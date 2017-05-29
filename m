@@ -1,69 +1,91 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] cec: STM32 driver
-Date: Mon, 29 May 2017 11:20:15 +0200
-Message-ID: <1a1685a9-c1c6-07db-6a3e-fe973d35086f@xs4all.nl>
-References: <1496046855-5809-1-git-send-email-benjamin.gaignard@linaro.org>
- <5ef1d96d-dc5f-49b9-0650-51d086efc226@xs4all.nl>
- <CA+M3ks5gdzAGx9suKnz-=4Aw5DiigLGFjOA5xqunzDEL8MmPBg@mail.gmail.com>
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Subject: Re: [PATCH v4 8/8] arm,arm64,drivers: add a prefix to drivers
+ arch_topology interfaces
+Date: Mon, 29 May 2017 11:20:24 +0200
+Message-ID: <bcc2f8f1-e953-9f32-2aa2-e660b0351e0a@arm.com>
+References: <20170420144316.15632-1-juri.lelli@arm.com>
+ <20170420144316.15632-9-juri.lelli@arm.com>
+ <20170525131802.GE16244@kroah.com>
+ <20170526101032.2t2xn5wrfenimu5w@e106622-lin>
+ <20170526183610.GB16490@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+M3ks5gdzAGx9suKnz-=4Aw5DiigLGFjOA5xqunzDEL8MmPBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170526183610.GB16490@kroah.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>, Juri Lelli <juri.lelli@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2017 11:07 AM, Benjamin Gaignard wrote:
-> 2017-05-29 10:54 GMT+02:00 Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>:
->> Hi Benjamin,
+Hi Greg,
+
+On 05/26/2017 08:36 PM, Greg KH wrote:
+> On Fri, May 26, 2017 at 11:10:32AM +0100, Juri Lelli wrote:
+>> Hi,
 >>
->> On 05/29/2017 10:34 AM, Benjamin Gaignard wrote:
+>> On 25/05/17 15:18, Greg KH wrote:
+>>> On Thu, Apr 20, 2017 at 03:43:16PM +0100, Juri Lelli wrote:
+
+[...]
+
+>>> But this is all really topology stuff, right?  Why use "capacity" at
+>>> all:
+>>> 	topology_normalize_cpu()
+>>> 	topology_parse_cpu()
+>>> 	topology_scale_cpu()
+>>> 	topology_set_scale()
+>>> ?
 >>>
->>> version 4:
->>> - rebased on Hans cec-config branch
->>> - rework bindings commit message
->>> - add notifier support
+>>> It's always best to put the "subsystem" name first, we have a bad
+>>> history of getting this wrong in the past by putting the verb first, not
+>>> the noun.
+>>>
 >>
->>
->> I really don't like this change. This forced me to think about this a bit
->> more,
->> and I think this requires another change as well.
->>
->> The problem you have is that the drm driver for this platform isn't ready
->> yet,
->> so this CEC driver needs userspace to provide a physical address since it
->> can't
->> use a notifier.
->>
->> Trying to support both is a bad idea since this runs the risk that we will
->> forget
->> to remove the CAP_PHYS_ADDR path later.
+>> topology_ works for me. However, I'd keep "capacity" in the names, as we
+>> might need to topology_normalize_cpu_somethingelse() (etc.) in the
+>> future?
 > 
-> I would like stm32 cec driver to be able to work with or without
-> notifier support.
-> stm32 are small platforms and not everybody will use hdmi because of memory
-> consomption but cec can be used anyway.
+> Worry about the future, in the future.  Change the names then, _IF_ it
+> becomes an issue.  Try to be short and simple please.
+> 
+>> Updated patch follows. I kept Catalin and Russell's acks as I only
+>> renamed the functions, please shout if that's not OK.
+>>
+>> Greg, if you are fine with this approach, do you still want a complete
+>> v5 of the set or can you pick this up?
+> 
+> Am I the one who is supposed to take all of these arm-specific patches?
+> If so, that's fine, but I need to have acks from the arm maintainers...
+> 
+> Oh, and drop "capacity" please :)
 
-Ah, that's a good point.
+Once we have driver/base/arch_topology.c in, we want to enable (cpu 
+micro-architectural + max frequency (OPPmax)) invariant and frequency 
+(OPPmin..OPPmax) invariant load-tracking/accounting in the task 
+scheduler for arm and arm64.
 
-So drop the notifier and add a comment where you describe that once the drm
-driver becomes available notifier support will be added, but that CAP_PHYS_ADDR
-remains allowed in cases where the drm driver isn't enabled due to the small
-size of the platform.
+The way to do this is to define the task scheduler interfaces 
+arch_scale_cpu_capacity() and arch_scale_freq_capacity() in arch 
+specific code:
 
-With that comment it can stay in mainline.
+#define arch_scale_cpu_capacity topology_scale_cpu_capacity
+#define arch_scale_freq_capacity topology_scale_freq_capacity
 
-When the drm driver arrives the notifier should probably be automatically
-selected when the drm driver is enabled. I want to avoid the combination of
-CAP_PHYS_ADDR and a drm driver, that shouldn't happen.
+In case an arch is not defining them, the default definitions in 
+kernel/sched/sched.h are used.
 
-Regards,
+So topology_scale_cpu() wouldn't be correct since we scale the 
+_capacity_ by the micro-architectural differences (hence cpu) and not 
+the cpu.
 
-	Hans
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Likewise we will have a function topology_scale_freq_capacity indicating 
+that we scale the capacity by the frequency.
+
+Or would you prefer something like topology_scale_capacity_by_cpu() and 
+topology_scale_capacity_by_freq()?
+
+-- Dietmar
+
+[...]
