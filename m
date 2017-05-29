@@ -1,122 +1,118 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt-bindings: mediatek: add bindings for MediaTek
- MT7622 SoC
-Date: Mon, 29 May 2017 17:11:57 +0200
-Message-ID: <63ce337b-db36-b1e2-09cd-8e29a96247f2@gmail.com>
-References: <cover.1496061587.git.sean.wang@mediatek.com>
- <9b4e201f8f9ad11be98f22ccc3022b4e5d76a681.1496061587.git.sean.wang@mediatek.com>
- <cf8fabea-8eb1-6a28-0e8e-cfc3087f5fb5@gmail.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v7 00/34] i.MX Media Driver
+Date: Mon, 29 May 2017 17:24:51 +0200
+Message-ID: <3de70e29-8429-1b56-8a01-84ca49f4fd89@xs4all.nl>
+References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+ <dd82968a-4c0b-12a4-f43b-7e63a255812d@xs4all.nl>
+ <1496067346.17695.91.camel@pengutronix.de>
+ <58c82482-d7d0-93cb-1e12-9749233bc5f3@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cf8fabea-8eb1-6a28-0e8e-cfc3087f5fb5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <58c82482-d7d0-93cb-1e12-9749233bc5f3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-medi
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 29/05/17 17:11, Matthias Brugger wrote:
+On 05/29/2017 04:21 PM, Hans Verkuil wrote:
+> On 05/29/2017 04:15 PM, Philipp Zabel wrote:
+>> On Mon, 2017-05-29 at 15:46 +0200, Hans Verkuil wrote:
+>>> Hi Steve,
+>>>
+>>> On 05/25/2017 02:29 AM, Steve Longerbeam wrote:
+>>>> In version 7:
+>>>>
+>>>> - video-mux: switched to Philipp's latest video-mux driver and updated
+>>>>      bindings docs, that makes use of the mmio-mux framework.
+>>>>
+>>>> - mmio-mux: includes Philipp's temporary patch that adds mmio-mux support
+>>>>      to video-mux driver, until mux framework is merged.
+>>>>
+>>>> - mmio-mux: updates to device tree from Philipp that define the i.MX6 mux
+>>>>      devices and modifies the video-mux device to become a consumer of the
+>>>>      video mmio-mux.
+>>>>
+>>>> - minor updates to Documentation/media/v4l-drivers/imx.rst.
+>>>>
+>>>> - ov5640: do nothing if entity stream count is greater than 1 in
+>>>>      ov5640_s_stream().
+>>>>
+>>>> - Previous versions of this driver had not tested the ability to enable
+>>>>      multiple independent streams, for instance enabling multiple output
+>>>>      pads from the imx6-mipi-csi2 subdevice, or enabling both prpenc and
+>>>>      prpvf outputs. Marek Vasut tested this support and reported issues
+>>>>      with it.
+>>>>
+>>>>      v4l2_pipeline_inherit_controls() used the media graph walk APIs, but
+>>>>      that walks both sink and source pads, so if there are multiple paths
+>>>>      enabled to video capture devices, controls would be added to the wrong
+>>>>      video capture device, and no controls added to the other enabled
+>>>>      capture devices.
+>>>>
+>>>>      These issues have been fixed. Control inheritance works correctly now
+>>>>      even with multiple enabled capture paths, and (for example)
+>>>>      simultaneous capture from prpenc and prpvf works also, and each with
+>>>>      independent scaling, CSC, and controls. For example prpenc can be
+>>>>      capturing with a 90 degree rotation, while prpvf is capturing with
+>>>>      vertical flip.
+>>>>
+>>>>      So the v4l2_pipeline_inherit_controls() patch has been dropped. The
+>>>>      new version of control inheritance could be made generically available,
+>>>>      but it would be more involved to incorporate it into v4l2-core.
+>>>>
+>>>> - A new function imx_media_fill_default_mbus_fields() is added to setup
+>>>>      colorimetry at sink pads, and these are propagated to source pads.
+>>>>
+>>>> - Ensure that the current sink and source rectangles meet alignment
+>>>>      restrictions before applying a new rotation control setting in
+>>>>      prp-enc/vf subdevices.
+>>>>
+>>>> - Chain the s_stream() subdev calls instead of implementing a custom
+>>>>      stream on/off function that attempts to call a fixed set of subdevices
+>>>>      in a pipeline in the correct order. This also simplifies imx6-mipi-csi2
+>>>>      subdevice, since the correct MIPI CSI-2 startup sequence can be
+>>>>      enforced completely in s_stream(), and s_power() is no longer
+>>>>      required. This also paves the way for more arbitrary OF graphs
+>>>>      external to the i.MX6.
+>>>>
+>>>> - Converted the v4l2_subdev and media_entity ops structures to const.
+>>>
+>>> What is the status as of v7?
+>>>
+>>>    From what I can tell patch 2/34 needs an Ack from Rob Herring, patches
+>>> 4-14 are out of scope for the media subsystem, patches 20-25 and 27-34
+>>> are all staging (so fine to be merged from my point of view).
+>>>
+>>> I'm not sure if patch 26 (defconfig) should be applied while the imx
+>>> driver is in staging. I would suggest that this patch is moved to the end
+>>> of the series.
+>>>
+>>> That leaves patches 15-19. I replied to patch 15 with a comment, patches
+>>> 16-18 look good to me, although patches 17 and 18 should be combined to one
+>>> patch since patch 17 won't compile otherwise.
+>>
+>> Is this a problem? It won't break any builds as patch 17 depends on
+>> CONFIG_MULTIPLEXER, which doesn't exist yet. I'm fine with merging the
+>> two patches, though.
 > 
+> You are right, but it is weird. I think I would prefer to have these two
+> merged and the #ifdef CONFIG_MULTIPLEXER bits removed. Just a note in the
+> commit log that this should be converted to the multiplexer when that gets
+> merged would be enough.
 > 
-> On 29/05/17 14:56, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
->> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>
->> This adds dt-binding documentation for MediaTek MT7622 SoC
->> which currently only includes basic items such as ARM CPU,
->> MediaTek SYSIRQ and UART.
->>
->> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> ---
->>   
->> Documentation/devicetree/bindings/arm/mediatek.txt                    
->> | 4 ++++
->>   
->> .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      
->> | 3 ++-
->>   
->> Documentation/devicetree/bindings/serial/mtk-uart.txt                 
->> | 1 +
->>   3 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt 
->> b/Documentation/devicetree/bindings/arm/mediatek.txt
->> index c860b24..fc68570 100644
->> --- a/Documentation/devicetree/bindings/arm/mediatek.txt
->> +++ b/Documentation/devicetree/bindings/arm/mediatek.txt
->> @@ -12,6 +12,7 @@ compatible: Must contain one of
->>      "mediatek,mt6592"
->>      "mediatek,mt6755"
->>      "mediatek,mt6795"
->> +   "mediatek,mt7622"
->>      "mediatek,mt7623"
->>      "mediatek,mt8127"
->>      "mediatek,mt8135"
->> @@ -38,6 +39,9 @@ Supported boards:
->>   - Evaluation board for MT6795(Helio X10):
->>       Required root node properties:
->>         - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
->> +- Reference board variant 1 for MT7622:
->> +    Required root node properties:
->> +      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
->>   - Evaluation board for MT7623:
->>       Required root node properties:
->>         - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
->> diff --git 
->> a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt 
->> b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt 
->>
->> index a89c03b..eda1183 100644
->> --- 
->> a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt 
->>
->> +++ 
->> b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt 
->>
->> @@ -1,4 +1,4 @@
->> -+Mediatek 65xx/67xx/81xx sysirq
->> ++Mediatek MT65xx/MT67xx/MT762x/MT81xx sysirq
->>   Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
->>   interrupt.
->> @@ -15,6 +15,7 @@ Required properties:
->>       "mediatek,mt6582-sysirq"
->>       "mediatek,mt6580-sysirq"
->>       "mediatek,mt6577-sysirq"
->> +    "mediatek,mt7622-sysirq"
->>       "mediatek,mt2701-sysirq"
-> 
-> This file is a mess and I posted some cleanups on the mailinglist. No 
-> need for you to resubmit. If the DT maintainers are fine with my 
-> cleanups, I cann change the line accordingly.
-> 
+> Dead code in drivers/media should be avoided because that's what this
+> driver currently has.
 
-I forgot:
+Thanks for those updates! That really leaves just an Ack for patch 2/34.
 
-Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sooo close!
 
-> Regards,
-> Matthias
-> 
->>   - interrupt-controller : Identifies the node as an interrupt controller
->>   - #interrupt-cells : Use the same format as specified by GIC in 
->> arm,gic.txt.
->> diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt 
->> b/Documentation/devicetree/bindings/serial/mtk-uart.txt
->> index 0015c72..daa1eef 100644
->> --- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
->> +++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
->> @@ -8,6 +8,7 @@ Required properties:
->>     * "mediatek,mt6589-uart" for MT6589 compatible UARTS
->>     * "mediatek,mt6755-uart" for MT6755 compatible UARTS
->>     * "mediatek,mt6795-uart" for MT6795 compatible UARTS
->> +  * "mediatek,mt7622-uart" for MT7622 compatible UARTS
->>     * "mediatek,mt7623-uart" for MT7623 compatible UARTS
->>     * "mediatek,mt8127-uart" for MT8127 compatible UARTS
->>     * "mediatek,mt8135-uart" for MT8135 compatible UARTS
->>
+Regards,
+
+	Hans
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
