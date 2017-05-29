@@ -1,66 +1,148 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/1] ARM: dts: orange-pi-zero: add node for SPI NOR
-Date: Mon, 29 May 2017 10:30:15 +0200
-Message-ID: <20170529083015.64kwhnzz7wh6d36g@flea.lan>
-References: <20170528103026.6396-1-geomatsi@gmail.com>
- <20170528103026.6396-2-geomatsi@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="j6fgvwf5lkez4bsz"
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 0/2] cec: STM32 driver
+Date: Mon, 29 May 2017 10:34:13 +0200
+Message-ID: <1496046855-5809-1-git-send-email-benjamin.gaignard@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170528103026.6396-2-geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: yannick.fertre-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
+Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+version 4:
+- rebased on Hans cec-config branch
+- rework bindings commit message
+- add notifier support
+- update KConfig
 
---j6fgvwf5lkez4bsz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+version 2:
+- fix typo in compagnie name
+- add yannick sign-off
+- use cec_message instead of custom struct in cec device
+- add monitor mode
 
-On Sun, May 28, 2017 at 01:30:26PM +0300, Sergey Matyukevich wrote:
-> Add node for SPI NOR flash on orange-pi-zero board. Disable this node
-> by default and leave it to users to enable it if their board has
-> SPI NOR flash chip populated.
->=20
-> SPI NOR flash was optional in the first production batch in Dec 2016.
-> In later batches flash chip was pre-populated. However there should
-> be quite a few boards around which do not have flash chip.
->=20
-> Signed-off-by: Sergey Matyukevich <geomatsi-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+I don't change the split between irq handler and irq thread because
+it would had mean to handle all errors cases irq handler to keep
+a correct sequence. I don't think it is critical as it is since cec is a very
+slow protocol.
 
-Merged, thanks!
-Maxime
+This serie of patches add cec driver for STM32 platforms.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+This code doesn't implement cec notifier because STM32 doesn't
+provide HDMI yet but it will be added later.
 
---j6fgvwf5lkez4bsz
-Content-Type: application/pgp-signature; name="signature.asc"
+Those patches have been developped on top of media_tree master branch
+where STM32 DCMI code has not been merged so conflict in Kconfig and Makefile
+could occur depending of merge ordering.
 
------BEGIN PGP SIGNATURE-----
+Compliance has been tested on STM32F769.
 
-iQIcBAEBAgAGBQJZK9wXAAoJEBx+YmzsjxAgzEwP/1kkjG5rPv+wON0tuXR4NXs5
-8t3PQP3Lc2C4E6OIoQhI31ADMjU5PpQfkALSj1GAtRNUOh0rERGmI4+kasWmPsVm
-zKpHcAWC1JYxTJnkBlfadAvzqGEQvzPOCkHGoR3jLtiWLY8LzVLZb+1ehUtf50iV
-xNS9RXq6r0l30dFXMrUn6GOlkkhKTihL1dKn1DtsgQILusJYbkaPPRfVO2BvMCG1
-EQVvB1yoX2oAwfI2FyAbTuxZU0nSe0QN0c2jlXXWCff5cR5nNBFCnr3aqBKDTLre
-2VX1yztZRMmr93+3TsWqKCti0JKbstO0f3/FvtIUWMqEb64d4WeMVB9Fa5BtGrtX
-+fZ/filejS/7cXLbVdWhNMAwPphK1QMfNaj38s4fy8QyyXSLpd+5Jwzwt+/3MzgV
-PvnzjWmIJln8W1yMkmD5g9syiDZFmh+aR5UMuQ+hs11sxG80UK0vmfAVUmoQ+m/x
-NwMDGSlvNk1SyXXzpmUb8X2kDPrc9goGJOegDT6q4BqmCBKiwKRaJi82YliwNuL+
-tDjyDZA+365eu1SGERPLz9pybEVP/YaLQJvut+9+WS/CzLkIME6hr5DTTiB99wdR
-ob6gFXQdembeTFs+lPeRSNdVQP3r99cXexJZYfh+ig2J5iW7NrwC8o9QgwJcTJyg
-B/zXS30gOJbxPAZCPhcz
-=fkF+
------END PGP SIGNATURE-----
+~ # cec-ctl -p 1.0.0.0 --playback 
+Driver Info:
+        Driver Name                : stm32-cec
+        Adapter Name               : stm32-cec
+        Capabilities               : 0x0000000f
+                Physical Address
+                Logical Addresses
+                Transmit
+                Passthrough
+        Driver version             : 4.11.0
+        Available Logical Addresses: 1
+        Physical Address           : 1.0.0.0
+        Logical Address Mask       : 0x0010
+        CEC Version                : 2.0
+        Vendor ID                  : 0x000c03 (HDMI)
+        OSD Name                   : 'Playback'
+        Logical Addresses          : 1 (Allow RC Passthrough)
 
---j6fgvwf5lkez4bsz--
+          Logical Address          : 4 (Playback Device 1)
+            Primary Device Type    : Playback
+            Logical Address Type   : Playback
+            All Device Types       : Playback
+            RC TV Profile          : None
+            Device Features        :
+                None
+
+~ # cec-compliance -A 
+cec-compliance SHA                 : 6acac5cec698de39b9398b66c4f5f4db6b2730d8
+
+Driver Info:
+        Driver Name                : stm32-cec
+        Adapter Name               : stm32-cec
+        Capabilities               : 0x0000000f
+                Physical Address
+                Logical Addresses
+                Transmit
+                Passthrough
+        Driver version             : 4.11.0
+        Available Logical Addresses: 1
+        Physical Address           : 1.0.0.0
+        Logical Address Mask       : 0x0010
+        CEC Version                : 2.0
+        Vendor ID                  : 0x000c03
+        Logical Addresses          : 1 (Allow RC Passthrough)
+
+          Logical Address          : 4
+            Primary Device Type    : Playback
+            Logical Address Type   : Playback
+            All Device Types       : Playback
+            RC TV Profile          : None
+            Device Features        :
+                None
+
+Compliance test for device /dev/cec0:
+
+    The test results mean the following:
+        OK                  Supported correctly by the device.
+        OK (Not Supported)  Not supported and not mandatory for the device.
+        OK (Presumed)       Presumably supported.  Manually check to confirm.
+        OK (Unexpected)     Supported correctly but is not expected to be supported for this device.
+        OK (Refused)        Supported by the device, but was refused.
+        FAIL                Failed and was expected to be supported by this device.
+
+Find remote devices:
+        Polling: OK
+
+CEC API:
+        CEC_ADAP_G_CAPS: OK
+        CEC_DQEVENT: OK
+        CEC_ADAP_G/S_PHYS_ADDR: OK
+        CEC_ADAP_G/S_LOG_ADDRS: OK
+        CEC_TRANSMIT: OK
+        CEC_RECEIVE: OK
+        CEC_TRANSMIT/RECEIVE (non-blocking): OK (Presumed)
+        CEC_G/S_MODE: OK
+        CEC_EVENT_LOST_MSGS: OK
+
+Network topology:
+        System Information for device 0 (TV) from device 4 (Playback Device 1):
+                CEC Version                : 1.4
+                Physical Address           : 0.0.0.0
+                Primary Device Type        : TV
+                Vendor ID                  : 0x00903e
+                OSD Name                   : 'TV'
+                Menu Language              : fre
+                Power Status               : On
+
+Total: 10, Succeeded: 10, Failed: 0, Warnings: 0
+
+
+Benjamin Gaignard (2):
+  dt-bindings: media: stm32 cec driver
+  cec: add STM32 cec driver
+
+ .../devicetree/bindings/media/st,stm32-cec.txt     |  22 ++
+ drivers/media/platform/Kconfig                     |  13 +
+ drivers/media/platform/Makefile                    |   2 +
+ drivers/media/platform/stm32/Makefile              |   1 +
+ drivers/media/platform/stm32/stm32-cec.c           | 392 +++++++++++++++++++++
+ 5 files changed, 430 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.txt
+ create mode 100644 drivers/media/platform/stm32/Makefile
+ create mode 100644 drivers/media/platform/stm32/stm32-cec.c
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
