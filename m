@@ -1,67 +1,93 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v3 2/3] thermal: broadcom: ns-thermal: default on iProc
- SoCs
-Date: Mon, 29 May 2017 09:21:51 -0700
-Message-ID: <f2544b8e-59fe-8cbc-5598-bd2a2b325a39@broadcom.com>
-References: <1493410291-16679-1-git-send-email-jon.mason@broadcom.com>
- <1493410291-16679-3-git-send-email-jon.mason@broadcom.com>
- <6628a958-087d-1221-7717-c07eeaec3cce@broadcom.com>
- <CAC3K-4oDnL2oiUDo29dLofHX3hQe2-d1xs=Cduwm==BjLH1djQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: sprd: Add Spreadtrum pin control driver
+Date: Mon, 29 May 2017 18:28:49 +0200
+Message-ID: <CACRpkdaBcGNTeUDCcVgK9JKZUPKD-qfO8PVHURR2F_pgvEgViQ@mail.gmail.com>
+References: <a1fa5b612de318213bab4404997d133ed118f5d2.1495863824.git.baolin.wang@spreadtrum.com>
+ <58b4b6fb2765ab9d5d3ac77f3854d0a88a0973bd.1495863824.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAC3K-4oDnL2oiUDo29dLofHX3hQe2-d1xs=Cduwm==BjLH1djQ@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Jon Mason <jon.mason@broadcom.com>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <58b4b6fb2765ab9d5d3ac77f3854d0a88a0973bd.1495863824.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+On Sat, May 27, 2017 at 7:56 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
 
-
-On 17-04-28 01:50 PM, Jon Mason wrote:
-> On Fri, Apr 28, 2017 at 4:36 PM, Scott Branden
-> <scott.branden@broadcom.com> wrote:
->>
->> On 17-04-28 01:11 PM, Jon Mason wrote:
->>> Tweak the Kconfig description to mention support for NSP and make the
->>> default on for iProc based platforms.
->>>
->>> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
->>> ---
->>>   drivers/thermal/broadcom/Kconfig | 9 +++++----
->>>   1 file changed, 5 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/drivers/thermal/broadcom/Kconfig
->>> b/drivers/thermal/broadcom/Kconfig
->>> index f0dea8a..b6f4b85 100644
->>> --- a/drivers/thermal/broadcom/Kconfig
->>> +++ b/drivers/thermal/broadcom/Kconfig
->>> @@ -1,8 +1,9 @@
->>>   config BCM_NS_THERMAL
->>>          tristate "Northstar thermal driver"
->>>          depends on ARCH_BCM_IPROC || COMPILE_TEST
->> If this driver is used on these SoCs then it:
->> depends on ARCH_BCM_NSP || ARCH_BCM_5301X || COMPILE_TEST
->> ?
-> The code referenced is outside of this patch, as that code was already
-> existing from when the driver was submitted.
+> This patch adds the pin control driver for Spreadtrum SC9860 platform.
 >
-> I did some checking and NS2 and Cygnus do not have the registers in
-> use by this driver.  So, you are correct in that this driver will
-> never be used for them.  So, this is slightly over-permissive in
-> allowing a driver to be selected that could not ever be used on
-> non-NS/NSP hardware.  But barring an incorrect DT string, it would
-> only result in an slightly larger kernel than necessary.
->
-> I'll do a follow-on patch to correct this with your suggestion above,
-> and push it separately (unless a v4 is needed on this series).
+> Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 
-Please submit the follow on patch.
+Overall I see that you want to store functions and groups in the device tree
+using the current helpers from Tony. That is OK if you want to take that
+approach, though I prefer the pins/groups/function encoding in plaintext.
 
->
-> Thanks,
-> Jon
-Thanks,
-  Scott
+But when it comes to pin config:
+
+> +static int sprd_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin_id,
+> +                           unsigned long *config)
+> +{
+> +       struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +       struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
+> +
+> +       if (!pin)
+> +               return -EINVAL;
+> +
+> +       if (pin->type == GLOBAL_CTRL_PIN) {
+> +               *config = (readl((void __iomem *)pin->reg) >>
+> +                          pin->bit_offset) & PINCTRL_BIT_MASK(pin->bit_width);
+> +       } else {
+> +               *config = readl((void __iomem *)pin->reg);
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
+> +                           unsigned long *configs, unsigned int num_configs)
+> +{
+> +       struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
+> +       struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
+> +       unsigned long reg;
+> +       int i;
+> +
+> +       if (!pin)
+> +               return -EINVAL;
+> +
+> +       for (i = 0; i < num_configs; i++) {
+> +               if (pin->type == GLOBAL_CTRL_PIN) {
+> +                       reg = readl((void __iomem *)pin->reg);
+> +                       reg &= ~(PINCTRL_BIT_MASK(pin->bit_width)
+> +                               << pin->bit_offset);
+> +                       reg |= (configs[i] & PINCTRL_BIT_MASK(pin->bit_width))
+> +                               << pin->bit_offset;
+> +                       writel(reg, (void __iomem *)pin->reg);
+> +               } else {
+> +                       writel(configs[i], (void __iomem *)pin->reg);
+> +               }
+> +               pin->config = configs[i];
+> +       }
+> +
+> +       return 0;
+> +}
+
+This is just hammering the register values, you have effectively defined your
+register layout as your device tree ABI.
+
+Please don't do this, please use genric pin config and use the approach
+other drivers take with explicit strings encoding the pin configuration.
+
+Even pinctrl-single that maintain quite a bit of muxing data in the device
+tree still use the generic pin config API, see:
+drivers/pinctrl/pinctrl-single.c
+pcs_pinconf_get(), pcs_pinconf_set()
+
+Same for group config.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
