@@ -1,61 +1,32 @@
-From: Bogdan Purcareata <bogdan.purcareata-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH v4 2/2] dt-bindings: net: Add Cortina device tree bindings
-Date: Mon, 29 May 2017 09:11:31 +0000
-Message-ID: <1496049091-4637-3-git-send-email-bogdan.purcareata@nxp.com>
-References: <1496049091-4637-1-git-send-email-bogdan.purcareata@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 5/7] pci: use proper name for the R-Car SoC
+Date: Mon, 29 May 2017 11:13:48 +0200
+Message-ID: <CAMuHMdV1AKU-kLj+1OgseqR1q2MOghRfWdyp6OJVe5BoW=FBkQ@mail.gmail.com>
+References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com> <20170528093051.11816-6-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496049091-4637-1-git-send-email-bogdan.purcareata-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170528093051.11816-6-wsa+renesas@sang-engineering.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree description info for Cortina 10G phy devices.
+On Sun, May 28, 2017 at 11:30 AM, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> It is 'R-Car', not 'RCar'. No code or binding changes, only descriptive text.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Signed-off-by: Bogdan Purcareata <bogdan.purcareata-3arQi8VN3Tc@public.gmane.org>
----
-v3 -> v4:
-- Consistency nit between phy label and reg value.
-- Add CORTINNA trademark info.
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Patch introduced in v3 of the patchset.
+Gr{oetje,eeting}s,
 
- Documentation/devicetree/bindings/net/cortina.txt | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/cortina.txt
-
-diff --git a/Documentation/devicetree/bindings/net/cortina.txt b/Documentation/devicetree/bindings/net/cortina.txt
-new file mode 100644
-index 0000000..40d0bd9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/cortina.txt
-@@ -0,0 +1,21 @@
-+Cortina Phy Driver Device Tree Bindings
-+---------------------------------------
-+
-+CORTINA is a registered trademark of Cortina Systems, Inc.
-+
-+The driver supports the Cortina Electronic Dispersion Compensation (EDC)
-+devices, equipped with clock and data recovery (CDR) circuits. These
-+devices make use of registers that are not compatible with Clause 45 or
-+Clause 22, therefore they need to be described using the
-+"ethernet-phy-id" compatible.
-+
-+Since the driver only implements  polling mode support, interrupts info
-+can be skipped.
-+
-+Example (CS4340 phy):
-+	mdio {
-+		cs4340_phy@10 {
-+			compatible = "ethernet-phy-id13e5.1002";
-+			reg = <0x10>;
-+		};
-+	};
--- 
-1.9.1
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
