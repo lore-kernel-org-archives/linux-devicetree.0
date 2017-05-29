@@ -1,477 +1,368 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v4 2/2] cec: add STM32 cec driver
-Date: Mon, 29 May 2017 10:34:15 +0200
-Message-ID: <1496046855-5809-3-git-send-email-benjamin.gaignard@linaro.org>
-References: <1496046855-5809-1-git-send-email-benjamin.gaignard@linaro.org>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1496046855-5809-1-git-send-email-benjamin.gaignard@linaro.org>
-Sender: linux-media-owner@vger.kernel.org
-To: yannick.fertre@st.com, alexandre.torgue@st.com, hverkuil@xs4all.nl, devicetree@vger.kernel.org, linux-media@vger.kernel.org, robh@kernel.org, hans.verkuil@cisco.com
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH RfC v4 2/6] irqchip: add Amlogic Meson GPIO irqchip driver
+Date: Mon, 29 May 2017 10:38:50 +0200
+Message-ID: <3acb15f5-c4ab-1c7f-222b-aba6eab6317f@baylibre.com>
+References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
+ <b23d0417-a43b-a28c-3d9f-2be9bf6623f1@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b23d0417-a43b-a28c-3d9f-2be9bf6623f1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add cec driver for STM32 platforms.
-cec hardware block isn't not always used with hdmi so
-cec notifier is not implemented. That will be done later
-when STM32 DSI driver will be available.
+Hi Heiner,
 
-Driver compliance has been tested with cec-ctl and cec-compliance
-tools.
+Finally, thanks for re-submitting an independent irq controller driver.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Signed-off-by: Yannick Fertre <yannick.fertre@st.com>
----
-version 4:
-- add cec notifier support
-- rework KConfig
-- rebased on Hans cec-config branch
- drivers/media/platform/Kconfig           |  13 +
- drivers/media/platform/Makefile          |   2 +
- drivers/media/platform/stm32/Makefile    |   1 +
- drivers/media/platform/stm32/stm32-cec.c | 392 +++++++++++++++++++++++++++++++
- 4 files changed, 408 insertions(+)
- create mode 100644 drivers/media/platform/stm32/Makefile
- create mode 100644 drivers/media/platform/stm32/stm32-cec.c
+On 05/28/2017 09:11 PM, Heiner Kallweit wrote:
+> Add a driver supporting the GPIO interrupt controller on certain
+> Amlogic meson SoC's.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/irqchip/Kconfig          |   3 +
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-meson-gpio.c | 280 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 284 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-meson-gpio.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 478f8ace..6bffe733 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -301,3 +301,6 @@ config QCOM_IRQ_COMBINER
+>  	help
+>  	  Say yes here to add support for the IRQ combiner devices embedded
+>  	  in Qualcomm Technologies chips.
+> +
+> +config MESON_GPIO_INTC
+> +	bool
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 041cb80..bf6dc4b 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -521,4 +521,17 @@ config VIDEO_STI_HDMI_CEC
-          CEC bus is present in the HDMI connector and enables communication
-          between compatible devices.
- 
-+config VIDEO_STM32_HDMI_CEC
-+       tristate "STMicroelectronics STM32 HDMI CEC driver"
-+       depends on ARCH_STM32 || COMPILE_TEST
-+       select REGMAP
-+       select REGMAP_MMIO
-+       select CEC_CORE
-+       select CEC_NOTIFIER
-+       ---help---
-+         This is a driver for STM32 interface. It uses the
-+         generic CEC framework interface.
-+         CEC bus is present in the HDMI connector and enables communication
-+         between compatible devices.
-+
- endif #CEC_PLATFORM_DRIVERS
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 63303d6..7cd9965 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -44,6 +44,8 @@ obj-$(CONFIG_VIDEO_STI_HDMI_CEC) 	+= sti/cec/
- 
- obj-$(CONFIG_VIDEO_STI_DELTA)		+= sti/delta/
- 
-+obj-$(CONFIG_VIDEO_STM32_HDMI_CEC) 	+= stm32/
-+
- obj-$(CONFIG_BLACKFIN)                  += blackfin/
- 
- obj-$(CONFIG_ARCH_DAVINCI)		+= davinci/
-diff --git a/drivers/media/platform/stm32/Makefile b/drivers/media/platform/stm32/Makefile
-new file mode 100644
-index 0000000..632b04c
---- /dev/null
-+++ b/drivers/media/platform/stm32/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_VIDEO_STM32_HDMI_CEC) += stm32-cec.o
-diff --git a/drivers/media/platform/stm32/stm32-cec.c b/drivers/media/platform/stm32/stm32-cec.c
-new file mode 100644
-index 0000000..2fe8b13
---- /dev/null
-+++ b/drivers/media/platform/stm32/stm32-cec.c
-@@ -0,0 +1,392 @@
-+/*
-+ * STM32 CEC driver
-+ * Copyright (C) STMicroelectronics SA 2017
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <media/cec.h>
-+#include <media/cec-notifier.h>
-+
-+#define CEC_NAME	"stm32-cec"
-+
-+/* CEC registers  */
-+#define CEC_CR		0x0000 /* Control Register */
-+#define CEC_CFGR	0x0004 /* ConFiGuration Register */
-+#define CEC_TXDR	0x0008 /* Rx data Register */
-+#define CEC_RXDR	0x000C /* Rx data Register */
-+#define CEC_ISR		0x0010 /* Interrupt and status Register */
-+#define CEC_IER		0x0014 /* Interrupt enable Register */
-+
-+#define TXEOM		BIT(2)
-+#define TXSOM		BIT(1)
-+#define CECEN		BIT(0)
-+
-+#define LSTN		BIT(31)
-+#define OAR		GENMASK(30, 16)
-+#define SFTOP		BIT(8)
-+#define BRDNOGEN	BIT(7)
-+#define LBPEGEN		BIT(6)
-+#define BREGEN		BIT(5)
-+#define BRESTP		BIT(4)
-+#define RXTOL		BIT(3)
-+#define SFT		GENMASK(2, 0)
-+#define FULL_CFG	(LSTN | SFTOP | BRDNOGEN | LBPEGEN | BREGEN | BRESTP \
-+			 | RXTOL | BRDNOGEN)
-+
-+#define TXACKE		BIT(12)
-+#define TXERR		BIT(11)
-+#define TXUDR		BIT(10)
-+#define TXEND		BIT(9)
-+#define TXBR		BIT(8)
-+#define ARBLST		BIT(7)
-+#define RXACKE		BIT(6)
-+#define RXOVR		BIT(2)
-+#define RXEND		BIT(1)
-+#define RXBR		BIT(0)
-+
-+#define ALL_TX_IT	(TXEND | TXBR | TXACKE | TXERR | TXUDR | ARBLST)
-+#define ALL_RX_IT	(RXEND | RXBR | RXACKE | RXOVR)
-+
-+struct stm32_cec {
-+	struct cec_adapter	*adap;
-+	struct device		*dev;
-+	struct clk		*clk_cec;
-+	struct clk		*clk_hdmi_cec;
-+	struct reset_control	*rstc;
-+	struct regmap		*regmap;
-+	int			irq;
-+	u32			irq_status;
-+	struct cec_msg		rx_msg;
-+	struct cec_msg		tx_msg;
-+	int			tx_cnt;
-+	struct cec_notifier	*notifier;
-+};
-+
-+static void cec_hw_init(struct stm32_cec *cec)
-+{
-+	regmap_update_bits(cec->regmap, CEC_CR, TXEOM | TXSOM | CECEN, 0);
-+
-+	regmap_update_bits(cec->regmap, CEC_IER, ALL_TX_IT | ALL_RX_IT,
-+			   ALL_TX_IT | ALL_RX_IT);
-+
-+	regmap_update_bits(cec->regmap, CEC_CFGR, FULL_CFG, FULL_CFG);
-+}
-+
-+static void stm32_tx_done(struct stm32_cec *cec, u32 status)
-+{
-+	if (status & (TXERR | TXUDR)) {
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_ERROR,
-+				  0, 0, 0, 1);
-+		return;
-+	}
-+
-+	if (status & ARBLST) {
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_ARB_LOST,
-+				  1, 0, 0, 0);
-+		return;
-+	}
-+
-+	if (status & TXACKE) {
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_NACK,
-+				  0, 1, 0, 0);
-+		return;
-+	}
-+
-+	if (cec->irq_status & TXBR) {
-+		/* send next byte */
-+		if (cec->tx_cnt < cec->tx_msg.len)
-+			regmap_write(cec->regmap, CEC_TXDR,
-+				     cec->tx_msg.msg[cec->tx_cnt++]);
-+
-+		/* TXEOM is set to command transmission of the last byte */
-+		if (cec->tx_cnt == cec->tx_msg.len)
-+			regmap_update_bits(cec->regmap, CEC_CR, TXEOM, TXEOM);
-+	}
-+
-+	if (cec->irq_status & TXEND)
-+		cec_transmit_done(cec->adap, CEC_TX_STATUS_OK, 0, 0, 0, 0);
-+}
-+
-+static void stm32_rx_done(struct stm32_cec *cec, u32 status)
-+{
-+	if (cec->irq_status & (RXACKE | RXOVR)) {
-+		cec->rx_msg.len = 0;
-+		return;
-+	}
-+
-+	if (cec->irq_status & RXBR) {
-+		u32 val;
-+
-+		regmap_read(cec->regmap, CEC_RXDR, &val);
-+		cec->rx_msg.msg[cec->rx_msg.len++] = val & 0xFF;
-+	}
-+
-+	if (cec->irq_status & RXEND) {
-+		cec_received_msg(cec->adap, &cec->rx_msg);
-+		cec->rx_msg.len = 0;
-+	}
-+}
-+
-+static irqreturn_t stm32_cec_irq_thread(int irq, void *arg)
-+{
-+	struct stm32_cec *cec = arg;
-+
-+	if (cec->irq_status & ALL_TX_IT)
-+		stm32_tx_done(cec, cec->irq_status);
-+
-+	if (cec->irq_status & ALL_RX_IT)
-+		stm32_rx_done(cec, cec->irq_status);
-+
-+	cec->irq_status = 0;
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t stm32_cec_irq_handler(int irq, void *arg)
-+{
-+	struct stm32_cec *cec = arg;
-+
-+	regmap_read(cec->regmap, CEC_ISR, &cec->irq_status);
-+
-+	regmap_update_bits(cec->regmap, CEC_ISR,
-+			   ALL_TX_IT | ALL_RX_IT,
-+			   ALL_TX_IT | ALL_RX_IT);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static int stm32_cec_adap_enable(struct cec_adapter *adap, bool enable)
-+{
-+	struct stm32_cec *cec = adap->priv;
-+	int ret = 0;
-+
-+	if (enable) {
-+		ret = clk_enable(cec->clk_cec);
-+		if (ret)
-+			dev_err(cec->dev, "fail to enable cec clock\n");
-+
-+		clk_enable(cec->clk_hdmi_cec);
-+		regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
-+	} else {
-+		clk_disable(cec->clk_cec);
-+		clk_disable(cec->clk_hdmi_cec);
-+		regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
-+	}
-+
-+	return ret;
-+}
-+
-+static int stm32_cec_adap_log_addr(struct cec_adapter *adap, u8 logical_addr)
-+{
-+	struct stm32_cec *cec = adap->priv;
-+	u32 oar = (1 << logical_addr) << 16;
-+
-+	regmap_update_bits(cec->regmap, CEC_CR, CECEN, 0);
-+
-+	if (logical_addr == CEC_LOG_ADDR_INVALID)
-+		regmap_update_bits(cec->regmap, CEC_CFGR, OAR, 0);
-+	else
-+		regmap_update_bits(cec->regmap, CEC_CFGR, oar, oar);
-+
-+	regmap_update_bits(cec->regmap, CEC_CR, CECEN, CECEN);
-+
-+	return 0;
-+}
-+
-+static int stm32_cec_adap_transmit(struct cec_adapter *adap, u8 attempts,
-+				   u32 signal_free_time, struct cec_msg *msg)
-+{
-+	struct stm32_cec *cec = adap->priv;
-+
-+	/* Copy message */
-+	cec->tx_msg = *msg;
-+	cec->tx_cnt = 0;
-+
-+	/*
-+	 * If the CEC message consists of only one byte,
-+	 * TXEOM must be set before of TXSOM.
-+	 */
-+	if (cec->tx_msg.len == 1)
-+		regmap_update_bits(cec->regmap, CEC_CR, TXEOM, TXEOM);
-+
-+	/* TXSOM is set to command transmission of the first byte */
-+	regmap_update_bits(cec->regmap, CEC_CR, TXSOM, TXSOM);
-+
-+	/* Write the header (first byte of message) */
-+	regmap_write(cec->regmap, CEC_TXDR, cec->tx_msg.msg[0]);
-+	cec->tx_cnt++;
-+
-+	return 0;
-+}
-+
-+static const struct cec_adap_ops stm32_cec_adap_ops = {
-+	.adap_enable = stm32_cec_adap_enable,
-+	.adap_log_addr = stm32_cec_adap_log_addr,
-+	.adap_transmit = stm32_cec_adap_transmit,
-+};
-+
-+static const struct regmap_config stm32_cec_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = sizeof(u32),
-+	.max_register = 0x14,
-+	.fast_io = true,
-+};
-+
-+static int stm32_cec_probe(struct platform_device *pdev)
-+{
-+	struct resource *res;
-+	struct stm32_cec *cec;
-+	void __iomem *mmio;
-+	struct device_node *np;
-+	int ret;
-+	u32 caps = CEC_CAP_LOG_ADDRS | CEC_CAP_PASSTHROUGH |
-+		   CEC_CAP_TRANSMIT | CEC_CAP_RC;
-+
-+	cec = devm_kzalloc(&pdev->dev, sizeof(*cec), GFP_KERNEL);
-+	if (!cec)
-+		return -ENOMEM;
-+
-+	/*
-+	 * getting an hdmi device is optional but if the phanlde exists
-+	 * all must be good to use it
-+	 */
-+	np = of_parse_phandle(pdev->dev.of_node, "hdmi-phandle", 0);
-+	if (np) {
-+		struct platform_device *hdmi_dev;
-+
-+		hdmi_dev = of_find_device_by_node(np);
-+		if (!hdmi_dev)
-+			return -EPROBE_DEFER;
-+
-+		cec->notifier = cec_notifier_get(&hdmi_dev->dev);
-+		if (!cec->notifier)
-+			return -ENOMEM;
-+	} else {
-+		/*
-+		 * no hdmi notifier so physical address need to be set by
-+		 * userland
-+		 */
-+		caps |= CEC_CAP_PHYS_ADDR;
-+	}
-+
-+	cec->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmio = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(mmio))
-+		return PTR_ERR(mmio);
-+
-+	cec->regmap = devm_regmap_init_mmio_clk(&pdev->dev, "cec", mmio,
-+						&stm32_cec_regmap_cfg);
-+
-+	if (IS_ERR(cec->regmap))
-+		return PTR_ERR(cec->regmap);
-+
-+	cec->irq = platform_get_irq(pdev, 0);
-+	if (cec->irq < 0)
-+		return cec->irq;
-+
-+	ret = devm_request_threaded_irq(&pdev->dev, cec->irq,
-+					stm32_cec_irq_handler,
-+					stm32_cec_irq_thread,
-+					0,
-+					pdev->name, cec);
-+	if (ret)
-+		return ret;
-+
-+	cec->clk_cec = devm_clk_get(&pdev->dev, "cec");
-+	if (IS_ERR(cec->clk_cec)) {
-+		dev_err(&pdev->dev, "Cannot get cec clock\n");
-+		return PTR_ERR(cec->clk_cec);
-+	}
-+
-+	ret = clk_prepare(cec->clk_cec);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to prepare cec clock\n");
-+		return ret;
-+	}
-+
-+	cec->clk_hdmi_cec = devm_clk_get(&pdev->dev, "hdmi-cec");
-+	if (!IS_ERR(cec->clk_hdmi_cec)) {
-+		ret = clk_prepare(cec->clk_hdmi_cec);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Unable to prepare hdmi-cec clock\n");
-+			return ret;
-+		}
-+	}
-+
-+	/*
-+	 * CEC_CAP_PHYS_ADDR could be removed when a cec notifier is available
-+	 */
-+	cec->adap = cec_allocate_adapter(&stm32_cec_adap_ops, cec,
-+			CEC_NAME, caps,	CEC_MAX_LOG_ADDRS);
-+	ret = PTR_ERR_OR_ZERO(cec->adap);
-+	if (ret)
-+		return ret;
-+
-+	ret = cec_register_adapter(cec->adap, &pdev->dev);
-+	if (ret) {
-+		cec_delete_adapter(cec->adap);
-+		return ret;
-+	}
-+
-+	if (cec->notifier)
-+		cec_register_cec_notifier(cec->adap, cec->notifier);
-+
-+	cec_hw_init(cec);
-+
-+	platform_set_drvdata(pdev, cec);
-+
-+	return 0;
-+}
-+
-+static int stm32_cec_remove(struct platform_device *pdev)
-+{
-+	struct stm32_cec *cec = platform_get_drvdata(pdev);
-+
-+	clk_unprepare(cec->clk_cec);
-+	clk_unprepare(cec->clk_hdmi_cec);
-+
-+	cec_unregister_adapter(cec->adap);
-+
-+	if (cec->notifier)
-+		cec_notifier_put(cec->notifier);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id stm32_cec_of_match[] = {
-+	{ .compatible = "st,stm32-cec" },
-+	{ /* end node */ }
-+};
-+MODULE_DEVICE_TABLE(of, stm32_cec_of_match);
-+
-+static struct platform_driver stm32_cec_driver = {
-+	.probe  = stm32_cec_probe,
-+	.remove = stm32_cec_remove,
-+	.driver = {
-+		.name		= CEC_NAME,
-+		.of_match_table = stm32_cec_of_match,
-+	},
-+};
-+
-+module_platform_driver(stm32_cec_driver);
-+
-+MODULE_AUTHOR("Benjamin Gaignard <benjamin.gaignard@st.com>");
-+MODULE_AUTHOR("Yannick Fertre <yannick.fertre@st.com>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 Consumer Electronics Control");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Maybe a :
+depends on ARCH_MESON
+default y
+
+would be great.
+
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index b64c59b8..1be482bd 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -76,3 +76,4 @@ obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+>  obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
+>  obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+>  obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
+> +obj-$(CONFIG_MESON_GPIO_INTC)		+= irq-meson-gpio.o
+> diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
+> new file mode 100644
+> index 00000000..acbbbdb0
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-meson-gpio.c
+> @@ -0,0 +1,280 @@
+> +/*
+> + * Amlogic Meson GPIO IRQ chip driver
+> + *
+> + * Copyright 2017 Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Please add :
++ * Copyright (c) 2015 Endless Mobile, Inc.
++ * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
++ * Copyright (c) 2016 BayLibre, SAS.
++ * Author: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+Since you based your work on previous work from Jerome derived from a work initially done by Carlo.
+
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation, version 2.
+> + */
+> +
+> +#include <linux/device.h>
+> +#include <linux/init.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/regmap.h>
+> +
+> +#define REG_EDGE_POL		0x00
+> +#define REG_PIN_03_SEL		0x04
+> +#define REG_PIN_47_SEL		0x08
+> +#define REG_FILTER_SEL		0x0c
+> +
+> +#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
+> +#define REG_EDGE_POL_EDGE(x)	BIT(x)
+> +#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
+> +
+> +#define MAX_PARENT_IRQ_NUM	8
+> +
+> +struct meson_irq_slot {
+> +	unsigned int irq;
+> +	unsigned int owner;
+> +};
+> +
+> +struct meson_data {
+> +	struct regmap *regmap;
+> +	struct meson_irq_slot slots[MAX_PARENT_IRQ_NUM];
+> +	unsigned int num_slots;
+> +	struct mutex lock;
+> +};
+> +
+> +static int meson_alloc_irq_slot(struct meson_data *md, unsigned int virq)
+> +{
+> +	int i, slot = -ENOSPC;
+> +
+> +	mutex_lock(&md->lock);
+> +
+> +	for (i = 0; i < md->num_slots && slot < 0; i++)
+> +		if (!md->slots[i].owner) {
+> +			md->slots[i].owner = virq;
+> +			slot = i;
+> +		}
+> +
+> +	mutex_unlock(&md->lock);
+> +
+> +	return slot;
+> +}
+> +
+> +static void meson_free_irq_slot(struct meson_data *md, unsigned int virq)
+> +{
+> +	int i;
+> +
+> +	mutex_lock(&md->lock);
+> +
+> +	for (i = 0; i < md->num_slots; i++)
+> +		if (md->slots[i].owner == virq) {
+> +			md->slots[i].owner = 0;
+> +			break;
+> +		}
+> +
+> +	mutex_unlock(&md->lock);
+> +}
+> +
+> +static int meson_find_irq_slot(struct meson_data *md, unsigned int virq)
+> +{
+> +	int i, slot = -EINVAL;
+> +
+> +	mutex_lock(&md->lock);
+> +
+> +	for (i = 0; i < md->num_slots && slot < 0; i++)
+> +		if (md->slots[i].owner == virq)
+> +			slot = i;
+> +
+> +	mutex_unlock(&md->lock);
+> +
+> +	return slot;
+> +}
+> +
+> +static void meson_set_hwirq(struct meson_data *md, int idx, unsigned int hwirq)
+> +{
+> +	int reg = idx > 3 ? REG_PIN_47_SEL : REG_PIN_03_SEL;
+> +	int shift = 8 * (idx % 4);
+> +
+> +	regmap_update_bits(md->regmap, reg, 0xff << shift,
+> +			   hwirq << shift);
+> +}
+> +
+> +static void meson_irq_set_hwirq(struct irq_data *data, unsigned int hwirq)
+> +{
+> +	struct meson_data *md = data->domain->host_data;
+> +	int slot = meson_find_irq_slot(md, data->irq);
+> +
+> +	if (slot >= 0)
+> +		meson_set_hwirq(md, slot, hwirq);
+> +}
+> +
+> +static int meson_irq_set_type(struct irq_data *data, unsigned int type)
+> +{
+> +	struct meson_data *md = data->domain->host_data;
+> +	int slot;
+> +	unsigned int val = 0;
+> +
+> +	if (type == IRQ_TYPE_EDGE_BOTH)
+> +		return -EINVAL;
+> +
+> +	slot = meson_find_irq_slot(md, data->irq);
+> +	if (slot < 0)
+> +		return slot;
+> +
+> +	if (type & IRQ_TYPE_EDGE_BOTH)
+> +		val |= REG_EDGE_POL_EDGE(slot);
+> +
+> +	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
+> +		val |= REG_EDGE_POL_LOW(slot);
+> +
+> +	regmap_update_bits(md->regmap, REG_EDGE_POL,
+> +			   REG_EDGE_POL_MASK(slot), val);
+> +
+> +	if (type & IRQ_TYPE_EDGE_BOTH)
+> +		val = IRQ_TYPE_EDGE_RISING;
+> +	else
+> +		val = IRQ_TYPE_LEVEL_HIGH;
+> +
+> +	return irq_chip_set_type_parent(data, val);
+> +}
+> +
+> +static unsigned int meson_irq_startup(struct irq_data *data)
+> +{
+> +	irq_chip_unmask_parent(data);
+> +	/*
+> +	 * An extra bit was added to allow having the same gpio hwirq twice
+> +	 * for handling IRQ_TYPE_EDGE_BOTH. Remove this bit to get the
+> +	 * gpio hwirq.
+> +	 */
+> +	meson_irq_set_hwirq(data, data->hwirq >> 1);
+> +
+> +	return 0;
+> +}
+> +
+> +static void meson_irq_shutdown(struct irq_data *data)
+> +{
+> +	meson_irq_set_hwirq(data, 0xff);
+> +	irq_chip_mask_parent(data);
+> +}
+> +
+> +static struct irq_chip meson_irq_chip = {
+> +	.name = "meson_gpio_intc",
+> +	.irq_set_type = meson_irq_set_type,
+> +	.irq_eoi = irq_chip_eoi_parent,
+> +	.irq_mask = irq_chip_mask_parent,
+> +	.irq_unmask = irq_chip_unmask_parent,
+> +	.irq_startup = meson_irq_startup,
+> +	.irq_shutdown = meson_irq_shutdown,
+> +	.irq_set_affinity = irq_chip_set_affinity_parent,
+> +};
+> +
+> +static int meson_irq_alloc(struct irq_domain *d, unsigned int virq,
+> +			   unsigned int nr_irqs, void *data)
+> +{
+> +	struct irq_fwspec parent_fwspec, *fwspec = data;
+> +	struct meson_data *md = d->host_data;
+> +	irq_hw_number_t hwirq;
+> +	int ret, slot;
+> +
+> +	slot = meson_alloc_irq_slot(md, virq);
+> +	if (slot < 0)
+> +		return slot;
+> +
+> +	hwirq = fwspec->param[0];
+> +	irq_domain_set_hwirq_and_chip(d, virq, hwirq, &meson_irq_chip, NULL);
+> +
+> +	parent_fwspec.fwnode = d->parent->fwnode;
+> +	parent_fwspec.param_count = 3;
+> +	parent_fwspec.param[0] = 0; /* SPI */
+> +	parent_fwspec.param[1] = md->slots[slot].irq;
+> +	parent_fwspec.param[2] = IRQ_TYPE_NONE;
+> +
+> +	ret = irq_domain_alloc_irqs_parent(d, virq, nr_irqs, &parent_fwspec);
+> +	if (ret)
+> +		meson_free_irq_slot(md, virq);
+> +
+> +	return ret;
+> +}
+> +
+> +static void meson_irq_free(struct irq_domain *d, unsigned int virq,
+> +			   unsigned int nr_irqs)
+> +{
+> +	struct meson_data *md = d->host_data;
+> +
+> +	irq_domain_free_irqs_common(d, virq, nr_irqs);
+> +	meson_free_irq_slot(md, virq);
+> +}
+> +
+> +static const struct irq_domain_ops meson_irq_ops = {
+> +	.alloc = meson_irq_alloc,
+> +	.free = meson_irq_free,
+> +	.xlate = irq_domain_xlate_twocell,
+> +};
+> +
+> +static int meson_get_irqs(struct meson_data *md, struct device_node *node)
+> +{
+> +	int ret, i;
+> +	u32 irq;
+> +
+> +	for (i = 0; i < MAX_PARENT_IRQ_NUM; i++) {
+> +		ret = of_property_read_u32_index(node, "parent-interrupts", i,
+> +						 &irq);
+> +		if (ret)
+> +			break;
+> +		md->slots[i].irq = irq;
+> +	}
+> +
+> +	md->num_slots = i;
+> +
+> +	return i ? 0 : -EINVAL;
+> +}
+> +
+> +static const struct regmap_config meson_regmap_config = {
+> +	.reg_bits       = 32,
+> +	.reg_stride     = 4,
+> +	.val_bits       = 32,
+> +	.max_register	= REG_FILTER_SEL,
+> +};
+> +
+> +static int __init meson_gpio_irq_init(struct device_node *node,
+> +				      struct device_node *parent)
+> +{
+> +	struct irq_domain *meson_irq_domain, *parent_domain;
+> +	struct meson_data *md;
+> +	void __iomem *io_base;
+> +	int ret;
+> +
+> +	md = kzalloc(sizeof(*md), GFP_KERNEL);
+> +	if (!md)
+> +		return -ENOMEM;
+> +
+> +	mutex_init(&md->lock);
+> +
+> +	io_base = of_iomap(node, 0);
+> +	if (!io_base)
+> +		return -EINVAL;
+> +
+> +	md->regmap = regmap_init_mmio(NULL, io_base, &meson_regmap_config);
+> +	if (IS_ERR(md->regmap))
+> +		return PTR_ERR(md->regmap);
+> +
+> +	/* initialize to IRQ_TYPE_LEVEL_HIGH */
+> +	regmap_write(md->regmap, REG_EDGE_POL, 0);
+> +	/* disable all GPIO interrupt sources */
+> +	regmap_write(md->regmap, REG_PIN_03_SEL, 0xffffffff);
+> +	regmap_write(md->regmap, REG_PIN_47_SEL, 0xffffffff);
+> +	/* disable filtering */
+> +	regmap_write(md->regmap, REG_FILTER_SEL, 0);
+> +
+> +	ret = meson_get_irqs(md, node);
+> +	if (ret)
+> +		return ret;
+> +
+> +	parent_domain = irq_find_host(parent);
+> +	if (!parent_domain)
+> +		return -ENXIO;
+> +
+> +	meson_irq_domain = irq_domain_add_hierarchy(parent_domain, 0, 2 * 256,
+> +						    node, &meson_irq_ops, md);
+
+While I understand why you reserve twice the numbers on logical interrupts,
+please add a define for 256 and add a comment in the head of the driver explaining why
+and how do you can handle the IRQ_BOTH in the pinctrl driver or elsewhere.
+
+
+> +
+> +	return meson_irq_domain ? 0 : -EINVAL;
+> +}
+> +
+> +IRQCHIP_DECLARE(meson_gpio_irq, "amlogic,meson-gpio-intc", meson_gpio_irq_init);
+> 
+
+Thanks,
+Neil
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
