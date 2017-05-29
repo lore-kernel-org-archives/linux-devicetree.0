@@ -1,51 +1,42 @@
-From: Bogdan Purcareata <bogdan.purcareata@nxp.com>
-Subject: [PATCH v4 0/2] net: phy: Support managed Cortina phys
-Date: Mon, 29 May 2017 09:11:29 +0000
-Message-ID: <1496049091-4637-1-git-send-email-bogdan.purcareata@nxp.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/7] dmaengine: use proper name for the R-Car SoC
+Date: Mon, 29 May 2017 11:12:43 +0200
+Message-ID: <CAMuHMdV9iU2vK+ae1vPET83Ck5UVzs-kVQJVgFeEA8aUi8vZ5Q@mail.gmail.com>
+References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com> <20170528093051.11816-2-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170528093051.11816-2-wsa+renesas@sang-engineering.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-So far, the Cortina family phys (CS4340 in this particular case) are only
-supported in fixed link mode (via fixed_phy_register). The generic 10G
-phy driver does not work well with the phylib state machine, when the phy
-is registered via of_phy_connect. This prohibits the user from describing the
-phy nodes in the device tree.
+On Sun, May 28, 2017 at 11:30 AM, Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+> It is 'R-Car', not 'r-car'. No code or binding changes, only descriptive text.
+>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-In order to support this scenario, and to properly describe the board
-device tree, add a minimal Cortina driver that reads the status from the
-right register. With the generic 10G C45 driver, the kernel will print
-messages like:
-[    0.226521] mdio_bus 8b96000: Error while reading PHY16 reg at 1.6
-[    0.232780] mdio_bus 8b96000: Error while reading PHY16 reg at 1.5
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-v3 -> v4:
-- Add trademark info.
-- Minor documentation entry consistency nit.
+> --- a/Documentation/devicetree/bindings/dma/shdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/shdma.txt
+> @@ -1,6 +1,6 @@
+>  * SHDMA Device Tree bindings
+>
+> -Sh-/r-mobile and r-car systems often have multiple identical DMA controller
+> +Sh-/r-mobile and R-Car systems often have multiple identical DMA controller
 
-v2 -> v3:
-- Add documentation entry.
+I'd fix "SH/R-Mobile" too, while at it.
 
-v1 -> v2:
-- Change approach for getting the phy_id from hacking get_phy_c45_ids to
-  describing the device in the device tree via ethernet-phy-id.
+Gr{oetje,eeting}s,
 
-More patch version changes per individual patches.
+                        Geert
 
-Bogdan Purcareata (2):
-  net: phy: Add Cortina CS4340 driver
-  dt-bindings: net: Add Cortina device tree bindings
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
- Documentation/devicetree/bindings/net/cortina.txt |  21 ++++
- drivers/net/phy/Kconfig                           |   5 +
- drivers/net/phy/Makefile                          |   1 +
- drivers/net/phy/cortina.c                         | 118 ++++++++++++++++++++++
- 4 files changed, 145 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/cortina.txt
- create mode 100644 drivers/net/phy/cortina.c
-
--- 
-1.9.1
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
