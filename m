@@ -1,90 +1,211 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [RFC v2 3/3] dt: bindings: Add a binding for referencing EEPROM
- from camera sensors
-Date: Mon, 29 May 2017 16:05:24 +0300
-Message-ID: <20170529130524.GF29527@valkosipuli.retiisi.org.uk>
-References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
- <20170508172418.zha3eyfsnuricfjk@rob-hp-laptop>
- <20170529122004.GE29527@valkosipuli.retiisi.org.uk>
- <c7a98681-4c95-0103-96ee-97ca6a02d9b3@zonque.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 06/10] pinctrl: sunxi: add support of R40 to A10
+ pinctrl driver
+Date: Mon, 29 May 2017 21:11:00 +0800
+Message-ID: <20170529131100.a56rv3e5z3kpcxuo@wens.csie.org>
+References: <20170527102308.1988-1-icenowy@aosc.io>
+ <20170527102308.1988-7-icenowy@aosc.io>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c7a98681-4c95-0103-96ee-97ca6a02d9b3-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
+In-Reply-To: <20170527102308.1988-7-icenowy@aosc.io>
+Sender: linux-doc-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
-
-On Mon, May 29, 2017 at 02:39:01PM +0200, Daniel Mack wrote:
-> On 05/29/2017 02:20 PM, Sakari Ailus wrote:
-> > On Mon, May 08, 2017 at 12:24:18PM -0500, Rob Herring wrote:
-> >> On Fri, May 05, 2017 at 11:48:30AM +0300, Sakari Ailus wrote:
-> >>> Many camera sensor devices contain EEPROM chips that describe the
-> >>> properties of a given unit --- the data is specific to a given unit can
-> >>> thus is not stored e.g. in user space or the driver.
-> >>>
-> >>> Some sensors embed the EEPROM chip and it can be accessed through the
-> >>> sensor's I2C interface. This property is to be used for devices where the
-> >>> EEPROM chip is accessed through a different I2C address than the sensor.
-> >>
-> >> Different I2C address or bus? We already have i2c bindings for sub 
-> >> devices downstream of another I2C device. Either the upstream device 
-> >> passes thru the I2C transactions or itself is an I2C controller with a 
-> >> separate downstream bus. For those cases the EEPROM should be a child 
-> >> node. A phandle only makes sense if you have the sensor and eeprom 
-> >> connected to 2 entirely separate host buses.
-> > 
-> > Right. It's a different address but located in the same package with the
-> > module, just like the lens. I should have actually said "module", not the
-> > "sensor".
-> > 
-> > The EEPROM integration to the module is done by the module vendor, but it's
-> > entirely possible to have another module vendor to use the sensor but not
-> > add an EEPROM or use a different EEPROM. It is also possible that the EEPROM
-> > is on the same silicon with the sensor, then it's always guaranteed to be
-> > there.
-> > 
-> > The bottom line is still that a sensor is simply one of the component in a
-> > camera module; the rest of the module (lens, eeprom etc.) is not defined by
-> > the sensor, the parts are rather picked by the module vendor. Yet the sensor
-> > is a central piece in a module: it's always guaranteed to be there or it's
-> > not a camera module.
+On Sat, May 27, 2017 at 06:23:04PM +0800, Icenowy Zheng wrote:
+> R40 is said to be an upgrade of A20, and its pin configuration is also
+> similar to A20 (and thus similar to A10).
 > 
-> I agree, yes. I think the only way to solve this is to have a generic
-> EEPROM API that allows the camera sensor to read data from it. If
-
-We have one already, and it's defined in Documentation/misc-devices/eeprom .
-
-> another vendor uses a different type of EEPROM, the sensor driver would
-> remain the same, as it only reads data from the storage behind the
-> phandle, not caring about the details.
+> Add support for R40 to the A10 pinctrl driver.
 > 
-> Same goes for the lens driver, and after thinking about it for awhile,
-> I'd say it makes most sense to allow referencing a v4l2_subdev device
-> through a phandle from another v4l2_subdev, and then offload certain
-> commands such as V4L2_CID_FOCUS_ABSOLUTE to the device that does the
-> actual work. Opinions?
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+>  drivers/pinctrl/sunxi/Kconfig             |   2 +-
+>  drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c | 272 +++++++++++++++++++++---------
+>  2 files changed, 197 insertions(+), 77 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kconfig
+> index 624d84e6c936..9d01da3b90bd 100644
+> --- a/drivers/pinctrl/sunxi/Kconfig
+> +++ b/drivers/pinctrl/sunxi/Kconfig
+> @@ -7,7 +7,7 @@ config PINCTRL_SUNXI
+>  	select GPIOLIB
+>  
+>  config PINCTRL_SUN4I_A10
+> -	def_bool MACH_SUN4I || MACH_SUN7I
+> +	def_bool MACH_SUN4I || MACH_SUN7I || MACH_SUN8I
+>  	select PINCTRL_SUNXI
+>  
+>  config PINCTRL_SUN5I
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c b/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c
+> index 159580c04b14..0f6ca8391ea7 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c
 
-There are different kinds of lens systems and I don't think the sensor
-drivers should be aware of them. The current approach is that the lens is a
-separate sub-device --- the intent of the patchset I posted was to document
-how the information on the related lens and eeprom components is conveyed to
-the software. There's one such driver in the mainline kernel, ad5820.
+[...]
 
-Unfortunately we don't right now have a good user space interface for
-telling which sensor a lens device is related to. The struct
-media_entity_desc does have a group_id field for grouping the sub-devices
-but that's hardly a good way to describe this.
+> @@ -162,14 +183,19 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] = {
+>  		  SUNXI_FUNCTION(0x3, "can"),		/* RX */
+>  		  SUNXI_FUNCTION(0x4, "uart1"),		/* RING */
+>  		  SUNXI_FUNCTION_VARIANT(0x5, "gmac",	/* GNULL / ETXERR */
+> -					 PINCTRL_SUN7I_A20),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40),
+>  		  SUNXI_FUNCTION_VARIANT(0x6, "i2s1",	/* DI */
+> -					 PINCTRL_SUN7I_A20)),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40)),
+>  	/* Hole */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 0),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> -		  SUNXI_FUNCTION(0x2, "i2c0")),		/* SCK */
+> +		  SUNXI_FUNCTION(0x2, "i2c0"),		/* SCK */
+> +		  SUNXI_FUNCTION_VARIANT(0x3,
+> +					 "pll-lock-dbg",
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can you stick to underscores to be consistent?
+
+> +					 PINCTRL_SUN8I_R40)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 1),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> @@ -177,11 +203,19 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] = {
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> -		  SUNXI_FUNCTION(0x2, "pwm")),		/* PWM0 */
+> +		  SUNXI_FUNCTION_VARIANT(0x2, "pwm",	/* PWM0 */
+> +					 PINCTRL_SUN4I_A10 |
+> +					 PINCTRL_SUN7I_A20),
+> +		  SUNXI_FUNCTION_VARIANT(0x3, "pwm",	/* PWM0 */
+> +					 PINCTRL_SUN8I_R40)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 3),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> -		  SUNXI_FUNCTION(0x2, "ir0"),		/* TX */
+> +		  SUNXI_FUNCTION_VARIANT(0x2, "ir0",	/* TX */
+> +					 PINCTRL_SUN4I_A10 |
+> +					 PINCTRL_SUN7I_A20),
+> +		  SUNXI_FUNCTION_VARIANT(0x3, "pwm0",	/* PWM1 */
+
+The numbering is wrong. Just drop the number altogether, like all the
+other instances.
+
+> +					 PINCTRL_SUN8I_R40),
+>  		/*
+>  		 * The SPDIF block is not referenced at all in the A10 user
+>  		 * manual. However it is described in the code leaked and the
+> @@ -205,7 +239,8 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] = {
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s",	/* MCLK */
+>  					 PINCTRL_SUN4I_A10),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s0",	/* MCLK */
+> -					 PINCTRL_SUN7I_A20),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40),
+
+Maybe we could use "i2s" instead, like on the A10. I don't know where
+i2s1 is used, but it certainly isn't routed outside the SoC, and i2s2
+looks like it's for dw-hdmi's audio path.
+
+>  		  SUNXI_FUNCTION(0x3, "ac97")),		/* MCLK */
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+
+[...]
+
+> @@ -237,31 +275,41 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] = {
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s",	/* DO1 */
+>  					 PINCTRL_SUN4I_A10),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s0",	/* DO1 */
+> -					 PINCTRL_SUN7I_A20)),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40),
+> +		  SUNXI_FUNCTION_VARIANT(0x4, "pwm",	/* PWM6 */
+> +					 PINCTRL_SUN8I_R40)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 10),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s",	/* DO2 */
+>  					 PINCTRL_SUN4I_A10),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s0",	/* DO2 */
+> -					 PINCTRL_SUN7I_A20)),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40),
+> +		  SUNXI_FUNCTION_VARIANT(0x4, "pwm",	/* PWM7 */
+> +					 PINCTRL_SUN8I_R40)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 11),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s",	/* DO3 */
+>  					 PINCTRL_SUN4I_A10),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s0",	/* DO3 */
+> -					 PINCTRL_SUN7I_A20)),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 12),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s",	/* DI */
+>  					 PINCTRL_SUN4I_A10),
+>  		  SUNXI_FUNCTION_VARIANT(0x2, "i2s0",	/* DI */
+> -					 PINCTRL_SUN7I_A20),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40),
+>  		  SUNXI_FUNCTION(0x3, "ac97"),		/* DI */
+>  		/* Undocumented mux function on A10 - See SPDIF MCLK above */
+> -		  SUNXI_FUNCTION(0x4, "spdif")),        /* SPDIF IN */
+> +		  SUNXI_FUNCTION_VARIANT(0x4, "spdif",	/* SPDIF IN */
+> +					 PINCTRL_SUN4I_A10 |
+> +					 PINCTRL_SUN7I_A20)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 13),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+> @@ -308,7 +356,9 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] = {
+
+You missed PWM4 and PWM5 on pins PB20 and PB21.
+
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+>  		  SUNXI_FUNCTION(0x2, "uart0"),		/* TX */
+> -		  SUNXI_FUNCTION(0x3, "ir1")),		/* TX */
+> +		  SUNXI_FUNCTION_VARIANT(0x3, "ir1",	/* TX */
+> +					 PINCTRL_SUN4I_A10 |
+> +					 PINCTRL_SUN7I_A20)),
+>  	SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 23),
+>  		  SUNXI_FUNCTION(0x0, "gpio_in"),
+>  		  SUNXI_FUNCTION(0x1, "gpio_out"),
+
+[...]
+
+> @@ -916,7 +1000,10 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] = {
+>  		  SUNXI_FUNCTION_VARIANT(0x3, "pata",	/* ATAD12 */
+>  					 PINCTRL_SUN4I_A10),
+>  		  SUNXI_FUNCTION_VARIANT(0x3, "emac",	/* ETXD1 */
+> -					 PINCTRL_SUN7I_A20),
+> +					 PINCTRL_SUN7I_A20 |
+> +					 PINCTRL_SUN8I_R40),
+> +		  SUNXI_FUNCTION_VARIANT(0x5, "sim",	/* DET */
+> +					 PINCTRL_SUN8I_R40),
+
+This is available on all 3 variants.
+
+Should we consider sending a fix for this first? The hardware backing
+this pin is not supported, but it would be less confusing to fix it
+first instead of introducing a function for all variants in a patch
+supposedly for just the R40.
+
+>  		  SUNXI_FUNCTION(0x4, "keypad"),	/* IN6 */
+>  		  SUNXI_FUNCTION_IRQ(0x6, 16),		/* EINT16 */
+>  		  SUNXI_FUNCTION(0x7, "csi1")),		/* D16 */
+
+[...]
+
+Looks good otherwise.
+
+
+Regards
+ChenYu
