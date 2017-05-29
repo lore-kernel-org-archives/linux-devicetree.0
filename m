@@ -1,72 +1,90 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH v2 3/4] arm64: dts: mt7622: add dts file for MT7622 reference board variant 1
-Date: Mon, 29 May 2017 20:56:03 +0800
-Message-ID: <83844be0407c4db170235c52f013b20a729e3382.1496061587.git.sean.wang@mediatek.com>
-References: <cover.1496061587.git.sean.wang@mediatek.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [RFC v2 3/3] dt: bindings: Add a binding for referencing EEPROM
+ from camera sensors
+Date: Mon, 29 May 2017 16:05:24 +0300
+Message-ID: <20170529130524.GF29527@valkosipuli.retiisi.org.uk>
+References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
+ <20170508172418.zha3eyfsnuricfjk@rob-hp-laptop>
+ <20170529122004.GE29527@valkosipuli.retiisi.org.uk>
+ <c7a98681-4c95-0103-96ee-97ca6a02d9b3@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1496061587.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <c7a98681-4c95-0103-96ee-97ca6a02d9b3-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+Hi Daniel,
 
-Add the support for the MT7622 reference board variant 1 from
-MediaTek.
+On Mon, May 29, 2017 at 02:39:01PM +0200, Daniel Mack wrote:
+> On 05/29/2017 02:20 PM, Sakari Ailus wrote:
+> > On Mon, May 08, 2017 at 12:24:18PM -0500, Rob Herring wrote:
+> >> On Fri, May 05, 2017 at 11:48:30AM +0300, Sakari Ailus wrote:
+> >>> Many camera sensor devices contain EEPROM chips that describe the
+> >>> properties of a given unit --- the data is specific to a given unit can
+> >>> thus is not stored e.g. in user space or the driver.
+> >>>
+> >>> Some sensors embed the EEPROM chip and it can be accessed through the
+> >>> sensor's I2C interface. This property is to be used for devices where the
+> >>> EEPROM chip is accessed through a different I2C address than the sensor.
+> >>
+> >> Different I2C address or bus? We already have i2c bindings for sub 
+> >> devices downstream of another I2C device. Either the upstream device 
+> >> passes thru the I2C transactions or itself is an I2C controller with a 
+> >> separate downstream bus. For those cases the EEPROM should be a child 
+> >> node. A phandle only makes sense if you have the sensor and eeprom 
+> >> connected to 2 entirely separate host buses.
+> > 
+> > Right. It's a different address but located in the same package with the
+> > module, just like the lens. I should have actually said "module", not the
+> > "sensor".
+> > 
+> > The EEPROM integration to the module is done by the module vendor, but it's
+> > entirely possible to have another module vendor to use the sensor but not
+> > add an EEPROM or use a different EEPROM. It is also possible that the EEPROM
+> > is on the same silicon with the sensor, then it's always guaranteed to be
+> > there.
+> > 
+> > The bottom line is still that a sensor is simply one of the component in a
+> > camera module; the rest of the module (lens, eeprom etc.) is not defined by
+> > the sensor, the parts are rather picked by the module vendor. Yet the sensor
+> > is a central piece in a module: it's always guaranteed to be there or it's
+> > not a camera module.
+> 
+> I agree, yes. I think the only way to solve this is to have a generic
+> EEPROM API that allows the camera sensor to read data from it. If
 
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
----
- arch/arm64/boot/dts/mediatek/Makefile        |  1 +
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 27 +++++++++++++++++++++++++++
- 2 files changed, 28 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+We have one already, and it's defined in Documentation/misc-devices/eeprom .
 
-diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-index 9fbfd32..e71456a2 100644
---- a/arch/arm64/boot/dts/mediatek/Makefile
-+++ b/arch/arm64/boot/dts/mediatek/Makefile
-@@ -1,5 +1,6 @@
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
-+dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
- dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-new file mode 100644
-index 0000000..c08309d
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright (c) 2017 MediaTek Inc.
-+ * Author: Ming Huang <ming.huang@mediatek.com>
-+ *	   Sean Wang <sean.wang@mediatek.com>
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+ */
-+
-+/dts-v1/;
-+#include "mt7622.dtsi"
-+
-+/ {
-+	model = "MediaTek MT7622 RFB1 board";
-+	compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n1";
-+	};
-+
-+	memory {
-+		reg = <0 0x40000000 0 0x3F000000>;
-+	};
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
+> another vendor uses a different type of EEPROM, the sensor driver would
+> remain the same, as it only reads data from the storage behind the
+> phandle, not caring about the details.
+> 
+> Same goes for the lens driver, and after thinking about it for awhile,
+> I'd say it makes most sense to allow referencing a v4l2_subdev device
+> through a phandle from another v4l2_subdev, and then offload certain
+> commands such as V4L2_CID_FOCUS_ABSOLUTE to the device that does the
+> actual work. Opinions?
+
+There are different kinds of lens systems and I don't think the sensor
+drivers should be aware of them. The current approach is that the lens is a
+separate sub-device --- the intent of the patchset I posted was to document
+how the information on the related lens and eeprom components is conveyed to
+the software. There's one such driver in the mainline kernel, ad5820.
+
+Unfortunately we don't right now have a good user space interface for
+telling which sensor a lens device is related to. The struct
+media_entity_desc does have a group_id field for grouping the sub-devices
+but that's hardly a good way to describe this.
+
 -- 
-1.9.1
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
