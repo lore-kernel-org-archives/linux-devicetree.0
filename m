@@ -1,91 +1,117 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: sun8i: v3s: add backlight device node for
- Lichee Pi Zero LCD
-Date: Mon, 29 May 2017 09:41:17 +0200
-Message-ID: <20170529074117.x7pm2k2lbznl2n5j@flea.home>
-References: <20170524121320.4171-1-icenowy@aosc.io>
- <20170524121320.4171-3-icenowy@aosc.io>
+From: Fabien DESSENNE <fabien.dessenne-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v3 2/5] crypto : stm32 - Add STM32F4 CRC32 support
+Date: Mon, 29 May 2017 07:56:48 +0000
+Message-ID: <efdd669a-2df6-f7fa-849b-e1c7057ae666@st.com>
+References: <cover.1495463449.git.cosardindar@gmail.com>
+ <3c520bbef98c630ca7de609f8ec27405e2ac07d4.1495463449.git.cosardindar@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5wqwd53k2xnqrp6s"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170524121320.4171-3-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <3c520bbef98c630ca7de609f8ec27405e2ac07d4.1495463449.git.cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
+Content-ID: <58173B46F577A94CB9B621165C5FAB39-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Cosar Dindar <cosardindar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org" <herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org>
+Cc: "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, "linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---5wqwd53k2xnqrp6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, May 24, 2017 at 08:13:20PM +0800, Icenowy Zheng wrote:
-> The 40-pin LCD connector on Lichee Pi Zero has backlight pins, which is
-> controlled by the PWM0 controller of the V3s SoC, and the controlling
-> part is on the board.
->=20
-> Add the PWM and backlight device nodes in the device tree file, but
-> leave them disabled, as they can only be useful when the LCD is
-> attached. The LCD device tree overlay files can enable these controllers
-> and make use of them.
->=20
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts b/arch/arm/boo=
-t/dts/sun8i-v3s-licheepi-zero.dts
-> index 387fc2aa546d..e0721bf725d1 100644
-> --- a/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> +++ b/arch/arm/boot/dts/sun8i-v3s-licheepi-zero.dts
-> @@ -52,6 +52,14 @@
->  		serial0 =3D &uart0;
->  	};
-> =20
-> +	backlight: backlight {
-> +		compatible =3D "pwm-backlight";
-> +		pwms =3D <&pwm 0 50000 0>;
-> +		brightness-levels =3D <0 10 20 30 40 50 60 70 80 90 100>;
-
-This is unlikely, the perceived brightness by the human eye is not
-linear, and is actually much closer to a logarithmic function, which
-means you should have use an exponential function here in order to
-appear that your brightness increase is linear.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---5wqwd53k2xnqrp6s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZK9CdAAoJEBx+YmzsjxAgnjEP/3kMRCu2TrZGKXooUBafXaVS
-CvFj+rGvwL1/7K81G9M8898kJ6nWgM3VQsRp6s371dy3pi59XTS0nhCXrwifrvMu
-BEfAAtWDSTAU9xb7NyXJPlOKtwvrx4RSCOSCBFn3i4f/8TvyrBCen6m7RW7MgzUN
-XFHX9egPGg1dQi/OIRc0Up0Uc2hFk5msFG71StM6/ICciBXSVirCjGOmhQE+R+Mr
-iceZ24OIlP5COroEDKIOJhlvQ+B4wVjtBp089RsLjVEJkEUhuV7YrN38W2v+K1kW
-olPt+NN608aUghOadyn1XkrbCIoezY3Cw8/JvSzUTpMmJyL22kBdX9uSVDdtlYp2
-U5DoTgbyaela6yQS8vy6U62mwaEMITSBOOrzVHRdkmZux/PT/4BvGQ3BzEK3VLsV
-agBse6zkvD07RqrlS89gMxGpJVadmm1p2CcfqKPNgAeTmuGDOmXyQ843ZJxTzRbo
-Fs+04KwJuXet0eeqYSTreF6ut8wBUtZwpNVeja7IkGex6wHedqBzqNPh0CxxiEA3
-xAL/8Pq5o+s2odoUQxkihOOu+ypRcYVOMbD4BeNaIPp2uJmYRSI48+BveG9ZdVM5
-9c3nBP3NgumqRhE9w3W0cjaVDFZ1f8sZ6MNcO1a/hDNQHYJa0Zuhz3lyCdvtzzai
-mUYkvwfZgYMUVQ9pn7w0
-=qtVZ
------END PGP SIGNATURE-----
-
---5wqwd53k2xnqrp6s--
+SGkgQ29zYXIsDQoNClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoDQoNCk9uIDIyLzA1LzE3IDE2OjM0
+LCBDb3NhciBEaW5kYXIgd3JvdGU6DQo+IFRoaXMgcGF0Y2ggYWRkcyBDUkMgKENSQzMyIENyeXB0
+bykgc3VwcG9ydCBmb3IgU1RNMzJGNCBzZXJpZXMuDQo+DQo+IEFzIGFuIGhhcmR3YXJlIGxpbWl0
+YXRpb24gcG9seW5vbWlhbCBhbmQga2V5IHNldHRpbmcgYXJlIG5vdCBzdXBwb3J0ZWQuDQo+IFRo
+ZXkgYXJlIGZpeGVkIGFzIDB4NEMxMURCNyAocG9seSkgYW5kIDB4RkZGRkZGRkYgKGtleSkuDQo+
+IENSQzMyQyBDYXN0YWdub2xpIGFsZ29yaXRobSBpcyBub3QgdXNlZC4NCj4NCj4gU2lnbmVkLW9m
+Zi1ieTogQ29zYXIgRGluZGFyIDxjb3NhcmRpbmRhckBnbWFpbC5jb20+DQo+IC0tLQ0KPiAgIGRy
+aXZlcnMvY3J5cHRvL3N0bTMyL3N0bTMyX2NyYzMyLmMgfCA2OCArKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKy0tLS0tLQ0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA1OCBpbnNlcnRpb25zKCsp
+LCAxMCBkZWxldGlvbnMoLSkNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY3J5cHRvL3N0bTMy
+L3N0bTMyX2NyYzMyLmMgYi9kcml2ZXJzL2NyeXB0by9zdG0zMi9zdG0zMl9jcmMzMi5jDQo+IGlu
+ZGV4IGVjODNiMWUuLjEyZmJkOTggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvY3J5cHRvL3N0bTMy
+L3N0bTMyX2NyYzMyLmMNCj4gKysrIGIvZHJpdmVycy9jcnlwdG8vc3RtMzIvc3RtMzJfY3JjMzIu
+Yw0KPiBAQCAtNyw2ICs3LDcgQEANCj4gICAjaW5jbHVkZSA8bGludXgvYml0cmV2Lmg+DQo+ICAg
+I2luY2x1ZGUgPGxpbnV4L2Nsay5oPg0KPiAgICNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4NCj4g
+KyNpbmNsdWRlIDxsaW51eC9vZi5oPg0KPiAgICNpbmNsdWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZp
+Y2UuaD4NCj4gICANCj4gICAjaW5jbHVkZSA8Y3J5cHRvL2ludGVybmFsL2hhc2guaD4NCj4gQEAg
+LTM5LDYgKzQwLDkgQEAgc3RydWN0IHN0bTMyX2NyYyB7DQo+ICAgCXN0cnVjdCBjbGsgICAgICAg
+KmNsazsNCj4gICAJdTggICAgICAgICAgICAgICBwZW5kaW5nX2RhdGFbc2l6ZW9mKHUzMildOw0K
+PiAgIAlzaXplX3QgICAgICAgICAgIG5iX3BlbmRpbmdfYnl0ZXM7DQo+ICsJYm9vbCAgICAgICAg
+ICAgICBrZXlfc3VwcG9ydDsNCj4gKwlib29sICAgICAgICAgICAgIHBvbHlfc3VwcG9ydDsNCj4g
+Kwlib29sICAgICAgICAgICAgIHJldmVyc2Vfc3VwcG9ydDsNCj4gICB9Ow0KPiAgIA0KPiAgIHN0
+cnVjdCBzdG0zMl9jcmNfbGlzdCB7DQo+IEBAIC0xMDYsMTMgKzExMCwzMSBAQCBzdGF0aWMgaW50
+IHN0bTMyX2NyY19pbml0KHN0cnVjdCBzaGFzaF9kZXNjICpkZXNjKQ0KPiAgIAl9DQo+ICAgCXNw
+aW5fdW5sb2NrX2JoKCZjcmNfbGlzdC5sb2NrKTsNCj4gICANCj4gLQkvKiBSZXNldCwgc2V0IGtl
+eSwgcG9seSBhbmQgY29uZmlndXJlIGluIGJpdCByZXZlcnNlIG1vZGUgKi8NCj4gLQl3cml0ZWwo
+Yml0cmV2MzIobWN0eC0+a2V5KSwgY3R4LT5jcmMtPnJlZ3MgKyBDUkNfSU5JVCk7DQo+IC0Jd3Jp
+dGVsKGJpdHJldjMyKG1jdHgtPnBvbHkpLCBjdHgtPmNyYy0+cmVncyArIENSQ19QT0wpOw0KPiAt
+CXdyaXRlbChDUkNfQ1JfUkVTRVQgfCBDUkNfQ1JfUkVWRVJTRSwgY3R4LT5jcmMtPnJlZ3MgKyBD
+UkNfQ1IpOw0KPiArCS8qIHNldCBrZXkgKi8NCj4gKwlpZiAoY3R4LT5jcmMtPmtleV9zdXBwb3J0
+KSB7DQo+ICsJCXdyaXRlbChiaXRyZXYzMihtY3R4LT5rZXkpLCBjdHgtPmNyYy0+cmVncyArIENS
+Q19JTklUKTsNCj4gKwl9IGVsc2UgaWYgKG1jdHgtPmtleSAhPSBDUkNfSU5JVF9ERUZBVUxUKSB7
+DQo+ICsJCWRldl9lcnIoY3R4LT5jcmMtPmRldiwgIlVuc3VwcG9ydGVkIGtleSB2YWx1ZSEgU2hv
+dWxkIGJlOiAweCV4XG4iLA0KPiArCQkJQ1JDX0lOSVRfREVGQVVMVCk7DQo+ICsJCXJldHVybiAt
+RUlOVkFMOw0KPiArCX0NCj4gKw0KPiArCS8qIHNldCBwb2x5ICovDQo+ICsJaWYgKGN0eC0+Y3Jj
+LT5wb2x5X3N1cHBvcnQpDQo+ICsJCXdyaXRlbChiaXRyZXYzMihtY3R4LT5wb2x5KSwgY3R4LT5j
+cmMtPnJlZ3MgKyBDUkNfUE9MKTsNCj4gKw0KPiArCS8qIHJlc2V0IGFuZCBjb25maWd1cmUgaW4g
+Yml0IHJldmVyc2UgbW9kZSBpZiBzdXBwb3J0ZWQgKi8NCj4gKwlpZiAoY3R4LT5jcmMtPnJldmVy
+c2Vfc3VwcG9ydCkNCj4gKwkJd3JpdGVsKENSQ19DUl9SRVNFVCB8IENSQ19DUl9SRVZFUlNFLCBj
+dHgtPmNyYy0+cmVncyArIENSQ19DUik7DQo+ICsJZWxzZQ0KPiArCQl3cml0ZWwoQ1JDX0NSX1JF
+U0VULCBjdHgtPmNyYy0+cmVncyArIENSQ19DUik7DQo+ICsNCj4gKwkvKiBzdG9yZSBwYXJ0aWFs
+IHJlc3VsdCAqLw0KPiArCWlmICghY3R4LT5jcmMtPnJldmVyc2Vfc3VwcG9ydCkNCj4gKwkJY3R4
+LT5wYXJ0aWFsID0gYml0cmV2MzIocmVhZGwoY3JjLT5yZWdzICsgQ1JDX0RSKSk7DQo+ICsJZWxz
+ZQ0KPiArCQljdHgtPnBhcnRpYWwgPSByZWFkbChjdHgtPmNyYy0+cmVncyArIENSQ19EUik7DQo+
+ICAgDQo+IC0JLyogU3RvcmUgcGFydGlhbCByZXN1bHQgKi8NCj4gLQljdHgtPnBhcnRpYWwgPSBy
+ZWFkbChjdHgtPmNyYy0+cmVncyArIENSQ19EUik7DQo+ICAgCWN0eC0+Y3JjLT5uYl9wZW5kaW5n
+X2J5dGVzID0gMDsNCj4gICANCj4gICAJcmV0dXJuIDA7DQo+IEBAIC0xMzUsNyArMTU3LDEyIEBA
+IHN0YXRpYyBpbnQgc3RtMzJfY3JjX3VwZGF0ZShzdHJ1Y3Qgc2hhc2hfZGVzYyAqZGVzYywgY29u
+c3QgdTggKmQ4LA0KPiAgIA0KPiAgIAkJaWYgKGNyYy0+bmJfcGVuZGluZ19ieXRlcyA9PSBzaXpl
+b2YodTMyKSkgew0KPiAgIAkJCS8qIFByb2Nlc3MgY29tcGxldGVkIHBlbmRpbmcgZGF0YSAqLw0K
+PiAtCQkJd3JpdGVsKCoodTMyICopY3JjLT5wZW5kaW5nX2RhdGEsIGNyYy0+cmVncyArIENSQ19E
+Uik7DQo+ICsJCQlpZiAoIWN0eC0+Y3JjLT5yZXZlcnNlX3N1cHBvcnQpDQo+ICsJCQkJd3JpdGVs
+KGJpdHJldjMyKCoodTMyICopY3JjLT5wZW5kaW5nX2RhdGEpLA0KPiArCQkJCSAgICAgICBjcmMt
+PnJlZ3MgKyBDUkNfRFIpOw0KPiArCQkJZWxzZQ0KPiArCQkJCXdyaXRlbCgqKHUzMiAqKWNyYy0+
+cGVuZGluZ19kYXRhLA0KPiArCQkJCSAgICAgICBjcmMtPnJlZ3MgKyBDUkNfRFIpOw0KPiAgIAkJ
+CWNyYy0+bmJfcGVuZGluZ19ieXRlcyA9IDA7DQo+ICAgCQl9DQo+ICAgCX0NCj4gQEAgLTE0Mywx
+MCArMTcwLDE2IEBAIHN0YXRpYyBpbnQgc3RtMzJfY3JjX3VwZGF0ZShzdHJ1Y3Qgc2hhc2hfZGVz
+YyAqZGVzYywgY29uc3QgdTggKmQ4LA0KPiAgIAlkMzIgPSAodTMyICopZDg7DQo+ICAgCWZvciAo
+aSA9IDA7IGkgPCBsZW5ndGggPj4gMjsgaSsrKQ0KPiAgIAkJLyogUHJvY2VzcyAzMiBiaXRzIGRh
+dGEgKi8NCj4gLQkJd3JpdGVsKCooZDMyKyspLCBjcmMtPnJlZ3MgKyBDUkNfRFIpOw0KPiArCQlp
+ZiAoIWN0eC0+Y3JjLT5yZXZlcnNlX3N1cHBvcnQpDQo+ICsJCQl3cml0ZWwoYml0cmV2MzIoKihk
+MzIrKykpLCBjcmMtPnJlZ3MgKyBDUkNfRFIpOw0KPiArCQllbHNlDQo+ICsJCQl3cml0ZWwoKihk
+MzIrKyksIGNyYy0+cmVncyArIENSQ19EUik7DQo+ICAgDQo+ICAgCS8qIFN0b3JlIHBhcnRpYWwg
+cmVzdWx0ICovDQo+IC0JY3R4LT5wYXJ0aWFsID0gcmVhZGwoY3JjLT5yZWdzICsgQ1JDX0RSKTsN
+Cj4gKwlpZiAoIWN0eC0+Y3JjLT5yZXZlcnNlX3N1cHBvcnQpDQo+ICsJCWN0eC0+cGFydGlhbCA9
+IGJpdHJldjMyKHJlYWRsKGNyYy0+cmVncyArIENSQ19EUikpOw0KPiArCWVsc2UNCj4gKwkJY3R4
+LT5wYXJ0aWFsID0gcmVhZGwoY3JjLT5yZWdzICsgQ1JDX0RSKTsNCj4gICANCj4gICAJLyogQ2hl
+Y2sgZm9yIHBlbmRpbmcgZGF0YSAobm9uIDMyIGJpdHMpICovDQo+ICAgCWxlbmd0aCAmPSAzOw0K
+PiBAQCAtMjQzLDYgKzI3Niw3IEBAIHN0YXRpYyBpbnQgc3RtMzJfY3JjX3Byb2JlKHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+ICAgCXN0cnVjdCBzdG0zMl9jcmMgKmNyYzsNCj4gICAJ
+c3RydWN0IHJlc291cmNlICpyZXM7DQo+ICAgCWludCByZXQ7DQo+ICsJaW50IGFsZ3Nfc2l6ZTsN
+Cj4gICANCj4gICAJY3JjID0gZGV2bV9remFsbG9jKGRldiwgc2l6ZW9mKCpjcmMpLCBHRlBfS0VS
+TkVMKTsNCj4gICAJaWYgKCFjcmMpDQo+IEBAIC0yNjksMTMgKzMwMywyNiBAQCBzdGF0aWMgaW50
+IHN0bTMyX2NyY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgIAkJcmV0
+dXJuIHJldDsNCj4gICAJfQ0KPiAgIA0KPiArCS8qIHNldCBrZXksIHBvbHkgYW5kIHJldmVyc2Ug
+c3VwcG9ydCBpZiBkZXZpY2UgaXMgb2YgRjcgc2VyaWVzICovDQo+ICsJaWYgKG9mX2RldmljZV9p
+c19jb21wYXRpYmxlKGNyYy0+ZGV2LT5vZl9ub2RlLCAic3Qsc3RtMzJmNy1jcmMiKSkgew0KPiAr
+CQljcmMtPmtleV9zdXBwb3J0ID0gdHJ1ZTsNCj4gKwkJY3JjLT5wb2x5X3N1cHBvcnQgPSB0cnVl
+Ow0KPiArCQljcmMtPnJldmVyc2Vfc3VwcG9ydCA9IHRydWU7DQo+ICsJfQ0KPiArDQo+ICAgCXBs
+YXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIGNyYyk7DQo+ICAgDQo+ICAgCXNwaW5fbG9jaygmY3Jj
+X2xpc3QubG9jayk7DQo+ICAgCWxpc3RfYWRkKCZjcmMtPmxpc3QsICZjcmNfbGlzdC5kZXZfbGlz
+dCk7DQo+ICAgCXNwaW5fdW5sb2NrKCZjcmNfbGlzdC5sb2NrKTsNCj4gICANCj4gLQlyZXQgPSBj
+cnlwdG9fcmVnaXN0ZXJfc2hhc2hlcyhhbGdzLCBBUlJBWV9TSVpFKGFsZ3MpKTsNCj4gKwkvKiBG
+b3IgRjQgc2VyaWVzIG9ubHkgQ1JDMzIgYWxnb3JpdGhtIHdpbGwgYmUgdXNlZCAqLw0KPiArCWlm
+IChvZl9kZXZpY2VfaXNfY29tcGF0aWJsZShjcmMtPmRldi0+b2Zfbm9kZSwgInN0LHN0bTMyZjQt
+Y3JjIikpDQo+ICsJCWFsZ3Nfc2l6ZSA9IDE7DQo+ICsJZWxzZQ0KPiArCQlhbGdzX3NpemUgPSBB
+UlJBWV9TSVpFKGFsZ3MpOw0KPiArDQo+ICsJcmV0ID0gY3J5cHRvX3JlZ2lzdGVyX3NoYXNoZXMo
+YWxncywgYWxnc19zaXplKTsNCj4gICAJaWYgKHJldCkgew0KPiAgIAkJZGV2X2VycihkZXYsICJG
+YWlsZWQgdG8gcmVnaXN0ZXJcbiIpOw0KPiAgIAkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGNyYy0+
+Y2xrKTsNCj4gQEAgLTMwNCw2ICszNTEsNyBAQCBzdGF0aWMgaW50IHN0bTMyX2NyY19yZW1vdmUo
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gICANCj4gICBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG9mX2RldmljZV9pZCBzdG0zMl9kdF9pZHNbXSA9IHsNCj4gICAJeyAuY29tcGF0aWJsZSA9
+ICJzdCxzdG0zMmY3LWNyYyIsIH0sDQo+ICsJeyAuY29tcGF0aWJsZSA9ICJzdCxzdG0zMmY0LWNy
+YyIsIH0sDQo+ICAgCXt9LA0KPiAgIH07DQo+ICAgTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgc3Rt
+MzJfZHRfaWRzKTsNClJldmlld2VkLWJ5OiBGYWJpZW4gRGVzc2VubmUgPGZhYmllbi5kZXNzZW5u
+ZUBzdC5jb20+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
