@@ -1,88 +1,95 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: [PATCH v3] serial: 8250_of: Add reset support
-Date: Mon, 29 May 2017 19:27:52 +0930
-Message-ID: <20170529095753.1210-1-joel@jms.id.au>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 8/8] arm,arm64,drivers: add a prefix to drivers
+ arch_topology interfaces
+Date: Mon, 29 May 2017 11:58:18 +0200
+Message-ID: <20170529095818.GA9892@kroah.com>
+References: <20170420144316.15632-1-juri.lelli@arm.com>
+ <20170420144316.15632-9-juri.lelli@arm.com>
+ <20170525131802.GE16244@kroah.com>
+ <20170526101032.2t2xn5wrfenimu5w@e106622-lin>
+ <20170526183610.GB16490@kroah.com>
+ <bcc2f8f1-e953-9f32-2aa2-e660b0351e0a@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <bcc2f8f1-e953-9f32-2aa2-e660b0351e0a@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Juri Lelli <juri.lelli@arm.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the hooks for an optional reset controller in the 8250 device
-tree node.
+On Mon, May 29, 2017 at 11:20:24AM +0200, Dietmar Eggemann wrote:
+> Hi Greg,
+> 
+> On 05/26/2017 08:36 PM, Greg KH wrote:
+> > On Fri, May 26, 2017 at 11:10:32AM +0100, Juri Lelli wrote:
+> > > Hi,
+> > > 
+> > > On 25/05/17 15:18, Greg KH wrote:
+> > > > On Thu, Apr 20, 2017 at 03:43:16PM +0100, Juri Lelli wrote:
+> 
+> [...]
+> 
+> > > > But this is all really topology stuff, right?  Why use "capacity" at
+> > > > all:
+> > > > 	topology_normalize_cpu()
+> > > > 	topology_parse_cpu()
+> > > > 	topology_scale_cpu()
+> > > > 	topology_set_scale()
+> > > > ?
+> > > > 
+> > > > It's always best to put the "subsystem" name first, we have a bad
+> > > > history of getting this wrong in the past by putting the verb first, not
+> > > > the noun.
+> > > > 
+> > > 
+> > > topology_ works for me. However, I'd keep "capacity" in the names, as we
+> > > might need to topology_normalize_cpu_somethingelse() (etc.) in the
+> > > future?
+> > 
+> > Worry about the future, in the future.  Change the names then, _IF_ it
+> > becomes an issue.  Try to be short and simple please.
+> > 
+> > > Updated patch follows. I kept Catalin and Russell's acks as I only
+> > > renamed the functions, please shout if that's not OK.
+> > > 
+> > > Greg, if you are fine with this approach, do you still want a complete
+> > > v5 of the set or can you pick this up?
+> > 
+> > Am I the one who is supposed to take all of these arm-specific patches?
+> > If so, that's fine, but I need to have acks from the arm maintainers...
+> > 
+> > Oh, and drop "capacity" please :)
+> 
+> Once we have driver/base/arch_topology.c in, we want to enable (cpu
+> micro-architectural + max frequency (OPPmax)) invariant and frequency
+> (OPPmin..OPPmax) invariant load-tracking/accounting in the task scheduler
+> for arm and arm64.
+> 
+> The way to do this is to define the task scheduler interfaces
+> arch_scale_cpu_capacity() and arch_scale_freq_capacity() in arch specific
+> code:
+> 
+> #define arch_scale_cpu_capacity topology_scale_cpu_capacity
+> #define arch_scale_freq_capacity topology_scale_freq_capacity
+> 
+> In case an arch is not defining them, the default definitions in
+> kernel/sched/sched.h are used.
+> 
+> So topology_scale_cpu() wouldn't be correct since we scale the _capacity_ by
+> the micro-architectural differences (hence cpu) and not the cpu.
+> 
+> Likewise we will have a function topology_scale_freq_capacity indicating
+> that we scale the capacity by the frequency.
+> 
+> Or would you prefer something like topology_scale_capacity_by_cpu() and
+> topology_scale_capacity_by_freq()?
 
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-v3:
- - deassert reset after disabling clock in _remove to to match _setup
- order
+I think that if you are creating an api that the scheduler will use, you
+need to ask the scheduler maintainers/developers what they want to see
+here, as that would be up to them, not me...
 
-v2:
- Address Philipp's comments. Thanks for the review!
- - use _shared variant
- - remove unnecessary error handling
+thanks,
 
- Documentation/devicetree/bindings/serial/8250.txt |  1 +
- drivers/tty/serial/8250/8250_of.c                 | 10 ++++++++++
- 2 files changed, 11 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-index 10276a46ecef..63e32393f82b 100644
---- a/Documentation/devicetree/bindings/serial/8250.txt
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -45,6 +45,7 @@ Optional properties:
-   property.
- - tx-threshold: Specify the TX FIFO low water indication for parts with
-   programmable TX FIFO thresholds.
-+- resets : phandle + reset specifier pairs
- 
- Note:
- * fsl,ns16550:
-diff --git a/drivers/tty/serial/8250/8250_of.c b/drivers/tty/serial/8250/8250_of.c
-index 1cbadafc6889..0cf95fddccfc 100644
---- a/drivers/tty/serial/8250/8250_of.c
-+++ b/drivers/tty/serial/8250/8250_of.c
-@@ -19,11 +19,13 @@
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/clk.h>
-+#include <linux/reset.h>
- 
- #include "8250.h"
- 
- struct of_serial_info {
- 	struct clk *clk;
-+	struct reset_control *rst;
- 	int type;
- 	int line;
- };
-@@ -132,6 +134,13 @@ static int of_platform_serial_setup(struct platform_device *ofdev,
- 		}
- 	}
- 
-+	info->rst = devm_reset_control_get_optional_shared(&ofdev->dev, NULL);
-+	if (IS_ERR(info->rst))
-+		goto out;
-+	ret = reset_control_deassert(info->rst);
-+	if (ret)
-+		goto out;
-+
- 	port->type = type;
- 	port->uartclk = clk;
- 	port->flags = UPF_SHARE_IRQ | UPF_BOOT_AUTOCONF | UPF_IOREMAP
-@@ -229,6 +238,7 @@ static int of_platform_serial_remove(struct platform_device *ofdev)
- 
- 	serial8250_unregister_port(info->line);
- 
-+	reset_control_assert(info->rst);
- 	if (info->clk)
- 		clk_disable_unprepare(info->clk);
- 	kfree(info);
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+greg k-h
