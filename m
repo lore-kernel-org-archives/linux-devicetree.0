@@ -1,57 +1,63 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] ASoC: cs35l35: Add multi-device synchronisation
-Date: Mon, 29 May 2017 14:53:06 +0100
-Message-ID: <20170529135306.ldn74fwvfa4ots6a@sirena.org.uk>
-References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1495121559-1063-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V3 0/2] usb: introduce "trigger-sources" DT property for usbport trigger
+Date: Mon, 29 May 2017 16:01:39 +0200
+Message-ID: <20170529140142.13496-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="d2vaxkr65qoxswv7"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1495121559-1063-4-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+Sender: linux-leds-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
+From: Rafał Miłecki <rafal@milecki.pl>
 
---d2vaxkr65qoxswv7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi,
 
-On Thu, May 18, 2017 at 04:32:39PM +0100, Charles Keepax wrote:
+This is another try of adding relation between LEDs and devices to the DT (and
+usbport). I followed discussions in all old threads and came with this V3.
 
-> +	SOC_SINGLE_EXT("SYNC Audio", CS35L35_MULT_DEV_SYNCH2, 1, 1, 0,
-> +		       snd_soc_get_volsw, cs35l35_put_sync),
-> +	SOC_SINGLE_EXT("SYNC VPBR", CS35L35_MULT_DEV_SYNCH2, 2, 1, 0,
-> +		       snd_soc_get_volsw, cs35l35_put_sync),
-> +	SOC_SINGLE_EXT("SYNC OTW", CS35L35_MULT_DEV_SYNCH2, 3, 1, 0,
-> +		       snd_soc_get_volsw, cs35l35_put_sync),
+I'd epxect both patches to go through Greg's usb.git if accepted.
 
-I can't tell how this works.  It feels like this shouldn't just be being
-controlled from userspace but rather should be handled in some more
-standard fashion, or possibly as part of the platform integration but
-right now it's just some totally undocumented application managed
-controls.
+For a reference (and before someome comes with already rejected solution) see
+below history of this work:
 
---d2vaxkr65qoxswv7
-Content-Type: application/pgp-signature; name="signature.asc"
+1) [PATCH V2] leds: trigger: Introduce an USB port trigger
+My initial try of adding "usb-ports" property. Rob said it should be more
+generic.
 
------BEGIN PGP SIGNATURE-----
+2) [PATCH 1/2] dt-bindings: leds: document new usb-ports property
+Rob still didn't like it due to being USB specific.
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlksJ8EACgkQJNaLcl1U
-h9B8rgf+PyvVds5J2CnjxYc3K2vORzlaYvkQhoMxlYAfIR0I9P5qvEpu4tNZ1645
-rMcgoNYZPz6mh7MzKn0EdCnbXob//RpmW4wBGgPbDJpoKVa6do6y3qi5RghpIJDX
-nT3NYDHXI9qrWyym8BEQ0mh719tOxdkzJwXF3tc38BjZePiZDUoUwGVImt/XP9Zu
-aioNf826nO3cMd5RS5fWdTuLfwMc9y2TDoTYzBcUxfkeJpgE2WGgMmbW+Z7PsI8I
-70dVQULsT4cwgjrCIvHZ9Az+Wx+pYBz+04LDJweedWhIt27K0R/zYe5gj9YN1ELu
-zUOEX5ZmP9Lg0uETC2S9C8VcPOFuJg==
-=bEnA
------END PGP SIGNATURE-----
+3) [PATCH V2 1/2] dt-bindings: leds: document new led-triggers property
+Jacek didn't like it's more generic than what Linux can already support. Later
+we agreed (?) that Linux limitations shouldn't influence DT structure.
+Jacek still wanted a specific trigger but Rob said he won't accept something
+specific to the USB.
+Jacek suggested "trigger-sources" and Rob agreed on the name.
+Jacek suggested trying triggers as separated nodes.
 
---d2vaxkr65qoxswv7--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+4) [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+This patch was trying to use separated nodes for triggers, e.g.:
+foo-trigger { trigger-type = "foo"; };
+Rob didn't like this extra level of indirection. He said Linux drivers shouldn't
+define/influence the binding.
+
+So finally I came with this patchset. It doesn't try to use separated nodes for
+triggers anymore and it uses the name that was mostly accepted I think. It
+should be generic and not influenced by Linux design.
+
+Rafał Miłecki (3):
+  dt-bindings: leds: document new trigger-sources property
+  usb: core: read USB ports from DT in the usbport LED trigger driver
+  ARM: BCM53573: Specify ports for USB LED for Tenda AC9
+
+ Documentation/devicetree/bindings/leds/common.txt | 18 ++++++++
+ arch/arm/boot/dts/bcm47189-tenda-ac9.dts          |  1 +
+ arch/arm/boot/dts/bcm53573.dtsi                   |  4 ++
+ drivers/usb/core/ledtrig-usbport.c                | 55 +++++++++++++++++++++++
+ 4 files changed, 78 insertions(+)
+
+-- 
+2.11.0
