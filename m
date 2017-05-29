@@ -1,93 +1,45 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: reset: Add bindings for basic reset
- controller
-Date: Mon, 29 May 2017 11:09:19 +0200
-Message-ID: <1496048959.17695.20.camel@pengutronix.de>
-References: <20170526033214.8081-1-joel@jms.id.au>
-         <20170526033214.8081-2-joel@jms.id.au>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] gpio: arizona: Add support for GPIOs that need to
+ be maintained
+Date: Mon, 29 May 2017 11:09:29 +0200
+Message-ID: <CACRpkdaCcDKH=8u6XhbQ1C40stjJ15YdEjbzTD8rCC397ZXD_w@mail.gmail.com>
+References: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1495550852-3672-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170526033214.8081-2-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+In-Reply-To: <1495550852-3672-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joel,
+On Tue, May 23, 2017 at 4:47 PM, Charles Keepax
+<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
 
-On Fri, 2017-05-26 at 13:32 +1000, Joel Stanley wrote:
-> This adds the bindings documentation for a basic single-register reset
-> controller.
-> 
-> The bindings describe a single 32-bit register that contains up to 32
-> reset lines, each deasserted by clearing the appropriate bit in the
-> register.
+> The Arizona devices only maintain the state of output GPIOs whilst the
+> CODEC is active, this can cause issues if the CODEC suspends whilst
+> something is relying on the state of one of its GPIOs. However, in
+> many systems the CODEC GPIOs are used for audio related features
+> and thus the state of the GPIOs is unimportant whilst the CODEC is
+> suspended. Often keeping the CODEC resumed in such a system would
+> incur a power impact that is unacceptable.
 >
-> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> Allow the user to select whether a GPIO output should keep the
+> CODEC resumed, by adding a flag through the second cell of the GPIO
+> specifier in device tree.
+>
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
 > ---
->  .../devicetree/bindings/reset/reset-basic.txt      | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/reset-basic.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/reset-basic.txt b/Documentation/devicetree/bindings/reset/reset-basic.txt
-> new file mode 100644
-> index 000000000000..7341e04e7904
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/reset-basic.txt
-> @@ -0,0 +1,31 @@
-> +Basic single-register reset controller
-> +======================================
-> +
-> +This describes a generic reset controller where the reset lines are controlled
-> +by single bits within a 32-bit memory location. The memory location is assumed
-> +to be part of a syscon regmap.
+>
+> Changes since v1:
+>  - Use the new gpiolib features to determine if the pin is
+>    persistent or not.
 
-There are a few more assumptions. First, that the reset line is asserted
-by setting the corresponding bits, and that it is deasserted by clearing
-them. Further, that the bits are not auto-clearing. And then, that the
-same bit can be read back to provide the current reset line status.
+Patch applied!
 
-> +Reset controller required properties:
-> + - compatible: should be "reset-basic"
-> + - #reset-cells: must be set to 1
-> + - reg: reset register location within regmap
-> +
-> +Device node required properties:
-> + - resets phandle
-> + - bit number, counting from zero, for the desired reset line. Max is 31.
-> +
-> +Example:
-> +
-> +syscon {
-> +	compatible = "syscon";
-> +
-> +	uart_rest: rest@0c {
-
-The device node name should be "reset-controller", and leading zeroes
-should be dropped from the address part:
-
-	uart_rest: reset-controller@c {
-
-> +		compatible = "reset-basic";
-
-Maybe this is not necessary for the example, but the compatible should
-contain a vendor/hardware specific string first.
-
-> +		#reset-cells = <1>;
-> +		reg = <0x0c>;
-> +	};
-> +}
-> +
-> +&uart {
-> +	resets = <&uart_rest 0x04>;
-
-I'd use decimal here.
-
-regards
-Philipp
-
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
