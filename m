@@ -1,92 +1,109 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Subject: Re: [PATCH V3 1/2] dt-bindings: leds: document new trigger-sources property
-Date: Mon, 29 May 2017 22:12:35 +0200
-Message-ID: <CACna6rxFScBo_ak1iDJrbnjfTke4Ef6=pAO1V-Tt7hyM=1U8KA@mail.gmail.com>
-References: <20170529140142.13496-1-zajec5@gmail.com> <20170529140142.13496-2-zajec5@gmail.com>
- <c12584bf-f0ab-337e-a8e8-e66e88026735@gmail.com>
+From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RfC v4 4/6] ARM(64): dts: meson: add GPIO
+ interrupt-controller support
+Date: Mon, 29 May 2017 22:01:25 +0200
+Message-ID: <a7db5fa9-02b9-a26a-26ad-fdfcef0b9938@gmail.com>
+References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
+ <5294644a-967e-dba8-d287-d932b38244d1@gmail.com>
+ <860a50b5-3e7c-29d0-54fa-89bf2840e04e@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <c12584bf-f0ab-337e-a8e8-e66e88026735@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "open list:LED SUBSYSTEM" <linux-leds@vger.kernel.org>, Richard Purdie <rpurdie@rpsys.net>, Pavel Machek <pavel@ucw.cz>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <860a50b5-3e7c-29d0-54fa-89bf2840e04e-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29 May 2017 at 21:52, Jacek Anaszewski <jacek.anaszewski@gmail.com> wrot=
-e:
-> On 05/29/2017 04:01 PM, Rafa=C5=82 Mi=C5=82ecki wrote:
->> From: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->>
->> Some LEDs can be related to a specific device(s) described in the DT.
->> This property allows specifying such relations. E.g. USB LED should
->> usually be used to indicate some USB port(s) state.
->>
->> Please note this binding is designed to be generic and not influenced by
->> any operating system design. Linux developers may find "trigger" part a
->> bit confusing since in Linux triggers are separated drivers. It
->> shouldn't define the binding though (we shouldn't add an extra level of
->> indirection).
->>
->> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl>
->> ---
->> V2: Replace "usb-ports" with "led-triggers" property which is more gener=
-ic and
->>     allows specifying other devices as well.
->> V3: Use "trigger-sources" which is even more accurate as devices aren't
->>     precisely triggers.
->> ---
->>  Documentation/devicetree/bindings/leds/common.txt | 18 ++++++++++++++++=
-++
->>  1 file changed, 18 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documen=
-tation/devicetree/bindings/leds/common.txt
->> index 24b656014089..e6e300975a4c 100644
->> --- a/Documentation/devicetree/bindings/leds/common.txt
->> +++ b/Documentation/devicetree/bindings/leds/common.txt
->> @@ -49,6 +49,19 @@ Optional properties for child nodes:
->>  - panic-indicator : This property specifies that the LED should be used=
-,
->>                   if at all possible, as a panic indicator.
->>
->> +- trigger-sources : List of devices which should be used as a source tr=
-iggering
->> +                 this LED activity. Some LEDs can be related to a speci=
-fic
->> +                 device and should somehow indicate its state. E.g. USB=
- 2.0
->> +                 LED may react to device(s) in a USB 2.0 port(s).
->> +                 Another common example is switch or router with multip=
-le
->> +                 Ethernet ports each of them having its own LED assigne=
-d
->> +                 (assuming they are not hardwired). In such cases this
->> +                 property should contain phandle(s) of related source
->> +                 device(s).
->> +                 In many cases LED can be related to more than one devi=
-ce
->> +                 (e.g. one USB LED vs. multiple USB ports) so a list of
->> +                 sources can be specified.
->> +
->>  Required properties for flash LED child nodes:
->>  - flash-max-microamp : Maximum flash LED supply current in microamperes=
-.
->>  - flash-max-timeout-us : Maximum timeout in microseconds after which th=
-e flash
->> @@ -69,6 +82,11 @@ gpio-leds {
->>               linux,default-trigger =3D "heartbeat";
->>               gpios =3D <&gpio0 0 GPIO_ACTIVE_HIGH>;
->>       };
->> +
->> +     usb {
->> +             gpios =3D <&gpio0 1 GPIO_ACTIVE_HIGH>;
->> +             led-triggers =3D <&ohci_port1>, <&ehci_port1>;
->
-> Didn't you mean "trigger-sources" here instead?
+Am 29.05.2017 um 10:49 schrieb Neil Armstrong:
+> 
+> 
+> Please correct the subject to :
+> ARM64: dts: meson: add GPIO interrupt-controller support
+> 
+At first thanks for the review comments.
 
-Oh, thanks for catching that.
+I chose ARM(64) because Meson8 resides under arch/arm whilst Meson GX
+is under arch/arm64, and I didn't want to split it into two patches.
+If we change it to ARM64 then it may not fit for Meson8.
 
---=20
-Rafa=C5=82
+> On 05/28/2017 09:11 PM, Heiner Kallweit wrote:
+>> Add support for the GPIO interupt controller of certain Amlogic Meson
+>> Soc's.
+>>
+>> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/meson8.dtsi             | 8 ++++++++
+>>  arch/arm/boot/dts/meson8b.dtsi            | 8 ++++++++
+>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++++++
+>>  3 files changed, 24 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+>> index 69930773..b4c4175d 100644
+>> --- a/arch/arm/boot/dts/meson8.dtsi
+>> +++ b/arch/arm/boot/dts/meson8.dtsi
+>> @@ -126,6 +126,14 @@
+>>  };
+>>  
+>>  &cbus {
+>> +	gpio_intc: interrupt-controller@9880 {
+>> +		compatible = "amlogic,meson-gpio-intc";
+>> +		reg = <0x9880 0x10>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +		parent-interrupts = <64 65 66 67 68 79 70 71>;
+>> +	};
+>> +
+>>  	pinctrl_cbus: pinctrl@9880 {
+>>  		compatible = "amlogic,meson8-cbus-pinctrl";
+>>  		reg = <0x9880 0x10>;
+>> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+>> index d9f116a4..1bce64a6 100644
+>> --- a/arch/arm/boot/dts/meson8b.dtsi
+>> +++ b/arch/arm/boot/dts/meson8b.dtsi
+>> @@ -151,6 +151,14 @@
+>>  		interrupts = <0 0 1>;
+>>  	};
+>>  
+>> +	gpio_intc: interrupt-controller@9880 {
+>> +		compatible = "amlogic,meson-gpio-intc";
+>> +		reg = <0x9880 0x10>;
+>> +		interrupt-controller;
+>> +		#interrupt-cells = <2>;
+>> +		parent-interrupts = <64 65 66 67 68 79 70 71>;
+>> +	};
+>> +
+>>  	pinctrl_cbus: pinctrl@9880 {
+>>  		compatible = "amlogic,meson8b-cbus-pinctrl";
+>>  		reg = <0x9880 0x10>;
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> index 436b8750..66dde761 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> @@ -312,6 +312,14 @@
+>>  				status = "disabled";
+>>  			};
+>>  
+>> +			gpio_intc: interrupt-controller@9880 {
+>> +				compatible = "amlogic,meson-gpio-intc";
+>> +				reg = <0x0 0x09880 0x0 0x10>;
+>> +				interrupt-controller;
+>> +				#interrupt-cells = <2>;
+>> +				parent-interrupts = <64 65 66 67 68 79 70 71>;
+>> +			};
+>> +
+>>  			watchdog@98d0 {
+>>  				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
+>>  				reg = <0x0 0x098d0 0x0 0x10>;
+>>
+> 
+> Seems correct with the dt-bindings,
+> 
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
