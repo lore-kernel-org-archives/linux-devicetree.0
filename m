@@ -1,69 +1,74 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [RFC v2 3/3] dt: bindings: Add a binding for referencing EEPROM
- from camera sensors
-Date: Mon, 29 May 2017 14:39:01 +0200
-Message-ID: <c7a98681-4c95-0103-96ee-97ca6a02d9b3@zonque.org>
-References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
- <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
- <20170508172418.zha3eyfsnuricfjk@rob-hp-laptop>
- <20170529122004.GE29527@valkosipuli.retiisi.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
+ arch/sparc: Define config parameter CPU_BIG_ENDIAN)
+Date: Mon, 29 May 2017 14:54:16 +0200
+Message-ID: <CAK8P3a0GEzj16=M5jV=u6ACE8K3_QMPk142AhFDLSp9MgpFTeQ@mail.gmail.com>
+References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
+ <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg@mail.gmail.com>
+ <CAMo8BfL8G0Fzn2SZ1356yaoxGgm8tpTDmFJ8cCxEEEgyObMwCQ@mail.gmail.com> <CAMo8BfJDRStMDGThMQhmZBQs2LLwxFOthuqQaC1qyws14gwhRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170529122004.GE29527@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Rob Herring <robh@kernel.org>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, pavel@ucw.cz, sebastian.reichel@collabora.co.uk
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMo8BfJDRStMDGThMQhmZBQs2LLwxFOthuqQaC1qyws14gwhRA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Max Filippov <jcmvbkbc@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Babu Moger <babu.moger@oracle.com>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2017 02:20 PM, Sakari Ailus wrote:
-> On Mon, May 08, 2017 at 12:24:18PM -0500, Rob Herring wrote:
->> On Fri, May 05, 2017 at 11:48:30AM +0300, Sakari Ailus wrote:
->>> Many camera sensor devices contain EEPROM chips that describe the
->>> properties of a given unit --- the data is specific to a given unit can
->>> thus is not stored e.g. in user space or the driver.
+On Fri, May 26, 2017 at 12:43 AM, Max Filippov <jcmvbkbc@gmail.com> wrote:
+> On Thu, May 25, 2017 at 3:27 PM, Max Filippov <jcmvbkbc@gmail.com> wrote:
+>> On Wed, May 24, 2017 at 3:18 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>>> On Wed, May 24, 2017 at 11:59 AM, Geert Uytterhoeven
+>>> <geert@linux-m68k.org> wrote:
+>>>> I guess the time is ripe for adding (both) symbols to all architectures?
 >>>
->>> Some sensors embed the EEPROM chip and it can be accessed through the
->>> sensor's I2C interface. This property is to be used for devices where the
->>> EEPROM chip is accessed through a different I2C address than the sensor.
+>>> Good idea. I think we can do most of this by adding a few lines to
+>>> arch/Kconfig:
+>>>
+>>> config CPU_BIG_ENDIAN
+>>>         bool
+>>>
+>>> config CPU_LITTLE_ENDIAN
+>>>        def_bool !CPU_BIG_ENDIAN
+>>>
+>>> This way, we only need to add 'select CPU_BIG_ENDIAN' to the
+>>> architectures that are always big-endian, and we don't need to
+>>> change anything for the ones that have a single 'CPU_BIG_ENDIAN'
+>>> option.
+>>>
+>>> The three architectures that have a 'choice' statement (mips, ppc and
+>>> sh) will have to convert, and m32r will have to replace the
+>>> option with the opposite one, which could break 'make oldconfig',
+>>> but nobody really cares about m32r any more.
 >>
->> Different I2C address or bus? We already have i2c bindings for sub 
->> devices downstream of another I2C device. Either the upstream device 
->> passes thru the I2C transactions or itself is an I2C controller with a 
->> separate downstream bus. For those cases the EEPROM should be a child 
->> node. A phandle only makes sense if you have the sensor and eeprom 
->> connected to 2 entirely separate host buses.
-> 
-> Right. It's a different address but located in the same package with the
-> module, just like the lens. I should have actually said "module", not the
-> "sensor".
-> 
-> The EEPROM integration to the module is done by the module vendor, but it's
-> entirely possible to have another module vendor to use the sensor but not
-> add an EEPROM or use a different EEPROM. It is also possible that the EEPROM
-> is on the same silicon with the sensor, then it's always guaranteed to be
-> there.
-> 
-> The bottom line is still that a sensor is simply one of the component in a
-> camera module; the rest of the module (lens, eeprom etc.) is not defined by
-> the sensor, the parts are rather picked by the module vendor. Yet the sensor
-> is a central piece in a module: it's always guaranteed to be there or it's
-> not a camera module.
+>> Xtensa may have either endianness and for xtensa we define
+>> CONFIG_CPU_BIG_ENDIAN or CONFIG_CPU_LITTLE_ENDIAN
+>> in the arch/xtensa/Makefile based on the value of the compiler builtin
+>> macro.
 
-I agree, yes. I think the only way to solve this is to have a generic
-EEPROM API that allows the camera sensor to read data from it. If
-another vendor uses a different type of EEPROM, the sensor driver would
-remain the same, as it only reads data from the storage behind the
-phandle, not caring about the details.
+I can sort of see why xtensa did it the other way round from everyone
+else (letting the toolchain decide what the kernel is, rather than letting
+the kernel pass the respective flags to gcc), but I'd argue that it would
+be better overall for xtensa to change over so we do it consistently
+on all architectures.
 
-Same goes for the lens driver, and after thinking about it for awhile,
-I'd say it makes most sense to allow referencing a v4l2_subdev device
-through a phandle from another v4l2_subdev, and then offload certain
-commands such as V4L2_CID_FOCUS_ABSOLUTE to the device that does the
-actual work. Opinions?
+> Also, in outside the Kconfig files there's much more instances of
+> __{BIG,LITTLE}_ENDIAN than CONFIG_CPU_{BIG,LITTLE}_ENDIAN:
+>
+> $ git grep '__\(BIG\|LITTLE\)_ENDIAN' | wc -l
+> 4537
+> $ git grep 'CONFIG_CPU_\(BIG\|LITTLE\)_ENDIAN' | wc -l
+> 247
+>
+> My understanding is that CONFIG_CPU_{BIG,LITTLE}_ENDIAN was
+> intended to be used only in Kconfig files, and perhaps all of its uses
+> outside should be replaced with __{BIG,LITTLE}_ENDIAN.
 
+Right, but I also think that using the CONFIG_CPU_* symbols in
+code makes sense because it is less ambiguous: the way we use
+__{BIG,LITTLE}_ENDIAN in the kernel is different from how user
+space uses them in glibc, and this confuses everyone when they
+try to use them in the kernel after being familiar with the traditional
+way. The Kconfig symbols don't have this problem.
 
-Thanks,
-Daniel
+       Arnd
