@@ -1,79 +1,106 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] cec: add STM32 cec driver (fwd)
-Date: Mon, 29 May 2017 13:20:10 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1705291319130.2989@hadrien>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: [PATCH v8 net-next 06/17] net: qualcomm: Improve readability of length defines
+Date: Mon, 29 May 2017 13:57:14 +0200
+Message-ID: <1496059045-13572-7-git-send-email-stefan.wahren@i2se.com>
+References: <1496059045-13572-1-git-send-email-stefan.wahren@i2se.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496059045-13572-1-git-send-email-stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: yannick.fertre-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-IBi9RG/b67k@public.gmane.org>, Lino Sanfilippo <LinoSanfilippo-Mmb7MZpHnFY@public.gmane.org>, Jakub Kicinski <kubakici-5tc4TXWwyLM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-BRDNOGEN is duplicate in the #defined on line 46.
+In order to avoid mixing things up, make the MTU and frame length
+defines easier to read.
 
-julia
-
----------- Forwarded message ----------
-Date: Mon, 29 May 2017 19:16:10 +0800
-From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-To: kbuild-JC7UmRfGjtg@public.gmane.org
-Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] cec: add STM32 cec driver
-
-CC: kbuild-all-JC7UmRfGjtg@public.gmane.org
-In-Reply-To: <1496046855-5809-3-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-TO: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-CC: yannick.fertre-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
-CC: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Hi Benjamin,
-
-[auto build test WARNING on linuxtv-media/master]
-[also build test WARNING on v4.12-rc3 next-20170529]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Benjamin-Gaignard/cec-STM32-driver/20170529-172722
-base:   git://linuxtv.org/media_tree.git master
-:::::: branch date: 2 hours ago
-:::::: commit date: 2 hours ago
-
->> drivers/media/platform/stm32/stm32-cec.c:46:33-41: duplicated argument to & or |
-
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 8864245090acf32561bbec305dd8be5cfe31f1e1
-vim +46 drivers/media/platform/stm32/stm32-cec.c
-
-88642450 Benjamin Gaignard 2017-05-29  30  #define CEC_ISR		0x0010 /* Interrupt and status Register */
-88642450 Benjamin Gaignard 2017-05-29  31  #define CEC_IER		0x0014 /* Interrupt enable Register */
-88642450 Benjamin Gaignard 2017-05-29  32
-88642450 Benjamin Gaignard 2017-05-29  33  #define TXEOM		BIT(2)
-88642450 Benjamin Gaignard 2017-05-29  34  #define TXSOM		BIT(1)
-88642450 Benjamin Gaignard 2017-05-29  35  #define CECEN		BIT(0)
-88642450 Benjamin Gaignard 2017-05-29  36
-88642450 Benjamin Gaignard 2017-05-29  37  #define LSTN		BIT(31)
-88642450 Benjamin Gaignard 2017-05-29  38  #define OAR		GENMASK(30, 16)
-88642450 Benjamin Gaignard 2017-05-29  39  #define SFTOP		BIT(8)
-88642450 Benjamin Gaignard 2017-05-29  40  #define BRDNOGEN	BIT(7)
-88642450 Benjamin Gaignard 2017-05-29  41  #define LBPEGEN		BIT(6)
-88642450 Benjamin Gaignard 2017-05-29  42  #define BREGEN		BIT(5)
-88642450 Benjamin Gaignard 2017-05-29  43  #define BRESTP		BIT(4)
-88642450 Benjamin Gaignard 2017-05-29  44  #define RXTOL		BIT(3)
-88642450 Benjamin Gaignard 2017-05-29  45  #define SFT		GENMASK(2, 0)
-88642450 Benjamin Gaignard 2017-05-29 @46  #define FULL_CFG	(LSTN | SFTOP | BRDNOGEN | LBPEGEN | BREGEN | BRESTP \
-88642450 Benjamin Gaignard 2017-05-29  47  			 | RXTOL | BRDNOGEN)
-88642450 Benjamin Gaignard 2017-05-29  48
-88642450 Benjamin Gaignard 2017-05-29  49  #define TXACKE		BIT(12)
-88642450 Benjamin Gaignard 2017-05-29  50  #define TXERR		BIT(11)
-88642450 Benjamin Gaignard 2017-05-29  51  #define TXUDR		BIT(10)
-88642450 Benjamin Gaignard 2017-05-29  52  #define TXEND		BIT(9)
-88642450 Benjamin Gaignard 2017-05-29  53  #define TXBR		BIT(8)
-88642450 Benjamin Gaignard 2017-05-29  54  #define ARBLST		BIT(7)
-
+Signed-off-by: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ drivers/net/ethernet/qualcomm/qca_framing.c |  2 +-
+ drivers/net/ethernet/qualcomm/qca_framing.h |  8 ++++----
+ drivers/net/ethernet/qualcomm/qca_spi.c     | 12 ++++++------
+ 3 files changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/net/ethernet/qualcomm/qca_framing.c b/drivers/net/ethernet/qualcomm/qca_framing.c
+index faa924c..2341f2b 100644
+--- a/drivers/net/ethernet/qualcomm/qca_framing.c
++++ b/drivers/net/ethernet/qualcomm/qca_framing.c
+@@ -117,7 +117,7 @@ qcafrm_fsm_decode(struct qcafrm_handle *handle, u8 *buf, u16 buf_len, u8 recv_by
+ 		break;
+ 	case QCAFRM_WAIT_RSVD_BYTE2:
+ 		len = handle->offset;
+-		if (len > buf_len || len < QCAFRM_ETHMINLEN) {
++		if (len > buf_len || len < QCAFRM_MIN_LEN) {
+ 			ret = QCAFRM_INVLEN;
+ 			handle->state = QCAFRM_HW_LEN0;
+ 		} else {
+diff --git a/drivers/net/ethernet/qualcomm/qca_framing.h b/drivers/net/ethernet/qualcomm/qca_framing.h
+index 8b385e6..5df7c65 100644
+--- a/drivers/net/ethernet/qualcomm/qca_framing.h
++++ b/drivers/net/ethernet/qualcomm/qca_framing.h
+@@ -44,12 +44,12 @@
+ #define QCAFRM_INVFRAME (QCAFRM_ERR_BASE - 4)
+ 
+ /* Min/Max Ethernet MTU: 46/1500 */
+-#define QCAFRM_ETHMINMTU (ETH_ZLEN - ETH_HLEN)
+-#define QCAFRM_ETHMAXMTU ETH_DATA_LEN
++#define QCAFRM_MIN_MTU (ETH_ZLEN - ETH_HLEN)
++#define QCAFRM_MAX_MTU ETH_DATA_LEN
+ 
+ /* Min/Max frame lengths */
+-#define QCAFRM_ETHMINLEN (QCAFRM_ETHMINMTU + ETH_HLEN)
+-#define QCAFRM_ETHMAXLEN (QCAFRM_ETHMAXMTU + VLAN_ETH_HLEN)
++#define QCAFRM_MIN_LEN (QCAFRM_MIN_MTU + ETH_HLEN)
++#define QCAFRM_MAX_LEN (QCAFRM_MAX_MTU + VLAN_ETH_HLEN)
+ 
+ /* QCA7K header len */
+ #define QCAFRM_HEADER_LEN 8
+diff --git a/drivers/net/ethernet/qualcomm/qca_spi.c b/drivers/net/ethernet/qualcomm/qca_spi.c
+index 7e039e3..f155548 100644
+--- a/drivers/net/ethernet/qualcomm/qca_spi.c
++++ b/drivers/net/ethernet/qualcomm/qca_spi.c
+@@ -69,7 +69,7 @@ static int qcaspi_pluggable = QCASPI_PLUGGABLE_MIN;
+ module_param(qcaspi_pluggable, int, 0);
+ MODULE_PARM_DESC(qcaspi_pluggable, "Pluggable SPI connection (yes/no).");
+ 
+-#define QCASPI_MTU QCAFRM_ETHMAXMTU
++#define QCASPI_MTU QCAFRM_MAX_MTU
+ #define QCASPI_TX_TIMEOUT (1 * HZ)
+ #define QCASPI_QCA7K_REBOOT_TIME_MS 1000
+ 
+@@ -403,7 +403,7 @@ qcaspi_tx_ring_has_space(struct tx_ring *txr)
+ 	if (txr->skb[txr->tail])
+ 		return 0;
+ 
+-	return (txr->size + QCAFRM_ETHMAXLEN < QCASPI_HW_BUF_LEN) ? 1 : 0;
++	return (txr->size + QCAFRM_MAX_LEN < QCASPI_HW_BUF_LEN) ? 1 : 0;
+ }
+ 
+ /*   Flush the tx ring. This function is only safe to
+@@ -667,8 +667,8 @@ qcaspi_netdev_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	struct sk_buff *tskb;
+ 	u8 pad_len = 0;
+ 
+-	if (skb->len < QCAFRM_ETHMINLEN)
+-		pad_len = QCAFRM_ETHMINLEN - skb->len;
++	if (skb->len < QCAFRM_MIN_LEN)
++		pad_len = QCAFRM_MIN_LEN - skb->len;
+ 
+ 	if (qca->txr.skb[qca->txr.tail]) {
+ 		netdev_warn(qca->net_dev, "queue was unexpectedly full!\n");
+@@ -805,8 +805,8 @@ qcaspi_netdev_setup(struct net_device *dev)
+ 	dev->tx_queue_len = 100;
+ 
+ 	/* MTU range: 46 - 1500 */
+-	dev->min_mtu = QCAFRM_ETHMINMTU;
+-	dev->max_mtu = QCAFRM_ETHMAXMTU;
++	dev->min_mtu = QCAFRM_MIN_MTU;
++	dev->max_mtu = QCAFRM_MAX_MTU;
+ 
+ 	qca = netdev_priv(dev);
+ 	memset(qca, 0, sizeof(struct qcaspi));
+-- 
+2.1.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
