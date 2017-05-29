@@ -1,98 +1,57 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH v8 net-next 12/17] net: qualcomm: make qca_7k_common a separate kernel module
-Date: Mon, 29 May 2017 13:57:20 +0200
-Message-ID: <1496059045-13572-13-git-send-email-stefan.wahren@i2se.com>
-References: <1496059045-13572-1-git-send-email-stefan.wahren@i2se.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496059045-13572-1-git-send-email-stefan.wahren@i2se.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Lino Sanfilippo <LinoSanfilippo@gmx.de>, Jakub Kicinski <kubakici@wp.pl>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/7] dmaengine: use proper name for the R-Car SoC
+Date: Mon, 29 May 2017 14:03:05 +0200
+Message-ID: <20170529120305.GD4342@katana>
+References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
+ <20170528093051.11816-2-wsa+renesas@sang-engineering.com>
+ <CAMuHMdV9iU2vK+ae1vPET83Ck5UVzs-kVQJVgFeEA8aUi8vZ5Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vni90+aGYgRvsTuO"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdV9iU2vK+ae1vPET83Ck5UVzs-kVQJVgFeEA8aUi8vZ5Q@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to share common functions between QCA7000 SPI and UART protocol
-driver the qca_7k_common needs to be a separate kernel module.
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- drivers/net/ethernet/qualcomm/Kconfig         |  8 +++++++-
- drivers/net/ethernet/qualcomm/Makefile        |  5 +++--
- drivers/net/ethernet/qualcomm/qca_7k_common.c | 10 ++++++++++
- 3 files changed, 20 insertions(+), 3 deletions(-)
+--vni90+aGYgRvsTuO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/net/ethernet/qualcomm/Kconfig b/drivers/net/ethernet/qualcomm/Kconfig
-index d7720bf..b4c369d 100644
---- a/drivers/net/ethernet/qualcomm/Kconfig
-+++ b/drivers/net/ethernet/qualcomm/Kconfig
-@@ -16,7 +16,13 @@ config NET_VENDOR_QUALCOMM
- if NET_VENDOR_QUALCOMM
- 
- config QCA7000
--	tristate "Qualcomm Atheros QCA7000 support"
-+	tristate
-+	help
-+	  This enables support for the Qualcomm Atheros QCA7000.
-+
-+config QCA7000_SPI
-+	tristate "Qualcomm Atheros QCA7000 SPI support"
-+	select QCA7000
- 	depends on SPI_MASTER && OF
- 	---help---
- 	  This SPI protocol driver supports the Qualcomm Atheros QCA7000.
-diff --git a/drivers/net/ethernet/qualcomm/Makefile b/drivers/net/ethernet/qualcomm/Makefile
-index 5e17bf1..65556ca 100644
---- a/drivers/net/ethernet/qualcomm/Makefile
-+++ b/drivers/net/ethernet/qualcomm/Makefile
-@@ -2,7 +2,8 @@
- # Makefile for the Qualcomm network device drivers.
- #
- 
--obj-$(CONFIG_QCA7000) += qcaspi.o
--qcaspi-objs := qca_spi.o qca_7k_common.o qca_7k.o qca_debug.o
-+obj-$(CONFIG_QCA7000) += qca_7k_common.o
-+obj-$(CONFIG_QCA7000_SPI) += qcaspi.o
-+qcaspi-objs := qca_7k.o qca_debug.o qca_spi.o
- 
- obj-y += emac/
-diff --git a/drivers/net/ethernet/qualcomm/qca_7k_common.c b/drivers/net/ethernet/qualcomm/qca_7k_common.c
-index 0d3daa9..6b511f0 100644
---- a/drivers/net/ethernet/qualcomm/qca_7k_common.c
-+++ b/drivers/net/ethernet/qualcomm/qca_7k_common.c
-@@ -21,7 +21,9 @@
-  *   by an atheros frame while transmitted over a serial channel;
-  */
- 
-+#include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/module.h>
- 
- #include "qca_7k_common.h"
- 
-@@ -46,6 +48,7 @@ qcafrm_create_header(u8 *buf, u16 length)
- 
- 	return QCAFRM_HEADER_LEN;
- }
-+EXPORT_SYMBOL_GPL(qcafrm_create_header);
- 
- u16
- qcafrm_create_footer(u8 *buf)
-@@ -57,6 +60,7 @@ qcafrm_create_footer(u8 *buf)
- 	buf[1] = 0x55;
- 	return QCAFRM_FOOTER_LEN;
- }
-+EXPORT_SYMBOL_GPL(qcafrm_create_footer);
- 
- /*   Gather received bytes and try to extract a full ethernet frame by
-  *   following a simple state machine.
-@@ -154,3 +158,9 @@ qcafrm_fsm_decode(struct qcafrm_handle *handle, u8 *buf, u16 buf_len, u8 recv_by
- 
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(qcafrm_fsm_decode);
-+
-+MODULE_DESCRIPTION("Qualcomm Atheros QCA7000 common");
-+MODULE_AUTHOR("Qualcomm Atheros Communications");
-+MODULE_AUTHOR("Stefan Wahren <stefan.wahren@i2se.com>");
-+MODULE_LICENSE("Dual BSD/GPL");
--- 
-2.1.4
+Geert,
+
+thanks for the Acks.
+
+> I'd fix "SH/R-Mobile" too, while at it.
+
+That would be a seperate tree-wide series in my book.
+
+Regards,
+
+   Wolfram
+
+
+--vni90+aGYgRvsTuO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlksDfkACgkQFA3kzBSg
+Kbb0Kw//TFkmKvE1FoUKPRM8Ofk18JhD5tq+aCsIWueKxktAgKWAmacOPjFvVeDj
+AZgsqZOjKYNVYFSi5xSMWaVATPXrDARheJINcmC5vIdCwh6+OCY6/ROxImjNK0xB
+TjS1+PU3SBhRt7C4Er9DGQhticsfb8VmSALg0XTD8El0jtl+LL/S0P4nmj1bldfH
+58xgSNxwpzqBCa0qgKbHnyqdEJybmqByi+QEBmBrEfDZAc/5r5zgJDArbo09aJ+i
+astf6mQoFIaDdrKcuFASgotAP7uVorC7nQAdMGvq82xTeKCAKRQ6C/nYZWdcN16l
+vI4FJbZbwFzGhNtqT5qL+es9Np1swUGih7oC6yonek2YYsvuRdCdMFkSIaKEENwM
+fjSTsKfY4tGYEQgFLsFvbre4pz/9yc9LU8ekRufYWyMOXPKrGQq8jVWWwSgXFMbU
+hqxJ/YIioTZekFF7rPe9aQ2J5SVGPArOzaKUkMAfQiHXRpZbbnBd/9lpraw9KVP4
+u5ioQY6Uq54P9F4qqwS6Ulg+Tr6iZZj6g79nu5SBrbRdSkpgCEF4Bhpx8sYDcsLs
+h+/Lx0y/Nv2F6S0FmsCSIs6xCKEEtTtLXWNexVgATwgGBhS4GhYL5Qusnp4EfNA9
+/XPdlnFSACXfUwPGly7b5sH91jYC2nXOrob1/g/7OTktYeUtI3A=
+=TW8D
+-----END PGP SIGNATURE-----
+
+--vni90+aGYgRvsTuO--
