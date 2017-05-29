@@ -1,74 +1,46 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
- arch/sparc: Define config parameter CPU_BIG_ENDIAN)
-Date: Mon, 29 May 2017 14:54:16 +0200
-Message-ID: <CAK8P3a0GEzj16=M5jV=u6ACE8K3_QMPk142AhFDLSp9MgpFTeQ@mail.gmail.com>
-References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
- <CAK8P3a1XZGQk3b3q+JFJ+mLgw_upUdAtTM1VBjHZq5f2m-YdUg@mail.gmail.com>
- <CAMo8BfL8G0Fzn2SZ1356yaoxGgm8tpTDmFJ8cCxEEEgyObMwCQ@mail.gmail.com> <CAMo8BfJDRStMDGThMQhmZBQs2LLwxFOthuqQaC1qyws14gwhRA@mail.gmail.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/4] Add Basic SoC support for MT7622
+Date: Mon, 29 May 2017 20:56:00 +0800
+Message-ID: <cover.1496061587.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMo8BfJDRStMDGThMQhmZBQs2LLwxFOthuqQaC1qyws14gwhRA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Max Filippov <jcmvbkbc@gmail.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Babu Moger <babu.moger@oracle.com>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 12:43 AM, Max Filippov <jcmvbkbc@gmail.com> wrote:
-> On Thu, May 25, 2017 at 3:27 PM, Max Filippov <jcmvbkbc@gmail.com> wrote:
->> On Wed, May 24, 2017 at 3:18 AM, Arnd Bergmann <arnd@arndb.de> wrote:
->>> On Wed, May 24, 2017 at 11:59 AM, Geert Uytterhoeven
->>> <geert@linux-m68k.org> wrote:
->>>> I guess the time is ripe for adding (both) symbols to all architectures?
->>>
->>> Good idea. I think we can do most of this by adding a few lines to
->>> arch/Kconfig:
->>>
->>> config CPU_BIG_ENDIAN
->>>         bool
->>>
->>> config CPU_LITTLE_ENDIAN
->>>        def_bool !CPU_BIG_ENDIAN
->>>
->>> This way, we only need to add 'select CPU_BIG_ENDIAN' to the
->>> architectures that are always big-endian, and we don't need to
->>> change anything for the ones that have a single 'CPU_BIG_ENDIAN'
->>> option.
->>>
->>> The three architectures that have a 'choice' statement (mips, ppc and
->>> sh) will have to convert, and m32r will have to replace the
->>> option with the opposite one, which could break 'make oldconfig',
->>> but nobody really cares about m32r any more.
->>
->> Xtensa may have either endianness and for xtensa we define
->> CONFIG_CPU_BIG_ENDIAN or CONFIG_CPU_LITTLE_ENDIAN
->> in the arch/xtensa/Makefile based on the value of the compiler builtin
->> macro.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-I can sort of see why xtensa did it the other way round from everyone
-else (letting the toolchain decide what the kernel is, rather than letting
-the kernel pass the respective flags to gcc), but I'd argue that it would
-be better overall for xtensa to change over so we do it consistently
-on all architectures.
+Changes since v1:
+- update SPDX-License-Identifier
+- remove next-level-cache property since cache geometry detection was removed since 4.12
 
-> Also, in outside the Kconfig files there's much more instances of
-> __{BIG,LITTLE}_ENDIAN than CONFIG_CPU_{BIG,LITTLE}_ENDIAN:
->
-> $ git grep '__\(BIG\|LITTLE\)_ENDIAN' | wc -l
-> 4537
-> $ git grep 'CONFIG_CPU_\(BIG\|LITTLE\)_ENDIAN' | wc -l
-> 247
->
-> My understanding is that CONFIG_CPU_{BIG,LITTLE}_ENDIAN was
-> intended to be used only in Kconfig files, and perhaps all of its uses
-> outside should be replaced with __{BIG,LITTLE}_ENDIAN.
+This patch set adds basic SoC support for MediaTek MT7622
+SoC based on 4.12-rc1.
 
-Right, but I also think that using the CONFIG_CPU_* symbols in
-code makes sense because it is less ambiguous: the way we use
-__{BIG,LITTLE}_ENDIAN in the kernel is different from how user
-space uses them in glibc, and this confuses everyone when they
-try to use them in the kernel after being familiar with the traditional
-way. The Kconfig symbols don't have this problem.
+Sean Wang (4):
+  dt-bindings: mediatek: add bindings for MediaTek MT7622 SoC
+  arm64: dts: mt7622: add basic nodes to the mt7622.dtsi file
+  arm64: dts: mt7622: add dts file for MT7622 reference board variant 1
+  arm64: dts: mt7622: group clock DT nodes into separate DT file
 
-       Arnd
+ Documentation/devicetree/bindings/arm/mediatek.txt |  4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |  3 +-
+ .../devicetree/bindings/serial/mtk-uart.txt        |  1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |  1 +
+ arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi     | 20 +++++
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts       | 27 ++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi           | 98 ++++++++++++++++++++++
+ 7 files changed, 153 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
