@@ -1,643 +1,533 @@
+Return-Path: <SRS0=WILj=5D=gmail.com=slongerbeam@kernel.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
+References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+ <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
+ <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
+Message-ID: <1d145bb7-c1f9-e551-f7f3-da330d12ed71@gmail.com>
+Date: Mon, 29 May 2017 14:49:17 -0700
 MIME-Version: 1.0
-In-Reply-To: <1490769009-12552-3-git-send-email-xuejiancheng@hisilicon.com>
-References: <1490769009-12552-1-git-send-email-xuejiancheng@hisilicon.com>
-	<1490769009-12552-3-git-send-email-xuejiancheng@hisilicon.com>
-Date: Wed, 10 May 2017 13:25:43 -0500
-Message-ID: <CAL_JsqJTRJsJe50r6Vj0=HnZUC9gdFM0E0Z7GcBV9xQHu0XWXw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: hisilicon: add dts files for
- hi3798cv200-poplar board
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>, Arnd Bergmann <arnd@arndb.de>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alex Elder <elder@linaro.org>, Peter Griffin <peter.griffin@linaro.org>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, yanhaifeng@hisilicon.com, hermit.wangheming@hisilicon.com
+In-Reply-To: <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
+Content-Type: multipart/alternative;
+ boundary="------------73BDF76690561185ABE4948D"
+Content-Language: en-US
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, Mar 29, 2017 at 1:30 AM, Jiancheng Xue <xuejiancheng@hisilicon.com> wrote:
-> Add basic dts files for hi3798cv200-poplar board. Poplar is the
-> first development board compliant with the 96Boards Enterprise
-> Edition TV Platform specification. The board features the
-> Hi3798CV200 with an integrated quad-core 64-bit ARM Cortex A53
-> processor and high performance Mali T720 GPU.
+This is a multi-part message in MIME format.
+--------------73BDF76690561185ABE4948D
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Hi Sakari,
+
+
+On 05/29/2017 08:55 AM, Sakari Ailus wrote:
+> Hi Steve,
 >
-> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Reviewed-by: Alex Elder <elder@linaro.org>
-> Acked-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
-> Changed Log:
-> v3:
-> - Refined the patch according to Andreas's suggestions.
->   1. Changed the license.
->   2. Added alias for uart2.
->   3. Reordered the device nodes.
-> v2:
-> - Fixed issues pointed by Rob Herring.
->   1. Moved the led node out of the soc node.
->   2. Restrained the ranges property of soc node smaller.
-> - Refined the patch according to Andreas's suggestions.
-> - Enabled gmac1 device node instead of gmac0.
-> - Added a compatible string "syscon" for crg nodes.
+> A few comments below.
 >
->  arch/arm64/boot/dts/hisilicon/Makefile             |   1 +
->  .../boot/dts/hisilicon/hi3798cv200-poplar.dts      | 163 +++++++++
->  arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 405 +++++++++++++++++++++
->  3 files changed, 569 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
->  create mode 100644 arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
+> On Wed, May 24, 2017 at 05:29:31PM -0700, Steve Longerbeam wrote:
+>> This driver is based on ov5640_mipi.c from Freescale imx_3.10.17_1.0.0_beta
+>> branch, modified heavily to bring forward to latest interfaces and code
+>> cleanup.
+>>
+>> Signed-off-by: Steve Longerbeam<steve_longerbeam@mentor.com>
+>> ---
+>>   drivers/media/i2c/Kconfig  |    9 +
+>>   drivers/media/i2c/Makefile |    1 +
+>>   drivers/media/i2c/ov5640.c | 2224 ++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 2234 insertions(+)
+>>   create mode 100644 drivers/media/i2c/ov5640.c
+>>
+>> diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+>> index fd181c9..ff082a7 100644
+>> --- a/drivers/media/i2c/Kconfig
+>> +++ b/drivers/media/i2c/Kconfig
+>> @@ -539,6 +539,15 @@ config VIDEO_OV2659
+>>   	  To compile this driver as a module, choose M here: the
+>>   	  module will be called ov2659.
+>>   
+>> +config VIDEO_OV5640
+>> +	tristate "OmniVision OV5640 sensor support"
+>> +	depends on OF
+>> +	depends on GPIOLIB && VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API
+>> +	depends on MEDIA_CAMERA_SUPPORT
+>> +	---help---
+>> +	  This is a Video4Linux2 sensor-level driver for the Omnivision
+>> +	  OV5640 camera sensor with a MIPI CSI-2 interface.
+>> +
+>>   config VIDEO_OV5645
+>>   	tristate "OmniVision OV5645 sensor support"
+>>   	depends on OF
+>> diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+>> index 62323ec..dc6b0c4 100644
+>> --- a/drivers/media/i2c/Makefile
+>> +++ b/drivers/media/i2c/Makefile
+>> @@ -58,6 +58,7 @@ obj-$(CONFIG_VIDEO_SONY_BTF_MPX) += sony-btf-mpx.o
+>>   obj-$(CONFIG_VIDEO_UPD64031A) += upd64031a.o
+>>   obj-$(CONFIG_VIDEO_UPD64083) += upd64083.o
+>>   obj-$(CONFIG_VIDEO_OV2640) += ov2640.o
+>> +obj-$(CONFIG_VIDEO_OV5640) += ov5640.o
+>>   obj-$(CONFIG_VIDEO_OV5645) += ov5645.o
+>>   obj-$(CONFIG_VIDEO_OV5647) += ov5647.o
+>>   obj-$(CONFIG_VIDEO_OV7640) += ov7640.o
+>> diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+>> new file mode 100644
+>> index 0000000..2a032bc
+>> --- /dev/null
+>> +++ b/drivers/media/i2c/ov5640.c
+>> @@ -0,0 +1,2224 @@
+>> +/*
+>> + * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+>> + * Copyright (C) 2014-2017 Mentor Graphics Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + */
+>> +
+>> +#include <linux/clk.h>
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/clkdev.h>
+>> +#include <linux/ctype.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/device.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/init.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/types.h>
+>> +#include <linux/gpio/consumer.h>
+>> +#include <linux/regulator/consumer.h>
+>> +#include <media/v4l2-async.h>
+>> +#include <media/v4l2-ctrls.h>
+>> +#include <media/v4l2-device.h>
+>> +#include <media/v4l2-of.h>
+> Could you rebase this on the V4L2 fwnode patchset here, please?
 >
-> diff --git a/arch/arm64/boot/dts/hisilicon/Makefile b/arch/arm64/boot/dts/hisilicon/Makefile
-> index c3a6c19..8960eca 100644
-> --- a/arch/arm64/boot/dts/hisilicon/Makefile
-> +++ b/arch/arm64/boot/dts/hisilicon/Makefile
-> @@ -1,4 +1,5 @@
->  dtb-$(CONFIG_ARCH_HISI) += hi3660-hikey960.dtb
-> +dtb-$(CONFIG_ARCH_HISI) += hi3798cv200-poplar.dtb
->  dtb-$(CONFIG_ARCH_HISI) += hi6220-hikey.dtb
->  dtb-$(CONFIG_ARCH_HISI) += hip05-d02.dtb
->  dtb-$(CONFIG_ARCH_HISI) += hip06-d03.dtb
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-> new file mode 100644
-> index 0000000..fe2f9f1
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-> @@ -0,0 +1,163 @@
-> +/*
-> + * DTS File for HiSilicon Poplar Development Board
-> + *
-> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
-> + *
-> + * Released under the GPLv2 only.
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "hi3798cv200.dtsi"
-> +
-> +/ {
-> +       model = "HiSilicon Poplar Development Board";
-> +       compatible = "hisilicon,hi3798cv200-poplar", "hisilicon,hi3798cv200";
-> +
-> +       aliases {
-> +               serial0 = &uart0;
-> +               serial2 = &uart2;
-> +       };
-> +
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
-> +
-> +       memory@0 {
-> +               device_type = "memory";
-> +               reg = <0x0 0x0 0x0 0x80000000>;
-> +       };
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +
-> +               user-led0 {
-> +                       label = "USER-LED0";
-> +                       gpios = <&gpio6 3 GPIO_ACTIVE_LOW>;
-> +                       linux,default-trigger = "heartbeat";
-> +                       default-state = "off";
-> +               };
-> +
-> +               user-led1 {
-> +                       label = "USER-LED1";
-> +                       gpios = <&gpio5 1 GPIO_ACTIVE_LOW>;
-> +                       linux,default-trigger = "mmc0";
-> +                       default-state = "off";
-> +               };
-> +
-> +               user-led2 {
-> +                       label = "USER-LED2";
-> +                       gpios = <&gpio5 2 GPIO_ACTIVE_LOW>;
-> +                       linux,default-trigger = "none";
-> +                       default-state = "off";
-> +               };
-> +
-> +               user-led3 {
-> +                       label = "USER-LED3";
-> +                       gpios = <&gpio10 6 GPIO_ACTIVE_LOW>;
-> +                       linux,default-trigger = "cpu0";
-> +                       default-state = "off";
-> +               };
-> +       };
-> +};
-> +
-> +&gmac1 {
-> +       status = "okay";
-> +       #address-cells = <1>;
-> +       #size-cells = <0>;
-> +       phy-handle = <&eth_phy1>;
-> +       phy-mode = "rgmii";
-> +       hisilicon,phy-reset-delays-us = <10000 10000 30000>;
-> +
-> +       eth_phy1: phy@3 {
-> +               reg = <3>;
-> +       };
-> +};
-> +
-> +&gpio1 {
-> +       status = "okay";
-> +       gpio-line-names = "LS-GPIO-E",  "",
-> +                         "",           "",
-> +                         "",           "LS-GPIO-F",
-> +                         "",           "LS-GPIO-J";
-> +};
-> +
-> +&gpio2 {
-> +       status = "okay";
-> +       gpio-line-names = "LS-GPIO-H",  "LS-GPIO-I",
-> +                         "LS-GPIO-L",  "LS-GPIO-G",
-> +                         "LS-GPIO-K",  "",
-> +                         "",           "";
-> +};
-> +
-> +&gpio3 {
-> +       status = "okay";
-> +       gpio-line-names = "",           "",
-> +                         "",           "",
-> +                         "LS-GPIO-C",  "",
-> +                         "",           "LS-GPIO-B";
-> +};
-> +
-> +&gpio4 {
-> +       status = "okay";
-> +       gpio-line-names = "",           "",
-> +                         "",           "",
-> +                         "",           "LS-GPIO-D",
-> +                         "",           "";
-> +};
-> +
-> +&gpio5 {
-> +       status = "okay";
-> +       gpio-line-names = "",           "USER-LED-1",
-> +                         "USER-LED-2", "",
-> +                         "",           "LS-GPIO-A",
-> +                         "",           "";
-> +};
-> +
-> +&gpio6 {
-> +       status = "okay";
-> +       gpio-line-names = "",           "",
-> +                         "",           "USER-LED-0",
-> +                         "",           "",
-> +                         "",           "";
-> +};
-> +
-> +&gpio10 {
-> +       status = "okay";
-> +       gpio-line-names = "",           "",
-> +                         "",           "",
-> +                         "",           "",
-> +                         "USER-LED-3", "";
-> +};
-> +
-> +&i2c0 {
-> +       status = "okay";
-> +       label = "LS-I2C0";
-> +};
-> +
-> +&i2c2 {
-> +       status = "okay";
-> +       label = "LS-I2C1";
-> +};
-> +
-> +&ir {
-> +       status = "okay";
-> +};
-> +
-> +&spi0 {
-> +       status = "okay";
-> +       label = "LS-SPI0";
-> +};
-> +
-> +&uart0 {
-> +       status = "okay";
-> +};
-> +
-> +&uart2 {
-> +       status = "okay";
-> +       label = "LS-UART0";
-> +};
-> +/* No optional LS-UART1 on Low Speed Expansion Connector. */
-> +
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-> new file mode 100644
-> index 0000000..e94d6f6
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-> @@ -0,0 +1,405 @@
-> +/*
-> + * DTS File for HiSilicon Hi3798cv200 SoC.
-> + *
-> + * Copyright (c) 2016-2017 HiSilicon Technologies Co., Ltd.
-> + *
-> + * Released under the GPLv2 only.
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +#include <dt-bindings/clock/histb-clock.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include <dt-bindings/reset/ti-syscon.h>
-> +
-> +/ {
-> +       compatible = "hisilicon,hi3798cv200";
-> +       interrupt-parent = <&gic>;
-> +       #address-cells = <2>;
-> +       #size-cells = <2>;
-> +
-> +       psci {
-> +               compatible = "arm,psci-0.2";
-> +               method = "smc";
-> +       };
-> +
-> +       cpus {
-> +               #address-cells = <2>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       compatible = "arm,cortex-a53";
-> +                       device_type = "cpu";
-> +                       reg = <0x0 0x0>;
-> +                       enable-method = "psci";
-> +               };
-> +
-> +               cpu@1 {
-> +                       compatible = "arm,cortex-a53";
-> +                       device_type = "cpu";
-> +                       reg = <0x0 0x1>;
-> +                       enable-method = "psci";
-> +               };
-> +
-> +               cpu@2 {
-> +                       compatible = "arm,cortex-a53";
-> +                       device_type = "cpu";
-> +                       reg = <0x0 0x2>;
-> +                       enable-method = "psci";
-> +               };
-> +
-> +               cpu@3 {
-> +                       compatible = "arm,cortex-a53";
-> +                       device_type = "cpu";
-> +                       reg = <0x0 0x3>;
-> +                       enable-method = "psci";
-> +               };
-> +       };
-> +
-> +       gic: interrupt-controller@f1001000 {
-> +               compatible = "arm,gic-400";
-> +               reg = <0x0 0xf1001000 0x0 0x1000>,  /* GICD */
-> +                     <0x0 0xf1002000 0x0 0x100>;   /* GICC */
-> +               #address-cells = <0>;
-> +               #interrupt-cells = <3>;
-> +               interrupt-controller;
-> +       };
-> +
-> +       timer {
-> +               compatible = "arm,armv8-timer";
-> +               interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-> +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-> +       };
-> +
-> +       soc: soc@f0000000 {
-> +               compatible = "simple-bus";
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges = <0x0 0x0 0xf0000000 0x10000000>;
-> +
-> +               crg: clock-reset-controller@8a22000 {
-> +                       compatible = "hisilicon,hi3798cv200-crg", "syscon", "simple-mfd";
-> +                       reg = <0x8a22000 0x1000>;
-> +                       #clock-cells = <1>;
-> +                       #reset-cells = <2>;
-> +
-> +                       gmacphyrst: reset-controller {
-> +                               compatible = "ti,syscon-reset";
-> +                               #reset-cells = <1>;
-> +                               ti,reset-bits =
-> +                                       <0xcc 12 0xcc 12 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)>,  /* 0: gmac0-phy-rst */
-> +                                       <0xcc 13 0xcc 13 0 0 (ASSERT_CLEAR|DEASSERT_SET|STATUS_NONE)>;  /* 1: gmac1-phy-rst */
-> +                       };
-> +               };
-> +
-> +               sysctrl: system-controller@8000000 {
-> +                       compatible = "hisilicon,hi3798cv200-sysctrl", "syscon";
-> +                       reg = <0x8000000 0x1000>;
-> +                       #clock-cells = <1>;
-> +                       #reset-cells = <2>;
-> +               };
-> +
-> +               uart0: serial@8b00000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x8b00000 0x1000>;
-> +                       interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&sysctrl HISTB_UART0_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               uart2: serial@8b02000 {
-> +                       compatible = "arm,pl011", "arm,primecell";
-> +                       reg = <0x8b02000 0x1000>;
-> +                       interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&crg HISTB_UART2_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c0: i2c@8b10000 {
-> +                       compatible = "hisilicon,hix5hd2-i2c";
-> +                       reg = <0x8b10000 0x1000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clock-frequency = <400000>;
-> +                       clocks = <&crg HISTB_I2C0_CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c1: i2c@8b11000 {
-> +                       compatible = "hisilicon,hix5hd2-i2c";
-> +                       reg = <0x8b11000 0x1000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clock-frequency = <400000>;
-> +                       clocks = <&crg HISTB_I2C1_CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c2: i2c@8b12000 {
-> +                       compatible = "hisilicon,hix5hd2-i2c";
-> +                       reg = <0x8b12000 0x1000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clock-frequency = <400000>;
-> +                       clocks = <&crg HISTB_I2C2_CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c3: i2c@8b13000 {
-> +                       compatible = "hisilicon,hix5hd2-i2c";
-> +                       reg = <0x8b13000 0x1000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clock-frequency = <400000>;
-> +                       clocks = <&crg HISTB_I2C3_CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               i2c4: i2c@8b14000 {
-> +                       compatible = "hisilicon,hix5hd2-i2c";
-> +                       reg = <0x8b14000 0x1000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clock-frequency = <400000>;
-> +                       clocks = <&crg HISTB_I2C4_CLK>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               spi0: spi@8b1a000 {
-> +                       compatible = "arm,pl022", "arm,primecell";
-> +                       reg = <0x8b1a000 0x1000>;
-> +                       interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-> +                       num-cs = <1>;
-> +                       cs-gpios = <&gpio7 1 0>;
-> +                       clocks = <&crg HISTB_SPI0_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       status = "disabled";
-> +               };
-> +
-> +               emmc: mmc@9830000 {
-> +                       compatible = "snps,dw-mshc";
-> +                       reg = <0x9830000 0x10000>;
-> +                       interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&crg HISTB_MMC_CIU_CLK>,
-> +                                <&crg HISTB_MMC_BIU_CLK>;
-> +                       clock-names = "ciu", "biu";
-> +               };
-> +
-> +               gpio0: gpio@8b20000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b20000 0x1000>;
-> +                       interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio1: gpio@8b21000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b21000 0x1000>;
-> +                       interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio2: gpio@8b22000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b22000 0x1000>;
-> +                       interrupts = <GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio3: gpio@8b23000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b23000 0x1000>;
-> +                       interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio4: gpio@8b24000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b24000 0x1000>;
-> +                       interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio5: gpio@8004000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8004000 0x1000>;
-> +                       interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio6: gpio@8b26000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b26000 0x1000>;
-> +                       interrupts = <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio7: gpio@8b27000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b27000 0x1000>;
-> +                       interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio8: gpio@8b28000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b28000 0x1000>;
-> +                       interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio9: gpio@8b29000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b29000 0x1000>;
-> +                       interrupts = <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio10: gpio@8b2a000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b2a000 0x1000>;
-> +                       interrupts = <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio11: gpio@8b2b000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b2b000 0x1000>;
-> +                       interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gpio12: gpio@8b2c000 {
-> +                       compatible = "arm,pl061", "arm,primecell";
-> +                       reg = <0x8b2c000 0x1000>;
-> +                       interrupts = <GIC_SPI 120 IRQ_TYPE_LEVEL_HIGH>;
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells = <2>;
-> +                       clocks = <&crg HISTB_APB_CLK>;
-> +                       clock-names = "apb_pclk";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gmac0: ethernet@9840000 {
-> +                       compatible = "hisilicon,hi3798cv200-gmac", "hisilicon,hisi-gmac-v2";
-> +                       reg = <0x9840000 0x1000>,
-> +                             <0x984300c 0x4>;
-> +                       interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&crg HISTB_ETH0_MAC_CLK>,
-> +                                <&crg HISTB_ETH0_MACIF_CLK>;
-> +                       clock-names = "mac_core", "mac_ifc";
-> +                       resets = <&crg 0xcc 8>,
-> +                                <&crg 0xcc 10>,
-> +                                <&gmacphyrst 0>;
-> +                       reset-names = "mac_core", "mac_ifc", "phy";
-> +                       status = "disabled";
-> +               };
-> +
-> +               gmac1: ethernet@9841000 {
-> +                       compatible = "hisilicon,hi3798cv200-gmac", "hisilicon,hisi-gmac-v2";
-> +                       reg = <0x9841000 0x1000>,
-> +                             <0x9843010 0x4>;
-> +                       interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&crg HISTB_ETH1_MAC_CLK>,
-> +                                <&crg HISTB_ETH1_MACIF_CLK>;
-> +                       clock-names = "mac_core", "mac_ifc";
-> +                       resets = <&crg 0xcc 9>,
-> +                                <&crg 0xcc 11>,
-> +                                <&gmacphyrst 1>;
-> +                       reset-names = "mac_core", "mac_ifc", "phy";
-> +                       status = "disabled";
-> +               };
-> +
-> +               ir: ir@8001000 {
-> +                       compatible = "hisilicon,hix5hd2-ir";
-> +                       reg = <0x8001000 0x1000>;
-> +                       interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-> +                       clocks = <&sysctrl HISTB_IR_CLK>;
-> +                       status = "disabled";
-> +               };
-> +       };
-> +};
-> --
-> 1.9.1
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi>
+
+Once the fwnode patchset hits mediatree, then yes it can be
+converted along with all the others under media/i2c.
+
+> <snip>
 >
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +
+>> +static int ov5640_write_reg16(struct ov5640_dev *sensor, u16 reg, u16 val)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = ov5640_write_reg(sensor, reg, val >> 8);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return ov5640_write_reg(sensor, reg + 1, val & 0xff);
+> Does the sensor datasheet suggest doing this?
+
+Why would the datasheet suggest or not suggest such things?
+Coding details like this don't belong in the datasheet.
+
+>   Making the write in two
+> transactions will make it non-atomic that could be an issue in some corner
+> cases.
+
+It's called everywhere under the same device mutex.
+
+
+> <snip>
+>> +
+>> +static int ov5640_set_gain(struct ov5640_dev *sensor, int auto_gain)
+>> +{
+>> +	struct ov5640_ctrls *ctrls = &sensor->ctrls;
+>> +
+>> +	if (ctrls->auto_gain->is_new) {
+>> +		ov5640_mod_reg(sensor, OV5640_REG_AEC_PK_MANUAL,
+>> +			       BIT(1), ctrls->auto_gain->val ? 0 : BIT(1));
+> You're generally silently ignoring all I²C access errors. Is that
+> intentional?
+
+Yeah, this driver is much cleaned up from the original, but there are
+still some issues like this. The register access errors are really only
+being paid attention to during s_power() when loading the initial
+register set, which is enough at least to catch a non-existent chip
+or basic i2c bus or other hardware issues. But I should work on
+catching all access errors. This is something I did in an earlier rev
+but I used a questionable short-cut to make it easier to implement.
+I'll just have to catch every case one by one.
+
+
+> <snip>
+>
+>> +
+>> +static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
+>> +{
+>> +	struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +	int ret = 0;
+>> +
+>> +	mutex_lock(&sensor->lock);
+> Could you use the same lock for the controls as you use for the rest? Just
+> setting handler->lock after handler init does the trick.
+
+Can you please rephrase, I don't follow. "same lock for the controls as
+you use for the rest" - there's only one device lock owned by this driver
+and I am already using that same lock.
+
+
+> <snip>
+>> +
+>> +static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
+>> +{
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +	int ret = 0;
+>> +
+>> +	mutex_lock(&sensor->lock);
+>> +
+>> +#if defined(CONFIG_MEDIA_CONTROLLER)
+>> +	if (sd->entity.stream_count > 1)
+> The entity stream_count isn't connected to the number of times s_stream(sd,
+> true) is called. Please remove the check.
+
+It's incremented by media_pipeline_start(), even if the entity is already
+a member of the given pipeline.
+
+I added this check because in imx-media, the ov5640 can be streaming
+concurrently to multiple video capture devices, and each capture device 
+calls
+media_pipeline_start() at stream on, which increments the entity stream 
+count.
+
+So if one capture device issues a stream off while others are still 
+streaming,
+ov5640 should remain at stream on. So the entity stream count is being
+used as a streaming usage counter. Is there a better way to do this? Should
+I use a private stream use counter instead?
+
+
+
+> <snip>
+>
+>> +
+>> +free_ctrls:
+>> +	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
+>> +entity_cleanup:
+>> +	mutex_destroy(&sensor->lock);
+>> +	media_entity_cleanup(&sensor->sd.entity);
+>> +	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
+> Should this still be here?
+>
+>> +	return ret;
+>> +}
+>> +
+>> +static int ov5640_remove(struct i2c_client *client)
+>> +{
+>> +	struct v4l2_subdev *sd = i2c_get_clientdata(client);
+>> +	struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>> +
+>> +	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
+> Ditto.
+
+I don't understand. regulator_bulk_disable() is still needed, am I missing
+something?
+
+Steve
+
+
+
+
+--------------73BDF76690561185ABE4948D
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    <p>Hi Sakari,<br>
+    </p>
+    <br>
+    <div class="moz-cite-prefix">On 05/29/2017 08:55 AM, Sakari Ailus
+      wrote:<br>
+    </div>
+    <blockquote type="cite"
+      cite="mid:20170529155511.GI29527@valkosipuli.retiisi.org.uk">
+      <pre wrap="">Hi Steve,
+
+A few comments below.
+
+On Wed, May 24, 2017 at 05:29:31PM -0700, Steve Longerbeam wrote:
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">This driver is based on ov5640_mipi.c from Freescale imx_3.10.17_1.0.0_beta
+branch, modified heavily to bring forward to latest interfaces and code
+cleanup.
+
+Signed-off-by: Steve Longerbeam <a class="moz-txt-link-rfc2396E" href="mailto:steve_longerbeam@mentor.com">&lt;steve_longerbeam@mentor.com&gt;</a>
+---
+ drivers/media/i2c/Kconfig  |    9 +
+ drivers/media/i2c/Makefile |    1 +
+ drivers/media/i2c/ov5640.c | 2224 ++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 2234 insertions(+)
+ create mode 100644 drivers/media/i2c/ov5640.c
+
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index fd181c9..ff082a7 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -539,6 +539,15 @@ config VIDEO_OV2659
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called ov2659.
+ 
++config VIDEO_OV5640
++	tristate "OmniVision OV5640 sensor support"
++	depends on OF
++	depends on GPIOLIB &amp;&amp; VIDEO_V4L2 &amp;&amp; I2C &amp;&amp; VIDEO_V4L2_SUBDEV_API
++	depends on MEDIA_CAMERA_SUPPORT
++	---help---
++	  This is a Video4Linux2 sensor-level driver for the Omnivision
++	  OV5640 camera sensor with a MIPI CSI-2 interface.
++
+ config VIDEO_OV5645
+ 	tristate "OmniVision OV5645 sensor support"
+ 	depends on OF
+diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
+index 62323ec..dc6b0c4 100644
+--- a/drivers/media/i2c/Makefile
++++ b/drivers/media/i2c/Makefile
+@@ -58,6 +58,7 @@ obj-$(CONFIG_VIDEO_SONY_BTF_MPX) += sony-btf-mpx.o
+ obj-$(CONFIG_VIDEO_UPD64031A) += upd64031a.o
+ obj-$(CONFIG_VIDEO_UPD64083) += upd64083.o
+ obj-$(CONFIG_VIDEO_OV2640) += ov2640.o
++obj-$(CONFIG_VIDEO_OV5640) += ov5640.o
+ obj-$(CONFIG_VIDEO_OV5645) += ov5645.o
+ obj-$(CONFIG_VIDEO_OV5647) += ov5647.o
+ obj-$(CONFIG_VIDEO_OV7640) += ov7640.o
+diff --git a/drivers/media/i2c/ov5640.c b/drivers/media/i2c/ov5640.c
+new file mode 100644
+index 0000000..2a032bc
+--- /dev/null
++++ b/drivers/media/i2c/ov5640.c
+@@ -0,0 +1,2224 @@
++/*
++ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2014-2017 Mentor Graphics Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ */
++
++#include &lt;linux/clk.h&gt;
++#include &lt;linux/clk-provider.h&gt;
++#include &lt;linux/clkdev.h&gt;
++#include &lt;linux/ctype.h&gt;
++#include &lt;linux/delay.h&gt;
++#include &lt;linux/device.h&gt;
++#include &lt;linux/i2c.h&gt;
++#include &lt;linux/init.h&gt;
++#include &lt;linux/module.h&gt;
++#include &lt;linux/of_device.h&gt;
++#include &lt;linux/slab.h&gt;
++#include &lt;linux/types.h&gt;
++#include &lt;linux/gpio/consumer.h&gt;
++#include &lt;linux/regulator/consumer.h&gt;
++#include &lt;media/v4l2-async.h&gt;
++#include &lt;media/v4l2-ctrls.h&gt;
++#include &lt;media/v4l2-device.h&gt;
++#include &lt;media/v4l2-of.h&gt;
+</pre>
+      </blockquote>
+      <pre wrap="">Could you rebase this on the V4L2 fwnode patchset here, please?
+
+<a class="moz-txt-link-rfc1738" href="https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi">&lt;URL:https://git.linuxtv.org/sailus/media_tree.git/log/?h=v4l2-acpi&gt;</a></pre>
+    </blockquote>
+    <br>
+    Once the fwnode patchset hits mediatree, then yes it can be<br>
+    converted along with all the others under media/i2c.<br>
+    <br>
+    <blockquote type="cite"
+      cite="mid:20170529155511.GI29527@valkosipuli.retiisi.org.uk">
+      <pre wrap="">&lt;snip&gt;
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_write_reg16(struct ov5640_dev *sensor, u16 reg, u16 val)
++{
++	int ret;
++
++	ret = ov5640_write_reg(sensor, reg, val &gt;&gt; 8);
++	if (ret)
++		return ret;
++
++	return ov5640_write_reg(sensor, reg + 1, val &amp; 0xff);
+</pre>
+      </blockquote>
+      <pre wrap="">Does the sensor datasheet suggest doing this?</pre>
+    </blockquote>
+    <br>
+    Why would the datasheet suggest or not suggest such things?<br>
+    Coding details like this don't belong in the datasheet.<br>
+    <br>
+    <blockquote type="cite"
+      cite="mid:20170529155511.GI29527@valkosipuli.retiisi.org.uk">
+      <pre wrap=""> Making the write in two
+transactions will make it non-atomic that could be an issue in some corner
+cases.
+</pre>
+    </blockquote>
+    <br>
+    It's called everywhere under the same device mutex.<br>
+    <br>
+    <br>
+    <blockquote type="cite"
+      cite="mid:20170529155511.GI29527@valkosipuli.retiisi.org.uk">
+      <pre wrap="">&lt;snip&gt;
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_set_gain(struct ov5640_dev *sensor, int auto_gain)
++{
++	struct ov5640_ctrls *ctrls = &amp;sensor-&gt;ctrls;
++
++	if (ctrls-&gt;auto_gain-&gt;is_new) {
++		ov5640_mod_reg(sensor, OV5640_REG_AEC_PK_MANUAL,
++			       BIT(1), ctrls-&gt;auto_gain-&gt;val ? 0 : BIT(1));
+</pre>
+      </blockquote>
+      <pre wrap="">You're generally silently ignoring all I²C access errors. Is that
+intentional?</pre>
+    </blockquote>
+    <br>
+    Yeah, this driver is much cleaned up from the original, but there
+    are<br>
+    still some issues like this. The register access errors are really
+    only<br>
+    being paid attention to during s_power() when loading the initial<br>
+    register set, which is enough at least to catch a non-existent chip<br>
+    or basic i2c bus or other hardware issues. But I should work on<br>
+    catching all access errors. This is something I did in an earlier
+    rev<br>
+    but I used a questionable short-cut to make it easier to implement.<br>
+    I'll just have to catch every case one by one.<br>
+    <br>
+    <br>
+    <blockquote type="cite"
+      cite="mid:20170529155511.GI29527@valkosipuli.retiisi.org.uk">
+      <pre wrap="">&lt;snip&gt;
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
++{
++	struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	int ret = 0;
++
++	mutex_lock(&amp;sensor-&gt;lock);
+</pre>
+      </blockquote>
+      <pre wrap="">Could you use the same lock for the controls as you use for the rest? Just
+setting handler-&gt;lock after handler init does the trick.</pre>
+    </blockquote>
+    <br>
+    Can you please rephrase, I don't follow. "same lock for the controls
+    as<br>
+    you use for the rest" - there's only one device lock owned by this
+    driver<br>
+    and I am already using that same lock.<br>
+    <br>
+    <br>
+    <blockquote type="cite"
+      cite="mid:20170529155511.GI29527@valkosipuli.retiisi.org.uk">
+      <pre wrap="">&lt;snip&gt;
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+
++static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
++{
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++	int ret = 0;
++
++	mutex_lock(&amp;sensor-&gt;lock);
++
++#if defined(CONFIG_MEDIA_CONTROLLER)
++	if (sd-&gt;entity.stream_count &gt; 1)
+</pre>
+      </blockquote>
+      <pre wrap="">The entity stream_count isn't connected to the number of times s_stream(sd,
+true) is called. Please remove the check.</pre>
+    </blockquote>
+    <br>
+    It's incremented by media_pipeline_start(), even if the entity is
+    already<br>
+    a member of the given pipeline.<br>
+    <br>
+    I added this check because in imx-media, the ov5640 can be streaming<br>
+    concurrently to multiple video capture devices, and each capture
+    device calls<br>
+    media_pipeline_start() at stream on, which increments the entity
+    stream count.<br>
+    <br>
+    So if one capture device issues a stream off while others are still
+    streaming,<br>
+    ov5640 should remain at stream on. So the entity stream count is
+    being<br>
+    used as a streaming usage counter. Is there a better way to do this?
+    Should<br>
+    I use a private stream use counter instead?<br>
+    <br>
+    <br>
+    <br>
+    <blockquote type="cite"
+      cite="mid:20170529155511.GI29527@valkosipuli.retiisi.org.uk">
+      <pre wrap="">&lt;snip&gt;
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+
++free_ctrls:
++	v4l2_ctrl_handler_free(&amp;sensor-&gt;ctrls.handler);
++entity_cleanup:
++	mutex_destroy(&amp;sensor-&gt;lock);
++	media_entity_cleanup(&amp;sensor-&gt;sd.entity);
++	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor-&gt;supplies);
+</pre>
+      </blockquote>
+      <pre wrap="">Should this still be here?
+
+</pre>
+      <blockquote type="cite">
+        <pre wrap="">+	return ret;
++}
++
++static int ov5640_remove(struct i2c_client *client)
++{
++	struct v4l2_subdev *sd = i2c_get_clientdata(client);
++	struct ov5640_dev *sensor = to_ov5640_dev(sd);
++
++	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor-&gt;supplies);
+</pre>
+      </blockquote>
+      <pre wrap="">Ditto.</pre>
+    </blockquote>
+    <br>
+    I don't understand. regulator_bulk_disable() is still needed, am I
+    missing<br>
+    something?<br>
+     <br>
+    Steve<br>
+    <br>
+    <br>
+    <br>
+  </body>
+</html>
+
+--------------73BDF76690561185ABE4948D--
