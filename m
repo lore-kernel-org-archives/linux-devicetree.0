@@ -1,46 +1,96 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/5] gpio: arizona: Add support for GPIOs that need to
- be maintained
-Date: Mon, 29 May 2017 11:09:29 +0200
-Message-ID: <CACRpkdaCcDKH=8u6XhbQ1C40stjJ15YdEjbzTD8rCC397ZXD_w@mail.gmail.com>
-References: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1495550852-3672-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH v4 2/2] tpm: do not suspend/resume if power
+ stays on
+Date: Mon, 29 May 2017 11:09:40 +0200
+Message-ID: <20170529090940.9874-2-enric.balletbo@collabora.com>
+References: <20170529090940.9874-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495550852-3672-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:WOLFSON MICROELECTRONICS DRIVERS" <patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20170529090940.9874-1-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/options/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=tpmdd-devel>
+List-Post: <mailto:tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/tpmdd-devel>,
+	<mailto:tpmdd-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: tpmdd-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, tpmdd-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 4:47 PM, Charles Keepax
-<ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+The suspend/resume behavior of the TPM can be controlled by setting
+"powered-while-suspended" in the DTS. This is useful for the cases
+when hardware does not power-off the TPM.
 
-> The Arizona devices only maintain the state of output GPIOs whilst the
-> CODEC is active, this can cause issues if the CODEC suspends whilst
-> something is relying on the state of one of its GPIOs. However, in
-> many systems the CODEC GPIOs are used for audio related features
-> and thus the state of the GPIOs is unimportant whilst the CODEC is
-> suspended. Often keeping the CODEC resumed in such a system would
-> incur a power impact that is unacceptable.
->
-> Allow the user to select whether a GPIO output should keep the
-> CODEC resumed, by adding a flag through the second cell of the GPIO
-> specifier in device tree.
->
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> ---
->
-> Changes since v1:
->  - Use the new gpiolib features to determine if the pin is
->    persistent or not.
+Signed-off-by: Sonny Rao <sonnyrao-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+Changes since v3.
+  - Rebased on top of linux-next
+ Rob Herring
+  - Split DT binding from code patch as is preferred.
+Changes since v2:
+ Jarkko Sakkinen
+  - Add a new TPM_CHIP_FLAG_ALWAYS_POWERED flag instead of using a boolean variable.
+  - Remove a trailing newline.
+Changes since v1:
+ Jason Gunthorpe :
+  - Move the code to handle suspend/resume in the common chip code.
 
-Patch applied!
+ drivers/char/tpm/tpm-interface.c | 3 +++
+ drivers/char/tpm/tpm.h           | 1 +
+ drivers/char/tpm/tpm_of.c        | 3 +++
+ 3 files changed, 7 insertions(+)
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index be54159..34ec7ce 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -1099,6 +1099,9 @@ int tpm_pm_suspend(struct device *dev)
+ 	if (chip == NULL)
+ 		return -ENODEV;
+ 
++	if (chip->flags & TPM_CHIP_FLAG_ALWAYS_POWERED)
++		return 0;
++
+ 	if (chip->flags & TPM_CHIP_FLAG_TPM2) {
+ 		tpm2_shutdown(chip, TPM2_SU_STATE);
+ 		return 0;
+diff --git a/drivers/char/tpm/tpm.h b/drivers/char/tpm/tpm.h
+index af05c14..b44d39c 100644
+--- a/drivers/char/tpm/tpm.h
++++ b/drivers/char/tpm/tpm.h
+@@ -170,6 +170,7 @@ enum tpm_chip_flags {
+ 	TPM_CHIP_FLAG_IRQ		= BIT(2),
+ 	TPM_CHIP_FLAG_VIRTUAL		= BIT(3),
+ 	TPM_CHIP_FLAG_HAVE_TIMEOUTS	= BIT(4),
++	TPM_CHIP_FLAG_ALWAYS_POWERED	= BIT(5),
+ };
+ 
+ struct tpm_bios_log {
+diff --git a/drivers/char/tpm/tpm_of.c b/drivers/char/tpm/tpm_of.c
+index de57d4a..aadb7f4 100644
+--- a/drivers/char/tpm/tpm_of.c
++++ b/drivers/char/tpm/tpm_of.c
+@@ -36,6 +36,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
+ 	else
+ 		return -ENODEV;
+ 
++	if (of_property_read_bool(np, "powered-while-suspended"))
++		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
++
+ 	sizep = of_get_property(np, "linux,sml-size", NULL);
+ 	basep = of_get_property(np, "linux,sml-base", NULL);
+ 	if (sizep == NULL && basep == NULL)
+-- 
+2.9.3
+
+
+------------------------------------------------------------------------------
+Check out the vibrant tech community on one of the world's most
+engaging tech sites, Slashdot.org! http://sdm.link/slashdot
