@@ -1,276 +1,95 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH v3 06/10] pinctrl: sunxi: add support of R40 to A10
- pinctrl driver
-Date: Mon, 29 May 2017 21:25:44 +0800
-Message-ID: <CAGb2v66q0qV3XenyJn77YyiBq0bE984SbB-9S8Z8vJhx2m7SZw@mail.gmail.com>
-References: <20170527102308.1988-1-icenowy@aosc.io> <20170527102308.1988-7-icenowy@aosc.io>
- <20170529131100.a56rv3e5z3kpcxuo@wens.csie.org> <7dd239497298ccd8e946c08d1d2a679f@aosc.io>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v7 15/34] add mux and video interface bridge entity
+ functions
+Date: Mon, 29 May 2017 15:37:00 +0200
+Message-ID: <3d3f0c9f-7315-69f0-877e-04b33c498c46@xs4all.nl>
+References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+ <1495672189-29164-16-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <7dd239497298ccd8e946c08d1d2a679f@aosc.io>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495672189-29164-16-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 29, 2017 at 9:19 PM,  <icenowy@aosc.io> wrote:
-> 在 2017-05-29 21:11，Chen-Yu Tsai 写道：
->>
->> On Sat, May 27, 2017 at 06:23:04PM +0800, Icenowy Zheng wrote:
->>>
->>> R40 is said to be an upgrade of A20, and its pin configuration is also
->>> similar to A20 (and thus similar to A10).
->>>
->>> Add support for R40 to the A10 pinctrl driver.
->>>
->>> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
->>> ---
->>>  drivers/pinctrl/sunxi/Kconfig             |   2 +-
->>>  drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c | 272
->>> +++++++++++++++++++++---------
->>>  2 files changed, 197 insertions(+), 77 deletions(-)
->>>
->>> diff --git a/drivers/pinctrl/sunxi/Kconfig
->>> b/drivers/pinctrl/sunxi/Kconfig
->>> index 624d84e6c936..9d01da3b90bd 100644
->>> --- a/drivers/pinctrl/sunxi/Kconfig
->>> +++ b/drivers/pinctrl/sunxi/Kconfig
->>> @@ -7,7 +7,7 @@ config PINCTRL_SUNXI
->>>         select GPIOLIB
->>>
->>>  config PINCTRL_SUN4I_A10
->>> -       def_bool MACH_SUN4I || MACH_SUN7I
->>> +       def_bool MACH_SUN4I || MACH_SUN7I || MACH_SUN8I
->>>         select PINCTRL_SUNXI
->>>
->>>  config PINCTRL_SUN5I
->>> diff --git a/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c
->>> b/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c
->>> index 159580c04b14..0f6ca8391ea7 100644
->>> --- a/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c
->>> +++ b/drivers/pinctrl/sunxi/pinctrl-sun4i-a10.c
->>
->>
->> [...]
->>
->>> @@ -162,14 +183,19 @@ static const struct sunxi_desc_pin sun4i_a10_pins[]
->>> = {
->>>                   SUNXI_FUNCTION(0x3, "can"),           /* RX */
->>>                   SUNXI_FUNCTION(0x4, "uart1"),         /* RING */
->>>                   SUNXI_FUNCTION_VARIANT(0x5, "gmac",   /* GNULL / ETXERR
->>> */
->>> -                                        PINCTRL_SUN7I_A20),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40),
->>>                   SUNXI_FUNCTION_VARIANT(0x6, "i2s1",   /* DI */
->>> -                                        PINCTRL_SUN7I_A20)),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40)),
->>>         /* Hole */
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 0),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>> -                 SUNXI_FUNCTION(0x2, "i2c0")),         /* SCK */
->>> +                 SUNXI_FUNCTION(0x2, "i2c0"),          /* SCK */
->>> +                 SUNXI_FUNCTION_VARIANT(0x3,
->>> +                                        "pll-lock-dbg",
->>
->>
->> Can you stick to underscores to be consistent?
->
->
-> OK...
-> This is a so strange pin name and I just picked the datasheet
-> name.
->
-> I don't care how to name it as I don't even know what this is.
->
->
->>
->>> +                                        PINCTRL_SUN8I_R40)),
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 1),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>> @@ -177,11 +203,19 @@ static const struct sunxi_desc_pin sun4i_a10_pins[]
->>> = {
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 2),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>> -                 SUNXI_FUNCTION(0x2, "pwm")),          /* PWM0 */
->>> +                 SUNXI_FUNCTION_VARIANT(0x2, "pwm",    /* PWM0 */
->>> +                                        PINCTRL_SUN4I_A10 |
->>> +                                        PINCTRL_SUN7I_A20),
->>> +                 SUNXI_FUNCTION_VARIANT(0x3, "pwm",    /* PWM0 */
->>> +                                        PINCTRL_SUN8I_R40)),
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 3),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>> -                 SUNXI_FUNCTION(0x2, "ir0"),           /* TX */
->>> +                 SUNXI_FUNCTION_VARIANT(0x2, "ir0",    /* TX */
->>> +                                        PINCTRL_SUN4I_A10 |
->>> +                                        PINCTRL_SUN7I_A20),
->>> +                 SUNXI_FUNCTION_VARIANT(0x3, "pwm0",   /* PWM1 */
->>
->>
->> The numbering is wrong. Just drop the number altogether, like all the
->> other instances.
->>
->>> +                                        PINCTRL_SUN8I_R40),
->>>                 /*
->>>                  * The SPDIF block is not referenced at all in the A10
->>> user
->>>                  * manual. However it is described in the code leaked and
->>> the
->>> @@ -205,7 +239,8 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] =
->>> {
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s",    /* MCLK */
->>>                                          PINCTRL_SUN4I_A10),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s0",   /* MCLK */
->>> -                                        PINCTRL_SUN7I_A20),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40),
->>
->>
->> Maybe we could use "i2s" instead, like on the A10. I don't know where
->> i2s1 is used, but it certainly isn't routed outside the SoC, and i2s2
->> looks like it's for dw-hdmi's audio path.
->
->
-> Nope, it's routed at PA bank, see pins start at PA14.
->
-> Changing this name will also break existing A20 device trees, if any of
-> them use I2S.
+On 05/25/2017 02:29 AM, Steve Longerbeam wrote:
+> From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> - renamed MEDIA_ENT_F_MUX to MEDIA_ENT_F_VID_MUX
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>   Documentation/media/uapi/mediactl/media-types.rst | 22 ++++++++++++++++++++++
+>   include/uapi/linux/media.h                        |  6 ++++++
+>   2 files changed, 28 insertions(+)
+> 
+> diff --git a/Documentation/media/uapi/mediactl/media-types.rst b/Documentation/media/uapi/mediactl/media-types.rst
+> index 2a5164a..47ee003 100644
+> --- a/Documentation/media/uapi/mediactl/media-types.rst
+> +++ b/Documentation/media/uapi/mediactl/media-types.rst
+> @@ -299,6 +299,28 @@ Types and flags used to represent the media graph elements
+>   	  received on its sink pad and outputs the statistics data on
+>   	  its source pad.
+>   
+> +    -  ..  row 29
+> +
+> +       ..  _MEDIA-ENT-F-VID-MUX:
+> +
+> +       -  ``MEDIA_ENT_F_VID_MUX``
+> +
+> +       - Video multiplexer. An entity capable of multiplexing must have at
+> +         least two sink pads and one source pad, and must pass the video
+> +         frame(s) received from the active sink pad to the source pad. Video
+> +         frame(s) from the inactive sink pads are discarded.
+> +
+> +    -  ..  row 30
+> +
+> +       ..  _MEDIA-ENT-F-VID-IF-BRIDGE:
+> +
+> +       -  ``MEDIA_ENT_F_VID_IF_BRIDGE``
+> +
+> +       - Video interface bridge. A video interface bridge entity must have at
+> +         least one sink pad and one source pad. It receives video frame(s) on
+> +         its sink pad in one bus format (HDMI, eDP, MIPI CSI-2, ...) and
+> +         converts them and outputs them on its source pad in another bus format
+> +         (eDP, MIPI CSI-2, parallel, ...).
 
-Missed that one. Sorry about the noise.
+I'm unhappy with the term 'bus format'. It's too close to 'mediabus format'.
+How about calling it "bus protocol"?
 
->
->
->>
->>>                   SUNXI_FUNCTION(0x3, "ac97")),         /* MCLK */
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 6),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>
->>
->> [...]
->>
->>> @@ -237,31 +275,41 @@ static const struct sunxi_desc_pin sun4i_a10_pins[]
->>> = {
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s",    /* DO1 */
->>>                                          PINCTRL_SUN4I_A10),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s0",   /* DO1 */
->>> -                                        PINCTRL_SUN7I_A20)),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40),
->>> +                 SUNXI_FUNCTION_VARIANT(0x4, "pwm",    /* PWM6 */
->>> +                                        PINCTRL_SUN8I_R40)),
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 10),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s",    /* DO2 */
->>>                                          PINCTRL_SUN4I_A10),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s0",   /* DO2 */
->>> -                                        PINCTRL_SUN7I_A20)),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40),
->>> +                 SUNXI_FUNCTION_VARIANT(0x4, "pwm",    /* PWM7 */
->>> +                                        PINCTRL_SUN8I_R40)),
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 11),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s",    /* DO3 */
->>>                                          PINCTRL_SUN4I_A10),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s0",   /* DO3 */
->>> -                                        PINCTRL_SUN7I_A20)),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40)),
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 12),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s",    /* DI */
->>>                                          PINCTRL_SUN4I_A10),
->>>                   SUNXI_FUNCTION_VARIANT(0x2, "i2s0",   /* DI */
->>> -                                        PINCTRL_SUN7I_A20),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40),
->>>                   SUNXI_FUNCTION(0x3, "ac97"),          /* DI */
->>>                 /* Undocumented mux function on A10 - See SPDIF MCLK
->>> above */
->>> -                 SUNXI_FUNCTION(0x4, "spdif")),        /* SPDIF IN */
->>> +                 SUNXI_FUNCTION_VARIANT(0x4, "spdif",  /* SPDIF IN */
->>> +                                        PINCTRL_SUN4I_A10 |
->>> +                                        PINCTRL_SUN7I_A20)),
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 13),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>> @@ -308,7 +356,9 @@ static const struct sunxi_desc_pin sun4i_a10_pins[] =
->>> {
->>
->>
->> You missed PWM4 and PWM5 on pins PB20 and PB21.
->>
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>>                   SUNXI_FUNCTION(0x2, "uart0"),         /* TX */
->>> -                 SUNXI_FUNCTION(0x3, "ir1")),          /* TX */
->>> +                 SUNXI_FUNCTION_VARIANT(0x3, "ir1",    /* TX */
->>> +                                        PINCTRL_SUN4I_A10 |
->>> +                                        PINCTRL_SUN7I_A20)),
->>>         SUNXI_PIN(SUNXI_PINCTRL_PIN(B, 23),
->>>                   SUNXI_FUNCTION(0x0, "gpio_in"),
->>>                   SUNXI_FUNCTION(0x1, "gpio_out"),
->>
->>
->> [...]
->>
->>> @@ -916,7 +1000,10 @@ static const struct sunxi_desc_pin sun4i_a10_pins[]
->>> = {
->>>                   SUNXI_FUNCTION_VARIANT(0x3, "pata",   /* ATAD12 */
->>>                                          PINCTRL_SUN4I_A10),
->>>                   SUNXI_FUNCTION_VARIANT(0x3, "emac",   /* ETXD1 */
->>> -                                        PINCTRL_SUN7I_A20),
->>> +                                        PINCTRL_SUN7I_A20 |
->>> +                                        PINCTRL_SUN8I_R40),
->>> +                 SUNXI_FUNCTION_VARIANT(0x5, "sim",    /* DET */
->>> +                                        PINCTRL_SUN8I_R40),
->>
->>
->> This is available on all 3 variants.
->>
->> Should we consider sending a fix for this first? The hardware backing
->> this pin is not supported, but it would be less confusing to fix it
->> first instead of introducing a function for all variants in a patch
->> supposedly for just the R40.
->
->
-> OK.
->
-> But if we do so I think I should delay this patch until the A10-A20
-> driver merge is applied...
+Regards,
 
-Since the hardware is unsupported to begin with, I think that's OK.
-You could add an extra patch just before this one in the series.
+	Hans
 
+>   
+>   ..  tabularcolumns:: |p{5.5cm}|p{12.0cm}|
+>   
+> diff --git a/include/uapi/linux/media.h b/include/uapi/linux/media.h
+> index 4890787..fac96c6 100644
+> --- a/include/uapi/linux/media.h
+> +++ b/include/uapi/linux/media.h
+> @@ -105,6 +105,12 @@ struct media_device_info {
+>   #define MEDIA_ENT_F_PROC_VIDEO_STATISTICS	(MEDIA_ENT_F_BASE + 0x4006)
+>   
+>   /*
+> + * Switch and bridge entitites
+> + */
+> +#define MEDIA_ENT_F_VID_MUX			(MEDIA_ENT_F_BASE + 0x5001)
+> +#define MEDIA_ENT_F_VID_IF_BRIDGE		(MEDIA_ENT_F_BASE + 0x5002)
+> +
+> +/*
+>    * Connectors
+>    */
+>   /* It is a responsibility of the entity drivers to add connectors and links */
+> 
 
-ChenYu
-
->
->>
->>>                   SUNXI_FUNCTION(0x4, "keypad"),        /* IN6 */
->>>                   SUNXI_FUNCTION_IRQ(0x6, 16),          /* EINT16 */
->>>                   SUNXI_FUNCTION(0x7, "csi1")),         /* D16 */
->>
->>
->> [...]
->>
->> Looks good otherwise.
->>
->>
->> Regards
->> ChenYu
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
