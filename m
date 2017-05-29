@@ -1,111 +1,133 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 4/5] iio: adc: stm32: make per instance bus clock optional
-Date: Mon, 29 May 2017 11:28:19 +0200
-Message-ID: <1496050100-25854-5-git-send-email-fabrice.gasnier@st.com>
-References: <1496050100-25854-1-git-send-email-fabrice.gasnier@st.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add clock bit definitions
+Date: Mon, 29 May 2017 11:31:37 +0200
+Message-ID: <CAMuHMdW21gwJZxCMsepX9c3hqpfw_+zc1x_f-6D0oKFVvqY2Kg@mail.gmail.com>
+References: <20170525160548.103182-1-chris.brandt@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496050100-25854-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, benjamin.gaignard@linaro.org, lars@metafoo.de, alexandre.torgue@st.com, linux-iio@vger.kernel.org, pmeerw@pmeerw.net, mcoquelin.stm32@gmail.com, knaack.h@gmx.de, fabrice.gasnier@st.com, benjamin.gaignard@st.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170525160548.103182-1-chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-STM32F4 requires one clock per ADC instance for register access. But,
-newer version of ADC hardware block have common bus clock for all
-instances (per instance driver isn't responsible for getting it).
-So, make it optional by default. Still, enforce it's required on STM32F4.
+Hi Chris,
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- drivers/iio/adc/stm32-adc.c | 28 ++++++++++++++++++++--------
- 1 file changed, 20 insertions(+), 8 deletions(-)
+On Thu, May 25, 2017 at 6:05 PM, Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> Add the remaining bit locations for the module stop clock registers.
+>
+> Signed-off-by: Chris Brandt <chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
-diff --git a/drivers/iio/adc/stm32-adc.c b/drivers/iio/adc/stm32-adc.c
-index 50b2538..2ba9ca9 100644
---- a/drivers/iio/adc/stm32-adc.c
-+++ b/drivers/iio/adc/stm32-adc.c
-@@ -160,6 +160,7 @@ struct stm32_adc_regspec {
-  * @regs:		registers descriptions
-  * @adc_info:		per instance input channels definitions
-  * @trigs:		external trigger sources
-+ * @clk_required:	clock is required
-  * @start_conv:		routine to start conversions
-  * @stop_conv:		routine to stop conversions
-  */
-@@ -167,6 +168,7 @@ struct stm32_adc_cfg {
- 	const struct stm32_adc_regspec	*regs;
- 	const struct stm32_adc_info	*adc_info;
- 	struct stm32_adc_trig_info	*trigs;
-+	bool clk_required;
- 	void (*start_conv)(struct stm32_adc *, bool dma);
- 	void (*stop_conv)(struct stm32_adc *);
- };
-@@ -1145,14 +1147,21 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 
- 	adc->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(adc->clk)) {
--		dev_err(&pdev->dev, "Can't get clock\n");
--		return PTR_ERR(adc->clk);
-+		ret = PTR_ERR(adc->clk);
-+		if (ret == -ENOENT && !adc->cfg->clk_required) {
-+			adc->clk = NULL;
-+		} else {
-+			dev_err(&pdev->dev, "Can't get clock\n");
-+			return ret;
-+		}
- 	}
- 
--	ret = clk_prepare_enable(adc->clk);
--	if (ret < 0) {
--		dev_err(&pdev->dev, "clk enable failed\n");
--		return ret;
-+	if (adc->clk) {
-+		ret = clk_prepare_enable(adc->clk);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "clk enable failed\n");
-+			return ret;
-+		}
- 	}
- 
- 	ret = stm32_adc_of_get_resolution(indio_dev);
-@@ -1196,7 +1205,8 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 		dma_release_channel(adc->dma_chan);
- 	}
- err_clk_disable:
--	clk_disable_unprepare(adc->clk);
-+	if (adc->clk)
-+		clk_disable_unprepare(adc->clk);
- 
- 	return ret;
- }
-@@ -1214,7 +1224,8 @@ static int stm32_adc_remove(struct platform_device *pdev)
- 				  adc->rx_buf, adc->rx_dma_buf);
- 		dma_release_channel(adc->dma_chan);
- 	}
--	clk_disable_unprepare(adc->clk);
-+	if (adc->clk)
-+		clk_disable_unprepare(adc->clk);
- 
- 	return 0;
- }
-@@ -1223,6 +1234,7 @@ static int stm32_adc_remove(struct platform_device *pdev)
- 	.regs = &stm32f4_adc_regspec,
- 	.adc_info = &stm32f4_adc_info,
- 	.trigs = stm32f4_adc_trigs,
-+	.clk_required = true,
- 	.start_conv = stm32f4_adc_start_conv,
- 	.stop_conv = stm32f4_adc_stop_conv,
- };
--- 
-1.9.1
+Reviewed-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+> --- a/include/dt-bindings/clock/r7s72100-clock.h
+> +++ b/include/dt-bindings/clock/r7s72100-clock.h
+> @@ -13,7 +13,14 @@
+>  #define R7S72100_CLK_PLL       0
+
+No CoreSight (MSTP20)?
+
+>  /* MSTP3 */
+> +#define R7S72100_CLK_IEBUS     7
+> +#define R7S72100_CLK_IRDA      6
+> +#define R7S72100_CLK_LIN0      5
+> +#define R7S72100_CLK_LIN1      4
+>  #define R7S72100_CLK_MTU2      3
+> +#define R7S72100_CLK_CAN       2
+> +#define R7S72100_CLK_ADCPWR    1
+> +#define R7S72100_CLK_MCPWM     0
+
+Perhaps just R7S72100_CLK_PWM?
+
+>  /* MSTP4 */
+>  #define R7S72100_CLK_SCIF0     7
+> @@ -26,25 +33,51 @@
+>  #define R7S72100_CLK_SCIF7     0
+>
+>  /* MSTP5 */
+> +#define R7S72100_CLK_SCI0      7
+> +#define R7S72100_CLK_SCI1      6
+> +#define R7S72100_CLK_SNDGEN0   5
+> +#define R7S72100_CLK_SNDGEN1   4
+> +#define R7S72100_CLK_SNDGEN2   3
+> +#define R7S72100_CLK_SNDGEN3   2
+
+R7S72100_CLK_SG[0-3]?
+
+>  #define R7S72100_CLK_OSTM0     1
+>  #define R7S72100_CLK_OSTM1     0
+>
+>  /* MSTP6 */
+> +#define R7S72100_CLK_ADC       7
+> +#define R7S72100_CLK_CEU       6
+> +#define R7S72100_CLK_DOC0      5
+> +#define R7S72100_CLK_DOC1      4
+> +#define R7S72100_CLK_DRC0      3
+> +#define R7S72100_CLK_DRC1      2
+> +#define R7S72100_CLK_JCU       1
+>  #define R7S72100_CLK_RTC       0
+>
+>  /* MSTP7 */
+> +#define R7S72100_CLK_VDEC0     7
+> +#define R7S72100_CLK_VDEC1     6
+
+R7S72100_CLK_VIN[01]?
+
+>  #define R7S72100_CLK_ETHER     4
+> +#define R7S72100_CLK_NAND      3
+>  #define R7S72100_CLK_USB0      1
+>  #define R7S72100_CLK_USB1      0
+>
+>  /* MSTP8 */
+> +#define R7S72100_CLK_IMR0      7
+> +#define R7S72100_CLK_IMR1      6
+> +#define R7S72100_CLK_IMRDISP   5
+>  #define R7S72100_CLK_MMCIF     4
+> +#define R7S72100_CLK_MLB       3
+> +#define R7S72100_CLK_ETHABV    2
+
+R7S72100_CLK_ETHAVB
+
+> +#define R7S72100_CLK_SCUX      1
+>
+>  /* MSTP9 */
+>  #define R7S72100_CLK_I2C0      7
+>  #define R7S72100_CLK_I2C1      6
+>  #define R7S72100_CLK_I2C2      5
+>  #define R7S72100_CLK_I2C3      4
+> +#define R7S72100_CLK_SPIMBC0   3
+> +#define R7S72100_CLK_SPIMBC1   2
+
+R7S72100_CLK_SPB[0-1]?
+All related registers and clocks are called SPB<something>.
+
+> +#define R7S72100_CLK_VDC50     1       /* and LVDS */
+> +#define R7S72100_CLK_VDC51     0
+>
+>  /* MSTP10 */
+>  #define R7S72100_CLK_SPI0      7
+> @@ -52,6 +85,9 @@
+>  #define R7S72100_CLK_SPI2      5
+>  #define R7S72100_CLK_SPI3      4
+>  #define R7S72100_CLK_SPI4      3
+> +#define R7S72100_CLK_CDROM     2
+> +#define R7S72100_CLK_SPDIF     1
+> +#define R7S72100_CLK_RGPVG2    0
+
+No SSI (MSTP11[0-5])?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
