@@ -1,37 +1,37 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 6/7] [media] soc_camera: rcar_vin: use proper name for the
- R-Car SoC
-Date: Mon, 29 May 2017 11:14:42 +0200
-Message-ID: <CAMuHMdVeuFBjcgQ=NLyPBz7_p=HbzHA+VD6N=ksFDNzAXObp4A@mail.gmail.com>
-References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com> <20170528093051.11816-7-wsa+renesas@sang-engineering.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170528093051.11816-7-wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
-Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH 0/4] add UniPhier thermal support
+Date: Mon, 29 May 2017 18:15:41 +0900
+Message-ID: <1496049345-14649-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rui.zhang@intel.com, edubezval@gmail.com
+Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, yamada.masahiro@socionext.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 28, 2017 at 11:30 AM, Wolfram Sang
-<wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org> wrote:
-> It is 'R-Car', not 'RCar'. No code or binding changes, only descriptive text.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+This patch series adds support for thermal monitor implemented on UniPhier LD20
+and PXs2 SoCs. This driver supports temperature monitoring and alert function.
 
-Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Kunihiko Hayashi (4):
+  thermal: uniphier: add UniPhier thermal driver
+  dt-bindings: thermal: add binding documentation for UniPhier thermal
+    monitor
+  ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for
+    PXs2
+  arm64: dts: uniphier: add nodes of thermal monitor and thermal zone
+    for LD20
 
-Gr{oetje,eeting}s,
+ .../bindings/thermal/uniphier-thermal.txt          |  54 +++
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts         |  21 ++
+ arch/arm/boot/dts/uniphier-pxs2-vodka.dts          |  21 ++
+ arch/arm/boot/dts/uniphier-pxs2.dtsi               |   6 +
+ .../arm64/boot/dts/socionext/uniphier-ld20-ref.dts |  25 ++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |   6 +
+ drivers/thermal/Kconfig                            |   8 +
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/uniphier_thermal.c                 | 390 +++++++++++++++++++++
+ 9 files changed, 532 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+ create mode 100644 drivers/thermal/uniphier_thermal.c
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+2.7.4
