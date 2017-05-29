@@ -1,96 +1,159 @@
-From: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 1/3] pinctrl: stm32: set pin to gpio input when used as interrupt
-Date: Mon, 29 May 2017 18:17:31 +0200
-Message-ID: <1496074653-2941-2-git-send-email-alexandre.torgue@st.com>
-References: <1496074653-2941-1-git-send-email-alexandre.torgue@st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] DT: pinctrl: Add binding documentation for Spreadtrum
+ pin controller
+Date: Mon, 29 May 2017 18:18:29 +0200
+Message-ID: <CACRpkdZFUDrfoyvk-CramNP2OVwVAazVsw3S-wCayx8HP6cSZQ@mail.gmail.com>
+References: <a1fa5b612de318213bab4404997d133ed118f5d2.1495863824.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496074653-2941-1-git-send-email-alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a1fa5b612de318213bab4404997d133ed118f5d2.1495863824.git.baolin.wang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch ensures that pin is correctly set as gpio input when it is used
-as an interrupt.
+On Sat, May 27, 2017 at 7:56 AM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+> This patch adds the binding documentation for Spreadtrum SC9860 pin
+> controller device.
+>
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+(...)
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index d3c5f5d..5a15c7d 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -219,12 +219,41 @@ static int stm32_gpio_to_irq(struct gpio_chip *chip, unsigned int offset)
- 	.to_irq			= stm32_gpio_to_irq,
- };
- 
-+static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
-+{
-+	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
-+	struct stm32_pinctrl *pctl = dev_get_drvdata(bank->gpio_chip.parent);
-+	int ret;
-+
-+	ret = stm32_gpio_direction_input(&bank->gpio_chip, irq_data->hwirq);
-+	if (ret)
-+		return ret;
-+
-+	ret = gpiochip_lock_as_irq(&bank->gpio_chip, irq_data->hwirq);
-+	if (ret) {
-+		dev_err(pctl->dev, "unable to lock HW IRQ %lu for IRQ\n",
-+			irq_data->hwirq);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
-+{
-+	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
-+
-+	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
-+}
-+
- static struct irq_chip stm32_gpio_irq_chip = {
- 	.name           = "stm32gpio",
- 	.irq_eoi	= irq_chip_eoi_parent,
- 	.irq_mask       = irq_chip_mask_parent,
- 	.irq_unmask     = irq_chip_unmask_parent,
- 	.irq_set_type   = irq_chip_set_type_parent,
-+	.irq_request_resources = stm32_gpio_irq_request_resources,
-+	.irq_release_resources = stm32_gpio_irq_release_resources,
- };
- 
- static int stm32_gpio_domain_translate(struct irq_domain *d,
-@@ -248,15 +277,6 @@ static void stm32_gpio_domain_activate(struct irq_domain *d,
- 	struct stm32_pinctrl *pctl = dev_get_drvdata(bank->gpio_chip.parent);
- 
- 	regmap_field_write(pctl->irqmux[irq_data->hwirq], bank->bank_nr);
--	gpiochip_lock_as_irq(&bank->gpio_chip, irq_data->hwirq);
--}
--
--static void stm32_gpio_domain_deactivate(struct irq_domain *d,
--				       struct irq_data *irq_data)
--{
--	struct stm32_gpio_bank *bank = d->host_data;
--
--	gpiochip_unlock_as_irq(&bank->gpio_chip, irq_data->hwirq);
- }
- 
- static int stm32_gpio_domain_alloc(struct irq_domain *d,
-@@ -285,7 +305,6 @@ static int stm32_gpio_domain_alloc(struct irq_domain *d,
- 	.alloc          = stm32_gpio_domain_alloc,
- 	.free           = irq_domain_free_irqs_common,
- 	.activate	= stm32_gpio_domain_activate,
--	.deactivate	= stm32_gpio_domain_deactivate,
- };
- 
- /* Pinctrl functions */
--- 
-1.9.1
+> +* Spreadtrum Pin Controller
+> +
+> +The Spreadtrum pin controller are organized in 3 blocks (types).
+> +
+> +The first block comprises some global control registers, and each
+> +register contains several feilds with one bit or several bits to
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+feilds -> fields
+
+Do you mean "bitfields", i.e a few bits inside a configuration register
+word?
+
+> +configurate for some global common configuration, such as domain
+
+configurate -> configure
+
+> +pad driving level, system control select
+
+Actually I do not understand at all what "domain pad driving level"
+or "system control select" means, those are very generic terms.
+Can you describe precisely what it means? What domain? What
+is a domain pad? What kind of system control? What is it selecting
+between?
+
+>  and so on. We recognise
+> +every feild comprising one bit or several bits in one global control
+
+feild -> field
+
+> +register as one pin, thus we should record every pin's bit offset,
+> +bit width and register offset to configurate this feild (pin).
+
+feild -> field
+
+> +The second block comprises some common registers which have unified
+> +register definition, and each register described one pin is used
+> +to configurate pin sleep mode and function select.
+
+OK
+
+> +The last block comprises some misc registers which also have unified
+> +register definition, and each register described one pin is used to
+> +configurate drive strength, pull up/down and so on.
+
+configurate -> configure
+
+OK that is pin configuration.
+
+> +This driver supports the generic pin multiplexing and configuration
+> +bindings. For details on each properties, you can refer to
+> +./pinctrl-bindings.txt.
+
+Do not talk about the driver in the bindings. Talk about the bindings per
+se, these bindings are supposed to be OS neutral.
+
+> +Required properties for Spreadtrum pin controller:
+> +- compatible: "sprd,<soc>-pinctrl"
+> +  Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported SoCs.
+> +
+> +Required properties for pin configuration node:
+> +- sprd,pins: each entry consists of 2 integers and represents the pin
+> +  id and config setting for one pin.
+
+Do not use the custom property "sprd,pins" for this, if you want to set up pin
+muxing with a magic value use the generic binding "pinmux", see:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt?id=8d5e7c5df0a6c442373628be5221321172b1badf
+
+But consider using groups+functions for defining multiplexing instead.
+
+But please do NOT combine pin configuration into a magic value. Use
+the generic pin control bindings, er have bindings for all kinds of pin
+config, and using them makes the driver much more readable for
+humans.
+
+I understand that you may have a lot of magic number tables around that
+you are using today, but it is necessary to decompose that into the proper
+generic pin configuration properties to make it usable.
+
+> +++ b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
+> @@ -0,0 +1,26 @@
+> +* Spreadtrum SC9860 Pin Controller
+> +
+> +Please refer to sprd,pinctrl.txt in this directory for common binding part
+> +and usage.
+> +
+> +Required properties:
+> +- compatible: must be "sprd,sc9860-pinctrl".
+> +- reg: the register address of pin controller device.
+> +- sprd,pins: two integers array, represents a group of pins id and config
+> +  setting. The format is sprd,pins = <PIN_ID CONFIG>, PIN_ID can be found
+> +  from pinctrl-sprd-sc9860.c file or spec file, CONFIG is the pad setting
+> +  value like pull-up for this pin.
+
+Same comments.
+
+> +Example:
+> +pin_controller: pinctrl@402a0000 {
+> +       compatible = "sprd,sc9860-pinctrl";
+> +       reg = <0x402a0000 0x10000>;
+> +
+> +       vio_sd0_ms_0: sd0_ms0 {
+> +               sprd,pins = <8 0x1>;
+> +       };
+> +
+> +       vbc_iis0_0: iis0_c {
+> +               sprd,pins = <34 0xc>;
+> +       };
+> +};
+
+Magic numbers are very hard to understand. Compare to this
+from Qualcomm APQ8064 using just standard bindings:
+
+pinmux@800000 {
+        i2c4_pins: i2c4_pinmux {
+               pins = "gpio12", "gpio13";
+               function = "gsbi4";
+               bias-disable;
+        };
+
+        spi_pins: spi_pins {
+               mux {
+                      pins = "gpio18", "gpio19", "gpio21";
+                      function = "gsbi5";
+                      drive-strength = <10>;
+                      bias-none;
+                };
+        };
+};
+
+Please try go get rid of the magic numbers and get to use pins, function,
+drive-strength bias etc from the standard bindings. We also have a lot
+of helper code available to use this.
+
+Yours,
+Linus Walleij
