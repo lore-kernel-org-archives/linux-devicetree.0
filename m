@@ -1,188 +1,263 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] cec: STM32 driver
-Date: Mon, 29 May 2017 10:54:27 +0200
-Message-ID: <5ef1d96d-dc5f-49b9-0650-51d086efc226@xs4all.nl>
-References: <1496046855-5809-1-git-send-email-benjamin.gaignard@linaro.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH v3 10/10] ARM: dts: sun8i: Add board dts file for Banana
+ Pi M2 Ultra
+Date: Mon, 29 May 2017 16:59:14 +0800
+Message-ID: <CAGb2v65-VrWbCHHvJLirCPBdQfoO6H106iQEATVSseUMfM5rQQ@mail.gmail.com>
+References: <20170527102308.1988-1-icenowy@aosc.io> <20170527102308.1988-11-icenowy@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496046855-5809-1-git-send-email-benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, yannick.fertre-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170527102308.1988-11-icenowy@aosc.io>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Benjamin,
+On Sat, May 27, 2017 at 6:23 PM, Icenowy Zheng <icenowy@aosc.io> wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>
+> The Banana Pi M2 Ultra is an SBC based on the Allwinner R40 SoC. The
+> form factor and position of various connectors, leds and buttons is
+> similar to the Banana Pi M1+, Banana Pi M3, and is exactly the same
+> as the latest Banana Pi M64.
+>
+> It features:
+>
+>   - X-Powers AXP221s PMIC connected to i2c0
+>   - 2 GB DDR3 DRAM
+>   - 8 GB eMMC
+>   - micro SD card slot
+>   - DC power jack
+>   - HDMI output
+>   - MIPI DSI connector
+>   - 2x USB 2.0 hosts
+>   - 1x USB 2.0 OTG
+>   - gigabit ethernet with Realtek RTL8211E transceiver
+>   - WiFi/Bluetooth with AP6212 chip, with external antenna connector
+>   - SATA and power connectors for native SATA support
+>   - camera sensor connector
+>   - consumer IR receiver
+>   - audio out headphone jack
+>   - onboard microphone
+>   - red, green, and blue LEDs
+>   - debug UART pins
+>   - Li-Po battery connector
+>   - Raspberry Pi B+ compatible GPIO header
+>   - power, reset, and boot control buttons
+>
+> This patch adds a dts file that enables debug UART and MMC support.
+>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> ---
+> Changes in v3:
+> - Pinmux changes.
+>
+>  arch/arm/boot/dts/Makefile                        |   1 +
+>  arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 157 ++++++++++++++++++++++
+>  2 files changed, 158 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index f68d6e0bc746..697c600bba28 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -910,6 +910,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
+>         sun8i-h3-orangepi-plus.dtb \
+>         sun8i-h3-orangepi-plus2e.dtb \
+>         sun8i-r16-parrot.dtb \
+> +       sun8i-r40-bananapi-m2-ultra.dtb \
+>         sun8i-v3s-licheepi-zero.dtb \
+>         sun8i-v3s-licheepi-zero-dock.dtb
+>  dtb-$(CONFIG_MACH_SUN9I) += \
+> diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+> new file mode 100644
+> index 000000000000..c4e69847cea1
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+> @@ -0,0 +1,157 @@
+> +/*
+> + * Copyright (C) 2017 Chen-Yu Tsai <wens@csie.org>
+> + * Copyright (C) 2017 Icenowy Zheng <icenowy@aosc.io>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +#include "sun8i-r40.dtsi"
+> +#include "sunxi-common-regulators.dtsi"
+> +
+> +/ {
+> +       model = "Banana Pi BPI-M2-Ultra";
+> +       compatible = "sinovoip,bpi-m2-ultra", "allwinner,sun8i-r40";
 
-On 05/29/2017 10:34 AM, Benjamin Gaignard wrote:
-> version 4:
-> - rebased on Hans cec-config branch
-> - rework bindings commit message
-> - add notifier support
+The vendor prefix "bananapi" was merged into -next through Rob's DT tree:
 
-I really don't like this change. This forced me to think about this a bit more,
-and I think this requires another change as well.
+https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/commit/?h=dt/next&id=79d45aed23f02022607501cd0d3c404592e027f8
 
-The problem you have is that the drm driver for this platform isn't ready yet,
-so this CEC driver needs userspace to provide a physical address since it can't
-use a notifier.
+Lets use that instead.
 
-Trying to support both is a bad idea since this runs the risk that we will forget
-to remove the CAP_PHYS_ADDR path later.
+> +
+> +       aliases {
+> +               serial0 = &uart0;
+> +       };
+> +
+> +       chosen {
+> +               stdout-path = "serial0:115200n8";
+> +       };
+> +
+> +       wifi_pwrseq: wifi_pwrseq {
+> +               compatible = "mmc-pwrseq-simple";
+> +               reset-gpios = <&pio 6 10 GPIO_ACTIVE_LOW>; /* PG10 WIFI_EN */
+> +       };
+> +};
+> +
+> +&i2c0 {
+> +       status = "okay";
+> +
+> +       axp22x: pmic@68 {
 
-Instead, just drop the notifier support. And move this driver to staging, just
-as we did with the st-cec driver. Once the drm driver arrives this cec driver
-can switch to using the notifier and be moved out of staging.
+Address here does not match the reg property below.
 
-Add a TODO file explaining that this is waiting for the drm driver so the
-CEC_CAP_PHYS_ADDR capability can be removed after switching to using CEC_NOTIFIER.
+> +               compatible = "x-powers,axp221";
+> +               reg = <0x34>;
+> +               interrupt-parent = <&nmi_intc>;
+> +               interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+> +       };
+> +};
+> +
+> +#include "axp22x.dtsi"
+> +
+> +&reg_aldo3 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <2700000>;
+> +       regulator-max-microvolt = <3300000>;
+> +       regulator-name = "avcc";
+> +};
+> +
+> +&reg_dcdc1 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <3000000>;
+> +       regulator-max-microvolt = <3000000>;
+> +       regulator-name = "vcc-3v0";
 
-I should have realized this when reviewing v2, sorry about that.
+Board schematic says 3.3V.
 
-The reason why I don't want CEC drivers using CEC_CAP_PHYS_ADDR in mainline (except
-if it is obviously required such as for the usb CEC dongles) is that it puts a
-major burden on the application to discover the physical address from the EDID. It
-should only be used if there is no other way. In this case this is just a
-temporary situation, so staging is the right place.
+> +};
+> +
+> +&reg_dcdc2 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <1000000>;
+> +       regulator-max-microvolt = <1300000>;
+> +       regulator-name = "vdd-cpu";
+> +};
+> +
+> +&reg_dcdc3 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <1000000>;
+> +       regulator-max-microvolt = <1300000>;
+> +       regulator-name = "vdd-sys";
+> +};
+> +
+> +&reg_dcdc5 {
+> +       regulator-always-on;
+> +       regulator-min-microvolt = <1500000>;
+> +       regulator-max-microvolt = <1500000>;
 
-BTW, if the stm32 drm driver is going to be accepted for 4.13, then that would
-change things, but I don't think that's the case.
+There is a small tolerance range: 1.425V ~ 1.575V.
 
-Regards,
+> +       regulator-name = "vcc-dram";
+> +};
+> +
+> +&reg_dldo1 {
+> +       regulator-min-microvolt = <1800000>;
+> +       regulator-max-microvolt = <3300000>;
 
-	Hans
+Recommended range on the AP6212 is 1.7V ~ 3.6V.
 
-> - update KConfig
-> 
-> version 2:
-> - fix typo in compagnie name
-> - add yannick sign-off
-> - use cec_message instead of custom struct in cec device
-> - add monitor mode
-> 
-> I don't change the split between irq handler and irq thread because
-> it would had mean to handle all errors cases irq handler to keep
-> a correct sequence. I don't think it is critical as it is since cec is a very
-> slow protocol.
-> 
-> This serie of patches add cec driver for STM32 platforms.
-> 
-> This code doesn't implement cec notifier because STM32 doesn't
-> provide HDMI yet but it will be added later.
-> 
-> Those patches have been developped on top of media_tree master branch
-> where STM32 DCMI code has not been merged so conflict in Kconfig and Makefile
-> could occur depending of merge ordering.
-> 
-> Compliance has been tested on STM32F769.
-> 
-> ~ # cec-ctl -p 1.0.0.0 --playback
-> Driver Info:
->          Driver Name                : stm32-cec
->          Adapter Name               : stm32-cec
->          Capabilities               : 0x0000000f
->                  Physical Address
->                  Logical Addresses
->                  Transmit
->                  Passthrough
->          Driver version             : 4.11.0
->          Available Logical Addresses: 1
->          Physical Address           : 1.0.0.0
->          Logical Address Mask       : 0x0010
->          CEC Version                : 2.0
->          Vendor ID                  : 0x000c03 (HDMI)
->          OSD Name                   : 'Playback'
->          Logical Addresses          : 1 (Allow RC Passthrough)
-> 
->            Logical Address          : 4 (Playback Device 1)
->              Primary Device Type    : Playback
->              Logical Address Type   : Playback
->              All Device Types       : Playback
->              RC TV Profile          : None
->              Device Features        :
->                  None
-> 
-> ~ # cec-compliance -A
-> cec-compliance SHA                 : 6acac5cec698de39b9398b66c4f5f4db6b2730d8
-> 
-> Driver Info:
->          Driver Name                : stm32-cec
->          Adapter Name               : stm32-cec
->          Capabilities               : 0x0000000f
->                  Physical Address
->                  Logical Addresses
->                  Transmit
->                  Passthrough
->          Driver version             : 4.11.0
->          Available Logical Addresses: 1
->          Physical Address           : 1.0.0.0
->          Logical Address Mask       : 0x0010
->          CEC Version                : 2.0
->          Vendor ID                  : 0x000c03
->          Logical Addresses          : 1 (Allow RC Passthrough)
-> 
->            Logical Address          : 4
->              Primary Device Type    : Playback
->              Logical Address Type   : Playback
->              All Device Types       : Playback
->              RC TV Profile          : None
->              Device Features        :
->                  None
-> 
-> Compliance test for device /dev/cec0:
-> 
->      The test results mean the following:
->          OK                  Supported correctly by the device.
->          OK (Not Supported)  Not supported and not mandatory for the device.
->          OK (Presumed)       Presumably supported.  Manually check to confirm.
->          OK (Unexpected)     Supported correctly but is not expected to be supported for this device.
->          OK (Refused)        Supported by the device, but was refused.
->          FAIL                Failed and was expected to be supported by this device.
-> 
-> Find remote devices:
->          Polling: OK
-> 
-> CEC API:
->          CEC_ADAP_G_CAPS: OK
->          CEC_DQEVENT: OK
->          CEC_ADAP_G/S_PHYS_ADDR: OK
->          CEC_ADAP_G/S_LOG_ADDRS: OK
->          CEC_TRANSMIT: OK
->          CEC_RECEIVE: OK
->          CEC_TRANSMIT/RECEIVE (non-blocking): OK (Presumed)
->          CEC_G/S_MODE: OK
->          CEC_EVENT_LOST_MSGS: OK
-> 
-> Network topology:
->          System Information for device 0 (TV) from device 4 (Playback Device 1):
->                  CEC Version                : 1.4
->                  Physical Address           : 0.0.0.0
->                  Primary Device Type        : TV
->                  Vendor ID                  : 0x00903e
->                  OSD Name                   : 'TV'
->                  Menu Language              : fre
->                  Power Status               : On
-> 
-> Total: 10, Succeeded: 10, Failed: 0, Warnings: 0
-> 
-> 
-> Benjamin Gaignard (2):
->    dt-bindings: media: stm32 cec driver
->    cec: add STM32 cec driver
-> 
->   .../devicetree/bindings/media/st,stm32-cec.txt     |  22 ++
->   drivers/media/platform/Kconfig                     |  13 +
->   drivers/media/platform/Makefile                    |   2 +
->   drivers/media/platform/stm32/Makefile              |   1 +
->   drivers/media/platform/stm32/stm32-cec.c           | 392 +++++++++++++++++++++
->   5 files changed, 430 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/media/st,stm32-cec.txt
->   create mode 100644 drivers/media/platform/stm32/Makefile
->   create mode 100644 drivers/media/platform/stm32/stm32-cec.c
-> 
+> +       regulator-name = "vcc-wifi-io";
+> +};
+> +
+> +&reg_dldo2 {
+> +       regulator-min-microvolt = <3300000>;
+> +       regulator-max-microvolt = <3300000>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Recommended range on the AP6212 is 3.0V ~ 4.8V.
+
+Regards
+ChenYu
+
+> +       regulator-name = "vcc-wifi";
+> +};
+> +
+> +&mmc0 {
+> +       vmmc-supply = <&reg_dcdc1>;
+> +       bus-width = <4>;
+> +       cd-gpios = <&pio 7 13 GPIO_ACTIVE_HIGH>; /* PH13 */
+> +       cd-inverted;
+> +       status = "okay";
+> +};
+> +
+> +&mmc1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&mmc1_pg_pins>;
+> +       vmmc-supply = <&reg_dldo2>;
+> +       vqmmc-supply = <&reg_dldo1>;
+> +       mmc-pwrseq = <&wifi_pwrseq>;
+> +       bus-width = <4>;
+> +       non-removable;
+> +       status = "okay";
+> +};
+> +
+> +&mmc2 {
+> +       vmmc-supply = <&reg_dcdc1>;
+> +       vqmmc-supply = <&reg_dcdc1>;
+> +       bus-width = <8>;
+> +       non-removable;
+> +       status = "okay";
+> +};
+> +
+> +&uart0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&uart0_pb_pins>;
+> +       status = "okay";
+> +};
+> --
+> 2.12.2
+>
