@@ -1,68 +1,95 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
-Date: Mon, 29 May 2017 10:45:44 +0200
-Message-ID: <CACRpkdYcaGzSvAN2Trqwer+8GbqXyfpE=VqiYcQvCOqhDO9MMw@mail.gmail.com>
-References: <SG2PR06MB1165E7E651BE96CD7B7738B08A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75Vcp_eMWrjZRX-x3=Tt3JRXcL_wWG43MymF=oyLLP4EJwg@mail.gmail.com>
- <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
- <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540> <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
- <20170508172516.GC25206@w540> <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
- <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ@mail.gmail.com> <20170523183735.GC13664@w540>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH RfC v4 4/6] ARM(64): dts: meson: add GPIO
+ interrupt-controller support
+Date: Mon, 29 May 2017 10:49:28 +0200
+Message-ID: <860a50b5-3e7c-29d0-54fa-89bf2840e04e@baylibre.com>
+References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
+ <5294644a-967e-dba8-d287-d932b38244d1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170523183735.GC13664@w540>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jmondi <jacopo@jmondi.org>
-Cc: Dong Aisheng <dongas86@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chris Brandt <Chris.Brandt@renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5294644a-967e-dba8-d287-d932b38244d1@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 8:37 PM, jmondi <jacopo@jmondi.org> wrote:
 
->> I did not follow too much.
->> But it seems IMX7ULP/Vybrid to be also a fan of generic
->> output-enable/input-enable
->> property.
->>
->> See:
->> Figure 5-2. GPIO PAD in Page 241
->> http://www.nxp.com/assets/documents/data/en/reference-manuals/VFXXXRM.pdf
->>
->> It has separate register bits to control input buffer enable and
->> output buffer enable
->> and we need set it property for GPIO function.
->
-> As it seems we have another user for 'output-enable' here, what if we just
-> add that one to the generic bindings properties list, and we keep
-> 'bi-directional' (which seems to be the most debated property we have
-> added) out of generic properties?
->
-> We can handle 'bi-directional' pins with static tables in our pin
-> controller driver and not have it anywhere in DT.
 
-This sounds like a viable approach.
+Please correct the subject to :
+ARM64: dts: meson: add GPIO interrupt-controller support
 
-I just want to know if "output-enable" is the right name?
-"output-buffer-enable"?
+On 05/28/2017 09:11 PM, Heiner Kallweit wrote:
+> Add support for the GPIO interupt controller of certain Amlogic Meson
+> Soc's.
+> 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+>  arch/arm/boot/dts/meson8.dtsi             | 8 ++++++++
+>  arch/arm/boot/dts/meson8b.dtsi            | 8 ++++++++
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++++++
+>  3 files changed, 24 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+> index 69930773..b4c4175d 100644
+> --- a/arch/arm/boot/dts/meson8.dtsi
+> +++ b/arch/arm/boot/dts/meson8.dtsi
+> @@ -126,6 +126,14 @@
+>  };
+>  
+>  &cbus {
+> +	gpio_intc: interrupt-controller@9880 {
+> +		compatible = "amlogic,meson-gpio-intc";
+> +		reg = <0x9880 0x10>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		parent-interrupts = <64 65 66 67 68 79 70 71>;
+> +	};
+> +
+>  	pinctrl_cbus: pinctrl@9880 {
+>  		compatible = "amlogic,meson8-cbus-pinctrl";
+>  		reg = <0x9880 0x10>;
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> index d9f116a4..1bce64a6 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -151,6 +151,14 @@
+>  		interrupts = <0 0 1>;
+>  	};
+>  
+> +	gpio_intc: interrupt-controller@9880 {
+> +		compatible = "amlogic,meson-gpio-intc";
+> +		reg = <0x9880 0x10>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		parent-interrupts = <64 65 66 67 68 79 70 71>;
+> +	};
+> +
+>  	pinctrl_cbus: pinctrl@9880 {
+>  		compatible = "amlogic,meson8b-cbus-pinctrl";
+>  		reg = <0x9880 0x10>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> index 436b8750..66dde761 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -312,6 +312,14 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			gpio_intc: interrupt-controller@9880 {
+> +				compatible = "amlogic,meson-gpio-intc";
+> +				reg = <0x0 0x09880 0x0 0x10>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				parent-interrupts = <64 65 66 67 68 79 70 71>;
+> +			};
+> +
+>  			watchdog@98d0 {
+>  				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
+>  				reg = <0x0 0x098d0 0x0 0x10>;
+> 
 
-> I see commit 42d5a11200d0[1] has not been reverted yet as Andy asked
-> in some previous email.
+Seems correct with the dt-bindings,
 
-I'm just overloaded. I sent that revert to Torvalds today.
-
-> I can send another version of that patch with
-> only 'output-enable' if you wish.
-
-That's what we want.
-
-> Once we reach consesus, I can then send v6 of our pin controller driver
-> based on that.
-
-OK sounds like a plan.
-
-Sorry for the mess, I'm just trying to get this right :/
-
-Yours,
-Linus Walleij
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
