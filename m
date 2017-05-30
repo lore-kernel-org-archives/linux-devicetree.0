@@ -1,120 +1,65 @@
-From: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: reset: Add bindings for basic reset controller
-Date: Mon, 29 May 2017 19:46:13 +0930
-Message-ID: <CACPK8Xc4zTqyB5ALU-N8KOkH-LLaJtSs5iBtjivNT=cJv3xkKA@mail.gmail.com>
-References: <20170526033214.8081-1-joel@jms.id.au> <20170526033214.8081-2-joel@jms.id.au>
- <1496048959.17695.20.camel@pengutronix.de>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7] arch/sparc: Define config parameter CPU_BIG_ENDIAN)
+Date: Tue, 30 May 2017 12:56:39 +1000
+Message-ID: <877f0z6oig.fsf@concordia.ellerman.id.au>
+References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com> <87a85v7to2.fsf@concordia.ellerman.id.au> <CAMuHMdU1kne4tKRfyx0hr1LXh_c75bYMs0b=vncHqrhB69jqYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496048959.17695.20.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU1kne4tKRfyx0hr1LXh_c75bYMs0b=vncHqrhB69jqYg@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Babu Moger <babu.moger@oracle.com>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 29, 2017 at 6:39 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Hi Joel,
+Geert Uytterhoeven <geert@linux-m68k.org> writes:
+
+> Hi Michael,
 >
-> On Fri, 2017-05-26 at 13:32 +1000, Joel Stanley wrote:
->> This adds the bindings documentation for a basic single-register reset
->> controller.
+> On Mon, May 29, 2017 at 2:07 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
+>> Geert Uytterhoeven <geert@linux-m68k.org> writes:
+>>> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
+>>>> Found this problem while enabling queued rwlock on SPARC.
+>>>> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
+>>>> specific byte in qrwlock structure. Without this parameter,
+>>>> we clear the wrong byte. Here is the code.
+>>>>
+>>>> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
+>>>>  {
+>>>>         return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
+>>>>  }
+>>>>
+>>>> Define CPU_BIG_ENDIAN for SPARC to fix it.
+>>>
+>>>> --- a/arch/sparc/Kconfig
+>>>> +++ b/arch/sparc/Kconfig
+>>>> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
+>>>>  config ARCH_PROC_KCORE_TEXT
+>>>>         def_bool y
+>>>>
+>>>> +config CPU_BIG_ENDIAN
+>>>> +       bool
+>>>> +       default y if SPARC
+>>>
+>>> Nice catch!
+>>>
+>>> Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
+>>> architectures that may support both.  And it was checked in platform code
+>>> and drivers only.
+>>> Hence the symbol is lacking from most architectures. Heck, even
+>>> architectures that support both may default to one endiannes, and declare
+>>> only the symbol for the other endianness:
 >>
->> The bindings describe a single 32-bit register that contains up to 32
->> reset lines, each deasserted by clearing the appropriate bit in the
->> register.
->>
->> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
->> ---
->>  .../devicetree/bindings/reset/reset-basic.txt      | 31 ++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/reset/reset-basic.txt
->>
->> diff --git a/Documentation/devicetree/bindings/reset/reset-basic.txt b/Documentation/devicetree/bindings/reset/reset-basic.txt
->> new file mode 100644
->> index 000000000000..7341e04e7904
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/reset-basic.txt
->> @@ -0,0 +1,31 @@
->> +Basic single-register reset controller
->> +======================================
->> +
->> +This describes a generic reset controller where the reset lines are controlled
->> +by single bits within a 32-bit memory location. The memory location is assumed
->> +to be part of a syscon regmap.
+>> I guess there's a reason we can't use __BIG_ENDIAN__ / __LITTLE_ENDIAN__ ?
 >
-> There are a few more assumptions. First, that the reset line is asserted
-> by setting the corresponding bits, and that it is deasserted by clearing
-> them. Further, that the bits are not auto-clearing. And then, that the
-> same bit can be read back to provide the current reset line status.
-
-I'll add a property to indicate set-to-enable in v2. How about:
-
- - reset-set-assert: Specifies that the bit should be set to assert
-the reset. The default is to set the bit to deassert the reset.
-
-I'm sure we can find a better way to write that.
-
-I'll add a note that the bits are not auto-clearing, and therefore
-they can be read back. This is in the spirit of trying to describe a
-basic reset controller.
-
+> I (C/asm) code we can, in Kconfig we cannot.
 >
->> +Reset controller required properties:
->> + - compatible: should be "reset-basic"
->> + - #reset-cells: must be set to 1
->> + - reg: reset register location within regmap
->> +
->> +Device node required properties:
->> + - resets phandle
->> + - bit number, counting from zero, for the desired reset line. Max is 31.
->> +
->> +Example:
->> +
->> +syscon {
->> +     compatible = "syscon";
->> +
->> +     uart_rest: rest@0c {
->
-> The device node name should be "reset-controller", and leading zeroes
-> should be dropped from the address part:
->
->         uart_rest: reset-controller@c {
+> So far we tried always doing that, but a few checks for the semi-existing
+> Kconfig symbol crept in in generic code. Those could be replaced by the __*__
+> variants, but consistently having the Kconfig symbols would be useful anyway
+> (e.g. to avoid building the broken-on-big-endian ISDN drivers).
 
-Ok.
+Ah OK, the original mail was citing C code, but yeah I guess it would be
+handy in Makefiles etc.
 
->
->> +             compatible = "reset-basic";
->
-> Maybe this is not necessary for the example, but the compatible should
-> contain a vendor/hardware specific string first.
-
-You're suggesting I add a hardware-specific string in addition to the
-generic reset-basic? eg:
-
-            compatible = "aspeed,uart-rest", "reset-basic";
-
-I don't think that helps anyone. We don't do that for eg.
-timeriomem-rng or gpio-fan. Or perhaps I've misunderstood your
-suggestion?
-
->
->> +             #reset-cells = <1>;
->> +             reg = <0x0c>;
->> +     };
->> +}
->> +
->> +&uart {
->> +     resets = <&uart_rest 0x04>;
->
-> I'd use decimal here.
-
-Ok.
-
-Cheers,
-
-Joel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers
