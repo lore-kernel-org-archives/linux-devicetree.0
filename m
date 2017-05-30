@@ -1,76 +1,68 @@
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Subject: Re: [PATCH 4/6] irqchip: irq-mvebu-icu: new driver for Marvell ICU
-Date: Tue, 30 May 2017 16:08:01 +0100
-Message-ID: <20170530150801.GV22219@n2100.armlinux.org.uk>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell GICP
+Date: Tue, 30 May 2017 16:17:41 +0100
+Message-ID: <5b882159-4de1-5a8e-5737-56542f2aee3a@arm.com>
 References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1496135772-20694-5-git-send-email-thomas.petazzoni@free-electrons.com>
- <20170530121907.GO22219@n2100.armlinux.org.uk>
- <20170530143350.6f8563c1@free-electrons.com>
- <20170530125643.GQ22219@n2100.armlinux.org.uk>
- <20170530132735.GA21646@lunn.ch>
- <20170530143902.GU22219@n2100.armlinux.org.uk>
- <20170530144934.GB22758@lunn.ch>
+ <1496135772-20694-4-git-send-email-thomas.petazzoni@free-electrons.com>
+ <2ea42715-700b-c363-eeba-db83b0f63a70@arm.com>
+ <20170530165454.6ca24dbc@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170530144934.GB22758@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170530165454.6ca24dbc-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 04:49:34PM +0200, Andrew Lunn wrote:
-> On Tue, May 30, 2017 at 03:39:02PM +0100, Russell King - ARM Linux wrote:
-> > On Tue, May 30, 2017 at 03:27:35PM +0200, Andrew Lunn wrote:
-> > > What might help is that you ask for help getting them merged. I know
-> > > of at least 4 groups of people interested in your devlink and 10G PHY
-> > > code. If you handed those patches over to these people, i'm sure we
-> > > could find somebody to post them to the list, deal with the feedback,
-> > > etc, to get them merged. It just needs you to say it is O.K. for
-> > > somebody to take patches from your git tree.
-> > 
-> > Is that not what I'm trying to do with these A8k changes?  What I'm
-> > instead getting is "your tree is private, we're not touching it".
-> > 
-> > Okay, so let me put it another way: please help me merge the A8k
-> > changes that I have in my tree.
+On 30/05/17 15:54, Thomas Petazzoni wrote:
+> Hello,
 > 
-> Hi Russell
+> On Tue, 30 May 2017 14:55:57 +0100, Marc Zyngier wrote:
 > 
-> So you are happy for Free-Electrons, or anybody else, to take patches
-> from your tree, submit them, handle comments, resubmit them, etc?
+>>> +	for (i = 0; i < GICP_INT_COUNT; i++)
+>>> +		writel(i, regs + GICP_CLRSPI_NSR_OFFSET);  
+>>
+>> What does this do on an edge interrupt?
+> 
+> I guess nothing. What the ICU does is:
+> 
+>  * For level interrupts: when the interrupt wire is asserted, write to
+>    SETNSR, when the interrupt wire is deasserted, write to CLRNSR
+> 
+>  * For edge interrupts: only the interrupt assertion causes a write to
+>    SETNSR.
+> 
+>> I bet this doesn't have any effect
+> 
+> Indeed. But do we care? Can an edge interrupt be left pending from the
+> firmware?
 
-I am happy for the A8k changes, provided there's coordination, so we
-reasonably avoid to duplicate effort, but I think we're already at
-the point where most of my effort has already been duplicated.
+I cannot see why not. It is just as likely as a level interrupt.
 
-If someone wants to take (eg) my ICU patches and fit what's appropriate
-on top of Thomas', then I'd welcome that effort.
+> 
+>> , so you may want to use the irq_set_irqchip_state() API to clear a
+>> potential pending state instead (and you may want to wire it in the
+>> ICU driver itself as well).
+> 
+> I'm not sure how to use this irq_set_irqchip_state() API. I guess it
+> needs a virq that corresponds to the GIC SPI interrupt, and I'm not
+> sure how to get that.
 
-Obviously, the PP2x changes in my tree are no-hopers for mainline as
-the decision has been made to improve the existing PP2 driver, and
-I think the gpio/pinctrl changes are now no-hopers as that work has
-already been done independently.
+You do have the virtual interrupt when doing the allocation (it is
+passed as a parameter). So you could perform the mapping (call into the
+lower layers), and clear the pending bit using the above API.
 
-I'm not sure there's much other stuff left out of the 63 patches that
-comprise my "mvebu" branch as far as core A8k changes go.
+But maybe you don't have any edge interrupt on this SoC, and it doesn't
+matter.
 
-For the mcbin changes (that come after the mvebu/phy merge), I think
-everything up to and including "arm64: dts: marvell: mcbin: add GPIO"
-is probably mainline-candidates (except for the PP2 driver obviously),
-the sdhci DTS patch has already been picked up.
+Thanks,
 
-"arm64: dts: marvell: mcbin: workaround wrongly wired i2c1 bus" is
-definitely not for mainline, as that is only for early revision
-boards, and SR does not want that merged into mainline (as stated
-in its commit log.)
-
-"arm64: dts: marvell: mcbin: add remainder of pinctrls" and
-"usb: host: xhci: mvebu: add reset on resume quirk" might also be
-candidates, I'm not sure without looking further.
-
+	M.
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
