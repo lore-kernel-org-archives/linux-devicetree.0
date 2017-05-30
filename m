@@ -1,323 +1,176 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH RfC v4 5/6] pinctrl: meson: add support for GPIO
- interrupts
-Date: Tue, 30 May 2017 20:51:10 +0200
-Message-ID: <da3d5de1-b9ae-9d93-dc99-a0e9af2e3694@gmail.com>
-References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
- <3265fbc9-467d-67fa-8752-f750f234dedd@gmail.com>
- <b897c978-df5c-3494-6e29-26cb0b376709@baylibre.com>
- <257713f3-af14-d923-6f80-774a60d8f22b@gmail.com>
- <1496130378.2741.4.camel@baylibre.com>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH 1/2] arm64: allwinner: h5: Add initial
+ NanoPi NEO2 support
+Date: Wed, 31 May 2017 03:09:22 +0800
+Message-ID: <0ac7e4973794e99d75001dd6b1adc822@aosc.io>
+References: <1496166170-6593-1-git-send-email-jagan@openedev.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1496130378.2741.4.camel@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBZUGW7EQKGQEU3VPIPQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1496166170-6593-1-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 30.05.2017 um 09:46 schrieb Jerome Brunet:
-> On Mon, 2017-05-29 at 22:12 +0200, Heiner Kallweit wrote:
->> Am 29.05.2017 um 10:43 schrieb Neil Armstrong:
->>> Hi Heiner,
->>>
->>> On 05/28/2017 09:12 PM, Heiner Kallweit wrote:
->>>> Add support for GPIO interrupts and make use of the just introduced
->>>> irqchip driver handling the GPIO interrupt-controller.
->>>>
->>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>> ---
->>>>  drivers/pinctrl/Kconfig               |   2 +
->>>>  drivers/pinctrl/meson/pinctrl-meson.c | 164
->>>> +++++++++++++++++++++++++++++++++-
->>>>  2 files changed, 165 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
->>>> index abc1cef7..d8c92809 100644
->>>> --- a/drivers/pinctrl/Kconfig
->>>> +++ b/drivers/pinctrl/Kconfig
->>>> @@ -166,8 +166,10 @@ config PINCTRL_MESON
->>>>  	select PINCONF
->>>>  	select GENERIC_PINCONF
->>>>  	select GPIOLIB
->>>> +	select GPIOLIB_IRQCHIP
->>>>  	select OF_GPIO
->>>>  	select REGMAP_MMIO
->>>> +	select MESON_GPIO_INTC
->>>
->>> This should not be here, there is not "compile-time" dependency.
->>>
->>>>  
->>>>  config PINCTRL_OXNAS
->>>>  	bool
->>>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c
->>>> b/drivers/pinctrl/meson/pinctrl-meson.c
->>>> index 66ed70c1..7fb98c71 100644
->>>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->>>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->>>> @@ -62,6 +62,8 @@
->>>>  #include "../pinctrl-utils.h"
->>>>  #include "pinctrl-meson.h"
->>>>  
->>>> +static struct irq_domain *meson_pinctrl_irq_domain;
->>>> +
->>>>  /**
->>>>   * meson_get_bank() - find the bank containing a given pin
->>>>   *
->>>> @@ -497,6 +499,150 @@ static int meson_gpio_get(struct gpio_chip *chip,
->>>> unsigned gpio)
->>>>  	return !!(val & BIT(bit));
->>>>  }
->>>>  
->>>> +static struct meson_pinctrl *meson_gpio_data_to_pc(struct irq_data *data)
->>>> +{
->>>> +        struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
->>>> +
->>>> +        return gpiochip_get_data(chip);
->>>> +}
->>>> +
->>>> +static int meson_gpio_bank_hwirq(struct meson_bank *bank, unsigned int
->>>> offset)
->>>> +{
->>>> +        int hwirq;
->>>> +
->>>> +        if (bank->irq_first < 0)
->>>> +                /* this bank cannot generate irqs */
->>>> +                return 0;
->>>> +
->>>> +        hwirq = offset - bank->first + bank->irq_first;
->>>> +
->>>> +        if (hwirq > bank->irq_last)
->>>> +                /* this pin cannot generate irqs */
->>>> +                return 0;
->>>> +
->>>> +        return hwirq;
->>>> +}
->>>> +
->>>> +static int meson_gpio_to_hwirq(struct irq_data *data)
->>>> +{
->>>> +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
->>>> +	unsigned int offset = data->hwirq;
->>>> +        struct meson_bank *bank;
->>>> +        int hwirq, ret;
->>>> +
->>>> +        offset += pc->data->pin_base;
->>>> +
->>>> +        ret = meson_get_bank(pc, offset, &bank);
->>>> +        if (ret)
->>>> +                return ret;
->>>> +
->>>> +        hwirq = meson_gpio_bank_hwirq(bank, offset);
->>>> +        if (!hwirq)
->>>> +                dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
->>>> +
->>>> +        return hwirq;
->>>> +}
->>>> +
->>>> +static void meson_gpio_irq_handler(struct irq_desc *desc)
->>>> +{
->>>> +        struct irq_chip *chip = irq_desc_get_chip(desc);
->>>> +        struct irq_data *gpio_irq_data = irq_desc_get_handler_data(desc);
->>>> +
->>>> +        chained_irq_enter(chip, desc);
->>>> +
->>>> +        if (gpio_irq_data)
->>>> +                generic_handle_irq(gpio_irq_data->irq);
->>>> +
->>>> +        chained_irq_exit(chip, desc);
->>>> +}
->>>> +
->>>> +static void meson_gpio_irq_unmask(struct irq_data *data) {}
->>>> +static void meson_gpio_irq_mask(struct irq_data *data) {}
->>>> +
->>>> +static void meson_gpio_irq_shutdown(struct irq_data *data)
->>>> +{
->>>> +	int hwirq = meson_gpio_to_hwirq(data);
->>>> +	int irq;
->>>> +
->>>> +	if (hwirq <= 0)
->>>> +		return;
->>>> +
->>>> +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2);
->>>> +	if (irq) {
->>>> +		irq_set_chained_handler_and_data(irq, handle_bad_irq,
->>>> NULL);
->>>> +		irq_domain_free_irqs(irq, 1);
->>>> +	}
->>>> +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2 + 1);
->>>> +	if (irq) {
->>>> +		irq_set_chained_handler_and_data(irq, handle_bad_irq,
->>>> NULL);
->>>> +		irq_domain_free_irqs(irq, 1);
->>>> +	}
->>>
->>> Same as irqchip, please add paragraph explaining why you use *2 here to
->>> handle the
->>> IRQ_BOTH situation.
->>>
->>>> +}
->>>> +
->>>> +static int meson_gpio_irq_set_type(struct irq_data *data, unsigned int
->>>> type)
->>>> +{
->>>> +	int hwirq = meson_gpio_to_hwirq(data);
->>>> +	struct irq_fwspec fwspec;
->>>> +        int irq, irq2, num_slots;
->>>> +
->>>> +	if (irqd_is_activated(data))
->>>> +		return -EBUSY;
->>>> +
->>>> +	if (hwirq < 0)
->>>> +		return hwirq;
->>>> +
->>>> +	if (!hwirq)
->>>> +		return -ENXIO;
->>>> +
->>>> +	fwspec.fwnode = meson_pinctrl_irq_domain->fwnode;
->>>> +	fwspec.param_count = 2;
->>>> +
->>>> +        /*
->>>> +         * The chip can create an interrupt for either rising or falling
->>>> edge
->>>> +         * only. Therefore use two interrupts in case of
->>>> IRQ_TYPE_EDGE_BOTH,
->>>> +         * first for falling edge and second one for rising edge.
->>>> +         */
->>>> +        num_slots = (type == IRQ_TYPE_EDGE_BOTH) ? 2 : 1;
->>>> +
->>>> +        /*
->>>
->>> Please correct indentation.
->>>
->>>> +	 * Add one bit to hwirq to allow for
->>>> +	 * - using the same gpio hwirq twice
->>>> +	 * - decoding the gpio hwirq in the interrupt controller driver
->>>> +         */
->>>> +	fwspec.param[0] = hwirq << 1;
->>>> +	if (num_slots == 1)
->>>> +		fwspec.param[1] = type;
->>>> +	else
->>>> +		fwspec.param[1] = IRQ_TYPE_EDGE_FALLING;
->>>> +
->>>> +	irq = irq_create_fwspec_mapping(&fwspec);
->>>> +	if (!irq)
->>>> +		return -EINVAL;
->>>> +
->>>> +	irq_set_chained_handler_and_data(irq, meson_gpio_irq_handler,
->>>> data);
->>>> +
->>>> +	if (num_slots > 1) {
->>>> +		fwspec.param[0]++;
->>>> +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
->>>> +		irq2 = irq_create_fwspec_mapping(&fwspec);
->>>> +		if (!irq2) {
->>>> +			irq_domain_free_irqs(irq, 1);
->>>> +			return -EINVAL;
->>>> +		}
->>>> +		irq_set_chained_handler_and_data(irq2,
->>>> meson_gpio_irq_handler, data);
->>>> +	}
->>>> +
->>>> +        return 0;
->>>> +}
->>>
->>> You will have an irq leak if you chance twice of type in the same GPIO from
->>> BOTH to Edge/Level.
->>>
->>
->> I'm not sure I get your point.
->> This function is called once for a GPIO IRQ, typically within request_irq()
->> based on the type flags (provided that gpio_to_irq is used).
->> And I don't change the type from BOTH to something, I create two parent irq's
->> with type RISING/FALLING.
-> 
-> Is there anything preventing the consumer driver from calling "irq_set_irq_type"
->  on its irq ? 
-> 
-No, however I haven't seen a use case where this would be necessary.
-I found one or two drivers which use request_irq with empty type flag and call
-irq_set_irq_type afterwards. This I would consider a misuse of the irq API.
+=E5=9C=A8 2017-05-31 01:42=EF=BC=8CJagan Teki =E5=86=99=E9=81=93=EF=BC=9A
+> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>=20
+> NanoPi M1 Plus is designed and developed by FriendlyElec
+> using the Allwinner 64-bit H5 SOC.
 
-To cope with cases where for whatever reason irq_set_irq_type is called a second
-time I return EBUSY if the irq is activated already.
+Copy'n'paste error?
 
-> By the way, I wonder if "irq_set_irq_type" is supposed to be fast (callable from
-> an irq handler). In such case, irq_create_fwspec_mapping cannot be called from
-> .irq_set_type (same as gpio_to_irq)
-> 
-Hmm, I don't know. But I think a driver doing such strange things has a much
-bigger problem than we have ..
+>=20
+> NanoPi Neo2 key features
+> - Allwinner H5, Quad-core 64-bit Cortex-A53
+> - 512MB DDR3 RAM
+> - microSD slot
+> - 10/100/1000M Ethernet
+> - Serial Debug Port
+> - 5V 2A DC MicroUSB power-supply
 
-> Again, I think this is a SW hack to compensate for a missing HW feature. I'm
-> curious to get the point of view the irq maintainers on it.
-> 
-I have to agree ..
-Worst case we could always reserve two parent interrupts in irq_request_resources.
-Then we don't have the issue with set_type, but on the other hand only four
-GPIO's could request an interrupt. This may be an acceptable trade-off.
+Sorry, this time I also submitted it first and merged...
 
->>
->>>> +
->>>> +static struct irq_chip meson_gpio_irq_chip = {
->>>> +        .name = "GPIO",
->>>> +        .irq_set_type = meson_gpio_irq_set_type,
->>>> +        .irq_mask = meson_gpio_irq_mask,
->>>> +        .irq_unmask = meson_gpio_irq_unmask,
->>>> +        .irq_shutdown = meson_gpio_irq_shutdown,
->>>> +};
->>>> +
->>>>  static const struct of_device_id meson_pinctrl_dt_match[] = {
->>>>  	{
->>>>  		.compatible = "amlogic,meson8-cbus-pinctrl",
->>>> @@ -558,7 +704,8 @@ static int meson_gpiolib_register(struct meson_pinctrl
->>>> *pc)
->>>>  		return ret;
->>>>  	}
->>>>  
->>>> -	return 0;
->>>> +	return gpiochip_irqchip_add(&pc->chip, &meson_gpio_irq_chip, 0,
->>>> +				    handle_simple_irq, IRQ_TYPE_NONE);
->>>>  }
->>>>  
->>>>  static struct regmap_config meson_regmap_config = {
->>>> @@ -637,6 +784,21 @@ static int meson_pinctrl_parse_dt(struct
->>>> meson_pinctrl *pc,
->>>>  		return PTR_ERR(pc->reg_gpio);
->>>>  	}
->>>>  
->>>> +	if (!meson_pinctrl_irq_domain) {
->>>> +		np = of_find_compatible_node(NULL, NULL, "amlogic,meson-
->>>> gpio-intc");
->>>> +		if (!np) {
->>>> +			dev_err(pc->dev, "interrupt controller DT node
->>>> not found\n");
->>>> +			return -EINVAL;
->>>> +		}
->>>> +		meson_pinctrl_irq_domain = irq_find_host(np);
->>>> +		if (!meson_pinctrl_irq_domain) {
->>>> +			dev_err(pc->dev, "interrupt controller not
->>>> found\n");
->>>> +			of_node_put(np);
->>>> +			return -EINVAL;
->>>> +		}
->>>> +		of_node_put(np);
->>>> +	}
->>>
->>> Please add some blank lines between logical sections of the code.
->>>
->>>> +
->>>>  	return 0;
->>>>  }
->>>>  
->>>>
->>>
->>> Thanks,
->>> Neil
->>>
->>
->>
-> 
-> 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-April/501672.htm=
+l
 
+>=20
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/Makefile             |  1 +
+>  .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 92=20
+> ++++++++++++++++++++++
+>  2 files changed, 93 insertions(+)
+>  create mode 100644=20
+> arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/Makefile
+> b/arch/arm64/boot/dts/allwinner/Makefile
+> index c1dd6e4..8d50907 100644
+> --- a/arch/arm64/boot/dts/allwinner/Makefile
+> +++ b/arch/arm64/boot/dts/allwinner/Makefile
+> @@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-bananapi-m64.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-nanopi-a64.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-pine64-plus.dtb=20
+> sun50i-a64-pine64.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-a64-orangepi-win.dtb
+> +dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-nanopi-neo2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-pc2.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-prime.dtb
+>  dtb-$(CONFIG_ARCH_SUNXI) +=3D sun50i-h5-orangepi-zero-plus2.dtb
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
+> b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
+> new file mode 100644
+> index 0000000..c28779f
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
+> @@ -0,0 +1,92 @@
+> +/*
+> + * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of=20
+> the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include "sun50i-h5.dtsi"
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model =3D "FriendlyARM NanoPi NEO2";
+> +	compatible =3D "friendlyarm,nanopi-neo2", "allwinner,sun50i-h5";
+> +
+> +	aliases {
+> +		serial0 =3D &uart0;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path =3D "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		reg =3D <0x40000000 0x20000000>;
+> +	};
+> +
+> +	soc {
+> +		reg_vcc3v3: vcc3v3 {
+> +			compatible =3D "regulator-fixed";
+> +			regulator-name =3D "vcc3v3";
+> +			regulator-min-microvolt =3D <3300000>;
+> +			regulator-max-microvolt =3D <3300000>;
+> +		};
+> +	};
+> +};
+> +
+> +&mmc0 {
+> +	compatible =3D "allwinner,sun50i-h5-mmc",
+> +		     "allwinner,sun50i-a64-mmc",
+> +		     "allwinner,sun5i-a13-mmc";
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&mmc0_pins_a>, <&mmc0_cd_pin>;
+> +	vmmc-supply =3D <&reg_vcc3v3>;
+> +	bus-width =3D <4>;
+> +	cd-gpios =3D <&pio 5 6 GPIO_ACTIVE_HIGH>;
+> +	cd-inverted;
+> +	status =3D "okay";
+> +};
+> +
+> +&uart0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&uart0_pins_a>;
+> +	status =3D "okay";
+> +};
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
