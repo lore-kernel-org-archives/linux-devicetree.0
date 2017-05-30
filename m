@@ -1,88 +1,78 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH v7 1/4] PCI: hisi: Add DT binding for PCIe of Kirin SoC
- series
-Date: Tue, 30 May 2017 15:01:06 -0500
-Message-ID: <20170530200106.GD4664@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170525030204.126233-1-songxiaowei@hisilicon.com>
- <20170525030204.126233-2-songxiaowei@hisilicon.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v5 0/9] pinctrl: meson: add support for GPIO IRQs
+Date: Tue, 30 May 2017 22:03:18 +0200
+Message-ID: <66c57893-0a9e-4f8c-a017-ab346abbdfd0@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170525030204.126233-2-songxiaowei@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Xiaowei Song <songxiaowei@hisilicon.com>
-Cc: bhelgaas@google.com, kishon@ti.com, jingoohan1@gmail.com, arnd@arndb.de, tn@semihalf.com, keith.busch@intel.com, niklas.cassel@axis.com, dhdang@apm.com, liudongdong3@huawei.com, gabriele.paoloni@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, chenyao11@huawei.com, puck.chen@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 25, 2017 at 11:02:01AM +0800, Xiaowei Song wrote:
-> Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
-> ---
->  .../devicetree/bindings/pci/kirin-pcie.txt         | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+This patch series is partially based on a series Jerome Brunet
+submitted about half a year ago. Due to open questions this series never
+made it to mainline, see https://patchwork.kernel.org/patch/9384431/
 
-Looking for an ack from Rob.
+This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
+Included is also support for using two parent IRQs in case
+of IRQ_TYPE_EDGE_BOTH, like in the vendor driver.
 
-> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> new file mode 100644
-> index 000000000000..ba6f1bd191f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
-> @@ -0,0 +1,49 @@
-> +HiSilicon Kirin SoCs PCIe host DT description
-> +
-> +Kirin PCIe host controller is based on Designware PCI core.
-> +It shares common functions with PCIe Designware core driver
-> +and inherits common properties defined in
-> +Documentation/devicetree/bindings/pci/designware-pci.txt.
-> +
-> +Additional properties are described here:
-> +
-> +Required properties
-> +- compatible:
-> +	"hisilicon,kirin960-pcie" for PCIe of Kirin960 SoC
-> +- reg: Should contain rc_dbi, apb, phy, config registers location and length.
-> +- reg-names: Must include the following entries:
-> +  "dbi": controller configuration registers;
-> +  "apb": apb Ctrl register defined by Kirin;
-> +  "phy": apb PHY register defined by Kirin;
-> +  "config": PCIe configuration space registers.
-> +- reset-gpio: The gpio to generate PCIe perst assert and deassert signal.
-> +
-> +Optional properties:
-> +
-> +Example based on kirin960:
-> +
-> +        pcie@f4000000 {
-> +                        compatible = "hisilicon,kirin-pcie";
-> +                        reg =  <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
-> +                                 <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
-> +                        reg-names = "dbi","apb","phy", "config";
-> +                        bus-range = <0x0  0x1>;
-> +                        #address-cells = <3>;
-> +                        #size-cells = <2>;
-> +                        device_type = "pci";
-> +                        ranges = <0x02000000 0x0 0x00000000 0x0 0xf5000000 0x0 0x2000000>;
-> +                        num-lanes = <1>;
-> +                        #interrupt-cells = <1>;
-> +                        interrupt-map-mask = <0xf800 0 0 7>;
-> +			interrupt-map = <0x0 0 0 2 &gic 0 0 0  283 4>,
+The series was successfully tested on a Odroid-C2, e.g. with removing
+polling for SD card insertion/removal from the mmc driver.
 
-Please indent consistently (above line uses tabs, most others use
-spaces).  Also, please line up the cells.
+Changes in v2:
+- separate the GPIO IRQ controller from the pinctrl driver
+- minor improvements to the GPIO IRQ controller
 
-> +                                        <0x0 0 0 3 &gic 0 0 0  284 4>,
-> +                                        <0x0 0 0 4 &gic 0 0 0  285 4>;
-> +                        clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-> +                                <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-> +                                <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-> +                                <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-> +                                <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-> +                        clock-names = "pcie_phy_ref", "pcie_aux",
-> +                                "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
-> +                        reset-gpio = <&gpio11 1 0 >;
-> +        };
-> -- 
-> 2.11.GIT
-> 
+Changes in v3:
+- replace the request_irq based allocation of parent irq's with
+  chained irq handling, this also fixes the spurious interrupts issue
+  and allows to remove the workaround code.
+  Last but not least the parent irq's are no longer visible in
+  /proc/interrupts.
+- minor improvements to the GPIO IRQ controller
+
+Changes in v4:
+- separate the gpio-independent interrupt controller part and make
+  it a driver under drivers/irqchip
+
+Changes in v5:
+- smaller changes based on review comments
+- split DT patches per ARM / ARM64
+
+Heiner Kallweit (7):
+  pinctrl: meson: add interrupts to pinctrl data
+  irqchip: add Amlogic Meson GPIO irqchip driver
+  dt-bindings: add Amlogic Meson GPIO interrupt-controller DT binding documentation
+  ARM: dts: meson: add GPIO interrupt-controller support
+  ARM64: dts: meson: add GPIO interrupt-controller support
+  pinctrl: meson: add support for GPIO interrupts
+  pinctrl: meson: update DT binding documentation
+  ARM: dts: meson: mark gpio controllers as interrupt controllers
+  ARM64: dts: meson: mark gpio controllers as interrupt controllers
+
+.../amlogic,meson-gpio-intc.txt                    |  26 ++
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   4 +
+ arch/arm/boot/dts/meson8.dtsi                      |  12 +
+ arch/arm/boot/dts/meson8b.dtsi                     |  12 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   4 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |   4 +
+ drivers/irqchip/Kconfig                            |   5 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-meson-gpio.c                   | 296 +++++++++++++++++++++
+ drivers/pinctrl/Kconfig                            |   1 +
+ drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |  22 +-
+ drivers/pinctrl/meson/pinctrl-meson-gxl.c          |  20 +-
+ drivers/pinctrl/meson/pinctrl-meson.c              | 170 +++++++++++-
+ drivers/pinctrl/meson/pinctrl-meson.h              |  15 +-
+ drivers/pinctrl/meson/pinctrl-meson8.c             |  20 +-
+ drivers/pinctrl/meson/pinctrl-meson8b.c            |  32 ++-
+ 17 files changed, 605 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+ create mode 100644 drivers/irqchip/irq-meson-gpio.c
+
+-- 
+2.13.0
