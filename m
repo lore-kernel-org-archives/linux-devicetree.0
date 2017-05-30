@@ -1,54 +1,116 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
-Date: Tue, 30 May 2017 12:03:51 +0200
-Message-ID: <20170530100351.GD2192@mai>
-References: <20170516075840.23130-1-andrew@aj.id.au>
- <CACRpkdZsbzwBKRj1FXAoCW9nD357SNNK8t=gOO-OBtV_pwjpKg@mail.gmail.com>
- <0f526d58-3138-d7ea-0dc7-5ef623fb0547@linaro.org>
- <CACRpkdYbicYPJvaeTMpHSn4F77ognBfnEbj7OknFiZgfK1qizA@mail.gmail.com>
- <1a165856-6863-ad51-d66c-eda062f4d98e@linaro.org>
- <CACRpkdYtq09MYz4xcgYOpKDe406YzatnRKNmVyP9QRU2z5x2_g@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] mfd: lp87565: Add lp87565 PMIC support
+Date: Tue, 30 May 2017 11:12:45 +0100
+Message-ID: <20170530101245.dtoj7v2scegmt66r@dell>
+References: <1495541816-14801-1-git-send-email-j-keerthy@ti.com>
+ <1495541816-14801-2-git-send-email-j-keerthy@ti.com>
+ <20170530092347.jlystyxrscuj3wvk@dell>
+ <a7204c7c-0cc0-f3a7-56af-d1f0508ad4d1@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdYtq09MYz4xcgYOpKDe406YzatnRKNmVyP9QRU2z5x2_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <a7204c7c-0cc0-f3a7-56af-d1f0508ad4d1-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
+To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, afd-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 11:53:35AM +0200, Linus Walleij wrote:
-> On Tue, May 30, 2017 at 10:54 AM, Daniel Lezcano
-> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On 30/05/2017 09:44, Linus Walleij wrote:
-> 
-> >> I guess what we can do is make two different sched_clock()
-> >> callbacks: one for upward and one for downward counting.
-> >>
-> >> Would you like an optimization like that?
-> >>
-> >> (It makes sense.)
-> >
-> > Yes, thanks Linus!
-> 
-> Can you point me to a git tree with all your patches so I can work
-> on top of what you have?
-> 
-> I think I will also look into adding delay timers.
+On Tue, 30 May 2017, Keerthy wrote:
 
-https://git.linaro.org/people/daniel.lezcano/linux.git clockevents/4.13
+> 
+> 
+> On Tuesday 30 May 2017 02:53 PM, Lee Jones wrote:
+> > On Tue, 23 May 2017, Keerthy wrote:
+> > 
+> >> The LP87565 chip is a power management IC for Portable Navigation Systems
+> >> and Tablet Computing devices. It contains the following components:
+> >>
+> >>         - Configurable Bucks(Single and multi-phase).
+> >>         - Configurable General Purpose Output Signals (GPO).
+> >>
+> >> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+> >> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+> >> output.
+> >>
+> >> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+> >> ---
+> >>
+> >> Changes in v2:
+> >>
+> >>   * Fixed a bunch of whitespace errors.
+> >>   * Changed the License to short form.
+> >>   * Added the generic compatible lp87565
+> >>   * Removed i2c_device_id table.
+> >>   * Introduced probe_new function in place of probe.
+> >>
+> >>  Documentation/devicetree/bindings/mfd/lp87565.txt |  45 ++++
+> >>  drivers/mfd/Kconfig                               |  14 ++
+> >>  drivers/mfd/Makefile                              |   1 +
+> >>  drivers/mfd/lp87565.c                             |  95 ++++++++
+> >>  include/linux/mfd/lp87565.h                       | 271 ++++++++++++++++++++++
+> >>  5 files changed, 426 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+> >>  create mode 100644 drivers/mfd/lp87565.c
+> >>  create mode 100644 include/linux/mfd/lp87565.h
 
-(subject to rebase)
+[...]
+
+> >> +static int lp87565_probe(struct i2c_client *client)
+> >> +{
+> >> +	struct lp87565 *lp87565;
+> >> +	const struct of_device_id *of_id;
+> >> +	int ret;
+> >> +	unsigned int otpid;
+> >> +
+> >> +	lp87565 = devm_kzalloc(&client->dev, sizeof(*lp87565), GFP_KERNEL);
+> >> +	if (!lp87565)
+> >> +		return -ENOMEM;
+> >> +
+> >> +	lp87565->dev = &client->dev;
+> >> +
+> >> +	lp87565->regmap = devm_regmap_init_i2c(client, &lp87565_regmap_config);
+> >> +	if (IS_ERR(lp87565->regmap)) {
+> >> +		ret = PTR_ERR(lp87565->regmap);
+> >> +		dev_err(lp87565->dev,
+> >> +			"Failed to initialize register map: %d\n", ret);
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	ret = regmap_read(lp87565->regmap, LP87565_REG_OTP_REV, &otpid);
+> >> +	if (ret) {
+> >> +		dev_err(lp87565->dev, "Failed to read OTP ID\n");
+> >> +		return ret;
+> >> +	}
+> >> +
+> >> +	lp87565->rev = otpid & LP87565_OTP_REV_OTP_ID;
+> >> +
+> >> +	of_id = of_match_device(of_lp87565_match_table, &client->dev);
+> >> +	if (of_id)
+> >> +		lp87565->dev_type = (enum lp87565_device_type)of_id->data;
+> > 
+> > So you can interigate the device for a revision number, but not a
+> > device type ID, is that correct?
+> 
+> I hope you meant integrate? Revision of a particular type. Then device
+> type can mean something like lp87565-q1 which is modeling 4 individual
+> regulators as 2 dual phase regulators. There can be other devices which
+> has 4 single phase regulators. I have no document which talks about that
+> yet but possible.
+
+No I meant "interrogate".  Odd that my spell checker didn't pick that
+one up.
+
+I'll put it another way.  You are able to read the revision number
+from the device, right?  Is there another register that you can read
+from to obtain the device type?
 
 -- 
-
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
