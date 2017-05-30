@@ -1,84 +1,37 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v13 9/9] arm64: dts: qcom: msm8916: Add debug unit
-Date: Tue, 30 May 2017 18:44:55 +0800
-Message-ID: <20170530104455.GD7177@leoy-ThinkPad-T440>
-References: <1495728253-30970-1-git-send-email-leo.yan@linaro.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2] ARM: dts: da850: Add interrupt-controller property to
+ gpio node
+Date: Tue, 30 May 2017 16:20:11 +0530
+Message-ID: <fe594161-3adf-8cd8-df41-63daca1cfeff@ti.com>
+References: <1495634501-3246-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1495728253-30970-1-git-send-email-leo.yan@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
-Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1495634501-3246-1-git-send-email-j-keerthy@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Keerthy <j-keerthy@ti.com>, linus.walleij@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tony@atomide.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy, David,
+On Wednesday 24 May 2017 07:31 PM, Keerthy wrote:
+> The gpio node has 144 gpios. Each gpio is capable of generating
+> an interrupt. Hence add interrupt-controller property to the gpio
+> node. With this in place one can use interrupts property in device
+> tree to request for the gpio interrupts.
+> 
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
 
-[ + Nico ]
-
-On Fri, May 26, 2017 at 12:04:13AM +0800, Leo Yan wrote:
-> Add debug unit on Qualcomm msm8916 based platforms, including the
-> DragonBoard 410c board.
-
-Could you take a look for this patch? After get your ACK I think
-Mathieu could help pick up this patch through coresight repository.
-
-If you want me to send a separate patch to you directly, also is okay.
-Please let me know which is your preferring.
+Applied to v4.13/dt
 
 Thanks,
-Leo Yan
-
-> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 32 ++++++++++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index ab30939..17691ab 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -1116,6 +1116,38 @@
->  			};
->  		};
->  
-> +		debug@850000 {
-> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-> +			reg = <0x850000 0x1000>;
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&CPU0>;
-> +		};
-> +
-> +		debug@852000 {
-> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-> +			reg = <0x852000 0x1000>;
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&CPU1>;
-> +		};
-> +
-> +		debug@854000 {
-> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-> +			reg = <0x854000 0x1000>;
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&CPU2>;
-> +		};
-> +
-> +		debug@856000 {
-> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
-> +			reg = <0x856000 0x1000>;
-> +			clocks = <&rpmcc RPM_QDSS_CLK>;
-> +			clock-names = "apb_pclk";
-> +			cpu = <&CPU3>;
-> +		};
-> +
->  		etm@85c000 {
->  			compatible = "arm,coresight-etm4x", "arm,primecell";
->  			reg = <0x85c000 0x1000>;
-> -- 
-> 2.7.4
-> 
+Sekhar
