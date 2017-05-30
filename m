@@ -1,43 +1,57 @@
-From: Leo Yan <leo.yan@linaro.org>
-Subject: Re: [PATCH v13 0/9] coresight: enable debug module
-Date: Tue, 30 May 2017 16:23:45 +0800
-Message-ID: <20170530082345.GB7177@leoy-ThinkPad-T440>
-References: <1495727836-30094-1-git-send-email-leo.yan@linaro.org>
- <CANLsYkyvcg6deYAHUCqmz=gAHeph1XkG0FrYV4cVrkLHS=CXEg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANLsYkyvcg6deYAHUCqmz=gAHeph1XkG0FrYV4cVrkLHS=CXEg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/5] dt-bindings: mtd: atmel-nand: Document the nfc-io bindings
+Date: Tue, 30 May 2017 10:32:46 +0200
+Message-ID: <1496133171-4787-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1496133171-4787-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496133171-4787-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 29, 2017 at 10:41:17AM -0600, Mathieu Poirier wrote:
-> On 25 May 2017 at 09:57, Leo Yan <leo.yan@linaro.org> wrote:
-> > ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
-> > Sample-based Profiling Extension" has description for sampling
-> > registers, we can utilize these registers to check program counter
-> > value with combined CPU exception level, secure state, etc. So this is
-> > helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
-> > with IRQ disabled; the 'hang' CPU cannot switch context and handle any
-> > interrupt, so it cannot handle SMP call for stack dump, etc.
-> >
-> > This patch series is to enable coresight debug module with sample-based
-> > registers and register call back notifier for PCSR register dumping
-> > when panic happens, so we can see below dumping info for panic; and
-> > this patch series has considered the conditions for access permission
-> > for debug registers self, so this can avoid access debug registers when
-> > CPU power domain is off; the driver also try to figure out the CPU is
-> > in secure or non-secure state.
-> 
-> I have queued patches 1 to 7 to my tree.  I can't do anything about
-> patches 8 and 9 because they haven't been ack'ed.  From here you can
-> either chase them to get an ACK or send a separate patch to them
-> directly.
+SAMA5 SoCs embed an advanced NAND controller logic to automate READ/WRITE
+page accesses. This advanced logic is exposed through a separate I/O mem
+range and is thus represented in a different node with its own compatible.
 
-Thanks a lot, Mathieu. I will ping Wei and Andy/David saperately.
+Document the bindings of this nfc-io block.
 
-> Thanks,
-> Mathieu
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mtd/atmel-nand.txt | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/atmel-nand.txt b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+index f6bee57e453a..9bb66e476672 100644
+--- a/Documentation/devicetree/bindings/mtd/atmel-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/atmel-nand.txt
+@@ -59,8 +59,22 @@ Required properties:
+ - reg: should contain 2 register ranges. The first one is pointing to the PMECC
+        block, and the second one to the PMECC_ERRLOC block.
+ 
++* SAMA5 NFC I/O bindings:
++
++SAMA5 SoCs embed an advanced NAND controller logic to automate READ/WRITE page
++operations. This interface to this logic is placed in a separate I/O range and
++should thus have its own DT node.
++
++- compatible: should be "atmel,sama5d3-nfc-io", "syscon".
++- reg: should contain the I/O range used to interact with the NFC logic.
++
+ Example:
+ 
++	nfc_io: nfc-io@70000000 {
++		compatible = "atmel,sama5d3-nfc-io", "syscon";
++		reg = <0x70000000 0x8000000>;
++	};
++
+ 	pmecc: ecc-engine@ffffc070 {
+ 		compatible = "atmel,at91sam9g45-pmecc";
+                 reg = <0xffffc070 0x490>,
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
