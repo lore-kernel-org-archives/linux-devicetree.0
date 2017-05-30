@@ -1,129 +1,43 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/2] Input: Add driver for Cypress Generation 5
- touchscreen
-Date: Tue, 30 May 2017 10:11:17 +0200
-Message-ID: <20170530101117.3b7a7186@free-electrons.com>
-References: <20170529144538.29187-1-mylene.josserand@free-electrons.com>
-        <20170529144538.29187-2-mylene.josserand@free-electrons.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v13 0/9] coresight: enable debug module
+Date: Tue, 30 May 2017 16:23:45 +0800
+Message-ID: <20170530082345.GB7177@leoy-ThinkPad-T440>
+References: <1495727836-30094-1-git-send-email-leo.yan@linaro.org>
+ <CANLsYkyvcg6deYAHUCqmz=gAHeph1XkG0FrYV4cVrkLHS=CXEg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170529144538.29187-2-mylene.josserand@free-electrons.com>
-Sender: linux-input-owner@vger.kernel.org
-To: =?UTF-8?B?TXlsw6huZQ==?= Josserand <mylene.josserand@free-electrons.com>
-Cc: dmitry.torokhov@gmail.com, fery@cypress.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, maxime.ripard@free-electrons.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANLsYkyvcg6deYAHUCqmz=gAHeph1XkG0FrYV4cVrkLHS=CXEg@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, May 29, 2017 at 10:41:17AM -0600, Mathieu Poirier wrote:
+> On 25 May 2017 at 09:57, Leo Yan <leo.yan@linaro.org> wrote:
+> > ARMv8 architecture reference manual (ARM DDI 0487A.k) Chapter H7 "The
+> > Sample-based Profiling Extension" has description for sampling
+> > registers, we can utilize these registers to check program counter
+> > value with combined CPU exception level, secure state, etc. So this is
+> > helpful for CPU lockup bugs, e.g. if one CPU has run into infinite loop
+> > with IRQ disabled; the 'hang' CPU cannot switch context and handle any
+> > interrupt, so it cannot handle SMP call for stack dump, etc.
+> >
+> > This patch series is to enable coresight debug module with sample-based
+> > registers and register call back notifier for PCSR register dumping
+> > when panic happens, so we can see below dumping info for panic; and
+> > this patch series has considered the conditions for access permission
+> > for debug registers self, so this can avoid access debug registers when
+> > CPU power domain is off; the driver also try to figure out the CPU is
+> > in secure or non-secure state.
+> 
+> I have queued patches 1 to 7 to my tree.  I can't do anything about
+> patches 8 and 9 because they haven't been ack'ed.  From here you can
+> either chase them to get an ACK or send a separate patch to them
+> directly.
 
-Couple more comments in addition to the more extensive review done by
-Maxime.
+Thanks a lot, Mathieu. I will ping Wei and Andy/David saperately.
 
-On Mon, 29 May 2017 16:45:37 +0200, Mylène Josserand wrote:
-> +static int cyttsp5_startup(struct cyttsp5 *ts)
-> +{
-> +	int rc;
-> +
-> +	rc = cyttsp5_deassert_int(ts);
-> +	if (rc) {
-> +		dev_err(ts->dev, "%s: Error on deassert int r=%d\n",
-> +			__func__, rc);
-
-I don't think it's very common to put __func__ in error messages,
-especially when dev_err() already prints the name of the dvice.
-
-> +		return -ENODEV;
-> +	}
-> +
-> +	/*
-> +	 * Launch the application as the device starts in bootloader mode
-> +	 * because of a power-on-reset
-> +	 */
-> +	rc = cyttsp5_hid_output_bl_launch_app(ts);
-> +	if (rc < 0) {
-> +		dev_err(ts->dev, "%s: Error on launch app r=%d\n",
-> +			__func__, rc);
-> +		goto exit;
-
-Replace "goto exit" by "return rc;" since anyway the exit label
-doesn't do anything.
-
-
-> +static int cyttsp5_probe(struct device *dev, struct regmap *regmap, int irq,
-> +			 const char *name)
-> +{
-> +	struct cyttsp5 *ts;
-> +	struct cyttsp5_sysinfo *si;
-> +	int rc = 0, i;
-> +
-> +	ts = devm_kzalloc(dev, sizeof(*ts), GFP_KERNEL);
-> +	if (!ts) {
-> +		rc = -ENOMEM;
-> +		goto error_alloc_data;
-
-Just return directly here (because the of_node_put is useless, see
-below).
-
-> +	}
-> +
-> +	/* Initialize device info */
-> +	ts->regmap = regmap;
-> +	ts->dev = dev;
-> +	si = &ts->sysinfo;
-
-So "si" is never NULL.
-
-> +	if (si) {
-
-And therefore you can do this unconditionally.
-
-> +		__set_bit(EV_KEY, ts->input->evbit);
-> +		for (i = 0; i < si->num_btns; i++)
-> +			__set_bit(si->btn[i].key_code, ts->input->keybit);
-> +
-> +		rc = cyttsp5_setup_input_device(dev);
-> +		if (rc)
-> +			goto error_init_input;
-> +	}
-> +
-> +	return 0;
-> +
-> +error_init_input:
-> +	input_free_device(ts->input);
-
-What about using devm_input_allocate_device() ?
-
-> +error_startup:
-> +error_setup_irq:
-> +	dev_set_drvdata(dev, NULL);
-> +error_alloc_data:
-> +	dev_err(dev, "%s failed.\n", __func__);
-> +	if (dev->of_node)
-> +		of_node_put(dev->of_node);
-
-As Maxime said, this is not necessary.
-
-> +static int cyttsp5_remove(struct device *dev)
-> +{
-> +	const struct of_device_id *match;
-> +	struct cyttsp5 *ts = dev_get_drvdata(dev);
-> +
-> +	input_unregister_device(ts->input);
-> +
-> +	dev_set_drvdata(dev, NULL);
-> +
-> +	match = of_match_device(of_match_ptr(cyttsp5_of_match), dev);
-> +	if (match && dev->of_node)
-> +		of_node_put(dev->of_node);
-
-Ditto.
-
-I'm also not sure that doing a dev_set_drvdata(dev, NULL) is really
-needed in ->remove() and in the ->probe() exit path.
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> Thanks,
+> Mathieu
