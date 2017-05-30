@@ -1,56 +1,34 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] iio: proximity: as3935: noise detection + threshold
- changes
-Date: Tue, 30 May 2017 16:32:59 -0500
-Message-ID: <20170530213259.qbcikyy446g726pk@rob-hp-laptop>
-References: <20170525055229.11659-1-matt.ranostay@konsulko.com>
- <20170528165830.3878c05c@kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed
+ I2C Interrupt Controller
+Date: Tue, 30 May 2017 16:34:30 -0500
+Message-ID: <20170530213430.vlxioxzzuzbjojhj@rob-hp-laptop>
+References: <20170525064925.16867-1-brendanhiggins@google.com>
+ <20170525064925.16867-2-brendanhiggins@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170528165830.3878c05c-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170525064925.16867-2-brendanhiggins@google.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: wsa@the-dreams.de, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org, benh@kernel.crashing.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 28, 2017 at 04:58:30PM +0100, Jonathan Cameron wrote:
-> On Wed, 24 May 2017 22:52:29 -0700
-> Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+On Wed, May 24, 2017 at 11:49:21PM -0700, Brendan Higgins wrote:
+> Added device tree binding documentation for Aspeed I2C Interrupt
+> Controller.
 > 
-> > Most applications are too noisy to allow the default noise and
-> > watchdog settings, and thus need to be configurable via DT
-> > properties.
-> > 
-> > Also default settings to POR defaults on a reset, and register
-> > distuber interrupts as noise since it prevents proper usage.
-> > 
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> I wonder if there are many other devices where this sort of
-> feature is relevant.  Anyone else come across any?
-> 
-> I suppose if we need to modify the ABI for any that show up
-> in future, it shouldn't be too hard to maintain this one
-> for backwards compatibility.
-> 
-> Anyhow, new devicetree bindings so I'll give Rob / Mark time
-> to have a chance to look at it.
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+> Added in v6:
+>   - Pulled "aspeed_i2c_controller" out into a interrupt controller since that is
+>     what it actually does.
+> Changes for v7:
+>   - None
+> Changes for v8:
+>   - None
 
-I acked v1.
+I already acked this. Please add acks when posting new versions.
 
-> My immediate thought is that you might be able to do something
-> a little more user (i.e. devicetree writer) friendly than
-> just using the register value...
-
-We certainly don't want that to be the norm, but sometimes it makes 
-sense when it's very specific to a certain device.
-
-> I see there are values, but it depends on whether the device
-> is in 'indoor mode' or 'outdoor mode' (which are just gain
-> settings?).  You could just use them though.
-> 
-> Given the gain is userspace controlled, and seems to effect
-> the meaning of this setting, is it valid to just put it
-> in the devicetree?
+Rob
