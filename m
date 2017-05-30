@@ -1,88 +1,116 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v6 3/6] ACPI/IORT: Ignore all errors except EPROBE_DEFER
-Date: Tue, 30 May 2017 10:06:52 +0100
-Message-ID: <20170530090652.GA1767@red-moon>
-References: <1495892865-9506-1-git-send-email-sricharan@codeaurora.org>
- <1495892865-9506-3-git-send-email-sricharan@codeaurora.org>
- <1564836.5iBbgoacpH@aspire.rjw.lan>
- <68bc9be5-22df-e7af-3fcd-182e935e681c@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND PATCH V7 7/7] MAINTAINERS: da9062/61 updates to the
+ Dialog Semiconductor search terms
+Date: Tue, 30 May 2017 10:09:53 +0100
+Message-ID: <20170530090953.bcrsclh77uwvtjzi@dell>
+References: <cover.1495546845.git.stwiss.opensource@diasemi.com>
+ <d1c3ceda19be1363cd37bb52fd7fae5b1b9a164e.1495546845.git.stwiss.opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <68bc9be5-22df-e7af-3fcd-182e935e681c@codeaurora.org>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sricharan R <sricharan@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, robin.murphy@arm.com, will.deacon@arm.com, joro@8bytes.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, m.szyprowski@samsung.com, bhelgaas@google.com, linux-pci@vger.kernel.org, linux-acpi@vger.kernel.org, tn@semihalf.com, hanjun.guo@linaro.org, okaya@codeaurora.org, robh+dt@kernel.org, frowand.list@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sudeep.holla@arm.com, lenb@kernel.org, catalin.marinas@arm.com, arnd@arndb.de, linux-arch@vger.kernel.org, laurent.pinchart@ideasonboard.com, j.neuschaefer@gmx.net, geert@linux-m68k.org, magnus.damm@gmail.com, nwatters@codeaurora.org, linux@armlinux.org.uk
+In-Reply-To: <d1c3ceda19be1363cd37bb52fd7fae5b1b9a164e.1495546845.git.stwiss.opensource@diasemi.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Steve Twiss <stwiss.opensource@diasemi.com>
+Cc: DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-KERNEL <linux-kernel@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>, Support Opensource <support.opensource@diasemi.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 29, 2017 at 10:36:42AM +0530, Sricharan R wrote:
-> Hi Rafael,
-> 
-> On 5/28/2017 12:48 AM, Rafael J. Wysocki wrote:
-> > On Saturday, May 27, 2017 07:17:42 PM Sricharan R wrote:
-> >> While deferring the probe of IOMMU masters, xlate and
-> >> add_device callbacks called from iort_iommu_configure
-> >> can pass back error values like -ENODEV, which means
-> >> the IOMMU cannot be connected with that master for real
-> >> reasons. Before the IOMMU probe deferral, all such errors
-> >> were ignored. Now all those errors are propagated back,
-> >> killing the master's probe for such errors. Instead ignore
-> >> all the errors except EPROBE_DEFER, which is the only one
-> >> of concern and let the master work without IOMMU, thus
-> >> restoring the old behavior. Also make explicit that
-> >> acpi_dma_configure handles only -EPROBE_DEFER from
-> >> iort_iommu_configure.
-> >>
-> >> Fixes: 5a1bb638d567 ("drivers: acpi: Handle IOMMU lookup failure with deferred probing or error")
-> >> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> >> ---
-> >>  drivers/acpi/arm64/iort.c | 6 ++++++
-> >>  drivers/acpi/scan.c       | 4 ++--
-> >>  2 files changed, 8 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/acpi/arm64/iort.c b/drivers/acpi/arm64/iort.c
-> >> index c5fecf9..16e101f 100644
-> >> --- a/drivers/acpi/arm64/iort.c
-> >> +++ b/drivers/acpi/arm64/iort.c
-> >> @@ -782,6 +782,12 @@ const struct iommu_ops *iort_iommu_configure(struct device *dev)
-> >>  	if (err)
-> >>  		ops = ERR_PTR(err);
-> >>  
-> >> +	/* Ignore all other errors apart from EPROBE_DEFER */
-> >> +	if (IS_ERR(ops) && (PTR_ERR(ops) != -EPROBE_DEFER)) {
-> >> +		dev_dbg(dev, "Adding to IOMMU failed: %ld\n", PTR_ERR(ops));
-> >> +		ops = NULL;
-> >> +	}
-> >> +
-> >>  	return ops;
-> >>  }
-> >>  
-> >> diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
-> >> index e39ec7b..3a10d757 100644
-> >> --- a/drivers/acpi/scan.c
-> >> +++ b/drivers/acpi/scan.c
-> >> @@ -1371,8 +1371,8 @@ int acpi_dma_configure(struct device *dev, enum dev_dma_attr attr)
-> >>  	iort_set_dma_mask(dev);
-> >>  
-> >>  	iommu = iort_iommu_configure(dev);
-> >> -	if (IS_ERR(iommu))
-> >> -		return PTR_ERR(iommu);
-> >> +	if (IS_ERR(iommu) && PTR_ERR(iommu) == -EPROBE_DEFER)
-> >> +		return -EPROBE_DEFER;
-> >>  
-> >>  	size = max(dev->coherent_dma_mask, dev->coherent_dma_mask + 1);
-> >>  	/*
-> >>
-> > 
-> > ACK for the scan.c change and I'm assuming this to go in via ARM64.
-> > 
-> 
-> Thanks for the ACK, should go through the IOMMU tree, since this fixes the IOMMU probe deferral
-> that got merged through it.
+On Tue, 23 May 2017, Steve Twiss wrote:
 
-Yes and it would be good to get them merged for -rc4 given that there
-are bug fixes there, I agree the IOMMU tree is the way they should
-go upstream.
+> From: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> Additions to search terms for files supported by Dialog Semiconductor.
+> This update will allow Dialog support to follow files for device tree
+> bindings (onkey, thermal and watchdog) and source code for chip thermal
+> monitoring drivers.
+> 
+> Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+> 
+> ---
+> Hi all,
+> 
+> Is there anybody willing to take this patch through their tree please?
+> 
+> Dialog Semiconductor support would like to add to the MAINTAINERS search
+> terms. This update will allow us to follow all of our files for device
+> tree bindings and the source code relating to chip thermal monitoring
+> described in this patch set.
+> 
+> All dependencies for this patch have been accepted into linux-next:
+> 
+> bindings/input/da90??-onkey.txt     -> linux-next.git/commit/?id=406d5a2de0718622241eff35831f6fed0316a7d4
+> bindings/thermal/da90??-thermal.txt -> linux-next.git/commit/?id=28c1b08d2a156ef16e912a4c618a529e586e5dbc
+> bindings/watchdog/da92??-wdt.txt    -> linux-next.git/commit/?id=be62f363a8d5b1703c08d2cb462786a68215bcca
+> drivers/thermal/da90??-thermal.c    -> linux-next.git/commit/?id=608567aac3206ae886c79688fbb8a62c473b55ef
+> 
+> Regards,
+> Steve Twiss, Dialog Semiconductor
+> 
+> 
+> This patch applies against linux-next and v4.12-rc2
+> 
+> v6 -> v7
+>  - NO CODE CHANGE
+>  - Rebased from v4.11-rc3 to v4.11-rc11
+>  - Updated the commit message
+>  - Moved the following names from CC: to TO: e-mail fields
+>    - Lee Jones
+>    - Liam Girdwood
+>    - Mark Brown
+> 
+> v5 -> v6
+>  - NO CODE CHANGE
+>  - Rebased from v4.8 to v4.11-rc3
+>  - Patch renamed from [PATCH V5 8/8] to [PATCH V5 7/7]
+> 
+> v4 -> v5
+>  - NO CODE CHANGE
+>  - Rebased from v4.8 to v4.9
+> 
+> v3 -> v4
+>  - NO CODE CHANGE
+>  - Patch renamed from [PATCH V3 9/9] to [PATCH V4 8/8]
+> 
+> v2 -> v3
+>  - NO CODE CHANGE
+>  - Patch renamed from [PATCH V2 10/10] to [PATCH V3 9/9]
+> 
+> v1 -> v2
+>  - NO CODE CHANGE
+> 
+> 
+>  MAINTAINERS | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Lorenzo
+Applied, thanks.
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 9e98464..a580bed 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3988,7 +3988,10 @@ W:	http://www.dialog-semiconductor.com/products
+>  S:	Supported
+>  F:	Documentation/hwmon/da90??
+>  F:	Documentation/devicetree/bindings/mfd/da90*.txt
+> +F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
+> +F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
+>  F:	Documentation/devicetree/bindings/regulator/da92*.txt
+> +F:	Documentation/devicetree/bindings/watchdog/da92??-wdt.txt
+>  F:	Documentation/devicetree/bindings/sound/da[79]*.txt
+>  F:	drivers/gpio/gpio-da90??.c
+>  F:	drivers/hwmon/da90??-hwmon.c
+> @@ -4003,6 +4006,7 @@ F:	drivers/power/supply/da9052-battery.c
+>  F:	drivers/power/supply/da91??-*.c
+>  F:	drivers/regulator/da903x.c
+>  F:	drivers/regulator/da9???-regulator.[ch]
+> +F:	drivers/thermal/da90??-thermal.c
+>  F:	drivers/rtc/rtc-da90??.c
+>  F:	drivers/video/backlight/da90??_bl.c
+>  F:	drivers/watchdog/da90??_wdt.c
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
