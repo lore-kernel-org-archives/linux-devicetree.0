@@ -1,58 +1,115 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 1/4] thermal: uniphier: add UniPhier thermal driver
-Date: Tue, 30 May 2017 13:09:20 +0900
-Message-ID: <20170530130919.685A.4A936039@socionext.com>
-References: <20170530114738.6856.4A936039@socionext.com> <42ed5250-781b-d829-cead-cc095de6e96f@ti.com>
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: sun7i-a20: Rename bananapi as
+ bananapi m1
+Date: Tue, 30 May 2017 10:00:49 +0530
+Message-ID: <CAD6G_RQpazcTEBijCzrqSx+7juVajn4as=x1+T-kX8WbKX-jJw@mail.gmail.com>
+References: <1496086228-2806-1-git-send-email-jagan@openedev.com> <20170529214551.GA1990@excalibur.cnev.de>
+Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <42ed5250-781b-d829-cead-cc095de6e96f@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: rui.zhang@intel.com, edubezval@gmail.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, yamada.masahiro@socionext.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCV4FV5N34IRB67KWPEQKGQERYSJHUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170529214551.GA1990-Hlt6eto4P0pdWf7zwHaZWbNAH6kLmebB@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 May 2017 08:51:31 +0530 Keerthy <j-keerthy@ti.com> wrote:
+On Tue, May 30, 2017 at 3:15 AM, Karsten Merker <merker-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, May 29, 2017 at 07:30:26PM +0000, Jagan Teki wrote:
+>> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>>
+>> from BPI(BIPAI KEJI LIMITED) products the Bananapi board
+>> is named as 'Bananapi M1' and this is the starting
+>> bananapi board from M1 series.
+>>
+>> So rename dts and suffix 'M1' on model for the same,
+>> so-that next sequence on bananapi starts like M1 Plus, M2 and so..on
+>>
+>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> ---
+>> Note: Bananapi BPI product site
+>> http://www.banana-pi.org/product.html
+>>
+>>  arch/arm/boot/dts/Makefile                  |   2 +-
+>>  arch/arm/boot/dts/sun7i-a20-bananapi-m1.dts | 286 ++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/sun7i-a20-bananapi.dts    | 286 ----------------------------
+>>  3 files changed, 287 insertions(+), 287 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi-m1.dts
+>>  delete mode 100644 arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 45c6e65..1b086f0 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -851,7 +851,7 @@ dtb-$(CONFIG_MACH_SUN6I) += \
+>>       sun6i-a31s-sinovoip-bpi-m2.dtb \
+>>       sun6i-a31s-yones-toptech-bs1078-v2.dtb
+>>  dtb-$(CONFIG_MACH_SUN7I) += \
+>> -     sun7i-a20-bananapi.dtb \
+>> +     sun7i-a20-bananapi-m1.dtb \
+>>       sun7i-a20-bananapi-m1-plus.dtb \
+>>       sun7i-a20-bananapro.dtb \
+>>       sun7i-a20-cubieboard2.dtb \
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi-m1.dts b/arch/arm/boot/dts/sun7i-a20-bananapi-m1.dts
+>> new file mode 100644
+>> index 0000000..8b97b89
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi-m1.dts
+>> @@ -0,0 +1,286 @@
+>> +/*
+>> + * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> [...]
+>> +/dts-v1/;
+>> +#include "sun7i-a20.dtsi"
+>> +#include "sunxi-common-regulators.dtsi"
+>> +
+>> +#include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +/ {
+>> +     model = "LeMaker Banana Pi M1";
+>> +     compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
+> [...]
+>> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>> deleted file mode 100644
+>> index ed2f35a..0000000
+>> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+>> +++ /dev/null
+>
+> NACK!
+>
+> Please neither rename the dts nor change the model string. Such a
+> change would make newer kernels unusable on many existing
+> installations without manual fixups by the end user.  Linux
+> distributions use databases with model-specific setup information
+> (such as the dtb file name, the platform-specific bootscript to
+> use, usable kernel flavours (lpae or non-lpae), etc.) on kernel
+> installations and kernel upgrades, and those use the model string
+> as their key for finding the relevant information.  If you change
+> either the dts file name or the model string inside the dts,
+> you'll effectively break the proper installation of newer kernel
+> versions on existing end user systems.
 
-> 
-> 
-> On Tuesday 30 May 2017 08:17 AM, Kunihiko Hayashi wrote:
-> > Hi Keerthy,
-> > Thank you for your comment.
-> > 
-> > On Mon, 29 May 2017 15:53:39 +0530 Keerthy <j-keerthy@ti.com> wrote:
-> >>
-> >>
-> >> On Monday 29 May 2017 02:45 PM, Kunihiko Hayashi wrote:
-> >>> Add a thermal driver for on-chip PVT (Process, Voltage and Temperature)
-> >>> monitoring unit implemented on UniPhier SoCs. This driver supports
-> >>> temperature monitoring and alert function.
-> >>
-> >> The Documentation in patch 2/4 should be squashed into this patch.
-> > 
-> > According to the following guide,
-> > http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/submitting-patches.txt
-> > 
-> >   1) The Documentation/ portion of the patch should be a separate patch.
-> > 
-> > I think it should be separated, how about that?
-> 
-> Then you should reorder the series as we get the warning with checkpatch:
-> 
-> WARNING: DT compatible string "socionext,uniphier-pxs2-thermal" appears
-> un-documented -- check ./Documentation/devicetree/bindings/
-> #488: FILE: drivers/thermal/uniphier_thermal.c:367:
-> +		.compatible = "socionext,uniphier-pxs2-thermal",
-> 
-> WARNING: DT compatible string "socionext,uniphier-ld20-thermal" appears
-> un-documented -- check ./Documentation/devicetree/bindings/
-> #492: FILE: drivers/thermal/uniphier_thermal.c:371:
-> +		.compatible = "socionext,uniphier-ld20-thermal",
-> 
-> When i apply the first patch.
+I understand your concerns about distribution change, but with new
+change in 'bananapi' brand owned by BIPAI KEJI(BPI) the model must
+need to update and this is not technically as Bananapi board it is
+Bananapi  M1 [1]
 
-OK. I also confirmed the warning messages. I'll reorder the patches 1/4 and 2/4.
+These are generic changes based on the hardware vendor info.
 
-Best Regards,
-Kunihiko Hayashi
+[1] http://www.banana-pi.org/m1.html
+
+thanks!
+-- 
+Jagan Teki
+Free Software Engineer | www.openedev.com
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
