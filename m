@@ -1,200 +1,48 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 3/6] mfd: hi6421v530: add support for HiSilicon Hi6421v530
-Date: Tue, 30 May 2017 08:36:06 +0100
-Message-ID: <20170530073606.tm4gacph4yj47ntx@dell>
-References: <20170526063518.21246-1-guodong.xu@linaro.org>
- <20170526063518.21246-4-guodong.xu@linaro.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
+Date: Tue, 30 May 2017 09:44:26 +0200
+Message-ID: <CACRpkdYbicYPJvaeTMpHSn4F77ognBfnEbj7OknFiZgfK1qizA@mail.gmail.com>
+References: <20170516075840.23130-1-andrew@aj.id.au> <CACRpkdZsbzwBKRj1FXAoCW9nD357SNNK8t=gOO-OBtV_pwjpKg@mail.gmail.com>
+ <0f526d58-3138-d7ea-0dc7-5ef623fb0547@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170526063518.21246-4-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, olof@lixom.net, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, damm+renesas@opensource.se, ard.biesheuvel@linaro.org, linus.walleij@linaro.org, geert+renesas@glider.be, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hw.wangxiaoyin@hisilicon.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0f526d58-3138-d7ea-0dc7-5ef623fb0547-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 26 May 2017, Guodong Xu wrote:
+On Sun, May 28, 2017 at 8:27 PM, Daniel Lezcano
+<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 28/05/2017 15:59, Linus Walleij wrote:
+>> On Tue, May 16, 2017 at 9:58 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+>>
+>>> Also clean up space-before-tab issues in the documentation.
+>>>
+>>> Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> Does this collide with Daniel's 2500 patch?
+>>
+>> Sorry for the mess, tell me if I need to fix something up :(
+>
+> It is ok, an usual collision change to be fixed when merging ;)
+>
+> By the way, can you have a look at fttmr010_read_sched_clock to remove
+> the local_fttmr->count_down test?
 
-> Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
-> main SoC via memory-mapped I/O.
-> 
-> Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon, but
-> at different revisions. They share the same memory-mapped I/O design. They
-> differ in regulator details, eg. LDO voltage points.
-> 
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-> ---
->  drivers/mfd/Kconfig           |  9 +++++
->  drivers/mfd/Makefile          |  1 +
->  drivers/mfd/hi6421v530-pmic.c | 92 +++++++++++++++++++++++++++++++++++++++++++
+I guess what we can do is make two different sched_clock()
+callbacks: one for upward and one for downward counting.
 
-As previously discussed, this support should be added to the existing
-driver.
+Would you like an optimization like that?
 
->  3 files changed, 102 insertions(+)
->  create mode 100644 drivers/mfd/hi6421v530-pmic.c
-> 
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 3eb5c93..bdc8304 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -388,6 +388,15 @@ config MFD_HI6421_PMIC
->  	  menus in order to enable them.
->  	  We communicate with the Hi6421 via memory-mapped I/O.
->  
-> +config MFD_HI6421V530_PMIC
-> +	tristate "HiSilicon Hi6421v530 PMU/Codec IC"
-> +	depends on OF
-> +	select MFD_CORE
-> +	select REGMAP_MMIO
-> +	help
-> +	  Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates
-> +	  with main SoC via memory-mapped I/O.
-> +
->  config MFD_HI655X_PMIC
->  	tristate "HiSilicon Hi655X series PMU/Codec IC"
->  	depends on ARCH_HISI || COMPILE_TEST
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index c16bf1e..cde62fc 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -206,6 +206,7 @@ obj-$(CONFIG_MFD_STW481X)	+= stw481x.o
->  obj-$(CONFIG_MFD_IPAQ_MICRO)	+= ipaq-micro.o
->  obj-$(CONFIG_MFD_MENF21BMC)	+= menf21bmc.o
->  obj-$(CONFIG_MFD_HI6421_PMIC)	+= hi6421-pmic-core.o
-> +obj-$(CONFIG_MFD_HI6421V530_PMIC)	+= hi6421v530-pmic.o
->  obj-$(CONFIG_MFD_HI655X_PMIC)   += hi655x-pmic.o
->  obj-$(CONFIG_MFD_DLN2)		+= dln2.o
->  obj-$(CONFIG_MFD_RT5033)	+= rt5033.o
-> diff --git a/drivers/mfd/hi6421v530-pmic.c b/drivers/mfd/hi6421v530-pmic.c
-> new file mode 100644
-> index 0000000..651659a
-> --- /dev/null
-> +++ b/drivers/mfd/hi6421v530-pmic.c
-> @@ -0,0 +1,92 @@
-> +/*
-> + * Device driver for Hi6421 IC
-> + *
-> + * Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
-> + *              http://www.hisilicon.com
-> + * Copyright (c) <2017> Linaro Ltd.
-> + *              http://www.linaro.org
-> + *
-> + * Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-> + *         Guodong Xu <guodong.xu@linaro.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+(It makes sense.)
 
-Can you use the shorter licence script?
-
-> + */
-> +
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/mfd/core.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/mfd/hi6421-pmic.h>
-
-Alphabetical.
-
-> +static const struct mfd_cell hi6421v530_devs[] = {
-> +	{ .name = "hi6421v530-regulator", },
-> +};
-
-Chen Feng promised me that he would add other devices to the original
-driver nearly 18 months ago.  Until more devices are added, these are
-not MFD drivers.  When will you add the remaining devices?
-
-> +static int hi6421v530_pmic_probe(struct platform_device *pdev)
-> +{
-> +	struct hi6421_pmic *pmic;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
-> +	if (!pmic)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	pmic->regmap = devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
-> +						 &hi6421_regmap_config);
-> +	if (IS_ERR(pmic->regmap)) {
-> +		dev_err(&pdev->dev,
-> +			"regmap init failed: %ld\n", PTR_ERR(pmic->regmap));
-
-"Failed to initialise Regmap"
-
-> +		return PTR_ERR(pmic->regmap);
-> +	}
-> +
-> +	platform_set_drvdata(pdev, pmic);
-> +
-> +	ret = devm_mfd_add_devices(&pdev->dev, 0, hi6421v530_devs,
-
-Use the #defines provided instead of '0'.
-
-> +				   ARRAY_SIZE(hi6421v530_devs), NULL, 0, NULL);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
-
-"Failed to add child devices"
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id of_hi6421v530_pmic_match_tbl[] = {
-> +	{ .compatible = "hisilicon,hi6421v530-pmic", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_hi6421v530_pmic_match_tbl);
-
-Drop the "_tbl" part, it's implied and superfluous.
-
-> +static struct platform_driver hi6421v530_pmic_driver = {
-> +	.driver = {
-> +		.name	= "hi6421v530_pmic",
-
-One space please.
-
-> +		.of_match_table = of_hi6421v530_pmic_match_tbl,
-> +	},
-> +	.probe	= hi6421v530_pmic_probe,
-> +};
-> +module_platform_driver(hi6421v530_pmic_driver);
-> +
-> +MODULE_AUTHOR("Guodong Xu <guodong.xu@linaro.org>");
-> +MODULE_DESCRIPTION("Hi6421v530 PMIC driver");
-> +MODULE_LICENSE("GPL v2");
-
-This does not match the header comment.
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
