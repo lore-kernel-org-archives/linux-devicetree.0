@@ -1,64 +1,66 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 0/4] r8a7793 Gose video input support
-Date: Tue, 30 May 2017 10:45:25 +0200
-Message-ID: <20170530084525.GE32139@verge.net.au>
-References: <1495199224-16337-1-git-send-email-ulrich.hecht+renesas@gmail.com>
- <20170526064907.GD2628@verge.net.au>
+From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 4/4] ASoC: cs35l35: Add multi-device
+	synchronisation
+Date: Tue, 30 May 2017 09:51:38 +0100
+Message-ID: <20170530085138.GR1594@localhost.localdomain>
+References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1495121559-1063-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20170529135306.ldn74fwvfa4ots6a@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 Content-Disposition: inline
-In-Reply-To: <20170526064907.GD2628@verge.net.au>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, geert@linux-m68k.org, magnus.damm@gmail.com, hans.verkuil@cisco.com, niklas.soderlund@ragnatech.se, sergei.shtylyov@cogentembedded.com, devicetree@vger.kernel.org
+In-Reply-To: <20170529135306.ldn74fwvfa4ots6a@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 08:49:07AM +0200, Simon Horman wrote:
-> On Fri, May 19, 2017 at 03:07:00PM +0200, Ulrich Hecht wrote:
-> > Hi!
-> > 
-> > This is a by-the-datasheet implementation of analog and digital video input
-> > on the Gose board.
-> > 
-> > This revision adds new bindings that distinguish between ADV7180 variants
-> > with three and six input ports. There are numerous variants of this chip,
-> > but since all that have "CP" in their names have three inputs, and all that
-> > have "ST" have six, I have limited myself to two new compatible strings,
-> > "adv7180cp" and "adv7180st".
-> > 
-> > The digital input patch has received minor tweaks of the port names for
-> > consistency, and the Gose analog input patch has been modified to use the
-> > new bindings, and a composite video connector has been added.
-> > 
-> > CU
-> > Uli
-> > 
-> > 
-> > Changes since v2:
-> > - hdmi: port hdmi_con renamed to hdmi_con_out
-> > - adv7180: added new compatibility strings and bindings
-> > - composite: added connector, use new bindings
-> > 
-> > Changes since v1:
-> > - r8a7793.dtsi: added VIN2
-> > - modeled HDMI decoder input/output and connector
-> > - added "renesas,rcar-gen2-vin" compat strings
-> > - removed unnecessary "remote" node and aliases
-> > - set ADV7612 interrupt to GP4_2
-> > 
-> > 
-> > Ulrich Hecht (4):
-> >   ARM: dts: gose: add HDMI input
+On Mon, May 29, 2017 at 02:53:06PM +0100, Mark Brown wrote:
+> On Thu, May 18, 2017 at 04:32:39PM +0100, Charles Keepax wrote:
 > 
-> I have queued-up the above patch for v4.13.
+> > +	SOC_SINGLE_EXT("SYNC Audio", CS35L35_MULT_DEV_SYNCH2, 1, 1, 0,
+> > +		       snd_soc_get_volsw, cs35l35_put_sync),
+> > +	SOC_SINGLE_EXT("SYNC VPBR", CS35L35_MULT_DEV_SYNCH2, 2, 1, 0,
+> > +		       snd_soc_get_volsw, cs35l35_put_sync),
+> > +	SOC_SINGLE_EXT("SYNC OTW", CS35L35_MULT_DEV_SYNCH2, 3, 1, 0,
+> > +		       snd_soc_get_volsw, cs35l35_put_sync),
 > 
-> >   media: adv7180: add adv7180cp, adv7180st compatible strings
-> >   media: adv7180: Add adv7180cp, adv7180st bindings
-> >   ARM: dts: gose: add composite video input
-> 
-> I have marked the above dts patch as "deferred" pending acceptance
-> of the binding. Please repost or otherwise ping me once that has happened.
+> I can't tell how this works.  It feels like this shouldn't just be being
+> controlled from userspace but rather should be handled in some more
+> standard fashion, or possibly as part of the platform integration but
+> right now it's just some totally undocumented application managed
+> controls.
 
-It looks like Hans will pick up the driver patches.
-Accordingly I have queued-up the last dts patch above.
+These activate the individual types of synchronisation between
+the two stereo amps over a proprietary single wire connection
+between the two amps. The audio option synchronises the group
+delay between the two amps. The VPBR links the brown out on the
+two amps and the OTW links the over temperature warning.
+
+The issue is really one of it being use-case specific whether the
+amps are being used independently or in a stereo configuration.
+You could have only a single amp in use in which case the sync
+features are best turned off. Or one might even have use-cases
+with both amps where they are being used independently but at the
+same time.
+
+I guess we could potentially do those as calls from the machine
+driver, although in some cases it might be hard to tell which
+use-case is being used. Alternatively, one could try to actually
+link the two amps in DAPM and control it that way although you
+probably still want some device tree stuff to say which things
+you want to sync and it might cause issues in any cases where you
+had both amps up but didn't want to sync.
+
+Thanks,
+Charles
