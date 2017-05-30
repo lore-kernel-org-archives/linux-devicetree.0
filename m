@@ -1,36 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RfC v3 7/7] pinctrl: meson: add interrupt controller to
- GPIO DT nodes
-Date: Tue, 30 May 2017 16:44:29 -0500
-Message-ID: <20170530214429.pulyr4hnhss4cmcr@rob-hp-laptop>
-References: <16950080-b19d-e25c-fb48-bc79cfe4acc0@gmail.com>
- <1c8aa228-c1da-ed48-52a5-184332eecf26@gmail.com>
+From: Brendan Higgins <brendanhiggins@google.com>
+Subject: Re: [PATCH v8 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed I2C
+ Interrupt Controller
+Date: Tue, 30 May 2017 14:46:35 -0700
+Message-ID: <CAFd5g45AXT0rJydYykh011JRm6cw=Tnz5EGfkQX1bddWW+SdNA@mail.gmail.com>
+References: <20170525064925.16867-1-brendanhiggins@google.com>
+ <20170525064925.16867-2-brendanhiggins@google.com> <20170530213430.vlxioxzzuzbjojhj@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1c8aa228-c1da-ed48-52a5-184332eecf26@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170530213430.vlxioxzzuzbjojhj@rob-hp-laptop>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 17, 2017 at 10:17:10PM +0200, Heiner Kallweit wrote:
-> Add interrupt controller properties to the gpio controller nodes and
-> extend the gpio controller DT binding documentation.
-> 
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> ---
-> v3:
-> - added to the patch series
-> ---
->  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
->  arch/arm/boot/dts/meson8.dtsi                               | 2 ++
->  arch/arm/boot/dts/meson8b.dtsi                              | 2 ++
->  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi                 | 4 ++++
->  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi                  | 4 ++++
->  5 files changed, 16 insertions(+)
+Sorry, I wasn't sure. Will do in the future.
 
-Bindings and dts changes should be separate patches. With that,
-
-Acked-by: Rob Herring <robh@kernel.org>
+On Tue, May 30, 2017 at 2:34 PM, Rob Herring <robh@kernel.org> wrote:
+> On Wed, May 24, 2017 at 11:49:21PM -0700, Brendan Higgins wrote:
+>> Added device tree binding documentation for Aspeed I2C Interrupt
+>> Controller.
+>>
+>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>> ---
+>> Added in v6:
+>>   - Pulled "aspeed_i2c_controller" out into a interrupt controller since that is
+>>     what it actually does.
+>> Changes for v7:
+>>   - None
+>> Changes for v8:
+>>   - None
+>
+> I already acked this. Please add acks when posting new versions.
+>
+> Rob
