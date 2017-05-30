@@ -1,66 +1,59 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 4/4] ASoC: cs35l35: Add multi-device
-	synchronisation
-Date: Tue, 30 May 2017 09:51:38 +0100
-Message-ID: <20170530085138.GR1594@localhost.localdomain>
-References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1495121559-1063-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170529135306.ldn74fwvfa4ots6a@sirena.org.uk>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
+Date: Tue, 30 May 2017 10:54:40 +0200
+Message-ID: <1a165856-6863-ad51-d66c-eda062f4d98e@linaro.org>
+References: <20170516075840.23130-1-andrew@aj.id.au>
+ <CACRpkdZsbzwBKRj1FXAoCW9nD357SNNK8t=gOO-OBtV_pwjpKg@mail.gmail.com>
+ <0f526d58-3138-d7ea-0dc7-5ef623fb0547@linaro.org>
+ <CACRpkdYbicYPJvaeTMpHSn4F77ognBfnEbj7OknFiZgfK1qizA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20170529135306.ldn74fwvfa4ots6a@sirena.org.uk>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYbicYPJvaeTMpHSn4F77ognBfnEbj7OknFiZgfK1qizA@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Andrew Jeffery <andrew@aj.id.au>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Joel Stanley <joel@jms.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 29, 2017 at 02:53:06PM +0100, Mark Brown wrote:
-> On Thu, May 18, 2017 at 04:32:39PM +0100, Charles Keepax wrote:
+On 30/05/2017 09:44, Linus Walleij wrote:
+> On Sun, May 28, 2017 at 8:27 PM, Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>> On 28/05/2017 15:59, Linus Walleij wrote:
+>>> On Tue, May 16, 2017 at 9:58 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
+>>>
+>>>> Also clean up space-before-tab issues in the documentation.
+>>>>
+>>>> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+>>>
+>>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>>
+>>> Does this collide with Daniel's 2500 patch?
+>>>
+>>> Sorry for the mess, tell me if I need to fix something up :(
+>>
+>> It is ok, an usual collision change to be fixed when merging ;)
+>>
+>> By the way, can you have a look at fttmr010_read_sched_clock to remove
+>> the local_fttmr->count_down test?
 > 
-> > +	SOC_SINGLE_EXT("SYNC Audio", CS35L35_MULT_DEV_SYNCH2, 1, 1, 0,
-> > +		       snd_soc_get_volsw, cs35l35_put_sync),
-> > +	SOC_SINGLE_EXT("SYNC VPBR", CS35L35_MULT_DEV_SYNCH2, 2, 1, 0,
-> > +		       snd_soc_get_volsw, cs35l35_put_sync),
-> > +	SOC_SINGLE_EXT("SYNC OTW", CS35L35_MULT_DEV_SYNCH2, 3, 1, 0,
-> > +		       snd_soc_get_volsw, cs35l35_put_sync),
+> I guess what we can do is make two different sched_clock()
+> callbacks: one for upward and one for downward counting.
 > 
-> I can't tell how this works.  It feels like this shouldn't just be being
-> controlled from userspace but rather should be handled in some more
-> standard fashion, or possibly as part of the platform integration but
-> right now it's just some totally undocumented application managed
-> controls.
+> Would you like an optimization like that?
+> 
+> (It makes sense.)
 
-These activate the individual types of synchronisation between
-the two stereo amps over a proprietary single wire connection
-between the two amps. The audio option synchronises the group
-delay between the two amps. The VPBR links the brown out on the
-two amps and the OTW links the over temperature warning.
+Yes, thanks Linus!
 
-The issue is really one of it being use-case specific whether the
-amps are being used independently or in a stereo configuration.
-You could have only a single amp in use in which case the sync
-features are best turned off. Or one might even have use-cases
-with both amps where they are being used independently but at the
-same time.
+  -- Daniel
 
-I guess we could potentially do those as calls from the machine
-driver, although in some cases it might be hard to tell which
-use-case is being used. Alternatively, one could try to actually
-link the two amps in DAPM and control it that way although you
-probably still want some device tree stuff to say which things
-you want to sync and it might cause issues in any cases where you
-had both amps up but didn't want to sync.
 
-Thanks,
-Charles
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
