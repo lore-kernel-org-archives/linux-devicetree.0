@@ -1,76 +1,33 @@
-From: Chris Brandt <Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: r7s72100: add clock bit definitions
-Date: Tue, 30 May 2017 16:23:02 +0000
-Message-ID: <SG2PR06MB11652CB46B57C6C592F7A2FB8AF00@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <20170525160548.103182-1-chris.brandt@renesas.com>
- <CAMuHMdW21gwJZxCMsepX9c3hqpfw_+zc1x_f-6D0oKFVvqY2Kg@mail.gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v4 0/2] net: phy: Support managed Cortina phys
+Date: Tue, 30 May 2017 12:42:58 -0400 (EDT)
+Message-ID: <20170530.124258.552928885307723573.davem@davemloft.net>
+References: <1496049091-4637-1-git-send-email-bogdan.purcareata@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdW21gwJZxCMsepX9c3hqpfw_+zc1x_f-6D0oKFVvqY2Kg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496049091-4637-1-git-send-email-bogdan.purcareata@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bogdan.purcareata@nxp.com
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR2VlcnQsDQoNCkFzIGFsd2F5cyBUaGFuayB5b3UgZm9yIHlvdXIgcmV2aWV3IQ0KDQoNCk9u
-IE1vbmRheSwgTWF5IDI5LCAyMDE3LCBHZWVydCBVeXR0ZXJob2V2ZW4gd3JvdGU6DQo+ID4gICNk
-ZWZpbmUgUjdTNzIxMDBfQ0xLX1BMTCAgICAgICAwDQo+IA0KPiBObyBDb3JlU2lnaHQgKE1TVFAy
-MCk/DQoNCk9LLCBJJ2xsIGFkZCB0aGF0IGluLg0KDQoNCj4gPiArI2RlZmluZSBSN1M3MjEwMF9D
-TEtfTUNQV00gICAgIDANCj4gDQo+IFBlcmhhcHMganVzdCBSN1M3MjEwMF9DTEtfUFdNPw0KDQpP
-Sy4NClBlb3BsZSBkb24ndCBzZWVtIHRvIGJlIHVzaW5nIGl0IGZvciBtb3RvciBjb250cm9sIGFu
-eXdheSA7KQ0KDQoNCj4gPiArI2RlZmluZSBSN1M3MjEwMF9DTEtfU05ER0VOMCAgIDUNCj4gPiAr
-I2RlZmluZSBSN1M3MjEwMF9DTEtfU05ER0VOMSAgIDQNCj4gPiArI2RlZmluZSBSN1M3MjEwMF9D
-TEtfU05ER0VOMiAgIDMNCj4gPiArI2RlZmluZSBSN1M3MjEwMF9DTEtfU05ER0VOMyAgIDINCj4g
-DQo+IFI3UzcyMTAwX0NMS19TR1swLTNdPw0KDQpJIGRlYmF0ZWQgYWdhaW5zdCAnU0cnIHZzICdT
-TkRHRU4nLg0KU2luY2UgeW91IGFsc28gc3VnZ2VzdGVkIFNHLCBJJ2xsIGNoYW5nZSBpdC4NCg0K
-PiA+ICAvKiBNU1RQNyAqLw0KPiA+ICsjZGVmaW5lIFI3UzcyMTAwX0NMS19WREVDMCAgICAgNw0K
-PiA+ICsjZGVmaW5lIFI3UzcyMTAwX0NMS19WREVDMSAgICAgNg0KPiANCj4gUjdTNzIxMDBfQ0xL
-X1ZJTlswMV0/DQoNClRoZXNlIGFyZSBhbmFsb2cgdmlkZW8gaW5wdXRzIChOVFNDL1BBTCkuDQpG
-b3IgUi1DYXIsICJWSU4iIHNlZW0gdG8gcmVmZXIgdG8gcGFyYWxsZWwgZGlnaXRhbCBpbnB1dHMg
-KGllLCByY2FyLXZpbiANCmRyaXZlcikNCg0KU28gZm9yIHRoZSBSWi9BIHNlcmllcywgSSB3YXMg
-Z29pbmcgdG8ga2VlcCB3aXRoIHRoZSBjb252ZW50aW9uIHRoYXQgd2UgDQp1c2UgZm9yIHRoZSBu
-b24tTGludXggc2FtcGxlIGNvZGUgYW5kIGFwcCBub3RlcyBzdWNoIHRoYXQgdGhlc2UgaW5wdXRz
-IA0KYXJlICdhbmFsb2cgdmlkZW8gZGVjb2RlcnMnIGFuZCBub3QganVzdCB2aWRlbyBpbnB1dC9j
-YXB0dXJlIA0KcGlucy4uLi5oZW5jZSB2ZGVjLg0KDQoNCj4gPiArI2RlZmluZSBSN1M3MjEwMF9D
-TEtfRVRIQUJWICAgIDINCj4gDQo+IFI3UzcyMTAwX0NMS19FVEhBVkINCg0KT3Bwcy4gVGhhbmsg
-eW91IQ0KDQoNCj4gPiArI2RlZmluZSBSN1M3MjEwMF9DTEtfU1BJTUJDMCAgIDMNCj4gPiArI2Rl
-ZmluZSBSN1M3MjEwMF9DTEtfU1BJTUJDMSAgIDINCj4gDQo+IFI3UzcyMTAwX0NMS19TUEJbMC0x
-XT8NCg0KSGVyZSdzIHRoZSBvbmUgdGhhdCBJJ20gc3RydWdnbGluZyB3aXRoIHdoYXQgdG8gY2Fs
-bC4NCg0KSW50ZXJuYWxseSwgdGhlIElQIGJsb2NrIGlzIHJlZmVycmVkIHRvIGFzIHRoZSAiU1BJ
-QlNDIi4gQXMgaW4sIFNQSSBCdXMgDQpTdGF0ZSBDb250cm9sbGVyIChiZWNhdXNlIGJhc2ljYWxs
-eSBhbnl0aGluZyB0aGF0IGhhcyBhIHBhcmFsbGVsIA0KaW50ZXJmYWNlIHRvIHRoZSBpbnRlcm5h
-bCBidXMgdGhlIGRlc2lnbiBndXlzIGNhbGwgaXQgYSBCU0M6IExCU0MsIERCU0MsIA0KZXRjLi4u
-KS4NCg0KSG93ZXZlciwgZm9yIGV2ZXJ5IGRldmljZSB0aGlzIElQIGlzIHVzZWQgaW4gaXQgaXMg
-Y2FsbGVkIHRoZSAiU1BJIA0KTXVsdGkgSS9PIEJ1cyBDb250cm9sbGVyIiBpbiB0aGUgSGFyZHdh
-cmUgTWFudWFsIChTSDc3NjksIFJaL0ExLCBSLUNhciBHZW4zLCANCmV0Yy4uLikuDQoNClNvLCB0
-aGF0IG1pZ2h0IGJlIGNvbmZ1c2luZyB0byB1c2Vycy4NCg0KT3JpZ2luYWxseSwgaXQgd2FzIGNh
-bGxlZCAiU1BJIEJTQyIgYmVjYXVzZSB0aGV5IHdlcmUgb25seSBjb25uZWN0aW5nIGEgDQoiU1BJ
-IiBidXMgaW50ZXJmYWNlIGFzIGEgIkJ1cyBTdGF0ZSBDb250cm9sbGVyIi4gSG93ZXZlciwgbm93
-IHRoZXkndmUgDQphZGRlZCBvbnRvIHRoZSBJUCBhbmQgaXQgZG9lcyBtb3JlIHRoYW4ganVzdCBT
-UEkuDQoNCg0KPiBBbGwgcmVsYXRlZCByZWdpc3RlcnMgYW5kIGNsb2NrcyBhcmUgY2FsbGVkIFNQ
-Qjxzb21ldGhpbmc+Lg0KT25seSB0aGUgcGlucyBhcmUgbGFiZWxlZCBTUEI8c29tZXRoaW5nPiwg
-bm90IHRoZSByZWdpc3RlcnMuIFRoZSANCnJlZ2lzdGVycyBkb2Vzbid0IHJlYWxseSBoYXZlIGEg
-Y29tbW9uIHByZWZpeC4NCg0KDQpTbyBpbiBnZW5lcmFsLCB3aGF0J3MgeW91ciBvcGluaW9uIG9u
-IHdoYXQgdG8gY2FsbCB0aGlzIHRoaW5nIChzaW5jZSANCkknZCBsaWtlIHRvIG5hbWUgdGhlIGRy
-aXZlciBpbiBhIHNpbWlsYXIgbWFubmVyKT8NCg0KKDEpICJTUElCU0MiOiBCZWNhdXNlIHRoYXQn
-cyB3aGF0IGFsbCB0aGUgbm9uLUxpbnV4IHNhbXBsZSBjb2RlIGFuZCBhcHAgDQogICAgIG5vdGUg
-cmVmZXIgdG8gaXQuDQoNCigyKSAiU1BJTUJDIjogVGFrZW4gZnJvbSAiU1BJIE11bHRpIEkvTyBC
-dXMgQ29udHJvbGxlciIgKHVzaW5nIGFsbCAxc3QgDQogICAgbGV0dGVycyBleGNlcHQgdGhlICJJ
-L08iIHBhcnQpDQoNCigzKSAiU1BCIjogQmVjYXVzZSB0aGF0IGlzIGhvdyB0aGV5IG5hbWVkIHRo
-ZSBwaW5zIGZvciBSWi8xIChOT1RFIHRoYXQNCiAgICBpcyBqdXN0IGZvciBSWi9BMSBhbmQgU0g3
-MjY5LCBmb3IgUlovQTIrKyBhbmQgUi1DYXIgdGhleSBhcmUgbGFiZWxlZA0KICAgIFFTUElfeHh4
-Li4uc28geW91IHdpbGwgcHJvYmFibHkgbmV2ZXIgc2VlIFNQQiBhZ2FpbiBpbiBmdXR1cmUgaGFy
-ZHdhcmUNCiAgICBtYW51YWxzKQ0KDQooNCkgIlNCQyI6IEZvciBTZXJpYWwgQnVzIENvbnRyb2xs
-ZXINCg0KDQpJIGFtIGxlYW5pbmcgdG8ganVzdCBzdGF5aW5nIHdpdGggIlNQSUJTQyIgd2hpY2gg
-aXMgd2hhdCBJIHVzZSBub3cgZm9yIA0Kb3VyIGN1cnJlbnQgTGludXggQlNQIGFuZCBub24tTGlu
-dXggc2FtcGxlIGNvZGUsIG9yICJTQkMiIGp1c3QgdG8gDQpzaG9ydGVuIGl0Lg0KDQpBbnkgb3Bp
-bmlvbnM/Pz8NCg0KDQoNCj4gTm8gU1NJIChNU1RQMTFbMC01XSk/DQoNCk9wcHMsIEkgbWlzc2Vk
-IHRoYXQgcmVnaXN0ZXIgc29tZWhvdy4NCkknbGwgYWRkIHRoZW0gaW4uDQoNCg0KVGhhbmsgeW91
-LA0KQ2hyaXMNCg0K
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+From: Bogdan Purcareata <bogdan.purcareata@nxp.com>
+Date: Mon, 29 May 2017 09:11:29 +0000
+
+> So far, the Cortina family phys (CS4340 in this particular case) are only
+> supported in fixed link mode (via fixed_phy_register). The generic 10G
+> phy driver does not work well with the phylib state machine, when the phy
+> is registered via of_phy_connect. This prohibits the user from describing the
+> phy nodes in the device tree.
+> 
+> In order to support this scenario, and to properly describe the board
+> device tree, add a minimal Cortina driver that reads the status from the
+> right register. With the generic 10G C45 driver, the kernel will print
+> messages like:
+> [    0.226521] mdio_bus 8b96000: Error while reading PHY16 reg at 1.6
+> [    0.232780] mdio_bus 8b96000: Error while reading PHY16 reg at 1.5
+ ...
+
+Series applied, thanks.
