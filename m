@@ -1,78 +1,141 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v5 0/9] pinctrl: meson: add support for GPIO IRQs
-Date: Tue, 30 May 2017 22:03:18 +0200
-Message-ID: <66c57893-0a9e-4f8c-a017-ab346abbdfd0@gmail.com>
+From: <christopher.spinrath@rwth-aachen.de>
+Subject: [PATCH] ARM: dts: imx6q-cm-fx6: add sdio wifi/bt nodes
+Date: Tue, 30 May 2017 22:16:01 +0200
+Message-ID: <1a13681b84564bc18937eb54b8345957@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series is partially based on a series Jerome Brunet
-submitted about half a year ago. Due to open questions this series never
-made it to mainline, see https://patchwork.kernel.org/patch/9384431/
+From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
 
-This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
-Included is also support for using two parent IRQs in case
-of IRQ_TYPE_EDGE_BOTH, like in the vendor driver.
+The cm-fx6 module has an on-board AW-NH387 WiFi/BT module which is
+based on Marvell's SD8787 chip and is connected to the usdhc1
+controller.
 
-The series was successfully tested on a Odroid-C2, e.g. with removing
-polling for SD card insertion/removal from the mmc driver.
+Unfortunately, the chip gets unresponsive if the Bluetooth AMP
+(Alternate Mac/Phy) function gets probed but the loaded firmware
+doesn't support it. For instance, this is the case for the most
+recent firmware in linux-firmware (Version 14.66.35.p52).
 
-Changes in v2:
-- separate the GPIO IRQ controller from the pinctrl driver
-- minor improvements to the GPIO IRQ controller
+Thus, just add the required nodes but leave the usdhc1 node disabled
+explicitly. Users who disabled the Bluetooth (AMP) support of their
+OS can then conveniently enable WiFi (or even plain Bluetooth) support
+with a simple device tree overlay/bootloader configuration.
 
-Changes in v3:
-- replace the request_irq based allocation of parent irq's with
-  chained irq handling, this also fixes the spurious interrupts issue
-  and allows to remove the workaround code.
-  Last but not least the parent irq's are no longer visible in
-  /proc/interrupts.
-- minor improvements to the GPIO IRQ controller
+Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+---
 
-Changes in v4:
-- separate the gpio-independent interrupt controller part and make
-  it a driver under drivers/irqchip
+Hi all,
 
-Changes in v5:
-- smaller changes based on review comments
-- split DT patches per ARM / ARM64
+some more information on the Bluetooth AMP dilemma: the vendor (CompuLab) just
+remove Bluetooth AMP support from the kernel. However, this is not an option
+here, since it would introduce a regression for its actual users.
 
-Heiner Kallweit (7):
-  pinctrl: meson: add interrupts to pinctrl data
-  irqchip: add Amlogic Meson GPIO irqchip driver
-  dt-bindings: add Amlogic Meson GPIO interrupt-controller DT binding documentation
-  ARM: dts: meson: add GPIO interrupt-controller support
-  ARM64: dts: meson: add GPIO interrupt-controller support
-  pinctrl: meson: add support for GPIO interrupts
-  pinctrl: meson: update DT binding documentation
-  ARM: dts: meson: mark gpio controllers as interrupt controllers
-  ARM64: dts: meson: mark gpio controllers as interrupt controllers
+Neither is degrading the firmware a good option: recent firmare (without AMP
+support) provides WiFi that is more stable (in particular, for access points).
 
-.../amlogic,meson-gpio-intc.txt                    |  26 ++
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   4 +
- arch/arm/boot/dts/meson8.dtsi                      |  12 +
- arch/arm/boot/dts/meson8b.dtsi                     |  12 +
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   4 +
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |   4 +
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-meson-gpio.c                   | 296 +++++++++++++++++++++
- drivers/pinctrl/Kconfig                            |   1 +
- drivers/pinctrl/meson/pinctrl-meson-gxbb.c         |  22 +-
- drivers/pinctrl/meson/pinctrl-meson-gxl.c          |  20 +-
- drivers/pinctrl/meson/pinctrl-meson.c              | 170 +++++++++++-
- drivers/pinctrl/meson/pinctrl-meson.h              |  15 +-
- drivers/pinctrl/meson/pinctrl-meson8.c             |  20 +-
- drivers/pinctrl/meson/pinctrl-meson8b.c            |  32 ++-
- 17 files changed, 605 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
- create mode 100644 drivers/irqchip/irq-meson-gpio.c
+I wrote a RFC to linux-bluetooth [1] two weeks ago about this problem and the
+only feedback I got was that Marvell has to provide information about how to
+detect whether the firmware supports AMP properly -- but this is unlikely given
+Marvell's information policy (in particular, since the sd8787 seems to be
+unsupported as of now).
 
+IMHO this patch is currently the best option, since it allows users in a
+convenient way to enable WiFi support (e.g. no pinctrl handling in overlays),
+even when they are using distribution kernels/device trees. Furthermore, the
+hardware description is entirely accurate -- we have a driver/firmware problem
+here.
+
+Thanks,
+Christopher
+
+[1] https://www.spinics.net/lists/linux-bluetooth/msg70493.html
+
+ arch/arm/boot/dts/imx6q-cm-fx6.dts | 41 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+index a8af382..fe6ab0a 100644
+--- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
++++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
+@@ -64,6 +64,14 @@
+ 		};
+ 	};
+ 
++	awnh387_pwrseq: pwrseq {
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_pwrseq>;
++		compatible = "mmc-pwrseq-sd8787";
++		powerdown-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpio6 16 GPIO_ACTIVE_HIGH>;
++	};
++
+ 	reg_pcie_power_on_gpio: regulator-pcie-power-on-gpio {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "regulator-pcie-power-on-gpio";
+@@ -304,6 +312,13 @@
+ 		>;
+ 	};
+ 
++	pinctrl_pwrseq: pwrseqgrp {
++		fsl,pins = <
++			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
++			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x1b0b0
++		>;
++	};
++
+ 	pinctrl_spdif: spdifgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_GPIO_16__SPDIF_IN  0x1b0b0
+@@ -330,6 +345,17 @@
+ 			MX6QDL_PAD_EIM_D22__GPIO3_IO22	0x130b0
+ 		>;
+ 	};
++
++	pinctrl_usdhc1: usdhc1grp {
++		fsl,pins = <
++			MX6QDL_PAD_SD1_CMD__SD1_CMD	0x17071
++			MX6QDL_PAD_SD1_CLK__SD1_CLK	0x10071
++			MX6QDL_PAD_SD1_DAT0__SD1_DATA0	0x17071
++			MX6QDL_PAD_SD1_DAT1__SD1_DATA1	0x17071
++			MX6QDL_PAD_SD1_DAT2__SD1_DATA2	0x17071
++			MX6QDL_PAD_SD1_DAT3__SD1_DATA3	0x17071
++		>;
++	};
+ };
+ 
+ &pcie {
+@@ -382,3 +408,18 @@
+ 	dr_mode = "otg";
+ 	status = "okay";
+ };
++
++&usdhc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_usdhc1>;
++	mmc-pwrseq = <&awnh387_pwrseq>;
++	non-removable;
++	/*
++	 * If the OS probes the Bluetooth AMP function advertised on this bus
++	 * but the firmware in place does not support it, the WiFi/BT module
++	 * gets unresponsive.
++	 * Users who configured their OS properly can enable this node to gain
++	 * WiFi and/or plain Bluetooth support.
++	 */
++	status = "disabled";
++};
 -- 
-2.13.0
+2.10.2
