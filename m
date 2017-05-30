@@ -1,66 +1,134 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: Re: [PATCH 4/6] irqchip: irq-mvebu-icu: new driver for Marvell ICU
-Date: Tue, 30 May 2017 14:42:26 +0100
-Message-ID: <20170530134226.GR22219@n2100.armlinux.org.uk>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell GICP
+Date: Tue, 30 May 2017 14:55:57 +0100
+Message-ID: <2ea42715-700b-c363-eeba-db83b0f63a70@arm.com>
 References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1496135772-20694-5-git-send-email-thomas.petazzoni@free-electrons.com>
- <20170530121907.GO22219@n2100.armlinux.org.uk>
- <20170530143350.6f8563c1@free-electrons.com>
- <20170530125643.GQ22219@n2100.armlinux.org.uk>
- <20170530132735.GA21646@lunn.ch>
+ <1496135772-20694-4-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170530132735.GA21646-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1496135772-20694-4-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 03:27:35PM +0200, Andrew Lunn wrote:
-> So you don't expect to every have your 500 patches merged?
+On 30/05/17 10:16, Thomas Petazzoni wrote:
+> This commit adds a simple driver for the Marvell GICP, a hardware unit
+> that converts memory writes into GIC SPI interrupts. The driver doesn't
+> do anything but clear all interrupts at boot time, to avoid spurious
+> interrupts left by the firmware.
+> 
+> The GICP registers are directly written to in hardware by the ICU unit,
+> which is configured in a separate driver.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/irqchip/Kconfig          |  3 +++
+>  drivers/irqchip/Makefile         |  1 +
+>  drivers/irqchip/irq-mvebu-gicp.c | 53 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 57 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 478f8ac..e527ee5 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -268,6 +268,9 @@ config IRQ_MXS
+>  	select IRQ_DOMAIN
+>  	select STMP_DEVICE
+>  
+> +config MVEBU_GICP
+> +	bool
+> +
+>  config MVEBU_ODMI
+>  	bool
+>  	select GENERIC_MSI_IRQ_DOMAIN
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index b64c59b..11eb858 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_SA1100)		+= irq-sa11x0.o
+>  obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
+>  obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
+>  obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
+> +obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
+>  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+>  obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
+>  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+> diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+> new file mode 100644
+> index 0000000..4effed4
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-mvebu-gicp.c
+> @@ -0,0 +1,53 @@
+> +/*
+> + * Copyright (C) 2017 Marvell
+> + *
+> + * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define GICP_SETSPI_NSR_OFFSET	0x0
+> +#define GICP_CLRSPI_NSR_OFFSET	0x8
+> +
+> +#define GICP_INT_COUNT		128
+> +
+> +static int mvebu_gicp_probe(struct platform_device *pdev)
+> +{
+> +	void __iomem *regs;
+> +	struct resource *res;
+> +	int i;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -ENODEV;
+> +
+> +	regs = ioremap(res->start, resource_size(res));
+> +	if (!regs)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < GICP_INT_COUNT; i++)
+> +		writel(i, regs + GICP_CLRSPI_NSR_OFFSET);
 
-Correct.
+What does this do on an edge interrupt? I bet this doesn't have any
+effect, so you may want to use the irq_set_irqchip_state() API to clear
+a potential pending state instead (and you may want to wire it in the
+ICU driver itself as well).
 
-> What might help is that you ask for help getting them merged. I know
-> of at least 4 groups of people interested in your devlink and 10G PHY
-> code.
+> +
+> +	iounmap(regs);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mvebu_gicp_of_match[] = {
+> +	{ .compatible = "marvell,gicp", },
+> +	{},
+> +};
+> +
+> +static struct platform_driver mvebu_gicp_driver = {
+> +	.probe  = mvebu_gicp_probe,
+> +	.driver = {
+> +		.name = "mvebu-gicp",
+> +		.of_match_table = mvebu_gicp_of_match,
+> +	},
+> +};
+> +builtin_platform_driver(mvebu_gicp_driver);
+> 
 
-As I've repeatedly explained - and it's called phylink, not devlink -
-the SFP support is not ready due to the SFP+ stuff needing a complete
-rewrite of that code, which has been delayed because of delays on
-SolidRun's side to provide SFP+ hardware.
+Thanks,
 
-Much of the changes for that happened during the last month, but are
-currently rather dirty and incomplete, but are in a working state.
-As you know, I had been pushing out the 10G PHY changes as quickly as
-netdev copes with them during the previous kernel cycle.  The rate of
-patch merging was completely insufficient to get the 10G support into
-netdev - with it taking a week or longer between patches posted and
-the merge happening.
-
-> You are great at writing new code, but terrible at getting it
-> merged.
-
-Yes, because I find it very very time consuming and frustrating to
-deal with other people - it's really not easy.
-
-What am I working on right now - I'm trying to get the dw-hdmi CEC
-driver out there.  I've been working on that all morning so far,
-but it's taking hours, despite having a previously working patch
-set... and the latest problem I find is that iMX6 appears to silently
-fail to boot.  So, this afternoon, I'm debugging why 4.12-rc3 on
-iMX6 seems to be broken, and while I'm doing that I won't be doing
-anything _else_, probably not even looking at any email.  So this
-will probably be the last email you see from me until I have the
-dw-hdmi stuff sorted.  That means I won't be doing _anything_ else
-while I sort out a set of patches for this.
-
+	M.
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
