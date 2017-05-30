@@ -1,59 +1,63 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
-Date: Tue, 30 May 2017 10:54:40 +0200
-Message-ID: <1a165856-6863-ad51-d66c-eda062f4d98e@linaro.org>
-References: <20170516075840.23130-1-andrew@aj.id.au>
- <CACRpkdZsbzwBKRj1FXAoCW9nD357SNNK8t=gOO-OBtV_pwjpKg@mail.gmail.com>
- <0f526d58-3138-d7ea-0dc7-5ef623fb0547@linaro.org>
- <CACRpkdYbicYPJvaeTMpHSn4F77ognBfnEbj7OknFiZgfK1qizA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYbicYPJvaeTMpHSn4F77ognBfnEbj7OknFiZgfK1qizA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Andrew Jeffery <andrew@aj.id.au>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Joel Stanley <joel@jms.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ryan Chen <ryan_chen@aspeedtech.com>
+From: Carlo Caione <carlo@caione.org>
+Subject: [PATCH v4 0/2] scpi-sensors: Fix SCP sensor readings scale
+Date: Tue, 30 May 2017 11:05:05 +0200
+Message-ID: <20170530090507.16611-1-carlo@caione.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: jdelvare@suse.com, linux@roeck-us.net, linux-hwmon@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux@endlessm.com, punit.agrawal@arm.com, sudeep.holla@arm.com, robh+dt@kernel.org, devicetree@vger.kernel.org
+Cc: Carlo Caione <carlo@endlessm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30/05/2017 09:44, Linus Walleij wrote:
-> On Sun, May 28, 2017 at 8:27 PM, Daniel Lezcano
-> <daniel.lezcano@linaro.org> wrote:
->> On 28/05/2017 15:59, Linus Walleij wrote:
->>> On Tue, May 16, 2017 at 9:58 AM, Andrew Jeffery <andrew@aj.id.au> wrote:
->>>
->>>> Also clean up space-before-tab issues in the documentation.
->>>>
->>>> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
->>>
->>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->>>
->>> Does this collide with Daniel's 2500 patch?
->>>
->>> Sorry for the mess, tell me if I need to fix something up :(
->>
->> It is ok, an usual collision change to be fixed when merging ;)
->>
->> By the way, can you have a look at fttmr010_read_sched_clock to remove
->> the local_fttmr->count_down test?
-> 
-> I guess what we can do is make two different sched_clock()
-> callbacks: one for upward and one for downward counting.
-> 
-> Would you like an optimization like that?
-> 
-> (It makes sense.)
+From: Carlo Caione <carlo@endlessm.com>
 
-Yes, thanks Linus!
+Sorry for the delay. This is the follow-up on the patches about scpi-sensors
+with the fix suggested in [0].
 
-  -- Daniel
+The previous version is at [1].
 
+The implementation details for SCPI seems to suggest that the sensor
+readings must be reported by SCP using a well defined scale
+(millidegree Celsius for temperature, millivolts for voltage,
+milliamperes for current, microwatts for power and microjoules for
+energy).
 
+This is also important for the interaction with other subsystems: for
+example both the thermal sub-system and the hwmon sysfs interface expect
+the temperature expressed in millidegree Celsius.
+
+Unfortunately since this behaviour is dependent on the firmware
+implementation there are cases where the sensor readings are reported
+using a different scale. For example in the Amlogic SoCs the
+temperature is reported in degree and not millidegree Celsius.
+
+In this patchset we introduce a new DT compatible
+'amlogic,meson-gxbb-scpi-sensors' that is used by the scpi-hwmon driver to
+convert the sensor readings to the expected scale.
+
+v2:
+ - Added data validation (scale != 0)
+ - s/unsigned int/u32/ for the array
+ - Switched to array initialiser notation
+ - Introduced scpi_scale_reading()
+
+v3:
+ - scpi_scale_reading marked as static
+
+v4:
+ - Removed new binding and added a new compatible instead
+
+[0] https://patchwork.kernel.org/patch/9612959/
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2017-March/492553.html
+
+Carlo Caione (2):
+  Documentation: bindings: add amlogic,meson-gxbb-scpi-sensors
+    compatible
+  hwmon: (scpi) Fix the scale of SCP sensor readings
+
+ Documentation/devicetree/bindings/arm/arm,scpi.txt |  2 +-
+ drivers/hwmon/scpi-hwmon.c                         | 54 +++++++++++++++++++---
+ 2 files changed, 49 insertions(+), 7 deletions(-)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+2.9.3
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
