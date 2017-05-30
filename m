@@ -1,128 +1,45 @@
 From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell GICP
-Date: Tue, 30 May 2017 14:55:57 +0100
-Message-ID: <2ea42715-700b-c363-eeba-db83b0f63a70@arm.com>
+Subject: Re: [PATCH 6/6] arm64: dts: marvell: enable GICP and ICU on Armada
+ 7K/8K
+Date: Tue, 30 May 2017 15:02:34 +0100
+Message-ID: <1fb18947-33e8-abc9-e78f-970e702af3ee@arm.com>
 References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1496135772-20694-4-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1496135772-20694-7-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496135772-20694-4-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1496135772-20694-7-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 30/05/17 10:16, Thomas Petazzoni wrote:
-> This commit adds a simple driver for the Marvell GICP, a hardware unit
-> that converts memory writes into GIC SPI interrupts. The driver doesn't
-> do anything but clear all interrupts at boot time, to avoid spurious
-> interrupts left by the firmware.
-> 
-> The GICP registers are directly written to in hardware by the ICU unit,
-> which is configured in a separate driver.
+> This commit modifies the Marvell EBU Armada 7K and 8K Device Tree files
+> to describe the ICU and GICP units, and use ICU interrupts for all
+> devices in the CP110 blocks.
 > 
 > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  drivers/irqchip/Kconfig          |  3 +++
->  drivers/irqchip/Makefile         |  1 +
->  drivers/irqchip/irq-mvebu-gicp.c | 53 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 57 insertions(+)
->  create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |  5 ++
+>  .../boot/dts/marvell/armada-cp110-master.dtsi      | 60 +++++++++++++---------
+>  .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi | 54 ++++++++++---------
+>  3 files changed, 71 insertions(+), 48 deletions(-)
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 478f8ac..e527ee5 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -268,6 +268,9 @@ config IRQ_MXS
->  	select IRQ_DOMAIN
->  	select STMP_DEVICE
->  
-> +config MVEBU_GICP
-> +	bool
-> +
->  config MVEBU_ODMI
->  	bool
->  	select GENERIC_MSI_IRQ_DOMAIN
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index b64c59b..11eb858 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_SA1100)		+= irq-sa11x0.o
->  obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
->  obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
->  obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
-> +obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
->  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
->  obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
->  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
-> diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
-> new file mode 100644
-> index 0000000..4effed4
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-mvebu-gicp.c
-> @@ -0,0 +1,53 @@
-> +/*
-> + * Copyright (C) 2017 Marvell
-> + *
-> + * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define GICP_SETSPI_NSR_OFFSET	0x0
-> +#define GICP_CLRSPI_NSR_OFFSET	0x8
-> +
-> +#define GICP_INT_COUNT		128
-> +
-> +static int mvebu_gicp_probe(struct platform_device *pdev)
-> +{
-> +	void __iomem *regs;
-> +	struct resource *res;
-> +	int i;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -ENODEV;
-> +
-> +	regs = ioremap(res->start, resource_size(res));
-> +	if (!regs)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < GICP_INT_COUNT; i++)
-> +		writel(i, regs + GICP_CLRSPI_NSR_OFFSET);
 
-What does this do on an edge interrupt? I bet this doesn't have any
-effect, so you may want to use the irq_set_irqchip_state() API to clear
-a potential pending state instead (and you may want to wire it in the
-ICU driver itself as well).
+[...]
 
-> +
-> +	iounmap(regs);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mvebu_gicp_of_match[] = {
-> +	{ .compatible = "marvell,gicp", },
-> +	{},
-> +};
-> +
-> +static struct platform_driver mvebu_gicp_driver = {
-> +	.probe  = mvebu_gicp_probe,
-> +	.driver = {
-> +		.name = "mvebu-gicp",
-> +		.of_match_table = mvebu_gicp_of_match,
-> +	},
-> +};
-> +builtin_platform_driver(mvebu_gicp_driver);
-> 
+> @@ -221,13 +229,13 @@
+>  			cps_crypto: crypto@800000 {
+>  				compatible = "inside-secure,safexcel-eip197";
+>  				reg = <0x800000 0x200000>;
+> -				interrupts = <GIC_SPI 34 (IRQ_TYPE_EDGE_RISING
+> +				interrupts = <ICU_GRP_NSR 87 (IRQ_TYPE_EDGE_RISING
+>  				| IRQ_TYPE_LEVEL_HIGH)>,
+
+I've already mentioned this in a separate thread to Antoine, but it'd be
+good to fix this non-sensical configuration.
 
 Thanks,
 
