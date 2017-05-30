@@ -1,84 +1,150 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v6 1/4] gpio: mvebu: Add limited PWM support
-Date: Tue, 30 May 2017 15:40:00 +0200
-Message-ID: <87tw42tqdr.fsf@free-electrons.com>
-References: <20170414154056.32055-1-ralph.sennhauser@gmail.com>
-        <20170414154056.32055-2-ralph.sennhauser@gmail.com>
-        <CACRpkdYPp6pBemTT_a4V6a-Qbk2475qOOxWJOhfVaEz=cojOvA@mail.gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 4/6] irqchip: irq-mvebu-icu: new driver for Marvell ICU
+Date: Tue, 30 May 2017 14:40:51 +0100
+Message-ID: <d9616800-83c4-7ae2-19fa-0fb90adbcaae@arm.com>
+References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1496135772-20694-5-git-send-email-thomas.petazzoni@free-electrons.com>
+ <6dffc4f2-aa72-a6ee-cf29-2b92f82b5ee8@arm.com>
+ <20170530140549.6aa5ebc5@free-electrons.com>
+ <aeb3ad3b-e7a2-6439-2cd7-3dde1bdc5974@arm.com>
+ <20170530151755.12d0d5e3@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYPp6pBemTT_a4V6a-Qbk2475qOOxWJOhfVaEz=cojOvA@mail.gmail.com>
-        (Linus Walleij's message of "Mon, 24 Apr 2017 11:18:30 +0200")
-Sender: linux-pwm-owner@vger.kernel.org
-To: Ralph Sennhauser <ralph.sennhauser@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Richard Genoud <richard.genoud@gmail.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170530151755.12d0d5e3@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ralph and Linus,
-
-I resurrect this thread following the series post by Richard Genoud:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509461.html
-
- On lun., avril 24 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
-
-> On Fri, Apr 14, 2017 at 5:40 PM, Ralph Sennhauser
-> <ralph.sennhauser@gmail.com> wrote:
->
->> From: Andrew Lunn <andrew@lunn.ch>
+On 30/05/17 14:17, Thomas Petazzoni wrote:
+> Hello,
+> 
+> On Tue, 30 May 2017 14:06:52 +0100, Marc Zyngier wrote:
+> 
+>>> Would drivers/irqchip/irq-mvebu-gicp.h, included by both
+>>> irq-mvebu-gicp.c and irq-mvebu-icu.c be fine for you?  
 >>
->> Armada 370/XP devices can 'blink' GPIO lines with a configurable on
->> and off period. This can be modelled as a PWM.
+>> Sure, that'd be fine, assuming that it is necessary (see below).
+> 
+> Right, if we merge everything into one file, then it's simpler :)
+> 
+>>>> What's the relationship between ICU_MAX_IRQS and
+>>>> IRQS_PER_ICU/ICU_MAX_SPI_IRQ_IN_GIC, if any? Is there only a single ICU?
+>>>> Or can you have multiple ones?  
+>>>
+>>> There is one ICU per CP. The Armada 7K SoC has one CP, the Armada 8K
+>>> SoC has two CPs. Therefore on Armada 8K, you have two ICUs, one per CP.  
 >>
->> However, there are only two sets of PWM configuration registers for
->> all the GPIO lines. This driver simply allows a single GPIO line per
->> GPIO chip of 32 lines to be used as a PWM. Attempts to use more return
->> EBUSY.
+>> OK. Is there any restriction on which SPI an ICU can generate?
+> 
+> Not that I'm aware of. Even though the fact that there are two ranges
+> of SPI interrupts, which might make one think there is one range per
+> ICU, this is not the case: any ICU can trigger any SPI within those
+> ranges. Which is why the ICU driver handles the 128 available SPIs
+> through a single global bitmap rather than a per-ICU bitmap.
+
+OK.
+
+> 
+>>> But I see your point: there is in fact no direct relation between the
+>>> number of GICP SPI interrupts reserved and the number of ICUs and
+>>> interrupts per ICU.  
 >>
->> Due to the interleaving of registers it is not simple to separate the
->> PWM driver from the GPIO driver. Thus the GPIO driver has been
->> extended with a PWM driver.
+>> Indeed. And maybe we should have an instance of the ICU device per CP.
+> 
+> Not sure what you mean here: we already have one instance of the ICU
+> device per CP.
+> 
+> armada-cp110-master.dtsi describes the ICU in the master CP,
+> armada-cp110-slave.dtsi describes the ICU in the slave CP. So in the
+> patch series I have posted, on an Armada 8K that has two CPs, the
+> ->probe() of irq-mvebu-icu.c gets called twice, once per ICU, and we
+> have one instance of the ICU per CP, as expected.
+> 
+> Am I missing something?
+
+No, I'm just being remarkably thick today. Sorry about the noise.
+
+> 
+>>>>> +#define ICU_GIC_SPI_BASE0	64
+>>>>> +#define ICU_GIC_SPI_BASE1	288    
+>>>>
+>>>> My own gut feeling is that there will be another version of this IP one
+>>>> of these days, with different bases. Should we bite the bullet right
+>>>> away and put those in DT?  
+>>>
+>>> Where should these properties go? Under the gicp DT node, or under the
+>>> ICU DT node?  
 >>
->> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
->> URL: https://patchwork.ozlabs.org/patch/427287/
->> URL: https://patchwork.ozlabs.org/patch/427295/
->> [Ralph Sennhauser:
->>   * Port forward
->>   * Merge PWM portion into gpio-mvebu.c
->>   * Switch to atomic PWM API
->>   * Add new compatible string marvell,armada-370-xp-gpio
+>> If the ICU has no knowledge of the SPI it can generate, I'd rather put
+>> that in the GICP node.
+> 
+> Something like:
+> 
+> 	marvell,spi-ranges = <64 64>, <288 64>;
+> 
+> And then the ICU ->probe() routine walks the marvell,gicp phandle, find
+> the gicp node and parses this information?
 
-The fact that Richard managed to run the code on Armada 38x draw my
-attention on the documentation that need to be amend.
+Either that, or you keep a separate GICP probing. Up to you, really.
 
-And it makes me realized that I missed the bad naming of the compatible
-string. We don't use family name for the compatible string, but the name
-of the first SoC compatible with. So in this case we should use
-"marvell,armada-370", as it is still in rc and not yet deployed. What
-about fixing the name now?
+> 
+>>> We in fact don't really care about how many ICUs we have here. We have
+>>> 128 GICP SPI interrupts available, in ranges:
+>>>
+>>>  - ICU_GIC_SPI_BASE0 ; ICU_GIC_SPI_BASE0 + 64
+>>>
+>>>  - ICU_GIC_SPI_BASE1 ; ICU_GIC_SPI_BASE1 + 64
+>>>
+>>> The icu_irq_alloc bitmap is a global one, which allows to allocate one
+>>> GICP SPI interrupts amongst the available 128 interrupts, and this
+>>> function simply allows to map the index in this bitmap (from 0 to 127)
+>>> to the corresponding GICP SPI interrupt.  
+>>
+>> That makes a lot more sense now, thanks.
+> 
+> I should probably add a comment explaining this in the driver.
 
-I can send a patch for it if you want and fix the dts that are still in
-my mvebu branch.
+Yeah, that'd help.
+
+>>>>> +	 */
+>>>>> +	if (hwirq == ICU_SATA0_IRQ_INT || hwirq == ICU_SATA1_IRQ_INT) {
+>>>>> +		writel(icu_int, icu->base + ICU_INT_CFG(ICU_SATA0_IRQ_INT));
+>>>>> +		writel(icu_int, icu->base + ICU_INT_CFG(ICU_SATA1_IRQ_INT));
+>>>>> +	}    
+>>>>
+>>>> Aren't you wasting an SPI here?  
+>>>
+>>> No: we allocate a single SPI, icu_int. What we're doing here is that we
+>>> have two different wired interrupts in the CP that are "connected" to
+>>> the same GICP SPI interrupt.  
+>>
+>> But if both ports are enabled, you're going to allocate one SPI per call
+>> to this function, and the last one wins (you never "remember" that you
+>> have configured one port already, and always allocate a new interrupt).
+> 
+> Yes, but no, because the DT only declares one of the two interrupts
+> currently:
+> 
+>  			cpm_sata0: sata@540000 {
+>  				compatible = "marvell,armada-8k-ahci",
+>  					     "generic-ahci";
+>  				reg = <0x540000 0x30000>;
+> -				interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
+> 
+> Yes, needs to be fixed, with proper changes to the AHCI driver, but
+> that's a separate matter.
+
+OK. Can you expose both interrupts in the DT already, assuming this
+doesn't break anything? Wasting an SPI is not that big a deal, and I
+want to make sure we'll have a smooth upgrade path when transitioning
+from the irqchip hack to the ahci solution.
 
 Thanks,
 
-Gregory
-
-
->>   * Update and merge documentation patch
->>   * Update MAINTAINERS]
->> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
->> Tested-by: Andrew Lunn <andrew@lunn.ch>
->> Acked-by: Thierry Reding <thierry.reding@gmail.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->
-> Patch applied.
->
-> Yours,
-> Linus Walleij
-
+	M.
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Jazz is not dead. It just smells funny...
