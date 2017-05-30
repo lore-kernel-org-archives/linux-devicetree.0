@@ -1,50 +1,81 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 6/6] arm64: dts: marvell: enable GICP and ICU on Armada
- 7K/8K
-Date: Tue, 30 May 2017 16:28:01 +0200
-Message-ID: <20170530162801.282302f1@free-electrons.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: Re: [PATCH 4/6] irqchip: irq-mvebu-icu: new driver for Marvell ICU
+Date: Tue, 30 May 2017 15:36:29 +0100
+Message-ID: <20170530143629.GT22219@n2100.armlinux.org.uk>
 References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1496135772-20694-7-git-send-email-thomas.petazzoni@free-electrons.com>
-        <1fb18947-33e8-abc9-e78f-970e702af3ee@arm.com>
+ <1496135772-20694-5-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20170530121907.GO22219@n2100.armlinux.org.uk>
+ <20170530143350.6f8563c1@free-electrons.com>
+ <20170530125643.GQ22219@n2100.armlinux.org.uk>
+ <20170530132735.GA21646@lunn.ch>
+ <20170530134226.GR22219@n2100.armlinux.org.uk>
+ <20170530140320.GA22758@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1fb18947-33e8-abc9-e78f-970e702af3ee-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170530140320.GA22758-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, May 30, 2017 at 04:03:20PM +0200, Andrew Lunn wrote:
+> Linux has a long history of reworking stuff in tree, when it has been
+> shown to be inadequate in its first version. So long as the device
+> tree binding does not need incompatible changes, this reworking is not
+> an issue. My guess is, a lot of people have SFP sockets, not
+> SFP+. Lets get SFP merged, and then rework it in tree to add SFP+.
 
-On Tue, 30 May 2017 15:02:34 +0100, Marc Zyngier wrote:
+Unfortunately, it _does_ require an incompatible DT change, and an
+incompatible change with the MAC drivers.
 
-> > @@ -221,13 +229,13 @@
-> >  			cps_crypto: crypto@800000 {
-> >  				compatible = "inside-secure,safexcel-eip197";
-> >  				reg = <0x800000 0x200000>;
-> > -				interrupts = <GIC_SPI 34 (IRQ_TYPE_EDGE_RISING
-> > +				interrupts = <ICU_GRP_NSR 87 (IRQ_TYPE_EDGE_RISING
-> >  				| IRQ_TYPE_LEVEL_HIGH)>,  
-> 
-> I've already mentioned this in a separate thread to Antoine, but it'd be
-> good to fix this non-sensical configuration.
+The DT change is needed because the current DT model (modelled from
+DSA) connects the SFP cage to the MAC device using (eg):
 
-Antoine has already submitted a patch, and it has been merged by
-Grégory already [1]. I simply didn't base my patches on top of the
-latest patch from Antoine, but Grégory will handle the merge conflict
-when applying the DT changes.
+	sfp {
+		...
+		sfp,ethernet = <&eth2>;
+	};
 
-Thanks!
+This completely breaks when you have SFP connected to a PHY, as is
+the case with SFP+.  So the current binding is unusable for this
+case.
 
-Thomas
+Instead, what I have (and what I will propose) is to get rid of that
+property entirely, replacing it with a property in the upstream device
+(being a MAC or PHY), eg:
 
-[1] http://git.infradead.org/linux-mvebu.git/commitdiff/44f73dc42c11398d7b84e94365a485ebd6420798
+&eth2 {
+	sfp = <&sfp>;
+};
+
+        p1_phy: ethernet-phy@8 {
+                sfp = <&sfp_eth1>;
+        };
+
+The code changes behind this would make maintaining support for the
+previous binding rather difficult, as the way the SFP code finds the
+netdevice changes completely - I now have a separate "sfp-bus", which
+both phylink and SFP sockets register into, and which is responsible
+for connecting the two together.
+
+This change would not be possible had SFP support already been merged.
+The old binding was just wrong.
+
+I pushed out some updates to the SFP support last week, and now that
+I have dw-hdmi out of the way, I'm about to merge these incompatible
+changes into the SFP branch, and as the branch is currently at 24
+patches, I'm probably going to squash a lot of the patches in there
+together at the same time - which'll make me feel a bit sorry for
+anyone who's making use of the existing code, because they won't be
+able to see what the changes have been.  However, that's the only way
+to stop the patch set going over 30...
+
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
