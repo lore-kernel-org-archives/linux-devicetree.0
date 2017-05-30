@@ -1,39 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: net: move FMan binding
-Date: Tue, 30 May 2017 16:41:32 -0500
-Message-ID: <20170530214132.cxdqh3xyobksrhvu@rob-hp-laptop>
-References: <1494855398-26215-1-git-send-email-madalin.bucur@nxp.com>
- <20170515.103048.248884533404807350.davem@davemloft.net>
- <AM5PR0402MB2691006D3DD1CEB8744EF8F4ECFF0@AM5PR0402MB2691.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH RfC v3 7/7] pinctrl: meson: add interrupt controller to
+ GPIO DT nodes
+Date: Tue, 30 May 2017 16:44:29 -0500
+Message-ID: <20170530214429.pulyr4hnhss4cmcr@rob-hp-laptop>
+References: <16950080-b19d-e25c-fb48-bc79cfe4acc0@gmail.com>
+ <1c8aa228-c1da-ed48-52a5-184332eecf26@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <AM5PR0402MB2691006D3DD1CEB8744EF8F4ECFF0@AM5PR0402MB2691.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Madalin-Cristian Bucur <madalin.bucur@nxp.com>
-Cc: David Miller <davem@davemloft.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "oss@buserror.net" <oss@buserror.net>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1c8aa228-c1da-ed48-52a5-184332eecf26@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 25, 2017 at 12:57:26PM +0000, Madalin-Cristian Bucur wrote:
-> > -----Original Message-----
-> > From: David Miller [mailto:davem@davemloft.net]
-> > Sent: Monday, May 15, 2017 5:31 PM
-> > Subject: Re: [PATCH] dt-bindings: net: move FMan binding
-> > 
-> > From: Madalin Bucur <madalin.bucur@nxp.com>
-> > Date: Mon, 15 May 2017 16:36:38 +0300
-> > 
-> > > Besides the PPC SoCs, the QorIQ DPAA FMan is also present on ARM SoCs,
-> > > moving the device tree binding document into the bindings/net folder.
-> > >
-> > > Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
-> > 
-> > What tree is this targetted at for merging?
+On Wed, May 17, 2017 at 10:17:10PM +0200, Heiner Kallweit wrote:
+> Add interrupt controller properties to the gpio controller nodes and
+> extend the gpio controller DT binding documentation.
 > 
-> I hope Rob Herring will take this into his tree, it's a device tree binding
-> change. 
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> ---
+> v3:
+> - added to the patch series
+> ---
+>  Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
+>  arch/arm/boot/dts/meson8.dtsi                               | 2 ++
+>  arch/arm/boot/dts/meson8b.dtsi                              | 2 ++
+>  arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi                 | 4 ++++
+>  arch/arm64/boot/dts/amlogic/meson-gxl.dtsi                  | 4 ++++
+>  5 files changed, 16 insertions(+)
 
-Applied.
+Bindings and dts changes should be separate patches. With that,
 
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
