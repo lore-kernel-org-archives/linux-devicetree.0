@@ -1,156 +1,109 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
-Date: Mon, 29 May 2017 14:50:34 -0700
-Message-ID: <c50c3c5f-71cf-fa73-f5a8-a4b5f59a87dc@gmail.com>
-References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
- <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
- <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] arm64: dts: mt7622: group clock DT nodes into
+ separate DT file
+Date: Tue, 30 May 2017 09:16:32 +0800
+Message-ID: <1496106992.3570.15.camel@mtkswgap22>
+References: <cover.1496061587.git.sean.wang@mediatek.com>
+         <f5fa4a4dd78bf92500a517b0582c745569aa8ff2.1496061587.git.sean.wang@mediatek.com>
+         <4a57ab2f-03b0-3c68-23cd-ed8253978ed7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4a57ab2f-03b0-3c68-23cd-ed8253978ed7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU2FrYXJpLAoKCk9uIDA1LzI5LzIwMTcgMDg6NTUgQU0sIFNha2FyaSBBaWx1cyB3cm90ZToK
-PiBIaSBTdGV2ZSwKPgo+IEEgZmV3IGNvbW1lbnRzIGJlbG93Lgo+Cj4gT24gV2VkLCBNYXkgMjQs
-IDIwMTcgYXQgMDU6Mjk6MzFQTSAtMDcwMCwgU3RldmUgTG9uZ2VyYmVhbSB3cm90ZToKPj4gVGhp
-cyBkcml2ZXIgaXMgYmFzZWQgb24gb3Y1NjQwX21pcGkuYyBmcm9tIEZyZWVzY2FsZSBpbXhfMy4x
-MC4xN18xLjAuMF9iZXRhCj4+IGJyYW5jaCwgbW9kaWZpZWQgaGVhdmlseSB0byBicmluZyBmb3J3
-YXJkIHRvIGxhdGVzdCBpbnRlcmZhY2VzIGFuZCBjb2RlCj4+IGNsZWFudXAuCj4+Cj4+IFNpZ25l
-ZC1vZmYtYnk6IFN0ZXZlIExvbmdlcmJlYW08c3RldmVfbG9uZ2VyYmVhbUBtZW50b3IuY29tPgo+
-PiAtLS0KPj4gICBkcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnICB8ICAgIDkgKwo+PiAgIGRyaXZl
-cnMvbWVkaWEvaTJjL01ha2VmaWxlIHwgICAgMSArCj4+ICAgZHJpdmVycy9tZWRpYS9pMmMvb3Y1
-NjQwLmMgfCAyMjI0ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-Cj4+ICAgMyBmaWxlcyBjaGFuZ2VkLCAyMjM0IGluc2VydGlvbnMoKykKPj4gICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMKPj4KPj4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvbWVkaWEvaTJjL0tjb25maWcgYi9kcml2ZXJzL21lZGlhL2kyYy9LY29uZmlnCj4+IGlu
-ZGV4IGZkMTgxYzkuLmZmMDgyYTcgMTAwNjQ0Cj4+IC0tLSBhL2RyaXZlcnMvbWVkaWEvaTJjL0tj
-b25maWcKPj4gKysrIGIvZHJpdmVycy9tZWRpYS9pMmMvS2NvbmZpZwo+PiBAQCAtNTM5LDYgKzUz
-OSwxNSBAQCBjb25maWcgVklERU9fT1YyNjU5Cj4+ICAgCSAgVG8gY29tcGlsZSB0aGlzIGRyaXZl
-ciBhcyBhIG1vZHVsZSwgY2hvb3NlIE0gaGVyZTogdGhlCj4+ICAgCSAgbW9kdWxlIHdpbGwgYmUg
-Y2FsbGVkIG92MjY1OS4KPj4gICAKPj4gK2NvbmZpZyBWSURFT19PVjU2NDAKPj4gKwl0cmlzdGF0
-ZSAiT21uaVZpc2lvbiBPVjU2NDAgc2Vuc29yIHN1cHBvcnQiCj4+ICsJZGVwZW5kcyBvbiBPRgo+
-PiArCWRlcGVuZHMgb24gR1BJT0xJQiAmJiBWSURFT19WNEwyICYmIEkyQyAmJiBWSURFT19WNEwy
-X1NVQkRFVl9BUEkKPj4gKwlkZXBlbmRzIG9uIE1FRElBX0NBTUVSQV9TVVBQT1JUCj4+ICsJLS0t
-aGVscC0tLQo+PiArCSAgVGhpcyBpcyBhIFZpZGVvNExpbnV4MiBzZW5zb3ItbGV2ZWwgZHJpdmVy
-IGZvciB0aGUgT21uaXZpc2lvbgo+PiArCSAgT1Y1NjQwIGNhbWVyYSBzZW5zb3Igd2l0aCBhIE1J
-UEkgQ1NJLTIgaW50ZXJmYWNlLgo+PiArCj4+ICAgY29uZmlnIFZJREVPX09WNTY0NQo+PiAgIAl0
-cmlzdGF0ZSAiT21uaVZpc2lvbiBPVjU2NDUgc2Vuc29yIHN1cHBvcnQiCj4+ICAgCWRlcGVuZHMg
-b24gT0YKPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvaTJjL01ha2VmaWxlIGIvZHJpdmVy
-cy9tZWRpYS9pMmMvTWFrZWZpbGUKPj4gaW5kZXggNjIzMjNlYy4uZGM2YjBjNCAxMDA2NDQKPj4g
-LS0tIGEvZHJpdmVycy9tZWRpYS9pMmMvTWFrZWZpbGUKPj4gKysrIGIvZHJpdmVycy9tZWRpYS9p
-MmMvTWFrZWZpbGUKPj4gQEAgLTU4LDYgKzU4LDcgQEAgb2JqLSQoQ09ORklHX1ZJREVPX1NPTllf
-QlRGX01QWCkgKz0gc29ueS1idGYtbXB4Lm8KPj4gICBvYmotJChDT05GSUdfVklERU9fVVBENjQw
-MzFBKSArPSB1cGQ2NDAzMWEubwo+PiAgIG9iai0kKENPTkZJR19WSURFT19VUEQ2NDA4MykgKz0g
-dXBkNjQwODMubwo+PiAgIG9iai0kKENPTkZJR19WSURFT19PVjI2NDApICs9IG92MjY0MC5vCj4+
-ICtvYmotJChDT05GSUdfVklERU9fT1Y1NjQwKSArPSBvdjU2NDAubwo+PiAgIG9iai0kKENPTkZJ
-R19WSURFT19PVjU2NDUpICs9IG92NTY0NS5vCj4+ICAgb2JqLSQoQ09ORklHX1ZJREVPX09WNTY0
-NykgKz0gb3Y1NjQ3Lm8KPj4gICBvYmotJChDT05GSUdfVklERU9fT1Y3NjQwKSArPSBvdjc2NDAu
-bwo+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tZWRpYS9pMmMvb3Y1NjQwLmMgYi9kcml2ZXJzL21l
-ZGlhL2kyYy9vdjU2NDAuYwo+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+PiBpbmRleCAwMDAwMDAw
-Li4yYTAzMmJjCj4+IC0tLSAvZGV2L251bGwKPj4gKysrIGIvZHJpdmVycy9tZWRpYS9pMmMvb3Y1
-NjQwLmMKPj4gQEAgLTAsMCArMSwyMjI0IEBACj4+ICsvKgo+PiArICogQ29weXJpZ2h0IChDKSAy
-MDExLTIwMTMgRnJlZXNjYWxlIFNlbWljb25kdWN0b3IsIEluYy4gQWxsIFJpZ2h0cyBSZXNlcnZl
-ZC4KPj4gKyAqIENvcHlyaWdodCAoQykgMjAxNC0yMDE3IE1lbnRvciBHcmFwaGljcyBJbmMuCj4+
-ICsgKgo+PiArICogVGhpcyBwcm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0
-cmlidXRlIGl0IGFuZC9vciBtb2RpZnkKPj4gKyAqIGl0IHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUg
-R05VIEdlbmVyYWwgUHVibGljIExpY2Vuc2UgYXMgcHVibGlzaGVkIGJ5Cj4+ICsgKiB0aGUgRnJl
-ZSBTb2Z0d2FyZSBGb3VuZGF0aW9uOyBlaXRoZXIgdmVyc2lvbiAyIG9mIHRoZSBMaWNlbnNlLCBv
-cgo+PiArICogKGF0IHlvdXIgb3B0aW9uKSBhbnkgbGF0ZXIgdmVyc2lvbi4KPj4gKyAqLwo+PiAr
-Cj4+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvY2xrLXByb3Zp
-ZGVyLmg+Cj4+ICsjaW5jbHVkZSA8bGludXgvY2xrZGV2Lmg+Cj4+ICsjaW5jbHVkZSA8bGludXgv
-Y3R5cGUuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9kZWxheS5oPgo+PiArI2luY2x1ZGUgPGxpbnV4
-L2RldmljZS5oPgo+PiArI2luY2x1ZGUgPGxpbnV4L2kyYy5oPgo+PiArI2luY2x1ZGUgPGxpbnV4
-L2luaXQuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9tb2R1bGUuaD4KPj4gKyNpbmNsdWRlIDxsaW51
-eC9vZl9kZXZpY2UuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+Cj4+ICsjaW5jbHVkZSA8
-bGludXgvdHlwZXMuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9ncGlvL2NvbnN1bWVyLmg+Cj4+ICsj
-aW5jbHVkZSA8bGludXgvcmVndWxhdG9yL2NvbnN1bWVyLmg+Cj4+ICsjaW5jbHVkZSA8bWVkaWEv
-djRsMi1hc3luYy5oPgo+PiArI2luY2x1ZGUgPG1lZGlhL3Y0bDItY3RybHMuaD4KPj4gKyNpbmNs
-dWRlIDxtZWRpYS92NGwyLWRldmljZS5oPgo+PiArI2luY2x1ZGUgPG1lZGlhL3Y0bDItb2YuaD4K
-PiBDb3VsZCB5b3UgcmViYXNlIHRoaXMgb24gdGhlIFY0TDIgZndub2RlIHBhdGNoc2V0IGhlcmUs
-IHBsZWFzZT8KPgo+IDxVUkw6aHR0cHM6Ly9naXQubGludXh0di5vcmcvc2FpbHVzL21lZGlhX3Ry
-ZWUuZ2l0L2xvZy8/aD12NGwyLWFjcGk+CgpPbmNlIHRoZSBmd25vZGUgcGF0Y2hzZXQgaGl0cyBt
-ZWRpYXRyZWUsIHRoZW4geWVzIGl0IGNhbiBiZQpjb252ZXJ0ZWQgYWxvbmcgd2l0aCBhbGwgdGhl
-IG90aGVycyB1bmRlciBtZWRpYS9pMmMuCgo+IDxzbmlwPgo+Cj4+ICsKPj4gK3N0YXRpYyBpbnQg
-b3Y1NjQwX3dyaXRlX3JlZzE2KHN0cnVjdCBvdjU2NDBfZGV2ICpzZW5zb3IsIHUxNiByZWcsIHUx
-NiB2YWwpCj4+ICt7Cj4+ICsJaW50IHJldDsKPj4gKwo+PiArCXJldCA9IG92NTY0MF93cml0ZV9y
-ZWcoc2Vuc29yLCByZWcsIHZhbCA+PiA4KTsKPj4gKwlpZiAocmV0KQo+PiArCQlyZXR1cm4gcmV0
-Owo+PiArCj4+ICsJcmV0dXJuIG92NTY0MF93cml0ZV9yZWcoc2Vuc29yLCByZWcgKyAxLCB2YWwg
-JiAweGZmKTsKPiBEb2VzIHRoZSBzZW5zb3IgZGF0YXNoZWV0IHN1Z2dlc3QgZG9pbmcgdGhpcz8K
-CldoeSB3b3VsZCB0aGUgZGF0YXNoZWV0IHN1Z2dlc3Qgb3Igbm90IHN1Z2dlc3Qgc3VjaCB0aGlu
-Z3M/CkNvZGluZyBkZXRhaWxzIGxpa2UgdGhpcyBkb24ndCBiZWxvbmcgaW4gdGhlIGRhdGFzaGVl
-dC4KCj4gICBNYWtpbmcgdGhlIHdyaXRlIGluIHR3bwo+IHRyYW5zYWN0aW9ucyB3aWxsIG1ha2Ug
-aXQgbm9uLWF0b21pYyB0aGF0IGNvdWxkIGJlIGFuIGlzc3VlIGluIHNvbWUgY29ybmVyCj4gY2Fz
-ZXMuCgpJdCdzIGNhbGxlZCBldmVyeXdoZXJlIHVuZGVyIHRoZSBzYW1lIGRldmljZSBtdXRleC4K
-Cgo+IDxzbmlwPgo+PiArCj4+ICtzdGF0aWMgaW50IG92NTY0MF9zZXRfZ2FpbihzdHJ1Y3Qgb3Y1
-NjQwX2RldiAqc2Vuc29yLCBpbnQgYXV0b19nYWluKQo+PiArewo+PiArCXN0cnVjdCBvdjU2NDBf
-Y3RybHMgKmN0cmxzID0gJnNlbnNvci0+Y3RybHM7Cj4+ICsKPj4gKwlpZiAoY3RybHMtPmF1dG9f
-Z2Fpbi0+aXNfbmV3KSB7Cj4+ICsJCW92NTY0MF9tb2RfcmVnKHNlbnNvciwgT1Y1NjQwX1JFR19B
-RUNfUEtfTUFOVUFMLAo+PiArCQkJICAgICAgIEJJVCgxKSwgY3RybHMtPmF1dG9fZ2Fpbi0+dmFs
-ID8gMCA6IEJJVCgxKSk7Cj4gWW91J3JlIGdlbmVyYWxseSBzaWxlbnRseSBpZ25vcmluZyBhbGwg
-ScKyQyBhY2Nlc3MgZXJyb3JzLiBJcyB0aGF0Cj4gaW50ZW50aW9uYWw/CgpZZWFoLCB0aGlzIGRy
-aXZlciBpcyBtdWNoIGNsZWFuZWQgdXAgZnJvbSB0aGUgb3JpZ2luYWwsIGJ1dCB0aGVyZSBhcmUK
-c3RpbGwgc29tZSBpc3N1ZXMgbGlrZSB0aGlzLiBUaGUgcmVnaXN0ZXIgYWNjZXNzIGVycm9ycyBh
-cmUgcmVhbGx5IG9ubHkKYmVpbmcgcGFpZCBhdHRlbnRpb24gdG8gZHVyaW5nIHNfcG93ZXIoKSB3
-aGVuIGxvYWRpbmcgdGhlIGluaXRpYWwKcmVnaXN0ZXIgc2V0LCB3aGljaCBpcyBlbm91Z2ggYXQg
-bGVhc3QgdG8gY2F0Y2ggYSBub24tZXhpc3RlbnQgY2hpcApvciBiYXNpYyBpMmMgYnVzIG9yIG90
-aGVyIGhhcmR3YXJlIGlzc3Vlcy4gQnV0IEkgc2hvdWxkIHdvcmsgb24KY2F0Y2hpbmcgYWxsIGFj
-Y2VzcyBlcnJvcnMuIFRoaXMgaXMgc29tZXRoaW5nIEkgZGlkIGluIGFuIGVhcmxpZXIgcmV2CmJ1
-dCBJIHVzZWQgYSBxdWVzdGlvbmFibGUgc2hvcnQtY3V0IHRvIG1ha2UgaXQgZWFzaWVyIHRvIGlt
-cGxlbWVudC4KSSdsbCBqdXN0IGhhdmUgdG8gY2F0Y2ggZXZlcnkgY2FzZSBvbmUgYnkgb25lLgoK
-Cj4gPHNuaXA+Cj4KPj4gKwo+PiArc3RhdGljIGludCBvdjU2NDBfc19jdHJsKHN0cnVjdCB2NGwy
-X2N0cmwgKmN0cmwpCj4+ICt7Cj4+ICsJc3RydWN0IHY0bDJfc3ViZGV2ICpzZCA9IGN0cmxfdG9f
-c2QoY3RybCk7Cj4+ICsJc3RydWN0IG92NTY0MF9kZXYgKnNlbnNvciA9IHRvX292NTY0MF9kZXYo
-c2QpOwo+PiArCWludCByZXQgPSAwOwo+PiArCj4+ICsJbXV0ZXhfbG9jaygmc2Vuc29yLT5sb2Nr
-KTsKPiBDb3VsZCB5b3UgdXNlIHRoZSBzYW1lIGxvY2sgZm9yIHRoZSBjb250cm9scyBhcyB5b3Ug
-dXNlIGZvciB0aGUgcmVzdD8gSnVzdAo+IHNldHRpbmcgaGFuZGxlci0+bG9jayBhZnRlciBoYW5k
-bGVyIGluaXQgZG9lcyB0aGUgdHJpY2suCgpDYW4geW91IHBsZWFzZSByZXBocmFzZSwgSSBkb24n
-dCBmb2xsb3cuICJzYW1lIGxvY2sgZm9yIHRoZSBjb250cm9scyBhcwp5b3UgdXNlIGZvciB0aGUg
-cmVzdCIgLSB0aGVyZSdzIG9ubHkgb25lIGRldmljZSBsb2NrIG93bmVkIGJ5IHRoaXMgZHJpdmVy
-CmFuZCBJIGFtIGFscmVhZHkgdXNpbmcgdGhhdCBzYW1lIGxvY2suCgoKPiA8c25pcD4KPj4gKwo+
-PiArc3RhdGljIGludCBvdjU2NDBfc19zdHJlYW0oc3RydWN0IHY0bDJfc3ViZGV2ICpzZCwgaW50
-IGVuYWJsZSkKPj4gK3sKPj4gKwlzdHJ1Y3Qgb3Y1NjQwX2RldiAqc2Vuc29yID0gdG9fb3Y1NjQw
-X2RldihzZCk7Cj4+ICsJaW50IHJldCA9IDA7Cj4+ICsKPj4gKwltdXRleF9sb2NrKCZzZW5zb3It
-PmxvY2spOwo+PiArCj4+ICsjaWYgZGVmaW5lZChDT05GSUdfTUVESUFfQ09OVFJPTExFUikKPj4g
-KwlpZiAoc2QtPmVudGl0eS5zdHJlYW1fY291bnQgPiAxKQo+IFRoZSBlbnRpdHkgc3RyZWFtX2Nv
-dW50IGlzbid0IGNvbm5lY3RlZCB0byB0aGUgbnVtYmVyIG9mIHRpbWVzIHNfc3RyZWFtKHNkLAo+
-IHRydWUpIGlzIGNhbGxlZC4gUGxlYXNlIHJlbW92ZSB0aGUgY2hlY2suCgpJdCdzIGluY3JlbWVu
-dGVkIGJ5IG1lZGlhX3BpcGVsaW5lX3N0YXJ0KCksIGV2ZW4gaWYgdGhlIGVudGl0eSBpcyBhbHJl
-YWR5CmEgbWVtYmVyIG9mIHRoZSBnaXZlbiBwaXBlbGluZS4KCkkgYWRkZWQgdGhpcyBjaGVjayBi
-ZWNhdXNlIGluIGlteC1tZWRpYSwgdGhlIG92NTY0MCBjYW4gYmUgc3RyZWFtaW5nCmNvbmN1cnJl
-bnRseSB0byBtdWx0aXBsZSB2aWRlbyBjYXB0dXJlIGRldmljZXMsIGFuZCBlYWNoIGNhcHR1cmUg
-ZGV2aWNlIApjYWxscwptZWRpYV9waXBlbGluZV9zdGFydCgpIGF0IHN0cmVhbSBvbiwgd2hpY2gg
-aW5jcmVtZW50cyB0aGUgZW50aXR5IHN0cmVhbSAKY291bnQuCgpTbyBpZiBvbmUgY2FwdHVyZSBk
-ZXZpY2UgaXNzdWVzIGEgc3RyZWFtIG9mZiB3aGlsZSBvdGhlcnMgYXJlIHN0aWxsIApzdHJlYW1p
-bmcsCm92NTY0MCBzaG91bGQgcmVtYWluIGF0IHN0cmVhbSBvbi4gU28gdGhlIGVudGl0eSBzdHJl
-YW0gY291bnQgaXMgYmVpbmcKdXNlZCBhcyBhIHN0cmVhbWluZyB1c2FnZSBjb3VudGVyLiBJcyB0
-aGVyZSBhIGJldHRlciB3YXkgdG8gZG8gdGhpcz8gU2hvdWxkCkkgdXNlIGEgcHJpdmF0ZSBzdHJl
-YW0gdXNlIGNvdW50ZXIgaW5zdGVhZD8KCgoKPiA8c25pcD4KPgo+PiArCj4+ICtmcmVlX2N0cmxz
-Ogo+PiArCXY0bDJfY3RybF9oYW5kbGVyX2ZyZWUoJnNlbnNvci0+Y3RybHMuaGFuZGxlcik7Cj4+
-ICtlbnRpdHlfY2xlYW51cDoKPj4gKwltdXRleF9kZXN0cm95KCZzZW5zb3ItPmxvY2spOwo+PiAr
-CW1lZGlhX2VudGl0eV9jbGVhbnVwKCZzZW5zb3ItPnNkLmVudGl0eSk7Cj4+ICsJcmVndWxhdG9y
-X2J1bGtfZGlzYWJsZShPVjU2NDBfTlVNX1NVUFBMSUVTLCBzZW5zb3ItPnN1cHBsaWVzKTsKPiBT
-aG91bGQgdGhpcyBzdGlsbCBiZSBoZXJlPwo+Cj4+ICsJcmV0dXJuIHJldDsKPj4gK30KPj4gKwo+
-PiArc3RhdGljIGludCBvdjU2NDBfcmVtb3ZlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQpCj4+
-ICt7Cj4+ICsJc3RydWN0IHY0bDJfc3ViZGV2ICpzZCA9IGkyY19nZXRfY2xpZW50ZGF0YShjbGll
-bnQpOwo+PiArCXN0cnVjdCBvdjU2NDBfZGV2ICpzZW5zb3IgPSB0b19vdjU2NDBfZGV2KHNkKTsK
-Pj4gKwo+PiArCXJlZ3VsYXRvcl9idWxrX2Rpc2FibGUoT1Y1NjQwX05VTV9TVVBQTElFUywgc2Vu
-c29yLT5zdXBwbGllcyk7Cj4gRGl0dG8uCgpJIGRvbid0IHVuZGVyc3RhbmQuIHJlZ3VsYXRvcl9i
-dWxrX2Rpc2FibGUoKSBpcyBzdGlsbCBuZWVkZWQsIGFtIEkgbWlzc2luZwpzb21ldGhpbmc/CgpT
-dGV2ZQoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-ZXZlbCBtYWlsaW5nIGxpc3QKZGV2ZWxAbGludXhkcml2ZXJwcm9qZWN0Lm9yZwpodHRwOi8vZHJp
-dmVyZGV2LmxpbnV4ZHJpdmVycHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcml2ZXJkZXYt
-ZGV2ZWwK
+On Mon, 2017-05-29 at 17:09 +0200, Matthias Brugger wrote:
+> 
+> On 29/05/17 14:56, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > For more readability and maintenance, all the clock related DT
+> > nodes for mt7622 SoC are grouped into a separate DT file. And
+> > currently mt7622-clock.dtsi only includes the fixed clock for
+> > uart0 and the oscillator which would be extended after MT7622
+> > clock driver is introduced.
+> > 
+> 
+> We've not done this for any other Mediatek SoC at the moment.
+> Do you expect the m7622 to have more clock nodes then for example mt7623?
+
+
+clocks on mt7622 has fewer nodes than mt7623
+
+> Apart from that this clock nodes are just dummy clocks which should 
+> disappear as soon as the clock driver got merged.
+> Last point, you break bisectability if add a clock node in a patch 
+> *after* the consumer was added.
+> 
+> So please add the clock nodes to the dtsi as we did up to now. If in the 
+> future we see that mt7622 has a whole bunch of clock nodes, we can still 
+> abstract them in an external dtsi file.
+> 
+
+Okay, I will merge back them into the main dtsi files for those reasons
+in the next version. 
+
+
+Appreciate all your reviewing and suggestions
+
+	Sean
+
+> Thanks,
+> Matthias
+> 
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi | 20 ++++++++++++++++++++
+> >   arch/arm64/boot/dts/mediatek/mt7622.dtsi       |  1 +
+> >   2 files changed, 21 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi b/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
+> > new file mode 100644
+> > index 0000000..264421d
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt7622-clock.dtsi
+> > @@ -0,0 +1,20 @@
+> > +/*
+> > + * Copyright (c) 2017 MediaTek Inc.
+> > + * Author: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > + */
+> > +/ {
+> > +	clk25m: oscillator@0 {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <25000000>;
+> > +		clock-output-names = "clkxtal";
+> > +	};
+> > +
+> > +	uart_clk: dummy26m {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <25000000>;
+> > +	};
+> > +};
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > index 3a729d9..3768c28 100644
+> > --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > @@ -8,6 +8,7 @@
+> >   
+> >   #include <dt-bindings/interrupt-controller/irq.h>
+> >   #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +#include "mt7622-clock.dtsi"
+> >   
+> >   / {
+> >   	compatible = "mediatek,mt7622";
+> > 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
