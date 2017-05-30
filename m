@@ -1,42 +1,39 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 5/7] pci: use proper name for the R-Car SoC
-Date: Tue, 30 May 2017 16:39:08 -0500
-Message-ID: <20170530213908.GD14896@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
- <20170528093051.11816-6-wsa+renesas@sang-engineering.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: net: move FMan binding
+Date: Tue, 30 May 2017 16:41:32 -0500
+Message-ID: <20170530214132.cxdqh3xyobksrhvu@rob-hp-laptop>
+References: <1494855398-26215-1-git-send-email-madalin.bucur@nxp.com>
+ <20170515.103048.248884533404807350.davem@davemloft.net>
+ <AM5PR0402MB2691006D3DD1CEB8744EF8F4ECFF0@AM5PR0402MB2691.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170528093051.11816-6-wsa+renesas@sang-engineering.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-renesas-soc@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <AM5PR0402MB2691006D3DD1CEB8744EF8F4ECFF0@AM5PR0402MB2691.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Madalin-Cristian Bucur <madalin.bucur@nxp.com>
+Cc: David Miller <davem@davemloft.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "oss@buserror.net" <oss@buserror.net>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>, "paulus@samba.org" <paulus@samba.org>, "mpe@ellerman.id.au" <mpe@ellerman.id.au>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 28, 2017 at 11:30:48AM +0200, Wolfram Sang wrote:
-> It is 'R-Car', not 'RCar'. No code or binding changes, only descriptive text.
+On Thu, May 25, 2017 at 12:57:26PM +0000, Madalin-Cristian Bucur wrote:
+> > -----Original Message-----
+> > From: David Miller [mailto:davem@davemloft.net]
+> > Sent: Monday, May 15, 2017 5:31 PM
+> > Subject: Re: [PATCH] dt-bindings: net: move FMan binding
+> > 
+> > From: Madalin Bucur <madalin.bucur@nxp.com>
+> > Date: Mon, 15 May 2017 16:36:38 +0300
+> > 
+> > > Besides the PPC SoCs, the QorIQ DPAA FMan is also present on ARM SoCs,
+> > > moving the device tree binding document into the bindings/net folder.
+> > >
+> > > Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+> > 
+> > What tree is this targetted at for merging?
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
-> I suggest this trivial patch should be picked individually per susbsystem.
-> 
->  Documentation/devicetree/bindings/pci/rcar-pci.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> I hope Rob Herring will take this into his tree, it's a device tree binding
+> change. 
 
-Applied with Geert and Simon's acks to pci/host-rcar for v4.13, thanks!
+Applied.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> index 34712d6fd25376..bd27428dda619d 100644
-> --- a/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-> @@ -1,4 +1,4 @@
-> -* Renesas RCar PCIe interface
-> +* Renesas R-Car PCIe interface
->  
->  Required properties:
->  compatible: "renesas,pcie-r8a7779" for the R8A7779 SoC;
-> -- 
-> 2.11.0
-> 
+Rob
