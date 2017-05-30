@@ -1,304 +1,106 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH RfC v4 5/6] pinctrl: meson: add support for GPIO
- interrupts
-Date: Tue, 30 May 2017 09:46:18 +0200
-Message-ID: <1496130378.2741.4.camel@baylibre.com>
-References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
-         <3265fbc9-467d-67fa-8752-f750f234dedd@gmail.com>
-         <b897c978-df5c-3494-6e29-26cb0b376709@baylibre.com>
-         <257713f3-af14-d923-6f80-774a60d8f22b@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 2/3 v2] rtc: gemini: Augment DT bindings for Faraday
+Date: Tue, 30 May 2017 09:53:31 +0200
+Message-ID: <20170530075332.3740-2-linus.walleij@linaro.org>
+References: <20170530075332.3740-1-linus.walleij@linaro.org>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <257713f3-af14-d923-6f80-774a60d8f22b@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Return-path: <rtc-linux+bncBDE6RCFOWIARBFGKWTEQKGQEZHEPHTA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170530075332.3740-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2017-05-29 at 22:12 +0200, Heiner Kallweit wrote:
-> Am 29.05.2017 um 10:43 schrieb Neil Armstrong:
-> > Hi Heiner,
-> > 
-> > On 05/28/2017 09:12 PM, Heiner Kallweit wrote:
-> > > Add support for GPIO interrupts and make use of the just introduced
-> > > irqchip driver handling the GPIO interrupt-controller.
-> > > 
-> > > Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-> > > ---
-> > >  drivers/pinctrl/Kconfig               |   2 +
-> > >  drivers/pinctrl/meson/pinctrl-meson.c | 164
-> > > +++++++++++++++++++++++++++++++++-
-> > >  2 files changed, 165 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-> > > index abc1cef7..d8c92809 100644
-> > > --- a/drivers/pinctrl/Kconfig
-> > > +++ b/drivers/pinctrl/Kconfig
-> > > @@ -166,8 +166,10 @@ config PINCTRL_MESON
-> > >  	select PINCONF
-> > >  	select GENERIC_PINCONF
-> > >  	select GPIOLIB
-> > > +	select GPIOLIB_IRQCHIP
-> > >  	select OF_GPIO
-> > >  	select REGMAP_MMIO
-> > > +	select MESON_GPIO_INTC
-> > 
-> > This should not be here, there is not "compile-time" dependency.
-> > 
-> > >  
-> > >  config PINCTRL_OXNAS
-> > >  	bool
-> > > diff --git a/drivers/pinctrl/meson/pinctrl-meson.c
-> > > b/drivers/pinctrl/meson/pinctrl-meson.c
-> > > index 66ed70c1..7fb98c71 100644
-> > > --- a/drivers/pinctrl/meson/pinctrl-meson.c
-> > > +++ b/drivers/pinctrl/meson/pinctrl-meson.c
-> > > @@ -62,6 +62,8 @@
-> > >  #include "../pinctrl-utils.h"
-> > >  #include "pinctrl-meson.h"
-> > >  
-> > > +static struct irq_domain *meson_pinctrl_irq_domain;
-> > > +
-> > >  /**
-> > >   * meson_get_bank() - find the bank containing a given pin
-> > >   *
-> > > @@ -497,6 +499,150 @@ static int meson_gpio_get(struct gpio_chip *chip,
-> > > unsigned gpio)
-> > >  	return !!(val & BIT(bit));
-> > >  }
-> > >  
-> > > +static struct meson_pinctrl *meson_gpio_data_to_pc(struct irq_data *data)
-> > > +{
-> > > +        struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
-> > > +
-> > > +        return gpiochip_get_data(chip);
-> > > +}
-> > > +
-> > > +static int meson_gpio_bank_hwirq(struct meson_bank *bank, unsigned int
-> > > offset)
-> > > +{
-> > > +        int hwirq;
-> > > +
-> > > +        if (bank->irq_first < 0)
-> > > +                /* this bank cannot generate irqs */
-> > > +                return 0;
-> > > +
-> > > +        hwirq = offset - bank->first + bank->irq_first;
-> > > +
-> > > +        if (hwirq > bank->irq_last)
-> > > +                /* this pin cannot generate irqs */
-> > > +                return 0;
-> > > +
-> > > +        return hwirq;
-> > > +}
-> > > +
-> > > +static int meson_gpio_to_hwirq(struct irq_data *data)
-> > > +{
-> > > +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
-> > > +	unsigned int offset = data->hwirq;
-> > > +        struct meson_bank *bank;
-> > > +        int hwirq, ret;
-> > > +
-> > > +        offset += pc->data->pin_base;
-> > > +
-> > > +        ret = meson_get_bank(pc, offset, &bank);
-> > > +        if (ret)
-> > > +                return ret;
-> > > +
-> > > +        hwirq = meson_gpio_bank_hwirq(bank, offset);
-> > > +        if (!hwirq)
-> > > +                dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
-> > > +
-> > > +        return hwirq;
-> > > +}
-> > > +
-> > > +static void meson_gpio_irq_handler(struct irq_desc *desc)
-> > > +{
-> > > +        struct irq_chip *chip = irq_desc_get_chip(desc);
-> > > +        struct irq_data *gpio_irq_data = irq_desc_get_handler_data(desc);
-> > > +
-> > > +        chained_irq_enter(chip, desc);
-> > > +
-> > > +        if (gpio_irq_data)
-> > > +                generic_handle_irq(gpio_irq_data->irq);
-> > > +
-> > > +        chained_irq_exit(chip, desc);
-> > > +}
-> > > +
-> > > +static void meson_gpio_irq_unmask(struct irq_data *data) {}
-> > > +static void meson_gpio_irq_mask(struct irq_data *data) {}
-> > > +
-> > > +static void meson_gpio_irq_shutdown(struct irq_data *data)
-> > > +{
-> > > +	int hwirq = meson_gpio_to_hwirq(data);
-> > > +	int irq;
-> > > +
-> > > +	if (hwirq <= 0)
-> > > +		return;
-> > > +
-> > > +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2);
-> > > +	if (irq) {
-> > > +		irq_set_chained_handler_and_data(irq, handle_bad_irq,
-> > > NULL);
-> > > +		irq_domain_free_irqs(irq, 1);
-> > > +	}
-> > > +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2 + 1);
-> > > +	if (irq) {
-> > > +		irq_set_chained_handler_and_data(irq, handle_bad_irq,
-> > > NULL);
-> > > +		irq_domain_free_irqs(irq, 1);
-> > > +	}
-> > 
-> > Same as irqchip, please add paragraph explaining why you use *2 here to
-> > handle the
-> > IRQ_BOTH situation.
-> > 
-> > > +}
-> > > +
-> > > +static int meson_gpio_irq_set_type(struct irq_data *data, unsigned int
-> > > type)
-> > > +{
-> > > +	int hwirq = meson_gpio_to_hwirq(data);
-> > > +	struct irq_fwspec fwspec;
-> > > +        int irq, irq2, num_slots;
-> > > +
-> > > +	if (irqd_is_activated(data))
-> > > +		return -EBUSY;
-> > > +
-> > > +	if (hwirq < 0)
-> > > +		return hwirq;
-> > > +
-> > > +	if (!hwirq)
-> > > +		return -ENXIO;
-> > > +
-> > > +	fwspec.fwnode = meson_pinctrl_irq_domain->fwnode;
-> > > +	fwspec.param_count = 2;
-> > > +
-> > > +        /*
-> > > +         * The chip can create an interrupt for either rising or falling
-> > > edge
-> > > +         * only. Therefore use two interrupts in case of
-> > > IRQ_TYPE_EDGE_BOTH,
-> > > +         * first for falling edge and second one for rising edge.
-> > > +         */
-> > > +        num_slots = (type == IRQ_TYPE_EDGE_BOTH) ? 2 : 1;
-> > > +
-> > > +        /*
-> > 
-> > Please correct indentation.
-> > 
-> > > +	 * Add one bit to hwirq to allow for
-> > > +	 * - using the same gpio hwirq twice
-> > > +	 * - decoding the gpio hwirq in the interrupt controller driver
-> > > +         */
-> > > +	fwspec.param[0] = hwirq << 1;
-> > > +	if (num_slots == 1)
-> > > +		fwspec.param[1] = type;
-> > > +	else
-> > > +		fwspec.param[1] = IRQ_TYPE_EDGE_FALLING;
-> > > +
-> > > +	irq = irq_create_fwspec_mapping(&fwspec);
-> > > +	if (!irq)
-> > > +		return -EINVAL;
-> > > +
-> > > +	irq_set_chained_handler_and_data(irq, meson_gpio_irq_handler,
-> > > data);
-> > > +
-> > > +	if (num_slots > 1) {
-> > > +		fwspec.param[0]++;
-> > > +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
-> > > +		irq2 = irq_create_fwspec_mapping(&fwspec);
-> > > +		if (!irq2) {
-> > > +			irq_domain_free_irqs(irq, 1);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +		irq_set_chained_handler_and_data(irq2,
-> > > meson_gpio_irq_handler, data);
-> > > +	}
-> > > +
-> > > +        return 0;
-> > > +}
-> > 
-> > You will have an irq leak if you chance twice of type in the same GPIO from
-> > BOTH to Edge/Level.
-> > 
-> 
-> I'm not sure I get your point.
-> This function is called once for a GPIO IRQ, typically within request_irq()
-> based on the type flags (provided that gpio_to_irq is used).
-> And I don't change the type from BOTH to something, I create two parent irq's
-> with type RISING/FALLING.
+The Gemini RTC is actually a standard IP block from Faraday
+Technology called FTRTC010. Rename the bindings, add the
+generic compatible string and add definitions for the two
+available clocks.
 
-Is there anything preventing the consumer driver from calling "irq_set_irq_type"
- on its irq ? 
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Po-Yu Chuang <ratbert-w0jeGXs5+AWXmMXjJBpWqg@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ChangeLog v1->v2:
+- Add Rob's ACK.
+---
+ .../devicetree/bindings/rtc/cortina,gemini.txt     | 14 -----------
+ .../devicetree/bindings/rtc/faraday,ftrtc010.txt   | 28 ++++++++++++++++++++++
+ 2 files changed, 28 insertions(+), 14 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+ create mode 100644 Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
 
-By the way, I wonder if "irq_set_irq_type" is supposed to be fast (callable from
-an irq handler). In such case, irq_create_fwspec_mapping cannot be called from
-.irq_set_type (same as gpio_to_irq)
+diff --git a/Documentation/devicetree/bindings/rtc/cortina,gemini.txt b/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
+deleted file mode 100644
+index 4ce4e794ddbb..000000000000
+--- a/Documentation/devicetree/bindings/rtc/cortina,gemini.txt
++++ /dev/null
+@@ -1,14 +0,0 @@
+-* Cortina Systems Gemini RTC
+-
+-Gemini SoC real-time clock.
+-
+-Required properties:
+-- compatible : Should be "cortina,gemini-rtc"
+-
+-Examples:
+-
+-rtc@45000000 {
+-	compatible = "cortina,gemini-rtc";
+-	reg = <0x45000000 0x100>;
+-	interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
+-};
+diff --git a/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt b/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
+new file mode 100644
+index 000000000000..e3938f5e0b6c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/faraday,ftrtc010.txt
+@@ -0,0 +1,28 @@
++* Faraday Technology FTRTC010 Real Time Clock
++
++This RTC appears in for example the Storlink Gemini family of
++SoCs.
++
++Required properties:
++- compatible : Should be one of:
++  "faraday,ftrtc010"
++  "cortina,gemini-rtc", "faraday,ftrtc010"
++
++Optional properties:
++- clocks: when present should contain clock references to the
++  PCLK and EXTCLK clocks. Faraday calls the later CLK1HZ and
++  says the clock should be 1 Hz, but implementers actually seem
++  to choose different clocks here, like Cortina who chose
++  32768 Hz (a typical low-power clock).
++- clock-names: should name the clocks "PCLK" and "EXTCLK"
++  respectively.
++
++Examples:
++
++rtc@45000000 {
++	compatible = "cortina,gemini-rtc";
++	reg = <0x45000000 0x100>;
++	interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&foo 0>, <&foo 1>;
++	clock-names = "PCLK", "EXTCLK";
++};
+-- 
+2.9.4
 
-Again, I think this is a SW hack to compensate for a missing HW feature. I'm
-curious to get the point of view the irq maintainers on it.
-
-> 
-> > > +
-> > > +static struct irq_chip meson_gpio_irq_chip = {
-> > > +        .name = "GPIO",
-> > > +        .irq_set_type = meson_gpio_irq_set_type,
-> > > +        .irq_mask = meson_gpio_irq_mask,
-> > > +        .irq_unmask = meson_gpio_irq_unmask,
-> > > +        .irq_shutdown = meson_gpio_irq_shutdown,
-> > > +};
-> > > +
-> > >  static const struct of_device_id meson_pinctrl_dt_match[] = {
-> > >  	{
-> > >  		.compatible = "amlogic,meson8-cbus-pinctrl",
-> > > @@ -558,7 +704,8 @@ static int meson_gpiolib_register(struct meson_pinctrl
-> > > *pc)
-> > >  		return ret;
-> > >  	}
-> > >  
-> > > -	return 0;
-> > > +	return gpiochip_irqchip_add(&pc->chip, &meson_gpio_irq_chip, 0,
-> > > +				    handle_simple_irq, IRQ_TYPE_NONE);
-> > >  }
-> > >  
-> > >  static struct regmap_config meson_regmap_config = {
-> > > @@ -637,6 +784,21 @@ static int meson_pinctrl_parse_dt(struct
-> > > meson_pinctrl *pc,
-> > >  		return PTR_ERR(pc->reg_gpio);
-> > >  	}
-> > >  
-> > > +	if (!meson_pinctrl_irq_domain) {
-> > > +		np = of_find_compatible_node(NULL, NULL, "amlogic,meson-
-> > > gpio-intc");
-> > > +		if (!np) {
-> > > +			dev_err(pc->dev, "interrupt controller DT node
-> > > not found\n");
-> > > +			return -EINVAL;
-> > > +		}
-> > > +		meson_pinctrl_irq_domain = irq_find_host(np);
-> > > +		if (!meson_pinctrl_irq_domain) {
-> > > +			dev_err(pc->dev, "interrupt controller not
-> > > found\n");
-> > > +			of_node_put(np);
-> > > +			return -EINVAL;
-> > > +		}
-> > > +		of_node_put(np);
-> > > +	}
-> > 
-> > Please add some blank lines between logical sections of the code.
-> > 
-> > > +
-> > >  	return 0;
-> > >  }
-> > >  
-> > > 
-> > 
-> > Thanks,
-> > Neil
-> > 
-> 
-> 
-
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
