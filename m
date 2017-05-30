@@ -1,62 +1,77 @@
-From: Chris Brandt <Chris.Brandt@renesas.com>
-Subject: RE: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
- output-enable
-Date: Tue, 30 May 2017 14:12:25 +0000
-Message-ID: <SG2PR06MB1165939E9F77006316ACECE68AF00@SG2PR06MB1165.apcprd06.prod.outlook.com>
-References: <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
- <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
- <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540>
- <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
- <20170508172516.GC25206@w540>
- <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
- <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ@mail.gmail.com>
- <20170523183735.GC13664@w540>
- <CACRpkdYcaGzSvAN2Trqwer+8GbqXyfpE=VqiYcQvCOqhDO9MMw@mail.gmail.com>
- <20170529104229.GB21347@w540>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 0/6] Add support for the ICU unit in Marvell Armada 7K/8K
+Date: Tue, 30 May 2017 15:15:54 +0100
+Message-ID: <cc93efea-84ea-970d-914a-141241b8cace@arm.com>
+References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170529104229.GB21347@w540>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jmondi <jacopo@jmondi.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Dong Aisheng <dongas86@gmail.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496135772-20694-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gSmFjb3BvIGFuZCBMaW51cywNCg0KT24gTW9uZGF5LCBNYXkgMjksIDIwMTcsIGptb25k
-aSB3cm90ZToNCj4gPiA+IFdlIGNhbiBoYW5kbGUgJ2JpLWRpcmVjdGlvbmFsJyBwaW5zIHdpdGgg
-c3RhdGljIHRhYmxlcyBpbiBvdXIgcGluDQo+ID4gPiBjb250cm9sbGVyIGRyaXZlciBhbmQgbm90
-IGhhdmUgaXQgYW55d2hlcmUgaW4gRFQuDQo+ID4NCj4gPiBUaGlzIHNvdW5kcyBsaWtlIGEgdmlh
-YmxlIGFwcHJvYWNoLg0KPiA+DQo+ID4gSSBqdXN0IHdhbnQgdG8ga25vdyBpZiAib3V0cHV0LWVu
-YWJsZSIgaXMgdGhlIHJpZ2h0IG5hbWU/DQo+ID4gIm91dHB1dC1idWZmZXItZW5hYmxlIj8NCj4g
-DQo+IEdyZWF0ISBUaGFua3MhDQo+IA0KPiBPbiBuYW1pbmc6IGlmIHdlIG5lZWQgIm91dHB1dC1i
-dWZmZXItZW5hYmxlIiBzaG91bGQgd2UgYWRkDQo+ICJpbnB1dC1idWZmZXItZW5hYmxlIiBhcyB3
-ZWxsPw0KPiANCj4gQ3VycmVudGx5IHdlIGFyZSB1c2luZyAiaW5wdXQtZW5hYmxlIiB0byBwYWly
-IHdpdGggIm91dHB1dC1lbmFibGUiLA0KPiBidXQgYXMgeW91IHNhaWQsIGp1c3QgIm91dHB1dC1l
-bmFibGUiIHdoZW4gIm91dHB1dC1oaWdoIiBhbmQNCj4gIm91dHB1dC1sb3ciIGFyZSB0aGVyZSBh
-bHJlYWR5IHNlZW1zIGEgYml0IGNvbmZ1c2luZy4NCj4gQXQgdGhlIHNhbWUgdGltZSAiaW5wdXQt
-YnVmZmVyLWVuYWJsZSIgc2VlbXMgdG8gYWN0dWFsbHkgYmUganVzdA0KPiBlbGVjdHJpY2FsbHkg
-ZXF1aXZhbGVudCB0byAiaW5wdXQtZW5hYmxlIiwgc28gYWRkaW5nIGl0IGlzIGEgYml0IG9mIGEN
-Cj4gd2FzdGUgYXMgd2VsbC4NCg0KSGVyZSBpcyB3aGF0IEkgdGhpbms6DQoNCg0KSW4gdGhlIGNh
-c2Ugb2YgdGhpcyBkcml2ZXIsIGFmdGVyIHdlIHJlbW92ZSB0aGUgJ2JpLWRpcmVjdGlvbmFsJw0K
-cHJvcGVydGllcyBhbmQgaGlkZSB0aGUgb3RoZXIgb2RkLWJhbGwgcGluIGNvbmZpZ3VyYXRpb25z
-IGluIGFuIGludGVybmFsDQp0YWJsZSwgd2UgYXJlIGxlZnQgd2l0aCB0aGUgTVRVMiB0aW1lciBw
-aW5zIHRoYXQgY2FuIGJlIGVpdGhlciBpbnB1dCBvcg0Kb3V0cHV0IGRlcGVuZGluZyBvbiB3aGF0
-IHlvdSB3YW50IHRvIGRvIHdpdGggdGhlbS4NCg0KICogSWYgeW91IHdhbnQgdG8gdXNlIGEgTVRV
-MiBjaGFubmVsIGFzIGEgUFdNLCB5b3Ugc2V0IHRoZSBwaW4gYXMgYW4NCiAgIG91dHB1dC4NCiAq
-IElmIHlvdSB3YW50IHRvIHVzZSBhIE1UVTIgY2hhbm5lbCBhcyBhIGlucHV0IGNhcHR1cmUsIHlv
-dSBzZXQgdGhlDQogICBwaW4gYXMgYW4gaW5wdXQuDQoNClRoZXkgYXJlIHNpbXBseSAiZGlyZWN0
-aW9uLWlucHV0IiBhbmQgImRpcmVjdGlvbi1vdXRwdXQiIHByb3BlcnRpZXMgdGhhdA0KZG9uJ3Qg
-cmVhbGx5IG5lZWQgdG8gdGFsayBhYm91dCAiYnVmZmVycyIuDQoNCg0KQnV0LCBpbnN0ZWFkIG9m
-IG1ha2luZyBhbnkgbmV3IHByb3BlcnRpZXMsIGZvciB0aGUgUmVuZXNhcyBkcml2ZXIsIGxldCdz
-DQpqdXN0IHN0aWNrIHdpdGggd2hhdCBhbHJlYWR5IGV4aXN0cyB0b2RheTogDQogKiBJZiB5b3Ug
-d2FudCBhIE1UVTIgY2hhbm5lbCBhcyBhIFBXTTogc2VsZWN0ICJvdXRwdXQtbG93Ig0KICogSWYg
-eW91IHdhbnQgYSBNVFUyIGNoYW5uZWwgYXMgYSBpbnB1dCBjYXB0dXJlOiBzZWxlY3QgImlucHV0
-LWVuYWJsZSINCg0KDQpTaWRlIE5vdGU6IFlvdSBjYW4gYWxzbyB1c2Ugb3V0cHV0LWhpZ2ggaW4g
-YWRkaXRpb24gdG8gb3V0cHV0LWxvdw0KICBiZWNhdXNlIGl0IGRvZXNuJ3QgbWF0dGVyICh0aGUg
-ZHJpdmVyIGNhbid0IHNldCB0aGUgcGluIGxldmVsIGFueXdheQ0KICBiZWNhdXNlIGFzIHNvb24g
-YXMgeW91IGFzc2lnbiB0aGUgcGluIHRvIE1UVTIsIHRoZSBNVFUyIGNvbnRyb2xzIHRoZQ0KICBw
-aW4sIG5vdCB0aGUgUEZDKS4gU28gdGhlIFJlbmVzYXMgZHJpdmVyIGNhbiBjaGVjayBmb3IgYm90
-aC4NCg0KDQoNCkNocmlzDQo=
+Hi Thomas,
+
+On 30/05/17 10:16, Thomas Petazzoni wrote:
+> Hello,
+> 
+> The Marvell Armada 7K/8K SoCs are composed of two parts: the AP (which
+> contains the CPU cores) and the CP (which contains most
+> peripherals). The 7K SoCs have one CP, while the 8K SoCs have two CPs,
+> doubling the number of available peripherals.
+> 
+> In terms of interrupt handling, all devices in the CPs are connected
+> through wired interrupt to a unit called ICU located in each CP. This
+> unit converts the wired interrupts from the devices into memory
+> transactions.
+> 
+> Inside the AP, there is a GIC extension called GICP, which allows a
+> memory write transaction to trigger a GIC SPI interrupt. The ICUs in
+> each CP are therefore configured to trigger a memory write into the
+> appropriate GICP register so that a wired interrupt from a CP device
+> is converted into a memory write, itself converted into a regular GIC
+> SPI interrupt.
+> 
+> Until now, the configuration of the ICU was done statically by the
+> firmware, and therefore the Device Tree files in Linux were specifying
+> directly GIC interrupts for the interrupts of CP devices. However,
+> with the growing number of devices in the CP, a static allocation
+> scheme doesn't work for the long term.
+> 
+> This patch series therefore makes Linux aware of the ICU: GIC SPI
+> interrupts are dynamically allocated, and the ICU is configured
+> accordingly to route a CP wired interrupt to the allocated GIC SPI
+> interrupt.
+> 
+> In detail:
+> 
+>  - The first two patches are the Device Tree binding patches
+> 
+>  - The third patch is a minimal driver for the GICP unit. All it does
+>    is clear interrupts that may have been left pending by the
+>    firmware.
+> 
+>  - The fourth patch is the most important done, which adds the driver
+>    for the ICU itself.
+> 
+>  - The fifth patch adjust Kconfig.platforms to select the GICP and ICU
+>    drivers.
+> 
+>  - The last patch adjusts the Device Tree files of the Armada 7K/8K to
+>    use the ICU.
+
+For a first drop, this looks quite good, and the few comments I've had
+should be pretty easy to address. Looking forward to reviewing v2.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
