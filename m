@@ -1,36 +1,27 @@
-From: Brendan Higgins <brendanhiggins@google.com>
-Subject: Re: [PATCH v8 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed I2C
- Interrupt Controller
-Date: Tue, 30 May 2017 14:46:35 -0700
-Message-ID: <CAFd5g45AXT0rJydYykh011JRm6cw=Tnz5EGfkQX1bddWW+SdNA@mail.gmail.com>
-References: <20170525064925.16867-1-brendanhiggins@google.com>
- <20170525064925.16867-2-brendanhiggins@google.com> <20170530213430.vlxioxzzuzbjojhj@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/9] pinctrl: dt-bindings: add documentation for AP806
+ pin controllers
+Date: Tue, 30 May 2017 16:46:46 -0500
+Message-ID: <20170530214646.ltspgyfgo5u3cml7@rob-hp-laptop>
+References: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
+ <bfd5b618a295f98a056784d7486dbd128d36fefb.1495209664.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170530213430.vlxioxzzuzbjojhj@rob-hp-laptop>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <bfd5b618a295f98a056784d7486dbd128d36fefb.1495209664.git-series.gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Sorry, I wasn't sure. Will do in the future.
+On Fri, May 19, 2017 at 06:04:44PM +0200, Gregory CLEMENT wrote:
+> Document the device tree binding for the pin controllers found on the
+> Armada 7K and Armada 8K SoCs.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt | 53 ++++++++++++++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 46 insertions(+), 7 deletions(-)
 
-On Tue, May 30, 2017 at 2:34 PM, Rob Herring <robh@kernel.org> wrote:
-> On Wed, May 24, 2017 at 11:49:21PM -0700, Brendan Higgins wrote:
->> Added device tree binding documentation for Aspeed I2C Interrupt
->> Controller.
->>
->> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->> ---
->> Added in v6:
->>   - Pulled "aspeed_i2c_controller" out into a interrupt controller since that is
->>     what it actually does.
->> Changes for v7:
->>   - None
->> Changes for v8:
->>   - None
->
-> I already acked this. Please add acks when posting new versions.
->
-> Rob
+Acked-by: Rob Herring <robh@kernel.org>
