@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH 6/6] arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K
-Date: Tue, 30 May 2017 11:16:11 +0200
-Message-ID: <1496135772-20694-7-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 6/6] arm64: dts: marvell: enable GICP and ICU
+Date: Tue, 30 May 2017 11:16:12 +0200
+Message-ID: <1496135772-20694-8-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
