@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH 1/6] dt-bindings: interrupt-controller: add DT binding for the Marvell GICP
-Date: Tue, 30 May 2017 11:16:06 +0200
-Message-ID: <1496135772-20694-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 2/6] dt-bindings: interrupt-controller: add DT binding for the Marvell ICU
+Date: Tue, 30 May 2017 11:16:07 +0200
+Message-ID: <1496135772-20694-3-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
@@ -11,42 +11,79 @@ Cc: linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Han
 List-Id: devicetree@vger.kernel.org
 
 This commit adds the Device Tree binding documentation for the Marvell
-GICP, an extension to the GIC that allows to trigger GIC SPI interrupts
-using memory transactions. It is used by the ICU unit in the Marvell
-CP110 block to turn wired interrupts inside the CP into SPI interrupts
-at the GIC level in the AP.
+ICU interrupt controller, which collects wired interrupts from the
+devices located into the CP110 hardware block of Marvell Armada 7K/8K,
+and converts them into SPI interrupts in the GIC located in the AP
+hardware block, using the GICP extension.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- .../bindings/interrupt-controller/marvell,gicp.txt   | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
+ .../bindings/interrupt-controller/marvell,icu.txt  | 57 ++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
 new file mode 100644
-index 0000000..996bdbf
+index 0000000..e0b4068
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
-@@ -0,0 +1,20 @@
-+Marvell GICP Controller
-+-----------------------
++++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+@@ -0,0 +1,57 @@
++Marvell ICU Interrupt Controller
++--------------------------------
 +
-+GICP is a Marvell extension of the GIC that allows to trigger GIC SPI
-+interrupts by doing a memory transaction. It is used by the ICU
-+located in the Marvell CP110 to turn wired interrupts inside the CP
-+into GIC SPI interrupts.
++The Marvell ICU (Interrupt Consolidation Unit) controller is
++responsible for collecting all wired-interrupt sources in the CP and
++communicating them to the GIC in the AP, the unit translates interrupt
++requests on input wires to MSG memory mapped transactions to the GIC.
++
++The interrupts from the ICU to the GIC can be mapped to one of the following groups:
++
++- Shared Peripheral Interrupt - Non-Secured (SPI_NSR)
++- Shared Peripheral Interrupt - Secured (SPI_SR)
++- System Error Interrupt (SEI)
++- RAM Error Interrupt (REI)
 +
 +Required properties:
 +
-+- compatible: Must be "marvell,gicp"
++- compatible: Should be "marvell,icu"
 +
-+- reg: Must be the address and size of the GICP SPI registers
++- reg: Should contain ICU registers location and length.
++
++- #interrupt-cells: Specifies the number of cells needed to encode an
++  interrupt source. The type shall be a <u32> and the value shall be
++  3.
++
++  The 1st cell is the group type of the ICU interrupt (SPI_NSR,
++  SPI_SR, SEI, and REI).
++
++  The 2nd cell is the index of the interrupt in the ICU unit.
++
++  The 3rd cell is the type of the interrupt. See arm,gic.txt for
++  details.
++
++- interrupt-controller: Identifies the node as an interrupt
++  controller.
++
++- interrupt-parent: Indicates the node of the parent interrupt
++  controller. Should be pointer to the GIC.
++
++- gicp: Should point to the GICP controller, the GIC extension that
++  allows to trigger interrupts using MSG memory mapped transactions.
 +
 +Example:
 +
-+gicp_spi: gicp-spi@3f0040 {
-+	compatible = "marvell,gicp";
-+	reg = <0x3f0040 0x10>;
++icu: interrupt-controller@1e0000 {
++	compatible = "marvell,icu";
++	reg = <0x1e0000 0x10>;
++	#interrupt-cells = <2>;
++	interrupt-controller;
++	interrupt-parent = <&gic>;
++	gicp = <&gicp>;
++};
++
++usb3h0: usb3@500000 {
++	interrupt-parent = <&icu>;
++	interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
 +};
 -- 
 2.7.4
