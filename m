@@ -1,95 +1,92 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/5] ARM: dts: at91: Migrate to the new EBI/NAND
- bindings
-Date: Tue, 30 May 2017 11:14:23 +0200
-Message-ID: <20170530111423.46c0e69e@bbrezillon>
-References: <1496133171-4787-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/6] Add support for the ICU unit in Marvell Armada 7K/8K
+Date: Tue, 30 May 2017 11:16:05 +0200
+Message-ID: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496133171-4787-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 30 May 2017 10:32:45 +0200
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+Hello,
 
-> Hello,
-> 
-> This is the last step of the EBI/NAND bindings rework started here [1].
-> 
-> The first patch is adding missing nfc-io bindings doc to atmel-nand.txt
-> and can be applied independently.
-> 
-> Patches 2 to 4 are migrating all at91/sama5 SoCs (except the
-> at91rm9200) to the new EBI/NAND representation introduced in 4.12.
-> 
-> The last patch is showing how one can add a non-NAND device under the
-> EBI bus.
+The Marvell Armada 7K/8K SoCs are composed of two parts: the AP (which
+contains the CPU cores) and the CP (which contains most
+peripherals). The 7K SoCs have one CP, while the 8K SoCs have two CPs,
+doubling the number of available peripherals.
 
-Please ignore this version: I forgot to Cc board maintainers and patch
-3 and 4 should be merged in a single patch.
+In terms of interrupt handling, all devices in the CPs are connected
+through wired interrupt to a unit called ICU located in each CP. This
+unit converts the wired interrupts from the devices into memory
+transactions.
 
-I'll send a v2.
+Inside the AP, there is a GIC extension called GICP, which allows a
+memory write transaction to trigger a GIC SPI interrupt. The ICUs in
+each CP are therefore configured to trigger a memory write into the
+appropriate GICP register so that a wired interrupt from a CP device
+is converted into a memory write, itself converted into a regular GIC
+SPI interrupt.
 
-> 
-> Regards,
-> 
-> Boris
-> 
-> [1]http://lkml.iu.edu/hypermail/linux/kernel/1703.2/00124.html
-> 
-> Boris Brezillon (5):
->   dt-bindings: mtd: atmel-nand: Document the nfc-io bindings
->   ARM: dts: at91: Declare EBI/NAND controllers
->   ARM: dts: at91: Update board dts to use the new EBI/NAND bindings
->   ARM: dts: at91: Get rid of old NAND definitions
->   ARM: dts: at91: Add the NOR flash available on sama5d3 dev kits
-> 
->  .../devicetree/bindings/mtd/atmel-nand.txt         |  14 ++
->  arch/arm/boot/dts/aks-cdu.dts                      |  56 ++++---
->  arch/arm/boot/dts/animeo_ip.dts                    |  53 ++++--
->  arch/arm/boot/dts/at91-cosino.dtsi                 |  83 ++++++----
->  arch/arm/boot/dts/at91-kizbox.dts                  |  42 +++--
->  arch/arm/boot/dts/at91-kizbox2.dts                 |  45 ++++--
->  arch/arm/boot/dts/at91-kizboxmini.dts              |  52 ++++--
->  arch/arm/boot/dts/at91-linea.dtsi                  |  25 ++-
->  arch/arm/boot/dts/at91-qil_a9260.dts               | 103 +++++++-----
->  arch/arm/boot/dts/at91-sama5d3_xplained.dts        |  97 ++++++-----
->  arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  83 ++++++----
->  arch/arm/boot/dts/at91-sama5d4ek.dts               |  83 ++++++----
->  arch/arm/boot/dts/at91-tse850-3.dts                |  70 ++++----
->  arch/arm/boot/dts/at91sam9260.dtsi                 |  65 +++++---
->  arch/arm/boot/dts/at91sam9261.dtsi                 |  48 ++++--
->  arch/arm/boot/dts/at91sam9261ek.dts                |  83 ++++++----
->  arch/arm/boot/dts/at91sam9263.dtsi                 |  89 ++++++++---
->  arch/arm/boot/dts/at91sam9263ek.dts                | 103 +++++++-----
->  arch/arm/boot/dts/at91sam9g20ek_common.dtsi        | 103 +++++++-----
->  arch/arm/boot/dts/at91sam9g45.dtsi                 |  64 +++++---
->  arch/arm/boot/dts/at91sam9m10g45ek.dts             |  49 ++++--
->  arch/arm/boot/dts/at91sam9n12.dtsi                 |  74 ++++++---
->  arch/arm/boot/dts/at91sam9n12ek.dts                |  26 ++-
->  arch/arm/boot/dts/at91sam9rl.dtsi                  |  69 +++++---
->  arch/arm/boot/dts/at91sam9rlek.dts                 |  85 ++++++----
->  arch/arm/boot/dts/at91sam9x5.dtsi                  | 134 ++++++++++------
->  arch/arm/boot/dts/at91sam9x5cm.dtsi                |  83 ++++++----
->  arch/arm/boot/dts/ethernut5.dts                    |  47 ++++--
->  arch/arm/boot/dts/ge863-pro3.dtsi                  |  41 +++--
->  arch/arm/boot/dts/pm9g45.dts                       |  99 ++++++------
->  arch/arm/boot/dts/sama5d2.dtsi                     |  53 ++++++
->  arch/arm/boot/dts/sama5d3.dtsi                     | 131 ++++++++++++---
->  arch/arm/boot/dts/sama5d3xcm.dtsi                  |  97 +++++++----
->  arch/arm/boot/dts/sama5d3xcm_cmp.dtsi              |  77 +++++----
->  arch/arm/boot/dts/sama5d4.dtsi                     | 177 ++++++++++++++++++---
->  arch/arm/boot/dts/tny_a9260_common.dtsi            |  89 +++++++----
->  arch/arm/boot/dts/tny_a9263.dts                    | 103 +++++++-----
->  arch/arm/boot/dts/usb_a9260_common.dtsi            | 103 +++++++-----
->  arch/arm/boot/dts/usb_a9263.dts                    | 103 +++++++-----
->  39 files changed, 1992 insertions(+), 1009 deletions(-)
-> 
+Until now, the configuration of the ICU was done statically by the
+firmware, and therefore the Device Tree files in Linux were specifying
+directly GIC interrupts for the interrupts of CP devices. However,
+with the growing number of devices in the CP, a static allocation
+scheme doesn't work for the long term.
+
+This patch series therefore makes Linux aware of the ICU: GIC SPI
+interrupts are dynamically allocated, and the ICU is configured
+accordingly to route a CP wired interrupt to the allocated GIC SPI
+interrupt.
+
+In detail:
+
+ - The first two patches are the Device Tree binding patches
+
+ - The third patch is a minimal driver for the GICP unit. All it does
+   is clear interrupts that may have been left pending by the
+   firmware.
+
+ - The fourth patch is the most important done, which adds the driver
+   for the ICU itself.
+
+ - The fifth patch adjust Kconfig.platforms to select the GICP and ICU
+   drivers.
+
+ - The last patch adjusts the Device Tree files of the Armada 7K/8K to
+   use the ICU.
+
+Best regards,
+
+Thomas
+
+Thomas Petazzoni (6):
+  dt-bindings: interrupt-controller: add DT binding for the Marvell GICP
+  dt-bindings: interrupt-controller: add DT binding for the Marvell ICU
+  irqchip: irq-mvebu-gicp: new driver for Marvell GICP
+  irqchip: irq-mvebu-icu: new driver for Marvell ICU
+  arm64: marvell: enable ICU and GICP drivers
+  arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K
+
+ .../bindings/interrupt-controller/marvell,gicp.txt |  20 ++
+ .../bindings/interrupt-controller/marvell,icu.txt  |  57 ++++
+ arch/arm64/Kconfig.platforms                       |   2 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |   5 +
+ .../boot/dts/marvell/armada-cp110-master.dtsi      |  60 ++--
+ .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi |  54 +--
+ drivers/irqchip/Kconfig                            |   6 +
+ drivers/irqchip/Makefile                           |   2 +
+ drivers/irqchip/irq-mvebu-gicp.c                   |  53 +++
+ drivers/irqchip/irq-mvebu-icu.c                    | 373 +++++++++++++++++++++
+ .../dt-bindings/interrupt-controller/mvebu-icu.h   |  15 +
+ 11 files changed, 599 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+ create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
+ create mode 100644 drivers/irqchip/irq-mvebu-icu.c
+ create mode 100644 include/dt-bindings/interrupt-controller/mvebu-icu.h
+
+-- 
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
