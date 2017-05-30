@@ -1,108 +1,84 @@
-From: John Crispin <john@phrozen.org>
-Subject: [PATCH V2 1/3] Documentation: devicetree: add multiple cpu port DSA binding
-Date: Tue, 30 May 2017 12:44:17 +0200
-Message-ID: <20170530104419.6052-1-john@phrozen.org>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v13 9/9] arm64: dts: qcom: msm8916: Add debug unit
+Date: Tue, 30 May 2017 18:44:55 +0800
+Message-ID: <20170530104455.GD7177@leoy-ThinkPad-T440>
+References: <1495728253-30970-1-git-send-email-leo.yan@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1495728253-30970-1-git-send-email-leo.yan@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, Florian Fainelli <f.fainelli@gmail.com>, "David S . Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, John Crispin <john@phrozen.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
+Cc: Nicolas Dechesne <nicolas.dechesne@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Extend the DSA binding documentation, adding the new property required
-when there is more than one CPU port attached to the switch.
+Hi Andy, David,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: John Crispin <john@phrozen.org>
----
- Documentation/devicetree/bindings/net/dsa/dsa.txt | 61 ++++++++++++++++++++++-
- 1 file changed, 60 insertions(+), 1 deletion(-)
+[ + Nico ]
 
-diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-index cfe8f64eca4f..c164eb38ccc5 100644
---- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
-+++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-@@ -55,6 +55,11 @@ A user port has the following optional property:
- - label			: Describes the label associated with this port, which
-                           will become the netdev name.
- 
-+- cpu			: Option for non "cpu"/"dsa" ports. A phandle to a
-+			  "cpu" port, which will be used for passing packets
-+			  from this port to the host. If not present, the first
-+			  "cpu" port will be used.
-+
- Port child nodes may also contain the following optional standardised
- properties, described in binding documents:
- 
-@@ -71,7 +76,7 @@ properties, described in binding documents:
- 			  Documentation/devicetree/bindings/net/fixed-link.txt
- 			  for details.
- 
--Example
-+Examples
- 
- The following example shows three switches on three MDIO busses,
- linked into one DSA cluster.
-@@ -264,6 +269,60 @@ linked into one DSA cluster.
- 	};
- };
- 
-+The following example shows a switch that has two cpu ports each connecting
-+to a different MAC.
-+
-+&mdio0 {
-+	switch@0 {
-+		compatible = "mediatek,mt7530";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			port@0 {
-+				reg = <0>;
-+				label = "lan0";
-+				cpu = <&cpu_port1>;
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+				label = "lan1";
-+				cpu = <&cpu_port1>;
-+			};
-+
-+			port@2 {
-+				reg = <2>;
-+				label = "lan2";
-+				cpu = <&cpu_port1>;
-+			};
-+
-+			port@3 {
-+				reg = <3>;
-+				label = "wan";
-+				cpu = <&cpu_port2>;
-+			};
-+
-+			cpu_port2: port@5 {
-+				reg = <5>;
-+				label = "cpu";
-+				ethernet = <&gmac2>;
-+				phy-mode = "trgmii";
-+			};
-+
-+			cpu_port1: port@6 {
-+				reg = <6>;
-+				label = "cpu";
-+				ethernet = <&gmac1>;
-+				phy-mode = "trgmii";
-+			};
-+		};
-+	};
-+};
-+
- Deprecated Binding
- ------------------
- 
--- 
-2.11.0
+On Fri, May 26, 2017 at 12:04:13AM +0800, Leo Yan wrote:
+> Add debug unit on Qualcomm msm8916 based platforms, including the
+> DragonBoard 410c board.
+
+Could you take a look for this patch? After get your ACK I think
+Mathieu could help pick up this patch through coresight repository.
+
+If you want me to send a separate patch to you directly, also is okay.
+Please let me know which is your preferring.
+
+Thanks,
+Leo Yan
+
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 32 ++++++++++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index ab30939..17691ab 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -1116,6 +1116,38 @@
+>  			};
+>  		};
+>  
+> +		debug@850000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0x850000 0x1000>;
+> +			clocks = <&rpmcc RPM_QDSS_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&CPU0>;
+> +		};
+> +
+> +		debug@852000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0x852000 0x1000>;
+> +			clocks = <&rpmcc RPM_QDSS_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&CPU1>;
+> +		};
+> +
+> +		debug@854000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0x854000 0x1000>;
+> +			clocks = <&rpmcc RPM_QDSS_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&CPU2>;
+> +		};
+> +
+> +		debug@856000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0x856000 0x1000>;
+> +			clocks = <&rpmcc RPM_QDSS_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&CPU3>;
+> +		};
+> +
+>  		etm@85c000 {
+>  			compatible = "arm,coresight-etm4x", "arm,primecell";
+>  			reg = <0x85c000 0x1000>;
+> -- 
+> 2.7.4
+> 
