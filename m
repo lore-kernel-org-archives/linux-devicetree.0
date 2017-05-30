@@ -1,28 +1,55 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH 2/7] dt-bindings: PCI: Describe ATS property for root
- complex nodes
-Date: Tue, 30 May 2017 12:01:53 +0200
-Message-ID: <20170530100153.GI2818@8bytes.org>
-References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
- <20170524180143.19855-3-jean-philippe.brucker@arm.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] clocksource: moxart: Add AST2500 compatible string
+Date: Tue, 30 May 2017 12:03:51 +0200
+Message-ID: <20170530100351.GD2192@mai>
+References: <20170516075840.23130-1-andrew@aj.id.au>
+ <CACRpkdZsbzwBKRj1FXAoCW9nD357SNNK8t=gOO-OBtV_pwjpKg@mail.gmail.com>
+ <0f526d58-3138-d7ea-0dc7-5ef623fb0547@linaro.org>
+ <CACRpkdYbicYPJvaeTMpHSn4F77ognBfnEbj7OknFiZgfK1qizA@mail.gmail.com>
+ <1a165856-6863-ad51-d66c-eda062f4d98e@linaro.org>
+ <CACRpkdYtq09MYz4xcgYOpKDe406YzatnRKNmVyP9QRU2z5x2_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170524180143.19855-3-jean-philippe.brucker@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, okaya@codeaurora.org, sunil.kovvuri@gmail.com, thunder.leizhen@huawei.com, tn@semihalf.com
+In-Reply-To: <CACRpkdYtq09MYz4xcgYOpKDe406YzatnRKNmVyP9QRU2z5x2_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 24, 2017 at 07:01:38PM +0100, Jean-Philippe Brucker wrote:
-> +- ats-supported: if present, the root complex supports the Address
-> +  Translation Service (ATS). It is able to interpret the AT field in PCIe
-> +  Transaction Layer Packets, and forward Translation Completions or
-> +  Invalidation Requests to endpoints.
-> +
-> +  Device drivers should not enable ATS in endpoints unless this property
-> +  is present.
+On Tue, May 30, 2017 at 11:53:35AM +0200, Linus Walleij wrote:
+> On Tue, May 30, 2017 at 10:54 AM, Daniel Lezcano
+> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On 30/05/2017 09:44, Linus Walleij wrote:
+> 
+> >> I guess what we can do is make two different sched_clock()
+> >> callbacks: one for upward and one for downward counting.
+> >>
+> >> Would you like an optimization like that?
+> >>
+> >> (It makes sense.)
+> >
+> > Yes, thanks Linus!
+> 
+> Can you point me to a git tree with all your patches so I can work
+> on top of what you have?
+> 
+> I think I will also look into adding delay timers.
 
-Device drivers should never enable ATS, this is the job of the IOMMU
-driver. This should be clarified in the text.
+https://git.linaro.org/people/daniel.lezcano/linux.git clockevents/4.13
+
+(subject to rebase)
+
+-- 
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
