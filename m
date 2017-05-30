@@ -1,102 +1,80 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 2/3] misc: Add w2sg0004 (gps receiver) power control driver
-Date: Tue, 30 May 2017 18:09:03 -0500
-Message-ID: <20170530230903.jrg6ui5xiqfhqyfg@rob-hp-laptop>
-References: <cover.1495363443.git.hns@goldelico.com>
- <24579fa76fbf454526fddabe0b20070e46d488ba.1495363443.git.hns@goldelico.com>
+Subject: Re: [PATCH v2 07/15] MIPS: lantiq: Convert the xbar driver to a
+ platform_driver
+Date: Tue, 30 May 2017 18:11:46 -0500
+Message-ID: <20170530231146.sk2zdq24a2oul6v4@rob-hp-laptop>
+References: <20170521130918.27446-1-hauke@hauke-m.de>
+ <20170521130918.27446-8-hauke@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <24579fa76fbf454526fddabe0b20070e46d488ba.1495363443.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org
+In-Reply-To: <20170521130918.27446-8-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 21, 2017 at 12:44:03PM +0200, H. Nikolaus Schaller wrote:
-> Add driver for Wi2Wi W2SG0004/84 GPS module connected through uart.
+On Sun, May 21, 2017 at 03:09:10PM +0200, Hauke Mehrtens wrote:
+> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > 
-> Use serdev API hooks to monitor and forward the UART traffic to /dev/BTn
-> and turn on/off the module. It also detects if the module is turned on (sends data)
-> but should be off, e.g. if it was already turned on during boot or power-on-reset.
+> This allows using the xbar driver on ARX300 based SoCs which require the
+> same xbar setup as the xRX200 chipsets because the xbar driver
+> initialization is not guarded by an xRX200 specific
+> of_machine_is_compatible condition anymore. Additionally the new driver
+> takes a syscon phandle to configure the XBAR endianness bits in RCU
+> (before this was done in arch/mips/lantiq/xway/reset.c and also
+> guarded by an VRX200 specific if-statement).
 > 
-> Additionally, rfkill block/unblock can be used to control an external LNA
-> (and power down the module if not needed).
-> 
-> The driver concept is based on code developed by NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-> but simplified and adapted to use the new serdev API introduced in 4.11.
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  .../devicetree/bindings/misc/wi2wi,w2sg0004.txt    |  20 +
->  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
-
-Please split binding patches.
-
->  drivers/misc/Kconfig                               |  16 +
->  drivers/misc/Makefile                              |   1 +
->  drivers/misc/w2sg0004.c                            | 646 +++++++++++++++++++++
->  include/linux/w2sg0004.h                           |  27 +
->  6 files changed, 711 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
->  create mode 100644 drivers/misc/w2sg0004.c
->  create mode 100644 include/linux/w2sg0004.h
+>  .../devicetree/bindings/mips/lantiq/xbar.txt       |  24 +++++
+>  MAINTAINERS                                        |   1 +
+>  arch/mips/lantiq/xway/reset.c                      |   4 -
+>  arch/mips/lantiq/xway/sysctrl.c                    |  41 ---------
+>  drivers/soc/Makefile                               |   1 +
+>  drivers/soc/lantiq/Makefile                        |   1 +
+>  drivers/soc/lantiq/xbar.c                          | 101 +++++++++++++++++++++
+>  7 files changed, 128 insertions(+), 45 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/xbar.txt
+>  create mode 100644 drivers/soc/lantiq/Makefile
+>  create mode 100644 drivers/soc/lantiq/xbar.c
 > 
-> diff --git a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
+> diff --git a/Documentation/devicetree/bindings/mips/lantiq/xbar.txt b/Documentation/devicetree/bindings/mips/lantiq/xbar.txt
 > new file mode 100644
-> index 000000000000..b7125c7a598c
+> index 000000000000..7e1ea5299744
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-> @@ -0,0 +1,20 @@
-> +Wi2Wi GPS module connected through UART
+> +++ b/Documentation/devicetree/bindings/mips/lantiq/xbar.txt
+> @@ -0,0 +1,24 @@
+> +Lantiq XWAY SoC XBAR binding
+> +============================
 > +
-> +Should be a subnode of the SoC UART it is connected to (serdev).
 > +
+> +-------------------------------------------------------------------------------
 > +Required properties:
-> +- compatible:	wi2wi,w2sg0004 or wi2wi,w2sg0084
+> +- compatible	: Should be one of
+> +				"lantiq,xbar-xway"
+> +				"lantiq,xbar-xrx200"
 
-Reformat to one per line.
+The normal form is <vendor>,<soc>-<block>.
 
-> +- on-off-gpio:	the GPIO that controls the module's on-off toggle input
-
-Does enable-gpios or powerdown-gpios work as those are semi-standard 
-names. Also, need to state the active state.
-
+> +- reg		: The address and length of the XBAR registers
 > +
 > +Optional properties:
-> +- lna-suppy:	an (optional) LNA regulator that is enabled together with the GPS receiver
-
-typo
-
+> +- lantiq,rcu-syscon	: A phandle and offset to the endianness configuration
+> +			  registers in the RCU module
 > +
-> +Example:
 > +
-> +&uart2 {
-> +	gps: w2sg0004 {
-
-w2sg0004: gps {
-
-The node name should be generic. The label can be whatever you like.
-
-> +		compatible = "wi2wi,w2sg0004";
-> +		lna-supply = <&vsim>;   /* LNA regulator */
-> +		on-off-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;    /* GPIO_145: trigger for turning on/off w2sg0004 */
-> +        };
-> +};
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index c03d20140366..c56b3181b266 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -345,6 +345,7 @@ voipac	Voipac Technologies s.r.o.
->  wd	Western Digital Corp.
->  wetek	WeTek Electronics, limited.
->  wexler	Wexler
-> +wi2wi	Wi2Wi, Inc.
->  winbond Winbond Electronics corp.
->  winstar	Winstar Display Corp.
->  wlf	Wolfson Microelectronics
+> +-------------------------------------------------------------------------------
+> +Example for the XBAR on the xRX200 SoCs:
+> +	xbar0: xbar@400000 {
+> +		compatible = "lantiq,xbar-xway";
+> +		reg = <0x400000 0x1000>;
+> +		big-endian;
+> +		lantiq,rcu-syscon = <&rcu0 0x4c>;
+> +	};
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
