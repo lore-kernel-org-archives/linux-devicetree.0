@@ -1,116 +1,61 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
-Date: Tue, 30 May 2017 09:56:32 +0300
-Message-ID: <20170530065632.GK29527@valkosipuli.retiisi.org.uk>
-References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
- <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
- <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
- <c50c3c5f-71cf-fa73-f5a8-a4b5f59a87dc@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 5/5] mfd: arizona: Update GPIO binding for newly
+ supported specifiers
+Date: Tue, 30 May 2017 08:17:58 +0100
+Message-ID: <20170530071758.gqwu7jkg6akss2kf@dell>
+References: <1495550852-3672-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1495550852-3672-5-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <c50c3c5f-71cf-fa73-f5a8-a4b5f59a87dc@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-me
+In-Reply-To: <1495550852-3672-5-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steve,
+On Tue, 23 May 2017, Charles Keepax wrote:
 
-On Mon, May 29, 2017 at 02:50:34PM -0700, Steve Longerbeam wrote:
-> ><snip>
-> >
-> >>+
-> >>+static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
-> >>+{
-> >>+	struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
-> >>+	struct ov5640_dev *sensor = to_ov5640_dev(sd);
-> >>+	int ret = 0;
-> >>+
-> >>+	mutex_lock(&sensor->lock);
-> >Could you use the same lock for the controls as you use for the rest? Just
-> >setting handler->lock after handler init does the trick.
+> Link to the generic GPIO specifier bindings now that the second cell of
+> the binding has some support in the driver.
 > 
-> Can you please rephrase, I don't follow. "same lock for the controls as
-> you use for the rest" - there's only one device lock owned by this driver
-> and I am already using that same lock.
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+> 
+> Changes since v1:
+>  - Now just points at the standard gpio binding stuff
+> 
+> Thanks,
+> Charles
+> 
+>  Documentation/devicetree/bindings/mfd/arizona.txt | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-There's another in the control handler. You could use your own lock for the
-control handler as well.
+Applied, thanks.
 
-> 
-> 
-> ><snip>
-> >>+
-> >>+static int ov5640_s_stream(struct v4l2_subdev *sd, int enable)
-> >>+{
-> >>+	struct ov5640_dev *sensor = to_ov5640_dev(sd);
-> >>+	int ret = 0;
-> >>+
-> >>+	mutex_lock(&sensor->lock);
-> >>+
-> >>+#if defined(CONFIG_MEDIA_CONTROLLER)
-> >>+	if (sd->entity.stream_count > 1)
-> >The entity stream_count isn't connected to the number of times s_stream(sd,
-> >true) is called. Please remove the check.
-> 
-> It's incremented by media_pipeline_start(), even if the entity is already
-> a member of the given pipeline.
-> 
-> I added this check because in imx-media, the ov5640 can be streaming
-> concurrently to multiple video capture devices, and each capture device
-> calls
-> media_pipeline_start() at stream on, which increments the entity stream
-> count.
-> 
-> So if one capture device issues a stream off while others are still
-> streaming,
-> ov5640 should remain at stream on. So the entity stream count is being
-> used as a streaming usage counter. Is there a better way to do this? Should
-> I use a private stream use counter instead?
-
-Different drivers may use media_pipeline_start() in different ways. Stream
-control shouldn't depend on that count. This could cause issues in using the
-driver with other ISP / receiver drivers.
-
-I think it should be enough to move the check to the imx driver in this
-case.
-
-> 
-> 
-> 
-> ><snip>
-> >
-> >>+
-> >>+free_ctrls:
-> >>+	v4l2_ctrl_handler_free(&sensor->ctrls.handler);
-> >>+entity_cleanup:
-> >>+	mutex_destroy(&sensor->lock);
-> >>+	media_entity_cleanup(&sensor->sd.entity);
-> >>+	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
-> >Should this still be here?
-> >
-> >>+	return ret;
-> >>+}
-> >>+
-> >>+static int ov5640_remove(struct i2c_client *client)
-> >>+{
-> >>+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-> >>+	struct ov5640_dev *sensor = to_ov5640_dev(sd);
-> >>+
-> >>+	regulator_bulk_disable(OV5640_NUM_SUPPLIES, sensor->supplies);
-> >Ditto.
-> 
-> I don't understand. regulator_bulk_disable() is still needed, am I missing
-> something?
-
-You still need to enable it first. I don't see that being done in probe. As
-the driver implements the s_power() op, I don't see a need for powering the
-device on at probe time (and conversely off at remove time).
+> diff --git a/Documentation/devicetree/bindings/mfd/arizona.txt b/Documentation/devicetree/bindings/mfd/arizona.txt
+> index 8f2e282..b37bdde 100644
+> --- a/Documentation/devicetree/bindings/mfd/arizona.txt
+> +++ b/Documentation/devicetree/bindings/mfd/arizona.txt
+> @@ -30,7 +30,8 @@ Required properties:
+>  
+>    - gpio-controller : Indicates this device is a GPIO controller.
+>    - #gpio-cells : Must be 2. The first cell is the pin number and the
+> -    second cell is used to specify optional parameters (currently unused).
+> +    second cell is used to specify optional parameters, see ../gpio/gpio.txt
+> +    for details.
+>  
+>    - AVDD-supply, DBVDD1-supply, CPVDD-supply : Power supplies for the device,
+>      as covered in Documentation/devicetree/bindings/regulator/regulator.txt
 
 -- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
