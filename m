@@ -1,24 +1,96 @@
-From: Michael Ellerman <patch-notifications-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: powerpc/sequoia: fix NAND partitions not to overlap
-Date: Tue, 30 May 2017 19:11:15 +1000 (AEST)
-Message-ID: <3wcSX36jzsz9s5j@ozlabs.org>
-References: <20170402100535.GA18340@amd>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/5] ARM: dts: at91: Migrate to the new EBI/NAND
+ bindings
+Date: Tue, 30 May 2017 11:14:23 +0200
+Message-ID: <20170530111423.46c0e69e@bbrezillon>
+References: <1496133171-4787-1-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170402100535.GA18340@amd>
+In-Reply-To: <1496133171-4787-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>, sr-ynQEQJNshbs@public.gmane.org, jwboyer-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2017-04-02 at 10:05:36 UTC, Pavel Machek wrote:
-> Fix overlapping NAND partitions.
+On Tue, 30 May 2017 10:32:45 +0200
+Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> Hello,
 > 
-> Signed-off-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> This is the last step of the EBI/NAND bindings rework started here [1].
+> 
+> The first patch is adding missing nfc-io bindings doc to atmel-nand.txt
+> and can be applied independently.
+> 
+> Patches 2 to 4 are migrating all at91/sama5 SoCs (except the
+> at91rm9200) to the new EBI/NAND representation introduced in 4.12.
+> 
+> The last patch is showing how one can add a non-NAND device under the
+> EBI bus.
 
-Applied to powerpc next, thanks.
+Please ignore this version: I forgot to Cc board maintainers and patch
+3 and 4 should be merged in a single patch.
 
-https://git.kernel.org/powerpc/c/70a92003de599ff2f15815b3d9c445
+I'll send a v2.
 
-cheers
+> 
+> Regards,
+> 
+> Boris
+> 
+> [1]http://lkml.iu.edu/hypermail/linux/kernel/1703.2/00124.html
+> 
+> Boris Brezillon (5):
+>   dt-bindings: mtd: atmel-nand: Document the nfc-io bindings
+>   ARM: dts: at91: Declare EBI/NAND controllers
+>   ARM: dts: at91: Update board dts to use the new EBI/NAND bindings
+>   ARM: dts: at91: Get rid of old NAND definitions
+>   ARM: dts: at91: Add the NOR flash available on sama5d3 dev kits
+> 
+>  .../devicetree/bindings/mtd/atmel-nand.txt         |  14 ++
+>  arch/arm/boot/dts/aks-cdu.dts                      |  56 ++++---
+>  arch/arm/boot/dts/animeo_ip.dts                    |  53 ++++--
+>  arch/arm/boot/dts/at91-cosino.dtsi                 |  83 ++++++----
+>  arch/arm/boot/dts/at91-kizbox.dts                  |  42 +++--
+>  arch/arm/boot/dts/at91-kizbox2.dts                 |  45 ++++--
+>  arch/arm/boot/dts/at91-kizboxmini.dts              |  52 ++++--
+>  arch/arm/boot/dts/at91-linea.dtsi                  |  25 ++-
+>  arch/arm/boot/dts/at91-qil_a9260.dts               | 103 +++++++-----
+>  arch/arm/boot/dts/at91-sama5d3_xplained.dts        |  97 ++++++-----
+>  arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  83 ++++++----
+>  arch/arm/boot/dts/at91-sama5d4ek.dts               |  83 ++++++----
+>  arch/arm/boot/dts/at91-tse850-3.dts                |  70 ++++----
+>  arch/arm/boot/dts/at91sam9260.dtsi                 |  65 +++++---
+>  arch/arm/boot/dts/at91sam9261.dtsi                 |  48 ++++--
+>  arch/arm/boot/dts/at91sam9261ek.dts                |  83 ++++++----
+>  arch/arm/boot/dts/at91sam9263.dtsi                 |  89 ++++++++---
+>  arch/arm/boot/dts/at91sam9263ek.dts                | 103 +++++++-----
+>  arch/arm/boot/dts/at91sam9g20ek_common.dtsi        | 103 +++++++-----
+>  arch/arm/boot/dts/at91sam9g45.dtsi                 |  64 +++++---
+>  arch/arm/boot/dts/at91sam9m10g45ek.dts             |  49 ++++--
+>  arch/arm/boot/dts/at91sam9n12.dtsi                 |  74 ++++++---
+>  arch/arm/boot/dts/at91sam9n12ek.dts                |  26 ++-
+>  arch/arm/boot/dts/at91sam9rl.dtsi                  |  69 +++++---
+>  arch/arm/boot/dts/at91sam9rlek.dts                 |  85 ++++++----
+>  arch/arm/boot/dts/at91sam9x5.dtsi                  | 134 ++++++++++------
+>  arch/arm/boot/dts/at91sam9x5cm.dtsi                |  83 ++++++----
+>  arch/arm/boot/dts/ethernut5.dts                    |  47 ++++--
+>  arch/arm/boot/dts/ge863-pro3.dtsi                  |  41 +++--
+>  arch/arm/boot/dts/pm9g45.dts                       |  99 ++++++------
+>  arch/arm/boot/dts/sama5d2.dtsi                     |  53 ++++++
+>  arch/arm/boot/dts/sama5d3.dtsi                     | 131 ++++++++++++---
+>  arch/arm/boot/dts/sama5d3xcm.dtsi                  |  97 +++++++----
+>  arch/arm/boot/dts/sama5d3xcm_cmp.dtsi              |  77 +++++----
+>  arch/arm/boot/dts/sama5d4.dtsi                     | 177 ++++++++++++++++++---
+>  arch/arm/boot/dts/tny_a9260_common.dtsi            |  89 +++++++----
+>  arch/arm/boot/dts/tny_a9263.dts                    | 103 +++++++-----
+>  arch/arm/boot/dts/usb_a9260_common.dtsi            | 103 +++++++-----
+>  arch/arm/boot/dts/usb_a9263.dts                    | 103 +++++++-----
+>  39 files changed, 1992 insertions(+), 1009 deletions(-)
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
