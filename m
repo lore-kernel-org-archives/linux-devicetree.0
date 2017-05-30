@@ -1,37 +1,36 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2] ARM: dts: da850: Add interrupt-controller property to
- gpio node
-Date: Tue, 30 May 2017 16:20:11 +0530
-Message-ID: <fe594161-3adf-8cd8-df41-63daca1cfeff@ti.com>
-References: <1495634501-3246-1-git-send-email-j-keerthy@ti.com>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 6/7] iommu/arm-smmu-v3: Add support for PCI ATS
+Date: Tue, 30 May 2017 11:58:41 +0100
+Message-ID: <e162ad57-0fab-b65c-49b1-d083fcbf61d7@arm.com>
+References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
+ <20170524180143.19855-7-jean-philippe.brucker@arm.com>
+ <20170530102831.GJ2818@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1495634501-3246-1-git-send-email-j-keerthy@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Keerthy <j-keerthy@ti.com>, linus.walleij@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, tony@atomide.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170530102831.GJ2818@8bytes.org>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Joerg Roedel <joro@8bytes.org>
+Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, okaya@codeaurora.org, sunil.kovvuri@gmail.com, thunder.leizhen@huawei.com, tn@semihalf.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 24 May 2017 07:31 PM, Keerthy wrote:
-> The gpio node has 144 gpios. Each gpio is capable of generating
-> an interrupt. Hence add interrupt-controller property to the gpio
-> node. With this in place one can use interrupts property in device
-> tree to request for the gpio interrupts.
+On 30/05/17 11:28, Joerg Roedel wrote:
+> On Wed, May 24, 2017 at 07:01:42PM +0100, Jean-Philippe Brucker wrote:
+>> * TLB invalidation by range is batched and committed with a single sync.
+>>   Batching ATC invalidation is inconvenient, endpoints limit the number of
+>>   inflight invalidations. We'd have to count the number of invalidations
+>>   queued and send a sync periodically. In addition, I suspect we always
+>>   need a sync between TLB and ATC invalidation for the same page.
 > 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> This sounds like the number of outstanding ATS invalidations is not
+> managed by the SMMU hardware, is that right?
 
-Applied to v4.13/dt
+Yes, the hardware doesn't know about ATS queue depth, it simply forwards
+invalidations to the root complex. Doing a sync on the SMMU command queue
+waits for all completions of outstanding ATS invalidations, but it is up
+to the driver to limit ATS invalidations according to queue depth.
 
 Thanks,
-Sekhar
+Jean
+
