@@ -1,84 +1,62 @@
 From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/4] ARM: dts: at91: Migrate to the new EBI/NAND bindings
-Date: Tue, 30 May 2017 11:20:50 +0200
-Message-ID: <1496136054-12390-1-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 4/4] ARM: dts: at91: Add the NOR flash available on sama5d3 dev kits
+Date: Tue, 30 May 2017 11:20:54 +0200
+Message-ID: <1496136054-12390-5-git-send-email-boris.brezillon@free-electrons.com>
+References: <1496136054-12390-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496136054-12390-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Antoine Aubert <a.aubert-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, info-inJ12LbcDfezQB+pC5nmwQ@public.gmane.org, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+sama5d3 CPU modules embed a parallel NOR flash connected to the EBI bus.
 
-This is the last step of the EBI/NAND bindings rework started here [1].
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/sama5d3xcm.dtsi | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-The first patch is adding missing nfc-io bindings doc to atmel-nand.txt
-and can be applied independently.
-
-Patches 2 and 3 are migrating all at91/sama5 SoCs (except the
-at91rm9200) to the new EBI/NAND representation introduced in 4.12.
-
-The last patch is showing how one can add a non-NAND device under the
-EBI bus.
-
-Regards,
-
-Boris
-
-[1]http://lkml.iu.edu/hypermail/linux/kernel/1703.2/00124.html
-
-Changes since v1:
-- Cc board maintainers
-- merge patches 3 and 4 into a single patch doing all board
-  modifications
-
-Boris Brezillon (4):
-  dt-bindings: mtd: atmel-nand: Document the nfc-io bindings
-  ARM: dts: at91: Declare EBI/NAND controllers
-  ARM: dts: at91: Switch to the new NAND bindings
-  ARM: dts: at91: Add the NOR flash available on sama5d3 dev kits
-
- .../devicetree/bindings/mtd/atmel-nand.txt         |  14 ++
- arch/arm/boot/dts/aks-cdu.dts                      |  56 ++++---
- arch/arm/boot/dts/animeo_ip.dts                    |  53 ++++--
- arch/arm/boot/dts/at91-cosino.dtsi                 |  83 ++++++----
- arch/arm/boot/dts/at91-kizbox.dts                  |  42 +++--
- arch/arm/boot/dts/at91-kizbox2.dts                 |  45 ++++--
- arch/arm/boot/dts/at91-kizboxmini.dts              |  52 ++++--
- arch/arm/boot/dts/at91-linea.dtsi                  |  25 ++-
- arch/arm/boot/dts/at91-qil_a9260.dts               | 103 +++++++-----
- arch/arm/boot/dts/at91-sama5d3_xplained.dts        |  97 ++++++-----
- arch/arm/boot/dts/at91-sama5d4_xplained.dts        |  83 ++++++----
- arch/arm/boot/dts/at91-sama5d4ek.dts               |  83 ++++++----
- arch/arm/boot/dts/at91-tse850-3.dts                |  70 ++++----
- arch/arm/boot/dts/at91sam9260.dtsi                 |  65 +++++---
- arch/arm/boot/dts/at91sam9261.dtsi                 |  48 ++++--
- arch/arm/boot/dts/at91sam9261ek.dts                |  83 ++++++----
- arch/arm/boot/dts/at91sam9263.dtsi                 |  89 ++++++++---
- arch/arm/boot/dts/at91sam9263ek.dts                | 103 +++++++-----
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi        | 103 +++++++-----
- arch/arm/boot/dts/at91sam9g45.dtsi                 |  64 +++++---
- arch/arm/boot/dts/at91sam9m10g45ek.dts             |  49 ++++--
- arch/arm/boot/dts/at91sam9n12.dtsi                 |  74 ++++++---
- arch/arm/boot/dts/at91sam9n12ek.dts                |  26 ++-
- arch/arm/boot/dts/at91sam9rl.dtsi                  |  69 +++++---
- arch/arm/boot/dts/at91sam9rlek.dts                 |  85 ++++++----
- arch/arm/boot/dts/at91sam9x5.dtsi                  | 134 ++++++++++------
- arch/arm/boot/dts/at91sam9x5cm.dtsi                |  83 ++++++----
- arch/arm/boot/dts/ethernut5.dts                    |  47 ++++--
- arch/arm/boot/dts/ge863-pro3.dtsi                  |  41 +++--
- arch/arm/boot/dts/pm9g45.dts                       |  99 ++++++------
- arch/arm/boot/dts/sama5d2.dtsi                     |  53 ++++++
- arch/arm/boot/dts/sama5d3.dtsi                     | 131 ++++++++++++---
- arch/arm/boot/dts/sama5d3xcm.dtsi                  |  97 +++++++----
- arch/arm/boot/dts/sama5d3xcm_cmp.dtsi              |  77 +++++----
- arch/arm/boot/dts/sama5d4.dtsi                     | 177 ++++++++++++++++++---
- arch/arm/boot/dts/tny_a9260_common.dtsi            |  89 +++++++----
- arch/arm/boot/dts/tny_a9263.dts                    | 103 +++++++-----
- arch/arm/boot/dts/usb_a9260_common.dtsi            | 103 +++++++-----
- arch/arm/boot/dts/usb_a9263.dts                    | 103 +++++++-----
- 39 files changed, 1992 insertions(+), 1009 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
+index 4606e1d7e6f2..9506daf5efb6 100644
+--- a/arch/arm/boot/dts/sama5d3xcm.dtsi
++++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+@@ -37,10 +37,33 @@
+ 		};
+ 
+ 		ebi@10000000 {
+-			pinctrl-0 = <&pinctrl_ebi_nand_addr>;
+-			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_ebi_addr &pinctrl_ebi_cs0>;
++			pinctr-name = "default";
+ 			status = "okay";
+ 
++			nor: flash@0,0 {
++				compatible = "cfi-flash";
++				linux,mtd-name = "physmap-flash.0";
++				#address-cells = <1>;
++				#size-cells = <1>;
++				reg = <0x0 0x0 0x1000000>;
++				bank-width = <2>;
++				atmel,smc-read-mode = "nrd";
++				atmel,smc-write-mode = "nwe";
++				atmel,smc-bus-width = <16>;
++				atmel,smc-ncs-rd-setup-ns = <0>;
++				atmel,smc-ncs-wr-setup-ns = <0>;
++				atmel,smc-nwe-setup-ns = <8>;
++				atmel,smc-nrd-setup-ns = <16>;
++				atmel,smc-ncs-rd-pulse-ns = <84>;
++				atmel,smc-ncs-wr-pulse-ns = <84>;
++				atmel,smc-nrd-pulse-ns = <76>;
++				atmel,smc-nwe-pulse-ns = <76>;
++				atmel,smc-nrd-cycle-ns = <107>;
++				atmel,smc-nwe-cycle-ns = <84>;
++				atmel,smc-tdf-ns = <16>;
++			};
++
+ 			nand_controller: nand-controller {
+ 				status = "okay";
+ 
 -- 
 2.7.4
 
