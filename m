@@ -1,107 +1,323 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 14/16] phy: Add an USB PHY driver for the Lantiq SoCs
- using the RCU module
-Date: Tue, 30 May 2017 21:31:27 +0300
-Message-ID: <CAHp75Ve9bV99=WCzmXU-Rth-gar5gqvy4taZ7NMQQHGKcVbHHw@mail.gmail.com>
-References: <20170528184006.31668-1-hauke@hauke-m.de> <20170528184006.31668-15-hauke@hauke-m.de>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH RfC v4 5/6] pinctrl: meson: add support for GPIO
+ interrupts
+Date: Tue, 30 May 2017 20:51:10 +0200
+Message-ID: <da3d5de1-b9ae-9d93-dc99-a0e9af2e3694@gmail.com>
+References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
+ <3265fbc9-467d-67fa-8752-f750f234dedd@gmail.com>
+ <b897c978-df5c-3494-6e29-26cb0b376709@baylibre.com>
+ <257713f3-af14-d923-6f80-774a60d8f22b@gmail.com>
+ <1496130378.2741.4.camel@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170528184006.31668-15-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, john <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1496130378.2741.4.camel@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 28, 2017 at 9:40 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
-> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
-> the PHY interfaces for each core. The phy instances can be passed to the
-> dwc2 driver, which already supports the generic phy interface.
+Am 30.05.2017 um 09:46 schrieb Jerome Brunet:
+> On Mon, 2017-05-29 at 22:12 +0200, Heiner Kallweit wrote:
+>> Am 29.05.2017 um 10:43 schrieb Neil Armstrong:
+>>> Hi Heiner,
+>>>
+>>> On 05/28/2017 09:12 PM, Heiner Kallweit wrote:
+>>>> Add support for GPIO interrupts and make use of the just introduced
+>>>> irqchip driver handling the GPIO interrupt-controller.
+>>>>
+>>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>>>> ---
+>>>>  drivers/pinctrl/Kconfig               |   2 +
+>>>>  drivers/pinctrl/meson/pinctrl-meson.c | 164
+>>>> +++++++++++++++++++++++++++++++++-
+>>>>  2 files changed, 165 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+>>>> index abc1cef7..d8c92809 100644
+>>>> --- a/drivers/pinctrl/Kconfig
+>>>> +++ b/drivers/pinctrl/Kconfig
+>>>> @@ -166,8 +166,10 @@ config PINCTRL_MESON
+>>>>  	select PINCONF
+>>>>  	select GENERIC_PINCONF
+>>>>  	select GPIOLIB
+>>>> +	select GPIOLIB_IRQCHIP
+>>>>  	select OF_GPIO
+>>>>  	select REGMAP_MMIO
+>>>> +	select MESON_GPIO_INTC
+>>>
+>>> This should not be here, there is not "compile-time" dependency.
+>>>
+>>>>  
+>>>>  config PINCTRL_OXNAS
+>>>>  	bool
+>>>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c
+>>>> b/drivers/pinctrl/meson/pinctrl-meson.c
+>>>> index 66ed70c1..7fb98c71 100644
+>>>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+>>>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+>>>> @@ -62,6 +62,8 @@
+>>>>  #include "../pinctrl-utils.h"
+>>>>  #include "pinctrl-meson.h"
+>>>>  
+>>>> +static struct irq_domain *meson_pinctrl_irq_domain;
+>>>> +
+>>>>  /**
+>>>>   * meson_get_bank() - find the bank containing a given pin
+>>>>   *
+>>>> @@ -497,6 +499,150 @@ static int meson_gpio_get(struct gpio_chip *chip,
+>>>> unsigned gpio)
+>>>>  	return !!(val & BIT(bit));
+>>>>  }
+>>>>  
+>>>> +static struct meson_pinctrl *meson_gpio_data_to_pc(struct irq_data *data)
+>>>> +{
+>>>> +        struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+>>>> +
+>>>> +        return gpiochip_get_data(chip);
+>>>> +}
+>>>> +
+>>>> +static int meson_gpio_bank_hwirq(struct meson_bank *bank, unsigned int
+>>>> offset)
+>>>> +{
+>>>> +        int hwirq;
+>>>> +
+>>>> +        if (bank->irq_first < 0)
+>>>> +                /* this bank cannot generate irqs */
+>>>> +                return 0;
+>>>> +
+>>>> +        hwirq = offset - bank->first + bank->irq_first;
+>>>> +
+>>>> +        if (hwirq > bank->irq_last)
+>>>> +                /* this pin cannot generate irqs */
+>>>> +                return 0;
+>>>> +
+>>>> +        return hwirq;
+>>>> +}
+>>>> +
+>>>> +static int meson_gpio_to_hwirq(struct irq_data *data)
+>>>> +{
+>>>> +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
+>>>> +	unsigned int offset = data->hwirq;
+>>>> +        struct meson_bank *bank;
+>>>> +        int hwirq, ret;
+>>>> +
+>>>> +        offset += pc->data->pin_base;
+>>>> +
+>>>> +        ret = meson_get_bank(pc, offset, &bank);
+>>>> +        if (ret)
+>>>> +                return ret;
+>>>> +
+>>>> +        hwirq = meson_gpio_bank_hwirq(bank, offset);
+>>>> +        if (!hwirq)
+>>>> +                dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
+>>>> +
+>>>> +        return hwirq;
+>>>> +}
+>>>> +
+>>>> +static void meson_gpio_irq_handler(struct irq_desc *desc)
+>>>> +{
+>>>> +        struct irq_chip *chip = irq_desc_get_chip(desc);
+>>>> +        struct irq_data *gpio_irq_data = irq_desc_get_handler_data(desc);
+>>>> +
+>>>> +        chained_irq_enter(chip, desc);
+>>>> +
+>>>> +        if (gpio_irq_data)
+>>>> +                generic_handle_irq(gpio_irq_data->irq);
+>>>> +
+>>>> +        chained_irq_exit(chip, desc);
+>>>> +}
+>>>> +
+>>>> +static void meson_gpio_irq_unmask(struct irq_data *data) {}
+>>>> +static void meson_gpio_irq_mask(struct irq_data *data) {}
+>>>> +
+>>>> +static void meson_gpio_irq_shutdown(struct irq_data *data)
+>>>> +{
+>>>> +	int hwirq = meson_gpio_to_hwirq(data);
+>>>> +	int irq;
+>>>> +
+>>>> +	if (hwirq <= 0)
+>>>> +		return;
+>>>> +
+>>>> +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2);
+>>>> +	if (irq) {
+>>>> +		irq_set_chained_handler_and_data(irq, handle_bad_irq,
+>>>> NULL);
+>>>> +		irq_domain_free_irqs(irq, 1);
+>>>> +	}
+>>>> +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2 + 1);
+>>>> +	if (irq) {
+>>>> +		irq_set_chained_handler_and_data(irq, handle_bad_irq,
+>>>> NULL);
+>>>> +		irq_domain_free_irqs(irq, 1);
+>>>> +	}
+>>>
+>>> Same as irqchip, please add paragraph explaining why you use *2 here to
+>>> handle the
+>>> IRQ_BOTH situation.
+>>>
+>>>> +}
+>>>> +
+>>>> +static int meson_gpio_irq_set_type(struct irq_data *data, unsigned int
+>>>> type)
+>>>> +{
+>>>> +	int hwirq = meson_gpio_to_hwirq(data);
+>>>> +	struct irq_fwspec fwspec;
+>>>> +        int irq, irq2, num_slots;
+>>>> +
+>>>> +	if (irqd_is_activated(data))
+>>>> +		return -EBUSY;
+>>>> +
+>>>> +	if (hwirq < 0)
+>>>> +		return hwirq;
+>>>> +
+>>>> +	if (!hwirq)
+>>>> +		return -ENXIO;
+>>>> +
+>>>> +	fwspec.fwnode = meson_pinctrl_irq_domain->fwnode;
+>>>> +	fwspec.param_count = 2;
+>>>> +
+>>>> +        /*
+>>>> +         * The chip can create an interrupt for either rising or falling
+>>>> edge
+>>>> +         * only. Therefore use two interrupts in case of
+>>>> IRQ_TYPE_EDGE_BOTH,
+>>>> +         * first for falling edge and second one for rising edge.
+>>>> +         */
+>>>> +        num_slots = (type == IRQ_TYPE_EDGE_BOTH) ? 2 : 1;
+>>>> +
+>>>> +        /*
+>>>
+>>> Please correct indentation.
+>>>
+>>>> +	 * Add one bit to hwirq to allow for
+>>>> +	 * - using the same gpio hwirq twice
+>>>> +	 * - decoding the gpio hwirq in the interrupt controller driver
+>>>> +         */
+>>>> +	fwspec.param[0] = hwirq << 1;
+>>>> +	if (num_slots == 1)
+>>>> +		fwspec.param[1] = type;
+>>>> +	else
+>>>> +		fwspec.param[1] = IRQ_TYPE_EDGE_FALLING;
+>>>> +
+>>>> +	irq = irq_create_fwspec_mapping(&fwspec);
+>>>> +	if (!irq)
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	irq_set_chained_handler_and_data(irq, meson_gpio_irq_handler,
+>>>> data);
+>>>> +
+>>>> +	if (num_slots > 1) {
+>>>> +		fwspec.param[0]++;
+>>>> +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
+>>>> +		irq2 = irq_create_fwspec_mapping(&fwspec);
+>>>> +		if (!irq2) {
+>>>> +			irq_domain_free_irqs(irq, 1);
+>>>> +			return -EINVAL;
+>>>> +		}
+>>>> +		irq_set_chained_handler_and_data(irq2,
+>>>> meson_gpio_irq_handler, data);
+>>>> +	}
+>>>> +
+>>>> +        return 0;
+>>>> +}
+>>>
+>>> You will have an irq leak if you chance twice of type in the same GPIO from
+>>> BOTH to Edge/Level.
+>>>
+>>
+>> I'm not sure I get your point.
+>> This function is called once for a GPIO IRQ, typically within request_irq()
+>> based on the type flags (provided that gpio_to_irq is used).
+>> And I don't change the type from BOTH to something, I create two parent irq's
+>> with type RISING/FALLING.
+> 
+> Is there anything preventing the consumer driver from calling "irq_set_irq_type"
+>  on its irq ? 
+> 
+No, however I haven't seen a use case where this would be necessary.
+I found one or two drivers which use request_irq with empty type flag and call
+irq_set_irq_type afterwards. This I would consider a misuse of the irq API.
 
-> +static void ltq_rcu_usb2_start_cores(struct platform_device *pdev)
+To cope with cases where for whatever reason irq_set_irq_type is called a second
+time I return EBUSY if the irq is activated already.
 
-It should return int. See below.
+> By the way, I wonder if "irq_set_irq_type" is supposed to be fast (callable from
+> an irq handler). In such case, irq_create_fwspec_mapping cannot be called from
+> .irq_set_type (same as gpio_to_irq)
+> 
+Hmm, I don't know. But I think a driver doing such strange things has a much
+bigger problem than we have ..
 
-> +{
+> Again, I think this is a SW hack to compensate for a missing HW feature. I'm
+> curious to get the point of view the irq maintainers on it.
+> 
+I have to agree ..
+Worst case we could always reserve two parent interrupts in irq_request_resources.
+Then we don't have the issue with set_type, but on the other hand only four
+GPIO's could request an interrupt. This may be an acceptable trade-off.
 
-> +       /* Power on the USB core. */
-> +       if (clk_prepare_enable(priv->ctrl_gate_clk)) {
+>>
+>>>> +
+>>>> +static struct irq_chip meson_gpio_irq_chip = {
+>>>> +        .name = "GPIO",
+>>>> +        .irq_set_type = meson_gpio_irq_set_type,
+>>>> +        .irq_mask = meson_gpio_irq_mask,
+>>>> +        .irq_unmask = meson_gpio_irq_unmask,
+>>>> +        .irq_shutdown = meson_gpio_irq_shutdown,
+>>>> +};
+>>>> +
+>>>>  static const struct of_device_id meson_pinctrl_dt_match[] = {
+>>>>  	{
+>>>>  		.compatible = "amlogic,meson8-cbus-pinctrl",
+>>>> @@ -558,7 +704,8 @@ static int meson_gpiolib_register(struct meson_pinctrl
+>>>> *pc)
+>>>>  		return ret;
+>>>>  	}
+>>>>  
+>>>> -	return 0;
+>>>> +	return gpiochip_irqchip_add(&pc->chip, &meson_gpio_irq_chip, 0,
+>>>> +				    handle_simple_irq, IRQ_TYPE_NONE);
+>>>>  }
+>>>>  
+>>>>  static struct regmap_config meson_regmap_config = {
+>>>> @@ -637,6 +784,21 @@ static int meson_pinctrl_parse_dt(struct
+>>>> meson_pinctrl *pc,
+>>>>  		return PTR_ERR(pc->reg_gpio);
+>>>>  	}
+>>>>  
+>>>> +	if (!meson_pinctrl_irq_domain) {
+>>>> +		np = of_find_compatible_node(NULL, NULL, "amlogic,meson-
+>>>> gpio-intc");
+>>>> +		if (!np) {
+>>>> +			dev_err(pc->dev, "interrupt controller DT node
+>>>> not found\n");
+>>>> +			return -EINVAL;
+>>>> +		}
+>>>> +		meson_pinctrl_irq_domain = irq_find_host(np);
+>>>> +		if (!meson_pinctrl_irq_domain) {
+>>>> +			dev_err(pc->dev, "interrupt controller not
+>>>> found\n");
+>>>> +			of_node_put(np);
+>>>> +			return -EINVAL;
+>>>> +		}
+>>>> +		of_node_put(np);
+>>>> +	}
+>>>
+>>> Please add some blank lines between logical sections of the code.
+>>>
+>>>> +
+>>>>  	return 0;
+>>>>  }
+>>>>  
+>>>>
+>>>
+>>> Thanks,
+>>> Neil
+>>>
+>>
+>>
+> 
+> 
 
-You basically shadow the error, why?
-
-> +               dev_err(dev, "failed to enable CTRL gate\n");
-> +               return;
-> +       }
-
-> +       if (clk_prepare_enable(priv->phy_gate_clk)) {
-> +               dev_err(dev, "failed to enable PHY gate\n");
-> +               return;
-> +       }
-
-Ditto.
-
-> +static int ltq_rcu_usb2_of_probe(struct device_node *phynode,
-> +                                   struct ltq_rcu_usb2_priv *priv)
-> +{
-> +       struct device *dev = priv->dev;
-> +       const struct of_device_id *match =
-> +               of_match_node(ltq_rcu_usb2_phy_of_match, phynode);
-> +       int ret;
-> +
-
-> +       if (!match) {
-> +               dev_err(dev, "Not a compatible Lantiq RCU USB PHY\n");
-> +               return -EINVAL;
-> +       }
-
-Can it ever happen?
-
-> +
-> +       priv->reg_bits = match->data;
-
-I think there is a helper to get driver data directly from node.
-
-> +       if (priv->reg_bits->have_ana_cfg) {
-> +               ret = device_property_read_u32(dev, "offset-ana",
-> +                                              &priv->ana_cfg1_reg_offset);
-> +               if (ret) {
-> +                       dev_dbg(dev, "Failed to get RCU ANA CFG1 reg offset\n");
-> +                       return ret;
-> +               }
-> +       }
-
-ret = device_property_...(...);
-if (ret && priv->reg_bits->have_ana_cfg) {
- ...
- return ret;
-}
-
-?
-
-
-> +       priv->dev = &pdev->dev;
-
-> +       dev_set_drvdata(priv->dev, priv);
-
-Move this to the end of function. Ideally it should be run if and only
-if the function returns 0.
-
-> +       provider = devm_of_phy_provider_register(&pdev->dev,
-> +                                                of_phy_simple_xlate);
-> +
-> +       return PTR_ERR_OR_ZERO(provider);
-
-I would do explicitly, though it's up to you and maintainer.
-
-if (IS_ERR(provider))
- return PTR_ERR();
-
-return 0;
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
