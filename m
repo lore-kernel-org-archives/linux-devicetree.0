@@ -1,3060 +1,529 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 3/4] ARM: dts: at91: Switch to the new NAND bindings
-Date: Tue, 30 May 2017 11:20:53 +0200
-Message-ID: <1496136054-12390-4-git-send-email-boris.brezillon@free-electrons.com>
-References: <1496136054-12390-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496136054-12390-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>, Antoine Aubert <a.aubert-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>, Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, info-inJ12LbcDfezQB+pC5nmwQ@public.gmane.org, Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: Re: [PATCH 1/4] thermal: uniphier: add UniPhier thermal driver
+Date: Tue, 30 May 2017 18:21:42 +0900
+Message-ID: <20170530182141.6865.4A936039@socionext.com>
+References: <1496049345-14649-2-git-send-email-hayashi.kunihiko@socionext.com> <20170529164816.GA14822@localhost.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170529164816.GA14822@localhost.localdomain>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: rui.zhang@intel.com, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, yamada.masahiro@socionext.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Use the new EBI/NAND bindings to declare NAND chips and remove old NAND
-nodes along the way.
+Hi Eduardo,
+Thank you for your comment.
 
-Note that we keep using old bindings in at91rm9200.dtsi because this
-SoC is not supported by the EBI driver.
+On Mon, 29 May 2017 09:48:19 -0700 <edubezval@gmail.com> wrote:
 
-Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jiri Prchal <jiri.prchal-cKCO0sOKHLPtwjQa/ONI9g@public.gmane.org>
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: Rodolfo Giometti <giometti-k2GhghHVRtY@public.gmane.org>
-Cc: Antoine Aubert <a.aubert-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
-Cc: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Cc: info-inJ12LbcDfezQB+pC5nmwQ@public.gmane.org
-Cc: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/aks-cdu.dts               |  56 ++++++++-------
- arch/arm/boot/dts/animeo_ip.dts             |  53 +++++++++-----
- arch/arm/boot/dts/at91-cosino.dtsi          |  83 ++++++++++++++--------
- arch/arm/boot/dts/at91-kizbox.dts           |  42 +++++++++---
- arch/arm/boot/dts/at91-kizbox2.dts          |  45 ++++++++----
- arch/arm/boot/dts/at91-kizboxmini.dts       |  52 +++++++++++---
- arch/arm/boot/dts/at91-linea.dtsi           |  25 +++++--
- arch/arm/boot/dts/at91-qil_a9260.dts        | 103 ++++++++++++++++------------
- arch/arm/boot/dts/at91-sama5d3_xplained.dts |  97 +++++++++++++++-----------
- arch/arm/boot/dts/at91-sama5d4_xplained.dts |  83 +++++++++++++---------
- arch/arm/boot/dts/at91-sama5d4ek.dts        |  83 +++++++++++++---------
- arch/arm/boot/dts/at91-tse850-3.dts         |  70 ++++++++++---------
- arch/arm/boot/dts/at91sam9260.dtsi          |  28 ++------
- arch/arm/boot/dts/at91sam9261.dtsi          |  24 ++-----
- arch/arm/boot/dts/at91sam9261ek.dts         |  83 +++++++++++++---------
- arch/arm/boot/dts/at91sam9263.dtsi          |  28 ++------
- arch/arm/boot/dts/at91sam9263ek.dts         | 103 ++++++++++++++++------------
- arch/arm/boot/dts/at91sam9g20ek_common.dtsi | 103 ++++++++++++++++------------
- arch/arm/boot/dts/at91sam9g45.dtsi          |  29 ++------
- arch/arm/boot/dts/at91sam9m10g45ek.dts      |  49 +++++++++----
- arch/arm/boot/dts/at91sam9n12.dtsi          |  32 ++-------
- arch/arm/boot/dts/at91sam9n12ek.dts         |  26 +++++--
- arch/arm/boot/dts/at91sam9rl.dtsi           |  42 ++++--------
- arch/arm/boot/dts/at91sam9rlek.dts          |  85 ++++++++++++++---------
- arch/arm/boot/dts/at91sam9x5.dtsi           |  92 ++++++++++++-------------
- arch/arm/boot/dts/at91sam9x5cm.dtsi         |  83 ++++++++++++++--------
- arch/arm/boot/dts/ethernut5.dts             |  47 ++++++++-----
- arch/arm/boot/dts/ge863-pro3.dtsi           |  41 ++++++++---
- arch/arm/boot/dts/pm9g45.dts                |  99 ++++++++++++++------------
- arch/arm/boot/dts/sama5d3.dtsi              |  32 ---------
- arch/arm/boot/dts/sama5d3xcm.dtsi           |  76 ++++++++++++--------
- arch/arm/boot/dts/sama5d3xcm_cmp.dtsi       |  77 +++++++++++++--------
- arch/arm/boot/dts/sama5d4.dtsi              |  31 ---------
- arch/arm/boot/dts/tny_a9260_common.dtsi     |  89 ++++++++++++++----------
- arch/arm/boot/dts/tny_a9263.dts             | 103 ++++++++++++++++------------
- arch/arm/boot/dts/usb_a9260_common.dtsi     | 103 ++++++++++++++++------------
- arch/arm/boot/dts/usb_a9263.dts             | 103 ++++++++++++++++------------
- 37 files changed, 1368 insertions(+), 1032 deletions(-)
+> Knihiko,
+> 
+> On Mon, May 29, 2017 at 06:15:42PM +0900, Kunihiko Hayashi wrote:
+> > Add a thermal driver for on-chip PVT (Process, Voltage and Temperature)
+> > monitoring unit implemented on UniPhier SoCs. This driver supports
+> > temperature monitoring and alert function.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  drivers/thermal/Kconfig            |   8 +
+> >  drivers/thermal/Makefile           |   1 +
+> >  drivers/thermal/uniphier_thermal.c | 390 +++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 399 insertions(+)
+> >  create mode 100644 drivers/thermal/uniphier_thermal.c
+> > 
+> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
+> > index 776b343..93ccf25 100644
+> > --- a/drivers/thermal/Kconfig
+> > +++ b/drivers/thermal/Kconfig
+> > @@ -453,4 +453,12 @@ config ZX2967_THERMAL
+> >  	  the primitive temperature sensor embedded in zx2967 SoCs.
+> >  	  This sensor generates the real time die temperature.
+> >  
+> > +config UNIPHIER_THERMAL
+> > +	tristate "Socionext UniPhier thermal driver"
+> > +	depends on ARCH_UNIPHIER || COMPILE_TEST
+> > +	help
+> > +	  Enable this to support thermal reporting on UniPhier SoC.
+> > +	  This driver supports CPU thermal zone to reports the temperture
+> > +	  and trip points.
+> > +
+> >  endif
+> > diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+> > index 7adae20..05b6e7c 100644
+> > --- a/drivers/thermal/Makefile
+> > +++ b/drivers/thermal/Makefile
+> > @@ -58,3 +58,4 @@ obj-$(CONFIG_HISI_THERMAL)     += hisi_thermal.o
+> >  obj-$(CONFIG_MTK_THERMAL)	+= mtk_thermal.o
+> >  obj-$(CONFIG_GENERIC_ADC_THERMAL)	+= thermal-generic-adc.o
+> >  obj-$(CONFIG_ZX2967_THERMAL)	+= zx2967_thermal.o
+> > +obj-$(CONFIG_UNIPHIER_THERMAL)	+= uniphier_thermal.o
+> > diff --git a/drivers/thermal/uniphier_thermal.c b/drivers/thermal/uniphier_thermal.c
+> > new file mode 100644
+> > index 0000000..ae7e5ce
+> > --- /dev/null
+> > +++ b/drivers/thermal/uniphier_thermal.c
+> > @@ -0,0 +1,390 @@
+> > +/**
+> > + * uniphier_thermal.c - Socionext UniPhier thermal driver
+> > + *
+> > + * Copyright 2014 Panasonic Corporation
+> > + * Copyright 2016 Socionext Inc.
+> > + * All rights reserved.
+> > + *
+> > + * Author:
+> > + *	Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > + *
+> > + * This program is free software: you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2  of
+> > + * the License as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +
+> > +#include <linux/bitops.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/thermal.h>
+> > +
+> > +#include "thermal_core.h"
+> > +
+> > +/*
+> > + * block registers
+> > + * addresses are the offset from .block_base
+> > + */
+> > +#define PVTCTLEN				0x0000
+> > +#define PVTCTLEN_EN				BIT(0)
+> > +
+> > +#define PVTCTLMODE				0x0004
+> > +#define PVTCTLMODE_MASK				0xf
+> > +#define PVTCTLMODE_TEMPMON			0x5
+> > +
+> > +#define EMONREPEAT				0x0040
+> > +#define EMONREPEAT_ENDLESS			BIT(24)
+> > +#define EMONREPEAT_PERIOD			0xf
+> > +#define EMONREPEAT_PERIOD_1000000		0x9
+> > +
+> > +/*
+> > + * common registers
+> > + * addresses are the offset from .map_base
+> > + */
+> > +#define PVTCTLSEL				0x0900
+> > +#define PVTCTLSEL_MASK				0x7
+> > +#define PVTCTLSEL_MONITOR			0
+> > +
+> > +#define SETALERT0				0x0910
+> > +#define SETALERT1				0x0914
+> > +#define SETALERT2				0x0918
+> > +#define SETALERT_TEMP_OVF			(0xff << 16)
+> > +#define SETALERT_TEMP_OVF_VALUE(val)		(((val) & 0xff) << 16)
+> > +#define SETALERT_EN				BIT(0)
+> > +
+> > +#define PMALERTINTCTL				0x0920
+> > +#define PMALERTINTCTL_CLR(ch)			BIT(4 * (ch) + 2)
+> > +#define PMALERTINTCTL_SET(ch)			BIT(4 * (ch) + 1)
+> > +#define PMALERTINTCTL_EN(ch)			BIT(4 * (ch) + 0)
+> > +#define PMALERTINTCTL_MASK			0x777
+> > +
+> > +#define TMOD					0x0928
+> > +#define TMOD_MASK				0x1ff
+> > +
+> > +#define TMODCOEF				0x0e5c
+> > +
+> > +#define TMODSETUP0_EN				BIT(30)
+> > +#define TMODSETUP0_VAL(val)			(((val) & 0x3fff) << 16)
+> > +#define TMODSETUP1_EN				BIT(15)
+> > +#define TMODSETUP1_VAL(val)			((val) & 0x7fff)
+> 
+> 
+> Maybe use use GENMASK for some of the above macros?
 
-diff --git a/arch/arm/boot/dts/aks-cdu.dts b/arch/arm/boot/dts/aks-cdu.dts
-index 5b1bf92d927c..888bfcd4a402 100644
---- a/arch/arm/boot/dts/aks-cdu.dts
-+++ b/arch/arm/boot/dts/aks-cdu.dts
-@@ -62,32 +62,36 @@
- 			status = "okay";
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
--			status = "okay";
--
--			bootstrap@0 {
--				label = "bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			uboot@40000 {
--				label = "uboot";
--				reg = <0x40000 0x80000>;
--			};
--			ubootenv@c0000 {
--				label = "ubootenv";
--				reg = <0xc0000 0x40000>;
--			};
--			kernel@100000 {
--				label = "kernel";
--				reg = <0x100000 0x400000>;
--			};
--			rootfs@500000 {
--				label = "rootfs";
--				reg = <0x500000 0x7b00000>;
-+		ebi: ebi@10000000 {
-+			nand_controller: nand-controller {
-+				nand: nand@3 {
-+					partitions {
-+						bootstrap@0 {
-+							label = "bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						uboot@40000 {
-+							label = "uboot";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						ubootenv@c0000 {
-+							label = "ubootenv";
-+							reg = <0xc0000 0x40000>;
-+						};
-+
-+						kernel@100000 {
-+							label = "kernel";
-+							reg = <0x100000 0x400000>;
-+						};
-+
-+						rootfs@500000 {
-+							label = "rootfs";
-+							reg = <0x500000 0x7b00000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/animeo_ip.dts b/arch/arm/boot/dts/animeo_ip.dts
-index 9cc372b9fb9b..26ade8c0a960 100644
---- a/arch/arm/boot/dts/animeo_ip.dts
-+++ b/arch/arm/boot/dts/animeo_ip.dts
-@@ -83,25 +83,44 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			barebox@0 {
--				label = "barebox";
--				reg = <0x0 0x58000>;
--			};
--
--			u_boot_env@58000 {
--				label = "u_boot_env";
--				reg = <0x58000 0x8000>;
--			};
--
--			ubi@60000 {
--				label = "ubi";
--				reg = <0x60000 0x1FA0000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						barebox@0 {
-+							label = "barebox";
-+							reg = <0x0 0x58000>;
-+						};
-+
-+						u_boot_env@58000 {
-+							label = "u_boot_env";
-+							reg = <0x58000 0x8000>;
-+						};
-+
-+						ubi@60000 {
-+							label = "ubi";
-+							reg = <0x60000 0x1FA0000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91-cosino.dtsi b/arch/arm/boot/dts/at91-cosino.dtsi
-index 02d8ef43de3a..89cde175154e 100644
---- a/arch/arm/boot/dts/at91-cosino.dtsi
-+++ b/arch/arm/boot/dts/at91-cosino.dtsi
-@@ -82,38 +82,61 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;	/* Enable PMECC */
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_addr_nand
-+				     &pinctrl_ebi_data_0_7>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			uboot@40000 {
--				label = "u-boot";
--				reg = <0x40000 0x80000>;
--			};
--
--			ubootenv@c0000 {
--				label = "U-Boot Env";
--				reg = <0xc0000 0x140000>;
--			};
--
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
--
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_oe_we
-+					     &pinctrl_nand_cs
-+					     &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-ecc-strength = <4>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						uboot@40000 {
-+							label = "u-boot";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						ubootenv@c0000 {
-+							label = "U-Boot Env";
-+							reg = <0xc0000 0x140000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
-+
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91-kizbox.dts b/arch/arm/boot/dts/at91-kizbox.dts
-index b4f147c193fd..1f31df846d61 100644
---- a/arch/arm/boot/dts/at91-kizbox.dts
-+++ b/arch/arm/boot/dts/at91-kizbox.dts
-@@ -59,19 +59,39 @@
- 			status = "okay";
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			bootstrap@0 {
--				label = "bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			ubi@20000 {
--				label = "ubi";
--				reg = <0x20000 0x7fe0000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						bootstrap@0 {
-+							label = "bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						ubi@20000 {
-+							label = "ubi";
-+							reg = <0x20000 0x7fe0000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91-kizbox2.dts b/arch/arm/boot/dts/at91-kizbox2.dts
-index 50a14568f094..4372c0287c1c 100644
---- a/arch/arm/boot/dts/at91-kizbox2.dts
-+++ b/arch/arm/boot/dts/at91-kizbox2.dts
-@@ -141,23 +141,40 @@
- 			status = "okay";
- 		};
- 
--		nand0: nand@60000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_nand_addr>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			bootstrap@0 {
--				label = "bootstrap";
--				reg = <0x0 0x20000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x2>;
-+					atmel,rb = <0>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-ecc-strength = <4>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						bootstrap@0 {
-+							label = "bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
- 
--			ubi@20000 {
--				label = "ubi";
--				reg = <0x20000 0x7fe0000>;
-+						ubi@20000 {
-+							label = "ubi";
-+							reg = <0x20000 0x7fe0000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91-kizboxmini.dts b/arch/arm/boot/dts/at91-kizboxmini.dts
-index 9682d105d4d8..33238fcb6d0b 100644
---- a/arch/arm/boot/dts/at91-kizboxmini.dts
-+++ b/arch/arm/boot/dts/at91-kizboxmini.dts
-@@ -68,6 +68,49 @@
- 			status = "okay";
- 		};
- 
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_addr_nand
-+				     &pinctrl_ebi_data_0_7>;
-+			pinctrl-names = "default";
-+			status = "okay";
-+
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_oe_we
-+					     &pinctrl_nand_cs
-+					     &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-ecc-strength = <4>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						bootstrap@0 {
-+							label = "bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						ubi@20000 {
-+							label = "ubi";
-+							reg = <0x20000 0x7fe0000>;
-+						};
-+					};
-+				};
-+			};
-+		};
-+
- 		nand0: nand@40000000 {
- 			nand-bus-width = <8>;
- 			nand-ecc-mode = "hw";
-@@ -77,15 +120,6 @@
- 			nand-on-flash-bbt;
- 			status = "okay";
- 
--			bootstrap@0 {
--				label = "bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			ubi@20000 {
--				label = "ubi";
--				reg = <0x20000 0x7fe0000>;
--			};
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/at91-linea.dtsi b/arch/arm/boot/dts/at91-linea.dtsi
-index 0721c8472509..14094af90719 100644
---- a/arch/arm/boot/dts/at91-linea.dtsi
-+++ b/arch/arm/boot/dts/at91-linea.dtsi
-@@ -37,13 +37,24 @@
- 	};
- };
- 
--&nand0 {
-+&ebi {
-+	pinctrl-0 = <&pinctrl_ebi_nand_addr>;
-+	pinctrl-names = "default";
- 	status = "okay";
-+};
-+
- 
--	nand-bus-width = <8>;
--	nand-ecc-mode = "hw";
--	atmel,has-pmecc;
--	atmel,pmecc-cap = <4>;
--	atmel,pmecc-sector-size = <512>;
--	nand-on-flash-bbt;
-+&nand_controller {
-+	status = "okay";
-+
-+	nand: nand@3 {
-+		reg = <0x3 0x0 0x2>;
-+		atmel,rb = <0>;
-+		nand-bus-width = <8>;
-+		nand-ecc-mode = "hw";
-+		nand-ecc-strength = <4>;
-+		nand-ecc-step-size = <512>;
-+		nand-on-flash-bbt;
-+		label = "atmel_nand";
-+	};
- };
-diff --git a/arch/arm/boot/dts/at91-qil_a9260.dts b/arch/arm/boot/dts/at91-qil_a9260.dts
-index 8f019184fccf..f46352790a41 100644
---- a/arch/arm/boot/dts/at91-qil_a9260.dts
-+++ b/arch/arm/boot/dts/at91-qil_a9260.dts
-@@ -107,50 +107,69 @@
- 			status = "okay";
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
--
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x20000>;
--			};
--
--			bareboxenv2@80000 {
--				label = "bareboxenv2";
--				reg = <0x80000 0x20000>;
--			};
--
--			oftree@a0000 {
--				label = "oftree";
--				reg = <0xa0000 0x20000>;
--			};
--
--			kernel@c0000 {
--				label = "kernel";
--				reg = <0xc0000 0x400000>;
--			};
--
--			rootfs@4c0000 {
--				label = "rootfs";
--				reg = <0x4c0000 0x7800000>;
--			};
--
--			data@7cc0000 {
--				label = "data";
--				reg = <0x7cc0000 0x8340000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
-+
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x20000>;
-+						};
-+
-+						bareboxenv2@80000 {
-+							label = "bareboxenv2";
-+							reg = <0x80000 0x20000>;
-+						};
-+
-+						oftree@a0000 {
-+							label = "oftree";
-+							reg = <0xa0000 0x20000>;
-+						};
-+
-+						kernel@c0000 {
-+							label = "kernel";
-+							reg = <0xc0000 0x400000>;
-+						};
-+
-+						rootfs@4c0000 {
-+							label = "rootfs";
-+							reg = <0x4c0000 0x7800000>;
-+						};
-+
-+						data@7cc0000 {
-+							label = "data";
-+							reg = <0x7cc0000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-index 5a53fcf542ab..3af088d2cba7 100644
---- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-@@ -235,46 +235,6 @@
- 			};
- 		};
- 
--		nand0: nand@60000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
--			status = "okay";
--
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			bootloader@40000 {
--				label = "bootloader";
--				reg = <0x40000 0x80000>;
--			};
--
--			bootloaderenv@c0000 {
--				label = "bootloader env";
--				reg = <0xc0000 0xc0000>;
--			};
--
--			dtb@180000 {
--				label = "device tree";
--				reg = <0x180000 0x80000>;
--			};
--
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
--
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
--			};
--		};
--
- 		usb0: gadget@00500000 {
- 			atmel,vbus-gpio = <&pioE 9 GPIO_ACTIVE_HIGH>;	/* PE9, conflicts with A9 */
- 			pinctrl-names = "default";
-@@ -294,6 +254,63 @@
- 		usb2: ehci@00700000 {
- 			status = "okay";
- 		};
-+
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_nand_addr>;
-+			pinctrl-names = "default";
-+			status = "okay";
-+
-+			nand_controller: nand-controller {
-+				status = "okay";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x2>;
-+					atmel,rb = <0>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-ecc-strength = <4>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						bootloader@40000 {
-+							label = "bootloader";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						bootloaderenv@c0000 {
-+							label = "bootloader env";
-+							reg = <0xc0000 0xc0000>;
-+						};
-+
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
-+
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
-+			};
-+		};
- 	};
- 
- 	vcc_mmc0_reg: fixedregulator_mmc0 {
-diff --git a/arch/arm/boot/dts/at91-sama5d4_xplained.dts b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-index 5ab14cedb1db..cf712444b2c2 100644
---- a/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4_xplained.dts
-@@ -190,41 +190,60 @@
- 			status = "okay";
- 		};
- 
--		nand0: nand@80000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			nand-on-flash-bbt;
--			atmel,has-pmecc;
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_cs3 &pinctrl_ebi_nrd_nandoe
-+				     &pinctrl_ebi_nwe_nandwe &pinctrl_ebi_nandrdy
-+				     &pinctrl_ebi_data_0_7 &pinctrl_ebi_nand_addr>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			bootloader@40000 {
--				label = "bootloader";
--				reg = <0x40000 0x80000>;
--			};
--
--			bootloaderenv@c0000 {
--				label = "bootloader env";
--				reg = <0xc0000 0xc0000>;
--			};
--
--			dtb@180000 {
--				label = "device tree";
--				reg = <0x180000 0x80000>;
--			};
--
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
- 
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
-+				nand@3 {
-+					reg = <0x3 0x0 0x2>;
-+					atmel,rb = <0>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						bootloader@40000 {
-+							label = "bootloader";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						bootloaderenv@c0000 {
-+							label = "bootloader env";
-+							reg = <0xc0000 0xc0000>;
-+						};
-+
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
-+
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91-sama5d4ek.dts b/arch/arm/boot/dts/at91-sama5d4ek.dts
-index f8b96cef5e1a..bae5248f126e 100644
---- a/arch/arm/boot/dts/at91-sama5d4ek.dts
-+++ b/arch/arm/boot/dts/at91-sama5d4ek.dts
-@@ -236,41 +236,60 @@
- 			status = "okay";
- 		};
- 
--		nand0: nand@80000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			nand-on-flash-bbt;
--			atmel,has-pmecc;
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_cs3 &pinctrl_ebi_nrd_nandoe
-+				     &pinctrl_ebi_nwe_nandwe &pinctrl_ebi_nandrdy
-+				     &pinctrl_ebi_data_0_7 &pinctrl_ebi_nand_addr>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			bootloader@40000 {
--				label = "bootloader";
--				reg = <0x40000 0x80000>;
--			};
--
--			bootloaderenv@c0000 {
--				label = "bootloader env";
--				reg = <0xc0000 0xc0000>;
--			};
--
--			dtb@180000 {
--				label = "device tree";
--				reg = <0x180000 0x80000>;
--			};
--
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
- 
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
-+				nand@3 {
-+					reg = <0x3 0x0 0x2>;
-+					atmel,rb = <0>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						bootloader@40000 {
-+							label = "bootloader";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						bootloaderenv@c0000 {
-+							label = "bootloader env";
-+							reg = <0xc0000 0xc0000>;
-+						};
-+
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
-+
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/at91-tse850-3.dts b/arch/arm/boot/dts/at91-tse850-3.dts
-index 498fba3e52b5..2c4bfefa3f71 100644
---- a/arch/arm/boot/dts/at91-tse850-3.dts
-+++ b/arch/arm/boot/dts/at91-tse850-3.dts
-@@ -161,45 +161,51 @@
- 	};
- };
- 
--&nand0 {
--	at91bootstrap@0 {
--		label = "at91bootstrap";
--		reg = <0x0 0x40000>;
--	};
-+&nand {
-+	partitions {
-+		compatible = "fixed-partitions";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		at91bootstrap@0 {
-+			label = "at91bootstrap";
-+			reg = <0x0 0x40000>;
-+		};
- 
--	barebox@40000 {
--		label = "bootloader";
--		reg = <0x40000 0x60000>;
--	};
-+		barebox@40000 {
-+			label = "bootloader";
-+			reg = <0x40000 0x60000>;
-+		};
- 
--	bareboxenv@c0000 {
--		label = "bareboxenv";
--		reg = <0xc0000 0x40000>;
--	};
-+		bareboxenv@c0000 {
-+			label = "bareboxenv";
-+			reg = <0xc0000 0x40000>;
-+		};
- 
--	bareboxenv2@100000 {
--		label = "bareboxenv2";
--		reg = <0x100000 0x40000>;
--	};
-+		bareboxenv2@100000 {
-+			label = "bareboxenv2";
-+			reg = <0x100000 0x40000>;
-+		};
- 
--	oftree@180000 {
--		label = "oftree";
--		reg = <0x180000 0x20000>;
--	};
-+		oftree@180000 {
-+			label = "oftree";
-+			reg = <0x180000 0x20000>;
-+		};
- 
--	kernel@200000 {
--		label = "kernel";
--		reg = <0x200000 0x500000>;
--	};
-+		kernel@200000 {
-+			label = "kernel";
-+			reg = <0x200000 0x500000>;
-+		};
- 
--	rootfs@800000 {
--		label = "rootfs";
--		reg = <0x800000 0x0f800000>;
--	};
-+		rootfs@800000 {
-+			label = "rootfs";
-+			reg = <0x800000 0x0f800000>;
-+		};
- 
--	ovlfs@10000000 {
--		label = "ovlfs";
--		reg = <0x10000000 0x10000000>;
-+		ovlfs@10000000 {
-+			label = "ovlfs";
-+			reg = <0x10000000 0x10000000>;
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/at91sam9260.dtsi b/arch/arm/boot/dts/at91sam9260.dtsi
-index ab0e73374567..6582f3cca929 100644
---- a/arch/arm/boot/dts/at91sam9260.dtsi
-+++ b/arch/arm/boot/dts/at91sam9260.dtsi
-@@ -532,10 +532,14 @@
- 				};
- 
- 				nand {
--					pinctrl_nand: nand-0 {
-+					pinctrl_nand_rb: nand-rb-0 {
- 						atmel,pins =
--							<AT91_PIOC 13 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP	/* PC13 gpio RDY pin pull_up */
--							 AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PC14 gpio enable pin pull_up */
-+							<AT91_PIOC 13 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
-+
-+					pinctrl_nand_cs: nand-cs-0 {
-+						atmel,pins =
-+							 <AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
- 
-@@ -995,24 +999,6 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			reg = <0x40000000 0x10000000
--			       0xffffe800 0x200
--			      >;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--			gpios = <&pioC 13 GPIO_ACTIVE_HIGH
--				 &pioC 14 GPIO_ACTIVE_HIGH
--				 0
--				>;
--			status = "disabled";
--		};
--
- 		usb0: ohci@500000 {
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00500000 0x100000>;
-diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
-index 3ab0c21134f1..a05353f96151 100644
---- a/arch/arm/boot/dts/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/at91sam9261.dtsi
-@@ -118,22 +118,6 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			reg = <0x40000000 0x10000000>;
--			atmel,nand-addr-offset = <22>;
--			atmel,nand-cmd-offset = <21>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--
--			gpios = <&pioC 15 GPIO_ACTIVE_HIGH>,
--				<&pioC 14 GPIO_ACTIVE_HIGH>,
--				<0>;
--			status = "disabled";
--		};
--
- 		apb {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -394,9 +378,13 @@
- 				};
- 
- 				nand {
--					pinctrl_nand: nand-0 {
-+					pinctrl_nand_rb: nand-rb-0 {
-+						atmel,pins =
-+							<AT91_PIOC 15 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
-+
-+					pinctrl_nand_cs: nand-cs-0 {
- 						atmel,pins =
--							<AT91_PIOC 15 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>,
- 							<AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
-diff --git a/arch/arm/boot/dts/at91sam9261ek.dts b/arch/arm/boot/dts/at91sam9261ek.dts
-index 55bd51f07fa6..157e1493e6eb 100644
---- a/arch/arm/boot/dts/at91sam9261ek.dts
-+++ b/arch/arm/boot/dts/at91sam9261ek.dts
-@@ -68,40 +68,59 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			bootloader@40000 {
--				label = "bootloader";
--				reg = <0x40000 0x80000>;
--			};
--
--			bootloaderenv@c0000 {
--				label = "bootloader env";
--				reg = <0xc0000 0xc0000>;
--			};
--
--			dtb@180000 {
--				label = "device tree";
--				reg = <0x180000 0x80000>;
--			};
--
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
--
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 15 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						bootloader@40000 {
-+							label = "bootloader";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						bootloaderenv@c0000 {
-+							label = "bootloader env";
-+							reg = <0xc0000 0xc0000>;
-+						};
-+
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
-+
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index db9f3a02f2fa..ed4b564f8de5 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -487,10 +487,14 @@
- 				};
- 
- 				nand {
--					pinctrl_nand: nand-0 {
-+					pinctrl_nand_rb: nand-rb-0 {
- 						atmel,pins =
--							<AT91_PIOA 22 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP	/* PA22 gpio RDY pin pull_up*/
--							 AT91_PIOD 15 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PD15 gpio enable pin pull_up */
-+							<AT91_PIOA 22 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
-+
-+					pinctrl_nand_cs: nand-cs-0 {
-+						atmel,pins =
-+							 <AT91_PIOD 15 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
- 
-@@ -1006,24 +1010,6 @@
- 			status = "disabled";
- 		};
- 
--		nand0: nand@40000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			reg = <0x40000000 0x10000000
--			       0xffffe000 0x200
--			      >;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--			gpios = <&pioA 22 GPIO_ACTIVE_HIGH
--				 &pioD 15 GPIO_ACTIVE_HIGH
--				 0
--				>;
--			status = "disabled";
--		};
--
- 		usb0: ohci@00a00000 {
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00a00000 0x100000>;
-diff --git a/arch/arm/boot/dts/at91sam9263ek.dts b/arch/arm/boot/dts/at91sam9263ek.dts
-index 127cc42e9e29..10a0925da10e 100644
---- a/arch/arm/boot/dts/at91sam9263ek.dts
-+++ b/arch/arm/boot/dts/at91sam9263ek.dts
-@@ -125,50 +125,69 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt = <1>;
-+		ebi0: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
--
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x20000>;
--			};
--
--			bareboxenv2@80000 {
--				label = "bareboxenv2";
--				reg = <0x80000 0x20000>;
--			};
--
--			oftree@80000 {
--				label = "oftree";
--				reg = <0xa0000 0x20000>;
--			};
--
--			kernel@a0000 {
--				label = "kernel";
--				reg = <0xc0000 0x400000>;
--			};
--
--			rootfs@4a0000 {
--				label = "rootfs";
--				reg = <0x4c0000 0x7800000>;
--			};
--
--			data@7ca0000 {
--				label = "data";
--				reg = <0x7cc0000 0x8340000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioA 22 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioA 15 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
-+
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x20000>;
-+						};
-+
-+						bareboxenv2@80000 {
-+							label = "bareboxenv2";
-+							reg = <0x80000 0x20000>;
-+						};
-+
-+						oftree@80000 {
-+							label = "oftree";
-+							reg = <0xa0000 0x20000>;
-+						};
-+
-+						kernel@a0000 {
-+							label = "kernel";
-+							reg = <0xc0000 0x400000>;
-+						};
-+
-+						rootfs@4a0000 {
-+							label = "rootfs";
-+							reg = <0x4c0000 0x7800000>;
-+						};
-+
-+						data@7ca0000 {
-+							label = "data";
-+							reg = <0x7cc0000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-index 27847a47c108..ac9a1511e239 100644
---- a/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g20ek_common.dtsi
-@@ -123,50 +123,69 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
--
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x20000>;
--			};
--
--			bareboxenv2@80000 {
--				label = "bareboxenv2";
--				reg = <0x80000 0x20000>;
--			};
--
--			oftree@80000 {
--				label = "oftree";
--				reg = <0xa0000 0x20000>;
--			};
--
--			kernel@a0000 {
--				label = "kernel";
--				reg = <0xc0000 0x400000>;
--			};
--
--			rootfs@4a0000 {
--				label = "rootfs";
--				reg = <0x4c0000 0x7800000>;
--			};
--
--			data@7ca0000 {
--				label = "data";
--				reg = <0x7cc0000 0x8340000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
-+
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x20000>;
-+						};
-+
-+						bareboxenv2@80000 {
-+							label = "bareboxenv2";
-+							reg = <0x80000 0x20000>;
-+						};
-+
-+						oftree@80000 {
-+							label = "oftree";
-+							reg = <0xa0000 0x20000>;
-+						};
-+
-+						kernel@a0000 {
-+							label = "kernel";
-+							reg = <0xc0000 0x400000>;
-+						};
-+
-+						rootfs@4a0000 {
-+							label = "rootfs";
-+							reg = <0x4c0000 0x7800000>;
-+						};
-+
-+						data@7ca0000 {
-+							label = "data";
-+							reg = <0x7cc0000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91sam9g45.dtsi b/arch/arm/boot/dts/at91sam9g45.dtsi
-index 392dcfb79b57..a4808c4fbc05 100644
---- a/arch/arm/boot/dts/at91sam9g45.dtsi
-+++ b/arch/arm/boot/dts/at91sam9g45.dtsi
-@@ -611,10 +611,14 @@
- 				};
- 
- 				nand {
--					pinctrl_nand: nand-0 {
-+					pinctrl_nand_rb: nand-rb-0 {
- 						atmel,pins =
--							<AT91_PIOC 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP	/* PC8 gpio RDY pin pull_up*/
--							 AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PC14 gpio enable pin pull_up */
-+							<AT91_PIOC 8 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
-+
-+					pinctrl_nand_cs: nand-cs-0 {
-+						atmel,pins =
-+							 <AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
- 
-@@ -1288,25 +1292,6 @@
- 			status = "disabled";
- 		};
- 
--		nand0: nand@40000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			reg = <0x40000000 0x10000000
--			       0xffffe200 0x200
--			      >;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			atmel,nand-has-dma;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--			gpios = <&pioC 8 GPIO_ACTIVE_HIGH
--				 &pioC 14 GPIO_ACTIVE_HIGH
--				 0
--				>;
--			status = "disabled";
--		};
--
- 		usb0: ohci@00700000 {
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00700000 0x100000>;
-diff --git a/arch/arm/boot/dts/at91sam9m10g45ek.dts b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-index 2400c99134f7..2522c3308305 100644
---- a/arch/arm/boot/dts/at91sam9m10g45ek.dts
-+++ b/arch/arm/boot/dts/at91sam9m10g45ek.dts
-@@ -245,25 +245,44 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			boot@0 {
--				label = "bootstrap/uboot/kernel";
--				reg = <0x0 0x400000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
- 
--			rootfs@400000 {
--				label = "rootfs";
--				reg = <0x400000 0x3C00000>;
--			};
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 8 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						boot@0 {
-+							label = "bootstrap/uboot/kernel";
-+							reg = <0x0 0x400000>;
-+						};
- 
--			data@4000000 {
--				label = "data";
--				reg = <0x4000000 0xC000000>;
-+						rootfs@400000 {
-+							label = "rootfs";
-+							reg = <0x400000 0x3C00000>;
-+						};
-+
-+						data@4000000 {
-+							label = "data";
-+							reg = <0x4000000 0xC000000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index df06a66ace07..06516d02d351 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -643,10 +643,14 @@
- 				};
- 
- 				nand {
--					pinctrl_nand: nand-0 {
-+					pinctrl_nand_rb: nand-rb-0 {
- 						atmel,pins =
--							<AT91_PIOD 5 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP	/* PD5 gpio RDY pin pull_up*/
--							 AT91_PIOD 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PD4 gpio enable pin pull_up */
-+							<AT91_PIOD 5 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
-+
-+					pinctrl_nand_cs: nand-cs-0 {
-+						atmel,pins =
-+							 <AT91_PIOD 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
- 
-@@ -1014,28 +1018,6 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			reg = < 0x40000000 0x10000000
--				0xffffe000 0x00000600
--				0xffffe600 0x00000200
--				0x00108000 0x00018000
--			       >;
--			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			atmel,nand-has-dma;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--			gpios = <&pioD 5 GPIO_ACTIVE_HIGH
--				 &pioD 4 GPIO_ACTIVE_HIGH
--				 0
--				>;
--			status = "disabled";
--		};
--
- 		usb0: ohci@00500000 {
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00500000 0x00100000>;
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index 626c67d66626..5bea8c59b115 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -147,14 +147,26 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <2>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
-+
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-ecc-strength = <2>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+				};
-+			};
- 		};
- 
- 		usb0: ohci@00500000 {
-diff --git a/arch/arm/boot/dts/at91sam9rl.dtsi b/arch/arm/boot/dts/at91sam9rl.dtsi
-index d373400cddcd..7768342a6638 100644
---- a/arch/arm/boot/dts/at91sam9rl.dtsi
-+++ b/arch/arm/boot/dts/at91sam9rl.dtsi
-@@ -117,23 +117,6 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			reg = <0x40000000 0x10000000>,
--			      <0xffffe800 0x200>;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			atmel,nand-has-dma;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--			gpios = <&pioD 17 GPIO_ACTIVE_HIGH>,
--				<&pioB 6 GPIO_ACTIVE_HIGH>,
--				<0>;
--			status = "disabled";
--		};
--
- 		apb {
- 			compatible = "simple-bus";
- 			#address-cells = <1>;
-@@ -478,6 +461,14 @@
- 					};
- 				};
- 
-+				ebi {
-+					pinctrl_ebi_addr_nand: ebi-addr-0 {
-+						atmel,pins =
-+							<AT91_PIOB 2 AT91_PERIPH_A AT91_PINCTRL_NONE>,
-+							<AT91_PIOB 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+				};
-+
- 				fb {
- 					pinctrl_fb: fb-0 {
- 						atmel,pins =
-@@ -542,28 +533,21 @@
- 				};
- 
- 				nand {
--					pinctrl_nand: nand-0 {
-+					pinctrl_nand_rb: nand-rb-0 {
- 						atmel,pins =
--							<AT91_PIOD 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>,
--							<AT91_PIOB 6 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+							<AT91_PIOD 17 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 
--					pinctrl_nand0_ale_cle: nand_ale_cle-0 {
-+					pinctrl_nand_cs: nand-cs-0 {
- 						atmel,pins =
--							<AT91_PIOB 2 AT91_PERIPH_A AT91_PINCTRL_NONE>,
--							<AT91_PIOB 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+							<AT91_PIOB 6 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 
--					pinctrl_nand0_oe_we: nand_oe_we-0 {
-+					pinctrl_nand_oe_we: nand-oe-we-0 {
- 						atmel,pins =
- 							<AT91_PIOB 4 AT91_PERIPH_A AT91_PINCTRL_NONE>,
- 							<AT91_PIOB 5 AT91_PERIPH_A AT91_PINCTRL_NONE>;
- 					};
--
--					pinctrl_nand0_cs: nand_cs-0 {
--						atmel,pins =
--							<AT91_PIOB 6 AT91_PERIPH_A AT91_PINCTRL_NONE>;
--					};
- 				};
- 
- 				pwm0 {
-diff --git a/arch/arm/boot/dts/at91sam9rlek.dts b/arch/arm/boot/dts/at91sam9rlek.dts
-index 2e567d90fba8..9047c168298a 100644
---- a/arch/arm/boot/dts/at91sam9rlek.dts
-+++ b/arch/arm/boot/dts/at91sam9rlek.dts
-@@ -63,40 +63,63 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt = <1>;
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_addr_nand>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			bootloader@40000 {
--				label = "bootloader";
--				reg = <0x40000 0x80000>;
--			};
--
--			bootloaderenv@c0000 {
--				label = "bootloader env";
--				reg = <0xc0000 0xc0000>;
--			};
--
--			dtb@180000 {
--				label = "device tree";
--				reg = <0x180000 0x80000>;
--			};
--
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_oe_we
-+					     &pinctrl_nand_cs
-+					     &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
- 
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioD 17 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioB 6 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						bootloader@40000 {
-+							label = "bootloader";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						bootloaderenv@c0000 {
-+							label = "bootloader env";
-+							reg = <0xc0000 0xc0000>;
-+						};
-+
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
-+
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
-index 7723e8b02880..57f307541d2e 100644
---- a/arch/arm/boot/dts/at91sam9x5.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5.dtsi
-@@ -481,6 +481,38 @@
- 					};
- 				};
- 
-+				ebi {
-+					pinctrl_ebi_data_0_7: ebi-data-lsb-0 {
-+						atmel,pins =
-+							<AT91_PIOD 6 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 7 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 8 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 9 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 10 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 11 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 12 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 13 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_ebi_data_8_15: ebi-data-msb-0 {
-+						atmel,pins =
-+							<AT91_PIOD 14 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 15 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 16 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 17 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 18 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 19 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 20 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 21 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_ebi_addr_nand: ebi-addr-0 {
-+						atmel,pins =
-+							<AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+				};
-+
- 				usart0 {
- 					pinctrl_usart0: usart0-0 {
- 						atmel,pins =
-@@ -567,34 +599,20 @@
- 				};
- 
- 				nand {
--					pinctrl_nand: nand-0 {
-+					pinctrl_nand_oe_we: nand-oe-we-0 {
- 						atmel,pins =
--							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD0 periph A Read Enable */
--							 AT91_PIOD 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD1 periph A Write Enable */
--							 AT91_PIOD 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD2 periph A Address Latch Enable */
--							 AT91_PIOD 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD3 periph A Command Latch Enable */
--							 AT91_PIOD 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP	/* PD4 gpio Chip Enable pin pull_up */
--							 AT91_PIOD 5 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP	/* PD5 gpio RDY/BUSY pin pull_up */
--							 AT91_PIOD 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD6 periph A Data bit 0 */
--							 AT91_PIOD 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD7 periph A Data bit 1 */
--							 AT91_PIOD 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD8 periph A Data bit 2 */
--							 AT91_PIOD 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD9 periph A Data bit 3 */
--							 AT91_PIOD 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD10 periph A Data bit 4 */
--							 AT91_PIOD 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD11 periph A Data bit 5 */
--							 AT91_PIOD 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD12 periph A Data bit 6 */
--							 AT91_PIOD 13 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PD13 periph A Data bit 7 */
--					};
--
--					pinctrl_nand_16bits: nand_16bits-0 {
-+							<AT91_PIOD 0 AT91_PERIPH_A AT91_PINCTRL_NONE
-+							 AT91_PIOD 1 AT91_PERIPH_A AT91_PINCTRL_NONE>;
-+					};
-+
-+					pinctrl_nand_rb: nand-rb-0 {
-+						atmel,pins =
-+							<AT91_PIOD 5 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
-+					};
-+
-+					pinctrl_nand_cs: nand-cs-0 {
- 						atmel,pins =
--							<AT91_PIOD 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD14 periph A Data bit 8 */
--							 AT91_PIOD 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD15 periph A Data bit 9 */
--							 AT91_PIOD 16 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD16 periph A Data bit 10 */
--							 AT91_PIOD 17 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD17 periph A Data bit 11 */
--							 AT91_PIOD 18 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD18 periph A Data bit 12 */
--							 AT91_PIOD 19 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD19 periph A Data bit 13 */
--							 AT91_PIOD 20 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PD20 periph A Data bit 14 */
--							 AT91_PIOD 21 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PD21 periph A Data bit 15 */
-+							<AT91_PIOD 4 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
- 
-@@ -1213,28 +1231,6 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			reg = <0x40000000 0x10000000
--			       0xffffe000 0x600		/* PMECC Registers */
--			       0xffffe600 0x200		/* PMECC Error Location Registers */
--			       0x00108000 0x18000	/* PMECC looup table in ROM code  */
--			      >;
--			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			atmel,nand-has-dma;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--			gpios = <&pioD 5 GPIO_ACTIVE_HIGH
--				 &pioD 4 GPIO_ACTIVE_HIGH
--				 0
--				>;
--			status = "disabled";
--		};
--
- 		usb0: ohci@00600000 {
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00600000 0x100000>;
-diff --git a/arch/arm/boot/dts/at91sam9x5cm.dtsi b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-index b098ad8cd93a..bdeaa0b64a5b 100644
---- a/arch/arm/boot/dts/at91sam9x5cm.dtsi
-+++ b/arch/arm/boot/dts/at91sam9x5cm.dtsi
-@@ -37,38 +37,61 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;	/* Enable PMECC */
--			atmel,pmecc-cap = <2>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_addr_nand
-+				     &pinctrl_ebi_data_0_7>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
--
--			uboot@40000 {
--				label = "u-boot";
--				reg = <0x40000 0x80000>;
--			};
--
--			ubootenv@c0000 {
--				label = "U-Boot Env";
--				reg = <0xc0000 0x140000>;
--			};
--
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
--
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x1f800000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_oe_we
-+					     &pinctrl_nand_cs
-+					     &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioD 5 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioD 4 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-ecc-strength = <2>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
-+
-+						uboot@40000 {
-+							label = "u-boot";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						ubootenv@c0000 {
-+							label = "U-Boot Env";
-+							reg = <0xc0000 0x140000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
-+
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x1f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/ethernut5.dts b/arch/arm/boot/dts/ethernut5.dts
-index 4687229a3ab9..123b203be06c 100644
---- a/arch/arm/boot/dts/ethernut5.dts
-+++ b/arch/arm/boot/dts/ethernut5.dts
-@@ -55,25 +55,38 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			gpios = <0
--				 &pioC 14 GPIO_ACTIVE_HIGH
--				 0
--				>;
--
--			root@0 {
--				label = "root";
--				reg = <0x0 0x08000000>;
--			};
--
--			data@20000 {
--				label = "data";
--				reg = <0x08000000 0x38000000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs>;
-+				pinctrl-names = "default";
-+
-+				nand: nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						root@0 {
-+							label = "root";
-+							reg = <0x0 0x08000000>;
-+						};
-+
-+						data@20000 {
-+							label = "data";
-+							reg = <0x08000000 0x38000000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/ge863-pro3.dtsi b/arch/arm/boot/dts/ge863-pro3.dtsi
-index 4aee5cc75fa4..8613944ea5c5 100644
---- a/arch/arm/boot/dts/ge863-pro3.dtsi
-+++ b/arch/arm/boot/dts/ge863-pro3.dtsi
-@@ -23,20 +23,39 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			boot@0 {
--				label = "boot";
--				reg = <0x0 0x7c0000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						boot@0 {
-+							label = "boot";
-+							reg = <0x0 0x7c0000>;
-+						};
- 
--			root@07c0000 {
--				label = "root";
--				reg = <0x7c0000 0x7840000>;
-+						root@07c0000 {
-+							label = "root";
-+							reg = <0x7c0000 0x7840000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/pm9g45.dts b/arch/arm/boot/dts/pm9g45.dts
-index 0abd7bf17568..3139221737ee 100644
---- a/arch/arm/boot/dts/pm9g45.dts
-+++ b/arch/arm/boot/dts/pm9g45.dts
-@@ -37,12 +37,10 @@
- 			};
- 
- 			pinctrl@fffff200 {
--
--				board {
--					pinctrl_board_nand: nand0-board {
-+				nand {
-+					pinctrl_nand_rb: nand-rb-0 {
- 						atmel,pins =
--							<AT91_PIOD 3 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP	/* PD3 gpio RDY pin pull_up*/
--							 AT91_PIOC 14 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;	/* PC14 gpio enable pin pull_up */
-+							<AT91_PIOD 3 AT91_PERIPH_GPIO AT91_PINCTRL_PULL_UP>;
- 					};
- 				};
- 
-@@ -71,50 +69,61 @@
- 				phy-mode = "rmii";
- 				status = "okay";
- 			};
--
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
--			pinctrl-0 = <&pinctrl_board_nand>;
--
--			gpios = <&pioD 3 GPIO_ACTIVE_HIGH
--				 &pioC 14 GPIO_ACTIVE_HIGH
--				 0
--				>;
--
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
--
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x1A0000>;
--			};
--
--			kernel@200000 {
--				label = "bareboxenv2";
--				reg = <0x200000 0x300000>;
--			};
--
--			kernel@500000 {
--				label = "root";
--				reg = <0x500000 0x400000>;
--			};
--
--			data@900000 {
--				label = "data";
--				reg = <0x900000 0x8340000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioD 3 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
-+
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x1A0000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "bareboxenv2";
-+							reg = <0x200000 0x300000>;
-+						};
-+
-+						kernel@500000 {
-+							label = "root";
-+							reg = <0x500000 0x400000>;
-+						};
-+
-+						data@900000 {
-+							label = "data";
-+							reg = <0x900000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-index 3925f83f58a6..554d0bdedc7a 100644
---- a/arch/arm/boot/dts/sama5d3.dtsi
-+++ b/arch/arm/boot/dts/sama5d3.dtsi
-@@ -1569,38 +1569,6 @@
- 			};
- 		};
- 
--		nand0: nand@60000000 {
--			compatible = "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
--			reg = <	0x60000000 0x01000000	/* EBI CS3 */
--				0xffffc070 0x00000490	/* SMC PMECC regs */
--				0xffffc500 0x00000100	/* SMC PMECC Error Location regs */
--				0x00110000 0x00018000	/* ROM code */
--				>;
--			interrupts = <5 IRQ_TYPE_LEVEL_HIGH 6>;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			atmel,nand-has-dma;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand0_ale_cle>;
--			atmel,pmecc-lookup-table-offset = <0x0 0x8000>;
--			status = "disabled";
--
--			nfc@70000000 {
--				compatible = "atmel,sama5d3-nfc";
--				#address-cells = <1>;
--				#size-cells = <1>;
--				reg = <
--					0x70000000 0x08000000	/* NFC Command Registers */
--					0xffffc000 0x00000070	/* NFC HSMC regs */
--					0x00200000 0x00100000	/* NFC SRAM banks */
--					>;
--				clocks = <&hsmc_clk>;
--			};
--		};
--
- 		nfc_io: nfc-io@70000000 {
- 			compatible = "atmel,sama5d3-nfc-io", "syscon";
- 			reg = <0x70000000 0x8000000>;
-diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
-index b5e111b29da1..4606e1d7e6f2 100644
---- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-@@ -36,43 +36,59 @@
- 			};
- 		};
- 
--		nand0: nand@60000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
-+		ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_nand_addr>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
- 
--			bootloader@40000 {
--				label = "bootloader";
--				reg = <0x40000 0x80000>;
--			};
-+				nand@3 {
-+					reg = <0x3 0x0 0x2>;
-+					atmel,rb = <0>;
-+					nand-ecc-mode = "hw";
-+					nand-ecc-strength = <4>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
- 
--			bootloaderenv@c0000 {
--				label = "bootloader env";
--				reg = <0xc0000 0xc0000>;
--			};
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
- 
--			dtb@180000 {
--				label = "device tree";
--				reg = <0x180000 0x80000>;
--			};
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
- 
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
-+						bootloader@40000 {
-+							label = "bootloader";
-+							reg = <0x40000 0x80000>;
-+						};
-+
-+						bootloaderenv@c0000 {
-+							label = "bootloader env";
-+							reg = <0xc0000 0xc0000>;
-+						};
-+
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
-+						};
-+
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
- 
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-index dc7572bc7ff0..75cbf4d4ab1a 100644
---- a/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-+++ b/arch/arm/boot/dts/sama5d3xcm_cmp.dtsi
-@@ -148,43 +148,60 @@
- 			};
- 		};
- 
--		nand0: nand@60000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "hw";
--			atmel,has-pmecc;
--			atmel,pmecc-cap = <4>;
--			atmel,pmecc-sector-size = <512>;
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
-+			pinctrl-0 = <&pinctrl_ebi_nand_addr>;
-+			pinctrl-names = "default";
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x40000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x2>;
-+					atmel,rb = <0>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "hw";
-+					nand-ecc-strength = <4>;
-+					nand-ecc-step-size = <512>;
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x40000>;
-+						};
- 
--			bootloader@40000 {
--				label = "bootloader";
--				reg = <0x40000 0x80000>;
--			};
-+						bootloader@40000 {
-+							label = "bootloader";
-+							reg = <0x40000 0x80000>;
-+						};
- 
--			bootloaderenv@c0000 {
--				label = "bootloader env";
--				reg = <0xc0000 0xc0000>;
--			};
-+						bootloaderenv@c0000 {
-+							label = "bootloader env";
-+							reg = <0xc0000 0xc0000>;
-+						};
- 
--			dtb@180000 {
--				label = "device tree";
--				reg = <0x180000 0x80000>;
--			};
-+						dtb@180000 {
-+							label = "device tree";
-+							reg = <0x180000 0x80000>;
-+						};
- 
--			kernel@200000 {
--				label = "kernel";
--				reg = <0x200000 0x600000>;
--			};
-+						kernel@200000 {
-+							label = "kernel";
-+							reg = <0x200000 0x600000>;
-+						};
- 
--			rootfs@800000 {
--				label = "rootfs";
--				reg = <0x800000 0x0f800000>;
-+						rootfs@800000 {
-+							label = "rootfs";
-+							reg = <0x800000 0x0f800000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sama5d4.dtsi b/arch/arm/boot/dts/sama5d4.dtsi
-index de6bcff87745..2fa36c525957 100644
---- a/arch/arm/boot/dts/sama5d4.dtsi
-+++ b/arch/arm/boot/dts/sama5d4.dtsi
-@@ -312,37 +312,6 @@
- 			};
- 		};
- 
--		nand0: nand@80000000 {
--			compatible = "atmel,sama5d4-nand", "atmel,at91rm9200-nand";
--			#address-cells = <1>;
--			#size-cells = <1>;
--			ranges;
--			reg = <	0x80000000 0x08000000	/* EBI CS3 */
--				0xfc05c070 0x00000490	/* SMC PMECC regs */
--				0xfc05c500 0x00000100	/* SMC PMECC Error Location regs */
--				>;
--			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 6>;
--			atmel,nand-addr-offset = <21>;
--			atmel,nand-cmd-offset = <22>;
--			atmel,nand-has-dma;
--			pinctrl-names = "default";
--			pinctrl-0 = <&pinctrl_nand>;
--			status = "disabled";
--
--			nfc@90000000 {
--				compatible = "atmel,sama5d3-nfc";
--				#address-cells = <1>;
--				#size-cells = <1>;
--				reg = <
--					0x90000000 0x08000000	/* NFC Command Registers */
--					0xfc05c000 0x00000070	/* NFC HSMC regs */
--					0x00100000 0x00100000	/* NFC SRAM banks */
--                                         >;
--				clocks = <&hsmc_clk>;
--				atmel,write-by-sram;
--			};
--		};
--
- 		nfc_io: nfc-io@90000000 {
- 			compatible = "atmel,sama5d3-nfc-io", "syscon";
- 			reg = <0x90000000 0x8000000>;
-diff --git a/arch/arm/boot/dts/tny_a9260_common.dtsi b/arch/arm/boot/dts/tny_a9260_common.dtsi
-index f9dc463b9e48..5d83df4675a1 100644
---- a/arch/arm/boot/dts/tny_a9260_common.dtsi
-+++ b/arch/arm/boot/dts/tny_a9260_common.dtsi
-@@ -32,50 +32,69 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
- 
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
- 
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x20000>;
--			};
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
- 
--			bareboxenv2@80000 {
--				label = "bareboxenv2";
--				reg = <0x80000 0x20000>;
--			};
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
- 
--			oftree@80000 {
--				label = "oftree";
--				reg = <0xa0000 0x20000>;
--			};
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
- 
--			kernel@a0000 {
--				label = "kernel";
--				reg = <0xc0000 0x400000>;
--			};
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x20000>;
-+						};
- 
--			rootfs@4a0000 {
--				label = "rootfs";
--				reg = <0x4c0000 0x7800000>;
--			};
-+						bareboxenv2@80000 {
-+							label = "bareboxenv2";
-+							reg = <0x80000 0x20000>;
-+						};
-+
-+						oftree@80000 {
-+							label = "oftree";
-+							reg = <0xa0000 0x20000>;
-+						};
-+
-+						kernel@a0000 {
-+							label = "kernel";
-+							reg = <0xc0000 0x400000>;
-+						};
-+
-+						rootfs@4a0000 {
-+							label = "rootfs";
-+							reg = <0x4c0000 0x7800000>;
-+						};
- 
--			data@7ca0000 {
--				label = "data";
--				reg = <0x7cc0000 0x8340000>;
-+						data@7ca0000 {
-+							label = "data";
-+							reg = <0x7cc0000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/tny_a9263.dts b/arch/arm/boot/dts/tny_a9263.dts
-index 9161cd9889b4..8cf0a9e08571 100644
---- a/arch/arm/boot/dts/tny_a9263.dts
-+++ b/arch/arm/boot/dts/tny_a9263.dts
-@@ -42,50 +42,69 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi0: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
--
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x20000>;
--			};
--
--			bareboxenv2@80000 {
--				label = "bareboxenv2";
--				reg = <0x80000 0x20000>;
--			};
--
--			oftree@80000 {
--				label = "oftree";
--				reg = <0xa0000 0x20000>;
--			};
--
--			kernel@a0000 {
--				label = "kernel";
--				reg = <0xc0000 0x400000>;
--			};
--
--			rootfs@4a0000 {
--				label = "rootfs";
--				reg = <0x4c0000 0x7800000>;
--			};
--
--			data@7ca0000 {
--				label = "data";
--				reg = <0x7cc0000 0x8340000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioA 22 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioA 15 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
-+
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x20000>;
-+						};
-+
-+						bareboxenv2@80000 {
-+							label = "bareboxenv2";
-+							reg = <0x80000 0x20000>;
-+						};
-+
-+						oftree@80000 {
-+							label = "oftree";
-+							reg = <0xa0000 0x20000>;
-+						};
-+
-+						kernel@a0000 {
-+							label = "kernel";
-+							reg = <0xc0000 0x400000>;
-+						};
-+
-+						rootfs@4a0000 {
-+							label = "rootfs";
-+							reg = <0x4c0000 0x7800000>;
-+						};
-+
-+						data@7ca0000 {
-+							label = "data";
-+							reg = <0x7cc0000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/usb_a9260_common.dtsi b/arch/arm/boot/dts/usb_a9260_common.dtsi
-index 7514b347cdd2..34a49995eda3 100644
---- a/arch/arm/boot/dts/usb_a9260_common.dtsi
-+++ b/arch/arm/boot/dts/usb_a9260_common.dtsi
-@@ -34,50 +34,69 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
--
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x20000>;
--			};
--
--			bareboxenv2@80000 {
--				label = "bareboxenv2";
--				reg = <0x80000 0x20000>;
--			};
--
--			oftree@80000 {
--				label = "oftree";
--				reg = <0xa0000 0x20000>;
--			};
--
--			kernel@a0000 {
--				label = "kernel";
--				reg = <0xc0000 0x400000>;
--			};
--
--			rootfs@4a0000 {
--				label = "rootfs";
--				reg = <0x4c0000 0x7800000>;
--			};
--
--			data@7ca0000 {
--				label = "data";
--				reg = <0x7cc0000 0x8340000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioC 13 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioC 14 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
-+
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x20000>;
-+						};
-+
-+						bareboxenv2@80000 {
-+							label = "bareboxenv2";
-+							reg = <0x80000 0x20000>;
-+						};
-+
-+						oftree@80000 {
-+							label = "oftree";
-+							reg = <0xa0000 0x20000>;
-+						};
-+
-+						kernel@a0000 {
-+							label = "kernel";
-+							reg = <0xc0000 0x400000>;
-+						};
-+
-+						rootfs@4a0000 {
-+							label = "rootfs";
-+							reg = <0x4c0000 0x7800000>;
-+						};
-+
-+						data@7ca0000 {
-+							label = "data";
-+							reg = <0x7cc0000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
-diff --git a/arch/arm/boot/dts/usb_a9263.dts b/arch/arm/boot/dts/usb_a9263.dts
-index bfc48a272417..482381c1c962 100644
---- a/arch/arm/boot/dts/usb_a9263.dts
-+++ b/arch/arm/boot/dts/usb_a9263.dts
-@@ -62,50 +62,69 @@
- 			};
- 		};
- 
--		nand0: nand@40000000 {
--			nand-bus-width = <8>;
--			nand-ecc-mode = "soft";
--			nand-on-flash-bbt;
-+		ebi0: ebi@10000000 {
- 			status = "okay";
- 
--			at91bootstrap@0 {
--				label = "at91bootstrap";
--				reg = <0x0 0x20000>;
--			};
--
--			barebox@20000 {
--				label = "barebox";
--				reg = <0x20000 0x40000>;
--			};
--
--			bareboxenv@60000 {
--				label = "bareboxenv";
--				reg = <0x60000 0x20000>;
--			};
--
--			bareboxenv2@80000 {
--				label = "bareboxenv2";
--				reg = <0x80000 0x20000>;
--			};
--
--			oftree@80000 {
--				label = "oftree";
--				reg = <0xa0000 0x20000>;
--			};
--
--			kernel@a0000 {
--				label = "kernel";
--				reg = <0xc0000 0x400000>;
--			};
--
--			rootfs@4a0000 {
--				label = "rootfs";
--				reg = <0x4c0000 0x7800000>;
--			};
--
--			data@7ca0000 {
--				label = "data";
--				reg = <0x7cc0000 0x8340000>;
-+			nand_controller: nand-controller {
-+				status = "okay";
-+				pinctrl-0 = <&pinctrl_nand_cs &pinctrl_nand_rb>;
-+				pinctrl-names = "default";
-+
-+				nand@3 {
-+					reg = <0x3 0x0 0x800000>;
-+					rb-gpios = <&pioA 22 GPIO_ACTIVE_HIGH>;
-+					cs-gpios = <&pioA 15 GPIO_ACTIVE_HIGH>;
-+					nand-bus-width = <8>;
-+					nand-ecc-mode = "soft";
-+					nand-on-flash-bbt;
-+					label = "atmel_nand";
-+
-+					partitions {
-+						compatible = "fixed-partitions";
-+						#address-cells = <1>;
-+						#size-cells = <1>;
-+
-+						at91bootstrap@0 {
-+							label = "at91bootstrap";
-+							reg = <0x0 0x20000>;
-+						};
-+
-+						barebox@20000 {
-+							label = "barebox";
-+							reg = <0x20000 0x40000>;
-+						};
-+
-+						bareboxenv@60000 {
-+							label = "bareboxenv";
-+							reg = <0x60000 0x20000>;
-+						};
-+
-+						bareboxenv2@80000 {
-+							label = "bareboxenv2";
-+							reg = <0x80000 0x20000>;
-+						};
-+
-+						oftree@80000 {
-+							label = "oftree";
-+							reg = <0xa0000 0x20000>;
-+						};
-+
-+						kernel@a0000 {
-+							label = "kernel";
-+							reg = <0xc0000 0x400000>;
-+						};
-+
-+						rootfs@4a0000 {
-+							label = "rootfs";
-+							reg = <0x4c0000 0x7800000>;
-+						};
-+
-+						data@7ca0000 {
-+							label = "data";
-+							reg = <0x7cc0000 0x8340000>;
-+						};
-+					};
-+				};
- 			};
- 		};
- 
--- 
-2.7.4
+OK. I'll apply it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +
+> > +/* SoC critical temperature is 95 degrees Celsius */
+> > +#define CRITICAL_TEMP_LIMIT			(95 * 1000)
+> > +
+> > +/* Max # of alert channels */
+> > +#define ALERT_CH_NUM				3
+> > +
+> > +/* SoC specific thermal sensor data */
+> > +struct uniphier_tm_soc_data {
+> > +	u32 map_base;
+> > +	u32 block_base;
+> > +	u32 tmod_setup_addr;
+> > +};
+> > +
+> > +struct uniphier_tm_dev {
+> > +	struct regmap *regmap;
+> > +	bool alert_en[ALERT_CH_NUM];
+> > +	u32 tmod_calib0;
+> > +	u32 tmod_calib1;
+> > +	struct thermal_zone_device *tz_dev;
+> > +	const struct uniphier_tm_soc_data *data;
+> > +};
+> > +
+> > +static int uniphier_tm_initialize_sensor(struct uniphier_tm_dev *tdev)
+> > +{
+> > +	struct regmap *map = tdev->regmap;
+> > +	u32 val;
+> > +	int ret;
+> > +
+> > +	/* stop PVT */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->block_base + PVTCTLEN,
+> > +			  PVTCTLEN_EN, 0);
+> > +
+> > +	/*
+> > +	 * set default value if missing calibrated value
+> > +	 *
+> > +	 * Since SoC has a calibrated value that was set in advance,
+> > +	 * TMODCOEF shows non-zero and PVT refers the value internally.
+> > +	 *
+> > +	 * However, there is the case that some SoCs might not have the
+> > +	 * calibrated value. In that case, TMODCOEF shows zero and the driver
+> > +	 * has to set default value manually.
+> 
+> Is this a common case or a corner case? Do we really need to care of it?
+> 
+> How accurate would be the sensor if it is missing calib values?
+> 
+> Should we let the user know?
+
+It depends a kind of boards.
+
+Production boards has always the calibrated value and PVT refers the value.
+In this case, it isn't necessary that the driver sets the value.
+
+Evaluation boards might not have the calibrated value, then
+the driver should set the value.
+In this case, the sensor can't work if the value isn't set.
+
+> > +	 */
+> > +	ret = regmap_read(map, tdev->data->map_base + TMODCOEF, &val);
+> > +	if (ret)
+> > +		return ret;
+> > +	if (!val)
+> > +		regmap_write(map,
+> > +			     tdev->data->tmod_setup_addr,
+> > +			     TMODSETUP0_EN |
+> > +			     TMODSETUP0_VAL(tdev->tmod_calib0) |
+> > +			     TMODSETUP1_EN |
+> > +			     TMODSETUP1_VAL(tdev->tmod_calib1));
+> > +
+> > +	/* select temperature mode */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->block_base + PVTCTLMODE,
+> > +			  PVTCTLMODE_MASK,
+> > +			  PVTCTLMODE_TEMPMON);
+> > +
+> > +	/* set monitoring period */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->block_base + EMONREPEAT,
+> > +			  EMONREPEAT_ENDLESS |
+> > +			  EMONREPEAT_PERIOD,
+> > +			  EMONREPEAT_ENDLESS |
+> > +			  EMONREPEAT_PERIOD_1000000);
+> > +
+> > +	/* set monitor mode */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->map_base + PVTCTLSEL,
+> > +			  PVTCTLSEL_MASK, PVTCTLSEL_MONITOR);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static void uniphier_tm_set_alert(struct uniphier_tm_dev *tdev, u32 ch,
+> > +				  u32 temp)
+> 
+> Does your sensor support negative values? The subsystem does.
+
+The actual temperature value from the sensor can have negative value,
+but "alert" temperature doesn't support negative value.
+
+> > +{
+> > +	struct regmap *map = tdev->regmap;
+> > +
+> > +	/* set alert temperature */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->map_base + SETALERT0 + (ch << 2),
+> > +			  SETALERT_EN |
+> > +			  SETALERT_TEMP_OVF,
+> > +			  SETALERT_EN |
+> > +			  SETALERT_TEMP_OVF_VALUE(temp / 1000));
+> > +}
+> > +
+> > +static void uniphier_tm_enable_sensor(struct uniphier_tm_dev *tdev)
+> > +{
+> > +	struct regmap *map = tdev->regmap;
+> > +	int i;
+> > +	u32 bits = 0;
+> > +
+> > +	for (i = 0; i < ALERT_CH_NUM; i++)
+> > +		if (tdev->alert_en[i])
+> > +			bits |= PMALERTINTCTL_EN(i);
+> > +
+> > +	/* enable alert interrupt */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->map_base + PMALERTINTCTL,
+> > +			  PMALERTINTCTL_MASK, bits);
+> > +
+> > +	/* start PVT */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->block_base + PVTCTLEN,
+> > +			  PVTCTLEN_EN, PVTCTLEN_EN);
+> > +}
+> > +
+> > +static void uniphier_tm_disable_sensor(struct uniphier_tm_dev *tdev)
+> > +{
+> > +	struct regmap *map = tdev->regmap;
+> > +
+> > +	/* disable alert interrupt */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->map_base + PMALERTINTCTL,
+> > +			  PMALERTINTCTL_MASK, 0);
+> > +
+> > +	/* stop PVT */
+> > +	regmap_write_bits(map,
+> > +			  tdev->data->block_base + PVTCTLEN,
+> > +			  PVTCTLEN_EN, 0);
+> > +}
+> > +
+> > +static int uniphier_tm_get_temp(void *data, int *out_temp)
+> > +{
+> > +	struct uniphier_tm_dev *tdev = data;
+> > +	struct regmap *map = tdev->regmap;
+> > +	int ret;
+> > +	u32 temp;
+> > +
+> > +	ret = regmap_read(map, tdev->data->map_base + TMOD, &temp);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	temp &= TMOD_MASK;
+> > +	*out_temp = temp * 1000;	/* millicelsius */
+> > +
+> 
+> Are you sure you are not loosing in this conversion?
+
+This sensor has only integer value of Celsius.
+But this version doesn't consider negative value. I'll fix it.
+
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct thermal_zone_of_device_ops uniphier_of_thermal_ops = {
+> > +	.get_temp = uniphier_tm_get_temp,
+> > +};
+> > +
+> > +static void uniphier_tm_irq_clear(struct uniphier_tm_dev *tdev)
+> > +{
+> > +	u32 mask = 0, bits = 0;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < ALERT_CH_NUM; i++) {
+> > +		mask |= (PMALERTINTCTL_CLR(i) |
+> > +			 PMALERTINTCTL_SET(i));
+> > +		bits |= PMALERTINTCTL_CLR(i);
+> > +	}
+> > +
+> > +	/* clear alert interrupt */
+> > +	regmap_write_bits(tdev->regmap,
+> > +			  tdev->data->map_base + PMALERTINTCTL, mask, bits);
+> > +}
+> > +
+> > +static irqreturn_t uniphier_tm_alarm_handler(int irq, void *_tdev)
+> > +{
+> > +	struct uniphier_tm_dev *tdev = _tdev;
+> > +
+> > +	uniphier_tm_irq_clear(tdev);
+> > +	thermal_zone_device_update(tdev->tz_dev, THERMAL_EVENT_UNSPECIFIED);
+> > +
+> 
+> This is executed in a top half, rigth? The above function uses mutexes
+> and should not be called within atomic context.
+
+I confirm other drivers again and I understand it.
+I'll replace devm_request_irq() to devm_request_threaded_irq().
+
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> > +static int uniphier_tm_probe(struct platform_device *pdev)
+> > +{
+> > +	struct device *dev = &pdev->dev;
+> > +	struct regmap *regmap;
+> > +	struct device_node *parent;
+> > +	struct uniphier_tm_dev *tdev;
+> > +	const struct thermal_trip *trips;
+> > +	const u32 *calib;
+> > +	int i, ret, irq, ntrips, crit_temp = INT_MAX;
+> > +
+> > +	tdev = devm_kzalloc(dev, sizeof(*tdev), GFP_KERNEL);
+> > +	if (!tdev)
+> > +		return -ENOMEM;
+> > +
+> > +	tdev->data = of_device_get_match_data(dev);
+> > +	if (WARN_ON(!tdev->data))
+> > +		return -EINVAL;
+> > +
+> > +	/* get irq */
+> > +	irq = platform_get_irq(pdev, 0);
+> > +	if (irq < 0)
+> > +		return irq;
+> > +
+> > +	/* get tmod-calibration values */
+> > +	calib = of_get_property(dev->of_node, "socionext,tmod-calibration",
+> > +				NULL);
+> > +	if (calib) {
+> > +		tdev->tmod_calib0 = of_read_number(calib, 1);
+> > +		tdev->tmod_calib1 = of_read_number(calib + 1, 1);
+> > +	}
+> > +
+> > +	/* get regmap from syscon node */
+> > +	parent = of_get_parent(dev->of_node); /* parent should be syscon node */
+> > +	regmap = syscon_node_to_regmap(parent);
+> > +	of_node_put(parent);
+> > +	if (IS_ERR(regmap)) {
+> > +		dev_err(dev, "failed to get regmap (error %ld)\n",
+> > +			PTR_ERR(regmap));
+> > +		return PTR_ERR(regmap);
+> > +	}
+> > +	tdev->regmap = regmap;
+> > +
+> > +	/* register sensor */
+> > +	tdev->tz_dev = devm_thermal_zone_of_sensor_register(dev, 0, tdev,
+> > +						&uniphier_of_thermal_ops);
+> 
+> From this point on, your driver should be ready to serve calls from the
+> thermal subsystem. Looks like you are missing a lot of initialization,
+> still to come from below, aren't you?. I would suggest moving the above
+> registration further to a point when the sensor is ready to be used.
+
+Indeed. I understand that all initialization to be used must be finished
+before the driver calls devm_thermal_zone_of_sensor_register().
+
+
+> > +	if (IS_ERR(tdev->tz_dev)) {
+> > +		dev_err(dev, "failed to register sensor device\n");
+> > +		return PTR_ERR(tdev->tz_dev);
+> > +	}
+> > +
+> > +	/* get trip points */
+> > +	trips = of_thermal_get_trip_points(tdev->tz_dev);
+> > +	ntrips = of_thermal_get_ntrips(tdev->tz_dev);
+> > +	if (ntrips > ALERT_CH_NUM) {
+> > +		dev_err(dev, "thermal zone has too many trips\n");
+> > +		return -E2BIG;
+> > +	}
+> > +
+> > +	/* initialize sensor */
+> > +	ret = uniphier_tm_initialize_sensor(tdev);
+> > +	if (ret) {
+> > +		dev_err(dev, "failed to initialize sensor\n");
+> > +		return ret;
+> > +	}
+> > +	for (i = 0; i < ntrips; i++) {
+> > +		if (trips[i].type == THERMAL_TRIP_CRITICAL &&
+> > +		    trips[i].temperature < crit_temp)
+> > +			crit_temp = trips[i].temperature;
+> > +		uniphier_tm_set_alert(tdev, i, trips[i].temperature);
+> > +		tdev->alert_en[i] = true;
+> > +	}
+> > +	if (crit_temp > CRITICAL_TEMP_LIMIT) {
+> > +		dev_err(dev, "critical trip is over limit(>%d), or not set\n",
+> > +			CRITICAL_TEMP_LIMIT);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	ret = devm_request_irq(dev, irq, uniphier_tm_alarm_handler,
+> > +			       0, "thermal", tdev);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* enable sensor */
+> > +	uniphier_tm_enable_sensor(tdev);
+> > +
+> > +	platform_set_drvdata(pdev, tdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int uniphier_tm_remove(struct platform_device *pdev)
+> > +{
+> > +	struct uniphier_tm_dev *tdev = platform_get_drvdata(pdev);
+> > +
+> > +	/* disable sensor */
+> > +	uniphier_tm_disable_sensor(tdev);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static const struct uniphier_tm_soc_data uniphier_pxs2_tm_data = {
+> > +	.map_base        = 0xe000,
+> > +	.block_base      = 0xe000,
+> > +	.tmod_setup_addr = 0xe904,
+> > +};
+> > +
+> > +static const struct uniphier_tm_soc_data uniphier_ld20_tm_data = {
+> > +	.map_base        = 0xe000,
+> > +	.block_base      = 0xe800,
+> > +	.tmod_setup_addr = 0xe938,
+> 
+> Shouldn't these be in your device tree using the register properties?
+> I see at least the map base as possible to be done in DT.
+
+I think so.
+However, the iomap of this device are included in sysctrl(simple-mfd),
+and I can't find the method to express offset from base-address of sysctrl
+on DT, instead of map_base, in resonable way.
+
+I think that mfd node has register property then the lower node of mfd,
+that is the thermal node, can't have register property.
+
+If the driver gets offset address from DT, I'll define new property
+like 'socionext,reg_offset' in the thermal node. But I'm not sure that.
+
+> > +};
+> > +
+> > +static const struct of_device_id uniphier_tm_dt_ids[] = {
+> > +	{
+> > +		.compatible = "socionext,uniphier-pxs2-thermal",
+> > +		.data       = &uniphier_pxs2_tm_data,
+> > +	},
+> > +	{
+> > +		.compatible = "socionext,uniphier-ld20-thermal",
+> > +		.data       = &uniphier_ld20_tm_data,
+> > +	},
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, uniphier_tm_dt_ids);
+> > +
+> > +static struct platform_driver uniphier_tm_driver = {
+> > +	.probe = uniphier_tm_probe,
+> > +	.remove = uniphier_tm_remove,
+> > +	.driver = {
+> > +		.name = "uniphier-thermal",
+> > +		.of_match_table = uniphier_tm_dt_ids,
+> > +	},
+> > +};
+> > +module_platform_driver(uniphier_tm_driver);
+> > +
+> > +MODULE_AUTHOR("Kunihiko Hayashi <hayashi.kunihiko@socionext.com>");
+> > +MODULE_DESCRIPTION("UniPhier thermal driver");
+> > +MODULE_LICENSE("GPL v2");
+> > -- 
+> > 2.7.4
+> > 
+
+Best Regards,
+Kunihiko Hayashi
