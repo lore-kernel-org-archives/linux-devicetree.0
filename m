@@ -1,141 +1,126 @@
-From: <christopher.spinrath@rwth-aachen.de>
-Subject: [PATCH] ARM: dts: imx6q-cm-fx6: add sdio wifi/bt nodes
-Date: Tue, 30 May 2017 22:16:01 +0200
-Message-ID: <1a13681b84564bc18937eb54b8345957@rwthex-s1-b.rwth-ad.de>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3 14/16] phy: Add an USB PHY driver for the Lantiq SoCs
+ using the RCU module
+Date: Tue, 30 May 2017 22:21:19 +0200
+Message-ID: <6180daf0-2eaf-cd68-3eb5-e119dfd4aa2a@hauke-m.de>
+References: <20170528184006.31668-1-hauke@hauke-m.de>
+ <20170528184006.31668-15-hauke@hauke-m.de>
+ <CAHp75Ve9bV99=WCzmXU-Rth-gar5gqvy4taZ7NMQQHGKcVbHHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, christopher.spinrath@rwth-aachen.de, linux@armlinux.org.uk, robh+dt@kernel.org, grinberg@compulab.co.il, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHp75Ve9bV99=WCzmXU-Rth-gar5gqvy4taZ7NMQQHGKcVbHHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, john <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
+On 05/30/2017 08:31 PM, Andy Shevchenko wrote:
+> On Sun, May 28, 2017 at 9:40 PM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
+>> This driver starts the DWC2 core(s) built into the XWAY SoCs and provides
+>> the PHY interfaces for each core. The phy instances can be passed to the
+>> dwc2 driver, which already supports the generic phy interface.
+> 
+>> +static void ltq_rcu_usb2_start_cores(struct platform_device *pdev)
+> 
+> It should return int. See below.
+> 
+>> +{
+> 
+>> +       /* Power on the USB core. */
+>> +       if (clk_prepare_enable(priv->ctrl_gate_clk)) {
+> 
+> You basically shadow the error, why?
 
-The cm-fx6 module has an on-board AW-NH387 WiFi/BT module which is
-based on Marvell's SD8787 chip and is connected to the usdhc1
-controller.
+Thanks for the hint I changed it.
 
-Unfortunately, the chip gets unresponsive if the Bluetooth AMP
-(Alternate Mac/Phy) function gets probed but the loaded firmware
-doesn't support it. For instance, this is the case for the most
-recent firmware in linux-firmware (Version 14.66.35.p52).
+>> +               dev_err(dev, "failed to enable CTRL gate\n");
+>> +               return;
+>> +       }
+> 
+>> +       if (clk_prepare_enable(priv->phy_gate_clk)) {
+>> +               dev_err(dev, "failed to enable PHY gate\n");
+>> +               return;
+>> +       }
+> 
+> Ditto.
 
-Thus, just add the required nodes but leave the usdhc1 node disabled
-explicitly. Users who disabled the Bluetooth (AMP) support of their
-OS can then conveniently enable WiFi (or even plain Bluetooth) support
-with a simple device tree overlay/bootloader configuration.
+same here.
 
-Signed-off-by: Christopher Spinrath <christopher.spinrath@rwth-aachen.de>
----
+>> +static int ltq_rcu_usb2_of_probe(struct device_node *phynode,
+>> +                                   struct ltq_rcu_usb2_priv *priv)
+>> +{
+>> +       struct device *dev = priv->dev;
+>> +       const struct of_device_id *match =
+>> +               of_match_node(ltq_rcu_usb2_phy_of_match, phynode);
+>> +       int ret;
+>> +
+> 
+>> +       if (!match) {
+>> +               dev_err(dev, "Not a compatible Lantiq RCU USB PHY\n");
+>> +               return -EINVAL;
+>> +       }
+> 
+> Can it ever happen?
 
-Hi all,
+As long as this device gets probed by device tree this can not happen,
+so I will remove it.
 
-some more information on the Bluetooth AMP dilemma: the vendor (CompuLab) just
-remove Bluetooth AMP support from the kernel. However, this is not an option
-here, since it would introduce a regression for its actual users.
+>> +
+>> +       priv->reg_bits = match->data;
+> 
+> I think there is a helper to get driver data directly from node.
 
-Neither is degrading the firmware a good option: recent firmare (without AMP
-support) provides WiFi that is more stable (in particular, for access points).
+Thanks for the hint, there is of_device_get_match_data() which does this.
 
-I wrote a RFC to linux-bluetooth [1] two weeks ago about this problem and the
-only feedback I got was that Marvell has to provide information about how to
-detect whether the firmware supports AMP properly -- but this is unlikely given
-Marvell's information policy (in particular, since the sd8787 seems to be
-unsupported as of now).
+>> +       if (priv->reg_bits->have_ana_cfg) {
+>> +               ret = device_property_read_u32(dev, "offset-ana",
+>> +                                              &priv->ana_cfg1_reg_offset);
+>> +               if (ret) {
+>> +                       dev_dbg(dev, "Failed to get RCU ANA CFG1 reg offset\n");
+>> +                       return ret;
+>> +               }
+>> +       }
+> 
+> ret = device_property_...(...);
+> if (ret && priv->reg_bits->have_ana_cfg) {
+>  ...
+>  return ret;
+> }
+> 
+> ?
 
-IMHO this patch is currently the best option, since it allows users in a
-convenient way to enable WiFi support (e.g. no pinctrl handling in overlays),
-even when they are using distribution kernels/device trees. Furthermore, the
-hardware description is entirely accurate -- we have a driver/firmware problem
-here.
+Yes, that should look better, I will change it.
 
-Thanks,
-Christopher
+> 
+> 
+>> +       priv->dev = &pdev->dev;
+> 
+>> +       dev_set_drvdata(priv->dev, priv);
+> 
+> Move this to the end of function. Ideally it should be run if and only
+> if the function returns 0.
 
-[1] https://www.spinics.net/lists/linux-bluetooth/msg70493.html
+Done
 
- arch/arm/boot/dts/imx6q-cm-fx6.dts | 41 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+>> +       provider = devm_of_phy_provider_register(&pdev->dev,
+>> +                                                of_phy_simple_xlate);
+>> +
+>> +       return PTR_ERR_OR_ZERO(provider);
+> 
+> I would do explicitly, though it's up to you and maintainer.
+> 
+> if (IS_ERR(provider))
+>  return PTR_ERR();
+> 
+> return 0;
 
-diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-index a8af382..fe6ab0a 100644
---- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-+++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-@@ -64,6 +64,14 @@
- 		};
- 	};
- 
-+	awnh387_pwrseq: pwrseq {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_pwrseq>;
-+		compatible = "mmc-pwrseq-sd8787";
-+		powerdown-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio6 16 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	reg_pcie_power_on_gpio: regulator-pcie-power-on-gpio {
- 		compatible = "regulator-fixed";
- 		regulator-name = "regulator-pcie-power-on-gpio";
-@@ -304,6 +312,13 @@
- 		>;
- 	};
- 
-+	pinctrl_pwrseq: pwrseqgrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
-+			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x1b0b0
-+		>;
-+	};
-+
- 	pinctrl_spdif: spdifgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_GPIO_16__SPDIF_IN  0x1b0b0
-@@ -330,6 +345,17 @@
- 			MX6QDL_PAD_EIM_D22__GPIO3_IO22	0x130b0
- 		>;
- 	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX6QDL_PAD_SD1_CMD__SD1_CMD	0x17071
-+			MX6QDL_PAD_SD1_CLK__SD1_CLK	0x10071
-+			MX6QDL_PAD_SD1_DAT0__SD1_DATA0	0x17071
-+			MX6QDL_PAD_SD1_DAT1__SD1_DATA1	0x17071
-+			MX6QDL_PAD_SD1_DAT2__SD1_DATA2	0x17071
-+			MX6QDL_PAD_SD1_DAT3__SD1_DATA3	0x17071
-+		>;
-+	};
- };
- 
- &pcie {
-@@ -382,3 +408,18 @@
- 	dr_mode = "otg";
- 	status = "okay";
- };
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	mmc-pwrseq = <&awnh387_pwrseq>;
-+	non-removable;
-+	/*
-+	 * If the OS probes the Bluetooth AMP function advertised on this bus
-+	 * but the firmware in place does not support it, the WiFi/BT module
-+	 * gets unresponsive.
-+	 * Users who configured their OS properly can enable this node to gain
-+	 * WiFi and/or plain Bluetooth support.
-+	 */
-+	status = "disabled";
-+};
--- 
-2.10.2
+I do not care, but this was I can call dev_set_drvdata() when this is
+really returning 0.
+
+Hauke
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
