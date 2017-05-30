@@ -1,60 +1,104 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell GICP
-Date: Tue, 30 May 2017 16:54:54 +0200
-Message-ID: <20170530165454.6ca24dbc@free-electrons.com>
-References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1496135772-20694-4-git-send-email-thomas.petazzoni@free-electrons.com>
- <2ea42715-700b-c363-eeba-db83b0f63a70@arm.com>
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: Re: [PATCH v4 8/8] arm,arm64,drivers: add a prefix to drivers
+ arch_topology interfaces
+Date: Tue, 30 May 2017 15:59:46 +0100
+Message-ID: <20170530145946.v3n44cx56flhbi5l@e106622-lin>
+References: <20170420144316.15632-1-juri.lelli@arm.com>
+ <20170420144316.15632-9-juri.lelli@arm.com>
+ <20170525131802.GE16244@kroah.com>
+ <20170526101032.2t2xn5wrfenimu5w@e106622-lin>
+ <20170526183610.GB16490@kroah.com>
+ <bcc2f8f1-e953-9f32-2aa2-e660b0351e0a@arm.com>
+ <20170529095818.GA9892@kroah.com>
+ <b5071e53-f9fa-cffe-e13d-731549382d56@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2ea42715-700b-c363-eeba-db83b0f63a70@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hanna Hawa <hannah@marvell.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b5071e53-f9fa-cffe-e13d-731549382d56@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, broonie@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 29/05/17 12:46, Dietmar Eggemann wrote:
+> On 05/29/2017 11:58 AM, Greg KH wrote:
+> > On Mon, May 29, 2017 at 11:20:24AM +0200, Dietmar Eggemann wrote:
+> > > Hi Greg,
+> > > 
+> > > On 05/26/2017 08:36 PM, Greg KH wrote:
+> > > > On Fri, May 26, 2017 at 11:10:32AM +0100, Juri Lelli wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On 25/05/17 15:18, Greg KH wrote:
+> > > > > > On Thu, Apr 20, 2017 at 03:43:16PM +0100, Juri Lelli wrote:
+> > > 
+> > > [...]
+> > > 
+> > > > > > But this is all really topology stuff, right?  Why use "capacity" at
+> > > > > > all:
+> > > > > > 	topology_normalize_cpu()
+> > > > > > 	topology_parse_cpu()
+> > > > > > 	topology_scale_cpu()
+> > > > > > 	topology_set_scale()
+> > > > > > ?
+> > > > > > 
+> > > > > > It's always best to put the "subsystem" name first, we have a bad
+> > > > > > history of getting this wrong in the past by putting the verb first, not
+> > > > > > the noun.
+> > > > > > 
+> > > > > 
 
-On Tue, 30 May 2017 14:55:57 +0100, Marc Zyngier wrote:
+[...]
 
-> > +	for (i = 0; i < GICP_INT_COUNT; i++)
-> > +		writel(i, regs + GICP_CLRSPI_NSR_OFFSET);  
+> > > > 
+> > > > Oh, and drop "capacity" please :)
+> > > 
+
+[...]
+
+> > 
+> > I think that if you are creating an api that the scheduler will use, you
+> > need to ask the scheduler maintainers/developers what they want to see
+> > here, as that would be up to them, not me...
 > 
-> What does this do on an edge interrupt?
+> The scheduler API exists already. It is arch_scale_cpu_capacity() and
+> arch_scale_freq_capacity() in kernel/sched/sched.h. An arch is able to
+> overwrite these two functions by defining them (since commit 8cd5601c5060
+> and dfbca41f3479):
+> 
+> #define arch_scale_cpu_capacity 'arch implementation of capacity scaling by
+> micro-architectural + max frequency (OPPmax)'
+> 
+> #define arch_scale_freq_capacity 'arch implementation of capacity scaling by
+> 'frequency ((OPPmin..OPPmax)'
+> 
+> There is no naming convention from the scheduler side on these functions
+> though. They should just express what they're doing, scaling capacity by
+> something.
+> 
 
-I guess nothing. What the ICU does is:
+So, discussing this naming with Morten off-line we seemed actually to
+agree that the following might adhere even better to what the functions
+actually do:
 
- * For level interrupts: when the interrupt wire is asserted, write to
-   SETNSR, when the interrupt wire is deasserted, write to CLRNSR
+ topology_parse_cpu_capacity() - it parses the raw capacity-dmips-mhz
+ values from DT; so it seems OK to leave capacity in the name here
 
- * For edge interrupts: only the interrupt assertion causes a write to
-   SETNSR.
+ topology_set_cpu_scale() - it sets the per_cpu cpu_scale variable; so
+ this name seems saner that the one with "_capacity"
 
-> I bet this doesn't have any effect
+ topology_get_cpu_scale() - dual of the previous one
 
-Indeed. But do we care? Can an edge interrupt be left pending from the
-firmware?
+ topology_normalize_cpu_scale() - it normalizes cpu_scale variables
+ across the system CPUs (and calls topology_set_cpu_scale() to set the
+ normalized values)
 
->, so you may want to use the irq_set_irqchip_state() API to clear a
-> potential pending state instead (and you may want to wire it in the
-> ICU driver itself as well).
+Greg, does this approack look saner to you as well?
+If yes, I'll send a new version of the set shortly.
 
-I'm not sure how to use this irq_set_irqchip_state() API. I guess it
-needs a virq that corresponds to the GIC SPI interrupt, and I'm not
-sure how to get that.
+And, as I already said on IRC, apologies for this naming fight. :)
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Thanks,
+
+- Juri
