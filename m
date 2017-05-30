@@ -1,7 +1,8 @@
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v5 4/9] ARM: dts: meson: add GPIO interrupt-controller support
-Date: Tue, 30 May 2017 22:26:38 +0200
-Message-ID: <dc97f555-a4f6-e320-a0f3-b20e1d60b8dd@gmail.com>
+Subject: [PATCH v5 5/9] ARM64: dts: meson: add GPIO interrupt-controller
+ support
+Date: Tue, 30 May 2017 22:26:41 +0200
+Message-ID: <1378b278-1d27-c2e4-2ebd-3526c3c82e45@gmail.com>
 References: <66c57893-0a9e-4f8c-a017-ab346abbdfd0@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -23,49 +24,28 @@ v5:
 - split ARM and ARM64 into separate patches
 - added Reviewed-by
 ---
- arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
- arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
- 2 files changed, 16 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 69930773..b4c4175d 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -126,6 +126,14 @@
- };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 436b8750..66dde761 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -312,6 +312,14 @@
+ 				status = "disabled";
+ 			};
  
- &cbus {
-+	gpio_intc: interrupt-controller@9880 {
-+		compatible = "amlogic,meson-gpio-intc";
-+		reg = <0x9880 0x10>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		parent-interrupts = <64 65 66 67 68 79 70 71>;
-+	};
++			gpio_intc: interrupt-controller@9880 {
++				compatible = "amlogic,meson-gpio-intc";
++				reg = <0x0 0x09880 0x0 0x10>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				parent-interrupts = <64 65 66 67 68 79 70 71>;
++			};
 +
- 	pinctrl_cbus: pinctrl@9880 {
- 		compatible = "amlogic,meson8-cbus-pinctrl";
- 		reg = <0x9880 0x10>;
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index d9f116a4..fedfef24 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -112,6 +112,14 @@
- };
- 
- &cbus {
-+	gpio_intc: interrupt-controller@9880 {
-+		compatible = "amlogic,meson-gpio-intc";
-+		reg = <0x9880 0x10>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		parent-interrupts = <64 65 66 67 68 79 70 71>;
-+	};
-+
- 	clkc: clock-controller@4000 {
- 		#clock-cells = <1>;
- 		compatible = "amlogic,meson8b-clkc";
+ 			watchdog@98d0 {
+ 				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
+ 				reg = <0x0 0x098d0 0x0 0x10>;
 -- 
 2.13.0
-
 
