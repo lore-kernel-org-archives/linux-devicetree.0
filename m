@@ -1,65 +1,130 @@
-From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-cm-fx6: add sdio wifi/bt nodes
-Date: Tue, 30 May 2017 23:23:14 +0200
-Message-ID: <6832964fb0644ed7a89391dc4423865f@rwthex-s1-b.rwth-ad.de>
-References: <1a13681b84564bc18937eb54b8345957@rwthex-s1-b.rwth-ad.de>
- <8c7aee6cf7184c1cb914c1eef530e2de@rwthex-w1-a.rwth-ad.de>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH V2 1/3] Documentation: devicetree: add multiple cpu port
+ DSA binding
+Date: Tue, 30 May 2017 14:32:29 -0700
+Message-ID: <69dd02a6-59f9-59df-f630-0ebd948451c4@gmail.com>
+References: <20170530104419.6052-1-john@phrozen.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8c7aee6cf7184c1cb914c1eef530e2de-cBaz+nnMw1/Ca9uivkkr415UTUQ924AY@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170530104419.6052-1-john@phrozen.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Crispin <john@phrozen.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S . Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
-
-thanks for the fast reply.
-
-On 05/30/2017 10:40 PM, Fabio Estevam wrote:
-> Hi Christopher,
+On 05/30/2017 03:44 AM, John Crispin wrote:
+> Extend the DSA binding documentation, adding the new property required
+> when there is more than one CPU port attached to the switch.
 > 
-> On Tue, May 30, 2017 at 5:16 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Crispin <john@phrozen.org>
+> ---
+>  Documentation/devicetree/bindings/net/dsa/dsa.txt | 61 ++++++++++++++++++++++-
+>  1 file changed, 60 insertions(+), 1 deletion(-)
 > 
->> +       awnh387_pwrseq: pwrseq {
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&pinctrl_pwrseq>;
->> +               compatible = "mmc-pwrseq-sd8787";
->> +               powerdown-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
->> +               reset-gpios = <&gpio6 16 GPIO_ACTIVE_HIGH>;
+> diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
+> index cfe8f64eca4f..c164eb38ccc5 100644
+> --- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
+> +++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
+> @@ -55,6 +55,11 @@ A user port has the following optional property:
+>  - label			: Describes the label associated with this port, which
+>                            will become the netdev name.
+>  
+> +- cpu			: Option for non "cpu"/"dsa" ports. A phandle to a
+> +			  "cpu" port, which will be used for passing packets
+> +			  from this port to the host. If not present, the first
+> +			  "cpu" port will be used.
+
+So this option essentially allow us to "partition" the switch between
+vectors of ports and their upstream/CPU port.
+
+While using Device Tree is an obvious choice for making the initial
+partitioning, it seems like we are missing a configuration mechanism
+whereby we can properly assign ports to a specific upstream CPU port.
+
+Let's move the actual discussion into patch 2 in order not to pollute
+the DT maintainers' inbox.
+
+> +
+>  Port child nodes may also contain the following optional standardised
+>  properties, described in binding documents:
+>  
+> @@ -71,7 +76,7 @@ properties, described in binding documents:
+>  			  Documentation/devicetree/bindings/net/fixed-link.txt
+>  			  for details.
+>  
+> -Example
+> +Examples
+>  
+>  The following example shows three switches on three MDIO busses,
+>  linked into one DSA cluster.
+> @@ -264,6 +269,60 @@ linked into one DSA cluster.
+>  	};
+>  };
+>  
+> +The following example shows a switch that has two cpu ports each connecting
+> +to a different MAC.
+> +
+> +&mdio0 {
+> +	switch@0 {
+> +		compatible = "mediatek,mt7530";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0>;
+> +
+> +		ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			port@0 {
+> +				reg = <0>;
+> +				label = "lan0";
+> +				cpu = <&cpu_port1>;
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				label = "lan1";
+> +				cpu = <&cpu_port1>;
+> +			};
+> +
+> +			port@2 {
+> +				reg = <2>;
+> +				label = "lan2";
+> +				cpu = <&cpu_port1>;
+> +			};
+> +
+> +			port@3 {
+> +				reg = <3>;
+> +				label = "wan";
+> +				cpu = <&cpu_port2>;
+> +			};
+> +
+> +			cpu_port2: port@5 {
+> +				reg = <5>;
+> +				label = "cpu";
+> +				ethernet = <&gmac2>;
+> +				phy-mode = "trgmii";
+> +			};
+> +
+> +			cpu_port1: port@6 {
+> +				reg = <6>;
+> +				label = "cpu";
+> +				ethernet = <&gmac1>;
+> +				phy-mode = "trgmii";
+> +			};
+> +		};
+> +	};
+> +};
+> +
+>  Deprecated Binding
+>  ------------------
+>  
 > 
-> At least in the AW-NH387 datasheet I found it says:
-> 
-> RESETn: Reset(active low at least 10ns)
 
-The BSP device tree uses an active-low regulator called nreset, too, but 
-strangly it has a startup delay of 10ms while the powerdown-regulator 
-"starts up" immediately.
 
-(btw: the "regulator setup" is not able to handle resets correctly.)
-
-It seems to me that the pwrseq-sd8787 uses inverted logic: it first sets 
-the -- in our case -- active-high gpio to high, waits, and then enables 
-the powerdown-gpio.
-
-This coincides with the gpio being called "reset" in the pwrseq binding, 
-neither "nreset" nor "RESETn" (beware the missing *n*ot).
-
-> Please double check the polarity in device tree.
-> 
-
-I just double checked: high/high for powerdown/reset gpios is the only 
-of the four possible combinations that works.
-
-So, all in all, I think the polarity is correct (or either the pwrseq 
-driver or hardware invertes the polarity for some reason).
-
-Cheers,
-Christopher
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Florian
