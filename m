@@ -1,130 +1,56 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH V2 1/3] Documentation: devicetree: add multiple cpu port
- DSA binding
-Date: Tue, 30 May 2017 14:32:29 -0700
-Message-ID: <69dd02a6-59f9-59df-f630-0ebd948451c4@gmail.com>
-References: <20170530104419.6052-1-john@phrozen.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] iio: proximity: as3935: noise detection + threshold
+ changes
+Date: Tue, 30 May 2017 16:32:59 -0500
+Message-ID: <20170530213259.qbcikyy446g726pk@rob-hp-laptop>
+References: <20170525055229.11659-1-matt.ranostay@konsulko.com>
+ <20170528165830.3878c05c@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170530104419.6052-1-john@phrozen.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: John Crispin <john@phrozen.org>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S . Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170528165830.3878c05c-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/30/2017 03:44 AM, John Crispin wrote:
-> Extend the DSA binding documentation, adding the new property required
-> when there is more than one CPU port attached to the switch.
+On Sun, May 28, 2017 at 04:58:30PM +0100, Jonathan Cameron wrote:
+> On Wed, 24 May 2017 22:52:29 -0700
+> Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Crispin <john@phrozen.org>
-> ---
->  Documentation/devicetree/bindings/net/dsa/dsa.txt | 61 ++++++++++++++++++++++-
->  1 file changed, 60 insertions(+), 1 deletion(-)
+> > Most applications are too noisy to allow the default noise and
+> > watchdog settings, and thus need to be configurable via DT
+> > properties.
+> > 
+> > Also default settings to POR defaults on a reset, and register
+> > distuber interrupts as noise since it prevents proper usage.
+> > 
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> I wonder if there are many other devices where this sort of
+> feature is relevant.  Anyone else come across any?
 > 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-> index cfe8f64eca4f..c164eb38ccc5 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
-> @@ -55,6 +55,11 @@ A user port has the following optional property:
->  - label			: Describes the label associated with this port, which
->                            will become the netdev name.
->  
-> +- cpu			: Option for non "cpu"/"dsa" ports. A phandle to a
-> +			  "cpu" port, which will be used for passing packets
-> +			  from this port to the host. If not present, the first
-> +			  "cpu" port will be used.
-
-So this option essentially allow us to "partition" the switch between
-vectors of ports and their upstream/CPU port.
-
-While using Device Tree is an obvious choice for making the initial
-partitioning, it seems like we are missing a configuration mechanism
-whereby we can properly assign ports to a specific upstream CPU port.
-
-Let's move the actual discussion into patch 2 in order not to pollute
-the DT maintainers' inbox.
-
-> +
->  Port child nodes may also contain the following optional standardised
->  properties, described in binding documents:
->  
-> @@ -71,7 +76,7 @@ properties, described in binding documents:
->  			  Documentation/devicetree/bindings/net/fixed-link.txt
->  			  for details.
->  
-> -Example
-> +Examples
->  
->  The following example shows three switches on three MDIO busses,
->  linked into one DSA cluster.
-> @@ -264,6 +269,60 @@ linked into one DSA cluster.
->  	};
->  };
->  
-> +The following example shows a switch that has two cpu ports each connecting
-> +to a different MAC.
-> +
-> +&mdio0 {
-> +	switch@0 {
-> +		compatible = "mediatek,mt7530";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			port@0 {
-> +				reg = <0>;
-> +				label = "lan0";
-> +				cpu = <&cpu_port1>;
-> +			};
-> +
-> +			port@1 {
-> +				reg = <1>;
-> +				label = "lan1";
-> +				cpu = <&cpu_port1>;
-> +			};
-> +
-> +			port@2 {
-> +				reg = <2>;
-> +				label = "lan2";
-> +				cpu = <&cpu_port1>;
-> +			};
-> +
-> +			port@3 {
-> +				reg = <3>;
-> +				label = "wan";
-> +				cpu = <&cpu_port2>;
-> +			};
-> +
-> +			cpu_port2: port@5 {
-> +				reg = <5>;
-> +				label = "cpu";
-> +				ethernet = <&gmac2>;
-> +				phy-mode = "trgmii";
-> +			};
-> +
-> +			cpu_port1: port@6 {
-> +				reg = <6>;
-> +				label = "cpu";
-> +				ethernet = <&gmac1>;
-> +				phy-mode = "trgmii";
-> +			};
-> +		};
-> +	};
-> +};
-> +
->  Deprecated Binding
->  ------------------
->  
+> I suppose if we need to modify the ABI for any that show up
+> in future, it shouldn't be too hard to maintain this one
+> for backwards compatibility.
 > 
+> Anyhow, new devicetree bindings so I'll give Rob / Mark time
+> to have a chance to look at it.
 
+I acked v1.
 
--- 
-Florian
+> My immediate thought is that you might be able to do something
+> a little more user (i.e. devicetree writer) friendly than
+> just using the register value...
+
+We certainly don't want that to be the norm, but sometimes it makes 
+sense when it's very specific to a certain device.
+
+> I see there are values, but it depends on whether the device
+> is in 'indoor mode' or 'outdoor mode' (which are just gain
+> settings?).  You could just use them though.
+> 
+> Given the gain is userspace controlled, and seems to effect
+> the meaning of this setting, is it valid to just put it
+> in the devicetree?
