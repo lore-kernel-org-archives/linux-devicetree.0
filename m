@@ -1,35 +1,35 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH 2/7] dt-bindings: PCI: Describe ATS property for root
- complex nodes
-Date: Tue, 30 May 2017 11:58:50 +0100
-Message-ID: <035be7ba-e850-a5a9-08fa-802a04feb600@arm.com>
-References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
- <20170524180143.19855-3-jean-philippe.brucker@arm.com>
- <20170530100153.GI2818@8bytes.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH] MAINTAINERS: add device-tree files to TI DaVinci entry
+Date: Tue, 30 May 2017 16:30:24 +0530
+Message-ID: <3edd407a-0495-4075-7478-fa62faf07e2b@ti.com>
+References: <20170525093807.21157-1-nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170530100153.GI2818@8bytes.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com, hanjun.guo@linaro.org, sudeep.holla@arm.com, rjw@rjwysocki.net, lenb@kernel.org, will.deacon@arm.com, robin.murphy@arm.com, okaya@codeaurora.org, sunil.kovvuri@gmail.com, thunder.leizhen@huawei.com, tn@semihalf.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170525093807.21157-1-nsekhar@ti.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/05/17 11:01, Joerg Roedel wrote:
-> On Wed, May 24, 2017 at 07:01:38PM +0100, Jean-Philippe Brucker wrote:
->> +- ats-supported: if present, the root complex supports the Address
->> +  Translation Service (ATS). It is able to interpret the AT field in PCIe
->> +  Transaction Layer Packets, and forward Translation Completions or
->> +  Invalidation Requests to endpoints.
->> +
->> +  Device drivers should not enable ATS in endpoints unless this property
->> +  is present.
+On Thursday 25 May 2017 03:08 PM, Sekhar Nori wrote:
+> Add device-tree files relevant to TI DaVinci platform
+> to its entry so mach-davinci sub-arch maintainers get
+> copied on patches with device-tree file updates.
 > 
-> Device drivers should never enable ATS, this is the job of the IOMMU
-> driver. This should be clarified in the text.
+> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 
-Right, I will change this.
+Applied to fixes
 
-Thanks,
-Jean
+Thanks
+Sekhar
