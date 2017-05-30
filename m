@@ -1,116 +1,112 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/6] dt-bindings: interrupt-controller: add DT binding for
- the Marvell ICU
-Date: Tue, 30 May 2017 11:37:10 +0100
-Message-ID: <97989700-2c97-892e-b470-a84af6dfd77b@arm.com>
-References: <1496135772-20694-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1496135772-20694-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v13 8/9] arm64: dts: hi6220: register debug module
+Date: Tue, 30 May 2017 18:39:05 +0800
+Message-ID: <20170530103905.GC7177@leoy-ThinkPad-T440>
+References: <1495727836-30094-1-git-send-email-leo.yan@linaro.org>
+ <1495727836-30094-9-git-send-email-leo.yan@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496135772-20694-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1495727836-30094-9-git-send-email-leo.yan@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jonathan Corbet <corbet@lwn.net>, Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30/05/17 10:16, Thomas Petazzoni wrote:
-> This commit adds the Device Tree binding documentation for the Marvell
-> ICU interrupt controller, which collects wired interrupts from the
-> devices located into the CP110 hardware block of Marvell Armada 7K/8K,
-> and converts them into SPI interrupts in the GIC located in the AP
-> hardware block, using the GICP extension.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../bindings/interrupt-controller/marvell,icu.txt  | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-> new file mode 100644
-> index 0000000..e0b4068
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-> @@ -0,0 +1,57 @@
-> +Marvell ICU Interrupt Controller
-> +--------------------------------
-> +
-> +The Marvell ICU (Interrupt Consolidation Unit) controller is
-> +responsible for collecting all wired-interrupt sources in the CP and
-> +communicating them to the GIC in the AP, the unit translates interrupt
-> +requests on input wires to MSG memory mapped transactions to the GIC.
-> +
-> +The interrupts from the ICU to the GIC can be mapped to one of the following groups:
-> +
-> +- Shared Peripheral Interrupt - Non-Secured (SPI_NSR)
-> +- Shared Peripheral Interrupt - Secured (SPI_SR)
-> +- System Error Interrupt (SEI)
-> +- RAM Error Interrupt (REI)
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "marvell,icu"
-> +
-> +- reg: Should contain ICU registers location and length.
-> +
-> +- #interrupt-cells: Specifies the number of cells needed to encode an
-> +  interrupt source. The type shall be a <u32> and the value shall be
-> +  3.
+Hi Wei,
 
-Yup...
+On Thu, May 25, 2017 at 11:57:15PM +0800, Leo Yan wrote:
+> Bind debug module driver for Hi6220.
 
-> +
-> +  The 1st cell is the group type of the ICU interrupt (SPI_NSR,
-> +  SPI_SR, SEI, and REI).
+Could you ACK this patch? From Mathieu's previous suggestion, after
+your confirmation he could pick up this patch.
 
-Is it worth documenting what these are?
-
-> +
-> +  The 2nd cell is the index of the interrupt in the ICU unit.
-> +
-> +  The 3rd cell is the type of the interrupt. See arm,gic.txt for
-> +  details.
-> +
-> +- interrupt-controller: Identifies the node as an interrupt
-> +  controller.
-> +
-> +- interrupt-parent: Indicates the node of the parent interrupt
-> +  controller. Should be pointer to the GIC.
-> +
-> +- gicp: Should point to the GICP controller, the GIC extension that
-> +  allows to trigger interrupts using MSG memory mapped transactions.
-> +
-> +Example:
-> +
-> +icu: interrupt-controller@1e0000 {
-> +	compatible = "marvell,icu";
-> +	reg = <0x1e0000 0x10>;
-> +	#interrupt-cells = <2>;
-
-Oh wait...
-
-> +	interrupt-controller;
-> +	interrupt-parent = <&gic>;
-> +	gicp = <&gicp>;
-
-Should this be prefixed with a vendor specific identifier, just in case?
-
-> +};
-> +
-> +usb3h0: usb3@500000 {
-> +	interrupt-parent = <&icu>;
-> +	interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
-> +};
-> 
+If you want me to send a separate patch to you directly, also is okay.
+Please let me know which is preferring.
 
 Thanks,
+Leo Yan
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> index 1e5129b..21805b9 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+> @@ -916,5 +916,69 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		debug@f6590000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf6590000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu0>;
+> +		};
+> +
+> +		debug@f6592000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf6592000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu1>;
+> +		};
+> +
+> +		debug@f6594000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf6594000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu2>;
+> +		};
+> +
+> +		debug@f6596000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf6596000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu3>;
+> +		};
+> +
+> +		debug@f65d0000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf65d0000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu4>;
+> +		};
+> +
+> +		debug@f65d2000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf65d2000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu5>;
+> +		};
+> +
+> +		debug@f65d4000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf65d4000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu6>;
+> +		};
+> +
+> +		debug@f65d6000 {
+> +			compatible = "arm,coresight-cpu-debug","arm,primecell";
+> +			reg = <0 0xf65d6000 0 0x1000>;
+> +			clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+> +			clock-names = "apb_pclk";
+> +			cpu = <&cpu7>;
+> +		};
+>  	};
+>  };
+> -- 
+> 2.7.4
+> 
