@@ -1,123 +1,136 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH RfC v4 4/6] ARM(64): dts: meson: add GPIO
- interrupt-controller support
-Date: Tue, 30 May 2017 10:41:44 +0200
-Message-ID: <17856f9b-5ea4-474b-30db-9608cb97f03c@baylibre.com>
-References: <49ab677f-3165-d6f5-75f5-a963879e8ecf@gmail.com>
- <5294644a-967e-dba8-d287-d932b38244d1@gmail.com>
- <860a50b5-3e7c-29d0-54fa-89bf2840e04e@baylibre.com>
- <a7db5fa9-02b9-a26a-26ad-fdfcef0b9938@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add clock bit definitions
+Date: Tue, 30 May 2017 10:42:28 +0200
+Message-ID: <20170530084227.GC32139@verge.net.au>
+References: <20170525160548.103182-1-chris.brandt@renesas.com>
+ <CAMuHMdW21gwJZxCMsepX9c3hqpfw_+zc1x_f-6D0oKFVvqY2Kg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a7db5fa9-02b9-a26a-26ad-fdfcef0b9938-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW21gwJZxCMsepX9c3hqpfw_+zc1x_f-6D0oKFVvqY2Kg@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Chris Brandt <chris.brandt@renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiner,
+On Mon, May 29, 2017 at 11:31:37AM +0200, Geert Uytterhoeven wrote:
+> Hi Chris,
+> 
+> On Thu, May 25, 2017 at 6:05 PM, Chris Brandt <chris.brandt@renesas.com> wrote:
+> > Add the remaining bit locations for the module stop clock registers.
+> >
+> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
+> 
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On 05/29/2017 10:01 PM, Heiner Kallweit wrote:
-> Am 29.05.2017 um 10:49 schrieb Neil Armstrong:
->>
->>
->> Please correct the subject to :
->> ARM64: dts: meson: add GPIO interrupt-controller support
->>
-> At first thanks for the review comments.
-
-You're welcome, I'm glad you followed some of our comments.
+Chris, please address Geert's review and repost as appropriate.
 
 > 
-> I chose ARM(64) because Meson8 resides under arch/arm whilst Meson GX
-> is under arch/arm64, and I didn't want to split it into two patches.
-> If we change it to ARM64 then it may not fit for Meson8.
-
-Yes, please split the patches in two for ARM and ARM64.
-This is a requirement from the arm-soc maintainers.
-
-Neil
-
+> > --- a/include/dt-bindings/clock/r7s72100-clock.h
+> > +++ b/include/dt-bindings/clock/r7s72100-clock.h
+> > @@ -13,7 +13,14 @@
+> >  #define R7S72100_CLK_PLL       0
 > 
->> On 05/28/2017 09:11 PM, Heiner Kallweit wrote:
->>> Add support for the GPIO interupt controller of certain Amlogic Meson
->>> Soc's.
->>>
->>> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/meson8.dtsi             | 8 ++++++++
->>>  arch/arm/boot/dts/meson8b.dtsi            | 8 ++++++++
->>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++++++
->>>  3 files changed, 24 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
->>> index 69930773..b4c4175d 100644
->>> --- a/arch/arm/boot/dts/meson8.dtsi
->>> +++ b/arch/arm/boot/dts/meson8.dtsi
->>> @@ -126,6 +126,14 @@
->>>  };
->>>  
->>>  &cbus {
->>> +	gpio_intc: interrupt-controller@9880 {
->>> +		compatible = "amlogic,meson-gpio-intc";
->>> +		reg = <0x9880 0x10>;
->>> +		interrupt-controller;
->>> +		#interrupt-cells = <2>;
->>> +		parent-interrupts = <64 65 66 67 68 79 70 71>;
->>> +	};
->>> +
->>>  	pinctrl_cbus: pinctrl@9880 {
->>>  		compatible = "amlogic,meson8-cbus-pinctrl";
->>>  		reg = <0x9880 0x10>;
->>> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
->>> index d9f116a4..1bce64a6 100644
->>> --- a/arch/arm/boot/dts/meson8b.dtsi
->>> +++ b/arch/arm/boot/dts/meson8b.dtsi
->>> @@ -151,6 +151,14 @@
->>>  		interrupts = <0 0 1>;
->>>  	};
->>>  
->>> +	gpio_intc: interrupt-controller@9880 {
->>> +		compatible = "amlogic,meson-gpio-intc";
->>> +		reg = <0x9880 0x10>;
->>> +		interrupt-controller;
->>> +		#interrupt-cells = <2>;
->>> +		parent-interrupts = <64 65 66 67 68 79 70 71>;
->>> +	};
->>> +
->>>  	pinctrl_cbus: pinctrl@9880 {
->>>  		compatible = "amlogic,meson8b-cbus-pinctrl";
->>>  		reg = <0x9880 0x10>;
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> index 436b8750..66dde761 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->>> @@ -312,6 +312,14 @@
->>>  				status = "disabled";
->>>  			};
->>>  
->>> +			gpio_intc: interrupt-controller@9880 {
->>> +				compatible = "amlogic,meson-gpio-intc";
->>> +				reg = <0x0 0x09880 0x0 0x10>;
->>> +				interrupt-controller;
->>> +				#interrupt-cells = <2>;
->>> +				parent-interrupts = <64 65 66 67 68 79 70 71>;
->>> +			};
->>> +
->>>  			watchdog@98d0 {
->>>  				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
->>>  				reg = <0x0 0x098d0 0x0 0x10>;
->>>
->>
->> Seems correct with the dt-bindings,
->>
->> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->>
+> No CoreSight (MSTP20)?
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >  /* MSTP3 */
+> > +#define R7S72100_CLK_IEBUS     7
+> > +#define R7S72100_CLK_IRDA      6
+> > +#define R7S72100_CLK_LIN0      5
+> > +#define R7S72100_CLK_LIN1      4
+> >  #define R7S72100_CLK_MTU2      3
+> > +#define R7S72100_CLK_CAN       2
+> > +#define R7S72100_CLK_ADCPWR    1
+> > +#define R7S72100_CLK_MCPWM     0
+> 
+> Perhaps just R7S72100_CLK_PWM?
+> 
+> >  /* MSTP4 */
+> >  #define R7S72100_CLK_SCIF0     7
+> > @@ -26,25 +33,51 @@
+> >  #define R7S72100_CLK_SCIF7     0
+> >
+> >  /* MSTP5 */
+> > +#define R7S72100_CLK_SCI0      7
+> > +#define R7S72100_CLK_SCI1      6
+> > +#define R7S72100_CLK_SNDGEN0   5
+> > +#define R7S72100_CLK_SNDGEN1   4
+> > +#define R7S72100_CLK_SNDGEN2   3
+> > +#define R7S72100_CLK_SNDGEN3   2
+> 
+> R7S72100_CLK_SG[0-3]?
+> 
+> >  #define R7S72100_CLK_OSTM0     1
+> >  #define R7S72100_CLK_OSTM1     0
+> >
+> >  /* MSTP6 */
+> > +#define R7S72100_CLK_ADC       7
+> > +#define R7S72100_CLK_CEU       6
+> > +#define R7S72100_CLK_DOC0      5
+> > +#define R7S72100_CLK_DOC1      4
+> > +#define R7S72100_CLK_DRC0      3
+> > +#define R7S72100_CLK_DRC1      2
+> > +#define R7S72100_CLK_JCU       1
+> >  #define R7S72100_CLK_RTC       0
+> >
+> >  /* MSTP7 */
+> > +#define R7S72100_CLK_VDEC0     7
+> > +#define R7S72100_CLK_VDEC1     6
+> 
+> R7S72100_CLK_VIN[01]?
+> 
+> >  #define R7S72100_CLK_ETHER     4
+> > +#define R7S72100_CLK_NAND      3
+> >  #define R7S72100_CLK_USB0      1
+> >  #define R7S72100_CLK_USB1      0
+> >
+> >  /* MSTP8 */
+> > +#define R7S72100_CLK_IMR0      7
+> > +#define R7S72100_CLK_IMR1      6
+> > +#define R7S72100_CLK_IMRDISP   5
+> >  #define R7S72100_CLK_MMCIF     4
+> > +#define R7S72100_CLK_MLB       3
+> > +#define R7S72100_CLK_ETHABV    2
+> 
+> R7S72100_CLK_ETHAVB
+> 
+> > +#define R7S72100_CLK_SCUX      1
+> >
+> >  /* MSTP9 */
+> >  #define R7S72100_CLK_I2C0      7
+> >  #define R7S72100_CLK_I2C1      6
+> >  #define R7S72100_CLK_I2C2      5
+> >  #define R7S72100_CLK_I2C3      4
+> > +#define R7S72100_CLK_SPIMBC0   3
+> > +#define R7S72100_CLK_SPIMBC1   2
+> 
+> R7S72100_CLK_SPB[0-1]?
+> All related registers and clocks are called SPB<something>.
+> 
+> > +#define R7S72100_CLK_VDC50     1       /* and LVDS */
+> > +#define R7S72100_CLK_VDC51     0
+> >
+> >  /* MSTP10 */
+> >  #define R7S72100_CLK_SPI0      7
+> > @@ -52,6 +85,9 @@
+> >  #define R7S72100_CLK_SPI2      5
+> >  #define R7S72100_CLK_SPI3      4
+> >  #define R7S72100_CLK_SPI4      3
+> > +#define R7S72100_CLK_CDROM     2
+> > +#define R7S72100_CLK_SPDIF     1
+> > +#define R7S72100_CLK_RGPVG2    0
+> 
+> No SSI (MSTP11[0-5])?
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
