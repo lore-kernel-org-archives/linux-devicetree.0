@@ -1,33 +1,152 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v4 0/2] net: phy: Support managed Cortina phys
-Date: Tue, 30 May 2017 12:42:58 -0400 (EDT)
-Message-ID: <20170530.124258.552928885307723573.davem@davemloft.net>
-References: <1496049091-4637-1-git-send-email-bogdan.purcareata@nxp.com>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 1/2] arm64: allwinner: h5: Add initial NanoPi
+ NEO2 support
+Date: Tue, 30 May 2017 17:42:49 +0000
+Message-ID: <1496166170-6593-1-git-send-email-jagan@openedev.com>
+Reply-To: jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496049091-4637-1-git-send-email-bogdan.purcareata@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bogdan.purcareata@nxp.com
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDH5TZWAZAFBBJO6W3EQKGQEB5HIYCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Bogdan Purcareata <bogdan.purcareata@nxp.com>
-Date: Mon, 29 May 2017 09:11:29 +0000
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-> So far, the Cortina family phys (CS4340 in this particular case) are only
-> supported in fixed link mode (via fixed_phy_register). The generic 10G
-> phy driver does not work well with the phylib state machine, when the phy
-> is registered via of_phy_connect. This prohibits the user from describing the
-> phy nodes in the device tree.
-> 
-> In order to support this scenario, and to properly describe the board
-> device tree, add a minimal Cortina driver that reads the status from the
-> right register. With the generic 10G C45 driver, the kernel will print
-> messages like:
-> [    0.226521] mdio_bus 8b96000: Error while reading PHY16 reg at 1.6
-> [    0.232780] mdio_bus 8b96000: Error while reading PHY16 reg at 1.5
- ...
+NanoPi M1 Plus is designed and developed by FriendlyElec
+using the Allwinner 64-bit H5 SOC.
 
-Series applied, thanks.
+NanoPi Neo2 key features
+- Allwinner H5, Quad-core 64-bit Cortex-A53
+- 512MB DDR3 RAM
+- microSD slot
+- 10/100/1000M Ethernet
+- Serial Debug Port
+- 5V 2A DC MicroUSB power-supply
+
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ arch/arm64/boot/dts/allwinner/Makefile             |  1 +
+ .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 92 ++++++++++++++++++++++
+ 2 files changed, 93 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
+
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index c1dd6e4..8d50907 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -2,6 +2,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-orangepi-win.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
+new file mode 100644
+index 0000000..c28779f
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
+@@ -0,0 +1,92 @@
++/*
++ * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "sun50i-h5.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "FriendlyARM NanoPi NEO2";
++	compatible = "friendlyarm,nanopi-neo2", "allwinner,sun50i-h5";
++
++	aliases {
++		serial0 = &uart0;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	memory {
++		reg = <0x40000000 0x20000000>;
++	};
++
++	soc {
++		reg_vcc3v3: vcc3v3 {
++			compatible = "regulator-fixed";
++			regulator-name = "vcc3v3";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++	};
++};
++
++&mmc0 {
++	compatible = "allwinner,sun50i-h5-mmc",
++		     "allwinner,sun50i-a64-mmc",
++		     "allwinner,sun5i-a13-mmc";
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
+-- 
+1.9.1
