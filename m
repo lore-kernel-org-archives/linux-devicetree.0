@@ -1,48 +1,33 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v8 4/4] defconfig: PCI: Enable  Kirin PCIe defconfig
-Date: Tue, 30 May 2017 15:31:54 -0500
-Message-ID: <20170530203154.GF4664@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170526015333.92482-1-songxiaowei@hisilicon.com>
- <20170526015333.92482-5-songxiaowei@hisilicon.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: imx6q-cm-fx6: add sdio wifi/bt nodes
+Date: Tue, 30 May 2017 17:40:06 -0300
+Message-ID: <CAOMZO5Ca+8U2r5hHcUd__d8EPWHQzKg5-WOY8d2NxBGEz18=yw@mail.gmail.com>
+References: <1a13681b84564bc18937eb54b8345957@rwthex-s1-b.rwth-ad.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170526015333.92482-5-songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+In-Reply-To: <1a13681b84564bc18937eb54b8345957-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, dhdang-qTEPVZfXA3Y@public.gmane.org, liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, chenyao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
+Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Subject line:
+Hi Christopher,
 
-  arm64: defconfig: Enable Kirin PCIe
+On Tue, May 30, 2017 at 5:16 PM,  <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org> wrote:
 
-(Hint: run "git log --oneline <file>" to see what pattern you should
-follow)
+> +       awnh387_pwrseq: pwrseq {
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_pwrseq>;
+> +               compatible = "mmc-pwrseq-sd8787";
+> +               powerdown-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
+> +               reset-gpios = <&gpio6 16 GPIO_ACTIVE_HIGH>;
 
-On Fri, May 26, 2017 at 09:53:33AM +0800, Xiaowei Song wrote:
-> Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  arch/arm64/configs/defconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 7c48028ec64a..d56d8f1062ab 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -71,6 +71,7 @@ CONFIG_PCI_XGENE=y
->  CONFIG_PCI_LAYERSCAPE=y
->  CONFIG_PCI_HISI=y
->  CONFIG_PCIE_QCOM=y
-> +CONFIG_PCIE_KIRIN=y
->  CONFIG_PCIE_ARMADA_8K=y
->  CONFIG_ARM64_VA_BITS_48=y
->  CONFIG_SCHED_MC=y
-> -- 
-> 2.11.GIT
-> 
+At least in the AW-NH387 datasheet I found it says:
+
+RESETn: Reset(active low at least 10ns)
+
+Please double check the polarity in device tree.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
