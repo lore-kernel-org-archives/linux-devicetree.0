@@ -1,64 +1,197 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 3/6] clk: sunxi-ng: h3: Export PLL_PERIPH0
- clock for the PRCM
-Date: Wed, 31 May 2017 15:58:21 +0800
-Message-ID: <20170531075824.657-4-wens@csie.org>
-References: <20170531075824.657-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: pinctrl: Add binding documentation for
+ Spreadtrum pin controller
+Date: Wed, 31 May 2017 15:58:27 +0800
+Message-ID: <20170531075827.GA31518@spreadtrum.com>
+References: <a1fa5b612de318213bab4404997d133ed118f5d2.1495863824.git.baolin.wang@spreadtrum.com>
+ <CACRpkdZFUDrfoyvk-CramNP2OVwVAazVsw3S-wCayx8HP6cSZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBKHPXHEQKGQEYW3G3LQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170531075824.657-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZFUDrfoyvk-CramNP2OVwVAazVsw3S-wCayx8HP6cSZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PRCM takes PLL_PERIPH0 as one of its parents for the AR100 clock.
-As such we need to be able to describe this relationship in the device
-tree.
+Hi Linus,
 
-Export the PLL_PERIPH0 clock so we can reference it in the PRCM node.
+On 一,  5月 29, 2017 at 06:18:29下午 +0200, Linus Walleij wrote:
+> On Sat, May 27, 2017 at 7:56 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> 
+> > This patch adds the binding documentation for Spreadtrum SC9860 pin
+> > controller device.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> (...)
+> 
+> > +* Spreadtrum Pin Controller
+> > +
+> > +The Spreadtrum pin controller are organized in 3 blocks (types).
+> > +
+> > +The first block comprises some global control registers, and each
+> > +register contains several feilds with one bit or several bits to
+> 
+> feilds -> fields
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- drivers/clk/sunxi-ng/ccu-sun8i-h3.h      | 4 +++-
- include/dt-bindings/clock/sun8i-h3-ccu.h | 2 ++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Sorry for typos, will fix in next version.
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-h3.h b/drivers/clk/sunxi-ng/ccu-sun8i-h3.h
-index 85973d1e8165..1b4baea37d81 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-h3.h
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-h3.h
-@@ -29,7 +29,9 @@
- #define CLK_PLL_VIDEO		6
- #define CLK_PLL_VE		7
- #define CLK_PLL_DDR		8
--#define CLK_PLL_PERIPH0		9
-+
-+/* PLL_PERIPH0 exported for PRCM */
-+
- #define CLK_PLL_PERIPH0_2X	10
- #define CLK_PLL_GPU		11
- #define CLK_PLL_PERIPH1		12
-diff --git a/include/dt-bindings/clock/sun8i-h3-ccu.h b/include/dt-bindings/clock/sun8i-h3-ccu.h
-index c2afc41d6964..e139fe5c62ec 100644
---- a/include/dt-bindings/clock/sun8i-h3-ccu.h
-+++ b/include/dt-bindings/clock/sun8i-h3-ccu.h
-@@ -43,6 +43,8 @@
- #ifndef _DT_BINDINGS_CLK_SUN8I_H3_H_
- #define _DT_BINDINGS_CLK_SUN8I_H3_H_
- 
-+#define CLK_PLL_PERIPH0		9
-+
- #define CLK_CPUX		14
- 
- #define CLK_BUS_CE		20
--- 
-2.11.0
+> 
+> Do you mean "bitfields", i.e a few bits inside a configuration register
+> word?
+
+Yes.
+
+> 
+> > +configurate for some global common configuration, such as domain
+> 
+> configurate -> configure
+
+OK.
+
+> 
+> > +pad driving level, system control select
+> 
+> Actually I do not understand at all what "domain pad driving level"
+> or "system control select" means, those are very generic terms.
+> Can you describe precisely what it means? What domain? What
+> is a domain pad? What kind of system control? What is it selecting
+> between?
+
+I try to explain what they are on Spreadtrum platform. One pin can output
+3.0v or 1.8v, depending on the related domain pad driving selection, if
+the related domain pad slect 3.0v, then the pin can output 3.0v.
+
+"system control" is used to choose this function (like: UART0) for which
+system, since we have several systems (AP/CP/CM4) on one SoC.
+
+> 
+> >  and so on. We recognise
+> > +every feild comprising one bit or several bits in one global control
+> 
+> feild -> field
+> 
+> > +register as one pin, thus we should record every pin's bit offset,
+> > +bit width and register offset to configurate this feild (pin).
+> 
+> feild -> field
+> 
+> > +The second block comprises some common registers which have unified
+> > +register definition, and each register described one pin is used
+> > +to configurate pin sleep mode and function select.
+> 
+> OK
+> 
+> > +The last block comprises some misc registers which also have unified
+> > +register definition, and each register described one pin is used to
+> > +configurate drive strength, pull up/down and so on.
+> 
+> configurate -> configure
+> 
+> OK that is pin configuration.
+> 
+> > +This driver supports the generic pin multiplexing and configuration
+> > +bindings. For details on each properties, you can refer to
+> > +./pinctrl-bindings.txt.
+> 
+> Do not talk about the driver in the bindings. Talk about the bindings per
+> se, these bindings are supposed to be OS neutral.
+
+Sure, will remove these.
+
+> 
+> > +Required properties for Spreadtrum pin controller:
+> > +- compatible: "sprd,<soc>-pinctrl"
+> > +  Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported SoCs.
+> > +
+> > +Required properties for pin configuration node:
+> > +- sprd,pins: each entry consists of 2 integers and represents the pin
+> > +  id and config setting for one pin.
+> 
+> Do not use the custom property "sprd,pins" for this, if you want to set up pin
+> muxing with a magic value use the generic binding "pinmux", see:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt?id=8d5e7c5df0a6c442373628be5221321172b1badf
+> 
+> But consider using groups+functions for defining multiplexing instead.
+> 
+> But please do NOT combine pin configuration into a magic value. Use
+> the generic pin control bindings, er have bindings for all kinds of pin
+> config, and using them makes the driver much more readable for
+> humans.
+> 
+> I understand that you may have a lot of magic number tables around that
+> you are using today, but it is necessary to decompose that into the proper
+> generic pin configuration properties to make it usable.
+
+Since we have lots of different pin configuration to set, it will be hard to
+use the standard pin config describing in binding files. But I will try to
+remove the magic number and use the common pin config.
+
+> 
+> > +++ b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
+> > @@ -0,0 +1,26 @@
+> > +* Spreadtrum SC9860 Pin Controller
+> > +
+> > +Please refer to sprd,pinctrl.txt in this directory for common binding part
+> > +and usage.
+> > +
+> > +Required properties:
+> > +- compatible: must be "sprd,sc9860-pinctrl".
+> > +- reg: the register address of pin controller device.
+> > +- sprd,pins: two integers array, represents a group of pins id and config
+> > +  setting. The format is sprd,pins = <PIN_ID CONFIG>, PIN_ID can be found
+> > +  from pinctrl-sprd-sc9860.c file or spec file, CONFIG is the pad setting
+> > +  value like pull-up for this pin.
+> 
+> Same comments.
+> 
+> > +Example:
+> > +pin_controller: pinctrl@402a0000 {
+> > +       compatible = "sprd,sc9860-pinctrl";
+> > +       reg = <0x402a0000 0x10000>;
+> > +
+> > +       vio_sd0_ms_0: sd0_ms0 {
+> > +               sprd,pins = <8 0x1>;
+> > +       };
+> > +
+> > +       vbc_iis0_0: iis0_c {
+> > +               sprd,pins = <34 0xc>;
+> > +       };
+> > +};
+> 
+> Magic numbers are very hard to understand. Compare to this
+> from Qualcomm APQ8064 using just standard bindings:
+> 
+> pinmux@800000 {
+>         i2c4_pins: i2c4_pinmux {
+>                pins = "gpio12", "gpio13";
+>                function = "gsbi4";
+>                bias-disable;
+>         };
+> 
+>         spi_pins: spi_pins {
+>                mux {
+>                       pins = "gpio18", "gpio19", "gpio21";
+>                       function = "gsbi5";
+>                       drive-strength = <10>;
+>                       bias-none;
+>                 };
+>         };
+> };
+> 
+> Please try go get rid of the magic numbers and get to use pins, function,
+> drive-strength bias etc from the standard bindings. We also have a lot
+> of helper code available to use this.
+
+Sure. I will try o fix this. Thanks for your helpful comments.
+
+> 
+> Yours,
+> Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
