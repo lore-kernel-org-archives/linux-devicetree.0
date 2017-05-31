@@ -1,521 +1,179 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] usb: max3421-hcd: Add devicetree support to the
- driver
-Date: Wed, 31 May 2017 14:03:32 -0500
-Message-ID: <20170531190332.hmyshg7agkmr3hrj@rob-hp-laptop>
-References: <fe4f9b0f3a18d48dec6c0a8d79cae386@amelkin.msk.ru>
- <420c4f42ade4fd33fb8ad00fa54552f1@amelkin.msk.ru>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] Documentation: DT: add Keystone DSP remoteproc
+ binding
+Date: Wed, 31 May 2017 14:12:31 -0500
+Message-ID: <20170531191231.5qt2lfv73p572gmd@rob-hp-laptop>
+References: <20170526165317.23164-1-s-anna@ti.com>
+ <20170526165317.23164-2-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <420c4f42ade4fd33fb8ad00fa54552f1-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Amelkin <alexander-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <20170526165317.23164-2-s-anna@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Santosh Shilimkar <ssantosh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Sam Nelson <sam.nelson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 02:28:24PM +0300, Alexander Amelkin wrote:
-> NOTE:
-> Please don't use the plain text here as a patch because it most probably is
-> corrupted by my webmail client.
-> Attached is a copy of the following text guaranteed to have correct
-> tabs/spaces.
-> -------------------------
-
-Huh?
-
+On Fri, May 26, 2017 at 11:53:15AM -0500, Suman Anna wrote:
+> Add the device tree bindings document for the Texas Instrument's
+> Keystone 2 DSP remoteproc devices.
 > 
-> Before this patch the max3421-hcd driver could only use
-> statically linked platform data to initialize its parameters.
-> This prevented it from being used on systems using device
-> tree.
-> 
-> The data taken from the device tree is put into dev->platform_data
-> when CONFIG_OF is enabled and the device is an OpenFirmware node.
-> 
-> The driver's 'compatible' string is 'maxim,max3421'
-> 
-> Binding documentation is also added with this patch.
-
-Please split binding to a separate patch.
-
-> 
-> Signed-off-by: Alexander Amelkin <alexander-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Sam Nelson <sam.nelson@ti.com>
 > ---
->  .../devicetree/bindings/usb/maxim,max3421-hcd.txt  | 19 +++++
-
-Drop the "-hcd"
-
->  drivers/usb/host/max3421-hcd.c                     | 96
-> ++++++++++++++++++++--
->  2 files changed, 110 insertions(+), 5 deletions(-)
->  create mode 100644
-> Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
+>  .../bindings/remoteproc/ti,keystone-rproc.txt      | 132 +++++++++++++++++++++
+>  1 file changed, 132 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
-> b/Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
 > new file mode 100644
-> index 0000000..a8b9faa
+> index 000000000000..f1ba88edd00d
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
-> @@ -0,0 +1,19 @@
-> +* SPI-based USB host controller Maxim Integrated max3421e
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
+> @@ -0,0 +1,132 @@
+> +TI Keystone DSP devices
+> +=======================
+> +
+> +Binding status: Unstable - Subject to changes for using multiple memory regions
+
+I don't really see what would be unstable here. memory-region is easily 
+extended to multiple entries.
+
+> +
+> +The TI Keystone 2 family of SoCs usually have one or more (upto 8) TI DSP Core
+> +sub-systems that are used to offload some of the processor-intensive tasks or
+> +algorithms, for achieving various system level goals.
+> +
+> +These processor sub-systems usually contain additional sub-modules like L1
+> +and/or L2 caches/SRAMs, an Interrupt Controller, an external memory controller,
+> +a dedicated local power/sleep controller etc. The DSP processor core in
+> +Keystone 2 SoCs is usually a TMS320C66x CorePac processor.
+> +
+> +DSP Device Node:
+> +================
+> +Each DSP Core sub-system is represented as a single DT node. Each node has a
+> +number of required or optional properties that enable the OS running on the
+> +host processor (ARM CorePac) to perform the device management of the remote
+> +processor and to communicate with the remote processor.
 > +
 > +Required properties:
-> +- compatible: must be "maxim,max3421"
-> +- reg: chip select number to which the max3421 chip is connected
-> +  (depends on master SPI controller)
-> +- spi-max-frequency: the operational frequency, must not exceed <26000000>
-> +- interrupt-parent: phandle of the associated GPIO controller to which the
-> INT line
+> +--------------------
+> +The following are the mandatory properties:
+> +
+> +- compatible:		Should be one of the following,
+> +			    "ti,k2hk-dsp" for DSPs on Keystone 2 66AK2H/K SoCs
+> +			    "ti,k2l-dsp" for DSPs on Keystone 2 66AK2L SoCs
+> +			    "ti,k2e-dsp" for DSPs on Keystone 2 66AK2E SoCs
+> +
+> +- reg:			Should contain an entry for each value in 'reg-names'.
+> +			Each entry should have the memory region's start address
+> +			and the size of the region, the representation matching
+> +			the parent node's '#address-cells' and '#size-cells' values.
+> +
+> +- reg-names:		Should contain strings with the following names, each
+> +			representing a specific internal memory region, and
+> +			should be defined in this order,
+> +			     "l2sram", "l1pram", "l1dram"
+> +
+> +- label:		Should contain a string identifying the DSP instance
+> +			within the SoC. Should be the string "dsp" followed by
+> +			the instance number. Eg: "dsp0", "dsp1",..."dsp7" etc
 
-Some line wrapping problems...
-
-While typically an interrupt to a board level device is a GPIO, that's 
-outside the scope of this binding. For this binding, it is just an 
-interrupt line.
-
-> +  of max3421e chip is connected
-> +- interrupts: specification of the GPIO pin (in terms of the
-> `interrupt-parent`)
-> +  to which INT line of max3421e chip is connected.
-> +  The driver configures MAX3421E for active low level triggered interrupts.
-> +  Configure your 'interrupt-parent' gpio controller accordingly.
-
-This is wrong. The flags cell tells how to configure the interrupt.
-
-> +- vbus: <GPOUTx ACTIVE_LEVEL>
-> +  GPOUTx is the number (1-8) of GPOUT pin of max3421e used to drive Vbus.
-> +  ACTIVE_LEVEL is 1 or 0.
-
-Just "vbus" could be a lot of things. Perhaps "maxim,vbus-en-pin".
+Why does a user need to know or care?
 
 > +
-> +Don't forget to add pinctrl properties if you need some GPIO pins
-> reconfigured
-> +for use as INT. See binding information for the pinctrl nodes.
+> +- clocks: 		Should contain the device's input clock, and should be
+> +			defined as per the bindings in,
+> +			Documentation/devicetree/bindings/clock/keystone-gate.txt
+> +
+> +- ti,syscon-dev:	Should be a pair of the phandle to the Keystone Device
+> +			State Control node, and the register offset of the DSP
+> +			boot address register within that node's address space.
+> +
+> +- resets:		Should contain the phandle to the reset controller node
+> +			managing the resets for this device, and a reset
+> +			specifier. Please refer to the following reset bindings
+> +			for the reset argument specifier as per SoC,
+> +			Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
+> +			    for 66AK2HK/66AK2L/66AK2E SoCs
+> +
+> +- interrupt-parent:	Should contain a phandle to the Keystone 2 IRQ controller
+> +			IP node that is used by the ARM CorePac processor to
+> +			receive interrupts from the DSP remote processors. See
+> +			Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
+> +			for details.
+> +
+> +- interrupts: 		Should contain an entry for each value in 'interrupt-names'.
+> +			Each entry should have the interrupt source number used by
+> +			the remote processor to the host processor. The values should
+> +			follow the interrupt-specifier format as dictated by the
+> +			'interrupt-parent' node. The purpose of each is as per the
+> +			description in the 'interrupt-names' property.
+> +
+> +- interrupt-names:	Should contain strings with the following names, each
+> +			representing a specific interrupt,
+> +			    "vring" - interrupt for virtio based IPC
+> +			    "exception" - interrupt for exception notification
+> +
+> +- kick-gpio: 		Should specify the gpio device needed for the virtio IPC
 
-List the properties as optional.
+-gpios
 
-> diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
-> index 369869a..f600052 100644
-> --- a/drivers/usb/host/max3421-hcd.c
-> +++ b/drivers/usb/host/max3421-hcd.c
-> @@ -61,6 +61,12 @@
->  #include <linux/usb.h>
->  #include <linux/usb/hcd.h>
-> 
-> +#if defined(CONFIG_OF)
-> +#include <linux/of_device.h>
-
-Probably should be of.h instead.
-
+> +			stack. This will be used to interrupt the remote processor.
+> +			The gpio device to be used is as per the bindings in,
+> +			Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
 > +
-> +#define MAX3421_GPOUT_COUNT 8
-> +#endif
-
-Don't need an ifdef here.
-
+> +Optional properties:
+> +--------------------
 > +
->  #include <linux/platform_data/max3421-hcd.h>
-> 
->  #define DRIVER_DESC    "MAX3421 USB Host-Controller Driver"
-> @@ -1699,6 +1705,10 @@ max3421_hub_control(struct usb_hcd *hcd, u16
-> type_req, u16 value, u16 index,
->     spin_lock_irqsave(&max3421_hcd->lock, flags);
-> 
->     pdata = spi->dev.platform_data;
-> +   if (!pdata) {
-> +       dev_err(&spi->dev, "Device platform data is missing\n");
-> +       return -EFAULT;
-> +   }
-> 
->     switch (type_req) {
->     case ClearHubFeature:
-> @@ -1831,20 +1841,80 @@ static struct hc_driver max3421_hcd_desc = {
->     .bus_resume =       max3421_bus_resume,
->  };
-> 
-> +#if defined(CONFIG_OF)
-> +static struct max3421_hcd_platform_data max3421_data;
-> +
-> +static const struct of_device_id max3421_dt_ids[] = {
-> +   { .compatible = "maxim,max3421", .data = &max3421_data, },
-> +   { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max3421_dt_ids);
-> +#endif
-> +
->  static int
->  max3421_probe(struct spi_device *spi)
->  {
->     struct max3421_hcd *max3421_hcd;
->     struct usb_hcd *hcd = NULL;
->     int retval = -ENOMEM;
-> +#if defined(CONFIG_OF)
-> +   struct max3421_hcd_platform_data *pdata = NULL;
-> +#endif
-> 
->     if (spi_setup(spi) < 0) {
->         dev_err(&spi->dev, "Unable to setup SPI bus");
->         return -EFAULT;
->     }
-> 
-> -   hcd = usb_create_hcd(&max3421_hcd_desc, &spi->dev,
-> -                dev_name(&spi->dev));
-> +   if (!spi->irq) {
-> +       dev_err(&spi->dev, "Failed to get SPI IRQ for node '%s'\n",
-> spi->dev.of_node->full_name);
-> +       return -EFAULT;
-> +   }
-> +
-> +#if defined(CONFIG_OF)
-> +   if (spi->dev.of_node) {
-
-if (IS_ENABLED(CONFIG_OF) && spi->dev.of_node)
-
-> +       /* A temporary alias structure */
-> +       union {
-> +           uint32_t value[2];
-> +           struct {
-> +               uint32_t gpout;
-> +               uint32_t active_level;
-> +           };
-> +       } vbus;
-> +
-> +       if(!(pdata = devm_kzalloc(&spi->dev, sizeof(*pdata), GFP_KERNEL))) {
-> +           dev_err(&spi->dev, "failed to allocate memory for private
-> data\n");
-> +           retval = -ENOMEM;
-> +           goto error;
-> +       }
-> +       spi->dev.platform_data = pdata;
-> +
-> +       if ((retval = of_property_read_u32_array(spi->dev.of_node, "vbus",
-> vbus.value, 2))) {
-> +           dev_err(&spi->dev, "device tree node property 'vbus' is
-> missing\n");
-> +           goto error;
-> +       }
-> +       pdata->vbus_gpout = vbus.gpout;
-> +       pdata->vbus_active_level = vbus.active_level;
-> +   }
-> +   else
-> +#endif
-> +   pdata = spi->dev.platform_data;
-> +   if (!pdata) {
-> +       dev_err(&spi->dev, "driver configuration data is not provided\n");
-> +       retval = -EFAULT;
-> +       goto error;
-> +   }
-> +   if (pdata->vbus_active_level > 1) {
-> +       dev_err(&spi->dev, "vbus active level value %d is out of range
-> (0/1)\n", pdata->vbus_active_level);
-> +       retval = -EINVAL;
-> +       goto error;
-> +   }
-> +   if (pdata->vbus_gpout < 1 || pdata->vbus_gpout > MAX3421_GPOUT_COUNT) {
-> +       dev_err(&spi->dev, "vbus gpout value %d is out of range (1..8)\n",
-> pdata->vbus_gpout);
-> +       retval = -EINVAL;
-> +       goto error;
-> +   }
-> +   hcd = usb_create_hcd(&max3421_hcd_desc, &spi->dev, dev_name(&spi->dev));
->     if (!hcd) {
->         dev_err(&spi->dev, "failed to create HCD structure\n");
->         goto error;
-> @@ -1892,6 +1962,12 @@ max3421_probe(struct spi_device *spi)
->             kthread_stop(max3421_hcd->spi_thread);
->         usb_put_hcd(hcd);
->     }
-> +#if defined(CONFIG_OF)
-> +   if (pdata && spi->dev.platform_data == pdata) {
-
-IS_ENABLED...
-
-> +       devm_kfree(&spi->dev, pdata);
-> +       spi->dev.platform_data = NULL;
-> +   }
-> +#endif
->     return retval;
->  }
-> 
-> @@ -1908,14 +1984,12 @@ max3421_remove(struct spi_device *spi)
->         if (hcd->self.controller == &spi->dev)
->             break;
->     }
-> +
-
-Spurious change.
-
->     if (!max3421_hcd) {
->         dev_err(&spi->dev, "no MAX3421 HCD found for SPI device %p\n",
->             spi);
->         return -ENODEV;
->     }
-> -
-> -   usb_remove_hcd(hcd);
-> -
->     spin_lock_irqsave(&max3421_hcd->lock, flags);
-> 
->     kthread_stop(max3421_hcd->spi_thread);
-> @@ -1923,8 +1997,19 @@ max3421_remove(struct spi_device *spi)
-> 
->     spin_unlock_irqrestore(&max3421_hcd->lock, flags);
-> 
-> +#if defined(CONFIG_OF)
-> +   if (spi->dev.platform_data) {
-> +       dev_dbg(&spi->dev, "Freeing platform data structure\n");
-> +       devm_kfree(&spi->dev, spi->dev.platform_data);
-> +       spi->dev.platform_data = NULL;
-> +   }
-> +#endif
-> +
->     free_irq(spi->irq, hcd);
-> 
-> +   usb_remove_hcd(hcd);
+> +- memory-region:	phandle to the reserved memory node to be associated
+> +			with the remoteproc device. The reserved memory node
+> +			can be a CMA memory node, and should be defined as
+> +			per the bindings in
+> +			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
 > +
 > +
-
-One blank line.
-
->     usb_put_hcd(hcd);
->     return 0;
->  }
-> @@ -1934,6 +2019,7 @@ static struct spi_driver max3421_driver = {
->     .remove     = max3421_remove,
->     .driver     = {
->         .name   = "max3421-hcd",
-> +       .of_match_table = of_match_ptr(max3421_dt_ids),
->     },
->  };
-> 
-> --
-> 2.7.4
-
-> From 0eb4464398c8b0a336aa0305724b4b84ef2be097 Mon Sep 17 00:00:00 2001
-> From: Alexander Amelkin <amelkin-0pd1rHjVOVEvJsYlp49lxw@public.gmane.org>
-> Date: Tue, 28 Mar 2017 20:59:06 +0300
-> Subject: [PATCH 1/3] usb: max3421-hcd: Add devicetree support to the driver
-> 
-> Before this patch the max3421-hcd driver could only use
-> statically linked platform data to initialize its parameters.
-> This prevented it from being used on systems using device
-> tree.
-> 
-> The data taken from the device tree is put into dev->platform_data
-> when CONFIG_OF is enabled and the device is an OpenFirmware node.
-> 
-> The driver's 'compatible' string is 'maxim,max3421'
-> 
-> Binding documentation is also added with this patch.
-> 
-> Signed-off-by: Alexander Amelkin <alexander-RgVAGUil9pwRDxlzMovjVg@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/maxim,max3421-hcd.txt  | 19 +++++
->  drivers/usb/host/max3421-hcd.c                     | 96 ++++++++++++++++++++--
->  2 files changed, 110 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt b/Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
-> new file mode 100644
-> index 0000000..a8b9faa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/maxim,max3421-hcd.txt
-> @@ -0,0 +1,19 @@
-> +* SPI-based USB host controller Maxim Integrated max3421e
+> +Example:
+> +--------
 > +
-> +Required properties:
-> +- compatible: must be "maxim,max3421"
-> +- reg: chip select number to which the max3421 chip is connected
-> +  (depends on master SPI controller)
-> +- spi-max-frequency: the operational frequency, must not exceed <26000000>
-> +- interrupt-parent: phandle of the associated GPIO controller to which the INT line
-> +  of max3421e chip is connected
-> +- interrupts: specification of the GPIO pin (in terms of the `interrupt-parent`)
-> +  to which INT line of max3421e chip is connected.
-> +  The driver configures MAX3421E for active low level triggered interrupts.
-> +  Configure your 'interrupt-parent' gpio controller accordingly.
-> +- vbus: <GPOUTx ACTIVE_LEVEL>
-> +  GPOUTx is the number (1-8) of GPOUT pin of max3421e used to drive Vbus.
-> +  ACTIVE_LEVEL is 1 or 0.
+> +	/* 66AK2H/K DSP node in SoC DTS file */
+> +	soc {
+> +		dsp0: dsp@10800000 {
+> +			compatible = "ti,k2hk-dsp";
+> +			reg = <0x10800000 0x00100000>,
+> +			      <0x10e00000 0x00008000>,
+> +			      <0x10f00000 0x00008000>;
+> +			reg-names = "l2sram", "l1pram", "l1dram";
+> +			label = "dsp0";
+> +			clocks = <&clkgem0>;
+> +			ti,syscon-dev = <&devctrl 0x40>;
+> +			resets = <&pscrst 0>;
+> +			interrupt-parent = <&kirq0>;
+> +			interrupts = <0 8>;
+> +			interrupt-names = "vring", "exception";
+> +			kick-gpio = <&dspgpio0 27 0>;
+> +		};
 > +
-> +Don't forget to add pinctrl properties if you need some GPIO pins reconfigured
-> +for use as INT. See binding information for the pinctrl nodes.
-> diff --git a/drivers/usb/host/max3421-hcd.c b/drivers/usb/host/max3421-hcd.c
-> index 369869a..f600052 100644
-> --- a/drivers/usb/host/max3421-hcd.c
-> +++ b/drivers/usb/host/max3421-hcd.c
-> @@ -61,6 +61,12 @@
->  #include <linux/usb.h>
->  #include <linux/usb/hcd.h>
->  
-> +#if defined(CONFIG_OF)
-> +#include <linux/of_device.h>
+> +	};
 > +
-> +#define MAX3421_GPOUT_COUNT 8
-> +#endif
+> +	/* K2HK EVM Board file */
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
 > +
->  #include <linux/platform_data/max3421-hcd.h>
->  
->  #define DRIVER_DESC	"MAX3421 USB Host-Controller Driver"
-> @@ -1699,6 +1705,10 @@ max3421_hub_control(struct usb_hcd *hcd, u16 type_req, u16 value, u16 index,
->  	spin_lock_irqsave(&max3421_hcd->lock, flags);
->  
->  	pdata = spi->dev.platform_data;
-> +	if (!pdata) {
-> +		dev_err(&spi->dev, "Device platform data is missing\n");
-> +		return -EFAULT;
-> +	}
->  
->  	switch (type_req) {
->  	case ClearHubFeature:
-> @@ -1831,20 +1841,80 @@ static struct hc_driver max3421_hcd_desc = {
->  	.bus_resume =		max3421_bus_resume,
->  };
->  
-> +#if defined(CONFIG_OF)
-> +static struct max3421_hcd_platform_data max3421_data;
+> +		dsp_common_cma_pool: dsp_common_cma_pool@81f800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x00000008 0x1f800000 0x00000000 0x800000>;
+> +			reusable;
+> +			status = "okay";
+> +		};
+> +	};
 > +
-> +static const struct of_device_id max3421_dt_ids[] = {
-> +	{ .compatible = "maxim,max3421", .data = &max3421_data, },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max3421_dt_ids);
-> +#endif
-> +
->  static int
->  max3421_probe(struct spi_device *spi)
->  {
->  	struct max3421_hcd *max3421_hcd;
->  	struct usb_hcd *hcd = NULL;
->  	int retval = -ENOMEM;
-> +#if defined(CONFIG_OF)
-> +	struct max3421_hcd_platform_data *pdata = NULL;
-> +#endif
->  
->  	if (spi_setup(spi) < 0) {
->  		dev_err(&spi->dev, "Unable to setup SPI bus");
->  		return -EFAULT;
->  	}
->  
-> -	hcd = usb_create_hcd(&max3421_hcd_desc, &spi->dev,
-> -			     dev_name(&spi->dev));
-> +	if (!spi->irq) {
-> +		dev_err(&spi->dev, "Failed to get SPI IRQ for node '%s'\n", spi->dev.of_node->full_name);
-> +		return -EFAULT;
-> +	}
-> +
-> +#if defined(CONFIG_OF)
-> +	if (spi->dev.of_node) {
-> +		/* A temporary alias structure */
-> +		union {
-> +			uint32_t value[2];
-> +			struct {
-> +				uint32_t gpout;
-> +				uint32_t active_level;
-> +			};
-> +		} vbus;
-> +
-> +		if(!(pdata = devm_kzalloc(&spi->dev, sizeof(*pdata), GFP_KERNEL))) {
-> +			dev_err(&spi->dev, "failed to allocate memory for private data\n");
-> +			retval = -ENOMEM;
-> +			goto error;
-> +		}
-> +		spi->dev.platform_data = pdata;
-> +
-> +		if ((retval = of_property_read_u32_array(spi->dev.of_node, "vbus", vbus.value, 2))) {
-> +			dev_err(&spi->dev, "device tree node property 'vbus' is missing\n");
-> +			goto error;
-> +		}
-> +		pdata->vbus_gpout = vbus.gpout;
-> +		pdata->vbus_active_level = vbus.active_level;
-> +	}
-> +	else
-> +#endif
-> +	pdata = spi->dev.platform_data;
-> +	if (!pdata) {
-> +		dev_err(&spi->dev, "driver configuration data is not provided\n");
-> +		retval = -EFAULT;
-> +		goto error;
-> +	}
-> +	if (pdata->vbus_active_level > 1) {
-> +		dev_err(&spi->dev, "vbus active level value %d is out of range (0/1)\n", pdata->vbus_active_level);
-> +		retval = -EINVAL;
-> +		goto error;
-> +	}
-> +	if (pdata->vbus_gpout < 1 || pdata->vbus_gpout > MAX3421_GPOUT_COUNT) {
-> +		dev_err(&spi->dev, "vbus gpout value %d is out of range (1..8)\n", pdata->vbus_gpout);
-> +		retval = -EINVAL;
-> +		goto error;
-> +	}
-> +	hcd = usb_create_hcd(&max3421_hcd_desc, &spi->dev, dev_name(&spi->dev));
->  	if (!hcd) {
->  		dev_err(&spi->dev, "failed to create HCD structure\n");
->  		goto error;
-> @@ -1892,6 +1962,12 @@ max3421_probe(struct spi_device *spi)
->  			kthread_stop(max3421_hcd->spi_thread);
->  		usb_put_hcd(hcd);
->  	}
-> +#if defined(CONFIG_OF)
-> +	if (pdata && spi->dev.platform_data == pdata) {
-> +		devm_kfree(&spi->dev, pdata);
-> +		spi->dev.platform_data = NULL;
-> +	}
-> +#endif
->  	return retval;
->  }
->  
-> @@ -1908,14 +1984,12 @@ max3421_remove(struct spi_device *spi)
->  		if (hcd->self.controller == &spi->dev)
->  			break;
->  	}
-> +
->  	if (!max3421_hcd) {
->  		dev_err(&spi->dev, "no MAX3421 HCD found for SPI device %p\n",
->  			spi);
->  		return -ENODEV;
->  	}
-> -
-> -	usb_remove_hcd(hcd);
-> -
->  	spin_lock_irqsave(&max3421_hcd->lock, flags);
->  
->  	kthread_stop(max3421_hcd->spi_thread);
-> @@ -1923,8 +1997,19 @@ max3421_remove(struct spi_device *spi)
->  
->  	spin_unlock_irqrestore(&max3421_hcd->lock, flags);
->  
-> +#if defined(CONFIG_OF)
-> +	if (spi->dev.platform_data) {
-> +		dev_dbg(&spi->dev, "Freeing platform data structure\n");
-> +		devm_kfree(&spi->dev, spi->dev.platform_data);
-> +		spi->dev.platform_data = NULL;
-> +	}
-> +#endif
-> +
->  	free_irq(spi->irq, hcd);
->  
-> +	usb_remove_hcd(hcd);
-> +
-> +
->  	usb_put_hcd(hcd);
->  	return 0;
->  }
-> @@ -1934,6 +2019,7 @@ static struct spi_driver max3421_driver = {
->  	.remove		= max3421_remove,
->  	.driver		= {
->  		.name	= "max3421-hcd",
-> +		.of_match_table = of_match_ptr(max3421_dt_ids),
->  	},
->  };
->  
+> +	&dsp0 {
+> +		memory-region = <&dsp_common_cma_pool>;
+> +	};
 > -- 
-> 2.7.4
+> 2.12.0
 > 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
