@@ -1,39 +1,41 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/6] Extend mvebu gpio driver to support the controllers
- of the Marvell Armada 7K/8K
-Date: Wed, 31 May 2017 11:16:45 +0200
-Message-ID: <20170531111645.6530911a@free-electrons.com>
-References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
+From: <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 linux-next 0/3] i.MX ECSPI controller slave mode support
+Date: Wed, 31 May 2017 02:19:55 -0700
+Message-ID: <1496222398-3192-1-git-send-email-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+From: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 
-On Fri, 19 May 2017 18:09:19 +0200, Gregory CLEMENT wrote:
 
-> Not that currently I didn't manage to fully test the gpio, indeed I
-> only have a 7040 DB board which lack of test point for this kind of
-> test. So any tested-by would be welcome.
+Changes in v2:
+re-workd i.MX ECSPI controller slave mode support based on Geert's work
 
-I have tested GPIOs on the master CP110 of the Armada 8K on a
-MacchiatoBin board, and they worked for me, so you can add my:
+Jiada Wang (3):
+  spi: imx: add selection for iMX53 and iMX6 controller
+  ARM: dts: imx: change compatiblity for SPI controllers on imx53 later
+    soc
+  spi: imx: Add support for SPI Slave mode
 
-Tested-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+ .../devicetree/bindings/spi/fsl-imx-cspi.txt       |   1 +
+ arch/arm/boot/dts/imx53.dtsi                       |   4 +-
+ arch/arm/boot/dts/imx6q.dtsi                       |   2 +-
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   8 +-
+ arch/arm/boot/dts/imx6sl.dtsi                      |   8 +-
+ arch/arm/boot/dts/imx6sx.dtsi                      |   8 +-
+ arch/arm/boot/dts/imx6ul.dtsi                      |   8 +-
+ drivers/spi/spi-imx.c                              | 273 ++++++++++++++++++---
+ 8 files changed, 257 insertions(+), 55 deletions(-)
 
-Best regards,
-
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.7.4
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
