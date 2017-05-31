@@ -1,57 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] firmware: qcom: scm: Expose download-mode control
-Date: Wed, 31 May 2017 14:31:42 -0500
-Message-ID: <20170531193142.xnf5nvnq7iejnuva@rob-hp-laptop>
-References: <20170527063308.10483-1-bjorn.andersson@linaro.org>
- <20170527063308.10483-2-bjorn.andersson@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: sun8i: h3: Add initial NanoPi
+ M1 Plus support
+Date: Wed, 31 May 2017 21:33:54 +0200
+Message-ID: <20170531193354.vuu4obasz4ksh6mv@flea.lan>
+References: <1496166170-6593-1-git-send-email-jagan@openedev.com>
+ <1496166170-6593-2-git-send-email-jagan@openedev.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="43p7rag7beynp7hs"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBI5VXTEQKGQELUFTFDY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170527063308.10483-2-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1496166170-6593-2-git-send-email-jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 11:33:07PM -0700, Bjorn Andersson wrote:
-> In order to aid post-mortem debugging the Qualcomm platforms provides a
-> "memory download mode", where the boot loader will provide an interface
-> for custom tools to "download" the content of RAM to a host machine.
-> 
-> The mode is triggered by writing a magic value somehwere in RAM, that is
-> read in the boot code path after a warm-restart. Two mechanism for
-> setting this magic value are supported in modern platforms; a direct SCM
-> call to enable the mode or through a secure io write of a magic value.
-> 
-> In order for a normal reboot not to trigger "download mode" the magic
-> must be cleared during a clean reboot.
 
-This must be happening somewhere before the kernel is entered? Or 
-warm-restarts are not the norm?
+--43p7rag7beynp7hs
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-> Download mode has to be enabled by including qcom_scm.download_mode=1 on
-> the command line.
+On Tue, May 30, 2017 at 05:42:50PM +0000, Jagan Teki wrote:
+> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> 
+> NanoPi M1 Plus is designed and developed by FriendlyElec
+> for professionals, enterprise users, makers and hobbyists
+> using the Allwinner H3 SOC.
+> 
+> NanoPi M1 Plus key features
+> - Allwinner H3, Quad-core Cortex-A7@1.2GHz
+> - 1GB DDR3 RAM
+> - 8GB eMMC
+> - microSD slot
+> - 10/100/1000M Ethernet
+> - Serial Debug Port
+> - 5V 2A DC power-supply
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-This looks similar to reboot reason functionality (i.e. boot into mode 
-X). I'd expect this to use that at least for the kernel. Not sure about 
-bindings though.
+Applied, thanks!
+Maxime
 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> 
-> Changes since v1:
-> - Specify DT propert being two-cell
-> - Correct handling of scm-call return code
-> 
->  .../devicetree/bindings/firmware/qcom,scm.txt      |  2 +
->  drivers/firmware/qcom_scm-32.c                     |  6 +++
->  drivers/firmware/qcom_scm-64.c                     | 13 +++++++
->  drivers/firmware/qcom_scm.c                        | 43 ++++++++++++++++++++++
->  drivers/firmware/qcom_scm.h                        |  2 +
->  5 files changed, 66 insertions(+)
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--43p7rag7beynp7hs--
