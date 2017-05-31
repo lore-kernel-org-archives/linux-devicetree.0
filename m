@@ -1,43 +1,78 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v6 21/21] arm64: defconfig: Enable dwmac-sun8i
- driver on defconfig
-Date: Wed, 31 May 2017 09:18:52 +0200
-Message-ID: <20170531071852.12422-22-clabbe.montjoie@gmail.com>
-References: <20170531071852.12422-1-clabbe.montjoie@gmail.com>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI
+ TRI_LED module
+Date: Wed, 31 May 2017 09:55:36 +0200
+Message-ID: <20170531075536.GA13028@amd>
+References: <20170531061541.10808-1-fenglinw@codeaurora.org>
+ <20170531061541.10808-2-fenglinw@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBJW6XHEQKGQE6BV6JEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170531071852.12422-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="T4sUOijqQbZv57TR"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170531061541.10808-2-fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, subbaram-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, aghayal-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, wruan-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, kgunda-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Enable the dwmac-sun8i ethernet driver as a module in the ARM64 defconfig.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+--T4sUOijqQbZv57TR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 000de61802a1..fd7d22b8480c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -191,6 +191,7 @@ CONFIG_RAVB=y
- CONFIG_SMC91X=y
- CONFIG_SMSC911X=y
- CONFIG_STMMAC_ETH=m
-+CONFIG_DWMAC_SUN8I=m
- CONFIG_MDIO_BUS_MUX_MMIOREG=y
- CONFIG_MESON_GXL_PHY=m
- CONFIG_MICREL_PHY=y
--- 
-2.13.0
+Hi!
+
+> +- qcom,support-blink:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: An array of integer values to indicate if "blue", "green", =
+"red"
+> +		LEDs support blink control. The values are listed as the fixed
+> +		order for "blue", "green", "red" LEDs.
+
+Normal order is RGB, and no need for the "s.
+
+> +- qcom,on-ms:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: An array of time values (milli-seconds) to represent the
+> +		on duration for "blue", "green", "red" LEDs. The values are
+> +		listed as the fixed order for "blue", "green", "red" LEDs.
+> +		This property has to be defined if "qcom,support-blink" is
+> +		present.
+> +
+> +- qcom,off-ms:
+> +	Usage: optional
+> +	Value type: <prop-encoded-array>
+> +	Definition: An array of time values (milli-seconds) to represent the
+> +		off duration for "blue", "green", "red" LEDs. The values are
+> +		listed as the fixed order for "blue", "green", "red" LEDs.
+> +		This property has to be defined if "qcom,support-blink" is
+> +		present.
+
+I don't get it; why is this needed?
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--T4sUOijqQbZv57TR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlkudvgACgkQMOfwapXb+vIBegCgsmDKsTiykhHcnLlnoUjLiqt0
+j2YAnjoQwFTA/DKM68UUGo78I+c3mX2b
+=2TyU
+-----END PGP SIGNATURE-----
+
+--T4sUOijqQbZv57TR--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
