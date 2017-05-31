@@ -1,45 +1,49 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 00/58] ARM: at91: rework Atmel TCB drivers
-Date: Wed, 31 May 2017 09:21:15 +0200
-Message-ID: <20170531072115.apeyzsqmfxa2qnd6@piout.net>
-References: <20170530215139.9983-1-alexandre.belloni@free-electrons.com>
- <da7069d4-e5b3-f10f-0816-ff973195aff6@axentia.se>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 01/21] net-next: stmmac: export stmmac_set_mac_addr/stmmac_get_mac_addr
+Date: Wed, 31 May 2017 09:18:32 +0200
+Message-ID: <20170531071852.12422-2-clabbe.montjoie@gmail.com>
+References: <20170531071852.12422-1-clabbe.montjoie@gmail.com>
+Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <da7069d4-e5b3-f10f-0816-ff973195aff6@axentia.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Antoine Aubert <a.aubert@overkiz.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Fabio Porcedda <fabio.porcedda@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Gregory Hermant <gregory.hermant@calao-systems.com>, Joachim Eastwood <manabian@gmail.com>, linux-pwm@vger.kernel.org, Marek Vasut <marex@denx.de>, Martin Reimann <martin.reimann@egnite.de>, Raashid Muhammed <raashidmuhammed@zilogic.com>, Rob Herring <robh+dt@kernel.org>, Rodolfo Giometti <giometti@linux.it>, Sergio Tanzilli <tanzilli@acmesystems.it>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7YLCN32UNBBEG6XHEQKGQE6H2WLFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170531071852.12422-1-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Thoses symbol will be needed for the dwmac-sun8i ethernet driver.
+For letting it to be build as module, they need to be exported.
 
-On 31/05/2017 at 08:34:00 +0200, Peter Rosin wrote:
-> On 2017-05-30 23:50, Alexandre Belloni wrote:
-> > Hi,
-> > 
-> > This series reworks the Atmel Timer counter Block drivers. Those blocks
-> > each have 3 counters with 2 channels each and can be used for
-> > multiple functions:
-> >  - timers
-> >  - PWMs
-> >  - Quadrature decoders
-> >  - Stepper motor counters
-> 
-> I'd like to test this, but I have a hard time doing that since all I got
-> was this cover letter and a single DT-only patch.
-> 
-> I understand that you were reluctant to spam too many people with
-> dozens of patches, but perhaps the series can be fetched from
-> somewhere?
-> 
+Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Sure, I've pushed the branch here:
-https://github.com/alexandrebelloni/linux/tree/at91-tcb-v3
-
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
+index 38f94305aab5..67af0bdd7f10 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac_lib.c
+@@ -248,6 +248,7 @@ void stmmac_set_mac_addr(void __iomem *ioaddr, u8 addr[6],
+ 	data = (addr[3] << 24) | (addr[2] << 16) | (addr[1] << 8) | addr[0];
+ 	writel(data, ioaddr + low);
+ }
++EXPORT_SYMBOL_GPL(stmmac_set_mac_addr);
+ 
+ /* Enable disable MAC RX/TX */
+ void stmmac_set_mac(void __iomem *ioaddr, bool enable)
+@@ -279,4 +280,4 @@ void stmmac_get_mac_addr(void __iomem *ioaddr, unsigned char *addr,
+ 	addr[4] = hi_addr & 0xff;
+ 	addr[5] = (hi_addr >> 8) & 0xff;
+ }
+-
++EXPORT_SYMBOL_GPL(stmmac_get_mac_addr);
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+2.13.0
