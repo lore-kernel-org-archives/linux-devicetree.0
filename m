@@ -1,48 +1,49 @@
 From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RFC 3/5] ARM: dts: at91-sama5d4: use IRQ_TYPE_* to
- specify irq flags
-Date: Wed, 31 May 2017 11:52:35 +0200
-Message-ID: <20170531095235.nzkce75ffekkr65e@piout.net>
-References: <20170526180609.2699-1-uwe@kleine-koenig.org>
- <20170526180609.2699-3-uwe@kleine-koenig.org>
- <8bbb5802-518b-6ae1-6ea2-642b1f0b3d2e@denx.de>
+Subject: Re: [PATCH v2 1/5] dts: gpio_atmel: adapt binding doc to reality
+Date: Wed, 31 May 2017 11:52:47 +0200
+Message-ID: <20170531095247.5g4zibmlc6qzyqwu@piout.net>
+References: <20170526185214.GB20946@lunn.ch>
+ <20170526190703.t5fab33peh2cmobm@taurus.defre.kleine-koenig.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8bbb5802-518b-6ae1-6ea2-642b1f0b3d2e-ynQEQJNshbs@public.gmane.org>
+In-Reply-To: <20170526190703.t5fab33peh2cmobm-T6qyLwKrzP+Pq0V0m3QNwQq/OYV65a7L4Y2cMoPwMik@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26/05/2017 at 21:17:37 +0200, Marek Vasut wrote:
-> On 05/26/2017 08:06 PM, Uwe Kleine-König wrote:
-> > According to the binding documentation and the source code the atmel-gpio
-> > controller takes IRQ_TYPE_* as its flags values, not GPIO_ACTIVE_*.
-> > 
-> > This patch uses the right variable type which yields the same result
-> > when compiled. Note that this might be wrong and actually
-> > IRQ_TYPE_LEVEL_LOW is intended by the dt author.
-> > 
-> > Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-> > ---
-> > Hello,
-> > 
-> > can somebody with the hardware or it's documentation please check which
-> > flag is the right one?
+On 26/05/2017 at 21:07:03 +0200, Uwe Kleine-König wrote:
+> The second cell in a gpio reference is used to pass GPIO_ACTIVE_LOW or
+> GPIO_ACTIVE_HIGH. The gpio device can also be used as irq controller and
+> a reference can contain the IRQ_TYPE_* values in the second cell.
 > 
-> It's correct, I tested the CAN, so:
-> 
-> Acked-by: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> 
-> > Best regards
-> > Uwe
+> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+> ---
+> On Fri, May 26, 2017 at 08:52:14PM +0200, Andrew Lunn wrote:
+> > > +- interrupt-controller: Marks the device node as a GPIO controller.
 > > 
-> >  arch/arm/boot/dts/at91-sama5d4_ma5d4.dtsi | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > Interrupt controller, not GPIO controller.
 > > 
+> > > +- #interrupt-cells: Should be two. The first cell is the pin number and the
+> > > +  second cell is used to specify irq type flags:
+> > > +      1 = low-to-high edge triggered.
+> > > +      2 = high-to-low edge triggered.
+> > > +      4 = active high level-sensitive.
+> > > +      8 = active low level-sensitive.
+> > 
+> > Maybe just reference interrupts.txt?
+> 
+> ack for both and changed in this v2.
+> 
+> Thanks
+> Uwe
+> 
+>  Documentation/devicetree/bindings/gpio/gpio_atmel.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
 Applied, thanks.
 
 -- 
