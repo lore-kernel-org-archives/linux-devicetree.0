@@ -1,88 +1,67 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v3 05/16] watchdog: lantiq: add device tree binding
- documentation
-Date: Wed, 31 May 2017 22:11:04 +0200
-Message-ID: <036b0b9c-a6dd-7d11-70a9-f7e8d4eb36be@hauke-m.de>
-References: <20170528184006.31668-1-hauke@hauke-m.de>
- <20170528184006.31668-6-hauke@hauke-m.de>
- <20170531200021.ld54cecme4ekak4i@rob-hp-laptop>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v7 00/34] i.MX Media Driver
+Date: Wed, 31 May 2017 22:11:07 +0200
+Message-ID: <20170531201107.GB16962@amd>
+References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+ <dd82968a-4c0b-12a4-f43b-7e63a255812d@xs4all.nl>
+ <20170529153637.GH29527@valkosipuli.retiisi.org.uk>
+ <08dcd6f6-e0ef-a6a0-cfc3-4fcd55624169@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170531200021.ld54cecme4ekak4i@rob-hp-laptop>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <08dcd6f6-e0ef-a6a0-cfc3-4fcd55624169-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgl
 List-Id: devicetree@vger.kernel.org
 
-On 05/31/2017 10:00 PM, Rob Herring wrote:
-> On Sun, May 28, 2017 at 08:39:55PM +0200, Hauke Mehrtens wrote:
->> The binding was not documented before, add the documentation now.
->>
->> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> ---
->>  .../devicetree/bindings/watchdog/lantiq-wdt.txt    | 28 ++++++++++++++++++++++
->>  1 file changed, 28 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
->>
->> diff --git a/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
->> new file mode 100644
->> index 000000000000..675c30e23b65
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
->> @@ -0,0 +1,28 @@
->> +Lantiq WTD watchdog binding
->> +============================
->> +
->> +This describes the binding of the Lantiq watchdog driver.
->> +
->> +-------------------------------------------------------------------------------
->> +Required properties:
->> +- compatible		: Should be one of
->> +				"lantiq,wdt"
->> +				"lantiq,wdt-xrx100"
->> +				"lantiq,wdt-falcon"
->> +
->> +Optional properties:
->> +- regmap		: A phandle to the RCU syscon
->> +- offset-status		: Offset of the reset cause register
->> +- mask-status		: Mask of the reset cause register value
-> 
-> These 2 should be implied by the compatible. But if already used in 
-> upstream dts files, then it's okay.
 
-This is new.
-Should I hard code the offsets of the register and the actual bits
-depending on the compatible string in the driver instead of configuring
-it in the device tree?
+--KFztAG8eRSV9hGtP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +
->> +
->> +-------------------------------------------------------------------------------
->> +Example for the watchdog on the xRX200 SoCs:
->> +		watchdog@803F0 {
-> 
-> Lowercase hex please.
-> 
->> +			compatible = "lantiq,wdt-xrx200", "lantiq,wdt-xrx100";
-> 
-> Doesn't match the documentation.
-> 
->> +			reg = <0x803F0 0x10>;
-> 
-> Lowercase hex please.
-> 
->> +
->> +			regmap = <&rcu0>;
->> +			offset-status = <0x14>;
->> +			mask-status = <0x80000000>;
->> +		};
->> -- 
->> 2.11.0
->>
+Hi!
 
+> >If there's a need for this (there should not be, as the controls are exp=
+osed
+> >to the user space through the sub-device nodes as the other drivers do),=
+ the
+> >framework APIs need to be extended.
+>=20
+> Right, this gets back to the media framework usability arguments. At least
+> myself, Philipp, and Russell feel that automatic inheritance of a configu=
+red
+> pipeline's controls to a video device adds to the usability.
+
+For the record, usability can be pretty much fixed in v4l-utils... I
+have patches that try ioctls on a list of fd's. Now we need a way to
+find out which /dev/video* files belong to single camera. I believe
+kernel already has required APIs, we just need to apply v4l-utils
+patch to use them...
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--KFztAG8eRSV9hGtP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlkvI1sACgkQMOfwapXb+vLfEgCfe4WFiqKmIIhFCORleJixmS6S
+V/EAn0APxvTmxHyOU+IpJUkFFYcKPjqx
+=Zw9u
+-----END PGP SIGNATURE-----
+
+--KFztAG8eRSV9hGtP--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
