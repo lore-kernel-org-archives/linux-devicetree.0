@@ -1,50 +1,57 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: [PATCH v5 0/3] Tango PCIe controller support
-Date: Wed, 31 May 2017 15:28:50 +0200
-Message-ID: <741766e5-cff2-db5f-d40b-6866e08fd966@sigmadesigns.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: DT <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mason <slash.tmp@free.fr>, linux-pci <linux-pci@vger.kernel.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Liviu Dudau <liviu.dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, David Laight <david.laight@aculab.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v2 0/7] Improve ap806 clk support on Marvell Armada 7K/8K
+Date: Wed, 31 May 2017 16:07:21 +0200
+Message-ID: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Spin v5 to address comments from Marc and Bjorn.
+Hi,
 
-Changes from v4 to v5
+This series modifies the device tree binding of the clock of the AP806
+part that we find in the Marvell Armada 7K/8K SoCs.
 
-- Split the DT binding into a third patch
-- Introduce host bridge support first
-- Put all MSI stuff in the MSI patch
-- Inline 2 single-use functions
-- Fix tango_ack
-- Allocate irq at probe start
-- Print dire message in probe, and taint kernel
-	("Lasciate ogne speranza, voi ch'intrate")
+As for the previsous series the only change in this second version is
+about the binding documentation: all the documentation related changes
+are now move in their own patches. It allows to provide a stable -dt
+branch for theses changes. I also added the acked-by from Rob Herring.
 
-Marc Gonzalez (3):
-  PCI: Add DT binding for tango PCIe controller
-  PCI: Add tango PCIe host bridge support
-  PCI: Add tango MSI controller support
+Here again the last two patches modifying the device tree _must_ be
+merged through the mvebu tree to avoid future conflict.
 
- Documentation/devicetree/bindings/pci/tango-pcie.txt |  30 +++
- drivers/pci/host/Kconfig                             |   8 +
- drivers/pci/host/Makefile                            |   1 +
- drivers/pci/host/pcie-tango.c                        | 386 +++++++++++++++++++++++++++++++++++++++
- include/linux/pci_ids.h                              |   2 +
- 5 files changed, 427 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/tango-pcie.txt
- create mode 100644 drivers/pci/host/pcie-tango.c
+For the record:
+As for the CP110, we want to be able to ease the integration of new
+clocks without breaking the backward compatibility. It is done in
+patch 3.
 
+We also want to ease the integration of the pinctrl node in the device
+tree. It is the purpose of the patch 5.
+
+In this series (as in the previous one for CP110), even if there is
+some change in the device tree binding we paid attention to the
+backward compatibility, and the driver can still work with the old
+device tree.
+
+Thanks,
+
+Gregory
+
+Gregory CLEMENT (7):
+  clk: mvebu: ap806: cosmetic improvement
+  dt-bindings: ap806: do not depend anymore of the *-clock-output-names
+  clk: mvebu: ap806: do not depend anymore of the *-clock-output-names
+  dt-bindings: ap806: introduce a new binding
+  clk: mvebu: ap806: introduce a new binding
+  arm64: dts: marvell: remove clock-output-names on ap806
+  arm64: dts: marvell: use new binding for the system controller on ap806
+
+ Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt |  24 ++++++++++------
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi                             |  23 +++++++--------
+ drivers/clk/mvebu/ap806-system-controller.c                               | 107 +++++++++++++++++++++++++++++++++++++++++++++++-------------------------
+ 3 files changed, 97 insertions(+), 57 deletions(-)
+
+base-commit: 4139fcd6c66df1c3d3fa0a0a7cf7f8a8c601a16c
 -- 
-2.11.0
+git-series 0.9.1
