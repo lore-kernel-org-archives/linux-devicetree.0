@@ -1,104 +1,45 @@
-From: Michael Turquette <mturquette@baylibre.com>
-Subject: Re: [PATCH 3/6] gpio: dt-bindings: Add documentation for gpio controllers on
- Armada 7K/8K
-Date: Wed, 31 May 2017 19:43:40 +0900
-Message-ID: <149622742055.34003.14963361587324682626@resonance>
-References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
- <306395ff39de3d3d3c8f55e5da4de8def29ae8d1.1495210061.git-series.gregory.clement@free-electrons.com>
- <CACRpkdY97DDcwec+J-4X1AT5a7Mbo4GnWUJmuAOYhNzOA8_HZQ@mail.gmail.com>
- <878tlnzps3.fsf@free-electrons.com>
- <CACRpkdbW3T5auXCMrqH_tTzcVseGbiV+y53fJ2xN5p-VbGz7rA@mail.gmail.com>
- <20170530222358.abta3srv5emz7wtp@rob-hp-laptop>
+From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v2 0/2] Add basic support for Mediatek MT2712 SoC
+Date: Wed, 31 May 2017 19:39:31 +0800
+Message-ID: <1496230773-22633-1-git-send-email-yt.shen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170530222358.abta3srv5emz7wtp@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Stephen Boyd <sboyd@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2017-05-31 07:23:58)
-> On Mon, May 29, 2017 at 10:08:16AM +0200, Linus Walleij wrote:
-> > On Tue, May 23, 2017 at 3:06 PM, Gregory CLEMENT
-> > <gregory.clement@free-electrons.com> wrote:
-> > >  On mar., mai 23 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
-> > =
+MT2712 is a SoC based on 64bit ARMv8 architecture.
+MT2712 share many HW IP with MT8173.  This patchset was tested on MT2712 evaluation board, and boot to shell ok.
 
-> > >> Please rebase and resend the rest of the patches.
-> > >
-> > > Actually I was wrong with my assumption that there was no dependency.
-> > > For the binding documentation there is dependecy accross the series I
-> > > sent.
-> > >
-> > > This patch depends on "pinctrl: dt-bindings: add documentation for AP=
-806
-> > > pin controllers" [1] and "pinctrl: dt-bindings: add documentation for
-> > > CP110 pin controllers" [3] from the series "Add support for the pin
-> > > controllers on the Marvell Armada 7K/8K".
-> > >
-> > > As you are maintainer of both gpio and pinctrl subsystem it will be e=
-asy
-> > > to resolv.
-> > =
+This series contains document bindings, device tree including interrupt, uart.
 
-> > Please send all patches in one big series in that case, so I can apply
-> > them all to a branch and merge that branch into both trees.
-> > =
+Changes compared to v1:
+- change subject prefix for bindings
+- change device tree license to SPDX tag.
+- change bootargs parameter to DT usage.
+- change intpol-controller to interrupt-controller
 
-> > > But these last patches depend also on "clk: mvebu: ap806: introduce a
-> > > new binding" [3] in the clock series "Improve ap806 clk support on
-> > > Marvell Armada 7K/8K" and on "clk: mvebu: cp110: introduce a new
-> > > binding" [4] in the clock series "Improve cp110 clk support on Marvell
-> > > Armada 7K/8K".
-> > =
+YT Shen (2):
+  dt-bindings: arm: Add bindings for Mediatek MT2712 SoC Platform
+  arm64: dts: Add Mediatek SoC MT2712 and evaluation board dts and
+    Makefile
 
-> > That sounds messy.
-> > =
+ Documentation/devicetree/bindings/arm/mediatek.txt |   4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |   1 +
+ .../devicetree/bindings/serial/mtk-uart.txt        |   1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |   1 +
+ arch/arm64/boot/dts/mediatek/mt2712-evb.dts        |  39 +++++
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi          | 166 +++++++++++++++++++++
+ 6 files changed, 212 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
 
-> > > So for these particular patches, either I rebase them on the v4.12-rc2
-> > > and there will be a small merge conflict during the merge window for
-> > > v4.13, or we can ask a stable branch with only these few patches (I am
-> > > adding the clock maintainer to this email).
-> > >
-> > > If we chose this last option I can split the clock patches to have pa=
-tch
-> > > modifying only the binding documentation.
-> > =
+-- 
+1.9.1
 
-> > I think you can make a patch just modifying the binding documentation
-> > and then apply that patch to *both* trees, just make sure the patch
-> > is *final* and not applied in different versions in clk and pinctrl.
-> =
-
-> I thought we try to avoid doing that.
-> =
-
-> > I think cross-tree branches for documentation clashes is too much
-> > bureaucracy.
-> =
-
-> I can just take all the doc patches separately. Or you can take the =
-
-> clock one too.
-
-Stephen and I have started making a -dt branch for each new clk driver
-which. This stable branch has only the dt bindings/headers in it (no
-driver code).
-
-I'll make such a branch for ap806 this week and everyone can merge that
-in as a dep.
-
-Regards,
-Mike
-
-> =
-
-> > Make sure your clock patch is finalized and preferably also applied
-> > to the clk tree then put it in the bottom of the patch set you send
-> > to me as well and I will proceed like above.
-> > =
-
-> > Yours,
-> > Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
