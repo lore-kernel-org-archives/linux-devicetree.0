@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 1/6] dt-bindings: clock: sunxi-ccu: Add pll-periph to PRCM's needed clocks
-Date: Wed, 31 May 2017 15:58:19 +0800
-Message-ID: <20170531075824.657-2-wens@csie.org>
+Subject: [PATCH v2 4/6] ARM: sunxi: h3-h5: Add PLL_PERIPH0 clock to the R_CCU
+Date: Wed, 31 May 2017 15:58:22 +0800
+Message-ID: <20170531075824.657-5-wens@csie.org>
 References: <20170531075824.657-1-wens@csie.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170531075824.657-1-wens-jdAy2FN1RRM@public.gmane.org>
@@ -10,41 +10,34 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The AR100 clock in the PRCM has parents, one of which is pll-periph from
-the main CCU.
+The AR100 clock within the R_CCU (PRCM) has the PLL_PERIPH0 as one of
+its parents.
 
-Add it to the list of required clocks for the PRCM CCU.
+This adds the reference in the device tree describing this relationship.
+This patch uses a raw number for the clock index to ease merging by
+avoiding cross tree dependencies.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- Documentation/devicetree/bindings/clock/sunxi-ccu.txt | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-index 095a5807d874..966345972d83 100644
---- a/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi-ccu.txt
-@@ -25,7 +25,8 @@ Required properties :
- - #clock-cells : must contain 1
- - #reset-cells : must contain 1
- 
--For the PRCM CCUs on A83T/H3/A64, one more clock is needed:
-+For the PRCM CCUs on A83T/H3/A64, two more clock is needed:
-+- "pll-periph": the SoC's peripheral PLL from the main CCU
- - "iosc": the SoC's internal frequency oscillator
- 
- Example for generic CCU:
-@@ -42,8 +43,8 @@ Example for PRCM CCU:
- r_ccu: clock@01f01400 {
- 	compatible = "allwinner,sun50i-a64-r-ccu";
- 	reg = <0x01f01400 0x100>;
--	clocks = <&osc24M>, <&osc32k>, <&iosc>;
--	clock-names = "hosc", "losc", "iosc";
-+	clocks = <&osc24M>, <&osc32k>, <&iosc>, <&ccu CLK_PLL_PERIPH0>;
-+	clock-names = "hosc", "losc", "iosc", "pll-periph";
- 	#clock-cells = <1>;
- 	#reset-cells = <1>;
- };
+diff --git a/arch/arm/boot/dts/sunxi-h3-h5.dtsi b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+index d0067fec99de..d4f600dbb7eb 100644
+--- a/arch/arm/boot/dts/sunxi-h3-h5.dtsi
++++ b/arch/arm/boot/dts/sunxi-h3-h5.dtsi
+@@ -560,8 +560,9 @@
+ 		r_ccu: clock@1f01400 {
+ 			compatible = "allwinner,sun8i-h3-r-ccu";
+ 			reg = <0x01f01400 0x100>;
+-			clocks = <&osc24M>, <&osc32k>, <&iosc>;
+-			clock-names = "hosc", "losc", "iosc";
++			clocks = <&osc24M>, <&osc32k>, <&iosc>,
++				 <&ccu 9>;
++			clock-names = "hosc", "losc", "iosc", "pll-periph";
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 		};
 -- 
 2.11.0
 
