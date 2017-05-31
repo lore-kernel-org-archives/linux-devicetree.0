@@ -1,56 +1,60 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 04/11] dt-bindings: cp110: do not depend anymore of the *-clock-output-names
-Date: Wed, 31 May 2017 15:41:48 +0200
-Message-ID: <6701a6c918ba8c89ef667e0ecc4fc249738a6a57.1496237893.git-series.gregory.clement@free-electrons.com>
-References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
+From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Subject: [PATCH v5 1/3] PCI: Add DT binding for tango PCIe controller
+Date: Wed, 31 May 2017 15:30:26 +0200
+Message-ID: <69f3ffe7-3c39-fa94-71f8-91744a869cc9@sigmadesigns.com>
+References: <741766e5-cff2-db5f-d40b-6866e08fd966@sigmadesigns.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
-In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
-References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <741766e5-cff2-db5f-d40b-6866e08fd966@sigmadesigns.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+To: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-This patch updates the documentation according to the change made in the
-patch "clk: mvebu: cp110: do not depend anymore of the
-*-clock-output-names": the clock names are no more part of the binding.
+Binding for the Sigma Designs SMP8759 SoC.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
 ---
- Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 14 --------------
- 1 file changed, 14 deletions(-)
+ Documentation/devicetree/bindings/pci/tango-pcie.txt | 30 ++++++++++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-index eb6cf44caa0f..47f1cf800e25 100644
---- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-+++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
-@@ -59,14 +59,6 @@ Required properties:
-      "marvell,cp110-system-controller0", "syscon";
-  - reg: register area of the CP110 system controller 0
-  - #clock-cells: must be set to 2
-- - core-clock-output-names must be set to:
--	"cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core"
-- - gate-clock-output-names must be set to:
--	"cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
--	"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "none",
--	"cpm-pcie_x10", "cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata",
--	"cpm-sata-usb", "cpm-main", "cpm-gop", "none", "none", "cpm-slow-io",
--	"cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150", "cpm-eip197";
- 
- Example:
- 
-@@ -74,10 +66,4 @@ Example:
- 		compatible = "marvell,cp110-system-controller0", "syscon";
- 		reg = <0x440000 0x1000>;
- 		#clock-cells = <2>;
--		core-clock-output-names = "cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core";
--		gate-clock-output-names = "cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
--			"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "none",
--			"cpm-pcie_x10", "cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata",
--			"cpm-sata-usb", "cpm-main", "cpm-gop", "none", "none", "cpm-slow-io",
--			"cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150", "cpm-eip197";
- 	};
+diff --git a/Documentation/devicetree/bindings/pci/tango-pcie.txt b/Documentation/devicetree/bindings/pci/tango-pcie.txt
+new file mode 100644
+index 000000000000..35ef2c811a27
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/tango-pcie.txt
+@@ -0,0 +1,30 @@
++Sigma Designs Tango PCIe controller
++
++Required properties:
++
++- compatible: "sigma,smp8759-pcie"
++- reg: address/size of PCI configuration space, address/size of register area
++- device_type: "pci"
++- #size-cells: <2>
++- #address-cells: <3>
++- msi-controller
++- ranges: translation from system to bus addresses
++- interrupts: spec for misc interrupts, spec for MSI
++
++http://elinux.org/Device_Tree_Usage#PCI_Address_Translation
++http://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
++
++Example:
++
++	pcie@2e000 {
++		compatible = "sigma,smp8759-pcie";
++		reg = <0x50000000 SZ_4M>, <0x2e000 0x100>;
++		device_type = "pci";
++		#size-cells = <2>;
++		#address-cells = <3>;
++		msi-controller;
++		ranges = <0x02000000 0x0 0x00400000  0x50400000  0x0 SZ_60M>;
++		interrupts =
++			<54 IRQ_TYPE_LEVEL_HIGH>, /* misc interrupts */
++			<55 IRQ_TYPE_LEVEL_HIGH>; /* MSI */
++	};
 -- 
-git-series 0.9.1
+2.11.0
