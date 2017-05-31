@@ -1,43 +1,78 @@
-From: Yegor Yefremov <yegorslists@googlemail.com>
-Subject: Re: [PATCH RFC 2/5] ARM: dts: am335x-baltos: use IRQ_TYPE_* to
- specify irq flags
-Date: Wed, 31 May 2017 19:22:22 +0200
-Message-ID: <CAGm1_ktJp+3t9ExuFJhKTmbM63yt-82PGP26KkEHGqK-tnfWRg@mail.gmail.com>
-References: <20170526180609.2699-1-uwe@kleine-koenig.org>
- <20170526180609.2699-2-uwe@kleine-koenig.org>
- <20170531171932.GH3730@atomide.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/7] dt-bindings: PCI: Describe ATS property for root
+	complex nodes
+Date: Wed, 31 May 2017 12:23:20 -0500
+Message-ID: <20170531172320.3u6bdctv44aqighy@rob-hp-laptop>
+References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
+	<20170524180143.19855-3-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170531171932.GH3730@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170524180143.19855-3-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVXdlLCBUb255LAoKT24gV2VkLCBNYXkgMzEsIDIwMTcgYXQgNzoxOSBQTSwgVG9ueSBMaW5k
-Z3JlbiA8dG9ueUBhdG9taWRlLmNvbT4gd3JvdGU6Cj4gKiBVd2UgS2xlaW5lLUvDtm5pZyA8dXdl
-QGtsZWluZS1rb2VuaWcub3JnPiBbMTcwNTI2IDExOjA5XToKPj4gQWNjb3JkaW5nIHRvIHRoZSBi
-aW5kaW5nIGRvY3VtZW50YXRpb24gYW5kIHRoZSBzb3VyY2UgY29kZSB0aGUgb21hcC1ncGlvCj4+
-IGNvbnRyb2xsZXIgdGFrZXMgSVJRX1RZUEVfKiBhcyBpdHMgZmxhZ3MgdmFsdWVzLCBub3QgR1BJ
-T19BQ1RJVkVfKi4KPj4KPj4gVGhpcyBwYXRjaCB1c2VzIHRoZSByaWdodCB2YXJpYWJsZSB0eXBl
-IHdoaWNoIHlpZWxkcyB0aGUgc2FtZSByZXN1bHQKPj4gd2hlbiBjb21waWxlZC4gTm90ZSB0aGF0
-IHRoaXMgbWlnaHQgYmUgd3JvbmcgYW5kIGFjdHVhbGx5Cj4+IElSUV9UWVBFX0xFVkVMX0xPVyBp
-cyBpbnRlbmRlZCBieSB0aGUgZHQgYXV0aG9yLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBVd2UgS2xl
-aW5lLUvDtm5pZyA8dXdlQGtsZWluZS1rb2VuaWcub3JnPgo+PiAtLS0KPj4gSGVsbG8sCj4+Cj4+
-IGNhbiBzb21lYm9keSB3aXRoIHRoZSBoYXJkd2FyZSBvciBpdCdzIGRvY3VtZW50YXRpb24gcGxl
-YXNlIGNoZWNrIHdoaWNoCj4+IGZsYWcgaXMgdGhlIHJpZ2h0IG9uZT8KPgo+IEknbGwgd2FpdCBv
-biB0aGlzIG9uZSB1bnRpbCB3ZSBoYXZlIHNvbWVib2R5IHRlc3QgaXQuCgpJJ2xsIGxvb2sgYXQg
-aXQgdGhpcyB3ZWVrLgoKWWVnb3IKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJu
-ZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Wed, May 24, 2017 at 07:01:38PM +0100, Jean-Philippe Brucker wrote:
+> Address Translation Service (ATS) is an extension to PCIe allowing
+> endpoints to manage their own IOTLB, called Address Translation Cache
+> (ATC). Instead of having every memory transaction processed by the IOMMU,
+> the endpoint can first send an Address Translation Requests for an IOVA,
+> obtain the corresponding Physical Address from the IOMMU and store it in
+> its ATC. Subsequent transactions to this memory region can be performed on
+> the PA, in which case they are marked 'translated' and (partially) bypass
+> the IOMMU.
+> 
+> Since the extension uses fields that were previously reserved in the
+> PCIe Translation Layer Packet, it seems ill-advised to enabled it on a
+> system that doesn't fully support ATS.
+> 
+> To "old" root complexes that simply ignored the new AT field, an Address
+> Translation Request will look exactly like a Memory Read Request, so the
+> root bridge will forward a memory read to the IOMMU instead of a
+> translation request. If the access succeeds, the RC will send a Read
+> Completion, which looks like a Translation Completion, back to the
+> endpoint. As a result the endpoint might end up storing the content of
+> memory instead of a physical address in its ATC. In reality, it's more
+> likely that the size fields will be invalid and either end will detect the
+> error, but in any case, it is undesirable.
+> 
+> Add a way for firmware to tell the OS that ATS is supported by the PCI
+> root complex.
+
+Can't firmware have already enabled ATS? Often for things like this, not 
+present means "use firmware setting".
+
+> 
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/pci/pci-iommu.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/pci-iommu.txt b/Documentation/devicetree/bindings/pci/pci-iommu.txt
+> index 0def586fdcdf..f21a68ec471a 100644
+> --- a/Documentation/devicetree/bindings/pci/pci-iommu.txt
+> +++ b/Documentation/devicetree/bindings/pci/pci-iommu.txt
+> @@ -44,6 +44,14 @@ Optional properties
+>  - iommu-map-mask: A mask to be applied to each Requester ID prior to being
+>    mapped to an IOMMU specifier per the iommu-map property.
+>  
+> +- ats-supported: if present, the root complex supports the Address
+> +  Translation Service (ATS). It is able to interpret the AT field in PCIe
+> +  Transaction Layer Packets, and forward Translation Completions or
+> +  Invalidation Requests to endpoints.
+
+Why can't this be based on the compatible strings?
+
+Rob
