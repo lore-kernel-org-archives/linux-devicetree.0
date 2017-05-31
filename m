@@ -1,103 +1,113 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 7/7] arm64: dts: marvell: use new binding for the system
- controller on ap806
-Date: Wed, 31 May 2017 16:07:28 +0200
-Message-ID: <e12e9b027462646e16cb51783d6e14660a019ba6.1496239589.git-series.gregory.clement@free-electrons.com>
-References: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/6] gpio: dt-bindings: Add documentation for gpio controllers on Armada 7K/8K
+Date: Wed, 31 May 2017 16:41:26 +0200
+Message-ID: <877f0xt7ft.fsf@free-electrons.com>
+References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
+        <306395ff39de3d3d3c8f55e5da4de8def29ae8d1.1495210061.git-series.gregory.clement@free-electrons.com>
+        <CACRpkdY97DDcwec+J-4X1AT5a7Mbo4GnWUJmuAOYhNzOA8_HZQ@mail.gmail.com>
+        <878tlnzps3.fsf@free-electrons.com>
+        <CACRpkdbW3T5auXCMrqH_tTzcVseGbiV+y53fJ2xN5p-VbGz7rA@mail.gmail.com>
+        <20170530222358.abta3srv5emz7wtp@rob-hp-laptop>
+        <149622742055.34003.14963361587324682626@resonance>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
-In-Reply-To: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
-References: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <149622742055.34003.14963361587324682626@resonance> (Michael
+        Turquette's message of "Wed, 31 May 2017 19:43:40 +0900")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio@vger.kernel.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta@marvell.>
 List-Id: devicetree@vger.kernel.org
 
-The new binding for the system controller on ap806 moved the clock into a
-subnode. This preliminary step will allow to add gpio and pinctrl
-subnodes
+Hi Michael,
+ 
+ On mer., mai 31 2017, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+> Quoting Rob Herring (2017-05-31 07:23:58)
+>> On Mon, May 29, 2017 at 10:08:16AM +0200, Linus Walleij wrote:
+>> > On Tue, May 23, 2017 at 3:06 PM, Gregory CLEMENT
+>> > <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > >  On mar., mai 23 2017, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > 
+>> > >> Please rebase and resend the rest of the patches.
+>> > >
+>> > > Actually I was wrong with my assumption that there was no dependency.
+>> > > For the binding documentation there is dependecy accross the series I
+>> > > sent.
+>> > >
+>> > > This patch depends on "pinctrl: dt-bindings: add documentation for AP806
+>> > > pin controllers" [1] and "pinctrl: dt-bindings: add documentation for
+>> > > CP110 pin controllers" [3] from the series "Add support for the pin
+>> > > controllers on the Marvell Armada 7K/8K".
+>> > >
+>> > > As you are maintainer of both gpio and pinctrl subsystem it will be easy
+>> > > to resolv.
+>> > 
+>> > Please send all patches in one big series in that case, so I can apply
+>> > them all to a branch and merge that branch into both trees.
+>> > 
+>> > > But these last patches depend also on "clk: mvebu: ap806: introduce a
+>> > > new binding" [3] in the clock series "Improve ap806 clk support on
+>> > > Marvell Armada 7K/8K" and on "clk: mvebu: cp110: introduce a new
+>> > > binding" [4] in the clock series "Improve cp110 clk support on Marvell
+>> > > Armada 7K/8K".
+>> > 
+>> > That sounds messy.
+>> > 
+>> > > So for these particular patches, either I rebase them on the v4.12-rc2
+>> > > and there will be a small merge conflict during the merge window for
+>> > > v4.13, or we can ask a stable branch with only these few patches (I am
+>> > > adding the clock maintainer to this email).
+>> > >
+>> > > If we chose this last option I can split the clock patches to have patch
+>> > > modifying only the binding documentation.
+>> > 
+>> > I think you can make a patch just modifying the binding documentation
+>> > and then apply that patch to *both* trees, just make sure the patch
+>> > is *final* and not applied in different versions in clk and pinctrl.
+>> 
+>> I thought we try to avoid doing that.
+>> 
+>> > I think cross-tree branches for documentation clashes is too much
+>> > bureaucracy.
+>> 
+>> I can just take all the doc patches separately. Or you can take the 
+>> clock one too.
+>
+> Stephen and I have started making a -dt branch for each new clk driver
+> which. This stable branch has only the dt bindings/headers in it (no
+> driver code).
+>
+> I'll make such a branch for ap806 this week and everyone can merge that
+> in as a dep.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 0c25ec62a2a3..205037e3e7dc 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -193,7 +193,7 @@
- 				#size-cells = <0>;
- 				cell-index = <0>;
- 				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&ap_syscon 3>;
-+				clocks = <&ap_clk 3>;
- 				status = "disabled";
- 			};
- 
-@@ -204,7 +204,7 @@
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
- 				timeout-ms = <1000>;
--				clocks = <&ap_syscon 3>;
-+				clocks = <&ap_clk 3>;
- 				status = "disabled";
- 			};
- 
-@@ -214,7 +214,7 @@
- 				reg-shift = <2>;
- 				interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
- 				reg-io-width = <1>;
--				clocks = <&ap_syscon 3>;
-+				clocks = <&ap_clk 3>;
- 				status = "disabled";
- 			};
- 
-@@ -224,7 +224,7 @@
- 				reg-shift = <2>;
- 				interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
- 				reg-io-width = <1>;
--				clocks = <&ap_syscon 3>;
-+				clocks = <&ap_clk 3>;
- 				status = "disabled";
- 
- 			};
-@@ -234,17 +234,20 @@
- 				reg = <0x6e0000 0x300>;
- 				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
- 				clock-names = "core";
--				clocks = <&ap_syscon 4>;
-+				clocks = <&ap_clk 4>;
- 				dma-coherent;
- 				marvell,xenon-phy-slow-mode;
- 				status = "disabled";
- 			};
- 
- 			ap_syscon: system-controller@6f4000 {
--				compatible = "marvell,ap806-system-controller",
--					     "syscon";
--				#clock-cells = <1>;
-+				compatible = "syscon", "simple-mfd";
- 				reg = <0x6f4000 0x1000>;
-+
-+				ap_clk: clock {
-+					compatible = "marvell,ap806-clock";
-+					#clock-cells = <1>;
-+				};
- 			};
- 		};
- 	};
+So please use the version 2 I've just submitted. I split each patch to
+allow you to have a dt binding only branch. See
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509832.html
+
+I did the same for the cp110:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509816.html
+
+Gregory
+
+>
+> Regards,
+> Mike
+>
+>> 
+>> > Make sure your clock patch is finalized and preferably also applied
+>> > to the clk tree then put it in the bottom of the patch set you send
+>> > to me as well and I will proceed like above.
+>> > 
+>> > Yours,
+>> > Linus Walleij
+
 -- 
-git-series 0.9.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
