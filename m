@@ -1,82 +1,45 @@
-From: m18063 <Claudiu.Beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: at91: sama5d2_xplained: add pwm controller
-Date: Wed, 31 May 2017 12:02:04 +0300
-Message-ID: <11d288df-db08-6e14-98a8-1ce6d669c31b@microchip.com>
-References: <1487839757-14040-1-git-send-email-claudiu.beznea@microchip.com>
- <20170531085018.tmbwqrqiiwitnm5u@piout.net>
+From: Alexandre TORGUE <alexandre.torgue@st.com>
+Subject: [PATCH] pinctrl: stm32: remove useless check
+Date: Wed, 31 May 2017 11:10:43 +0200
+Message-ID: <1496221843-10697-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170531085018.tmbwqrqiiwitnm5u-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org, amelie.delaunay@st.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+There is no link between the number of elements of tab which contains all
+pin desc (located in each pinctrl-stm32xxxx.c files) and the pin number
+(defined in the tab).
 
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-On 31.05.2017 11:50, Alexandre Belloni wrote:
-> Hi,
-> 
-> On 23/02/2017 at 10:49:17 +0200, Claudiu Beznea wrote:
->> Add pwm controller bindings for sam5d2_xplained
->> and enable it.
->>
->> Changes since v1:
->> - Correct the typo in patch subject.
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi | 4 ++++
->>  arch/arm/boot/dts/sama5d2.dtsi                      | 8 ++++++++
->>  2 files changed, 12 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi b/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
->> index 9fc270f..493ea29 100644
->> --- a/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
->> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
->> @@ -318,6 +318,10 @@
->>  				};
->>  			};
->>  
->> +			pwm0: pwm@f802c000 {
->> +				status = "okay";
->> +			};
->> +
->>  			flx0: flexcom@f8034000 {
->>  				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
->>  				status = "disabled"; /* conflict with ISC_D2 & ISC_D3 data pins */
-> 
-> 
-> This doesn't apply on v4.12-rc1, this file doesn't exist.
-Sorry, I will resend it.
-> 
->> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
->> index cd459e8..e88785e 100644
->> --- a/arch/arm/boot/dts/sama5d2.dtsi
->> +++ b/arch/arm/boot/dts/sama5d2.dtsi
->> @@ -1098,6 +1098,14 @@
->>  				status = "disabled";
->>  			};
->>  
->> +			pwm0: pwm@f802c000 {
->> +				compatible = "atmel,sama5d2-pwm";
->> +				reg = <0xf802c000 0x4000>;
->> +				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 7>;
->> +				#pwm-cells = <3>;
->> +				clocks = <&pwm_clk>;
->> +			};
->> +
->>  			sfr: sfr@f8030000 {
->>  				compatible = "atmel,sama5d2-sfr", "syscon";
->>  				reg = <0xf8030000 0x98>;
->> -- 
->> 2.7.4
->>
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index d3c5f5d..8be7ebd 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -411,11 +411,6 @@ static int stm32_pctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+ 		pin = STM32_GET_PIN_NO(pinfunc);
+ 		func = STM32_GET_PIN_FUNC(pinfunc);
+ 
+-		if (pin >= pctl->match_data->npins) {
+-			dev_err(pctl->dev, "invalid pin number.\n");
+-			return -EINVAL;
+-		}
+-
+ 		if (!stm32_pctrl_is_function_valid(pctl, pin, func)) {
+ 			dev_err(pctl->dev, "invalid function.\n");
+ 			return -EINVAL;
+-- 
+1.9.1
