@@ -1,42 +1,56 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 6/9] dmaengine: sun6i: support V3s SoC variant
-Date: Wed, 31 May 2017 11:57:26 -0500
-Message-ID: <20170531165726.zmrzawjlnetw2nyd@rob-hp-laptop>
-References: <20170524100607.29790-1-icenowy@aosc.io>
- <20170524100607.29790-7-icenowy@aosc.io>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Juri Lelli <juri.lelli@arm.com>
+Subject: [PATCH v5 1/7] Documentation: arm: fix wrong reference number in DT
+ definition
+Date: Wed, 31 May 2017 17:59:25 +0100
+Message-ID: <20170531165931.6945-2-juri.lelli@arm.com>
+References: <20170531165931.6945-1-juri.lelli@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERB6HLXPEQKGQEVOFMWKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170524100607.29790-7-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170531165931.6945-1-juri.lelli@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, lorenzo.pieralisi@arm.com, vincent.guittot@linaro.org, juri.lelli@arm.com, linux-pm@vger.kernel.org, peterz@infradead.org, catalin.marinas@arm.com, broonie@kernel.org, will.deacon@arm.com, gregkh@linuxfoundation.org, dietmar.eggemann@arm.com, robh+dt@kernel.org, sudeep.holla@arm.com, linux@arm.linux.org.uk, morten.rasmussen@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 24, 2017 at 06:06:04PM +0800, Icenowy Zheng wrote:
-> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> 
-> Allwinner V3s has a DMA engine similar to the ones from A31, but with
-> fewer channels and DRQs.
-> 
-> Add support for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
-> Acked-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
-> Changes in v3:
-> - Added Chen-Yu's ACK.
-> 
->  Documentation/devicetree/bindings/dma/sun6i-dma.txt |  1 +
->  drivers/dma/sun6i-dma.c                             | 13 +++++++++++++
->  2 files changed, 14 insertions(+)
+Reference to cpu capacity binding has a wrong number. Fix it.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reported-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Signed-off-by: Juri Lelli <juri.lelli@arm.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 1030f5f50207..2713aadb7411 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -249,7 +249,7 @@ nodes to be present and contain the properties described below.
+ 		Usage: Optional
+ 		Value type: <u32>
+ 		Definition:
+-			# u32 value representing CPU capacity [3] in
++			# u32 value representing CPU capacity [4] in
+ 			  DMIPS/MHz, relative to highest capacity-dmips-mhz
+ 			  in the system.
+ 
+@@ -476,5 +476,5 @@ cpus {
+ [2] arm/msm/qcom,kpss-acc.txt
+ [3] ARM Linux kernel documentation - idle states bindings
+     Documentation/devicetree/bindings/arm/idle-states.txt
+-[3] ARM Linux kernel documentation - cpu capacity bindings
++[4] ARM Linux kernel documentation - cpu capacity bindings
+     Documentation/devicetree/bindings/arm/cpu-capacity.txt
+-- 
+2.11.0
