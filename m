@@ -1,80 +1,210 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: at91: sama5d2_xplained: add pwm controller
-Date: Wed, 31 May 2017 10:50:18 +0200
-Message-ID: <20170531085018.tmbwqrqiiwitnm5u@piout.net>
-References: <1487839757-14040-1-git-send-email-claudiu.beznea@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1487839757-14040-1-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v6 0/7] Add V4L2 SDR (DRIF & MAX2175) driver
+Date: Wed, 31 May 2017 09:44:50 +0100
+Message-ID: <20170531084457.4800-1-ramesh.shanmugasundaram@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Media, DT maintainers, All,
 
-On 23/02/2017 at 10:49:17 +0200, Claudiu Beznea wrote:
-> Add pwm controller bindings for sam5d2_xplained
-> and enable it.
-> 
-> Changes since v1:
-> - Correct the typo in patch subject.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi | 4 ++++
->  arch/arm/boot/dts/sama5d2.dtsi                      | 8 ++++++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi b/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
-> index 9fc270f..493ea29 100644
-> --- a/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
-> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
-> @@ -318,6 +318,10 @@
->  				};
->  			};
->  
-> +			pwm0: pwm@f802c000 {
-> +				status = "okay";
-> +			};
-> +
->  			flx0: flexcom@f8034000 {
->  				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
->  				status = "disabled"; /* conflict with ISC_D2 & ISC_D3 data pins */
+This patch set contains two drivers
+ - Renesas R-Car Digital Radio Interface (DRIF) driver
+ - Maxim's MAX2175 RF to Bits tuner driver
+
+These patches were based on top of Sakari's v4l2-acpi tag as requested.
+repo: git://git.linuxtv.org/sailus/media_tree.git
+branch: v4l2-acpi
+commit: 575cafad3859ae42e83538b1c60d2beb51bd845f
+
+https://www.spinics.net/lists/linux-media/msg116129.html
+
+These two drivers combined together expose a V4L2 SDR device that is compliant
+with the V4L2 framework [1]. Agreed review comments are incorporated in this
+series.
+
+The rcar_drif device is modelled using "renesas,bonding" property. The
+discussion on this property is available here [2].
+
+Change history:
+
+v5 -> v6:
+ - Addressed Sakari's comments & rebased to his branch.
+ - Used fwnode_ instead of of_ apis whereever applicable.
+
+v4 -> v5:
+ - Minor documentation changes. Refer individual patches.
+
+v3 -> v4:
+ - Added ACKs
+rcar_drif:
+ - Incorporated a number of review comments from Laurent on DRIF driver.
+ - Addressed comments from Rob and Laurent on bindings.
+max2175:
+ - Minor changes addressing Hans and Laurent's comments
+
+v2 -> v3:
+rcar_drif:
+ - Reduced DRIF DT properties to expose tested I2S mode only (Hans - discussion on #v4l)
+ - Fixed error path clean up of ctrl_hdl on rcar_drif
+
+v1 -> v2:
+ - SDR formats renamed as "planar" instead of sliced (Hans)
+ - Documentation formatting correction (Laurent)
+
+ rcar_drif:
+ - DT model using "bonding" property
+ - Addressed Laurent's coments on bindings - DT optional parameters rename & rework
+ - Addressed Han's comments on driver
+ - Addressed Geert's comments on DT
+
+ max2175:
+ - Avoided scaling using method proposed by Antti. Thanks
+ - Bindings is a separate patch (Rob)
+ - Addressed Rob's comment on bindings
+ - Added Custom controls documentation (Laurent)
+
+[1] v4l2-compliance report:
+root@salvator-x:~# v4l2-compliance -S /dev/swradio0
+v4l2-compliance SHA   : d57bb8af0c71d82b702e35a7362aa077189dd593
+
+Driver Info:
+        Driver name   : rcar_drif
+        Card type     : R-Car DRIF
+        Bus info      : platform:R-Car DRIF
+        Driver version: 4.12.0
+        Capabilities  : 0x85310000
+                SDR Capture
+                Tuner
+                Read/Write
+                Streaming
+                Extended Pix Format
+                Device Capabilities
+        Device Caps   : 0x05310000
+                SDR Capture
+                Tuner
+                Read/Write
+                Streaming
+                Extended Pix Format
+
+Compliance test for device /dev/swradio0 (not using libv4l2):
+
+Required ioctls:
+        test VIDIOC_QUERYCAP: OK
+
+Allow for multiple opens:
+        test second sdr open: OK
+        test VIDIOC_QUERYCAP: OK
+        test VIDIOC_G/S_PRIORITY: OK
+        test for unlimited opens: OK
+
+Debug ioctls:
+        test VIDIOC_DBG_G/S_REGISTER: OK
+        test VIDIOC_LOG_STATUS: OK
+
+Input ioctls:
+        test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK
+        test VIDIOC_G/S_FREQUENCY: OK
+        test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+        test VIDIOC_ENUMAUDIO: OK (Not Supported)
+        test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDIO: OK (Not Supported)
+        Inputs: 0 Audio Inputs: 0 Tuners: 1
+
+Output ioctls:
+        test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+        test VIDIOC_G/S_FREQUENCY: OK
+        test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+        test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+        test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+        Outputs: 0 Audio Outputs: 0 Modulators: 0
+
+Input/Output configuration ioctls:
+        test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+        test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+        test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+        test VIDIOC_G/S_EDID: OK (Not Supported)
+
+        Control ioctls:
+                test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK
+                test VIDIOC_QUERYCTRL: OK
+                test VIDIOC_G/S_CTRL: OK
+                test VIDIOC_G/S/TRY_EXT_CTRLS: OK
+                test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK
+                test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+                Standard Controls: 5 Private Controls: 3
+
+        Format ioctls:
+                test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+                test VIDIOC_G/S_PARM: OK (Not Supported)
+                test VIDIOC_G_FBUF: OK (Not Supported)
+                test VIDIOC_G_FMT: OK
+                test VIDIOC_TRY_FMT: OK
+                test VIDIOC_S_FMT: OK
+                test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+                test Cropping: OK (Not Supported)
+                test Composing: OK (Not Supported)
+                test Scaling: OK (Not Supported)
+
+        Codec ioctls:
+                test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+                test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+                test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+
+        Buffer ioctls:
+                test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+                test VIDIOC_EXPBUF: OK (Not Supported)
+
+Test input 0:
 
 
-This doesn't apply on v4.12-rc1, this file doesn't exist.
+Total: 43, Succeeded: 43, Failed: 0, Warnings: 0
+root@salvator-x:~#
 
-> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-> index cd459e8..e88785e 100644
-> --- a/arch/arm/boot/dts/sama5d2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d2.dtsi
-> @@ -1098,6 +1098,14 @@
->  				status = "disabled";
->  			};
->  
-> +			pwm0: pwm@f802c000 {
-> +				compatible = "atmel,sama5d2-pwm";
-> +				reg = <0xf802c000 0x4000>;
-> +				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 7>;
-> +				#pwm-cells = <3>;
-> +				clocks = <&pwm_clk>;
-> +			};
-> +
->  			sfr: sfr@f8030000 {
->  				compatible = "atmel,sama5d2-sfr", "syscon";
->  				reg = <0xf8030000 0x98>;
-> -- 
-> 2.7.4
-> 
+[2] "bonding" DT property discussion (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg09415.html)
+
+Ramesh Shanmugasundaram (7):
+  media: v4l2-ctrls: Reserve controls for MAX217X
+  dt-bindings: media: Add MAX2175 binding description
+  media: i2c: max2175: Add MAX2175 support
+  media: Add new SDR formats PC16, PC18 & PC20
+  doc_rst: media: New SDR formats PC16, PC18 & PC20
+  dt-bindings: media: Add Renesas R-Car DRIF binding
+  media: platform: rcar_drif: Add DRIF support
+
+ .../devicetree/bindings/media/i2c/max2175.txt      |   59 +
+ .../devicetree/bindings/media/renesas,drif.txt     |  176 +++
+ .../devicetree/bindings/property-units.txt         |    1 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu16be.rst          |   55 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu18be.rst          |   55 +
+ .../media/uapi/v4l/pixfmt-sdr-pcu20be.rst          |   54 +
+ Documentation/media/uapi/v4l/sdr-formats.rst       |    3 +
+ Documentation/media/v4l-drivers/index.rst          |    1 +
+ Documentation/media/v4l-drivers/max2175.rst        |   60 +
+ drivers/media/i2c/Kconfig                          |   12 +
+ drivers/media/i2c/Makefile                         |    2 +
+ drivers/media/i2c/max2175.c                        | 1448 +++++++++++++++++++
+ drivers/media/i2c/max2175.h                        |  107 ++
+ drivers/media/platform/Kconfig                     |   25 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/rcar_drif.c                 | 1500 ++++++++++++++++++++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    3 +
+ include/uapi/linux/max2175.h                       |   28 +
+ include/uapi/linux/v4l2-controls.h                 |    5 +
+ include/uapi/linux/videodev2.h                     |    3 +
+ 20 files changed, 3598 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/max2175.txt
+ create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
+ create mode 100644 Documentation/media/v4l-drivers/max2175.rst
+ create mode 100644 drivers/media/i2c/max2175.c
+ create mode 100644 drivers/media/i2c/max2175.h
+ create mode 100644 drivers/media/platform/rcar_drif.c
+ create mode 100644 include/uapi/linux/max2175.h
 
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.12.2
