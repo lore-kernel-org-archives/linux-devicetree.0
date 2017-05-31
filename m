@@ -1,78 +1,109 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 10/11] arm64: dts: marvell: remove *-clock-output-names on cp110
-Date: Wed, 31 May 2017 15:41:54 +0200
-Message-ID: <161fdab8848052b8cd6e2ef630c1a2bbab6532d5.1496237893.git-series.gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v2 03/11] clk: mvebu: cp110: make failure labels more
+ meaningful
+Date: Wed, 31 May 2017 15:41:47 +0200
+Message-ID: <a74d055e9c5e20cd563d6d13da4b3733411dceeb.1496237893.git-series.gregory.clement@free-electrons.com>
 References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
+References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The *-clock-output-names of the cp110-system-controller0 node are not
-used anymore, so remove them.
+In preparation to the addition of a new clock, rename the goto labels
+used to handle the failure cases using a name related to the failure
+cause. This will allow to insert additional failing cases without
+renaming all the labels.
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 13 +-------------
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 13 +-------------
- 2 files changed, 26 deletions(-)
+ drivers/clk/mvebu/cp110-system-controller.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-index 59259270964c..a0f57a8e5dcb 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-@@ -101,19 +101,6 @@
- 					     "syscon";
- 				reg = <0x440000 0x1000>;
- 				#clock-cells = <2>;
--				core-clock-output-names =
--					"cpm-apll", "cpm-ppv2-core", "cpm-eip",
--					"cpm-core", "cpm-nand-core";
--				gate-clock-output-names =
--					"cpm-audio", "cpm-communit", "cpm-nand",
--					"cpm-ppv2", "cpm-sdio", "cpm-mg-domain",
--					"cpm-mg-core", "cpm-xor1", "cpm-xor0",
--					"cpm-gop-dp", "none", "cpm-pcie_x10",
--					"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor",
--					"cpm-sata", "cpm-sata-usb", "cpm-main",
--					"cpm-gop", "none", "none",
--					"cpm-slow-io", "cpm-usb3h0", "cpm-usb3h1",
--					"cpm-usb3dev", "cpm-eip150", "cpm-eip197";
- 			};
+diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
+index 8f315c74997e..2a75397f9304 100644
+--- a/drivers/clk/mvebu/cp110-system-controller.c
++++ b/drivers/clk/mvebu/cp110-system-controller.c
+@@ -221,7 +221,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 					1000 * 1000 * 1000);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+-		goto fail0;
++		goto fail_apll;
+ 	}
  
- 			cpm_rtc: rtc@284000 {
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index 046d3fe53cda..9584bc8d8b3f 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -108,19 +108,6 @@
- 					     "syscon";
- 				reg = <0x440000 0x1000>;
- 				#clock-cells = <2>;
--				core-clock-output-names =
--					"cps-apll", "cps-ppv2-core", "cps-eip",
--					"cps-core", "cps-nand-core";
--				gate-clock-output-names =
--					"cps-audio", "cps-communit", "cps-nand",
--					"cps-ppv2", "cps-sdio", "cps-mg-domain",
--					"cps-mg-core", "cps-xor1", "cps-xor0",
--					"cps-gop-dp", "none", "cps-pcie_x10",
--					"cps-pcie_x11", "cps-pcie_x4", "cps-pcie-xor",
--					"cps-sata", "cps-sata-usb", "cps-main",
--					"cps-gop", "none", "none",
--					"cps-slow-io", "cps-usb3h0", "cps-usb3h1",
--					"cps-usb3dev", "cps-eip150", "cps-eip197";
- 			};
+ 	cp110_clks[CP110_CORE_APLL] = hw;
+@@ -232,7 +232,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+-		goto fail1;
++		goto fail_ppv2;
+ 	}
  
- 			cps_sata0: sata@540000 {
+ 	cp110_clks[CP110_CORE_PPV2] = hw;
+@@ -243,7 +243,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	hw = clk_hw_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+-		goto fail2;
++		goto fail_eip;
+ 	}
+ 
+ 	cp110_clks[CP110_CORE_EIP] = hw;
+@@ -254,7 +254,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	hw = clk_hw_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+-		goto fail3;
++		goto fail_core;
+ 	}
+ 
+ 	cp110_clks[CP110_CORE_CORE] = hw;
+@@ -270,7 +270,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 						   core_name, 0, 1, 1);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+-		goto fail4;
++		goto fail_nand;
+ 	}
+ 
+ 	cp110_clks[CP110_CORE_NAND] = hw;
+@@ -366,15 +366,15 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_NAND]);
+-fail4:
++fail_nand:
+ 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_CORE]);
+-fail3:
++fail_core:
+ 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_EIP]);
+-fail2:
++fail_eip:
+ 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_PPV2]);
+-fail1:
++fail_ppv2:
+ 	clk_hw_unregister_fixed_rate(cp110_clks[CP110_CORE_APLL]);
+-fail0:
++fail_apll:
+ 	return ret;
+ }
+ 
 -- 
 git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
