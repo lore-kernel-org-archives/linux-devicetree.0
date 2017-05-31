@@ -1,36 +1,104 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v4 4/5] device property: Introduce
- fwnode_device_is_available()
-Date: Wed, 31 May 2017 13:17:44 +0300
-Message-ID: <20170531101744.GF2784@lahna.fi.intel.com>
-References: <1495443202-22817-1-git-send-email-sakari.ailus@linux.intel.com>
- <1495443202-22817-5-git-send-email-sakari.ailus@linux.intel.com>
- <20170531095804.GD2784@lahna.fi.intel.com>
- <9a32d562-8335-2b10-8aaa-e74d919636a0@linux.intel.com>
+From: Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH 3/6] gpio: dt-bindings: Add documentation for gpio controllers on
+ Armada 7K/8K
+Date: Wed, 31 May 2017 19:43:40 +0900
+Message-ID: <149622742055.34003.14963361587324682626@resonance>
+References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
+ <306395ff39de3d3d3c8f55e5da4de8def29ae8d1.1495210061.git-series.gregory.clement@free-electrons.com>
+ <CACRpkdY97DDcwec+J-4X1AT5a7Mbo4GnWUJmuAOYhNzOA8_HZQ@mail.gmail.com>
+ <878tlnzps3.fsf@free-electrons.com>
+ <CACRpkdbW3T5auXCMrqH_tTzcVseGbiV+y53fJ2xN5p-VbGz7rA@mail.gmail.com>
+ <20170530222358.abta3srv5emz7wtp@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9a32d562-8335-2b10-8aaa-e74d919636a0@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170530222358.abta3srv5emz7wtp@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Stephen Boyd <sboyd@codeaurora.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 31, 2017 at 01:12:35PM +0300, Sakari Ailus wrote:
-> On 05/31/17 12:58, Mika Westerberg wrote:
-> > On Mon, May 22, 2017 at 11:53:21AM +0300, Sakari Ailus wrote:
-> >>  /**
-> >> + * fwnode_device_is_available - check if a device is available for use
-> >> + * @fwnode: Pointer to the fwnode of the device.
-> >> + */
-> >> +bool fwnode_device_is_available(struct fwnode_handle *fwnode)
-> > 
-> > Can it be const instead? Ditto for of_fwnode_device_is_available() and
-> > acpi_fwnode_device_is_available) and the .device_available() hook.
-> > 
-> 
-> In principle yes, but it will require other changes in the ACPI
-> framework as well that do not suit well yet for this patchset.
+Quoting Rob Herring (2017-05-31 07:23:58)
+> On Mon, May 29, 2017 at 10:08:16AM +0200, Linus Walleij wrote:
+> > On Tue, May 23, 2017 at 3:06 PM, Gregory CLEMENT
+> > <gregory.clement@free-electrons.com> wrote:
+> > >  On mar., mai 23 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > =
 
-Fair enough.
+> > >> Please rebase and resend the rest of the patches.
+> > >
+> > > Actually I was wrong with my assumption that there was no dependency.
+> > > For the binding documentation there is dependecy accross the series I
+> > > sent.
+> > >
+> > > This patch depends on "pinctrl: dt-bindings: add documentation for AP=
+806
+> > > pin controllers" [1] and "pinctrl: dt-bindings: add documentation for
+> > > CP110 pin controllers" [3] from the series "Add support for the pin
+> > > controllers on the Marvell Armada 7K/8K".
+> > >
+> > > As you are maintainer of both gpio and pinctrl subsystem it will be e=
+asy
+> > > to resolv.
+> > =
+
+> > Please send all patches in one big series in that case, so I can apply
+> > them all to a branch and merge that branch into both trees.
+> > =
+
+> > > But these last patches depend also on "clk: mvebu: ap806: introduce a
+> > > new binding" [3] in the clock series "Improve ap806 clk support on
+> > > Marvell Armada 7K/8K" and on "clk: mvebu: cp110: introduce a new
+> > > binding" [4] in the clock series "Improve cp110 clk support on Marvell
+> > > Armada 7K/8K".
+> > =
+
+> > That sounds messy.
+> > =
+
+> > > So for these particular patches, either I rebase them on the v4.12-rc2
+> > > and there will be a small merge conflict during the merge window for
+> > > v4.13, or we can ask a stable branch with only these few patches (I am
+> > > adding the clock maintainer to this email).
+> > >
+> > > If we chose this last option I can split the clock patches to have pa=
+tch
+> > > modifying only the binding documentation.
+> > =
+
+> > I think you can make a patch just modifying the binding documentation
+> > and then apply that patch to *both* trees, just make sure the patch
+> > is *final* and not applied in different versions in clk and pinctrl.
+> =
+
+> I thought we try to avoid doing that.
+> =
+
+> > I think cross-tree branches for documentation clashes is too much
+> > bureaucracy.
+> =
+
+> I can just take all the doc patches separately. Or you can take the =
+
+> clock one too.
+
+Stephen and I have started making a -dt branch for each new clk driver
+which. This stable branch has only the dt bindings/headers in it (no
+driver code).
+
+I'll make such a branch for ap806 this week and everyone can merge that
+in as a dep.
+
+Regards,
+Mike
+
+> =
+
+> > Make sure your clock patch is finalized and preferably also applied
+> > to the clk tree then put it in the bottom of the patch set you send
+> > to me as well and I will proceed like above.
+> > =
+
+> > Yours,
+> > Linus Walleij
