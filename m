@@ -1,63 +1,41 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI
- TRI_LED module
-Date: Wed, 31 May 2017 18:55:40 +0200
-Message-ID: <20170531165540.GA9371@amd>
-References: <20170531061541.10808-1-fenglinw@codeaurora.org>
- <20170531061541.10808-2-fenglinw@codeaurora.org>
- <20170531075536.GA13028@amd>
- <001301d2d9e7$3102b720$93082560$@codeaurora.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH RFC 2/5] ARM: dts: am335x-baltos: use IRQ_TYPE_* to
+ specify irq flags
+Date: Wed, 31 May 2017 10:19:32 -0700
+Message-ID: <20170531171932.GH3730@atomide.com>
+References: <20170526180609.2699-1-uwe@kleine-koenig.org>
+ <20170526180609.2699-2-uwe@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <001301d2d9e7$3102b720$93082560$@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wu Fenglin <fenglinw@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 'Richard Purdie' <rpurdie@rpsys.net>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, subbaram@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
+In-Reply-To: <20170526180609.2699-2-uwe@kleine-koenig.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Cc: Marek Vasut <marex@denx.de>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---n8g4imXOkfNTN/H1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> Thanks for the reviewing.
->=20
-> For the order, the hardware register mapping has this order (blue/green/r=
-ed)
-> from bit0/1/2, I can revert it to (red/green/blue) if there is a strong
-> concern.
-
-I'd do that.
-
-> For these two properties: qcom,off-ms/ qcom,on-ms, I am using them to ass=
-ign
-> the default blinking on/off time, then the LEDs would have a default
-> blinking pattern if you do "echo 1 > /sys/class/leds/red/blink"
-
-Normally, dts describes hardware; this does not seem to be hardware
-description, so I'd leave it out.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlku9YwACgkQMOfwapXb+vIa3ACfYl1XNqzEjZI914rKh3cWswSh
-6ocAnjKU/PhpkgCvEzdQno5ZPLA0XeQQ
-=P31m
------END PGP SIGNATURE-----
-
---n8g4imXOkfNTN/H1--
+KiBVd2UgS2xlaW5lLUvDtm5pZyA8dXdlQGtsZWluZS1rb2VuaWcub3JnPiBbMTcwNTI2IDExOjA5
+XToKPiBBY2NvcmRpbmcgdG8gdGhlIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBhbmQgdGhlIHNvdXJj
+ZSBjb2RlIHRoZSBvbWFwLWdwaW8KPiBjb250cm9sbGVyIHRha2VzIElSUV9UWVBFXyogYXMgaXRz
+IGZsYWdzIHZhbHVlcywgbm90IEdQSU9fQUNUSVZFXyouCj4gCj4gVGhpcyBwYXRjaCB1c2VzIHRo
+ZSByaWdodCB2YXJpYWJsZSB0eXBlIHdoaWNoIHlpZWxkcyB0aGUgc2FtZSByZXN1bHQKPiB3aGVu
+IGNvbXBpbGVkLiBOb3RlIHRoYXQgdGhpcyBtaWdodCBiZSB3cm9uZyBhbmQgYWN0dWFsbHkKPiBJ
+UlFfVFlQRV9MRVZFTF9MT1cgaXMgaW50ZW5kZWQgYnkgdGhlIGR0IGF1dGhvci4KPiAKPiBTaWdu
+ZWQtb2ZmLWJ5OiBVd2UgS2xlaW5lLUvDtm5pZyA8dXdlQGtsZWluZS1rb2VuaWcub3JnPgo+IC0t
+LQo+IEhlbGxvLAo+IAo+IGNhbiBzb21lYm9keSB3aXRoIHRoZSBoYXJkd2FyZSBvciBpdCdzIGRv
+Y3VtZW50YXRpb24gcGxlYXNlIGNoZWNrIHdoaWNoCj4gZmxhZyBpcyB0aGUgcmlnaHQgb25lPwoK
+SSdsbCB3YWl0IG9uIHRoaXMgb25lIHVudGlsIHdlIGhhdmUgc29tZWJvZHkgdGVzdCBpdC4KClJl
+Z2FyZHMsCgpUb255CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
