@@ -1,147 +1,92 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 2/3] arm64: dts: mt7622: add basic nodes to the mt7622.dtsi
- file
-Date: Thu, 1 Jun 2017 01:29:00 +0800
-Message-ID: <60640937c793184ce12f88e5c66f3f316e97cefa.1496250798.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v3 1/3] dt-bindings: mediatek: add bindings for MediaTek
+ MT7622 SoC
+Date: Thu, 1 Jun 2017 01:28:59 +0800
+Message-ID: <1b9dd0df077a59aea5a15e3cb7775f80224b0b06.1496250798.git.sean.wang@mediatek.com>
 References: <cover.1496250798.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1496250798.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1496250798.git.sean.wang@mediatek.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
+Cc: Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-add basic nodes into the mt7622.dtsi for the system
-bring-up which includes ARM CPU, GIC, timer, MediaTek
-UART, SYSIRQ and one reserved memory region for ATF.
+This adds dt-binding documentation for MediaTek MT7622 SoC
+which currently only includes basic items such as ARM CPU,
+MediaTek SYSIRQ and UART.
 
-Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- arch/arm64/boot/dts/mediatek/mt7622.dtsi | 103 +++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
+ Documentation/devicetree/bindings/arm/mediatek.txt                    | 4 ++++
+ .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      | 3 ++-
+ Documentation/devicetree/bindings/serial/mtk-uart.txt                 | 1 +
+ 3 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-new file mode 100644
-index 0000000..2031b73
---- /dev/null
-+++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-@@ -0,0 +1,103 @@
-+/*
-+ * Copyright (c) 2017 MediaTek Inc.
-+ * Author: Ming Huang <ming.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "mediatek,mt7622";
-+	interrupt-parent = <&sysirq>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+			clock-frequency = <1300000000>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+			clock-frequency = <1300000000>;
-+		};
-+	};
-+
-+	uart_clk: dummy26m {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <25000000>;
-+	};
-+
-+	psci {
-+		compatible  = "arm,psci-0.2";
-+		method      = "smc";
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
-+		secmon_reserved: secmon@43000000 {
-+			reg = <0 0x43000000 0 0x30000>;
-+			no-map;
-+		};
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupt-parent = <&gic>;
-+		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-+			      IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-+			      IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-+			      IRQ_TYPE_LEVEL_HIGH)>,
-+			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-+			      IRQ_TYPE_LEVEL_HIGH)>;
-+	};
-+
-+	sysirq: interrupt-controller@10200620 {
-+		compatible = "mediatek,mt7622-sysirq",
-+			     "mediatek,mt6577-sysirq";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10200620 0 0x20>;
-+	};
-+
-+	gic: interrupt-controller@10300000 {
-+		compatible = "arm,gic-400";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		interrupt-parent = <&gic>;
-+		reg = <0 0x10310000 0 0x1000>,
-+		      <0 0x10320000 0 0x1000>,
-+		      <0 0x10340000 0 0x2000>,
-+		      <0 0x10360000 0 0x2000>;
-+	};
-+
-+	uart0: serial@11002000 {
-+		compatible = "mediatek,mt7622-uart",
-+			     "mediatek,mt6577-uart";
-+		reg = <0 0x11002000 0 0x400>;
-+		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&uart_clk>;
-+		status = "disabled";
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
+index c860b24..fc68570 100644
+--- a/Documentation/devicetree/bindings/arm/mediatek.txt
++++ b/Documentation/devicetree/bindings/arm/mediatek.txt
+@@ -12,6 +12,7 @@ compatible: Must contain one of
+    "mediatek,mt6592"
+    "mediatek,mt6755"
+    "mediatek,mt6795"
++   "mediatek,mt7622"
+    "mediatek,mt7623"
+    "mediatek,mt8127"
+    "mediatek,mt8135"
+@@ -38,6 +39,9 @@ Supported boards:
+ - Evaluation board for MT6795(Helio X10):
+     Required root node properties:
+       - compatible = "mediatek,mt6795-evb", "mediatek,mt6795";
++- Reference board variant 1 for MT7622:
++    Required root node properties:
++      - compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
+ - Evaluation board for MT7623:
+     Required root node properties:
+       - compatible = "mediatek,mt7623-evb", "mediatek,mt7623";
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+index a89c03b..eda1183 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
+@@ -1,4 +1,4 @@
+-+Mediatek 65xx/67xx/81xx sysirq
+++Mediatek MT65xx/MT67xx/MT762x/MT81xx sysirq
+ 
+ Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
+ interrupt.
+@@ -15,6 +15,7 @@ Required properties:
+ 	"mediatek,mt6582-sysirq"
+ 	"mediatek,mt6580-sysirq"
+ 	"mediatek,mt6577-sysirq"
++	"mediatek,mt7622-sysirq"
+ 	"mediatek,mt2701-sysirq"
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
+diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+index 0015c72..daa1eef 100644
+--- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
++++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
+@@ -8,6 +8,7 @@ Required properties:
+   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
+   * "mediatek,mt6755-uart" for MT6755 compatible UARTS
+   * "mediatek,mt6795-uart" for MT6795 compatible UARTS
++  * "mediatek,mt7622-uart" for MT7622 compatible UARTS
+   * "mediatek,mt7623-uart" for MT7623 compatible UARTS
+   * "mediatek,mt8127-uart" for MT8127 compatible UARTS
+   * "mediatek,mt8135-uart" for MT8135 compatible UARTS
 -- 
 1.9.1
