@@ -1,83 +1,83 @@
-From: YT Shen <yt.shen@mediatek.com>
-Subject: [PATCH v2 1/2] dt-bindings: arm: Add bindings for Mediatek MT2712 SoC
- Platform
-Date: Wed, 31 May 2017 19:39:32 +0800
-Message-ID: <1496230773-22633-2-git-send-email-yt.shen@mediatek.com>
-References: <1496230773-22633-1-git-send-email-yt.shen@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496230773-22633-1-git-send-email-yt.shen@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, srv_heupstream@mediatek.com, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Mars Cheng <mars.cheng@mediatek.com>, linux-serial@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, YT Shen <yt.shen@mediatek.com>, linux-mediatek@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v5 1/6] ACPI: Constify argument to acpi_device_is_present()
+Date: Wed, 31 May 2017 14:52:07 +0300
+Message-ID: <1496231532-23601-2-git-send-email-sakari.ailus@linux.intel.com>
+References: <1496231532-23601-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1496231532-23601-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org
+Cc: devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, kieran.bingham@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-This adds dt-binding documentation for Mediatek MT2712.
-Only include very basic items: cpu, gic and uart.
+This will be needed in constifying the fwnode API.
 
-Signed-off-by: YT Shen <yt.shen@mediatek.com>
-Acked-by: Rob Herring <robh@kernel.org>
+The side effects the function had have been moved to the callers.
+
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 ---
- Documentation/devicetree/bindings/arm/mediatek.txt                    | 4 ++++
- .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      | 1 +
- Documentation/devicetree/bindings/serial/mtk-uart.txt                 | 1 +
- 3 files changed, 6 insertions(+)
+ drivers/acpi/device_pm.c | 4 +++-
+ drivers/acpi/internal.h  | 2 +-
+ drivers/acpi/scan.c      | 9 +++------
+ 3 files changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek.txt b/Documentation/devicetree/bindings/arm/mediatek.txt
-index c860b24..3161651 100644
---- a/Documentation/devicetree/bindings/arm/mediatek.txt
-+++ b/Documentation/devicetree/bindings/arm/mediatek.txt
-@@ -7,6 +7,7 @@ Required root node property:
+diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
+index 798d500..b404604 100644
+--- a/drivers/acpi/device_pm.c
++++ b/drivers/acpi/device_pm.c
+@@ -262,8 +262,10 @@ int acpi_bus_init_power(struct acpi_device *device)
+ 		return -EINVAL;
  
- compatible: Must contain one of
-    "mediatek,mt2701"
-+   "mediatek,mt2712"
-    "mediatek,mt6580"
-    "mediatek,mt6589"
-    "mediatek,mt6592"
-@@ -23,6 +24,9 @@ Supported boards:
- - Evaluation board for MT2701:
-     Required root node properties:
-       - compatible = "mediatek,mt2701-evb", "mediatek,mt2701";
-+- Evaluation board for MT2712:
-+    Required root node properties:
-+      - compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
- - Evaluation board for MT6580:
-     Required root node properties:
-       - compatible = "mediatek,mt6580-evbp1", "mediatek,mt6580";
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-index a89c03b..653adb5 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-@@ -16,6 +16,7 @@ Required properties:
- 	"mediatek,mt6580-sysirq"
- 	"mediatek,mt6577-sysirq"
- 	"mediatek,mt2701-sysirq"
-+	"mediatek,mt2712-sysirq"
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Use the same format as specified by GIC in arm,gic.txt.
- - interrupt-parent: phandle of irq parent for sysirq. The parent must
-diff --git a/Documentation/devicetree/bindings/serial/mtk-uart.txt b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-index 0015c72..5f88e0d 100644
---- a/Documentation/devicetree/bindings/serial/mtk-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/mtk-uart.txt
-@@ -3,6 +3,7 @@
- Required properties:
- - compatible should contain:
-   * "mediatek,mt2701-uart" for MT2701 compatible UARTS
-+  * "mediatek,mt2712-uart" for MT2712 compatible UARTS
-   * "mediatek,mt6580-uart" for MT6580 compatible UARTS
-   * "mediatek,mt6582-uart" for MT6582 compatible UARTS
-   * "mediatek,mt6589-uart" for MT6589 compatible UARTS
+ 	device->power.state = ACPI_STATE_UNKNOWN;
+-	if (!acpi_device_is_present(device))
++	if (!acpi_device_is_present(device)) {
++		device->flags.initialized = false;
+ 		return -ENXIO;
++	}
+ 
+ 	result = acpi_device_get_power(device, &state);
+ 	if (result)
+diff --git a/drivers/acpi/internal.h b/drivers/acpi/internal.h
+index 66229ff..7300240 100644
+--- a/drivers/acpi/internal.h
++++ b/drivers/acpi/internal.h
+@@ -111,7 +111,7 @@ int acpi_device_setup_files(struct acpi_device *dev);
+ void acpi_device_remove_files(struct acpi_device *dev);
+ void acpi_device_add_finalize(struct acpi_device *device);
+ void acpi_free_pnp_ids(struct acpi_device_pnp *pnp);
+-bool acpi_device_is_present(struct acpi_device *adev);
++bool acpi_device_is_present(const struct acpi_device *adev);
+ bool acpi_device_is_battery(struct acpi_device *adev);
+ bool acpi_device_is_first_physical_node(struct acpi_device *adev,
+ 					const struct device *dev);
+diff --git a/drivers/acpi/scan.c b/drivers/acpi/scan.c
+index e39ec7b..b609cbf 100644
+--- a/drivers/acpi/scan.c
++++ b/drivers/acpi/scan.c
+@@ -1567,13 +1567,9 @@ static int acpi_bus_type_and_status(acpi_handle handle, int *type,
+ 	return 0;
+ }
+ 
+-bool acpi_device_is_present(struct acpi_device *adev)
++bool acpi_device_is_present(const struct acpi_device *adev)
+ {
+-	if (adev->status.present || adev->status.functional)
+-		return true;
+-
+-	adev->flags.initialized = false;
+-	return false;
++	return adev->status.present || adev->status.functional;
+ }
+ 
+ static bool acpi_scan_handler_matching(struct acpi_scan_handler *handler,
+@@ -1831,6 +1827,7 @@ static void acpi_bus_attach(struct acpi_device *device)
+ 	acpi_bus_get_status(device);
+ 	/* Skip devices that are not present. */
+ 	if (!acpi_device_is_present(device)) {
++		device->flags.initialized = false;
+ 		acpi_device_clear_enumerated(device);
+ 		device->flags.power_manageable = 0;
+ 		return;
 -- 
-1.9.1
+2.7.4
+
