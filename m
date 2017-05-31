@@ -1,148 +1,57 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] Documentation: dt: Add bindings for Davinci DSP
- processors
-Date: Wed, 31 May 2017 14:22:11 -0500
-Message-ID: <20170531192211.xszanmzvj34ohblk@rob-hp-laptop>
-References: <20170526202140.10472-1-s-anna@ti.com>
- <20170526202140.10472-4-s-anna@ti.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] firmware: qcom: scm: Expose download-mode control
+Date: Wed, 31 May 2017 14:31:42 -0500
+Message-ID: <20170531193142.xnf5nvnq7iejnuva@rob-hp-laptop>
+References: <20170527063308.10483-1-bjorn.andersson@linaro.org>
+ <20170527063308.10483-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170526202140.10472-4-s-anna@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Robert Tivy <rtivy@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170527063308.10483-2-bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 03:21:39PM -0500, Suman Anna wrote:
-> Add the device tree bindings document for the DSP processor
-> subsystem devices on TI Davinci DA8xx/OMAP-L13x SoCs.
-
-"dt-bindings: remoteproc:  ..." for the subject.
-
+On Fri, May 26, 2017 at 11:33:07PM -0700, Bjorn Andersson wrote:
+> In order to aid post-mortem debugging the Qualcomm platforms provides a
+> "memory download mode", where the boot loader will provide an interface
+> for custom tools to "download" the content of RAM to a host machine.
 > 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
+> The mode is triggered by writing a magic value somehwere in RAM, that is
+> read in the boot code path after a warm-restart. Two mechanism for
+> setting this magic value are supported in modern platforms; a direct SCM
+> call to enable the mode or through a secure io write of a magic value.
+> 
+> In order for a normal reboot not to trigger "download mode" the magic
+> must be cleared during a clean reboot.
+
+This must be happening somewhere before the kernel is entered? Or 
+warm-restarts are not the norm?
+
+> Download mode has to be enabled by including qcom_scm.download_mode=1 on
+> the command line.
+
+This looks similar to reboot reason functionality (i.e. boot into mode 
+X). I'd expect this to use that at least for the kernel. Not sure about 
+bindings though.
+
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  .../bindings/remoteproc/ti,davinci-rproc.txt       | 92 ++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-> new file mode 100644
-> index 000000000000..e53572e22002
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/remoteproc/ti,davinci-rproc.txt
-> @@ -0,0 +1,92 @@
-> +TI Davinci DSP devices
-> +=======================
-> +
-> +Binding status: Unstable - Subject to changes for DT clocks and resets
-
-Sorry, understandable if you didn't have documentation, but you work for 
-TI, figure out what the clocks and resets are.
-
-> +
-> +The TI Davinci family of SoCs usually contains a TI DSP Core sub-system that
-> +is used to offload some of the processor-intensive tasks or algorithms, for
-> +achieving various system level goals.
-> +
-> +The processor cores in the sub-system usually contain additional sub-modules
-> +like L1 and/or L2 caches/SRAMs, an Interrupt Controller, an external memory
-> +controller, a dedicated local power/sleep controller etc. The DSP processor
-> +core used in Davinci SoCs is usually a C674x DSP CPU.
-
-I'm wondering if your compatible string is specific enough with this 
-statement.
-
-> +
-> +DSP Device Node:
-> +================
-> +Each DSP Core sub-system is represented as a single DT node.
-> +
-> +Required properties:
-> +--------------------
-> +The following are the mandatory properties:
-> +
-> +- compatible:		Should be one of the following,
-> +			    "ti,da850-dsp" for DSPs on OMAP-L138 SoCs
-> +
-> +- reg:			Should contain an entry for each value in 'reg-names'.
-> +			Each entry should have the memory region's start address
-> +			and the size of the region, the representation matching
-> +			the parent node's '#address-cells' and '#size-cells' values.
-> +
-> +- reg-names:		Should contain strings with the following names, each
-> +			representing a specific internal memory region or a
-> +			specific register space,
-> +			     "l2sram", "l1pram", "l1dram", "host1cfg", "chipsig_base"
-> +
-> +- interrupts: 		Should contain the interrupt number used to receive the
-> +			interrupts from the DSP. The value should follow the
-> +			interrupt-specifier format as dictated by the
-> +			'interrupt-parent' node.
-> +
-> +- memory-region:	phandle to the reserved memory node to be associated
-> +			with the remoteproc device. The reserved memory node
-> +			can be a CMA memory node, and should be defined as
-> +			per the bindings in
-> +			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-> +
-> +Optional properties:
-> +--------------------
-> +- interrupt-parent:	phandle to the interrupt controller node. This property
-> +			is needed if the device node hierarchy doesn't have an
-> +			interrupt controller.
-> +
-> +
-> +Example:
-> +--------
-> +
-> +	/* DA850 DTS file */
-
-Don't show the dts split in examples.
-
-> +	{
-> +		dsp: dsp@11800000 {
-> +			compatible = "ti,da850-dsp";
-> +			reg = <0x11800000 0x40000>,
-> +			      <0x11e00000 0x8000>,
-> +			      <0x11f00000 0x8000>,
-> +			      <0x01c14044 0x4>,
-> +			      <0x01c14174 0x8>;
-> +			reg-names = "l2sram", "l1pram", "l1dram", "host1cfg",
-> +				    "chipsig";
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <28>;
-> +			status = "disabled";
-
-Don't show status in examples.
-
-> +		};
-> +
-> +	};
-> +
-> +	/* OMAP-L138 LCDK Board file */
-> +	reserved-memory {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +
-> +		dsp_cma_pool: dsp_cma@c3000000 {
-
-cma is a linuxism. dsp-memory@...
-
-> +                        compatible = "shared-dma-pool";
-> +                        reg = <0xc3000000 0x1000000>;
-> +                        reusable;
-> +                        status = "okay";
-> +                };
-> +	};
-> +
-> +	&dsp {
-> +		status = "okay";
-> +		memory-region = <&dsp_cma_pool>;
-> +	};
-> -- 
-> 2.12.0
+> Changes since v1:
+> - Specify DT propert being two-cell
+> - Correct handling of scm-call return code
 > 
+>  .../devicetree/bindings/firmware/qcom,scm.txt      |  2 +
+>  drivers/firmware/qcom_scm-32.c                     |  6 +++
+>  drivers/firmware/qcom_scm-64.c                     | 13 +++++++
+>  drivers/firmware/qcom_scm.c                        | 43 ++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.h                        |  2 +
+>  5 files changed, 66 insertions(+)
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
