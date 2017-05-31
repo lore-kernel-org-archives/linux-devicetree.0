@@ -1,47 +1,31 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 0/9] Add support for the pin controllers on the Marvell
- Armada 7K/8K
-Date: Wed, 31 May 2017 11:15:43 +0200
-Message-ID: <20170531111543.7c753308@free-electrons.com>
-References: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/6] Extend mvebu gpio driver to support the controllers
+ of the Marvell Armada 7K/8K
+Date: Wed, 31 May 2017 11:16:45 +0200
+Message-ID: <20170531111645.6530911a@free-electrons.com>
+References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.0dd8a92ae74fcec8d0470d0a7016035089e46eed.1495209664.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hello,
 
-On Fri, 19 May 2017 18:04:42 +0200, Gregory CLEMENT wrote:
+On Fri, 19 May 2017 18:09:19 +0200, Gregory CLEMENT wrote:
 
-> Gregory CLEMENT (6):
->   MAINTAINERS: extend mvebu SoC entry with pinctrl drivers
->   pinctrl: dt-bindings: add documentation for AP806 pin controllers
->   pinctrl: dt-bindings: add documentation for CP110 pin controllers
->   pinctrl: mvebu: remove the offset property for regmap
->   arm64: marvell: enable the Armada 7K/8K pinctrl driver
->   arm64: dts: marvell: add pinctrl support for Armada 7K/8K
-> 
-> Hanna Hawa (2):
->   pinctrl: mvebu: add driver for Armada AP806 pinctrl
->   pinctrl: mvebu: add driver for Armada CP110 pinctrl
-> 
-> Russell King (1):
->   pinctrl: avoid PLAT_ORION dependency
+> Not that currently I didn't manage to fully test the gpio, indeed I
+> only have a 7040 DB board which lack of test point for this kind of
+> test. So any tested-by would be welcome.
 
-I have tested the combination of your four series (touching clock,
-pinmux and gpio) on Armada 8K MacchiatoBin, and I was able to validate
-that the CP110 pinmuxing works as expected.
+I have tested GPIOs on the master CP110 of the Armada 8K on a
+MacchiatoBin board, and they worked for me, so you can add my:
 
-I used MPP37 and MPP38, which I was able to configure as GPIO or I2C0,
-and validate that they are working as GPIOs and as I2C0.
-
-I was however unable to test the AP MPPs due to the lack of access to
-such pins.
+Tested-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Best regards,
 
@@ -50,3 +34,7 @@ Thomas
 Thomas Petazzoni, CTO, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
