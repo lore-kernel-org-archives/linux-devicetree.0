@@ -1,86 +1,88 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: [PATCH v6 5/6] device property: Add FW type agnostic fwnode_graph_get_remote_node
-Date: Wed, 31 May 2017 15:27:11 +0300
-Message-ID: <1496233632-25518-6-git-send-email-sakari.ailus@linux.intel.com>
-References: <1496233632-25518-1-git-send-email-sakari.ailus@linux.intel.com>
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1496233632-25518-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: linux-acpi@vger.kernel.org
-Cc: devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, kieran.bingham@ideasonboard.com
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v6 1/4] gpio: mvebu: Add limited PWM support
+Date: Wed, 31 May 2017 14:36:21 +0200
+Message-ID: <87bmq9td8a.fsf@free-electrons.com>
+References: <20170414154056.32055-1-ralph.sennhauser@gmail.com>
+        <20170414154056.32055-2-ralph.sennhauser@gmail.com>
+        <CACRpkdYPp6pBemTT_a4V6a-Qbk2475qOOxWJOhfVaEz=cojOvA@mail.gmail.com>
+        <87tw42tqdr.fsf@free-electrons.com>
+        <20170530165101.73ae0bf6@gmail.com>
+        <CACQ1gAhhVEem9=We3mTJwhDbLDNw+_uyr2LpAyjQSk0iJ4O6Ew@mail.gmail.com>
+        <20170531142614.5f32fca6@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20170531142614.5f32fca6@gmail.com> (Ralph Sennhauser's message
+        of "Wed, 31 May 2017 14:26:14 +0200")
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: Richard Genoud <richard.genoud@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add fwnode_graph_get_remote_node() function which is equivalent to
-of_graph_get_remote_node() on OF.
-
-Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
----
- drivers/base/property.c  | 37 +++++++++++++++++++++++++++++++++++++
- include/linux/property.h |  2 ++
- 2 files changed, 39 insertions(+)
-
-diff --git a/drivers/base/property.c b/drivers/base/property.c
-index b979f8a..ac3590b 100644
---- a/drivers/base/property.c
-+++ b/drivers/base/property.c
-@@ -1216,6 +1216,43 @@ fwnode_graph_get_remote_endpoint(struct fwnode_handle *fwnode)
- EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_endpoint);
+Hi Ralph,
  
- /**
-+ * fwnode_graph_get_remote_node - get remote parent node for given port/endpoint
-+ * @fwnode: pointer to parent fwnode_handle containing graph port/endpoint
-+ * @port_id: identifier of the parent port node
-+ * @endpoint_id: identifier of the endpoint node
-+ *
-+ * Return: Remote fwnode handle associated with remote endpoint node linked
-+ *	   to @node. Use fwnode_node_put() on it when done.
-+ */
-+struct fwnode_handle *fwnode_graph_get_remote_node(struct fwnode_handle *fwnode,
-+						   u32 port_id, u32 endpoint_id)
-+{
-+	struct fwnode_handle *endpoint = NULL;
-+
-+	while ((endpoint = fwnode_graph_get_next_endpoint(fwnode, endpoint))) {
-+		struct fwnode_endpoint fwnode_ep;
-+		struct fwnode_handle *remote;
-+		int ret;
-+
-+		ret = fwnode_graph_parse_endpoint(endpoint, &fwnode_ep);
-+		if (ret < 0)
-+			continue;
-+
-+		if (fwnode_ep.port != port_id || fwnode_ep.id != endpoint_id)
-+			continue;
-+
-+		remote = fwnode_graph_get_remote_port_parent(endpoint);
-+		if (!remote)
-+			return NULL;
-+
-+		return fwnode_device_is_available(remote) ? remote : NULL;
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_node);
-+
-+/**
-  * fwnode_graph_parse_endpoint - parse common endpoint node properties
-  * @fwnode: pointer to endpoint fwnode_handle
-  * @endpoint: pointer to the fwnode endpoint data structure
-diff --git a/include/linux/property.h b/include/linux/property.h
-index 7be014a..0597a74 100644
---- a/include/linux/property.h
-+++ b/include/linux/property.h
-@@ -281,6 +281,8 @@ struct fwnode_handle *fwnode_graph_get_remote_port(
- 	struct fwnode_handle *fwnode);
- struct fwnode_handle *fwnode_graph_get_remote_endpoint(
- 	struct fwnode_handle *fwnode);
-+struct fwnode_handle *fwnode_graph_get_remote_node(struct fwnode_handle *fwnode,
-+						   u32 port, u32 endpoint);
- 
- int fwnode_graph_parse_endpoint(struct fwnode_handle *fwnode,
- 				struct fwnode_endpoint *endpoint);
+ On mer., mai 31 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com> wrote:
+
+> On Tue, 30 May 2017 17:35:33 +0200
+> Richard Genoud <richard.genoud@gmail.com> wrote:
+>   
+>> Hi Ralph,
+>> 
+>> I have the functional spec (no NDA needed, but it's not the full
+>> one) : A38x-Functional-Spec-PU0A.pdf
+>> https://marvellcorp.wufoo.com/forms/marvell-armada-38x-functional-specifications/
+>> (just an email needed, no blood signing nor chicken slaughtering)
+>> There are the GPIO Blink Counter A/B is ON/OFF Duration Registers as
+>> well as the Blink Enable Registers.
+>> 
+>
+> Hi Richard,
+>
+> Thanks for the link, as the terms only talk about materials obtained
+> from www.marvell.com this one from wufoo.com should be exempt ;)
+> Also at a glance looks like the complete one. Also says "Functional
+> Specifications – Unrestricted". Maybe you want to re-download it.
+>
+> Regardless, as you said the blinking registers are all described. So
+> it's probably safe to assume 39x will have them as well.
+
+I guess you meant 38x. (But I suppose it is also true for 39x)
+
+
+>
+>> I've done a pwm with different periods (8ms, 4ms, 100ns).
+>> Looking at the scope, it seems to work pretty well :)
+>> 
+>> >>
+>> >> And it makes me realized that I missed the bad naming of the
+>> >> compatible string. We don't use family name for the compatible
+>> >> string, but the name of the first SoC compatible with. So in this
+>> >> case we should use "marvell,armada-370", as it is still in rc and
+>> >> not yet deployed. What about fixing the name now?  
+>
+> Gregory,
+>
+> Knowing it's not limited to 370/XP makes "marvell,armada-370-gpio" an
+> obviously better choice for the compatible string. Guess you didn't
+> mean to drop the "-gpio" suffix.
+
+You're right I meant "marvell,armada-370-gpio".
+
+>
+> Will work on a patch changing the compatible string / documentation for
+> 4.12 and an updated patch for armada 370/XP dtsi as well as a patch
+> adding the properties to 38x for 4.13+. Expect them tomorrow, probably
+> won't get around to it today anymore.
+
+Great!
+
+Thanks,
+
+Gregory
+
 -- 
-2.7.4
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
