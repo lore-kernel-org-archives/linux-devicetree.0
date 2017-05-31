@@ -1,163 +1,58 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 5/7] clk: mvebu: ap806: introduce a new binding
-Date: Wed, 31 May 2017 16:07:26 +0200
-Message-ID: <cc8c8c40fa4c4e71133033358992ec38e5aa2be5.1496239589.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v2 2/7] dt-bindings: ap806: do not depend anymore of the
+ *-clock-output-names
+Date: Wed, 31 May 2017 16:07:23 +0200
+Message-ID: <d502b5abc68cbb5739ce72ba8be27528f9042a28.1496239589.git-series.gregory.clement@free-electrons.com>
 References: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
 References: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-As for cp110, the initial intent when the binding of the ap806 system
-controller was to have one flat node. The idea being that what is
-currently a clock-only driver in drivers would become a MFD driver,
-exposing the clock, GPIO and pinctrl functionality. However, after taking
-a step back, this would lead to a messy binding. Indeed, a single node
-would be a GPIO controller, clock controller, pinmux controller, and
-more.
-
-This patch adopts a more classical solution of a top-level syscon node
-with sub-nodes for the individual devices. The main benefit will be to
-have each functional block associated to its own sub-node where we can
-put its own properties.
-
-The introduction of the Armada 7K/8K is still in the early stage so the
-plan is to remove the old binding. However, we don't want to break the
-device tree compatibility for the few devices already in the field. For
-this we still keep the support of the legacy compatible string with a big
-warning in the kernel about updating the device tree.
+This patch updates the documentation according to the change made in the
+patch "clk: mvebu: ap806: do not depend anymore of the
+*-clock-output-names": the clock names are no more part of the binding.
 
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/clk/mvebu/ap806-system-controller.c | 56 +++++++++++++++++-----
- 1 file changed, 44 insertions(+), 12 deletions(-)
+ Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/clk/mvebu/ap806-system-controller.c b/drivers/clk/mvebu/ap806-system-controller.c
-index 95ae16e203ea..fa2fbd2cef4a 100644
---- a/drivers/clk/mvebu/ap806-system-controller.c
-+++ b/drivers/clk/mvebu/ap806-system-controller.c
-@@ -44,7 +44,8 @@ static char *ap806_unique_name(struct device *dev, struct device_node *np,
- 			(unsigned long long)addr, name);
- }
+diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+index 8968371d84e2..3faab71dff9f 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+@@ -21,15 +21,11 @@ Required properties:
+      "marvell,ap806-system-controller", "syscon"
+  - reg: register area of the AP806 system controller
+  - #clock-cells: must be set to 1
+- - clock-output-names: must be defined to:
+-    "ap-cpu-cluster-0", "ap-cpu-cluster-1", "ap-fixed", "ap-mss"
  
--static int ap806_syscon_clk_probe(struct platform_device *pdev)
-+static int ap806_syscon_common_probe(struct platform_device *pdev,
-+				     struct device_node *syscon_node)
- {
- 	unsigned int freq_mode, cpuclk_freq;
- 	const char *name, *fixedclk_name;
-@@ -54,7 +55,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	u32 reg;
- 	int ret;
+ Example:
  
--	regmap = syscon_node_to_regmap(np);
-+	regmap = syscon_node_to_regmap(syscon_node);
- 	if (IS_ERR(regmap)) {
- 		dev_err(dev, "cannot get regmap\n");
- 		return PTR_ERR(regmap);
-@@ -110,7 +111,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	cpuclk_freq *= 1000 * 1000;
- 
- 	/* CPU clocks depend on the Sample At Reset configuration */
--	name = ap806_unique_name(dev, np, "cpu-cluster-0");
-+	name = ap806_unique_name(dev, syscon_node, "cpu-cluster-0");
- 	ap806_clks[0] = clk_register_fixed_rate(dev, name, NULL,
- 						0, cpuclk_freq);
- 	if (IS_ERR(ap806_clks[0])) {
-@@ -118,7 +119,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 		goto fail0;
- 	}
- 
--	name = ap806_unique_name(dev, np, "cpu-cluster-1");
-+	name = ap806_unique_name(dev, syscon_node, "cpu-cluster-1");
- 	ap806_clks[1] = clk_register_fixed_rate(dev, name, NULL, 0,
- 						cpuclk_freq);
- 	if (IS_ERR(ap806_clks[1])) {
-@@ -127,7 +128,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	}
- 
- 	/* Fixed clock is always 1200 Mhz */
--	fixedclk_name = ap806_unique_name(dev, np, "fixed");
-+	fixedclk_name = ap806_unique_name(dev, syscon_node, "fixed");
- 	ap806_clks[2] = clk_register_fixed_rate(dev, fixedclk_name, NULL,
- 						0, 1200 * 1000 * 1000);
- 	if (IS_ERR(ap806_clks[2])) {
-@@ -136,7 +137,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	}
- 
- 	/* MSS Clock is fixed clock divided by 6 */
--	name = ap806_unique_name(dev, np, "mss");
-+	name = ap806_unique_name(dev, syscon_node, "mss");
- 	ap806_clks[3] = clk_register_fixed_factor(NULL, name, fixedclk_name,
- 						  0, 1, 6);
- 	if (IS_ERR(ap806_clks[3])) {
-@@ -145,7 +146,7 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	}
- 
- 	/* SDIO(/eMMC) Clock is fixed clock divided by 3 */
--	name = ap806_unique_name(dev, np, "sdio");
-+	name = ap806_unique_name(dev, syscon_node, "sdio");
- 	ap806_clks[4] = clk_register_fixed_factor(NULL, name,
- 						  fixedclk_name,
- 						  0, 1, 3);
-@@ -175,17 +176,48 @@ static int ap806_syscon_clk_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static const struct of_device_id ap806_syscon_of_match[] = {
-+static int ap806_syscon_legacy_probe(struct platform_device *pdev)
-+{
-+	dev_warn(&pdev->dev, FW_WARN "Using legacy device tree binding\n");
-+	dev_warn(&pdev->dev, FW_WARN "Update your device tree:\n");
-+	dev_warn(&pdev->dev, FW_WARN
-+		 "This binding won't be supported in future kernel\n");
-+
-+	return ap806_syscon_common_probe(pdev, pdev->dev.of_node);
-+
-+}
-+
-+static int ap806_clock_probe(struct platform_device *pdev)
-+{
-+	return ap806_syscon_common_probe(pdev, pdev->dev.of_node->parent);
-+}
-+
-+static const struct of_device_id ap806_syscon_legacy_of_match[] = {
- 	{ .compatible = "marvell,ap806-system-controller", },
- 	{ }
- };
- 
--static struct platform_driver ap806_syscon_driver = {
--	.probe = ap806_syscon_clk_probe,
-+static struct platform_driver ap806_syscon_legacy_driver = {
-+	.probe = ap806_syscon_legacy_probe,
- 	.driver		= {
- 		.name	= "marvell-ap806-system-controller",
--		.of_match_table = ap806_syscon_of_match,
-+		.of_match_table = ap806_syscon_legacy_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+builtin_platform_driver(ap806_syscon_legacy_driver);
-+
-+static const struct of_device_id ap806_clock_of_match[] = {
-+	{ .compatible = "marvell,ap806-clock", },
-+	{ }
-+};
-+
-+static struct platform_driver ap806_clock_driver = {
-+	.probe = ap806_clock_probe,
-+	.driver		= {
-+		.name	= "marvell-ap806-clock",
-+		.of_match_table = ap806_clock_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(ap806_syscon_driver);
-+builtin_platform_driver(ap806_clock_driver);
+ 	syscon: system-controller@6f4000 {
+ 		compatible = "marvell,ap806-system-controller", "syscon";
+ 		#clock-cells = <1>;
+-		clock-output-names = "ap-cpu-cluster-0", "ap-cpu-cluster-1",
+-				     "ap-fixed", "ap-mss";
+ 		reg = <0x6f4000 0x1000>;
+ 	};
 -- 
 git-series 0.9.1
