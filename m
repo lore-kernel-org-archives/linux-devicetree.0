@@ -1,56 +1,80 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] clk: sunxi-ng: Add support for
- A83T's PRCM
-Date: Wed, 31 May 2017 21:58:27 +0200
-Message-ID: <20170531195827.kcbkwf5k2mh4q4re@flea.home>
-References: <20170531075824.657-1-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 05/16] watchdog: lantiq: add device tree binding
+ documentation
+Date: Wed, 31 May 2017 15:00:21 -0500
+Message-ID: <20170531200021.ld54cecme4ekak4i@rob-hp-laptop>
+References: <20170528184006.31668-1-hauke@hauke-m.de>
+ <20170528184006.31668-6-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qkey6pgizbckwfak"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZGAXTEQKGQEFJMXWFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170531075824.657-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170528184006.31668-6-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, May 28, 2017 at 08:39:55PM +0200, Hauke Mehrtens wrote:
+> The binding was not documented before, add the documentation now.
+> 
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/watchdog/lantiq-wdt.txt    | 28 ++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
+> new file mode 100644
+> index 000000000000..675c30e23b65
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
+> @@ -0,0 +1,28 @@
+> +Lantiq WTD watchdog binding
+> +============================
+> +
+> +This describes the binding of the Lantiq watchdog driver.
+> +
+> +-------------------------------------------------------------------------------
+> +Required properties:
+> +- compatible		: Should be one of
+> +				"lantiq,wdt"
+> +				"lantiq,wdt-xrx100"
+> +				"lantiq,wdt-falcon"
+> +
+> +Optional properties:
+> +- regmap		: A phandle to the RCU syscon
+> +- offset-status		: Offset of the reset cause register
+> +- mask-status		: Mask of the reset cause register value
 
---qkey6pgizbckwfak
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+These 2 should be implied by the compatible. But if already used in 
+upstream dts files, then it's okay.
 
-On Wed, May 31, 2017 at 03:58:18PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
-> 
-> This is the remaining parts of my A83T PRCM support series, along with
-> changes requested by Maxime.
-> 
-> Patch 1 updates the device tree bindings for the PRCM, adding pll-periph
-> to the list of required clocks
-> 
-> Patch 2 adds a device node for the PRCM on the A83T SoC, updated from v1
-> to include the pll-periph clock.
-> 
-> Patch 3 exports the PLL_PERIPH0 clock from the CCU on the H3/H5, for
-> consumption by the PRCM.
-> 
-> Patch 4 adds the pll-periph clock to the PRCM device node on the H3/H5.
-> 
-> Patch 5 / 6 are the same as 3 / 4, but for the A64.
+> +
+> +
+> +-------------------------------------------------------------------------------
+> +Example for the watchdog on the xRX200 SoCs:
+> +		watchdog@803F0 {
 
-Applied, thanks!
-Maxime
+Lowercase hex please.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---qkey6pgizbckwfak--
+> +			compatible = "lantiq,wdt-xrx200", "lantiq,wdt-xrx100";
+
+Doesn't match the documentation.
+
+> +			reg = <0x803F0 0x10>;
+
+Lowercase hex please.
+
+> +
+> +			regmap = <&rcu0>;
+> +			offset-status = <0x14>;
+> +			mask-status = <0x80000000>;
+> +		};
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
