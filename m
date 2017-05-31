@@ -1,204 +1,88 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/3] Documentation: DT: add Keystone DSP remoteproc binding
-Date: Wed, 31 May 2017 15:05:59 -0500
-Message-ID: <884f5585-eac2-57b2-a2be-879bf23f2e00@ti.com>
-References: <20170526165317.23164-1-s-anna@ti.com>
- <20170526165317.23164-2-s-anna@ti.com>
- <20170531191231.5qt2lfv73p572gmd@rob-hp-laptop>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3 05/16] watchdog: lantiq: add device tree binding
+ documentation
+Date: Wed, 31 May 2017 22:11:04 +0200
+Message-ID: <036b0b9c-a6dd-7d11-70a9-f7e8d4eb36be@hauke-m.de>
+References: <20170528184006.31668-1-hauke@hauke-m.de>
+ <20170528184006.31668-6-hauke@hauke-m.de>
+ <20170531200021.ld54cecme4ekak4i@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170531191231.5qt2lfv73p572gmd@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Santosh Shilimkar <ssantosh@kernel.org>, "Andrew F. Davis" <afd@ti.com>, linux-arm-kernel@lists.infradead.org, Sam Nelson <sam.nelson@ti.com>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170531200021.ld54cecme4ekak4i@rob-hp-laptop>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 05/31/2017 02:12 PM, Rob Herring wrote:
-> On Fri, May 26, 2017 at 11:53:15AM -0500, Suman Anna wrote:
->> Add the device tree bindings document for the Texas Instrument's
->> Keystone 2 DSP remoteproc devices.
+On 05/31/2017 10:00 PM, Rob Herring wrote:
+> On Sun, May 28, 2017 at 08:39:55PM +0200, Hauke Mehrtens wrote:
+>> The binding was not documented before, add the documentation now.
 >>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> Signed-off-by: Sam Nelson <sam.nelson@ti.com>
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 >> ---
->>  .../bindings/remoteproc/ti,keystone-rproc.txt      | 132 +++++++++++++++++++++
->>  1 file changed, 132 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
+>>  .../devicetree/bindings/watchdog/lantiq-wdt.txt    | 28 ++++++++++++++++++++++
+>>  1 file changed, 28 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
+>> diff --git a/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
 >> new file mode 100644
->> index 000000000000..f1ba88edd00d
+>> index 000000000000..675c30e23b65
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
->> @@ -0,0 +1,132 @@
->> +TI Keystone DSP devices
->> +=======================
+>> +++ b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
+>> @@ -0,0 +1,28 @@
+>> +Lantiq WTD watchdog binding
+>> +============================
 >> +
->> +Binding status: Unstable - Subject to changes for using multiple memory regions
-> 
-> I don't really see what would be unstable here. memory-region is easily 
-> extended to multiple entries.
-
-OK will drop this line.
-
-> 
+>> +This describes the binding of the Lantiq watchdog driver.
 >> +
->> +The TI Keystone 2 family of SoCs usually have one or more (upto 8) TI DSP Core
->> +sub-systems that are used to offload some of the processor-intensive tasks or
->> +algorithms, for achieving various system level goals.
->> +
->> +These processor sub-systems usually contain additional sub-modules like L1
->> +and/or L2 caches/SRAMs, an Interrupt Controller, an external memory controller,
->> +a dedicated local power/sleep controller etc. The DSP processor core in
->> +Keystone 2 SoCs is usually a TMS320C66x CorePac processor.
->> +
->> +DSP Device Node:
->> +================
->> +Each DSP Core sub-system is represented as a single DT node. Each node has a
->> +number of required or optional properties that enable the OS running on the
->> +host processor (ARM CorePac) to perform the device management of the remote
->> +processor and to communicate with the remote processor.
->> +
+>> +-------------------------------------------------------------------------------
 >> +Required properties:
->> +--------------------
->> +The following are the mandatory properties:
->> +
->> +- compatible:		Should be one of the following,
->> +			    "ti,k2hk-dsp" for DSPs on Keystone 2 66AK2H/K SoCs
->> +			    "ti,k2l-dsp" for DSPs on Keystone 2 66AK2L SoCs
->> +			    "ti,k2e-dsp" for DSPs on Keystone 2 66AK2E SoCs
->> +
->> +- reg:			Should contain an entry for each value in 'reg-names'.
->> +			Each entry should have the memory region's start address
->> +			and the size of the region, the representation matching
->> +			the parent node's '#address-cells' and '#size-cells' values.
->> +
->> +- reg-names:		Should contain strings with the following names, each
->> +			representing a specific internal memory region, and
->> +			should be defined in this order,
->> +			     "l2sram", "l1pram", "l1dram"
->> +
->> +- label:		Should contain a string identifying the DSP instance
->> +			within the SoC. Should be the string "dsp" followed by
->> +			the instance number. Eg: "dsp0", "dsp1",..."dsp7" etc
-> 
-> Why does a user need to know or care?
-
-This is used to distinguish the exact DSP instance from others since the
-DT node name is a generic "dsp". One of the uses is to be able to
-construct a firmware name within the driver using this label.
-
-> 
->> +
->> +- clocks: 		Should contain the device's input clock, and should be
->> +			defined as per the bindings in,
->> +			Documentation/devicetree/bindings/clock/keystone-gate.txt
->> +
->> +- ti,syscon-dev:	Should be a pair of the phandle to the Keystone Device
->> +			State Control node, and the register offset of the DSP
->> +			boot address register within that node's address space.
->> +
->> +- resets:		Should contain the phandle to the reset controller node
->> +			managing the resets for this device, and a reset
->> +			specifier. Please refer to the following reset bindings
->> +			for the reset argument specifier as per SoC,
->> +			Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
->> +			    for 66AK2HK/66AK2L/66AK2E SoCs
->> +
->> +- interrupt-parent:	Should contain a phandle to the Keystone 2 IRQ controller
->> +			IP node that is used by the ARM CorePac processor to
->> +			receive interrupts from the DSP remote processors. See
->> +			Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
->> +			for details.
->> +
->> +- interrupts: 		Should contain an entry for each value in 'interrupt-names'.
->> +			Each entry should have the interrupt source number used by
->> +			the remote processor to the host processor. The values should
->> +			follow the interrupt-specifier format as dictated by the
->> +			'interrupt-parent' node. The purpose of each is as per the
->> +			description in the 'interrupt-names' property.
->> +
->> +- interrupt-names:	Should contain strings with the following names, each
->> +			representing a specific interrupt,
->> +			    "vring" - interrupt for virtio based IPC
->> +			    "exception" - interrupt for exception notification
->> +
->> +- kick-gpio: 		Should specify the gpio device needed for the virtio IPC
-> 
-> -gpios
-
-Will fix.
-
-> 
->> +			stack. This will be used to interrupt the remote processor.
->> +			The gpio device to be used is as per the bindings in,
->> +			Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
+>> +- compatible		: Should be one of
+>> +				"lantiq,wdt"
+>> +				"lantiq,wdt-xrx100"
+>> +				"lantiq,wdt-falcon"
 >> +
 >> +Optional properties:
->> +--------------------
->> +
->> +- memory-region:	phandle to the reserved memory node to be associated
->> +			with the remoteproc device. The reserved memory node
->> +			can be a CMA memory node, and should be defined as
->> +			per the bindings in
->> +			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
->> +
->> +
->> +Example:
->> +--------
->> +
->> +	/* 66AK2H/K DSP node in SoC DTS file */
->> +	soc {
->> +		dsp0: dsp@10800000 {
->> +			compatible = "ti,k2hk-dsp";
->> +			reg = <0x10800000 0x00100000>,
->> +			      <0x10e00000 0x00008000>,
->> +			      <0x10f00000 0x00008000>;
->> +			reg-names = "l2sram", "l1pram", "l1dram";
->> +			label = "dsp0";
->> +			clocks = <&clkgem0>;
->> +			ti,syscon-dev = <&devctrl 0x40>;
->> +			resets = <&pscrst 0>;
->> +			interrupt-parent = <&kirq0>;
->> +			interrupts = <0 8>;
->> +			interrupt-names = "vring", "exception";
->> +			kick-gpio = <&dspgpio0 27 0>;
->> +		};
->> +
->> +	};
->> +
->> +	/* K2HK EVM Board file */
->> +	reserved-memory {
->> +		#address-cells = <2>;
->> +		#size-cells = <2>;
->> +		ranges;
->> +
->> +		dsp_common_cma_pool: dsp_common_cma_pool@81f800000 {
->> +			compatible = "shared-dma-pool";
->> +			reg = <0x00000008 0x1f800000 0x00000000 0x800000>;
->> +			reusable;
->> +			status = "okay";
->> +		};
->> +	};
->> +
->> +	&dsp0 {
->> +		memory-region = <&dsp_common_cma_pool>;
->> +	};
+>> +- regmap		: A phandle to the RCU syscon
+>> +- offset-status		: Offset of the reset cause register
+>> +- mask-status		: Mask of the reset cause register value
+> 
+> These 2 should be implied by the compatible. But if already used in 
+> upstream dts files, then it's okay.
 
-Will also fix this up based on your comments on the Davinci remoteproc
-driver binding.
+This is new.
+Should I hard code the offsets of the register and the actual bits
+depending on the compatible string in the driver instead of configuring
+it in the device tree?
 
-regards
-Suman
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Example for the watchdog on the xRX200 SoCs:
+>> +		watchdog@803F0 {
+> 
+> Lowercase hex please.
+> 
+>> +			compatible = "lantiq,wdt-xrx200", "lantiq,wdt-xrx100";
+> 
+> Doesn't match the documentation.
+> 
+>> +			reg = <0x803F0 0x10>;
+> 
+> Lowercase hex please.
+> 
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset-status = <0x14>;
+>> +			mask-status = <0x80000000>;
+>> +		};
+>> -- 
+>> 2.11.0
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
