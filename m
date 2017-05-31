@@ -1,818 +1,602 @@
-From: Juri Lelli <juri.lelli@arm.com>
-Subject: [PATCH v5 4/7] arm, arm64: factorize common cpu capacity default code
-Date: Wed, 31 May 2017 17:59:28 +0100
-Message-ID: <20170531165931.6945-5-juri.lelli@arm.com>
-References: <20170531165931.6945-1-juri.lelli@arm.com>
+From: "Jingoo Han" <jingoohan1@gmail.com>
+Subject: Re: [PATCH v9 3/4] PCI: dwc: kirin: add PCIe Driver for HiSilicon Kirin SoC
+Date: Wed, 31 May 2017 13:00:10 -0400
+Message-ID: <000201d2da2f$5dccb2e0$196618a0$@gmail.com>
+References: <20170531070109.81569-1-songxiaowei@hisilicon.com> <20170531070109.81569-4-songxiaowei@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170531165931.6945-1-juri.lelli@arm.com>
+In-Reply-To: <20170531070109.81569-4-songxiaowei@hisilicon.com>
+Content-Language: en-us
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, peterz@infradead.org, vincent.guittot@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, morten.rasmussen@arm.com, dietmar.eggemann@arm.com, juri.lelli@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, Russell King <linux@armlinux.org.uk>
+To: 'Xiaowei Song' <songxiaowei@hisilicon.com>, bhelgaas@google.com
+Cc: kishon@ti.com, arnd@arndb.de, tn@semihalf.com, keith.busch@intel.com, niklas.cassel@axis.com, dhdang@apm.com, liudongdong3@huawei.com, gabriele.paoloni@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, chenyao11@huawei.com, puck.chen@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-arm and arm64 share lot of code relative to parsing CPU capacity
-information from DT, using that information for appropriate scaling and
-exposing a sysfs interface for chaging such values at runtime.
+On Wednesday, May 31, 2017 3:01 AM, Xiaowei Song wrote:
+> 
+> Hisilicon PCIe Driver shares the common functions for PCIe dw-host
+> 
+> The poweron functions is developed on hi3660 SoC,
+> while Others Functions are common for Kirin series SoCs.
+> 
+> Low power mode (L1 sub-state and Suspend/Resume), hotplug
+> and MSI feature are not supported currently.
+> 
+> Cc: Guodong Xu <guodong.xu@linaro.org>
+> Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
 
-Factorize such code in a common place (driver/base/arch_topology.c) in
-preparation for further additions.
+Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
 
-Suggested-by: Will Deacon <will.deacon@arm.com>
-Suggested-by: Mark Rutland <mark.rutland@arm.com>
-Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Juri Lelli <juri.lelli@arm.com>
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arm/Kconfig             |   1 +
- arch/arm/kernel/topology.c   | 213 ++-----------------------------------
- arch/arm64/Kconfig           |   1 +
- arch/arm64/kernel/topology.c | 219 +--------------------------------------
- drivers/base/Kconfig         |   8 ++
- drivers/base/Makefile        |   1 +
- drivers/base/arch_topology.c | 242 +++++++++++++++++++++++++++++++++++++++++++
- 7 files changed, 262 insertions(+), 423 deletions(-)
- create mode 100644 drivers/base/arch_topology.c
+Best regards,
+Jingoo Han
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 4c1a35f15838..7ef16700cb88 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -25,6 +25,7 @@ config ARM
- 	select EDAC_SUPPORT
- 	select EDAC_ATOMIC_SCRUB
- 	select GENERIC_ALLOCATOR
-+	select GENERIC_ARCH_TOPOLOGY if ARM_CPU_TOPOLOGY
- 	select GENERIC_ATOMIC64 if (CPU_V7M || CPU_V6 || !CPU_32v6K || !AEABI)
- 	select GENERIC_CLOCKEVENTS_BROADCAST if SMP
- 	select GENERIC_CPU_AUTOPROBE
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 40dd35aa46d0..49ef025ffaa0 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -44,75 +44,10 @@
-  * to run the rebalance_domains for all idle cores and the cpu_capacity can be
-  * updated during this sequence.
-  */
--static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
--static DEFINE_MUTEX(cpu_scale_mutex);
- 
--unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
--{
--	return per_cpu(cpu_scale, cpu);
--}
--
--static void set_capacity_scale(unsigned int cpu, unsigned long capacity)
--{
--	per_cpu(cpu_scale, cpu) = capacity;
--}
--
--static ssize_t cpu_capacity_show(struct device *dev,
--				 struct device_attribute *attr,
--				 char *buf)
--{
--	struct cpu *cpu = container_of(dev, struct cpu, dev);
--
--	return sprintf(buf, "%lu\n",
--			arch_scale_cpu_capacity(NULL, cpu->dev.id));
--}
--
--static ssize_t cpu_capacity_store(struct device *dev,
--				  struct device_attribute *attr,
--				  const char *buf,
--				  size_t count)
--{
--	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	int this_cpu = cpu->dev.id, i;
--	unsigned long new_capacity;
--	ssize_t ret;
--
--	if (count) {
--		ret = kstrtoul(buf, 0, &new_capacity);
--		if (ret)
--			return ret;
--		if (new_capacity > SCHED_CAPACITY_SCALE)
--			return -EINVAL;
--
--		mutex_lock(&cpu_scale_mutex);
--		for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
--			set_capacity_scale(i, new_capacity);
--		mutex_unlock(&cpu_scale_mutex);
--	}
--
--	return count;
--}
--
--static DEVICE_ATTR_RW(cpu_capacity);
--
--static int register_cpu_capacity_sysctl(void)
--{
--	int i;
--	struct device *cpu;
--
--	for_each_possible_cpu(i) {
--		cpu = get_cpu_device(i);
--		if (!cpu) {
--			pr_err("%s: too early to get CPU%d device!\n",
--			       __func__, i);
--			continue;
--		}
--		device_create_file(cpu, &dev_attr_cpu_capacity);
--	}
--
--	return 0;
--}
--subsys_initcall(register_cpu_capacity_sysctl);
-+extern unsigned long
-+arch_scale_cpu_capacity(struct sched_domain *sd, int cpu);
-+extern void set_capacity_scale(unsigned int cpu, unsigned long capacity);
- 
- #ifdef CONFIG_OF
- struct cpu_efficiency {
-@@ -141,145 +76,9 @@ static unsigned long *__cpu_capacity;
- 
- static unsigned long middle_capacity = 1;
- static bool cap_from_dt = true;
--static u32 *raw_capacity;
--static bool cap_parsing_failed;
--static u32 capacity_scale;
--
--static int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu)
--{
--	int ret = 1;
--	u32 cpu_capacity;
--
--	if (cap_parsing_failed)
--		return !ret;
--
--	ret = of_property_read_u32(cpu_node,
--				   "capacity-dmips-mhz",
--				   &cpu_capacity);
--	if (!ret) {
--		if (!raw_capacity) {
--			raw_capacity = kcalloc(num_possible_cpus(),
--					       sizeof(*raw_capacity),
--					       GFP_KERNEL);
--			if (!raw_capacity) {
--				pr_err("cpu_capacity: failed to allocate memory for raw capacities\n");
--				cap_parsing_failed = true;
--				return 0;
--			}
--		}
--		capacity_scale = max(cpu_capacity, capacity_scale);
--		raw_capacity[cpu] = cpu_capacity;
--		pr_debug("cpu_capacity: %s cpu_capacity=%u (raw)\n",
--			cpu_node->full_name, raw_capacity[cpu]);
--	} else {
--		if (raw_capacity) {
--			pr_err("cpu_capacity: missing %s raw capacity\n",
--				cpu_node->full_name);
--			pr_err("cpu_capacity: partial information: fallback to 1024 for all CPUs\n");
--		}
--		cap_parsing_failed = true;
--		kfree(raw_capacity);
--	}
--
--	return !ret;
--}
--
--static void normalize_cpu_capacity(void)
--{
--	u64 capacity;
--	int cpu;
--
--	if (!raw_capacity || cap_parsing_failed)
--		return;
--
--	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
--	mutex_lock(&cpu_scale_mutex);
--	for_each_possible_cpu(cpu) {
--		capacity = (raw_capacity[cpu] << SCHED_CAPACITY_SHIFT)
--			/ capacity_scale;
--		set_capacity_scale(cpu, capacity);
--		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
--			cpu, arch_scale_cpu_capacity(NULL, cpu));
--	}
--	mutex_unlock(&cpu_scale_mutex);
--}
--
--#ifdef CONFIG_CPU_FREQ
--static cpumask_var_t cpus_to_visit;
--static bool cap_parsing_done;
--static void parsing_done_workfn(struct work_struct *work);
--static DECLARE_WORK(parsing_done_work, parsing_done_workfn);
--
--static int
--init_cpu_capacity_callback(struct notifier_block *nb,
--			   unsigned long val,
--			   void *data)
--{
--	struct cpufreq_policy *policy = data;
--	int cpu;
--
--	if (cap_parsing_failed || cap_parsing_done)
--		return 0;
--
--	switch (val) {
--	case CPUFREQ_NOTIFY:
--		pr_debug("cpu_capacity: init cpu capacity for CPUs [%*pbl] (to_visit=%*pbl)\n",
--				cpumask_pr_args(policy->related_cpus),
--				cpumask_pr_args(cpus_to_visit));
--		cpumask_andnot(cpus_to_visit,
--			       cpus_to_visit,
--			       policy->related_cpus);
--		for_each_cpu(cpu, policy->related_cpus) {
--			raw_capacity[cpu] = arch_scale_cpu_capacity(NULL, cpu) *
--					    policy->cpuinfo.max_freq / 1000UL;
--			capacity_scale = max(raw_capacity[cpu], capacity_scale);
--		}
--		if (cpumask_empty(cpus_to_visit)) {
--			normalize_cpu_capacity();
--			kfree(raw_capacity);
--			pr_debug("cpu_capacity: parsing done\n");
--			cap_parsing_done = true;
--			schedule_work(&parsing_done_work);
--		}
--	}
--	return 0;
--}
--
--static struct notifier_block init_cpu_capacity_notifier = {
--	.notifier_call = init_cpu_capacity_callback,
--};
--
--static int __init register_cpufreq_notifier(void)
--{
--	if (cap_parsing_failed)
--		return -EINVAL;
--
--	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL)) {
--		pr_err("cpu_capacity: failed to allocate memory for cpus_to_visit\n");
--		return -ENOMEM;
--	}
--	cpumask_copy(cpus_to_visit, cpu_possible_mask);
--
--	return cpufreq_register_notifier(&init_cpu_capacity_notifier,
--					 CPUFREQ_POLICY_NOTIFIER);
--}
--core_initcall(register_cpufreq_notifier);
--
--static void parsing_done_workfn(struct work_struct *work)
--{
--	cpufreq_unregister_notifier(&init_cpu_capacity_notifier,
--					 CPUFREQ_POLICY_NOTIFIER);
--}
--
--#else
--static int __init free_raw_capacity(void)
--{
--	kfree(raw_capacity);
--
--	return 0;
--}
--core_initcall(free_raw_capacity);
--#endif
-+extern bool cap_parsing_failed;
-+extern void normalize_cpu_capacity(void);
-+extern int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu);
- 
- /*
-  * Iterate all CPUs' descriptor in DT and compute the efficiency
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 3dcd7ec69bca..1ce760d259b6 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -41,6 +41,7 @@ config ARM64
- 	select EDAC_SUPPORT
- 	select FRAME_POINTER
- 	select GENERIC_ALLOCATOR
-+	select GENERIC_ARCH_TOPOLOGY
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_CLOCKEVENTS_BROADCAST
- 	select GENERIC_CPU_AUTOPROBE
-diff --git a/arch/arm64/kernel/topology.c b/arch/arm64/kernel/topology.c
-index 08243533e5ee..c5bc31eb97e8 100644
---- a/arch/arm64/kernel/topology.c
-+++ b/arch/arm64/kernel/topology.c
-@@ -11,7 +11,6 @@
-  * for more details.
-  */
- 
--#include <linux/acpi.h>
- #include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/init.h>
-@@ -23,226 +22,14 @@
- #include <linux/sched/topology.h>
- #include <linux/slab.h>
- #include <linux/string.h>
--#include <linux/cpufreq.h>
- 
- #include <asm/cpu.h>
- #include <asm/cputype.h>
- #include <asm/topology.h>
- 
--static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
--static DEFINE_MUTEX(cpu_scale_mutex);
--
--unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
--{
--	return per_cpu(cpu_scale, cpu);
--}
--
--static void set_capacity_scale(unsigned int cpu, unsigned long capacity)
--{
--	per_cpu(cpu_scale, cpu) = capacity;
--}
--
--static ssize_t cpu_capacity_show(struct device *dev,
--				 struct device_attribute *attr,
--				 char *buf)
--{
--	struct cpu *cpu = container_of(dev, struct cpu, dev);
--
--	return sprintf(buf, "%lu\n",
--			arch_scale_cpu_capacity(NULL, cpu->dev.id));
--}
--
--static ssize_t cpu_capacity_store(struct device *dev,
--				  struct device_attribute *attr,
--				  const char *buf,
--				  size_t count)
--{
--	struct cpu *cpu = container_of(dev, struct cpu, dev);
--	int this_cpu = cpu->dev.id, i;
--	unsigned long new_capacity;
--	ssize_t ret;
--
--	if (count) {
--		ret = kstrtoul(buf, 0, &new_capacity);
--		if (ret)
--			return ret;
--		if (new_capacity > SCHED_CAPACITY_SCALE)
--			return -EINVAL;
--
--		mutex_lock(&cpu_scale_mutex);
--		for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
--			set_capacity_scale(i, new_capacity);
--		mutex_unlock(&cpu_scale_mutex);
--	}
--
--	return count;
--}
--
--static DEVICE_ATTR_RW(cpu_capacity);
--
--static int register_cpu_capacity_sysctl(void)
--{
--	int i;
--	struct device *cpu;
--
--	for_each_possible_cpu(i) {
--		cpu = get_cpu_device(i);
--		if (!cpu) {
--			pr_err("%s: too early to get CPU%d device!\n",
--			       __func__, i);
--			continue;
--		}
--		device_create_file(cpu, &dev_attr_cpu_capacity);
--	}
--
--	return 0;
--}
--subsys_initcall(register_cpu_capacity_sysctl);
--
--static u32 capacity_scale;
--static u32 *raw_capacity;
--static bool cap_parsing_failed;
--
--static void __init parse_cpu_capacity(struct device_node *cpu_node, int cpu)
--{
--	int ret;
--	u32 cpu_capacity;
--
--	if (cap_parsing_failed)
--		return;
--
--	ret = of_property_read_u32(cpu_node,
--				   "capacity-dmips-mhz",
--				   &cpu_capacity);
--	if (!ret) {
--		if (!raw_capacity) {
--			raw_capacity = kcalloc(num_possible_cpus(),
--					       sizeof(*raw_capacity),
--					       GFP_KERNEL);
--			if (!raw_capacity) {
--				pr_err("cpu_capacity: failed to allocate memory for raw capacities\n");
--				cap_parsing_failed = true;
--				return;
--			}
--		}
--		capacity_scale = max(cpu_capacity, capacity_scale);
--		raw_capacity[cpu] = cpu_capacity;
--		pr_debug("cpu_capacity: %s cpu_capacity=%u (raw)\n",
--			cpu_node->full_name, raw_capacity[cpu]);
--	} else {
--		if (raw_capacity) {
--			pr_err("cpu_capacity: missing %s raw capacity\n",
--				cpu_node->full_name);
--			pr_err("cpu_capacity: partial information: fallback to 1024 for all CPUs\n");
--		}
--		cap_parsing_failed = true;
--		kfree(raw_capacity);
--	}
--}
--
--static void normalize_cpu_capacity(void)
--{
--	u64 capacity;
--	int cpu;
--
--	if (!raw_capacity || cap_parsing_failed)
--		return;
--
--	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
--	mutex_lock(&cpu_scale_mutex);
--	for_each_possible_cpu(cpu) {
--		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
--			 cpu, raw_capacity[cpu]);
--		capacity = (raw_capacity[cpu] << SCHED_CAPACITY_SHIFT)
--			/ capacity_scale;
--		set_capacity_scale(cpu, capacity);
--		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
--			cpu, arch_scale_cpu_capacity(NULL, cpu));
--	}
--	mutex_unlock(&cpu_scale_mutex);
--}
--
--#ifdef CONFIG_CPU_FREQ
--static cpumask_var_t cpus_to_visit;
--static bool cap_parsing_done;
--static void parsing_done_workfn(struct work_struct *work);
--static DECLARE_WORK(parsing_done_work, parsing_done_workfn);
--
--static int
--init_cpu_capacity_callback(struct notifier_block *nb,
--			   unsigned long val,
--			   void *data)
--{
--	struct cpufreq_policy *policy = data;
--	int cpu;
--
--	if (cap_parsing_failed || cap_parsing_done)
--		return 0;
--
--	switch (val) {
--	case CPUFREQ_NOTIFY:
--		pr_debug("cpu_capacity: init cpu capacity for CPUs [%*pbl] (to_visit=%*pbl)\n",
--				cpumask_pr_args(policy->related_cpus),
--				cpumask_pr_args(cpus_to_visit));
--		cpumask_andnot(cpus_to_visit,
--			       cpus_to_visit,
--			       policy->related_cpus);
--		for_each_cpu(cpu, policy->related_cpus) {
--			raw_capacity[cpu] = arch_scale_cpu_capacity(NULL, cpu) *
--					    policy->cpuinfo.max_freq / 1000UL;
--			capacity_scale = max(raw_capacity[cpu], capacity_scale);
--		}
--		if (cpumask_empty(cpus_to_visit)) {
--			normalize_cpu_capacity();
--			kfree(raw_capacity);
--			pr_debug("cpu_capacity: parsing done\n");
--			cap_parsing_done = true;
--			schedule_work(&parsing_done_work);
--		}
--	}
--	return 0;
--}
--
--static struct notifier_block init_cpu_capacity_notifier = {
--	.notifier_call = init_cpu_capacity_callback,
--};
--
--static int __init register_cpufreq_notifier(void)
--{
--	/*
--	 * on ACPI-based systems we need to use the default cpu capacity
--	 * until we have the necessary code to parse the cpu capacity, so
--	 * skip registering cpufreq notifier.
--	 */
--	if (!acpi_disabled || cap_parsing_failed)
--		return -EINVAL;
--
--	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL)) {
--		pr_err("cpu_capacity: failed to allocate memory for cpus_to_visit\n");
--		return -ENOMEM;
--	}
--	cpumask_copy(cpus_to_visit, cpu_possible_mask);
--
--	return cpufreq_register_notifier(&init_cpu_capacity_notifier,
--					 CPUFREQ_POLICY_NOTIFIER);
--}
--core_initcall(register_cpufreq_notifier);
--
--static void parsing_done_workfn(struct work_struct *work)
--{
--	cpufreq_unregister_notifier(&init_cpu_capacity_notifier,
--					 CPUFREQ_POLICY_NOTIFIER);
--}
--
--#else
--static int __init free_raw_capacity(void)
--{
--	kfree(raw_capacity);
--
--	return 0;
--}
--core_initcall(free_raw_capacity);
--#endif
-+extern bool cap_parsing_failed;
-+extern void normalize_cpu_capacity(void);
-+extern int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu);
- 
- static int __init get_cpu_for_node(struct device_node *node)
- {
-diff --git a/drivers/base/Kconfig b/drivers/base/Kconfig
-index d718ae4b907a..f046d21de57d 100644
---- a/drivers/base/Kconfig
-+++ b/drivers/base/Kconfig
-@@ -339,4 +339,12 @@ config CMA_ALIGNMENT
- 
- endif
- 
-+config GENERIC_ARCH_TOPOLOGY
-+	bool
-+	help
-+	  Enable support for architectures common topology code: e.g., parsing
-+	  CPU capacity information from DT, usage of such information for
-+	  appropriate scaling, sysfs interface for changing capacity values at
-+	  runtime.
-+
- endmenu
-diff --git a/drivers/base/Makefile b/drivers/base/Makefile
-index f2816f6ff76a..397e5c344e6a 100644
---- a/drivers/base/Makefile
-+++ b/drivers/base/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_SOC_BUS) += soc.o
- obj-$(CONFIG_PINCTRL) += pinctrl.o
- obj-$(CONFIG_DEV_COREDUMP) += devcoredump.o
- obj-$(CONFIG_GENERIC_MSI_IRQ_DOMAIN) += platform-msi.o
-+obj-$(CONFIG_GENERIC_ARCH_TOPOLOGY) += arch_topology.o
- 
- obj-y			+= test/
- 
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-new file mode 100644
-index 000000000000..097834f0fcd7
---- /dev/null
-+++ b/drivers/base/arch_topology.c
-@@ -0,0 +1,242 @@
-+/*
-+ * Arch specific cpu topology information
-+ *
-+ * Copyright (C) 2016, ARM Ltd.
-+ * Written by: Juri Lelli, ARM Ltd.
-+ *
-+ * This file is subject to the terms and conditions of the GNU General Public
-+ * License.  See the file "COPYING" in the main directory of this archive
-+ * for more details.
-+ *
-+ * Released under the GPLv2 only.
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#include <linux/acpi.h>
-+#include <linux/cpu.h>
-+#include <linux/cpufreq.h>
-+#include <linux/device.h>
-+#include <linux/of.h>
-+#include <linux/slab.h>
-+#include <linux/string.h>
-+#include <linux/sched/topology.h>
-+
-+static DEFINE_MUTEX(cpu_scale_mutex);
-+static DEFINE_PER_CPU(unsigned long, cpu_scale) = SCHED_CAPACITY_SCALE;
-+
-+unsigned long arch_scale_cpu_capacity(struct sched_domain *sd, int cpu)
-+{
-+	return per_cpu(cpu_scale, cpu);
-+}
-+
-+void set_capacity_scale(unsigned int cpu, unsigned long capacity)
-+{
-+	per_cpu(cpu_scale, cpu) = capacity;
-+}
-+
-+static ssize_t cpu_capacity_show(struct device *dev,
-+				 struct device_attribute *attr,
-+				 char *buf)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+
-+	return sprintf(buf, "%lu\n",
-+			arch_scale_cpu_capacity(NULL, cpu->dev.id));
-+}
-+
-+static ssize_t cpu_capacity_store(struct device *dev,
-+				  struct device_attribute *attr,
-+				  const char *buf,
-+				  size_t count)
-+{
-+	struct cpu *cpu = container_of(dev, struct cpu, dev);
-+	int this_cpu = cpu->dev.id;
-+	int i;
-+	unsigned long new_capacity;
-+	ssize_t ret;
-+
-+	if (!count)
-+		return 0;
-+
-+	ret = kstrtoul(buf, 0, &new_capacity);
-+	if (ret)
-+		return ret;
-+	if (new_capacity > SCHED_CAPACITY_SCALE)
-+		return -EINVAL;
-+
-+	mutex_lock(&cpu_scale_mutex);
-+	for_each_cpu(i, &cpu_topology[this_cpu].core_sibling)
-+		set_capacity_scale(i, new_capacity);
-+	mutex_unlock(&cpu_scale_mutex);
-+
-+	return count;
-+}
-+
-+static DEVICE_ATTR_RW(cpu_capacity);
-+
-+static int register_cpu_capacity_sysctl(void)
-+{
-+	int i;
-+	struct device *cpu;
-+
-+	for_each_possible_cpu(i) {
-+		cpu = get_cpu_device(i);
-+		if (!cpu) {
-+			pr_err("%s: too early to get CPU%d device!\n",
-+			       __func__, i);
-+			continue;
-+		}
-+		device_create_file(cpu, &dev_attr_cpu_capacity);
-+	}
-+
-+	return 0;
-+}
-+subsys_initcall(register_cpu_capacity_sysctl);
-+
-+static u32 capacity_scale;
-+static u32 *raw_capacity;
-+bool cap_parsing_failed;
-+
-+void normalize_cpu_capacity(void)
-+{
-+	u64 capacity;
-+	int cpu;
-+
-+	if (!raw_capacity || cap_parsing_failed)
-+		return;
-+
-+	pr_debug("cpu_capacity: capacity_scale=%u\n", capacity_scale);
-+	mutex_lock(&cpu_scale_mutex);
-+	for_each_possible_cpu(cpu) {
-+		pr_debug("cpu_capacity: cpu=%d raw_capacity=%u\n",
-+			 cpu, raw_capacity[cpu]);
-+		capacity = (raw_capacity[cpu] << SCHED_CAPACITY_SHIFT)
-+			/ capacity_scale;
-+		set_capacity_scale(cpu, capacity);
-+		pr_debug("cpu_capacity: CPU%d cpu_capacity=%lu\n",
-+			cpu, arch_scale_cpu_capacity(NULL, cpu));
-+	}
-+	mutex_unlock(&cpu_scale_mutex);
-+}
-+
-+int __init parse_cpu_capacity(struct device_node *cpu_node, int cpu)
-+{
-+	int ret = 1;
-+	u32 cpu_capacity;
-+
-+	if (cap_parsing_failed)
-+		return !ret;
-+
-+	ret = of_property_read_u32(cpu_node,
-+				   "capacity-dmips-mhz",
-+				   &cpu_capacity);
-+	if (!ret) {
-+		if (!raw_capacity) {
-+			raw_capacity = kcalloc(num_possible_cpus(),
-+					       sizeof(*raw_capacity),
-+					       GFP_KERNEL);
-+			if (!raw_capacity) {
-+				pr_err("cpu_capacity: failed to allocate memory for raw capacities\n");
-+				cap_parsing_failed = true;
-+				return 0;
-+			}
-+		}
-+		capacity_scale = max(cpu_capacity, capacity_scale);
-+		raw_capacity[cpu] = cpu_capacity;
-+		pr_debug("cpu_capacity: %s cpu_capacity=%u (raw)\n",
-+			cpu_node->full_name, raw_capacity[cpu]);
-+	} else {
-+		if (raw_capacity) {
-+			pr_err("cpu_capacity: missing %s raw capacity\n",
-+				cpu_node->full_name);
-+			pr_err("cpu_capacity: partial information: fallback to 1024 for all CPUs\n");
-+		}
-+		cap_parsing_failed = true;
-+		kfree(raw_capacity);
-+	}
-+
-+	return !ret;
-+}
-+
-+#ifdef CONFIG_CPU_FREQ
-+static cpumask_var_t cpus_to_visit;
-+static bool cap_parsing_done;
-+static void parsing_done_workfn(struct work_struct *work);
-+static DECLARE_WORK(parsing_done_work, parsing_done_workfn);
-+
-+static int
-+init_cpu_capacity_callback(struct notifier_block *nb,
-+			   unsigned long val,
-+			   void *data)
-+{
-+	struct cpufreq_policy *policy = data;
-+	int cpu;
-+
-+	if (cap_parsing_failed || cap_parsing_done)
-+		return 0;
-+
-+	switch (val) {
-+	case CPUFREQ_NOTIFY:
-+		pr_debug("cpu_capacity: init cpu capacity for CPUs [%*pbl] (to_visit=%*pbl)\n",
-+				cpumask_pr_args(policy->related_cpus),
-+				cpumask_pr_args(cpus_to_visit));
-+		cpumask_andnot(cpus_to_visit,
-+			       cpus_to_visit,
-+			       policy->related_cpus);
-+		for_each_cpu(cpu, policy->related_cpus) {
-+			raw_capacity[cpu] = arch_scale_cpu_capacity(NULL, cpu) *
-+					    policy->cpuinfo.max_freq / 1000UL;
-+			capacity_scale = max(raw_capacity[cpu], capacity_scale);
-+		}
-+		if (cpumask_empty(cpus_to_visit)) {
-+			normalize_cpu_capacity();
-+			kfree(raw_capacity);
-+			pr_debug("cpu_capacity: parsing done\n");
-+			cap_parsing_done = true;
-+			schedule_work(&parsing_done_work);
-+		}
-+	}
-+	return 0;
-+}
-+
-+static struct notifier_block init_cpu_capacity_notifier = {
-+	.notifier_call = init_cpu_capacity_callback,
-+};
-+
-+static int __init register_cpufreq_notifier(void)
-+{
-+	/*
-+	 * on ACPI-based systems we need to use the default cpu capacity
-+	 * until we have the necessary code to parse the cpu capacity, so
-+	 * skip registering cpufreq notifier.
-+	 */
-+	if (!acpi_disabled || cap_parsing_failed)
-+		return -EINVAL;
-+
-+	if (!alloc_cpumask_var(&cpus_to_visit, GFP_KERNEL)) {
-+		pr_err("cpu_capacity: failed to allocate memory for cpus_to_visit\n");
-+		return -ENOMEM;
-+	}
-+
-+	cpumask_copy(cpus_to_visit, cpu_possible_mask);
-+
-+	return cpufreq_register_notifier(&init_cpu_capacity_notifier,
-+					 CPUFREQ_POLICY_NOTIFIER);
-+}
-+core_initcall(register_cpufreq_notifier);
-+
-+static void parsing_done_workfn(struct work_struct *work)
-+{
-+	cpufreq_unregister_notifier(&init_cpu_capacity_notifier,
-+					 CPUFREQ_POLICY_NOTIFIER);
-+}
-+
-+#else
-+static int __init free_raw_capacity(void)
-+{
-+	kfree(raw_capacity);
-+
-+	return 0;
-+}
-+core_initcall(free_raw_capacity);
-+#endif
--- 
-2.11.0
+> ---
+>  drivers/pci/dwc/Kconfig      |  10 +
+>  drivers/pci/dwc/Makefile     |   1 +
+>  drivers/pci/dwc/pcie-kirin.c | 514
+> +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 525 insertions(+)
+>  create mode 100644 drivers/pci/dwc/pcie-kirin.c
+> 
+> diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
+> index d2d2ba5b8a68..afecfb2b6ff4 100644
+> --- a/drivers/pci/dwc/Kconfig
+> +++ b/drivers/pci/dwc/Kconfig
+> @@ -130,4 +130,14 @@ config PCIE_ARTPEC6
+>  	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
+>  	  SoCs.  This PCIe controller uses the DesignWare core.
+> 
+> +config PCIE_KIRIN
+> +	depends on OF && ARM64
+> +	bool "HiSilicon Kirin series SoCs PCIe controllers"
+> +	depends on PCI
+> +	select PCIEPORTBUS
+> +	select PCIE_DW_HOST
+> +	help
+> +	  Say Y here if you want PCIe controller support
+> +	  on HiSilicon Kirin series SoCs.
+> +
+>  endmenu
+> diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
+> index a2df13c28798..4bd69bacd4ab 100644
+> --- a/drivers/pci/dwc/Makefile
+> +++ b/drivers/pci/dwc/Makefile
+> @@ -10,6 +10,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> +obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
+> 
+>  # The following drivers are for devices that use the generic ACPI
+>  # pci_root.c driver but don't support standard ECAM config access.
+> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+> new file mode 100644
+> index 000000000000..f63e6548efae
+> --- /dev/null
+> +++ b/drivers/pci/dwc/pcie-kirin.c
+> @@ -0,0 +1,514 @@
+> +/*
+> + * PCIe host controller driver for Kirin Phone SoCs
+> + *
+> + * Copyright (C) 2017 Hilisicon Electronics Co., Ltd.
+> + *		http://www.huawei.com
+> + *
+> + * Author: Xiaowei Song <songxiaowei@huawei.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <asm/compiler.h>
+> +#include <linux/compiler.h>
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/pci.h>
+> +#include <linux/pci_regs.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/resource.h>
+> +#include <linux/types.h>
+> +#include "pcie-designware.h"
+> +
+> +#define to_kirin_pcie(x) dev_get_drvdata((x)->dev)
+> +
+> +#define REF_CLK_FREQ			100000000
+> +
+> +/* PCIe ELBI registers */
+> +#define SOC_PCIECTRL_CTRL0_ADDR	0x000
+> +#define SOC_PCIECTRL_CTRL1_ADDR	0x004
+> +#define SOC_PCIEPHY_CTRL2_ADDR		0x008
+> +#define SOC_PCIEPHY_CTRL3_ADDR		0x00c
+> +#define PCIE_ELBI_SLV_DBI_ENABLE	(0x1 << 21)
+> +
+> +/* info located in APB */
+> +#define PCIE_APP_LTSSM_ENABLE		0x01c
+> +#define PCIE_APB_PHY_CTRL0		0x0
+> +#define PCIE_APB_PHY_CTRL1		0x4
+> +#define PCIE_APB_PHY_STATUS0		0x400
+> +#define PCIE_LINKUP_ENABLE		(0x8020)
+> +#define PCIE_LTSSM_ENABLE_BIT		(0x1 << 11)
+> +#define PIPE_CLK_STABLE		(0x1 << 19)
+> +#define PIPE_CLK_MAX_TRY_TIMES		10
+> +#define PHY_REF_PAD_BIT		(0x1 << 8)
+> +#define PHY_PWR_DOWN_BIT		(0x1 << 22)
+> +#define PHY_RST_ACK_BIT		(0x1 << 16)
+> +
+> +/* info located in sysctrl */
+> +#define SCTRL_PCIE_CMOS_OFFSET		0x60
+> +#define SCTRL_PCIE_CMOS_BIT		0x10
+> +#define SCTRL_PCIE_ISO_OFFSET		0x44
+> +#define SCTRL_PCIE_ISO_BIT		0x30
+> +#define SCTRL_PCIE_HPCLK_OFFSET	0x190
+> +#define SCTRL_PCIE_HPCLK_BIT		0x184000
+> +#define SCTRL_PCIE_OE_OFFSET		0x14a
+> +#define PCIE_DEBOUNCE_PARAM		0xF0F400
+> +#define PCIE_OE_BYPASS			(0x3 << 28)
+> +
+> +/* peri_crg ctrl */
+> +#define CRGCTRL_PCIE_ASSERT_OFFSET	0x88
+> +#define CRGCTRL_PCIE_ASSERT_BIT	0x8c000000
+> +
+> +/* Time for delay */
+> +#define REF_2_PERST_MIN		20000
+> +#define REF_2_PERST_MAX		25000
+> +#define PERST_2_ACCESS_MIN		10000
+> +#define PERST_2_ACCESS_MAX		12000
+> +#define LINK_WAIT_MIN			900
+> +#define LINK_WAIT_MAX			1000
+> +#define PIPE_CLK_WAIT_MIN		550
+> +#define PIPE_CLK_WAIT_MAX		600
+> +
+> +struct kirin_pcie {
+> +	struct dw_pcie		*pci;
+> +	void __iomem		*apb_base;
+> +	void __iomem		*phy_base;
+> +	struct regmap		*crgctrl;
+> +	struct regmap 		*sysctrl;
+> +	struct clk		*apb_sys_clk;
+> +	struct clk		*apb_phy_clk;
+> +	struct clk		*phy_ref_clk;
+> +	struct clk		*pcie_aclk;
+> +	struct clk		*pcie_aux_clk;
+> +	int			gpio_id_reset;
+> +};
+> +
+> +/* Registers in PCIeCTRL */
+> +static inline void kirin_apb_ctrl_writel(struct kirin_pcie *kirin_pcie,
+> +		u32 val, u32 reg)
+> +{
+> +	writel(val, kirin_pcie->apb_base + reg);
+> +}
+> +
+> +static inline u32 kirin_apb_ctrl_readl(struct kirin_pcie *kirin_pcie, u32
+> reg)
+> +{
+> +	return readl(kirin_pcie->apb_base + reg);
+> +}
+> +
+> +/* Registers in PCIePHY */
+> +static inline void kirin_apb_phy_writel(struct kirin_pcie *kirin_pcie,
+> +		u32 val, u32 reg)
+> +{
+> +	writel(val, kirin_pcie->phy_base + reg);
+> +}
+> +
+> +static inline u32 kirin_apb_phy_readl(struct kirin_pcie *kirin_pcie, u32
+> reg)
+> +{
+> +	return readl(kirin_pcie->phy_base + reg);
+> +}
+> +
+> +static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+> +		struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +
+> +	kirin_pcie->phy_ref_clk = devm_clk_get(dev, "pcie_phy_ref");
+> +	if (IS_ERR(kirin_pcie->phy_ref_clk))
+> +		return PTR_ERR(kirin_pcie->phy_ref_clk);
+> +
+> +	kirin_pcie->pcie_aux_clk = devm_clk_get(dev, "pcie_aux");
+> +	if (IS_ERR(kirin_pcie->pcie_aux_clk))
+> +		return PTR_ERR(kirin_pcie->pcie_aux_clk);
+> +
+> +	kirin_pcie->apb_phy_clk = devm_clk_get(dev, "pcie_apb_phy");
+> +	if (IS_ERR(kirin_pcie->apb_phy_clk))
+> +		return PTR_ERR(kirin_pcie->apb_phy_clk);
+> +
+> +	kirin_pcie->apb_sys_clk = devm_clk_get(dev, "pcie_apb_sys");
+> +	if (IS_ERR(kirin_pcie->apb_sys_clk))
+> +		return PTR_ERR(kirin_pcie->apb_sys_clk);
+> +
+> +	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
+> +	if (IS_ERR(kirin_pcie->pcie_aclk))
+> +		return PTR_ERR(kirin_pcie->pcie_aclk);
+> +
+> +	return 0;
+> +}
+> +
+> +static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+> +		struct platform_device *pdev)
+> +{
+> +	struct resource *apb;
+> +	struct resource *phy;
+> +	struct resource *dbi;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	apb = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
+> +	kirin_pcie->apb_base = devm_ioremap_resource(dev, apb);
+> +	if (IS_ERR(kirin_pcie->apb_base))
+> +		return PTR_ERR(kirin_pcie->apb_base);
+> +
+> +	phy = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
+> +	kirin_pcie->phy_base = devm_ioremap_resource(dev, phy);
+> +	if (IS_ERR(kirin_pcie->phy_base))
+> +		return PTR_ERR(kirin_pcie->phy_base);
+> +
+> +	dbi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
+> +	kirin_pcie->pci->dbi_base = devm_ioremap_resource(dev, dbi);
+> +	if (IS_ERR(kirin_pcie->pci->dbi_base))
+> +		return PTR_ERR(kirin_pcie->pci->dbi_base);
+> +
+> +	kirin_pcie->crgctrl =
+> +		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-
+> crgctrl");
+> +	if (IS_ERR(kirin_pcie->crgctrl))
+> +		return PTR_ERR(kirin_pcie->crgctrl);
+> +
+> +	kirin_pcie->sysctrl =
+> +
+syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
+> +	if (IS_ERR(kirin_pcie->sysctrl))
+> +		return PTR_ERR(kirin_pcie->sysctrl);
+> +
+> +	return 0;
+> +}
+> +
+> +static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
+> +{
+> +	u32 reg_val;
+> +	u32 time = PIPE_CLK_MAX_TRY_TIMES;
+> +
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
+> +	reg_val &= ~PHY_REF_PAD_BIT;
+> +	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
+> +
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL0);
+> +	reg_val &= ~PHY_PWR_DOWN_BIT;
+> +	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL0);
+> +	udelay(10);
+> +
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
+> +	reg_val &= ~PHY_RST_ACK_BIT;
+> +	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
+> +
+> +	usleep_range(PIPE_CLK_WAIT_MIN, PIPE_CLK_WAIT_MAX);
+> +	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
+> +	if (reg_val & PIPE_CLK_STABLE) {
+> +		dev_err(kirin_pcie->pci->dev, "PIPE clk is not stable\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void kirin_pcie_oe_enable(struct kirin_pcie *kirin_pcie)
+> +{
+> +	u32 val;
+> +
+> +	regmap_read(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, &val);
+> +	val |= PCIE_DEBOUNCE_PARAM;
+> +	val &= ~PCIE_OE_BYPASS;
+> +	regmap_write(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, val);
+> +}
+> +
+> +static int kirin_pcie_clk_ctrl(struct kirin_pcie *kirin_pcie, bool
+enable)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!enable)
+> +		goto close_clk;
+> +
+> +	ret = clk_set_rate(kirin_pcie->phy_ref_clk, REF_CLK_FREQ);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->phy_ref_clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->apb_sys_clk);
+> +	if (ret)
+> +		goto apb_sys_fail;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->apb_phy_clk);
+> +	if (ret)
+> +		goto apb_phy_fail;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->pcie_aclk);
+> +	if (ret)
+> +		goto aclk_fail;
+> +
+> +	ret = clk_prepare_enable(kirin_pcie->pcie_aux_clk);
+> +	if (ret)
+> +		goto aux_clk_fail;
+> +
+> +	return 0;
+> +
+> +close_clk:
+> +	clk_disable_unprepare(kirin_pcie->pcie_aux_clk);
+> +aux_clk_fail:
+> +	clk_disable_unprepare(kirin_pcie->pcie_aclk);
+> +aclk_fail:
+> +	clk_disable_unprepare(kirin_pcie->apb_phy_clk);
+> +apb_phy_fail:
+> +	clk_disable_unprepare(kirin_pcie->apb_sys_clk);
+> +apb_sys_fail:
+> +	clk_disable_unprepare(kirin_pcie->phy_ref_clk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int kirin_pcie_power_on(struct kirin_pcie *kirin_pcie)
+> +{
+> +	int ret;
+> +
+> +	/* Power supply for Host */
+> +	regmap_write(kirin_pcie->sysctrl,
+> +		SCTRL_PCIE_CMOS_OFFSET, SCTRL_PCIE_CMOS_BIT);
+> +	udelay(100);
+> +	kirin_pcie_oe_enable(kirin_pcie);
+> +
+> +	ret = kirin_pcie_clk_ctrl(kirin_pcie, true);
+> +	if (ret)
+> +		return ret;
+> +
+> +	/* ISO disable, PCIeCtrl, PHY assert and clk gate clear */
+> +	regmap_write(kirin_pcie->sysctrl,
+> +		SCTRL_PCIE_ISO_OFFSET, SCTRL_PCIE_ISO_BIT);
+> +	regmap_write(kirin_pcie->crgctrl,
+> +		CRGCTRL_PCIE_ASSERT_OFFSET, CRGCTRL_PCIE_ASSERT_BIT);
+> +	regmap_write(kirin_pcie->sysctrl,
+> +		SCTRL_PCIE_HPCLK_OFFSET, SCTRL_PCIE_HPCLK_BIT);
+> +
+> +	ret = kirin_pcie_phy_init(kirin_pcie);
+> +	if (ret)
+> +		goto close_clk;
+> +
+> +	/* perst assert Endpoint */
+> +	if (!gpio_request(kirin_pcie->gpio_id_reset, "pcie_perst")) {
+> +		usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
+> +		ret = gpio_direction_output(kirin_pcie->gpio_id_reset, 1);
+> +		if (ret)
+> +			goto close_clk;
+> +		usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
+> +
+> +		return 0;
+> +	}
+> +
+> +close_clk:
+> +	kirin_pcie_clk_ctrl(kirin_pcie, false);
+> +	return ret;
+> +}
+> +
+> +static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
+> +		bool on)
+> +{
+> +	u32 val;
+> +
+> +	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL0_ADDR);
+> +	if (on)
+> +		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
+> +	else
+> +		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +
+> +	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL0_ADDR);
+> +}
+> +
+> +static void kirin_pcie_sideband_dbi_r_mode(struct kirin_pcie *kirin_pcie,
+> +		bool on)
+> +{
+> +	u32 val;
+> +
+> +	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL1_ADDR);
+> +	if (on)
+> +		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
+> +	else
+> +		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
+> +
+> +	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL1_ADDR);
+> +}
+> +
+> +static int kirin_pcie_rd_own_conf(struct pcie_port *pp,
+> +		int where, int size, u32 *val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +	int ret;
+> +
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
+> +	ret = dw_pcie_read(pci->dbi_base + where, size, val);
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static int kirin_pcie_wr_own_conf(struct pcie_port *pp,
+> +		int where, int size, u32 val)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +	int ret;
+> +
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
+> +	ret = dw_pcie_write(pci->dbi_base + where, size, val);
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static u32 kirin_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
+> +		u32 reg, size_t size)
+> +{
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +	u32 ret;
+> +
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
+> +	dw_pcie_read(base + reg, size, &ret);
+> +	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
+> +
+> +	return ret;
+> +}
+> +
+> +static void kirin_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
+> +		u32 reg, size_t size, u32 val)
+> +{
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
+> +	dw_pcie_write(base + reg, size, val);
+> +	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
+> +}
+> +
+> +static int kirin_pcie_link_up(struct dw_pcie *pci)
+> +{
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +	u32 val = kirin_apb_ctrl_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
+> +
+> +	if ((val & PCIE_LINKUP_ENABLE) == PCIE_LINKUP_ENABLE)
+> +		return 1;
+> +
+> +	return 0;
+> +}
+> +
+> +static int kirin_pcie_establish_link(struct pcie_port *pp)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+> +	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
+> +	int count = 0;
+> +
+> +	if (kirin_pcie_link_up(pci))
+> +		return 0;
+> +
+> +	dw_pcie_setup_rc(pp);
+> +
+> +	/* assert LTSSM enable */
+> +	kirin_apb_ctrl_writel(kirin_pcie, PCIE_LTSSM_ENABLE_BIT,
+> +		PCIE_APP_LTSSM_ENABLE);
+> +
+> +	/* check if the link is up or not */
+> +	while (!kirin_pcie_link_up(pci)) {
+> +		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
+> +		count++;
+> +		if (count == 1000) {
+> +			dev_err(pci->dev, "Link Fail\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void kirin_pcie_host_init(struct pcie_port *pp)
+> +{
+> +	kirin_pcie_establish_link(pp);
+> +}
+> +
+> +static struct dw_pcie_ops kirin_dw_pcie_ops = {
+> +	.read_dbi = kirin_pcie_read_dbi,
+> +	.write_dbi = kirin_pcie_write_dbi,
+> +	.link_up = kirin_pcie_link_up,
+> +};
+> +
+> +static struct dw_pcie_host_ops kirin_pcie_host_ops = {
+> +	.rd_own_conf = kirin_pcie_rd_own_conf,
+> +	.wr_own_conf = kirin_pcie_wr_own_conf,
+> +	.host_init = kirin_pcie_host_init,
+> +};
+> +
+> +static int __init kirin_add_pcie_port(struct dw_pcie *pci,
+> +			struct platform_device *pdev)
+> +{
+> +	pci->pp.ops = &kirin_pcie_host_ops;
+> +
+> +	return dw_pcie_host_init(&pci->pp);
+> +}
+> +
+> +static int kirin_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct kirin_pcie *kirin_pcie;
+> +	struct dw_pcie *pci;
+> +	struct device *dev = &pdev->dev;
+> +	int ret;
+> +
+> +	if (!dev->of_node) {
+> +		dev_err(&pdev->dev, "NULL node\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	kirin_pcie = devm_kzalloc(dev, sizeof(struct kirin_pcie),
+> GFP_KERNEL);
+> +	if (!kirin_pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	pci->dev = dev;
+> +	pci->ops = &kirin_dw_pcie_ops;
+> +	kirin_pcie->pci = pci;
+> +
+> +	ret = kirin_pcie_get_clk(kirin_pcie, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = kirin_pcie_get_resource(kirin_pcie, pdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	kirin_pcie->gpio_id_reset = of_get_named_gpio(dev->of_node,
+> +			"reset-gpio", 0);
+> +	if (kirin_pcie->gpio_id_reset < 0)
+> +		return -ENODEV;
+> +
+> +	ret = kirin_pcie_power_on(kirin_pcie);
+> +	if (ret)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, kirin_pcie);
+> +
+> +	return kirin_add_pcie_port(pci, pdev);
+> +}
+> +
+> +static const struct of_device_id kirin_pcie_match[] = {
+> +	{ .compatible = "hisilicon,kirin960-pcie" },
+> +	{},
+> +};
+> +
+> +struct platform_driver kirin_pcie_driver = {
+> +	.probe			= kirin_pcie_probe,
+> +	.driver			= {
+> +		.name			= "kirin-pcie",
+> +		.of_match_table = kirin_pcie_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +
+> +builtin_platform_driver(kirin_pcie_driver);
+> --
+> 2.11.GIT
