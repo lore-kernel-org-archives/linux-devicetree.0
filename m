@@ -1,89 +1,71 @@
-From: Ye Xiaolong <xiaolong.ye-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [kbuild-all] [PATCH v4 3/9] arm: dts: mt7623: add
- mt7623-mt6323.dtsi file
-Date: Wed, 31 May 2017 16:08:42 +0800
-Message-ID: <20170531080842.GB12568@yexl-desktop>
-References: <201705281908.LU8TFOQ8%fengguang.wu@intel.com>
- <d565b4dd-f6b7-ee43-ddfe-ae98328646ed@gmail.com>
+From: Cosar Dindar <cosardindar@gmail.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings : Document the STM32F4 CRC32 binding
+Date: Wed, 31 May 2017 11:17:33 +0300
+Message-ID: <20170531081733.GB21306@osboxes>
+References: <cover.1495285223.git.cosardindar@gmail.com>
+ <bb672acb88667e9d27beb4d1e4fd8882f265ee47.1495285223.git.cosardindar@gmail.com>
+ <20170530225024.ypguef347yqbjbsd@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <d565b4dd-f6b7-ee43-ddfe-ae98328646ed-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20170530225024.ypguef347yqbjbsd@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, linux-kernel@vger.kernel.org, fabien.dessenne@st.com, linux-crypto@vger.kernel.org, mcoquelin.stm32@gmail.com, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, herbert@gondor.apana.org.au
 List-Id: devicetree@vger.kernel.org
 
-Hi, Matthias
-
-On 05/29, Matthias Brugger wrote:
+On Tue, May 30, 2017 at 05:50:24PM -0500, Rob Herring wrote:
+> On Sat, May 20, 2017 at 04:32:12PM +0300, Cosar Dindar wrote:
+> > Add device tree binding for STM32F4.
+> > 
+> > Signed-off-by: Cosar Dindar <cosardindar@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/crypto/st,stm32-crc.txt | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt b/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
+> > index 3ba92a5..7b30f1e 100644
+> > --- a/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
+> > +++ b/Documentation/devicetree/bindings/crypto/st,stm32-crc.txt
+> > @@ -1,7 +1,7 @@
+> >  * STMicroelectronics STM32 CRC
+> >  
+> >  Required properties:
+> > -- compatible: Should be "st,stm32f7-crc".
+> > +- compatible: Can be either "st,stm32f7-crc" or "st,srm32f4-crc".
+> 
+> Here you say either, but the example has both.
 >
->
->On 28/05/17 13:31, kbuild test robot wrote:
->>Hi John,
->>
->>[auto build test ERROR on robh/for-next]
->>[also build test ERROR on v4.12-rc2 next-20170526]
->>[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
->>
->>url:    https://github.com/0day-ci/linux/commits/sean-wang-mediatek-com/arm-dts-extend-mt7623-support/20170525-142103
->>base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
->
->Mediatek dts patches should be tested against:
->https://github.com/mbgg/linux-mediatek.git for-next
->
->Not sure why this happend, as this got already fixed in lkp-tests:
->bc0c8847 ("mediatek: mark for-next branch")
+Thanks for reviewing. Here it could be changed as :
+	Should be one of the following string
+	      "st,stm32f7-crc"
+	      "st,stm32f4-crc"
 
-0day mainly relies on MAINTAINERS file to determine the git am base for lkml
-patches, could you help add your tree in below section?
+Also, example may not contain both binding strings, I think. It could be leaved unchanged
+as in the previous version. I will make these changes with this way if it is OK.
 
-ARM/Mediatek SoC support
-M:      Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-L:      linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
-L:      linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
-S:      Maintained
-F:      arch/arm/boot/dts/mt6*
-F:      arch/arm/boot/dts/mt7*
-F:      arch/arm/boot/dts/mt8*
-F:      arch/arm/mach-mediatek/
-F:      arch/arm64/boot/dts/mediatek/
-N:      mtk
-K:      mediatek
-
-
-Thanks,
-Xiaolong
-
->
->Regards,
->Matthias
->
->>config: arm-allyesconfig (attached as .config)
->>compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
->>reproduce:
->>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->>         chmod +x ~/bin/make.cross
->>         # save the attached .config to linux build tree
->>         make.cross ARCH=arm
->>
->>All errors (new ones prefixed by >>):
->>
->>>>Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:33.1-7 Label or path pwrap not found
->>>>Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:261.1-6 Label or path mmc0 not found
->>>>Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:266.1-6 Label or path mmc1 not found
->>    FATAL ERROR: Syntax error parsing input tree
->>
->>---
->>0-DAY kernel test infrastructure                Open Source Technology Center
->>https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
->>
->_______________________________________________
->kbuild-all mailing list
->kbuild-all-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
->https://lists.01.org/mailman/listinfo/kbuild-all
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >  - reg: The address and length of the peripheral registers space
+> >  - clocks: The input clock of the CRC instance
+> >  
+> > @@ -10,7 +10,7 @@ Optional properties: none
+> >  Example:
+> >  
+> >  crc: crc@40023000 {
+> > -	compatible = "st,stm32f7-crc";
+> > +	compatible = "st,stm32f7-crc", "st,stm32f4-crc";
+> >  	reg = <0x40023000 0x400>;
+> >  	clocks = <&rcc 0 12>;
+> >  };
+> > -- 
+> > 2.7.4
+> > 
