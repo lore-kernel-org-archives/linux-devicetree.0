@@ -1,142 +1,117 @@
-From: <jiada_wang@mentor.com>
-Subject: [PATCH v2 linux-next 1/3] spi: imx: add selection for iMX53 and iMX6 controller
-Date: Wed, 31 May 2017 02:19:56 -0700
-Message-ID: <1496222398-3192-2-git-send-email-jiada_wang@mentor.com>
-References: <1496222398-3192-1-git-send-email-jiada_wang@mentor.com>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+Date: Wed, 31 May 2017 09:22:35 +0000
+Message-ID: <HE1PR0402MB28283F05F0E7831AD210C21BF3F10@HE1PR0402MB2828.eurprd04.prod.outlook.com>
+References: <1489977443-33582-1-git-send-email-andy.tang@nxp.com>
+ <DB6PR0402MB283701D478A1678D28894C77F30A0@DB6PR0402MB2837.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496222398-3192-1-git-send-email-jiada_wang@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jiada Wang <jiada_wang@mentor.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Scott Wood <oss@buserror.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Jiada Wang <jiada_wang@mentor.com>
+Hi Stephen and Michael,
 
-ECSPI contorller for iMX53 and iMX6 has few hardware issues
-comparing to iMX51.
-The change add possibility to detect which controller is used
-to apply possible workaround and limitations.
+How many times do I need to push those patch get merged?
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
- drivers/spi/spi-imx.c                              | 46 ++++++++++++++++++++--
- 2 files changed, 43 insertions(+), 4 deletions(-)
+Regards,
+Andy
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-index 31b5b21..5bf1396 100644
---- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
-@@ -9,6 +9,7 @@ Required properties:
-   - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
-   - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
-   - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
-+  - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain CSPI/eCSPI interrupt
- - cs-gpios : Specifies the gpio pins to be used for chipselects.
-diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
-index b402530..765856c 100644
---- a/drivers/spi/spi-imx.c
-+++ b/drivers/spi/spi-imx.c
-@@ -67,7 +67,8 @@ enum spi_imx_devtype {
- 	IMX27_CSPI,
- 	IMX31_CSPI,
- 	IMX35_CSPI,	/* CSPI on all i.mx except above */
--	IMX51_ECSPI,	/* ECSPI on i.mx51 and later */
-+	IMX51_ECSPI,	/* ECSPI on i.mx51 */
-+	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
- };
- 
- struct spi_imx_data;
-@@ -128,9 +129,32 @@ static inline int is_imx51_ecspi(struct spi_imx_data *d)
- 	return d->devtype_data->devtype == IMX51_ECSPI;
- }
- 
-+static inline int is_imx53_ecspi(struct spi_imx_data *d)
-+{
-+	return d->devtype_data->devtype == IMX53_ECSPI;
-+}
-+
- static inline unsigned spi_imx_get_fifosize(struct spi_imx_data *d)
- {
--	return is_imx51_ecspi(d) ? 64 : 8;
-+	switch (d->devtype_data->devtype) {
-+	case IMX51_ECSPI:
-+	case IMX53_ECSPI:
-+		return 64;
-+	default:
-+		return 8;
-+	}
-+}
-+
-+static inline bool spi_imx_has_dmamode(struct spi_imx_data *d)
-+{
-+	switch (d->devtype_data->devtype) {
-+	case IMX35_CSPI:
-+	case IMX51_ECSPI:
-+	case IMX53_ECSPI:
-+		return true;
-+	default:
-+		return false;
-+	}
- }
- 
- #define MXC_SPI_BUF_RX(type)						\
-@@ -754,6 +778,15 @@ static struct spi_imx_devtype_data imx51_ecspi_devtype_data = {
- 	.devtype = IMX51_ECSPI,
- };
- 
-+static struct spi_imx_devtype_data imx53_ecspi_devtype_data = {
-+	.intctrl = mx51_ecspi_intctrl,
-+	.config = mx51_ecspi_config,
-+	.trigger = mx51_ecspi_trigger,
-+	.rx_available = mx51_ecspi_rx_available,
-+	.reset = mx51_ecspi_reset,
-+	.devtype = IMX53_ECSPI,
-+};
-+
- static const struct platform_device_id spi_imx_devtype[] = {
- 	{
- 		.name = "imx1-cspi",
-@@ -774,6 +807,9 @@ static const struct platform_device_id spi_imx_devtype[] = {
- 		.name = "imx51-ecspi",
- 		.driver_data = (kernel_ulong_t) &imx51_ecspi_devtype_data,
- 	}, {
-+		.name = "imx53-ecspi",
-+		.driver_data = (kernel_ulong_t) &imx53_ecspi_devtype_data,
-+	}, {
- 		/* sentinel */
- 	}
- };
-@@ -785,6 +821,7 @@ static const struct of_device_id spi_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx31-cspi", .data = &imx31_cspi_devtype_data, },
- 	{ .compatible = "fsl,imx35-cspi", .data = &imx35_cspi_devtype_data, },
- 	{ .compatible = "fsl,imx51-ecspi", .data = &imx51_ecspi_devtype_data, },
-+	{ .compatible = "fsl,imx53-ecspi", .data = &imx53_ecspi_devtype_data, },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, spi_imx_dt_ids);
-@@ -1229,7 +1266,8 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	spi_imx->bitbang.master->prepare_message = spi_imx_prepare_message;
- 	spi_imx->bitbang.master->unprepare_message = spi_imx_unprepare_message;
- 	spi_imx->bitbang.master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
--	if (is_imx35_cspi(spi_imx) || is_imx51_ecspi(spi_imx))
-+	if (is_imx35_cspi(spi_imx) || is_imx51_ecspi(spi_imx) ||
-+	    is_imx53_ecspi(spi_imx))
- 		spi_imx->bitbang.master->mode_bits |= SPI_LOOP | SPI_READY;
- 
- 	spi_imx->spi_drctl = spi_drctl;
-@@ -1282,7 +1320,7 @@ static int spi_imx_probe(struct platform_device *pdev)
- 	 * Only validated on i.mx35 and i.mx6 now, can remove the constraint
- 	 * if validated on other chips.
- 	 */
--	if (is_imx35_cspi(spi_imx) || is_imx51_ecspi(spi_imx)) {
-+	if (spi_imx_has_dmamode(spi_imx)) {
- 		ret = spi_imx_sdma_init(&pdev->dev, spi_imx, master);
- 		if (ret == -EPROBE_DEFER)
- 			goto out_clk_put;
--- 
-2.7.4
+-----Original Message-----
+From: Andy Tang=20
+Sent: Monday, April 17, 2017 9:37 AM
+To: 'mturquette@baylibre.com' <mturquette@baylibre.com>; 'sboyd@codeaurora.=
+org' <sboyd@codeaurora.org>
+Cc: 'robh+dt@kernel.org' <robh+dt@kernel.org>; 'mark.rutland@arm.com' <mark=
+.rutland@arm.com>; 'linux-clk@vger.kernel.org' <linux-clk@vger.kernel.org>;=
+ 'devicetree@vger.kernel.org' <devicetree@vger.kernel.org>; 'linux-kernel@v=
+ger.kernel.org' <linux-kernel@vger.kernel.org>; 'linux-arm-kernel@lists.inf=
+radead.org' <linux-arm-kernel@lists.infradead.org>; 'Scott Wood' <oss@buser=
+ror.net>
+Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+
+Hi Stephen and Michael,
+
+This patch set has been pending for more than two months since it was first=
+ sent.
+I have not received any response from you until now.
+
+Could you give some comments on it?
+
+Regards,
+Andy
+
+-----Original Message-----
+From: Andy Tang
+Sent: Wednesday, April 05, 2017 2:16 PM
+To: mturquette@baylibre.com; sboyd@codeaurora.org
+Cc: robh+dt@kernel.org; mark.rutland@arm.com; linux-clk@vger.kernel.org; de=
+vicetree@vger.kernel.org; linux-kernel@vger.kernel.org; linux-arm-kernel@li=
+sts.infradead.org; Scott Wood <oss@buserror.net>
+Subject: RE: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+
+Hello=20
+
+Do you have any comments on this patch set which was acked by Rob?
+
+Regards,
+Andy
+
+> -----Original Message-----
+> From: Yuantian Tang [mailto:andy.tang@nxp.com]
+> Sent: Monday, March 20, 2017 10:37 AM
+> To: mturquette@baylibre.com
+> Cc: sboyd@codeaurora.org; robh+dt@kernel.org; mark.rutland@arm.com;=20
+> linux-clk@vger.kernel.org; devicetree@vger.kernel.org; linux-=20
+> kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Scott=20
+> Wood <oss@buserror.net>; Andy Tang <andy.tang@nxp.com>
+> Subject: [PATCH 1/2 v2] dt-bindings: qoriq-clock: Add coreclk
+>=20
+> From: Scott Wood <oss@buserror.net>
+>=20
+> ls1012a has separate input root clocks for core PLLs versus the=20
+> platform PLL, with the latter described as sysclk in the hw docs.
+> Update the qoriq-clock binding to allow a second input clock, named=20
+> "coreclk".  If present, this clock will be used for the core PLLs.
+>=20
+> Signed-off-by: Scott Wood <oss@buserror.net>
+> Signed-off-by: Tang Yuantian <andy.tang@nxp.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+> v2:
+> 	-- change the author to Scott
+>  Documentation/devicetree/bindings/clock/qoriq-clock.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> index aa3526f..119cafd 100644
+> --- a/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/qoriq-clock.txt
+> @@ -56,6 +56,11 @@ Optional properties:
+>  - clocks: If clock-frequency is not specified, sysclk may be provided
+>  	as an input clock.  Either clock-frequency or clocks must be
+>  	provided.
+> +	A second input clock, called "coreclk", may be provided if
+> +	core PLLs are based on a different input clock from the
+> +	platform PLL.
+> +- clock-names: Required if a coreclk is present.  Valid names are
+> +	"sysclk" and "coreclk".
+>=20
+>  2. Clock Provider
+>=20
+> @@ -72,6 +77,7 @@ second cell is the clock index for the specified type.
+>  	2	hwaccel		index (n in CLKCGnHWACSR)
+>  	3	fman		0 for fm1, 1 for fm2
+>  	4	platform pll	0=3Dpll, 1=3Dpll/2, 2=3Dpll/3, 3=3Dpll/4
+> +	5	coreclk		must be 0
+>=20
+>  3. Example
+>=20
+> --
+> 2.1.0.27.g96db324
+
