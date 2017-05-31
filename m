@@ -1,64 +1,39 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] net: fec: add post PHY reset delay DT property
-Date: Wed, 31 May 2017 11:44:16 -0500
-Message-ID: <20170531164416.ka3hk6a2lybrlngd@rob-hp-laptop>
-References: <20170523094808.11102-1-quentin.schulz@free-electrons.com>
+Subject: Re: [PATCH v3 3/9] ASoC: sun8i-codec-analog: add
+ support for V3s SoC
+Date: Wed, 31 May 2017 11:55:35 -0500
+Message-ID: <20170531165535.bmvsox25akmks2kq@rob-hp-laptop>
+References: <20170524100607.29790-1-icenowy@aosc.io>
+ <20170524100607.29790-4-icenowy@aosc.io>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBCHLXPEQKGQEUJ6MYXA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170523094808.11102-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: fugang.duan-3arQi8VN3Tc@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+In-Reply-To: <20170524100607.29790-4-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 23, 2017 at 11:48:08AM +0200, Quentin Schulz wrote:
-> Some PHY require to wait for a bit after the reset GPIO has been
-> toggled. This adds support for the DT property `phy-reset-post-delay`
-> which gives the delay in milliseconds to wait after reset.
+On Wed, May 24, 2017 at 06:06:01PM +0800, Icenowy Zheng wrote:
+> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > 
-> If the DT property is not given, no delay is observed. Post reset delay
-> greater than 1000ms are invalid.
+> The V3s SoC features an analog codec with headphone support but without
+> mic2 and linein.
 > 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Add support for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 > ---
-> 
-> v2:
->   - return -EINVAL when phy-reset-post-delay is greater than 1000ms
->   instead of defaulting to 1ms,
->   - remove `default to 1ms` when phy-reset-post-delay > 1000Ms from DT
->   binding doc and commit log,
->   - move phy-reset-post-delay property reading before
->   devm_gpio_request_one(),
-> 
->  Documentation/devicetree/bindings/net/fsl-fec.txt |  4 ++++
->  drivers/net/ethernet/freescale/fec_main.c         | 16 +++++++++++++++-
->  2 files changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/fsl-fec.txt b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> index a1e3693cca16..6f55bdd52f8a 100644
-> --- a/Documentation/devicetree/bindings/net/fsl-fec.txt
-> +++ b/Documentation/devicetree/bindings/net/fsl-fec.txt
-> @@ -15,6 +15,10 @@ Optional properties:
->  - phy-reset-active-high : If present then the reset sequence using the GPIO
->    specified in the "phy-reset-gpios" property is reversed (H=reset state,
->    L=operation state).
-> +- phy-reset-post-delay : Post reset delay in milliseconds. If present then
+>  Documentation/devicetree/bindings/sound/sun8i-codec-analog.txt | 1 +
+>  sound/soc/sunxi/sun8i-codec-analog.c                           | 9 +++++++++
+>  2 files changed, 10 insertions(+)
 
-This needs unit suffix minimally. It should also have a vendor prefix or 
-be made generic.
-
-But really, this is a property of the phy and should be in the phy node 
-as should phy-reset-gpios, phy-reset-active-high, phy-supply, etc.
-
-> +  a delay of phy-reset-post-delay milliseconds will be observed after the
-> +  phy-reset-gpios has been toggled. Can be omitted thus no delay is
-> +  observed. Delay is in range of 1ms to 1000ms. Other delays are invalid.
->  - phy-supply : regulator that powers the Ethernet PHY.
->  - phy-handle : phandle to the PHY device connected to this device.
->  - fixed-link : Assume a fixed link. See fixed-link.txt in the same directory.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
