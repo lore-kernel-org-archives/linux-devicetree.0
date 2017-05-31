@@ -1,83 +1,65 @@
-From: Andi Shyti <andi.shyti@samsung.com>
-Subject: [PATCH v4 0/2] STM FingerTip S touchscreen support for TM2 board
-Date: Wed, 31 May 2017 15:59:13 +0900
-Message-ID: <20170531065915.15695-1-andi.shyti@samsung.com>
-References: <CGME20170531065928epcas1p20b5ee8e7d3c74670fda56cb1ed4ca06e@epcas1p2.samsung.com>
+From: Xiaowei Song <songxiaowei@hisilicon.com>
+Subject: [PATCH v9 2/4] arm64: dts: hisi: add kirin pcie node
+Date: Wed, 31 May 2017 15:01:07 +0800
+Message-ID: <20170531070109.81569-3-songxiaowei@hisilicon.com>
+References: <20170531070109.81569-1-songxiaowei@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170531070109.81569-1-songxiaowei@hisilicon.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andi Shyti <andi.shyti@samsung.com>, Andi Shyti <andi@etezian.org>
+To: bhelgaas@google.com, kishon@ti.com, jingoohan1@gmail.com, arnd@arndb.de, tn@semihalf.com, keith.busch@intel.com, niklas.cassel@axis.com, dhdang@apm.com, liudongdong3@huawei.com, gabriele.paoloni@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
+Cc: chenyao11@huawei.com, puck.chen@hisilicon.com, songxiaowei@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add PCIe node for hi3660, and add binding documentation.
 
-this patchset provides support for the ST-Microelectronics
-FingerTip S touchscreen device.
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
+---
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-It's tested on top of mainline kernel on TM2 and TM2e boards.
-
-Thanks,
-Andi
-
-Changelog V3-V4
-===============
-V3: https://marc.info/?l=linux-kernel&m=149062016401170&w=2
-After an offline discussion, I applied some changes suggested by
-Dmitry.
-
- - some cosmetic changes
- - interrupt gets disabled explicitly instead of using
-   IRQ_NOAUTOEN
- - cleaner management of the input reports
- - the parsing of the event has been split into two major switch
-   chunks, this might cause some event id overlapping, but the
-   probability is quite rare
-
-Changelog V2-V3
-===============
-V2: https://marc.info/?l=linux-kernel&m=148669314305915&w=2
-
- - fixed multi touch broken protocol reported by Chanwoo;
- - disabled irqs at the registration by setting the IRQ_NOAUTOEN
-   flag, as suggested by Andrzej;
- - changed the interrupt handling policy: in the V1 and V2 the
-   events were read one by one (8 each), this was increasing the
-   overhead. Now all the events are read in a single operation,
-   but because the stack is deep 32 events (256bytes, 32*8), it's
-   impossible to use the smbus protocol. The i2c_transfer()
-   functions is used instead;
- - random code changes;
- - patch 3 in the V1 and V2 patchset has been omitted because
-   Krzysztof already merged it.
-
-Changelog V1-V2
-===============
-V1: https://marc.info/?l=linux-kernel&m=148466204431327&w=2
-
- - fixed Javier's, Krzysztof's and Dmitry's reviews
- - added Javier's review tag on patch 1 and 3
- - the main difference of the driver from v2 is that the driver
-   generates only one input interface instead of two (one for the
-   touchscreen and one for the touchkeys). The job of filtering
-   the events is demanded to userspace applications that are
-   accessing the device. This is done by making an ioctl call:
-
-	ioctl(fd, EVIOCSMASK, &mask);
-
-   where 'mask' is an 'input_mask' structure that contains the type
-   variable of the EV_* that needs to be filtered out.
-
-Andi Shyti (2):
-  Input: add STMicroelectronics FingerTip touchscreen driver
-  Input: add support for the STMicroelectronics FingerTip touchscreen
-
- .../bindings/input/touchscreen/st,stmfts.txt       |  43 ++
- drivers/input/touchscreen/Kconfig                  |  11 +
- drivers/input/touchscreen/Makefile                 |   1 +
- drivers/input/touchscreen/stmfts.c                 | 823 +++++++++++++++++++++
- 4 files changed, 878 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/st,stmfts.txt
- create mode 100644 drivers/input/touchscreen/stmfts.c
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index 3983086bd67b..e8feb2fb4d53 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -156,5 +156,36 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			status = "disabled";
+ 		};
++
++		pcie@f4000000 {
++			compatible = "hisilicon,kirin960-pcie";
++			reg = <0x0 0xf4000000 0x0 0x1000>,
++			      <0x0 0xff3fe000 0x0 0x1000>,
++			      <0x0 0xf3f20000 0x0 0x40000>,
++			      <0x0 0xF5000000 0x0 0x2000>;
++			reg-names = "dbi", "apb", "phy", "config";
++			bus-range = <0x0  0x1>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			ranges = <0x02000000 0x0 0x00000000 0x0
++				  0xf6000000 0x0 0x2000000>;
++			num-lanes = <1>;
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0xf800 0 0 7>;
++			interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
++					<0x0 0 0 2 &gic 0 0 0  283 4>,
++					<0x0 0 0 3 &gic 0 0 0  284 4>,
++					<0x0 0 0 4 &gic 0 0 0  285 4>;
++			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
++				 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
++				 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
++				 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
++				 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
++			clock-names = "pcie_phy_ref", "pcie_aux",
++				      "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
++			reset-gpios = <&gpio11 1 0 >;
++			status = "ok";
++		};
+ 	};
+ };
 -- 
-2.11.0
+2.11.GIT
