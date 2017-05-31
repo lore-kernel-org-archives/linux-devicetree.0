@@ -1,55 +1,71 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH v4 2/5] device property: Move FW type specific
- functionality to FW specific files
-Date: Wed, 31 May 2017 13:08:49 +0300
-Message-ID: <b5d632a9-4c35-13b0-0b80-1e58b78660cf@linux.intel.com>
-References: <1495443202-22817-1-git-send-email-sakari.ailus@linux.intel.com>
- <1495443202-22817-3-git-send-email-sakari.ailus@linux.intel.com>
- <20170531094428.GB2784@lahna.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170531094428.GB2784@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com
+From: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Subject: [PATCH v6 0/3] Support for USB DRD Phy driver for NS2
+Date: Wed, 31 May 2017 15:42:00 +0530
+Message-ID: <1496225523-22035-1-git-send-email-raviteja.garimella@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mika,
+Changes in v6:
+=============
+Removed spin locks which are not required as the references
+to phy_ops in the same driver were removed in v5.
 
-Thanks for the review.
+Removed host/device 'notify' routines which are registered
+using 'extcon_register_notifier'. The irq handler is sufficient
+to deal with the change in extcon events within the same driver.
 
-On 05/31/17 12:44, Mika Westerberg wrote:
-> On Mon, May 22, 2017 at 11:53:19AM +0300, Sakari Ailus wrote:
->> +static int acpi_fwnode_property_read_int_array(
-> 
-> Yuck!
-> 
->> +	struct fwnode_handle *fwnode, const char *propname,
->> +	unsigned int elem_size, void *val, size_t nval)
-> 
-> Can you please write it like:
-> 
-> static int acpi_fwnode_property_read_int_array(struct fwnode_handle *fwnode,
-> 	const char *propname, unsigned int elem_size, void *val, size_t nval)
-> 
-> or even
-> 
-> static int acpi_fwnode_property_read_int_array(struct fwnode_handle *fwnode,
-> 					       const char *propname,
-> 					       unsigned int elem_size,
-> 					       void *val, size_t nval)
-> 
-> Ditto to all similar constructs in this whole series.
+<clip: as before>
+Changes in v5:
+=============
+Removed references to phy_ops in the same driver by connect_work
+event handler to change the phy modes.
 
-Ah. I forgot you didn't like this wrapping and indentation. ;-)
+To support dynamically changing the mode of the phy, it does
+not require doing a phy reset/programming of PHY PLL. Changes
+are made to the connect_work routine to just program the required
+register bits to achieve this purpose.
 
-That's not uncommon e.g. in V4L2 but many have argued that it's not
-where you should look for examples. X-) I'll change them.
+Changes in v4:
+=============
+Remove references to edev->name in debug prints.
+
+Changes in v3:
+=============
+Remove unnecessary checks for poweron as suggested in review.
+
+Changes in v2:
+=============
+1. Initialize file operations .owner field with THIS_MODULE.
+2. Remove unnecessary gpio example in DT bindings documentation.
+   This is previously acked by Rob Herring <robh@kernel.org>
+
+Introduction for PATCH v1:
+
+This patch adds support for USB Dual Role Device Phy for Broadcom
+Northstar2 SoC. Apart from the new phy driver, this patchset contains
+changes to Kconfig, Makefile, and Device tree files.
+
+This patchset is tested on Broadcom NS2 BCM958712K reference board.
+
+Repo: https://github.com/Broadcom/arm64-linux.git
+Branch: ns2_drdphy_v6
+
+Raviteja Garimella (3):
+  dt-bindings:phy:Add DT bindings documentation for NS2 USB DRD phy
+  phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy driver for Northstar2
+  arm64: dts: NS2: Add USB DRD PHY device tree node
+
+ .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   |  30 ++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  14 +
+ drivers/phy/Kconfig                                |  13 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-ns2-usbdrd.c                   | 466 +++++++++++++++++++++
+ 5 files changed, 524 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
 
 -- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.1.0
