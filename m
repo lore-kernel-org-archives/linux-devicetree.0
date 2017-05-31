@@ -1,34 +1,45 @@
-From: Xiaowei Song <songxiaowei@hisilicon.com>
-Subject: [PATCH v9 4/4] ARM64: defconfig: Enable  Kirin PCIe
-Date: Wed, 31 May 2017 15:01:09 +0800
-Message-ID: <20170531070109.81569-5-songxiaowei@hisilicon.com>
-References: <20170531070109.81569-1-songxiaowei@hisilicon.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 00/58] ARM: at91: rework Atmel TCB drivers
+Date: Wed, 31 May 2017 09:21:15 +0200
+Message-ID: <20170531072115.apeyzsqmfxa2qnd6@piout.net>
+References: <20170530215139.9983-1-alexandre.belloni@free-electrons.com>
+ <da7069d4-e5b3-f10f-0816-ff973195aff6@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170531070109.81569-1-songxiaowei@hisilicon.com>
+Content-Disposition: inline
+In-Reply-To: <da7069d4-e5b3-f10f-0816-ff973195aff6@axentia.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, kishon@ti.com, jingoohan1@gmail.com, arnd@arndb.de, tn@semihalf.com, keith.busch@intel.com, niklas.cassel@axis.com, dhdang@apm.com, liudongdong3@huawei.com, gabriele.paoloni@huawei.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com
-Cc: chenyao11@huawei.com, puck.chen@hisilicon.com, songxiaowei@hisilicon.com, guodong.xu@linaro.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>, Boris Brezillon <boris.brezillon@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Antoine Aubert <a.aubert@overkiz.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org, Douglas Gilbert <dgilbert@interlog.com>, Fabio Porcedda <fabio.porcedda@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Gregory Hermant <gregory.hermant@calao-systems.com>, Joachim Eastwood <manabian@gmail.com>, linux-pwm@vger.kernel.org, Marek Vasut <marex@denx.de>, Martin Reimann <martin.reimann@egnite.de>, Raashid Muhammed <raashidmuhammed@zilogic.com>, Rob Herring <robh+dt@kernel.org>, Rodolfo Giometti <giometti@linux.it>, Sergio Tanzilli <tanzilli@acmesystems.it>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
----
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Hi,
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 7c48028ec64a..d56d8f1062ab 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -71,6 +71,7 @@ CONFIG_PCI_XGENE=y
- CONFIG_PCI_LAYERSCAPE=y
- CONFIG_PCI_HISI=y
- CONFIG_PCIE_QCOM=y
-+CONFIG_PCIE_KIRIN=y
- CONFIG_PCIE_ARMADA_8K=y
- CONFIG_ARM64_VA_BITS_48=y
- CONFIG_SCHED_MC=y
+On 31/05/2017 at 08:34:00 +0200, Peter Rosin wrote:
+> On 2017-05-30 23:50, Alexandre Belloni wrote:
+> > Hi,
+> > 
+> > This series reworks the Atmel Timer counter Block drivers. Those blocks
+> > each have 3 counters with 2 channels each and can be used for
+> > multiple functions:
+> >  - timers
+> >  - PWMs
+> >  - Quadrature decoders
+> >  - Stepper motor counters
+> 
+> I'd like to test this, but I have a hard time doing that since all I got
+> was this cover letter and a single DT-only patch.
+> 
+> I understand that you were reluctant to spam too many people with
+> dozens of patches, but perhaps the series can be fetched from
+> somewhere?
+> 
+
+Sure, I've pushed the branch here:
+https://github.com/alexandrebelloni/linux/tree/at91-tcb-v3
+
 -- 
-2.11.GIT
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
