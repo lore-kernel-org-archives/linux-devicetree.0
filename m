@@ -1,81 +1,80 @@
-From: "Wu Fenglin" <fenglinw@codeaurora.org>
-Subject: RE: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI TRI_LED module
-Date: Wed, 31 May 2017 16:23:28 +0800
-Message-ID: <001301d2d9e7$3102b720$93082560$@codeaurora.org>
-References: <20170531061541.10808-1-fenglinw@codeaurora.org> <20170531061541.10808-2-fenglinw@codeaurora.org> <20170531075536.GA13028@amd>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: at91: sama5d2_xplained: add pwm controller
+Date: Wed, 31 May 2017 10:50:18 +0200
+Message-ID: <20170531085018.tmbwqrqiiwitnm5u@piout.net>
+References: <1487839757-14040-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170531075536.GA13028@amd>
-Content-Language: en-us
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Pavel Machek' <pavel@ucw.cz>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 'Richard Purdie' <rpurdie@rpsys.net>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, subbaram@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1487839757-14040-1-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+Hi,
 
-Thanks for the reviewing.
-
-For the order, the hardware register mapping has this order (blue/green/red)
-from bit0/1/2, I can revert it to (red/green/blue) if there is a strong
-concern.
-
-For these two properties: qcom,off-ms/ qcom,on-ms, I am using them to assign
-the default blinking on/off time, then the LEDs would have a default
-blinking pattern if you do "echo 1 > /sys/class/leds/red/blink"
-
-Fenglin Wu
-
------Original Message-----
-From: Pavel Machek [mailto:pavel@ucw.cz] 
-Sent: Wednesday, May 31, 2017 3:56 PM
-To: fenglinw@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org; linux-kernel@vger.kernel.org; Richard
-Purdie <rpurdie@rpsys.net>; Jacek Anaszewski <jacek.anaszewski@gmail.com>;
-Rob Herring <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-linux-leds@vger.kernel.org; devicetree@vger.kernel.org;
-subbaram@quicinc.com; aghayal@qti.qualcomm.com; wruan@quicinc.com;
-kgunda@qti.qualcomm.com
-Subject: Re: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI
-TRI_LED module
-
-Hi!
-
-> +- qcom,support-blink:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: An array of integer values to indicate if "blue",
-"green", "red"
-> +		LEDs support blink control. The values are listed as the
-fixed
-> +		order for "blue", "green", "red" LEDs.
-
-Normal order is RGB, and no need for the "s.
-
-> +- qcom,on-ms:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: An array of time values (milli-seconds) to represent the
-> +		on duration for "blue", "green", "red" LEDs. The values are
-> +		listed as the fixed order for "blue", "green", "red" LEDs.
-> +		This property has to be defined if "qcom,support-blink" is
-> +		present.
+On 23/02/2017 at 10:49:17 +0200, Claudiu Beznea wrote:
+> Add pwm controller bindings for sam5d2_xplained
+> and enable it.
+> 
+> Changes since v1:
+> - Correct the typo in patch subject.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi | 4 ++++
+>  arch/arm/boot/dts/sama5d2.dtsi                      | 8 ++++++++
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi b/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
+> index 9fc270f..493ea29 100644
+> --- a/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
+> +++ b/arch/arm/boot/dts/at91-sama5d2_xplained_common.dtsi
+> @@ -318,6 +318,10 @@
+>  				};
+>  			};
+>  
+> +			pwm0: pwm@f802c000 {
+> +				status = "okay";
+> +			};
 > +
-> +- qcom,off-ms:
-> +	Usage: optional
-> +	Value type: <prop-encoded-array>
-> +	Definition: An array of time values (milli-seconds) to represent the
-> +		off duration for "blue", "green", "red" LEDs. The values are
-> +		listed as the fixed order for "blue", "green", "red" LEDs.
-> +		This property has to be defined if "qcom,support-blink" is
-> +		present.
+>  			flx0: flexcom@f8034000 {
+>  				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_USART>;
+>  				status = "disabled"; /* conflict with ISC_D2 & ISC_D3 data pins */
 
-I don't get it; why is this needed?
+
+This doesn't apply on v4.12-rc1, this file doesn't exist.
+
+> diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+> index cd459e8..e88785e 100644
+> --- a/arch/arm/boot/dts/sama5d2.dtsi
+> +++ b/arch/arm/boot/dts/sama5d2.dtsi
+> @@ -1098,6 +1098,14 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			pwm0: pwm@f802c000 {
+> +				compatible = "atmel,sama5d2-pwm";
+> +				reg = <0xf802c000 0x4000>;
+> +				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 7>;
+> +				#pwm-cells = <3>;
+> +				clocks = <&pwm_clk>;
+> +			};
+> +
+>  			sfr: sfr@f8030000 {
+>  				compatible = "atmel,sama5d2-sfr", "syscon";
+>  				reg = <0xf8030000 0x98>;
+> -- 
+> 2.7.4
+> 
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures)
-http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
