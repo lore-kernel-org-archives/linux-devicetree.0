@@ -1,102 +1,88 @@
-From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: sprd: Add Spreadtrum pin control driver
-Date: Wed, 31 May 2017 16:00:12 +0800
-Message-ID: <20170531080012.GB31518@spreadtrum.com>
-References: <a1fa5b612de318213bab4404997d133ed118f5d2.1495863824.git.baolin.wang@spreadtrum.com>
- <58b4b6fb2765ab9d5d3ac77f3854d0a88a0973bd.1495863824.git.baolin.wang@spreadtrum.com>
- <CACRpkdaBcGNTeUDCcVgK9JKZUPKD-qfO8PVHURR2F_pgvEgViQ@mail.gmail.com>
+From: Ye Xiaolong <xiaolong.ye-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [kbuild-all] [PATCH v4 3/9] arm: dts: mt7623: add
+ mt7623-mt6323.dtsi file
+Date: Wed, 31 May 2017 16:08:42 +0800
+Message-ID: <20170531080842.GB12568@yexl-desktop>
+References: <201705281908.LU8TFOQ8%fengguang.wu@intel.com>
+ <d565b4dd-f6b7-ee43-ddfe-ae98328646ed@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdaBcGNTeUDCcVgK9JKZUPKD-qfO8PVHURR2F_pgvEgViQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <d565b4dd-f6b7-ee43-ddfe-ae98328646ed-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kbuild-all-JC7UmRfGjtg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+Hi, Matthias
 
-On 一,  5月 29, 2017 at 06:28:49下午 +0200, Linus Walleij wrote:
-> On Sat, May 27, 2017 at 7:56 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
-> 
-> > This patch adds the pin control driver for Spreadtrum SC9860 platform.
-> >
-> > Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> 
-> Overall I see that you want to store functions and groups in the device tree
-> using the current helpers from Tony. That is OK if you want to take that
-> approach, though I prefer the pins/groups/function encoding in plaintext.
-> 
-> But when it comes to pin config:
-> 
-> > +static int sprd_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin_id,
-> > +                           unsigned long *config)
-> > +{
-> > +       struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
-> > +       struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
-> > +
-> > +       if (!pin)
-> > +               return -EINVAL;
-> > +
-> > +       if (pin->type == GLOBAL_CTRL_PIN) {
-> > +               *config = (readl((void __iomem *)pin->reg) >>
-> > +                          pin->bit_offset) & PINCTRL_BIT_MASK(pin->bit_width);
-> > +       } else {
-> > +               *config = readl((void __iomem *)pin->reg);
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
-> > +                           unsigned long *configs, unsigned int num_configs)
-> > +{
-> > +       struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
-> > +       struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
-> > +       unsigned long reg;
-> > +       int i;
-> > +
-> > +       if (!pin)
-> > +               return -EINVAL;
-> > +
-> > +       for (i = 0; i < num_configs; i++) {
-> > +               if (pin->type == GLOBAL_CTRL_PIN) {
-> > +                       reg = readl((void __iomem *)pin->reg);
-> > +                       reg &= ~(PINCTRL_BIT_MASK(pin->bit_width)
-> > +                               << pin->bit_offset);
-> > +                       reg |= (configs[i] & PINCTRL_BIT_MASK(pin->bit_width))
-> > +                               << pin->bit_offset;
-> > +                       writel(reg, (void __iomem *)pin->reg);
-> > +               } else {
-> > +                       writel(configs[i], (void __iomem *)pin->reg);
-> > +               }
-> > +               pin->config = configs[i];
-> > +       }
-> > +
-> > +       return 0;
-> > +}
-> 
-> This is just hammering the register values, you have effectively defined your
-> register layout as your device tree ABI.
-> 
-> Please don't do this, please use genric pin config and use the approach
-> other drivers take with explicit strings encoding the pin configuration.
+On 05/29, Matthias Brugger wrote:
+>
+>
+>On 28/05/17 13:31, kbuild test robot wrote:
+>>Hi John,
+>>
+>>[auto build test ERROR on robh/for-next]
+>>[also build test ERROR on v4.12-rc2 next-20170526]
+>>[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>>
+>>url:    https://github.com/0day-ci/linux/commits/sean-wang-mediatek-com/arm-dts-extend-mt7623-support/20170525-142103
+>>base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+>
+>Mediatek dts patches should be tested against:
+>https://github.com/mbgg/linux-mediatek.git for-next
+>
+>Not sure why this happend, as this got already fixed in lkp-tests:
+>bc0c8847 ("mediatek: mark for-next branch")
 
-Make sense. I will try to use genric pin config instead of the magic number.
-Thanks for your comments.
+0day mainly relies on MAINTAINERS file to determine the git am base for lkml
+patches, could you help add your tree in below section?
 
-> 
-> Even pinctrl-single that maintain quite a bit of muxing data in the device
-> tree still use the generic pin config API, see:
-> drivers/pinctrl/pinctrl-single.c
-> pcs_pinconf_get(), pcs_pinconf_set()
-> 
-> Same for group config.
-> 
-> Yours,
-> Linus Walleij
+ARM/Mediatek SoC support
+M:      Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+L:      linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+L:      linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+S:      Maintained
+F:      arch/arm/boot/dts/mt6*
+F:      arch/arm/boot/dts/mt7*
+F:      arch/arm/boot/dts/mt8*
+F:      arch/arm/mach-mediatek/
+F:      arch/arm64/boot/dts/mediatek/
+N:      mtk
+K:      mediatek
+
+
+Thanks,
+Xiaolong
+
+>
+>Regards,
+>Matthias
+>
+>>config: arm-allyesconfig (attached as .config)
+>>compiler: arm-linux-gnueabi-gcc (Debian 6.1.1-9) 6.1.1 20160705
+>>reproduce:
+>>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # save the attached .config to linux build tree
+>>         make.cross ARCH=arm
+>>
+>>All errors (new ones prefixed by >>):
+>>
+>>>>Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:33.1-7 Label or path pwrap not found
+>>>>Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:261.1-6 Label or path mmc0 not found
+>>>>Error: arch/arm/boot/dts/mt7623-mt6323.dtsi:266.1-6 Label or path mmc1 not found
+>>    FATAL ERROR: Syntax error parsing input tree
+>>
+>>---
+>>0-DAY kernel test infrastructure                Open Source Technology Center
+>>https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>>
+>_______________________________________________
+>kbuild-all mailing list
+>kbuild-all-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+>https://lists.01.org/mailman/listinfo/kbuild-all
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
