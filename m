@@ -1,67 +1,159 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v7 00/34] i.MX Media Driver
-Date: Wed, 31 May 2017 22:11:07 +0200
-Message-ID: <20170531201107.GB16962@amd>
-References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
- <dd82968a-4c0b-12a4-f43b-7e63a255812d@xs4all.nl>
- <20170529153637.GH29527@valkosipuli.retiisi.org.uk>
- <08dcd6f6-e0ef-a6a0-cfc3-4fcd55624169@gmail.com>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3 07/16] Documentation: DT: MIPS: lantiq: Add docs for
+ the RCU bindings
+Date: Wed, 31 May 2017 22:13:16 +0200
+Message-ID: <6b8bb1cd-c090-435d-d150-d53edf04d2df@hauke-m.de>
+References: <20170528184006.31668-1-hauke@hauke-m.de>
+ <20170528184006.31668-8-hauke@hauke-m.de>
+ <20170531200540.joludfqpy35yc5yy@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="KFztAG8eRSV9hGtP"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <08dcd6f6-e0ef-a6a0-cfc3-4fcd55624169-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgl
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170531200540.joludfqpy35yc5yy@rob-hp-laptop>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 05/31/2017 10:05 PM, Rob Herring wrote:
+> On Sun, May 28, 2017 at 08:39:57PM +0200, Hauke Mehrtens wrote:
+>> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>>
+>> This adds the initial documentation for the RCU module (a MFD device
+>> which provides USB PHYs, reset controllers and more).
+>>
+>> The RCU register range is used for multiple purposes. Mostly one device
+>> uses one or multiple register exclusively, but for some registers some
+>> bits are for one driver and some other bits are for a different driver.
+>> With this patch all accesses to the RCU registers will go through
+>> syscon.
+>>
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mips/lantiq/rcu.txt        | 97 ++++++++++++++++++++++
+>>  1 file changed, 97 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+>> new file mode 100644
+>> index 000000000000..3e2461262218
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+>> @@ -0,0 +1,97 @@
+>> +Lantiq XWAY SoC RCU binding
+>> +===========================
+>> +
+>> +This binding describes the RCU (reset controller unit) multifunction device,
+>> +where each sub-device has it's own set of registers.
+>> +
+>> +The RCU register range is used for multiple purposes. Mostly one device
+>> +uses one or multiple register exclusively, but for some registers some
+>> +bits are for one driver and some other bits are for a different driver.
+>> +With this patch all accesses to the RCU registers will go through
+>> +syscon.
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Required properties:
+>> +- compatible	: The first and second values must be: "simple-mfd", "syscon"
+>> +- reg		: The address and length of the system control registers
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Example of the RCU bindings on a xRX200 SoC:
+>> +	rcu0: rcu@203000 {
+>> +		compatible = "lantiq,rcu-xrx200", "simple-mfd", "syscon";
+>> +		reg = <0x203000 0x100>;
+>> +		big-endian;
+>> +
+>> +		gphy0: gphy@0 {
+> 
+> Unit address without reg address is not valid.
+> 
+>> +			compatible = "lantiq,xrx200a2x-rcu-gphy";
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset = <0x20>;
+> 
+> Does reg not work instead?
 
---KFztAG8eRSV9hGtP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Is it ok to access some registers in this range with a reg = <0x20 0x04>
+setting and some others through syscon? This specific register is only
+used by this gphy, but the reset controller shares the register with
+some other drivers like the watchdog driver.
 
-Hi!
+>> +			resets = <&reset0 31 30>, <&reset1 7 7>;
+>> +			reset-names = "gphy", "gphy2";
+>> +			lantiq,gphy-mode = <GPHY_MODE_GE>;
+>> +		};
+>> +
+>> +		gphy1: gphy@1 {
+>> +			compatible = "lantiq,xrx200a2x-rcu-gphy";
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset = <0x68>;
+>> +			resets = <&reset0 29 28>, <&reset1 6 6>;
+>> +			reset-names = "gphy", "gphy2";
+>> +			lantiq,gphy-mode = <GPHY_MODE_GE>;
+>> +		};
+>> +
+>> +		reset0: reset-controller@0 {
+>> +			compatible = "lantiq,rcu-reset";
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset-set = <0x10>;
+>> +			offset-status = <0x14>;
+>> +			#reset-cells = <2>;
+>> +		};
+>> +
+>> +		reset1: reset-controller@1 {
+>> +			compatible = "lantiq,rcu-reset";
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset-set = <0x48>;
+>> +			offset-status = <0x24>;
+>> +			#reset-cells = <2>;
+>> +		};
+>> +
+>> +		usb_phy0: usb2-phy@0 {
+>> +			compatible = "lantiq,xrx200-rcu-usb2-phy";
+>> +			status = "disabled";
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset-phy = <0x18>;
+>> +			offset-ana = <0x38>;
+>> +			resets = <&reset1 4 4>, <&reset0 4 4>;
+>> +			reset-names = "phy", "ctrl";
+>> +			#phy-cells = <0>;
+>> +		};
+>> +
+>> +		usb_phy1: usb2-phy@1 {
+>> +			compatible = "lantiq,xrx200-rcu-usb2-phy";
+>> +			status = "disabled";
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset-phy = <0x34>;
+>> +			offset-ana = <0x3C>;
+>> +			resets = <&reset1 5 4>, <&reset0 4 4>;
+>> +			reset-names = "phy", "ctrl";
+>> +			#phy-cells = <0>;
+>> +		};
+>> +
+>> +		reboot {
+>> +			compatible = "syscon-reboot";
+>> +
+>> +			regmap = <&rcu0>;
+>> +			offset = <0x10>;
+>> +			mask = <0x40000000>;
+>> +		};
+>> +	};
+>> +
+>> -- 
+>> 2.11.0
+>>
 
-> >If there's a need for this (there should not be, as the controls are exp=
-osed
-> >to the user space through the sub-device nodes as the other drivers do),=
- the
-> >framework APIs need to be extended.
->=20
-> Right, this gets back to the media framework usability arguments. At least
-> myself, Philipp, and Russell feel that automatic inheritance of a configu=
-red
-> pipeline's controls to a video device adds to the usability.
-
-For the record, usability can be pretty much fixed in v4l-utils... I
-have patches that try ioctls on a list of fd's. Now we need a way to
-find out which /dev/video* files belong to single camera. I believe
-kernel already has required APIs, we just need to apply v4l-utils
-patch to use them...
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---KFztAG8eRSV9hGtP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlkvI1sACgkQMOfwapXb+vLfEgCfe4WFiqKmIIhFCORleJixmS6S
-V/EAn0APxvTmxHyOU+IpJUkFFYcKPjqx
-=Zw9u
------END PGP SIGNATURE-----
-
---KFztAG8eRSV9hGtP--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
