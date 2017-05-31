@@ -1,279 +1,85 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek SoC MT2712 and evaluation
- board dts and Makefile
-Date: Wed, 31 May 2017 14:42:20 +0200
-Message-ID: <92e438b3-4e9c-421b-5398-5aad2541524c@gmail.com>
-References: <1496230773-22633-1-git-send-email-yt.shen@mediatek.com>
- <1496230773-22633-3-git-send-email-yt.shen@mediatek.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v9 3/4] arm: dts: mt2701: Add node for Mediatek JPEG
+ Decoder
+Date: Wed, 31 May 2017 15:04:06 +0200
+Message-ID: <35da3376-cc23-b588-c026-b3d300f6ecfa@gmail.com>
+References: <1481702690-10476-1-git-send-email-rick.chang@mediatek.com>
+ <1481702690-10476-4-git-send-email-rick.chang@mediatek.com>
+ <492cfa38-aff0-f7c9-72f9-94e53adc198c@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496230773-22633-3-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <492cfa38-aff0-f7c9-72f9-94e53adc198c@gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+Sender: linux-media-owner@vger.kernel.org
+To: Rick Chang <rick.chang@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, srv_heupstream@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Bin Liu <bin.liu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 31/05/17 13:39, YT Shen wrote:
-> This adds basic chip support for Mediatek 2712
+On 10/05/17 13:02, Matthias Brugger wrote:
 > 
-> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/mediatek/Makefile       |   1 +
->   arch/arm64/boot/dts/mediatek/mt2712-evb.dts |  39 +++++++
->   arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 166 ++++++++++++++++++++++++++++
->   3 files changed, 206 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
-> index 9fbfd32..fcc0604 100644
-> --- a/arch/arm64/boot/dts/mediatek/Makefile
-> +++ b/arch/arm64/boot/dts/mediatek/Makefile
-> @@ -1,3 +1,4 @@
-> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
->   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
-> new file mode 100644
-> index 0000000..e526c0f
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
-> @@ -0,0 +1,39 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> + */
-> +
-> +/dts-v1/;
-> +#include "mt2712e.dtsi"
-> +
-> +/ {
-> +	model = "MediaTek MT2712 evaluation board";
-> +	compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +		serial3 = &uart3;
-> +		serial4 = &uart4;
-> +		serial5 = &uart5;
-> +	};
+> On 14/12/16 09:04, Rick Chang wrote:
+>> Signed-off-by: Rick Chang <rick.chang@mediatek.com>
+>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
+>> ---
+>> This patch depends on:
+>>    CCF "Add clock support for Mediatek MT2701"[1]
+>>    iommu and smi "Add the dtsi node of iommu and smi for mt2701"[2]
+>>
+>> [1] 
+>> http://lists.infradead.org/pipermail/linux-mediatek/2016-October/007271.html 
+>>
+>> [2] https://patchwork.kernel.org/patch/9164013/
+> 
+> Now queued for v4.12-next/dts32
+> 
+> Thanks and sorry for the delay.
+> Matthias
+> 
 
-Just declare serial0 here, as you don't use the others.
+I realized that a long time ago I made a mistake when taking:
+f3cba0f49c7c ("ARM: dts: mt2701: add iommu/smi dtsi node for mt2701")
 
-> +
-> +	memory@40000000 {
-> +		device_type = "memory";
-> +		reg = <0 0x40000000 0 0x80000000>;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:921600n8";
-> +		linux,initrd-start = <0x45000000>;
-> +		linux,initrd-end   = <0x4a000000>;
+as I forgot to include dt-bindings/memory/mt2701-larb-port.h
 
-initrd-start and end should be dynamically set by the bootloader and not 
-via a chosen node. Is your bootloader not able to do that?
+I fixed this now in v4.12-next/dts32
 
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	status = "okay";
-> +};
-> +
-> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> new file mode 100644
-> index 0000000..6df0da9
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
-> @@ -0,0 +1,166 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt2712";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu-map {
-> +			cluster0 {
-> +				core0 {
-> +					cpu = <&cpu0>;
-> +				};
-> +				core1 {
-> +					cpu = <&cpu1>;
-> +				};
-> +			};
-> +
-> +			cluster1 {
-> +				core0 {
-> +					cpu = <&cpu2>;
-> +				};
-> +			};
-> +		};
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-
-do you mean cortex-a53?
-
-> +			reg = <0x000>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a35";
-
-same here.
+Sorry for that.
 
 Regards,
 Matthias
 
-> +			reg = <0x001>;
-> +			enable-method = "psci";
-> +		};
-> +
-> +		cpu2: cpu@200 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a72";
-> +			reg = <0x200>;
-> +			enable-method = "psci";
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +
-> +	uart_clk: dummy26m {
-> +		compatible = "fixed-clock";
-> +		clock-frequency = <26000000>;
-> +		#clock-cells = <0>;
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 14
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 11
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
-> +			     <GIC_PPI 10
-> +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		compatible = "simple-bus";
-> +		ranges;
-> +
-> +		uart5: serial@1000f000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x1000f000 0 0x400>;
-> +			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		sysirq: interrupt-controller@10220a80 {
-> +			compatible = "mediatek,mt2712-sysirq",
-> +				     "mediatek,mt6577-sysirq";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			reg = <0 0x10220a80 0 0x40>;
-> +		};
-> +
-> +		gic: interrupt-controller@10510000 {
-> +			compatible = "arm,gic-400";
-> +			#interrupt-cells = <3>;
-> +			interrupt-parent = <&gic>;
-> +			interrupt-controller;
-> +			reg = <0 0x10510000 0 0x1000>,
-> +			      <0 0x10520000 0 0x1000>,
-> +			      <0 0x10540000 0 0x2000>,
-> +			      <0 0x10560000 0 0x2000>;
-> +			interrupts = <GIC_PPI 9
-> +				(GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
-> +		};
-> +
-> +		uart0: serial@11002000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11002000 0 0x400>;
-> +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart1: serial@11003000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11003000 0 0x400>;
-> +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart2: serial@11004000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11004000 0 0x400>;
-> +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart3: serial@11005000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11005000 0 0x400>;
-> +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +
-> +		uart4: serial@11019000 {
-> +			compatible = "mediatek,mt2712-uart",
-> +				     "mediatek,mt6577-uart";
-> +			reg = <0 0x11019000 0 0x400>;
-> +			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
-> +			clocks = <&uart_clk>;
-> +			status = "disabled";
-> +		};
-> +	};
-> +};
-> +
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> ---
+>>   arch/arm/boot/dts/mt2701.dtsi | 14 ++++++++++++++
+>>   1 file changed, 14 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/mt2701.dtsi 
+>> b/arch/arm/boot/dts/mt2701.dtsi
+>> index 8f13c70..4dd5048 100644
+>> --- a/arch/arm/boot/dts/mt2701.dtsi
+>> +++ b/arch/arm/boot/dts/mt2701.dtsi
+>> @@ -298,6 +298,20 @@
+>>           power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+>>       };
+>> +    jpegdec: jpegdec@15004000 {
+>> +        compatible = "mediatek,mt2701-jpgdec";
+>> +        reg = <0 0x15004000 0 0x1000>;
+>> +        interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_LOW>;
+>> +        clocks =  <&imgsys CLK_IMG_JPGDEC_SMI>,
+>> +              <&imgsys CLK_IMG_JPGDEC>;
+>> +        clock-names = "jpgdec-smi",
+>> +                  "jpgdec";
+>> +        power-domains = <&scpsys MT2701_POWER_DOMAIN_ISP>;
+>> +        mediatek,larb = <&larb2>;
+>> +        iommus = <&iommu MT2701_M4U_PORT_JPGDEC_WDMA>,
+>> +             <&iommu MT2701_M4U_PORT_JPGDEC_BSDMA>;
+>> +    };
+>> +
+>>       vdecsys: syscon@16000000 {
+>>           compatible = "mediatek,mt2701-vdecsys", "syscon";
+>>           reg = <0 0x16000000 0 0x1000>;
+>>
