@@ -1,109 +1,128 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 03/11] clk: mvebu: cp110: make failure labels more
- meaningful
-Date: Wed, 31 May 2017 15:41:47 +0200
-Message-ID: <a74d055e9c5e20cd563d6d13da4b3733411dceeb.1496237893.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v2 09/11] clk: mvebu: cp110: add sdio clock to cp-110 system controller
+Date: Wed, 31 May 2017 15:41:53 +0200
+Message-ID: <d0021421e2446b0eedf7d64a7ab19581fcedd124.1496237893.git-series.gregory.clement@free-electrons.com>
 References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
 References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-In preparation to the addition of a new clock, rename the goto labels
-used to handle the failure cases using a name related to the failure
-cause. This will allow to insert additional failing cases without
-renaming all the labels.
+From: Konstantin Porotchkin <kostap@marvell.com>
 
+This commit updates the CP110 system controller driver to add the
+definition for a missing clock.
+
+The SDIO clock is dedicated driving the SDHCI interface and its frequency
+is 400MHz (2/5 of PLL source clock).
+
+The SDIO interface should be bound to this clock and not the core clock
+as in the older code.
+Using the wrong clock lead to a maximum SDHCI frequency of 250 Mhz, while
+the HW really supports up to 400 Mhz.
+
+This patch also fixes the NAND clock relationship documentation.
+
+Signed-off-by: Konstantin Porotchkin <kostap@marvell.com>
+[gregory.clement@free-electrons.com:
+- use sdio instead of emmc to name the clock]
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/clk/mvebu/cp110-system-controller.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ drivers/clk/mvebu/cp110-system-controller.c | 28 ++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-index 8f315c74997e..2a75397f9304 100644
+index ecbcae321424..8be7ae25c7eb 100644
 --- a/drivers/clk/mvebu/cp110-system-controller.c
 +++ b/drivers/clk/mvebu/cp110-system-controller.c
-@@ -221,7 +221,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 					1000 * 1000 * 1000);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail0;
-+		goto fail_apll;
- 	}
+@@ -11,15 +11,16 @@
+  */
  
- 	cp110_clks[CP110_CORE_APLL] = hw;
-@@ -232,7 +232,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail1;
-+		goto fail_ppv2;
- 	}
+ /*
+- * CP110 has 5 core clocks:
++ * CP110 has 6 core clocks:
+  *
+  *  - APLL		(1 Ghz)
+  *    - PPv2 core	(1/3 APLL)
+  *    - EIP		(1/2 APLL)
+- *      - Core		(1/2 EIP)
++ *     - Core		(1/2 EIP)
++ *    - SDIO		(2/5 APLL)
+  *
+  *  - NAND clock, which is either:
+- *    - Equal to the core clock
++ *    - Equal to SDIO clock
+  *    - 2/5 APLL
+  *
+  * CP110 has 32 gatable clocks, for the various peripherals in the
+@@ -46,7 +47,7 @@ enum {
+ 	CP110_CLK_TYPE_GATABLE,
+ };
  
- 	cp110_clks[CP110_CORE_PPV2] = hw;
-@@ -243,7 +243,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	hw = clk_hw_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail2;
-+		goto fail_eip;
- 	}
+-#define CP110_MAX_CORE_CLOCKS		5
++#define CP110_MAX_CORE_CLOCKS		6
+ #define CP110_MAX_GATABLE_CLOCKS	32
  
- 	cp110_clks[CP110_CORE_EIP] = hw;
-@@ -254,7 +254,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	hw = clk_hw_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail3;
-+		goto fail_core;
- 	}
+ #define CP110_CLK_NUM \
+@@ -57,6 +58,7 @@ enum {
+ #define CP110_CORE_EIP			2
+ #define CP110_CORE_CORE			3
+ #define CP110_CORE_NAND			4
++#define CP110_CORE_SDIO			5
  
- 	cp110_clks[CP110_CORE_CORE] = hw;
-@@ -270,7 +270,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 						   core_name, 0, 1, 1);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail4;
-+		goto fail_nand;
- 	}
+ /* A number of gatable clocks need special handling */
+ #define CP110_GATE_AUDIO		0
+@@ -235,7 +237,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
+ 	struct regmap *regmap;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+-	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name;
++	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name,
++		*sdio_name;
+ 	struct clk_hw_onecell_data *cp110_clk_data;
+ 	struct clk_hw *hw, **cp110_clks;
+ 	u32 nand_clk_ctrl;
+@@ -315,6 +318,17 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
  
  	cp110_clks[CP110_CORE_NAND] = hw;
-@@ -366,15 +366,15 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 
++	/* SDIO clock is APLL/2.5 */
++	sdio_name = cp110_unique_name(dev, syscon_node, "sdio-core");
++	hw = clk_hw_register_fixed_factor(NULL, sdio_name,
++					  apll_name, 0, 2, 5);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto fail_sdio;
++	}
++
++	cp110_clks[CP110_CORE_SDIO] = hw;
++
+ 	/* create the unique name for all the gate clocks */
+ 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
+ 		gate_name[i] =	cp110_unique_name(dev, syscon_node,
+@@ -344,6 +358,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
+ 			parent = ppv2_name;
+ 			break;
+ 		case CP110_GATE_SDIO:
++			parent = sdio_name;
++			break;
+ 		case CP110_GATE_GOP_DP:
+ 			parent = gate_name[CP110_GATE_GOP];
+ 			break;
+@@ -391,6 +407,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
+ 			cp110_unregister_gate(hw);
  	}
  
++	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_SDIO]);
++fail_sdio:
  	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_NAND]);
--fail4:
-+fail_nand:
+ fail_nand:
  	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_CORE]);
--fail3:
-+fail_core:
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_EIP]);
--fail2:
-+fail_eip:
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_PPV2]);
--fail1:
-+fail_ppv2:
- 	clk_hw_unregister_fixed_rate(cp110_clks[CP110_CORE_APLL]);
--fail0:
-+fail_apll:
- 	return ret;
- }
- 
 -- 
 git-series 0.9.1
