@@ -1,26 +1,37 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v4 4/5] device property: Introduce
- fwnode_device_is_available()
-Date: Wed, 31 May 2017 12:58:04 +0300
-Message-ID: <20170531095804.GD2784@lahna.fi.intel.com>
-References: <1495443202-22817-1-git-send-email-sakari.ailus@linux.intel.com>
- <1495443202-22817-5-git-send-email-sakari.ailus@linux.intel.com>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH v3] ARM: dts: at91: sama5d2_xplained: add pwm controller
+Date: Wed, 31 May 2017 12:01:04 +0200
+Message-ID: <20170531100104.ol6gkredbncq52kl@piout.net>
+References: <1496222592-19375-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1495443202-22817-5-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com
+In-Reply-To: <1496222592-19375-1-git-send-email-claudiu.beznea@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: nicolas.ferre@microchip.com, boris.brezillon@free-electrons.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 22, 2017 at 11:53:21AM +0300, Sakari Ailus wrote:
->  /**
-> + * fwnode_device_is_available - check if a device is available for use
-> + * @fwnode: Pointer to the fwnode of the device.
-> + */
-> +bool fwnode_device_is_available(struct fwnode_handle *fwnode)
+On 31/05/2017 at 12:23:12 +0300, Claudiu Beznea wrote:
+> Add pwm controller bindings for sama5d2_xplained
+> and enable it.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> ---
+> Changes in v3:
+> - enable pwm in at91-sama5d2_xplained.dts file
+> 
+> Changes in v2:
+> - Correct the typo in patch subject.
+> 
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts | 4 ++++
+>  arch/arm/boot/dts/sama5d2.dtsi              | 8 ++++++++
+>  2 files changed, 12 insertions(+)
+> 
+Applied, thanks.
 
-Can it be const instead? Ditto for of_fwnode_device_is_available() and
-acpi_fwnode_device_is_available) and the .device_available() hook.
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
