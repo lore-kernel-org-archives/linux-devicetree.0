@@ -1,140 +1,114 @@
 From: fenglinw@codeaurora.org
-Subject: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI TRI_LED module
-Date: Wed, 31 May 2017 14:14:37 +0800
-Message-ID: <20170531061541.10808-2-fenglinw@codeaurora.org>
+Subject: [PATCH V1 2/2] pwm: pwm-qti-lpg: Add PWM driver for QTI LPG module
+Date: Wed, 31 May 2017 14:14:38 +0800
+Message-ID: <20170531061541.10808-3-fenglinw@codeaurora.org>
 References: <20170531061541.10808-1-fenglinw@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 In-Reply-To: <20170531061541.10808-1-fenglinw@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
 Cc: subbaram@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com, Fenglin Wu <fenglinw@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Fenglin Wu <fenglinw@codeaurora.org>
 
-QTI TRI_LED module has 3 current sinks for LED driver and each is
-controlled by a PWM channel used for LED dimming or blinking. Add
-the driver to support it.
+Add pwm_chip to support QTI LPG module and export LPG channels as
+PWM devices for consumer drivers' usage.
 
 Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
 ---
- .../devicetree/bindings/leds/leds-qti-rgb.txt      |  66 +++
- drivers/leds/Kconfig                               |   8 +
- drivers/leds/Makefile                              |   1 +
- drivers/leds/leds-qti-rgb.c                        | 634 +++++++++++++++++++++
- 4 files changed, 709 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-qti-rgb.txt
- create mode 100644 drivers/leds/leds-qti-rgb.c
+ .../devicetree/bindings/pwm/pwm-qti-lpg.txt        |  39 ++
+ drivers/pwm/Kconfig                                |  10 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-qti-lpg.c                          | 578 +++++++++++++++++++++
+ 4 files changed, 628 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
+ create mode 100644 drivers/pwm/pwm-qti-lpg.c
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-qti-rgb.txt b/Documentation/devicetree/bindings/leds/leds-qti-rgb.txt
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt b/Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
 new file mode 100644
-index 0000000..62daf38
+index 0000000..df81f5f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-qti-rgb.txt
-@@ -0,0 +1,66 @@
-+Qualcomm Technologies, Inc. TRI_LED driver specific bindings
++++ b/Documentation/devicetree/bindings/pwm/pwm-qti-lpg.txt
+@@ -0,0 +1,39 @@
++Qualcomm Technologies, Inc. LPG driver specific bindings
 +
-+This binding document describes the properties of TRI_LED module in
-+Qualcomm Technologies, Inc. PMIC chips.
++This binding document describes the properties of LPG (Light Pulse Generator)
++device module in Qualcomm Technologies, Inc. PMIC chips.
 +
 +- compatible:
 +	Usage: required
 +	Value type: <string>
-+	Definition: Must be "qcom,leds-rgb".
++	Definition: Must be "qcom,pwm-lpg".
 +
 +- reg:
 +	Usage: required
 +	Value type: <prop-encoded-array>
-+	Definition: Register base of the TRI_LED module and length.
++	Definition: Register base and length for LPG modules. The length
++		      varies based on the number of channels available in
++		      the PMIC chips.
 +
-+- pwm-names:
++- reg-names:
 +	Usage: required
-+	Value type: <stringlist>
-+	Definition: A list of string to label the PWM devices defined in pwms
-+		property which are using for controlling LEDs.
-+		It must be: "blue", "green", "red".
++	Value type: <string>
++	Definition: The name of the register defined in the reg property.
++		      It must be "lpg-base".
 +
-+- pwms:
++- #pwm-cells:
 +	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: A list of the PWM devices (phandles) used for controlling
-+		LEDs.
-+
-+- qcom,support-blink:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: An array of integer values to indicate if "blue", "green", "red"
-+		LEDs support blink control. The values are listed as the fixed
-+		order for "blue", "green", "red" LEDs.
-+
-+- qcom,on-ms:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: An array of time values (milli-seconds) to represent the
-+		on duration for "blue", "green", "red" LEDs. The values are
-+		listed as the fixed order for "blue", "green", "red" LEDs.
-+		This property has to be defined if "qcom,support-blink" is
-+		present.
-+
-+- qcom,off-ms:
-+	Usage: optional
-+	Value type: <prop-encoded-array>
-+	Definition: An array of time values (milli-seconds) to represent the
-+		off duration for "blue", "green", "red" LEDs. The values are
-+		listed as the fixed order for "blue", "green", "red" LEDs.
-+		This property has to be defined if "qcom,support-blink" is
-+		present.
++	Value type: <u32>
++	Definition: The number of cells in "pwms" property specified in
++		      PWM user nodes. It should be 2. The first cell is
++		      the PWM channel ID indexed from 0, and the second
++		      cell is the PWM default period in nanoseconds.
 +
 +Example:
 +
-+	pmi8998_rgb: rgb@d000{
-+		compatible = "qcom,leds-rgb";
-+		reg = <0xd000 0x100>;
-+		pwm-names = "blue", "green", "red";
-+		pwms =  <&pmi8998_pwm_3 0 1000000>,
-+			<&pmi8998_pwm_4 0 1000000>,
-+			<&pmi8998_pwm_5 0 1000000>;
-+		qcom,support-blink = <1 1 1>;
-+		qcom,on-ms = <500 500 500>;
-+		qcom,off-ms = <500 500 500>;
++	pmi8998_lpg: lpg@b100 {
++		compatible = "qcom,pwm-lpg";
++		reg = <0xb100 0x600>;
++		reg-names = "lpg-base";
++		#pwm-cells = <2>;
 +	};
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index 6c29998..8996bde 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -667,6 +667,14 @@ config LEDS_PM8058
- 	  Choose this option if you want to use the LED drivers in
- 	  the Qualcomm PM8058 PMIC.
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 313c107..711104f 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -349,6 +349,16 @@ config PWM_PXA
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-pxa.
  
-+config LEDS_QTI_RGB
-+	tristate "Qualcomm Technologies, Inc. TRI_LED driver"
-+	depends on LEDS_CLASS && MFD_SPMI_PMIC && PWM && OF
++config PWM_QTI_LPG
++	tristate "Qualcomm Technologies, Inc. LPG driver"
++	depends on  MFD_SPMI_PMIC && OF
 +	help
-+	  This driver supports the TRI_LED module found in Qualcomm
-+	  Technologies, Inc. PMIC's chips. TRI_LED supports 3 LED drivers and
-+	  each is controlled by a PWM channel used for dimming or blinking.
++	  This driver supports the LPG (Light Pulse Generator) module found in
++	  Qualcomm Technologies, Inc. PMIC chips. Each LPG channel can be
++	  configured to operate in PWM mode to output a fixed amplitude with
++	  variable duty cycle or in LUT (Look up table) mode to output PWM
++	  signal with a modulated amplitude.
 +
- config LEDS_MLXCPLD
- 	tristate "LED support for the Mellanox boards"
- 	depends on X86_64 && DMI
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 45f1339..d1a967c 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_LEDS_COBALT_QUBE)		+= leds-cobalt-qube.o
- obj-$(CONFIG_LEDS_COBALT_RAQ)		+= leds-cobalt-raq.o
- obj-$(CONFIG_LEDS_SUNFIRE)		+= leds-sunfire.o
- obj-$(CONFIG_LEDS_PCA9532)		+= leds-pca9532.o
-+obj-$(CONFIG_LEDS_QTI_RGB)		+= leds-qti-rgb.o
- obj-$(CONFIG_LEDS_GPIO_REGISTER)	+= leds-gpio-register.o
- obj-$(CONFIG_LEDS_GPIO)			+= leds-gpio.o
- obj-$(CONFIG_LEDS_LP3944)		+= leds-lp3944.o
-diff --git a/drivers/leds/leds-qti-rgb.c b/drivers/leds/leds-qti-rgb.c
+ config PWM_RCAR
+ 	tristate "Renesas R-Car PWM support"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 93da1f7..16958be 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -33,6 +33,7 @@ obj-$(CONFIG_PWM_OMAP_DMTIMER)	+= pwm-omap-dmtimer.o
+ obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
+ obj-$(CONFIG_PWM_PUV3)		+= pwm-puv3.o
+ obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
++obj-$(CONFIG_PWM_QTI_LPG)	+= pwm-qti-lpg.o
+ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
+ obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
+ obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
+diff --git a/drivers/pwm/pwm-qti-lpg.c b/drivers/pwm/pwm-qti-lpg.c
 new file mode 100644
-index 0000000..0e363d4
+index 0000000..929b6a4
 --- /dev/null
-+++ b/drivers/leds/leds-qti-rgb.c
-@@ -0,0 +1,634 @@
++++ b/drivers/pwm/pwm-qti-lpg.c
+@@ -0,0 +1,578 @@
 +/* Copyright (c) 2017, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
@@ -154,7 +128,6 @@ index 0000000..0e363d4
 +#include <linux/err.h>
 +#include <linux/init.h>
 +#include <linux/kernel.h>
-+#include <linux/leds.h>
 +#include <linux/module.h>
 +#include <linux/mutex.h>
 +#include <linux/of.h>
@@ -163,529 +136,493 @@ index 0000000..0e363d4
 +#include <linux/pwm.h>
 +#include <linux/regmap.h>
 +#include <linux/types.h>
-+#include <linux/workqueue.h>
 +
-+#define REG_LED_SRC_SEL		0x45
-+#define REG_LED_EN_CTL		0x46
-+#define REG_LED_ATC_EN_CTL	0x47
++#define REG_SIZE_PER_LPG	0x100
 +
-+/* REG_LED_SRC_SEL */
-+#define LED_SRC_SEL_MASK	GENMASK(1, 0)
-+#define LED_SRC_GND		0x00
-+#define LED_SRC_VINRGB_VBOOST	0x01
-+#define LED_SRC_VSYS		0x03
++#define REG_LPG_PWM_SIZE_CLK		0x41
++#define REG_LPG_PWM_FREQ_PREDIV_CLK	0x42
++#define REG_LPG_PWM_TYPE_CONFIG		0x43
++#define REG_LPG_PWM_VALUE_LSB		0x44
++#define REG_LPG_PWM_VALUE_MSB		0x45
++#define REG_LPG_ENABLE_CONTROL		0x46
++#define REG_LPG_PWM_SYNC		0x47
 +
-+/* REG_LED_EN_CTL */
-+#define LED_EN_CTL_MASK		GENMASK(7, 5)
-+#define LED_EN_CTL_OFFSET	5
++/* REG_LPG_PWM_SIZE_CLK */
++#define LPG_PWM_SIZE_MASK		BIT(4)
++#define LPG_PWM_SIZE_SHIFT		4
++#define LPG_PWM_CLK_FREQ_SEL_MASK	GENMASK(1, 0)
 +
-+/* REG_LED_ATC_EN_CTL */
-+#define LED_ATC_EN_MASK		GENMASK(7, 5)
++/* REG_LPG_PWM_FREQ_PREDIV_CLK */
++#define LPG_PWM_FREQ_PREDIV_MASK	GENMASK(6, 5)
++#define LPG_PWM_FREQ_PREDIV_SHIFT	5
++#define LPG_PWM_FREQ_EXPONENT_MASK	GENMASK(2, 0)
 +
-+#define NUM_LEDS		3
-+const char * const led_names[NUM_LEDS] = {"blue", "green", "red"};
++/* REG_LPG_PWM_TYPE_CONFIG */
++#define LPG_PWM_EN_GLITCH_REMOVAL_MASK	BIT(5)
 +
-+struct pwm_setting {
-+	u32	initial_period_ns;
-+	u32	period_ns;
-+	u32	duty_ns;
++/* REG_LPG_PWM_VALUE_LSB */
++#define LPG_PWM_VALUE_LSB_MASK		GENMASK(7, 0)
++
++/* REG_LPG_PWM_VALUE_MSB */
++#define LPG_PWM_VALUE_MSB_MASK		BIT(0)
++
++/* REG_LPG_ENABLE_CONTROL */
++#define LPG_EN_LPG_OUT_BIT		BIT(7)
++#define LPG_PWM_SRC_SELECT_MASK		BIT(2)
++#define LPG_PWM_SRC_SELECT_SHIFT	2
++#define LPG_EN_RAMP_GEN_MASK		BIT(1)
++#define LPG_EN_RAMP_GEN_SHIFT		1
++
++/* REG_LPG_PWM_SYNC */
++#define LPG_PWM_VALUE_SYNC		BIT(0)
++
++#define NUM_PWM_SIZE			2
++#define NUM_PWM_CLK			3
++#define NUM_CLK_PREDIV			4
++#define NUM_PWM_EXP			8
++
++enum {
++	LUT_PATTERN = 0,
++	PWM_OUTPUT,
 +};
 +
-+struct led_setting {
-+	u32	brightness;
-+	u32	on_ms;
-+	u32	off_ms;
-+	bool	blink;
++static const int pwm_size[NUM_PWM_SIZE] = {6, 9};
++static const int clk_freq_hz[NUM_PWM_CLK] = {1024, 32768, 19200000};
++static const int clk_prediv[NUM_CLK_PREDIV] = {1, 3, 5, 6};
++static const int pwm_exponent[NUM_PWM_EXP] = {0, 1, 2, 3, 4, 5, 6, 7};
++
++struct lpg_pwm_config {
++	u32	pwm_size;
++	u32	pwm_clk;
++	u32	prediv;
++	u32	clk_exp;
++	u16	pwm_value;
++	u32	best_period_ns;
 +};
 +
-+struct qti_rgb_led_dev {
-+	struct led_classdev	cdev;
-+	struct pwm_device	*pwm_dev;
-+	struct pwm_setting	pwm_setting;
-+	struct led_setting	led_setting;
-+	struct qti_rgb_chip	*chip;
-+	struct work_struct	work;
-+	struct mutex		lock;
-+	bool			support_blink;
-+	bool			blinking;
-+	u8			idx;
++struct qti_lpg_channel {
++	struct qti_lpg_chip		*chip;
++	struct lpg_pwm_config		pwm_config;
++	u32				lpg_idx;
++	u32				reg_base;
++	u8				src_sel;
++	int				current_period_ns;
++	int				current_duty_ns;
 +};
 +
-+struct qti_rgb_chip {
-+	struct device		*dev;
++struct qti_lpg_chip {
++	struct pwm_chip		pwm_chip;
 +	struct regmap		*regmap;
-+	struct qti_rgb_led_dev	leds[NUM_LEDS];
++	struct device		*dev;
++	struct qti_lpg_channel	*lpgs;
 +	struct mutex		bus_lock;
-+	u16			reg_base;
++	u32			lpg_nums;
 +};
 +
-+static int qti_rgb_masked_write(struct qti_rgb_chip *chip,
++static int qti_lpg_write(struct qti_lpg_channel *lpg, u16 addr, u8 val)
++{
++	int rc;
++
++	mutex_lock(&lpg->chip->bus_lock);
++	rc = regmap_write(lpg->chip->regmap, lpg->reg_base + addr, val);
++	if (rc < 0)
++		dev_err(lpg->chip->dev, "Write addr 0x%x with value %d failed, rc=%d\n",
++				lpg->reg_base + addr, val, rc);
++	mutex_unlock(&lpg->chip->bus_lock);
++
++	return rc;
++}
++
++static int qti_lpg_masked_write(struct qti_lpg_channel *lpg,
 +				u16 addr, u8 mask, u8 val)
 +{
 +	int rc;
 +
-+	mutex_lock(&chip->bus_lock);
-+	rc = regmap_update_bits(chip->regmap, chip->reg_base + addr, mask, val);
++	mutex_lock(&lpg->chip->bus_lock);
++	rc = regmap_update_bits(lpg->chip->regmap, lpg->reg_base + addr,
++							mask, val);
 +	if (rc < 0)
-+		dev_err(chip->dev, "Update addr 0x%x to val 0x%x with mask 0x%x failed, rc=%d\n",
-+					addr, val, mask, rc);
-+	mutex_unlock(&chip->bus_lock);
++		dev_err(lpg->chip->dev, "Update addr 0x%x to val 0x%x with mask 0x%x failed, rc=%d\n",
++				lpg->reg_base + addr, val, mask, rc);
++	mutex_unlock(&lpg->chip->bus_lock);
 +
 +	return rc;
 +}
 +
-+static int __rgb_led_config_pwm(struct qti_rgb_led_dev *led,
-+				struct pwm_setting *pwm)
-+{
-+	int rc;
++static struct qti_lpg_channel *pwm_dev_to_qti_lpg(struct pwm_chip *pwm_chip,
++				struct pwm_device *pwm) {
 +
-+	if (pwm->duty_ns == 0) {
-+		pwm_disable(led->pwm_dev);
-+		return 0;
++	struct qti_lpg_chip *chip = container_of(pwm_chip,
++			struct qti_lpg_chip, pwm_chip);
++	u32 hw_idx = pwm->hwpwm;
++
++	if (hw_idx >= chip->lpg_nums) {
++		dev_err(chip->dev, "hw index %d out of range [0-%d]\n",
++				hw_idx, chip->lpg_nums - 1);
++		return NULL;
 +	}
 +
-+	rc = pwm_config(led->pwm_dev, pwm->duty_ns, pwm->period_ns);
-+	if (rc < 0) {
-+		dev_err(led->chip->dev, "Config PWM settings for %s led failed, rc=%d\n",
-+					led->cdev.name, rc);
-+		return rc;
-+	}
-+
-+	rc = pwm_enable(led->pwm_dev);
-+	if (rc < 0)
-+		dev_err(led->chip->dev, "Enable PWM for %s led failed, rc=%d\n",
-+					led->cdev.name, rc);
-+
-+	return rc;
++	return &chip->lpgs[hw_idx];
 +}
 +
-+static int __rgb_led_set(struct qti_rgb_led_dev *led)
++static int __find_index_in_array(int member, const int array[], int length)
 +{
-+	int rc = 0;
-+	u8 val = 0, mask = 0;
-+
-+	rc = __rgb_led_config_pwm(led, &led->pwm_setting);
-+	if (rc < 0) {
-+		dev_err(led->chip->dev, "Configure PWM for %s led failed, rc=%d\n",
-+					led->cdev.name, rc);
-+		return rc;
-+	}
-+
-+	mask |= 1 << (led->idx + LED_EN_CTL_OFFSET);
-+
-+	if (led->pwm_setting.duty_ns == 0)
-+		val = 0;
-+	else
-+		val = mask;
-+
-+	rc = qti_rgb_masked_write(led->chip, REG_LED_EN_CTL, mask, val);
-+	if (rc < 0)
-+		dev_err(led->chip->dev, "Update addr 0x%x failed, rc=%d\n",
-+					REG_LED_EN_CTL, rc);
-+
-+	return rc;
-+}
-+
-+static void rgb_led_set_work(struct work_struct *work)
-+{
-+	struct qti_rgb_led_dev *led = container_of(work,
-+			struct qti_rgb_led_dev, work);
-+	u32 brightness = 0, on_ms, off_ms, period_ns, duty_ns;
-+	int rc = 0;
-+
-+	mutex_lock(&led->lock);
-+	if (led->led_setting.blink) {
-+		on_ms = led->led_setting.on_ms;
-+		off_ms = led->led_setting.off_ms;
-+
-+		if (on_ms > INT_MAX / NSEC_PER_MSEC)
-+			duty_ns = INT_MAX - 1;
-+		else
-+			duty_ns = on_ms * NSEC_PER_MSEC;
-+
-+		if (on_ms + off_ms > INT_MAX / NSEC_PER_MSEC) {
-+			period_ns = INT_MAX;
-+			duty_ns = (period_ns / (on_ms + off_ms)) * on_ms;
-+		} else {
-+			period_ns = (on_ms + off_ms) * NSEC_PER_MSEC;
-+		}
-+
-+		if (period_ns < duty_ns && duty_ns != 0)
-+			period_ns = duty_ns + 1;
-+	} else {
-+		brightness = led->led_setting.brightness;
-+		period_ns = pwm_get_period(led->pwm_dev);
-+		/* Use initial period if no blinking is required */
-+		if (period_ns > led->pwm_setting.initial_period_ns)
-+			period_ns = led->pwm_setting.initial_period_ns;
-+
-+		if (period_ns > INT_MAX / brightness)
-+			duty_ns = (period_ns / LED_FULL) * brightness;
-+		else
-+			duty_ns = (period_ns * brightness) / LED_FULL;
-+
-+		if (period_ns < duty_ns && duty_ns != 0)
-+			period_ns = duty_ns + 1;
-+	}
-+	pr_debug("PWM settings for %s led: period = %dns, duty = %dns\n",
-+			led->cdev.name, period_ns, duty_ns);
-+
-+	led->pwm_setting.duty_ns = duty_ns;
-+	led->pwm_setting.period_ns = period_ns;
-+
-+	rc = __rgb_led_set(led);
-+	if (rc < 0) {
-+		dev_err(led->chip->dev, "rgb_led_set %s failed, rc=%d\n",
-+				led->cdev.name, rc);
-+		goto unlock;
-+	}
-+
-+	if (led->led_setting.blink) {
-+		led->cdev.brightness = LED_FULL;
-+		led->blinking = true;
-+	} else {
-+		led->cdev.brightness = brightness;
-+		led->blinking = false;
-+	}
-+
-+unlock:
-+	mutex_unlock(&led->lock);
-+}
-+
-+static void qti_rgb_led_set(struct led_classdev *led_cdev,
-+		enum led_brightness brightness)
-+{
-+	struct qti_rgb_led_dev *led =
-+		container_of(led_cdev, struct qti_rgb_led_dev, cdev);
-+
-+	mutex_lock(&led->lock);
-+	if (brightness > LED_FULL)
-+		brightness = LED_FULL;
-+
-+	if (brightness == led->led_setting.brightness &&
-+				!led->blinking) {
-+		mutex_unlock(&led->lock);
-+		return;
-+	}
-+	led->led_setting.blink = false;
-+	led->led_setting.brightness = brightness;
-+	mutex_unlock(&led->lock);
-+
-+	schedule_work(&led->work);
-+}
-+
-+static enum led_brightness qti_rgb_led_get(struct led_classdev *led_cdev)
-+{
-+	return led_cdev->brightness;
-+}
-+
-+static int qti_rgb_led_blink(struct led_classdev *led_cdev,
-+		unsigned long *on_ms, unsigned long *off_ms)
-+{
-+	struct qti_rgb_led_dev *led =
-+		container_of(led_cdev, struct qti_rgb_led_dev, cdev);
-+
-+	if (*on_ms == 0 || *off_ms == 0) {
-+		dev_err(led->chip->dev, "Can't set blink for on=%lums off=%lums\n",
-+						*on_ms, *off_ms);
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&led->lock);
-+	if (led->blinking && *on_ms == led->led_setting.on_ms &&
-+			*off_ms == led->led_setting.off_ms) {
-+		pr_debug("Ignore, on/off setting is not changed: on %lums, off %lums\n",
-+							*on_ms, *off_ms);
-+		mutex_unlock(&led->lock);
-+		return 0;
-+	}
-+
-+	led->led_setting.blink = true;
-+	led->led_setting.on_ms = (u32)*on_ms;
-+	led->led_setting.off_ms = (u32)*off_ms;
-+	mutex_unlock(&led->lock);
-+
-+	schedule_work(&led->work);
-+
-+	return 0;
-+}
-+
-+static ssize_t blink_store(struct device *dev, struct device_attribute *attr,
-+					const char *buf, size_t count)
-+{
-+	int rc;
-+	u32 blink;
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct qti_rgb_led_dev *led =
-+		container_of(led_cdev, struct qti_rgb_led_dev, cdev);
-+
-+	rc = kstrtouint(buf, 0, &blink);
-+	if (rc)
-+		return rc;
-+
-+	if (!!blink)
-+		qti_rgb_led_blink(led_cdev,
-+				(unsigned long *)&led->led_setting.on_ms,
-+				(unsigned long *)&led->led_setting.off_ms);
-+	else
-+		qti_rgb_led_set(led_cdev, LED_OFF);
-+
-+	return count;
-+}
-+
-+static ssize_t blink_show(struct device *dev, struct device_attribute *attr,
-+							char *buf)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct qti_rgb_led_dev *led =
-+		container_of(led_cdev, struct qti_rgb_led_dev, cdev);
-+	bool blink;
-+
-+	blink = led->led_setting.blink &&
-+			led->cdev.brightness == LED_FULL;
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", blink);
-+}
-+
-+static ssize_t on_off_ms_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	int rc, buff_size;
-+	char buff[32];
-+	char *token, *buff_ptr;
-+	bool blink;
-+	u32 on_ms, off_ms, brightness;
-+
-+	buff_size = min(count, sizeof(buff) - 1);
-+	memcpy(buff, buf, buff_size);
-+	buff[buff_size] = '\0';
-+	buff_ptr = buff;
-+
-+	token = strsep(&buff_ptr, " ");
-+	if (!token)
-+		return -EINVAL;
-+
-+	rc = kstrtouint(token, 0, &on_ms);
-+	if (rc < 0)
-+		return rc;
-+
-+	token = strsep(&buff_ptr, " ");
-+	if (!token)
-+		return -EINVAL;
-+
-+	rc = kstrtouint(token, 0, &off_ms);
-+	if (rc < 0)
-+		return rc;
-+
-+	blink = !(on_ms == 0 || off_ms == 0);
-+	if (on_ms == 0)
-+		brightness = LED_OFF;
-+	else if (off_ms == 0)
-+		brightness = LED_FULL;
-+
-+	if (blink)
-+		qti_rgb_led_blink(led_cdev, (unsigned long *)&on_ms,
-+					(unsigned long *)&off_ms);
-+	else
-+		qti_rgb_led_set(led_cdev, brightness);
-+
-+	return count;
-+}
-+
-+static ssize_t on_off_ms_show(struct device *dev, struct device_attribute *attr,
-+							char *buf)
-+{
-+	struct led_classdev *led_cdev = dev_get_drvdata(dev);
-+	struct qti_rgb_led_dev *led =
-+		container_of(led_cdev, struct qti_rgb_led_dev, cdev);
-+
-+	return snprintf(buf, PAGE_SIZE, "on: %dms, off: %dms\n",
-+			led->led_setting.on_ms, led->led_setting.off_ms);
-+}
-+
-+static DEVICE_ATTR(blink, 0644, blink_show, blink_store);
-+static DEVICE_ATTR(on_off_ms, 0644, on_off_ms_show, on_off_ms_store);
-+
-+static struct attribute *blink_attrs[] = {
-+	&dev_attr_blink.attr,
-+	&dev_attr_on_off_ms.attr,
-+	NULL
-+};
-+
-+static const struct attribute_group blink_attrs_group = {
-+	.attrs = blink_attrs,
-+};
-+
-+static int qti_rgb_leds_register(struct qti_rgb_chip *chip)
-+{
-+	int rc, i, j;
-+
-+	for (i = 0; i < NUM_LEDS; i++) {
-+		INIT_WORK(&chip->leds[i].work, rgb_led_set_work);
-+		mutex_init(&chip->leds[i].lock);
-+		chip->leds[i].cdev.name = led_names[i];
-+		chip->leds[i].cdev.max_brightness = LED_FULL;
-+		chip->leds[i].cdev.brightness = LED_OFF;
-+		chip->leds[i].cdev.brightness_set = qti_rgb_led_set;
-+		chip->leds[i].cdev.brightness_get = qti_rgb_led_get;
-+		if (chip->leds[i].support_blink)
-+			chip->leds[i].cdev.blink_set = qti_rgb_led_blink;
-+
-+		rc = devm_led_classdev_register(chip->dev, &chip->leds[i].cdev);
-+		if (rc < 0) {
-+			dev_err(chip->dev, "%s led class device registering failed, rc=%d\n",
-+							led_names[i], rc);
-+			goto destroy;
-+		}
-+
-+		if (chip->leds[i].support_blink) {
-+			rc = sysfs_create_group(&chip->leds[i].cdev.dev->kobj,
-+							&blink_attrs_group);
-+			if (rc < 0) {
-+				dev_err(chip->dev, "Create blink_attrs for %s led failed, rc=%d\n",
-+						led_names[i], rc);
-+				goto destroy;
-+			}
-+		}
-+	}
-+
-+	return 0;
-+destroy:
-+	for (j = 0; j < i; j++) {
-+		mutex_destroy(&chip->leds[i].lock);
-+		sysfs_remove_group(&chip->leds[i].cdev.dev->kobj,
-+				&blink_attrs_group);
-+	}
-+
-+	return rc;
-+}
-+
-+static int qti_rgb_leds_init_pwm_settings(struct qti_rgb_chip *chip)
-+{
-+	u32 period_ns, duty_ns;
-+	bool is_enabled;
 +	int i;
 +
-+	for (i = 0; i < NUM_LEDS; i++) {
-+		period_ns = pwm_get_period(chip->leds[i].pwm_dev);
-+		duty_ns = pwm_get_duty_cycle(chip->leds[i].pwm_dev);
-+		is_enabled = pwm_is_enabled(chip->leds[i].pwm_dev);
-+
-+		pr_debug("%s led PWM default setting: period = %dns, duty = %dns, is_enabled = %d\n",
-+			led_names[i], period_ns, duty_ns, is_enabled);
-+		chip->leds[i].pwm_setting.initial_period_ns = period_ns;
-+		if (duty_ns > period_ns) {
-+			duty_ns = period_ns - 1;
-+			pwm_set_duty_cycle(chip->leds[i].pwm_dev, duty_ns);
-+		}
-+
-+		if (is_enabled)
-+			pwm_disable(chip->leds[i].pwm_dev);
++	for (i = 0; i < length; i++) {
++		if (member == array[i])
++			return i;
 +	}
 +
-+	return 0;
++	return -EINVAL;
 +}
 +
-+static int qti_rgb_leds_hw_init(struct qti_rgb_chip *chip)
++static int qti_lpg_set_pwm_config(struct qti_lpg_channel *lpg)
 +{
-+	int rc = 0;
++	int rc;
++	u8 val, mask;
++	int pwm_size_idx, pwm_clk_idx, prediv_idx, clk_exp_idx;
 +
-+	/* Disable ATC_EN for LEDs */
-+	rc = qti_rgb_masked_write(chip, REG_LED_ATC_EN_CTL,
-+				LED_ATC_EN_MASK, 0);
++	pwm_size_idx = __find_index_in_array(lpg->pwm_config.pwm_size,
++			pwm_size, ARRAY_SIZE(pwm_size));
++	pwm_clk_idx = __find_index_in_array(lpg->pwm_config.pwm_clk,
++			clk_freq_hz, ARRAY_SIZE(clk_freq_hz));
++	prediv_idx = __find_index_in_array(lpg->pwm_config.prediv,
++			clk_prediv, ARRAY_SIZE(clk_prediv));
++	clk_exp_idx = __find_index_in_array(lpg->pwm_config.clk_exp,
++			pwm_exponent, ARRAY_SIZE(pwm_exponent));
++
++	if (pwm_size_idx < 0 || pwm_clk_idx < 0
++			|| prediv_idx < 0 || clk_exp_idx < 0)
++		return -EINVAL;
++
++	pwm_clk_idx += 1;
++	val = pwm_size_idx << LPG_PWM_SIZE_SHIFT | pwm_clk_idx;
++	mask = LPG_PWM_SIZE_MASK | LPG_PWM_CLK_FREQ_SEL_MASK;
++	rc = qti_lpg_masked_write(lpg, REG_LPG_PWM_SIZE_CLK, mask, val);
 +	if (rc < 0) {
-+		dev_err(chip->dev, "Writing ATC_EN_CTL failed, rc=%d\n", rc);
++		dev_err(lpg->chip->dev, "Write LPG_PWM_SIZE_CLK failed, rc=%d\n",
++							rc);
 +		return rc;
 +	}
 +
-+	/* Select VINRGB_VBOOST as the source */
-+	rc = qti_rgb_masked_write(chip, REG_LED_SRC_SEL, LED_SRC_SEL_MASK,
-+				LED_SRC_VINRGB_VBOOST);
++	val = prediv_idx << LPG_PWM_FREQ_PREDIV_SHIFT | clk_exp_idx;
++	mask = LPG_PWM_FREQ_PREDIV_MASK | LPG_PWM_FREQ_EXPONENT_MASK;
++	rc = qti_lpg_masked_write(lpg, REG_LPG_PWM_FREQ_PREDIV_CLK, mask, val);
 +	if (rc < 0) {
-+		dev_err(chip->dev, "Writing SRC_SEL failed, rc=%d\n", rc);
++		dev_err(lpg->chip->dev, "Write LPG_PWM_FREQ_PREDIV_CLK failed, rc=%d\n",
++							rc);
++		return rc;
++	}
++
++	val = lpg->pwm_config.pwm_value & LPG_PWM_VALUE_LSB_MASK;
++	rc = qti_lpg_write(lpg, REG_LPG_PWM_VALUE_LSB, val);
++	if (rc < 0) {
++		dev_err(lpg->chip->dev, "Write LPG_PWM_VALUE_LSB failed, rc=%d\n",
++							rc);
++		return rc;
++	}
++
++	val = lpg->pwm_config.pwm_value >> 8;
++	mask = LPG_PWM_VALUE_MSB_MASK;
++	rc = qti_lpg_masked_write(lpg, REG_LPG_PWM_VALUE_MSB, mask, val);
++	if (rc < 0) {
++		dev_err(lpg->chip->dev, "Write LPG_PWM_VALUE_MSB failed, rc=%d\n",
++							rc);
++		return rc;
++	}
++
++	val = LPG_PWM_VALUE_SYNC;
++	rc = qti_lpg_write(lpg, REG_LPG_PWM_SYNC, val);
++	if (rc < 0) {
++		dev_err(lpg->chip->dev, "Write LPG_PWM_SYNC failed, rc=%d\n",
++							rc);
 +		return rc;
 +	}
 +
 +	return rc;
 +}
 +
-+static int qti_rgb_leds_parse_dt(struct qti_rgb_chip *chip)
++static void __qti_lpg_calc_pwm_period(int period_ns,
++			struct lpg_pwm_config *pwm_config)
 +{
-+	int rc, i, count;
++	struct lpg_pwm_config configs[NUM_PWM_SIZE];
++	int i, j, m, n;
++	int tmp1, tmp2;
++	int clk_period_ns = 0, pwm_clk_period_ns;
++	int clk_delta_ns = INT_MAX, min_clk_delta_ns = INT_MAX;
++	int pwm_period_delta = INT_MAX, min_pwm_period_delta = INT_MAX;
++	int pwm_size_step;
++
++	/*
++	 *              (2^pwm_size) * (2^pwm_exp) * prediv * NSEC_PER_SEC
++	 * pwm_period = ---------------------------------------------------
++	 *                               clk_freq_hz
++	 *
++	 * Searching the closest settings for the requested PWM period.
++	 */
++	for (n = 0; n < ARRAY_SIZE(pwm_size); n++) {
++		pwm_clk_period_ns = period_ns >> pwm_size[n];
++		for (i = ARRAY_SIZE(clk_freq_hz) - 1; i >= 0; i--) {
++			for (j = 0; j < ARRAY_SIZE(clk_prediv); j++) {
++				for (m = 0; m < ARRAY_SIZE(pwm_exponent); m++) {
++					tmp1 = 1 << pwm_exponent[m];
++					tmp1 *= clk_prediv[j];
++					tmp2 = NSEC_PER_SEC / clk_freq_hz[i];
++
++					clk_period_ns = tmp1 * tmp2;
++
++					clk_delta_ns = abs(pwm_clk_period_ns
++						- clk_period_ns);
++					/*
++					 * Find the closet setting for
++					 * PWM frequency predivide value
++					 */
++					if (clk_delta_ns < min_clk_delta_ns) {
++						min_clk_delta_ns
++							= clk_delta_ns;
++						configs[n].pwm_clk
++							= clk_freq_hz[i];
++						configs[n].prediv
++							= clk_prediv[j];
++						configs[n].clk_exp
++							= pwm_exponent[m];
++						configs[n].pwm_size
++							= pwm_size[n];
++						configs[n].best_period_ns
++							= clk_period_ns;
++					}
++				}
++			}
++		}
++		configs[n].best_period_ns *= 1 << pwm_size[n];
++		/* Find the closet setting for PWM period */
++		pwm_period_delta = min_clk_delta_ns << pwm_size[n];
++		if (pwm_period_delta < min_pwm_period_delta) {
++			min_pwm_period_delta = pwm_period_delta;
++			memcpy(pwm_config, &configs[n],
++					sizeof(struct lpg_pwm_config));
++		}
++	}
++
++	/* Larger PWM size can achieve better resolution for PWM duty */
++	for (n = ARRAY_SIZE(pwm_size) - 1; n > 0; n--) {
++		if (pwm_config->pwm_size >= pwm_size[n])
++			break;
++		pwm_size_step = pwm_size[n] - pwm_config->pwm_size;
++		if (pwm_config->clk_exp >= pwm_size_step) {
++			pwm_config->pwm_size = pwm_size[n];
++			pwm_config->clk_exp -= pwm_size_step;
++		}
++	}
++	pr_debug("PWM setting for period_ns %d: pwm_clk = %dHZ, prediv = %d, exponent = %d, pwm_size = %d\n",
++			period_ns, pwm_config->pwm_clk, pwm_config->prediv,
++			pwm_config->clk_exp, pwm_config->pwm_size);
++	pr_debug("Actual period: %dns\n", pwm_config->best_period_ns);
++}
++
++static void __qti_lpg_calc_pwm_duty(int period_ns, int duty_ns,
++			struct lpg_pwm_config *pwm_config)
++{
++	u16 pwm_value, max_pwm_value;
++
++	if ((1 << pwm_config->pwm_size) > (INT_MAX / duty_ns))
++		pwm_value = duty_ns / (period_ns >> pwm_config->pwm_size);
++	else
++		pwm_value = (duty_ns << pwm_config->pwm_size) / period_ns;
++
++	max_pwm_value = (1 << pwm_config->pwm_size) - 1;
++	if (pwm_value > max_pwm_value)
++		pwm_value = max_pwm_value;
++	pwm_config->pwm_value = pwm_value;
++}
++
++static int qti_lpg_pwm_config(struct pwm_chip *pwm_chip,
++		struct pwm_device *pwm, int duty_ns, int period_ns)
++{
++	struct qti_lpg_channel *lpg;
++	int rc = 0;
++
++	lpg = pwm_dev_to_qti_lpg(pwm_chip, pwm);
++	if (lpg == NULL) {
++		dev_err(pwm_chip->dev, "lpg not found\n");
++		return -ENODEV;
++	}
++
++	if (duty_ns > period_ns) {
++		dev_err(pwm_chip->dev, "Duty %dns is larger than period %dns\n",
++						duty_ns, period_ns);
++		return -EINVAL;
++	}
++
++	if (period_ns != lpg->current_period_ns)
++		__qti_lpg_calc_pwm_period(period_ns, &lpg->pwm_config);
++
++	if (period_ns != lpg->current_period_ns ||
++			duty_ns != lpg->current_duty_ns)
++		__qti_lpg_calc_pwm_duty(period_ns, duty_ns, &lpg->pwm_config);
++
++	rc = qti_lpg_set_pwm_config(lpg);
++	if (rc < 0)
++		dev_err(pwm_chip->dev, "Config PWM failed for channel %d, rc=%d\n",
++						lpg->lpg_idx, rc);
++
++	return rc;
++}
++
++static int qti_lpg_pwm_enable(struct pwm_chip *pwm_chip,
++				struct pwm_device *pwm)
++{
++	struct qti_lpg_channel *lpg;
++	int rc = 0;
++	u8 mask, val;
++
++	lpg = pwm_dev_to_qti_lpg(pwm_chip, pwm);
++	if (lpg == NULL) {
++		dev_err(pwm_chip->dev, "lpg not found\n");
++		return -ENODEV;
++	}
++
++	mask = LPG_PWM_SRC_SELECT_MASK | LPG_EN_LPG_OUT_BIT;
++
++	val = lpg->src_sel << LPG_PWM_SRC_SELECT_SHIFT | LPG_EN_LPG_OUT_BIT;
++
++	rc = qti_lpg_masked_write(lpg, REG_LPG_ENABLE_CONTROL, mask, val);
++	if (rc < 0)
++		dev_err(pwm_chip->dev, "Enable PWM output failed for channel %d, rc=%d\n",
++						lpg->lpg_idx, rc);
++
++	return rc;
++}
++
++static void qti_lpg_pwm_disable(struct pwm_chip *pwm_chip,
++				struct pwm_device *pwm)
++{
++	struct qti_lpg_channel *lpg;
++	int rc;
++	u8 mask, val;
++
++	lpg = pwm_dev_to_qti_lpg(pwm_chip, pwm);
++	if (lpg == NULL) {
++		dev_err(pwm_chip->dev, "lpg not found\n");
++		return;
++	}
++
++	mask = LPG_PWM_SRC_SELECT_MASK | LPG_EN_LPG_OUT_BIT;
++
++	val = lpg->src_sel << LPG_PWM_SRC_SELECT_SHIFT;
++
++	rc = qti_lpg_masked_write(lpg, REG_LPG_ENABLE_CONTROL, mask, val);
++	if (rc < 0)
++		dev_err(pwm_chip->dev, "Disable PWM output failed for channel %d, rc=%d\n",
++						lpg->lpg_idx, rc);
++}
++
++#ifdef CONFIG_DEBUG_FS
++static void qti_lpg_pwm_dbg_show(struct pwm_chip *pwm_chip, struct seq_file *s)
++{
++	struct qti_lpg_channel *lpg;
++	struct lpg_pwm_config *cfg;
++	struct pwm_device *pwm;
++	int i;
++
++	for (i = 0; i < pwm_chip->npwm; i++) {
++		pwm = &pwm_chip->pwms[i];
++
++		lpg = pwm_dev_to_qti_lpg(pwm_chip, pwm);
++		if (lpg == NULL) {
++			dev_err(pwm_chip->dev, "lpg not found\n");
++			return;
++		}
++
++		if (test_bit(PWMF_REQUESTED, &pwm->flags)) {
++			seq_printf(s, "LPG %d is requested by %s\n",
++					lpg->lpg_idx + 1, pwm->label);
++		} else {
++			seq_printf(s, "LPG %d is free\n",
++					lpg->lpg_idx + 1);
++			continue;
++		}
++
++		if (pwm_is_enabled(pwm)) {
++			seq_puts(s, "  enabled\n");
++		} else {
++			seq_puts(s, "  disabled\n");
++			continue;
++		}
++
++		cfg = &lpg->pwm_config;
++		seq_printf(s, "     clk = %dHz\n", cfg->pwm_clk);
++		seq_printf(s, "     pwm_size = %d\n", cfg->pwm_size);
++		seq_printf(s, "     prediv = %d\n", cfg->prediv);
++		seq_printf(s, "     exponent = %d\n", cfg->clk_exp);
++		seq_printf(s, "     pwm_value = %d\n", cfg->pwm_value);
++		seq_printf(s, "  Requested period: %dns, best period = %dns\n",
++				pwm_get_period(pwm), cfg->best_period_ns);
++	}
++}
++#endif
++
++static const struct pwm_ops qti_lpg_pwm_ops = {
++	.config = qti_lpg_pwm_config,
++	.enable = qti_lpg_pwm_enable,
++	.disable = qti_lpg_pwm_disable,
++#ifdef CONFIG_DEBUG_FS
++	.dbg_show = qti_lpg_pwm_dbg_show,
++#endif
++	.owner = THIS_MODULE,
++};
++
++static int qti_lpg_add_pwmchip(struct qti_lpg_chip *chip)
++{
++	int rc;
++
++	chip->pwm_chip.dev = chip->dev;
++	chip->pwm_chip.base = -1;
++	chip->pwm_chip.npwm = chip->lpg_nums;
++	chip->pwm_chip.ops = &qti_lpg_pwm_ops;
++
++	rc = pwmchip_add(&chip->pwm_chip);
++	if (rc < 0)
++		dev_err(chip->dev, "Add pwmchip failed, rc=%d\n", rc);
++
++	return rc;
++}
++
++static int qti_lpg_parse_dt(struct qti_lpg_chip *chip)
++{
++	int rc = 0, i;
++	u64 base, length;
 +	const __be32 *addr;
-+	u32 support_blink[NUM_LEDS], on_ms[NUM_LEDS], off_ms[NUM_LEDS];
 +
 +	addr = of_get_address(chip->dev->of_node, 0, NULL, NULL);
 +	if (!addr) {
 +		dev_err(chip->dev, "Getting address failed\n");
 +		return -EINVAL;
 +	}
-+	chip->reg_base = be32_to_cpu(addr[0]);
++	base = be32_to_cpu(addr[0]);
++	length = be32_to_cpu(addr[1]);
 +
-+	for (i = 0; i < NUM_LEDS; i++) {
-+		chip->leds[i].pwm_dev = devm_pwm_get(chip->dev, led_names[i]);
-+		if (IS_ERR(chip->leds[i].pwm_dev)) {
-+			rc = PTR_ERR(chip->leds[i].pwm_dev);
-+			if (rc != -EPROBE_DEFER)
-+				dev_err(chip->dev, "Get pwm device for %s led failed, rc=%d\n",
-+						led_names[i], rc);
-+			return rc;
-+		}
-+		chip->leds[i].chip = chip;
-+		chip->leds[i].idx = i;
-+	}
++	chip->lpg_nums = length / REG_SIZE_PER_LPG;
++	chip->lpgs = devm_kcalloc(chip->dev, chip->lpg_nums,
++			sizeof(*chip->lpgs), GFP_KERNEL);
++	if (!chip->lpgs)
++		return -ENOMEM;
 +
-+	count = of_property_count_elems_of_size(chip->dev->of_node,
-+			"qcom,support-blink", sizeof(u32));
-+	if (count > 0) {
-+		if (count != NUM_LEDS) {
-+			dev_err(chip->dev, "qcom,support-blink property expects %d elements, but it has %d\n",
-+					NUM_LEDS, count);
-+			return -EINVAL;
-+		}
-+		rc = of_property_read_u32_array(chip->dev->of_node,
-+				"qcom,support-blink", support_blink, count);
-+		if (rc < 0) {
-+			dev_err(chip->dev, "qcom,support-blink property reading failed, rc=%d\n",
-+					rc);
-+			return rc;
-+		}
-+		rc = of_property_read_u32_array(chip->dev->of_node,
-+				"qcom,on-ms", on_ms, count);
-+		if (rc < 0) {
-+			dev_err(chip->dev, "qcom,on-ms property reading failed, rc=%d\n",
-+					rc);
-+			return rc;
-+		}
-+		rc = of_property_read_u32_array(chip->dev->of_node,
-+				"qcom,off-ms", off_ms, count);
-+		if (rc < 0) {
-+			dev_err(chip->dev, "qcom,off-ms property reading failed, rc=%d\n",
-+					rc);
-+			return rc;
-+		}
-+
-+		for (i = 0; i < NUM_LEDS; i++) {
-+			chip->leds[i].support_blink = !!support_blink[i];
-+			chip->leds[i].led_setting.on_ms = on_ms[i];
-+			chip->leds[i].led_setting.off_ms = off_ms[i];
-+			if (chip->leds[i].support_blink)
-+				pr_debug("%s led supports blink, on_ms=%d, off_ms=%d!\n",
-+					led_names[i], on_ms[i], off_ms[i]);
-+			else
-+				pr_debug("%s led doesn't support blink\n",
-+					led_names[i]);
-+		}
++	for (i = 0; i < chip->lpg_nums; i++) {
++		chip->lpgs[i].chip = chip;
++		chip->lpgs[i].lpg_idx = i;
++		chip->lpgs[i].reg_base = base + i * REG_SIZE_PER_LPG;
++		chip->lpgs[i].src_sel = PWM_OUTPUT;
 +	}
 +
 +	return rc;
 +}
 +
-+static int qti_rgb_leds_probe(struct platform_device *pdev)
++static int qti_lpg_probe(struct platform_device *pdev)
 +{
-+	struct qti_rgb_chip *chip;
-+	int rc = 0;
++	int rc;
++	struct qti_lpg_chip *chip;
 +
 +	chip = devm_kzalloc(&pdev->dev, sizeof(*chip), GFP_KERNEL);
 +	if (!chip)
@@ -698,77 +635,58 @@ index 0000000..0e363d4
 +		return -EINVAL;
 +	}
 +
-+	rc = qti_rgb_leds_parse_dt(chip);
++	rc = qti_lpg_parse_dt(chip);
 +	if (rc < 0) {
 +		dev_err(chip->dev, "Devicetree properties parsing failed, rc=%d\n",
-+								rc);
++				rc);
 +		return rc;
-+	}
-+
-+	rc = qti_rgb_leds_init_pwm_settings(chip);
-+	if (rc < 0) {
-+		dev_err(chip->dev, "Init PWM setting failed, rc=%d\n", rc);
-+		return rc;
-+	}
-+
-+	mutex_init(&chip->bus_lock);
-+
-+	rc = qti_rgb_leds_hw_init(chip);
-+	if (rc) {
-+		dev_err(chip->dev, "HW initialization failed, rc=%d\n", rc);
-+		goto destroy;
 +	}
 +
 +	dev_set_drvdata(chip->dev, chip);
-+	rc = qti_rgb_leds_register(chip);
++
++	mutex_init(&chip->bus_lock);
++	rc = qti_lpg_add_pwmchip(chip);
 +	if (rc < 0) {
-+		dev_err(chip->dev, "Registering LED class devices failed, rc=%d\n",
-+								rc);
-+		goto destroy;
++		dev_err(chip->dev, "Add pwmchip failed, rc=%d\n", rc);
++		mutex_destroy(&chip->bus_lock);
 +	}
 +
-+	return 0;
-+destroy:
++	return rc;
++}
++
++static int qti_lpg_remove(struct platform_device *pdev)
++{
++	struct qti_lpg_chip *chip = dev_get_drvdata(&pdev->dev);
++	int rc = 0;
++
++	rc = pwmchip_remove(&chip->pwm_chip);
++	if (rc < 0)
++		dev_err(chip->dev, "Remove pwmchip failed, rc=%d\n", rc);
++
 +	mutex_destroy(&chip->bus_lock);
 +	dev_set_drvdata(chip->dev, NULL);
 +
 +	return rc;
 +}
 +
-+static int qti_rgb_leds_remove(struct platform_device *pdev)
-+{
-+	int i;
-+	struct qti_rgb_chip *chip = dev_get_drvdata(&pdev->dev);
-+
-+	mutex_destroy(&chip->bus_lock);
-+	for (i = 0; i < NUM_LEDS; i++) {
-+		if (chip->leds[i].support_blink)
-+			sysfs_remove_group(&chip->leds[i].cdev.dev->kobj,
-+						&blink_attrs_group);
-+		mutex_destroy(&chip->leds[i].lock);
-+	}
-+	dev_set_drvdata(chip->dev, NULL);
-+	return 0;
-+}
-+
-+static const struct of_device_id qti_rgb_of_match[] = {
-+	{ .compatible = "qcom,leds-rgb",},
++static const struct of_device_id qti_lpg_of_match[] = {
++	{ .compatible = "qcom,pwm-lpg",},
 +	{ },
 +};
 +
-+static struct platform_driver qti_rgb_leds_driver = {
++static struct platform_driver qti_lpg_driver = {
 +	.driver		= {
-+		.name		= "qcom,leds-rgb",
-+		.of_match_table	= qti_rgb_of_match,
++		.name		= "qcom,pwm-lpg",
++		.of_match_table	= qti_lpg_of_match,
 +	},
-+	.probe		= qti_rgb_leds_probe,
-+	.remove		= qti_rgb_leds_remove,
++	.probe		= qti_lpg_probe,
++	.remove		= qti_lpg_remove,
 +};
-+module_platform_driver(qti_rgb_leds_driver);
++module_platform_driver(qti_lpg_driver);
 +
-+MODULE_DESCRIPTION("QTI TRI_LED (RGB) driver");
++MODULE_DESCRIPTION("QTI LPG driver");
 +MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("leds:leds-qti-rgb");
++MODULE_ALIAS("pwm:pwm-lpg");
 -- 
 Qualcomm Technologies, Inc. is a member of the
 Code Aurora Forum, a Linux Foundation Collaborative Project.
