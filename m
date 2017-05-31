@@ -1,112 +1,48 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/6] gpio: dt-bindings: Add documentation for gpio controllers on Armada 7K/8K
-Date: Wed, 31 May 2017 16:41:26 +0200
-Message-ID: <877f0xt7ft.fsf@free-electrons.com>
-References: <cover.e10718b9c0f9fdd07327ae14e213be8da5b1f7ef.1495210061.git-series.gregory.clement@free-electrons.com>
-        <306395ff39de3d3d3c8f55e5da4de8def29ae8d1.1495210061.git-series.gregory.clement@free-electrons.com>
-        <CACRpkdY97DDcwec+J-4X1AT5a7Mbo4GnWUJmuAOYhNzOA8_HZQ@mail.gmail.com>
-        <878tlnzps3.fsf@free-electrons.com>
-        <CACRpkdbW3T5auXCMrqH_tTzcVseGbiV+y53fJ2xN5p-VbGz7rA@mail.gmail.com>
-        <20170530222358.abta3srv5emz7wtp@rob-hp-laptop>
-        <149622742055.34003.14963361587324682626@resonance>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] regulator: pfuze100: add fsl,pmic_stby_poweroff
+ property
+Date: Wed, 31 May 2017 15:44:38 +0100
+Message-ID: <20170531144438.xwdbrmb76ortbgnx@sirena.org.uk>
+References: <20170531061457.23744-1-o.rempel@pengutronix.de>
+ <20170531061457.23744-5-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="daic2ongoiyxb4c5"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <149622742055.34003.14963361587324682626@resonance> (Michael
-        Turquette's message of "Wed, 31 May 2017 19:43:40 +0900")
+Content-Disposition: inline
+In-Reply-To: <20170531061457.23744-5-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio@vger.kernel.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel@vger.kernel.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta@marvell.>
+To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
- 
- On mer., mai 31 2017, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
 
-> Quoting Rob Herring (2017-05-31 07:23:58)
->> On Mon, May 29, 2017 at 10:08:16AM +0200, Linus Walleij wrote:
->> > On Tue, May 23, 2017 at 3:06 PM, Gregory CLEMENT
->> > <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > >  On mar., mai 23 2017, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > 
->> > >> Please rebase and resend the rest of the patches.
->> > >
->> > > Actually I was wrong with my assumption that there was no dependency.
->> > > For the binding documentation there is dependecy accross the series I
->> > > sent.
->> > >
->> > > This patch depends on "pinctrl: dt-bindings: add documentation for AP806
->> > > pin controllers" [1] and "pinctrl: dt-bindings: add documentation for
->> > > CP110 pin controllers" [3] from the series "Add support for the pin
->> > > controllers on the Marvell Armada 7K/8K".
->> > >
->> > > As you are maintainer of both gpio and pinctrl subsystem it will be easy
->> > > to resolv.
->> > 
->> > Please send all patches in one big series in that case, so I can apply
->> > them all to a branch and merge that branch into both trees.
->> > 
->> > > But these last patches depend also on "clk: mvebu: ap806: introduce a
->> > > new binding" [3] in the clock series "Improve ap806 clk support on
->> > > Marvell Armada 7K/8K" and on "clk: mvebu: cp110: introduce a new
->> > > binding" [4] in the clock series "Improve cp110 clk support on Marvell
->> > > Armada 7K/8K".
->> > 
->> > That sounds messy.
->> > 
->> > > So for these particular patches, either I rebase them on the v4.12-rc2
->> > > and there will be a small merge conflict during the merge window for
->> > > v4.13, or we can ask a stable branch with only these few patches (I am
->> > > adding the clock maintainer to this email).
->> > >
->> > > If we chose this last option I can split the clock patches to have patch
->> > > modifying only the binding documentation.
->> > 
->> > I think you can make a patch just modifying the binding documentation
->> > and then apply that patch to *both* trees, just make sure the patch
->> > is *final* and not applied in different versions in clk and pinctrl.
->> 
->> I thought we try to avoid doing that.
->> 
->> > I think cross-tree branches for documentation clashes is too much
->> > bureaucracy.
->> 
->> I can just take all the doc patches separately. Or you can take the 
->> clock one too.
->
-> Stephen and I have started making a -dt branch for each new clk driver
-> which. This stable branch has only the dt bindings/headers in it (no
-> driver code).
->
-> I'll make such a branch for ap806 this week and everyone can merge that
-> in as a dep.
+--daic2ongoiyxb4c5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So please use the version 2 I've just submitted. I split each patch to
-allow you to have a dt binding only branch. See
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509832.html
+On Wed, May 31, 2017 at 08:14:55AM +0200, Oleksij Rempel wrote:
+> Document the new optional "fsl,pmic_stby_poweroff" property.
 
-I did the same for the cp110:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509816.html
+I'm missing both the cover letter and the rest of the series, what's
+going on with dependencies here?
 
-Gregory
+--daic2ongoiyxb4c5
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> Regards,
-> Mike
->
->> 
->> > Make sure your clock patch is finalized and preferably also applied
->> > to the clk tree then put it in the bottom of the patch set you send
->> > to me as well and I will proceed like above.
->> > 
->> > Yours,
->> > Linus Walleij
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlku1tUACgkQJNaLcl1U
+h9BKEwf/YZIa95NYp66vn6zXDGl2ykubvwmxy8r35albw3qM1sSGTF63kfxu00yd
+vOfa+w8bESDgHPfNmXfgSswqLBs+Ls9gc9VU219nRD0/Ql7Z5gYrexrFG9SVZ62X
+4pq8Rz/xEBYpPhCj+HnJfMcpoOIhTf/0pY4/vCQWMdxwCfTF4CMk8QrSg8ZeymLY
+M1tQuGjTplRB5HpoS07u8IpUtqR3eW+QfHcdTHaT9eIvRiV/4uLIvX90wpFBL8Zn
+xuGzzNtMDsYieSfZKLUcOsDsfWg/tL2F//e1ntEv8FI43/RgZ4noBvS/LqO55lJV
+8AR5brq5JE25tUZxVUjb4GnFz/Kmaw==
+=J1FC
+-----END PGP SIGNATURE-----
+
+--daic2ongoiyxb4c5--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
