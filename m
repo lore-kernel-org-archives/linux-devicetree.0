@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 09/11] clk: mvebu: cp110: add sdio clock to cp-110 system controller
-Date: Wed, 31 May 2017 15:41:53 +0200
-Message-ID: <d0021421e2446b0eedf7d64a7ab19581fcedd124.1496237893.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v2 02/11] clk: mvebu: cp110 fix name of the GOP gate clock
+Date: Wed, 31 May 2017 15:41:46 +0200
+Message-ID: <edce259fb331015346d9af3a13dee39ef4c99dc0.1496237893.git-series.gregory.clement@free-electrons.com>
 References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
@@ -12,117 +12,69 @@ To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Konstantin Porotchkin <kostap@marvell.com>
+Actually the GOP clock (bit 18) is not at all used for emmc but only
+for GOP: let's fix the name.
 
-This commit updates the CP110 system controller driver to add the
-definition for a missing clock.
+Changing the name in the device tree is not an issue because the name
+itself is not used to reference the clock. Thanks to this the ABI remains
+backward compatible.
 
-The SDIO clock is dedicated driving the SDHCI interface and its frequency
-is 400MHz (2/5 of PLL source clock).
-
-The SDIO interface should be bound to this clock and not the core clock
-as in the older code.
-Using the wrong clock lead to a maximum SDHCI frequency of 250 Mhz, while
-the HW really supports up to 400 Mhz.
-
-This patch also fixes the NAND clock relationship documentation.
-
-Signed-off-by: Konstantin Porotchkin <kostap@marvell.com>
-[gregory.clement@free-electrons.com:
-- use sdio instead of emmc to name the clock]
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/clk/mvebu/cp110-system-controller.c | 28 ++++++++++++++++++----
- 1 file changed, 23 insertions(+), 5 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 2 +-
+ arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 2 +-
+ drivers/clk/mvebu/cp110-system-controller.c          | 5 +++--
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
+index ac8df5201cd6..59259270964c 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
+@@ -111,7 +111,7 @@
+ 					"cpm-gop-dp", "none", "cpm-pcie_x10",
+ 					"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor",
+ 					"cpm-sata", "cpm-sata-usb", "cpm-main",
+-					"cpm-sd-mmc-gop", "none", "none",
++					"cpm-gop", "none", "none",
+ 					"cpm-slow-io", "cpm-usb3h0", "cpm-usb3h1",
+ 					"cpm-usb3dev", "cpm-eip150", "cpm-eip197";
+ 			};
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+index 7740a75a8230..046d3fe53cda 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+@@ -118,7 +118,7 @@
+ 					"cps-gop-dp", "none", "cps-pcie_x10",
+ 					"cps-pcie_x11", "cps-pcie_x4", "cps-pcie-xor",
+ 					"cps-sata", "cps-sata-usb", "cps-main",
+-					"cps-sd-mmc-gop", "none", "none",
++					"cps-gop", "none", "none",
+ 					"cps-slow-io", "cps-usb3h0", "cps-usb3h1",
+ 					"cps-usb3dev", "cps-eip150", "cps-eip197";
+ 			};
 diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-index ecbcae321424..8be7ae25c7eb 100644
+index 6b11d7b3e0e0..8f315c74997e 100644
 --- a/drivers/clk/mvebu/cp110-system-controller.c
 +++ b/drivers/clk/mvebu/cp110-system-controller.c
-@@ -11,15 +11,16 @@
-  */
- 
- /*
-- * CP110 has 5 core clocks:
-+ * CP110 has 6 core clocks:
-  *
-  *  - APLL		(1 Ghz)
-  *    - PPv2 core	(1/3 APLL)
-  *    - EIP		(1/2 APLL)
-- *      - Core		(1/2 EIP)
-+ *     - Core		(1/2 EIP)
-+ *    - SDIO		(2/5 APLL)
-  *
-  *  - NAND clock, which is either:
-- *    - Equal to the core clock
-+ *    - Equal to SDIO clock
-  *    - 2/5 APLL
-  *
-  * CP110 has 32 gatable clocks, for the various peripherals in the
-@@ -46,7 +47,7 @@ enum {
- 	CP110_CLK_TYPE_GATABLE,
- };
- 
--#define CP110_MAX_CORE_CLOCKS		5
-+#define CP110_MAX_CORE_CLOCKS		6
- #define CP110_MAX_GATABLE_CLOCKS	32
- 
- #define CP110_CLK_NUM \
-@@ -57,6 +58,7 @@ enum {
- #define CP110_CORE_EIP			2
- #define CP110_CORE_CORE			3
- #define CP110_CORE_NAND			4
-+#define CP110_CORE_SDIO			5
- 
- /* A number of gatable clocks need special handling */
- #define CP110_GATE_AUDIO		0
-@@ -235,7 +237,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 	struct regmap *regmap;
- 	struct device *dev = &pdev->dev;
- 	struct device_node *np = dev->of_node;
--	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name;
-+	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name,
-+		*sdio_name;
- 	struct clk_hw_onecell_data *cp110_clk_data;
- 	struct clk_hw *hw, **cp110_clks;
- 	u32 nand_clk_ctrl;
-@@ -315,6 +318,17 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 
- 	cp110_clks[CP110_CORE_NAND] = hw;
- 
-+	/* SDIO clock is APLL/2.5 */
-+	sdio_name = cp110_unique_name(dev, syscon_node, "sdio-core");
-+	hw = clk_hw_register_fixed_factor(NULL, sdio_name,
-+					  apll_name, 0, 2, 5);
-+	if (IS_ERR(hw)) {
-+		ret = PTR_ERR(hw);
-+		goto fail_sdio;
-+	}
-+
-+	cp110_clks[CP110_CORE_SDIO] = hw;
-+
- 	/* create the unique name for all the gate clocks */
- 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
- 		gate_name[i] =	cp110_unique_name(dev, syscon_node,
-@@ -344,6 +358,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 			parent = ppv2_name;
- 			break;
- 		case CP110_GATE_SDIO:
-+			parent = sdio_name;
-+			break;
+@@ -76,7 +76,7 @@ enum {
+ #define CP110_GATE_SATA			15
+ #define CP110_GATE_SATA_USB		16
+ #define CP110_GATE_MAIN			17
+-#define CP110_GATE_SDMMC_GOP		18
++#define CP110_GATE_GOP			18
+ #define CP110_GATE_SLOW_IO		21
+ #define CP110_GATE_USB3H0		22
+ #define CP110_GATE_USB3H1		23
+@@ -314,7 +314,8 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
  		case CP110_GATE_GOP_DP:
- 			parent = gate_name[CP110_GATE_GOP];
+ 			of_property_read_string_index(np,
+ 						      "gate-clock-output-names",
+-						      CP110_GATE_SDMMC_GOP, &parent);
++						      CP110_GATE_GOP, &parent);
++
  			break;
-@@ -391,6 +407,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
- 			cp110_unregister_gate(hw);
- 	}
- 
-+	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_SDIO]);
-+fail_sdio:
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_NAND]);
- fail_nand:
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_CORE]);
+ 		case CP110_GATE_XOR1:
+ 		case CP110_GATE_XOR0:
 -- 
 git-series 0.9.1
