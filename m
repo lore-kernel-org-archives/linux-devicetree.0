@@ -1,47 +1,63 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/7] dt-bindings: PCI: Describe ATS property for root
-	complex nodes
-Date: Wed, 31 May 2017 12:17:48 -0500
-Message-ID: <20170531171748.rcrwpkgqgx7lin23@rob-hp-laptop>
-References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
-	<20170524180143.19855-3-jean-philippe.brucker@arm.com>
-	<20170530100153.GI2818@8bytes.org>
-	<035be7ba-e850-a5a9-08fa-802a04feb600@arm.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI
+ TRI_LED module
+Date: Wed, 31 May 2017 18:55:40 +0200
+Message-ID: <20170531165540.GA9371@amd>
+References: <20170531061541.10808-1-fenglinw@codeaurora.org>
+ <20170531061541.10808-2-fenglinw@codeaurora.org>
+ <20170531075536.GA13028@amd>
+ <001301d2d9e7$3102b720$93082560$@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <035be7ba-e850-a5a9-08fa-802a04feb600-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <001301d2d9e7$3102b720$93082560$@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wu Fenglin <fenglinw@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 'Richard Purdie' <rpurdie@rpsys.net>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, subbaram@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 11:58:50AM +0100, Jean-Philippe Brucker wrote:
-> On 30/05/17 11:01, Joerg Roedel wrote:
-> > On Wed, May 24, 2017 at 07:01:38PM +0100, Jean-Philippe Brucker wrote:
-> >> +- ats-supported: if present, the root complex supports the Address
-> >> +  Translation Service (ATS). It is able to interpret the AT field in PCIe
-> >> +  Transaction Layer Packets, and forward Translation Completions or
-> >> +  Invalidation Requests to endpoints.
-> >> +
-> >> +  Device drivers should not enable ATS in endpoints unless this property
-> >> +  is present.
-> > 
-> > Device drivers should never enable ATS, this is the job of the IOMMU
-> > driver. This should be clarified in the text.
-> 
-> Right, I will change this.
 
-Driver details should not be in DT to begin with.
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Rob
+Hi!
+
+> Thanks for the reviewing.
+>=20
+> For the order, the hardware register mapping has this order (blue/green/r=
+ed)
+> from bit0/1/2, I can revert it to (red/green/blue) if there is a strong
+> concern.
+
+I'd do that.
+
+> For these two properties: qcom,off-ms/ qcom,on-ms, I am using them to ass=
+ign
+> the default blinking on/off time, then the LEDs would have a default
+> blinking pattern if you do "echo 1 > /sys/class/leds/red/blink"
+
+Normally, dts describes hardware; this does not seem to be hardware
+description, so I'd leave it out.
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlku9YwACgkQMOfwapXb+vIa3ACfYl1XNqzEjZI914rKh3cWswSh
+6ocAnjKU/PhpkgCvEzdQno5ZPLA0XeQQ
+=P31m
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
