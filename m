@@ -1,33 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 01/10] arm: sunxi: add support for R40 SoC
-Date: Wed, 31 May 2017 14:42:33 -0500
-Message-ID: <20170531194232.fhiz7z3iqhnkacev@rob-hp-laptop>
-References: <20170527102308.1988-1-icenowy@aosc.io>
- <20170527102308.1988-2-icenowy@aosc.io>
+Subject: Re: [PATCH 1/7] dmaengine: use proper name for the R-Car SoC
+Date: Wed, 31 May 2017 14:45:33 -0500
+Message-ID: <20170531194533.bc63tanffxjosuqb@rob-hp-laptop>
+References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
+ <20170528093051.11816-2-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170527102308.1988-2-icenowy@aosc.io>
+In-Reply-To: <20170528093051.11816-2-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Icenowy Zheng <icenowy@aosc.io>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 27, 2017 at 06:22:59PM +0800, Icenowy Zheng wrote:
-> Allwinner R40 is a new SoC, with Quad Core Cortex-A7 and peripherals
-> like A20.
+On Sun, May 28, 2017 at 11:30:44AM +0200, Wolfram Sang wrote:
+> It is 'R-Car', not 'r-car'. No code or binding changes, only descriptive text.
 > 
-> Add support for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
-> Changes in v3:
-> - Use V1.0 documents.
+> I suggest this trivial patch should be picked individually per susbsystem.
 > 
->  Documentation/arm/sunxi/README                  | 6 ++++++
->  Documentation/devicetree/bindings/arm/sunxi.txt | 1 +
->  arch/arm/mach-sunxi/sunxi.c                     | 1 +
->  3 files changed, 8 insertions(+)
+>  Documentation/devicetree/bindings/dma/shdma.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
