@@ -1,137 +1,50 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: supply: add battery charge voltage/current
-Date: Thu, 1 Jun 2017 12:32:16 +0200
-Message-ID: <CAFqH_52mkFUzbNN1kFRE2F4_DzTCVU+0nu6dz0Pox-8eE3PSYw@mail.gmail.com>
-References: <20170526110413.24836-1-enric.balletbo@collabora.com>
- <CAKvHMgTvUkJENP=Y_rdge6Oqq-La341nYW5prB=BpXWo7rF-0A@mail.gmail.com>
- <CAFqH_50+58swMjGOK1oyP0152ap=5Ng1m86q5sdq2Enc08Ui5g@mail.gmail.com>
- <CAKvHMgQWT-V=vt6bkR7QoCRM8W0MeyfY0hjNL-q0FmfPfNhtfA@mail.gmail.com>
- <CAFqH_536VDcx--dJga_+ffut9QmHLySk_gzZbXuCv8TBz++OzA@mail.gmail.com> <CAKvHMgR7p7rbeRnLTVRdStBETCu=vYebpeKqr6rNJQ9tWO+AyA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKvHMgR7p7rbeRnLTVRdStBETCu=vYebpeKqr6rNJQ9tWO+AyA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Liam Breck <kernel@networkimprov.net>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: shmobile: Update R-Car Gen3 ULCB board part numbers
+Date: Thu,  1 Jun 2017 12:34:29 +0200
+Message-ID: <1496313269-27795-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-2017-06-01 12:25 GMT+02:00 Liam Breck <liam@networkimprov.net>:
-> Hi Enric,
->
->
->
-> On Thu, Jun 1, 2017 at 1:18 AM, Enric Balletbo Serra
-> <eballetbo@gmail.com> wrote:
->> Hi Liam,
->>
->> 2017-06-01 9:01 GMT+02:00 Liam Breck <liam@networkimprov.net>:
->>> Hi Enric,
->>>
->>> On Sat, May 27, 2017 at 1:11 PM, Enric Balletbo Serra
->>> <eballetbo@gmail.com> wrote:
->>>> Hi Liam,
->>>>
->>>> 2017-05-26 23:20 GMT+02:00 Liam Breck <liam@networkimprov.net>:
->>>>> Hi Enric,
->>>>>
->>>>> On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
->>>>> <enric.balletbo@collabora.com> wrote:
->>>>>> Add charging voltage and current characteristics to the battery DT for
->>>>>> proper handling of the battery by fuel-gauge and charger chips.
->>>>>>
->>>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>>>> ---
->>>>>> Changes since v2:
->>>>>>  - Requested by Sebastian Reichel
->>>>>>    - Move to its own patch and apply to simple-battery framework.
->>>>>> Changes since v1:
->>>>>>  - Requested by Rob Herring
->>>>>>    - Rename ti,charge-* to charge-* to be standard properties.
->>>>>>    - Use unit suffixes as per bindings/property-units.txt
->>>>>>
->>>>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
->>>>>>  1 file changed, 4 insertions(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>> index 63a7028..c87a439 100644
->>>>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>>>> @@ -12,6 +12,8 @@ Optional Properties:
->>>>>>   - voltage-min-design-microvolt: drained battery voltage
->>>>>>   - energy-full-design-microwatt-hours: battery design energy
->>>>>>   - charge-full-design-microamp-hours: battery design capacity
->>>>>> + - charge-voltage-microvolt: battery charging voltage
->>>>>> + - charge-current-microamp: battery charging current
->>>>>
->>>>> I think you mean constant-charge-* which is how you surface these
->>>>> properties in your tps65217_charger patch.
->>>>>
->>>>
->>>> Yes, to be strict this is constant-charge-*
->>>
->>> The DT battery node should carry static battery characteristics. So on
->>> reflection, I think you want
->>>
->>> constant-charge-current-max-microamp
->>> constant-charge-voltage-max-microvolt
->>>
->>> The charger or the user could then safely apply any value <= those.
->>>
->>> Thoughts?
->
-> I'm curious to hear how your hw config requires constant-charge settings?
->
->> Hmm I see your point and I'm thinking now that actually this is not
->> what I wanted to do. What I wanted is set the charger voltage and the
->> current hence my first patchset was setting these properties in the
->> charger node not the battery.
->
-> You could certainly support constant-charge-* params in the charger
-> node. And it's easy to enable userspace to set these via sysfs.
->
->> Said that, I think that you have reason and what we want in battery
->> node is the current/voltage max values but we also need to implement a
->> mechanism to set the charging voltage/current from userspace or from
->> the DT for the charger. The charger should be able to set these values
->> and fail if, based in the battery specs, is not supported.
->
-> The charger could default constant-charge-* to the battery node's max values.
->
-> See also this discussion about similar issues.
-> https://patchwork.kernel.org/patch/9625331/
->
+The board part numbers for the R-Car H3 and M3 ULCB boards corresponded
+to versions predating mass production.  Update them for mass production.
 
-Oh I missed that thread, please keep me in the loop for next versions
-of the patchset :)
+Note that the H3 ULCB board can be equipped with either revision ES1.1
+or ES2.0 of the R-Car H3 SoC.  While these have different board part
+numbers, no new compatible values are needed, as the revision can be
+detected at runtime using the PRR register.
 
-Best regards,
- Enric
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+See also http://elinux.org/index.php?title=R-Car/Boards/H3SK
 
->
->> More thoughts?
->>
->>>>> I'll add these to v14 of my patchset which adds simple-battery
->>>>> support. Rob requested a single patch for this file.
->>>>>
->>>>
->>>> Ok, I'll send the tps charger series without this patch, so please,
->>>> include this patch in your series.
->>>>
->>>>> I've been waiting for feedback on v13.2 from Sebastian. If I don't
->>>>> hear from him within a few days, I'll post v14.
->>>>>
->>>>>>  Batteries must be referenced by chargers and/or fuel-gauges
->>>>>>  using a phandle. The phandle's property should be named
->>>>>> @@ -24,6 +26,8 @@ Example:
->>>>>>                 voltage-min-design-microvolt = <3200000>;
->>>>>>                 energy-full-design-microwatt-hours = <5290000>;
->>>>>>                 charge-full-design-microamp-hours = <1430000>;
->>>>>> +               charge-voltage-microvolt = <4100000>;
->>>>>> +               charge-current-microamp = <300000>;
->>>>>>         };
->>>>>>
->>>>>>         charger: charger@11 {
->>>>>> --
->>>>>> 2.9.3
->>>>>>
+ Documentation/devicetree/bindings/arm/shmobile.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 4b60ce21f4f3af5f..c80a0fd05d753a90 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -59,7 +59,8 @@ Boards:
+     compatible = "renesas,gr-peach", "renesas,r7s72100"
+   - Gose (RTP0RC7793SEB00010S)
+     compatible = "renesas,gose", "renesas,r8a7793"
+-  - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKB00010S)
++  - H3ULCB (R-Car Starter Kit Premier, RTP0RC7795SKBX0010SA00 (H3 ES1.1))
++    H3ULCB (R-Car Starter Kit Premier, RTP0RC77951SKBX010SA00 (H3 ES2.0))
+     compatible = "renesas,h3ulcb", "renesas,r8a7795";
+   - Henninger
+     compatible = "renesas,henninger", "renesas,r8a7791"
+@@ -71,7 +72,7 @@ Boards:
+     compatible = "renesas,kzm9g", "renesas,sh73a0"
+   - Lager (RTP0RC7790SEB00010S)
+     compatible = "renesas,lager", "renesas,r8a7790"
+-  - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKB00010S)
++  - M3ULCB (R-Car Starter Kit Pro, RTP0RC7796SKBX0010SA09 (M3 ES1.0))
+     compatible = "renesas,m3ulcb", "renesas,r8a7796";
+   - Marzen (R0P7779A00010S)
+     compatible = "renesas,marzen", "renesas,r8a7779"
+-- 
+2.7.4
