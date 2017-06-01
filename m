@@ -1,42 +1,36 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH v3 2/2] ARM: dts: imx7-colibri: add NAND support
-Date: Thu,  1 Jun 2017 12:20:44 -0700
-Message-ID: <20170601192044.6548-3-stefan@agner.ch>
-References: <20170601192044.6548-1-stefan@agner.ch>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170601192044.6548-1-stefan@agner.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, kernel@pengutronix.de
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@atmel.com, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@KARO-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI TRI_LED
+ module
+Date: Thu, 1 Jun 2017 21:31:40 +0200
+Message-ID: <2c01fa38-b711-56af-5458-e726540d37ea@gmail.com>
+References: <20170531061541.10808-1-fenglinw@codeaurora.org>
+ <20170531061541.10808-2-fenglinw@codeaurora.org> <20170531075536.GA13028@amd>
+ <001301d2d9e7$3102b720$93082560$@codeaurora.org> <20170531165540.GA9371@amd>
+ <002d01d2da6e$42a987b0$c7fc9710$@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <002d01d2da6e$42a987b0$c7fc9710$@codeaurora.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wu Fenglin <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, 'Pavel Machek' <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Richard Purdie' <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, 'Rob Herring' <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, subbaram-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, aghayal-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org, wruan-jfJNa2p1gH1BDgjK7y7TUQ@public.gmane.org, kgunda-Rm6X0d1/PG5y9aJCnZT0Uw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Colibri iMX7 modules come with 512MB on-module SLC NAND flash
-populated. Make use of it by enabling the GPMI controller.
+Hi Wu,
 
-Signed-off-by: Stefan Agner <stefan@agner.ch>
----
- arch/arm/boot/dts/imx7-colibri.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+On 06/01/2017 02:30 AM, Wu Fenglin wrote:
+> Thanks Pavel.
+> I will remove these two dts properties and define the default on/off time
+> values in C code.
 
-diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
-index 2d87489f9105..ad4ce19d455b 100644
---- a/arch/arm/boot/dts/imx7-colibri.dtsi
-+++ b/arch/arm/boot/dts/imx7-colibri.dtsi
-@@ -106,6 +106,15 @@
- 	fsl,magic-packet;
- };
- 
-+&gpmi {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_gpmi_nand>;
-+	fsl,use-minimum-ecc;
-+	nand-on-flash-bbt;
-+	nand-ecc-mode = "hw";
-+	status = "okay";
-+};
-+
- &i2c1 {
- 	clock-frequency = <100000>;
- 	pinctrl-names = "default";
+There are many things to sort out regarding your patch. I'll be able to
+give you a detailed feedback probably no sooner than at the weekend.
+
 -- 
-2.13.0
+Best regards,
+Jacek Anaszewski
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
