@@ -1,35 +1,36 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 1/5 v2] clk: qcom: Update DT bindings for the
- MSM8660/APQ8060 RPMCC
-Date: Thu, 1 Jun 2017 00:48:52 -0700
-Message-ID: <20170601074852.GY20170@codeaurora.org>
-References: <20170419091326.11226-1-linus.walleij@linaro.org>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [RFC v2 3/3] dt: bindings: Add a binding for referencing EEPROM
+ from camera sensors
+Date: Thu, 1 Jun 2017 11:00:04 +0300
+Message-ID: <20170601080004.GI1019@valkosipuli.retiisi.org.uk>
+References: <1493974110-26510-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1493974110-26510-4-git-send-email-sakari.ailus@linux.intel.com>
+ <20170508172418.zha3eyfsnuricfjk@rob-hp-laptop>
+ <20170529122004.GE29527@valkosipuli.retiisi.org.uk>
+ <c7a98681-4c95-0103-96ee-97ca6a02d9b3@zonque.org>
+ <20170529130524.GF29527@valkosipuli.retiisi.org.uk>
+ <20170531173718.GA11983@amd>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170419091326.11226-1-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170531173718.GA11983@amd>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/19, Linus Walleij wrote:
-> These compatible strings need to be added to extend support
-> for the RPM CC to cover MSM8660/APQ8060. We also need to add
-> enumberators to the include file for a few clocks that were
-> missing.
-> 
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
+On Wed, May 31, 2017 at 07:37:18PM +0200, Pavel Machek wrote:
+> Yeah, it would be good to get the corresponding patches to be merged
+> to v4l-utils...
 
-Applied to clk-qcom-rpm
+There are also no drivers to make use of this currently --- I certainly
+don't object using the group_id before better solutions are available. But
+the kernel needs to have the information before it can use it. :-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
