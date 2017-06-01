@@ -1,164 +1,93 @@
-From: Oleksij Rempel <linux@rempel-privat.de>
-Subject: Re: [PATCH v2 1/6] ARM: imx6q: provide documentation for new
- fsl,pmic_stby_poweroff property
-Date: Thu, 1 Jun 2017 08:50:35 +0200
-Message-ID: <b9ba2cce-5383-636e-8e2c-4d85b2a92cb6@rempel-privat.de>
-References: <20170531061457.23744-1-o.rempel@pengutronix.de>
- <20170531061457.23744-2-o.rempel@pengutronix.de>
- <20170531145255.GC10351@leverpostej>
+From: Liam Breck <liam@networkimprov.net>
+Subject: Re: [PATCH v3 1/4] dt-bindings: power: supply: add battery charge voltage/current
+Date: Thu, 1 Jun 2017 00:01:00 -0700
+Message-ID: <CAKvHMgQWT-V=vt6bkR7QoCRM8W0MeyfY0hjNL-q0FmfPfNhtfA@mail.gmail.com>
+References: <20170526110413.24836-1-enric.balletbo@collabora.com>
+ <CAKvHMgTvUkJENP=Y_rdge6Oqq-La341nYW5prB=BpXWo7rF-0A@mail.gmail.com> <CAFqH_50+58swMjGOK1oyP0152ap=5Ng1m86q5sdq2Enc08Ui5g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6839236265480607228=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170531145255.GC10351@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Andrew Morton <akpm@linux-foundation.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAFqH_50+58swMjGOK1oyP0152ap=5Ng1m86q5sdq2Enc08Ui5g@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============6839236265480607228==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF"
+Hi Enric,
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF
-Content-Type: multipart/mixed; boundary="C7RPagmBr0a7D5kUOEPQDw7kQbnk7rr2h";
- protected-headers="v1"
-From: Oleksij Rempel <linux@rempel-privat.de>
-To: Mark Rutland <mark.rutland@arm.com>,
- Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>,
- linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
-Message-ID: <b9ba2cce-5383-636e-8e2c-4d85b2a92cb6@rempel-privat.de>
-Subject: Re: [PATCH v2 1/6] ARM: imx6q: provide documentation for new
- fsl,pmic_stby_poweroff property
-References: <20170531061457.23744-1-o.rempel@pengutronix.de>
- <20170531061457.23744-2-o.rempel@pengutronix.de>
- <20170531145255.GC10351@leverpostej>
-In-Reply-To: <20170531145255.GC10351@leverpostej>
-
---C7RPagmBr0a7D5kUOEPQDw7kQbnk7rr2h
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-
-Am 31.05.2017 um 16:52 schrieb Mark Rutland:
-> On Wed, May 31, 2017 at 08:14:52AM +0200, Oleksij Rempel wrote:
->> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
->> Cc: kernel@pengutronix.de
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: Michael Turquette <mturquette@baylibre.com>
->> Cc: Stephen Boyd <sboyd@codeaurora.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-clk@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> ---
->>  Documentation/devicetree/bindings/clock/imx6q-clock.txt | 4 ++++
->>  1 file changed, 4 insertions(+)
+On Sat, May 27, 2017 at 1:11 PM, Enric Balletbo Serra
+<eballetbo@gmail.com> wrote:
+> Hi Liam,
+>
+> 2017-05-26 23:20 GMT+02:00 Liam Breck <liam@networkimprov.net>:
+>> Hi Enric,
 >>
->> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b=
-/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->> index 9252912a5b0e..214cb5f461c7 100644
->> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
->> @@ -6,6 +6,10 @@ Required properties:
->>  - interrupts: Should contain CCM interrupt
->>  - #clock-cells: Should be <1>
->> =20
->> +Optional properties:
->> +- fsl,pmic_stby_poweroff: Configure CCM to assert PMIC_STBY_REQ signa=
-l
->> +  on power off.
->=20
-> s/_/-/ in property names, please.
-
-ok.
-
-I have now some more questions:
-what naming schema should be actually used?
-fsl,pmic-stby-poweroff
-or
-fsl,pmic-stby-power-off
-
-i found some existing case:
-sound/rt5660.txt:- realtek,poweroff-in-suspend
-so in my case it will be:
-fsl,standby-in-poweroff
-or
-fsl,standby-in-power-off
-
-can we have generic name for this use case?
-should I use same binding for PMIC and the SoC or they should be more lik=
-e:
-for SoC "standby-in-power-off"
-and for PMIC "power-off-in-standby"
-
-
-
-> When/why is this needed?
->=20
-> Why should a DT author (not) set this?
->=20
-> Thanks,
-> Mark.
->=20
->> +
->>  The clock consumer should specify the desired clock by having the clo=
-ck
->>  ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6q=
-dl-clock.h
->>  for the full list of i.MX6 Quad and DualLite clock IDs.
->> --=20
->> 2.11.0
+>> On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
+>> <enric.balletbo@collabora.com> wrote:
+>>> Add charging voltage and current characteristics to the battery DT for
+>>> proper handling of the battery by fuel-gauge and charger chips.
+>>>
+>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>> ---
+>>> Changes since v2:
+>>>  - Requested by Sebastian Reichel
+>>>    - Move to its own patch and apply to simple-battery framework.
+>>> Changes since v1:
+>>>  - Requested by Rob Herring
+>>>    - Rename ti,charge-* to charge-* to be standard properties.
+>>>    - Use unit suffixes as per bindings/property-units.txt
+>>>
+>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> index 63a7028..c87a439 100644
+>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>> @@ -12,6 +12,8 @@ Optional Properties:
+>>>   - voltage-min-design-microvolt: drained battery voltage
+>>>   - energy-full-design-microwatt-hours: battery design energy
+>>>   - charge-full-design-microamp-hours: battery design capacity
+>>> + - charge-voltage-microvolt: battery charging voltage
+>>> + - charge-current-microamp: battery charging current
 >>
+>> I think you mean constant-charge-* which is how you surface these
+>> properties in your tps65217_charger patch.
+>>
+>
+> Yes, to be strict this is constant-charge-*
 
+The DT battery node should carry static battery characteristics. So on
+reflection, I think you want
 
---=20
-Regards,
-Oleksij
+constant-charge-current-max-microamp
+constant-charge-voltage-max-microvolt
 
+The charger or the user could then safely apply any value <= those.
 
---C7RPagmBr0a7D5kUOEPQDw7kQbnk7rr2h--
+Thoughts?
 
---mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iF4EAREIAAYFAlkvuTsACgkQHwImuRkmbWnjTgD+OMPXuh3DWAZ3dFKYKRlyWpRj
-6G3lHy7rYcwSxcSEun8A/il84kXam14WDsmzKbTyuS9wcg2x2PfrvK3QsbiC0n25
-=VV6G
------END PGP SIGNATURE-----
-
---mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF--
-
-
---===============6839236265480607228==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============6839236265480607228==--
+>> I'll add these to v14 of my patchset which adds simple-battery
+>> support. Rob requested a single patch for this file.
+>>
+>
+> Ok, I'll send the tps charger series without this patch, so please,
+> include this patch in your series.
+>
+>> I've been waiting for feedback on v13.2 from Sebastian. If I don't
+>> hear from him within a few days, I'll post v14.
+>>
+>>>  Batteries must be referenced by chargers and/or fuel-gauges
+>>>  using a phandle. The phandle's property should be named
+>>> @@ -24,6 +26,8 @@ Example:
+>>>                 voltage-min-design-microvolt = <3200000>;
+>>>                 energy-full-design-microwatt-hours = <5290000>;
+>>>                 charge-full-design-microamp-hours = <1430000>;
+>>> +               charge-voltage-microvolt = <4100000>;
+>>> +               charge-current-microamp = <300000>;
+>>>         };
+>>>
+>>>         charger: charger@11 {
+>>> --
+>>> 2.9.3
+>>>
