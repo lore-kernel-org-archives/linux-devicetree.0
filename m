@@ -1,96 +1,59 @@
-From: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 2/3] arm: dts: mt2701: Add display bls related nodes for MT2701
-Date: Thu, 1 Jun 2017 14:08:43 +0800
-Message-ID: <1496297324-21091-3-git-send-email-erin.lo@mediatek.com>
-References: <1496297324-21091-1-git-send-email-erin.lo@mediatek.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] firmware: qcom: scm: Expose download-mode control
+Date: Wed, 31 May 2017 23:17:30 -0700
+Message-ID: <20170601061730.GM20170@codeaurora.org>
+References: <20170527063308.10483-1-bjorn.andersson@linaro.org>
+ <20170527063308.10483-2-bjorn.andersson@linaro.org>
+ <20170531162726.GZ20170@codeaurora.org>
+ <20170531220220.GW12920@tuxbook>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1496297324-21091-1-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170531220220.GW12920@tuxbook>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+On 05/31, Bjorn Andersson wrote:
+> On Wed 31 May 09:27 PDT 2017, Stephen Boyd wrote:
+> 
+> > On 05/26, Bjorn Andersson wrote:
+> > > In order to aid post-mortem debugging the Qualcomm platforms provides a
+> > > "memory download mode", where the boot loader will provide an interface
+> > > for custom tools to "download" the content of RAM to a host machine.
+> > > 
+> > > The mode is triggered by writing a magic value somehwere in RAM, that is
+> > > read in the boot code path after a warm-restart. Two mechanism for
+> > > setting this magic value are supported in modern platforms; a direct SCM
+> > > call to enable the mode or through a secure io write of a magic value.
+> > > 
+> > > In order for a normal reboot not to trigger "download mode" the magic
+> > > must be cleared during a clean reboot.
+> > > 
+> > > Download mode has to be enabled by including qcom_scm.download_mode=1 on
+> > > the command line.
+> > 
+> > Why the kernel command line parameter? If we keep the kernel
+> > command line param, perhaps we can also gain a config option to
+> > make it default enabled or default disabled so that we don't have
+> > to specify it on the commandline to get the feature all the time.
+> > 
+> 
+> I put a command line parameter there because most people will not have
+> the tools to catch what's given to them by this. Making it a config
+> option definitely makes more sense than forcing certain groups of
+> engineers to always slap a kernel parameter in there.
 
-This patch adds the device node of display backlight for MT2701
+Ok. Sounds good. The commandline will still be nice to have to
+override whatever is in the build without having to recompile.
+And it sounds like the plan is to have both pieces.
 
-Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
----
- arch/arm/boot/dts/mt2701-evb.dts | 29 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/mt2701.dtsi    |  9 +++++++++
- 2 files changed, 38 insertions(+)
-
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-index a483798..e49c2b7 100644
---- a/arch/arm/boot/dts/mt2701-evb.dts
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -22,6 +22,35 @@
- 	memory {
- 		reg = <0 0x80000000 0 0x40000000>;
- 	};
-+
-+	backlight_lcd: backlight_lcd {
-+		compatible = "pwm-backlight";
-+		pwms = <&bls 0 100000>;
-+		brightness-levels = <
-+			  0  16  32  48  64  80  96 112
-+			128 144 160 176 192 208 224 240
-+			255
-+		>;
-+		default-brightness-level = <9>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pwm_bls_gpio>;
-+	};
-+};
-+
-+&bls {
-+	status = "okay";
-+};
-+
-+&mmsys {
-+	status = "okay";
-+};
-+
-+&pio {
-+	pwm_bls_gpio: pwm_bls_gpio {
-+		pins_cmd_dat {
-+			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
-+		};
-+	};
- };
- 
- &auxadc {
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index de88bd7..4f110d5 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -366,6 +366,15 @@
- 		#clock-cells = <1>;
- 	};
- 
-+	bls: bls@1400a000 {
-+		compatible = "mediatek,mt2701-disp-pwm";
-+		reg = <0 0x1400a000 0 0x1000>;
-+		#pwm-cells = <2>;
-+		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
-+		clock-names = "main", "mm";
-+		status = "disabled";
-+	};
-+
- 	larb0: larb@14010000 {
- 		compatible = "mediatek,mt2701-smi-larb";
- 		reg = <0 0x14010000 0 0x1000>;
 -- 
-1.9.1
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
