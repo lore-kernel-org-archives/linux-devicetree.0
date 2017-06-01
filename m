@@ -1,185 +1,23 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 5/9] clk: mvebu: cp110: introduce a new binding
-Date: Thu,  1 Jun 2017 16:55:38 +0200
-Message-ID: <bb21ee9acc55efac884450ff710049b99b27f8bf.1496328934.git-series.gregory.clement@free-electrons.com>
-References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/5] Add phylib support for MV88X3310 10G phy
+Date: Thu, 01 Jun 2017 12:07:36 -0400 (EDT)
+Message-ID: <20170601.120736.670167741447008364.davem@davemloft.net>
+References: <20170601102327.GF27796@n2100.armlinux.org.uk>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170601102327.GF27796@n2100.armlinux.org.uk>
+Sender: netdev-owner@vger.kernel.org
+To: linux@armlinux.org.uk
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The initial intent when the binding of the cp110 system controller was to
-have one flat node. The idea being that what is currently a clock-only
-driver in drivers would become a MFD driver, exposing the clock, GPIO and
-pinctrl functionality. However, after taking a step back, this would lead
-to a messy binding. Indeed, a single node would be a GPIO controller,
-clock controller, pinmux controller, and more.
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Date: Thu, 1 Jun 2017 11:23:27 +0100
 
-This patch adopts a more classical solution of a top-level syscon node
-with sub-nodes for the individual devices. The main benefit will be to
-have each functional block associated to its own sub-node where we can
-put its own properties.
+> This patch series adds support for the Marvell 88x3310 PHY found on
+> the SolidRun Macchiatobin board.
 
-The introduction of the Armada 7K/8K is still in the early stage so the
-plan is to remove the old binding. However, we don't want to break the
-device tree compatibility for the few devices already in the field. For
-this we still keep the support of the legacy compatible string with a big
-warning in the kernel about updating the device tree.
-
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/clk/mvebu/cp110-system-controller.c | 63 ++++++++++++++++------
- 1 file changed, 48 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-index 081f089d2656..ae3d81263304 100644
---- a/drivers/clk/mvebu/cp110-system-controller.c
-+++ b/drivers/clk/mvebu/cp110-system-controller.c
-@@ -213,9 +213,9 @@ static struct clk_hw *cp110_of_clk_get(struct of_phandle_args *clkspec,
- 	return ERR_PTR(-EINVAL);
- }
- 
--static char *cp110_unique_name(struct device *dev, const char *name)
-+static char *cp110_unique_name(struct device *dev, struct device_node *np,
-+			       const char *name)
- {
--	struct device_node *np = dev->of_node;
- 	const __be32 *reg;
- 	u64 addr;
- 
-@@ -229,7 +229,8 @@ static char *cp110_unique_name(struct device *dev, const char *name)
- 			      (unsigned long long)addr, name);
- }
- 
--static int cp110_syscon_clk_probe(struct platform_device *pdev)
-+static int cp110_syscon_common_probe(struct platform_device *pdev,
-+				     struct device_node *syscon_node)
- {
- 	struct regmap *regmap;
- 	struct device *dev = &pdev->dev;
-@@ -241,7 +242,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	int i, ret;
- 	char *gate_name[ARRAY_SIZE(gate_base_names)];
- 
--	regmap = syscon_node_to_regmap(np);
-+	regmap = syscon_node_to_regmap(syscon_node);
- 	if (IS_ERR(regmap))
- 		return PTR_ERR(regmap);
- 
-@@ -260,7 +261,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clk_data->num = CP110_CLK_NUM;
- 
- 	/* Register the APLL which is the root of the hw tree */
--	apll_name = cp110_unique_name(dev, "apll");
-+	apll_name = cp110_unique_name(dev, syscon_node, "apll");
- 	hw = clk_hw_register_fixed_rate(NULL, apll_name, NULL, 0,
- 					1000 * 1000 * 1000);
- 	if (IS_ERR(hw)) {
-@@ -271,7 +272,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clks[CP110_CORE_APLL] = hw;
- 
- 	/* PPv2 is APLL/3 */
--	ppv2_name = cp110_unique_name(dev, "ppv2-core");
-+	ppv2_name = cp110_unique_name(dev, syscon_node, "ppv2-core");
- 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -281,7 +282,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clks[CP110_CORE_PPV2] = hw;
- 
- 	/* EIP clock is APLL/2 */
--	eip_name = cp110_unique_name(dev, "eip");
-+	eip_name = cp110_unique_name(dev, syscon_node, "eip");
- 	hw = clk_hw_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -291,7 +292,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clks[CP110_CORE_EIP] = hw;
- 
- 	/* Core clock is EIP/2 */
--	core_name = cp110_unique_name(dev, "core");
-+	core_name = cp110_unique_name(dev, syscon_node, "core");
- 	hw = clk_hw_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -300,7 +301,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 
- 	cp110_clks[CP110_CORE_CORE] = hw;
- 	/* NAND can be either APLL/2.5 or core clock */
--	nand_name = cp110_unique_name(dev, "nand-core");
-+	nand_name = cp110_unique_name(dev, syscon_node, "nand-core");
- 	if (nand_clk_ctrl & NF_CLOCK_SEL_400_MASK)
- 		hw = clk_hw_register_fixed_factor(NULL, nand_name,
- 						   apll_name, 0, 2, 5);
-@@ -316,7 +317,8 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 
- 	/* create the unique name for all the gate clocks */
- 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
--		gate_name[i] =	cp110_unique_name(dev, gate_base_names[i]);
-+		gate_name[i] =	cp110_unique_name(dev, syscon_node,
-+						  gate_base_names[i]);
- 
- 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++) {
- 		const char *parent;
-@@ -402,17 +404,48 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
--static const struct of_device_id cp110_syscon_of_match[] = {
-+static int cp110_syscon_legacy_clk_probe(struct platform_device *pdev)
-+{
-+	dev_warn(&pdev->dev, FW_WARN "Using legacy device tree binding\n");
-+	dev_warn(&pdev->dev, FW_WARN "Update your device tree:\n");
-+	dev_warn(&pdev->dev, FW_WARN
-+		 "This binding won't be supported in future kernels\n");
-+
-+	return cp110_syscon_common_probe(pdev, pdev->dev.of_node);
-+}
-+
-+static int cp110_clk_probe(struct platform_device *pdev)
-+{
-+	return cp110_syscon_common_probe(pdev, pdev->dev.of_node->parent);
-+}
-+
-+
-+static const struct of_device_id cp110_syscon_legacy_of_match[] = {
- 	{ .compatible = "marvell,cp110-system-controller0", },
- 	{ }
- };
- 
--static struct platform_driver cp110_syscon_driver = {
--	.probe = cp110_syscon_clk_probe,
-+static struct platform_driver cp110_syscon_legacy_driver = {
-+	.probe = *cp110_syscon_legacy_clk_probe,
- 	.driver		= {
- 		.name	= "marvell-cp110-system-controller0",
--		.of_match_table = cp110_syscon_of_match,
-+		.of_match_table = cp110_syscon_legacy_of_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+builtin_platform_driver(cp110_syscon_legacy_driver);
-+
-+static const struct of_device_id cp110_clock_of_match[] = {
-+	{ .compatible = "marvell,cp110-clock", },
-+	{ }
-+};
-+
-+static struct platform_driver cp110_clock_driver = {
-+	.probe = cp110_clk_probe,
-+	.driver		= {
-+		.name	= "marvell-cp110-clock",
-+		.of_match_table = cp110_clock_of_match,
- 		.suppress_bind_attrs = true,
- 	},
- };
--builtin_platform_driver(cp110_syscon_driver);
-+builtin_platform_driver(cp110_clock_driver);
--- 
-git-series 0.9.1
+Andrew has asked for some comment documentation additions to patch #5
+so I'm expecting at least one respin of this series ;-)
