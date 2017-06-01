@@ -1,28 +1,48 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: rockchip: add adc button for Firefly
-Date: Fri, 02 Jun 2017 01:47:36 +0200
-Message-ID: <2698518.oyLyAMgdGQ@phil>
-References: <20170530155246.14869-1-ayaka@soulik.info>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: versatile: use #include "..." to include local
+ DT
+Date: Thu, 1 Jun 2017 16:52:51 -0700
+Message-ID: <20170601235251.GB13314@localhost>
+References: <1495602610-18667-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170530155246.14869-1-ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1495602610-18667-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 30. Mai 2017, 23:52:46 CEST schrieb Randy Li:
-> The only adc button connected to adc input is recovery button.
+On Wed, May 24, 2017 at 02:10:10PM +0900, Masahiro Yamada wrote:
+> Most of DT files in ARM use #include "..." to make pre-processor
+> include DT in the same directory, but this is one of the exceptional
+> files that use #include <...> for that.
 > 
-> Signed-off-by: Randy Li <ayaka-xPW3/0Ywev/iB9QmIjCX8w@public.gmane.org>
+> Fix it to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
+> dtc_cpp_flags.
+> 
+> ARM: dts: versatile: use #include "..." to include DT in the same directory
+> 
+> Most of DT files in ARM use #include "..." to make pre-processor
+> include DT in the same directory, but we have 3 exceptional files
+> that use #include <...> for that.
+> 
+> They must be fixed to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts
+> path from dtc_cpp_flags.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+> ---
+> 
+> Arnd, Olof,
+> I could not find a sub-arch maintainer for versatile.
+> If nobody picks up this, could you take care of this?
 
-applied for 4.13
+Applied to fixes. Thanks!
 
 
-Thanks
-Heiko
+-Olof
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
