@@ -1,23 +1,24 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/5] Add phylib support for MV88X3310 10G phy
-Date: Thu, 01 Jun 2017 12:07:36 -0400 (EDT)
-Message-ID: <20170601.120736.670167741447008364.davem@davemloft.net>
-References: <20170601102327.GF27796@n2100.armlinux.org.uk>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 1/7] dmaengine: use proper name for the R-Car SoC
+Date: Thu, 1 Jun 2017 22:07:43 +0530
+Message-ID: <20170601163743.GE2885@localhost>
+References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
+ <20170528093051.11816-2-wsa+renesas@sang-engineering.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170601102327.GF27796@n2100.armlinux.org.uk>
-Sender: netdev-owner@vger.kernel.org
-To: linux@armlinux.org.uk
-Cc: andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, robh+dt@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170528093051.11816-2-wsa+renesas@sang-engineering.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
-Date: Thu, 1 Jun 2017 11:23:27 +0100
+On Sun, May 28, 2017 at 11:30:44AM +0200, Wolfram Sang wrote:
+> It is 'R-Car', not 'r-car'. No code or binding changes, only descriptive text.
 
-> This patch series adds support for the Marvell 88x3310 PHY found on
-> the SolidRun Macchiatobin board.
 
-Andrew has asked for some comment documentation additions to patch #5
-so I'm expecting at least one respin of this series ;-)
+Applied, thanks
+
+-- 
+~Vinod
