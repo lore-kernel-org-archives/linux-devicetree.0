@@ -1,42 +1,60 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 4/7] ARM: dts: am57xx-beagle-x15-revb1: Fix supply name used for MMC1 IO lines
-Date: Thu, 1 Jun 2017 20:03:58 +0530
-Message-ID: <20170601143401.16852-5-kishon@ti.com>
-References: <20170601143401.16852-1-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170601143401.16852-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, nsekhar@ti.com
-Cc: Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, kishon@ti.com
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 0/9] Improve cp110 clk support on Marvell Armada 7K/8K
+Date: Thu,  1 Jun 2017 16:55:33 +0200
+Message-ID: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The dt binding documentation of omap-hsmmc recommends using
-"vmmc_aux" for IO supply lines. However
-commit 0af28cc92690d8c ("ARM: dts: am57xx-beagle-x15: Add support
-for rev B1") added it as "vmmc-aux". Fix it here.
+Hi,
 
-Fixes: commit 0af28cc92690d8c ("ARM: dts: am57xx-beagle-x15: Add
-support for rev B1")
+We got more information about the clock controllers and the clock tree
+of the CP110 part that we find in the Marvell Armada 7K/8K SoCs.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In this 3rd version I removed the GOP changes because the clock is
+actually shared between GOP and SD/eMMC.
 
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-index 39a92aff0a0d..6ae94ab52b7b 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-@@ -20,7 +20,7 @@
- 
- &mmc1 {
- 	vmmc-supply = <&vdd_3v3>;
--	vmmc-aux-supply = <&ldo1_reg>;
-+	vmmc_aux-supply = <&ldo1_reg>;
- };
- 
- /* errata i880 "Ethernet RGMII2 Limited to 10/100 Mbps" */
+The last two patches modifying the device tree _must_ be merged
+through the mvebu tree to avoid future conflict (especially with the
+recent ICU series sent by Thomas Petazzoni).
+
+Changelog:
+v2 -> v3
+ - removed the GOP changed
+cover letter for v2:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509816.html
+
+v1 -> v2
+ - split the patch to have separate patch for the binding documentation
+ - added the acked-by from Rob Herring
+cover letter for v2:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/507381.html
+
+Thanks,
+
+Gregory
+
+Gregory CLEMENT (8):
+  clk: mvebu: cp110: make failure labels more meaningful
+  dt-bindings: cp110: do not depend anymore of the *-clock-output-names
+  clk: mvebu: cp110: do not depend anymore of the *-clock-output-names
+  dt-bindings: cp110: introduce a new binding
+  clk: mvebu: cp110: introduce a new binding
+  dt-bindings: cp110: add sdio clock to cp-110 system controller
+  arm64: dts: marvell: remove *-clock-output-names on cp110
+  arm64: dts: marvell: use new binding for the system controller on cp110
+
+Konstantin Porotchkin (1):
+  clk: mvebu: cp110: add sdio clock to cp-110 system controller
+
+ Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt |  33 +++++-------
+ arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi                       |  54 +++++++------------
+ arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi                        |  48 ++++++-----------
+ drivers/clk/mvebu/cp110-system-controller.c                                | 200 +++++++++++++++++++++++++++++++++++++++++++++++++-----------------------
+ 4 files changed, 194 insertions(+), 141 deletions(-)
+
+base-commit: 2ea659a9ef488125eb46da6eb571de5eae5c43f6
 -- 
-2.11.0
+git-series 0.9.1
