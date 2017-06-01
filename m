@@ -1,97 +1,76 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 1/9] clk: mvebu: cp110: make failure labels more meaningful
-Date: Thu,  1 Jun 2017 16:55:34 +0200
-Message-ID: <29e6beb5a55fe79c94e0f746d0de7bd851cd3618.1496328934.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v3 4/9] dt-bindings: cp110: introduce a new binding
+Date: Thu,  1 Jun 2017 16:55:37 +0200
+Message-ID: <b27495e10fb4f4d8a7fd1a760d49402bbae83b58.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-In preparation to the addition of a new clock, rename the goto labels
-used to handle the failure cases using a name related to the failure
-cause. This will allow to insert additional failing cases without
-renaming all the labels.
+This patch updates the documentation according to the change made in the
+patch "pinctrl: dt-bindings: cp110: introduce a new binding".
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/clk/mvebu/cp110-system-controller.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-index 6b11d7b3e0e0..3b27a6056c73 100644
---- a/drivers/clk/mvebu/cp110-system-controller.c
-+++ b/drivers/clk/mvebu/cp110-system-controller.c
-@@ -221,7 +221,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 					1000 * 1000 * 1000);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail0;
-+		goto fail_apll;
- 	}
+diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+index dbd0a38ca580..e97cc2d73e2e 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+@@ -7,6 +7,13 @@ Controller 0 and System Controller 1. This Device Tree binding allows
+ to describe the first system controller, which provides registers to
+ configure various aspects of the SoC.
  
- 	cp110_clks[CP110_CORE_APLL] = hw;
-@@ -232,7 +232,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail1;
-+		goto fail_ppv2;
- 	}
++For the top level node:
++ - compatible: must be: "syscon", "simple-mfd";
++ - reg: register area of the CP110 system controller 0
++
++Clocks:
++-------
++
+ The Device Tree node representing this System Controller 0 provides a
+ number of clocks:
  
- 	cp110_clks[CP110_CORE_PPV2] = hw;
-@@ -243,7 +243,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	hw = clk_hw_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail2;
-+		goto fail_eip;
- 	}
+@@ -56,14 +63,17 @@ The following clocks are available:
+ Required properties:
  
- 	cp110_clks[CP110_CORE_EIP] = hw;
-@@ -254,7 +254,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	hw = clk_hw_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail3;
-+		goto fail_core;
- 	}
+  - compatible: must be:
+-     "marvell,cp110-system-controller0", "syscon";
+- - reg: register area of the CP110 system controller 0
++     "marvell,cp110-clock"
+  - #clock-cells: must be set to 2
  
- 	cp110_clks[CP110_CORE_CORE] = hw;
-@@ -270,7 +270,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 						   core_name, 0, 1, 1);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
--		goto fail4;
-+		goto fail_nand;
- 	}
+ Example:
  
- 	cp110_clks[CP110_CORE_NAND] = hw;
-@@ -365,15 +365,15 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	}
- 
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_NAND]);
--fail4:
-+fail_nand:
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_CORE]);
--fail3:
-+fail_core:
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_EIP]);
--fail2:
-+fail_eip:
- 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_PPV2]);
--fail1:
-+fail_ppv2:
- 	clk_hw_unregister_fixed_rate(cp110_clks[CP110_CORE_APLL]);
--fail0:
-+fail_apll:
- 	return ret;
- }
- 
+ 	cpm_syscon0: system-controller@440000 {
+-		compatible = "marvell,cp110-system-controller0", "syscon";
++		compatible = "syscon", "simple-mfd";
+ 		reg = <0x440000 0x1000>;
+-		#clock-cells = <2>;
++
++		cpm_clk: clock {
++			compatible = "marvell,cp110-clock";
++			#clock-cells = <2>;
++		};
+ 	};
 -- 
 git-series 0.9.1
