@@ -1,41 +1,54 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gx: Add SPICC nodes
-Date: Thu, 01 Jun 2017 11:59:53 +0200
-Message-ID: <1496311193.3552.3.camel@baylibre.com>
-References: <1496045395-5702-1-git-send-email-narmstrong@baylibre.com>
-         <m27f0yt2cv.fsf@baylibre.com> <m237bmsz61.fsf@baylibre.com>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: [PATCH 0/5] Add phylib support for MV88X3310 10G phy
+Date: Thu, 1 Jun 2017 11:23:27 +0100
+Message-ID: <20170601102327.GF27796@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <m237bmsz61.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-05-30 at 16:27 -0700, Kevin Hilman wrote:
-> Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
-> 
-> > Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
-> > 
-> > > Add nodes for the SPICC controller on GX common dtsi, GXBB and
-> > > GXL dtsi files.
-> > > 
-> > > Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> > 
-> > Applied to v4.13/dt64,
-> 
-> Oops, this one will have to wait until we have an immutable branch in
-> the clk tree.
+Hi,
 
-Now available : meson-clk-headers-for-4.13
+This patch series adds support for the Marvell 88x3310 PHY found on
+the SolidRun Macchiatobin board.
 
-> 
-> Kevin
-> 
+The first patch introduces a set of generic Clause 45 PHY helpers that
+C45 PHY drivers can make use of if they wish.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch 2 fixes the aneg restart to be compatible with C45 PHYs - it can
+currently only cope with C22 PHYs.
+
+Patch 3 moves the "gen10g" driver into the Clause 45 code, grouping all
+core clause 45 code together.
+
+Patch 4 adds the phy_interface_t types for XAUI and 10GBase-KR links.
+As 10GBase-KR appears to be compatible with XFI and SFI, XFI and SFI,
+I currently see no reason to add XFI and SFI interface modes.  There
+seems to be vendor code out there using these, but they all alias back
+to the same hardware settings.
+
+Patch 5 adds support for the MV88X3310 PHY, which supports both the
+copper and fiber interfaces.  It should be noted that the MV88X3310
+automatically switches its MAC facing interface between 10GBase-KR
+and SGMII depending on the negotiated speed.  This was discussed with
+Florian, and we agreed to update the phy interface mode depending on
+the properties of the actual link mode to the PHY.
+
+ Documentation/devicetree/bindings/net/ethernet.txt |   2 +
+ MAINTAINERS                                        |   6 +
+ drivers/net/phy/Makefile                           |   4 +-
+ drivers/net/phy/marvell10g.c                       | 364 +++++++++++++++++++++
+ drivers/net/phy/phy-c45.c                          | 295 +++++++++++++++++
+ drivers/net/phy/phy.c                              |  23 +-
+ drivers/net/phy/phy_device.c                       | 113 ++-----
+ include/linux/phy.h                                |  20 ++
+ 8 files changed, 729 insertions(+), 98 deletions(-)
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
