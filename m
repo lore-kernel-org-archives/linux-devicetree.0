@@ -1,140 +1,135 @@
-From: richard.gong@linux.intel.com
-Subject: [PATCHv1] dt-bindings: reset: Add reset manager offsets for Stratix10
-Date: Thu,  1 Jun 2017 09:23:59 -0500
-Message-ID: <1496327039-21942-2-git-send-email-richard.gong@linux.intel.com>
-References: <1496327039-21942-1-git-send-email-richard.gong@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496327039-21942-1-git-send-email-richard.gong@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, richard.gong@linux.intel.com, Richard Gong <richard.gong@intel.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 1/7] ARM: dts: dra72-evm-common: Correct vmmc-supply for mmc2
+Date: Thu, 1 Jun 2017 20:03:55 +0530
+Message-ID: <20170601143401.16852-2-kishon@ti.com>
+References: <20170601143401.16852-1-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170601143401.16852-1-kishon@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, nsekhar@ti.com
+Cc: Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, kishon@ti.com, Ravikumar Kattekola <rk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+On dra72/dra71 evms, mmc2 vdd/ios are connected to a common 1.8V supply
+not 3.3V. Also the regulator that supplies 1.8V is different on dra71-evm
+so move the supply property from common dtsi to evm specific dts files.
 
-There are several changes in reset manager offsets from Arria10 to
-Stratix10. This patch is based on one from Arria10 and adds offset
-updates for Stratix10
-
-Signed-off-by: Richard Gong <richard.gong@intel.com>
+Fixes: a4240d3af677 ("ARM: dts: Add support for dra72-evm rev C (SR2.0)")
+Signed-off-by: Ravikumar Kattekola <rk@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- include/dt-bindings/reset/altr,rst-mgr-s10.h | 108 +++++++++++++++++++++++++++
- 1 file changed, 108 insertions(+)
- create mode 100644 include/dt-bindings/reset/altr,rst-mgr-s10.h
+ arch/arm/boot/dts/dra71-evm.dts         | 14 ++++++++++++++
+ arch/arm/boot/dts/dra72-evm-common.dtsi |  2 --
+ arch/arm/boot/dts/dra72-evm-revc.dts    | 14 ++++++++++++++
+ arch/arm/boot/dts/dra72-evm.dts         | 14 ++++++++++++++
+ 4 files changed, 42 insertions(+), 2 deletions(-)
 
-diff --git a/include/dt-bindings/reset/altr,rst-mgr-s10.h b/include/dt-bindings/reset/altr,rst-mgr-s10.h
-new file mode 100644
-index 0000000..7978c21
---- /dev/null
-+++ b/include/dt-bindings/reset/altr,rst-mgr-s10.h
-@@ -0,0 +1,108 @@
-+/*
-+ * Copyright (C) 2016 Intel Corporation. All rights reserved
-+ * Copyright (C) 2016 Altera Corporation. All rights reserved
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ *
-+ * derived from Steffen Trumtrar's "altr,rst-mgr-a10.h"
-+ */
+diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
+index 4d57a55473af..c7a56b6263a6 100644
+--- a/arch/arm/boot/dts/dra71-evm.dts
++++ b/arch/arm/boot/dts/dra71-evm.dts
+@@ -32,6 +32,16 @@
+ 			  3000000 0x1>;
+ 	};
+ 
++	evm_1v8_sw: fixedregulator-evm_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "evm_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&lp8732_buck0_reg>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
 +
-+#ifndef _DT_BINDINGS_RESET_ALTR_RST_MGR_S10_H
-+#define _DT_BINDINGS_RESET_ALTR_RST_MGR_S10_H
+ 	poweroff: gpio-poweroff {
+ 		compatible = "gpio-poweroff";
+ 		gpios = <&gpio7 30 GPIO_ACTIVE_HIGH>;
+@@ -165,6 +175,10 @@
+ 	vmmc_aux-supply = <&vpo_sd_1v8_3v3>;
+ };
+ 
++&mmc2 {
++	vmmc-supply = <&evm_1v8_sw>;
++};
 +
-+/* MPUMODRST */
-+#define CPU0_RESET		0
-+#define CPU1_RESET		1
-+#define CPU2_RESET		2
-+#define CPU3_RESET		3
+ &mac {
+ 	mode-gpios = <&pcf_gpio_21 4 GPIO_ACTIVE_LOW>,
+ 		     <&pcf_hdmi 9 GPIO_ACTIVE_LOW>,	/* P11 */
+diff --git a/arch/arm/boot/dts/dra72-evm-common.dtsi b/arch/arm/boot/dts/dra72-evm-common.dtsi
+index ad24544adf0f..d97370217eff 100644
+--- a/arch/arm/boot/dts/dra72-evm-common.dtsi
++++ b/arch/arm/boot/dts/dra72-evm-common.dtsi
+@@ -418,8 +418,6 @@
+ 	status = "okay";
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&mmc2_pins_default>;
+-
+-	vmmc-supply = <&evm_3v3_sw>;
+ 	bus-width = <8>;
+ 	ti,non-removable;
+ 	max-frequency = <192000000>;
+diff --git a/arch/arm/boot/dts/dra72-evm-revc.dts b/arch/arm/boot/dts/dra72-evm-revc.dts
+index 3ecac56bf504..47dcd527ec58 100644
+--- a/arch/arm/boot/dts/dra72-evm-revc.dts
++++ b/arch/arm/boot/dts/dra72-evm-revc.dts
+@@ -15,6 +15,16 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x0 0x80000000>; /* 2GB */
+ 	};
 +
-+/* PER0MODRST */
-+#define EMAC0_RESET		32
-+#define EMAC1_RESET		33
-+#define EMAC2_RESET		34
-+#define USB0_RESET		35
-+#define USB1_RESET		36
-+#define NAND_RESET		37
-+/* 38 is empty */
-+#define SDMMC_RESET		39
-+#define EMAC0_OCP_RESET		40
-+#define EMAC1_OCP_RESET		41
-+#define EMAC2_OCP_RESET		42
-+#define USB0_OCP_RESET		43
-+#define USB1_OCP_RESET		44
-+#define NAND_OCP_RESET		45
-+/* 46 is empty */
-+#define SDMMC_OCP_RESET		47
-+#define DMA_RESET		48
-+#define SPIM0_RESET		49
-+#define SPIM1_RESET		50
-+#define SPIS0_RESET		51
-+#define SPIS1_RESET		52
-+#define DMA_OCP_RESET		53
-+#define EMAC_PTP_RESET		54
-+/* 55 is empty*/
-+#define DMAIF0_RESET		56
-+#define DMAIF1_RESET		57
-+#define DMAIF2_RESET		58
-+#define DMAIF3_RESET		59
-+#define DMAIF4_RESET		60
-+#define DMAIF5_RESET		61
-+#define DMAIF6_RESET		62
-+#define DMAIF7_RESET		63
++	evm_1v8_sw: fixedregulator-evm_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "evm_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&smps4_reg>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
+ };
+ 
+ &i2c1 {
+@@ -82,3 +92,7 @@
+ 		interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+ 	};
+ };
 +
-+/* PER1MODRST */
-+#define WATCHDOG0_RESET		64
-+#define WATCHDOG1_RESET		65
-+#define WATCHDOG2_RESET		66
-+#define WATCHDOG3_RESET		67
-+#define L4SYSTIMER0_RESET	68
-+#define L4SYSTIMER1_RESET	69
-+#define SPTIMER0_RESET		70
-+#define SPTIMER1_RESET		71
-+#define I2C0_RESET		72
-+#define I2C1_RESET		73
-+#define I2C2_RESET		74
-+#define I2C3_RESET		75
-+#define I2C4_RESET		76
-+/* 77-79 is empty */
-+#define UART0_RESET		80
-+#define UART1_RESET		81
-+/* 82-87 is empty */
-+#define GPIO0_RESET		88
-+#define GPIO1_RESET		89
++&mmc2 {
++	vmmc-supply = <&evm_1v8_sw>;
++};
+diff --git a/arch/arm/boot/dts/dra72-evm.dts b/arch/arm/boot/dts/dra72-evm.dts
+index cd9c4ff12654..adbcc570eba9 100644
+--- a/arch/arm/boot/dts/dra72-evm.dts
++++ b/arch/arm/boot/dts/dra72-evm.dts
+@@ -13,6 +13,16 @@
+ 		device_type = "memory";
+ 		reg = <0x0 0x80000000 0x0 0x40000000>; /* 1024 MB */
+ 	};
 +
-+/* BRGMODRST */
-+#define SOC2FPGA_RESET		96
-+#define LWHPS2FPGA_RESET	97
-+#define FPGA2SOC_RESET		98
-+#define F2SSDRAM0_RESET		99
-+#define F2SSDRAM1_RESET		100
-+#define F2SSDRAM2_RESET		101
-+#define DDRSCH_RESET		102
++	evm_1v8_sw: fixedregulator-evm_1v8 {
++		compatible = "regulator-fixed";
++		regulator-name = "evm_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&smps4_reg>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
+ };
+ 
+ &i2c1 {
+@@ -43,3 +53,7 @@
+ 	phy_id = <&davinci_mdio>, <3>;
+ 	phy-mode = "rgmii";
+ };
 +
-+/* COLDMODRST */
-+#define CPUPO0_RESET		160
-+#define CPUPO1_RESET		161
-+#define CPUPO2_RESET		162
-+#define CPUPO3_RESET		163
-+/* 164-167 is empty */
-+#define L2_RESET		168
-+
-+/* DBGMODRST */
-+#define DBG_RESET		224
-+#define CSDAP_RESET		225
-+
-+/* TAPMODRST */
-+#define TAP_RESET		256
-+
-+#endif
++&mmc2 {
++	vmmc-supply = <&evm_1v8_sw>;
++};
 -- 
-2.7.4
+2.11.0
+
