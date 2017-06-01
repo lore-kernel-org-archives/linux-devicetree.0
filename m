@@ -1,330 +1,265 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 9/9] arm64: dts: marvell: use new binding for the system controller on cp110
-Date: Thu,  1 Jun 2017 16:55:42 +0200
-Message-ID: <9c5807cafb03413f4318f6c95a2e093bd9cdcdcf.1496328934.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v3 3/9] clk: mvebu: cp110: do not depend anymore of the
+ *-clock-output-names
+Date: Thu,  1 Jun 2017 16:55:36 +0200
+Message-ID: <9f5211cf77fa76e22cd8d94b833b7701f5072b42.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Sender: linux-clk-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The new binding for the system controller on cp110 moved the clock
-controller into a subnode. This preliminary step will allow to add gpio
-and pinctrl subnodes.
+Using the *-clock-output-names property was a convenient way to have a
+unique name for each clock even when there are multiple cp110 blocks
+as we can find on Armada 8K.
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+However it has some drawbacks: the main one being a stronger link than
+necessary between the driver and the device tree. For example the clock
+name can't be changed, removed or moved. It is still the early stage of
+introduction of the Armada 7K/8K and the hardware is still not totally
+documented, especially for the clock part. By removing the use of
+*-clock-output-names it will be easier to add new clocks without breaking
+the compatibility.
+
+The name of each clock is now created by using its physical address as a
+prefix (as it was done for the platform device names). Thanks to this we
+have an automatic way to compute a unique name.
+
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 41 ++++++-------
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 35 +++++------
- 2 files changed, 41 insertions(+), 35 deletions(-)
+ drivers/clk/mvebu/cp110-system-controller.c | 105 +++++++++++++--------
+ 1 file changed, 65 insertions(+), 40 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-index a0f57a8e5dcb..96a4ff75b3b0 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-@@ -62,7 +62,7 @@
- 			cpm_ethernet: ethernet@0 {
- 				compatible = "marvell,armada-7k-pp22";
- 				reg = <0x0 0x100000>, <0x129000 0xb000>;
--				clocks = <&cpm_syscon0 1 3>, <&cpm_syscon0 1 9>, <&cpm_syscon0 1 5>;
-+				clocks = <&cpm_clk 1 3>, <&cpm_clk 1 9>, <&cpm_clk 1 5>;
- 				clock-names = "pp_clk", "gop_clk", "mg_clk";
- 				status = "disabled";
- 				dma-coherent;
-@@ -97,10 +97,13 @@
- 			};
+diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
+index 3b27a6056c73..081f089d2656 100644
+--- a/drivers/clk/mvebu/cp110-system-controller.c
++++ b/drivers/clk/mvebu/cp110-system-controller.c
+@@ -84,6 +84,33 @@ enum {
+ #define CP110_GATE_EIP150		25
+ #define CP110_GATE_EIP197		26
  
- 			cpm_syscon0: system-controller@440000 {
--				compatible = "marvell,cp110-system-controller0",
--					     "syscon";
-+				compatible = "syscon", "simple-mfd";
- 				reg = <0x440000 0x1000>;
--				#clock-cells = <2>;
++const char *gate_base_names[] = {
++	[CP110_GATE_AUDIO]	= "audio",
++	[CP110_GATE_COMM_UNIT]	= "communit",
++	[CP110_GATE_NAND]	= "nand",
++	[CP110_GATE_PPV2]	= "ppv2",
++	[CP110_GATE_SDIO]	= "sdio",
++	[CP110_GATE_MG]		= "mg-domain",
++	[CP110_GATE_MG_CORE]	= "mg-core",
++	[CP110_GATE_XOR1]	= "xor1",
++	[CP110_GATE_XOR0]	= "xor0",
++	[CP110_GATE_GOP_DP]	= "gop-dp",
++	[CP110_GATE_PCIE_X1_0]	= "pcie_x10",
++	[CP110_GATE_PCIE_X1_1]	= "pcie_x11",
++	[CP110_GATE_PCIE_X4]	= "pcie_x4",
++	[CP110_GATE_PCIE_XOR]	= "pcie-xor",
++	[CP110_GATE_SATA]	= "sata",
++	[CP110_GATE_SATA_USB]	= "sata-usb",
++	[CP110_GATE_MAIN]	= "main",
++	[CP110_GATE_SDMMC_GOP]	= "sd-mmc-gop",
++	[CP110_GATE_SLOW_IO]	= "slow-io",
++	[CP110_GATE_USB3H0]	= "usb3h0",
++	[CP110_GATE_USB3H1]	= "usb3h1",
++	[CP110_GATE_USB3DEV]	= "usb3dev",
++	[CP110_GATE_EIP150]	= "eip150",
++	[CP110_GATE_EIP197]	= "eip197"
++};
 +
-+				cpm_clk: clock {
-+					compatible = "marvell,cp110-clock";
-+					#clock-cells = <2>;
-+				};
- 			};
+ struct cp110_gate_clk {
+ 	struct clk_hw hw;
+ 	struct regmap *regmap;
+@@ -186,15 +213,33 @@ static struct clk_hw *cp110_of_clk_get(struct of_phandle_args *clkspec,
+ 	return ERR_PTR(-EINVAL);
+ }
  
- 			cpm_rtc: rtc@284000 {
-@@ -115,7 +118,7 @@
- 					     "generic-ahci";
- 				reg = <0x540000 0x30000>;
- 				interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 15>;
-+				clocks = <&cpm_clk 1 15>;
- 				status = "disabled";
- 			};
- 
-@@ -125,7 +128,7 @@
- 				reg = <0x500000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 22>;
-+				clocks = <&cpm_clk 1 22>;
- 				status = "disabled";
- 			};
- 
-@@ -135,7 +138,7 @@
- 				reg = <0x510000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 23>;
-+				clocks = <&cpm_clk 1 23>;
- 				status = "disabled";
- 			};
- 
-@@ -145,7 +148,7 @@
- 				      <0x6b0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cpm_syscon0 1 8>;
-+				clocks = <&cpm_clk 1 8>;
- 			};
- 
- 			cpm_xor1: xor@6c0000 {
-@@ -154,7 +157,7 @@
- 				      <0x6d0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cpm_syscon0 1 7>;
-+				clocks = <&cpm_clk 1 7>;
- 			};
- 
- 			cpm_spi0: spi@700600 {
-@@ -163,7 +166,7 @@
- 				#address-cells = <0x1>;
- 				#size-cells = <0x0>;
- 				cell-index = <1>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -173,7 +176,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				cell-index = <2>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -183,7 +186,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -193,7 +196,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 21>;
-+				clocks = <&cpm_clk 1 21>;
- 				status = "disabled";
- 			};
- 
-@@ -201,7 +204,7 @@
- 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
- 				reg = <0x760000 0x7d>;
- 				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cpm_syscon0 1 25>;
-+				clocks = <&cpm_clk 1 25>;
- 				status = "okay";
- 			};
- 
-@@ -210,7 +213,7 @@
- 				reg = <0x780000 0x300>;
- 				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 				clock-names = "core";
--				clocks = <&cpm_syscon0 1 4>;
-+				clocks = <&cpm_clk 1 4>;
- 				dma-coherent;
- 				status = "disabled";
- 			};
-@@ -227,7 +230,7 @@
- 					     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
- 				interrupt-names = "mem", "ring0", "ring1",
- 				"ring2", "ring3", "eip";
--				clocks = <&cpm_syscon0 1 26>;
-+				clocks = <&cpm_clk 1 26>;
- 				status = "disabled";
- 			};
- 		};
-@@ -254,7 +257,7 @@
- 			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 			num-lanes = <1>;
--			clocks = <&cpm_syscon0 1 13>;
-+			clocks = <&cpm_clk 1 13>;
- 			status = "disabled";
- 		};
- 
-@@ -281,7 +284,7 @@
- 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cpm_syscon0 1 11>;
-+			clocks = <&cpm_clk 1 11>;
- 			status = "disabled";
- 		};
- 
-@@ -308,7 +311,7 @@
- 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cpm_syscon0 1 12>;
-+			clocks = <&cpm_clk 1 12>;
- 			status = "disabled";
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index 9584bc8d8b3f..48a658aa5b32 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -104,10 +104,13 @@
- 			};
- 
- 			cps_syscon0: system-controller@440000 {
--				compatible = "marvell,cp110-system-controller0",
--					     "syscon";
-+				compatible = "syscon", "simple-mfd";
- 				reg = <0x440000 0x1000>;
--				#clock-cells = <2>;
++static char *cp110_unique_name(struct device *dev, const char *name)
++{
++	struct device_node *np = dev->of_node;
++	const __be32 *reg;
++	u64 addr;
 +
-+				cps_clk: clock {
-+					compatible = "marvell,cp110-clock";
-+					#clock-cells = <2>;
-+				};
- 			};
++	/* Do not create a name if there is no clock */
++	if (!name)
++		return NULL;
++
++	reg = of_get_property(np, "reg", NULL);
++	addr = of_translate_address(np, reg);
++	return devm_kasprintf(dev, GFP_KERNEL, "%llx-%s",
++			      (unsigned long long)addr, name);
++}
++
+ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ {
+ 	struct regmap *regmap;
+-	struct device_node *np = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
+ 	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name;
+ 	struct clk_hw_onecell_data *cp110_clk_data;
+ 	struct clk_hw *hw, **cp110_clks;
+ 	u32 nand_clk_ctrl;
+ 	int i, ret;
++	char *gate_name[ARRAY_SIZE(gate_base_names)];
  
- 			cps_sata0: sata@540000 {
-@@ -115,7 +118,7 @@
- 					     "generic-ahci";
- 				reg = <0x540000 0x30000>;
- 				interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 15>;
-+				clocks = <&cps_clk 1 15>;
- 				status = "disabled";
- 			};
+ 	regmap = syscon_node_to_regmap(np);
+ 	if (IS_ERR(regmap))
+@@ -205,7 +250,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
  
-@@ -125,7 +128,7 @@
- 				reg = <0x500000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 22>;
-+				clocks = <&cps_clk 1 22>;
- 				status = "disabled";
- 			};
+-	cp110_clk_data = devm_kzalloc(&pdev->dev, sizeof(*cp110_clk_data) +
++	cp110_clk_data = devm_kzalloc(dev, sizeof(*cp110_clk_data) +
+ 				      sizeof(struct clk_hw *) * CP110_CLK_NUM,
+ 				      GFP_KERNEL);
+ 	if (!cp110_clk_data)
+@@ -215,8 +260,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clk_data->num = CP110_CLK_NUM;
  
-@@ -135,7 +138,7 @@
- 				reg = <0x510000 0x4000>;
- 				dma-coherent;
- 				interrupts = <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 23>;
-+				clocks = <&cps_clk 1 23>;
- 				status = "disabled";
- 			};
+ 	/* Register the APLL which is the root of the hw tree */
+-	of_property_read_string_index(np, "core-clock-output-names",
+-				      CP110_CORE_APLL, &apll_name);
++	apll_name = cp110_unique_name(dev, "apll");
+ 	hw = clk_hw_register_fixed_rate(NULL, apll_name, NULL, 0,
+ 					1000 * 1000 * 1000);
+ 	if (IS_ERR(hw)) {
+@@ -227,8 +271,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clks[CP110_CORE_APLL] = hw;
  
-@@ -145,7 +148,7 @@
- 				      <0x6b0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cps_syscon0 1 8>;
-+				clocks = <&cps_clk 1 8>;
- 			};
+ 	/* PPv2 is APLL/3 */
+-	of_property_read_string_index(np, "core-clock-output-names",
+-				      CP110_CORE_PPV2, &ppv2_name);
++	ppv2_name = cp110_unique_name(dev, "ppv2-core");
+ 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -238,8 +281,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clks[CP110_CORE_PPV2] = hw;
  
- 			cps_xor1: xor@6c0000 {
-@@ -154,7 +157,7 @@
- 				      <0x6d0000 0x1000>;
- 				dma-coherent;
- 				msi-parent = <&gic_v2m0>;
--				clocks = <&cps_syscon0 1 7>;
-+				clocks = <&cps_clk 1 7>;
- 			};
+ 	/* EIP clock is APLL/2 */
+-	of_property_read_string_index(np, "core-clock-output-names",
+-				      CP110_CORE_EIP, &eip_name);
++	eip_name = cp110_unique_name(dev, "eip");
+ 	hw = clk_hw_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -249,8 +291,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	cp110_clks[CP110_CORE_EIP] = hw;
  
- 			cps_spi0: spi@700600 {
-@@ -163,7 +166,7 @@
- 				#address-cells = <0x1>;
- 				#size-cells = <0x0>;
- 				cell-index = <3>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
+ 	/* Core clock is EIP/2 */
+-	of_property_read_string_index(np, "core-clock-output-names",
+-				      CP110_CORE_CORE, &core_name);
++	core_name = cp110_unique_name(dev, "core");
+ 	hw = clk_hw_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
+ 	if (IS_ERR(hw)) {
+ 		ret = PTR_ERR(hw);
+@@ -258,10 +299,8 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 	}
  
-@@ -173,7 +176,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				cell-index = <4>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
+ 	cp110_clks[CP110_CORE_CORE] = hw;
+-
+ 	/* NAND can be either APLL/2.5 or core clock */
+-	of_property_read_string_index(np, "core-clock-output-names",
+-				      CP110_CORE_NAND, &nand_name);
++	nand_name = cp110_unique_name(dev, "nand-core");
+ 	if (nand_clk_ctrl & NF_CLOCK_SEL_400_MASK)
+ 		hw = clk_hw_register_fixed_factor(NULL, nand_name,
+ 						   apll_name, 0, 2, 5);
+@@ -275,18 +314,14 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
  
-@@ -183,7 +186,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
+ 	cp110_clks[CP110_CORE_NAND] = hw;
  
-@@ -193,7 +196,7 @@
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				interrupts = <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 21>;
-+				clocks = <&cps_clk 1 21>;
- 				status = "disabled";
- 			};
+-	for (i = 0; i < CP110_MAX_GATABLE_CLOCKS; i++) {
+-		const char *parent, *name;
+-		int ret;
+-
+-		ret = of_property_read_string_index(np,
+-						    "gate-clock-output-names",
+-						    i, &name);
+-		/* Reached the end of the list? */
+-		if (ret < 0)
+-			break;
++	/* create the unique name for all the gate clocks */
++	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
++		gate_name[i] =	cp110_unique_name(dev, gate_base_names[i]);
++
++	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++) {
++		const char *parent;
  
-@@ -201,7 +204,7 @@
- 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
- 				reg = <0x760000 0x7d>;
- 				interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&cps_syscon0 1 25>;
-+				clocks = <&cps_clk 1 25>;
- 				status = "okay";
- 			};
+-		if (!strcmp(name, "none"))
++		if (gate_name[i] == NULL)
+ 			continue;
  
-@@ -244,7 +247,7 @@
- 			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
- 			num-lanes = <1>;
--			clocks = <&cps_syscon0 1 13>;
-+			clocks = <&cps_clk 1 13>;
- 			status = "disabled";
- 		};
+ 		switch (i) {
+@@ -295,14 +330,10 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 		case CP110_GATE_EIP150:
+ 		case CP110_GATE_EIP197:
+ 		case CP110_GATE_SLOW_IO:
+-			of_property_read_string_index(np,
+-						      "gate-clock-output-names",
+-						      CP110_GATE_MAIN, &parent);
++			parent = gate_name[CP110_GATE_MAIN];
+ 			break;
+ 		case CP110_GATE_MG:
+-			of_property_read_string_index(np,
+-						      "gate-clock-output-names",
+-						      CP110_GATE_MG_CORE, &parent);
++			parent = gate_name[CP110_GATE_MG_CORE];
+ 			break;
+ 		case CP110_GATE_NAND:
+ 			parent = nand_name;
+@@ -312,33 +343,27 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+ 			break;
+ 		case CP110_GATE_SDIO:
+ 		case CP110_GATE_GOP_DP:
+-			of_property_read_string_index(np,
+-						      "gate-clock-output-names",
+-						      CP110_GATE_SDMMC_GOP, &parent);
++			parent = gate_name[CP110_GATE_SDMMC_GOP];
+ 			break;
+ 		case CP110_GATE_XOR1:
+ 		case CP110_GATE_XOR0:
+ 		case CP110_GATE_PCIE_X1_0:
+ 		case CP110_GATE_PCIE_X1_1:
+ 		case CP110_GATE_PCIE_X4:
+-			of_property_read_string_index(np,
+-						      "gate-clock-output-names",
+-						      CP110_GATE_PCIE_XOR, &parent);
++			parent = gate_name[CP110_GATE_PCIE_XOR];
+ 			break;
+ 		case CP110_GATE_SATA:
+ 		case CP110_GATE_USB3H0:
+ 		case CP110_GATE_USB3H1:
+ 		case CP110_GATE_USB3DEV:
+-			of_property_read_string_index(np,
+-						      "gate-clock-output-names",
+-						      CP110_GATE_SATA_USB, &parent);
++			parent = gate_name[CP110_GATE_SATA_USB];
+ 			break;
+ 		default:
+ 			parent = core_name;
+ 			break;
+ 		}
++		hw = cp110_register_gate(gate_name[i], parent, regmap, i);
  
-@@ -271,7 +274,7 @@
- 			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cps_syscon0 1 11>;
-+			clocks = <&cps_clk 1 11>;
- 			status = "disabled";
- 		};
- 
-@@ -298,7 +301,7 @@
- 			interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			num-lanes = <1>;
--			clocks = <&cps_syscon0 1 12>;
-+			clocks = <&cps_clk 1 12>;
- 			status = "disabled";
- 		};
- 	};
+-		hw = cp110_register_gate(name, parent, regmap, i);
+ 		if (IS_ERR(hw)) {
+ 			ret = PTR_ERR(hw);
+ 			goto fail_gate;
 -- 
 git-series 0.9.1
