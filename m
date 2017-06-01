@@ -1,74 +1,330 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 8/9] arm64: dts: marvell: remove *-clock-output-names on cp110
-Date: Thu,  1 Jun 2017 16:55:41 +0200
-Message-ID: <99492ad5e3026e12a57623bdcf0cc33d4935eb66.1496328934.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v3 9/9] arm64: dts: marvell: use new binding for the system controller on cp110
+Date: Thu,  1 Jun 2017 16:55:42 +0200
+Message-ID: <9c5807cafb03413f4318f6c95a2e093bd9cdcdcf.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-clk-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-The *-clock-output-names of the cp110-system-controller0 node are not
-used anymore, so remove them.
+The new binding for the system controller on cp110 moved the clock
+controller into a subnode. This preliminary step will allow to add gpio
+and pinctrl subnodes.
 
 Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 13 +-------------
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 13 +-------------
- 2 files changed, 26 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 41 ++++++-------
+ arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 35 +++++------
+ 2 files changed, 41 insertions(+), 35 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-index ac8df5201cd6..a0f57a8e5dcb 100644
+index a0f57a8e5dcb..96a4ff75b3b0 100644
 --- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
 +++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-@@ -101,19 +101,6 @@
- 					     "syscon";
+@@ -62,7 +62,7 @@
+ 			cpm_ethernet: ethernet@0 {
+ 				compatible = "marvell,armada-7k-pp22";
+ 				reg = <0x0 0x100000>, <0x129000 0xb000>;
+-				clocks = <&cpm_syscon0 1 3>, <&cpm_syscon0 1 9>, <&cpm_syscon0 1 5>;
++				clocks = <&cpm_clk 1 3>, <&cpm_clk 1 9>, <&cpm_clk 1 5>;
+ 				clock-names = "pp_clk", "gop_clk", "mg_clk";
+ 				status = "disabled";
+ 				dma-coherent;
+@@ -97,10 +97,13 @@
+ 			};
+ 
+ 			cpm_syscon0: system-controller@440000 {
+-				compatible = "marvell,cp110-system-controller0",
+-					     "syscon";
++				compatible = "syscon", "simple-mfd";
  				reg = <0x440000 0x1000>;
- 				#clock-cells = <2>;
--				core-clock-output-names =
--					"cpm-apll", "cpm-ppv2-core", "cpm-eip",
--					"cpm-core", "cpm-nand-core";
--				gate-clock-output-names =
--					"cpm-audio", "cpm-communit", "cpm-nand",
--					"cpm-ppv2", "cpm-sdio", "cpm-mg-domain",
--					"cpm-mg-core", "cpm-xor1", "cpm-xor0",
--					"cpm-gop-dp", "none", "cpm-pcie_x10",
--					"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor",
--					"cpm-sata", "cpm-sata-usb", "cpm-main",
--					"cpm-sd-mmc-gop", "none", "none",
--					"cpm-slow-io", "cpm-usb3h0", "cpm-usb3h1",
--					"cpm-usb3dev", "cpm-eip150", "cpm-eip197";
+-				#clock-cells = <2>;
++
++				cpm_clk: clock {
++					compatible = "marvell,cp110-clock";
++					#clock-cells = <2>;
++				};
  			};
  
  			cpm_rtc: rtc@284000 {
+@@ -115,7 +118,7 @@
+ 					     "generic-ahci";
+ 				reg = <0x540000 0x30000>;
+ 				interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cpm_syscon0 1 15>;
++				clocks = <&cpm_clk 1 15>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -125,7 +128,7 @@
+ 				reg = <0x500000 0x4000>;
+ 				dma-coherent;
+ 				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cpm_syscon0 1 22>;
++				clocks = <&cpm_clk 1 22>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -135,7 +138,7 @@
+ 				reg = <0x510000 0x4000>;
+ 				dma-coherent;
+ 				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cpm_syscon0 1 23>;
++				clocks = <&cpm_clk 1 23>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -145,7 +148,7 @@
+ 				      <0x6b0000 0x1000>;
+ 				dma-coherent;
+ 				msi-parent = <&gic_v2m0>;
+-				clocks = <&cpm_syscon0 1 8>;
++				clocks = <&cpm_clk 1 8>;
+ 			};
+ 
+ 			cpm_xor1: xor@6c0000 {
+@@ -154,7 +157,7 @@
+ 				      <0x6d0000 0x1000>;
+ 				dma-coherent;
+ 				msi-parent = <&gic_v2m0>;
+-				clocks = <&cpm_syscon0 1 7>;
++				clocks = <&cpm_clk 1 7>;
+ 			};
+ 
+ 			cpm_spi0: spi@700600 {
+@@ -163,7 +166,7 @@
+ 				#address-cells = <0x1>;
+ 				#size-cells = <0x0>;
+ 				cell-index = <1>;
+-				clocks = <&cpm_syscon0 1 21>;
++				clocks = <&cpm_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -173,7 +176,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				cell-index = <2>;
+-				clocks = <&cpm_syscon0 1 21>;
++				clocks = <&cpm_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -183,7 +186,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cpm_syscon0 1 21>;
++				clocks = <&cpm_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -193,7 +196,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cpm_syscon0 1 21>;
++				clocks = <&cpm_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -201,7 +204,7 @@
+ 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
+ 				reg = <0x760000 0x7d>;
+ 				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cpm_syscon0 1 25>;
++				clocks = <&cpm_clk 1 25>;
+ 				status = "okay";
+ 			};
+ 
+@@ -210,7 +213,7 @@
+ 				reg = <0x780000 0x300>;
+ 				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+ 				clock-names = "core";
+-				clocks = <&cpm_syscon0 1 4>;
++				clocks = <&cpm_clk 1 4>;
+ 				dma-coherent;
+ 				status = "disabled";
+ 			};
+@@ -227,7 +230,7 @@
+ 					     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "mem", "ring0", "ring1",
+ 				"ring2", "ring3", "eip";
+-				clocks = <&cpm_syscon0 1 26>;
++				clocks = <&cpm_clk 1 26>;
+ 				status = "disabled";
+ 			};
+ 		};
+@@ -254,7 +257,7 @@
+ 			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+ 			num-lanes = <1>;
+-			clocks = <&cpm_syscon0 1 13>;
++			clocks = <&cpm_clk 1 13>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -281,7 +284,7 @@
+ 			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+-			clocks = <&cpm_syscon0 1 11>;
++			clocks = <&cpm_clk 1 11>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -308,7 +311,7 @@
+ 			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+-			clocks = <&cpm_syscon0 1 12>;
++			clocks = <&cpm_clk 1 12>;
+ 			status = "disabled";
+ 		};
+ 	};
 diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index 7740a75a8230..9584bc8d8b3f 100644
+index 9584bc8d8b3f..48a658aa5b32 100644
 --- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
 +++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -108,19 +108,6 @@
- 					     "syscon";
+@@ -104,10 +104,13 @@
+ 			};
+ 
+ 			cps_syscon0: system-controller@440000 {
+-				compatible = "marvell,cp110-system-controller0",
+-					     "syscon";
++				compatible = "syscon", "simple-mfd";
  				reg = <0x440000 0x1000>;
- 				#clock-cells = <2>;
--				core-clock-output-names =
--					"cps-apll", "cps-ppv2-core", "cps-eip",
--					"cps-core", "cps-nand-core";
--				gate-clock-output-names =
--					"cps-audio", "cps-communit", "cps-nand",
--					"cps-ppv2", "cps-sdio", "cps-mg-domain",
--					"cps-mg-core", "cps-xor1", "cps-xor0",
--					"cps-gop-dp", "none", "cps-pcie_x10",
--					"cps-pcie_x11", "cps-pcie_x4", "cps-pcie-xor",
--					"cps-sata", "cps-sata-usb", "cps-main",
--					"cps-sd-mmc-gop", "none", "none",
--					"cps-slow-io", "cps-usb3h0", "cps-usb3h1",
--					"cps-usb3dev", "cps-eip150", "cps-eip197";
+-				#clock-cells = <2>;
++
++				cps_clk: clock {
++					compatible = "marvell,cp110-clock";
++					#clock-cells = <2>;
++				};
  			};
  
  			cps_sata0: sata@540000 {
+@@ -115,7 +118,7 @@
+ 					     "generic-ahci";
+ 				reg = <0x540000 0x30000>;
+ 				interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cps_syscon0 1 15>;
++				clocks = <&cps_clk 1 15>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -125,7 +128,7 @@
+ 				reg = <0x500000 0x4000>;
+ 				dma-coherent;
+ 				interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cps_syscon0 1 22>;
++				clocks = <&cps_clk 1 22>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -135,7 +138,7 @@
+ 				reg = <0x510000 0x4000>;
+ 				dma-coherent;
+ 				interrupts = <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cps_syscon0 1 23>;
++				clocks = <&cps_clk 1 23>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -145,7 +148,7 @@
+ 				      <0x6b0000 0x1000>;
+ 				dma-coherent;
+ 				msi-parent = <&gic_v2m0>;
+-				clocks = <&cps_syscon0 1 8>;
++				clocks = <&cps_clk 1 8>;
+ 			};
+ 
+ 			cps_xor1: xor@6c0000 {
+@@ -154,7 +157,7 @@
+ 				      <0x6d0000 0x1000>;
+ 				dma-coherent;
+ 				msi-parent = <&gic_v2m0>;
+-				clocks = <&cps_syscon0 1 7>;
++				clocks = <&cps_clk 1 7>;
+ 			};
+ 
+ 			cps_spi0: spi@700600 {
+@@ -163,7 +166,7 @@
+ 				#address-cells = <0x1>;
+ 				#size-cells = <0x0>;
+ 				cell-index = <3>;
+-				clocks = <&cps_syscon0 1 21>;
++				clocks = <&cps_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -173,7 +176,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				cell-index = <4>;
+-				clocks = <&cps_syscon0 1 21>;
++				clocks = <&cps_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -183,7 +186,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				interrupts = <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cps_syscon0 1 21>;
++				clocks = <&cps_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -193,7 +196,7 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+ 				interrupts = <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cps_syscon0 1 21>;
++				clocks = <&cps_clk 1 21>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -201,7 +204,7 @@
+ 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
+ 				reg = <0x760000 0x7d>;
+ 				interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks = <&cps_syscon0 1 25>;
++				clocks = <&cps_clk 1 25>;
+ 				status = "okay";
+ 			};
+ 
+@@ -244,7 +247,7 @@
+ 			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
+ 			num-lanes = <1>;
+-			clocks = <&cps_syscon0 1 13>;
++			clocks = <&cps_clk 1 13>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -271,7 +274,7 @@
+ 			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+-			clocks = <&cps_syscon0 1 11>;
++			clocks = <&cps_clk 1 11>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -298,7 +301,7 @@
+ 			interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+-			clocks = <&cps_syscon0 1 12>;
++			clocks = <&cps_clk 1 12>;
+ 			status = "disabled";
+ 		};
+ 	};
 -- 
 git-series 0.9.1
