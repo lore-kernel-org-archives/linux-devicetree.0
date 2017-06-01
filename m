@@ -1,59 +1,164 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] firmware: qcom: scm: Expose download-mode control
-Date: Wed, 31 May 2017 23:17:30 -0700
-Message-ID: <20170601061730.GM20170@codeaurora.org>
-References: <20170527063308.10483-1-bjorn.andersson@linaro.org>
- <20170527063308.10483-2-bjorn.andersson@linaro.org>
- <20170531162726.GZ20170@codeaurora.org>
- <20170531220220.GW12920@tuxbook>
+From: Oleksij Rempel <linux@rempel-privat.de>
+Subject: Re: [PATCH v2 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic_stby_poweroff property
+Date: Thu, 1 Jun 2017 08:50:35 +0200
+Message-ID: <b9ba2cce-5383-636e-8e2c-4d85b2a92cb6@rempel-privat.de>
+References: <20170531061457.23744-1-o.rempel@pengutronix.de>
+ <20170531061457.23744-2-o.rempel@pengutronix.de>
+ <20170531145255.GC10351@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170531220220.GW12920@tuxbook>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============6839236265480607228=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170531145255.GC10351@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Andrew Morton <akpm@linux-foundation.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/31, Bjorn Andersson wrote:
-> On Wed 31 May 09:27 PDT 2017, Stephen Boyd wrote:
-> 
-> > On 05/26, Bjorn Andersson wrote:
-> > > In order to aid post-mortem debugging the Qualcomm platforms provides a
-> > > "memory download mode", where the boot loader will provide an interface
-> > > for custom tools to "download" the content of RAM to a host machine.
-> > > 
-> > > The mode is triggered by writing a magic value somehwere in RAM, that is
-> > > read in the boot code path after a warm-restart. Two mechanism for
-> > > setting this magic value are supported in modern platforms; a direct SCM
-> > > call to enable the mode or through a secure io write of a magic value.
-> > > 
-> > > In order for a normal reboot not to trigger "download mode" the magic
-> > > must be cleared during a clean reboot.
-> > > 
-> > > Download mode has to be enabled by including qcom_scm.download_mode=1 on
-> > > the command line.
-> > 
-> > Why the kernel command line parameter? If we keep the kernel
-> > command line param, perhaps we can also gain a config option to
-> > make it default enabled or default disabled so that we don't have
-> > to specify it on the commandline to get the feature all the time.
-> > 
-> 
-> I put a command line parameter there because most people will not have
-> the tools to catch what's given to them by this. Making it a config
-> option definitely makes more sense than forcing certain groups of
-> engineers to always slap a kernel parameter in there.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--===============6839236265480607228==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF"
 
-Ok. Sounds good. The commandline will still be nice to have to
-override whatever is in the build without having to recompile.
-And it sounds like the plan is to have both pieces.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF
+Content-Type: multipart/mixed; boundary="C7RPagmBr0a7D5kUOEPQDw7kQbnk7rr2h";
+ protected-headers="v1"
+From: Oleksij Rempel <linux@rempel-privat.de>
+To: Mark Rutland <mark.rutland@arm.com>,
+ Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org,
+ Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>,
+ linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Message-ID: <b9ba2cce-5383-636e-8e2c-4d85b2a92cb6@rempel-privat.de>
+Subject: Re: [PATCH v2 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic_stby_poweroff property
+References: <20170531061457.23744-1-o.rempel@pengutronix.de>
+ <20170531061457.23744-2-o.rempel@pengutronix.de>
+ <20170531145255.GC10351@leverpostej>
+In-Reply-To: <20170531145255.GC10351@leverpostej>
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--C7RPagmBr0a7D5kUOEPQDw7kQbnk7rr2h
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+
+Am 31.05.2017 um 16:52 schrieb Mark Rutland:
+> On Wed, May 31, 2017 at 08:14:52AM +0200, Oleksij Rempel wrote:
+>> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+>> Cc: kernel@pengutronix.de
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: Michael Turquette <mturquette@baylibre.com>
+>> Cc: Stephen Boyd <sboyd@codeaurora.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: linux-clk@vger.kernel.org
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>  Documentation/devicetree/bindings/clock/imx6q-clock.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b=
+/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>> index 9252912a5b0e..214cb5f461c7 100644
+>> --- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>> +++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+>> @@ -6,6 +6,10 @@ Required properties:
+>>  - interrupts: Should contain CCM interrupt
+>>  - #clock-cells: Should be <1>
+>> =20
+>> +Optional properties:
+>> +- fsl,pmic_stby_poweroff: Configure CCM to assert PMIC_STBY_REQ signa=
+l
+>> +  on power off.
+>=20
+> s/_/-/ in property names, please.
+
+ok.
+
+I have now some more questions:
+what naming schema should be actually used?
+fsl,pmic-stby-poweroff
+or
+fsl,pmic-stby-power-off
+
+i found some existing case:
+sound/rt5660.txt:- realtek,poweroff-in-suspend
+so in my case it will be:
+fsl,standby-in-poweroff
+or
+fsl,standby-in-power-off
+
+can we have generic name for this use case?
+should I use same binding for PMIC and the SoC or they should be more lik=
+e:
+for SoC "standby-in-power-off"
+and for PMIC "power-off-in-standby"
+
+
+
+> When/why is this needed?
+>=20
+> Why should a DT author (not) set this?
+>=20
+> Thanks,
+> Mark.
+>=20
+>> +
+>>  The clock consumer should specify the desired clock by having the clo=
+ck
+>>  ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6q=
+dl-clock.h
+>>  for the full list of i.MX6 Quad and DualLite clock IDs.
+>> --=20
+>> 2.11.0
+>>
+
+
+--=20
+Regards,
+Oleksij
+
+
+--C7RPagmBr0a7D5kUOEPQDw7kQbnk7rr2h--
+
+--mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iF4EAREIAAYFAlkvuTsACgkQHwImuRkmbWnjTgD+OMPXuh3DWAZ3dFKYKRlyWpRj
+6G3lHy7rYcwSxcSEun8A/il84kXam14WDsmzKbTyuS9wcg2x2PfrvK3QsbiC0n25
+=VV6G
+-----END PGP SIGNATURE-----
+
+--mqhHG7A28Bi5ojtFwwc5pNTD1cqSe61KF--
+
+
+--===============6839236265480607228==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============6839236265480607228==--
