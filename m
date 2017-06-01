@@ -1,81 +1,159 @@
-From: Bjorn Helgaas via iommu <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] PCI: Add support for PCI inbound windows resources
-Date: Thu, 1 Jun 2017 12:08:59 -0500
-Message-ID: <CAErSpo58xJbQG_UK76pW55phs32Bqeyv=_wtJTS2jvf6JQ2MAA@mail.gmail.com>
-References: <1495471182-12490-1-git-send-email-oza.oza@broadcom.com>
-	<1495471182-12490-3-git-send-email-oza.oza@broadcom.com>
-	<CAErSpo6MJbNEyGQC4MwFb6kPoOf1p=mxk-SHAz-+HuDFbvRkmw@mail.gmail.com>
-	<CAMSpPPdXbCteC7scb99CMKqdif0q9ngZnzJMhGa6xZt7BM0yKg@mail.gmail.com>
-Reply-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCHv1] dt-bindings: reset: Add reset manager offsets for
+ Stratix10
+Date: Thu, 01 Jun 2017 19:17:15 +0200
+Message-ID: <1496337435.27771.1.camel@pengutronix.de>
+References: <1496327039-21942-1-git-send-email-richard.gong@linux.intel.com>
+         <1496327039-21942-2-git-send-email-richard.gong@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CAMSpPPdXbCteC7scb99CMKqdif0q9ngZnzJMhGa6xZt7BM0yKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Oza Pawandeep <oza.pawandeep-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:INTEL IOMMU (VT-d)" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496327039-21942-2-git-send-email-richard.gong-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: richard.gong-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Gong <richard.gong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 31, 2017 at 11:17 AM, Oza Oza <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> On Wed, May 31, 2017 at 4:12 AM, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
->> On Mon, May 22, 2017 at 11:39 AM, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>> This patch adds support for inbound memory window
->>> for PCI RC drivers.
->>>
->>> It defines new function pci_create_root_bus2 which
->>> takes inbound resources as an argument and fills in the
->>> memory resource to PCI internal host bridge structure
->>> as inbound_windows.
->>>
->>> Legacy RC driver could continue to use pci_create_root_bus,
->>> but any RC driver who wants to reseve IOVAS for their
->>> inbound memory holes, should use new API pci_create_root_bus2.
->>>
->>> Signed-off-by: Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ...
->>
->>> +struct pci_bus *pci_create_root_bus2(struct device *parent, int bus,
->>> +               struct pci_ops *ops, void *sysdata, struct list_head *resources,
->>> +               struct list_head *in_res)
->>> +{
->>> +       return pci_create_root_bus_msi(parent, bus, ops, sysdata,
->>> +                                      resources, in_res, NULL);
->>> +}
->>> +EXPORT_SYMBOL_GPL(pci_create_root_bus2);
->>
->> Based on your response to Lorenzo's "[RFC/RFT PATCH 03/18] PCI:
->> Introduce pci_scan_root_bus_bridge()", I'm hoping you can avoid adding
->> yet another variant of pci_create_root_bus().
->>
->> So I think I can wait for that to settle out and look for a v8?
->>
->> Bjorn
->
-> Sure Bjorn, please wait for v8.
->
-> But there is one more associated patch
-> [PATCH v7 1/3] OF/PCI: Export inbound memory interface to PCI RC
-> which basically aims to provide an interface to RC drivers for their
-> inbound resources.
-> RC driver already get their outbound resources from
-> of_pci_get_host_bridge_resources,
-> similar attempt for inbound dma-ranges.
+Hi Richard,
 
-Not sure I understand.  Patch 1/3 adds of_pci_get_dma_ranges(), but
-none of the patches adds a caller, so I don't see the point of it yet.
+On Thu, 2017-06-01 at 09:23 -0500, richard.gong-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+> From: Richard Gong <richard.gong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> 
+> There are several changes in reset manager offsets from Arria10 to
+> Stratix10. This patch is based on one from Arria10 and adds offset
+> updates for Stratix10
+> 
+> Signed-off-by: Richard Gong <richard.gong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> ---
+>  include/dt-bindings/reset/altr,rst-mgr-s10.h | 108 +++++++++++++++++++++++++++
+>  1 file changed, 108 insertions(+)
+>  create mode 100644 include/dt-bindings/reset/altr,rst-mgr-s10.h
+> 
+> diff --git a/include/dt-bindings/reset/altr,rst-mgr-s10.h b/include/dt-bindings/reset/altr,rst-mgr-s10.h
+> new file mode 100644
+> index 0000000..7978c21
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/altr,rst-mgr-s10.h
+> @@ -0,0 +1,108 @@
+> +/*
+> + * Copyright (C) 2016 Intel Corporation. All rights reserved
+> + * Copyright (C) 2016 Altera Corporation. All rights reserved
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + *
+> + * derived from Steffen Trumtrar's "altr,rst-mgr-a10.h"
+> + */
+> +
+> +#ifndef _DT_BINDINGS_RESET_ALTR_RST_MGR_S10_H
+> +#define _DT_BINDINGS_RESET_ALTR_RST_MGR_S10_H
+> +
+> +/* MPUMODRST */
+> +#define CPU0_RESET		0
+> +#define CPU1_RESET		1
+> +#define CPU2_RESET		2
+> +#define CPU3_RESET		3
+> +
+> +/* PER0MODRST */
+> +#define EMAC0_RESET		32
+> +#define EMAC1_RESET		33
+> +#define EMAC2_RESET		34
+> +#define USB0_RESET		35
+> +#define USB1_RESET		36
+> +#define NAND_RESET		37
+> +/* 38 is empty */
+> +#define SDMMC_RESET		39
+> +#define EMAC0_OCP_RESET		40
+> +#define EMAC1_OCP_RESET		41
+> +#define EMAC2_OCP_RESET		42
+> +#define USB0_OCP_RESET		43
+> +#define USB1_OCP_RESET		44
+> +#define NAND_OCP_RESET		45
+> +/* 46 is empty */
+> +#define SDMMC_OCP_RESET		47
+> +#define DMA_RESET		48
+> +#define SPIM0_RESET		49
+> +#define SPIM1_RESET		50
+> +#define SPIS0_RESET		51
+> +#define SPIS1_RESET		52
+> +#define DMA_OCP_RESET		53
+> +#define EMAC_PTP_RESET		54
+> +/* 55 is empty*/
+> +#define DMAIF0_RESET		56
+> +#define DMAIF1_RESET		57
+> +#define DMAIF2_RESET		58
+> +#define DMAIF3_RESET		59
+> +#define DMAIF4_RESET		60
+> +#define DMAIF5_RESET		61
+> +#define DMAIF6_RESET		62
+> +#define DMAIF7_RESET		63
+> +
+> +/* PER1MODRST */
+> +#define WATCHDOG0_RESET		64
+> +#define WATCHDOG1_RESET		65
+> +#define WATCHDOG2_RESET		66
+> +#define WATCHDOG3_RESET		67
+> +#define L4SYSTIMER0_RESET	68
+> +#define L4SYSTIMER1_RESET	69
+> +#define SPTIMER0_RESET		70
+> +#define SPTIMER1_RESET		71
+> +#define I2C0_RESET		72
+> +#define I2C1_RESET		73
+> +#define I2C2_RESET		74
+> +#define I2C3_RESET		75
+> +#define I2C4_RESET		76
+> +/* 77-79 is empty */
+> +#define UART0_RESET		80
+> +#define UART1_RESET		81
+> +/* 82-87 is empty */
+> +#define GPIO0_RESET		88
+> +#define GPIO1_RESET		89
+> +
+> +/* BRGMODRST */
+> +#define SOC2FPGA_RESET		96
+> +#define LWHPS2FPGA_RESET	97
+> +#define FPGA2SOC_RESET		98
+> +#define F2SSDRAM0_RESET		99
+> +#define F2SSDRAM1_RESET		100
+> +#define F2SSDRAM2_RESET		101
+> +#define DDRSCH_RESET		102
+> +
+> +/* COLDMODRST */
+> +#define CPUPO0_RESET		160
+> +#define CPUPO1_RESET		161
+> +#define CPUPO2_RESET		162
+> +#define CPUPO3_RESET		163
+> +/* 164-167 is empty */
+> +#define L2_RESET		168
+> +
+> +/* DBGMODRST */
+> +#define DBG_RESET		224
+> +#define CSDAP_RESET		225
+> +
+> +/* TAPMODRST */
+> +#define TAP_RESET		256
+> +
+> +#endif
+> -- 
+> 2.7.4
 
-In general, if I'm expecting another revision of one patch in a
-series, I expect the next revision to include *all* the patches in the
-series.  I normally don't pick out and apply individual patches from
-the series.
+Applied, thanks.
 
-Bjorn
+regards
+Philipp
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
