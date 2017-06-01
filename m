@@ -1,50 +1,111 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH v5 00/20] eeprom: at24: Add OF device ID table
-Date: Thu, 1 Jun 2017 10:07:19 +0200
-Message-ID: <CABxcv=kC0Bfxsm73x9AY6OiQCEZOafidMT+kv=qUqpqnaMAMaA@mail.gmail.com>
-References: <20170523133448.4794-1-javier@dowhile0.org>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: power: supply: add battery charge voltage/current
+Date: Thu, 1 Jun 2017 10:18:54 +0200
+Message-ID: <CAFqH_536VDcx--dJga_+ffut9QmHLySk_gzZbXuCv8TBz++OzA@mail.gmail.com>
+References: <20170526110413.24836-1-enric.balletbo@collabora.com>
+ <CAKvHMgTvUkJENP=Y_rdge6Oqq-La341nYW5prB=BpXWo7rF-0A@mail.gmail.com>
+ <CAFqH_50+58swMjGOK1oyP0152ap=5Ng1m86q5sdq2Enc08Ui5g@mail.gmail.com> <CAKvHMgQWT-V=vt6bkR7QoCRM8W0MeyfY0hjNL-q0FmfPfNhtfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170523133448.4794-1-javier@dowhile0.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Tony Lindgren <tony@atomide.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Russell King <linux@armlinux.org.uk>, Masahiro Yamada <yamada.masahiro@socionext.com>, Paul Mackerras <paulus@samba.org>, Linux I2C <linux-i2c@vger.kernel.org>, Hongtao Jia <hongtao.jia@nxp.com>, David Lechner <david@lechnology.com>, Rob Herring <robh@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>, Michael Ellerman <mpe@ellerman.id.au>, Magnus Damm <magnus.damm@gmail.com>, Michal Simek <michal.simek@xilinx.com>, Andy Shevchenko <andy.shevchenko@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Javier Martinez Canillas <javier@dowhile0.org>, Jas
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKvHMgQWT-V=vt6bkR7QoCRM8W0MeyfY0hjNL-q0FmfPfNhtfA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Breck <liam@networkimprov.net>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Liam Breck <kernel@networkimprov.net>
 List-Id: devicetree@vger.kernel.org
 
-Hello Wolfram,
+Hi Liam,
 
-On Tue, May 23, 2017 at 3:34 PM, Javier Martinez Canillas
-<javier@dowhile0.org> wrote:
+2017-06-01 9:01 GMT+02:00 Liam Breck <liam@networkimprov.net>:
+> Hi Enric,
 >
-> This series is a follow-up to patch [0] that added an OF device ID table
-> to the at24 EEPROM driver. As you suggested [1], this version instead of
-> adding entries for every used <vendor,device> tuple, only adds a single
-> entry for each chip type using the "atmel" vendor as a generic fallback.
+> On Sat, May 27, 2017 at 1:11 PM, Enric Balletbo Serra
+> <eballetbo@gmail.com> wrote:
+>> Hi Liam,
+>>
+>> 2017-05-26 23:20 GMT+02:00 Liam Breck <liam@networkimprov.net>:
+>>> Hi Enric,
+>>>
+>>> On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
+>>> <enric.balletbo@collabora.com> wrote:
+>>>> Add charging voltage and current characteristics to the battery DT for
+>>>> proper handling of the battery by fuel-gauge and charger chips.
+>>>>
+>>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+>>>> ---
+>>>> Changes since v2:
+>>>>  - Requested by Sebastian Reichel
+>>>>    - Move to its own patch and apply to simple-battery framework.
+>>>> Changes since v1:
+>>>>  - Requested by Rob Herring
+>>>>    - Rename ti,charge-* to charge-* to be standard properties.
+>>>>    - Use unit suffixes as per bindings/property-units.txt
+>>>>
+>>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
+>>>>  1 file changed, 4 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>> index 63a7028..c87a439 100644
+>>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
+>>>> @@ -12,6 +12,8 @@ Optional Properties:
+>>>>   - voltage-min-design-microvolt: drained battery voltage
+>>>>   - energy-full-design-microwatt-hours: battery design energy
+>>>>   - charge-full-design-microamp-hours: battery design capacity
+>>>> + - charge-voltage-microvolt: battery charging voltage
+>>>> + - charge-current-microamp: battery charging current
+>>>
+>>> I think you mean constant-charge-* which is how you surface these
+>>> properties in your tps65217_charger patch.
+>>>
+>>
+>> Yes, to be strict this is constant-charge-*
 >
-> The first patch documents in the DT binding what's the correct vendor to
-> use and what are the ones that are being deprecated. The second one adds
-> the OF device ID table for the at24 driver and the next patches use this
-> vendor in the compatible string to each DTS that defines a compatible I2C
-> EEPROM device node.
+> The DT battery node should carry static battery characteristics. So on
+> reflection, I think you want
 >
-> Patches can be applied independently since the DTS changes without driver
-> changes are no-op and the OF table won't be used without the DTS changes.
+> constant-charge-current-max-microamp
+> constant-charge-voltage-max-microvolt
 >
-> [0]: https://lkml.org/lkml/2017/3/14/589
-> [1]: https://lkml.org/lkml/2017/3/15/99
+> The charger or the user could then safely apply any value <= those.
+>
+> Thoughts?
 >
 
-Any comments on this series?
+Hmm I see your point and I'm thinking now that actually this is not
+what I wanted to do. What I wanted is set the charger voltage and the
+current hence my first patchset was setting these properties in the
+charger node not the battery.
 
-Best regards,
-Javier
+Said that, I think that you have reason and what we want in battery
+node is the current/voltage max values but we also need to implement a
+mechanism to set the charging voltage/current from userspace or from
+the DT for the charger. The charger should be able to set these values
+and fail if, based in the battery specs, is not supported.
+
+More thoughts?
+
+>>> I'll add these to v14 of my patchset which adds simple-battery
+>>> support. Rob requested a single patch for this file.
+>>>
+>>
+>> Ok, I'll send the tps charger series without this patch, so please,
+>> include this patch in your series.
+>>
+>>> I've been waiting for feedback on v13.2 from Sebastian. If I don't
+>>> hear from him within a few days, I'll post v14.
+>>>
+>>>>  Batteries must be referenced by chargers and/or fuel-gauges
+>>>>  using a phandle. The phandle's property should be named
+>>>> @@ -24,6 +26,8 @@ Example:
+>>>>                 voltage-min-design-microvolt = <3200000>;
+>>>>                 energy-full-design-microwatt-hours = <5290000>;
+>>>>                 charge-full-design-microamp-hours = <1430000>;
+>>>> +               charge-voltage-microvolt = <4100000>;
+>>>> +               charge-current-microamp = <300000>;
+>>>>         };
+>>>>
+>>>>         charger: charger@11 {
+>>>> --
+>>>> 2.9.3
+>>>>
