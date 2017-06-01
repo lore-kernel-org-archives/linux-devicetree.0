@@ -1,24 +1,31 @@
-From: "Wu Fenglin" <fenglinw@codeaurora.org>
-Subject: RE: [PATCH V1 1/2] leds: leds-qti-rgb: Add LED driver for QTI TRI_LED module
-Date: Thu, 1 Jun 2017 08:30:19 +0800
-Message-ID: <002d01d2da6e$42a987b0$c7fc9710$@codeaurora.org>
-References: <20170531061541.10808-1-fenglinw@codeaurora.org> <20170531061541.10808-2-fenglinw@codeaurora.org> <20170531075536.GA13028@amd> <001301d2d9e7$3102b720$93082560$@codeaurora.org> <20170531165540.GA9371@amd>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH 2/2] crypto: mediatek - update DT binding documentation
+Date: Thu, 1 Jun 2017 09:04:38 +0800
+Message-ID: <1496279078.31264.2.camel@mtkswgap22>
+References: <1495791789-19230-1-git-send-email-ryder.lee@mediatek.com>
+         <1495791789-19230-2-git-send-email-ryder.lee@mediatek.com>
+         <20170531184620.io3nohu3f4hhkpwz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170531165540.GA9371@amd>
-Content-Language: en-us
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: 'Pavel Machek' <pavel@ucw.cz>
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 'Richard Purdie' <rpurdie@rpsys.net>, 'Jacek Anaszewski' <jacek.anaszewski@gmail.com>, 'Rob Herring' <robh+dt@kernel.org>, 'Mark Rutland' <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, subbaram@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20170531184620.io3nohu3f4hhkpwz@rob-hp-laptop>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Pavel.
-I will remove these two dts properties and define the default on/off time
-values in C code.
+On Wed, 2017-05-31 at 13:46 -0500, Rob Herring wrote:
+> On Fri, May 26, 2017 at 05:43:09PM +0800, Ryder Lee wrote:
+> > This patch removes unnecessary clock in binding file.
+> 
+> Why is the clock unnecessary? A h/w block either has a clock or doesn't.
+> 
+> The subject needs some work. Perhaps "dt-bindings: crypto: remove 
+> mediatek ethif clock".
+> 
+> Rob
 
---
-Qualcomm Technologies, Inc. is a member of the Code Aurora Forum, a Linux
-Foundation Collaborative Project.
+I'll write more clearly, thanks.
+
+Ryder.
