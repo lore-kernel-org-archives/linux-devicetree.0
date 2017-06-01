@@ -1,60 +1,56 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 0/9] Improve cp110 clk support on Marvell Armada 7K/8K
-Date: Thu,  1 Jun 2017 16:55:33 +0200
-Message-ID: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-Sender: linux-clk-owner@vger.kernel.org
+Subject: [PATCH v3 2/9] dt-bindings: cp110: do not depend anymore of the *-clock-output-names
+Date: Thu,  1 Jun 2017 16:55:35 +0200
+Message-ID: <a335846551408d262ddca35097151cddc71b61e1.1496328934.git-series.gregory.clement@free-electrons.com>
+References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
+References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch updates the documentation according to the change made in the
+patch "clk: mvebu: cp110: do not depend anymore of the
+*-clock-output-names": the clock names are no more part of the binding.
 
-We got more information about the clock controllers and the clock tree
-of the CP110 part that we find in the Marvell Armada 7K/8K SoCs.
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-In this 3rd version I removed the GOP changes because the clock is
-actually shared between GOP and SD/eMMC.
-
-The last two patches modifying the device tree _must_ be merged
-through the mvebu tree to avoid future conflict (especially with the
-recent ICU series sent by Thomas Petazzoni).
-
-Changelog:
-v2 -> v3
- - removed the GOP changed
-cover letter for v2:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509816.html
-
-v1 -> v2
- - split the patch to have separate patch for the binding documentation
- - added the acked-by from Rob Herring
-cover letter for v2:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/507381.html
-
-Thanks,
-
-Gregory
-
-Gregory CLEMENT (8):
-  clk: mvebu: cp110: make failure labels more meaningful
-  dt-bindings: cp110: do not depend anymore of the *-clock-output-names
-  clk: mvebu: cp110: do not depend anymore of the *-clock-output-names
-  dt-bindings: cp110: introduce a new binding
-  clk: mvebu: cp110: introduce a new binding
-  dt-bindings: cp110: add sdio clock to cp-110 system controller
-  arm64: dts: marvell: remove *-clock-output-names on cp110
-  arm64: dts: marvell: use new binding for the system controller on cp110
-
-Konstantin Porotchkin (1):
-  clk: mvebu: cp110: add sdio clock to cp-110 system controller
-
- Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt |  33 +++++-------
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi                       |  54 +++++++------------
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi                        |  48 ++++++-----------
- drivers/clk/mvebu/cp110-system-controller.c                                | 200 +++++++++++++++++++++++++++++++++++++++++++++++++-----------------------
- 4 files changed, 194 insertions(+), 141 deletions(-)
-
-base-commit: 2ea659a9ef488125eb46da6eb571de5eae5c43f6
+diff --git a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+index 07dbb358182c..dbd0a38ca580 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt
+@@ -59,14 +59,6 @@ Required properties:
+      "marvell,cp110-system-controller0", "syscon";
+  - reg: register area of the CP110 system controller 0
+  - #clock-cells: must be set to 2
+- - core-clock-output-names must be set to:
+-	"cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core"
+- - gate-clock-output-names must be set to:
+-	"cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
+-	"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "none",
+-	"cpm-pcie_x10", "cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata",
+-	"cpm-sata-usb", "cpm-main", "cpm-sd-mmc-gop", "none", "none", "cpm-slow-io",
+-	"cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150", "cpm-eip197";
+ 
+ Example:
+ 
+@@ -74,10 +66,4 @@ Example:
+ 		compatible = "marvell,cp110-system-controller0", "syscon";
+ 		reg = <0x440000 0x1000>;
+ 		#clock-cells = <2>;
+-		core-clock-output-names = "cpm-apll", "cpm-ppv2-core", "cpm-eip", "cpm-core", "cpm-nand-core";
+-		gate-clock-output-names = "cpm-audio", "cpm-communit", "cpm-nand", "cpm-ppv2", "cpm-sdio",
+-			"cpm-mg-domain", "cpm-mg-core", "cpm-xor1", "cpm-xor0", "cpm-gop-dp", "none",
+-			"cpm-pcie_x10", "cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor", "cpm-sata",
+-			"cpm-sata-usb", "cpm-main", "cpm-sd-mmc-gop", "none", "none", "cpm-slow-io",
+-			"cpm-usb3h0", "cpm-usb3h1", "cpm-usb3dev", "cpm-eip150", "cpm-eip197";
+ 	};
 -- 
 git-series 0.9.1
