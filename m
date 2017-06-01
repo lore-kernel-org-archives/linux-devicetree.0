@@ -1,72 +1,77 @@
-From: Charles Keepax <ckeepax@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 4/4] ASoC: cs35l35: Add multi-device
-	synchronisation
-Date: Thu, 1 Jun 2017 12:45:21 +0100
-Message-ID: <20170601114521.GS1594@localhost.localdomain>
-References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1495121559-1063-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <20170529135306.ldn74fwvfa4ots6a@sirena.org.uk>
- <20170530085138.GR1594@localhost.localdomain>
+From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: Re: [PATCH 0/7] Add PCI ATS support to SMMUv3
+Date: Thu, 1 Jun 2017 13:23:41 +0100
+Message-ID: <d95b6094-0c10-3669-00f4-6a365b2697b9@arm.com>
+References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
+ <2ae88519-7dbb-97ee-1ef9-8a92c31472d5@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <20170530085138.GR1594@localhost.localdomain>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, brian.austin@cirrus.com, Paul.Handrigan@cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <2ae88519-7dbb-97ee-1ef9-8a92c31472d5@codeaurora.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Nate Watterson <nwatters@codeaurora.org>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org
+Cc: mark.rutland@arm.com, will.deacon@arm.com, thunder.leizhen@huawei.com, rjw@rjwysocki.net, okaya@codeaurora.org, robh+dt@kernel.org, sudeep.holla@arm.com, bhelgaas@google.com, tn@semihalf.com, sunil.kovvuri@gmail.com, lenb@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 09:51:38AM +0100, Charles Keepax wrote:
-> On Mon, May 29, 2017 at 02:53:06PM +0100, Mark Brown wrote:
-> > On Thu, May 18, 2017 at 04:32:39PM +0100, Charles Keepax wrote:
-> > 
-> > > +	SOC_SINGLE_EXT("SYNC Audio", CS35L35_MULT_DEV_SYNCH2, 1, 1, 0,
-> > > +		       snd_soc_get_volsw, cs35l35_put_sync),
-> > > +	SOC_SINGLE_EXT("SYNC VPBR", CS35L35_MULT_DEV_SYNCH2, 2, 1, 0,
-> > > +		       snd_soc_get_volsw, cs35l35_put_sync),
-> > > +	SOC_SINGLE_EXT("SYNC OTW", CS35L35_MULT_DEV_SYNCH2, 3, 1, 0,
-> > > +		       snd_soc_get_volsw, cs35l35_put_sync),
-> > 
-> > I can't tell how this works.  It feels like this shouldn't just be being
-> > controlled from userspace but rather should be handled in some more
-> > standard fashion, or possibly as part of the platform integration but
-> > right now it's just some totally undocumented application managed
-> > controls.
+On 31/05/17 16:27, Nate Watterson wrote:
+> Hi Jean-Philippe,
 > 
-> These activate the individual types of synchronisation between
-> the two stereo amps over a proprietary single wire connection
-> between the two amps. The audio option synchronises the group
-> delay between the two amps. The VPBR links the brown out on the
-> two amps and the OTW links the over temperature warning.
+> On 5/24/2017 2:01 PM, Jean-Philippe Brucker wrote:
+>> PCIe devices can implement their own TLB, named Address Translation Cache
+>> (ATC). In order to support Address Translation Service (ATS), the
+>> following changes are needed in software:
+>>
+>> * Enable ATS on endpoints when the system supports it. Both PCI root
+>>    complex and associated SMMU must implement the ATS protocol.
+>>
+>> * When unmapping an IOVA, send an ATC invalidate request to the endpoint
+>>    in addition to the usual SMMU IOTLB invalidations.
+>>
+>> I previously sent this as part of a lengthy RFC [1] adding SVM (ATS +
+>> PASID + PRI) support to SMMUv3. The next PASID/PRI version is almost
+>> ready, but isn't likely to get merged because it needs hardware testing,
+>> so I will send it later. PRI depends on ATS, but ATS should be useful on
+>> its own.
+>>
+>> Without PASID and PRI, ATS is used for accelerating transactions. Instead
+>> of having all memory accesses go through SMMU translation, the endpoint
+>> can translate IOVA->PA once, store the result in its ATC, then issue
+>> subsequent transactions using the PA, partially bypassing the SMMU. So in
+>> theory it should be faster while keeping the advantages of an IOMMU,
+>> namely scatter-gather and access control.
+>>
+>> The ATS patches can now be tested on some hardware, even though the lack
+>> of compatible PCI endpoints makes it difficult to assess what performance
+>> optimizations we need. That's why the ATS implementation is a bit rough at
+>> the moment, and we will work on optimizing things like invalidation ranges
+>> later.
 > 
-> The issue is really one of it being use-case specific whether the
-> amps are being used independently or in a stereo configuration.
-> You could have only a single amp in use in which case the sync
-> features are best turned off. Or one might even have use-cases
-> with both amps where they are being used independently but at the
-> same time.
-> 
-> I guess we could potentially do those as calls from the machine
-> driver, although in some cases it might be hard to tell which
-> use-case is being used. Alternatively, one could try to actually
-> link the two amps in DAPM and control it that way although you
-> probably still want some device tree stuff to say which things
-> you want to sync and it might cause issues in any cases where you
-> had both amps up but didn't want to sync.
+> Sinan and I have tested this series on a QDF2400 development platform
+> using a PCIe exerciser card as the ATS capable endpoint. We were able
+> to verify that ATS requests complete with a valid translated address
+> and that DMA transactions using the pre-translated address "bypass"
+> the SMMU. Testing ATC invalidations was a bit more difficult as we
+> could not figure out how to get the exerciser card to automatically
+> send the completion message. We ended up having to write a debugger
+> script that would monitor the CMDQ and tell the exerciser to send
+> the completion when a hanging CMD_SYNC following a CMD_ATC_INV was
+> detected. Hopefully we'll get some real ATS capable endpoints to
+> test with soon.
 
-Ok turns out there is one other corner case issue here, lets drop
-this patch for now and I will try to see if I can come up with
-better solution for it.
+That's still a big step forward from my software tests, thanks a lot for
+the report. If you get around testing a real endpoint, there are a few
+data points that would be really useful to compare, if only to see whether
+enabling ATS is at all viable, or if we end up getting stuck in
+queue_poll_cons in normal conditions:
+
+* ATS enabled/disabled in endpoint
+* ATSCHK enabled/disabled in SMMU
+* Invalidation duration when ATC entry is present/absent, and the range is
+big/small
+
+Knowing this would indicate if more work is needed on invalidation sizing,
+batching, postponing or if we can optimize later.
 
 Thanks,
-Charles
+Jean
