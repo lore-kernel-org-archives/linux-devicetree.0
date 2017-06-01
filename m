@@ -1,42 +1,65 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH] ASoC: rsnd: Document optional reset properties
-Date: Thu,  1 Jun 2017 12:36:15 +0200
-Message-ID: <1496313375-27892-1-git-send-email-geert+renesas@glider.be>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v3 0/5] Add minimal boot support for IPQ8074
+Date: Thu,  1 Jun 2017 16:57:57 +0530
+Message-ID: <1496316482-25468-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, varada@codeaurora.org, mraghava@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Document the optional properties for describing module resets, to
-support resetting these modules on R-Car Gen2 and Gen3.
+v3:
+  * Addressed review feedback from Bjorn for pinctrl
+     - Unified the names for qpic pads.
+     - Corrected the names for pwm pins.
+  * Updated pinctrl documentation.
+  * Updated the default bootargs in ipq8074-hk01.dts.
+  * Updated the gcc clocks driver for removing the
+    unused halt_bit in few places.
 
-Note that the audio module has resets for the Serial Sound Interfaces
-only.
+v2:
+  * Addressed review feedback from Stephen
+    - Removed cpu-map entries
+    - Added mmio-timer nodes
+  * Fix sparse warnings in the gcc-ipq8074.c
+  * Updated pinctrl documentation
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
----
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 3 +++
- 1 file changed, 3 insertions(+)
+v1:
+  https://www.spinics.net/lists/kernel/msg2498734.html
+  This series adds minimal board boot support for ipq8074-hk01
+  board.
 
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index 13cb21d53b8bdf5c..7246bb268bf9bab6 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -379,6 +379,9 @@ Optional properties:
- - clock-frequency		: for all audio_clkout0/1/2/3
- - clkout-lr-asynchronous	: boolean property. it indicates that audio_clkoutn
- 				  is asynchronizes with lr-clock.
-+- resets			: References to SSI resets.
-+- reset-names			: List of valid reset names.
-+				  "ssi-all", "ssi.X"
- 
- SSI subnode properties:
- - interrupts			: Should contain SSI interrupt for PIO transfer
+Abhishek Sahu (2):
+  clk: qcom: ipq8074: Add Global Clock Controller support
+  arm64: defconfig: Enable QCOM IPQ8074 clock and pinctrl
+
+Varadarajan Narayanan (3):
+  pinctrl: qcom: Add ipq8074 pinctrl driver
+  dt-bindings: qcom: Add IPQ8074 bindings
+  arm64: dts: Add ipq8074 SoC and HK01 board support
+
+ Documentation/devicetree/bindings/arm/qcom.txt     |    2 +
+ .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+ .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt      |  172 ++++
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   53 +
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              |  194 ++++
+ arch/arm64/configs/defconfig                       |    2 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq8074.c                     | 1009 ++++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                       |   10 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c             | 1076 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h       |  152 +++
+ 14 files changed, 2683 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq8074.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq8074.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq8074.h
+
 -- 
-2.7.4
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
