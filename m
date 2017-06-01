@@ -1,206 +1,57 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: rockchip: add usb nodes on rk322x
-Date: Thu, 01 Jun 2017 22:22:17 +0200
-Message-ID: <1657625.AqxPQItbmB@phil>
-References: <1496193684-30449-1-git-send-email-william.wu@rock-chips.com> <1496193684-30449-2-git-send-email-william.wu@rock-chips.com>
+From: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH v3 0/2] ARM: dts: imx7: add NAND support
+Date: Thu, 1 Jun 2017 21:14:57 +0000
+Message-ID: <3c086d95-96e5-71ec-b44f-12ed41903fcf@nxp.com>
+References: <20170601192044.6548-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496193684-30449-2-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <20170601192044.6548-1-stefan-XLVq0VzYD2Y@public.gmane.org>
+Content-Language: en-US
+Content-ID: <747476295435174AA58ABE6DCBF21B41-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org" <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel@vg>
 List-Id: devicetree@vger.kernel.org
 
-Hi William,
-
-Am Mittwoch, 31. Mai 2017, 09:21:23 CEST schrieb William Wu:
-> This patch adds usb otg/host controllers and phys nodes on rk322x.
-> 
-> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/rk322x.dtsi | 138 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 137 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-> index df57413..d4bfd3c 100644
-> --- a/arch/arm/boot/dts/rk322x.dtsi
-> +++ b/arch/arm/boot/dts/rk322x.dtsi
-> @@ -210,8 +210,61 @@
->  	};
->  
->  	grf: syscon@11000000 {
-> -		compatible = "syscon";
-> +		compatible = "syscon", "simple-mfd";
->  		reg = <0x11000000 0x1000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		u2phy0: usb2-phy@760 {
-> +			compatible = "rockchip,rk322x-usb2phy";
-
-as commented on the driver-side some moments ago, compatibles should not
-contain wildcards, so please make this
-	"rockchip,rk3228-usb2phy"
-instead.
-
-Same below and also for the dwc2 node.
 
 
-Thanks
-Heiko
-
-> +			reg = <0x0760 0x0c>;
-> +			clocks = <&cru SCLK_OTGPHY0>;
-> +			clock-names = "phyclk";
-> +			#clock-cells = <0>;
-> +			clock-output-names = "usb480m_phy0";
-> +			status = "disabled";
-> +
-> +			u2phy0_otg: otg-port {
-> +				#phy-cells = <0>;
-> +				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupt-names = "otg-bvalid", "otg-id",
-> +						  "linestate";
-> +				status = "disabled";
-> +			};
-> +
-> +			u2phy0_host: host-port {
-> +				#phy-cells = <0>;
-> +				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupt-names = "linestate";
-> +				status = "disabled";
-> +			};
-> +		};
-> +
-> +		u2phy1: usb2-phy@800 {
-> +			compatible = "rockchip,rk322x-usb2phy";
-
-rockchip,rk3228-usb2phy
-
-> +			reg = <0x0800 0x0c>;
-> +			clocks = <&cru SCLK_OTGPHY1>;
-> +			clock-names = "phyclk";
-> +			#clock-cells = <0>;
-> +			clock-output-names = "usb480m_phy1";
-> +			status = "disabled";
-> +
-> +			u2phy1_otg: otg-port {
-> +				#phy-cells = <0>;
-> +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupt-names = "linestate";
-> +				status = "disabled";
-> +			};
-> +
-> +			u2phy1_host: host-port {
-> +				#phy-cells = <0>;
-> +				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupt-names = "linestate";
-> +				status = "disabled";
-> +			};
-> +		};
->  	};
->  
->  	uart0: serial@11010000 {
-> @@ -467,6 +520,89 @@
->  		status = "disabled";
->  	};
->  
-> +	usb_otg: usb@30040000 {
-> +		compatible = "rockchip,rk322x-usb", "rockchip,rk3066-usb",
-
-rockchip,rk3228-usb
-
-> +			     "snps,dwc2";
-> +		reg = <0x30040000 0x40000>;
-> +		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_OTG>;
-> +		clock-names = "otg";
-> +		dr_mode = "otg";
-> +		g-np-tx-fifo-size = <16>;
-> +		g-rx-fifo-size = <280>;
-> +		g-tx-fifo-size = <256 128 128 64 32 16>;
-> +		g-use-dma;
-> +		phys = <&u2phy0_otg>;
-> +		phy-names = "usb2-phy";
-> +		status = "disabled";
-> +	};
-> +
-> +	usb_host0_ehci: usb@30080000 {
-> +		compatible = "generic-ehci";
-> +		reg = <0x30080000 0x20000>;
-> +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HOST0>, <&u2phy0>;
-> +		clock-names = "usbhost", "utmi";
-> +		phys = <&u2phy0_host>;
-> +		phy-names = "usb";
-> +		status = "disabled";
-> +	};
-> +
-> +	usb_host0_ohci: usb@300a0000 {
-> +		compatible = "generic-ohci";
-> +		reg = <0x300a0000 0x20000>;
-> +		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HOST0>, <&u2phy0>;
-> +		clock-names = "usbhost", "utmi";
-> +		phys = <&u2phy0_host>;
-> +		phy-names = "usb";
-> +		status = "disabled";
-> +	};
-> +
-> +	usb_host1_ehci: usb@300c0000 {
-> +		compatible = "generic-ehci";
-> +		reg = <0x300c0000 0x20000>;
-> +		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HOST1>, <&u2phy1>;
-> +		clock-names = "usbhost", "utmi";
-> +		phys = <&u2phy1_otg>;
-> +		phy-names = "usb";
-> +		status = "disabled";
-> +	};
-> +
-> +	usb_host1_ohci: usb@300e0000 {
-> +		compatible = "generic-ohci";
-> +		reg = <0x300e0000 0x20000>;
-> +		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HOST1>, <&u2phy1>;
-> +		clock-names = "usbhost", "utmi";
-> +		phys = <&u2phy1_otg>;
-> +		phy-names = "usb";
-> +		status = "disabled";
-> +	};
-> +
-> +	usb_host2_ehci: usb@30100000 {
-> +		compatible = "generic-ehci";
-> +		reg = <0x30100000 0x20000>;
-> +		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HOST2>, <&u2phy1>;
-> +		phys = <&u2phy1_host>;
-> +		phy-names = "usb";
-> +		clock-names = "usbhost", "utmi";
-> +		status = "disabled";
-> +	};
-> +
-> +	usb_host2_ohci: usb@30120000 {
-> +		compatible = "generic-ohci";
-> +		reg = <0x30120000 0x20000>;
-> +		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&cru HCLK_HOST2>, <&u2phy1>;
-> +		clock-names = "usbhost", "utmi";
-> +		phys = <&u2phy1_host>;
-> +		phy-names = "usb";
-> +		status = "disabled";
-> +	};
-> +
->  	gmac: ethernet@30200000 {
->  		compatible = "rockchip,rk3228-gmac";
->  		reg = <0x30200000 0x10000>;
-> 
-
-
+On 06/01/2017 02:20 PM, Stefan Agner wrote:
+> This are the missing device tree parts to add NAND support for i.MX 7.
+> See previous patchset:
+> https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flkml=
+.org%2Flkml%2F2017%2F4%2F21%2F832&data=3D01%7C01%7Chan.xu%40nxp.com%7C3b908=
+1a68c94476c4a2108d4a9235512%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0&sdata=3D=
+mQ2aq5rW%2B9uADY5mSzFxk8P6bAVq%2BosPJQAi0PL9SQg%3D&reserved=3D0
+>
+> The previous version also included driver changes, which are already
+> merged.
+>
+> --
+> Stefan
+>
+> Changes since v2:
+> - Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
+Hi Stefan, sorry I didn't reply your last patch. I was unable to fully=20
+test on i.MX7 since the work bandwidth, but the quick test shows DMA=20
+cannot work WITHOUT IMX7D_NAND_ROOT_CLK on my side, I will fully check=20
+it tomorrow morning and let you know the result.
+> - Dropped driver changes, alreay merged
+>
+> Changes since v1:
+> - Make clks_count const
+> - Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
+>
+> Stefan Agner (2):
+>    ARM: dts: imx7: add GPMI NAND
+>    ARM: dts: imx7-colibri: add NAND support
+>
+>   arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++
+>   arch/arm/boot/dts/imx7s.dtsi        | 31 ++++++++++++++++++++++++++++++=
++
+>   2 files changed, 40 insertions(+)
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
