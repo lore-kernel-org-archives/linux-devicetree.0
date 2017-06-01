@@ -1,99 +1,149 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 00/11] Improve cp110 clk support on Marvell Armada 7K/8K
-Date: Thu, 01 Jun 2017 15:34:13 +0200
-Message-ID: <87lgpbsuga.fsf@free-electrons.com>
-References: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.d3a417499f4e5f039deaa27832bf6eccdd090a6f.1496237893.git-series.gregory.clement@free-electrons.com>
-        (Gregory CLEMENT's message of "Wed, 31 May 2017 15:41:44 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+From: Rob Clark <robdclark@gmail.com>
+Subject: [PATCH 1/4] Docs: dt: document qcom iommu bindings
+Date: Thu,  1 Jun 2017 09:58:46 -0400
+Message-ID: <20170601135849.14978-2-robdclark@gmail.com>
+References: <20170601135849.14978-1-robdclark@gmail.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20170601135849.14978-1-robdclark@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: iommu@lists.linux-foundation.org
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh@kernel.org>, Robin Murphy <robin.murphy@arm.com>, Will Deacon <will.deacon@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sricharan <sricharan@codeaurora.org>, Archit Taneja <architt@codeaurora.org>, Stanimir Varbanov <stanimir.varbanov@linaro.org>, Rob Clark <robdclark@gmail.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi ,
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Rob Clark <robdclark@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+ .../devicetree/bindings/iommu/qcom,iommu.txt       | 121 +++++++++++++++++++++
+ 1 file changed, 121 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iommu/qcom,iommu.txt
 
-Please do not apply this version. I was just pointed that I misread the
-documentation and that the GOP clock are really also used by the
-SD/eMMC.
-
-So I am about sending a new version of the series removing the 2 first
-patchs and fixing the patch 5.
-
-Gregory
-
- On mer., mai 31 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-
-> Hi,
->
-> We got more information about the clock controllers and the clock tree
-> of the CP110 part that we find in the Marvell Armada 7K/8K SoCs.
->
-> The main change in this second version is about the binding
-> documentation: all the documentation related changes are now move in
-> their own patches. It allows to provide a stable -dt branch for theses
-> changes. I also added the acked-by from Rob Herring.
->
-> However the last two patches modifying the device tree _must_ be
-> merged through the mvebu tree to avoid future conflict (especially
-> with the recent ICU series sent by Thomas Petazzoni).
->
-> For the record:
->
-> The clock tree needs to be fixed, indeed the GOP clock is only the
-> clock for the GOIP and not for the SDIO, it is fixed in the first
-> patch.
->
-> The third patch does a small improve of the code itself.
->
-> The purpose of the fifth patch is to have an easier way to add new
-> clocks without breaking the backward compatibility. Indeed, we expect
-> to continue to have new update on the datasheet and this patch will
-> allow integrating this change easier and faster.
->
-> The  patch 7 is needed to ease the integration of the pinctrl node
-> in the device tree.
->
-> The patch 9 adds a new clock for the SDIO, it also fixes the clock
-> tree.
->
-> In this series, even if there is some change in the device tree
-> binding, we paid attention to the backward compatibility, and the
-> driver can still work with the old device tree.
->
-> Thanks,
->
-> Gregory
->
-> Gregory CLEMENT (10):
->   dt-bindings: cp110: fix name of the GOP gate clock
->   clk: mvebu: cp110 fix name of the GOP gate clock
->   clk: mvebu: cp110: make failure labels more meaningful
->   dt-bindings: cp110: do not depend anymore of the *-clock-output-names
->   clk: mvebu: cp110: do not depend anymore of the *-clock-output-names
->   dt-bindings: cp110: introduce a new binding
->   clk: mvebu: cp110: introduce a new binding
->   dt-bindings: cp110: add sdio clock to cp-110 system controller
->   arm64: dts: marvell: remove *-clock-output-names on cp110
->   arm64: dts: marvell: use new binding for the system controller on cp110
->
-> Konstantin Porotchkin (1):
->   clk: mvebu: cp110: add sdio clock to cp-110 system controller
->
->  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt |  35 +++++-------
->  arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi                       |  54 +++++++------------
->  arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi                        |  48 ++++++-----------
->  drivers/clk/mvebu/cp110-system-controller.c                                | 202 +++++++++++++++++++++++++++++++++++++++++++++++++-----------------------
->  4 files changed, 196 insertions(+), 143 deletions(-)
->
-> base-commit: 2ea659a9ef488125eb46da6eb571de5eae5c43f6
-> -- 
-> git-series 0.9.1
-
+diff --git a/Documentation/devicetree/bindings/iommu/qcom,iommu.txt b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+new file mode 100644
+index 0000000..b2641ce
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iommu/qcom,iommu.txt
+@@ -0,0 +1,121 @@
++* QCOM IOMMU v1 Implementation
++
++Qualcomm "B" family devices which are not compatible with arm-smmu have
++a similar looking IOMMU but without access to the global register space,
++and optionally requiring additional configuration to route context irqs
++to non-secure vs secure interrupt line.
++
++** Required properties:
++
++- compatible       : Should be one of:
++
++                        "qcom,msm8916-iommu"
++
++                     Followed by "qcom,msm-iommu-v1".
++
++- clock-names      : Should be a pair of "iface" (required for IOMMUs
++                     register group access) and "bus" (required for
++                     the IOMMUs underlying bus access).
++
++- clocks           : Phandles for respective clocks described by
++                     clock-names.
++
++- #address-cells   : must be 1.
++
++- #size-cells      : must be 1.
++
++- #iommu-cells     : Must be 1.  Index identifies the context-bank #.
++
++- ranges           : Base address and size of the iommu context banks.
++
++- qcom,iommu-secure-id  : secure-id.
++
++- List of sub-nodes, one per translation context bank.  Each sub-node
++  has the following required properties:
++
++  - compatible     : Should be one of:
++        - "qcom,msm-iommu-v1-ns"  : non-secure context bank
++        - "qcom,msm-iommu-v1-sec" : secure context bank
++  - reg            : Base address and size of context bank within the iommu
++  - interrupts     : The context fault irq.
++
++** Optional properties:
++
++- reg              : Base address and size of the SMMU local base, should
++                     be only specified if the iommu requires configuration
++                     for routing of context bank irq's to secure vs non-
++                     secure lines.  (Ie. if the iommu contains secure
++                     context banks)
++
++
++** Examples:
++
++	apps_iommu: iommu@1e20000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
++		ranges = <0 0x1e20000 0x40000>;
++		reg = <0x1ef0000 0x3000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_APSS_TCU_CLK>;
++		clock-names = "iface", "bus";
++		qcom,iommu-secure-id = <17>;
++
++		// mdp_0:
++		iommu-ctx@4000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x4000 0x1000>;
++			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		// venus_ns:
++		iommu-ctx@5000 {
++			compatible = "qcom,msm-iommu-v1-sec";
++			reg = <0x5000 0x1000>;
++			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++
++	gpu_iommu: iommu@1f08000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		#iommu-cells = <1>;
++		compatible = "qcom,msm8916-iommu", "qcom,msm-iommu-v1";
++		ranges = <0 0x1f08000 0x10000>;
++		clocks = <&gcc GCC_SMMU_CFG_CLK>,
++			 <&gcc GCC_GFX_TCU_CLK>;
++		clock-names = "iface", "bus";
++		qcom,iommu-secure-id = <18>;
++
++		// gfx3d_user:
++		iommu-ctx@1000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x1000 0x1000>;
++			interrupts = <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
++		// gfx3d_priv:
++		iommu-ctx@2000 {
++			compatible = "qcom,msm-iommu-v1-ns";
++			reg = <0x2000 0x1000>;
++			interrupts = <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>;
++		};
++	};
++
++	...
++
++	venus: video-codec@1d00000 {
++		...
++		iommus = <&apps_iommu 5>;
++	};
++
++	mdp: mdp@1a01000 {
++		...
++		iommus = <&apps_iommu 4>;
++	};
++
++	gpu@01c00000 {
++		...
++		iommus = <&gpu_iommu 1>, <&gpu_iommu 2>;
++	};
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.9.4
