@@ -1,265 +1,128 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 3/9] clk: mvebu: cp110: do not depend anymore of the
- *-clock-output-names
-Date: Thu,  1 Jun 2017 16:55:36 +0200
-Message-ID: <9f5211cf77fa76e22cd8d94b833b7701f5072b42.1496328934.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v3 7/9] clk: mvebu: cp110: add sdio clock to cp-110 system controller
+Date: Thu,  1 Jun 2017 16:55:40 +0200
+Message-ID: <71f731afd7f11b6ca3c0cffba3855c6ceac78d94.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
 References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Using the *-clock-output-names property was a convenient way to have a
-unique name for each clock even when there are multiple cp110 blocks
-as we can find on Armada 8K.
+From: Konstantin Porotchkin <kostap@marvell.com>
 
-However it has some drawbacks: the main one being a stronger link than
-necessary between the driver and the device tree. For example the clock
-name can't be changed, removed or moved. It is still the early stage of
-introduction of the Armada 7K/8K and the hardware is still not totally
-documented, especially for the clock part. By removing the use of
-*-clock-output-names it will be easier to add new clocks without breaking
-the compatibility.
+This commit updates the CP110 system controller driver to add the
+definition for a missing clock.
 
-The name of each clock is now created by using its physical address as a
-prefix (as it was done for the platform device names). Thanks to this we
-have an automatic way to compute a unique name.
+The SDIO clock is dedicated driving the SDHCI interface and its frequency
+is 400MHz (2/5 of PLL source clock).
 
+The SDIO interface should be bound to this clock and not the core clock
+as in the older code.
+Using the wrong clock lead to a maximum SDHCI frequency of 250 Mhz, while
+the HW really supports up to 400 Mhz.
+
+This patch also fixes the NAND clock relationship documentation.
+
+Signed-off-by: Konstantin Porotchkin <kostap@marvell.com>
+[gregory.clement@free-electrons.com:
+- use sdio instead of emmc to name the clock]
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/clk/mvebu/cp110-system-controller.c | 105 +++++++++++++--------
- 1 file changed, 65 insertions(+), 40 deletions(-)
+ drivers/clk/mvebu/cp110-system-controller.c | 28 ++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-index 3b27a6056c73..081f089d2656 100644
+index ae3d81263304..b034b79345ec 100644
 --- a/drivers/clk/mvebu/cp110-system-controller.c
 +++ b/drivers/clk/mvebu/cp110-system-controller.c
-@@ -84,6 +84,33 @@ enum {
- #define CP110_GATE_EIP150		25
- #define CP110_GATE_EIP197		26
+@@ -11,15 +11,16 @@
+  */
  
-+const char *gate_base_names[] = {
-+	[CP110_GATE_AUDIO]	= "audio",
-+	[CP110_GATE_COMM_UNIT]	= "communit",
-+	[CP110_GATE_NAND]	= "nand",
-+	[CP110_GATE_PPV2]	= "ppv2",
-+	[CP110_GATE_SDIO]	= "sdio",
-+	[CP110_GATE_MG]		= "mg-domain",
-+	[CP110_GATE_MG_CORE]	= "mg-core",
-+	[CP110_GATE_XOR1]	= "xor1",
-+	[CP110_GATE_XOR0]	= "xor0",
-+	[CP110_GATE_GOP_DP]	= "gop-dp",
-+	[CP110_GATE_PCIE_X1_0]	= "pcie_x10",
-+	[CP110_GATE_PCIE_X1_1]	= "pcie_x11",
-+	[CP110_GATE_PCIE_X4]	= "pcie_x4",
-+	[CP110_GATE_PCIE_XOR]	= "pcie-xor",
-+	[CP110_GATE_SATA]	= "sata",
-+	[CP110_GATE_SATA_USB]	= "sata-usb",
-+	[CP110_GATE_MAIN]	= "main",
-+	[CP110_GATE_SDMMC_GOP]	= "sd-mmc-gop",
-+	[CP110_GATE_SLOW_IO]	= "slow-io",
-+	[CP110_GATE_USB3H0]	= "usb3h0",
-+	[CP110_GATE_USB3H1]	= "usb3h1",
-+	[CP110_GATE_USB3DEV]	= "usb3dev",
-+	[CP110_GATE_EIP150]	= "eip150",
-+	[CP110_GATE_EIP197]	= "eip197"
-+};
-+
- struct cp110_gate_clk {
- 	struct clk_hw hw;
- 	struct regmap *regmap;
-@@ -186,15 +213,33 @@ static struct clk_hw *cp110_of_clk_get(struct of_phandle_args *clkspec,
- 	return ERR_PTR(-EINVAL);
- }
+ /*
+- * CP110 has 5 core clocks:
++ * CP110 has 6 core clocks:
+  *
+  *  - APLL		(1 Ghz)
+  *    - PPv2 core	(1/3 APLL)
+  *    - EIP		(1/2 APLL)
+- *      - Core		(1/2 EIP)
++ *     - Core		(1/2 EIP)
++ *    - SDIO		(2/5 APLL)
+  *
+  *  - NAND clock, which is either:
+- *    - Equal to the core clock
++ *    - Equal to SDIO clock
+  *    - 2/5 APLL
+  *
+  * CP110 has 32 gatable clocks, for the various peripherals in the
+@@ -46,7 +47,7 @@ enum {
+ 	CP110_CLK_TYPE_GATABLE,
+ };
  
-+static char *cp110_unique_name(struct device *dev, const char *name)
-+{
-+	struct device_node *np = dev->of_node;
-+	const __be32 *reg;
-+	u64 addr;
-+
-+	/* Do not create a name if there is no clock */
-+	if (!name)
-+		return NULL;
-+
-+	reg = of_get_property(np, "reg", NULL);
-+	addr = of_translate_address(np, reg);
-+	return devm_kasprintf(dev, GFP_KERNEL, "%llx-%s",
-+			      (unsigned long long)addr, name);
-+}
-+
- static int cp110_syscon_clk_probe(struct platform_device *pdev)
- {
+-#define CP110_MAX_CORE_CLOCKS		5
++#define CP110_MAX_CORE_CLOCKS		6
+ #define CP110_MAX_GATABLE_CLOCKS	32
+ 
+ #define CP110_CLK_NUM \
+@@ -57,6 +58,7 @@ enum {
+ #define CP110_CORE_EIP			2
+ #define CP110_CORE_CORE			3
+ #define CP110_CORE_NAND			4
++#define CP110_CORE_SDIO			5
+ 
+ /* A number of gatable clocks need special handling */
+ #define CP110_GATE_AUDIO		0
+@@ -235,7 +237,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
  	struct regmap *regmap;
--	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = dev->of_node;
- 	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+-	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name;
++	const char *ppv2_name, *apll_name, *core_name, *eip_name, *nand_name,
++		*sdio_name;
  	struct clk_hw_onecell_data *cp110_clk_data;
  	struct clk_hw *hw, **cp110_clks;
  	u32 nand_clk_ctrl;
- 	int i, ret;
-+	char *gate_name[ARRAY_SIZE(gate_base_names)];
- 
- 	regmap = syscon_node_to_regmap(np);
- 	if (IS_ERR(regmap))
-@@ -205,7 +250,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	cp110_clk_data = devm_kzalloc(&pdev->dev, sizeof(*cp110_clk_data) +
-+	cp110_clk_data = devm_kzalloc(dev, sizeof(*cp110_clk_data) +
- 				      sizeof(struct clk_hw *) * CP110_CLK_NUM,
- 				      GFP_KERNEL);
- 	if (!cp110_clk_data)
-@@ -215,8 +260,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clk_data->num = CP110_CLK_NUM;
- 
- 	/* Register the APLL which is the root of the hw tree */
--	of_property_read_string_index(np, "core-clock-output-names",
--				      CP110_CORE_APLL, &apll_name);
-+	apll_name = cp110_unique_name(dev, "apll");
- 	hw = clk_hw_register_fixed_rate(NULL, apll_name, NULL, 0,
- 					1000 * 1000 * 1000);
- 	if (IS_ERR(hw)) {
-@@ -227,8 +271,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clks[CP110_CORE_APLL] = hw;
- 
- 	/* PPv2 is APLL/3 */
--	of_property_read_string_index(np, "core-clock-output-names",
--				      CP110_CORE_PPV2, &ppv2_name);
-+	ppv2_name = cp110_unique_name(dev, "ppv2-core");
- 	hw = clk_hw_register_fixed_factor(NULL, ppv2_name, apll_name, 0, 1, 3);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -238,8 +281,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clks[CP110_CORE_PPV2] = hw;
- 
- 	/* EIP clock is APLL/2 */
--	of_property_read_string_index(np, "core-clock-output-names",
--				      CP110_CORE_EIP, &eip_name);
-+	eip_name = cp110_unique_name(dev, "eip");
- 	hw = clk_hw_register_fixed_factor(NULL, eip_name, apll_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -249,8 +291,7 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	cp110_clks[CP110_CORE_EIP] = hw;
- 
- 	/* Core clock is EIP/2 */
--	of_property_read_string_index(np, "core-clock-output-names",
--				      CP110_CORE_CORE, &core_name);
-+	core_name = cp110_unique_name(dev, "core");
- 	hw = clk_hw_register_fixed_factor(NULL, core_name, eip_name, 0, 1, 2);
- 	if (IS_ERR(hw)) {
- 		ret = PTR_ERR(hw);
-@@ -258,10 +299,8 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 	}
- 
- 	cp110_clks[CP110_CORE_CORE] = hw;
--
- 	/* NAND can be either APLL/2.5 or core clock */
--	of_property_read_string_index(np, "core-clock-output-names",
--				      CP110_CORE_NAND, &nand_name);
-+	nand_name = cp110_unique_name(dev, "nand-core");
- 	if (nand_clk_ctrl & NF_CLOCK_SEL_400_MASK)
- 		hw = clk_hw_register_fixed_factor(NULL, nand_name,
- 						   apll_name, 0, 2, 5);
-@@ -275,18 +314,14 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
+@@ -315,6 +318,17 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
  
  	cp110_clks[CP110_CORE_NAND] = hw;
  
--	for (i = 0; i < CP110_MAX_GATABLE_CLOCKS; i++) {
--		const char *parent, *name;
--		int ret;
--
--		ret = of_property_read_string_index(np,
--						    "gate-clock-output-names",
--						    i, &name);
--		/* Reached the end of the list? */
--		if (ret < 0)
--			break;
-+	/* create the unique name for all the gate clocks */
-+	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
-+		gate_name[i] =	cp110_unique_name(dev, gate_base_names[i]);
++	/* SDIO clock is APLL/2.5 */
++	sdio_name = cp110_unique_name(dev, syscon_node, "sdio-core");
++	hw = clk_hw_register_fixed_factor(NULL, sdio_name,
++					  apll_name, 0, 2, 5);
++	if (IS_ERR(hw)) {
++		ret = PTR_ERR(hw);
++		goto fail_sdio;
++	}
 +
-+	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++) {
-+		const char *parent;
- 
--		if (!strcmp(name, "none"))
-+		if (gate_name[i] == NULL)
- 			continue;
- 
- 		switch (i) {
-@@ -295,14 +330,10 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
- 		case CP110_GATE_EIP150:
- 		case CP110_GATE_EIP197:
- 		case CP110_GATE_SLOW_IO:
--			of_property_read_string_index(np,
--						      "gate-clock-output-names",
--						      CP110_GATE_MAIN, &parent);
-+			parent = gate_name[CP110_GATE_MAIN];
- 			break;
- 		case CP110_GATE_MG:
--			of_property_read_string_index(np,
--						      "gate-clock-output-names",
--						      CP110_GATE_MG_CORE, &parent);
-+			parent = gate_name[CP110_GATE_MG_CORE];
- 			break;
- 		case CP110_GATE_NAND:
- 			parent = nand_name;
-@@ -312,33 +343,27 @@ static int cp110_syscon_clk_probe(struct platform_device *pdev)
++	cp110_clks[CP110_CORE_SDIO] = hw;
++
+ 	/* create the unique name for all the gate clocks */
+ 	for (i = 0; i < ARRAY_SIZE(gate_base_names); i++)
+ 		gate_name[i] =	cp110_unique_name(dev, syscon_node,
+@@ -344,6 +358,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
+ 			parent = ppv2_name;
  			break;
  		case CP110_GATE_SDIO:
++			parent = sdio_name;
++			break;
  		case CP110_GATE_GOP_DP:
--			of_property_read_string_index(np,
--						      "gate-clock-output-names",
--						      CP110_GATE_SDMMC_GOP, &parent);
-+			parent = gate_name[CP110_GATE_SDMMC_GOP];
+ 			parent = gate_name[CP110_GATE_SDMMC_GOP];
  			break;
- 		case CP110_GATE_XOR1:
- 		case CP110_GATE_XOR0:
- 		case CP110_GATE_PCIE_X1_0:
- 		case CP110_GATE_PCIE_X1_1:
- 		case CP110_GATE_PCIE_X4:
--			of_property_read_string_index(np,
--						      "gate-clock-output-names",
--						      CP110_GATE_PCIE_XOR, &parent);
-+			parent = gate_name[CP110_GATE_PCIE_XOR];
- 			break;
- 		case CP110_GATE_SATA:
- 		case CP110_GATE_USB3H0:
- 		case CP110_GATE_USB3H1:
- 		case CP110_GATE_USB3DEV:
--			of_property_read_string_index(np,
--						      "gate-clock-output-names",
--						      CP110_GATE_SATA_USB, &parent);
-+			parent = gate_name[CP110_GATE_SATA_USB];
- 			break;
- 		default:
- 			parent = core_name;
- 			break;
- 		}
-+		hw = cp110_register_gate(gate_name[i], parent, regmap, i);
+@@ -391,6 +407,8 @@ static int cp110_syscon_common_probe(struct platform_device *pdev,
+ 			cp110_unregister_gate(hw);
+ 	}
  
--		hw = cp110_register_gate(name, parent, regmap, i);
- 		if (IS_ERR(hw)) {
- 			ret = PTR_ERR(hw);
- 			goto fail_gate;
++	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_SDIO]);
++fail_sdio:
+ 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_NAND]);
+ fail_nand:
+ 	clk_hw_unregister_fixed_factor(cp110_clks[CP110_CORE_CORE]);
 -- 
 git-series 0.9.1
