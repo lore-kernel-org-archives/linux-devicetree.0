@@ -1,84 +1,207 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: [PATCH] ARM: dts: mvebu: Add PWM properties for armada-38x
-Date: Thu,  1 Jun 2017 22:10:30 +0200
-Message-ID: <20170601201030.22525-1-ralph.sennhauser@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Gregory Clement <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@gmail.com>, Ralph Sennhauser <ralph.sennhauser@gmail.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: rockchip: add usb nodes on rk322x
+Date: Thu, 01 Jun 2017 22:22:17 +0200
+Message-ID: <1657625.AqxPQItbmB@phil>
+References: <1496193684-30449-1-git-send-email-william.wu@rock-chips.com> <1496193684-30449-2-git-send-email-william.wu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496193684-30449-2-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the required properties to the GPIO nodes for them to be used as PWM
-lines.
+Hi William,
 
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Am Mittwoch, 31. Mai 2017, 09:21:23 CEST schrieb William Wu:
+> This patch adds usb otg/host controllers and phys nodes on rk322x.
+> 
+> Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk322x.dtsi | 138 +++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 137 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+> index df57413..d4bfd3c 100644
+> --- a/arch/arm/boot/dts/rk322x.dtsi
+> +++ b/arch/arm/boot/dts/rk322x.dtsi
+> @@ -210,8 +210,61 @@
+>  	};
+>  
+>  	grf: syscon@11000000 {
+> -		compatible = "syscon";
+> +		compatible = "syscon", "simple-mfd";
+>  		reg = <0x11000000 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		u2phy0: usb2-phy@760 {
+> +			compatible = "rockchip,rk322x-usb2phy";
 
----
+as commented on the driver-side some moments ago, compatibles should not
+contain wildcards, so please make this
+	"rockchip,rk3228-usb2phy"
+instead.
 
-Hi everyone,
+Same below and also for the dwc2 node.
 
-this patch uses "marvell,armada-370-gpio" for the compatible property
-and as such depends on the rename of the property to still make it in in
-time for 4.12 ("gpio: mvebu: change compatible string for PWM support").
-Otherwise the compatible string will need to be amended to
-"marvell,armada-370-xp-gpio".
 
-Checked the functional spec and the register ranges and offsets are the
-same as for armada-xp. Likely the same holds true for the armada-39x
-family, though I neither have access to the spec nor any such hardware.
+Thanks
+Heiko
 
-Ralph
----
- arch/arm/boot/dts/armada-38x.dtsi | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+> +			reg = <0x0760 0x0c>;
+> +			clocks = <&cru SCLK_OTGPHY0>;
+> +			clock-names = "phyclk";
+> +			#clock-cells = <0>;
+> +			clock-output-names = "usb480m_phy0";
+> +			status = "disabled";
+> +
+> +			u2phy0_otg: otg-port {
+> +				#phy-cells = <0>;
+> +				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+> +					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupt-names = "otg-bvalid", "otg-id",
+> +						  "linestate";
+> +				status = "disabled";
+> +			};
+> +
+> +			u2phy0_host: host-port {
+> +				#phy-cells = <0>;
+> +				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupt-names = "linestate";
+> +				status = "disabled";
+> +			};
+> +		};
+> +
+> +		u2phy1: usb2-phy@800 {
+> +			compatible = "rockchip,rk322x-usb2phy";
 
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 8b165c3..af31f5d 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -312,31 +312,39 @@
- 			};
- 
- 			gpio0: gpio@18100 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18100 0x40>;
-+				compatible = "marvell,armada-370-gpio",
-+					     "marvell,orion-gpio";
-+				reg = <0x18100 0x40>, <0x181c0 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <32>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			gpio1: gpio@18140 {
--				compatible = "marvell,orion-gpio";
--				reg = <0x18140 0x40>;
-+				compatible = "marvell,armada-370-gpio",
-+					     "marvell,orion-gpio";
-+				reg = <0x18140 0x40>, <0x181c8 0x08>;
-+				reg-names = "gpio", "pwm";
- 				ngpios = <28>;
- 				gpio-controller;
- 				#gpio-cells = <2>;
-+				#pwm-cells = <2>;
- 				interrupt-controller;
- 				#interrupt-cells = <2>;
- 				interrupts = <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&coreclk 0>;
- 			};
- 
- 			systemc: system-controller@18200 {
--- 
-2.10.2
+rockchip,rk3228-usb2phy
+
+> +			reg = <0x0800 0x0c>;
+> +			clocks = <&cru SCLK_OTGPHY1>;
+> +			clock-names = "phyclk";
+> +			#clock-cells = <0>;
+> +			clock-output-names = "usb480m_phy1";
+> +			status = "disabled";
+> +
+> +			u2phy1_otg: otg-port {
+> +				#phy-cells = <0>;
+> +				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupt-names = "linestate";
+> +				status = "disabled";
+> +			};
+> +
+> +			u2phy1_host: host-port {
+> +				#phy-cells = <0>;
+> +				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupt-names = "linestate";
+> +				status = "disabled";
+> +			};
+> +		};
+>  	};
+>  
+>  	uart0: serial@11010000 {
+> @@ -467,6 +520,89 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	usb_otg: usb@30040000 {
+> +		compatible = "rockchip,rk322x-usb", "rockchip,rk3066-usb",
+
+rockchip,rk3228-usb
+
+> +			     "snps,dwc2";
+> +		reg = <0x30040000 0x40000>;
+> +		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_OTG>;
+> +		clock-names = "otg";
+> +		dr_mode = "otg";
+> +		g-np-tx-fifo-size = <16>;
+> +		g-rx-fifo-size = <280>;
+> +		g-tx-fifo-size = <256 128 128 64 32 16>;
+> +		g-use-dma;
+> +		phys = <&u2phy0_otg>;
+> +		phy-names = "usb2-phy";
+> +		status = "disabled";
+> +	};
+> +
+> +	usb_host0_ehci: usb@30080000 {
+> +		compatible = "generic-ehci";
+> +		reg = <0x30080000 0x20000>;
+> +		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HOST0>, <&u2phy0>;
+> +		clock-names = "usbhost", "utmi";
+> +		phys = <&u2phy0_host>;
+> +		phy-names = "usb";
+> +		status = "disabled";
+> +	};
+> +
+> +	usb_host0_ohci: usb@300a0000 {
+> +		compatible = "generic-ohci";
+> +		reg = <0x300a0000 0x20000>;
+> +		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HOST0>, <&u2phy0>;
+> +		clock-names = "usbhost", "utmi";
+> +		phys = <&u2phy0_host>;
+> +		phy-names = "usb";
+> +		status = "disabled";
+> +	};
+> +
+> +	usb_host1_ehci: usb@300c0000 {
+> +		compatible = "generic-ehci";
+> +		reg = <0x300c0000 0x20000>;
+> +		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HOST1>, <&u2phy1>;
+> +		clock-names = "usbhost", "utmi";
+> +		phys = <&u2phy1_otg>;
+> +		phy-names = "usb";
+> +		status = "disabled";
+> +	};
+> +
+> +	usb_host1_ohci: usb@300e0000 {
+> +		compatible = "generic-ohci";
+> +		reg = <0x300e0000 0x20000>;
+> +		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HOST1>, <&u2phy1>;
+> +		clock-names = "usbhost", "utmi";
+> +		phys = <&u2phy1_otg>;
+> +		phy-names = "usb";
+> +		status = "disabled";
+> +	};
+> +
+> +	usb_host2_ehci: usb@30100000 {
+> +		compatible = "generic-ehci";
+> +		reg = <0x30100000 0x20000>;
+> +		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HOST2>, <&u2phy1>;
+> +		phys = <&u2phy1_host>;
+> +		phy-names = "usb";
+> +		clock-names = "usbhost", "utmi";
+> +		status = "disabled";
+> +	};
+> +
+> +	usb_host2_ohci: usb@30120000 {
+> +		compatible = "generic-ohci";
+> +		reg = <0x30120000 0x20000>;
+> +		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru HCLK_HOST2>, <&u2phy1>;
+> +		clock-names = "usbhost", "utmi";
+> +		phys = <&u2phy1_host>;
+> +		phy-names = "usb";
+> +		status = "disabled";
+> +	};
+> +
+>  	gmac: ethernet@30200000 {
+>  		compatible = "rockchip,rk3228-gmac";
+>  		reg = <0x30200000 0x10000>;
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
