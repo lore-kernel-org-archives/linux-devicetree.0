@@ -1,29 +1,65 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v13 9/9] arm64: dts: qcom: msm8916: Add debug unit
-Date: Thu, 1 Jun 2017 08:14:29 -0500
-Message-ID: <20170601131429.GE19546@hector.attlocal.net>
-References: <1495728253-30970-1-git-send-email-leo.yan@linaro.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 0/2] Meson8 USB PHY support
+Date: Thu, 1 Jun 2017 18:42:58 +0530
+Message-ID: <02656f9a-33d8-c009-7785-a6bd7d4b2617@ti.com>
+References: <20170506173625.19501-1-martin.blumenstingl@googlemail.com>
+ <20170520141250.27388-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1495728253-30970-1-git-send-email-leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jonathan Corbet <corbet-T1hC0tSOHrs@public.gmane.org>, Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Leach <mike.leach-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170520141250.27388-1-martin.blumenstingl@googlemail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: carlo@caione.org, khilman@baylibre.com, johnyoun@synopsys.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 12:04:13AM +0800, Leo Yan wrote:
-> Add debug unit on Qualcomm msm8916 based platforms, including the
-> DragonBoard 410c board.
+
+
+On Saturday 20 May 2017 07:42 PM, Martin Blumenstingl wrote:
+> The USB2 PHY in the Meson8 SoCs is identical to the one in the Meson8b
+> and GXBB SoCs.
+> This series adds a new compatible string for Meson8 and adjusts the
+> Kconfig and MODULE_DESCRIPTION documentation as well as the dt-bindings
+> accordingly.
 > 
-> Reviewed-by: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Leo Yan <leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> With some additional work the same driver could be used to add USB2
+> support to Meson6 SoCs as well. However, due to lack of a clock
+> controller driver for Meson6 and the lack of a board Meson6 support
+> is not part of this series (Meson6 uses internal mux and divider clocks
+> which are provided by the USB2 PHY registers, while the newer SoCs seem
+> to use an alternative clock called "clk_32k_altsel")
 
-Looks fine.
+merged, thanks.
 
-Acked-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Kishon
+> 
+> 
+> Changes since v1:
+> - split the dt-bindings and the driver changes into separate patches
+> - rebased to apply on top of my other series "Meson GXL USB2 PHY driver"
+>   (from [0]) which means that this also applies on top of "phy: Group
+>   vendor specific phy drivers"
+> - also update the Kconfig option name (instead of just the description)
+> 
+> 
+> [0] http://lists.infradead.org/pipermail/linux-amlogic/2017-May/003664.html
+> 
+> 
+> Martin Blumenstingl (2):
+>   phy: meson8b-usb2: add support for the USB PHY on Meson8 SoCs
+>   dt-bindings: phy: meson8b-usb2-phy: add support for the Meson8 SoCs
+> 
+>  Documentation/devicetree/bindings/phy/meson8b-usb2-phy.txt | 3 ++-
+>  drivers/phy/amlogic/Kconfig                                | 6 +++---
+>  drivers/phy/amlogic/phy-meson8b-usb2.c                     | 5 +++--
+>  3 files changed, 8 insertions(+), 6 deletions(-)
+> 
