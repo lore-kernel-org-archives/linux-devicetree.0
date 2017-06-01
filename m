@@ -1,111 +1,81 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: power: supply: add battery charge voltage/current
-Date: Thu, 1 Jun 2017 10:18:54 +0200
-Message-ID: <CAFqH_536VDcx--dJga_+ffut9QmHLySk_gzZbXuCv8TBz++OzA@mail.gmail.com>
-References: <20170526110413.24836-1-enric.balletbo@collabora.com>
- <CAKvHMgTvUkJENP=Y_rdge6Oqq-La341nYW5prB=BpXWo7rF-0A@mail.gmail.com>
- <CAFqH_50+58swMjGOK1oyP0152ap=5Ng1m86q5sdq2Enc08Ui5g@mail.gmail.com> <CAKvHMgQWT-V=vt6bkR7QoCRM8W0MeyfY0hjNL-q0FmfPfNhtfA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: dts: r7s72100: add clock bit definitions
+Date: Thu, 1 Jun 2017 10:22:56 +0200
+Message-ID: <CAMuHMdVnNod2F37AbHkc8qwWWxOD99vkdXaT9X-v26E6j60udQ@mail.gmail.com>
+References: <20170525160548.103182-1-chris.brandt@renesas.com>
+ <CAMuHMdW21gwJZxCMsepX9c3hqpfw_+zc1x_f-6D0oKFVvqY2Kg@mail.gmail.com> <SG2PR06MB11652CB46B57C6C592F7A2FB8AF00@SG2PR06MB1165.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKvHMgQWT-V=vt6bkR7QoCRM8W0MeyfY0hjNL-q0FmfPfNhtfA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Breck <liam@networkimprov.net>
-Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Liam Breck <kernel@networkimprov.net>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <SG2PR06MB11652CB46B57C6C592F7A2FB8AF00@SG2PR06MB1165.apcprd06.prod.outlook.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liam,
+Hi Chris,
 
-2017-06-01 9:01 GMT+02:00 Liam Breck <liam@networkimprov.net>:
-> Hi Enric,
->
-> On Sat, May 27, 2017 at 1:11 PM, Enric Balletbo Serra
-> <eballetbo@gmail.com> wrote:
->> Hi Liam,
+On Tue, May 30, 2017 at 6:23 PM, Chris Brandt <Chris.Brandt@renesas.com> wrote:
+>> > +#define R7S72100_CLK_SPIMBC0   3
+>> > +#define R7S72100_CLK_SPIMBC1   2
 >>
->> 2017-05-26 23:20 GMT+02:00 Liam Breck <liam@networkimprov.net>:
->>> Hi Enric,
->>>
->>> On Fri, May 26, 2017 at 4:04 AM, Enric Balletbo i Serra
->>> <enric.balletbo@collabora.com> wrote:
->>>> Add charging voltage and current characteristics to the battery DT for
->>>> proper handling of the battery by fuel-gauge and charger chips.
->>>>
->>>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
->>>> ---
->>>> Changes since v2:
->>>>  - Requested by Sebastian Reichel
->>>>    - Move to its own patch and apply to simple-battery framework.
->>>> Changes since v1:
->>>>  - Requested by Rob Herring
->>>>    - Rename ti,charge-* to charge-* to be standard properties.
->>>>    - Use unit suffixes as per bindings/property-units.txt
->>>>
->>>>  Documentation/devicetree/bindings/power/supply/battery.txt | 4 ++++
->>>>  1 file changed, 4 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/power/supply/battery.txt b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> index 63a7028..c87a439 100644
->>>> --- a/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> +++ b/Documentation/devicetree/bindings/power/supply/battery.txt
->>>> @@ -12,6 +12,8 @@ Optional Properties:
->>>>   - voltage-min-design-microvolt: drained battery voltage
->>>>   - energy-full-design-microwatt-hours: battery design energy
->>>>   - charge-full-design-microamp-hours: battery design capacity
->>>> + - charge-voltage-microvolt: battery charging voltage
->>>> + - charge-current-microamp: battery charging current
->>>
->>> I think you mean constant-charge-* which is how you surface these
->>> properties in your tps65217_charger patch.
->>>
->>
->> Yes, to be strict this is constant-charge-*
+>> R7S72100_CLK_SPB[0-1]?
 >
-> The DT battery node should carry static battery characteristics. So on
-> reflection, I think you want
+> Here's the one that I'm struggling with what to call.
 >
-> constant-charge-current-max-microamp
-> constant-charge-voltage-max-microvolt
+> Internally, the IP block is referred to as the "SPIBSC". As in, SPI Bus
+> State Controller (because basically anything that has a parallel
+> interface to the internal bus the design guys call it a BSC: LBSC, DBSC,
+> etc...).
 >
-> The charger or the user could then safely apply any value <= those.
+> However, for every device this IP is used in it is called the "SPI
+> Multi I/O Bus Controller" in the Hardware Manual (SH7769, RZ/A1, R-Car Gen3,
+> etc...).
 >
-> Thoughts?
+> So, that might be confusing to users.
 >
+> Originally, it was called "SPI BSC" because they were only connecting a
+> "SPI" bus interface as a "Bus State Controller". However, now they've
+> added onto the IP and it does more than just SPI.
+>
+>
+>> All related registers and clocks are called SPB<something>.
+> Only the pins are labeled SPB<something>, not the registers. The
+> registers doesn't really have a common prefix.
+>
+>
+> So in general, what's your opinion on what to call this thing (since
+> I'd like to name the driver in a similar manner)?
+>
+> (1) "SPIBSC": Because that's what all the non-Linux sample code and app
+>      note refer to it.
+>
+> (2) "SPIMBC": Taken from "SPI Multi I/O Bus Controller" (using all 1st
+>     letters except the "I/O" part)
+>
+> (3) "SPB": Because that is how they named the pins for RZ/1 (NOTE that
+>     is just for RZ/A1 and SH7269, for RZ/A2++ and R-Car they are labeled
+>     QSPI_xxx...so you will probably never see SPB again in future hardware
+>     manuals)
+>
+> (4) "SBC": For Serial Bus Controller
+>
+>
+> I am leaning to just staying with "SPIBSC" which is what I use now for
+> our current Linux BSP and non-Linux sample code, or "SBC" just to
+> shorten it.
+>
+> Any opinions???
 
-Hmm I see your point and I'm thinking now that actually this is not
-what I wanted to do. What I wanted is set the charger voltage and the
-current hence my first patchset was setting these properties in the
-charger node not the battery.
+I'm fine with SPIBSC.
 
-Said that, I think that you have reason and what we want in battery
-node is the current/voltage max values but we also need to implement a
-mechanism to set the charging voltage/current from userspace or from
-the DT for the charger. The charger should be able to set these values
-and fail if, based in the battery specs, is not supported.
+Gr{oetje,eeting}s,
 
-More thoughts?
+                        Geert
 
->>> I'll add these to v14 of my patchset which adds simple-battery
->>> support. Rob requested a single patch for this file.
->>>
->>
->> Ok, I'll send the tps charger series without this patch, so please,
->> include this patch in your series.
->>
->>> I've been waiting for feedback on v13.2 from Sebastian. If I don't
->>> hear from him within a few days, I'll post v14.
->>>
->>>>  Batteries must be referenced by chargers and/or fuel-gauges
->>>>  using a phandle. The phandle's property should be named
->>>> @@ -24,6 +26,8 @@ Example:
->>>>                 voltage-min-design-microvolt = <3200000>;
->>>>                 energy-full-design-microwatt-hours = <5290000>;
->>>>                 charge-full-design-microamp-hours = <1430000>;
->>>> +               charge-voltage-microvolt = <4100000>;
->>>> +               charge-current-microamp = <300000>;
->>>>         };
->>>>
->>>>         charger: charger@11 {
->>>> --
->>>> 2.9.3
->>>>
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
