@@ -1,216 +1,117 @@
-From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
 Subject: Re: [PATCH v7 00/34] i.MX Media Driver
-Date: Thu, 1 Jun 2017 17:25:57 -0700
-Message-ID: <CAJ+vNU2K1g32HTbJktLYaCGWLbPs19HSM_PMNryPBqQC-O77vw@mail.gmail.com>
+Date: Thu, 1 Jun 2017 17:43:39 -0700
+Message-ID: <8e240c2d-f762-ff04-f57b-2741cb6fab58@gmail.com>
 References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+ <CAJ+vNU2K1g32HTbJktLYaCGWLbPs19HSM_PMNryPBqQC-O77vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1495672189-29164-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean-Christophe TROTIN <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renes>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAJ+vNU2K1g32HTbJktLYaCGWLbPs19HSM_PMNryPBqQC-O77vw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Tim Harvey <tharvey@gateworks.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, Nick Dyer <nick@shmanahar.org>, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, geert@linux-m68k.org, linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, mchehab@kernel.org, bparrot@ti.com, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms+renesas@verge.net.au>, Tiffany Lin <tiffany.lin@mediatek.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infr>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 24, 2017 at 5:29 PM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> In version 7:
->
-> - video-mux: switched to Philipp's latest video-mux driver and updated
->   bindings docs, that makes use of the mmio-mux framework.
->
-> - mmio-mux: includes Philipp's temporary patch that adds mmio-mux support
->   to video-mux driver, until mux framework is merged.
->
-> - mmio-mux: updates to device tree from Philipp that define the i.MX6 mux
->   devices and modifies the video-mux device to become a consumer of the
->   video mmio-mux.
->
-> - minor updates to Documentation/media/v4l-drivers/imx.rst.
->
-> - ov5640: do nothing if entity stream count is greater than 1 in
->   ov5640_s_stream().
->
-> - Previous versions of this driver had not tested the ability to enable
->   multiple independent streams, for instance enabling multiple output
->   pads from the imx6-mipi-csi2 subdevice, or enabling both prpenc and
->   prpvf outputs. Marek Vasut tested this support and reported issues
->   with it.
->
->   v4l2_pipeline_inherit_controls() used the media graph walk APIs, but
->   that walks both sink and source pads, so if there are multiple paths
->   enabled to video capture devices, controls would be added to the wrong
->   video capture device, and no controls added to the other enabled
->   capture devices.
->
->   These issues have been fixed. Control inheritance works correctly now
->   even with multiple enabled capture paths, and (for example)
->   simultaneous capture from prpenc and prpvf works also, and each with
->   independent scaling, CSC, and controls. For example prpenc can be
->   capturing with a 90 degree rotation, while prpvf is capturing with
->   vertical flip.
->
->   So the v4l2_pipeline_inherit_controls() patch has been dropped. The
->   new version of control inheritance could be made generically available,
->   but it would be more involved to incorporate it into v4l2-core.
->
-> - A new function imx_media_fill_default_mbus_fields() is added to setup
->   colorimetry at sink pads, and these are propagated to source pads.
->
-> - Ensure that the current sink and source rectangles meet alignment
->   restrictions before applying a new rotation control setting in
->   prp-enc/vf subdevices.
->
-> - Chain the s_stream() subdev calls instead of implementing a custom
->   stream on/off function that attempts to call a fixed set of subdevices
->   in a pipeline in the correct order. This also simplifies imx6-mipi-csi2
->   subdevice, since the correct MIPI CSI-2 startup sequence can be
->   enforced completely in s_stream(), and s_power() is no longer
->   required. This also paves the way for more arbitrary OF graphs
->   external to the i.MX6.
->
-> - Converted the v4l2_subdev and media_entity ops structures to const.
->
+Hi Tim,
 
-Hi Steve,
+On 06/01/2017 05:25 PM, Tim Harvey wrote:
+> 
+> 
+> Hi Steve,
+> 
+> I've applied adv7180 device-tree config for the Gateworks ventana
+> boards on top of your imx-media-staging-md-v15 github branch but am
+> not able to get it to work.
+> 
+> Here's my device-tree patch that adds adv7180 to the GW54xx connected
+> to IPU2_CSI1:
+> --- a/arch/arm/boot/dts/imx6q-gw54xx.dts
+> +++ b/arch/arm/boot/dts/imx6q-gw54xx.dts
 
-I've applied adv7180 device-tree config for the Gateworks ventana
-boards on top of your imx-media-staging-md-v15 github branch but am
-not able to get it to work.
 
-Here's my device-tree patch that adds adv7180 to the GW54xx connected
-to IPU2_CSI1:
---- a/arch/arm/boot/dts/imx6q-gw54xx.dts
-+++ b/arch/arm/boot/dts/imx6q-gw54xx.dts
-@@ -18,6 +18,76 @@
-        compatible = "gw,imx6q-gw54xx", "gw,ventana", "fsl,imx6q";
- };
+I haven't studied your device-tree in detail yet, I'll try to have a
+better look this weekend.
 
-+&i2c3 {
-+       adv7180: camera@20 {
-+               compatible = "adi,adv7180";
-+               pinctrl-names = "default";
-+               pinctrl-0 = <&pinctrl_adv7180>;
-+               reg = <0x20>;
-+               powerdown-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
-+               interrupt-parent = <&gpio3>;
-+               interrupts = <30 GPIO_ACTIVE_LOW>;
-+               inputs = <0x00 0x01 0x02>;
-+               input-names = "ADV7180 Composite on Ain1",
-+                             "ADV7180 Composite on Ain2",
-+                             "ADV7180 Composite on Ain3";
-+
-+               port {
-+                       adv7180_to_ipu2_csi1_mux: endpoint {
-+                               remote-endpoint =
-<&ipu2_csi1_mux_from_parallel_sensor>;
-+                               bus-width = <8>;
-+                       };
-+               };
-+       };
-+};
-+
-+&ipu2_csi1_from_ipu2_csi1_mux {
-+       bus-width = <8>;
-+};
-+
-+&ipu2_csi1_mux_from_parallel_sensor {
-+       remote-endpoint = <&adv7180_to_ipu2_csi1_mux>;
-+       bus-width = <8>;
-+};
-+
-+&ipu2_csi1 {
-+       pinctrl-names = "default";
-+       pinctrl-0 = <&pinctrl_ipu2_csi1>;
-+
-+       /* enable frame interval monitor on this port */
-+       fim {
-+               status = "okay";
-+       };
-+};
-+
- &sata {
-        status = "okay";
- };
-+
-+&iomuxc {
-+       video {
-+               pinctrl_adv7180: adv7180grp {
-+                       fsl,pins = <
-+                               MX6QDL_PAD_EIM_D30__GPIO3_IO30
- 0x0001b0b0
-+                               MX6QDL_PAD_EIM_D31__GPIO3_IO31
- 0x4001b0b0
-+                       >;
-+               };
-+
-+               pinctrl_ipu2_csi1: ipu2_csi1grp { /* IPU2_CSI1: 8-bit input */
-+                       fsl,pins = <
-+                               MX6QDL_PAD_EIM_EB2__IPU2_CSI1_DATA19    0x1b0b0
-+                               MX6QDL_PAD_EIM_D16__IPU2_CSI1_DATA18    0x1b0b0
-+                               MX6QDL_PAD_EIM_D18__IPU2_CSI1_DATA17    0x1b0b0
-+                               MX6QDL_PAD_EIM_D19__IPU2_CSI1_DATA16    0x1b0b0
-+                               MX6QDL_PAD_EIM_D20__IPU2_CSI1_DATA15    0x1b0b0
-+                               MX6QDL_PAD_EIM_D26__IPU2_CSI1_DATA14    0x1b0b0
-+                               MX6QDL_PAD_EIM_D27__IPU2_CSI1_DATA13    0x1b0b0
-+                               MX6QDL_PAD_EIM_A17__IPU2_CSI1_DATA12    0x1b0b0
-+                               MX6QDL_PAD_EIM_D29__IPU2_CSI1_VSYNC     0x1b0b0
-+                               MX6QDL_PAD_EIM_EB3__IPU2_CSI1_HSYNC     0x1b0b0
-+                               MX6QDL_PAD_EIM_A16__IPU2_CSI1_PIXCLK    0x1b0b0
-+                       >;
-+               };
-+       };
-+};
-+
+<snip>
 
-Here's my userspace test commands:
+> 
+> 
+> Here's my userspace test commands:
+> 
+> media-ctl -r # reset all links
+> export outputfmt="UYVY2X8/720x480"
+> # Setup links (ADV7180 IPU2_CSI1)
+> media-ctl -l '"adv7180 2-0020":0 -> "ipu2_csi1_mux":1[1]'
+> media-ctl -l '"ipu2_csi1_mux":2 -> "ipu2_csi1":0[1]'
+> media-ctl -l '"ipu2_csi1":1 -> "ipu2_vdic":0[1]'
+> media-ctl -l '"ipu2_vdic":2 -> "ipu2_ic_prp":0[1]'
+> media-ctl -l '"ipu2_ic_prp":2 -> "ipu2_ic_prpvf":0[1]'
+> media-ctl -l '"ipu2_ic_prpvf":1 -> "ipu2_ic_prpvf capture":0[1]'
+> # Configure pads
+> media-ctl -V "'adv7180 2-0020':0 [fmt:UYVY2X8/720x480]"
+> media-ctl -V "'ipu2_csi1_mux':2 [fmt:UYVY2X8/720x480 field:interlaced]"
+> media-ctl -V "'ipu2_csi1':1 [fmt:UYVY2X8/720x480 field:interlaced]"
+> media-ctl -V "'ipu2_vdic':2 [fmt:UYVY2X8/720x480 field:none]"
+> media-ctl -V "'ipu2_ic_prp':2 [fmt:AYUV32/720x480 field:none]"
+> media-ctl -V "'ipu2_ic_prpvf':1 [fmt:$outputfmt field:none]"
+> ^^^^ no errors up to this point; streaming can now begin on
+> 'ipu2_ic_prpvf capture'
+> 
+> # select input
+> v4l2-ctl --device /dev/video3 -i0 # 0=AIN1 1=AIN2 2=AIN3
+> VIDIOC_S_INPUT: failed: Inappropriate ioctl for device
+> ^^^^ /sys/class/video4linux/v4l-subdev2/name is 'ipu2_ic_prpvf
+> capture' - is this not right?
 
-media-ctl -r # reset all links
-export outputfmt="UYVY2X8/720x480"
-# Setup links (ADV7180 IPU2_CSI1)
-media-ctl -l '"adv7180 2-0020":0 -> "ipu2_csi1_mux":1[1]'
-media-ctl -l '"ipu2_csi1_mux":2 -> "ipu2_csi1":0[1]'
-media-ctl -l '"ipu2_csi1":1 -> "ipu2_vdic":0[1]'
-media-ctl -l '"ipu2_vdic":2 -> "ipu2_ic_prp":0[1]'
-media-ctl -l '"ipu2_ic_prp":2 -> "ipu2_ic_prpvf":0[1]'
-media-ctl -l '"ipu2_ic_prpvf":1 -> "ipu2_ic_prpvf capture":0[1]'
-# Configure pads
-media-ctl -V "'adv7180 2-0020':0 [fmt:UYVY2X8/720x480]"
-media-ctl -V "'ipu2_csi1_mux':2 [fmt:UYVY2X8/720x480 field:interlaced]"
-media-ctl -V "'ipu2_csi1':1 [fmt:UYVY2X8/720x480 field:interlaced]"
-media-ctl -V "'ipu2_vdic':2 [fmt:UYVY2X8/720x480 field:none]"
-media-ctl -V "'ipu2_ic_prp':2 [fmt:AYUV32/720x480 field:none]"
-media-ctl -V "'ipu2_ic_prpvf':1 [fmt:$outputfmt field:none]"
-^^^^ no errors up to this point; streaming can now begin on
-'ipu2_ic_prpvf capture'
 
-# select input
-v4l2-ctl --device /dev/video3 -i0 # 0=AIN1 1=AIN2 2=AIN3
-VIDIOC_S_INPUT: failed: Inappropriate ioctl for device
-^^^^ /sys/class/video4linux/v4l-subdev2/name is 'ipu2_ic_prpvf
-capture' - is this not right?
+Support for setting sensor inputs from the main video capture nodes
+was long ago removed. Sorry about that, but there were objections to
+reaching across the media graph to make this happen.
 
-# select any supported YUV or RGB pixelformat on the capture device node
-v4l2-ctl --device /dev/video3
---set-fmt-video=width=720,height=480,pixelformat=UYVY
-v4l2-ctl --device /dev/video3 --stream-mmap --stream-to=/x.raw
---stream-count=1 # capture single raw-frame
-[  904.870444] ipu2_ic_prpvf: EOF timeout
-VIDIOC_DQBUF: failed: Input/output error
-[  905.910702] ipu2_ic_prpvf: wait last EOF timeout
-^^^^ not getting any frames
+Until a VIDIOC_SUBDEV_S_INPUT is added to v4l2, you will just need to
+send your analog signal to whichever ADV7180 input is active.
 
-The last patchset of yours I had running on this board was your v3
-patchset - any ideas?
 
-As it looks like things have settled down with this patchset and it
-sounds like it will get merged for 4.13 I'm going to start working on
-a driver for the tda1997x HDMI receiver which is also on this board
-connected to IPU1_CSI0.
 
-Thanks,
+> 
+> # select any supported YUV or RGB pixelformat on the capture device node
+> v4l2-ctl --device /dev/video3
+> --set-fmt-video=width=720,height=480,pixelformat=UYVY
+> v4l2-ctl --device /dev/video3 --stream-mmap --stream-to=/x.raw
+> --stream-count=1 # capture single raw-frame
+> [  904.870444] ipu2_ic_prpvf: EOF timeout
+> VIDIOC_DQBUF: failed: Input/output error
+> [  905.910702] ipu2_ic_prpvf: wait last EOF timeout
+> ^^^^ not getting any frames
+> 
+> The last patchset of yours I had running on this board was your v3
+> patchset - any ideas?
 
-Tim
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Beyond maybe the input selection issue above, not really, your pipeline
+config looks correct.
+
+I have a script for the ADV7180 VDIC -> prpvf pipeline on IPU1 for the
+SabreAuto, I will send to you separately to see if that helps.
+
+
+> 
+> As it looks like things have settled down with this patchset and it
+> sounds like it will get merged for 4.13 I'm going to start working on
+> a driver for the tda1997x HDMI receiver which is also on this board
+> connected to IPU1_CSI0.
+
+Awesome, thanks.
+
+Steve
