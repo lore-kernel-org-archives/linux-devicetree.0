@@ -1,31 +1,38 @@
-From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v11 0/6] FPGA Manager support for altera passive serial
-Date: Fri, 2 Jun 2017 17:49:47 +0200
-Message-ID: <20170602174947.5673f8f2@crub>
-References: <20170525172911.11467-1-stillcompiling@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] Support for USB DRD Phy driver for NS2
+Date: Fri, 2 Jun 2017 08:53:19 -0700
+Message-ID: <4824c415-ea31-f252-7e94-ed3e3b2c064c@gmail.com>
+References: <1496408439-30431-1-git-send-email-raviteja.garimella@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170525172911.11467-1-stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1496408439-30431-1-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Bastian Stender <bst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
 
-On Thu, 25 May 2017 10:29:05 -0700
-Joshua Clayton stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
 
->FPGA Manager passive serial can now support Stratix, Cyclone and Arria
->FPGAs.
+On 06/02/2017 06:00 AM, Raviteja Garimella wrote:
+> 
+> Raviteja Garimella (3):
+>   dt-bindings:phy:Add DT bindings documentation for NS2 USB DRD phy
+>   phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy driver for Northstar2
+>   arm64: dts: NS2: Add USB DRD PHY device tree node
 
-can this series be queued for merging in v4.13 or are there any
-issues with it?
+For future submission can you be consistent in how you create your
+subjects and how PHY vs. Phy or phy is used? For instance this would be
+much better:
 
-Thanks,
-Anatolij
+dt-bindings: phy: Add DT bindings documentation for NS2 USB DRD PHY
+phy: phy-bcm-ns2-usbdrd: Broadcom USB DRD PHY driver for Northstar 2
+
+Thank you
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
