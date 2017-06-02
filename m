@@ -1,96 +1,63 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v4 2/3] dt-bindings: add bindings for rk3128 clock controller
-Date: Fri, 02 Jun 2017 11:24:38 +0200
-Message-ID: <5144625.YTyQlHCbiT@phil>
-References: <1496368045-17746-1-git-send-email-zhangqing@rock-chips.com> <1496368045-17746-3-git-send-email-zhangqing@rock-chips.com>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v8 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Fri, 2 Jun 2017 02:29:39 -0700
+Message-ID: <CAFd5g45en_S0NYgufoET_Lwgu3Rs=7RafsFJZeCUiYCWyxogag@mail.gmail.com>
+References: <20170525064925.16867-1-brendanhiggins@google.com>
+ <20170525064925.16867-5-brendanhiggins@google.com> <1496197001.3354.19.camel@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496368045-17746-3-git-send-email-zhangqing@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Elaine Zhang <zhangqing@rock-chips.com>
-Cc: xf@rock-chips.com, linux-clk@vger.kernel.org, huangtao@rock-chips.com, xxx@rock-chips.com, cl@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, zhengxing@rock-chips.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496197001.3354.19.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Kachalov Anton <mouse-Pma6HLj0uuo@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 2. Juni 2017, 09:47:24 CEST schrieb Elaine Zhang:
-> Add devicetree bindings for Rockchip cru which found on
-> Rockchip SoCs.
-> 
-> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
+I addressed all of your comments in my next revision except the one below.
 
-the binding + binding header did receive an
+>> +     time_left = wait_for_completion_timeout(&bus->cmd_complete,
+>> +                                             bus->adap.timeout);
+>> +
+>> +     spin_lock_irqsave(&bus->lock, flags);
+>> +     bus->msgs = NULL;
+>> +     if (time_left == 0)
+>> +             ret = -ETIMEDOUT;
+>> +     else
+>> +             ret = bus->cmd_err;
+>> +     spin_unlock_irqrestore(&bus->lock, flags);
+>
+> I would make the interrupt handler self-clear msgs and I would copy
+> cmd_err to a separate field (or ensure it's only set by the interrupt
+> handler when msgs is non-NULL, by the completion code).
+>
+> That way you avoid the above lock which is racy, slave activity could
+> get in there and trigger an error interrupt clobbering cmd_err for
+> example no ? Or am I missing something...
 
-	Acked-by: Rob Herring <robh@kernel.org>
+The slave handler does not touch these fields, so that should be fine.
+The only way I can think
+that we could get in this state is if we had some sort of error
+interrupt fire after we handled a
+STOP or previous error; this should not happen, but I think it is
+better to be safe than sorry.
+Nevertheless, I do not think it is necessary to do more than what I
+have already done because
+it would mean the bus is in a pretty bad state anyway. Maybe I should
+just drop the locks here.
 
-in v1 already. Please carry these over when sending new versions.
-[no need to do that for your v4 now though :-) ]
+If you disagree, could you elaborate on what you meant by putting
+cmd_err in a separate field?
+Did you just mean having one for xfer and one for everything else (like resets)?
 
-> ---
->  .../bindings/clock/rockchip,rk3128-cru.txt         | 56 ++++++++++++++++++++++
->  1 file changed, 56 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
-> new file mode 100644
-> index 000000000000..455a9a00a623
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
-> @@ -0,0 +1,56 @@
-> +* Rockchip RK3128 Clock and Reset Unit
-> +
-> +The RK3128 clock controller generates and supplies clock to various
-> +controllers within the SoC and also implements a reset controller for SoC
-> +peripherals.
-> +
-> +Required Properties:
-> +
-> +- compatible: should be "rockchip,rk3128-cru"
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- #clock-cells: should be 1.
-> +- #reset-cells: should be 1.
-> +
-> +Optional Properties:
-> +
-> +- rockchip,grf: phandle to the syscon managing the "general register files"
-> +  If missing pll rates are not changeable, due to the missing pll lock status.
-> +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. All available clocks are defined as
-> +preprocessor macros in the dt-bindings/clock/rk3128-cru.h headers and can be
-> +used in device tree sources. Similar macros exist for the reset sources in
-> +these files.
-> +
-> +External clocks:
-> +
-> +There are several clocks that are generated outside the SoC. It is expected
-> +that they are defined using standard clock bindings with following
-> +clock-output-names:
-> + - "xin24m" - crystal input - required,
-> + - "ext_i2s" - external I2S clock - optional,
-> + - "gmac_clkin" - external GMAC clock - optional
-> +
-> +Example: Clock controller node:
-> +
-> +	cru: cru@20000000 {
-> +		compatible = "rockchip,rk3128-cru";
-> +		reg = <0x20000000 0x1000>;
-> +		rockchip,grf = <&grf>;
-> +
-> +		#clock-cells = <1>;
-> +		#reset-cells = <1>;
-> +	};
-> +
-> +Example: UART controller node that consumes the clock generated by the clock
-> +  controller:
-> +
-> +	uart2: serial@20068000 {
-> +		compatible = "rockchip,serial";
-> +		reg = <0x20068000 0x100>;
-> +		interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
-> +		clock-frequency = <24000000>;
-> +		clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
-> +		clock-names = "sclk_uart", "pclk_uart";
-> +	};
-> 
+>
+>> +     /* If nothing went wrong, return number of messages transferred. */
+>> +     if (ret >= 0)
+>> +             return bus->msgs_index + 1;
+>> +     else
+>> +             return ret;
+>> +}
+>> +
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
