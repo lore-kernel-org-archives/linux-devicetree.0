@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 11/19] drm/sun4i: hdmi: Add A31 specific DDC
- register definitions
-Date: Fri,  2 Jun 2017 18:10:16 +0800
-Message-ID: <20170602101024.18940-12-wens@csie.org>
+Subject: [PATCH 01/19] drm/sun4i: call drm_vblank_init with
+ correct number of crtcs
+Date: Fri,  2 Jun 2017 18:10:06 +0800
+Message-ID: <20170602101024.18940-2-wens@csie.org>
 References: <20170602101024.18940-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHHTYTEQKGQEGSSP5PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBG7TYTEQKGQEHRMAW6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170602101024.18940-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,51 +20,46 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The DDC block for the HDMI controller is different on the A31.
+If we want to have vblank on both pipelines at the same time, we need
+to call drm_vblank_init with num_crtcs = 2.
 
-This patch adds the register definitions.
+Instead, since the crtc init calls correctly set mode_config.num_crtc,
+we can move the drm_vblank_init call to after the crtc init code is
+called, which is the component bind part. Then we can just pass
+mode_config.num_crtc in.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi.h | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_drv.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-index 3a4987ab8da8..08c514672fd3 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-@@ -124,6 +124,32 @@
+diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
+index f19100c91c2b..ed75a779ae4b 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_drv.c
++++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
+@@ -100,11 +100,6 @@ static int sun4i_drv_bind(struct device *dev)
+ 		goto free_drm;
+ 	}
  
- #define SUN4I_HDMI_DDC_FIFO_SIZE	16
+-	/* drm_vblank_init calls kcalloc, which can fail */
+-	ret = drm_vblank_init(drm, 1);
+-	if (ret)
+-		goto free_mem_region;
+-
+ 	drm_mode_config_init(drm);
  
-+/* A31 specific */
-+#define SUN6I_HDMI_DDC_CTRL_REG		0x500
-+#define SUN6I_HDMI_DDC_CTRL_RESET		BIT(31)
-+#define SUN6I_HDMI_DDC_CTRL_START_CMD		BIT(27)
-+#define SUN6I_HDMI_DDC_CTRL_SDA_ENABLE		BIT(6)
-+#define SUN6I_HDMI_DDC_CTRL_SCL_ENABLE		BIT(4)
-+#define SUN6I_HDMI_DDC_CTRL_ENABLE		BIT(0)
+ 	ret = component_bind_all(drm->dev, drm);
+@@ -113,6 +108,11 @@ static int sun4i_drv_bind(struct device *dev)
+ 		goto cleanup_mode_config;
+ 	}
+ 
++	/* drm_vblank_init calls kcalloc, which can fail */
++	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
++	if (ret)
++		goto free_mem_region;
 +
-+#define SUN6I_HDMI_DDC_CMD_REG		0x508
-+#define SUN6I_HDMI_DDC_CMD_EXPLICIT_EDDC_READ	6
-+#define SUN6I_HDMI_DDC_CMD_BYTE_COUNT(count)	((count) << 16)
-+
-+#define SUN6I_HDMI_DDC_ADDR_REG		0x50c
-+#define SUN6I_HDMI_DDC_ADDR_SEGMENT(seg)	(((seg) & 0xff) << 24)
-+#define SUN6I_HDMI_DDC_ADDR_EDDC(addr)		(((addr) & 0xff) << 16)
-+#define SUN6I_HDMI_DDC_ADDR_OFFSET(off)		(((off) & 0xff) << 8)
-+#define SUN6I_HDMI_DDC_ADDR_SLAVE(addr)		(((addr) & 0xff) << 1)
-+
-+#define SUN6I_HDMI_DDC_FIFO_CTRL_REG	0x518
-+#define SUN6I_HDMI_DDC_FIFO_CTRL_CLEAR		BIT(15)
-+
-+#define SUN6I_HDMI_DDC_CLK_REG		0x520
-+/* DDC CLK bit fields are the same, but the formula is not */
-+
-+#define SUN6I_HDMI_DDC_FIFO_DATA_REG	0x580
-+
- enum sun4i_hdmi_pkt_type {
- 	SUN4I_HDMI_PKT_AVI = 2,
- 	SUN4I_HDMI_PKT_END = 15,
+ 	drm->irq_enabled = true;
+ 
+ 	/* Remove early framebuffers (ie. simplefb) */
 -- 
 2.11.0
