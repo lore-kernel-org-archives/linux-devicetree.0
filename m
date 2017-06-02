@@ -1,53 +1,43 @@
-From: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
-Subject: [PATCH] arm64: dts: ls1046a: Add dis_rxdet_inp3_quirk property to USB3 node
-Date: Fri, 2 Jun 2017 10:30:00 +0800
-Message-ID: <1496370600-31442-1-git-send-email-ran.wang_1@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 1/4] phy: rockchip-inno-usb2: add a delay after phy resume
+Date: Fri,  2 Jun 2017 11:20:23 +0800
+Message-ID: <1496373626-27856-2-git-send-email-frank.wang@rock-chips.com>
+References: <1496373626-27856-1-git-send-email-frank.wang@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496373626-27856-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tang Yuantian <Yuantian.Tang-3arQi8VN3Tc@public.gmane.org>, =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta-3arQi8VN3Tc@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Mihai Bantea <mihai.bantea-3arQi8VN3Tc@public.gmane.org>, Jia Hongtao <hongtao.jia-3arQi8VN3Tc@public.gmane.org>, Scott Wood <oss-fOR+EgIDQEHk1uMJSBkQmQ@public.gmane.org>, Liu Gang <Gang.Liu-3arQi8VN3Tc@public.gmane.org>, York Sun <york.sun-3arQi8VN3Tc@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cody.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add "dis_rxdet_inp3_quirk" boolean property to USB3 node. This property
-is used to disable rx detection in P3 PHY mode.
+From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Signed-off-by: Ran Wang <ran.wang_1-3arQi8VN3Tc@public.gmane.org>
+When resume phy, it need about 1.5 ~ 2ms to wait for
+utmi_clk which used for USB controller to become stable.
+
+Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 3 +++
+ drivers/phy/phy-rockchip-inno-usb2.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index f4b8b7e..9137280 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -567,6 +567,7 @@
- 			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
- 		};
+diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
+index 8efe78a..f12dc8d 100644
+--- a/drivers/phy/phy-rockchip-inno-usb2.c
++++ b/drivers/phy/phy-rockchip-inno-usb2.c
+@@ -463,6 +463,9 @@ static int rockchip_usb2phy_power_on(struct phy *phy)
+ 	if (ret)
+ 		return ret;
  
- 		usb1: usb@3000000 {
-@@ -575,6 +576,7 @@
- 			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
- 		};
- 
- 		usb2: usb@3100000 {
-@@ -583,6 +585,7 @@
- 			interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
- 			dr_mode = "host";
- 			snps,quirk-frame-length-adjustment = <0x20>;
-+			snps,dis_rxdet_inp3_quirk;
- 		};
- 
- 		sata: sata@3200000 {
++	/* waiting for the utmi_clk to become stable */
++	usleep_range(1500, 2000);
++
+ 	rport->suspended = false;
+ 	return 0;
+ }
 -- 
-2.1.0.27.g96db324
+2.0.0
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
