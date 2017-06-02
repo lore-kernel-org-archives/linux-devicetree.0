@@ -1,40 +1,61 @@
-From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 0/4] fix some issues for Rockchip usb2-phy and add rk3228 SoCs' support
-Date: Fri,  2 Jun 2017 11:20:22 +0800
-Message-ID: <1496373626-27856-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cody.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [PATCH v2 2/4] phy: rockchip-inno-usb2: increase otg sm work first schedule time
+Date: Fri,  2 Jun 2017 11:20:24 +0800
+Message-ID: <1496373626-27856-3-git-send-email-frank.wang@rock-chips.com>
+References: <1496373626-27856-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496373626-27856-1-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, william.wu@rock-chips.com
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-These series of patches fix some issues for rockchip usb2-phy and amend
-usb2-phy framework to support one phy which comprises with two host-ports.
+From: William Wu <william.wu@rock-chips.com>
 
-In addition, this change also add rk3228 usb2-phy support.
+In rockchip-inno-usb2 phy driver, we use otg_sm_work to
+dynamically manage power consumption for phy otg-port.
+If the otg-port works as peripheral mode and does not
+communicate with usb host, we will suspend phy.
 
-Changes from v1:
- - Replaced rk322x with rk3228 for PATCH 4/4.
- - Included devicetree people in the recipient list.
+But once suspend phy, the phy no longer has any internal
+clock running, include the utmi_clk which supplied for
+usb controller. So if we suspend phy before usb controller
+init, it will cause usb controller fail to initialize.
 
-Frank Wang (1):
-  phy: rockchip-inno-usb2: add support of usb2-phy for rk3228 SoCs
+Specifically, without this patch, the observed order is:
+ 1. unplug usb cable
+ 2. start system, do dwc2 controller probe
+ 3. dwc2_lowlevel_hw_enable()
+    - phy_init()
+     - rockchip_usb2phy_init()
+      - schedule otg_sm_work after 2s
+        put phy in suspend, and close utmi_clk
+ 4. dwc2_hsotg_udc_start() - fail to initialize the usb core
 
-William Wu (3):
-  phy: rockchip-inno-usb2: add a delay after phy resume
-  phy: rockchip-inno-usb2: increase otg sm work first schedule time
-  phy: rockchip-inno-usb2: add one phy comprises with two host-ports
-    support
+Generally, dwc2_hsotg_udc_start() can be called within 5s
+after start system on Rockchip platform, so we increase the
+the first schedule delay time to 6s for otg_sm_work afer usb
+controller calls phy_init(), this can make sure that the usb
+controller completes initialization before phy enter suspend.
 
- .../bindings/phy/phy-rockchip-inno-usb2.txt        |  1 +
- drivers/phy/phy-rockchip-inno-usb2.c               | 74 ++++++++++++++++++++--
- 2 files changed, 71 insertions(+), 4 deletions(-)
+Signed-off-by: William Wu <william.wu@rock-chips.com>
+Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+---
+ drivers/phy/phy-rockchip-inno-usb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
+index f12dc8d..d6e459d 100644
+--- a/drivers/phy/phy-rockchip-inno-usb2.c
++++ b/drivers/phy/phy-rockchip-inno-usb2.c
+@@ -421,7 +421,7 @@ static int rockchip_usb2phy_init(struct phy *phy)
+ 				goto out;
+ 
+ 			schedule_delayed_work(&rport->otg_sm_work,
+-					      OTG_SCHEDULE_DELAY);
++					      OTG_SCHEDULE_DELAY * 3);
+ 		} else {
+ 			/* If OTG works in host only mode, do nothing. */
+ 			dev_dbg(&rport->phy->dev, "mode %d\n", rport->mode);
 -- 
 2.0.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
