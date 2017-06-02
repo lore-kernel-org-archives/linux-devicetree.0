@@ -1,75 +1,138 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v5 04/11] arm64: dts: Initial DTS files for Broadcom
- Stingray SOC
-Date: Thu, 1 Jun 2017 22:37:47 -0700
-Message-ID: <abeca9ac-487c-b6dc-1397-4134b0442909@gmail.com>
-References: <1495790704-2438-1-git-send-email-anup.patel@broadcom.com>
- <1495790704-2438-5-git-send-email-anup.patel@broadcom.com>
+From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU doorbells
+Date: Fri, 2 Jun 2017 11:15:39 +0530
+Message-ID: <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+ <1495621003-4291-3-git-send-email-sudeep.holla@arm.com> <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
+ <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com> <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1495790704-2438-5-git-send-email-anup.patel@broadcom.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Scott Branden <scott.branden@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
+On Wed, May 31, 2017 at 10:38 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, May 25, 2017 at 02:23:44PM +0100, Sudeep Holla wrote:
+>>
+>> >>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 46 ++++++++++++++++++++--
+>> >>  1 file changed, 43 insertions(+), 3 deletions(-)
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>> >> index 4971f03f0b33..bd9a3a267caf 100644
+>> >> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>> >> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>> >> @@ -10,21 +10,42 @@ STAT register and the remote clears it after having read the data.
+>> >>  The last channel is specified to be a 'Secure' resource, hence can't be
+>> >>  used by Linux running NS.
+>> >>
+>> >> +The MHU drives the interrupt signal using a 32-bit register, with all
+>> >> +32-bits logically ORed together. It provides a set of registers to
+>> >> +enable software to set, clear and check the status of each of the bits
+>> >> +of this register independently. The use of 32 bits per interrupt line
+>> >> +enables software to provide more information about the source of the
+>> >> +interrupt. For example, each bit of the register can be associated with
+>> >> +a type of event that can contribute to raising the interrupt. Each of
+>> >> +the 32-bits can be used as "doorbell" to alert the remote processor.
+>> >> +
+>> >>  Mailbox Device Node:
+>> >>  ====================
+>> >>
+>> >>  Required properties:
+>> >>  --------------------
+>> >> -- compatible:          Shall be "arm,mhu" & "arm,primecell"
+>> >> +- compatible:          Shall be "arm,primecell" and one of the below:
+>> >> +                       "arm,mhu" - if the controller doesn't support
+>> >> +                                   doorbell model
+>> >> +                       "arm,mhu-doorbell" - if the controller supports
+>> >> +                                   doorbell model
+>> >>  - reg:                 Contains the mailbox register address range (base
+>> >>                         address and length)
+>> >> -- #mbox-cells          Shall be 1 - the index of the channel needed.
+>> >> +- #mbox-cells          Shall be 1 - the index of the channel needed when
+>> >> +                       compatible is "arm,mhu"
+>> >> +                       Shall be 2 - the index of the channel needed, and
+>> >> +                       the index of the doorbell bit with the channel when
+>> >> +                       compatible is "arm,mhu-doorbell"
+>> >>  - interrupts:          Contains the interrupt information corresponding to
+>> >> -                       each of the 3 links of MHU.
+>> >> +                       each of the 3 physical channels of MHU namely low
+>> >> +                       priority non-secure, high priority non-secure and
+>> >> +                       secure channels.
+>> >>
+>> >>  Example:
+>> >>  --------
+>> >>
+>> >> +1. Controller which doesn't support doorbells
+>> >> +
+>> >>         mhu: mailbox@2b1f0000 {
+>> >>                 #mbox-cells = <1>;
+>> >>                 compatible = "arm,mhu", "arm,primecell";
+>> >> @@ -41,3 +62,22 @@ used by Linux running NS.
+>> >>                 reg = <0 0x2e000000 0x4000>;
+>> >>                 mboxes = <&mhu 1>; /* HP-NonSecure */
+>> >>         };
+>> >> +
+>> >> +2. Controller which supports doorbells
+>> >> +
+>> >> +       mhu: mailbox@2b1f0000 {
+>> >> +               #mbox-cells = <2>;
+>> >> +               compatible = "arm,mhu-doorbell", "arm,primecell";
+>> >> +               reg = <0 0x2b1f0000 0x1000>;
+>> >> +               interrupts = <0 36 4>, /* LP-NonSecure */
+>> >> +                            <0 35 4>, /* HP-NonSecure */
+>> >> +                            <0 37 4>; /* Secure */
+>> >> +               clocks = <&clock 0 2 1>;
+>> >> +               clock-names = "apb_pclk";
+>> >> +       };
+>> >> +
+>> >> +       mhu_client: scb@2e000000 {
+>> >> +               compatible = "arm,scpi";
+>> >> +               reg = <0 0x2e000000 0x200>;
+>> >> +               mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
+>> >> +       };
+>> >>
+>> > Every MHU controller can by driven as "arm,mhu-doorbell" or "arm,mhu"
+>> > equally fine. So you are basically smuggling a s/w feature into DT.
+>> >
+>>
+>> I disagree, the spec clearly says each bit can be used for different
+>> event and hence we need a way to specify that in DT when used as doorbell.
+>
+> I think the point is that you should not continue to use both. The
+>
+FYKI my point (here and in other threads) is that current MHU
+driver/bindings can very well support Sudeep's usecase.
 
-On 05/26/2017 02:24 AM, Anup Patel wrote:
-> The Broadcom Stingray SoC is a new member in Broadcom iProc
-> SoC family.
-> 
-> This patch adds initial DTS files for Broadcom Stingray SoC
-> and two of its reference boards (bcm958742k and bcm958742t).
-> 
-> We have lot of reference boards and large number of devices
-> in Broadcom Stingray SoC so eventually we will have quite
-> a few DTS files for Stingray. To tackle, we have added a
-> separate directory for Stingray DTS files.
+> single cell usage should be deprecated. Maybe you'll have to encode the
+> 2nd cell when not used as 0 means bit 0?
+>
+> Arguably, you don't even need a new compatible. #mbox-cells tells you
+> whether to use the old or new binding. I'm fine either way though.
+>
+In mailbox terminology, there is a channel and command(s) that we
+send/recv over it. OOB data passing is optional.
 
-So I was going to apply this, but...
+MHU driver accepts a command as a u32. Sudeep's usecase has commands
+of the form of BIT(x)  ... an instance of u32.
 
+Instead of having his client driver pass BIT(x) like other MHU
+clients, he wants to modify the driver and bindings to specify 'x' via
+second cell of mboxes.  That would have made sense (and already
+implemented) if the controller could send only 1 bit at a time and
+every client/protocol used exactly 1 command - both of which are not
+true.
 
-> +	scr {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x61000000 0x05000000>;
+I even offered Sudeep to share his client driver and I'll adapt it for
+him, but her refuses to either see my point or share his code.
 
-So you corrected the ranges property here...
-
-> +
-> +		gic: interrupt-controller@63c00000 {
-
-but you kept the original unit address here, which does not match the
-reg property, could you fix that through your entire submission?
-
-> +			compatible = "arm,gic-v3";
-> +			#interrupt-cells = <3>;
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			ranges;
-> +			interrupt-controller;
-> +			reg = <0x02c00000 0x010000>, /* GICD */
-> +			      <0x02e00000 0x600000>; /* GICR */
-
-> +	hsls {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x0 0x0 0x68900000 0x17700000>;
-
-Same here.
-
-> +
-> +		uart0: uart@68a00000 {
-> +			device_type = "serial";
-> +			compatible = "snps,dw-apb-uart";
-> +			reg = <0x00100000 0x1000>;
-
-and here and all other sub nodes
--- 
-Florian
+Cheers!
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
