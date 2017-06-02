@@ -1,77 +1,36 @@
-From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 3/7] dt-bindings: net: Document Intel pch_gbe binding
-Date: Fri, 2 Jun 2017 16:40:38 -0700
-Message-ID: <20170602234042.22782-4-paul.burton@imgtec.com>
-References: <20170602234042.22782-1-paul.burton@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCHv3 0/4] Add Altera I2C Controller Driver
+Date: Fri,  2 Jun 2017 18:52:35 -0500
+Message-ID: <1496447559-19782-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170602234042.22782-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jarod Wilson <jarod-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Eric Dumazet <edumazet-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce documentation for a device tree binding for the Intel Platform
-Controller Hub (PCH) GigaBit Ethernet (GBE) device. Although this is a
-PCIe device & thus largely auto-detectable, this binding will be used to
-provide the driver with the PHY reset GPIO.
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Eric Dumazet <edumazet-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Jarod Wilson <jarod-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+This patch seris add the Altera I2C Controller driver for use in FPGAs.
 
----
+Thor Thayer (4):
+  ARM: dts: socfpga: Add Altera I2C Controller to CycloneV
+  MAINTAINERS: Add Altera I2C Controller Driver
+  dt-bindings: i2c: Add Altera I2C Controller
+  i2c: altera: Add Altera I2C Controller driver
 
-Changes in v3:
-- New patch.
+ .../devicetree/bindings/i2c/i2c-altera.txt         |  39 ++
+ MAINTAINERS                                        |   5 +
+ arch/arm/boot/dts/socfpga.dtsi                     |  13 +-
+ arch/arm/boot/dts/socfpga_cyclone5_socdk.dts       |  28 +-
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-altera.c                    | 509 +++++++++++++++++++++
+ 7 files changed, 601 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
+ create mode 100644 drivers/i2c/busses/i2c-altera.c
 
-Changes in v2: None
-
- Documentation/devicetree/bindings/net/pch_gbe.txt | 25 +++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/pch_gbe.txt
-
-diff --git a/Documentation/devicetree/bindings/net/pch_gbe.txt b/Documentation/devicetree/bindings/net/pch_gbe.txt
-new file mode 100644
-index 000000000000..5de479c26b04
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/pch_gbe.txt
-@@ -0,0 +1,25 @@
-+Intel Platform Controller Hub (PCH) GigaBit Ethernet (GBE)
-+
-+Required properties:
-+- compatible:		Should be the PCI vendor & device ID, eg. "pci8086,8802".
-+- reg:			Should be a PCI device number as specified by the PCI bus
-+			binding to IEEE Std 1275-1994.
-+- phy-reset-gpios:	Should be a GPIO list containing a single GPIO that
-+			resets the attached PHY when active.
-+
-+Example:
-+
-+	eg20t_mac@2,0,1 {
-+		compatible = "pci8086,8802";
-+		reg = <0x00020100 0 0 0 0>;
-+		phy-reset-gpios = <&eg20t_gpio 6
-+				   GPIO_ACTIVE_LOW>;
-+	};
-+
-+	eg20t_gpio: eg20t_gpio@2,0,2 {
-+		compatible = "pci8086,8803";
-+		reg = <0x00020200 0 0 0 0>;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+	};
 -- 
-2.13.0
+2.7.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
