@@ -1,95 +1,60 @@
-From: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] ARM: dts: imx7: add NAND support
-Date: Fri, 2 Jun 2017 20:09:38 +0000
-Message-ID: <1dd0abe0-81a3-d4ea-69c1-98fe354f91f4@nxp.com>
-References: <20170601192044.6548-1-stefan@agner.ch>
- <3c086d95-96e5-71ec-b44f-12ed41903fcf@nxp.com>
- <e57ba49dc2b91b70b5848875e28b17ae@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: quoted-printable
+From: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v12 1/6] fpga: Add flag to indicate SPI bitstream is bit-reversed
+Date: Fri,  2 Jun 2017 13:30:47 -0700
+Message-ID: <684ea151ba9aa2c6555a299daf56552ddc11f596.1496434383.git.stillcompiling@gmail.com>
+References: <20170525172911.11467-1-stillcompiling@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e57ba49dc2b91b70b5848875e28b17ae-XLVq0VzYD2Y@public.gmane.org>
-Content-Language: en-US
-Content-ID: <04C6D6B187BD5F4AB360BAA5C8138663-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <20170525172911.11467-1-stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org" <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM1dQTEkxZZdg@public.gmane.org
+To: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Bastian Stender <bst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
 
+Add a flag that is passed to the write_init() callback,
+indicating that the SPI bitstream starts with LSB first.
+SPI controllers usually send data with MSB first. If an
+FPGA expects bitstream data as LSB first, the data must
+be reversed either by the SPI controller or by the driver.
 
-On 06/01/2017 08:48 PM, Stefan Agner wrote:
-> Hi Han,
->
-> On 2017-06-01 14:14, Han Xu wrote:
->> On 06/01/2017 02:20 PM, Stefan Agner wrote:
->>> This are the missing device tree parts to add NAND support for i.MX 7.
->>> See previous patchset:
->>> https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flk=
-ml.org%2Flkml%2F2017%2F4%2F21%2F832&data=3D01%7C01%7Chan.xu%40nxp.com%7C3b9=
-081a68c94476c4a2108d4a9235512%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0&sdata=
-=3DmQ2aq5rW%2B9uADY5mSzFxk8P6bAVq%2BosPJQAi0PL9SQg%3D&reserved=3D0
->>>
->>> The previous version also included driver changes, which are already
->>> merged.
->>>
->>> --
->>> Stefan
->>>
->>> Changes since v2:
->>> - Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficen=
-t
->> Hi Stefan, sorry I didn't reply your last patch. I was unable to fully
->> test on i.MX7 since the work bandwidth, but the quick test shows DMA
->> cannot work WITHOUT IMX7D_NAND_ROOT_CLK on my side, I will fully check
->> it tomorrow morning and let you know the result.
-> How did you test that?
->
-> Since DMA can only use NAND in i.MX 7, testing is somewhat hard.
->
-> Fact is, I can access DMA registers using just NAND_USDHC_BUS_CLK_ROOT
->
-> mw.l 0x30388980 0x11000000 # Enable NAND_USDHC_BUS_CLK_ROOT
-> mw.l 0x3038aa00 0x00000000 # Enable NAND_CLK_ROOT
+Alternatively the bitstream could be prepared as bit-reversed
+to avoid the bit-swapping while sending. This flag indicates
+such bit-reversed SPI bitstream. The low-level driver will
+deal with the flag and perform bit-reversing if needed.
 
-NAND_ROOT_CLK offset is 0x4140 which control the CCGR20 to gate on/off=20
-the rawnand module, including APBH/GPMI/BCH. Without enabling it, the=20
-mxs-dma hangs during initialization. I guess this bit was enabled in=20
-some early stage.
+Signed-off-by: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
 
-> md.l 0x33000100 0 # Access APBH_CH0_CURCMDAR
->
-> This works for me.
->
-> I can *boot* from a UBIFS using this driver and Linux 4.12-rc1 with my
-> patchset applied...
->
-> Monitoring clocks in /sys/kernel/debug/clk/clk_summary show that
-> NAND_ROOT_CLK gets turned off and back on if NAND access happens, the
-> system seems stable.
->
-> All that said, this patchset v3 actually does not remove the
-> NAND_ROOT_CLK as intended to. Will send a v4.
->
-> --
-> Stefan
->
->>> - Dropped driver changes, alreay merged
->>>
->>> Changes since v1:
->>> - Make clks_count const
->>> - Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
->>>
->>> Stefan Agner (2):
->>>     ARM: dts: imx7: add GPMI NAND
->>>     ARM: dts: imx7-colibri: add NAND support
->>>
->>>    arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++
->>>    arch/arm/boot/dts/imx7s.dtsi        | 31 +++++++++++++++++++++++++++=
-++++
->>>    2 files changed, 40 insertions(+)
->>>
+Changes from v11 (all in patch 4/4)
+- Change "Altera V FPGA" to simply "Altera FPGA"
+- Change the devicetree name to a generic "fpga: fpga@0"
+  from "fpga_spi: cyclonespi@0"
+
+ include/linux/fpga/fpga-mgr.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/include/linux/fpga/fpga-mgr.h b/include/linux/fpga/fpga-mgr.h
+index b4ac24c4411d..01c348ca38b7 100644
+--- a/include/linux/fpga/fpga-mgr.h
++++ b/include/linux/fpga/fpga-mgr.h
+@@ -67,10 +67,12 @@ enum fpga_mgr_states {
+  * FPGA Manager flags
+  * FPGA_MGR_PARTIAL_RECONFIG: do partial reconfiguration if supported
+  * FPGA_MGR_EXTERNAL_CONFIG: FPGA has been configured prior to Linux booting
++ * FPGA_MGR_BITSTREAM_LSB_FIRST: SPI bitstream bit order is LSB first
+  */
+ #define FPGA_MGR_PARTIAL_RECONFIG	BIT(0)
+ #define FPGA_MGR_EXTERNAL_CONFIG	BIT(1)
+ #define FPGA_MGR_ENCRYPTED_BITSTREAM	BIT(2)
++#define FPGA_MGR_BITSTREAM_LSB_FIRST	BIT(3)
+ 
+ /**
+  * struct fpga_image_info - information specific to a FPGA image
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
