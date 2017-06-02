@@ -1,86 +1,96 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: [PATCH v2] ARM: dts: AM43XX: Remove min and max voltage values for
- dcdc3
-Date: Fri, 2 Jun 2017 14:54:01 +0530
-Message-ID: <1496395441-29526-1-git-send-email-j-keerthy@ti.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v4 2/3] dt-bindings: add bindings for rk3128 clock controller
+Date: Fri, 02 Jun 2017 11:24:38 +0200
+Message-ID: <5144625.YTyQlHCbiT@phil>
+References: <1496368045-17746-1-git-send-email-zhangqing@rock-chips.com> <1496368045-17746-3-git-send-email-zhangqing@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com
-Cc: devicetree@vger.kernel.org, j-keerthy@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496368045-17746-3-git-send-email-zhangqing@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Elaine Zhang <zhangqing@rock-chips.com>
+Cc: xf@rock-chips.com, linux-clk@vger.kernel.org, huangtao@rock-chips.com, xxx@rock-chips.com, cl@rock-chips.com, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, zhengxing@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-dcdc3 supplies to DDR on AM43x series. When we set both
-min and max values to the same value. The regulator framework
-sets that particular voltage. This is bad as we are changing
-the ddr voltage when executing from ddr. Hence remove the min and
-max values. The ddr supply voltage shall be set from bootloader
-when not executing from ddr and not while executing from kernel.
+Am Freitag, 2. Juni 2017, 09:47:24 CEST schrieb Elaine Zhang:
+> Add devicetree bindings for Rockchip cru which found on
+> Rockchip SoCs.
+> 
+> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
 
-The previous discussion can be found here:
+the binding + binding header did receive an
 
-http://www.spinics.net/lists/devicetree/msg56399.html
+	Acked-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Keerthy <j-keerthy@ti.com>
----
+in v1 already. Please carry these over when sending new versions.
+[no need to do that for your v4 now though :-) ]
 
-Changes in v2:
-
-  * Corrected $subject
-
- arch/arm/boot/dts/am437x-gp-evm.dts  | 2 --
- arch/arm/boot/dts/am437x-sk-evm.dts  | 2 --
- arch/arm/boot/dts/am43x-epos-evm.dts | 2 --
- 3 files changed, 6 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 397e98b..29a538e 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -549,8 +549,6 @@
- 
- 		dcdc3: regulator-dcdc3 {
- 			regulator-name = "vdcdc3";
--			regulator-min-microvolt = <1500000>;
--			regulator-max-microvolt = <1500000>;
- 			regulator-boot-on;
- 			regulator-always-on;
- 			regulator-state-mem {
-diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-index a62e158..2c6bf06 100644
---- a/arch/arm/boot/dts/am437x-sk-evm.dts
-+++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-@@ -451,8 +451,6 @@
- 
- 		dcdc3: regulator-dcdc3 {
- 			regulator-name = "vdds_ddr";
--			regulator-min-microvolt = <1500000>;
--			regulator-max-microvolt = <1500000>;
- 			regulator-boot-on;
- 			regulator-always-on;
- 			regulator-state-mem {
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index f6648ab..54f40f3 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -442,8 +442,6 @@
- 
- 		dcdc3: regulator-dcdc3 {
- 			regulator-name = "vdcdc3";
--			regulator-min-microvolt = <1500000>;
--			regulator-max-microvolt = <1500000>;
- 			regulator-boot-on;
- 			regulator-always-on;
- 		};
--- 
-1.9.1
+> ---
+>  .../bindings/clock/rockchip,rk3128-cru.txt         | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+> new file mode 100644
+> index 000000000000..455a9a00a623
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/rockchip,rk3128-cru.txt
+> @@ -0,0 +1,56 @@
+> +* Rockchip RK3128 Clock and Reset Unit
+> +
+> +The RK3128 clock controller generates and supplies clock to various
+> +controllers within the SoC and also implements a reset controller for SoC
+> +peripherals.
+> +
+> +Required Properties:
+> +
+> +- compatible: should be "rockchip,rk3128-cru"
+> +- reg: physical base address of the controller and length of memory mapped
+> +  region.
+> +- #clock-cells: should be 1.
+> +- #reset-cells: should be 1.
+> +
+> +Optional Properties:
+> +
+> +- rockchip,grf: phandle to the syscon managing the "general register files"
+> +  If missing pll rates are not changeable, due to the missing pll lock status.
+> +
+> +Each clock is assigned an identifier and client nodes can use this identifier
+> +to specify the clock which they consume. All available clocks are defined as
+> +preprocessor macros in the dt-bindings/clock/rk3128-cru.h headers and can be
+> +used in device tree sources. Similar macros exist for the reset sources in
+> +these files.
+> +
+> +External clocks:
+> +
+> +There are several clocks that are generated outside the SoC. It is expected
+> +that they are defined using standard clock bindings with following
+> +clock-output-names:
+> + - "xin24m" - crystal input - required,
+> + - "ext_i2s" - external I2S clock - optional,
+> + - "gmac_clkin" - external GMAC clock - optional
+> +
+> +Example: Clock controller node:
+> +
+> +	cru: cru@20000000 {
+> +		compatible = "rockchip,rk3128-cru";
+> +		reg = <0x20000000 0x1000>;
+> +		rockchip,grf = <&grf>;
+> +
+> +		#clock-cells = <1>;
+> +		#reset-cells = <1>;
+> +	};
+> +
+> +Example: UART controller node that consumes the clock generated by the clock
+> +  controller:
+> +
+> +	uart2: serial@20068000 {
+> +		compatible = "rockchip,serial";
+> +		reg = <0x20068000 0x100>;
+> +		interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
+> +		clock-frequency = <24000000>;
+> +		clocks = <&cru SCLK_UART2>, <&cru PCLK_UART2>;
+> +		clock-names = "sclk_uart", "pclk_uart";
+> +	};
+> 
