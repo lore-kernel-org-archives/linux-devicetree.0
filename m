@@ -1,474 +1,102 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 10/11] gpio: mvebu: Add support for the Armada 7K/8K SoCs
-Date: Fri,  2 Jun 2017 16:23:17 +0200
-Message-ID: <8666a1e32d95ecb6b2752cb68de6d988c1bd901c.1496413293.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v2 01/11] pinctrl: dt-bindings: add documentation for AP806
+ pin controllers
+Date: Fri,  2 Jun 2017 16:23:08 +0200
+Message-ID: <2d89fbc10d07c890336eabbd362e55cb2e5055b5.1496413293.git-series.gregory.clement@free-electrons.com>
 References: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
 References: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Armada 7K and 8K SoCs use the same gpio controller as most of the
-other mvebu SoCs. However, the main difference is that the GPIO
-controller is part of a bigger system controller, and a syscon is used to
-control the overall system controller. Therefore, the driver needs to be
-adjusted to retrieve the regmap of the syscon to access registers, and
-account for the fact that registers are located at a certain offset
-within the regmap.
+Document the device tree binding for the pin controllers found on the
+Armada 7K and Armada 8K SoCs.
 
-This commit add the support of the syscon and introduce a new variant for
-this case.
-
-It was based on the preliminary work of Thomas Petazzoni.
-
-Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/gpio/gpio-mvebu.c | 212 +++++++++++++++++++++++++--------------
- 1 file changed, 141 insertions(+), 71 deletions(-)
+ Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt | 53 ++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 46 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index 3d03740a20e7..5edb04abd7d7 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -42,6 +42,7 @@
- #include <linux/irq.h>
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/pinctrl/consumer.h>
-@@ -88,6 +89,7 @@
- #define MVEBU_GPIO_SOC_VARIANT_ORION	0x1
- #define MVEBU_GPIO_SOC_VARIANT_MV78200	0x2
- #define MVEBU_GPIO_SOC_VARIANT_ARMADAXP 0x3
-+#define MVEBU_GPIO_SOC_VARIANT_A8K	0x4
+diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+index 888c50e0d64f..4228d158fb31 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+@@ -28,14 +28,53 @@ Required properties:
+  - compatible: must be: "marvell,ap806-clock"
+  - #clock-cells: must be set to 1
  
- #define MVEBU_MAX_GPIO_PER_BANK		32
- 
-@@ -108,6 +110,7 @@ struct mvebu_pwm {
- struct mvebu_gpio_chip {
- 	struct gpio_chip   chip;
- 	struct regmap     *regs;
-+	u32		   offset;
- 	struct regmap     *percpu_regs;
- 	int		   irqbase;
- 	struct irq_domain *domain;
-@@ -139,8 +142,9 @@ static void mvebu_gpioreg_edge_cause(struct mvebu_gpio_chip *mvchip,
- 	switch (mvchip->soc_variant) {
- 	case MVEBU_GPIO_SOC_VARIANT_ORION:
- 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-+	case MVEBU_GPIO_SOC_VARIANT_A8K:
- 		*map = mvchip->regs;
--		*offset = GPIO_EDGE_CAUSE_OFF;
-+		*offset = GPIO_EDGE_CAUSE_OFF + mvchip->offset;
- 		break;
- 	case MVEBU_GPIO_SOC_VARIANT_ARMADAXP:
- 		cpu = smp_processor_id();
-@@ -183,8 +187,9 @@ mvebu_gpioreg_edge_mask(struct mvebu_gpio_chip *mvchip,
- 
- 	switch (mvchip->soc_variant) {
- 	case MVEBU_GPIO_SOC_VARIANT_ORION:
-+	case MVEBU_GPIO_SOC_VARIANT_A8K:
- 		*map = mvchip->regs;
--		*offset = GPIO_EDGE_MASK_OFF;
-+		*offset = GPIO_EDGE_MASK_OFF + mvchip->offset;
- 		break;
- 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
- 		cpu = smp_processor_id();
-@@ -232,8 +237,9 @@ mvebu_gpioreg_level_mask(struct mvebu_gpio_chip *mvchip,
- 
- 	switch (mvchip->soc_variant) {
- 	case MVEBU_GPIO_SOC_VARIANT_ORION:
-+	case MVEBU_GPIO_SOC_VARIANT_A8K:
- 		*map = mvchip->regs;
--		*offset = GPIO_LEVEL_MASK_OFF;
-+		*offset = GPIO_LEVEL_MASK_OFF + mvchip->offset;
- 		break;
- 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
- 		cpu = smp_processor_id();
-@@ -294,7 +300,7 @@ static void mvebu_gpio_set(struct gpio_chip *chip, unsigned int pin, int value)
- {
- 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
- 
--	regmap_update_bits(mvchip->regs, GPIO_OUT_OFF,
-+	regmap_update_bits(mvchip->regs, GPIO_OUT_OFF + mvchip->offset,
- 			   BIT(pin), value ? BIT(pin) : 0);
- }
- 
-@@ -303,16 +309,18 @@ static int mvebu_gpio_get(struct gpio_chip *chip, unsigned int pin)
- 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
- 	u32 u;
- 
--	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &u);
-+	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset, &u);
- 
- 	if (u & BIT(pin)) {
- 		u32 data_in, in_pol;
- 
--		regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
--		regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &in_pol);
-+		regmap_read(mvchip->regs, GPIO_DATA_IN_OFF + mvchip->offset,
-+			    &data_in);
-+		regmap_read(mvchip->regs, GPIO_IN_POL_OFF + mvchip->offset,
-+			    &in_pol);
- 		u = data_in ^ in_pol;
- 	} else {
--		regmap_read(mvchip->regs, GPIO_OUT_OFF, &u);
-+		regmap_read(mvchip->regs, GPIO_OUT_OFF + mvchip->offset, &u);
- 	}
- 
- 	return (u >> pin) & 1;
-@@ -323,7 +331,7 @@ static void mvebu_gpio_blink(struct gpio_chip *chip, unsigned int pin,
- {
- 	struct mvebu_gpio_chip *mvchip = gpiochip_get_data(chip);
- 
--	regmap_update_bits(mvchip->regs, GPIO_BLINK_EN_OFF,
-+	regmap_update_bits(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset,
- 			   BIT(pin), value ? BIT(pin) : 0);
- }
- 
-@@ -340,7 +348,7 @@ static int mvebu_gpio_direction_input(struct gpio_chip *chip, unsigned int pin)
- 	if (ret)
- 		return ret;
- 
--	regmap_update_bits(mvchip->regs, GPIO_IO_CONF_OFF,
-+	regmap_update_bits(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset,
- 			   BIT(pin), 1);
- 
- 	return 0;
-@@ -363,7 +371,7 @@ static int mvebu_gpio_direction_output(struct gpio_chip *chip, unsigned int pin,
- 	mvebu_gpio_blink(chip, pin, 0);
- 	mvebu_gpio_set(chip, pin, value);
- 
--	regmap_update_bits(mvchip->regs, GPIO_IO_CONF_OFF,
-+	regmap_update_bits(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset,
- 			   BIT(pin), 0);
- 
- 	return 0;
-@@ -478,7 +486,7 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 
- 	pin = d->hwirq;
- 
--	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &u);
-+	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset, &u);
- 	if ((u & BIT(pin)) == 0)
- 		return -EINVAL;
- 
-@@ -497,19 +505,23 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_RISING:
- 	case IRQ_TYPE_LEVEL_HIGH:
--		regmap_update_bits(mvchip->regs, GPIO_IN_POL_OFF,
-+		regmap_update_bits(mvchip->regs,
-+				   GPIO_IN_POL_OFF + mvchip->offset,
- 				   BIT(pin), 0);
- 		break;
- 	case IRQ_TYPE_EDGE_FALLING:
- 	case IRQ_TYPE_LEVEL_LOW:
--		regmap_update_bits(mvchip->regs, GPIO_IN_POL_OFF,
-+		regmap_update_bits(mvchip->regs,
-+				   GPIO_IN_POL_OFF + mvchip->offset,
- 				   BIT(pin), 1);
- 		break;
- 	case IRQ_TYPE_EDGE_BOTH: {
- 		u32 data_in, in_pol, val;
- 
--		regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &in_pol);
--		regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
-+		regmap_read(mvchip->regs,
-+			    GPIO_IN_POL_OFF + mvchip->offset, &in_pol);
-+		regmap_read(mvchip->regs,
-+			    GPIO_DATA_IN_OFF + mvchip->offset, &data_in);
- 
- 		/*
- 		 * set initial polarity based on current input level
-@@ -519,7 +531,8 @@ static int mvebu_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 		else
- 			val = 0; /* raising */
- 
--		regmap_update_bits(mvchip->regs, GPIO_IN_POL_OFF,
-+		regmap_update_bits(mvchip->regs,
-+				   GPIO_IN_POL_OFF + mvchip->offset,
- 				   BIT(pin), val);
- 		break;
- 	}
-@@ -539,7 +552,7 @@ static void mvebu_gpio_irq_handler(struct irq_desc *desc)
- 
- 	chained_irq_enter(chip, desc);
- 
--	regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
-+	regmap_read(mvchip->regs, GPIO_DATA_IN_OFF + mvchip->offset, &data_in);
- 	level_mask = mvebu_gpio_read_level_mask(mvchip);
- 	edge_cause = mvebu_gpio_read_edge_cause(mvchip);
- 	edge_mask  = mvebu_gpio_read_edge_mask(mvchip);
-@@ -559,9 +572,13 @@ static void mvebu_gpio_irq_handler(struct irq_desc *desc)
- 			/* Swap polarity (race with GPIO line) */
- 			u32 polarity;
- 
--			regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &polarity);
-+			regmap_read(mvchip->regs,
-+				    GPIO_IN_POL_OFF + mvchip->offset,
-+				    &polarity);
- 			polarity ^= BIT(i);
--			regmap_write(mvchip->regs, GPIO_IN_POL_OFF, polarity);
-+			regmap_write(mvchip->regs,
-+				     GPIO_IN_POL_OFF + mvchip->offset,
-+				     polarity);
- 		}
- 
- 		generic_handle_irq(irq);
-@@ -664,7 +681,7 @@ static void mvebu_pwm_get_state(struct pwm_chip *chip,
- 			state->period = 1;
- 	}
- 
--	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF, &u);
-+	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset, &u);
- 	if (u)
- 		state->enabled = true;
- 	else
-@@ -727,7 +744,7 @@ static void __maybe_unused mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
- {
- 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
- 
--	regmap_read(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF,
-+	regmap_read(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
- 		    &mvpwm->blink_select);
- 	mvpwm->blink_on_duration =
- 		readl_relaxed(mvebu_pwmreg_blink_on_duration(mvpwm));
-@@ -739,7 +756,7 @@ static void __maybe_unused mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
- {
- 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
- 
--	regmap_write(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF,
-+	regmap_write(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
- 		     mvpwm->blink_select);
- 	writel_relaxed(mvpwm->blink_on_duration,
- 		       mvebu_pwmreg_blink_on_duration(mvpwm));
-@@ -783,7 +800,8 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 		set = U32_MAX;
- 	else
- 		return -EINVAL;
--	regmap_write(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF, 0);
-+	regmap_write(mvchip->regs,
-+		     GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, 0);
- 
- 	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
- 	if (!mvpwm)
-@@ -819,11 +837,11 @@ static void mvebu_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- 	u32 out, io_conf, blink, in_pol, data_in, cause, edg_msk, lvl_msk;
- 	int i;
- 
--	regmap_read(mvchip->regs, GPIO_OUT_OFF, &out);
--	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &io_conf);
--	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF, &blink);
--	regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &in_pol);
--	regmap_read(mvchip->regs, GPIO_DATA_IN_OFF, &data_in);
-+	regmap_read(mvchip->regs, GPIO_OUT_OFF + mvchip->offset, &out);
-+	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset, &io_conf);
-+	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset, &blink);
-+	regmap_read(mvchip->regs, GPIO_IN_POL_OFF + mvchip->offset, &in_pol);
-+	regmap_read(mvchip->regs, GPIO_DATA_IN_OFF + mvchip->offset, &data_in);
- 	cause	= mvebu_gpio_read_edge_cause(mvchip);
- 	edg_msk	= mvebu_gpio_read_edge_mask(mvchip);
- 	lvl_msk	= mvebu_gpio_read_level_mask(mvchip);
-@@ -885,6 +903,10 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
- 		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ORION,
- 	},
- 	{
-+		.compatible = "marvell,armada-8k-gpio",
-+		.data       = (void *) MVEBU_GPIO_SOC_VARIANT_A8K,
-+	},
-+	{
- 		/* sentinel */
- 	},
- };
-@@ -894,16 +916,21 @@ static int mvebu_gpio_suspend(struct platform_device *pdev, pm_message_t state)
- 	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
- 	int i;
- 
--	regmap_read(mvchip->regs, GPIO_OUT_OFF, &mvchip->out_reg);
--	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF, &mvchip->io_conf_reg);
--	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF, &mvchip->blink_en_reg);
--	regmap_read(mvchip->regs, GPIO_IN_POL_OFF, &mvchip->in_pol_reg);
-+	regmap_read(mvchip->regs, GPIO_OUT_OFF + mvchip->offset,
-+		    &mvchip->out_reg);
-+	regmap_read(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset,
-+		    &mvchip->io_conf_reg);
-+	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset,
-+		    &mvchip->blink_en_reg);
-+	regmap_read(mvchip->regs, GPIO_IN_POL_OFF + mvchip->offset,
-+		    &mvchip->in_pol_reg);
- 
- 	switch (mvchip->soc_variant) {
- 	case MVEBU_GPIO_SOC_VARIANT_ORION:
--		regmap_read(mvchip->regs, GPIO_EDGE_MASK_OFF,
-+	case MVEBU_GPIO_SOC_VARIANT_A8K:
-+		regmap_read(mvchip->regs, GPIO_EDGE_MASK_OFF + mvchip->offset,
- 			    &mvchip->edge_mask_regs[0]);
--		regmap_read(mvchip->regs, GPIO_LEVEL_MASK_OFF,
-+		regmap_read(mvchip->regs, GPIO_LEVEL_MASK_OFF + mvchip->offset,
- 			    &mvchip->level_mask_regs[0]);
- 		break;
- 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-@@ -941,16 +968,21 @@ static int mvebu_gpio_resume(struct platform_device *pdev)
- 	struct mvebu_gpio_chip *mvchip = platform_get_drvdata(pdev);
- 	int i;
- 
--	regmap_write(mvchip->regs, GPIO_OUT_OFF, mvchip->out_reg);
--	regmap_write(mvchip->regs, GPIO_IO_CONF_OFF, mvchip->io_conf_reg);
--	regmap_write(mvchip->regs, GPIO_BLINK_EN_OFF, mvchip->blink_en_reg);
--	regmap_write(mvchip->regs, GPIO_IN_POL_OFF, mvchip->in_pol_reg);
-+	regmap_write(mvchip->regs, GPIO_OUT_OFF + mvchip->offset,
-+		     mvchip->out_reg);
-+	regmap_write(mvchip->regs, GPIO_IO_CONF_OFF + mvchip->offset,
-+		     mvchip->io_conf_reg);
-+	regmap_write(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset,
-+		     mvchip->blink_en_reg);
-+	regmap_write(mvchip->regs, GPIO_IN_POL_OFF + mvchip->offset,
-+		     mvchip->in_pol_reg);
- 
- 	switch (mvchip->soc_variant) {
- 	case MVEBU_GPIO_SOC_VARIANT_ORION:
--		regmap_write(mvchip->regs, GPIO_EDGE_MASK_OFF,
-+	case MVEBU_GPIO_SOC_VARIANT_A8K:
-+		regmap_write(mvchip->regs, GPIO_EDGE_MASK_OFF + mvchip->offset,
- 			     mvchip->edge_mask_regs[0]);
--		regmap_write(mvchip->regs, GPIO_LEVEL_MASK_OFF,
-+		regmap_write(mvchip->regs, GPIO_LEVEL_MASK_OFF + mvchip->offset,
- 			     mvchip->level_mask_regs[0]);
- 		break;
- 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
-@@ -990,15 +1022,68 @@ static const struct regmap_config mvebu_gpio_regmap_config = {
- 	.fast_io = true,
- };
- 
-+static int mvebu_gpio_probe_raw(struct platform_device *pdev,
-+				struct mvebu_gpio_chip *mvchip)
-+{
-+	struct resource *res;
-+	void __iomem *base;
++Pinctrl:
++--------
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
++For common binding part and usage, refer to
++Documentation/devicetree/bindings/pinctrl/marvell,mvebu-pinctrl.txt.
 +
-+	mvchip->regs = devm_regmap_init_mmio(&pdev->dev, base,
-+					     &mvebu_gpio_regmap_config);
-+	if (IS_ERR(mvchip->regs))
-+		return PTR_ERR(mvchip->regs);
++Required properties:
++- compatible must be "marvell,ap806-pinctrl",
 +
-+	/*
-+	 * For the legacy SoCs, the regmap directly maps to the GPIO
-+	 * registers, so no offset is needed.
-+	 */
-+	mvchip->offset = 0;
++Available mpp pins/groups and functions:
++Note: brackets (x) are not part of the mpp name for marvell,function and given
++only for more detailed description in this document.
 +
-+	/*
-+	 * The Armada XP has a second range of registers for the
-+	 * per-CPU registers
-+	 */
-+	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_ARMADAXP) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+		base = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(base))
-+			return PTR_ERR(base);
++name	pins	functions
++================================================================================
++mpp0	0	gpio, sdio(clk), spi0(clk)
++mpp1	1	gpio, sdio(cmd), spi0(miso)
++mpp2	2	gpio, sdio(d0), spi0(mosi)
++mpp3	3	gpio, sdio(d1), spi0(cs0n)
++mpp4	4	gpio, sdio(d2), i2c0(sda)
++mpp5	5	gpio, sdio(d3), i2c0(sdk)
++mpp6	6	gpio, sdio(ds)
++mpp7	7	gpio, sdio(d4), uart1(rxd)
++mpp8	8	gpio, sdio(d5), uart1(txd)
++mpp9	9	gpio, sdio(d6), spi0(cs1n)
++mpp10	10	gpio, sdio(d7)
++mpp11	11	gpio, uart0(txd)
++mpp12	12	gpio, sdio(pw_off), sdio(hw_rst)
++mpp13	13	gpio
++mpp14	14	gpio
++mpp15	15	gpio
++mpp16	16	gpio
++mpp17	17	gpio
++mpp18	18	gpio
++mpp19	19	gpio, uart0(rxd), sdio(pw_off)
 +
-+		mvchip->percpu_regs =
-+			devm_regmap_init_mmio(&pdev->dev, base,
-+					      &mvebu_gpio_regmap_config);
-+		if (IS_ERR(mvchip->percpu_regs))
-+			return PTR_ERR(mvchip->percpu_regs);
-+	}
-+
-+	return 0;
-+}
-+
-+static int mvebu_gpio_probe_syscon(struct platform_device *pdev,
-+				   struct mvebu_gpio_chip *mvchip)
-+{
-+	mvchip->regs = syscon_node_to_regmap(pdev->dev.parent->of_node);
-+	if (IS_ERR(mvchip->regs))
-+		return PTR_ERR(mvchip->regs);
-+
-+	if (of_property_read_u32(pdev->dev.of_node, "offset", &mvchip->offset))
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- static int mvebu_gpio_probe(struct platform_device *pdev)
- {
- 	struct mvebu_gpio_chip *mvchip;
- 	const struct of_device_id *match;
- 	struct device_node *np = pdev->dev.of_node;
--	struct resource *res;
- 	struct irq_chip_generic *gc;
- 	struct irq_chip_type *ct;
--	void __iomem *base;
- 	unsigned int ngpios;
- 	bool have_irqs;
- 	int soc_variant;
-@@ -1054,41 +1139,26 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
- 	mvchip->chip.of_node = np;
- 	mvchip->chip.dbg_show = mvebu_gpio_dbg_show;
+ Example:
++ap_syscon: system-controller@6f4000 {
++	compatible = "syscon", "simple-mfd";
++	reg = <0x6f4000 0x1000>;
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
--
--	mvchip->regs = devm_regmap_init_mmio(&pdev->dev, base,
--					     &mvebu_gpio_regmap_config);
--	if (IS_ERR(mvchip->regs))
--		return PTR_ERR(mvchip->regs);
-+	if (soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K)
-+		err = mvebu_gpio_probe_syscon(pdev, mvchip);
-+	else
-+		err = mvebu_gpio_probe_raw(pdev, mvchip);
+-	syscon: system-controller@6f4000 {
+-		compatible = "syscon", "simple-mfd";
+-		reg = <0x6f4000 0x1000>;
++	ap_clk: clock {
++		compatible = "marvell,ap806-clock";
++		#clock-cells = <1>;
++	};
  
--	/*
--	 * The Armada XP has a second range of registers for the
--	 * per-CPU registers
--	 */
--	if (soc_variant == MVEBU_GPIO_SOC_VARIANT_ARMADAXP) {
--		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
--		base = devm_ioremap_resource(&pdev->dev, res);
--		if (IS_ERR(base))
--			return PTR_ERR(base);
--
--		mvchip->percpu_regs =
--			devm_regmap_init_mmio(&pdev->dev, base,
--					      &mvebu_gpio_regmap_config);
--		if (IS_ERR(mvchip->percpu_regs))
--			return PTR_ERR(mvchip->percpu_regs);
--	}
-+	if (err)
-+		return err;
- 
- 	/*
- 	 * Mask and clear GPIO interrupts.
- 	 */
- 	switch (soc_variant) {
- 	case MVEBU_GPIO_SOC_VARIANT_ORION:
--		regmap_write(mvchip->regs, GPIO_EDGE_CAUSE_OFF, 0);
--		regmap_write(mvchip->regs, GPIO_EDGE_MASK_OFF, 0);
--		regmap_write(mvchip->regs, GPIO_LEVEL_MASK_OFF, 0);
-+	case MVEBU_GPIO_SOC_VARIANT_A8K:
-+		regmap_write(mvchip->regs,
-+			     GPIO_EDGE_CAUSE_OFF + mvchip->offset, 0);
-+		regmap_write(mvchip->regs,
-+			     GPIO_EDGE_MASK_OFF + mvchip->offset, 0);
-+		regmap_write(mvchip->regs,
-+			     GPIO_LEVEL_MASK_OFF + mvchip->offset, 0);
- 		break;
- 	case MVEBU_GPIO_SOC_VARIANT_MV78200:
- 		regmap_write(mvchip->regs, GPIO_EDGE_CAUSE_OFF, 0);
+-		ap_clk: clock {
+-			compatible = "marvell,ap806-clock";
+-			#clock-cells = <1>;
+-		};
++	ap_pinctrl: pinctrl {
++		compatible = "marvell,ap806-pinctrl";
+ 	};
++};
 -- 
 git-series 0.9.1
