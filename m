@@ -1,80 +1,44 @@
 From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: Re: [PATCH v3 0/2] ARM: dts: imx7: add NAND support
-Date: Thu, 01 Jun 2017 18:48:30 -0700
-Message-ID: <e57ba49dc2b91b70b5848875e28b17ae@agner.ch>
-References: <20170601192044.6548-1-stefan@agner.ch>
- <3c086d95-96e5-71ec-b44f-12ed41903fcf@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH v4 0/2] ARM: dts: imx7: add NAND support
+Date: Thu,  1 Jun 2017 19:11:08 -0700
+Message-ID: <cover.9cbefd91387aefe2522dbb3e6338e4e4efdb5e41.1496369342.git-series.stefan@agner.ch>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3c086d95-96e5-71ec-b44f-12ed41903fcf-3arQi8VN3Tc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
-Cc: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, "LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org" <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Han,
+This are the missing device tree parts to add NAND support for i.MX 7.
+See previous patchset:
+https://lkml.org/lkml/2017/4/21/832
 
-On 2017-06-01 14:14, Han Xu wrote:
-> On 06/01/2017 02:20 PM, Stefan Agner wrote:
->> This are the missing device tree parts to add NAND support for i.MX 7.
->> See previous patchset:
->> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2017%2F4%2F21%2F832&data=01%7C01%7Chan.xu%40nxp.com%7C3b9081a68c94476c4a2108d4a9235512%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0&sdata=mQ2aq5rW%2B9uADY5mSzFxk8P6bAVq%2BosPJQAi0PL9SQg%3D&reserved=0
->>
->> The previous version also included driver changes, which are already
->> merged.
->>
->> --
->> Stefan
->>
->> Changes since v2:
->> - Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
-> Hi Stefan, sorry I didn't reply your last patch. I was unable to fully 
-> test on i.MX7 since the work bandwidth, but the quick test shows DMA 
-> cannot work WITHOUT IMX7D_NAND_ROOT_CLK on my side, I will fully check 
-> it tomorrow morning and let you know the result.
-
-How did you test that?
-
-Since DMA can only use NAND in i.MX 7, testing is somewhat hard.
-
-Fact is, I can access DMA registers using just NAND_USDHC_BUS_CLK_ROOT
-
-mw.l 0x30388980 0x11000000 # Enable NAND_USDHC_BUS_CLK_ROOT
-mw.l 0x3038aa00 0x00000000 # Enable NAND_CLK_ROOT
-
-md.l 0x33000100 0 # Access APBH_CH0_CURCMDAR
-
-This works for me.
-
-I can *boot* from a UBIFS using this driver and Linux 4.12-rc1 with my
-patchset applied...
-
-Monitoring clocks in /sys/kernel/debug/clk/clk_summary show that
-NAND_ROOT_CLK gets turned off and back on if NAND access happens, the
-system seems stable.
-
-All that said, this patchset v3 actually does not remove the
-NAND_ROOT_CLK as intended to. Will send a v4.
+The previous version also included driver changes, which are already
+merged.
 
 --
 Stefan
 
->> - Dropped driver changes, alreay merged
->>
->> Changes since v1:
->> - Make clks_count const
->> - Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
->>
->> Stefan Agner (2):
->>    ARM: dts: imx7: add GPMI NAND
->>    ARM: dts: imx7-colibri: add NAND support
->>
->>   arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++
->>   arch/arm/boot/dts/imx7s.dtsi        | 31 +++++++++++++++++++++++++++++++
->>   2 files changed, 40 insertions(+)
->>
+Changes since v3:
+- Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
+
+Changes since v2:
+- Dropped driver changes, alreay merged
+
+Changes since v1:
+- Make clks_count const
+- Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
+
+Stefan Agner (2):
+  ARM: dts: imx7: add GPMI NAND
+  ARM: dts: imx7-colibri: add NAND support
+
+ arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++-
+ arch/arm/boot/dts/imx7s.dtsi        | 30 ++++++++++++++++++++++++++++++-
+ 2 files changed, 39 insertions(+)
+
+base-commit: e2bb3be2c6c623ff0bad975dc9435531f450f0c5
+-- 
+git-series 0.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
