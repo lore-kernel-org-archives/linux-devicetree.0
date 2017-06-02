@@ -1,46 +1,121 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v2 5/6] arm64: marvell: enable ICU and GICP drivers
-Date: Fri,  2 Jun 2017 12:06:56 +0200
-Message-ID: <1496398017-6487-6-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1496398017-6487-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 03/19] drm/sun4i: tcon: Add support for demuxing
+ TCON output on A31
+Date: Fri,  2 Jun 2017 18:10:08 +0800
+Message-ID: <20170602101024.18940-4-wens@csie.org>
+References: <20170602101024.18940-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496398017-6487-1-git-send-email-thomas.petazzoni@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBG7TYTEQKGQEHRMAW6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170602101024.18940-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit enables the newly introduced Marvell GICP and ICUs driver
-for the 64-bit Marvell EBU platforms.
+On systems with 2 TCONs such as the A31, it is possible to demux the
+output of the TCONs to one encoder.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Add support for this for the A31.
+
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- arch/arm64/Kconfig.platforms | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 61 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 4afcffc..bf3b505 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -106,6 +106,8 @@ config ARCH_MVEBU
- 	select ARMADA_AP806_SYSCON
- 	select ARMADA_CP110_SYSCON
- 	select ARMADA_37XX_CLK
-+	select MVEBU_GICP
-+	select MVEBU_ICU
- 	select MVEBU_ODMI
- 	select MVEBU_PIC
- 	help
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index d9791292553e..21bd7fab7aaa 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -14,9 +14,12 @@
+ #include <drm/drm_atomic_helper.h>
+ #include <drm/drm_crtc.h>
+ #include <drm/drm_crtc_helper.h>
++#include <drm/drm_encoder.h>
+ #include <drm/drm_modes.h>
+ #include <drm/drm_of.h>
+ 
++#include <uapi/drm/drm_mode.h>
++
+ #include <linux/component.h>
+ #include <linux/ioport.h>
+ #include <linux/of_address.h>
+@@ -109,11 +112,69 @@ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable)
+ }
+ EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
+ 
++static struct sun4i_tcon *sun4i_get_first_tcon(struct drm_device *drm)
++{
++	struct sun4i_drv *drv = drm->dev_private;
++	struct sun4i_tcon *tcon;
++
++	list_for_each_entry(tcon, &drv->tcon_list, list)
++		if (tcon->id == 0)
++			return tcon;
++
++	dev_warn(drm->dev,
++		 "TCON0 not found, display output muxing may not work\n");
++
++	return tcon;
++}
++
++static int _sun6i_tcon_set_mux(struct drm_encoder *encoder)
++{
++	struct sun4i_tcon *tcon = sun4i_get_first_tcon(encoder->dev);
++	int tcon_id = drm_crtc_to_sun4i_crtc(encoder->crtc)->tcon->id;
++	u32 shift;
++
++	DRM_DEBUG_DRIVER("Muxing encoder %s to CRTC %s (TCON %d)\n",
++			 encoder->name, encoder->crtc->name, tcon_id);
++
++	/* Only 2 TCONs */
++	if (tcon_id >= 2)
++		return -EINVAL;
++
++	switch (encoder->encoder_type) {
++	case DRM_MODE_ENCODER_TMDS:
++		/* HDMI */
++		shift = 8;
++		break;
++	case DRM_MODE_ENCODER_DSI:
++		/* No MIPI DSI on A31s */
++		if (of_device_is_compatible(tcon->dev->of_node,
++					    "allwinner,sun6i-a31s-tcon"))
++			return -EINVAL;
++		shift = 0;
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	regmap_update_bits(tcon->regs, SUN4I_TCON_MUX_CTRL_REG,
++			   0x3 << shift, tcon_id << shift);
++
++	return 0;
++}
++
+ void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
+ 			struct drm_encoder *encoder)
+ {
++	/* Get the device node of the display engine */
++	struct device_node *node = encoder->dev->dev->of_node;
+ 	u32 val;
+ 
++	if (of_device_is_compatible(node, "allwinner,sun6i-a31-display-engine") ||
++	    of_device_is_compatible(node, "allwinner,sun6i-a31s-display-engine")) {
++		_sun6i_tcon_set_mux(encoder);
++		return;
++	}
++
+ 	if (!tcon->quirks->has_unknown_mux)
+ 		return;
+ 
 -- 
-2.7.4
+2.11.0
