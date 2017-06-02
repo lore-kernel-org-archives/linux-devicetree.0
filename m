@@ -1,193 +1,75 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v5 5/5] mtd: mchp23k256: Add support for mchp23lcv1024
-Date: Fri,  2 Jun 2017 15:21:19 +1200
-Message-ID: <20170602032119.22282-6-chris.packham@alliedtelesis.co.nz>
-References: <20170602032119.22282-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170602032119.22282-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, andrew@lunn.ch, dwmw2@infradead.org, boris.brezillon@free-electrons.com
-Cc: linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v5 04/11] arm64: dts: Initial DTS files for Broadcom
+ Stingray SOC
+Date: Thu, 1 Jun 2017 22:37:47 -0700
+Message-ID: <abeca9ac-487c-b6dc-1397-4134b0442909@gmail.com>
+References: <1495790704-2438-1-git-send-email-anup.patel@broadcom.com>
+ <1495790704-2438-5-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1495790704-2438-5-git-send-email-anup.patel@broadcom.com>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Scott Branden <scott.branden@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The mchp23lcv1024 is similar to the mchp23k256, the differences (from a
-software point of view) are the capacity of the chip and the size of the
-addresses used.
 
-There is no way to detect the specific chip so we must be told via a
-Device Tree or default to mchp23k256 when device tree is not used.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes in v2:
-- fix formatting in switch statement
-- add support for 24-bit addressing
-Changes in v3:
-- None
-Changes in v4:
-- reword commit message (thanks Andrew)
-- introduce mchp23_caps struct (thanks Boris)
-Changes in v5:
-- collect ack from Rob
+On 05/26/2017 02:24 AM, Anup Patel wrote:
+> The Broadcom Stingray SoC is a new member in Broadcom iProc
+> SoC family.
+> 
+> This patch adds initial DTS files for Broadcom Stingray SoC
+> and two of its reference boards (bcm958742k and bcm958742t).
+> 
+> We have lot of reference boards and large number of devices
+> in Broadcom Stingray SoC so eventually we will have quite
+> a few DTS files for Stingray. To tackle, we have added a
+> separate directory for Stingray DTS files.
 
- .../bindings/mtd/microchip,mchp23k256.txt          |  2 +-
- drivers/mtd/devices/mchp23k256.c                   | 66 ++++++++++++++++++----
- 2 files changed, 57 insertions(+), 11 deletions(-)
+So I was going to apply this, but...
 
-diff --git a/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt b/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
-index 25e5ad38b0f0..7328eb92a03c 100644
---- a/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
-+++ b/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
-@@ -3,7 +3,7 @@
- Required properties:
- - #address-cells, #size-cells : Must be present if the device has sub-nodes
-   representing partitions.
--- compatible : Must be "microchip,mchp23k256"
-+- compatible : Must be one of "microchip,mchp23k256" or "microchip,mchp23lcv1024"
- - reg : Chip-Select number
- - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
- 
-diff --git a/drivers/mtd/devices/mchp23k256.c b/drivers/mtd/devices/mchp23k256.c
-index 3e5feb454644..8956b7dcc984 100644
---- a/drivers/mtd/devices/mchp23k256.c
-+++ b/drivers/mtd/devices/mchp23k256.c
-@@ -21,10 +21,18 @@
- #include <linux/spi/spi.h>
- #include <linux/of_device.h>
- 
-+#define MAX_CMD_SIZE		4
-+
-+struct mchp23_caps {
-+	u8 addr_width;
-+	unsigned int size;
-+};
-+
- struct mchp23k256_flash {
- 	struct spi_device	*spi;
- 	struct mutex		lock;
- 	struct mtd_info		mtd;
-+	const struct mchp23_caps	*caps;
- };
- 
- #define MCHP23K256_CMD_WRITE_STATUS	0x01
-@@ -34,22 +42,40 @@ struct mchp23k256_flash {
- 
- #define to_mchp23k256_flash(x) container_of(x, struct mchp23k256_flash, mtd)
- 
-+static void mchp23k256_addr2cmd(struct mchp23k256_flash *flash,
-+				unsigned int addr, u8 *cmd)
-+{
-+	int i;
-+
-+	/*
-+	 * Address is sent in big endian (MSB first) and we skip
-+	 * the first entry of the cmd array which contains the cmd
-+	 * opcode.
-+	 */
-+	for (i = flash->caps->addr_width; i > 0; i--, addr >>= 8)
-+		cmd[i] = addr;
-+}
-+
-+static int mchp23k256_cmdsz(struct mchp23k256_flash *flash)
-+{
-+	return 1 + flash->caps->addr_width;
-+}
-+
- static int mchp23k256_write(struct mtd_info *mtd, loff_t to, size_t len,
- 			    size_t *retlen, const unsigned char *buf)
- {
- 	struct mchp23k256_flash *flash = to_mchp23k256_flash(mtd);
- 	struct spi_transfer transfer[2] = {};
- 	struct spi_message message;
--	unsigned char command[3];
-+	unsigned char command[MAX_CMD_SIZE];
- 
- 	spi_message_init(&message);
- 
- 	command[0] = MCHP23K256_CMD_WRITE;
--	command[1] = to >> 8;
--	command[2] = to;
-+	mchp23k256_addr2cmd(flash, to, command);
- 
- 	transfer[0].tx_buf = command;
--	transfer[0].len = sizeof(command);
-+	transfer[0].len = mchp23k256_cmdsz(flash);
- 	spi_message_add_tail(&transfer[0], &message);
- 
- 	transfer[1].tx_buf = buf;
-@@ -73,17 +99,16 @@ static int mchp23k256_read(struct mtd_info *mtd, loff_t from, size_t len,
- 	struct mchp23k256_flash *flash = to_mchp23k256_flash(mtd);
- 	struct spi_transfer transfer[2] = {};
- 	struct spi_message message;
--	unsigned char command[3];
-+	unsigned char command[MAX_CMD_SIZE];
- 
- 	spi_message_init(&message);
- 
- 	memset(&transfer, 0, sizeof(transfer));
- 	command[0] = MCHP23K256_CMD_READ;
--	command[1] = from >> 8;
--	command[2] = from;
-+	mchp23k256_addr2cmd(flash, from, command);
- 
- 	transfer[0].tx_buf = command;
--	transfer[0].len = sizeof(command);
-+	transfer[0].len = mchp23k256_cmdsz(flash);
- 	spi_message_add_tail(&transfer[0], &message);
- 
- 	transfer[1].rx_buf = buf;
-@@ -123,6 +148,16 @@ static int mchp23k256_set_mode(struct spi_device *spi)
- 	return spi_sync(spi, &message);
- }
- 
-+static const struct mchp23_caps mchp23k256_caps = {
-+	.size = SZ_32K,
-+	.addr_width = 2,
-+};
-+
-+static const struct mchp23_caps mchp23lcv1024_caps = {
-+	.size = SZ_128K,
-+	.addr_width = 3,
-+};
-+
- static int mchp23k256_probe(struct spi_device *spi)
- {
- 	struct mchp23k256_flash *flash;
-@@ -143,12 +178,16 @@ static int mchp23k256_probe(struct spi_device *spi)
- 
- 	data = dev_get_platdata(&spi->dev);
- 
-+	flash->caps = of_device_get_match_data(&spi->dev);
-+	if (!flash->caps)
-+		flash->caps = &mchp23k256_caps;
-+
- 	mtd_set_of_node(&flash->mtd, spi->dev.of_node);
- 	flash->mtd.dev.parent	= &spi->dev;
- 	flash->mtd.type		= MTD_RAM;
- 	flash->mtd.flags	= MTD_CAP_RAM;
- 	flash->mtd.writesize	= 1;
--	flash->mtd.size		= SZ_32K;
-+	flash->mtd.size		= flash->caps->size;
- 	flash->mtd._read	= mchp23k256_read;
- 	flash->mtd._write	= mchp23k256_write;
- 
-@@ -168,7 +207,14 @@ static int mchp23k256_remove(struct spi_device *spi)
- }
- 
- static const struct of_device_id mchp23k256_of_table[] = {
--	{ .compatible = "microchip,mchp23k256" },
-+	{
-+		.compatible = "microchip,mchp23k256",
-+		.data = &mchp23k256_caps,
-+	},
-+	{
-+		.compatible = "microchip,mchp23lcv1024",
-+		.data = &mchp23lcv1024_caps,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, mchp23k256_of_table);
+
+> +	scr {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x61000000 0x05000000>;
+
+So you corrected the ranges property here...
+
+> +
+> +		gic: interrupt-controller@63c00000 {
+
+but you kept the original unit address here, which does not match the
+reg property, could you fix that through your entire submission?
+
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			ranges;
+> +			interrupt-controller;
+> +			reg = <0x02c00000 0x010000>, /* GICD */
+> +			      <0x02e00000 0x600000>; /* GICR */
+
+> +	hsls {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges = <0x0 0x0 0x68900000 0x17700000>;
+
+Same here.
+
+> +
+> +		uart0: uart@68a00000 {
+> +			device_type = "serial";
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x00100000 0x1000>;
+
+and here and all other sub nodes
 -- 
-2.13.0
+Florian
