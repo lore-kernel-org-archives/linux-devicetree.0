@@ -1,76 +1,36 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v11 4/6] ARM: dts: imx6q-evi: support altera-ps-spi
-Date: Fri, 2 Jun 2017 18:30:12 +0200
-Message-ID: <a4d0815c-593f-57a9-41fc-ab636ca9b9e5@suse.de>
-References: <20170525172911.11467-1-stillcompiling@gmail.com>
- <20170525172911.11467-5-stillcompiling@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170525172911.11467-5-stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Bastian Stender <bst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH  0/4] ARM: dts: Add iWave RZ/G1M board support
+Date: Fri,  2 Jun 2017 17:21:59 +0100
+Message-ID: <1496420523-23506-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello,
 
-Am 25.05.2017 um 19:29 schrieb Joshua Clayton:
-> Add support for Altera V FPGA connected to an spi port
+This series aims to add iWave RZ/G1M R8A7743 based Qseven SOM and RainboW-G20D- Qseven board support. 
 
-Did you mean "Altera Cyclone V"?
-
-> to the evi devicetree file
-> 
-> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6q-evi.dts | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-> index 24fe093a66db..a0cbb2d84803 100644
-> --- a/arch/arm/boot/dts/imx6q-evi.dts
-> +++ b/arch/arm/boot/dts/imx6q-evi.dts
-> @@ -82,6 +82,15 @@
->  	pinctrl-names = "default";
->  	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
->  	status = "okay";
-> +
-> +	fpga_spi: cyclonespi@0 {
-
-"cyclonespi" does not strike me as the best node name.
-
-I am guessing this is a sub-node of a SPI controller node, so no need to
-repeat "spi", and Cyclone seems more or less implied by "altr,fpga-".
-
-Note that the example in the bindings doc uses "evi-fpga-spi". Nodes
-don't need to be (shouldn't be?) prefixed with the board. Note that
-bindings examples tend to get copied a lot.
-
-Any reason not to just use "fpga@0" in both places for simplicity?
-
-> +		compatible = "altr,fpga-passive-serial";
-> +		spi-max-frequency = <20000000>;
-> +		reg = <0>;
-> +		pinctrl-0 = <&pinctrl_fpgaspi>;
-> +		nconfig-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
-> +		nstat-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-> +	};
->  };
->  
->  &ecspi3 {
-[snip]
+This series has been tested against linux-next tag next-20170602.
 
 Regards,
-Andreas
+
+Biju Das (4):
+  of: Add vendor prefix for iWave Systems Technologies Pvt. Ltd
+  ARM: shmobile: document iW-RainboW-G20D-Qseven-RZG1M board
+  ARM: dts: iwg20m: Add iWave RZG1M Qseven SOM
+  ARM: dts: iwg20d-q7: Add support for iWave G20D-Q7 board based on
+    RZ/G1M
+
+ Documentation/devicetree/bindings/arm/shmobile.txt |  2 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/r8a7743-iwg20d-q7.dts            | 25 ++++++++++++++++++++
+ arch/arm/boot/dts/r8a7743-iwg20m.dtsi              | 27 ++++++++++++++++++++++
+ 5 files changed, 56 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+ create mode 100644 arch/arm/boot/dts/r8a7743-iwg20m.dtsi
 
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
