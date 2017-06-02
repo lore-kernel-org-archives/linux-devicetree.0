@@ -1,98 +1,82 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v2 2/6] dt-bindings: interrupt-controller: add DT binding for
- the Marvell ICU
-Date: Fri,  2 Jun 2017 12:06:53 +0200
-Message-ID: <1496398017-6487-3-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1496398017-6487-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: RE: [PATCH v4 3/3] USB3/DWC3: Enable undefined length INCR burst type
+Date: Fri, 02 Jun 2017 13:07:24 +0300
+Message-ID: <87a85qvh2b.fsf@linux.intel.com>
+References: <1484727138-3264-1-git-send-email-jerry.huang@nxp.com> <1484727138-3264-3-git-send-email-jerry.huang@nxp.com> <DB5PR0401MB1813965DDC8CC6CD0BD85980FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com> <87y3xeqvsl.fsf@linux.intel.com> <DB5PR0401MB1813AAB5AA84B0B310ED1B10FE440@DB5PR0401MB1813.eurprd04.prod.outlook.com> <87tw71xthj.fsf@linux.intel.com> <DB5PR0401MB181366E27C238DF8B2228B00FE170@DB5PR0401MB1813.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496398017-6487-1-git-send-email-thomas.petazzoni@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <DB5PR0401MB181366E27C238DF8B2228B00FE170@DB5PR0401MB1813.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerry Huang <jerry.huang@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rajesh Bhagat <rajesh.bhagat@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds the Device Tree binding documentation for the Marvell
-ICU interrupt controller, which collects wired interrupts from the
-devices located into the CP110 hardware block of Marvell Armada 7K/8K,
-and converts them into SPI interrupts in the GIC located in the AP
-hardware block, using the GICP extension.
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- .../bindings/interrupt-controller/marvell,icu.txt  | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-new file mode 100644
-index 0000000..3e7954c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
-@@ -0,0 +1,54 @@
-+Marvell ICU Interrupt Controller
-+--------------------------------
-+
-+The Marvell ICU (Interrupt Consolidation Unit) controller is
-+responsible for collecting all wired-interrupt sources in the CP and
-+communicating them to the GIC in the AP, the unit translates interrupt
-+requests on input wires to MSG memory mapped transactions to the GIC.
-+
-+Required properties:
-+
-+- compatible: Should be "marvell,cp110-icu"
-+
-+- reg: Should contain ICU registers location and length.
-+
-+- #interrupt-cells: Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 3.
-+
-+  The 1st cell is the group type of the ICU interrupt. Possible group
-+  types are:
-+
-+   ICU_GRP_NSR (0x0) : Shared peripheral interrupt, non-secure
-+   ICU_GRP_SR  (0x1) : Shared peripheral interrupt, secure
-+   ICU_GRP_SEI (0x4) : System error interrupt
-+   ICU_GRP_REI (0x5) : RAM error interrupt
-+
-+  The 2nd cell is the index of the interrupt in the ICU unit.
-+
-+  The 3rd cell is the type of the interrupt. See arm,gic.txt for
-+  details.
-+
-+- interrupt-controller: Identifies the node as an interrupt
-+  controller.
-+
-+- interrupt-parent: Indicates the node of the parent interrupt
-+  controller. Should be pointer to the GIC.
-+
-+- gicp: Should point to the GICP controller, the GIC extension that
-+  allows to trigger interrupts using MSG memory mapped transactions.
-+
-+Example:
-+
-+icu: interrupt-controller@1e0000 {
-+	compatible = "marvell,cp110-icu";
-+	reg = <0x1e0000 0x10>;
-+	#interrupt-cells = <3>;
-+	interrupt-controller;
-+	interrupt-parent = <&gic>;
-+	marvell,gicp = <&gicp>;
-+};
-+
-+usb3h0: usb3@500000 {
-+	interrupt-parent = <&icu>;
-+	interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
-+};
--- 
-2.7.4
+Hi,
+
+Jerry Huang <jerry.huang@nxp.com> writes:
+>> Jerry Huang <jerry.huang@nxp.com> writes:
+>> >> >> --
+>> >> >> 1.7.9.5
+>> >> > Hi, Balbi and all guys,
+>> >> > Any comment for these patches? Can they be accepted?
+>> >>
+>> >> Rob had comments which you didn't reply yet. I cannot take this
+>> >> patchset yet ;-)
+>> >>
+>> > Balbi,
+>> >
+>> > I look into his mail again, which was based v3, and I replied it.
+>> >
+>> > He had different understanding for undefined length burst mode.
+>> >
+>> > It seems he think for this mode, just setting bit[0] (INCRBrstEna) and
+>> > don't need to set other field.
+>> >
+>> > However, according to the DWC USB3.0 controller databook, when it is
+>> > undefined length INCR burst mode, we still need to set one max burst
+>> > type, such as INCR8, which means controller will use any length less
+>> > than or equal to this INCR8.
+>>=20
+>> Rob, do you agree with the patch now?
+>>=20
+>> --
+>> balbi
+>
+> Hi, Balbi,
+> Any comment for these patches? Or any chance to merge them?
+
+I'm not sure you understand how development is carried out here. I
+*can't* apply patches touching Device Tree properties without an
+Acked-by from any of the Device Tree maintainers. Until then, there's
+nothing I can say/do.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlkxONwACgkQzL64meEa
+mQaaRg//R3mclqymF77i+Z5ZtaMh+H/BNu+iP4NocdTnOk8UCsU7rBWCq1lJg9Pp
+4dXBzVNRoltz2VbAn87VTwIzkNrdYQpdjPqVpJsd+guCEeIKY+4SPi6DpTfCDrM6
+xCykvpIWYnzUKw2QO8jTYTg0svbQd3sZBGJtPIeRypaiPbWkBpHDe7xMmRHQaiEt
+FLTRqBxa1BcfekyoQIgJvCaRZn+SwbGyk7U89DsReSfhvFR5VCMKKFyikI0sZOFw
+uboMAXiHffmpPyNv3AqjpwBpj4Ae9uEyV0a0BYTdHmK1QV2gXuhfMsdLdJsGdS96
+mYLZwUcykXeU6xoe8pH5VUyuTiIhbtSRzvG0KzhDzt/5GjF5qjehRWLg6eT2xgDz
+2/sM1L+wU1/ChKG+9sY2w29/446etGfG2meovrb1ySqs89BrHVhnLUsknWvFjluW
+kPbMwXzRn2nUoyLIZQbbpR1pzhYkkuDMK0+x2lOSwAJfw2U2qOHvtXR/P/5qcqIN
+awVhlp3WoQV9IssIEN+PRMMSxJzPlGCI8dCVIod08M39/Bq+Ph3rEGnODscn3hgQ
+vnpID8Gdd/3VnvQV61MTPsqzEdyqL564OhW3A7d5EUR3xXqJ09qSwyjLj/HfxzEt
+9HydxyGPOCwuIf9QyxS8i6XBxcgWGFIGdBB2YDTxs1yYU5JkvJg=
+=E9mq
+-----END PGP SIGNATURE-----
+--=-=-=--
