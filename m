@@ -1,188 +1,47 @@
-From: Cosar Dindar <cosardindar@gmail.com>
-Subject: Re: [PATCH v3 2/5] crypto : stm32 - Add STM32F4 CRC32 support
-Date: Fri, 2 Jun 2017 16:56:08 +0300
-Message-ID: <20170602135608.GA40339@osboxes>
-References: <cover.1495463449.git.cosardindar@gmail.com>
- <3c520bbef98c630ca7de609f8ec27405e2ac07d4.1495463449.git.cosardindar@gmail.com>
- <efdd669a-2df6-f7fa-849b-e1c7057ae666@st.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v6 00/21] net-next: stmmac: add dwmac-sun8i
+ ethernet driver
+Date: Fri, 02 Jun 2017 10:08:01 -0400 (EDT)
+Message-ID: <20170602.100801.2029534530888525251.davem@davemloft.net>
+References: <20170531071852.12422-1-clabbe.montjoie@gmail.com>
+	<20170601.145819.789604139072328057.davem@davemloft.net>
+	<20170602063752.aqyvwcykvepiyt4y@flea.lan>
+Reply-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <efdd669a-2df6-f7fa-849b-e1c7057ae666@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabien DESSENNE <fabien.dessenne@st.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>
+Return-path: <linux-sunxi+bncBCFPF2XH6UDBBRXCYXEQKGQEHTC6UDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170602063752.aqyvwcykvepiyt4y-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabien,
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Date: Fri, 2 Jun 2017 08:37:52 +0200
 
-Thanks for your review.
-
-On Mon, May 29, 2017 at 07:56:48AM +0000, Fabien DESSENNE wrote:
-> Hi Cosar,
+> On Thu, Jun 01, 2017 at 02:58:19PM -0400, David Miller wrote:
+>> From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Date: Wed, 31 May 2017 09:18:31 +0200
+>> 
+>> > This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
+>> > present on Allwinner H3/H5/A83T/A64 SoCs.
+>> 
+>> Series applied, but wow that's a lot of DT file changes :-(
 > 
-> Thank you for the patch
-> 
-> On 22/05/17 16:34, Cosar Dindar wrote:
-> > This patch adds CRC (CRC32 Crypto) support for STM32F4 series.
-> >
-> > As an hardware limitation polynomial and key setting are not supported.
-> > They are fixed as 0x4C11DB7 (poly) and 0xFFFFFFFF (key).
-> > CRC32C Castagnoli algorithm is not used.
-> >
-> > Signed-off-by: Cosar Dindar <cosardindar@gmail.com>
-> > ---
-> >   drivers/crypto/stm32/stm32_crc32.c | 68 ++++++++++++++++++++++++++++++++------
-> >   1 file changed, 58 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/drivers/crypto/stm32/stm32_crc32.c b/drivers/crypto/stm32/stm32_crc32.c
-> > index ec83b1e..12fbd98 100644
-> > --- a/drivers/crypto/stm32/stm32_crc32.c
-> > +++ b/drivers/crypto/stm32/stm32_crc32.c
-> > @@ -7,6 +7,7 @@
-> >   #include <linux/bitrev.h>
-> >   #include <linux/clk.h>
-> >   #include <linux/module.h>
-> > +#include <linux/of.h>
-> >   #include <linux/platform_device.h>
-> >   
-> >   #include <crypto/internal/hash.h>
-> > @@ -39,6 +40,9 @@ struct stm32_crc {
-> >   	struct clk       *clk;
-> >   	u8               pending_data[sizeof(u32)];
-> >   	size_t           nb_pending_bytes;
-> > +	bool             key_support;
-> > +	bool             poly_support;
-> > +	bool             reverse_support;
-> >   };
-> >   
-> >   struct stm32_crc_list {
-> > @@ -106,13 +110,31 @@ static int stm32_crc_init(struct shash_desc *desc)
-> >   	}
-> >   	spin_unlock_bh(&crc_list.lock);
-> >   
-> > -	/* Reset, set key, poly and configure in bit reverse mode */
-> > -	writel(bitrev32(mctx->key), ctx->crc->regs + CRC_INIT);
-> > -	writel(bitrev32(mctx->poly), ctx->crc->regs + CRC_POL);
-> > -	writel(CRC_CR_RESET | CRC_CR_REVERSE, ctx->crc->regs + CRC_CR);
-> > +	/* set key */
-> > +	if (ctx->crc->key_support) {
-> > +		writel(bitrev32(mctx->key), ctx->crc->regs + CRC_INIT);
-> > +	} else if (mctx->key != CRC_INIT_DEFAULT) {
-> > +		dev_err(ctx->crc->dev, "Unsupported key value! Should be: 0x%x\n",
-> > +			CRC_INIT_DEFAULT);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	/* set poly */
-> > +	if (ctx->crc->poly_support)
-> > +		writel(bitrev32(mctx->poly), ctx->crc->regs + CRC_POL);
-> > +
-> > +	/* reset and configure in bit reverse mode if supported */
-> > +	if (ctx->crc->reverse_support)
-> > +		writel(CRC_CR_RESET | CRC_CR_REVERSE, ctx->crc->regs + CRC_CR);
-> > +	else
-> > +		writel(CRC_CR_RESET, ctx->crc->regs + CRC_CR);
-> > +
-> > +	/* store partial result */
-> > +	if (!ctx->crc->reverse_support)
-> > +		ctx->partial = bitrev32(readl(crc->regs + CRC_DR));
-> > +	else
-> > +		ctx->partial = readl(ctx->crc->regs + CRC_DR);
-> >   
-> > -	/* Store partial result */
-> > -	ctx->partial = readl(ctx->crc->regs + CRC_DR);
-> >   	ctx->crc->nb_pending_bytes = 0;
-> >   
-> >   	return 0;
-> > @@ -135,7 +157,12 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
-> >   
-> >   		if (crc->nb_pending_bytes == sizeof(u32)) {
-> >   			/* Process completed pending data */
-> > -			writel(*(u32 *)crc->pending_data, crc->regs + CRC_DR);
-> > +			if (!ctx->crc->reverse_support)
-> > +				writel(bitrev32(*(u32 *)crc->pending_data),
-> > +				       crc->regs + CRC_DR);
-> > +			else
-> > +				writel(*(u32 *)crc->pending_data,
-> > +				       crc->regs + CRC_DR);
-> >   			crc->nb_pending_bytes = 0;
-> >   		}
-> >   	}
-> > @@ -143,10 +170,16 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
-> >   	d32 = (u32 *)d8;
-> >   	for (i = 0; i < length >> 2; i++)
-> >   		/* Process 32 bits data */
-> > -		writel(*(d32++), crc->regs + CRC_DR);
-> > +		if (!ctx->crc->reverse_support)
-> > +			writel(bitrev32(*(d32++)), crc->regs + CRC_DR);
-> > +		else
-> > +			writel(*(d32++), crc->regs + CRC_DR);
-> >   
-> >   	/* Store partial result */
-> > -	ctx->partial = readl(crc->regs + CRC_DR);
-> > +	if (!ctx->crc->reverse_support)
-> > +		ctx->partial = bitrev32(readl(crc->regs + CRC_DR));
-> > +	else
-> > +		ctx->partial = readl(crc->regs + CRC_DR);
-> >   
-> >   	/* Check for pending data (non 32 bits) */
-> >   	length &= 3;
-> > @@ -243,6 +276,7 @@ static int stm32_crc_probe(struct platform_device *pdev)
-> >   	struct stm32_crc *crc;
-> >   	struct resource *res;
-> >   	int ret;
-> > +	int algs_size;
-> >   
-> >   	crc = devm_kzalloc(dev, sizeof(*crc), GFP_KERNEL);
-> >   	if (!crc)
-> > @@ -269,13 +303,26 @@ static int stm32_crc_probe(struct platform_device *pdev)
-> >   		return ret;
-> >   	}
-> >   
-> > +	/* set key, poly and reverse support if device is of F7 series */
-> > +	if (of_device_is_compatible(crc->dev->of_node, "st,stm32f7-crc")) {
-> > +		crc->key_support = true;
-> > +		crc->poly_support = true;
-> > +		crc->reverse_support = true;
-> > +	}
-> > +
-> >   	platform_set_drvdata(pdev, crc);
-> >   
-> >   	spin_lock(&crc_list.lock);
-> >   	list_add(&crc->list, &crc_list.dev_list);
-> >   	spin_unlock(&crc_list.lock);
-> >   
-> > -	ret = crypto_register_shashes(algs, ARRAY_SIZE(algs));
-> > +	/* For F4 series only CRC32 algorithm will be used */
-> > +	if (of_device_is_compatible(crc->dev->of_node, "st,stm32f4-crc"))
-> > +		algs_size = 1;
-> > +	else
-> > +		algs_size = ARRAY_SIZE(algs);
-> > +
-> > +	ret = crypto_register_shashes(algs, algs_size);
-> >   	if (ret) {
-> >   		dev_err(dev, "Failed to register\n");
-> >   		clk_disable_unprepare(crc->clk);
-> > @@ -304,6 +351,7 @@ static int stm32_crc_remove(struct platform_device *pdev)
-> >   
-> >   static const struct of_device_id stm32_dt_ids[] = {
-> >   	{ .compatible = "st,stm32f7-crc", },
-> > +	{ .compatible = "st,stm32f4-crc", },
-> >   	{},
-> >   };
-> >   MODULE_DEVICE_TABLE(of, stm32_dt_ids);
-> Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
+> The DT patches should not go through your tree, but arm-soc, so I
+> guess this is not an issue for you?
 
-Best Regards.
-Cosar
+I already applied them, so if that is the intention, too late.
+
+This needs to be explicitly stated in the header posting.  Otherwise
+I assume the entire series is meant to go into my tree.
+
+Also, saying "net-next" in the patch subjects means it's targetting my
+tree.
