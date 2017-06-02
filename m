@@ -1,86 +1,75 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v5 0/2] Add TI SCI Reset Driver
-Date: Fri, 2 Jun 2017 11:45:53 -0500
-Message-ID: <04a25503-b675-8832-0323-eb7ecbaaefeb@ti.com>
-References: <20170524180930.9290-1-s-anna@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] ASoC: cs35l35: Add multi-device synchronisation
+Date: Fri, 2 Jun 2017 18:11:18 +0100
+Message-ID: <20170602171118.4jikytasxphfjosx@sirena.org.uk>
+References: <1495121559-1063-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1495121559-1063-4-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <20170529135306.ldn74fwvfa4ots6a@sirena.org.uk>
+ <20170530085138.GR1594@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170524180930.9290-1-s-anna@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="z72kcepzfbm2ydud"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170530085138.GR1594-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
 
-On 05/24/2017 01:09 PM, Suman Anna wrote:
-> Hi Philipp,
-> 
-> This series adds a reset controller driver that uses the TI SCI protocol
-> to manage resets on some TI SoCs. It is a repost of the previous v4 [1]
-> submission that has already been acked by Rob and Santosh, but with some
-> minor changes. This series has been waiting for the ti-sci-pm-domains
-> series to make it to mainline and because of the dependencies against
-> a DT header file including the device id values. The ti-sci-pm-domains
-> series is now merged and available in 4.12-rc1.
-> 
-> The main changes in v5 is to drop the include/dt-bindings/reset/k2g.h
-> file based on some comments received from Arnd on a similar header usage
-> in the ti-sci-pm-domains series. The ti-sci-pm-domains usage is being
-> addressed in [2] and this reset series is refreshed to follow the same
-> rule and drop the reset header file.
-> 
-> Patches are on top of 4.12-rc1 plus the recent Kconfig name change on
-> the TI SYSCON reset driver [3].
-> 
-> Rob, Santosh,
-> I have retained the Acks received from you on v4, but I am not sure
-> since there are some minor changes to the series. Please provide any
-> comments if you do not agree with the changes.
-> 
-> regards
-> Suman
-> 
-> Changes from v4 [1]:
->  - Removed the include/dt-bindings/reset/k2g.h, and updated the
->    bindings document
->  - Minor checkpatch fixes to the driver patch
-> 
-> Changes from v3:
->  - Addressed Rob Herring's comments
->  - Added Santosh Shilimkar's Ack
-> 
-> Changes from v2:
->  - Merged DT binding patch and reset header patch
->  - Added locking for reset bit mask
-> 
-> Changes from v1:
->  - Revised dt binding
->  - CC Linux ARM list
-> 
-> [1] http://marc.info/?l=devicetree&m=147976458332492&w=2
-> [2] http://marc.info/?l=linux-arm-kernel&m=149547831708124&w=2
-> [3] https://patchwork.kernel.org/patch/9744909/
-> 
-> Andrew F. Davis (2):
->   Documentation: dt: reset: Add TI SCI reset binding
->   reset: Add the TI SCI reset driver
-> 
+--z72kcepzfbm2ydud
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Can you pick up this series for v4.13 if there are no comments. Btw, [2]
-is acked by Rob. Will appreciate if you can fixup the patch header from
-"Documentation: dt: reset: ..." to "dt-bindings: reset: ..." on the
-first patch when applying. Thanks in advance.
+On Tue, May 30, 2017 at 09:51:38AM +0100, Charles Keepax wrote:
 
-regards
-Suman
+> These activate the individual types of synchronisation between
+> the two stereo amps over a proprietary single wire connection
+> between the two amps. The audio option synchronises the group
+
+So we should at least have something that represents that single wire
+connection in DT since it might not be there and so that the kernel can
+make sure that both devices agree if they're synced or not and can
+disable the sync if it's been enabled in error (if one of the devices
+is off, you seemed to be saying that might cause problems).
+
+> delay between the two amps. The VPBR links the brown out on the
+> two amps and the OTW links the over temperature warning.
+
+It's not clear to me when it'd make sense to disable these from a system
+integration point of view.
+
+> The issue is really one of it being use-case specific whether the
+> amps are being used independently or in a stereo configuration.
+> You could have only a single amp in use in which case the sync
+> features are best turned off. Or one might even have use-cases
+> with both amps where they are being used independently but at the
+> same time.
+
+It feels like if this is going to be user controllable the UI needs to
+be pulled up a level to be something like an on/off switch for the sync
+rather than a series of magic _EXT controls on the individual CODECs.
+Even if it is magic _EXT controls having them being per device feels
+wrong.
+
+--z72kcepzfbm2ydud
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlkxnDUACgkQJNaLcl1U
+h9DwbQf/RPXNfMDWZAXSNkxfwW8jhRBIn0ZQxNxPyA1L+ch9pP8izS7H2PJUHlbL
+VGUlsfToBAMQz7NPjOdmxm5fg7VitjhGCMt25WxuPJ/c5mg0XJbB5IaoOW1AK6jx
+szU76UGb2ZgHNUohca1+YjpjqEpXkGWycfQ05xBoDLzemnKeIG0YQYPcDg9EJjVe
+EGQnwf6IXp0DCeYrdZ+a1oyx6OJck2aYmgfnG+VYX6DzV3Jtpx5On6a+aLRV07Yu
+fbrVKtfNMjETwZmkjRXzV4qwoKdneunV0blsBJnEP0QiSGuz4wkii0ATYfdPQINw
+cCvi69rIegmu66P4KjifLhW30ZqsVQ==
+=jl+k
+-----END PGP SIGNATURE-----
+
+--z72kcepzfbm2ydud--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
