@@ -1,156 +1,76 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH 3/4 DONOTMERGE] ARM: sun8i: a83t: Add device tree for Sinovoip Bananapi BPI-M3
-Date: Fri,  2 Jun 2017 11:11:25 +0200
-Message-ID: <20170602091126.14476-3-clabbe.montjoie@gmail.com>
-References: <20170602091126.14476-1-clabbe.montjoie@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170602091126.14476-1-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: Remove min and max voltage values for dcdc3
+Date: Fri, 2 Jun 2017 14:51:48 +0530
+Message-ID: <1496395308-29471-1-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: j-keerthy-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+dcdc3 supplies to DDR on AM43x series. When we set both
+min and max values to the same value. The regulator framework
+sets that particular voltage. This is bad as we are changing
+the ddr voltage when executing from ddr. Hence remove the min and
+max values. The ddr supply voltage shall be set from bootloader
+when not executing from ddr and not while executing from kernel.
 
-The BPI-M3 is an Allwinner A83T based SBC in the Bananapi/Bpi family.
-It is roughly the same form factor as the BPI-M1+, with roughly the
-same peripherals and connectors:
+The previous discussion can be found here:
 
-  - 2GB LPDDR3 DRAM
-  - 8GB eMMC
-  - Micro-SD card slot
-  - HDMI output
-  - Headset (stereo + mic) jack
-  - Onboard mic
-  - Gigabit Ethernet with RTL8211E transceiver
-  - Ampak AP6212 WiFi + BT
-  - USB OTG connector
-  - USB-to-SATA bridge connected through a USB 2.0 hub
-  - Consumer IR receiver
-  - MIPI DSI LCD panel connector
-  - Camera interface (parallel and MIPI CSI) connector
-  - 3 LEDs (Red, Green, Blue), of which 2 are controllable (GB)
-  - Raspberry Pi 2 compatible GPIO header
+http://www.spinics.net/lists/devicetree/msg56399.html
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/Makefile                   |  1 +
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 94 ++++++++++++++++++++++++++++
- 2 files changed, 95 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
+ arch/arm/boot/dts/am437x-gp-evm.dts  | 2 --
+ arch/arm/boot/dts/am437x-sk-evm.dts  | 2 --
+ arch/arm/boot/dts/am43x-epos-evm.dts | 2 --
+ 3 files changed, 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 3bd29feb8298..4cb203deb118 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -897,6 +897,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a33-sinlinx-sina33.dtb \
- 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
- 	sun8i-a83t-cubietruck-plus.dtb \
-+	sun8i-a83t-bananapi-m3.dtb \
- 	sun8i-h2-plus-orangepi-zero.dtb \
- 	sun8i-h3-bananapi-m2-plus.dtb \
- 	sun8i-h3-beelink-x2.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-new file mode 100644
-index 000000000000..bb23904847d5
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright 2017 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens@csie.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a83t.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "Banana Pi BPI-M3";
-+	compatible = "sinovoip,bpi-m3", "allwinner,sun8i-a83t";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_emmc_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index 397e98b..29a538e 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -549,8 +549,6 @@
+ 
+ 		dcdc3: regulator-dcdc3 {
+ 			regulator-name = "vdcdc3";
+-			regulator-min-microvolt = <1500000>;
+-			regulator-max-microvolt = <1500000>;
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 			regulator-state-mem {
+diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
+index a62e158..2c6bf06 100644
+--- a/arch/arm/boot/dts/am437x-sk-evm.dts
++++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+@@ -451,8 +451,6 @@
+ 
+ 		dcdc3: regulator-dcdc3 {
+ 			regulator-name = "vdds_ddr";
+-			regulator-min-microvolt = <1500000>;
+-			regulator-max-microvolt = <1500000>;
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 			regulator-state-mem {
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index f6648ab..54f40f3 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -442,8 +442,6 @@
+ 
+ 		dcdc3: regulator-dcdc3 {
+ 			regulator-name = "vdcdc3";
+-			regulator-min-microvolt = <1500000>;
+-			regulator-max-microvolt = <1500000>;
+ 			regulator-boot-on;
+ 			regulator-always-on;
+ 		};
 -- 
-2.13.0
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
