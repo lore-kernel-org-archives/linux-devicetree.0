@@ -1,171 +1,237 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
- ARM MHU doorbells
-Date: Fri, 2 Jun 2017 10:32:57 +0100
-Message-ID: <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
- <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
- <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com>
- <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
- <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH 3/6] mfd: hi6421v530: add support for HiSilicon Hi6421v530
+Date: Fri, 2 Jun 2017 17:35:45 +0800
+Message-ID: <CAFGCpxzvJ2hm0hrb6T-faPeKhLhMOMMWZi7HO=oUOa+pHFdd2g@mail.gmail.com>
+References: <20170526063518.21246-1-guodong.xu@linaro.org> <20170526063518.21246-4-guodong.xu@linaro.org>
+ <20170530073606.tm4gacph4yj47ntx@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170530073606.tm4gacph4yj47ntx@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, damm+renesas@opensource.se, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Linus Walleij <linus>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 02/06/17 06:45, Jassi Brar wrote:
-> Hi Rob,
-> 
-> On Wed, May 31, 2017 at 10:38 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Thu, May 25, 2017 at 02:23:44PM +0100, Sudeep Holla wrote:
->>>
->>>>>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 46 ++++++++++++++++++++--
->>>>>  1 file changed, 43 insertions(+), 3 deletions(-)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> index 4971f03f0b33..bd9a3a267caf 100644
->>>>> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->>>>> @@ -10,21 +10,42 @@ STAT register and the remote clears it after having read the data.
->>>>>  The last channel is specified to be a 'Secure' resource, hence can't be
->>>>>  used by Linux running NS.
->>>>>
->>>>> +The MHU drives the interrupt signal using a 32-bit register, with all
->>>>> +32-bits logically ORed together. It provides a set of registers to
->>>>> +enable software to set, clear and check the status of each of the bits
->>>>> +of this register independently. The use of 32 bits per interrupt line
->>>>> +enables software to provide more information about the source of the
->>>>> +interrupt. For example, each bit of the register can be associated with
->>>>> +a type of event that can contribute to raising the interrupt. Each of
->>>>> +the 32-bits can be used as "doorbell" to alert the remote processor.
->>>>> +
->>>>>  Mailbox Device Node:
->>>>>  ====================
->>>>>
->>>>>  Required properties:
->>>>>  --------------------
->>>>> -- compatible:          Shall be "arm,mhu" & "arm,primecell"
->>>>> +- compatible:          Shall be "arm,primecell" and one of the below:
->>>>> +                       "arm,mhu" - if the controller doesn't support
->>>>> +                                   doorbell model
->>>>> +                       "arm,mhu-doorbell" - if the controller supports
->>>>> +                                   doorbell model
->>>>>  - reg:                 Contains the mailbox register address range (base
->>>>>                         address and length)
->>>>> -- #mbox-cells          Shall be 1 - the index of the channel needed.
->>>>> +- #mbox-cells          Shall be 1 - the index of the channel needed when
->>>>> +                       compatible is "arm,mhu"
->>>>> +                       Shall be 2 - the index of the channel needed, and
->>>>> +                       the index of the doorbell bit with the channel when
->>>>> +                       compatible is "arm,mhu-doorbell"
->>>>>  - interrupts:          Contains the interrupt information corresponding to
->>>>> -                       each of the 3 links of MHU.
->>>>> +                       each of the 3 physical channels of MHU namely low
->>>>> +                       priority non-secure, high priority non-secure and
->>>>> +                       secure channels.
->>>>>
->>>>>  Example:
->>>>>  --------
->>>>>
->>>>> +1. Controller which doesn't support doorbells
->>>>> +
->>>>>         mhu: mailbox@2b1f0000 {
->>>>>                 #mbox-cells = <1>;
->>>>>                 compatible = "arm,mhu", "arm,primecell";
->>>>> @@ -41,3 +62,22 @@ used by Linux running NS.
->>>>>                 reg = <0 0x2e000000 0x4000>;
->>>>>                 mboxes = <&mhu 1>; /* HP-NonSecure */
->>>>>         };
->>>>> +
->>>>> +2. Controller which supports doorbells
->>>>> +
->>>>> +       mhu: mailbox@2b1f0000 {
->>>>> +               #mbox-cells = <2>;
->>>>> +               compatible = "arm,mhu-doorbell", "arm,primecell";
->>>>> +               reg = <0 0x2b1f0000 0x1000>;
->>>>> +               interrupts = <0 36 4>, /* LP-NonSecure */
->>>>> +                            <0 35 4>, /* HP-NonSecure */
->>>>> +                            <0 37 4>; /* Secure */
->>>>> +               clocks = <&clock 0 2 1>;
->>>>> +               clock-names = "apb_pclk";
->>>>> +       };
->>>>> +
->>>>> +       mhu_client: scb@2e000000 {
->>>>> +               compatible = "arm,scpi";
->>>>> +               reg = <0 0x2e000000 0x200>;
->>>>> +               mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
->>>>> +       };
->>>>>
->>>> Every MHU controller can by driven as "arm,mhu-doorbell" or "arm,mhu"
->>>> equally fine. So you are basically smuggling a s/w feature into DT.
->>>>
->>>
->>> I disagree, the spec clearly says each bit can be used for different
->>> event and hence we need a way to specify that in DT when used as doorbell.
+On Tue, May 30, 2017 at 3:36 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Fri, 26 May 2017, Guodong Xu wrote:
+>
+>> Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
+>> main SoC via memory-mapped I/O.
 >>
->> I think the point is that you should not continue to use both. The
+>> Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon, bu=
+t
+>> at different revisions. They share the same memory-mapped I/O design. Th=
+ey
+>> differ in regulator details, eg. LDO voltage points.
 >>
-> FYKI my point (here and in other threads) is that current MHU
-> driver/bindings can very well support Sudeep's usecase.
-> 
->> single cell usage should be deprecated. Maybe you'll have to encode the
->> 2nd cell when not used as 0 means bit 0?
+>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+>> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+>> ---
+>>  drivers/mfd/Kconfig           |  9 +++++
+>>  drivers/mfd/Makefile          |  1 +
+>>  drivers/mfd/hi6421v530-pmic.c | 92 ++++++++++++++++++++++++++++++++++++=
++++++++
+>
+> As previously discussed, this support should be added to the existing
+> driver.
+
+Yes, I will do that.
+
+>
+>>  3 files changed, 102 insertions(+)
+>>  create mode 100644 drivers/mfd/hi6421v530-pmic.c
 >>
->> Arguably, you don't even need a new compatible. #mbox-cells tells you
->> whether to use the old or new binding. I'm fine either way though.
+>> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> index 3eb5c93..bdc8304 100644
+>> --- a/drivers/mfd/Kconfig
+>> +++ b/drivers/mfd/Kconfig
+>> @@ -388,6 +388,15 @@ config MFD_HI6421_PMIC
+>>         menus in order to enable them.
+>>         We communicate with the Hi6421 via memory-mapped I/O.
 >>
-> In mailbox terminology, there is a channel and command(s) that we
-> send/recv over it. OOB data passing is optional.
-> 
-> MHU driver accepts a command as a u32. Sudeep's usecase has commands
-> of the form of BIT(x)  ... an instance of u32.
-> 
+>> +config MFD_HI6421V530_PMIC
+>> +     tristate "HiSilicon Hi6421v530 PMU/Codec IC"
+>> +     depends on OF
+>> +     select MFD_CORE
+>> +     select REGMAP_MMIO
+>> +     help
+>> +       Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicat=
+es
+>> +       with main SoC via memory-mapped I/O.
+>> +
+>>  config MFD_HI655X_PMIC
+>>       tristate "HiSilicon Hi655X series PMU/Codec IC"
+>>       depends on ARCH_HISI || COMPILE_TEST
+>> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+>> index c16bf1e..cde62fc 100644
+>> --- a/drivers/mfd/Makefile
+>> +++ b/drivers/mfd/Makefile
+>> @@ -206,6 +206,7 @@ obj-$(CONFIG_MFD_STW481X) +=3D stw481x.o
+>>  obj-$(CONFIG_MFD_IPAQ_MICRO) +=3D ipaq-micro.o
+>>  obj-$(CONFIG_MFD_MENF21BMC)  +=3D menf21bmc.o
+>>  obj-$(CONFIG_MFD_HI6421_PMIC)        +=3D hi6421-pmic-core.o
+>> +obj-$(CONFIG_MFD_HI6421V530_PMIC)    +=3D hi6421v530-pmic.o
+>>  obj-$(CONFIG_MFD_HI655X_PMIC)   +=3D hi655x-pmic.o
+>>  obj-$(CONFIG_MFD_DLN2)               +=3D dln2.o
+>>  obj-$(CONFIG_MFD_RT5033)     +=3D rt5033.o
+>> diff --git a/drivers/mfd/hi6421v530-pmic.c b/drivers/mfd/hi6421v530-pmic=
+.c
+>> new file mode 100644
+>> index 0000000..651659a
+>> --- /dev/null
+>> +++ b/drivers/mfd/hi6421v530-pmic.c
+>> @@ -0,0 +1,92 @@
+>> +/*
+>> + * Device driver for Hi6421 IC
+>> + *
+>> + * Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
+>> + *              http://www.hisilicon.com
+>> + * Copyright (c) <2017> Linaro Ltd.
+>> + *              http://www.linaro.org
+>> + *
+>> + * Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+>> + *         Guodong Xu <guodong.xu@linaro.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHO=
+UT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY o=
+r
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Licens=
+e for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License
+>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>=
+.
+>
+> Can you use the shorter licence script?
+>
+>> + */
+>> +
+>> +#include <linux/device.h>
+>> +#include <linux/err.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/mfd/hi6421-pmic.h>
+>
+> Alphabetical.
+>
 
-Again read the spec, it is designed to be used as doorbell
+I will update that in the existing drivers/mfd/hi6421-pmic-core.c
+together with my other changes.
 
-> Instead of having his client driver pass BIT(x) like other MHU
+>> +static const struct mfd_cell hi6421v530_devs[] =3D {
+>> +     { .name =3D "hi6421v530-regulator", },
+>> +};
+>
+> Chen Feng promised me that he would add other devices to the original
+> driver nearly 18 months ago.  Until more devices are added, these are
+> not MFD drivers.  When will you add the remaining devices?
+>
 
-Client is generic and doesn't understand which controller it's working
-with. It's not custom protocol. I have given enough links and details to
-say it's generic protocol adapted by other vendors.
+New devices will be added when enabling functions on the hikey960
+board. v530 provides a clk for wifi/bt, that can be added very quick.
 
-> clients, he wants to modify the driver and bindings to specify 'x' via
-> second cell of mboxes.  That would have made sense (and already
-> implemented) if the controller could send only 1 bit at a time and
-> every client/protocol used exactly 1 command - both of which are not
-> true.
+>> +static int hi6421v530_pmic_probe(struct platform_device *pdev)
+>> +{
+>> +     struct hi6421_pmic *pmic;
+>> +     struct resource *res;
+>> +     void __iomem *base;
+>> +     int ret;
+>> +
+>> +     pmic =3D devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+>> +     if (!pmic)
+>> +             return -ENOMEM;
+>> +
+>> +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +     base =3D devm_ioremap_resource(&pdev->dev, res);
+>> +     if (IS_ERR(base))
+>> +             return PTR_ERR(base);
+>> +
+>> +     pmic->regmap =3D devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
+>> +                                              &hi6421_regmap_config);
+>> +     if (IS_ERR(pmic->regmap)) {
+>> +             dev_err(&pdev->dev,
+>> +                     "regmap init failed: %ld\n", PTR_ERR(pmic->regmap)=
+);
+>
+> "Failed to initialise Regmap"
 
-Yes but the controller is designed to provide single bit doorbell
-capability. Please understand that instead of pushing how you think it
-needs to work.
+Thanks, will update in the existing drivers/mfd/hi6421-pmic-core.c
 
-> 
-> I even offered Sudeep to share his client driver and I'll adapt it for
-> him, but her refuses to either see my point or share his code.
-> 
+>
+>> +             return PTR_ERR(pmic->regmap);
+>> +     }
+>> +
+>> +     platform_set_drvdata(pdev, pmic);
+>> +
+>> +     ret =3D devm_mfd_add_devices(&pdev->dev, 0, hi6421v530_devs,
+>
+> Use the #defines provided instead of '0'.
+>
+>> +                                ARRAY_SIZE(hi6421v530_devs), NULL, 0, N=
+ULL);
+>> +     if (ret) {
+>> +             dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
+>
+> "Failed to add child devices"
+>
 
-You have not answered my queries, you keep telling I can help but never
-read and answer what I ask. Also I have told you the driver is in
-mainline(drivers/firmware/arm_scpi.c) and there will be another similar
-one. And theres are used by different platforms with different mailbox
-controllers.
-Please post patches to make 2 different protocols like SCPI work. Please
-note these protocols are used by other platforms which have different
-controllers.
+Thanks, will update in the existing drivers/mfd/hi6421-pmic-core.c
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +             return ret;
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static const struct of_device_id of_hi6421v530_pmic_match_tbl[] =3D {
+>> +     { .compatible =3D "hisilicon,hi6421v530-pmic", },
+>> +     { },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, of_hi6421v530_pmic_match_tbl);
+>
+> Drop the "_tbl" part, it's implied and superfluous.
+>
+
+Will update.
+
+>> +static struct platform_driver hi6421v530_pmic_driver =3D {
+>> +     .driver =3D {
+>> +             .name   =3D "hi6421v530_pmic",
+>
+> One space please.
+>
+
+Thanks, will update.
+
+I will send updates in v3 soon.
+
+-Guodong
+
+>> +             .of_match_table =3D of_hi6421v530_pmic_match_tbl,
+>> +     },
+>> +     .probe  =3D hi6421v530_pmic_probe,
+>> +};
+>> +module_platform_driver(hi6421v530_pmic_driver);
+>> +
+>> +MODULE_AUTHOR("Guodong Xu <guodong.xu@linaro.org>");
+>> +MODULE_DESCRIPTION("Hi6421v530 PMIC driver");
+>> +MODULE_LICENSE("GPL v2");
+>
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
