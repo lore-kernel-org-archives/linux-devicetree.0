@@ -1,7 +1,7 @@
 From: Joshua Clayton <stillcompiling@gmail.com>
-Subject: [PATCH v12 4/6] ARM: dts: imx6q-evi: support altera-ps-spi
-Date: Fri,  2 Jun 2017 13:30:50 -0700
-Message-ID: <8253d3ad7de8ba991de9f23fd68b8f9502c1ffe0.1496434383.git.stillcompiling@gmail.com>
+Subject: [PATCH v12 5/6] lib: add bitrev8x4()
+Date: Fri,  2 Jun 2017 13:30:51 -0700
+Message-ID: <7108de698ffdeaa3c61a23997bc0877120bf114e.1496434383.git.stillcompiling@gmail.com>
 References: <684ea151ba9aa2c6555a299daf56552ddc11f596.1496434383.git.stillcompiling@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <684ea151ba9aa2c6555a299daf56552ddc11f596.1496434383.git.stillcompiling@gmail.com>
@@ -12,47 +12,57 @@ To: Alan Tull <atull@kernel.org>, Moritz Fischer <moritz.fischer@ettus.com>, Ana
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for Altera FPGA connected to an spi port
-to the evi devicetree file
+Add a function to reverse bytes within a 32 bit word.
+Operate on a u32 rather than individual bytes.
 
 Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
 ---
- arch/arm/boot/dts/imx6q-evi.dts | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ include/linux/bitrev.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
-index 24fe093a66db..59aebbc95671 100644
---- a/arch/arm/boot/dts/imx6q-evi.dts
-+++ b/arch/arm/boot/dts/imx6q-evi.dts
-@@ -82,6 +82,15 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
- 	status = "okay";
-+
-+	fpga: fpga@0 {
-+		compatible = "altr,fpga-passive-serial";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		pinctrl-0 = <&pinctrl_fpgaspi>;
-+		nconfig-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
-+		nstat-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
-+	};
- };
+diff --git a/include/linux/bitrev.h b/include/linux/bitrev.h
+index fb790b8449c1..b97be27e5a85 100644
+--- a/include/linux/bitrev.h
++++ b/include/linux/bitrev.h
+@@ -29,6 +29,8 @@ static inline u32 __bitrev32(u32 x)
  
- &ecspi3 {
-@@ -313,6 +322,13 @@
- 		>;
- 	};
+ #endif /* CONFIG_HAVE_ARCH_BITREVERSE */
  
-+	pinctrl_fpgaspi: fpgaspigrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_ROW1__GPIO4_IO09 0x1b0b0
-+			MX6QDL_PAD_KEY_ROW2__GPIO4_IO11 0x1b0b0
-+		>;
-+	};
++#define __bitrev8x4(x)	(__bitrev32(swab32(x)))
 +
- 	pinctrl_gpminand: gpminandgrp {
- 		fsl,pins = <
- 			MX6QDL_PAD_NANDF_CLE__NAND_CLE 0xb0b1
+ #define __constant_bitrev32(x)	\
+ ({					\
+ 	u32 __x = x;			\
+@@ -50,6 +52,15 @@ static inline u32 __bitrev32(u32 x)
+ 	__x;								\
+ })
+ 
++#define __constant_bitrev8x4(x) \
++({			\
++	u32 __x = x;	\
++	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
++	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
++	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
++	__x;								\
++})
++
+ #define __constant_bitrev8(x)	\
+ ({					\
+ 	u8 __x = x;			\
+@@ -75,6 +86,14 @@ static inline u32 __bitrev32(u32 x)
+ 	__bitrev16(__x);				\
+  })
+ 
++#define bitrev8x4(x) \
++({			\
++	u32 __x = x;	\
++	__builtin_constant_p(__x) ?	\
++	__constant_bitrev8x4(__x) :			\
++	__bitrev8x4(__x);				\
++ })
++
+ #define bitrev8(x) \
+ ({			\
+ 	u8 __x = x;	\
 -- 
 2.11.0
