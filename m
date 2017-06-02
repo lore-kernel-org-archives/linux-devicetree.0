@@ -1,64 +1,92 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: [PATCH v2 3/4] phy: rockchip-inno-usb2: add one phy comprises with two host-ports support
-Date: Fri,  2 Jun 2017 11:20:25 +0800
-Message-ID: <1496373626-27856-4-git-send-email-frank.wang@rock-chips.com>
-References: <1496373626-27856-1-git-send-email-frank.wang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496373626-27856-1-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, william.wu@rock-chips.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, charles.chen@rock-chips.com, cody.xie@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
+From: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: [PATCH v5 1/5] mtd: mchp23k256: Add OF device ID table
+Date: Fri,  2 Jun 2017 15:21:15 +1200
+Message-ID: <20170602032119.22282-2-chris.packham@alliedtelesis.co.nz>
+References: <20170602032119.22282-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170602032119.22282-1-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: William Wu <william.wu@rock-chips.com>
+This allows registering of this device via a Device Tree.
 
-At the current rockchip-inno-usb2 phy driver framework, it can
-only support usb2-phy which comprises with one otg-port and one
-host-port.
-
-However, some Rockchip SoCs' (e.g RK3228, RK3229) usb2-phy comprises
-with two host-ports, so we use index of otg id for one host-port
-configuration, and make it work the same as otg-port host mode.
-
-Signed-off-by: William Wu <william.wu@rock-chips.com>
-Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
+Signed-off-by: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Reviewed-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Tested-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 ---
- drivers/phy/phy-rockchip-inno-usb2.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Changes in v2:
+- collect review/test from Andrew
+Changes in v3:
+- None
+Changes in v4:
+- None
+Changes in v5:
+- None (note this has already been applied to l2-mtd.git)
 
-diff --git a/drivers/phy/phy-rockchip-inno-usb2.c b/drivers/phy/phy-rockchip-inno-usb2.c
-index d6e459d..d026b4cf 100644
---- a/drivers/phy/phy-rockchip-inno-usb2.c
-+++ b/drivers/phy/phy-rockchip-inno-usb2.c
-@@ -406,7 +406,8 @@ static int rockchip_usb2phy_init(struct phy *phy)
- 	mutex_lock(&rport->mutex);
+ .../devicetree/bindings/mtd/microchip,mchp23k256.txt   | 18 ++++++++++++++++++
+ drivers/mtd/devices/mchp23k256.c                       |  8 ++++++++
+ 2 files changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
+
+diff --git a/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt b/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
+new file mode 100644
+index 000000000000..25e5ad38b0f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/microchip,mchp23k256.txt
+@@ -0,0 +1,18 @@
++* MTD SPI driver for Microchip 23K256 (and similar) serial SRAM
++
++Required properties:
++- #address-cells, #size-cells : Must be present if the device has sub-nodes
++  representing partitions.
++- compatible : Must be "microchip,mchp23k256"
++- reg : Chip-Select number
++- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
++
++Example:
++
++	spi-sram@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "microchip,mchp23k256";
++		reg = <0>;
++		spi-max-frequency = <20000000>;
++	};
+diff --git a/drivers/mtd/devices/mchp23k256.c b/drivers/mtd/devices/mchp23k256.c
+index e237db9f1bdb..9d8306a15833 100644
+--- a/drivers/mtd/devices/mchp23k256.c
++++ b/drivers/mtd/devices/mchp23k256.c
+@@ -19,6 +19,7 @@
+ #include <linux/sizes.h>
+ #include <linux/spi/flash.h>
+ #include <linux/spi/spi.h>
++#include <linux/of_device.h>
  
- 	if (rport->port_id == USB2PHY_PORT_OTG) {
--		if (rport->mode != USB_DR_MODE_HOST) {
-+		if (rport->mode != USB_DR_MODE_HOST &&
-+		    rport->mode != USB_DR_MODE_UNKNOWN) {
- 			/* clear bvalid status and enable bvalid detect irq */
- 			ret = property_enable(rphy,
- 					      &rport->port_cfg->bvalid_det_clr,
-@@ -496,7 +497,8 @@ static int rockchip_usb2phy_exit(struct phy *phy)
- 	struct rockchip_usb2phy_port *rport = phy_get_drvdata(phy);
+ struct mchp23k256_flash {
+ 	struct spi_device	*spi;
+@@ -166,9 +167,16 @@ static int mchp23k256_remove(struct spi_device *spi)
+ 	return mtd_device_unregister(&flash->mtd);
+ }
  
- 	if (rport->port_id == USB2PHY_PORT_OTG &&
--	    rport->mode != USB_DR_MODE_HOST) {
-+	    rport->mode != USB_DR_MODE_HOST &&
-+	    rport->mode != USB_DR_MODE_UNKNOWN) {
- 		cancel_delayed_work_sync(&rport->otg_sm_work);
- 		cancel_delayed_work_sync(&rport->chg_work);
- 	} else if (rport->port_id == USB2PHY_PORT_HOST)
-@@ -973,7 +975,8 @@ static int rockchip_usb2phy_otg_port_init(struct rockchip_usb2phy *rphy,
- 	mutex_init(&rport->mutex);
- 
- 	rport->mode = of_usb_get_dr_mode_by_phy(child_np, -1);
--	if (rport->mode == USB_DR_MODE_HOST) {
-+	if (rport->mode == USB_DR_MODE_HOST ||
-+	    rport->mode == USB_DR_MODE_UNKNOWN) {
- 		ret = 0;
- 		goto out;
- 	}
++static const struct of_device_id mchp23k256_of_table[] = {
++	{ .compatible = "microchip,mchp23k256" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, mchp23k256_of_table);
++
+ static struct spi_driver mchp23k256_driver = {
+ 	.driver = {
+ 		.name	= "mchp23k256",
++		.of_match_table = of_match_ptr(mchp23k256_of_table),
+ 	},
+ 	.probe		= mchp23k256_probe,
+ 	.remove		= mchp23k256_remove,
 -- 
-2.0.0
+2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
