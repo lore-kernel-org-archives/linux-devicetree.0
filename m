@@ -1,66 +1,58 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] dt-bindings: mfd: Add hi6421v530 bindings
-Date: Fri, 2 Jun 2017 17:01:18 +0800
-Message-ID: <CAFGCpxzxQfC+mf6Ltjzq=rtk+1C_R2x0+eu3s+zszK58x0OS8Q@mail.gmail.com>
-References: <20170526063518.21246-1-guodong.xu@linaro.org> <20170526063518.21246-2-guodong.xu@linaro.org>
- <20170531180755.on4jcgwxpnli3mly@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 00/21] net-next: stmmac: add dwmac-sun8i
+ ethernet driver
+Date: Fri, 2 Jun 2017 11:13:20 +0200
+Message-ID: <20170602091320.lyfxsanxrypfpozb@flea.lan>
+References: <20170531071852.12422-1-clabbe.montjoie@gmail.com>
+ <20170601.145819.789604139072328057.davem@davemloft.net>
+ <20170602063752.aqyvwcykvepiyt4y@flea.lan>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170531180755.on4jcgwxpnli3mly@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mi7hxpmao4xr3bre"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMOYYTEQKGQECJJO22Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170602063752.aqyvwcykvepiyt4y-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 1, 2017 at 2:07 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, May 26, 2017 at 02:35:13PM +0800, Guodong Xu wrote:
->> DT bindings for hisilicon HI655x PMIC chip.
->>
->> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  .../bindings/mfd/hisilicon,hi6421v530.txt          | 25 ++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt
->> new file mode 100644
->> index 0000000..6ffe6f6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/hisilicon,hi6421v530.txt
->> @@ -0,0 +1,25 @@
->> +Hisilicon Hi6421v530 Power Management Integrated Circuit (PMIC)
->> +
->> +The hardware layout for access PMIC Hi6421v530 from AP SoC Hi3660.
->> +Between PMIC Hi6421v530 and Hi3660, the physical signal channel is SSI.
->> +We can use memory-mapped I/O to communicate.
->> +
->> ++----------------+             +-------------+
->> +|                |             |             |
->> +|    Hi3660      |   SSI bus   |  Hi6421v530 |
->> +|                |-------------|             |
->> +|                |(REGMAP_MMIO)|             |
->> ++----------------+             +-------------+
->
-> regmap is a Linuxism and should not be part of the binding.
->
-> So there some sort of controller that generates SSI packets? based on
-> MMIO addresses? That should be more fully described here. For example,
-> the PMIC should probably be a child of the controller.
 
-Hi, Rob
+--mi7hxpmao4xr3bre
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Thanks for review. I just sent v2 of this patchset, according to
-review comments I got. In v2, I discarded this new binding file.
-Actually, I extended the existing
-Documentation/devicetree/bindings/mfd/hi6421.txt to make it support
-v530. There is no regmap in that.
+On Fri, Jun 02, 2017 at 08:37:52AM +0200, Maxime Ripard wrote:
+> On Thu, Jun 01, 2017 at 02:58:19PM -0400, David Miller wrote:
+> > From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > Date: Wed, 31 May 2017 09:18:31 +0200
+> > 
+> > > This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
+> > > present on Allwinner H3/H5/A83T/A64 SoCs.
+> > 
+> > Series applied, but wow that's a lot of DT file changes :-(
+> 
+> The DT patches should not go through your tree, but arm-soc, so I
+> guess this is not an issue for you?
 
-Yes, there is a controller to generate SSI packets. However that is
-completely blind to main SoC. It's more MMIO.
+Ok, so I saw that you actually merged them. Can you revert or drop
+that merge for the DT part?
 
--Guodong
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This will generate a lot of conflicts with our tree, and I'm not sure
+this would be efficient to make you take all the entirely unrelated to
+next patches.
+
+Maxime
+
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--mi7hxpmao4xr3bre--
