@@ -1,87 +1,102 @@
-From: Jens Rottmann <JRottm-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH] streamline TLV320AIC23 drivers
-Date: Fri, 2 Jun 2017 23:22:05 +0200
-Message-ID: <641616fb-1903-12e3-831e-4744e3ab6bfa@gmx.de>
-References: <b4127646-565b-ab16-0a8f-1fd6c263389e@ADLINKtech.com>
- <20170428171115.6zc5nhspvkkgevs7@rob-hp-laptop>
- <0ea2a5f8-8af0-598d-ad49-23501176efbb@yahoo.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v6 03/11] clk: bcm: Add clocks for Stingray SOC
+Date: Fri, 2 Jun 2017 15:10:52 -0700
+Message-ID: <20170602221052.GT20170@codeaurora.org>
+References: <1496385275-6899-1-git-send-email-anup.patel@broadcom.com>
+ <1496385275-6899-4-git-send-email-anup.patel@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0ea2a5f8-8af0-598d-ad49-23501176efbb-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1496385275-6899-4-git-send-email-anup.patel@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-repeatedly got no response. Assuming all my mails got blocked, so moved to yet another account. Hope I'll get through this time.
-Regards, Jens
+On 06/02, Anup Patel wrote:
+> diff --git a/drivers/clk/bcm/clk-sr.c b/drivers/clk/bcm/clk-sr.c
+> new file mode 100644
+> index 0000000..342f702
+> --- /dev/null
+> +++ b/drivers/clk/bcm/clk-sr.c
+> @@ -0,0 +1,320 @@
+> +
+> +static const struct iproc_clk_ctrl lcpll_pcie_clk[] = {
+> +	[BCM_SR_LCPLL_PCIE_PHY_REF_CLK] = {
+> +		.channel = BCM_SR_LCPLL_PCIE_PHY_REF_CLK,
+> +		.flags = IPROC_CLK_AON,
+> +		.enable = ENABLE_VAL(0x0, 7, 1, 13),
+> +		.mdiv = REG_VAL(0x14, 0, 9),
+> +	},
+> +};
+> +
+> +static void __init sr_lcpll_pcie_clk_init(struct device_node *node)
 
--------- Original Message --------
-Subject: Re: [PATCH] streamline TLV320AIC23 drivers
-Date: Sat, 6 May 2017 00:39:20 +0200
-From: Jens Rottmann <JRottm-/E1597aS9LQAvxtiuMwx3w@public.gmane.org>
-To: Rob Herring
-CC: Mark Rutland, Jaroslav Kysela, Takashi Iwai, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liam Girdwood, Mark Brown
+Drop __init usage throughout this patch please.
 
-Hi Rob,
-sorry for the delay.
+> +{
+> +	iproc_pll_clk_setup(node, &lcpll_pcie, NULL, 0, lcpll_pcie_clk,
+> +		ARRAY_SIZE(lcpll_pcie_clk));
+> +}
+> +
+> +static const struct of_device_id sr_clk_dt_ids[] = {
+> +{ .compatible = "brcm,sr-genpll0", .data = sr_genpll0_clk_init, },
+> +{ .compatible = "brcm,sr-genpll4", .data = sr_genpll4_clk_init, },
+> +{ .compatible = "brcm,sr-genpll5", .data = sr_genpll5_clk_init, },
+> +{ .compatible = "brcm,sr-lcpll0", .data = sr_lcpll0_clk_init, },
+> +{ .compatible = "brcm,sr-lcpll1", .data = sr_lcpll1_clk_init, },
+> +{ .compatible = "brcm,sr-lcpll-pcie", .data = sr_lcpll_pcie_clk_init, },
+> +{ /* sentinel */ }
 
-> On Fri, Apr 21, 2017 at 09:22:02PM +0200, Jens Rottmann wrote:
->> - Remove Eukrea naming, i.MX is from Freescale, TLV320AIC23 is from TI,
->>   driver was written by Eukrea, but it's DT capable, so it's not exclusive:
->>   - Kconfig option title
->>   - 'model' option
->>   - driver 'compatible' string
->> [...]
->> CONFIG variable and files have not been renamed, though, so no need to
->> change old defconfigs.
+Please tab these out properly And also leave off the , after the
+init function.
 
-On 04/28/2017 19:11, Rob Herring answered:
-> Perhaps change the filename. [...]
+> +};
+> +
+> +static int sr_clk_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *device;
+> +	void (*init_func)(struct device_node *);
 
-I wanted to avoid the churn, but ok. In that case:
+Let's keep this taking the platform device pointer. That way in
+the future devm could be used as well as other platform device
+APIs without having to change all init signatures.
 
-Do you want me to change all indentifiers inside driver, too?
-eukrea_tlv320_probe() --> imx_tlv320aic23_probe()
+> +
+> +	device = of_match_device(sr_clk_dt_ids, &pdev->dev);
+> +	if (!device)
+> +		return -ENODEV;
+> +	init_func = device->data;
 
-Do you want me to also rename the CONFIG var?
-CONFIG_SND_SOC_EUKREA_TLV320 --> CONFIG_SND_SOC_IMX_TLV320
-I'd adapt in-tree defconfigs, but would unavoidably break
-out-of-tree defconfigs...
+Can use of_device_get_match_data() instead
 
->> -  - fsl,mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX).
->> +  - mux-int-port	: The internal port of the i.MX audio muxer (AUDMUX).
->> +  - fsl,mux-int-port	: Dito, deprecated.
->> -  - fsl,mux-ext-port	: The external port of the i.MX audio muxer.
->> +  - mux-ext-port	: The external port of the i.MX audio muxer.
->> +  - fsl,mux-ext-port	: Dito, deprecated.
+> +
+> +	init_func(pdev->dev.of_node);
+> +
+> +	return 0;
+> +}
 
-> Is this used elsewhere? This is FSL specific, so you should keep the
-> prefix.
+It would be pretty nice if we could have some platform driver
+common function for this where we want to call different probe
+functions for different compatible ids and put them all in the
+same driver file. Like platform_driver_of_probe() or something
+that then calls a int (*init_func)(struct platform_device *pdev)
+directly from the of match table for you.
 
-.../sound/soc/fsl$ egrep 'property.*mux-(int|ext)-port' *
-eukrea-tlv320.c: ret = of_property_read_u32(np, "fsl,mux-int-port", &int_port);
-eukrea-tlv320.c: ret = of_property_read_u32(np, "fsl,mux-ext-port", &ext_port);
-fsl-asoc-card.c: ret = of_property_read_u32(np, "mux-int-port", &int_port);
-fsl-asoc-card.c: ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
-imx-es8328.c:    ret = of_property_read_u32(np, "mux-int-port", &int_port);
-imx-es8328.c:    ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
-imx-sgtl5000.c:  ret = of_property_read_u32(np, "mux-int-port", &int_port);
-imx-sgtl5000.c:  ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
-imx-wm8962.c:    ret = of_property_read_u32(np, "mux-int-port", &int_port);
-imx-wm8962.c:    ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
+> +
+> +static struct platform_driver sr_clk_driver = {
 
-All drivers use mux-int|ext-port without prefix, tlv320 is the only
-odd driver out, that's why I did this streamlining patch in the 1st place.
+iproc_sr_* throughout this file?
 
-I would rather not have to change all other drivers to match the tlv320 one.
+> +	.driver = {
+> +		.name = "sr-clk",
+> +		.of_match_table = sr_clk_dt_ids,
+> +	},
+> +	.probe = sr_clk_probe,
+> +};
+> +builtin_platform_driver(sr_clk_driver);
 
-Thanks,
-Jens
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
