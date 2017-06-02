@@ -1,71 +1,18 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
-Date: Sat, 3 Jun 2017 21:46:36 -0700
-Message-ID: <d51acbaa-0dc6-ce5c-5442-62c5c24ad6da@gmail.com>
-References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
- <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
- <20170531195821.GA16962@amd>
- <20170601082659.GJ1019@valkosipuli.retiisi.org.uk>
- <755909bf-d1de-e0f3-1569-0d4b16e26817@gmail.com> <20170603195139.GA3062@amd>
- <20170603215709.GU1019@valkosipuli.retiisi.org.uk>
+From: "Seydou Thieba" <seydouthieba-IWqWACnzNjwqdlJmJB21zg@public.gmane.org>
+Subject: Investment Interest & Offer
+Date: Sat, 03 Jun 2017 00:01:46 +0100
+Message-ID: <201706022301.v52MWdWe028766@www.brfliseberg.se>
+Reply-To: seydouthiebaconsultant-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170603215709.GU1019-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Content-Language: en-US
+Content-Description: Mail message body
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TZNg+MwTxZMZA@public.gmane.org
+To: Recipients <seydouthieba-IWqWACnzNjwqdlJmJB21zg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 06/03/2017 02:57 PM, Sakari Ailus wrote:
-> On Sat, Jun 03, 2017 at 09:51:39PM +0200, Pavel Machek wrote:
->> Hi!
->>
->>>>>> +	/* Auto/manual exposure */
->>>>>> +	ctrls->auto_exp = v4l2_ctrl_new_std_menu(hdl, ops,
->>>>>> +						 V4L2_CID_EXPOSURE_AUTO,
->>>>>> +						 V4L2_EXPOSURE_MANUAL, 0,
->>>>>> +						 V4L2_EXPOSURE_AUTO);
->>>>>> +	ctrls->exposure = v4l2_ctrl_new_std(hdl, ops,
->>>>>> +					    V4L2_CID_EXPOSURE_ABSOLUTE,
->>>>>> +					    0, 65535, 1, 0);
->>>>>
->>>>> Is exposure_absolute supposed to be in microseconds...?
->>>>
->>>> Yes.
->>>
->>> According to the docs V4L2_CID_EXPOSURE_ABSOLUTE is in 100 usec units.
->>>
->>>   OTOH V4L2_CID_EXPOSURE has no defined unit, so it's a better fit IMO.
->>>> Way more drivers appear to be using EXPOSURE than EXPOSURE_ABSOLUTE, too.
->>>
->>> Done, switched to V4L2_CID_EXPOSURE. It's true, this control is not
->>> taking 100 usec units, so unit-less is better.
->>
->> Thanks. If you know the units, it would be of course better to use
->> right units...
-> 
-> Steve: what's the unit in this case? Is it lines or something else?
-
-Yes, the register interface for exposure takes lines*16.
-
-Maybe converting from seconds to lines is as simple as
-framerate * height * seconds. But I'm not sure about that.
-
-Steve
-
-> 
-> Pavel: we do need to make sure the user space will be able to know the unit,
-> too. It's rather a case with a number of controls: the unit is known but
-> there's no API to convey it to the user.
-> 
-> The exposure is a bit special, too: granularity matters a lot on small
-> values. On most other controls it does not.
-> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
