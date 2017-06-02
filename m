@@ -1,67 +1,55 @@
 From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 02/19] drm/sun4i: add components in two passes with
- encoders added in second pass
-Date: Fri, 2 Jun 2017 21:18:47 +0200
-Message-ID: <20170602191847.6wuz2pthqtc44xxb@flea.lan>
+Subject: Re: [PATCH 10/19] drm/sun4i: hdmi: Rename internal DDC clock to
+ avoid name collision
+Date: Fri, 2 Jun 2017 21:30:12 +0200
+Message-ID: <20170602193012.xwuziggyx6evmusz@flea.lan>
 References: <20170602101024.18940-1-wens@csie.org>
- <20170602101024.18940-3-wens@csie.org>
+ <20170602101024.18940-11-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="jsz7dexgmjhyp7va"
+        protocol="application/pgp-signature"; boundary="7y53a2smtra3yz4w"
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170602101024.18940-3-wens@csie.org>
+In-Reply-To: <20170602101024.18940-11-wens@csie.org>
 Sender: linux-clk-owner@vger.kernel.org
 To: Chen-Yu Tsai <wens@csie.org>
 Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
---jsz7dexgmjhyp7va
+--7y53a2smtra3yz4w
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 02, 2017 at 06:10:07PM +0800, Chen-Yu Tsai wrote:
-> The encoder drivers use drm_of_find_possible_crtcs to get upstream
-> crtcs from the device tree using of_graph. For the results to be
-> correct, encoders must be probed/bound after _all_ crtcs have been
-> created. The existing code uses a depth first recursive traversal
-> of the of_graph, which means the encoders downstream of the TCON
-> get add right after the first TCON. The second TCON or CRTC will
-> never be properly associated with encoders connected to it.
+On Fri, Jun 02, 2017 at 06:10:15PM +0800, Chen-Yu Tsai wrote:
+> The DDC parent clock on the A31 SoC is also conveniently named
+> "hdmi-ddc", which results in a name collision when the hdmi driver
+> registers its internal DDC divider clock.
 >=20
-> Other platforms, such as Rockchip, deal with this by probing all
-> crtcs first, then all subsequent components. This is easy to do
-> since the crtcs correspond to just one device node, and are the
-> first nodes in the pipeline.
->=20
-> However with Allwinner SoCs, the function of the CRTC is split between
-> the display backend (DE 1.0) or mixer (DE 2.0), which does scan-out
-> and compositing, and the TCON, which generating the display timing
-> signals. Further complicating the process, there may be a Dynamic Range
-> Controller between the backend and the TCON. Also, the backend is
-> preceded by the frontend, with a Display Enhancement Unit possibly
-> in between.
->=20
-> One solution would be, instead of a depth first traversal of the
-> component of_graph, we do a breadth first traversal, so that components
-> at the same depth are grouped together. This however requires us to
-> implement extra code for a queue structure that is only used here.
->=20
-> Instead, since we can identify TCON device nodes, and since the
-> component system can gracefully deal with duplicate entries, we can add
-> components in two passes, using the existing recursive depth code. The
-> first pass stops right after the TCON is added. The second pass will
-> re-add all components up to the TCON, but these will be skipped since
-> they will have already been bound with the entries from the first pass.
-> The encoders added in the second pass will be the last entries in the
-> list.
+> Rename the internal clock to "hdmi-ddc-divider".
 >=20
 > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm=
+/sun4i/sun4i_hdmi_ddc_clk.c
+> index e1071838f487..9a6b6243e977 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+> @@ -125,7 +125,7 @@ static int _sun4i_ddc_create(struct sun4i_hdmi *hdmi,=
+ struct clk *parent,
+>  	if (!ddc)
+>  		return -ENOMEM;
+> =20
+> -	init.name =3D "hdmi-ddc";
+> +	init.name =3D "hdmi-ddc-divider";
 
-This commit log is great. So great actually that it should be a
-comment in the code ;)
+Can't we rename the CCU clock instead? Having the clock called
+hdmi-ddc being the actual clock output on the DDC bus feels more
+natural.
 
 Maxime
 
@@ -70,24 +58,24 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---jsz7dexgmjhyp7va
+--7y53a2smtra3yz4w
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZMboXAAoJEBx+YmzsjxAgqSEP/11tZUrN/BZ9+oTiMsSWDaJB
-+biwzLq02fKdOigBcF5y9bSaIRRaPz+l5nFXE6iFmm3KLzFUF/HXXHjdnDGGtF6I
-dfaEu9xmb24ApYrT4h0zTw8+tSGb3mDrKqYKc6m9a4Hfu5qaMA2ymcc13X6AR7h1
-gOMRElVhsSmSVAw4Lxd5nfYrWmx8pRgaFjAREKdY/QeT3nNQZdo12sXansUa8nYl
-9o9Y8w55IyWtcWK64nqFt/REF2w6FZbT1214n55Bk9yb40LpKmZnPpuwl4JScgKK
-DrKkc8UsP3TWCfi5WYlVB5Jyms74ku2pUNMQuR5hPRzy7n4d4OFap1hAN4G25gWM
-+DKch6xGwX74MsNhkOEReSlQ34Y3qL4CROZ8mdOq6JX0OqUUgq6oYD0a0FnCzjrF
-QE/k0kH6H8MMX6ILol5Oxdv9OqCGjXAkMY+onsyuDtfb1sdM1sq2m1NVZPk0uilO
-6kpw8LgGPIkJmLmkxn8D9pNGjpulCJDWl/zGxgaXAJnVcX/dkof2TE6dLzPG8LHg
-rRhuda/2VCwkB+TIjhL0uutxKb+OULsbUSbWNmGT4Z6A+awjr+BEpmdQTrxL/Y/1
-UdnSq1p+q1znuP0b6JKwxioPteQu9MxxawMjNoa/0Xo7wbNNBgHRuyV1IZnlCKB+
-KkFjPTuvZ3mmUkvxhiwv
-=JZct
+iQIcBAEBAgAGBQJZMbzEAAoJEBx+YmzsjxAg+W0P/0PxhdeQ1+8PIIiKtkbF2xFr
+NTcNMGvLcni1Hi3NWyLE/V6p91o/XmC3VdTKvF4Xz2u75YWKLiT+adorC36TYOkf
+2PTESXtN4EuMjVGc9rLixF9kW/GSYMZbgQJzYyH09aUkmCQtdRDQcO59bdvUXvDv
+WaUWL5mrHcllBh+MgR/+6psXLnmcB0XXXcRAbB4LmrjNKB9A51uay/iITUVteDo1
+3I4XA0dRv8FeFAUPA4zMLOMYjdsMuYVNWYu5S8+0oJt78EbmX9xOQJ7Abfpr3XB4
+peo+oTA6XXibnaTOhLTTqSFJJI9VNu6wEv+uw/AVb5sx+OjEqRVS9pGiN6q2xx0s
+YfBtN8xPmexM7qQFktgWTL7ODKIwa6w2izv1n536OlzJXxApPdgbWlxJw6SHuQj7
+QWnjghOP1B1XjleLH+fOO47Ocfesd5dfIvDhM1Vf8S6quzFWTlPBFoRrB3C1PJc0
+bcs3ZTT+DUHAftT5AmdUlqNUhreNnGNC9X77tloOis4YIsYRA8GknQx3V2AlLpRy
+QwIw2YIZfqHERla4GGIQg0h00583J0A79aXbtUcxgzhvGQv4JKc/C9ZGuykBpUPP
+uoZ9A7XOydDJ/JF6/3P7pv3aFfDx0IAO86euPYOlDCbte8qyKHsIQlOT8gOwcAs4
+OjAluf9xndDmUSXnXX0b
+=lGDu
 -----END PGP SIGNATURE-----
 
---jsz7dexgmjhyp7va--
+--7y53a2smtra3yz4w--
