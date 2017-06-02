@@ -1,479 +1,75 @@
-From: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] mfd: max7360: Add mfd core device driver
-Date: Fri, 2 Jun 2017 19:21:58 +0300
-Message-ID: <20170602162158.4432-3-valentin_sitdikov@mentor.com>
-References: <20170602162158.4432-1-valentin_sitdikov@mentor.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v11 4/6] ARM: dts: imx6q-evi: support altera-ps-spi
+Date: Fri, 2 Jun 2017 18:30:12 +0200
+Message-ID: <a4d0815c-593f-57a9-41fc-ab636ca9b9e5@suse.de>
+References: <20170525172911.11467-1-stillcompiling@gmail.com>
+ <20170525172911.11467-5-stillcompiling@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170602162158.4432-1-valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170525172911.11467-5-stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Bastian Stender <bst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Hi,
 
-This patch adds core/IRQ driver to support MAX7360 I2C chip
-which contains keypad, GPIO, PWM, GPO and rotary encoder submodules.
+Am 25.05.2017 um 19:29 schrieb Joshua Clayton:
+> Add support for Altera V FPGA connected to an spi port
 
-Signed-off-by: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
----
- drivers/mfd/Kconfig         |  16 +++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/max7360.c       | 302 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/max7360.h |  90 +++++++++++++
- 4 files changed, 409 insertions(+)
- create mode 100644 drivers/mfd/max7360.c
- create mode 100644 include/linux/mfd/max7360.h
+Did you mean "Altera Cyclone V"?
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 3eb5c93..894c2e9 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -721,6 +721,22 @@ config MFD_MAX8998
- 	  additional drivers must be enabled in order to use the functionality
- 	  of the device.
- 
-+config MFD_MAX7360
-+	tristate "Maxim Semiconductor MAX7360 support"
-+	depends on I2C && OF
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select IRQ_DOMAIN
-+	help
-+	  Say yes here to add support for Maxim Semiconductor MAX7360.
-+	  This provides microprocessors with management of up to 64 key switches,
-+	  with an additional eight LED drivers/GPIOs that feature constant-current,
-+	  PWM intensity control, and rotary switch control options.
-+
-+	  This driver provides common support for accessing the device,
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
-+
- config MFD_MT6397
- 	tristate "MediaTek MT6397 PMIC Support"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index c16bf1e..9e721c0 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -137,6 +137,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
- obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
- 
- obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
-+obj-$(CONFIG_MFD_MAX7360)	+= max7360.o
- obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
- obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
- obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
-diff --git a/drivers/mfd/max7360.c b/drivers/mfd/max7360.c
-new file mode 100644
-index 0000000..2bfd3e2
---- /dev/null
-+++ b/drivers/mfd/max7360.c
-@@ -0,0 +1,302 @@
-+/*
-+ * Copyright (C) 2017 Mentor Graphics
-+ *
-+ * Author: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-+ * Author: Valentin Sitdikov <Valentin.Sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/slab.h>
-+
-+
-+static const struct mfd_cell max7360_devices[] = {
-+	{
-+		.name           = "max7360-gpio",
-+		.of_compatible	= "maxim,max7360-gpio",
-+	},
-+	{
-+		.name           = "max7360-keypad",
-+		.of_compatible	= "maxim,max7360-keypad",
-+	},
-+	{
-+		.name           = "max7360-pwm",
-+		.of_compatible	= "maxim,max7360-pwm",
-+	},
-+	{
-+		.name           = "max7360-rotary",
-+		.of_compatible	= "maxim,max7360-rotary",
-+	},
-+};
-+
-+static irqreturn_t max7360_irq(int irq, void *data)
-+{
-+	struct max7360 *max7360 = data;
-+	int virq;
-+
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_GPIO);
-+	handle_nested_irq(virq);
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_KEYPAD);
-+	handle_nested_irq(virq);
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_ROTARY);
-+	handle_nested_irq(virq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t max7360_irqi(int irq, void *data)
-+{
-+	struct max7360 *max7360 = data;
-+	int virq;
-+
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_GPIO);
-+	handle_nested_irq(virq);
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_ROTARY);
-+	handle_nested_irq(virq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t max7360_irqk(int irq, void *data)
-+{
-+	struct max7360 *max7360 = data;
-+	int virq;
-+
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_KEYPAD);
-+	handle_nested_irq(virq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max7360_irq_map(struct irq_domain *d, unsigned int virq,
-+			  irq_hw_number_t hwirq)
-+{
-+	struct max7360 *max7360 = d->host_data;
-+
-+	irq_set_chip_data(virq, max7360);
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip,
-+				handle_edge_irq);
-+	irq_set_nested_thread(virq, 1);
-+	irq_set_noprobe(virq);
-+
-+	return 0;
-+}
-+
-+static void max7360_irq_unmap(struct irq_domain *d, unsigned int virq)
-+{
-+	irq_set_chip_and_handler(virq, NULL, NULL);
-+	irq_set_chip_data(virq, NULL);
-+}
-+
-+static const struct irq_domain_ops max7360_irq_ops = {
-+	.map    = max7360_irq_map,
-+	.unmap  = max7360_irq_unmap,
-+	.xlate  = irq_domain_xlate_onecell,
-+};
-+
-+static void max7360_free_irqs(struct max7360 *max7360)
-+{
-+	if (max7360->shared_irq)
-+		free_irq(max7360->shared_irq, max7360);
-+	else {
-+		free_irq(max7360->irq_inti, max7360);
-+		free_irq(max7360->irq_intk, max7360);
-+	}
-+}
-+
-+static int max7360_irq_init(struct max7360 *max7360, struct device_node *np)
-+{
-+	int ret;
-+
-+	max7360->irq_inti = of_irq_get_byname(np, "inti");
-+	if (max7360->irq_inti < 0) {
-+		dev_err(max7360->dev, "no inti provided");
-+		return -ENODEV;
-+	}
-+
-+	max7360->irq_intk = of_irq_get_byname(np, "intk");
-+	if (max7360->irq_intk < 0) {
-+		dev_err(max7360->dev, "no intk provided");
-+		return -ENODEV;
-+	}
-+
-+	if (max7360->irq_inti == max7360->irq_intk) {
-+		/*
-+		 * In case of pin inti and pin intk are the connected
-+		 * to the same soc`s irq pin.
-+		 */
-+		max7360->shared_irq = max7360->irq_inti;
-+		ret = request_threaded_irq(max7360->shared_irq, NULL,
-+					  max7360_irq,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  "max7360", max7360);
-+		if (ret) {
-+			dev_err(max7360->dev, "failed to request IRQ: %d\n",
-+				ret);
-+			return ret;
-+		}
-+	} else {
-+		max7360->shared_irq = 0;
-+		ret = request_threaded_irq(max7360->irq_inti, NULL,
-+					  max7360_irqi,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  "max7360", max7360);
-+		if (ret) {
-+			dev_err(max7360->dev, "failed to request inti IRQ: %d\n",
-+			       ret);
-+			return ret;
-+		}
-+
-+		ret = request_threaded_irq(max7360->irq_intk, NULL,
-+					  max7360_irqk,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  "max7360", max7360);
-+		if (ret) {
-+			free_irq(max7360->irq_inti, max7360);
-+			dev_err(max7360->dev, "failed to request intk IRQ: %d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	max7360->domain = irq_domain_add_simple(np, MAX7360_NR_INTERNAL_IRQS,
-+					       0, &max7360_irq_ops, max7360);
-+
-+	if (!max7360->domain) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to create irqdomain\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = irq_create_mapping(max7360->domain, MAX7360_INT_GPIO);
-+	if (!ret) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to map GPIO IRQ\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = irq_create_mapping(max7360->domain, MAX7360_INT_KEYPAD);
-+	if (!ret) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to map KEYPAD IRQ\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = irq_create_mapping(max7360->domain, MAX7360_INT_ROTARY);
-+	if (!ret) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to map ROTARY IRQ\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+static int max7360_device_init(struct max7360 *max7360)
-+{
-+	int ret;
-+
-+	ret = mfd_add_devices(max7360->dev, PLATFORM_DEVID_NONE,
-+			     max7360_devices,
-+			     ARRAY_SIZE(max7360_devices), NULL,
-+			     0, max7360->domain);
-+	if (ret)
-+		dev_err(max7360->dev, "failed to add child devices\n");
-+
-+	return ret;
-+}
-+
-+static const struct regmap_range max7360_volatile_ranges[] = {
-+	{
-+		.range_min = MAX7360_REG_KEYFIFO,
-+		.range_max = MAX7360_REG_KEYFIFO,
-+	}, {
-+		.range_min = MAX7360_REG_GPIOIN,
-+		.range_max = MAX7360_REG_GPIOIN,
-+	},
-+};
-+
-+static const struct regmap_access_table max7360_volatile_table = {
-+	.yes_ranges = max7360_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max7360_volatile_ranges),
-+};
-+
-+static const struct regmap_config max7360_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0xff,
-+	.volatile_table = &max7360_volatile_table,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static int max7360_probe(struct i2c_client *i2c,
-+			const struct i2c_device_id *id)
-+{
-+	struct device_node *np = i2c->dev.of_node;
-+	struct max7360 *max7360;
-+	int ret;
-+
-+	max7360 = devm_kzalloc(&i2c->dev, sizeof(struct max7360),
-+			      GFP_KERNEL);
-+	if (!max7360)
-+		return -ENOMEM;
-+
-+	max7360->dev = &i2c->dev;
-+	max7360->i2c = i2c;
-+
-+	i2c_set_clientdata(i2c, max7360);
-+
-+	max7360->regmap = devm_regmap_init_i2c(i2c, &max7360_regmap_config);
-+
-+	ret = max7360_irq_init(max7360, np);
-+	if (ret)
-+		return ret;
-+
-+	ret = max7360_device_init(max7360);
-+	if (ret) {
-+		dev_err(max7360->dev, "failed to add child devices\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max7360_remove(struct i2c_client *client)
-+{
-+	struct max7360 *max7360 = i2c_get_clientdata(client);
-+
-+	mfd_remove_devices(max7360->dev);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id max7360_match[] = {
-+	{ .compatible = "maxim,max7360" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max7360_match);
-+
-+static struct i2c_driver max7360_driver = {
-+	.driver = {
-+		.name	= "max7360",
-+		.of_match_table = max7360_match,
-+	},
-+	.probe		= max7360_probe,
-+	.remove		= max7360_remove,
-+};
-+
-+builtin_i2c_driver(max7360_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("MAX7360 MFD core driver");
-diff --git a/include/linux/mfd/max7360.h b/include/linux/mfd/max7360.h
-new file mode 100644
-index 0000000..c350d5e
---- /dev/null
-+++ b/include/linux/mfd/max7360.h
-@@ -0,0 +1,90 @@
-+#ifndef __LINUX_MFD_MAX7360_H
-+#define __LINUX_MFD_MAX7360_H
-+#include <linux/regmap.h>
-+
-+#define MAX7360_MAX_KEY_ROWS	8
-+#define MAX7360_MAX_KEY_COLS	8
-+#define MAX7360_MAX_KEY_NUM	(MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS)
-+#define MAX7360_ROW_SHIFT	3
-+
-+#define MAX7360_MAX_GPIO 8
-+#define MAX7360_MAX_GPO 6
-+#define MAX7360_COL_GPO_PINS 8
-+/*
-+ * MAX7360 registers
-+ */
-+#define MAX7360_REG_KEYFIFO	0x00
-+#define MAX7360_REG_CONFIG	0x01
-+#define MAX7360_REG_DEBOUNCE	0x02
-+#define MAX7360_REG_INTERRUPT	0x03
-+#define MAX7360_REG_PORTS	0x04
-+#define MAX7360_REG_KEYREP	0x05
-+#define MAX7360_REG_SLEEP	0x06
-+
-+/*
-+ * MAX7360 registers
-+ */
-+#define MAX7360_REG_GPIOCFG	0x40
-+#define MAX7360_REG_GPIOCTRL	0x41
-+#define MAX7360_REG_GPIODEB	0x42
-+#define MAX7360_REG_GPIOCURR	0x43
-+#define MAX7360_REG_GPIOOUTM	0x44
-+#define MAX7360_REG_PWMCOM	0x45
-+#define MAX7360_REG_RTRCFG	0x46
-+#define MAX7360_REG_GPIOIN	0x49
-+#define MAX7360_REG_RTR_CNT	0x4A
-+#define MAX7360_REG_PWMBASE	0x50
-+#define MAX7360_REG_PWMCFG	0x58
-+
-+
-+#define MAX7360_REG_PORTCFGBASE 0x58
-+
-+/*
-+ * Configuration register bits
-+ */
-+#define MAX7360_CFG_SLEEP	BIT(7)
-+#define MAX7360_CFG_INTERRUPT	BIT(5)
-+#define MAX7360_CFG_KEY_RELEASE	BIT(3)
-+#define MAX7360_CFG_WAKEUP	BIT(1)
-+#define MAX7360_CFG_TIMEOUT	BIT(0)
-+
-+/*
-+ * Autosleep register values (ms)
-+ */
-+#define MAX7360_AUTOSLEEP_8192	0x01
-+#define MAX7360_AUTOSLEEP_4096	0x02
-+#define MAX7360_AUTOSLEEP_2048	0x03
-+#define MAX7360_AUTOSLEEP_1024	0x04
-+#define MAX7360_AUTOSLEEP_512	0x05
-+#define MAX7360_AUTOSLEEP_256	0x06
-+
-+#define MAX7360_INT_INTI	0
-+#define MAX7360_INT_INTK	1
-+
-+#define MAX7360_INT_GPIO   0
-+#define MAX7360_INT_KEYPAD 1
-+#define MAX7360_INT_ROTARY 2
-+
-+#define MAX7360_NR_INTERNAL_IRQS	3
-+
-+/**
-+ * struct max7360
-+ * @dev: Parent device pointer
-+ * @i2c: I2c client pointer
-+ * @domain: Irq domain pointer
-+ * @regmap: Used for I2C communication on accessing registers
-+ * shared_irq: Irq number if inti and intk pins are connected together
-+ * irq_inti: Irq number for inti pin
-+ * irq_intk: Irq number for inik pin
-+ */
-+struct max7360 {
-+	struct device *dev;
-+	struct i2c_client *i2c;
-+	struct irq_domain *domain;
-+	struct regmap *regmap;
-+
-+	int shared_irq;
-+	int irq_inti;
-+	int irq_intk;
-+};
-+#endif
+> to the evi devicetree file
+> 
+> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6q-evi.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+> index 24fe093a66db..a0cbb2d84803 100644
+> --- a/arch/arm/boot/dts/imx6q-evi.dts
+> +++ b/arch/arm/boot/dts/imx6q-evi.dts
+> @@ -82,6 +82,15 @@
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
+>  	status = "okay";
+> +
+> +	fpga_spi: cyclonespi@0 {
+
+"cyclonespi" does not strike me as the best node name.
+
+I am guessing this is a sub-node of a SPI controller node, so no need to
+repeat "spi", and Cyclone seems more or less implied by "altr,fpga-".
+
+Note that the example in the bindings doc uses "evi-fpga-spi". Nodes
+don't need to be (shouldn't be?) prefixed with the board. Note that
+bindings examples tend to get copied a lot.
+
+Any reason not to just use "fpga@0" in both places for simplicity?
+
+> +		compatible = "altr,fpga-passive-serial";
+> +		spi-max-frequency = <20000000>;
+> +		reg = <0>;
+> +		pinctrl-0 = <&pinctrl_fpgaspi>;
+> +		nconfig-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
+> +		nstat-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
+> +	};
+>  };
+>  
+>  &ecspi3 {
+[snip]
+
+Regards,
+Andreas
+
 -- 
-2.9.3
-
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
