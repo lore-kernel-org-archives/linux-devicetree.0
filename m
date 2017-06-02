@@ -1,137 +1,55 @@
-From: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
- ARM MHU doorbells
-Date: Fri, 2 Jun 2017 11:15:39 +0530
-Message-ID: <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
-References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
- <1495621003-4291-3-git-send-email-sudeep.holla@arm.com> <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
- <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com> <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v5 04/11] arm64: dts: Initial DTS files for Broadcom
+ Stingray SOC
+Date: Fri, 2 Jun 2017 12:02:25 +0530
+Message-ID: <CAALAos-YQdr3dwjMDj-upSQMQbE6EHO8aXjjwTdCuTEgM+CR0g@mail.gmail.com>
+References: <1495790704-2438-1-git-send-email-anup.patel@broadcom.com>
+ <1495790704-2438-5-git-send-email-anup.patel@broadcom.com> <abeca9ac-487c-b6dc-1397-4134b0442909@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+In-Reply-To: <abeca9ac-487c-b6dc-1397-4134b0442909-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>Scott
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wed, May 31, 2017 at 10:38 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, May 25, 2017 at 02:23:44PM +0100, Sudeep Holla wrote:
+On Fri, Jun 2, 2017 at 11:07 AM, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>
+> On 05/26/2017 02:24 AM, Anup Patel wrote:
+>> The Broadcom Stingray SoC is a new member in Broadcom iProc
+>> SoC family.
 >>
->> >>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 46 ++++++++++++++++++++--
->> >>  1 file changed, 43 insertions(+), 3 deletions(-)
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> >> index 4971f03f0b33..bd9a3a267caf 100644
->> >> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> >> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
->> >> @@ -10,21 +10,42 @@ STAT register and the remote clears it after having read the data.
->> >>  The last channel is specified to be a 'Secure' resource, hence can't be
->> >>  used by Linux running NS.
->> >>
->> >> +The MHU drives the interrupt signal using a 32-bit register, with all
->> >> +32-bits logically ORed together. It provides a set of registers to
->> >> +enable software to set, clear and check the status of each of the bits
->> >> +of this register independently. The use of 32 bits per interrupt line
->> >> +enables software to provide more information about the source of the
->> >> +interrupt. For example, each bit of the register can be associated with
->> >> +a type of event that can contribute to raising the interrupt. Each of
->> >> +the 32-bits can be used as "doorbell" to alert the remote processor.
->> >> +
->> >>  Mailbox Device Node:
->> >>  ====================
->> >>
->> >>  Required properties:
->> >>  --------------------
->> >> -- compatible:          Shall be "arm,mhu" & "arm,primecell"
->> >> +- compatible:          Shall be "arm,primecell" and one of the below:
->> >> +                       "arm,mhu" - if the controller doesn't support
->> >> +                                   doorbell model
->> >> +                       "arm,mhu-doorbell" - if the controller supports
->> >> +                                   doorbell model
->> >>  - reg:                 Contains the mailbox register address range (base
->> >>                         address and length)
->> >> -- #mbox-cells          Shall be 1 - the index of the channel needed.
->> >> +- #mbox-cells          Shall be 1 - the index of the channel needed when
->> >> +                       compatible is "arm,mhu"
->> >> +                       Shall be 2 - the index of the channel needed, and
->> >> +                       the index of the doorbell bit with the channel when
->> >> +                       compatible is "arm,mhu-doorbell"
->> >>  - interrupts:          Contains the interrupt information corresponding to
->> >> -                       each of the 3 links of MHU.
->> >> +                       each of the 3 physical channels of MHU namely low
->> >> +                       priority non-secure, high priority non-secure and
->> >> +                       secure channels.
->> >>
->> >>  Example:
->> >>  --------
->> >>
->> >> +1. Controller which doesn't support doorbells
->> >> +
->> >>         mhu: mailbox@2b1f0000 {
->> >>                 #mbox-cells = <1>;
->> >>                 compatible = "arm,mhu", "arm,primecell";
->> >> @@ -41,3 +62,22 @@ used by Linux running NS.
->> >>                 reg = <0 0x2e000000 0x4000>;
->> >>                 mboxes = <&mhu 1>; /* HP-NonSecure */
->> >>         };
->> >> +
->> >> +2. Controller which supports doorbells
->> >> +
->> >> +       mhu: mailbox@2b1f0000 {
->> >> +               #mbox-cells = <2>;
->> >> +               compatible = "arm,mhu-doorbell", "arm,primecell";
->> >> +               reg = <0 0x2b1f0000 0x1000>;
->> >> +               interrupts = <0 36 4>, /* LP-NonSecure */
->> >> +                            <0 35 4>, /* HP-NonSecure */
->> >> +                            <0 37 4>; /* Secure */
->> >> +               clocks = <&clock 0 2 1>;
->> >> +               clock-names = "apb_pclk";
->> >> +       };
->> >> +
->> >> +       mhu_client: scb@2e000000 {
->> >> +               compatible = "arm,scpi";
->> >> +               reg = <0 0x2e000000 0x200>;
->> >> +               mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
->> >> +       };
->> >>
->> > Every MHU controller can by driven as "arm,mhu-doorbell" or "arm,mhu"
->> > equally fine. So you are basically smuggling a s/w feature into DT.
->> >
+>> This patch adds initial DTS files for Broadcom Stingray SoC
+>> and two of its reference boards (bcm958742k and bcm958742t).
 >>
->> I disagree, the spec clearly says each bit can be used for different
->> event and hence we need a way to specify that in DT when used as doorbell.
+>> We have lot of reference boards and large number of devices
+>> in Broadcom Stingray SoC so eventually we will have quite
+>> a few DTS files for Stingray. To tackle, we have added a
+>> separate directory for Stingray DTS files.
 >
-> I think the point is that you should not continue to use both. The
+> So I was going to apply this, but...
 >
-FYKI my point (here and in other threads) is that current MHU
-driver/bindings can very well support Sudeep's usecase.
-
-> single cell usage should be deprecated. Maybe you'll have to encode the
-> 2nd cell when not used as 0 means bit 0?
 >
-> Arguably, you don't even need a new compatible. #mbox-cells tells you
-> whether to use the old or new binding. I'm fine either way though.
+>> +     scr {
+>> +             compatible = "simple-bus";
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +             ranges = <0x0 0x0 0x61000000 0x05000000>;
 >
-In mailbox terminology, there is a channel and command(s) that we
-send/recv over it. OOB data passing is optional.
+> So you corrected the ranges property here...
+>
+>> +
+>> +             gic: interrupt-controller@63c00000 {
+>
+> but you kept the original unit address here, which does not match the
+> reg property, could you fix that through your entire submission?
 
-MHU driver accepts a command as a u32. Sudeep's usecase has commands
-of the form of BIT(x)  ... an instance of u32.
+Thanks for catching. I quickly update this and send revised patchset.
 
-Instead of having his client driver pass BIT(x) like other MHU
-clients, he wants to modify the driver and bindings to specify 'x' via
-second cell of mboxes.  That would have made sense (and already
-implemented) if the controller could send only 1 bit at a time and
-every client/protocol used exactly 1 command - both of which are not
-true.
-
-I even offered Sudeep to share his client driver and I'll adapt it for
-him, but her refuses to either see my point or share his code.
-
-Cheers!
+Regards,
+Anup
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
