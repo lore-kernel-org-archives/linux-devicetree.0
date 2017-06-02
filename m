@@ -1,123 +1,151 @@
-From: <sean.wang@mediatek.com>
-Subject: [PATCH 2/9] dt-bindings: regulator: Add document for MediaTek MT6380 regulator
-Date: Sat, 3 Jun 2017 01:55:43 +0800
-Message-ID: <8764fea31386da58518dff7f5e2170dcd8f6c167.1496425268.git.sean.wang@mediatek.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 4/9] soc: mediatek: pwrap: add pwrap_read32 for reading in 32-bit mode
+Date: Sat, 3 Jun 2017 01:55:45 +0800
+Message-ID: <efc4e0fc5e56a150b96d071bda4dc353fdafe394.1496425268.git.sean.wang@mediatek.com>
 References: <cover.1496425268.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1496425268.git.sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc: chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1496425268.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jamesjj.liao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, henryc.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-add dt-binding document for MediaTek MT6380 PMIC
+Some regulators such as MediaTek MT6380 has to be read in 32-bit mode.
+So the patch adds pwrap_read32, rename old pwrap_read into pwrap_read16
+and one function pointer is introduced for increasing flexibility allowing
+the determination which mode is used by the pwrap slave detection through
+device tree.
 
-Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Chenglin Xu <chenglin.xu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Chen Zhong <chen.zhong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- .../bindings/regulator/mt6380-regulator.txt        | 90 ++++++++++++++++++++++
- 1 file changed, 90 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 54 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 53 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-new file mode 100644
-index 0000000..9affeab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-@@ -0,0 +1,90 @@
-+Mediatek MT6380 Regulator Driver
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index a5f1093..4385e8d 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -487,6 +487,7 @@ enum pwrap_regs {
+ 
+ enum pmic_type {
+ 	PMIC_MT6323,
++	PMIC_MT6380,
+ 	PMIC_MT6397,
+ };
+ 
+@@ -496,9 +497,15 @@ enum pwrap_type {
+ 	PWRAP_MT8173,
+ };
+ 
++struct pmic_wrapper;
+ struct pwrap_slv_type {
+ 	const u32 *dew_regs;
+ 	enum pmic_type type;
++	/* pwrap operations are highly associated with the PMIC types,
++	 * so the pointers added increases flexibility allowing determination
++	 * which type is used by the detection through device tree.
++	 */
++	int (*pwrap_read)(struct pmic_wrapper *wrp, u32 adr, u32 *rdata);
+ };
+ 
+ struct pmic_wrapper {
+@@ -609,7 +616,7 @@ static int pwrap_write(struct pmic_wrapper *wrp, u32 adr, u32 wdata)
+ 	return 0;
+ }
+ 
+-static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
++static int pwrap_read16(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+ {
+ 	int ret;
+ 
+@@ -632,6 +639,39 @@ static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
+ 	return 0;
+ }
+ 
++static int pwrap_read32(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
++{
++	int ret, msb;
 +
-+All voltage regulators are defined as subnodes of the regulators node. A list
-+of regulators provided by this controller are defined as subnodes of the
-+PMIC's node. Each regulator is named according to its regulator type,
-+buck_<name> and ldo_<name>. The definition for each of these nodes is defined
-+using the standard binding for regulators at
-+Documentation/devicetree/bindings/regulator/regulator.txt.
++	*rdata = 0;
++	for (msb = 0; msb < 2; msb++) {
++		ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_idle);
++		if (ret) {
++			pwrap_leave_fsm_vldclr(wrp);
++			return ret;
++		}
 +
-+The valid names for regulators are::
-+BUCK:
-+  buck_vcore1, buck_vcore, buck_vrf
-+LDO:
-+  ldo_vmldo ,ldo_valdo , ldo_vphyldo, ldo_vddrldo, ldo_vtldo
++		pwrap_writel(wrp, ((msb << 30) | (adr << 16)),
++			     PWRAP_WACS2_CMD);
 +
-+Example:
++		ret = pwrap_wait_for_state(wrp, pwrap_is_fsm_vldclr);
++		if (ret)
++			return ret;
 +
-+	mt6380regulator: mt6380regulator {
-+		compatible = "mediatek,mt6380-regulator";
++		*rdata += (PWRAP_GET_WACS_RDATA(pwrap_readl(wrp,
++			   PWRAP_WACS2_RDATA)) << (16 * msb));
 +
-+		mt6380_vcpu_reg: buck_vcore1 {
-+			regulator-name = "vcpu";
-+			regulator-min-microvolt = < 600000>;
-+			regulator-max-microvolt = <1393750>;
-+			regulator-ramp-delay = <6250>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
++		pwrap_writel(wrp, 1, PWRAP_WACS2_VLDCLR);
++	}
 +
-+		mt6380_vcore_reg: buck_vcore {
-+			regulator-name = "vcore";
-+			regulator-min-microvolt = <600000>;
-+			regulator-max-microvolt = <1393750>;
-+			regulator-ramp-delay = <6250>;
-+		};
++	return 0;
++}
 +
-+		mt6380_vrf_reg: buck_vrf {
-+			regulator-name = "vrf";
-+			regulator-min-microvolt = <1200000>;
-+			regulator-max-microvolt = <1575000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
++static int pwrap_read(struct pmic_wrapper *wrp, u32 adr, u32 *rdata)
++{
++	return wrp->slave->pwrap_read(wrp, adr, rdata);
++}
 +
-+		mt6380_vm_reg: ldo_vmldo {
-+			regulator-name = "vmldo";
-+			regulator-min-microvolt = <1050000>;
-+			regulator-max-microvolt = <1400000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
+ static int pwrap_regmap_read(void *context, u32 adr, u32 *rdata)
+ {
+ 	return pwrap_read(context, adr, rdata);
+@@ -752,6 +792,8 @@ static int pwrap_mt2701_init_reg_clock(struct pmic_wrapper *wrp)
+ 		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_START);
+ 		pwrap_writel(wrp, 0x2, PWRAP_CSLEXT_END);
+ 		break;
++	default:
++		break;
+ 	}
+ 
+ 	return 0;
+@@ -815,6 +857,8 @@ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+ 		pwrap_write(wrp, wrp->slave->dew_regs[PWRAP_DEW_CIPHER_EN],
+ 			    0x1);
+ 		break;
++	default:
++		break;
+ 	}
+ 
+ 	/* wait for cipher data ready@AP */
+@@ -1035,11 +1079,19 @@ static irqreturn_t pwrap_interrupt(int irqno, void *dev_id)
+ static const struct pwrap_slv_type pmic_mt6323 = {
+ 	.dew_regs = mt6323_regs,
+ 	.type = PMIC_MT6323,
++	.pwrap_read = pwrap_read16,
++};
 +
-+		mt6380_va_reg: ldo_valdo {
-+			regulator-name = "valdo";
-+			regulator-min-microvolt = <2200000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vphy_reg: ldo_vphyldo {
-+			regulator-name = "vphyldo";
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vddr_reg: ldo_vddrldo {
-+			regulator-name = "vddr";
-+			regulator-min-microvolt = <1240000>;
-+			regulator-max-microvolt = <1840000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+
-+		mt6380_vt_reg: ldo_vtldo {
-+			regulator-name = "vadc18";
-+			regulator-min-microvolt = <2200000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-ramp-delay = <0>;
-+			regulator-always-on;
-+			regulator-boot-on;
-+		};
-+	};
++static const struct pwrap_slv_type pmic_mt6380 = {
++	.dew_regs = NULL,
++	.type = PMIC_MT6380,
++	.pwrap_read = pwrap_read32,
+ };
+ 
+ static const struct pwrap_slv_type pmic_mt6397 = {
+ 	.dew_regs = mt6397_regs,
+ 	.type = PMIC_MT6397,
++	.pwrap_read = pwrap_read16,
+ };
+ 
+ static const struct of_device_id of_slave_match_tbl[] = {
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
