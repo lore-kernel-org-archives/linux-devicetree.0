@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 09/19] drm/sun4i: hdmi: Support different
- variants of the DDC clock
-Date: Fri,  2 Jun 2017 18:10:14 +0800
-Message-ID: <20170602101024.18940-10-wens@csie.org>
+Subject: [PATCH 04/19] drm/sun4i: hdmi: Disable clks in bind
+ function error path and unbind function
+Date: Fri,  2 Jun 2017 18:10:09 +0800
+Message-ID: <20170602101024.18940-5-wens@csie.org>
 References: <20170602101024.18940-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBHHTYTEQKGQEGSSP5PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBG7TYTEQKGQEHRMAW6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170602101024.18940-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,131 +20,108 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On the A31, the HDMI DDC block is different from the one in the
-other SoCs. As far as the DDC clock goes, it has no pre-divider,
-as it is clocked from a slower parent clock, not the TMDS clock.
-The divider offset from the register value is different. And the
-clock control register is at a different offset.
+The HDMI driver enables the bus and mod clocks in the bind function, but
+does not disable them if it then bails our due to any errors. Neither
+does it disable the clocks in the unbind function.
 
-This patch adds support for different variants of the DDC clock.
+Fix this by adding a proper error path to the bind function, and
+clk_disable_unprepare calls to the unbind function.
+
+Also rename the err_cleanup_connector label to err_cleanup_encoder,
+since it is the encoder that gets cleaned up.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 42 ++++++++++++++++++++++++------
- 1 file changed, 34 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-index 4692e8c345ed..e1071838f487 100644
---- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-@@ -15,9 +15,16 @@
- #include "sun4i_tcon.h"
- #include "sun4i_hdmi.h"
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+index d3398f6250ef..457614073501 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+@@ -350,26 +350,29 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 	hdmi->mod_clk = devm_clk_get(dev, "mod");
+ 	if (IS_ERR(hdmi->mod_clk)) {
+ 		dev_err(dev, "Couldn't get the HDMI mod clock\n");
+-		return PTR_ERR(hdmi->mod_clk);
++		ret = PTR_ERR(hdmi->mod_clk);
++		goto err_disable_bus_clk;
+ 	}
+ 	clk_prepare_enable(hdmi->mod_clk);
  
-+struct sun4i_ddc_variant {
-+	u32	reg_offset;
-+	u8	pre_divider;
-+	u8	m_offset;
-+};
-+
- struct sun4i_ddc {
- 	struct clk_hw		hw;
- 	struct sun4i_hdmi	*hdmi;
-+	const struct sun4i_ddc_variant	*variant;
- };
+ 	hdmi->pll0_clk = devm_clk_get(dev, "pll-0");
+ 	if (IS_ERR(hdmi->pll0_clk)) {
+ 		dev_err(dev, "Couldn't get the HDMI PLL 0 clock\n");
+-		return PTR_ERR(hdmi->pll0_clk);
++		ret = PTR_ERR(hdmi->pll0_clk);
++		goto err_disable_mod_clk;
+ 	}
  
- static inline struct sun4i_ddc *hw_to_ddc(struct clk_hw *hw)
-@@ -27,6 +34,7 @@ static inline struct sun4i_ddc *hw_to_ddc(struct clk_hw *hw)
+ 	hdmi->pll1_clk = devm_clk_get(dev, "pll-1");
+ 	if (IS_ERR(hdmi->pll1_clk)) {
+ 		dev_err(dev, "Couldn't get the HDMI PLL 1 clock\n");
+-		return PTR_ERR(hdmi->pll1_clk);
++		ret = PTR_ERR(hdmi->pll1_clk);
++		goto err_disable_mod_clk;
+ 	}
  
- static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
- 					    unsigned long parent_rate,
-+					    const struct sun4i_ddc_variant *variant,
- 					    u8 *m, u8 *n)
- {
- 	unsigned long best_rate = 0;
-@@ -36,7 +44,8 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
- 		for (_n = 0; _n < 8; _n++) {
- 			unsigned long tmp_rate;
+ 	ret = sun4i_tmds_create(hdmi);
+ 	if (ret) {
+ 		dev_err(dev, "Couldn't create the TMDS clock\n");
+-		return ret;
++		goto err_disable_mod_clk;
+ 	}
  
--			tmp_rate = (((parent_rate / 2) / 10) >> _n) / (_m + 1);
-+			tmp_rate = (((parent_rate / variant->pre_divider) /
-+				     10) >> _n) / (_m + variant->m_offset);
+ 	writel(SUN4I_HDMI_CTRL_ENABLE, hdmi->base + SUN4I_HDMI_CTRL_REG);
+@@ -410,7 +413,7 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 	ret = sun4i_ddc_create(hdmi, hdmi->tmds_clk);
+ 	if (ret) {
+ 		dev_err(dev, "Couldn't create the DDC clock\n");
+-		return ret;
++		goto err_disable_mod_clk;
+ 	}
  
- 			if (tmp_rate > rate)
- 				continue;
-@@ -60,7 +69,9 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
- static long sun4i_ddc_round_rate(struct clk_hw *hw, unsigned long rate,
- 				 unsigned long *prate)
- {
--	return sun4i_ddc_calc_divider(rate, *prate, NULL, NULL);
-+	struct sun4i_ddc *ddc = hw_to_ddc(hw);
-+
-+	return sun4i_ddc_calc_divider(rate, *prate, ddc->variant, NULL, NULL);
- }
+ 	drm_encoder_helper_add(&hdmi->encoder,
+@@ -428,7 +431,7 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 	hdmi->encoder.possible_crtcs = drm_of_find_possible_crtcs(drm,
+ 								  dev->of_node);
+ 	if (!hdmi->encoder.possible_crtcs)
+-		return -EPROBE_DEFER;
++		goto err_disable_mod_clk;
  
- static unsigned long sun4i_ddc_recalc_rate(struct clk_hw *hw,
-@@ -70,11 +81,12 @@ static unsigned long sun4i_ddc_recalc_rate(struct clk_hw *hw,
- 	u32 reg;
- 	u8 m, n;
+ 	drm_connector_helper_add(&hdmi->connector,
+ 				 &sun4i_hdmi_connector_helper_funcs);
+@@ -438,7 +441,7 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
+ 	if (ret) {
+ 		dev_err(dev,
+ 			"Couldn't initialise the HDMI connector\n");
+-		goto err_cleanup_connector;
++		goto err_cleanup_encoder;
+ 	}
  
--	reg = readl(ddc->hdmi->base + SUN4I_HDMI_DDC_CLK_REG);
--	m = (reg >> 3) & 0x7;
-+	reg = readl(ddc->hdmi->base + ddc->variant->reg_offset);
-+	m = (reg >> 3) & 0xf;
- 	n = reg & 0x7;
- 
--	return (((parent_rate / 2) / 10) >> n) / (m + 1);
-+	return (((parent_rate / ddc->variant->pre_divider) / 10) >> n) /
-+	       (m + ddc->variant->m_offset);
- }
- 
- static int sun4i_ddc_set_rate(struct clk_hw *hw, unsigned long rate,
-@@ -83,10 +95,11 @@ static int sun4i_ddc_set_rate(struct clk_hw *hw, unsigned long rate,
- 	struct sun4i_ddc *ddc = hw_to_ddc(hw);
- 	u8 div_m, div_n;
- 
--	sun4i_ddc_calc_divider(rate, parent_rate, &div_m, &div_n);
-+	sun4i_ddc_calc_divider(rate, parent_rate, ddc->variant,
-+			       &div_m, &div_n);
- 
- 	writel(SUN4I_HDMI_DDC_CLK_M(div_m) | SUN4I_HDMI_DDC_CLK_N(div_n),
--	       ddc->hdmi->base + SUN4I_HDMI_DDC_CLK_REG);
-+	       ddc->hdmi->base + ddc->variant->reg_offset);
+ 	/* There is no HPD interrupt, so we need to poll the controller */
+@@ -449,8 +452,12 @@ static int sun4i_hdmi_bind(struct device *dev, struct device *master,
  
  	return 0;
+ 
+-err_cleanup_connector:
++err_cleanup_encoder:
+ 	drm_encoder_cleanup(&hdmi->encoder);
++err_disable_mod_clk:
++	clk_disable_unprepare(hdmi->mod_clk);
++err_disable_bus_clk:
++	clk_disable_unprepare(hdmi->bus_clk);
+ 	return ret;
  }
-@@ -97,7 +110,8 @@ static const struct clk_ops sun4i_ddc_ops = {
- 	.set_rate	= sun4i_ddc_set_rate,
- };
  
--int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
-+static int _sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent,
-+			     const struct sun4i_ddc_variant *variant)
- {
- 	struct clk_init_data init;
- 	struct sun4i_ddc *ddc;
-@@ -117,6 +131,7 @@ int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
- 	init.num_parents = 1;
+@@ -461,6 +468,8 @@ static void sun4i_hdmi_unbind(struct device *dev, struct device *master,
  
- 	ddc->hdmi = hdmi;
-+	ddc->variant = variant;
- 	ddc->hw.init = &init;
- 
- 	hdmi->ddc_clk = devm_clk_register(hdmi->dev, &ddc->hw);
-@@ -125,3 +140,14 @@ int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
- 
- 	return 0;
+ 	drm_connector_cleanup(&hdmi->connector);
+ 	drm_encoder_cleanup(&hdmi->encoder);
++	clk_disable_unprepare(hdmi->mod_clk);
++	clk_disable_unprepare(hdmi->bus_clk);
  }
-+
-+static const struct sun4i_ddc_variant sun4i_variant = {
-+	.reg_offset	= SUN4I_HDMI_DDC_CLK_REG,
-+	.pre_divider	= 2,
-+	.m_offset	= 1,
-+};
-+
-+int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
-+{
-+	return _sun4i_ddc_create(hdmi, parent, &sun4i_variant);
-+}
+ 
+ static const struct component_ops sun4i_hdmi_ops = {
 -- 
 2.11.0
