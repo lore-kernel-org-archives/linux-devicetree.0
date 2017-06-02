@@ -1,72 +1,86 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH  4/4] ARM: dts: iwg20d-q7: Add support for iWave G20D-Q7 board based on RZ/G1M
-Date: Fri,  2 Jun 2017 17:22:03 +0100
-Message-ID: <1496420523-23506-5-git-send-email-biju.das@bp.renesas.com>
-References: <1496420523-23506-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496420523-23506-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v5 0/2] Add TI SCI Reset Driver
+Date: Fri, 2 Jun 2017 11:45:53 -0500
+Message-ID: <04a25503-b675-8832-0323-eb7ecbaaefeb@ti.com>
+References: <20170524180930.9290-1-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170524180930.9290-1-s-anna@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Tero Kristo <t-kristo@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for iWave RainboW-G20D-Qseven board based on RZ/G1M.
+Hi Philipp,
 
-Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Reviewed-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile              |  1 +
- arch/arm/boot/dts/r8a7743-iwg20d-q7.dts | 25 +++++++++++++++++++++++++
- 2 files changed, 26 insertions(+)
- create mode 100644 arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+On 05/24/2017 01:09 PM, Suman Anna wrote:
+> Hi Philipp,
+> 
+> This series adds a reset controller driver that uses the TI SCI protocol
+> to manage resets on some TI SoCs. It is a repost of the previous v4 [1]
+> submission that has already been acked by Rob and Santosh, but with some
+> minor changes. This series has been waiting for the ti-sci-pm-domains
+> series to make it to mainline and because of the dependencies against
+> a DT header file including the device id values. The ti-sci-pm-domains
+> series is now merged and available in 4.12-rc1.
+> 
+> The main changes in v5 is to drop the include/dt-bindings/reset/k2g.h
+> file based on some comments received from Arnd on a similar header usage
+> in the ti-sci-pm-domains series. The ti-sci-pm-domains usage is being
+> addressed in [2] and this reset series is refreshed to follow the same
+> rule and drop the reset header file.
+> 
+> Patches are on top of 4.12-rc1 plus the recent Kconfig name change on
+> the TI SYSCON reset driver [3].
+> 
+> Rob, Santosh,
+> I have retained the Acks received from you on v4, but I am not sure
+> since there are some minor changes to the series. Please provide any
+> comments if you do not agree with the changes.
+> 
+> regards
+> Suman
+> 
+> Changes from v4 [1]:
+>  - Removed the include/dt-bindings/reset/k2g.h, and updated the
+>    bindings document
+>  - Minor checkpatch fixes to the driver patch
+> 
+> Changes from v3:
+>  - Addressed Rob Herring's comments
+>  - Added Santosh Shilimkar's Ack
+> 
+> Changes from v2:
+>  - Merged DT binding patch and reset header patch
+>  - Added locking for reset bit mask
+> 
+> Changes from v1:
+>  - Revised dt binding
+>  - CC Linux ARM list
+> 
+> [1] http://marc.info/?l=devicetree&m=147976458332492&w=2
+> [2] http://marc.info/?l=linux-arm-kernel&m=149547831708124&w=2
+> [3] https://patchwork.kernel.org/patch/9744909/
+> 
+> Andrew F. Davis (2):
+>   Documentation: dt: reset: Add TI SCI reset binding
+>   reset: Add the TI SCI reset driver
+> 
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 3bd29fe..1642fd1 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -711,6 +711,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7743-sk-rzg1m.dtb \
-+	r8a7743-iwg20d-q7.dtb \
- 	r8a7745-sk-rzg1e.dtb \
- 	r8a7778-bockw.dtb \
- 	r8a7779-marzen.dtb \
-diff --git a/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-new file mode 100644
-index 0000000..0f609291
---- /dev/null
-+++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-@@ -0,0 +1,25 @@
-+/*
-+ * Device Tree Source for the iWave-RZG1M Qseven carrier board
-+ *
-+ * Copyright (C) 2017 Renesas Electronics Corp.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+#include "r8a7743-iwg20m.dtsi"
-+
-+/ {
-+	model = "iWave Systems RainboW-G20D-Qseven board based on RZ/G1M";
-+	compatible = "iwave,g20d", "renesas,r8a7743";
-+
-+	aliases {
-+		serial0 = &scif0;
-+	};
-+};
-+
-+&scif0 {
-+	status = "okay";
-+};
--- 
-1.9.1
+Can you pick up this series for v4.13 if there are no comments. Btw, [2]
+is acked by Rob. Will appreciate if you can fixup the patch header from
+"Documentation: dt: reset: ..." to "dt-bindings: reset: ..." on the
+first patch when applying. Thanks in advance.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Suman
