@@ -1,67 +1,59 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v3 3/5] clk: qcom: ipq8074: Add Global Clock Controller
- support
-Date: Fri, 2 Jun 2017 15:52:31 -0700
-Message-ID: <20170602225231.GD20170@codeaurora.org>
-References: <1496316482-25468-1-git-send-email-varada@codeaurora.org>
- <1496316482-25468-4-git-send-email-varada@codeaurora.org>
+Subject: Re: [PATCH] Documentation: clock: address more for clock-cells
+ property
+Date: Fri, 2 Jun 2017 15:56:21 -0700
+Message-ID: <20170602225621.GE20170@codeaurora.org>
+References: <1496306801-19239-1-git-send-email-zhang.chunyan@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1496316482-25468-4-git-send-email-varada@codeaurora.org>
+In-Reply-To: <1496306801-19239-1-git-send-email-zhang.chunyan@linaro.org>
 Sender: linux-clk-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, mraghava@codeaurora.org
+To: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, zhang.lyra@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/01, Varadarajan Narayanan wrote:
-> From: Abhishek Sahu <absahu@codeaurora.org>
+On 06/01, Chunyan Zhang wrote:
+> The value of property 'clock-cells' is not determined only by the number of
+> clock outputs in one clock node, it is actually determined by whether the
+> clock output in this node can be referenced directly without index.  If
+> the output clock has to be referenced by a index, the clock-cell of this
+> clock node can't be defined 0.
 > 
-> This patch adds support for the global clock controller found on
-> the IPQ8074 based devices. This includes UART, I2C, SPI etc.
-> 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
 > ---
->  .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
->  drivers/clk/qcom/Kconfig                           |    9 +
->  drivers/clk/qcom/Makefile                          |    1 +
->  drivers/clk/qcom/gcc-ipq8074.c                     | 1009 ++++++++++++++++++++
->  include/dt-bindings/clock/qcom,gcc-ipq8074.h       |  152 +++
+>  Documentation/devicetree/bindings/clock/clock-bindings.txt | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 
-The new world order is to split these includes from the driver
-changes. Then someone (clk or arm-soc related maintainers) can
-merge that #define change somewhere stable and then apply the
-driver code on top or the dts file on top.
+I'm leaving this patch for Rob/DT maintainers to apply.
 
-So can you please split the header file off into it's own patch
-before this one and resend?
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> index 2ec489e..cef3db5 100644
+> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -15,8 +15,14 @@ value of a #clock-cells property in the clock provider node.
+>  
+>  Required properties:
+>  #clock-cells:	   Number of cells in a clock specifier; Typically 0 for nodes
+> -		   with a single clock output and 1 for nodes with multiple
+> -		   clock outputs.
+> +		   with a single clock output and it must be able to be
+> +		   referenced without index, and 1 for nodes with single or
+> +		   multiple clock outputs which have to be referenced by index.
+> +
+> +		   Please note that if a node with a single clock output
+> +		   but it has "clock-indices" property (see bellow), it has
+> +		   to be referenced by index, its "#clock-cells" cannot be
+> +		   defined 0.
 
-> diff --git a/drivers/clk/qcom/gcc-ipq8074.c b/drivers/clk/qcom/gcc-ipq8074.c
-> new file mode 100644
-> index 0000000..b62db77
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gcc-ipq8074.c
-> +
-> +static int gcc_ipq8074_probe(struct platform_device *pdev)
-> +{
-> +	int ret, i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(gcc_ipq8074_hws); i++) {
-> +		ret = devm_clk_hw_register(&pdev->dev, gcc_ipq8074_hws[i]);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = qcom_cc_probe(pdev, &gcc_ipq8074_desc);
-> +
-> +	return ret;
+Maybe this should be added to the clock-indices area of the
+document instead of here? It seems to me that you can't have
+clock-indices if you have #clock-cells=<0>, and that's sort of
+obvious because 0 cells means 1 output and >0 cells means
+potentially many outputs.
 
-Just return qcom_cc_probe() please.
-
-> +}
-> +
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
