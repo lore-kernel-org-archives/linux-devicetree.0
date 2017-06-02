@@ -1,47 +1,46 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v6 00/21] net-next: stmmac: add dwmac-sun8i
- ethernet driver
-Date: Fri, 02 Jun 2017 10:08:01 -0400 (EDT)
-Message-ID: <20170602.100801.2029534530888525251.davem@davemloft.net>
-References: <20170531071852.12422-1-clabbe.montjoie@gmail.com>
-	<20170601.145819.789604139072328057.davem@davemloft.net>
-	<20170602063752.aqyvwcykvepiyt4y@flea.lan>
-Reply-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: powerpc/opal-irqchip: Use interrupt names if present
+Date: Sat, 03 Jun 2017 00:11:42 +1000
+Message-ID: <1496412702.2842.11.camel@kernel.crashing.org>
+References: <20170222190235.92E5F661CEB@gitolite.kernel.org>
+         <CAMuHMdWGZYkM_aQ=vXr5J9-KFGzzWgq3hf+ZRY-n-+8-ghG5nQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sunxi+bncBCFPF2XH6UDBBRXCYXEQKGQEHTC6UDA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170602063752.aqyvwcykvepiyt4y-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdWGZYkM_aQ=vXr5J9-KFGzzWgq3hf+ZRY-n-+8-ghG5nQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Date: Fri, 2 Jun 2017 08:37:52 +0200
-
-> On Thu, Jun 01, 2017 at 02:58:19PM -0400, David Miller wrote:
->> From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Date: Wed, 31 May 2017 09:18:31 +0200
->> 
->> > This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
->> > present on Allwinner H3/H5/A83T/A64 SoCs.
->> 
->> Series applied, but wow that's a lot of DT file changes :-(
+On Fri, 2017-06-02 at 14:39 +0200, Geert Uytterhoeven wrote:
 > 
-> The DT patches should not go through your tree, but arm-soc, so I
-> guess this is not an issue for you?
+> > diff --git a/arch/powerpc/platforms/powernv/opal-irqchip.c b/arch/powerpc/platforms/powernv/opal-irqchip.c
+> > index 998316bf2dad..ecdcba9d1220 100644
+> > --- a/arch/powerpc/platforms/powernv/opal-irqchip.c
+> > +++ b/arch/powerpc/platforms/powernv/opal-irqchip.c
+> > @@ -183,8 +183,9 @@ void opal_event_shutdown(void)
+> > +       /* It's not an error for the names to be missing */
+> > +       of_property_read_string_array(opal_node, "opal-interrupts-names",
+> > +                                     names, opal_irq_count);
+> 
+> Just double-checking, as it's different from the standard "interrupt-names":
+> is "opal-interrupts-names" the correct name?
 
-I already applied them, so if that is the intention, too late.
+Yes, because the property it refers to isn't a standard "interrupts"
+property... it's ... complicated :-)
 
-This needs to be explicitly stated in the header posting.  Otherwise
-I assume the entire series is meant to go into my tree.
+It could have been mind you, but the decision for that was made years
+ago... it's a bunch of interrupts OPAL is interested in, which Linux
+requests and sets up a handler for which just calls back into OPAL. 
 
-Also, saying "net-next" in the patch subjects means it's targetting my
-tree.
+In any case, firmwares with that property are out now.
+
+Cheers,
+Ben.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
