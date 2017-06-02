@@ -1,78 +1,192 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 12/19] drm/sun4i: hdmi: Support the DDC
- clock in the A31's HDMI controller
-Date: Fri, 2 Jun 2017 21:31:06 +0200
-Message-ID: <20170602193106.c3yagwkglhg45h6y@flea.lan>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 13/19] drm/sun4i: hdmi: Add support for controller
+ hardware variants
+Date: Fri, 2 Jun 2017 21:38:27 +0200
+Message-ID: <20170602193827.rnjum6x5ra4x5wef@flea.lan>
 References: <20170602101024.18940-1-wens@csie.org>
- <20170602101024.18940-13-wens@csie.org>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+ <20170602101024.18940-14-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rjl2suipzdxwdmfe"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF72Y3EQKGQEL2D54TA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+        protocol="application/pgp-signature"; boundary="3rlmyxdx2g2od3o6"
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170602101024.18940-13-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170602101024.18940-14-wens@csie.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 
---rjl2suipzdxwdmfe
-Content-Type: text/plain; charset="UTF-8"
+--3rlmyxdx2g2od3o6
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 02, 2017 at 06:10:17PM +0800, Chen-Yu Tsai wrote:
-> On the A31, the HDMI DDC block is different from the one in the
-> other SoCs. As far as the DDC clock goes, it has no pre-divider,
-> as it is clocked from a slower parent clock, not the TMDS clock.
-> The divider offset from the register value is different. And the
-> clock control register is at a different offset.
-> 
-> This patch adds support for this variant.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+On Fri, Jun 02, 2017 at 06:10:18PM +0800, Chen-Yu Tsai wrote:
+> The HDMI controller found in earlier Allwinner SoCs have slight
+> differences:
+>=20
+>   - Need different initial values for the PLL related registers
+>=20
+>   - Different behavior of the DDC and TMDS clocks
+>=20
+>   - Different register layout for the DDC portion
+>=20
+>   - Separate DDC parent clock on the A31
+>=20
+>   - Explicit reset control
+>=20
+> The clock variants are supported within their implementations,
+> which only expose a create function for each variant.
+>=20
+> The different layout of the DDC registers necessitates a separate
+> version of struct drm_connector_helper_funcs.
+>=20
+> A new variant data structure is created to store pointers to the
+> above functions, structures, and the different initial values.
+> Another flag notates whether there is a separate DDC parent clock.
+> If not, the TMDS clock is passed to the DDC clock create function,
+> as before.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
->  drivers/gpu/drm/sun4i/sun4i_hdmi.h         |  1 +
->  drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 11 +++++++++++
->  2 files changed, 12 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-> index 08c514672fd3..c39c2a245339 100644
+>  drivers/clk/sunxi-ng/ccu-sun6i-a31.c   |   2 +-
+>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |   8 +++
+>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 114 ++++++++++++++++++++++++++-=
+------
+>  3 files changed, 100 insertions(+), 24 deletions(-)
+>=20
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c b/drivers/clk/sunxi-ng/=
+ccu-sun6i-a31.c
+> index 4d6078fca9ac..e48186985a51 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
+> @@ -610,7 +610,7 @@ static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", lc=
+d_ch1_parents,
+> =20
+>  static SUNXI_CCU_GATE(hdmi_ddc_clk, "hdmi-ddc", "osc24M", 0x150, BIT(30)=
+, 0);
+> =20
+> -static SUNXI_CCU_GATE(ps_clk, "ps", "lcd1-ch1", 0x140, BIT(31), 0);
+> +static SUNXI_CCU_GATE(ps_clk, "ps", "lcd1-ch1", 0x154, BIT(31), 0);
+
+Unrelated change?
+
+> =20
+>  static const char * const mbus_parents[] =3D { "osc24M", "pll-periph",
+>  					     "pll-ddr" };
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/s=
+un4i_hdmi.h
+> index c39c2a245339..c63d0bd95963 100644
 > --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
 > +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-> @@ -178,6 +178,7 @@ struct sun4i_hdmi {
+> @@ -155,6 +155,8 @@ enum sun4i_hdmi_pkt_type {
+>  	SUN4I_HDMI_PKT_END =3D 15,
 >  };
->  
->  int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *clk);
-> +int sun6i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *clk);
->  int sun4i_tmds_create(struct sun4i_hdmi *hdmi);
->  int sun6i_tmds_create(struct sun4i_hdmi *hdmi);
->  
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-> index 9a6b6243e977..b1395e7b242c 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
-> @@ -151,3 +151,14 @@ int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
->  {
->  	return _sun4i_ddc_create(hdmi, parent, &sun4i_variant);
->  }
+> =20
+> +struct sun4i_hdmi_variant;
 > +
-> +static const struct sun4i_ddc_variant sun6i_variant = {
-> +	.reg_offset	= SUN6I_HDMI_DDC_CLK_REG,
+>  struct sun4i_hdmi {
+>  	struct drm_connector	connector;
+>  	struct drm_encoder	encoder;
+> @@ -162,9 +164,13 @@ struct sun4i_hdmi {
+> =20
+>  	void __iomem		*base;
+> =20
+> +	/* Reset control */
+> +	struct reset_control	*reset;
+> +
+>  	/* Parent clocks */
+>  	struct clk		*bus_clk;
+>  	struct clk		*mod_clk;
+> +	struct clk		*ddc_parent_clk;
+>  	struct clk		*pll0_clk;
+>  	struct clk		*pll1_clk;
+> =20
+> @@ -175,6 +181,8 @@ struct sun4i_hdmi {
+>  	struct sun4i_drv	*drv;
+> =20
+>  	bool			hdmi_monitor;
+> +
+> +	const struct sun4i_hdmi_variant	*variant;
+>  };
+> =20
+>  int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *clk);
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun=
+4i/sun4i_hdmi_enc.c
+> index 457614073501..9ded40aaed32 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
+> @@ -20,8 +20,10 @@
+>  #include <linux/clk.h>
+>  #include <linux/component.h>
+>  #include <linux/iopoll.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/reset.h>
+> =20
+>  #include "sun4i_backend.h"
+>  #include "sun4i_crtc.h"
+> @@ -315,6 +317,56 @@ static const struct drm_connector_funcs sun4i_hdmi_c=
+onnector_funcs =3D {
+>  	.atomic_destroy_state	=3D drm_atomic_helper_connector_destroy_state,
+>  };
+> =20
+> +struct sun4i_hdmi_variant {
+> +	const struct drm_connector_helper_funcs *connector_helpers;
+> +	int (*ddc_create)(struct sun4i_hdmi *hdmi, struct clk *clk);
+> +	int (*tmds_create)(struct sun4i_hdmi *hdmi);
+> +	bool has_ddc_parent_clk;
+> +	bool has_reset_control;
+> +
+> +	u32 pad_ctrl0_init_val;
+> +	u32 pad_ctrl1_init_val;
+> +	u32 pll_ctrl_init_val;
+> +};
+> +
+> +#define SUN4I_HDMI_PAD_CTRL1_MASK	(GENMASK(24, 7) | GENMASK(5, 0))
+> +#define SUN4I_HDMI_PLL_CTRL_MASK	(GENMASK(31, 8) | GENMASK(3, 0))
+> +
+> +static const struct sun4i_hdmi_variant sun5i_variant =3D {
+> +	.connector_helpers	=3D &sun4i_hdmi_connector_helper_funcs,
+> +	.ddc_create		=3D sun4i_ddc_create,
+> +	.tmds_create		=3D sun4i_tmds_create,
 
-This one should be handled through a regmap_field.
+If we store the variants info for those clocks in that structure, we
+don't need those functions anymore. This would be cleaner imho.
+
+> +	.has_ddc_parent_clk	=3D false,
+> +	.has_reset_control	=3D false,
+
+Those two are the default values
+
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---rjl2suipzdxwdmfe--
+
+--3rlmyxdx2g2od3o6
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZMb6zAAoJEBx+YmzsjxAgqugP/A7tIKwiaDmMm7EDrd0pIbdX
+J7xjBXcWTxw2fjkkEJTBSyg+16wxtvrlWxhr/MjUq7Q27bzJDD6o/m35VeqL5XUF
+SiJ+Erq1n3DoiYcbdHsGOAAgoArIudaruczzgPPwkAF45ReLvVG9i8dJNgaUyuLV
+SCrngkzOfzMJ9uP3lVYAY6I11pUgp+l4aY5kX7iQaNnCvaady8+JxNRIxrXshC+t
+UfQAk2Ec+gqweWg8caUYuS67aoXR4XGvxgnOKmWtlSbE0qMVeHfrNEtTYm/00Ey0
+KzJ0yXGHCuDzGzYpAWwFiwTgJlzR06R+nemcb3vMzAiJaihnknWeyVAL+luVd3sw
+WQ/ayv7zcvuN0r/K3anxNKvLKSL4Bvki8Juz4Jyq7aFZcoCK45ZCeMtvg1Bimc0W
+bazS54p82kRBrBYCWY2yiyP3ZBhGjtFD1uH9WA3ANpSHppZoKX9ZcWyYLY9rCwY0
+sAPcYCCuzU91ExFLyZ57sPdgqcL3rW9e/BAzgRuUYc5/23kTE52u3vuVD4Bc183T
+TMk+7q64jwGgSmanzuwGAZl9C8BYv31BtxHEDOmmf5IEVuXvRoCYY5Rm8KpTOCLC
+XGd1sFsMUVlCIazlonFz+ujVGQWokgVMDX8/g71RqnqlXCUUM/hI9mAc6gDr4Csc
+oC/A4jkb1ucVCEkHMf3k
+=MPAs
+-----END PGP SIGNATURE-----
+
+--3rlmyxdx2g2od3o6--
