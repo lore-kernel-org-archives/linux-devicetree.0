@@ -1,67 +1,79 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: [PATCH 1/7] drm: Add drm_atomic_helper_wait_for_flip_done()
-Date: Fri,  2 Jun 2017 10:32:06 +0200
-Message-ID: <1496392332-8722-2-git-send-email-boris.brezillon@free-electrons.com>
-References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Eric Anholt <eric@anholt.net>, Sean Paul <seanpaul@chromium.org>, Gerd Hoffmann <kraxel@redhat.com>, Mark Yao <mark.yao@rock-chips.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Florian Fainelli <f.fainelli@gmail.com>, Pawel Moll <pawel.moll@arm.com>, Scott Branden <sbranden@broadcom.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Eben Upton <eben@raspberrypi.org>, Lee Jones <lee@kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>, "Hollingworth, Gordon" <gordon@raspberrypi.org>, "Cobley,
- Dom" <dom@raspberrypi.org>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/7] drm/vc4: Add writeback support to the VC4 driver
+Date: Fri,  2 Jun 2017 10:32:05 +0200
+Message-ID: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eben Upton <eben-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "Hollingworth, Gordon" <gordon-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "Cobley, Dom" <dom-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGFuIGhlbHBlciB0byB3YWl0IGZvciBhbGwgcGFnZSBmbGlwcyBvZiBhbiBhdG9taWMgc3Rh
-dGUgdG8gYmUgZG9uZS4KClNpZ25lZC1vZmYtYnk6IEJvcmlzIEJyZXppbGxvbiA8Ym9yaXMuYnJl
-emlsbG9uQGZyZWUtZWxlY3Ryb25zLmNvbT4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vZHJtX2F0b21p
-Y19oZWxwZXIuYyB8IDMwICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwogaW5jbHVkZS9k
-cm0vZHJtX2F0b21pY19oZWxwZXIuaCAgICAgfCAgMyArKysKIDIgZmlsZXMgY2hhbmdlZCwgMzMg
-aW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hl
-bHBlci5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9hdG9taWNfaGVscGVyLmMKaW5kZXggZmEyZDhk
-N2E2MDJhLi4xMWYyZDY0NDc3MWIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9kcm1fYXRv
-bWljX2hlbHBlci5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9kcm1fYXRvbWljX2hlbHBlci5jCkBA
-IC0xMTY2LDYgKzExNjYsMzYgQEAgZHJtX2F0b21pY19oZWxwZXJfd2FpdF9mb3JfdmJsYW5rcyhz
-dHJ1Y3QgZHJtX2RldmljZSAqZGV2LAogRVhQT1JUX1NZTUJPTChkcm1fYXRvbWljX2hlbHBlcl93
-YWl0X2Zvcl92YmxhbmtzKTsKIAogLyoqCisgKiBkcm1fYXRvbWljX2hlbHBlcl93YWl0X2Zvcl9m
-bGlwX2RvbmUgLSB3YWl0IGZvciBhbGwgcGFnZSBmbGlwcyB0byBiZSBkb25lCisgKiBAc3RhdGU6
-IGF0b21pYyBzdGF0ZSBvYmplY3QKKyAqCisgKiBIZWxwZXIgdG8sIGFmdGVyIGF0b21pYyBjb21t
-aXQsIHdhaXQgZm9yIHBhZ2UgZmxpcHMgb24gYWxsIGVmZmVjdGVkCisgKiBjcnRjcyAoaWUuIGJl
-Zm9yZSBjbGVhbmluZyB1cCBvbGQgZnJhbWVidWZmZXJzIHVzaW5nCisgKiBkcm1fYXRvbWljX2hl
-bHBlcl9jbGVhbnVwX3BsYW5lcygpKS4KKyAqLwordm9pZCBkcm1fYXRvbWljX2hlbHBlcl93YWl0
-X2Zvcl9mbGlwX2RvbmUoc3RydWN0IGRybV9kZXZpY2UgKmRldiwKKwkJCQkJICBzdHJ1Y3QgZHJt
-X2F0b21pY19zdGF0ZSAqc3RhdGUpCit7CisJc3RydWN0IGRybV9jcnRjX3N0YXRlICpjcnRjX3N0
-YXRlOworCXN0cnVjdCBkcm1fY3J0YyAqY3J0YzsKKwlpbnQgaTsKKworCWZvcl9lYWNoX2NydGNf
-aW5fc3RhdGUoc3RhdGUsIGNydGMsIGNydGNfc3RhdGUsIGkpIHsKKwkJc3RydWN0IGRybV9jcnRj
-X2NvbW1pdCAqY29tbWl0ID0gc3RhdGUtPmNydGNzW2ldLmNvbW1pdDsKKwkJaW50IHJldDsKKwor
-CQlpZiAoIWNvbW1pdCkKKwkJCWNvbnRpbnVlOworCisJCXJldCA9IHdhaXRfZm9yX2NvbXBsZXRp
-b25fdGltZW91dCgmY29tbWl0LT5mbGlwX2RvbmUsIDEwICogSFopOworCQlpZiAocmV0ID09IDAp
-CisJCQlEUk1fRVJST1IoIltDUlRDOiVkOiVzXSBmbGlwX2RvbmUgdGltZWQgb3V0XG4iLAorCQkJ
-CSAgY3J0Yy0+YmFzZS5pZCwgY3J0Yy0+bmFtZSk7CisJfQorfQorRVhQT1JUX1NZTUJPTChkcm1f
-YXRvbWljX2hlbHBlcl93YWl0X2Zvcl9mbGlwX2RvbmUpOworCisvKioKICAqIGRybV9hdG9taWNf
-aGVscGVyX2NvbW1pdF90YWlsIC0gY29tbWl0IGF0b21pYyB1cGRhdGUgdG8gaGFyZHdhcmUKICAq
-IEBvbGRfc3RhdGU6IGF0b21pYyBzdGF0ZSBvYmplY3Qgd2l0aCBvbGQgc3RhdGUgc3RydWN0dXJl
-cwogICoKZGlmZiAtLWdpdCBhL2luY2x1ZGUvZHJtL2RybV9hdG9taWNfaGVscGVyLmggYi9pbmNs
-dWRlL2RybS9kcm1fYXRvbWljX2hlbHBlci5oCmluZGV4IGYwYTg2NzhhZTk4ZS4uNzE5MmU3YWMx
-MTdmIDEwMDY0NAotLS0gYS9pbmNsdWRlL2RybS9kcm1fYXRvbWljX2hlbHBlci5oCisrKyBiL2lu
-Y2x1ZGUvZHJtL2RybV9hdG9taWNfaGVscGVyLmgKQEAgLTUyLDYgKzUyLDkgQEAgaW50IGRybV9h
-dG9taWNfaGVscGVyX3dhaXRfZm9yX2ZlbmNlcyhzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAogdm9p
-ZCBkcm1fYXRvbWljX2hlbHBlcl93YWl0X2Zvcl92YmxhbmtzKHN0cnVjdCBkcm1fZGV2aWNlICpk
-ZXYsCiAJCQkJCXN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpvbGRfc3RhdGUpOwogCit2b2lkIGRy
-bV9hdG9taWNfaGVscGVyX3dhaXRfZm9yX2ZsaXBfZG9uZShzdHJ1Y3QgZHJtX2RldmljZSAqZGV2
-LAorCQkJCQkgIHN0cnVjdCBkcm1fYXRvbWljX3N0YXRlICpzdGF0ZSk7CisKIHZvaWQKIGRybV9h
-dG9taWNfaGVscGVyX3VwZGF0ZV9sZWdhY3lfbW9kZXNldF9zdGF0ZShzdHJ1Y3QgZHJtX2Rldmlj
-ZSAqZGV2LAogCQkJCQkgICAgICBzdHJ1Y3QgZHJtX2F0b21pY19zdGF0ZSAqb2xkX3N0YXRlKTsK
-LS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
-aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hello,
+
+This series adds a driver for the TXP (transposer) block which is
+providing writeback support.
+
+Note that adding support for this IP required reworking a bit how the
+VC4 driver handles commits (vc4_kms.c). I also had to support a new use
+case in vc4_crtc.c because the TXP IP is completely bypassing the
+pixelvalve element (it's taking its data directly from the HVS FIFO).
+
+First patch is adding a new helper to the core to wait for all pageflips
+to be done. It can be used as a replacement for
+drm_atomic_helper_wait_for_vblanks() when your HW is only generating
+a single frame (AKA oneshot mode), which implies a single VBLANK event.
+In this situation, if drm_atomic_helper_wait_for_vblanks() is called
+after the VBLANK event has been sent, we face a timeout because vblank
+counter (used to detect when vblanks are happening) is never updated
+again.
+Daniel, I'm not sure this is exactly what you had in mind when you
+proposed this approach, so feel free to comment on this patch.
+
+Patches 2 to 4 are modifying the current logic to make it work with
+the TXP block.
+
+Patches 5 and 6 are adding code to support the TXP and documenting the
+bindings.
+And the last patch is defining the TXP block in bcm283x.dtsi.
+
+This series depends on Brian Starkey/Liviu Dudau patchset [1] and has
+been tested on a RPi2 with the kms_writeback tests provided here [2].
+
+Regards,
+
+Boris
+
+[1]https://lists.freedesktop.org/archives/dri-devel/2017-May/141796.html
+[2]https://github.com/dliviu/intel-gpu-tools/tree/master
+
+Boris Brezillon (7):
+  drm: Add drm_atomic_helper_wait_for_flip_done()
+  drm/vc4: Fix vblank handling
+  drm/vc4: Mimic drm_atomic_helper_commit() behavior
+  drm/vc4: Use drm_atomic_helper_wait_for_flip_done()
+  drm/vc4: Add support for the TXP (transposer) block
+  dt-bindings: Document the VC4 TXP module nodes.
+  ARM: dts: bcm283x: Add Transposer block
+
+ .../devicetree/bindings/display/brcm,bcm-vc4.txt   |  12 +
+ arch/arm/boot/dts/bcm283x.dtsi                     |   6 +
+ drivers/gpu/drm/drm_atomic_helper.c                |  30 ++
+ drivers/gpu/drm/vc4/Makefile                       |   1 +
+ drivers/gpu/drm/vc4/vc4_crtc.c                     | 206 +++++++--
+ drivers/gpu/drm/vc4/vc4_debugfs.c                  |   1 +
+ drivers/gpu/drm/vc4/vc4_drv.c                      |   1 +
+ drivers/gpu/drm/vc4/vc4_drv.h                      |  10 +
+ drivers/gpu/drm/vc4/vc4_kms.c                      |  47 +-
+ drivers/gpu/drm/vc4/vc4_regs.h                     |   1 +
+ drivers/gpu/drm/vc4/vc4_txp.c                      | 509 +++++++++++++++++++++
+ include/drm/drm_atomic_helper.h                    |   3 +
+ 12 files changed, 755 insertions(+), 72 deletions(-)
+ create mode 100644 drivers/gpu/drm/vc4/vc4_txp.c
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
