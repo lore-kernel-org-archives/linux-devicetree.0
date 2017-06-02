@@ -1,1182 +1,401 @@
-From: =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
-Date: Fri,  2 Jun 2017 13:49:15 +0200
-Message-ID: <1496404155-8344-5-git-send-email-noralf@tronnes.org>
-References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v6 2/3] phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy driver
+ for Northstar2
+Date: Fri, 2 Jun 2017 17:21:37 +0530
+Message-ID: <CAEHZuqMVV_TmTqZk=w-y2naeU0PAO4=vO5R_oHZwgwe5KzDHtw@mail.gmail.com>
+References: <1496225523-22035-1-git-send-email-raviteja.garimella@broadcom.com>
+ <1496225523-22035-3-git-send-email-raviteja.garimella@broadcom.com>
+ <f90cd885-be89-5c66-c5d8-224173825f0c@ti.com> <CAEHZuqMJyxCdNmv2RZ9ZOc=FuWRQesfJ9-QMQCKW+XHUQru6wg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496404155-8344-1-git-send-email-noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+In-Reply-To: <CAEHZuqMJyxCdNmv2RZ9ZOc=FuWRQesfJ9-QMQCKW+XHUQru6wg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, =?UTF-8?q?Noralf=20Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the Pervasive Displays RePaper branded displays.
-The controller code is taken from the userspace driver available
-through repaper.org. Only the V231 film is supported since the others
-are EOL.
+Hi,
 
-Signed-off-by: Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
----
- MAINTAINERS                       |    6 +
- drivers/gpu/drm/tinydrm/Kconfig   |   12 +
- drivers/gpu/drm/tinydrm/Makefile  |    1 +
- drivers/gpu/drm/tinydrm/repaper.c | 1095 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 1114 insertions(+)
- create mode 100644 drivers/gpu/drm/tinydrm/repaper.c
+On Fri, Jun 2, 2017 at 5:18 PM, Raviteja Garimella
+<raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Kishon,
+>
+> On Fri, Jun 2, 2017 at 3:59 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>> Hi,
+>>
+>> On Wednesday 31 May 2017 03:42 PM, Raviteja Garimella wrote:
+>>> This is driver for USB DRD Phy used in Broadcom's Northstar2
+>>> SoC. The phy can be configured to be in Device mode or Host
+>>> mode based on the type of cable connected to the port. The
+>>> driver registers to  extcon framework to get appropriate
+>>> connect events for Host/Device cables connect/disconnect
+>>> states based on VBUS and ID interrupts.
+>>>
+>>> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  drivers/phy/Kconfig              |  13 ++
+>>>  drivers/phy/Makefile             |   1 +
+>>>  drivers/phy/phy-bcm-ns2-usbdrd.c | 466 +++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 480 insertions(+)
+>>>  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
+>>>
+>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>> index afaf7b6..8028da7 100644
+>>> --- a/drivers/phy/Kconfig
+>>> +++ b/drivers/phy/Kconfig
+>>> @@ -507,6 +507,19 @@ config PHY_CYGNUS_PCIE
+>>>         Enable this to support the Broadcom Cygnus PCIe PHY.
+>>>         If unsure, say N.
+>>>
+>>> +config PHY_NS2_USB_DRD
+>>> +     tristate "Broadcom Northstar2 USB DRD PHY support"
+>>> +     depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
+>>> +     select GENERIC_PHY
+>>> +     select EXTCON
+>>> +     default ARCH_BCM_IPROC
+>>> +     help
+>>> +       Enable this to support the Broadcom Northstar2 USB DRD PHY.
+>>> +       This driver initializes the PHY in either HOST or DEVICE mode.
+>>> +       The host or device configuration is read from device tree.
+>>> +
+>>> +       If unsure, say N.
+>>> +
+>>>  source "drivers/phy/tegra/Kconfig"
+>>>
+>>>  config PHY_NS2_PCIE
+>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>>> index f8047b4..e5fbb0e 100644
+>>> --- a/drivers/phy/Makefile
+>>> +++ b/drivers/phy/Makefile
+>>> @@ -61,6 +61,7 @@ obj-$(CONFIG_PHY_TUSB1210)          += phy-tusb1210.o
+>>>  obj-$(CONFIG_PHY_BRCM_SATA)          += phy-brcm-sata.o
+>>>  obj-$(CONFIG_PHY_PISTACHIO_USB)              += phy-pistachio-usb.o
+>>>  obj-$(CONFIG_PHY_CYGNUS_PCIE)                += phy-bcm-cygnus-pcie.o
+>>> +obj-$(CONFIG_PHY_NS2_USB_DRD)                += phy-bcm-ns2-usbdrd.o
+>>>  obj-$(CONFIG_ARCH_TEGRA) += tegra/
+>>>  obj-$(CONFIG_PHY_NS2_PCIE)           += phy-bcm-ns2-pcie.o
+>>>  obj-$(CONFIG_PHY_MESON8B_USB2)               += phy-meson8b-usb2.o
+>>> diff --git a/drivers/phy/phy-bcm-ns2-usbdrd.c b/drivers/phy/phy-bcm-ns2-usbdrd.c
+>>> new file mode 100644
+>>> index 0000000..8e05c70
+>>> --- /dev/null
+>>> +++ b/drivers/phy/phy-bcm-ns2-usbdrd.c
+>>> @@ -0,0 +1,466 @@
+>>> +/*
+>>> + * Copyright (C) 2017 Broadcom
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or
+>>> + * modify it under the terms of the GNU General Public License as
+>>> + * published by the Free Software Foundation version 2.
+>>> + *
+>>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>>> + * kind, whether express or implied; without even the implied warranty
+>>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + */
+>>> +
+>>> +#include <linux/delay.h>
+>>> +#include <linux/extcon.h>
+>>> +#include <linux/gpio.h>
+>>> +#include <linux/gpio/consumer.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/interrupt.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/irq.h>
+>>> +#include <linux/mfd/syscon.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/of_address.h>
+>>> +#include <linux/phy/phy.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/regmap.h>
+>>> +#include <linux/slab.h>
+>>> +#include <linux/workqueue.h>
+>>> +
+>>> +#define ICFG_DRD_AFE         0x0
+>>> +#define ICFG_MISC_STAT               0x18
+>>> +#define ICFG_DRD_P0CTL               0x1C
+>>> +#define ICFG_STRAP_CTRL              0x20
+>>> +#define ICFG_FSM_CTRL                0x24
+>>> +
+>>> +#define ICFG_DEV_BIT         BIT(2)
+>>> +#define IDM_RST_BIT          BIT(0)
+>>> +#define AFE_CORERDY_VDDC     BIT(18)
+>>> +#define PHY_PLL_RESETB               BIT(15)
+>>> +#define PHY_RESETB           BIT(14)
+>>> +#define PHY_PLL_LOCK         BIT(0)
+>>> +
+>>> +#define DRD_DEV_MODE         BIT(20)
+>>> +#define OHCI_OVRCUR_POL              BIT(11)
+>>> +#define ICFG_OFF_MODE                BIT(6)
+>>> +#define PLL_LOCK_RETRY               1000
+>>> +
+>>> +#define EVT_DEVICE           0
+>>> +#define EVT_HOST             1
+>>> +
+>>> +#define DRD_HOST_MODE                (BIT(2) | BIT(3))
+>>> +#define DRD_DEVICE_MODE              (BIT(4) | BIT(5))
+>>> +#define DRD_HOST_VAL         0x803
+>>> +#define DRD_DEV_VAL          0x807
+>>> +#define GPIO_DELAY           20
+>>> +
+>>> +struct ns2_phy_data;
+>>> +struct ns2_phy_driver {
+>>> +     void __iomem *icfgdrd_regs;
+>>> +     void __iomem *idmdrd_rst_ctrl;
+>>> +     void __iomem *crmu_usb2_ctrl;
+>>> +     void __iomem *usb2h_strap_reg;
+>>> +     struct ns2_phy_data *data;
+>>> +     struct extcon_specific_cable_nb extcon_dev;
+>>> +     struct extcon_specific_cable_nb extcon_host;
+>>
+>> The above two members are not used in the driver.
+>
+> Missed out to remove them. Will do.
+>
+>>> +     struct extcon_dev *edev;
+>>
+>> Does USB DRD driver waits for extcon events? If not using extcon here is bogus.
+>
+> DRD driver uses extcon events to disconnect/connect gadget driver runtime.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 757d487..800afa2 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4446,6 +4446,12 @@ M:	Dave Airlie <airlied-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
- S:	Odd Fixes
- F:	drivers/gpu/drm/mgag200/
- 
-+DRM DRIVER FOR PERVASIVE DISPLAYS REPAPER PANELS
-+M:	Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-+S:	Maintained
-+F:	drivers/gpu/drm/tinydrm/repaper.c
-+F:	Documentation/devicetree/bindings/display/repaper.txt
-+
- DRM DRIVER FOR RAGE 128 VIDEO CARDS
- S:	Orphan / Obsolete
- F:	drivers/gpu/drm/r128/
-diff --git a/drivers/gpu/drm/tinydrm/Kconfig b/drivers/gpu/drm/tinydrm/Kconfig
-index 3504c53..9596e44 100644
---- a/drivers/gpu/drm/tinydrm/Kconfig
-+++ b/drivers/gpu/drm/tinydrm/Kconfig
-@@ -19,3 +19,15 @@ config TINYDRM_MI0283QT
- 	help
- 	  DRM driver for the Multi-Inno MI0283QT display panel
- 	  If M is selected the module will be called mi0283qt.
-+
-+config TINYDRM_REPAPER
-+	tristate "DRM support for Pervasive Displays RePaper panels (V231)"
-+	depends on DRM_TINYDRM && SPI
-+	help
-+	  DRM driver for the following Pervasive Displays panels:
-+	  1.44" TFT EPD Panel (E1144CS021)
-+	  1.90" TFT EPD Panel (E1190CS021)
-+	  2.00" TFT EPD Panel (E2200CS021)
-+	  2.71" TFT EPD Panel (E2271CS021)
-+
-+	  If M is selected the module will be called repaper.
-diff --git a/drivers/gpu/drm/tinydrm/Makefile b/drivers/gpu/drm/tinydrm/Makefile
-index 7a3604c..95bb4d4 100644
---- a/drivers/gpu/drm/tinydrm/Makefile
-+++ b/drivers/gpu/drm/tinydrm/Makefile
-@@ -5,3 +5,4 @@ obj-$(CONFIG_TINYDRM_MIPI_DBI)		+= mipi-dbi.o
- 
- # Displays
- obj-$(CONFIG_TINYDRM_MI0283QT)		+= mi0283qt.o
-+obj-$(CONFIG_TINYDRM_REPAPER)		+= repaper.o
-diff --git a/drivers/gpu/drm/tinydrm/repaper.c b/drivers/gpu/drm/tinydrm/repaper.c
-new file mode 100644
-index 0000000..d1eaa88
---- /dev/null
-+++ b/drivers/gpu/drm/tinydrm/repaper.c
-@@ -0,0 +1,1095 @@
-+/*
-+ * DRM driver for Pervasive Displays RePaper branded e-ink panels
-+ *
-+ * Copyright 2013-2017 Pervasive Displays, Inc.
-+ * Copyright 2017 Noralf Trønnes
-+ *
-+ * The driver supports:
-+ * Material Film: Aurora Mb (V231)
-+ * Driver IC: G2 (eTC)
-+ *
-+ * The controller code was taken from the userspace driver:
-+ * https://github.com/repaper/gratis
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/sched/clock.h>
-+#include <linux/spi/spi.h>
-+#include <linux/thermal.h>
-+
-+#include <drm/tinydrm/tinydrm.h>
-+#include <drm/tinydrm/tinydrm-helpers.h>
-+
-+#define REPAPER_RID_G2_COG_ID	0x12
-+
-+enum repaper_model {
-+	E1144CS021 = 1,
-+	E1190CS021,
-+	E2200CS021,
-+	E2271CS021,
-+};
-+
-+enum repaper_stage {         /* Image pixel -> Display pixel */
-+	REPAPER_COMPENSATE,  /* B -> W, W -> B (Current Image) */
-+	REPAPER_WHITE,       /* B -> N, W -> W (Current Image) */
-+	REPAPER_INVERSE,     /* B -> N, W -> B (New Image) */
-+	REPAPER_NORMAL       /* B -> B, W -> W (New Image) */
-+};
-+
-+enum repaper_epd_border_byte {
-+	REPAPER_BORDER_BYTE_NONE,
-+	REPAPER_BORDER_BYTE_ZERO,
-+	REPAPER_BORDER_BYTE_SET,
-+};
-+
-+struct repaper_epd {
-+	struct tinydrm_device tinydrm;
-+	struct spi_device *spi;
-+
-+	struct gpio_desc *panel_on;
-+	struct gpio_desc *border;
-+	struct gpio_desc *discharge;
-+	struct gpio_desc *reset;
-+	struct gpio_desc *busy;
-+
-+	struct thermal_zone_device *thermal;
-+
-+	unsigned int height;
-+	unsigned int width;
-+	unsigned int bytes_per_scan;
-+	const u8 *channel_select;
-+	unsigned int stage_time;
-+	unsigned int factored_stage_time;
-+	bool middle_scan;
-+	bool pre_border_byte;
-+	enum repaper_epd_border_byte border_byte;
-+
-+	u8 *line_buffer;
-+	void *current_frame;
-+
-+	bool enabled;
-+	bool cleared;
-+	bool partial;
-+};
-+
-+static inline struct repaper_epd *
-+epd_from_tinydrm(struct tinydrm_device *tdev)
-+{
-+	return container_of(tdev, struct repaper_epd, tinydrm);
-+}
-+
-+static int repaper_spi_transfer(struct spi_device *spi, u8 header,
-+				const void *tx, void *rx, size_t len)
-+{
-+	void *txbuf = NULL, *rxbuf = NULL;
-+	struct spi_transfer tr[2] = {};
-+	u8 *headerbuf;
-+	int ret;
-+
-+	headerbuf = kmalloc(1, GFP_KERNEL);
-+	if (!headerbuf)
-+		return -ENOMEM;
-+
-+	headerbuf[0] = header;
-+	tr[0].tx_buf = headerbuf;
-+	tr[0].len = 1;
-+
-+	/* Stack allocated tx? */
-+	if (tx && len <= 32) {
-+		txbuf = kmalloc(len, GFP_KERNEL);
-+		if (!txbuf) {
-+			ret = -ENOMEM;
-+			goto out_free;
-+		}
-+		memcpy(txbuf, tx, len);
-+	}
-+
-+	if (rx) {
-+		rxbuf = kmalloc(len, GFP_KERNEL);
-+		if (!rxbuf) {
-+			ret = -ENOMEM;
-+			goto out_free;
-+		}
-+	}
-+
-+	tr[1].tx_buf = txbuf ? txbuf : tx;
-+	tr[1].rx_buf = rxbuf;
-+	tr[1].len = len;
-+
-+	ndelay(80);
-+	ret = spi_sync_transfer(spi, tr, 2);
-+	if (rx && !ret)
-+		memcpy(rx, rxbuf, len);
-+
-+out_free:
-+	kfree(headerbuf);
-+	kfree(txbuf);
-+	kfree(rxbuf);
-+
-+	return ret;
-+}
-+
-+static int repaper_write_buf(struct spi_device *spi, u8 reg,
-+			     const u8 *buf, size_t len)
-+{
-+	int ret;
-+
-+	ret = repaper_spi_transfer(spi, 0x70, &reg, NULL, 1);
-+	if (ret)
-+		return ret;
-+
-+	return repaper_spi_transfer(spi, 0x72, buf, NULL, len);
-+}
-+
-+static int repaper_write_val(struct spi_device *spi, u8 reg, u8 val)
-+{
-+	return repaper_write_buf(spi, reg, &val, 1);
-+}
-+
-+static int repaper_read_val(struct spi_device *spi, u8 reg)
-+{
-+	int ret;
-+	u8 val;
-+
-+	ret = repaper_spi_transfer(spi, 0x70, &reg, NULL, 1);
-+	if (ret)
-+		return ret;
-+
-+	ret = repaper_spi_transfer(spi, 0x73, NULL, &val, 1);
-+
-+	return ret ? ret : val;
-+}
-+
-+static int repaper_read_id(struct spi_device *spi)
-+{
-+	int ret;
-+	u8 id;
-+
-+	ret = repaper_spi_transfer(spi, 0x71, NULL, &id, 1);
-+
-+	return ret ? ret : id;
-+}
-+
-+static void repaper_spi_mosi_low(struct spi_device *spi)
-+{
-+	const u8 buf[1] = { 0 };
-+
-+	spi_write(spi, buf, 1);
-+}
-+
-+/* pixels on display are numbered from 1 so even is actually bits 1,3,5,... */
-+static void repaper_even_pixels(struct repaper_epd *epd, u8 **pp,
-+				const u8 *data, u8 fixed_value, const u8 *mask,
-+				enum repaper_stage stage)
-+{
-+	unsigned int b;
-+
-+	for (b = 0; b < (epd->width / 8); b++) {
-+		if (data) {
-+			u8 pixels = data[b] & 0xaa;
-+			u8 pixel_mask = 0xff;
-+			u8 p1, p2, p3, p4;
-+
-+			if (mask) {
-+				pixel_mask = (mask[b] ^ pixels) & 0xaa;
-+				pixel_mask |= pixel_mask >> 1;
-+			}
-+
-+			switch (stage) {
-+			case REPAPER_COMPENSATE: /* B -> W, W -> B (Current) */
-+				pixels = 0xaa | ((pixels ^ 0xaa) >> 1);
-+				break;
-+			case REPAPER_WHITE:      /* B -> N, W -> W (Current) */
-+				pixels = 0x55 + ((pixels ^ 0xaa) >> 1);
-+				break;
-+			case REPAPER_INVERSE:    /* B -> N, W -> B (New) */
-+				pixels = 0x55 | (pixels ^ 0xaa);
-+				break;
-+			case REPAPER_NORMAL:     /* B -> B, W -> W (New) */
-+				pixels = 0xaa | (pixels >> 1);
-+				break;
-+			}
-+
-+			pixels = (pixels & pixel_mask) | (~pixel_mask & 0x55);
-+			p1 = (pixels >> 6) & 0x03;
-+			p2 = (pixels >> 4) & 0x03;
-+			p3 = (pixels >> 2) & 0x03;
-+			p4 = (pixels >> 0) & 0x03;
-+			pixels = (p1 << 0) | (p2 << 2) | (p3 << 4) | (p4 << 6);
-+			*(*pp)++ = pixels;
-+		} else {
-+			*(*pp)++ = fixed_value;
-+		}
-+	}
-+}
-+
-+/* pixels on display are numbered from 1 so odd is actually bits 0,2,4,... */
-+static void repaper_odd_pixels(struct repaper_epd *epd, u8 **pp,
-+			       const u8 *data, u8 fixed_value, const u8 *mask,
-+			       enum repaper_stage stage)
-+{
-+	unsigned int b;
-+
-+	for (b = epd->width / 8; b > 0; b--) {
-+		if (data) {
-+			u8 pixels = data[b - 1] & 0x55;
-+			u8 pixel_mask = 0xff;
-+
-+			if (mask) {
-+				pixel_mask = (mask[b - 1] ^ pixels) & 0x55;
-+				pixel_mask |= pixel_mask << 1;
-+			}
-+
-+			switch (stage) {
-+			case REPAPER_COMPENSATE: /* B -> W, W -> B (Current) */
-+				pixels = 0xaa | (pixels ^ 0x55);
-+				break;
-+			case REPAPER_WHITE:      /* B -> N, W -> W (Current) */
-+				pixels = 0x55 + (pixels ^ 0x55);
-+				break;
-+			case REPAPER_INVERSE:    /* B -> N, W -> B (New) */
-+				pixels = 0x55 | ((pixels ^ 0x55) << 1);
-+				break;
-+			case REPAPER_NORMAL:     /* B -> B, W -> W (New) */
-+				pixels = 0xaa | pixels;
-+				break;
-+			}
-+
-+			pixels = (pixels & pixel_mask) | (~pixel_mask & 0x55);
-+			*(*pp)++ = pixels;
-+		} else {
-+			*(*pp)++ = fixed_value;
-+		}
-+	}
-+}
-+
-+/* interleave bits: (byte)76543210 -> (16 bit).7.6.5.4.3.2.1 */
-+static inline u16 repaper_interleave_bits(u16 value)
-+{
-+	value = (value | (value << 4)) & 0x0f0f;
-+	value = (value | (value << 2)) & 0x3333;
-+	value = (value | (value << 1)) & 0x5555;
-+
-+	return value;
-+}
-+
-+/* pixels on display are numbered from 1 */
-+static void repaper_all_pixels(struct repaper_epd *epd, u8 **pp,
-+			       const u8 *data, u8 fixed_value, const u8 *mask,
-+			       enum repaper_stage stage)
-+{
-+	unsigned int b;
-+
-+	for (b = epd->width / 8; b > 0; b--) {
-+		if (data) {
-+			u16 pixels = repaper_interleave_bits(data[b - 1]);
-+			u16 pixel_mask = 0xffff;
-+
-+			if (mask) {
-+				u16 pixel_mask = repaper_interleave_bits(mask[b - 1]);
-+
-+				pixel_mask = (pixel_mask ^ pixels) & 0x5555;
-+				pixel_mask |= pixel_mask << 1;
-+			}
-+
-+			switch (stage) {
-+			case REPAPER_COMPENSATE: /* B -> W, W -> B (Current) */
-+				pixels = 0xaaaa | (pixels ^ 0x5555);
-+				break;
-+			case REPAPER_WHITE:      /* B -> N, W -> W (Current) */
-+				pixels = 0x5555 + (pixels ^ 0x5555);
-+				break;
-+			case REPAPER_INVERSE:    /* B -> N, W -> B (New) */
-+				pixels = 0x5555 | ((pixels ^ 0x5555) << 1);
-+				break;
-+			case REPAPER_NORMAL:     /* B -> B, W -> W (New) */
-+				pixels = 0xaaaa | pixels;
-+				break;
-+			}
-+
-+			pixels = (pixels & pixel_mask) | (~pixel_mask & 0x5555);
-+			*(*pp)++ = pixels >> 8;
-+			*(*pp)++ = pixels;
-+		} else {
-+			*(*pp)++ = fixed_value;
-+			*(*pp)++ = fixed_value;
-+		}
-+	}
-+}
-+
-+/* output one line of scan and data bytes to the display */
-+static void repaper_one_line(struct repaper_epd *epd, unsigned int line,
-+			     const u8 *data, u8 fixed_value, const u8 *mask,
-+			     enum repaper_stage stage)
-+{
-+	u8 *p = epd->line_buffer;
-+	unsigned int b;
-+
-+	repaper_spi_mosi_low(epd->spi);
-+
-+	if (epd->pre_border_byte)
-+		*p++ = 0x00;
-+
-+	if (epd->middle_scan) {
-+		/* data bytes */
-+		repaper_odd_pixels(epd, &p, data, fixed_value, mask, stage);
-+
-+		/* scan line */
-+		for (b = epd->bytes_per_scan; b > 0; b--) {
-+			if (line / 4 == b - 1)
-+				*p++ = 0x03 << (2 * (line & 0x03));
-+			else
-+				*p++ = 0x00;
-+		}
-+
-+		/* data bytes */
-+		repaper_even_pixels(epd, &p, data, fixed_value, mask, stage);
-+	} else {
-+		/*
-+		 * even scan line, but as lines on display are numbered from 1,
-+		 * line: 1,3,5,...
-+		 */
-+		for (b = 0; b < epd->bytes_per_scan; b++) {
-+			if (0 != (line & 0x01) && line / 8 == b)
-+				*p++ = 0xc0 >> (line & 0x06);
-+			else
-+				*p++ = 0x00;
-+		}
-+
-+		/* data bytes */
-+		repaper_all_pixels(epd, &p, data, fixed_value, mask, stage);
-+
-+		/*
-+		 * odd scan line, but as lines on display are numbered from 1,
-+		 * line: 0,2,4,6,...
-+		 */
-+		for (b = epd->bytes_per_scan; b > 0; b--) {
-+			if (0 == (line & 0x01) && line / 8 == b - 1)
-+				*p++ = 0x03 << (line & 0x06);
-+			else
-+				*p++ = 0x00;
-+		}
-+	}
-+
-+	switch (epd->border_byte) {
-+	case REPAPER_BORDER_BYTE_NONE:
-+		break;
-+
-+	case REPAPER_BORDER_BYTE_ZERO:
-+		*p++ = 0x00;
-+		break;
-+
-+	case REPAPER_BORDER_BYTE_SET:
-+		switch (stage) {
-+		case REPAPER_COMPENSATE:
-+		case REPAPER_WHITE:
-+		case REPAPER_INVERSE:
-+			*p++ = 0x00;
-+			break;
-+		case REPAPER_NORMAL:
-+			*p++ = 0xaa;
-+			break;
-+		}
-+		break;
-+	}
-+
-+	repaper_write_buf(epd->spi, 0x0a, epd->line_buffer,
-+			  p - epd->line_buffer);
-+
-+	/* Output data to panel */
-+	repaper_write_val(epd->spi, 0x02, 0x07);
-+
-+	repaper_spi_mosi_low(epd->spi);
-+}
-+
-+static void repaper_frame_fixed(struct repaper_epd *epd, u8 fixed_value,
-+				enum repaper_stage stage)
-+{
-+	unsigned int line;
-+
-+	for (line = 0; line < epd->height; line++)
-+		repaper_one_line(epd, line, NULL, fixed_value, NULL, stage);
-+}
-+
-+static void repaper_frame_data(struct repaper_epd *epd, const u8 *image,
-+			       const u8 *mask, enum repaper_stage stage)
-+{
-+	unsigned int line;
-+
-+	if (!mask) {
-+		for (line = 0; line < epd->height; line++) {
-+			repaper_one_line(epd, line,
-+					 &image[line * (epd->width / 8)],
-+					 0, NULL, stage);
-+		}
-+	} else {
-+		for (line = 0; line < epd->height; line++) {
-+			size_t n = line * epd->width / 8;
-+
-+			repaper_one_line(epd, line, &image[n], 0, &mask[n],
-+					 stage);
-+		}
-+	}
-+}
-+
-+static void repaper_frame_fixed_repeat(struct repaper_epd *epd, u8 fixed_value,
-+				       enum repaper_stage stage)
-+{
-+	u64 start = local_clock();
-+	u64 end = start + (epd->factored_stage_time * 1000 * 1000);
-+
-+	do {
-+		repaper_frame_fixed(epd, fixed_value, stage);
-+	} while (local_clock() < end);
-+}
-+
-+static void repaper_frame_data_repeat(struct repaper_epd *epd, const u8 *image,
-+				      const u8 *mask, enum repaper_stage stage)
-+{
-+	u64 start = local_clock();
-+	u64 end = start + (epd->factored_stage_time * 1000 * 1000);
-+
-+	do {
-+		repaper_frame_data(epd, image, mask, stage);
-+	} while (local_clock() < end);
-+}
-+
-+static void repaper_get_temperature(struct repaper_epd *epd)
-+{
-+	int ret, temperature = 0;
-+	unsigned int factor10x;
-+
-+	if (!epd->thermal)
-+		return;
-+
-+	ret = thermal_zone_get_temp(epd->thermal, &temperature);
-+	if (ret) {
-+		dev_err(&epd->spi->dev, "Failed to get temperature (%d)\n",
-+			ret);
-+		return;
-+	}
-+
-+	temperature /= 1000;
-+
-+	if (temperature <= -10)
-+		factor10x = 170;
-+	else if (temperature <= -5)
-+		factor10x = 120;
-+	else if (temperature <= 5)
-+		factor10x = 80;
-+	else if (temperature <= 10)
-+		factor10x = 40;
-+	else if (temperature <= 15)
-+		factor10x = 30;
-+	else if (temperature <= 20)
-+		factor10x = 20;
-+	else if (temperature <= 40)
-+		factor10x = 10;
-+	else
-+		factor10x = 7;
-+
-+	epd->factored_stage_time = epd->stage_time * factor10x / 10;
-+}
-+
-+static void repaper_gray8_to_mono_reversed(u8 *buf, u32 width, u32 height)
-+{
-+	u8 *gray8 = buf, *mono = buf;
-+	int y, xb, i;
-+
-+	for (y = 0; y < height; y++)
-+		for (xb = 0; xb < width / 8; xb++) {
-+			u8 byte = 0x00;
-+
-+			for (i = 0; i < 8; i++) {
-+				int x = xb * 8 + i;
-+
-+				byte >>= 1;
-+				if (gray8[y * width + x] >> 7)
-+					byte |= BIT(7);
-+			}
-+			*mono++ = byte;
-+		}
-+}
-+
-+static int repaper_fb_dirty(struct drm_framebuffer *fb,
-+			    struct drm_file *file_priv,
-+			    unsigned int flags, unsigned int color,
-+			    struct drm_clip_rect *clips,
-+			    unsigned int num_clips)
-+{
-+	struct tinydrm_device *tdev = fb->dev->dev_private;
-+	struct repaper_epd *epd = epd_from_tinydrm(tdev);
-+	u8 *buf = NULL;
-+	int ret = 0;
-+
-+	mutex_lock(&tdev->dirty_lock);
-+
-+	if (!epd->enabled)
-+		goto out_unlock;
-+
-+	/* fbdev can flush even when we're not interested */
-+	if (tdev->pipe.plane.fb != fb)
-+		goto out_unlock;
-+
-+	repaper_get_temperature(epd);
-+
-+	DRM_DEBUG("Flushing [FB:%d] st=%ums\n", fb->base.id,
-+		  epd->factored_stage_time);
-+
-+	buf = kmalloc(fb->width * fb->height, GFP_KERNEL);
-+	if (!buf) {
-+		ret = -ENOMEM;
-+		goto out_unlock;
-+	}
-+
-+	ret = tinydrm_xrgb8888_to_gray8(buf, fb);
-+	if (ret)
-+		goto out_unlock;
-+
-+	repaper_gray8_to_mono_reversed(buf, fb->width, fb->height);
-+
-+	if (epd->partial) {
-+		repaper_frame_data_repeat(epd, buf, epd->current_frame,
-+					  REPAPER_NORMAL);
-+	} else if (epd->cleared) {
-+		repaper_frame_data_repeat(epd, epd->current_frame, NULL,
-+					  REPAPER_COMPENSATE);
-+		repaper_frame_data_repeat(epd, epd->current_frame, NULL,
-+					  REPAPER_WHITE);
-+		repaper_frame_data_repeat(epd, buf, NULL, REPAPER_INVERSE);
-+		repaper_frame_data_repeat(epd, buf, NULL, REPAPER_NORMAL);
-+
-+		epd->partial = true;
-+	} else {
-+		/* Clear display (anything -> white) */
-+		repaper_frame_fixed_repeat(epd, 0xff, REPAPER_COMPENSATE);
-+		repaper_frame_fixed_repeat(epd, 0xff, REPAPER_WHITE);
-+		repaper_frame_fixed_repeat(epd, 0xaa, REPAPER_INVERSE);
-+		repaper_frame_fixed_repeat(epd, 0xaa, REPAPER_NORMAL);
-+
-+		/* Assuming a clear (white) screen output an image */
-+		repaper_frame_fixed_repeat(epd, 0xaa, REPAPER_COMPENSATE);
-+		repaper_frame_fixed_repeat(epd, 0xaa, REPAPER_WHITE);
-+		repaper_frame_data_repeat(epd, buf, NULL, REPAPER_INVERSE);
-+		repaper_frame_data_repeat(epd, buf, NULL, REPAPER_NORMAL);
-+
-+		epd->cleared = true;
-+		epd->partial = true;
-+	}
-+
-+	memcpy(epd->current_frame, buf, fb->width * fb->height / 8);
-+
-+	/*
-+	 * An extra frame write is needed if pixels are set in the bottom line,
-+	 * or else grey lines rises up from the pixels
-+	 */
-+	if (epd->pre_border_byte) {
-+		unsigned int x;
-+
-+		for (x = 0; x < (fb->width / 8); x++)
-+			if (buf[x + (fb->width * (fb->height - 1) / 8)]) {
-+				repaper_frame_data_repeat(epd, buf,
-+							  epd->current_frame,
-+							  REPAPER_NORMAL);
-+				break;
-+			}
-+	}
-+
-+out_unlock:
-+	mutex_unlock(&tdev->dirty_lock);
-+
-+	if (ret)
-+		dev_err(fb->dev->dev, "Failed to update display (%d)\n", ret);
-+	kfree(buf);
-+
-+	return ret;
-+}
-+
-+static const struct drm_framebuffer_funcs repaper_fb_funcs = {
-+	.destroy	= drm_fb_cma_destroy,
-+	.create_handle	= drm_fb_cma_create_handle,
-+	.dirty		= repaper_fb_dirty,
-+};
-+
-+static void power_off(struct repaper_epd *epd)
-+{
-+	/* Turn off power and all signals */
-+	gpiod_set_value_cansleep(epd->reset, 0);
-+	gpiod_set_value_cansleep(epd->panel_on, 0);
-+	if (epd->border)
-+		gpiod_set_value_cansleep(epd->border, 0);
-+
-+	/* Ensure SPI MOSI and CLOCK are Low before CS Low */
-+	repaper_spi_mosi_low(epd->spi);
-+
-+	/* Discharge pulse */
-+	gpiod_set_value_cansleep(epd->discharge, 1);
-+	msleep(150);
-+	gpiod_set_value_cansleep(epd->discharge, 0);
-+}
-+
-+static void repaper_pipe_enable(struct drm_simple_display_pipe *pipe,
-+				struct drm_crtc_state *crtc_state)
-+{
-+	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
-+	struct repaper_epd *epd = epd_from_tinydrm(tdev);
-+	struct spi_device *spi = epd->spi;
-+	struct device *dev = &spi->dev;
-+	bool dc_ok = false;
-+	int i, ret;
-+
-+	DRM_DEBUG_DRIVER("\n");
-+
-+	/* Power up sequence */
-+	gpiod_set_value_cansleep(epd->reset, 0);
-+	gpiod_set_value_cansleep(epd->panel_on, 0);
-+	gpiod_set_value_cansleep(epd->discharge, 0);
-+	if (epd->border)
-+		gpiod_set_value_cansleep(epd->border, 0);
-+	repaper_spi_mosi_low(spi);
-+	usleep_range(5000, 10000);
-+
-+	gpiod_set_value_cansleep(epd->panel_on, 1);
-+	/*
-+	 * This delay comes from the repaper.org userspace driver, it's not
-+	 * mentioned in the datasheet.
-+	 */
-+	usleep_range(10000, 15000);
-+	gpiod_set_value_cansleep(epd->reset, 1);
-+	if (epd->border)
-+		gpiod_set_value_cansleep(epd->border, 1);
-+	usleep_range(5000, 10000);
-+	gpiod_set_value_cansleep(epd->reset, 0);
-+	usleep_range(5000, 10000);
-+	gpiod_set_value_cansleep(epd->reset, 1);
-+	usleep_range(5000, 10000);
-+
-+	/* Wait for COG to become ready */
-+	for (i = 100; i > 0; i--) {
-+		if (!gpiod_get_value_cansleep(epd->busy))
-+			break;
-+
-+		usleep_range(10, 100);
-+	}
-+
-+	if (!i) {
-+		dev_err(dev, "timeout waiting for panel to become ready.\n");
-+		power_off(epd);
-+		return;
-+	}
-+
-+	repaper_read_id(spi);
-+	ret = repaper_read_id(spi);
-+	if (ret != REPAPER_RID_G2_COG_ID) {
-+		if (ret < 0)
-+			dev_err(dev, "failed to read chip (%d)\n", ret);
-+		else
-+			dev_err(dev, "wrong COG ID 0x%02x\n", ret);
-+		power_off(epd);
-+		return;
-+	}
-+
-+	/* Disable OE */
-+	repaper_write_val(spi, 0x02, 0x40);
-+
-+	ret = repaper_read_val(spi, 0x0f);
-+	if (ret < 0 || !(ret & 0x80)) {
-+		if (ret < 0)
-+			dev_err(dev, "failed to read chip (%d)\n", ret);
-+		else
-+			dev_err(dev, "panel is reported broken\n");
-+		power_off(epd);
-+		return;
-+	}
-+
-+	/* Power saving mode */
-+	repaper_write_val(spi, 0x0b, 0x02);
-+	/* Channel select */
-+	repaper_write_buf(spi, 0x01, epd->channel_select, 8);
-+	/* High power mode osc */
-+	repaper_write_val(spi, 0x07, 0xd1);
-+	/* Power setting */
-+	repaper_write_val(spi, 0x08, 0x02);
-+	/* Vcom level */
-+	repaper_write_val(spi, 0x09, 0xc2);
-+	/* Power setting */
-+	repaper_write_val(spi, 0x04, 0x03);
-+	/* Driver latch on */
-+	repaper_write_val(spi, 0x03, 0x01);
-+	/* Driver latch off */
-+	repaper_write_val(spi, 0x03, 0x00);
-+	usleep_range(5000, 10000);
-+
-+	/* Start chargepump */
-+	for (i = 0; i < 4; ++i) {
-+		/* Charge pump positive voltage on - VGH/VDL on */
-+		repaper_write_val(spi, 0x05, 0x01);
-+		msleep(240);
-+
-+		/* Charge pump negative voltage on - VGL/VDL on */
-+		repaper_write_val(spi, 0x05, 0x03);
-+		msleep(40);
-+
-+		/* Charge pump Vcom on - Vcom driver on */
-+		repaper_write_val(spi, 0x05, 0x0f);
-+		msleep(40);
-+
-+		/* check DC/DC */
-+		ret = repaper_read_val(spi, 0x0f);
-+		if (ret < 0) {
-+			dev_err(dev, "failed to read chip (%d)\n", ret);
-+			power_off(epd);
-+			return;
-+		}
-+
-+		if (ret & 0x40) {
-+			dc_ok = true;
-+			break;
-+		}
-+	}
-+
-+	if (!dc_ok) {
-+		dev_err(dev, "dc/dc failed\n");
-+		power_off(epd);
-+		return;
-+	}
-+
-+	/*
-+	 * Output enable to disable
-+	 * The userspace driver sets this to 0x04, but the datasheet says 0x06
-+	 */
-+	repaper_write_val(spi, 0x02, 0x04);
-+
-+	epd->enabled = true;
-+	epd->partial = false;
-+}
-+
-+static void repaper_pipe_disable(struct drm_simple_display_pipe *pipe)
-+{
-+	struct tinydrm_device *tdev = pipe_to_tinydrm(pipe);
-+	struct repaper_epd *epd = epd_from_tinydrm(tdev);
-+	struct spi_device *spi = epd->spi;
-+	unsigned int line;
-+
-+	DRM_DEBUG_DRIVER("\n");
-+
-+	mutex_lock(&tdev->dirty_lock);
-+	epd->enabled = false;
-+	mutex_unlock(&tdev->dirty_lock);
-+
-+	/* Nothing frame */
-+	for (line = 0; line < epd->height; line++)
-+		repaper_one_line(epd, 0x7fffu, NULL, 0x00, NULL,
-+				 REPAPER_COMPENSATE);
-+
-+	/* 2.7" */
-+	if (epd->border) {
-+		/* Dummy line */
-+		repaper_one_line(epd, 0x7fffu, NULL, 0x00, NULL,
-+				 REPAPER_COMPENSATE);
-+		msleep(25);
-+		gpiod_set_value_cansleep(epd->border, 0);
-+		msleep(200);
-+		gpiod_set_value_cansleep(epd->border, 1);
-+	} else {
-+		/* Border dummy line */
-+		repaper_one_line(epd, 0x7fffu, NULL, 0x00, NULL,
-+				 REPAPER_NORMAL);
-+		msleep(200);
-+	}
-+
-+	/* not described in datasheet */
-+	repaper_write_val(spi, 0x0b, 0x00);
-+	/* Latch reset turn on */
-+	repaper_write_val(spi, 0x03, 0x01);
-+	/* Power off charge pump Vcom */
-+	repaper_write_val(spi, 0x05, 0x03);
-+	/* Power off charge pump neg voltage */
-+	repaper_write_val(spi, 0x05, 0x01);
-+	msleep(120);
-+	/* Discharge internal */
-+	repaper_write_val(spi, 0x04, 0x80);
-+	/* turn off all charge pumps */
-+	repaper_write_val(spi, 0x05, 0x00);
-+	/* Turn off osc */
-+	repaper_write_val(spi, 0x07, 0x01);
-+	msleep(50);
-+
-+	power_off(epd);
-+}
-+
-+static const struct drm_simple_display_pipe_funcs repaper_pipe_funcs = {
-+	.enable = repaper_pipe_enable,
-+	.disable = repaper_pipe_disable,
-+	.update = tinydrm_display_pipe_update,
-+	.prepare_fb = tinydrm_display_pipe_prepare_fb,
-+};
-+
-+static const uint32_t repaper_formats[] = {
-+	DRM_FORMAT_XRGB8888,
-+};
-+
-+static const struct drm_display_mode repaper_e1144cs021_mode = {
-+	TINYDRM_MODE(128, 96, 29, 22),
-+};
-+
-+static const u8 repaper_e1144cs021_cs[] = { 0x00, 0x00, 0x00, 0x00,
-+					    0x00, 0x0f, 0xff, 0x00 };
-+
-+static const struct drm_display_mode repaper_e1190cs021_mode = {
-+	TINYDRM_MODE(144, 128, 36, 32),
-+};
-+
-+static const u8 repaper_e1190cs021_cs[] = { 0x00, 0x00, 0x00, 0x03,
-+					    0xfc, 0x00, 0x00, 0xff };
-+
-+static const struct drm_display_mode repaper_e2200cs021_mode = {
-+	TINYDRM_MODE(200, 96, 46, 22),
-+};
-+
-+static const u8 repaper_e2200cs021_cs[] = { 0x00, 0x00, 0x00, 0x00,
-+					    0x01, 0xff, 0xe0, 0x00 };
-+
-+static const struct drm_display_mode repaper_e2271cs021_mode = {
-+	TINYDRM_MODE(264, 176, 57, 38),
-+};
-+
-+static const u8 repaper_e2271cs021_cs[] = { 0x00, 0x00, 0x00, 0x7f,
-+					    0xff, 0xfe, 0x00, 0x00 };
-+
-+DEFINE_DRM_GEM_CMA_FOPS(repaper_fops);
-+
-+static struct drm_driver repaper_driver = {
-+	.driver_features	= DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME |
-+				  DRIVER_ATOMIC,
-+	.fops			= &repaper_fops,
-+	TINYDRM_GEM_DRIVER_OPS,
-+	.name			= "repaper",
-+	.desc			= "Pervasive Displays RePaper e-ink panels",
-+	.date			= "20170405",
-+	.major			= 1,
-+	.minor			= 0,
-+};
-+
-+static const struct of_device_id repaper_of_match[] = {
-+	{ .compatible = "pervasive,e1144cs021", .data = (void *)E1144CS021 },
-+	{ .compatible = "pervasive,e1190cs021", .data = (void *)E1190CS021 },
-+	{ .compatible = "pervasive,e2200cs021", .data = (void *)E2200CS021 },
-+	{ .compatible = "pervasive,e2271cs021", .data = (void *)E2271CS021 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, repaper_of_match);
-+
-+static const struct spi_device_id repaper_id[] = {
-+	{ "e1144cs021", E1144CS021 },
-+	{ "e1190cs021", E1190CS021 },
-+	{ "e2200cs021", E2200CS021 },
-+	{ "e2271cs021", E2271CS021 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(spi, repaper_id);
-+
-+static int repaper_probe(struct spi_device *spi)
-+{
-+	const struct drm_display_mode *mode;
-+	const struct spi_device_id *spi_id;
-+	const struct of_device_id *match;
-+	struct device *dev = &spi->dev;
-+	struct tinydrm_device *tdev;
-+	enum repaper_model model;
-+	const char *thermal_zone;
-+	struct repaper_epd *epd;
-+	size_t line_buffer_size;
-+	int ret;
-+
-+	match = of_match_device(repaper_of_match, dev);
-+	if (match) {
-+		model = (enum repaper_model)match->data;
-+	} else {
-+		spi_id = spi_get_device_id(spi);
-+		model = spi_id->driver_data;
-+	}
-+
-+	/* The SPI device is used to allocate dma memory */
-+	if (!dev->coherent_dma_mask) {
-+		ret = dma_coerce_mask_and_coherent(dev, DMA_BIT_MASK(32));
-+		if (ret) {
-+			dev_warn(dev, "Failed to set dma mask %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
-+	epd = devm_kzalloc(dev, sizeof(*epd), GFP_KERNEL);
-+	if (!epd)
-+		return -ENOMEM;
-+
-+	epd->spi = spi;
-+
-+	epd->panel_on = devm_gpiod_get(dev, "panel-on", GPIOD_OUT_LOW);
-+	if (IS_ERR(epd->panel_on)) {
-+		ret = PTR_ERR(epd->panel_on);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get gpio 'panel-on'\n");
-+		return ret;
-+	}
-+
-+	epd->discharge = devm_gpiod_get(dev, "discharge", GPIOD_OUT_LOW);
-+	if (IS_ERR(epd->discharge)) {
-+		ret = PTR_ERR(epd->discharge);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get gpio 'discharge'\n");
-+		return ret;
-+	}
-+
-+	epd->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(epd->reset)) {
-+		ret = PTR_ERR(epd->reset);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get gpio 'reset'\n");
-+		return ret;
-+	}
-+
-+	epd->busy = devm_gpiod_get(dev, "busy", GPIOD_IN);
-+	if (IS_ERR(epd->busy)) {
-+		ret = PTR_ERR(epd->busy);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get gpio 'busy'\n");
-+		return ret;
-+	}
-+
-+	if (!device_property_read_string(dev, "pervasive,thermal-zone",
-+					 &thermal_zone)) {
-+		epd->thermal = thermal_zone_get_zone_by_name(thermal_zone);
-+		if (IS_ERR(epd->thermal)) {
-+			dev_err(dev, "Failed to get thermal zone: %s\n",
-+				thermal_zone);
-+			return PTR_ERR(epd->thermal);
-+		}
-+	}
-+
-+	switch (model) {
-+	case E1144CS021:
-+		mode = &repaper_e1144cs021_mode;
-+		epd->channel_select = repaper_e1144cs021_cs;
-+		epd->stage_time = 480;
-+		epd->bytes_per_scan = 96 / 4;
-+		epd->middle_scan = true; /* data-scan-data */
-+		epd->pre_border_byte = false;
-+		epd->border_byte = REPAPER_BORDER_BYTE_ZERO;
-+		break;
-+
-+	case E1190CS021:
-+		mode = &repaper_e1190cs021_mode;
-+		epd->channel_select = repaper_e1190cs021_cs;
-+		epd->stage_time = 480;
-+		epd->bytes_per_scan = 128 / 4 / 2;
-+		epd->middle_scan = false; /* scan-data-scan */
-+		epd->pre_border_byte = false;
-+		epd->border_byte = REPAPER_BORDER_BYTE_SET;
-+		break;
-+
-+	case E2200CS021:
-+		mode = &repaper_e2200cs021_mode;
-+		epd->channel_select = repaper_e2200cs021_cs;
-+		epd->stage_time = 480;
-+		epd->bytes_per_scan = 96 / 4;
-+		epd->middle_scan = true; /* data-scan-data */
-+		epd->pre_border_byte = true;
-+		epd->border_byte = REPAPER_BORDER_BYTE_NONE;
-+		break;
-+
-+	case E2271CS021:
-+		epd->border = devm_gpiod_get(dev, "border", GPIOD_OUT_LOW);
-+		if (IS_ERR(epd->border)) {
-+			ret = PTR_ERR(epd->border);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to get gpio 'border'\n");
-+			return ret;
-+		}
-+
-+		mode = &repaper_e2271cs021_mode;
-+		epd->channel_select = repaper_e2271cs021_cs;
-+		epd->stage_time = 630;
-+		epd->bytes_per_scan = 176 / 4;
-+		epd->middle_scan = true; /* data-scan-data */
-+		epd->pre_border_byte = true;
-+		epd->border_byte = REPAPER_BORDER_BYTE_NONE;
-+		break;
-+
-+	default:
-+		return -ENODEV;
-+	}
-+
-+	epd->width = mode->hdisplay;
-+	epd->height = mode->vdisplay;
-+	epd->factored_stage_time = epd->stage_time;
-+
-+	line_buffer_size = 2 * epd->width / 8 + epd->bytes_per_scan + 2;
-+	epd->line_buffer = devm_kzalloc(dev, line_buffer_size, GFP_KERNEL);
-+	if (!epd->line_buffer)
-+		return -ENOMEM;
-+
-+	epd->current_frame = devm_kzalloc(dev, epd->width * epd->height / 8,
-+					  GFP_KERNEL);
-+	if (!epd->current_frame)
-+		return -ENOMEM;
-+
-+	tdev = &epd->tinydrm;
-+
-+	ret = devm_tinydrm_init(dev, tdev, &repaper_fb_funcs, &repaper_driver);
-+	if (ret)
-+		return ret;
-+
-+	ret = tinydrm_display_pipe_init(tdev, &repaper_pipe_funcs,
-+					DRM_MODE_CONNECTOR_VIRTUAL,
-+					repaper_formats,
-+					ARRAY_SIZE(repaper_formats), mode, 0);
-+	if (ret)
-+		return ret;
-+
-+	drm_mode_config_reset(tdev->drm);
-+
-+	ret = devm_tinydrm_register(tdev);
-+	if (ret)
-+		return ret;
-+
-+	spi_set_drvdata(spi, tdev);
-+
-+	DRM_DEBUG_DRIVER("Initialized %s:%s @%uMHz on minor %d\n",
-+			 tdev->drm->driver->name, dev_name(dev),
-+			 spi->max_speed_hz / 1000000,
-+			 tdev->drm->primary->index);
-+
-+	return 0;
-+}
-+
-+static void repaper_shutdown(struct spi_device *spi)
-+{
-+	struct tinydrm_device *tdev = spi_get_drvdata(spi);
-+
-+	tinydrm_shutdown(tdev);
-+}
-+
-+static struct spi_driver repaper_spi_driver = {
-+	.driver = {
-+		.name = "repaper",
-+		.owner = THIS_MODULE,
-+		.of_match_table = repaper_of_match,
-+	},
-+	.id_table = repaper_id,
-+	.probe = repaper_probe,
-+	.shutdown = repaper_shutdown,
-+};
-+module_spi_driver(repaper_spi_driver);
-+
-+MODULE_DESCRIPTION("Pervasive Displays RePaper DRM driver");
-+MODULE_AUTHOR("Noralf Trønnes");
-+MODULE_LICENSE("GPL");
--- 
-2.7.4
+I meant USB Device controller driver. It's not capable of DRD.
 
+Thanks,
+Ravi
+
+>
+>>> +     struct gpio_desc *vbus_gpiod;
+>>> +     struct gpio_desc *id_gpiod;
+>>> +     int id_irq;
+>>> +     int vbus_irq;
+>>> +     unsigned long debounce_jiffies;
+>>> +     struct delayed_work wq_extcon;
+>>> +};
+>>> +
+>>> +struct ns2_phy_data {
+>>> +     struct ns2_phy_driver *driver;
+>>> +     struct phy *phy;
+>>> +     int new_state;
+>>> +};
+>>> +
+>>> +static const unsigned int usb_extcon_cable[] = {
+>>> +     EXTCON_USB,
+>>> +     EXTCON_USB_HOST,
+>>> +     EXTCON_NONE,
+>>> +};
+>>> +
+>>> +static inline int pll_lock_stat(u32 usb_reg, int reg_mask,
+>>> +                             struct ns2_phy_driver *driver)
+>>> +{
+>>> +     int retry = PLL_LOCK_RETRY;
+>>> +     u32 val;
+>>> +
+>>> +     do {
+>>> +             udelay(1);
+>>> +             val = readl(driver->icfgdrd_regs + usb_reg);
+>>> +             if (val & reg_mask)
+>>> +                     return 0;
+>>> +     } while (--retry > 0);
+>>> +
+>>> +     return -EBUSY;
+>>> +}
+>>> +
+>>> +static int ns2_drd_phy_init(struct phy *phy)
+>>> +{
+>>> +     struct ns2_phy_data *data = phy_get_drvdata(phy);
+>>> +     struct ns2_phy_driver *driver = data->driver;
+>>> +     u32 val;
+>>> +
+>>> +     val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +     if (data->new_state == EVT_HOST) {
+>>> +             val &= ~DRD_DEVICE_MODE;
+>>> +             val |= DRD_HOST_MODE;
+>>> +     } else {
+>>> +             val &= ~DRD_HOST_MODE;
+>>> +             val |= DRD_DEVICE_MODE;
+>>> +     }
+>>> +     writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int ns2_drd_phy_shutdown(struct phy *phy)
+>>> +{
+>>> +     struct ns2_phy_data *data = phy_get_drvdata(phy);
+>>> +     struct ns2_phy_driver *driver = data->driver;
+>>> +     u32 val;
+>>> +
+>>> +     val = readl(driver->crmu_usb2_ctrl);
+>>> +     val &= ~AFE_CORERDY_VDDC;
+>>> +     writel(val, driver->crmu_usb2_ctrl);
+>>> +
+>>> +     val = readl(driver->crmu_usb2_ctrl);
+>>> +     val &= ~DRD_DEV_MODE;
+>>> +     writel(val, driver->crmu_usb2_ctrl);
+>>> +
+>>> +     /* Disable Host and Device Mode */
+>>> +     val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +     val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE | ICFG_OFF_MODE);
+>>> +     writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int ns2_drd_phy_poweron(struct phy *phy)
+>>> +{
+>>> +     struct ns2_phy_data *data = phy_get_drvdata(phy);
+>>> +     struct ns2_phy_driver *driver = data->driver;
+>>> +     u32 extcon_event = data->new_state;
+>>> +     int ret;
+>>> +     u32 val;
+>>> +
+>>> +     if (extcon_event == EVT_DEVICE) {
+>>> +             writel(DRD_DEV_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+>>> +
+>>> +             val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +             val &= ~(DRD_HOST_MODE | ICFG_OFF_MODE);
+>>> +             val |= DRD_DEVICE_MODE;
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>
+>> Setting to DRD_DEVICE_MODE or DRD_HOST_MODE is done in connect_change. Why do
+>> you want to do it here?
+>
+> Will remove it if not required for power management support. I would
+> like this to be there now.
+> Pls let me know.
+>
+>>> +
+>>> +             val = readl(driver->idmdrd_rst_ctrl);
+>>> +             val &= ~IDM_RST_BIT;
+>>> +             writel(val, driver->idmdrd_rst_ctrl);
+>>> +
+>>> +             val = readl(driver->crmu_usb2_ctrl);
+>>> +             val |= (AFE_CORERDY_VDDC | DRD_DEV_MODE);
+>>> +             writel(val, driver->crmu_usb2_ctrl);
+>>> +
+>>> +             /* Bring PHY and PHY_PLL out of Reset */
+>>> +             val = readl(driver->crmu_usb2_ctrl);
+>>> +             val |= (PHY_PLL_RESETB | PHY_RESETB);
+>>> +             writel(val, driver->crmu_usb2_ctrl);
+>>> +
+>>> +             ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
+>>> +             if (ret < 0) {
+>>> +                     dev_err(&phy->dev, "Phy PLL lock failed\n");
+>>> +                     goto err_shutdown;
+>>> +             }
+>>> +     } else {
+>>> +             writel(DRD_HOST_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+>>> +
+>>> +             val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +             val &= ~(DRD_DEVICE_MODE | ICFG_OFF_MODE);
+>>> +             val |= DRD_HOST_MODE;
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +             val = readl(driver->crmu_usb2_ctrl);
+>>> +             val |= AFE_CORERDY_VDDC;
+>>> +             writel(val, driver->crmu_usb2_ctrl);
+>>> +
+>>> +             ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
+>>> +             if (ret < 0) {
+>>> +                     dev_err(&phy->dev, "Phy PLL lock failed\n");
+>>> +                     goto err_shutdown;
+>>> +             }
+>>> +
+>>> +             val = readl(driver->idmdrd_rst_ctrl);
+>>> +             val &= ~IDM_RST_BIT;
+>>> +             writel(val, driver->idmdrd_rst_ctrl);
+>>> +
+>>> +             /* port over current Polarity */
+>>> +             val = readl(driver->usb2h_strap_reg);
+>>> +             val |= OHCI_OVRCUR_POL;
+>>> +             writel(val, driver->usb2h_strap_reg);
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +
+>>> +err_shutdown:
+>>> +     ns2_drd_phy_shutdown(phy);
+>>
+>> This should be left for the consumer driver to handle.
+>
+> Ok.
+>
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static void connect_change(struct ns2_phy_driver *driver)
+>>> +{
+>>> +     u32 extcon_event;
+>>> +     u32 val;
+>>> +
+>>> +     extcon_event = driver->data->new_state;
+>>> +     val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +     switch (extcon_event) {
+>>> +     case EVT_DEVICE:
+>>> +             val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE);
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +             val = (val & ~DRD_HOST_MODE) | DRD_DEVICE_MODE;
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +             val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+>>> +             val |= ICFG_DEV_BIT;
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+>>> +             break;
+>>> +
+>>> +     case EVT_HOST:
+>>> +             val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE);
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +             val = (val & ~DRD_DEVICE_MODE) | DRD_HOST_MODE;
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
+>>> +
+>>> +             val = readl(driver->usb2h_strap_reg);
+>>> +             val |= OHCI_OVRCUR_POL;
+>>> +             writel(val, driver->usb2h_strap_reg);
+>>> +
+>>> +             val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+>>> +             val &= ~ICFG_DEV_BIT;
+>>> +             writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
+>>> +             break;
+>>> +
+>>> +     default:
+>>> +             pr_err("Invalid extcon event\n");
+>>> +             break;
+>>> +     }
+>>> +}
+>>> +
+>>> +static void extcon_work(struct work_struct *work)
+>>> +{
+>>> +     struct ns2_phy_driver *driver;
+>>> +     int vbus;
+>>> +     int id;
+>>> +
+>>> +     driver  = container_of(to_delayed_work(work),
+>>> +                            struct ns2_phy_driver, wq_extcon);
+>>> +
+>>> +     id = gpiod_get_value_cansleep(driver->id_gpiod);
+>>> +     vbus = gpiod_get_value_cansleep(driver->vbus_gpiod);
+>>> +
+>>> +     if (!id && vbus) { /* Host connected */
+>>> +             extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, true);
+>>
+>> Why do you need all extcon_set_cable_state_ here?
+>
+> Based on the cable state, the UDC driver can do gagdet driver
+> connect/disconnect,
+> the way it is done now.
+>
+> Thanks,
+> Ravi
+>
+>>
+>> Thanks
+>> Kishon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
