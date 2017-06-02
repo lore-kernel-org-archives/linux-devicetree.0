@@ -1,36 +1,39 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 5/6] dt-bindings: display: amlogic: DT fix s/resets-names/reset-names/
-Date: Fri,  2 Jun 2017 14:38:48 +0200
-Message-ID: <1496407129-13527-6-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v3 3/6] dt: booting-without-of: DT fix s/#interrupt-cell/#interrupt-cells/
+Date: Fri,  2 Jun 2017 14:38:46 +0200
+Message-ID: <1496407129-13527-4-git-send-email-geert+renesas@glider.be>
 References: <1496407129-13527-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1496407129-13527-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Chanho Min <chanho.min@lge.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
 Cc: Neil Armstrong <narmstrong@baylibre.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Fixes: 8cceda5349377e30 ("dt-bindings: Add bindings for the Amlogic Meson dw-hdmi extension")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
 v3:
-  - New.
+  - No changes,
+
+v2:
+  - Add Acked-by.
 ---
- Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt | 2 +-
+ Documentation/devicetree/booting-without-of.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-index 7f040edc16fe6325..a65c890e3170f875 100644
---- a/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-+++ b/Documentation/devicetree/bindings/display/amlogic,meson-dw-hdmi.txt
-@@ -43,7 +43,7 @@ Required properties:
-   and the Amlogic Meson venci clocks as described in
-   Documentation/devicetree/bindings/clock/clock-bindings.txt,
-   the clocks are soc specific, the clock-names should be "iahb", "isfr", "venci"
--- resets, resets-names: must have the phandles to the HDMI apb, glue and phy
-+- resets, reset-names: must have the phandles to the HDMI apb, glue and phy
-   resets as described in :
-   Documentation/devicetree/bindings/reset/reset.txt,
-   the reset-names should be "hdmitx_apb", "hdmitx", "hdmitx_phy"
+diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+index 280d283304bb82d8..f35d3adacb987f7d 100644
+--- a/Documentation/devicetree/booting-without-of.txt
++++ b/Documentation/devicetree/booting-without-of.txt
+@@ -1309,7 +1309,7 @@ number and level/sense information. All interrupt children in an
+ OpenPIC interrupt domain use 2 cells per interrupt in their interrupts
+ property.
+ 
+-The PCI bus binding specifies a #interrupt-cell value of 1 to encode
++The PCI bus binding specifies a #interrupt-cells value of 1 to encode
+ which interrupt pin (INTA,INTB,INTC,INTD) is used.
+ 
+ 2) interrupt-parent property
 -- 
 2.7.4
