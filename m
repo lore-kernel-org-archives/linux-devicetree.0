@@ -1,237 +1,178 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH 3/6] mfd: hi6421v530: add support for HiSilicon Hi6421v530
-Date: Fri, 2 Jun 2017 17:35:45 +0800
-Message-ID: <CAFGCpxzvJ2hm0hrb6T-faPeKhLhMOMMWZi7HO=oUOa+pHFdd2g@mail.gmail.com>
-References: <20170526063518.21246-1-guodong.xu@linaro.org> <20170526063518.21246-4-guodong.xu@linaro.org>
- <20170530073606.tm4gacph4yj47ntx@dell>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH v9 2/5] irqchip/aspeed-i2c-ic: Add I2C IRQ controller for
+ Aspeed
+Date: Fri, 2 Jun 2017 10:54:37 +0100
+Message-ID: <0db6df3c-013b-1d57-5c69-edfc53ef26c0@arm.com>
+References: <20170602084603.30811-1-brendanhiggins@google.com>
+ <20170602084603.30811-3-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170530073606.tm4gacph4yj47ntx@dell>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Arnd Bergmann <arnd@arndb.de>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, damm+renesas@opensource.se, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Linus Walleij <linus>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170602084603.30811-3-brendanhiggins@google.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org, benh@kernel.crashing.org, ryan_chen@aspeedtech.com
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 3:36 PM, Lee Jones <lee.jones@linaro.org> wrote:
-> On Fri, 26 May 2017, Guodong Xu wrote:
->
->> Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
->> main SoC via memory-mapped I/O.
->>
->> Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon, bu=
-t
->> at different revisions. They share the same memory-mapped I/O design. Th=
-ey
->> differ in regulator details, eg. LDO voltage points.
->>
->> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
->> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
->> ---
->>  drivers/mfd/Kconfig           |  9 +++++
->>  drivers/mfd/Makefile          |  1 +
->>  drivers/mfd/hi6421v530-pmic.c | 92 ++++++++++++++++++++++++++++++++++++=
-+++++++
->
-> As previously discussed, this support should be added to the existing
-> driver.
+On 02/06/17 09:46, Brendan Higgins wrote:
+> The Aspeed 24XX/25XX chips share a single hardware interrupt across 14
+> separate I2C busses. This adds a dummy irqchip which maps the single
+> hardware interrupt to software interrupts for each of the busses.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> ---
+> Added in v6:
+>   - Pulled "aspeed_i2c_controller" out into a interrupt controller since that is
+>     what it actually does.
+> Changes for v7:
+>   - Renamed irq domain for consistency
+> Changes for v8:
+>   - None
+> Changes for v9:
+>   - None
+> ---
+>  drivers/irqchip/Makefile            |   2 +-
+>  drivers/irqchip/irq-aspeed-i2c-ic.c | 102 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 103 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/irqchip/irq-aspeed-i2c-ic.c
+> 
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index b64c59b838a0..e067f9839b33 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -73,6 +73,6 @@ obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+>  obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
+>  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+>  obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
+> -obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
+> +obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o irq-aspeed-i2c-ic.o
+>  obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+>  obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
+> diff --git a/drivers/irqchip/irq-aspeed-i2c-ic.c b/drivers/irqchip/irq-aspeed-i2c-ic.c
+> new file mode 100644
+> index 000000000000..a36fb09c10c2
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-aspeed-i2c-ic.c
+> @@ -0,0 +1,102 @@
+> +/*
+> + *  Aspeed 24XX/25XX I2C Interrupt Controller.
+> + *
+> + *  Copyright (C) 2012-2017 ASPEED Technology Inc.
+> + *  Copyright 2017 IBM Corporation
+> + *  Copyright 2017 Google, Inc.
+> + *
+> + *  This program is free software; you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License version 2 as
+> + *  published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/irq.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/io.h>
+> +
+> +
+> +#define ASPEED_I2C_IC_NUM_BUS 14
+> +
+> +struct aspeed_i2c_ic {
+> +	void __iomem		*base;
+> +	int			parent_irq;
+> +	struct irq_domain	*irq_domain;
+> +};
+> +
+> +/*
+> + * The aspeed chip provides a single hardware interrupt for all of the I2C
+> + * busses, so we use a dummy interrupt chip to translate this single interrupt
+> + * into multiple interrupts, each associated with a single I2C bus.
+> + */
+> +static void aspeed_i2c_ic_irq_handler(struct irq_desc *desc)
+> +{
+> +	struct aspeed_i2c_ic *i2c_ic = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned long bit, status;
+> +	unsigned int bus_irq;
+> +
+> +	chained_irq_enter(chip, desc);
+> +	status = readl(i2c_ic->base);
+> +	for_each_set_bit(bit, &status, ASPEED_I2C_IC_NUM_BUS) {
+> +		bus_irq = irq_find_mapping(i2c_ic->irq_domain, bit);
+> +		generic_handle_irq(bus_irq);
+> +	}
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +/*
+> + * Set simple handler and mark IRQ as valid. Nothing interesting to do here
+> + * since we are using a dummy interrupt chip.
+> + */
+> +static int aspeed_i2c_ic_map_irq_domain(struct irq_domain *domain,
+> +					unsigned int irq, irq_hw_number_t hwirq)
+> +{
+> +	irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+> +	irq_set_chip_data(irq, domain->host_data);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct irq_domain_ops aspeed_i2c_ic_irq_domain_ops = {
+> +	.map = aspeed_i2c_ic_map_irq_domain,
+> +};
+> +
+> +static int __init aspeed_i2c_ic_of_init(struct device_node *node,
+> +					struct device_node *parent)
+> +{
+> +	struct aspeed_i2c_ic *i2c_ic;
+> +
+> +	i2c_ic = kzalloc(sizeof(*i2c_ic), GFP_KERNEL);
+> +	if (!i2c_ic)
+> +		return -ENOMEM;
+> +
+> +	i2c_ic->base = of_iomap(node, 0);
+> +	if (IS_ERR(i2c_ic->base))
+> +		return PTR_ERR(i2c_ic->base);
+> +
+> +	i2c_ic->parent_irq = irq_of_parse_and_map(node, 0);
+> +	if (i2c_ic->parent_irq < 0)
+> +		return i2c_ic->parent_irq;
+> +
+> +	i2c_ic->irq_domain = irq_domain_add_linear(
+> +			node, ASPEED_I2C_IC_NUM_BUS,
+> +			&aspeed_i2c_ic_irq_domain_ops, NULL);
 
-Yes, I will do that.
+nit: can you have at least one argument following the function name?
+Even if checkpatch shouts out you?
 
->
->>  3 files changed, 102 insertions(+)
->>  create mode 100644 drivers/mfd/hi6421v530-pmic.c
->>
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index 3eb5c93..bdc8304 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -388,6 +388,15 @@ config MFD_HI6421_PMIC
->>         menus in order to enable them.
->>         We communicate with the Hi6421 via memory-mapped I/O.
->>
->> +config MFD_HI6421V530_PMIC
->> +     tristate "HiSilicon Hi6421v530 PMU/Codec IC"
->> +     depends on OF
->> +     select MFD_CORE
->> +     select REGMAP_MMIO
->> +     help
->> +       Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicat=
-es
->> +       with main SoC via memory-mapped I/O.
->> +
->>  config MFD_HI655X_PMIC
->>       tristate "HiSilicon Hi655X series PMU/Codec IC"
->>       depends on ARCH_HISI || COMPILE_TEST
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index c16bf1e..cde62fc 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -206,6 +206,7 @@ obj-$(CONFIG_MFD_STW481X) +=3D stw481x.o
->>  obj-$(CONFIG_MFD_IPAQ_MICRO) +=3D ipaq-micro.o
->>  obj-$(CONFIG_MFD_MENF21BMC)  +=3D menf21bmc.o
->>  obj-$(CONFIG_MFD_HI6421_PMIC)        +=3D hi6421-pmic-core.o
->> +obj-$(CONFIG_MFD_HI6421V530_PMIC)    +=3D hi6421v530-pmic.o
->>  obj-$(CONFIG_MFD_HI655X_PMIC)   +=3D hi655x-pmic.o
->>  obj-$(CONFIG_MFD_DLN2)               +=3D dln2.o
->>  obj-$(CONFIG_MFD_RT5033)     +=3D rt5033.o
->> diff --git a/drivers/mfd/hi6421v530-pmic.c b/drivers/mfd/hi6421v530-pmic=
-.c
->> new file mode 100644
->> index 0000000..651659a
->> --- /dev/null
->> +++ b/drivers/mfd/hi6421v530-pmic.c
->> @@ -0,0 +1,92 @@
->> +/*
->> + * Device driver for Hi6421 IC
->> + *
->> + * Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
->> + *              http://www.hisilicon.com
->> + * Copyright (c) <2017> Linaro Ltd.
->> + *              http://www.linaro.org
->> + *
->> + * Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
->> + *         Guodong Xu <guodong.xu@linaro.org>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHO=
-UT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY o=
-r
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Licens=
-e for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program.  If not, see <http://www.gnu.org/licenses/>=
-.
->
-> Can you use the shorter licence script?
->
->> + */
->> +
->> +#include <linux/device.h>
->> +#include <linux/err.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +#include <linux/mfd/hi6421-pmic.h>
->
-> Alphabetical.
->
+> +	if (!i2c_ic->irq_domain)
+> +		return -ENOMEM;
 
-I will update that in the existing drivers/mfd/hi6421-pmic-core.c
-together with my other changes.
+All these error paths are leaking the initial memory allocation.
 
->> +static const struct mfd_cell hi6421v530_devs[] =3D {
->> +     { .name =3D "hi6421v530-regulator", },
->> +};
->
-> Chen Feng promised me that he would add other devices to the original
-> driver nearly 18 months ago.  Until more devices are added, these are
-> not MFD drivers.  When will you add the remaining devices?
->
+> +
+> +	i2c_ic->irq_domain->name = "aspeed-i2c-domain";
+> +
+> +	irq_set_chained_handler_and_data(i2c_ic->parent_irq,
+> +					 aspeed_i2c_ic_irq_handler, i2c_ic);
+> +
+> +	pr_info("i2c controller registered, irq %d\n", i2c_ic->parent_irq);
+> +
+> +	return 0;
+> +}
+> +
+> +IRQCHIP_DECLARE(ast2400_i2c_ic, "aspeed,ast2400-i2c-ic", aspeed_i2c_ic_of_init);
+> +IRQCHIP_DECLARE(ast2500_i2c_ic, "aspeed,ast2500-i2c-ic", aspeed_i2c_ic_of_init);
+> 
 
-New devices will be added when enabling functions on the hikey960
-board. v530 provides a clk for wifi/bt, that can be added very quick.
+Once you've fixed the trivial bug above, this should be good to go.
+What's the merging strategy? Can I take the initial two patches, and let
+someone else deal with the rest? Or do you want the whole series to be
+kept together?
 
->> +static int hi6421v530_pmic_probe(struct platform_device *pdev)
->> +{
->> +     struct hi6421_pmic *pmic;
->> +     struct resource *res;
->> +     void __iomem *base;
->> +     int ret;
->> +
->> +     pmic =3D devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
->> +     if (!pmic)
->> +             return -ENOMEM;
->> +
->> +     res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     base =3D devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(base))
->> +             return PTR_ERR(base);
->> +
->> +     pmic->regmap =3D devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
->> +                                              &hi6421_regmap_config);
->> +     if (IS_ERR(pmic->regmap)) {
->> +             dev_err(&pdev->dev,
->> +                     "regmap init failed: %ld\n", PTR_ERR(pmic->regmap)=
-);
->
-> "Failed to initialise Regmap"
+Thanks,
 
-Thanks, will update in the existing drivers/mfd/hi6421-pmic-core.c
-
->
->> +             return PTR_ERR(pmic->regmap);
->> +     }
->> +
->> +     platform_set_drvdata(pdev, pmic);
->> +
->> +     ret =3D devm_mfd_add_devices(&pdev->dev, 0, hi6421v530_devs,
->
-> Use the #defines provided instead of '0'.
->
->> +                                ARRAY_SIZE(hi6421v530_devs), NULL, 0, N=
-ULL);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
->
-> "Failed to add child devices"
->
-
-Thanks, will update in the existing drivers/mfd/hi6421-pmic-core.c
-
->> +             return ret;
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static const struct of_device_id of_hi6421v530_pmic_match_tbl[] =3D {
->> +     { .compatible =3D "hisilicon,hi6421v530-pmic", },
->> +     { },
->> +};
->> +MODULE_DEVICE_TABLE(of, of_hi6421v530_pmic_match_tbl);
->
-> Drop the "_tbl" part, it's implied and superfluous.
->
-
-Will update.
-
->> +static struct platform_driver hi6421v530_pmic_driver =3D {
->> +     .driver =3D {
->> +             .name   =3D "hi6421v530_pmic",
->
-> One space please.
->
-
-Thanks, will update.
-
-I will send updates in v3 soon.
-
--Guodong
-
->> +             .of_match_table =3D of_hi6421v530_pmic_match_tbl,
->> +     },
->> +     .probe  =3D hi6421v530_pmic_probe,
->> +};
->> +module_platform_driver(hi6421v530_pmic_driver);
->> +
->> +MODULE_AUTHOR("Guodong Xu <guodong.xu@linaro.org>");
->> +MODULE_DESCRIPTION("Hi6421v530 PMIC driver");
->> +MODULE_LICENSE("GPL v2");
->
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+	M.
+-- 
+Jazz is not dead. It just smells funny...
