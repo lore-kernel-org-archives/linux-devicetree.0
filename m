@@ -1,13 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 01/19] drm/sun4i: call drm_vblank_init with
- correct number of crtcs
-Date: Fri,  2 Jun 2017 18:10:06 +0800
-Message-ID: <20170602101024.18940-2-wens@csie.org>
+Subject: [PATCH 09/19] drm/sun4i: hdmi: Support different
+ variants of the DDC clock
+Date: Fri,  2 Jun 2017 18:10:14 +0800
+Message-ID: <20170602101024.18940-10-wens@csie.org>
 References: <20170602101024.18940-1-wens@csie.org>
 Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBG7TYTEQKGQEHRMAW6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBHHTYTEQKGQEGSSP5PY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170602101024.18940-1-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,46 +20,131 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If we want to have vblank on both pipelines at the same time, we need
-to call drm_vblank_init with num_crtcs = 2.
+On the A31, the HDMI DDC block is different from the one in the
+other SoCs. As far as the DDC clock goes, it has no pre-divider,
+as it is clocked from a slower parent clock, not the TMDS clock.
+The divider offset from the register value is different. And the
+clock control register is at a different offset.
 
-Instead, since the crtc init calls correctly set mode_config.num_crtc,
-we can move the drm_vblank_init call to after the crtc init code is
-called, which is the component bind part. Then we can just pass
-mode_config.num_crtc in.
+This patch adds support for different variants of the DDC clock.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 42 ++++++++++++++++++++++++------
+ 1 file changed, 34 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index f19100c91c2b..ed75a779ae4b 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -100,11 +100,6 @@ static int sun4i_drv_bind(struct device *dev)
- 		goto free_drm;
- 	}
+diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+index 4692e8c345ed..e1071838f487 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
++++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+@@ -15,9 +15,16 @@
+ #include "sun4i_tcon.h"
+ #include "sun4i_hdmi.h"
  
--	/* drm_vblank_init calls kcalloc, which can fail */
--	ret = drm_vblank_init(drm, 1);
--	if (ret)
--		goto free_mem_region;
--
- 	drm_mode_config_init(drm);
- 
- 	ret = component_bind_all(drm->dev, drm);
-@@ -113,6 +108,11 @@ static int sun4i_drv_bind(struct device *dev)
- 		goto cleanup_mode_config;
- 	}
- 
-+	/* drm_vblank_init calls kcalloc, which can fail */
-+	ret = drm_vblank_init(drm, drm->mode_config.num_crtc);
-+	if (ret)
-+		goto free_mem_region;
++struct sun4i_ddc_variant {
++	u32	reg_offset;
++	u8	pre_divider;
++	u8	m_offset;
++};
 +
- 	drm->irq_enabled = true;
+ struct sun4i_ddc {
+ 	struct clk_hw		hw;
+ 	struct sun4i_hdmi	*hdmi;
++	const struct sun4i_ddc_variant	*variant;
+ };
  
- 	/* Remove early framebuffers (ie. simplefb) */
+ static inline struct sun4i_ddc *hw_to_ddc(struct clk_hw *hw)
+@@ -27,6 +34,7 @@ static inline struct sun4i_ddc *hw_to_ddc(struct clk_hw *hw)
+ 
+ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
+ 					    unsigned long parent_rate,
++					    const struct sun4i_ddc_variant *variant,
+ 					    u8 *m, u8 *n)
+ {
+ 	unsigned long best_rate = 0;
+@@ -36,7 +44,8 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
+ 		for (_n = 0; _n < 8; _n++) {
+ 			unsigned long tmp_rate;
+ 
+-			tmp_rate = (((parent_rate / 2) / 10) >> _n) / (_m + 1);
++			tmp_rate = (((parent_rate / variant->pre_divider) /
++				     10) >> _n) / (_m + variant->m_offset);
+ 
+ 			if (tmp_rate > rate)
+ 				continue;
+@@ -60,7 +69,9 @@ static unsigned long sun4i_ddc_calc_divider(unsigned long rate,
+ static long sun4i_ddc_round_rate(struct clk_hw *hw, unsigned long rate,
+ 				 unsigned long *prate)
+ {
+-	return sun4i_ddc_calc_divider(rate, *prate, NULL, NULL);
++	struct sun4i_ddc *ddc = hw_to_ddc(hw);
++
++	return sun4i_ddc_calc_divider(rate, *prate, ddc->variant, NULL, NULL);
+ }
+ 
+ static unsigned long sun4i_ddc_recalc_rate(struct clk_hw *hw,
+@@ -70,11 +81,12 @@ static unsigned long sun4i_ddc_recalc_rate(struct clk_hw *hw,
+ 	u32 reg;
+ 	u8 m, n;
+ 
+-	reg = readl(ddc->hdmi->base + SUN4I_HDMI_DDC_CLK_REG);
+-	m = (reg >> 3) & 0x7;
++	reg = readl(ddc->hdmi->base + ddc->variant->reg_offset);
++	m = (reg >> 3) & 0xf;
+ 	n = reg & 0x7;
+ 
+-	return (((parent_rate / 2) / 10) >> n) / (m + 1);
++	return (((parent_rate / ddc->variant->pre_divider) / 10) >> n) /
++	       (m + ddc->variant->m_offset);
+ }
+ 
+ static int sun4i_ddc_set_rate(struct clk_hw *hw, unsigned long rate,
+@@ -83,10 +95,11 @@ static int sun4i_ddc_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	struct sun4i_ddc *ddc = hw_to_ddc(hw);
+ 	u8 div_m, div_n;
+ 
+-	sun4i_ddc_calc_divider(rate, parent_rate, &div_m, &div_n);
++	sun4i_ddc_calc_divider(rate, parent_rate, ddc->variant,
++			       &div_m, &div_n);
+ 
+ 	writel(SUN4I_HDMI_DDC_CLK_M(div_m) | SUN4I_HDMI_DDC_CLK_N(div_n),
+-	       ddc->hdmi->base + SUN4I_HDMI_DDC_CLK_REG);
++	       ddc->hdmi->base + ddc->variant->reg_offset);
+ 
+ 	return 0;
+ }
+@@ -97,7 +110,8 @@ static const struct clk_ops sun4i_ddc_ops = {
+ 	.set_rate	= sun4i_ddc_set_rate,
+ };
+ 
+-int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
++static int _sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent,
++			     const struct sun4i_ddc_variant *variant)
+ {
+ 	struct clk_init_data init;
+ 	struct sun4i_ddc *ddc;
+@@ -117,6 +131,7 @@ int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
+ 	init.num_parents = 1;
+ 
+ 	ddc->hdmi = hdmi;
++	ddc->variant = variant;
+ 	ddc->hw.init = &init;
+ 
+ 	hdmi->ddc_clk = devm_clk_register(hdmi->dev, &ddc->hw);
+@@ -125,3 +140,14 @@ int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
+ 
+ 	return 0;
+ }
++
++static const struct sun4i_ddc_variant sun4i_variant = {
++	.reg_offset	= SUN4I_HDMI_DDC_CLK_REG,
++	.pre_divider	= 2,
++	.m_offset	= 1,
++};
++
++int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent)
++{
++	return _sun4i_ddc_create(hdmi, parent, &sun4i_variant);
++}
 -- 
 2.11.0
