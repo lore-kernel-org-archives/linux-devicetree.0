@@ -1,78 +1,64 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/2] drm/bridge: Add Cadence DSI driver
-Date: Fri, 2 Jun 2017 14:02:57 +0200
-Message-ID: <20170602140257.5e0524fa@bbrezillon>
-References: <1496390360-7958-1-git-send-email-boris.brezillon@free-electrons.com>
- <201706021924.1vwA2TOY%fengguang.wu@intel.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v9 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Fri, 02 Jun 2017 22:02:22 +1000
+Message-ID: <1496404942.2842.2.camel@kernel.crashing.org>
+References: <20170602084603.30811-1-brendanhiggins@google.com>
+         <20170602084603.30811-5-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <201706021924.1vwA2TOY%fengguang.wu@intel.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: kbuild test robot <lkp@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, dri-devel@lists.freedesktop.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, kbuild-all@01.org, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Neil Webb <neilw@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170602084603.30811-5-brendanhiggins@google.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org, ryan_chen@aspeedtech.com
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyIEp1biAyMDE3IDE5OjA3OjI4ICswODAwCmtidWlsZCB0ZXN0IHJvYm90IDxsa3BA
-aW50ZWwuY29tPiB3cm90ZToKCj4gSGkgQm9yaXMsCj4gCj4gW2F1dG8gYnVpbGQgdGVzdCBFUlJP
-UiBvbiByb2JoL2Zvci1uZXh0XQo+IFthbHNvIGJ1aWxkIHRlc3QgRVJST1Igb24gdjQuMTItcmMz
-IG5leHQtMjAxNzA2MDJdCj4gW2Nhbm5vdCBhcHBseSB0byBkcm0vZHJtLW5leHQgZHJtLWludGVs
-L2Zvci1saW51eC1uZXh0XQo+IFtpZiB5b3VyIHBhdGNoIGlzIGFwcGxpZWQgdG8gdGhlIHdyb25n
-IGdpdCB0cmVlLCBwbGVhc2UgZHJvcCB1cyBhIG5vdGUgdG8gaGVscCBpbXByb3ZlIHRoZSBzeXN0
-ZW1dCj4gCj4gdXJsOiAgICBodHRwczovL2dpdGh1Yi5jb20vMGRheS1jaS9saW51eC9jb21taXRz
-L0JvcmlzLUJyZXppbGxvbi9kcm0tYnJpZGdlLUFkZC1DYWRlbmNlLURTSS1kcml2ZXIvMjAxNzA2
-MDItMTYyMDA2Cj4gYmFzZTogICBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgv
-a2VybmVsL2dpdC9yb2JoL2xpbnV4LmdpdCBmb3ItbmV4dAo+IGNvbmZpZzogaTM4Ni1hbGxtb2Rj
-b25maWcgKGF0dGFjaGVkIGFzIC5jb25maWcpCj4gY29tcGlsZXI6IGdjYy02IChEZWJpYW4gNi4y
-LjAtMykgNi4yLjAgMjAxNjA5MDEKPiByZXByb2R1Y2U6Cj4gICAgICAgICAjIHNhdmUgdGhlIGF0
-dGFjaGVkIC5jb25maWcgdG8gbGludXggYnVpbGQgdHJlZQo+ICAgICAgICAgbWFrZSBBUkNIPWkz
-ODYgCj4gCj4gQWxsIGVycm9ycyAobmV3IG9uZXMgcHJlZml4ZWQgYnkgPj4pOgo+IAo+ICAgIGRy
-aXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1kc2kuYzogSW4gZnVuY3Rpb24gJ2NkbnNfZHNpX2Jy
-aWRnZV9hdHRhY2gnOgo+ID4+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1kc2kuYzo1NTA6
-Mjc6IGVycm9yOiBwYXNzaW5nIGFyZ3VtZW50IDEgb2YgJ2RybV9icmlkZ2VfYXR0YWNoJyBmcm9t
-IGluY29tcGF0aWJsZSBwb2ludGVyIHR5cGUgWy1XZXJyb3I9aW5jb21wYXRpYmxlLXBvaW50ZXIt
-dHlwZXNdICAKPiAgICAgICByZXQgPSBkcm1fYnJpZGdlX2F0dGFjaChicmlkZ2UtPmRldiwgb3V0
-cHV0LT5icmlkZ2UpOwo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fgo+ICAg
-IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBpbmNsdWRlL2RybS9kcm1fY3J0Yy5oOjQzOjAsCj4gICAg
-ICAgICAgICAgICAgICAgICBmcm9tIGluY2x1ZGUvZHJtL2RybV9hdG9taWNfaGVscGVyLmg6MzEs
-Cj4gICAgICAgICAgICAgICAgICAgICBmcm9tIGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1k
-c2kuYzoxOToKPiAgICBpbmNsdWRlL2RybS9kcm1fYnJpZGdlLmg6MjEwOjU6IG5vdGU6IGV4cGVj
-dGVkICdzdHJ1Y3QgZHJtX2VuY29kZXIgKicgYnV0IGFyZ3VtZW50IGlzIG9mIHR5cGUgJ3N0cnVj
-dCBkcm1fZGV2aWNlIConCj4gICAgIGludCBkcm1fYnJpZGdlX2F0dGFjaChzdHJ1Y3QgZHJtX2Vu
-Y29kZXIgKmVuY29kZXIsIHN0cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsCj4gICAgICAgICBefn5+
-fn5+fn5+fn5+fn5+fgo+ID4+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1kc2kuYzo1NTA6
-OTogZXJyb3I6IHRvbyBmZXcgYXJndW1lbnRzIHRvIGZ1bmN0aW9uICdkcm1fYnJpZGdlX2F0dGFj
-aCcgIAo+ICAgICAgIHJldCA9IGRybV9icmlkZ2VfYXR0YWNoKGJyaWRnZS0+ZGV2LCBvdXRwdXQt
-PmJyaWRnZSk7Cj4gICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn4KPiAgICBJbiBmaWxlIGlu
-Y2x1ZGVkIGZyb20gaW5jbHVkZS9kcm0vZHJtX2NydGMuaDo0MzowLAo+ICAgICAgICAgICAgICAg
-ICAgICAgZnJvbSBpbmNsdWRlL2RybS9kcm1fYXRvbWljX2hlbHBlci5oOjMxLAo+ICAgICAgICAg
-ICAgICAgICAgICAgZnJvbSBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NkbnMtZHNpLmM6MTk6Cj4g
-ICAgaW5jbHVkZS9kcm0vZHJtX2JyaWRnZS5oOjIxMDo1OiBub3RlOiBkZWNsYXJlZCBoZXJlCj4g
-ICAgIGludCBkcm1fYnJpZGdlX2F0dGFjaChzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIsIHN0
-cnVjdCBkcm1fYnJpZGdlICpicmlkZ2UsCj4gICAgICAgICBefn5+fn5+fn5+fn5+fn5+fgo+ICAg
-IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1kc2kuYzogSW4gZnVuY3Rpb24gJ2NkbnNfZHNp
-X2JyaWRnZV9kZXRhY2gnOgo+ID4+IGRyaXZlcnMvZ3B1L2RybS9icmlkZ2UvY2Rucy1kc2kuYzo1
-NjY6MzogZXJyb3I6IGltcGxpY2l0IGRlY2xhcmF0aW9uIG9mIGZ1bmN0aW9uICdkcm1fYnJpZGdl
-X2RldGFjaCcgWy1XZXJyb3I9aW1wbGljaXQtZnVuY3Rpb24tZGVjbGFyYXRpb25dICAKPiAgICAg
-ICBkcm1fYnJpZGdlX2RldGFjaChvdXRwdXQtPmJyaWRnZSk7Cj4gICAgICAgXn5+fn5+fn5+fn5+
-fn5+fn4KPiAgICBjYzE6IHNvbWUgd2FybmluZ3MgYmVpbmcgdHJlYXRlZCBhcyBlcnJvcnMKPiAK
-PiBjb2NjaW5lbGxlIHdhcm5pbmdzOiAobmV3IG9uZXMgcHJlZml4ZWQgYnkgPj4pCj4gCj4gPj4g
-ZHJpdmVycy9ncHUvZHJtL2JyaWRnZS9jZG5zLWRzaS5jOjk4MDo1LTExOiBpbmNvbnNpc3RlbnQg
-SVNfRVJSIGFuZCBQVFJfRVJSIG9uIGxpbmUgOTgxLiAgCj4gCj4gUGxlYXNlIHJldmlldyBhbmQg
-cG9zc2libHkgZm9sZCB0aGUgZm9sbG93dXAgcGF0Y2guCj4gCj4gdmltICsvZHJtX2JyaWRnZV9h
-dHRhY2ggKzU1MCBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2NkbnMtZHNpLmMKCk9vcHMuIEZvcmdv
-dCB0byByZWJhc2Ugb24gYSB2NC4xMi1yYzEgYmVmb3JlIHNlbmRpbmcgdGhlIHBhdGNoZXMuIEkn
-bGwKYSBzZW5kIG5ldyB2ZXJzaW9uIGZpeGluZyB0aGVzZSBlcnJvcnMuCgpTb3JyeSBmb3IgdGhl
-IG5vaXNlLgoKQm9yaXMKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRl
-dmVsCg==
+On Fri, 2017-06-02 at 01:46 -0700, Brendan Higgins wrote:
+> Added initial master support for Aspeed I2C controller. Supports
+> fourteen busses present in AST24XX and AST25XX BMC SoCs by Aspeed.
+> 
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+
+Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+---
+
+Just spotted a completely minor/tivial nit:
+
+> +static int aspeed_i2c_master_xfer(struct i2c_adapter *adap,
+> +				  struct i2c_msg *msgs, int num)
+> +{
+> +	struct aspeed_i2c_bus *bus = adap->algo_data;
+> +	unsigned long time_left, flags;
+> +	int ret = 0;
+> +
+> +	spin_lock_irqsave(&bus->lock, flags);
+> +	bus->cmd_err = 0;
+        ^^^^^^^^^^^^^^^^^
+
+This is probably unnecessary now since it's initialized further down.
+
+> +	/* If bus is busy, attempt recovery. We assume a single master
+> +	 * environment.
+> +	 */
+> +	if (readl(bus->base + ASPEED_I2C_CMD_REG) & ASPEED_I2CD_BUS_BUSY_STS) {
+> +		spin_unlock_irqrestore(&bus->lock, flags);
+> +		ret = aspeed_i2c_recover_bus(bus);
+> +		if (ret)
+> +			return ret;
+> +		spin_lock_irqsave(&bus->lock, flags);
+> +	}
+> +
+> +	bus->cmd_err = 0;
+> +	bus->msgs = msgs;
+> +	bus->msgs_index = 0;
+> +	bus->msgs_count = num;
+
+Now I'd like Andrew to give it a spin as he's currently
+testing/debugging some i2c related stuff to be 100% certain it works
+fine on our systems.
+
+Thanks !
+
+Cheers,
+Ben.
