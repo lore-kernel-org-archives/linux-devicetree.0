@@ -1,36 +1,84 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 6/6] dt-bindings: net: btusb: DT fix s/interrupt-name/interrupt-names/
-Date: Fri,  2 Jun 2017 14:38:49 +0200
-Message-ID: <1496407129-13527-7-git-send-email-geert+renesas@glider.be>
-References: <1496407129-13527-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496407129-13527-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Chanho Min <chanho.min@lge.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v7 0/3] Support for USB DRD Phy driver for NS2
+Date: Fri,  2 Jun 2017 18:30:36 +0530
+Message-ID: <1496408439-30431-1-git-send-email-raviteja.garimella@broadcom.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Fixes: fd913ef7ce619467 ("Bluetooth: btusb: Add out-of-band wakeup support")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v3:
-  - New.
----
- Documentation/devicetree/bindings/net/btusb.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Changes in v7:
+=============
+Cleaned up unused variables in phy private data structure that's
+missed out in v6.
+Setting of phy mode to device/host is removed from phy power on.
+routine.
 
-diff --git a/Documentation/devicetree/bindings/net/btusb.txt b/Documentation/devicetree/bindings/net/btusb.txt
-index 01fa2d4188d4a900..18dd9c386be094db 100644
---- a/Documentation/devicetree/bindings/net/btusb.txt
-+++ b/Documentation/devicetree/bindings/net/btusb.txt
-@@ -37,7 +37,7 @@ Following example uses irq pin number 3 of gpio0 for out of band wake-on-bt:
- 	compatible = "usb1286,204e";
- 	reg = <1>;
- 	interrupt-parent = <&gpio0>;
--	interrupt-name = "wakeup";
-+	interrupt-names = "wakeup";
- 	interrupts = <3 IRQ_TYPE_LEVEL_LOW>;
-     };
- };
+Changes in v6:
+=============
+Removed spin locks which are not required as the references
+to phy_ops in the same driver were removed in v5.
+
+Removed host/device 'notify' routines which are registered
+using 'extcon_register_notifier'. The irq handler is sufficient
+to deal with the change in extcon events within the same driver.
+
+Changes in v5:
+=============
+Removed references to phy_ops in the same driver by connect_work
+event handler to change the phy modes.
+
+To support dynamically changing the mode of the phy, it does
+not require doing a phy reset/programming of PHY PLL. Changes
+are made to the connect_work routine to just program the required
+register bits to achieve this purpose.
+
+Changes in v4:
+=============
+Remove references to edev->name in debug prints.
+
+Changes in v3:
+=============
+Remove unnecessary checks for poweron as suggested in review.
+
+Changes in v2:
+=============
+1. Initialize file operations .owner field with THIS_MODULE.
+2. Remove unnecessary gpio example in DT bindings documentation.
+   This is previously acked by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Introduction for PATCH v1:
+
+This patch adds support for USB Dual Role Device Phy for Broadcom
+Northstar2 SoC. Apart from the new phy driver, this patchset contains
+changes to Kconfig, Makefile, and Device tree files.
+
+This patchset is tested on Broadcom NS2 BCM958712K reference board.
+
+Repo: https://github.com/Broadcom/arm64-linux.git
+Branch: ns2_drdphy_v7
+
+*** BLURB HERE ***
+
+Raviteja Garimella (3):
+  dt-bindings:phy:Add DT bindings documentation for NS2 USB DRD phy
+  phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy driver for Northstar2
+  arm64: dts: NS2: Add USB DRD PHY device tree node
+
+ .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   |  30 ++
+ arch/arm64/boot/dts/broadcom/ns2.dtsi              |  14 +
+ drivers/phy/Kconfig                                |  13 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-bcm-ns2-usbdrd.c                   | 450 +++++++++++++++++++++
+ 5 files changed, 508 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+ create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
+
 -- 
-2.7.4
+2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
