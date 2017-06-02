@@ -1,182 +1,135 @@
-From: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 1/2] ARM: dts: rockchip: add usb nodes on rk322x
-Date: Fri,  2 Jun 2017 15:04:24 +0800
-Message-ID: <1496387065-21073-2-git-send-email-william.wu@rock-chips.com>
-References: <1496387065-21073-1-git-send-email-william.wu@rock-chips.com>
+From: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 2/3] spi: mediatek: support adjust register define
+Date: Fri, 2 Jun 2017 15:18:42 +0800
+Message-ID: <1496387923-31674-3-git-send-email-leilk.liu@mediatek.com>
+References: <1496387923-31674-1-git-send-email-leilk.liu@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496387065-21073-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+In-Reply-To: <1496387923-31674-1-git-send-email-leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds usb otg/host controllers and phys nodes on rk322x.
+this patch adds support for adjust register design.
 
-Signed-off-by: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Leilk Liu <leilk.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm/boot/dts/rk322x.dtsi | 138 +++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 137 insertions(+), 1 deletion(-)
+ drivers/spi/spi-mt65xx.c                 |   45 ++++++++++++++++++++++++++----
+ include/linux/platform_data/spi-mt65xx.h |    2 ++
+ 2 files changed, 42 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index df57413..1e0ee4a 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -210,8 +210,61 @@
- 	};
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 278867a..3d7cd2d 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -35,11 +35,15 @@
+ #define SPI_CMD_REG                       0x0018
+ #define SPI_STATUS0_REG                   0x001c
+ #define SPI_PAD_SEL_REG                   0x0024
++#define SPI_CFG2_REG                      0x0028
  
- 	grf: syscon@11000000 {
--		compatible = "syscon";
-+		compatible = "syscon", "simple-mfd";
- 		reg = <0x11000000 0x1000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		u2phy0: usb2-phy@760 {
-+			compatible = "rockchip,rk3228-usb2phy";
-+			reg = <0x0760 0x0c>;
-+			clocks = <&cru SCLK_OTGPHY0>;
-+			clock-names = "phyclk";
-+			#clock-cells = <0>;
-+			clock-output-names = "usb480m_phy0";
-+			status = "disabled";
-+
-+			u2phy0_otg: otg-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
-+					     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "otg-bvalid", "otg-id",
-+						  "linestate";
-+				status = "disabled";
-+			};
-+
-+			u2phy0_host: host-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "linestate";
-+				status = "disabled";
-+			};
-+		};
-+
-+		u2phy1: usb2-phy@800 {
-+			compatible = "rockchip,rk3228-usb2phy";
-+			reg = <0x0800 0x0c>;
-+			clocks = <&cru SCLK_OTGPHY1>;
-+			clock-names = "phyclk";
-+			#clock-cells = <0>;
-+			clock-output-names = "usb480m_phy1";
-+			status = "disabled";
-+
-+			u2phy1_otg: otg-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "linestate";
-+				status = "disabled";
-+			};
-+
-+			u2phy1_host: host-port {
-+				#phy-cells = <0>;
-+				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-+				interrupt-names = "linestate";
-+				status = "disabled";
-+			};
-+		};
- 	};
+ #define SPI_CFG0_SCK_HIGH_OFFSET          0
+ #define SPI_CFG0_SCK_LOW_OFFSET           8
+ #define SPI_CFG0_CS_HOLD_OFFSET           16
+ #define SPI_CFG0_CS_SETUP_OFFSET          24
++#define SPI_ADJUST_CFG0_SCK_LOW_OFFSET    16
++#define SPI_ADJUST_CFG0_CS_HOLD_OFFSET    0
++#define SPI_ADJUST_CFG0_CS_SETUP_OFFSET   16
  
- 	uart0: serial@11010000 {
-@@ -467,6 +520,89 @@
- 		status = "disabled";
- 	};
+ #define SPI_CFG1_CS_IDLE_OFFSET           0
+ #define SPI_CFG1_PACKET_LOOP_OFFSET       8
+@@ -55,6 +59,8 @@
+ #define SPI_CMD_RST                  BIT(2)
+ #define SPI_CMD_PAUSE_EN             BIT(4)
+ #define SPI_CMD_DEASSERT             BIT(5)
++#define SPI_CMD_SAMPLE_SEL           BIT(6)
++#define SPI_CMD_CS_POL               BIT(7)
+ #define SPI_CMD_CPHA                 BIT(8)
+ #define SPI_CMD_CPOL                 BIT(9)
+ #define SPI_CMD_RX_DMA               BIT(10)
+@@ -80,6 +86,8 @@ struct mtk_spi_compatible {
+ 	bool need_pad_sel;
+ 	/* Must explicitly send dummy Tx bytes to do Rx only transfer */
+ 	bool must_tx;
++	/* some IC design adjust register define */
++	bool adjust_reg;
+ };
  
-+	usb_otg: usb@30040000 {
-+		compatible = "rockchip,rk3228-usb", "rockchip,rk3066-usb",
-+			     "snps,dwc2";
-+		reg = <0x30040000 0x40000>;
-+		interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_OTG>;
-+		clock-names = "otg";
-+		dr_mode = "otg";
-+		g-np-tx-fifo-size = <16>;
-+		g-rx-fifo-size = <280>;
-+		g-tx-fifo-size = <256 128 128 64 32 16>;
-+		g-use-dma;
-+		phys = <&u2phy0_otg>;
-+		phy-names = "usb2-phy";
-+		status = "disabled";
-+	};
+ struct mtk_spi {
+@@ -108,6 +116,8 @@ struct mtk_spi {
+ static const struct mtk_chip_config mtk_default_chip_info = {
+ 	.rx_mlsb = 1,
+ 	.tx_mlsb = 1,
++	.cs_pol = 0,
++	.sample_sel = 0,
+ };
+ 
+ static const struct of_device_id mtk_spi_of_match[] = {
+@@ -182,6 +192,17 @@ static int mtk_spi_prepare_message(struct spi_master *master,
+ 	reg_val |= SPI_CMD_RX_ENDIAN;
+ #endif
+ 
++	if (mdata->dev_comp->adjust_reg) {
++		if (chip_config->cs_pol)
++			reg_val |= SPI_CMD_CS_POL;
++		else
++			reg_val &= ~SPI_CMD_CS_POL;
++		if (chip_config->sample_sel)
++			reg_val |= SPI_CMD_SAMPLE_SEL;
++		else
++			reg_val &= ~SPI_CMD_SAMPLE_SEL;
++	}
 +
-+	usb_host0_ehci: usb@30080000 {
-+		compatible = "generic-ehci";
-+		reg = <0x30080000 0x20000>;
-+		interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_HOST0>, <&u2phy0>;
-+		clock-names = "usbhost", "utmi";
-+		phys = <&u2phy0_host>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
-+
-+	usb_host0_ohci: usb@300a0000 {
-+		compatible = "generic-ohci";
-+		reg = <0x300a0000 0x20000>;
-+		interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_HOST0>, <&u2phy0>;
-+		clock-names = "usbhost", "utmi";
-+		phys = <&u2phy0_host>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
-+
-+	usb_host1_ehci: usb@300c0000 {
-+		compatible = "generic-ehci";
-+		reg = <0x300c0000 0x20000>;
-+		interrupts = <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_HOST1>, <&u2phy1>;
-+		clock-names = "usbhost", "utmi";
-+		phys = <&u2phy1_otg>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
-+
-+	usb_host1_ohci: usb@300e0000 {
-+		compatible = "generic-ohci";
-+		reg = <0x300e0000 0x20000>;
-+		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_HOST1>, <&u2phy1>;
-+		clock-names = "usbhost", "utmi";
-+		phys = <&u2phy1_otg>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
-+
-+	usb_host2_ehci: usb@30100000 {
-+		compatible = "generic-ehci";
-+		reg = <0x30100000 0x20000>;
-+		interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_HOST2>, <&u2phy1>;
-+		phys = <&u2phy1_host>;
-+		phy-names = "usb";
-+		clock-names = "usbhost", "utmi";
-+		status = "disabled";
-+	};
-+
-+	usb_host2_ohci: usb@30120000 {
-+		compatible = "generic-ohci";
-+		reg = <0x30120000 0x20000>;
-+		interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru HCLK_HOST2>, <&u2phy1>;
-+		clock-names = "usbhost", "utmi";
-+		phys = <&u2phy1_host>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
-+
- 	gmac: ethernet@30200000 {
- 		compatible = "rockchip,rk3228-gmac";
- 		reg = <0x30200000 0x10000>;
+ 	/* set finish and pause interrupt always enable */
+ 	reg_val |= SPI_CMD_FINISH_IE | SPI_CMD_PAUSE_IE;
+ 
+@@ -233,11 +254,25 @@ static void mtk_spi_prepare_transfer(struct spi_master *master,
+ 	sck_time = (div + 1) / 2;
+ 	cs_time = sck_time * 2;
+ 
+-	reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_HIGH_OFFSET);
+-	reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
+-	reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
+-	reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_SETUP_OFFSET);
+-	writel(reg_val, mdata->base + SPI_CFG0_REG);
++	if (mdata->dev_comp->adjust_reg) {
++		reg_val |= (((sck_time - 1) & 0xffff)
++			   << SPI_CFG0_SCK_HIGH_OFFSET);
++		reg_val |= (((sck_time - 1) & 0xffff)
++			   << SPI_ADJUST_CFG0_SCK_LOW_OFFSET);
++		writel(reg_val, mdata->base + SPI_CFG2_REG);
++		reg_val |= (((cs_time - 1) & 0xffff)
++			   << SPI_ADJUST_CFG0_CS_HOLD_OFFSET);
++		reg_val |= (((cs_time - 1) & 0xffff)
++			   << SPI_ADJUST_CFG0_CS_SETUP_OFFSET);
++		writel(reg_val, mdata->base + SPI_CFG0_REG);
++	} else {
++		reg_val |= (((sck_time - 1) & 0xff)
++			   << SPI_CFG0_SCK_HIGH_OFFSET);
++		reg_val |= (((sck_time - 1) & 0xff) << SPI_CFG0_SCK_LOW_OFFSET);
++		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_HOLD_OFFSET);
++		reg_val |= (((cs_time - 1) & 0xff) << SPI_CFG0_CS_SETUP_OFFSET);
++		writel(reg_val, mdata->base + SPI_CFG0_REG);
++	}
+ 
+ 	reg_val = readl(mdata->base + SPI_CFG1_REG);
+ 	reg_val &= ~SPI_CFG1_CS_IDLE_MASK;
+diff --git a/include/linux/platform_data/spi-mt65xx.h b/include/linux/platform_data/spi-mt65xx.h
+index 54b0448..ba4e4bb 100644
+--- a/include/linux/platform_data/spi-mt65xx.h
++++ b/include/linux/platform_data/spi-mt65xx.h
+@@ -16,5 +16,7 @@
+ struct mtk_chip_config {
+ 	u32 tx_mlsb;
+ 	u32 rx_mlsb;
++	u32 cs_pol;
++	u32 sample_sel;
+ };
+ #endif
 -- 
-2.0.0
-
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
