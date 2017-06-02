@@ -1,137 +1,49 @@
-From: Anup Patel <anup.patel@broadcom.com>
-Subject: [PATCH v6 11/11] arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
-Date: Fri,  2 Jun 2017 12:04:35 +0530
-Message-ID: <1496385275-6899-12-git-send-email-anup.patel@broadcom.com>
-References: <1496385275-6899-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1496385275-6899-1-git-send-email-anup.patel@broadcom.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, Anup Patel <anup.patel@broadcom.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 00/21] net-next: stmmac: add dwmac-sun8i
+ ethernet driver
+Date: Fri, 2 Jun 2017 08:37:52 +0200
+Message-ID: <20170602063752.aqyvwcykvepiyt4y@flea.lan>
+References: <20170531071852.12422-1-clabbe.montjoie@gmail.com>
+ <20170601.145819.789604139072328057.davem@davemloft.net>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jnfaadalxstctcl6"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRUPYTEQKGQE3G2PROI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170601.145819.789604139072328057.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Srinath Mannam <srinath.mannam@broadcom.com>
 
-The Stingray SoC has two instances of SDHCI controller
-and one instance of iProc PWM.
+--jnfaadalxstctcl6
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Let's enable above mentioned devices in Stingray DT.
+On Thu, Jun 01, 2017 at 02:58:19PM -0400, David Miller wrote:
+> From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date: Wed, 31 May 2017 09:18:31 +0200
+> 
+> > This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
+> > present on Allwinner H3/H5/A83T/A64 SoCs.
+> 
+> Series applied, but wow that's a lot of DT file changes :-(
 
-Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-Signed-off-by: Anup Patel <anup.patel@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
----
- .../boot/dts/broadcom/stingray/bcm958742-base.dtsi | 39 ++++++++++++++++++++++
- .../arm64/boot/dts/broadcom/stingray/stingray.dtsi | 28 ++++++++++++++++
- 2 files changed, 67 insertions(+)
+The DT patches should not go through your tree, but arm-soc, so I
+guess this is not an issue for you?
 
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-index ff59a26..5dca7d1 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/bcm958742-base.dtsi
-@@ -43,6 +43,28 @@
- 		serial2 = &uart2;
- 		serial3 = &uart3;
- 	};
-+
-+	sdio0_vddo_ctrl_reg: sdio0_vddo_ctrl {
-+		compatible = "regulator-gpio";
-+		regulator-name = "sdio0_vddo_ctrl_reg";
-+		regulator-type = "voltage";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpios = <&pca9505 18 0>;
-+		states = <3300000 0x0
-+			  1800000 0x1>;
-+	};
-+
-+	sdio1_vddo_ctrl_reg: sdio1_vddo_ctrl {
-+		compatible = "regulator-gpio";
-+		regulator-name = "sdio1_vddo_ctrl_reg";
-+		regulator-type = "voltage";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <3300000>;
-+		gpios = <&pca9505 19 0>;
-+		states = <3300000 0x0
-+			  1800000 0x1>;
-+	};
- };
- 
- &memory { /* Default DRAM banks */
-@@ -54,6 +76,10 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	status = "okay";
-+};
-+
- &i2c0 {
- 	status = "okay";
- 
-@@ -90,3 +116,16 @@
- 		#size-cells = <1>;
- 	};
- };
-+
-+&sdio0 {
-+	vqmmc-supply = <&sdio0_vddo_ctrl_reg>;
-+	non-removable;
-+	full-pwr-cycle;
-+	status = "okay";
-+};
-+
-+&sdio1 {
-+	vqmmc-supply = <&sdio1_vddo_ctrl_reg>;
-+	full-pwr-cycle;
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-index 88a6176..49933cf 100644
---- a/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/stingray/stingray.dtsi
-@@ -269,6 +269,14 @@
- 
- 		#include "stingray-pinctrl.dtsi"
- 
-+		pwm: pwm@00010000 {
-+			compatible = "brcm,iproc-pwm";
-+			reg = <0x00010000 0x1000>;
-+			clocks = <&crmu_ref25m>;
-+			#pwm-cells = <3>;
-+			status = "disabled";
-+		};
-+
- 		i2c0: i2c@000b0000 {
- 			compatible = "brcm,iproc-i2c";
- 			reg = <0x000b0000 0x100>;
-@@ -428,5 +436,25 @@
- 			brcm,nand-has-wp;
- 			status = "disabled";
- 		};
-+
-+		sdio0: sdhci@003f1000 {
-+			compatible = "brcm,sdhci-iproc";
-+			reg = <0x003f1000 0x100>;
-+			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+			clocks = <&sdio0_clk>;
-+			iommus = <&smmu 0x6002 0x0000>;
-+			status = "disabled";
-+		};
-+
-+		sdio1: sdhci@003f2000 {
-+			compatible = "brcm,sdhci-iproc";
-+			reg = <0x003f2000 0x100>;
-+			interrupts = <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>;
-+			bus-width = <8>;
-+			clocks = <&sdio1_clk>;
-+			iommus = <&smmu 0x6003 0x0000>;
-+			status = "disabled";
-+		};
- 	};
- };
+Maximee
+
 -- 
-2.7.4
-
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--jnfaadalxstctcl6--
