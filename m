@@ -1,59 +1,79 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH] Documentation: clock: address more for clock-cells
- property
-Date: Fri, 2 Jun 2017 15:56:21 -0700
-Message-ID: <20170602225621.GE20170@codeaurora.org>
-References: <1496306801-19239-1-git-send-email-zhang.chunyan@linaro.org>
+From: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 3/7] dt-bindings: net: Document Intel pch_gbe binding
+Date: Fri, 2 Jun 2017 16:40:38 -0700
+Message-ID: <20170602234042.22782-4-paul.burton@imgtec.com>
+References: <20170602234042.22782-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1496306801-19239-1-git-send-email-zhang.chunyan@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chunyan Zhang <zhang.chunyan@linaro.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, zhang.lyra@gmail.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170602234042.22782-1-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Jarod Wilson <jarod-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Eric Dumazet <edumazet-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01, Chunyan Zhang wrote:
-> The value of property 'clock-cells' is not determined only by the number of
-> clock outputs in one clock node, it is actually determined by whether the
-> clock output in this node can be referenced directly without index.  If
-> the output clock has to be referenced by a index, the clock-cell of this
-> clock node can't be defined 0.
-> 
-> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-> ---
->  Documentation/devicetree/bindings/clock/clock-bindings.txt | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+Introduce documentation for a device tree binding for the Intel Platform
+Controller Hub (PCH) GigaBit Ethernet (GBE) device. Although this is a
+PCIe device & thus largely auto-detectable, this binding will be used to
+provide the driver with the PHY reset GPIO.
 
-I'm leaving this patch for Rob/DT maintainers to apply.
+Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Eric Dumazet <edumazet-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Jarod Wilson <jarod-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> index 2ec489e..cef3db5 100644
-> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -15,8 +15,14 @@ value of a #clock-cells property in the clock provider node.
->  
->  Required properties:
->  #clock-cells:	   Number of cells in a clock specifier; Typically 0 for nodes
-> -		   with a single clock output and 1 for nodes with multiple
-> -		   clock outputs.
-> +		   with a single clock output and it must be able to be
-> +		   referenced without index, and 1 for nodes with single or
-> +		   multiple clock outputs which have to be referenced by index.
-> +
-> +		   Please note that if a node with a single clock output
-> +		   but it has "clock-indices" property (see bellow), it has
-> +		   to be referenced by index, its "#clock-cells" cannot be
-> +		   defined 0.
+---
 
-Maybe this should be added to the clock-indices area of the
-document instead of here? It seems to me that you can't have
-clock-indices if you have #clock-cells=<0>, and that's sort of
-obvious because 0 cells means 1 output and >0 cells means
-potentially many outputs.
+Changes in v3:
+- New patch.
 
+Changes in v2: None
+
+ Documentation/devicetree/bindings/net/pch_gbe.txt | 25 +++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/pch_gbe.txt
+
+diff --git a/Documentation/devicetree/bindings/net/pch_gbe.txt b/Documentation/devicetree/bindings/net/pch_gbe.txt
+new file mode 100644
+index 000000000000..5de479c26b04
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/pch_gbe.txt
+@@ -0,0 +1,25 @@
++Intel Platform Controller Hub (PCH) GigaBit Ethernet (GBE)
++
++Required properties:
++- compatible:		Should be the PCI vendor & device ID, eg. "pci8086,8802".
++- reg:			Should be a PCI device number as specified by the PCI bus
++			binding to IEEE Std 1275-1994.
++- phy-reset-gpios:	Should be a GPIO list containing a single GPIO that
++			resets the attached PHY when active.
++
++Example:
++
++	eg20t_mac@2,0,1 {
++		compatible = "pci8086,8802";
++		reg = <0x00020100 0 0 0 0>;
++		phy-reset-gpios = <&eg20t_gpio 6
++				   GPIO_ACTIVE_LOW>;
++	};
++
++	eg20t_gpio: eg20t_gpio@2,0,2 {
++		compatible = "pci8086,8803";
++		reg = <0x00020200 0 0 0 0>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
