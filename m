@@ -1,53 +1,59 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] fix some issues for Rockchip usb2-phy and add
- rk3228 SoCs' support
-Date: Fri, 2 Jun 2017 15:47:18 +0530
-Message-ID: <711e89a3-0f55-7458-2e4f-589d719a0548@ti.com>
-References: <1496373626-27856-1-git-send-email-frank.wang@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1496373626-27856-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, cody.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Paolo Pisati <p.pisati@gmail.com>
+Subject: [PATCH v3 1/2] dt: bindings: fpga: add lattice machxo2 slave spi binding description
+Date: Fri,  2 Jun 2017 12:27:12 +0200
+Message-ID: <1496399233-21451-2-git-send-email-p.pisati@gmail.com>
+References: <1496399233-21451-1-git-send-email-p.pisati@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496399233-21451-1-git-send-email-p.pisati@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alan Tull <atull@opensource.altera.com>, Moritz Fischer <moritz.fischer@ettus.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Add dt binding documentation details for Lattice MachXO2 FPGA configuration
+over Slave SPI interface.
 
+Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
 
-On Friday 02 June 2017 08:50 AM, Frank Wang wrote:
-> These series of patches fix some issues for rockchip usb2-phy and amend
-> usb2-phy framework to support one phy which comprises with two host-ports.
-> 
-> In addition, this change also add rk3228 usb2-phy support.
-
-merged, thanks!
-
--Kishon
-> 
-> Changes from v1:
->  - Replaced rk322x with rk3228 for PATCH 4/4.
->  - Included devicetree people in the recipient list.
-> 
-> Frank Wang (1):
->   phy: rockchip-inno-usb2: add support of usb2-phy for rk3228 SoCs
-> 
-> William Wu (3):
->   phy: rockchip-inno-usb2: add a delay after phy resume
->   phy: rockchip-inno-usb2: increase otg sm work first schedule time
->   phy: rockchip-inno-usb2: add one phy comprises with two host-ports
->     support
-> 
->  .../bindings/phy/phy-rockchip-inno-usb2.txt        |  1 +
->  drivers/phy/phy-rockchip-inno-usb2.c               | 74 ++++++++++++++++++++--
->  2 files changed, 71 insertions(+), 4 deletions(-)
-> 
+diff --git a/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+new file mode 100644
+index 0000000..c3ef26bd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+@@ -0,0 +1,29 @@
++Lattice MachXO2 Slave SPI FPGA Manager
++
++Lattice MachXO2 FPGAs support a method of loading the bitstream over
++'slave SPI' interface.
++
++See 'MachXO2ProgrammingandConfigurationUsageGuide.pdf' on www.latticesemi.com
++
++Required properties:
++- compatible: should contain "lattice,machxo2-slave-spi"
++- reg: spi chip select of the FPGA
++
++Example for full FPGA configuration:
++
++	fpga-region0 {
++		compatible = "fpga-region";
++		fpga-mgr = <&fpga_mgr_spi>;
++		#address-cells = <0x1>;
++		#size-cells = <0x1>;
++	};
++
++	spi1: spi@2000 {
++        ...
++
++		fpga_mgr_spi: fpga-mgr@0 {
++			compatible = "lattice,machxo2-slave-spi";
++			spi-max-frequency = <60000000>;
++			reg = <0>;
++		};
++	};
+-- 
+2.7.4
