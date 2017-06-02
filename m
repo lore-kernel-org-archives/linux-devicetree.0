@@ -1,34 +1,39 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] Add usb nodes on rk322x SoCs and enable usb on rk3229 evb
-Date: Fri, 02 Jun 2017 14:14:45 +0200
-Message-ID: <1678079.AVLeaivyut@phil>
-References: <1496387065-21073-1-git-send-email-william.wu@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496387065-21073-1-git-send-email-william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: William Wu <william.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, daniel.meng-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v3 2/6] arm64: dts: lg1313: DT fix s/#interrupts-cells/#interrupt-cells/
+Date: Fri,  2 Jun 2017 14:38:45 +0200
+Message-ID: <1496407129-13527-3-git-send-email-geert+renesas@glider.be>
+References: <1496407129-13527-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496407129-13527-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Chanho Min <chanho.min@lge.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, dri-devel@lists.freedesktop.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, 2. Juni 2017, 15:04:23 CEST schrieb William Wu:
-> This series adds support for usb on rk322x SoCs.
-> 
-> William Wu (2):
->   ARM: dts: rockchip: add usb nodes on rk322x
->   ARM: dts: rockchip: enable usb for rk3229 evb board
-> 
-> Tested on rk3229 evb board, and depended on the following
-> patches and config.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Chanho Min <chanho.min@lge.com>
+---
+v3:
+  - Add Acked-by,
 
-applied both for 4.13 (with some minor reordering in patch1)
+v2:
+  - New.
+---
+ arch/arm64/boot/dts/lg/lg1313.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Thanks
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm64/boot/dts/lg/lg1313.dtsi b/arch/arm64/boot/dts/lg/lg1313.dtsi
+index e703e1149c757082..abb2162228e82d39 100644
+--- a/arch/arm64/boot/dts/lg/lg1313.dtsi
++++ b/arch/arm64/boot/dts/lg/lg1313.dtsi
+@@ -123,7 +123,7 @@
+ 	amba {
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+-		#interrupts-cells = <3>;
++		#interrupt-cells = <3>;
+ 
+ 		compatible = "simple-bus";
+ 		interrupt-parent = <&gic>;
+-- 
+2.7.4
