@@ -1,45 +1,44 @@
-From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Subject: [PATCH v4 0/2] ARM: dts: imx7: add NAND support
-Date: Thu,  1 Jun 2017 19:11:08 -0700
-Message-ID: <cover.9cbefd91387aefe2522dbb3e6338e4e4efdb5e41.1496369342.git-series.stefan@agner.ch>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, han.xu-3arQi8VN3Tc@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v4 2/2] ARM: dts: imx7-colibri: add NAND support
+Date: Thu,  1 Jun 2017 19:11:10 -0700
+Message-ID: <415320ef413f5eb5dcba236aa69a0b644d7e7469.1496369342.git-series.stefan@agner.ch>
+References: <cover.9cbefd91387aefe2522dbb3e6338e4e4efdb5e41.1496369342.git-series.stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.9cbefd91387aefe2522dbb3e6338e4e4efdb5e41.1496369342.git-series.stefan@agner.ch>
+In-Reply-To: <cover.9cbefd91387aefe2522dbb3e6338e4e4efdb5e41.1496369342.git-series.stefan@agner.ch>
+References: <cover.9cbefd91387aefe2522dbb3e6338e4e4efdb5e41.1496369342.git-series.stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@atmel.com, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@KARO-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-This are the missing device tree parts to add NAND support for i.MX 7.
-See previous patchset:
-https://lkml.org/lkml/2017/4/21/832
+The Colibri iMX7 modules come with 512MB on-module SLC NAND flash
+populated. Make use of it by enabling the GPMI controller.
 
-The previous version also included driver changes, which are already
-merged.
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++
+ 1 file changed, 9 insertions(+)
 
---
-Stefan
-
-Changes since v3:
-- Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
-
-Changes since v2:
-- Dropped driver changes, alreay merged
-
-Changes since v1:
-- Make clks_count const
-- Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
-
-Stefan Agner (2):
-  ARM: dts: imx7: add GPMI NAND
-  ARM: dts: imx7-colibri: add NAND support
-
- arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++-
- arch/arm/boot/dts/imx7s.dtsi        | 30 ++++++++++++++++++++++++++++++-
- 2 files changed, 39 insertions(+)
-
-base-commit: e2bb3be2c6c623ff0bad975dc9435531f450f0c5
+diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi b/arch/arm/boot/dts/imx7-colibri.dtsi
+index 2d87489..ad4ce19 100644
+--- a/arch/arm/boot/dts/imx7-colibri.dtsi
++++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+@@ -106,6 +106,15 @@
+ 	fsl,magic-packet;
+ };
+ 
++&gpmi {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_gpmi_nand>;
++	fsl,use-minimum-ecc;
++	nand-on-flash-bbt;
++	nand-ecc-mode = "hw";
++	status = "okay";
++};
++
+ &i2c1 {
+ 	clock-frequency = <100000>;
+ 	pinctrl-names = "default";
 -- 
 git-series 0.9.1
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
