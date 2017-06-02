@@ -1,64 +1,88 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH v9 4/5] i2c: aspeed: added driver for Aspeed I2C
-Date: Fri, 02 Jun 2017 22:02:22 +1000
-Message-ID: <1496404942.2842.2.camel@kernel.crashing.org>
-References: <20170602084603.30811-1-brendanhiggins@google.com>
-         <20170602084603.30811-5-brendanhiggins@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170602084603.30811-5-brendanhiggins@google.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org, ryan_chen@aspeedtech.com
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 2/2] dt-bindings: drm/bridge: Document Cadence DSI bridge bindings
+Date: Fri,  2 Jun 2017 14:04:56 +0200
+Message-ID: <1496405096-18275-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496405096-18275-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-06-02 at 01:46 -0700, Brendan Higgins wrote:
-> Added initial master support for Aspeed I2C controller. Supports
-> fourteen busses present in AST24XX and AST25XX BMC SoCs by Aspeed.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+Document the bindings used for the Cadence DSI bridge.
 
-Reviewed-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
+ .../bindings/display/bridge/cdns,dsi.txt           | 55 ++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
 
-Just spotted a completely minor/tivial nit:
+diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+new file mode 100644
+index 000000000000..770c5c5b1e93
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+@@ -0,0 +1,55 @@
++Cadence DSI bridge
++==================
++
++The Cadence DSI bridge is a DPI to DSI bridge supporting up to 4 DSI lanes.
++
++Required properties:
++- compatible: should be set to "cdns,dsi".
++- reg: physical base address and length of the controller's registers.
++- interrupts: interrupt line connected to the DSI bridge.
++- clocks: DSI bridge clocks.
++- clock-names: must contain "pclk" and "sysclk".
++- phys: phandle link to the MIPI D-PHY controller.
++- phy-names: must contain "dphy".
++- #address-cells: must be set to 1.
++- #size-cells: must be set to 0.
++
++Required subnodes:
++- ports: Ports as described in Documentation/devicetree/bindings/graph.txt.
++  Currently contains a single input port at address 0 representing the DPI
++  input. Other ports will be added later to support the SDI inputs.
++  Port 0 should be connected to a DPI encoder output.
++- one subnode per DSI device connected on the DSI bus. Each DSI device should
++  contain a reg property encoding its address on the bus.
++
++Example:
++
++	dsi0: dsi@fd0c0000 {
++		compatible = "cdns,dsi";
++		reg = <0x0 0xfd0c0000 0x0 0x1000>;
++		clocks = <&pclk>, <&sysclk>;
++		clock-names = "pclk", "hclk";
++		interrupts = <1>;
++		phys = <&dphy1>;
++		phy-names = "dphy";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				reg = <0>;
++				dsi0_dpi_input: endpoint {
++					remote-endpoint = <&xxx_dpi_output>;
++				};
++			};
++		};
++
++		panel: dsi-dev@0 {
++			compatible = "<vendor,panel>";
++			reg = <0>;
++		};
++	};
++
+-- 
+2.7.4
 
-> +static int aspeed_i2c_master_xfer(struct i2c_adapter *adap,
-> +				  struct i2c_msg *msgs, int num)
-> +{
-> +	struct aspeed_i2c_bus *bus = adap->algo_data;
-> +	unsigned long time_left, flags;
-> +	int ret = 0;
-> +
-> +	spin_lock_irqsave(&bus->lock, flags);
-> +	bus->cmd_err = 0;
-        ^^^^^^^^^^^^^^^^^
-
-This is probably unnecessary now since it's initialized further down.
-
-> +	/* If bus is busy, attempt recovery. We assume a single master
-> +	 * environment.
-> +	 */
-> +	if (readl(bus->base + ASPEED_I2C_CMD_REG) & ASPEED_I2CD_BUS_BUSY_STS) {
-> +		spin_unlock_irqrestore(&bus->lock, flags);
-> +		ret = aspeed_i2c_recover_bus(bus);
-> +		if (ret)
-> +			return ret;
-> +		spin_lock_irqsave(&bus->lock, flags);
-> +	}
-> +
-> +	bus->cmd_err = 0;
-> +	bus->msgs = msgs;
-> +	bus->msgs_index = 0;
-> +	bus->msgs_count = num;
-
-Now I'd like Andrew to give it a spin as he's currently
-testing/debugging some i2c related stuff to be 100% certain it works
-fine on our systems.
-
-Thanks !
-
-Cheers,
-Ben.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
