@@ -1,87 +1,130 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH] ARM: dts: Remove min and max voltage values for dcdc3
-Date: Fri, 2 Jun 2017 14:53:19 +0530
-Message-ID: <99d7bac7-164c-bc71-edff-6d3590a92298@ti.com>
-References: <1496395308-29471-1-git-send-email-j-keerthy@ti.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH] gpio: mvebu: change compatible string for PWM support
+Date: Fri, 02 Jun 2017 11:24:38 +0200
+Message-ID: <874lvyrbc9.fsf@free-electrons.com>
+References: <20170601200820.22396-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496395308-29471-1-git-send-email-j-keerthy@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, t-kristo@ti.com, robh+dt@kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170601200820.22396-1-ralph.sennhauser@gmail.com> (Ralph
+        Sennhauser's message of "Thu, 1 Jun 2017 22:08:20 +0200")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, Richard Genoud <richard.genoud@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Ralph,
+ 
+ On jeu., juin 01 2017, Ralph Sennhauser <ralph.sennhauser@gmail.com> wrote:
+
+> As it turns out more than just Armada 370 and XP support using GPIO
+> lines as PWM lines. For example the Armada 38x family has the same
+> hardware support. As such "marvell,armada-370-xp-gpio" for the
+> compatible string is a misnomer.
+>
+> Change the compatible string to "marvell,armada-370-gpio" before the
+> driver makes it out of the -rc stage. This also follows the practice of
+> using only the first device family supported as part of the name.
+>
+> Also update the documentation and comments in the code accordingly.
+>
+
+As I suggested it obviously:
+
+Acked-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+
+Thanks,
+
+Gregory
 
 
-On Friday 02 June 2017 02:51 PM, Keerthy wrote:
-> dcdc3 supplies to DDR on AM43x series. When we set both
-> min and max values to the same value. The regulator framework
-> sets that particular voltage. This is bad as we are changing
-> the ddr voltage when executing from ddr. Hence remove the min and
-> max values. The ddr supply voltage shall be set from bootloader
-> when not executing from ddr and not while executing from kernel.
-
-Apologies for the $subject. I will send v2 with $Subject corrected.
-
-> 
-> The previous discussion can be found here:
-> 
-> http://www.spinics.net/lists/devicetree/msg56399.html
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+>
 > ---
->  arch/arm/boot/dts/am437x-gp-evm.dts  | 2 --
->  arch/arm/boot/dts/am437x-sk-evm.dts  | 2 --
->  arch/arm/boot/dts/am43x-epos-evm.dts | 2 --
->  3 files changed, 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-> index 397e98b..29a538e 100644
-> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
-> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-> @@ -549,8 +549,6 @@
+>
+> Hi everyone,
+>
+> The suggestion to change the compatible string last minute comes from
+> Gregory CLEMENT after we realized the bad choice of name due to Richard
+> Genoud reporting an issue when he used the driver with an Armada-388.
+>
+> Rob Herring just requested to use a separate compatible string but not
+> what it should look like. So I assume he is fine with the new one as
+> well. The rest of this patch is rather minor.
+>
+> Nothing in tree is using this driver so far, first consumers will be
+> added with 4.13.
+>
+> Ralph
+>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt | 6 +++---
+>  drivers/gpio/gpio-mvebu.c                             | 6 +++---
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> index 42c3bb2..01e331a 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
+> @@ -41,9 +41,9 @@ Required properties:
+>  Optional properties:
 >  
->  		dcdc3: regulator-dcdc3 {
->  			regulator-name = "vdcdc3";
-> -			regulator-min-microvolt = <1500000>;
-> -			regulator-max-microvolt = <1500000>;
->  			regulator-boot-on;
->  			regulator-always-on;
->  			regulator-state-mem {
-> diff --git a/arch/arm/boot/dts/am437x-sk-evm.dts b/arch/arm/boot/dts/am437x-sk-evm.dts
-> index a62e158..2c6bf06 100644
-> --- a/arch/arm/boot/dts/am437x-sk-evm.dts
-> +++ b/arch/arm/boot/dts/am437x-sk-evm.dts
-> @@ -451,8 +451,6 @@
+>  In order to use the GPIO lines in PWM mode, some additional optional
+> -properties are required. Only Armada 370 and XP support these properties.
+> +properties are required.
 >  
->  		dcdc3: regulator-dcdc3 {
->  			regulator-name = "vdds_ddr";
-> -			regulator-min-microvolt = <1500000>;
-> -			regulator-max-microvolt = <1500000>;
->  			regulator-boot-on;
->  			regulator-always-on;
->  			regulator-state-mem {
-> diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-> index f6648ab..54f40f3 100644
-> --- a/arch/arm/boot/dts/am43x-epos-evm.dts
-> +++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-> @@ -442,8 +442,6 @@
+> -- compatible: Must contain "marvell,armada-370-xp-gpio"
+> +- compatible: Must contain "marvell,armada-370-gpio"
 >  
->  		dcdc3: regulator-dcdc3 {
->  			regulator-name = "vdcdc3";
-> -			regulator-min-microvolt = <1500000>;
-> -			regulator-max-microvolt = <1500000>;
->  			regulator-boot-on;
->  			regulator-always-on;
+>  - reg: an additional register set is needed, for the GPIO Blink
+>    Counter on/off registers.
+> @@ -71,7 +71,7 @@ Example:
 >  		};
-> 
+>  
+>  		gpio1: gpio@18140 {
+> -			compatible = "marvell,armada-370-xp-gpio";
+> +			compatible = "marvell,armada-370-gpio";
+>  			reg = <0x18140 0x40>, <0x181c8 0x08>;
+>  			reg-names = "gpio", "pwm";
+>  			ngpios = <17>;
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index 19a92ef..f94fd47 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -721,7 +721,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+>  	u32 set;
+>  
+>  	if (!of_device_is_compatible(mvchip->chip.of_node,
+> -				     "marvell,armada-370-xp-gpio"))
+> +				     "marvell,armada-370-gpio"))
+>  		return 0;
+>  
+>  	if (IS_ERR(mvchip->clk))
+> @@ -845,7 +845,7 @@ static const struct of_device_id mvebu_gpio_of_match[] = {
+>  		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ARMADAXP,
+>  	},
+>  	{
+> -		.compatible = "marvell,armada-370-xp-gpio",
+> +		.compatible = "marvell,armada-370-gpio",
+>  		.data	    = (void *) MVEBU_GPIO_SOC_VARIANT_ORION,
+>  	},
+>  	{
+> @@ -1121,7 +1121,7 @@ static int mvebu_gpio_probe(struct platform_device *pdev)
+>  						 mvchip);
+>  	}
+>  
+> -	/* Armada 370/XP has simple PWM support for GPIO lines */
+> +	/* Some MVEBU SoCs have simple PWM support for GPIO lines */
+>  	if (IS_ENABLED(CONFIG_PWM))
+>  		return mvebu_pwm_probe(pdev, mvchip, id);
+>  
+> -- 
+> 2.10.2
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
