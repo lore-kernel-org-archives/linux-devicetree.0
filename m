@@ -1,155 +1,44 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 2/6] mfd: hi6421-pmic: add support for HiSilicon Hi6421v530
-Date: Fri,  2 Jun 2017 16:51:13 +0800
-Message-ID: <20170602085117.27474-3-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH v2 4/6] regulator: hi6421: Describe consumed platform device
+Date: Fri,  2 Jun 2017 16:51:15 +0800
+Message-ID: <20170602085117.27474-5-guodong.xu@linaro.org>
 References: <20170602085117.27474-1-guodong.xu@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170602085117.27474-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170602085117.27474-1-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, horms+renesas@verge.net.au, olof@lixom.net, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, damm+renesas@opensource.se, ard.biesheuvel@linaro.org, linus.walleij@linaro.org, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hw.wangxiaoyin@hisilicon.com, Guodong Xu <guodong.xu@linaro.org>, Jeremy Linton <lintonrjeremy@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
-main SoC via memory-mapped I/O.
+The hi6421-regulator driver consumes a similarly named platform device.
+Adding that to the module device table, allows modprobe to locate this
+driver once the device is created.
 
-Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon,
-but at different revisions. They share the same memory-mapped I/O
-design. They differ in integrated devices, such as regulator details,
-LDO voltage points.
-
-Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jeremy Linton <lintonrjeremy@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- drivers/mfd/hi6421-pmic-core.c  | 56 +++++++++++++++++++++++++++++++----------
- include/linux/mfd/hi6421-pmic.h |  5 ++++
- 2 files changed, 48 insertions(+), 13 deletions(-)
+ drivers/regulator/hi6421-regulator.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-core.c
-index 3fd703f..6d40485 100644
---- a/drivers/mfd/hi6421-pmic-core.c
-+++ b/drivers/mfd/hi6421-pmic-core.c
-@@ -26,7 +26,7 @@
- #include <linux/err.h>
- #include <linux/mfd/core.h>
- #include <linux/module.h>
--#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/mfd/hi6421-pmic.h>
-@@ -35,6 +35,10 @@ static const struct mfd_cell hi6421_devs[] = {
- 	{ .name = "hi6421-regulator", },
- };
- 
-+static const struct mfd_cell hi6421v530_devs[] = {
-+	{ .name = "hi6421v530-regulator", },
-+};
-+
- static const struct regmap_config hi6421_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
-@@ -42,12 +46,30 @@ static const struct regmap_config hi6421_regmap_config = {
- 	.max_register = HI6421_REG_TO_BUS_ADDR(HI6421_REG_MAX),
- };
- 
-+static const struct of_device_id of_hi6421_pmic_match_tbl[] = {
-+	{ .compatible = "hisilicon,hi6421-pmic",
-+					.data = (void *)HI6421 },
-+	{ .compatible = "hisilicon,hi6421v530-pmic",
-+					.data = (void *)HI6421_V530 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match_tbl);
-+
- static int hi6421_pmic_probe(struct platform_device *pdev)
- {
- 	struct hi6421_pmic *pmic;
- 	struct resource *res;
- 	void __iomem *base;
--	int ret;
-+	const struct of_device_id *id;
-+	unsigned long type;
-+	const struct mfd_cell *subdevs = NULL;
-+	int n_subdevs, ret;
-+
-+	id = of_match_device(of_hi6421_pmic_match_tbl, &pdev->dev);
-+	if (id)
-+		type = (unsigned long)id->data;
-+	else
-+		return -EINVAL;
- 
- 	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
- 	if (!pmic)
-@@ -66,18 +88,32 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
- 		return PTR_ERR(pmic->regmap);
- 	}
- 
--	/* set over-current protection debounce 8ms */
--	regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
-+	platform_set_drvdata(pdev, pmic);
-+
-+	switch (type) {
-+	case HI6421:
-+		/* set over-current protection debounce 8ms */
-+		regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
- 				(HI6421_OCP_DEB_SEL_MASK
- 				 | HI6421_OCP_EN_DEBOUNCE_MASK
- 				 | HI6421_OCP_AUTO_STOP_MASK),
- 				(HI6421_OCP_DEB_SEL_8MS
- 				 | HI6421_OCP_EN_DEBOUNCE_ENABLE));
- 
--	platform_set_drvdata(pdev, pmic);
-+		subdevs = hi6421_devs;
-+		n_subdevs = ARRAY_SIZE(hi6421_devs);
-+		break;
-+	case HI6421_V530:
-+		subdevs = hi6421v530_devs;
-+		n_subdevs = ARRAY_SIZE(hi6421v530_devs);
-+		break;
-+	default:
-+		dev_err(&pdev->dev, "Unknown device type %ld\n", type);
-+		return -EINVAL;
-+	}
- 
--	ret = devm_mfd_add_devices(&pdev->dev, 0, hi6421_devs,
--				   ARRAY_SIZE(hi6421_devs), NULL, 0, NULL);
-+	ret = devm_mfd_add_devices(&pdev->dev, 0, subdevs,
-+				   n_subdevs, NULL, 0, NULL);
- 	if (ret) {
- 		dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
- 		return ret;
-@@ -86,12 +122,6 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
+diff --git a/drivers/regulator/hi6421-regulator.c b/drivers/regulator/hi6421-regulator.c
+index 62c5f54..259c3a8 100644
+--- a/drivers/regulator/hi6421-regulator.c
++++ b/drivers/regulator/hi6421-regulator.c
+@@ -621,7 +621,14 @@ static int hi6421_regulator_probe(struct platform_device *pdev)
  	return 0;
  }
  
--static const struct of_device_id of_hi6421_pmic_match_tbl[] = {
--	{ .compatible = "hisilicon,hi6421-pmic", },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match_tbl);
--
- static struct platform_driver hi6421_pmic_driver = {
- 	.driver = {
- 		.name	= "hi6421_pmic",
-diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
-index 587273e..2457438 100644
---- a/include/linux/mfd/hi6421-pmic.h
-+++ b/include/linux/mfd/hi6421-pmic.h
-@@ -38,4 +38,9 @@ struct hi6421_pmic {
- 	struct regmap		*regmap;
- };
- 
-+enum hi6421_type {
-+	HI6421      = 1,
-+	HI6421_V530 = 2,
++static const struct platform_device_id hi6421_regulator_table[] = {
++	{ .name = "hi6421-regulator" },
++	{},
 +};
++MODULE_DEVICE_TABLE(platform, hi6421_regulator_table);
 +
- #endif		/* __HI6421_PMIC_H */
+ static struct platform_driver hi6421_regulator_driver = {
++	.id_table = hi6421_regulator_table,
+ 	.driver = {
+ 		.name	= "hi6421-regulator",
+ 	},
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
