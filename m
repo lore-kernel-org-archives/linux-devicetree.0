@@ -1,111 +1,188 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v2 0/7] Improve ap806 clk support on Marvell Armada 7K/8K
-Date: Fri, 02 Jun 2017 15:52:48 +0200
-Message-ID: <87mv9qpkcv.fsf@free-electrons.com>
-References: <cover.21754b3184e2122d1c83a664477ed26ec562b3e9.1496239589.git-series.gregory.clement@free-electrons.com>
-        <149631063623.33065.5881396919137461999@resonance>
+From: Cosar Dindar <cosardindar@gmail.com>
+Subject: Re: [PATCH v3 2/5] crypto : stm32 - Add STM32F4 CRC32 support
+Date: Fri, 2 Jun 2017 16:56:08 +0300
+Message-ID: <20170602135608.GA40339@osboxes>
+References: <cover.1495463449.git.cosardindar@gmail.com>
+ <3c520bbef98c630ca7de609f8ec27405e2ac07d4.1495463449.git.cosardindar@gmail.com>
+ <efdd669a-2df6-f7fa-849b-e1c7057ae666@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <149631063623.33065.5881396919137461999@resonance> (Michael
-        Turquette's message of "Thu, 01 Jun 2017 18:50:36 +0900")
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <efdd669a-2df6-f7fa-849b-e1c7057ae666@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabien DESSENNE <fabien.dessenne@st.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, "davem@davemloft.net" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
- 
- On jeu., juin 01 2017, Michael Turquette <mturquette@baylibre.com> wrote:
+Hi Fabien,
 
-> Hi Gregory,
->
-> Quoting Gregory CLEMENT (2017-05-31 23:07:21)
->> Hi,
->> 
->> This series modifies the device tree binding of the clock of the AP806
->> part that we find in the Marvell Armada 7K/8K SoCs.
->> 
->> As for the previsous series the only change in this second version is
->> about the binding documentation: all the documentation related changes
->> are now move in their own patches. It allows to provide a stable -dt
->> branch for theses changes. I also added the acked-by from Rob Herring.
->> 
->> Here again the last two patches modifying the device tree _must_ be
->> merged through the mvebu tree to avoid future conflict.
->
-> The approach (and the patches) look good to me. I took the DT binding
-> description changes (patches 2 & 4) into clk-ap806-dt stable branch:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-ap806-dt
->
-> Anyone can merge the above branch if they need it as a dep.
->
-> The driver changes (patches 1, 3 & 5) are merged on into clk-ap806,
-> which is based on top of clk-ap806-dt:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-ap806
->
-> Everything has been merged into clk-next. I did not touch the .dts files
-> at all.
->
+Thanks for your review.
 
-Perfect I will take care of the dts patch.
+On Mon, May 29, 2017 at 07:56:48AM +0000, Fabien DESSENNE wrote:
+> Hi Cosar,
+> 
+> Thank you for the patch
+> 
+> On 22/05/17 16:34, Cosar Dindar wrote:
+> > This patch adds CRC (CRC32 Crypto) support for STM32F4 series.
+> >
+> > As an hardware limitation polynomial and key setting are not supported.
+> > They are fixed as 0x4C11DB7 (poly) and 0xFFFFFFFF (key).
+> > CRC32C Castagnoli algorithm is not used.
+> >
+> > Signed-off-by: Cosar Dindar <cosardindar@gmail.com>
+> > ---
+> >   drivers/crypto/stm32/stm32_crc32.c | 68 ++++++++++++++++++++++++++++++++------
+> >   1 file changed, 58 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/drivers/crypto/stm32/stm32_crc32.c b/drivers/crypto/stm32/stm32_crc32.c
+> > index ec83b1e..12fbd98 100644
+> > --- a/drivers/crypto/stm32/stm32_crc32.c
+> > +++ b/drivers/crypto/stm32/stm32_crc32.c
+> > @@ -7,6 +7,7 @@
+> >   #include <linux/bitrev.h>
+> >   #include <linux/clk.h>
+> >   #include <linux/module.h>
+> > +#include <linux/of.h>
+> >   #include <linux/platform_device.h>
+> >   
+> >   #include <crypto/internal/hash.h>
+> > @@ -39,6 +40,9 @@ struct stm32_crc {
+> >   	struct clk       *clk;
+> >   	u8               pending_data[sizeof(u32)];
+> >   	size_t           nb_pending_bytes;
+> > +	bool             key_support;
+> > +	bool             poly_support;
+> > +	bool             reverse_support;
+> >   };
+> >   
+> >   struct stm32_crc_list {
+> > @@ -106,13 +110,31 @@ static int stm32_crc_init(struct shash_desc *desc)
+> >   	}
+> >   	spin_unlock_bh(&crc_list.lock);
+> >   
+> > -	/* Reset, set key, poly and configure in bit reverse mode */
+> > -	writel(bitrev32(mctx->key), ctx->crc->regs + CRC_INIT);
+> > -	writel(bitrev32(mctx->poly), ctx->crc->regs + CRC_POL);
+> > -	writel(CRC_CR_RESET | CRC_CR_REVERSE, ctx->crc->regs + CRC_CR);
+> > +	/* set key */
+> > +	if (ctx->crc->key_support) {
+> > +		writel(bitrev32(mctx->key), ctx->crc->regs + CRC_INIT);
+> > +	} else if (mctx->key != CRC_INIT_DEFAULT) {
+> > +		dev_err(ctx->crc->dev, "Unsupported key value! Should be: 0x%x\n",
+> > +			CRC_INIT_DEFAULT);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	/* set poly */
+> > +	if (ctx->crc->poly_support)
+> > +		writel(bitrev32(mctx->poly), ctx->crc->regs + CRC_POL);
+> > +
+> > +	/* reset and configure in bit reverse mode if supported */
+> > +	if (ctx->crc->reverse_support)
+> > +		writel(CRC_CR_RESET | CRC_CR_REVERSE, ctx->crc->regs + CRC_CR);
+> > +	else
+> > +		writel(CRC_CR_RESET, ctx->crc->regs + CRC_CR);
+> > +
+> > +	/* store partial result */
+> > +	if (!ctx->crc->reverse_support)
+> > +		ctx->partial = bitrev32(readl(crc->regs + CRC_DR));
+> > +	else
+> > +		ctx->partial = readl(ctx->crc->regs + CRC_DR);
+> >   
+> > -	/* Store partial result */
+> > -	ctx->partial = readl(ctx->crc->regs + CRC_DR);
+> >   	ctx->crc->nb_pending_bytes = 0;
+> >   
+> >   	return 0;
+> > @@ -135,7 +157,12 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+> >   
+> >   		if (crc->nb_pending_bytes == sizeof(u32)) {
+> >   			/* Process completed pending data */
+> > -			writel(*(u32 *)crc->pending_data, crc->regs + CRC_DR);
+> > +			if (!ctx->crc->reverse_support)
+> > +				writel(bitrev32(*(u32 *)crc->pending_data),
+> > +				       crc->regs + CRC_DR);
+> > +			else
+> > +				writel(*(u32 *)crc->pending_data,
+> > +				       crc->regs + CRC_DR);
+> >   			crc->nb_pending_bytes = 0;
+> >   		}
+> >   	}
+> > @@ -143,10 +170,16 @@ static int stm32_crc_update(struct shash_desc *desc, const u8 *d8,
+> >   	d32 = (u32 *)d8;
+> >   	for (i = 0; i < length >> 2; i++)
+> >   		/* Process 32 bits data */
+> > -		writel(*(d32++), crc->regs + CRC_DR);
+> > +		if (!ctx->crc->reverse_support)
+> > +			writel(bitrev32(*(d32++)), crc->regs + CRC_DR);
+> > +		else
+> > +			writel(*(d32++), crc->regs + CRC_DR);
+> >   
+> >   	/* Store partial result */
+> > -	ctx->partial = readl(crc->regs + CRC_DR);
+> > +	if (!ctx->crc->reverse_support)
+> > +		ctx->partial = bitrev32(readl(crc->regs + CRC_DR));
+> > +	else
+> > +		ctx->partial = readl(crc->regs + CRC_DR);
+> >   
+> >   	/* Check for pending data (non 32 bits) */
+> >   	length &= 3;
+> > @@ -243,6 +276,7 @@ static int stm32_crc_probe(struct platform_device *pdev)
+> >   	struct stm32_crc *crc;
+> >   	struct resource *res;
+> >   	int ret;
+> > +	int algs_size;
+> >   
+> >   	crc = devm_kzalloc(dev, sizeof(*crc), GFP_KERNEL);
+> >   	if (!crc)
+> > @@ -269,13 +303,26 @@ static int stm32_crc_probe(struct platform_device *pdev)
+> >   		return ret;
+> >   	}
+> >   
+> > +	/* set key, poly and reverse support if device is of F7 series */
+> > +	if (of_device_is_compatible(crc->dev->of_node, "st,stm32f7-crc")) {
+> > +		crc->key_support = true;
+> > +		crc->poly_support = true;
+> > +		crc->reverse_support = true;
+> > +	}
+> > +
+> >   	platform_set_drvdata(pdev, crc);
+> >   
+> >   	spin_lock(&crc_list.lock);
+> >   	list_add(&crc->list, &crc_list.dev_list);
+> >   	spin_unlock(&crc_list.lock);
+> >   
+> > -	ret = crypto_register_shashes(algs, ARRAY_SIZE(algs));
+> > +	/* For F4 series only CRC32 algorithm will be used */
+> > +	if (of_device_is_compatible(crc->dev->of_node, "st,stm32f4-crc"))
+> > +		algs_size = 1;
+> > +	else
+> > +		algs_size = ARRAY_SIZE(algs);
+> > +
+> > +	ret = crypto_register_shashes(algs, algs_size);
+> >   	if (ret) {
+> >   		dev_err(dev, "Failed to register\n");
+> >   		clk_disable_unprepare(crc->clk);
+> > @@ -304,6 +351,7 @@ static int stm32_crc_remove(struct platform_device *pdev)
+> >   
+> >   static const struct of_device_id stm32_dt_ids[] = {
+> >   	{ .compatible = "st,stm32f7-crc", },
+> > +	{ .compatible = "st,stm32f4-crc", },
+> >   	{},
+> >   };
+> >   MODULE_DEVICE_TABLE(of, stm32_dt_ids);
+> Reviewed-by: Fabien Dessenne <fabien.dessenne@st.com>
 
-What about the other series on cp110?
-a clk_cp110-dt branch will be needed too for the pinctrl series.
-
-Thanks,
-
-Gregory
-
-
-> Regards,
-> Mike
->
->> 
->> For the record:
->> As for the CP110, we want to be able to ease the integration of new
->> clocks without breaking the backward compatibility. It is done in
->> patch 3.
->> 
->> We also want to ease the integration of the pinctrl node in the device
->> tree. It is the purpose of the patch 5.
->> 
->> In this series (as in the previous one for CP110), even if there is
->> some change in the device tree binding we paid attention to the
->> backward compatibility, and the driver can still work with the old
->> device tree.
->> 
->> Thanks,
->> 
->> Gregory
->> 
->> Gregory CLEMENT (7):
->>   clk: mvebu: ap806: cosmetic improvement
->>   dt-bindings: ap806: do not depend anymore of the *-clock-output-names
->>   clk: mvebu: ap806: do not depend anymore of the *-clock-output-names
->>   dt-bindings: ap806: introduce a new binding
->>   clk: mvebu: ap806: introduce a new binding
->>   arm64: dts: marvell: remove clock-output-names on ap806
->>   arm64: dts: marvell: use new binding for the system controller on ap806
->> 
->>  Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt |  24 ++++++++++------
->>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi                             |  23 +++++++--------
->>  drivers/clk/mvebu/ap806-system-controller.c                               | 107 +++++++++++++++++++++++++++++++++++++++++++++++-------------------------
->>  3 files changed, 97 insertions(+), 57 deletions(-)
->> 
->> base-commit: 4139fcd6c66df1c3d3fa0a0a7cf7f8a8c601a16c
->> -- 
->> git-series 0.9.1
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Best Regards.
+Cosar
