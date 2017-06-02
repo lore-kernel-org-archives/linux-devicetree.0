@@ -1,62 +1,170 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v8 4/5] i2c: aspeed: added driver for Aspeed I2C
-Date: Fri, 2 Jun 2017 02:29:39 -0700
-Message-ID: <CAFd5g45en_S0NYgufoET_Lwgu3Rs=7RafsFJZeCUiYCWyxogag@mail.gmail.com>
-References: <20170525064925.16867-1-brendanhiggins@google.com>
- <20170525064925.16867-5-brendanhiggins@google.com> <1496197001.3354.19.camel@kernel.crashing.org>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] Documentation: devicetree: add bindings to support
+ ARM MHU doorbells
+Date: Fri, 2 Jun 2017 10:32:57 +0100
+Message-ID: <9a38040c-8062-870e-ab2a-beb4934428b3@arm.com>
+References: <1495621003-4291-1-git-send-email-sudeep.holla@arm.com>
+ <1495621003-4291-3-git-send-email-sudeep.holla@arm.com>
+ <CABb+yY0gXDEfoRmfHPOoEKgGjp_e5B5orYZ2qjcypL7ven50hw@mail.gmail.com>
+ <e85c913d-0188-8780-9ea6-c82849e87d58@arm.com>
+ <20170531170801.u6d4fhsfu5mmqgta@rob-hp-laptop>
+ <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496197001.3354.19.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CABb+yY1mA5Hzce5c5JGVtqmRjoTBj=YTZcajVpANq1oQP0Gc0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Kachalov Anton <mouse-Pma6HLj0uuo@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I addressed all of your comments in my next revision except the one below.
 
->> +     time_left = wait_for_completion_timeout(&bus->cmd_complete,
->> +                                             bus->adap.timeout);
->> +
->> +     spin_lock_irqsave(&bus->lock, flags);
->> +     bus->msgs = NULL;
->> +     if (time_left == 0)
->> +             ret = -ETIMEDOUT;
->> +     else
->> +             ret = bus->cmd_err;
->> +     spin_unlock_irqrestore(&bus->lock, flags);
->
-> I would make the interrupt handler self-clear msgs and I would copy
-> cmd_err to a separate field (or ensure it's only set by the interrupt
-> handler when msgs is non-NULL, by the completion code).
->
-> That way you avoid the above lock which is racy, slave activity could
-> get in there and trigger an error interrupt clobbering cmd_err for
-> example no ? Or am I missing something...
 
-The slave handler does not touch these fields, so that should be fine.
-The only way I can think
-that we could get in this state is if we had some sort of error
-interrupt fire after we handled a
-STOP or previous error; this should not happen, but I think it is
-better to be safe than sorry.
-Nevertheless, I do not think it is necessary to do more than what I
-have already done because
-it would mean the bus is in a pretty bad state anyway. Maybe I should
-just drop the locks here.
+On 02/06/17 06:45, Jassi Brar wrote:
+> Hi Rob,
+> 
+> On Wed, May 31, 2017 at 10:38 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Thu, May 25, 2017 at 02:23:44PM +0100, Sudeep Holla wrote:
+>>>
+>>>>>  .../devicetree/bindings/mailbox/arm-mhu.txt        | 46 ++++++++++++++++++++--
+>>>>>  1 file changed, 43 insertions(+), 3 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>> index 4971f03f0b33..bd9a3a267caf 100644
+>>>>> --- a/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>> +++ b/Documentation/devicetree/bindings/mailbox/arm-mhu.txt
+>>>>> @@ -10,21 +10,42 @@ STAT register and the remote clears it after having read the data.
+>>>>>  The last channel is specified to be a 'Secure' resource, hence can't be
+>>>>>  used by Linux running NS.
+>>>>>
+>>>>> +The MHU drives the interrupt signal using a 32-bit register, with all
+>>>>> +32-bits logically ORed together. It provides a set of registers to
+>>>>> +enable software to set, clear and check the status of each of the bits
+>>>>> +of this register independently. The use of 32 bits per interrupt line
+>>>>> +enables software to provide more information about the source of the
+>>>>> +interrupt. For example, each bit of the register can be associated with
+>>>>> +a type of event that can contribute to raising the interrupt. Each of
+>>>>> +the 32-bits can be used as "doorbell" to alert the remote processor.
+>>>>> +
+>>>>>  Mailbox Device Node:
+>>>>>  ====================
+>>>>>
+>>>>>  Required properties:
+>>>>>  --------------------
+>>>>> -- compatible:          Shall be "arm,mhu" & "arm,primecell"
+>>>>> +- compatible:          Shall be "arm,primecell" and one of the below:
+>>>>> +                       "arm,mhu" - if the controller doesn't support
+>>>>> +                                   doorbell model
+>>>>> +                       "arm,mhu-doorbell" - if the controller supports
+>>>>> +                                   doorbell model
+>>>>>  - reg:                 Contains the mailbox register address range (base
+>>>>>                         address and length)
+>>>>> -- #mbox-cells          Shall be 1 - the index of the channel needed.
+>>>>> +- #mbox-cells          Shall be 1 - the index of the channel needed when
+>>>>> +                       compatible is "arm,mhu"
+>>>>> +                       Shall be 2 - the index of the channel needed, and
+>>>>> +                       the index of the doorbell bit with the channel when
+>>>>> +                       compatible is "arm,mhu-doorbell"
+>>>>>  - interrupts:          Contains the interrupt information corresponding to
+>>>>> -                       each of the 3 links of MHU.
+>>>>> +                       each of the 3 physical channels of MHU namely low
+>>>>> +                       priority non-secure, high priority non-secure and
+>>>>> +                       secure channels.
+>>>>>
+>>>>>  Example:
+>>>>>  --------
+>>>>>
+>>>>> +1. Controller which doesn't support doorbells
+>>>>> +
+>>>>>         mhu: mailbox@2b1f0000 {
+>>>>>                 #mbox-cells = <1>;
+>>>>>                 compatible = "arm,mhu", "arm,primecell";
+>>>>> @@ -41,3 +62,22 @@ used by Linux running NS.
+>>>>>                 reg = <0 0x2e000000 0x4000>;
+>>>>>                 mboxes = <&mhu 1>; /* HP-NonSecure */
+>>>>>         };
+>>>>> +
+>>>>> +2. Controller which supports doorbells
+>>>>> +
+>>>>> +       mhu: mailbox@2b1f0000 {
+>>>>> +               #mbox-cells = <2>;
+>>>>> +               compatible = "arm,mhu-doorbell", "arm,primecell";
+>>>>> +               reg = <0 0x2b1f0000 0x1000>;
+>>>>> +               interrupts = <0 36 4>, /* LP-NonSecure */
+>>>>> +                            <0 35 4>, /* HP-NonSecure */
+>>>>> +                            <0 37 4>; /* Secure */
+>>>>> +               clocks = <&clock 0 2 1>;
+>>>>> +               clock-names = "apb_pclk";
+>>>>> +       };
+>>>>> +
+>>>>> +       mhu_client: scb@2e000000 {
+>>>>> +               compatible = "arm,scpi";
+>>>>> +               reg = <0 0x2e000000 0x200>;
+>>>>> +               mboxes = <&mhu 1 4>; /* HP-NonSecure 5th doorbell bit */
+>>>>> +       };
+>>>>>
+>>>> Every MHU controller can by driven as "arm,mhu-doorbell" or "arm,mhu"
+>>>> equally fine. So you are basically smuggling a s/w feature into DT.
+>>>>
+>>>
+>>> I disagree, the spec clearly says each bit can be used for different
+>>> event and hence we need a way to specify that in DT when used as doorbell.
+>>
+>> I think the point is that you should not continue to use both. The
+>>
+> FYKI my point (here and in other threads) is that current MHU
+> driver/bindings can very well support Sudeep's usecase.
+> 
+>> single cell usage should be deprecated. Maybe you'll have to encode the
+>> 2nd cell when not used as 0 means bit 0?
+>>
+>> Arguably, you don't even need a new compatible. #mbox-cells tells you
+>> whether to use the old or new binding. I'm fine either way though.
+>>
+> In mailbox terminology, there is a channel and command(s) that we
+> send/recv over it. OOB data passing is optional.
+> 
+> MHU driver accepts a command as a u32. Sudeep's usecase has commands
+> of the form of BIT(x)  ... an instance of u32.
+> 
 
-If you disagree, could you elaborate on what you meant by putting
-cmd_err in a separate field?
-Did you just mean having one for xfer and one for everything else (like resets)?
+Again read the spec, it is designed to be used as doorbell
 
->
->> +     /* If nothing went wrong, return number of messages transferred. */
->> +     if (ret >= 0)
->> +             return bus->msgs_index + 1;
->> +     else
->> +             return ret;
->> +}
->> +
+> Instead of having his client driver pass BIT(x) like other MHU
+
+Client is generic and doesn't understand which controller it's working
+with. It's not custom protocol. I have given enough links and details to
+say it's generic protocol adapted by other vendors.
+
+> clients, he wants to modify the driver and bindings to specify 'x' via
+> second cell of mboxes.  That would have made sense (and already
+> implemented) if the controller could send only 1 bit at a time and
+> every client/protocol used exactly 1 command - both of which are not
+> true.
+
+Yes but the controller is designed to provide single bit doorbell
+capability. Please understand that instead of pushing how you think it
+needs to work.
+
+> 
+> I even offered Sudeep to share his client driver and I'll adapt it for
+> him, but her refuses to either see my point or share his code.
+> 
+
+You have not answered my queries, you keep telling I can help but never
+read and answer what I ask. Also I have told you the driver is in
+mainline(drivers/firmware/arm_scpi.c) and there will be another similar
+one. And theres are used by different platforms with different mailbox
+controllers.
+Please post patches to make 2 different protocols like SCPI work. Please
+note these protocols are used by other platforms which have different
+controllers.
+
+-- 
+Regards,
+Sudeep
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
