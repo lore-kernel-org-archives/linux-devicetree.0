@@ -1,118 +1,53 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 02/19] drm/sun4i: add components in two passes with encoders added in second pass
-Date: Fri,  2 Jun 2017 18:10:07 +0800
-Message-ID: <20170602101024.18940-3-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 06/19] dt-bindings: display: sun4i: Add binding for A31 HDMI controller
+Date: Fri,  2 Jun 2017 18:10:11 +0800
+Message-ID: <20170602101024.18940-7-wens@csie.org>
 References: <20170602101024.18940-1-wens@csie.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170602101024.18940-1-wens@csie.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-sunxi@googlegroups.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170602101024.18940-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The encoder drivers use drm_of_find_possible_crtcs to get upstream
-crtcs from the device tree using of_graph. For the results to be
-correct, encoders must be probed/bound after _all_ crtcs have been
-created. The existing code uses a depth first recursive traversal
-of the of_graph, which means the encoders downstream of the TCON
-get add right after the first TCON. The second TCON or CRTC will
-never be properly associated with encoders connected to it.
+The HDMI controller in the A31 SoC is slightly different from the
+earlier version. In addition to the TMDS clock and DDC controls,
+this version now takes a second DDC clock input.
 
-Other platforms, such as Rockchip, deal with this by probing all
-crtcs first, then all subsequent components. This is easy to do
-since the crtcs correspond to just one device node, and are the
-first nodes in the pipeline.
+Add a compatible string for it, and add the DDC clock input to the
+list of clocks required.
 
-However with Allwinner SoCs, the function of the CRTC is split between
-the display backend (DE 1.0) or mixer (DE 2.0), which does scan-out
-and compositing, and the TCON, which generating the display timing
-signals. Further complicating the process, there may be a Dynamic Range
-Controller between the backend and the TCON. Also, the backend is
-preceded by the frontend, with a Display Enhancement Unit possibly
-in between.
-
-One solution would be, instead of a depth first traversal of the
-component of_graph, we do a breadth first traversal, so that components
-at the same depth are grouped together. This however requires us to
-implement extra code for a queue structure that is only used here.
-
-Instead, since we can identify TCON device nodes, and since the
-component system can gracefully deal with duplicate entries, we can add
-components in two passes, using the existing recursive depth code. The
-first pass stops right after the TCON is added. The second pass will
-re-add all components up to the TCON, but these will be skipped since
-they will have already been bound with the entries from the first pass.
-The encoders added in the second pass will be the last entries in the
-list.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun4i_drv.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index ed75a779ae4b..bc13dcf06783 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -198,7 +198,8 @@ static int compare_of(struct device *dev, void *data)
- 
- static int sun4i_drv_add_endpoints(struct device *dev,
- 				   struct component_match **match,
--				   struct device_node *node)
-+				   struct device_node *node,
-+				   bool add_encoders)
- {
- 	struct device_node *port, *ep, *remote;
- 	int count = 0;
-@@ -227,13 +228,16 @@ static int sun4i_drv_add_endpoints(struct device *dev,
- 		count++;
- 	}
- 
-+	/* Skip downstream encoders during the first pass */
-+	if (sun4i_drv_node_is_tcon(node) && !add_encoders)
-+		return count;
-+
- 	/* Inputs are listed first, then outputs */
- 	port = of_graph_get_port_by_id(node, 1);
- 	if (!port) {
- 		DRM_DEBUG_DRIVER("No output to bind\n");
- 		return count;
- 	}
--
- 	for_each_available_child_of_node(port, ep) {
- 		remote = of_graph_get_remote_port_parent(ep);
- 		if (!remote) {
-@@ -262,7 +266,8 @@ static int sun4i_drv_add_endpoints(struct device *dev,
- 		}
- 
- 		/* Walk down our tree */
--		count += sun4i_drv_add_endpoints(dev, match, remote);
-+		count += sun4i_drv_add_endpoints(dev, match, remote,
-+						 add_encoders);
- 
- 		of_node_put(remote);
- 	}
-@@ -283,8 +288,19 @@ static int sun4i_drv_probe(struct platform_device *pdev)
- 		if (!pipeline)
- 			break;
- 
-+		sun4i_drv_add_endpoints(&pdev->dev, &match, pipeline, false);
-+		of_node_put(pipeline);
-+	}
-+
-+	for (i = 0;; i++) {
-+		struct device_node *pipeline = of_parse_phandle(np,
-+								"allwinner,pipelines",
-+								i);
-+		if (!pipeline)
-+			break;
-+
- 		count += sun4i_drv_add_endpoints(&pdev->dev, &match,
--						pipeline);
-+						 pipeline, true);
- 		of_node_put(pipeline);
- 
- 		DRM_DEBUG_DRIVER("Queued %d outputs on pipeline %d\n",
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+index b83e6018041d..d23e7cad19d0 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
+@@ -23,14 +23,17 @@ CEC. It is one end of the pipeline.
+ Required properties:
+   - compatible: value must be one of:
+     * allwinner,sun5i-a10s-hdmi
++    * allwinner,sun6i-a31-hdmi
+   - reg: base address and size of memory-mapped region
+   - interrupts: interrupt associated to this IP
+   - clocks: phandles to the clocks feeding the HDMI encoder
+     * ahb: the HDMI interface clock
+     * mod: the HDMI module clock
++    * ddc: the HDMI ddc clock (A31 only)
+     * pll-0: the first video PLL
+     * pll-1: the second video PLL
+   - clock-names: the clock names mentioned above
++  - resets: phandle to the reset control for the HDMI encoder (A31 only)
+   - dmas: phandles to the DMA channels used by the HDMI encoder
+     * ddc-tx: The channel for DDC transmission
+     * ddc-rx: The channel for DDC reception
 -- 
 2.11.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
