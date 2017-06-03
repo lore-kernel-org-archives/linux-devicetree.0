@@ -1,46 +1,51 @@
 From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v4 6/6] arm64: defconfig: Enable qcom ipq8074 clock and pinctrl
-Date: Sat,  3 Jun 2017 12:57:55 +0530
-Message-ID: <1496474875-7190-7-git-send-email-varada@codeaurora.org>
+Subject: [PATCH v4 2/6] dt-bindings: qcom: Add ipq8074 bindings
+Date: Sat,  3 Jun 2017 12:57:51 +0530
+Message-ID: <1496474875-7190-3-git-send-email-varada@codeaurora.org>
 References: <1496474875-7190-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1496474875-7190-1-git-send-email-varada@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org
 Cc: absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, varada@codeaurora.org, mraghava@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
-
-These configs are required for booting kernel in qcom
-ipq8074 boards.
-
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 ---
- arch/arm64/configs/defconfig | 2 ++
+ Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 65cdd87..c20328e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -267,6 +267,7 @@ CONFIG_SPI_S3C64XX=y
- CONFIG_SPI_SPIDEV=m
- CONFIG_SPMI=y
- CONFIG_PINCTRL_SINGLE=y
-+CONFIG_PINCTRL_IPQ8074=y
- CONFIG_PINCTRL_MAX77620=y
- CONFIG_PINCTRL_MSM8916=y
- CONFIG_PINCTRL_MSM8994=y
-@@ -450,6 +451,7 @@ CONFIG_CLK_QORIQ=y
- CONFIG_COMMON_CLK_PWM=y
- CONFIG_COMMON_CLK_QCOM=y
- CONFIG_QCOM_CLK_SMD_RPM=y
-+CONFIG_IPQ_GCC_8074=y
- CONFIG_MSM_GCC_8916=y
- CONFIG_MSM_GCC_8994=y
- CONFIG_MSM_MMCC_8996=y
+diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
+index 028d16e..0ed4d39 100644
+--- a/Documentation/devicetree/bindings/arm/qcom.txt
++++ b/Documentation/devicetree/bindings/arm/qcom.txt
+@@ -25,6 +25,7 @@ The 'SoC' element must be one of the following strings:
+ 	msm8994
+ 	msm8996
+ 	mdm9615
++	ipq8074
+ 
+ The 'board' element must be one of the following strings:
+ 
+@@ -33,6 +34,7 @@ The 'board' element must be one of the following strings:
+ 	dragonboard
+ 	mtp
+ 	sbc
++	hk01
+ 
+ The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
+ where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
