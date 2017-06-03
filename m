@@ -1,140 +1,34 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v7 00/23] FSI device driver implementation
-Date: Sat, 3 Jun 2017 19:05:10 +0900
-Message-ID: <20170603100510.GA24053@kroah.com>
-References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
- <305bc7b6-30eb-a44d-28da-f90f9a973acf@linux.vnet.ibm.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
+Date: Sat, 3 Jun 2017 19:26:27 +0900
+Message-ID: <20170603102627.GA24274@kroah.com>
+References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <305bc7b6-30eb-a44d-28da-f90f9a973acf-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 31, 2017 at 12:17:05PM -0500, Christopher Bostic wrote:
+On Sun, May 14, 2017 at 09:51:03PM +0200, Peter Rosin wrote:
+> From: Peter Rosin <peda@axentia.se>
+> 
 > Hi Greg,
 > 
-> Are there any further changes you require for this patch set? This has been
-> extensively tested internally and all is working as expected.   Would it be
-> possible to move forward with integration in the near future?   Any input
-> would be appreciated.
+> Philipp found problems in v14 with using a mutex for locking that was
+> the outcome of the review for v13, so I'm now using a semaphore instead
+> of the rwsem that was in v13. That at least got rid of the scary call
+> to downgrade_write. However, I'm still unsure about what you actually
+> meant with your comment about lack of sparse markings [1]. I did add
+> __must_check to the funcs that selects the mux, but I've got this
+> feeling that this is not what you meant?
 
-Sorry for the delay.  I just tried applying this to my tree, but got the
-following build warnings, and then errors:
-
-In file included from ./include/trace/define_trace.h:95:0,
-                 from ./include/trace/events/fsi.h:127,
-                 from drivers/fsi/fsi-core.c:27:
-./include/trace/events/fsi.h: In function ‘trace_raw_output_fsi_master_write’:
-./include/trace/events/fsi.h:58:12: warning: field width specifier ‘*’ expects argument of type ‘int’, but argument 8 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
-  TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
-            ^
-./include/trace/trace_events.h:343:22: note: in definition of macro ‘DECLARE_EVENT_CLASS’
-  trace_seq_printf(s, print);     \
-                      ^~~~~
-./include/trace/trace_events.h:65:9: note: in expansion of macro ‘PARAMS’
-         PARAMS(print));         \
-         ^~~~~~
-./include/trace/events/fsi.h:37:1: note: in expansion of macro ‘TRACE_EVENT’
- TRACE_EVENT(fsi_master_write,
- ^~~~~~~~~~~
-./include/trace/events/fsi.h:58:2: note: in expansion of macro ‘TP_printk’
-  TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
-  ^~~~~~~~~
-In file included from ./include/trace/trace_events.h:377:0,
-                 from ./include/trace/define_trace.h:95,
-                 from ./include/trace/events/fsi.h:127,
-                 from drivers/fsi/fsi-core.c:27:
-./include/trace/events/fsi.h:58:44: note: format string is defined here
-  TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
-                                           ~^~
-In file included from ./include/trace/define_trace.h:95:0,
-                 from ./include/trace/events/fsi.h:127,
-                 from drivers/fsi/fsi-core.c:27:
-./include/trace/events/fsi.h: In function ‘trace_raw_output_fsi_master_rw_resul
-’:
-./include/trace/events/fsi.h:95:12: warning: field width specifier ‘*’ expects argument of type ‘int’, but argument 9 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
-  TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
-            ^
-./include/trace/trace_events.h:343:22: note: in definition of macro ‘DECLARE_EVENT_CLASS’
-  trace_seq_printf(s, print);     \
-                      ^~~~~
-./include/trace/trace_events.h:65:9: note: in expansion of macro ‘PARAMS’
-         PARAMS(print));         \
-         ^~~~~~
-./include/trace/events/fsi.h:68:1: note: in expansion of macro ‘TRACE_EVENT’
- TRACE_EVENT(fsi_master_rw_result,
- ^~~~~~~~~~~
-./include/trace/events/fsi.h:95:2: note: in expansion of macro ‘TP_printk’
-  TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
-  ^~~~~~~~~
-In file included from ./include/trace/trace_events.h:377:0,
-                 from ./include/trace/define_trace.h:95,
-                 from ./include/trace/events/fsi.h:127,
-                 from drivers/fsi/fsi-core.c:27:
-./include/trace/events/fsi.h:95:44: note: format string is defined here
-  TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
-                                           ~^~
-  CHK     include/generated/uapi/linux/version.h
-  GEN     .version
-  CHK     include/generated/compile.h
-  UPD     include/generated/compile.h
-  CC      init/version.o
-  LD      init/built-in.o
-  LD      vmlinux.o
-  MODPOST vmlinux.o
-  KSYM    .tmp_kallsyms1.o
-  KSYM    .tmp_kallsyms2.o
-  LD      vmlinux
-  SORTEX  vmlinux
-  SYSMAP  System.map
-  CC      arch/x86/boot/version.o
-  Building modules, stage 2.
-  VOFFSET arch/x86/boot/compressed/../voffset.h
-  OBJCOPY arch/x86/boot/compressed/vmlinux.bin
-  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
-  CC      arch/x86/boot/compressed/kaslr.o
-  GZIP    arch/x86/boot/compressed/vmlinux.bin.gz
-  CC      arch/x86/boot/compressed/misc.o
-  MODPOST 476 modules
-WARNING: modpost: missing MODULE_LICENSE() in drivers/fsi/fsi-core.o
-see include/linux/module.h for more information
-  MKPIGGY arch/x86/boot/compressed/piggy.S
-  AS      arch/x86/boot/compressed/piggy.o
-  DATAREL arch/x86/boot/compressed/vmlinux
-  LD      arch/x86/boot/compressed/vmlinux
-  ZOFFSET arch/x86/boot/zoffset.h
-  OBJCOPY arch/x86/boot/vmlinux.bin
-  AS      arch/x86/boot/header.o
-  LD      arch/x86/boot/setup.elf
-  OBJCOPY arch/x86/boot/setup.bin
-  BUILD   arch/x86/boot/bzImage
-Setup is 17532 bytes (padded to 17920 bytes).
-System is 5445 kB
-CRC 56d8089d
-Kernel: arch/x86/boot/bzImage is ready  (#387)
-ERROR: "fsi_slave_claim_range" [drivers/fsi/fsi-master-hub.ko] undefined!
-ERROR: "fsi_slave_read" [drivers/fsi/fsi-master-hub.ko] undefined!
-ERROR: "fsi_slave_write" [drivers/fsi/fsi-master-hub.ko] undefined!
-ERROR: "fsi_slave_release_range" [drivers/fsi/fsi-master-hub.ko] undefined!
-make[1]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
-make: *** [Makefile:1214: modules] Error 2
-
-
-Note, I'm using gcc 7.1.1, which might be what is showing the build warnings,
-but that doesn't explain the build errors.
-
-So obviously, I can't take this as is :(
+I thought there was a way to mark a function as requiring a lock be held
+when it is being called.  Does sparse not support that anymore?
 
 thanks,
 
 greg k-h
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
