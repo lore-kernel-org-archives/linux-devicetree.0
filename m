@@ -1,51 +1,63 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
-Date: Sat, 3 Jun 2017 23:37:15 +0200
-Message-ID: <b1de713b-2256-a67c-86bb-31439aa66e54@axentia.se>
-References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
- <20170603102627.GA24274@kroah.com> <20170603103121.GA9599@kroah.com>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
+Date: Sun, 4 Jun 2017 00:57:09 +0300
+Message-ID: <20170603215709.GU1019@valkosipuli.retiisi.org.uk>
+References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+ <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
+ <20170531195821.GA16962@amd>
+ <20170601082659.GJ1019@valkosipuli.retiisi.org.uk>
+ <755909bf-d1de-e0f3-1569-0d4b16e26817@gmail.com>
+ <20170603195139.GA3062@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170603103121.GA9599@kroah.com>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Rosin <peda@lysator.liu.se>
-Cc: linux-kernel@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170603195139.GA3062@amd>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel@l
 List-Id: devicetree@vger.kernel.org
 
-On 2017-06-03 12:31, Greg Kroah-Hartman wrote:
-> On Sat, Jun 03, 2017 at 07:26:27PM +0900, Greg Kroah-Hartman wrote:
->> On Sun, May 14, 2017 at 09:51:03PM +0200, Peter Rosin wrote:
->>> From: Peter Rosin <peda@axentia.se>
->>>
->>> Hi Greg,
->>>
->>> Philipp found problems in v14 with using a mutex for locking that was
->>> the outcome of the review for v13, so I'm now using a semaphore instead
->>> of the rwsem that was in v13. That at least got rid of the scary call
->>> to downgrade_write. However, I'm still unsure about what you actually
->>> meant with your comment about lack of sparse markings [1]. I did add
->>> __must_check to the funcs that selects the mux, but I've got this
->>> feeling that this is not what you meant?
->>
->> I thought there was a way to mark a function as requiring a lock be held
->> when it is being called.  Does sparse not support that anymore?
+On Sat, Jun 03, 2017 at 09:51:39PM +0200, Pavel Machek wrote:
+> Hi!
 > 
-> Anyway, not a big deal.  I still worry about the calls blocking when
-> people are not expecting them to, but it is just the nature of th api I
-> guess.
+> > >>>+	/* Auto/manual exposure */
+> > >>>+	ctrls->auto_exp = v4l2_ctrl_new_std_menu(hdl, ops,
+> > >>>+						 V4L2_CID_EXPOSURE_AUTO,
+> > >>>+						 V4L2_EXPOSURE_MANUAL, 0,
+> > >>>+						 V4L2_EXPOSURE_AUTO);
+> > >>>+	ctrls->exposure = v4l2_ctrl_new_std(hdl, ops,
+> > >>>+					    V4L2_CID_EXPOSURE_ABSOLUTE,
+> > >>>+					    0, 65535, 1, 0);
+> > >>
+> > >>Is exposure_absolute supposed to be in microseconds...?
+> > >
+> > >Yes.
+> > 
+> > According to the docs V4L2_CID_EXPOSURE_ABSOLUTE is in 100 usec units.
+> > 
+> >  OTOH V4L2_CID_EXPOSURE has no defined unit, so it's a better fit IMO.
+> > >Way more drivers appear to be using EXPOSURE than EXPOSURE_ABSOLUTE, too.
+> > 
+> > Done, switched to V4L2_CID_EXPOSURE. It's true, this control is not
+> > taking 100 usec units, so unit-less is better.
+> 
+> Thanks. If you know the units, it would be of course better to use
+> right units...
 
-Yeah, first come first serve. I don't know what else I can do, except maybe
-follow up with a timed version of mux_control_select()...
+Steve: what's the unit in this case? Is it lines or something else?
 
-> All now queued up, nice work, thanks for sticking with this.
+Pavel: we do need to make sure the user space will be able to know the unit,
+too. It's rather a case with a number of controls: the unit is known but
+there's no API to convey it to the user.
 
-*big sigh of relief*
+The exposure is a bit special, too: granularity matters a lot on small
+values. On most other controls it does not.
 
-I was getting pretty fed up with the series to be honest :-), so thanks
-a bunch for taking it!
-
-Cheers,
-peda
+-- 
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
