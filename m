@@ -1,34 +1,49 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
-Date: Sat, 3 Jun 2017 19:26:27 +0900
-Message-ID: <20170603102627.GA24274@kroah.com>
-References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 10/19] drm/sun4i: hdmi: Rename internal DDC clock to avoid
+ name collision
+Date: Sat, 3 Jun 2017 22:33:25 +0800
+Message-ID: <CAGb2v64Vgdjm1MAwn+L0PVc0CA0QOCn=0RONKoGDWLpzVBzvmQ@mail.gmail.com>
+References: <20170602101024.18940-1-wens@csie.org> <20170602101024.18940-11-wens@csie.org>
+ <20170602193012.xwuziggyx6evmusz@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@lysator.liu.se>
-Cc: linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170602193012.xwuziggyx6evmusz@flea.lan>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 14, 2017 at 09:51:03PM +0200, Peter Rosin wrote:
-> From: Peter Rosin <peda@axentia.se>
-> 
-> Hi Greg,
-> 
-> Philipp found problems in v14 with using a mutex for locking that was
-> the outcome of the review for v13, so I'm now using a semaphore instead
-> of the rwsem that was in v13. That at least got rid of the scary call
-> to downgrade_write. However, I'm still unsure about what you actually
-> meant with your comment about lack of sparse markings [1]. I did add
-> __must_check to the funcs that selects the mux, but I've got this
-> feeling that this is not what you meant?
+On Sat, Jun 3, 2017 at 3:30 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Fri, Jun 02, 2017 at 06:10:15PM +0800, Chen-Yu Tsai wrote:
+>> The DDC parent clock on the A31 SoC is also conveniently named
+>> "hdmi-ddc", which results in a name collision when the hdmi driver
+>> registers its internal DDC divider clock.
+>>
+>> Rename the internal clock to "hdmi-ddc-divider".
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
+>>  drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+>> index e1071838f487..9a6b6243e977 100644
+>> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+>> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+>> @@ -125,7 +125,7 @@ static int _sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent,
+>>       if (!ddc)
+>>               return -ENOMEM;
+>>
+>> -     init.name = "hdmi-ddc";
+>> +     init.name = "hdmi-ddc-divider";
+>
+> Can't we rename the CCU clock instead? Having the clock called
+> hdmi-ddc being the actual clock output on the DDC bus feels more
+> natural.
 
-I thought there was a way to mark a function as requiring a lock be held
-when it is being called.  Does sparse not support that anymore?
+Do you have any suggestions? The manual labels the conflicting one
+in the CCU as "HDMI_DDC"...
 
-thanks,
-
-greg k-h
+ChenYu
