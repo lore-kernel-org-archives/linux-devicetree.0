@@ -1,69 +1,70 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v5 0/3] More fixes for twl4030 charger
-Date: Sat, 3 Jun 2017 08:01:13 +0200
-Message-ID: <421EB4BB-9E42-413B-8FB8-2B865FC25D15@goldelico.com>
-References: <cover.1495363097.git.hns@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1495363097.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, Marek Belisko <marek@goldelico.com>, Nikolaus Schaller <hns@goldelico.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v4 0/6] Add minimal boot support for IPQ8074
+Date: Sat,  3 Jun 2017 12:57:49 +0530
+Message-ID: <1496474875-7190-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org
+Cc: absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, varada@codeaurora.org, mraghava@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-No comments for this series? Everything fine? Has it been merged =
-somewhere?
+v4:
+  * Split the clock patch and addressed a minor comment
+    in the clock driver as per stephen's feedback.
 
-> Am 21.05.2017 um 12:38 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Changes V5:
-> * reworked max_current removal patch (comments by Sebastian Reichel)
-> * resubmit missing madc connection for AC power detection
-> * resubmit patch for irq allocation and -EPROBE_DEFER
-> * rebased on 4.12-rc1
->=20
-> Changes V4:
-> * resent commit (original one did contain material not upstream)
->=20
-> 2017-04-14 21:29:39: 2017-04-14 20:26:00: Changes V3:
-> * worked in comments by Sebsatian Reichel
-> * clarifications of some commit messages
-> * rebased on v4.11rc-6
->=20
-> It took a while (18 months) until we propose an updated patch for =
-upstream...
->=20
-> 2015-11-02 12:27:39: Changes V2:
-> * worked in comments by Nishanth Menon <nm@ti.com>
-> * added another patch which solves a probing/boot stall problem (irq =
-allocation vs. -EPROBE_DEFER)
->=20
-> V1:
-> 4.3-rc1 introduced a new charger driver for the twl4030. This patch =
-set fixes some
-> issues.
->=20
-> While making twl4030 changes from 4.3 operable we have found some =
-issues
-> during testing on GTA04 and OpenPandora.
->=20
-> H. Nikolaus Schaller (2):
->  drivers:power:twl4030-charger: remove nonstandard max_current sysfs
->    attribute
->  drivers:power:twl4030-charger: add deferred probing for phy and iio
->=20
-> Marek Belisko (1):
->  ARM: dts: twl4030: Add missing madc reference for bci subnode
->=20
-> .../ABI/testing/sysfs-class-power-twl4030          |  17 ----
-> arch/arm/boot/dts/twl4030.dtsi                     |   2 +
-> drivers/power/supply/twl4030_charger.c             | 100 =
-+++++----------------
-> 3 files changed, 24 insertions(+), 95 deletions(-)
->=20
-> --=20
-> 2.12.2
->=20
+v3:
+  * Addressed review feedback from Bjorn for pinctrl
+     - Unified the names for qpic pads.
+     - Corrected the names for pwm pins.
+  * Updated pinctrl documentation.
+  * Updated the default bootargs in ipq8074-hk01.dts.
+  * Updated the gcc clocks driver for removing the
+    unused halt_bit in few places.
+
+v2:
+  * Addressed review feedback from Stephen
+    - Removed cpu-map entries
+    - Added mmio-timer nodes
+  * Fix sparse warnings in the gcc-ipq8074.c
+  * Updated pinctrl documentation
+
+v1:
+  https://www.spinics.net/lists/kernel/msg2498734.html
+  This series adds minimal board boot support for ipq8074-hk01
+  board.
+
+Abhishek Sahu (3):
+  clk: qcom: Add DT bindings for ipq8074 gcc clock controller
+  clk: qcom: Add ipq8074 Global Clock Controller support
+  arm64: defconfig: Enable qcom ipq8074 clock and pinctrl
+
+Varadarajan Narayanan (3):
+  pinctrl: qcom: Add ipq8074 pinctrl driver
+  dt-bindings: qcom: Add ipq8074 bindings
+  arm64: dts: Add ipq8074 SoC and HK01 board support
+
+ Documentation/devicetree/bindings/arm/qcom.txt     |    2 +
+ .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+ .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt      |  172 ++++
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   53 +
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              |  194 ++++
+ arch/arm64/configs/defconfig                       |    2 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq8074.c                     | 1007 ++++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                       |   10 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c             | 1076 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h       |  152 +++
+ 14 files changed, 2681 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq8074.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq8074.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq8074.h
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
