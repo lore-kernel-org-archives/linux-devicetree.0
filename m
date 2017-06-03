@@ -1,82 +1,39 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: drm/bridge: Document Cadence DSI
- bridge bindings
-Date: Sat, 3 Jun 2017 23:43:17 +0530
-Message-ID: <60f8b8ec-c83b-0609-c5e5-44b3f9302808@codeaurora.org>
-References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
- <1496405096-18275-2-git-send-email-boris.brezillon@free-electrons.com>
+From: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
+Date: Sat, 3 Jun 2017 20:37:21 +0200
+Message-ID: <CAExDi1QZsccMm_0v90Wx5Bxi7XYT_eNBWRJ51Neb8nWa4GD-+A@mail.gmail.com>
+References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se> <20170603102627.GA24274@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1496405096-18275-2-git-send-email-boris.brezillon@free-electrons.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, dri-devel@lists.freedesktop.org, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, Neil Webb <neilw@cadence.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170603102627.GA24274@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Peter Rosin <peda@lysator.liu.se>, open list <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAwNi8wMi8yMDE3IDA1OjM0IFBNLCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gRG9j
-dW1lbnQgdGhlIGJpbmRpbmdzIHVzZWQgZm9yIHRoZSBDYWRlbmNlIERTSSBicmlkZ2UuCj4KPiBT
-aWduZWQtb2ZmLWJ5OiBCb3JpcyBCcmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0
-cm9ucy5jb20+Cj4gLS0tCj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLGRzaS50
-eHQgICAgICAgICAgIHwgNTUgKysrKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdl
-ZCwgNTUgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2NkbnMsZHNpLnR4dAo+Cj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9j
-ZG5zLGRzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvY2Rucyxkc2kudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAw
-MDAwMDAuLjc3MGM1YzViMWU5Mwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0Cj4gQEAgLTAs
-MCArMSw1NSBAQAo+ICtDYWRlbmNlIERTSSBicmlkZ2UKPiArPT09PT09PT09PT09PT09PT09Cj4g
-Kwo+ICtUaGUgQ2FkZW5jZSBEU0kgYnJpZGdlIGlzIGEgRFBJIHRvIERTSSBicmlkZ2Ugc3VwcG9y
-dGluZyB1cCB0byA0IERTSSBsYW5lcy4KCklzIHRoaXMgYSBzZXBhcmF0ZSBjaGlwLCBvciBhbiBJ
-UCBpbnRlZ3JhdGVkIGludG8gU29Dcz8gSWYgaXQncyB0aGUgCmxhdHRlciwgSSBkb24ndCB0aGlu
-ayBEUEkgb24gdGhlIGl0cyBpbnB1dCBzaWRlIGlzIHRoZSByaWdodCB0ZXJtIHRvIAp1c2UuIE1h
-eWJlIFJHQiB3b3VsZCBiZSBtb3JlIGFwcHJvcHJpYXRlIGhlcmUuCgo+ICsKPiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgc2V0IHRvICJjZG5zLGRzaSIu
-CgpXb3VsZCBpdCBiZSBiZXR0ZXIgdG8gdGFrZSBhIGR3LWhkbWkgbGlrZSBhcHByb2FjaCBoZXJl
-PyBJLmUsIHRoZQpiaW5kaW5nIHNob3VsZCBiZSBzcGVjaWZpYyB0byB0aGUgU29DIHRoYXQgaW50
-ZWdyYXRlcyB0aGlzIERTSQpicmlkZ2U/Cgo+ICstIHJlZzogcGh5c2ljYWwgYmFzZSBhZGRyZXNz
-IGFuZCBsZW5ndGggb2YgdGhlIGNvbnRyb2xsZXIncyByZWdpc3RlcnMuCj4gKy0gaW50ZXJydXB0
-czogaW50ZXJydXB0IGxpbmUgY29ubmVjdGVkIHRvIHRoZSBEU0kgYnJpZGdlLgo+ICstIGNsb2Nr
-czogRFNJIGJyaWRnZSBjbG9ja3MuCj4gKy0gY2xvY2stbmFtZXM6IG11c3QgY29udGFpbiAicGNs
-ayIgYW5kICJzeXNjbGsiLgo+ICstIHBoeXM6IHBoYW5kbGUgbGluayB0byB0aGUgTUlQSSBELVBI
-WSBjb250cm9sbGVyLgo+ICstIHBoeS1uYW1lczogbXVzdCBjb250YWluICJkcGh5Ii4KPiArLSAj
-YWRkcmVzcy1jZWxsczogbXVzdCBiZSBzZXQgdG8gMS4KPiArLSAjc2l6ZS1jZWxsczogbXVzdCBi
-ZSBzZXQgdG8gMC4KPiArCj4gK1JlcXVpcmVkIHN1Ym5vZGVzOgo+ICstIHBvcnRzOiBQb3J0cyBh
-cyBkZXNjcmliZWQgaW4gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2dyYXBoLnR4
-dC4KPiArICBDdXJyZW50bHkgY29udGFpbnMgYSBzaW5nbGUgaW5wdXQgcG9ydCBhdCBhZGRyZXNz
-IDAgcmVwcmVzZW50aW5nIHRoZSBEUEkKPiArICBpbnB1dC4gT3RoZXIgcG9ydHMgd2lsbCBiZSBh
-ZGRlZCBsYXRlciB0byBzdXBwb3J0IHRoZSBTREkgaW5wdXRzLgo+ICsgIFBvcnQgMCBzaG91bGQg
-YmUgY29ubmVjdGVkIHRvIGEgRFBJIGVuY29kZXIgb3V0cHV0LgoKVGhlIG91dHB1dCBvZiB0aGUg
-RFNJIGJyaWRnZSBtYXkgYmUgYW5vdGhlciBicmlkZ2UsIHdoaWNoIGNvdWxkIGJlIGkyYwpjb250
-cm9sbGVkLiBJbiB0aGF0IGNhc2UsIGl0IHdvbid0IGJlIGEgY2hpbGQgb2YgdGhlIERTSSBicmlk
-Z2UuIEZvcgpzdWNoIHNjZW5hcmlvcywgd2UgbWlnaHQgd2FudCB0byBkZWZpbmUgYW4gb3V0cHV0
-IHBvcnQgZm9yIHRoZSBicmlkZ2UuCgpUaGFua3MsCkFyY2hpdAoKPiArLSBvbmUgc3Vibm9kZSBw
-ZXIgRFNJIGRldmljZSBjb25uZWN0ZWQgb24gdGhlIERTSSBidXMuIEVhY2ggRFNJIGRldmljZSBz
-aG91bGQKPiArICBjb250YWluIGEgcmVnIHByb3BlcnR5IGVuY29kaW5nIGl0cyBhZGRyZXNzIG9u
-IHRoZSBidXMuCj4gKwo+ICtFeGFtcGxlOgo+ICsKPiArCWRzaTA6IGRzaUBmZDBjMDAwMCB7Cj4g
-KwkJY29tcGF0aWJsZSA9ICJjZG5zLGRzaSI7Cj4gKwkJcmVnID0gPDB4MCAweGZkMGMwMDAwIDB4
-MCAweDEwMDA+Owo+ICsJCWNsb2NrcyA9IDwmcGNsaz4sIDwmc3lzY2xrPjsKPiArCQljbG9jay1u
-YW1lcyA9ICJwY2xrIiwgImhjbGsiOwo+ICsJCWludGVycnVwdHMgPSA8MT47Cj4gKwkJcGh5cyA9
-IDwmZHBoeTE+Owo+ICsJCXBoeS1uYW1lcyA9ICJkcGh5IjsKPiArCQkjYWRkcmVzcy1jZWxscyA9
-IDwxPjsKPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJcG9ydHMgewo+ICsJCQkjYWRk
-cmVzcy1jZWxscyA9IDwxPjsKPiArCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+ICsJCQlwb3J0
-QDAgewo+ICsJCQkJcmVnID0gPDA+Owo+ICsJCQkJZHNpMF9kcGlfaW5wdXQ6IGVuZHBvaW50IHsK
-PiArCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8Jnh4eF9kcGlfb3V0cHV0PjsKPiArCQkJCX07Cj4g
-KwkJCX07Cj4gKwkJfTsKPiArCj4gKwkJcGFuZWw6IGRzaS1kZXZAMCB7Cj4gKwkJCWNvbXBhdGli
-bGUgPSAiPHZlbmRvcixwYW5lbD4iOwo+ICsJCQlyZWcgPSA8MD47Cj4gKwkJfTsKPiArCX07Cj4g
-Kwo+CgotLSAKUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2Yg
-Q29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2pl
-Y3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
-dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On Sat, Jun 3, 2017 at 12:26 PM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Sun, May 14, 2017 at 09:51:03PM +0200, Peter Rosin wrote:
+>> From: Peter Rosin <peda@axentia.se>
+>>
+>> Hi Greg,
+>>
+>> Philipp found problems in v14 with using a mutex for locking that was
+>> the outcome of the review for v13, so I'm now using a semaphore instead
+>> of the rwsem that was in v13. That at least got rid of the scary call
+>> to downgrade_write. However, I'm still unsure about what you actually
+>> meant with your comment about lack of sparse markings [1]. I did add
+>> __must_check to the funcs that selects the mux, but I've got this
+>> feeling that this is not what you meant?
+>
+> I thought there was a way to mark a function as requiring a lock be held
+> when it is being called.  Does sparse not support that anymore?
+
+sparse still support these annotations, of course.
+In this case, I suppose you're talking about '__must_hold()' which
+*must* be used instead of a pair of '__releases()' + '__acquires()'
+when the lock is help on function entry and exit.
+
+Cheers,
+-- Luc Van Oostenryck
