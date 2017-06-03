@@ -1,31 +1,23 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 13/19] drm/sun4i: hdmi: Add support for
- controller hardware variants
-Date: Sat, 3 Jun 2017 22:58:39 +0800
-Message-ID: <CAGb2v676G4A5MWAgJdotszJZkGf5OtLw9n71wTWP=+2gpSRf5g@mail.gmail.com>
-References: <20170602101024.18940-1-wens@csie.org> <20170602101024.18940-14-wens@csie.org>
- <20170602193827.rnjum6x5ra4x5wef@flea.lan>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 14/19] drm/sun4i: hdmi: Add support for A31's HDMI controller
+Date: Sat, 3 Jun 2017 23:19:09 +0800
+Message-ID: <CAGb2v65eFAmAybmHkQcKjF+ZKxh+_G6q9i2GPzMs5854X8bQug@mail.gmail.com>
+References: <20170602101024.18940-1-wens@csie.org> <20170602101024.18940-15-wens@csie.org>
+ <20170602194110.goale2ssyg5vuqiv@flea.lan>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBN45ZPEQKGQE66EHQ2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170602193827.rnjum6x5ra4x5wef-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170602194110.goale2ssyg5vuqiv@flea.lan>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, dri-devel <dri-devel@lists.freedesktop.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 3, 2017 at 3:38 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Jun 02, 2017 at 06:10:18PM +0800, Chen-Yu Tsai wrote:
->> The HDMI controller found in earlier Allwinner SoCs have slight
->> differences:
+On Sat, Jun 3, 2017 at 3:41 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Fri, Jun 02, 2017 at 06:10:19PM +0800, Chen-Yu Tsai wrote:
+>> The HDMI controller found in the A31 SoCs is slightly different
+>> from the one already supported, which is found in the A10s:
 >>
 >>   - Need different initial values for the PLL related registers
 >>
@@ -33,132 +25,174 @@ On Sat, Jun 3, 2017 at 3:38 AM, Maxime Ripard
 >>
 >>   - Different register layout for the DDC portion
 >>
->>   - Separate DDC parent clock on the A31
+>>   - Separate DDC parent clock
 >>
->>   - Explicit reset control
+>> This patch adds support for it.
 >>
->> The clock variants are supported within their implementations,
->> which only expose a create function for each variant.
->>
->> The different layout of the DDC registers necessitates a separate
->> version of struct drm_connector_helper_funcs.
->>
->> A new variant data structure is created to store pointers to the
->> above functions, structures, and the different initial values.
->> Another flag notates whether there is a separate DDC parent clock.
->> If not, the TMDS clock is passed to the DDC clock create function,
->> as before.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 >> ---
->>  drivers/clk/sunxi-ng/ccu-sun6i-a31.c   |   2 +-
->>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |   8 +++
->>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 114 ++++++++++++++++++++++++++-------
->>  3 files changed, 100 insertions(+), 24 deletions(-)
+>>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |   3 +
+>>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 141 +++++++++++++++++++++++++++++++++
+>>  2 files changed, 144 insertions(+)
 >>
->> diff --git a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
->> index 4d6078fca9ac..e48186985a51 100644
->> --- a/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
->> +++ b/drivers/clk/sunxi-ng/ccu-sun6i-a31.c
->> @@ -610,7 +610,7 @@ static SUNXI_CCU_M_WITH_MUX_GATE(hdmi_clk, "hdmi", lcd_ch1_parents,
->>
->>  static SUNXI_CCU_GATE(hdmi_ddc_clk, "hdmi-ddc", "osc24M", 0x150, BIT(30), 0);
->>
->> -static SUNXI_CCU_GATE(ps_clk, "ps", "lcd1-ch1", 0x140, BIT(31), 0);
->> +static SUNXI_CCU_GATE(ps_clk, "ps", "lcd1-ch1", 0x154, BIT(31), 0);
->
-> Unrelated change?
-
-Indeed. :(
-
->>
->>  static const char * const mbus_parents[] = { "osc24M", "pll-periph",
->>                                            "pll-ddr" };
 >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> index c39c2a245339..c63d0bd95963 100644
+>> index c63d0bd95963..2589bc92be59 100644
 >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
 >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
->> @@ -155,6 +155,8 @@ enum sun4i_hdmi_pkt_type {
->>       SUN4I_HDMI_PKT_END = 15,
->>  };
+>> @@ -56,10 +56,13 @@
+>>  #define SUN4I_HDMI_PAD_CTRL0_TXEN            BIT(23)
 >>
->> +struct sun4i_hdmi_variant;
->> +
->>  struct sun4i_hdmi {
->>       struct drm_connector    connector;
->>       struct drm_encoder      encoder;
->> @@ -162,9 +164,13 @@ struct sun4i_hdmi {
->>
->>       void __iomem            *base;
->>
->> +     /* Reset control */
->> +     struct reset_control    *reset;
->> +
->>       /* Parent clocks */
->>       struct clk              *bus_clk;
->>       struct clk              *mod_clk;
->> +     struct clk              *ddc_parent_clk;
->>       struct clk              *pll0_clk;
->>       struct clk              *pll1_clk;
->>
->> @@ -175,6 +181,8 @@ struct sun4i_hdmi {
->>       struct sun4i_drv        *drv;
->>
->>       bool                    hdmi_monitor;
->> +
->> +     const struct sun4i_hdmi_variant *variant;
->>  };
->>
->>  int sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *clk);
+>>  #define SUN4I_HDMI_PAD_CTRL1_REG     0x204
+>> +#define SUN4I_HDMI_PAD_CTRL1_UNKNOWN         BIT(24) /* set on A31 */
+>>  #define SUN4I_HDMI_PAD_CTRL1_AMP_OPT         BIT(23)
+>>  #define SUN4I_HDMI_PAD_CTRL1_AMPCK_OPT               BIT(22)
+>>  #define SUN4I_HDMI_PAD_CTRL1_EMP_OPT         BIT(20)
+>>  #define SUN4I_HDMI_PAD_CTRL1_EMPCK_OPT               BIT(19)
+>> +#define SUN4I_HDMI_PAD_CTRL1_PWSCK           BIT(18)
+>> +#define SUN4I_HDMI_PAD_CTRL1_PWSDT           BIT(17)
+>>  #define SUN4I_HDMI_PAD_CTRL1_REG_DEN         BIT(15)
+>>  #define SUN4I_HDMI_PAD_CTRL1_REG_DENCK               BIT(14)
+>>  #define SUN4I_HDMI_PAD_CTRL1_REG_EMP(n)              (((n) & 7) << 10)
 >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> index 457614073501..9ded40aaed32 100644
+>> index 9ded40aaed32..e9abf93eb41c 100644
 >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
 >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
->> @@ -20,8 +20,10 @@
->>  #include <linux/clk.h>
->>  #include <linux/component.h>
->>  #include <linux/iopoll.h>
->> +#include <linux/of_device.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/pm_runtime.h>
->> +#include <linux/reset.h>
->>
->>  #include "sun4i_backend.h"
->>  #include "sun4i_crtc.h"
->> @@ -315,6 +317,56 @@ static const struct drm_connector_funcs sun4i_hdmi_connector_funcs = {
->>       .atomic_destroy_state   = drm_atomic_helper_connector_destroy_state,
+>> @@ -293,6 +293,109 @@ static const struct drm_connector_helper_funcs sun4i_hdmi_connector_helper_funcs
+>>       .get_modes      = sun4i_hdmi_get_modes,
 >>  };
 >>
->> +struct sun4i_hdmi_variant {
->> +     const struct drm_connector_helper_funcs *connector_helpers;
->> +     int (*ddc_create)(struct sun4i_hdmi *hdmi, struct clk *clk);
->> +     int (*tmds_create)(struct sun4i_hdmi *hdmi);
->> +     bool has_ddc_parent_clk;
->> +     bool has_reset_control;
+>> +static int sun6i_hdmi_read_sub_block(struct sun4i_hdmi *hdmi,
+>> +                                  unsigned int blk, unsigned int offset,
+>> +                                  u8 *buf, unsigned int count)
+>> +{
+>> +     unsigned long reg;
+>> +     int i;
 >> +
->> +     u32 pad_ctrl0_init_val;
->> +     u32 pad_ctrl1_init_val;
->> +     u32 pll_ctrl_init_val;
+>> +     reg = readl(hdmi->base + SUN6I_HDMI_DDC_FIFO_CTRL_REG);
+>> +     writel(reg | SUN6I_HDMI_DDC_FIFO_CTRL_CLEAR,
+>> +            hdmi->base + SUN6I_HDMI_DDC_FIFO_CTRL_REG);
+>> +     writel(SUN6I_HDMI_DDC_ADDR_SEGMENT(offset >> 8) |
+>> +            SUN6I_HDMI_DDC_ADDR_EDDC(DDC_SEGMENT_ADDR << 1) |
+>> +            SUN6I_HDMI_DDC_ADDR_OFFSET(offset) |
+>> +            SUN6I_HDMI_DDC_ADDR_SLAVE(DDC_ADDR),
+>> +            hdmi->base + SUN6I_HDMI_DDC_ADDR_REG);
+>> +
+>> +     writel(SUN6I_HDMI_DDC_CMD_EXPLICIT_EDDC_READ |
+>> +            SUN6I_HDMI_DDC_CMD_BYTE_COUNT(count),
+>> +            hdmi->base + SUN6I_HDMI_DDC_CMD_REG);
+>> +
+>> +     reg = readl(hdmi->base + SUN6I_HDMI_DDC_CTRL_REG);
+>> +     writel(reg | SUN6I_HDMI_DDC_CTRL_START_CMD,
+>> +            hdmi->base + SUN6I_HDMI_DDC_CTRL_REG);
+>> +
+>> +     if (readl_poll_timeout(hdmi->base + SUN6I_HDMI_DDC_CTRL_REG, reg,
+>> +                            !(reg & SUN6I_HDMI_DDC_CTRL_START_CMD),
+>> +                            100, 100000))
+>> +             return -EIO;
+>> +
+>> +     for (i = 0; i < count; i++)
+>> +             buf[i] = readb(hdmi->base + SUN6I_HDMI_DDC_FIFO_DATA_REG);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int sun6i_hdmi_read_edid_block(void *data, u8 *buf, unsigned int blk,
+>> +                                   size_t length)
+>> +{
+>> +     struct sun4i_hdmi *hdmi = data;
+>> +     int retry = 2, i;
+>> +
+>> +     do {
+>> +             for (i = 0; i < length; i += SUN4I_HDMI_DDC_FIFO_SIZE) {
+>> +                     unsigned char offset = blk * EDID_LENGTH + i;
+>> +                     unsigned int count = min((unsigned int)SUN4I_HDMI_DDC_FIFO_SIZE,
+>> +                                              length - i);
+>> +                     int ret;
+>> +
+>> +                     ret = sun6i_hdmi_read_sub_block(hdmi, blk, offset,
+>> +                                                     buf + i, count);
+>> +                     if (ret)
+>> +                             return ret;
+>> +             }
+>> +     } while (!drm_edid_block_valid(buf, blk, true, NULL) && (retry--));
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int sun6i_hdmi_get_modes(struct drm_connector *connector)
+>> +{
+>> +     struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
+>> +     u32 reg;
+>> +     struct edid *edid;
+>> +     int ret;
+>> +
+>> +     clk_set_rate(hdmi->ddc_clk, 100000);
+>> +     clk_prepare_enable(hdmi->ddc_clk);
+>> +
+>> +     /* Reset i2c controller */
+>> +     writel(SUN6I_HDMI_DDC_CTRL_ENABLE | SUN6I_HDMI_DDC_CTRL_RESET |
+>> +            SUN6I_HDMI_DDC_CTRL_SDA_ENABLE |
+>> +            SUN6I_HDMI_DDC_CTRL_SCL_ENABLE,
+>> +            hdmi->base + SUN6I_HDMI_DDC_CTRL_REG);
+>> +     if (readl_poll_timeout(hdmi->base + SUN6I_HDMI_DDC_CTRL_REG, reg,
+>> +                            !(reg & SUN6I_HDMI_DDC_CTRL_RESET),
+>> +                            100, 2000)) {
+>> +             dev_err(hdmi->dev, "DDC reset timeout: %08x\n", reg);
+>> +             clk_disable_unprepare(hdmi->ddc_clk);
+>> +             return -EIO;
+>> +     }
+>> +
+>> +     edid = drm_do_get_edid(connector, sun6i_hdmi_read_edid_block, hdmi);
+>> +
+>> +     clk_disable_unprepare(hdmi->ddc_clk);
+>> +
+>> +     if (!edid)
+>> +             return 0;
+>> +
+>> +     hdmi->hdmi_monitor = drm_detect_hdmi_monitor(edid);
+>> +     DRM_DEBUG_DRIVER("Monitor is %s monitor\n",
+>> +                      hdmi->hdmi_monitor ? "an HDMI" : "a DVI");
+>> +
+>> +     drm_mode_connector_update_edid_property(connector, edid);
+>> +     ret = drm_add_edid_modes(connector, edid);
+>> +     kfree(edid);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static const struct drm_connector_helper_funcs sun6i_hdmi_connector_helper_funcs = {
+>> +     .get_modes      = sun6i_hdmi_get_modes,
 >> +};
 >> +
->> +#define SUN4I_HDMI_PAD_CTRL1_MASK    (GENMASK(24, 7) | GENMASK(5, 0))
->> +#define SUN4I_HDMI_PLL_CTRL_MASK     (GENMASK(31, 8) | GENMASK(3, 0))
->> +
->> +static const struct sun4i_hdmi_variant sun5i_variant = {
->> +     .connector_helpers      = &sun4i_hdmi_connector_helper_funcs,
->> +     .ddc_create             = sun4i_ddc_create,
->> +     .tmds_create            = sun4i_tmds_create,
 >
-> If we store the variants info for those clocks in that structure, we
-> don't need those functions anymore. This would be cleaner imho.
+> Every thing here can be handled through regfield without having to
+> duplicate the logic.
 
-I'll see what I can do.
+Hmm... You're right. Does that mean we should convert the entire driver to
+using regmap? Or just the DDC bits here, since they won't conflict with
+any other access patterns in the whole HDMI driver?
 
->> +     .has_ddc_parent_clk     = false,
->> +     .has_reset_control      = false,
 >
-> Those two are the default values
+>>  static enum drm_connector_status
+>>  sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
+>>  {
+>> @@ -367,6 +470,43 @@ static const struct sun4i_hdmi_variant sun5i_variant = {
+>>                                 SUN4I_HDMI_PLL_CTRL_PLL_EN,
+>>  };
+>>
+>> +static const struct sun4i_hdmi_variant sun6i_variant = {
+>> +     .connector_helpers      = &sun6i_hdmi_connector_helper_funcs,
+>> +     .ddc_create             = sun6i_ddc_create,
+>> +     .tmds_create            = sun6i_tmds_create,
+>> +     .has_ddc_parent_clk     = true,
+>> +     .has_reset_control      = true,
+>> +     .pad_ctrl0_init_val     = 0xff |
+>
+> What is this 0xff for?
 
-Right. I wanted them to be explicitly labeled.
+Unknown. It is set in the mainline U-boot driver.
+
+Looking at an old 3.3 kernel from the BSP, it seems the higher 4 bits
+control the transmitter. But the lower 4 bits are still unknown.
 
 ChenYu
