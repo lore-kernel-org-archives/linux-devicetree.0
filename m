@@ -1,51 +1,69 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v4 2/6] dt-bindings: qcom: Add ipq8074 bindings
-Date: Sat,  3 Jun 2017 12:57:51 +0530
-Message-ID: <1496474875-7190-3-git-send-email-varada@codeaurora.org>
-References: <1496474875-7190-1-git-send-email-varada@codeaurora.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] iio: proximity: as3935: noise detection + threshold
+ changes
+Date: Sat, 3 Jun 2017 10:00:49 +0100
+Message-ID: <20170603100049.02fa3c76@kernel.org>
+References: <20170525055229.11659-1-matt.ranostay@konsulko.com>
+        <20170528165830.3878c05c@kernel.org>
+        <20170530213259.qbcikyy446g726pk@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496474875-7190-1-git-send-email-varada@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org
-Cc: absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, varada@codeaurora.org, mraghava@codeaurora.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170530213259.qbcikyy446g726pk@rob-hp-laptop>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
- 1 file changed, 2 insertions(+)
+On Tue, 30 May 2017 16:32:59 -0500
+Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-diff --git a/Documentation/devicetree/bindings/arm/qcom.txt b/Documentation/devicetree/bindings/arm/qcom.txt
-index 028d16e..0ed4d39 100644
---- a/Documentation/devicetree/bindings/arm/qcom.txt
-+++ b/Documentation/devicetree/bindings/arm/qcom.txt
-@@ -25,6 +25,7 @@ The 'SoC' element must be one of the following strings:
- 	msm8994
- 	msm8996
- 	mdm9615
-+	ipq8074
- 
- The 'board' element must be one of the following strings:
- 
-@@ -33,6 +34,7 @@ The 'board' element must be one of the following strings:
- 	dragonboard
- 	mtp
- 	sbc
-+	hk01
- 
- The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
- where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> On Sun, May 28, 2017 at 04:58:30PM +0100, Jonathan Cameron wrote:
+> > On Wed, 24 May 2017 22:52:29 -0700
+> > Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> >   
+> > > Most applications are too noisy to allow the default noise and
+> > > watchdog settings, and thus need to be configurable via DT
+> > > properties.
+> > > 
+> > > Also default settings to POR defaults on a reset, and register
+> > > distuber interrupts as noise since it prevents proper usage.
+> > > 
+> > > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > Signed-off-by: Matt Ranostay <matt.ranostay-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>  
+> > I wonder if there are many other devices where this sort of
+> > feature is relevant.  Anyone else come across any?
+> > 
+> > I suppose if we need to modify the ABI for any that show up
+> > in future, it shouldn't be too hard to maintain this one
+> > for backwards compatibility.
+> > 
+> > Anyhow, new devicetree bindings so I'll give Rob / Mark time
+> > to have a chance to look at it.  
+> 
+> I acked v1.
+Given there are a couple of precursors working their way towards
+mainline and stable, I'll need to wait for those to filter through.
+
+Matt give me a bump if it looks like I've forgotten this once
+it will apply!
+
+Thanks,
+
+Jonathan
+> 
+> > My immediate thought is that you might be able to do something
+> > a little more user (i.e. devicetree writer) friendly than
+> > just using the register value...  
+> 
+> We certainly don't want that to be the norm, but sometimes it makes 
+> sense when it's very specific to a certain device.
+> 
+> > I see there are values, but it depends on whether the device
+> > is in 'indoor mode' or 'outdoor mode' (which are just gain
+> > settings?).  You could just use them though.
+> > 
+> > Given the gain is userspace controlled, and seems to effect
+> > the meaning of this setting, is it valid to just put it
+> > in the devicetree?  
