@@ -1,58 +1,139 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: powerpc/opal-irqchip: Use interrupt names if present
-Date: Sat, 3 Jun 2017 16:04:44 +0200
-Message-ID: <CAMuHMdUWM+5U=gngX9V5y8yNzfW5JM_DYQm_jC4uEWdX3asPJw@mail.gmail.com>
-References: <20170222190235.92E5F661CEB@gitolite.kernel.org>
- <CAMuHMdWGZYkM_aQ=vXr5J9-KFGzzWgq3hf+ZRY-n-+8-ghG5nQ@mail.gmail.com> <1496412702.2842.11.camel@kernel.crashing.org>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v7 00/23] FSI device driver implementation
+Date: Sat, 3 Jun 2017 19:05:10 +0900
+Message-ID: <20170603100510.GA24053@kroah.com>
+References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
+ <305bc7b6-30eb-a44d-28da-f90f9a973acf@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496412702.2842.11.camel-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <305bc7b6-30eb-a44d-28da-f90f9a973acf-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
-Cc: "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+On Wed, May 31, 2017 at 12:17:05PM -0500, Christopher Bostic wrote:
+> Hi Greg,
+> 
+> Are there any further changes you require for this patch set? This has been
+> extensively tested internally and all is working as expected.   Would it be
+> possible to move forward with integration in the near future?   Any input
+> would be appreciated.
 
-On Fri, Jun 2, 2017 at 4:11 PM, Benjamin Herrenschmidt
-<benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org> wrote:
-> On Fri, 2017-06-02 at 14:39 +0200, Geert Uytterhoeven wrote:
->> > diff --git a/arch/powerpc/platforms/powernv/opal-irqchip.c b/arch/powerpc/platforms/powernv/opal-irqchip.c
->> > index 998316bf2dad..ecdcba9d1220 100644
->> > --- a/arch/powerpc/platforms/powernv/opal-irqchip.c
->> > +++ b/arch/powerpc/platforms/powernv/opal-irqchip.c
->> > @@ -183,8 +183,9 @@ void opal_event_shutdown(void)
->> > +       /* It's not an error for the names to be missing */
->> > +       of_property_read_string_array(opal_node, "opal-interrupts-names",
->> > +                                     names, opal_irq_count);
->>
->> Just double-checking, as it's different from the standard "interrupt-names":
->> is "opal-interrupts-names" the correct name?
->
-> Yes, because the property it refers to isn't a standard "interrupts"
-> property... it's ... complicated :-)
+Sorry for the delay.  I just tried applying this to my tree, but got the
+following build warnings, and then errors:
 
-I'm aware it's a different property.
+In file included from ./include/trace/define_trace.h:95:0,
+                 from ./include/trace/events/fsi.h:127,
+                 from drivers/fsi/fsi-core.c:27:
+./include/trace/events/fsi.h: In function ‘trace_raw_output_fsi_master_write’:
+./include/trace/events/fsi.h:58:12: warning: field width specifier ‘*’ expects argument of type ‘int’, but argument 8 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+  TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
+            ^
+./include/trace/trace_events.h:343:22: note: in definition of macro ‘DECLARE_EVENT_CLASS’
+  trace_seq_printf(s, print);     \
+                      ^~~~~
+./include/trace/trace_events.h:65:9: note: in expansion of macro ‘PARAMS’
+         PARAMS(print));         \
+         ^~~~~~
+./include/trace/events/fsi.h:37:1: note: in expansion of macro ‘TRACE_EVENT’
+ TRACE_EVENT(fsi_master_write,
+ ^~~~~~~~~~~
+./include/trace/events/fsi.h:58:2: note: in expansion of macro ‘TP_printk’
+  TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
+  ^~~~~~~~~
+In file included from ./include/trace/trace_events.h:377:0,
+                 from ./include/trace/define_trace.h:95,
+                 from ./include/trace/events/fsi.h:127,
+                 from drivers/fsi/fsi-core.c:27:
+./include/trace/events/fsi.h:58:44: note: format string is defined here
+  TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
+                                           ~^~
+In file included from ./include/trace/define_trace.h:95:0,
+                 from ./include/trace/events/fsi.h:127,
+                 from drivers/fsi/fsi-core.c:27:
+./include/trace/events/fsi.h: In function ‘trace_raw_output_fsi_master_rw_resul
+’:
+./include/trace/events/fsi.h:95:12: warning: field width specifier ‘*’ expects argument of type ‘int’, but argument 9 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
+  TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
+            ^
+./include/trace/trace_events.h:343:22: note: in definition of macro ‘DECLARE_EVENT_CLASS’
+  trace_seq_printf(s, print);     \
+                      ^~~~~
+./include/trace/trace_events.h:65:9: note: in expansion of macro ‘PARAMS’
+         PARAMS(print));         \
+         ^~~~~~
+./include/trace/events/fsi.h:68:1: note: in expansion of macro ‘TRACE_EVENT’
+ TRACE_EVENT(fsi_master_rw_result,
+ ^~~~~~~~~~~
+./include/trace/events/fsi.h:95:2: note: in expansion of macro ‘TP_printk’
+  TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
+  ^~~~~~~~~
+In file included from ./include/trace/trace_events.h:377:0,
+                 from ./include/trace/define_trace.h:95,
+                 from ./include/trace/events/fsi.h:127,
+                 from drivers/fsi/fsi-core.c:27:
+./include/trace/events/fsi.h:95:44: note: format string is defined here
+  TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
+                                           ~^~
+  CHK     include/generated/uapi/linux/version.h
+  GEN     .version
+  CHK     include/generated/compile.h
+  UPD     include/generated/compile.h
+  CC      init/version.o
+  LD      init/built-in.o
+  LD      vmlinux.o
+  MODPOST vmlinux.o
+  KSYM    .tmp_kallsyms1.o
+  KSYM    .tmp_kallsyms2.o
+  LD      vmlinux
+  SORTEX  vmlinux
+  SYSMAP  System.map
+  CC      arch/x86/boot/version.o
+  Building modules, stage 2.
+  VOFFSET arch/x86/boot/compressed/../voffset.h
+  OBJCOPY arch/x86/boot/compressed/vmlinux.bin
+  RELOCS  arch/x86/boot/compressed/vmlinux.relocs
+  CC      arch/x86/boot/compressed/kaslr.o
+  GZIP    arch/x86/boot/compressed/vmlinux.bin.gz
+  CC      arch/x86/boot/compressed/misc.o
+  MODPOST 476 modules
+WARNING: modpost: missing MODULE_LICENSE() in drivers/fsi/fsi-core.o
+see include/linux/module.h for more information
+  MKPIGGY arch/x86/boot/compressed/piggy.S
+  AS      arch/x86/boot/compressed/piggy.o
+  DATAREL arch/x86/boot/compressed/vmlinux
+  LD      arch/x86/boot/compressed/vmlinux
+  ZOFFSET arch/x86/boot/zoffset.h
+  OBJCOPY arch/x86/boot/vmlinux.bin
+  AS      arch/x86/boot/header.o
+  LD      arch/x86/boot/setup.elf
+  OBJCOPY arch/x86/boot/setup.bin
+  BUILD   arch/x86/boot/bzImage
+Setup is 17532 bytes (padded to 17920 bytes).
+System is 5445 kB
+CRC 56d8089d
+Kernel: arch/x86/boot/bzImage is ready  (#387)
+ERROR: "fsi_slave_claim_range" [drivers/fsi/fsi-master-hub.ko] undefined!
+ERROR: "fsi_slave_read" [drivers/fsi/fsi-master-hub.ko] undefined!
+ERROR: "fsi_slave_write" [drivers/fsi/fsi-master-hub.ko] undefined!
+ERROR: "fsi_slave_release_range" [drivers/fsi/fsi-master-hub.ko] undefined!
+make[1]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
+make: *** [Makefile:1214: modules] Error 2
 
-> It could have been mind you, but the decision for that was made years
-> ago... it's a bunch of interrupts OPAL is interested in, which Linux
-> requests and sets up a handler for which just calls back into OPAL.
->
-> In any case, firmwares with that property are out now.
 
-Thanks for the confirmation!
+Note, I'm using gcc 7.1.1, which might be what is showing the build warnings,
+but that doesn't explain the build errors.
 
-Gr{oetje,eeting}s,
+So obviously, I can't take this as is :(
 
-                        Geert
+thanks,
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+greg k-h
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
