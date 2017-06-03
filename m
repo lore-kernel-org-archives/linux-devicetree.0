@@ -1,55 +1,40 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 19/19] ARM: sun6i: a31s: Enable HDMI display output on the
- MSI Primo81 tablet
-Date: Sat, 3 Jun 2017 23:31:11 +0800
-Message-ID: <CAGb2v66k-LjPnHPLV17JW-zL9m+zBeOoVZN_kwHnU19KS+gfHg@mail.gmail.com>
-References: <20170602101024.18940-1-wens@csie.org> <20170602101024.18940-20-wens@csie.org>
- <20170602194219.hiajr7dt2oikm52q@flea.lan>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
+Date: Sat, 3 Jun 2017 19:31:21 +0900
+Message-ID: <20170603103121.GA9599@kroah.com>
+References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
+ <20170603102627.GA24274@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170602194219.hiajr7dt2oikm52q-ZC1Zs529Oq4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170603102627.GA24274@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Rosin <peda@lysator.liu.se>
+Cc: linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 3, 2017 at 3:42 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Jun 02, 2017 at 06:10:24PM +0800, Chen-Yu Tsai wrote:
->> The MSI Primo81 tablet has a micro HDMI connector at the bottom.
->> This is connected to the SoCs HDMI output.
->>
->> Enable the display pipeline and the HDMI output.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun6i-a31s-primo81.dts | 25 +++++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->> index f3712753fa42..26154b2f87a3 100644
->> --- a/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->> +++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->> @@ -52,17 +52,42 @@
->>  / {
->>       model = "MSI Primo81 tablet";
->>       compatible = "msi,primo81", "allwinner,sun6i-a31s";
->> +
->> +     hdmi-connector {
->> +             compatible = "hdmi-connector";
->> +             type = "c";
->
-> Should we add a connector type for this one?
+On Sat, Jun 03, 2017 at 07:26:27PM +0900, Greg Kroah-Hartman wrote:
+> On Sun, May 14, 2017 at 09:51:03PM +0200, Peter Rosin wrote:
+> > From: Peter Rosin <peda@axentia.se>
+> > 
+> > Hi Greg,
+> > 
+> > Philipp found problems in v14 with using a mutex for locking that was
+> > the outcome of the review for v13, so I'm now using a semaphore instead
+> > of the rwsem that was in v13. That at least got rid of the scary call
+> > to downgrade_write. However, I'm still unsure about what you actually
+> > meant with your comment about lack of sparse markings [1]. I did add
+> > __must_check to the funcs that selects the mux, but I've got this
+> > feeling that this is not what you meant?
+> 
+> I thought there was a way to mark a function as requiring a lock be held
+> when it is being called.  Does sparse not support that anymore?
 
-To be honest I don't know. DRM has HDMI-B to differentiate dual-link
-connections, but that is only used by Intel and AMD GPU drivers.
-AMD driver has "/* HDMI-B is basically DL-DVI; analog works fine */",
-which makes sense since actual HDMI B-type connectors only exist on
-paper. None of the other drivers seem to care.
+Anyway, not a big deal.  I still worry about the calls blocking when
+people are not expecting them to, but it is just the nature of th api I
+guess.
 
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All now queued up, nice work, thanks for sticking with this.
+
+greg k-h
