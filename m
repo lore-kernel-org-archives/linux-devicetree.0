@@ -1,186 +1,106 @@
-From: Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v7 00/23] FSI device driver implementation
-Date: Sat, 3 Jun 2017 17:25:28 -0400
-Message-ID: <20170603172528.113ffe11@vmware.local.home>
-References: <20170511210101.78409-1-cbostic@linux.vnet.ibm.com>
-        <305bc7b6-30eb-a44d-28da-f90f9a973acf@linux.vnet.ibm.com>
-        <20170603100510.GA24053@kroah.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
+Date: Sat, 3 Jun 2017 23:29:47 +0200
+Message-ID: <c6db1b4b-5bf2-96e8-a4fc-f5932c660b18@axentia.se>
+References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
+ <20170603102627.GA24274@kroah.com>
+ <CAExDi1QZsccMm_0v90Wx5Bxi7XYT_eNBWRJ51Neb8nWa4GD-+A@mail.gmail.com>
+ <20170603193445.GA18851@kroah.com>
+ <CAMHZB6F64BNWHa6KRWN4EH2uuaedxcNVgPJ3zfB_=No+9kteNw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170603100510.GA24053@kroah.com>
+In-Reply-To: <CAMHZB6F64BNWHa6KRWN4EH2uuaedxcNVgPJ3zfB_=No+9kteNw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, mingo@redhat.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, joel@jms.id.au, andrew@aj.id.au, jk@ozlabs.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, alistair@popple.id.au, benh@kernel.crashing.org
+To: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Peter Rosin <peda@lysator.liu.se>, open list <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 3 Jun 2017 19:05:10 +0900
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> On Wed, May 31, 2017 at 12:17:05PM -0500, Christopher Bostic wrote:
-> > Hi Greg,
-> > 
-> > Are there any further changes you require for this patch set? This has been
-> > extensively tested internally and all is working as expected.   Would it be
-> > possible to move forward with integration in the near future?   Any input
-> > would be appreciated.  
+On 2017-06-03 22:26, Luc Van Oostenryck wrote:
+> On Sat, Jun 3, 2017 at 9:34 PM, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+>> On Sat, Jun 03, 2017 at 08:37:21PM +0200, Luc Van Oostenryck wrote:
+>>> On Sat, Jun 3, 2017 at 12:26 PM, Greg Kroah-Hartman
+>>> <gregkh@linuxfoundation.org> wrote:
+>>>> On Sun, May 14, 2017 at 09:51:03PM +0200, Peter Rosin wrote:
+>>>>> From: Peter Rosin <peda@axentia.se>
+>>>>>
+>>>>> Hi Greg,
+>>>>>
+>>>>> Philipp found problems in v14 with using a mutex for locking that was
+>>>>> the outcome of the review for v13, so I'm now using a semaphore instead
+>>>>> of the rwsem that was in v13. That at least got rid of the scary call
+>>>>> to downgrade_write. However, I'm still unsure about what you actually
+>>>>> meant with your comment about lack of sparse markings [1]. I did add
+>>>>> __must_check to the funcs that selects the mux, but I've got this
+>>>>> feeling that this is not what you meant?
+>>>>
+>>>> I thought there was a way to mark a function as requiring a lock be held
+>>>> when it is being called.  Does sparse not support that anymore?
+>>>
+>>> sparse still support these annotations, of course.
+>>> In this case, I suppose you're talking about '__must_hold()' which
+>>> *must* be used instead of a pair of '__releases()' + '__acquires()'
+>>> when the lock is help on function entry and exit.
+>>
+>> Ah, yes, that's what I was thinking of.  I don't know if sparse can
+>> track things like this across an exported symbol, so I doubt it really
+>> will help here.  Sorry for the noise.
 > 
-> Sorry for the delay.  I just tried applying this to my tree, but got the
-> following build warnings, and then errors:
+> No problem, I'm glad to help for sparse related things.
 > 
-> In file included from ./include/trace/define_trace.h:95:0,
->                  from ./include/trace/events/fsi.h:127,
->                  from drivers/fsi/fsi-core.c:27:
-> ./include/trace/events/fsi.h: In function ‘trace_raw_output_fsi_master_write’:
-> ./include/trace/events/fsi.h:58:12: warning: field width specifier ‘*’ expects argument of type ‘int’, but argument 8 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
->   TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
-
->From patch 16/23:
-
-+TRACE_EVENT(fsi_master_write,
-+	TP_PROTO(const struct fsi_master *master, int link, int id,
-+			uint32_t addr, size_t size, const void *data),
-+	TP_ARGS(master, link, id, addr, size, data),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+		__field(int,	id)
-+		__field(__u32,	addr)
-+		__field(size_t,	size)
-+		__field(__u32,	data)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+		__entry->id = id;
-+		__entry->addr = addr;
-+		__entry->size = size;
-+		__entry->data = 0;
-+		memcpy(&__entry->data, data, size);
-+	),
-+	TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
-+		__entry->master_idx,
-+		__entry->link,
-+		__entry->id,
-+		__entry->addr,
-+		__entry->size,
-+		__entry->size, &__entry->data
-+	)
-+);
-
-Looks like the second __entry->size, probably needs a type cast.
-
-Would something like:
-
-	__entry->size,
-	(int)__entry->size, &__entry->data
-
-work?
-
-I haven't looked at the others, but I'm guessing they are probably
-similar issues.
-
--- Steve
-
->             ^
-> ./include/trace/trace_events.h:343:22: note: in definition of macro ‘DECLARE_EVENT_CLASS’
->   trace_seq_printf(s, print);     \
->                       ^~~~~
-> ./include/trace/trace_events.h:65:9: note: in expansion of macro ‘PARAMS’
->          PARAMS(print));         \
->          ^~~~~~
-> ./include/trace/events/fsi.h:37:1: note: in expansion of macro ‘TRACE_EVENT’
->  TRACE_EVENT(fsi_master_write,
->  ^~~~~~~~~~~
-> ./include/trace/events/fsi.h:58:2: note: in expansion of macro ‘TP_printk’
->   TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
->   ^~~~~~~~~
-> In file included from ./include/trace/trace_events.h:377:0,
->                  from ./include/trace/define_trace.h:95,
->                  from ./include/trace/events/fsi.h:127,
->                  from drivers/fsi/fsi-core.c:27:
-> ./include/trace/events/fsi.h:58:44: note: format string is defined here
->   TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
->                                            ~^~
-> In file included from ./include/trace/define_trace.h:95:0,
->                  from ./include/trace/events/fsi.h:127,
->                  from drivers/fsi/fsi-core.c:27:
-> ./include/trace/events/fsi.h: In function ‘trace_raw_output_fsi_master_rw_resul
-> ’:
-> ./include/trace/events/fsi.h:95:12: warning: field width specifier ‘*’ expects argument of type ‘int’, but argument 9 has type ‘size_t {aka long unsigned int}’ [-Wformat=]
->   TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
->             ^
-> ./include/trace/trace_events.h:343:22: note: in definition of macro ‘DECLARE_EVENT_CLASS’
->   trace_seq_printf(s, print);     \
->                       ^~~~~
-> ./include/trace/trace_events.h:65:9: note: in expansion of macro ‘PARAMS’
->          PARAMS(print));         \
->          ^~~~~~
-> ./include/trace/events/fsi.h:68:1: note: in expansion of macro ‘TRACE_EVENT’
->  TRACE_EVENT(fsi_master_rw_result,
->  ^~~~~~~~~~~
-> ./include/trace/events/fsi.h:95:2: note: in expansion of macro ‘TP_printk’
->   TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
->   ^~~~~~~~~
-> In file included from ./include/trace/trace_events.h:377:0,
->                  from ./include/trace/define_trace.h:95,
->                  from ./include/trace/events/fsi.h:127,
->                  from drivers/fsi/fsi-core.c:27:
-> ./include/trace/events/fsi.h:95:44: note: format string is defined here
->   TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
->                                            ~^~
->   CHK     include/generated/uapi/linux/version.h
->   GEN     .version
->   CHK     include/generated/compile.h
->   UPD     include/generated/compile.h
->   CC      init/version.o
->   LD      init/built-in.o
->   LD      vmlinux.o
->   MODPOST vmlinux.o
->   KSYM    .tmp_kallsyms1.o
->   KSYM    .tmp_kallsyms2.o
->   LD      vmlinux
->   SORTEX  vmlinux
->   SYSMAP  System.map
->   CC      arch/x86/boot/version.o
->   Building modules, stage 2.
->   VOFFSET arch/x86/boot/compressed/../voffset.h
->   OBJCOPY arch/x86/boot/compressed/vmlinux.bin
->   RELOCS  arch/x86/boot/compressed/vmlinux.relocs
->   CC      arch/x86/boot/compressed/kaslr.o
->   GZIP    arch/x86/boot/compressed/vmlinux.bin.gz
->   CC      arch/x86/boot/compressed/misc.o
->   MODPOST 476 modules
-> WARNING: modpost: missing MODULE_LICENSE() in drivers/fsi/fsi-core.o
-> see include/linux/module.h for more information
->   MKPIGGY arch/x86/boot/compressed/piggy.S
->   AS      arch/x86/boot/compressed/piggy.o
->   DATAREL arch/x86/boot/compressed/vmlinux
->   LD      arch/x86/boot/compressed/vmlinux
->   ZOFFSET arch/x86/boot/zoffset.h
->   OBJCOPY arch/x86/boot/vmlinux.bin
->   AS      arch/x86/boot/header.o
->   LD      arch/x86/boot/setup.elf
->   OBJCOPY arch/x86/boot/setup.bin
->   BUILD   arch/x86/boot/bzImage
-> Setup is 17532 bytes (padded to 17920 bytes).
-> System is 5445 kB
-> CRC 56d8089d
-> Kernel: arch/x86/boot/bzImage is ready  (#387)
-> ERROR: "fsi_slave_claim_range" [drivers/fsi/fsi-master-hub.ko] undefined!
-> ERROR: "fsi_slave_read" [drivers/fsi/fsi-master-hub.ko] undefined!
-> ERROR: "fsi_slave_write" [drivers/fsi/fsi-master-hub.ko] undefined!
-> ERROR: "fsi_slave_release_range" [drivers/fsi/fsi-master-hub.ko] undefined!
-> make[1]: *** [scripts/Makefile.modpost:91: __modpost] Error 1
-> make: *** [Makefile:1214: modules] Error 2
+> I didn't saw the code in question because the lkml.org link Peter
+> gave didn't work for me and I don't know much about exported symbols
+> (but I think the sole effect is to add some data in some symbol table).
+> But these annotations just work based on the declarations, very much
+> like type checking. So if you have something in scope like the following:
 > 
+> void do_stuff_locked(struct s *ptr) __must_hold(*ptr);
 > 
-> Note, I'm using gcc 7.1.1, which might be what is showing the build warnings,
-> but that doesn't explain the build errors.
+> ...
 > 
-> So obviously, I can't take this as is :(
+> void do_stuff_unlocked(struct s *ptr)
+> {
+>         ...
+>         do_stuff_locked(ptr);        // will warn
+>         ...
+> }
 > 
-> thanks,
+> You will have a warning from sparse unless the code preceding and following
+> the call to do_stuff_locked() lock & then unlock 'ptr', generaly
+> indirectly by a pair
+> of functions, the one before with an '__acquires()' in its declaration
+> the one after
+> with a '__releases()' in its declaration:
 > 
-> greg k-h
+> void lock_stuff(struct s *ptr) __acquires(*ptr);
+> void unlock_stuff(struct s *ptr) __releases(*ptr);
+> 
+> void do_stuff_unlocked(struct s *ptr)
+> {
+>         lock_stuff(ptr);
+>         do_stuff_locked(ptr);        // won't warn
+>         unlock_stuff(ptr);
+> }
+
+Ok, thanks for the explanation! The above was what I gathered when I
+looked around, and since it didn't really fit the usage pattern of the
+mux api I was stomped. When comparing the mux code with the above,
+mux_control_select would be an __acquires (albeit a conditional one,
+but let's not muddy the waters unnecessarily) and mux_control_deselect
+would be a __releases.
+
+But for long time mux consumers, like the video mux, it must be OK to
+only acquire the mux, and not release it right away in the same context,
+which I assume will be very hard for sparse to handle sanely? E.g. I
+think sparse also complains if there are unbalanced __acquires and
+__releases in some context, no?
+
+Cheers,
+peda
+
+BTW, the core mux code is at the below link if the lkml link continues
+to fail:
+https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git/commit/?h=char-misc-testing&id=a3b02a9c6591ce154cd44e2383406390a45b530c
