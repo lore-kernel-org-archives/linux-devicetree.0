@@ -1,106 +1,48 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [PATCH v4 1/6] pinctrl: qcom: Add ipq8074 pinctrl driver
-Date: Sat, 03 Jun 2017 20:55:23 +0200
-Message-ID: <2668868.v3IoKk0Lz9@debian64>
-References: <1496474875-7190-1-git-send-email-varada@codeaurora.org> <1496474875-7190-2-git-send-email-varada@codeaurora.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
+Date: Sat, 3 Jun 2017 21:34:45 +0200
+Message-ID: <20170603193445.GA18851@kroah.com>
+References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
+ <20170603102627.GA24274@kroah.com>
+ <CAExDi1QZsccMm_0v90Wx5Bxi7XYT_eNBWRJ51Neb8nWa4GD-+A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1496474875-7190-2-git-send-email-varada@codeaurora.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, mraghava@codeaurora.org, Ram Chandra Jangir <rjangir@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAExDi1QZsccMm_0v90Wx5Bxi7XYT_eNBWRJ51Neb8nWa4GD-+A@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Cc: Peter Rosin <peda@lysator.liu.se>, open list <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, June 3, 2017 12:57:50 PM CEST Varadarajan Narayanan wrote:
-> Add initial pinctrl driver to support pin configuration with
-> pinctrl framework for ipq8074.
+On Sat, Jun 03, 2017 at 08:37:21PM +0200, Luc Van Oostenryck wrote:
+> On Sat, Jun 3, 2017 at 12:26 PM, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> > On Sun, May 14, 2017 at 09:51:03PM +0200, Peter Rosin wrote:
+> >> From: Peter Rosin <peda@axentia.se>
+> >>
+> >> Hi Greg,
+> >>
+> >> Philipp found problems in v14 with using a mutex for locking that was
+> >> the outcome of the review for v13, so I'm now using a semaphore instead
+> >> of the rwsem that was in v13. That at least got rid of the scary call
+> >> to downgrade_write. However, I'm still unsure about what you actually
+> >> meant with your comment about lack of sparse markings [1]. I did add
+> >> __must_check to the funcs that selects the mux, but I've got this
+> >> feeling that this is not what you meant?
+> >
+> > I thought there was a way to mark a function as requiring a lock be held
+> > when it is being called.  Does sparse not support that anymore?
 > 
-> Signed-off-by: Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
-> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
-> ---
-> +- bias-disable:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configued as no pull.
-> +
-> +- bias-pull-down:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configued as pull down.
-> +
-> +- bias-pull-up:
-> +	Usage: optional
-> +	Value type: <none>
-> +	Definition: The specified pins should be configued as pull up.
-> +
-> +#define REG_SIZE 0x1000
-> +#define PINGROUP(id, f1, f2, f3, f4, f5, f6, f7, f8, f9)	\
-> +	{					        \
-> +		.name = "gpio" #id,			\
-> +		.pins = gpio##id##_pins,		\
-> +		.npins = (unsigned int)ARRAY_SIZE(gpio##id##_pins),	\
-> +		.funcs = (int[]){			\
-> +			msm_mux_gpio, /* gpio mode */	\
-> +			msm_mux_##f1,			\
-> +			msm_mux_##f2,			\
-> +			msm_mux_##f3,			\
-> +			msm_mux_##f4,			\
-> +			msm_mux_##f5,			\
-> +			msm_mux_##f6,			\
-> +			msm_mux_##f7,			\
-> +			msm_mux_##f8,			\
-> +			msm_mux_##f9			\
-> +		},				        \
-> +		.nfuncs = 10,				\
-> +		.ctl_reg = REG_SIZE * id,		\
-> +		.io_reg = 0x4 + REG_SIZE * id,		\
-> +		.intr_cfg_reg = 0x8 + REG_SIZE * id,		\
-> +		.intr_status_reg = 0xc + REG_SIZE * id,	\
-> +		.intr_target_reg = 0x8 + REG_SIZE * id,	\
-> +		.mux_bit = 2,			\
-> +		.pull_bit = 0,			\
-> +		.drv_bit = 6,			\
-> +		.oe_bit = 9,			\
-> +		.in_bit = 0,			\
-> +		.out_bit = 1,			\
-> +		.intr_enable_bit = 0,		\
-> +		.intr_status_bit = 0,		\
-> +		.intr_target_bit = 5,		\
-> +		.intr_raw_status_bit = 4,	\
-> +		.intr_polarity_bit = 1,		\
-> +		.intr_detection_bit = 2,	\
-> +		.intr_detection_width = 2,	\
-> +	}
-> +
-Hello,
+> sparse still support these annotations, of course.
+> In this case, I suppose you're talking about '__must_hold()' which
+> *must* be used instead of a pair of '__releases()' + '__acquires()'
+> when the lock is help on function entry and exit.
 
-Back in May, Ram Chandra Jangir posted a rather interesting patch on
-the LEDE Mailing-List:
-<https://www.mail-archive.com/lede-dev@lists.infradead.org/msg07691.html>
-|GPIO_PULL bits configurations in TLMM_GPIO_CFG register
-|differs for IPQ40xx from rest of the other qcom SoC's.
-|This change add support to configure the msm_gpio_pull
-|bits for ipq40xx, It is required to fix the proper
-|configurations of gpio-pull bits for nand pins mux.
-|
-|IPQ40xx SoC:
-|2'b10: Internal pull up enable.
-|2'b11: Unsupport
-|
-|For other SoC's:
-|2'b10: Keeper
-|2'b11: Pull-Up
+Ah, yes, that's what I was thinking of.  I don't know if sparse can
+track things like this across an exported symbol, so I doubt it really
+will help here.  Sorry for the noise.
 
-This information wasn't mentioned anywhere. In fact, the special pull-up
-configuration was only discovered due to an issue with the qpic NAND on
-the Cisco Meraki MR33. So I wonder what does the gpio-pull look like for
-the IPQ8074? Is it the same as the IPQ40XX or does it follow the older 
-SoCs?
+thanks,
 
-I'm asking this because I'm preparing a modified version of this patch
-that will be posted once the IPQ8074 is ready.
-
-Regards,
-Christian
+greg k-h
