@@ -1,97 +1,94 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: [PATCH 2/4 v4] ata: Add DT bindings for the Gemini SATA bridge
-Date: Sun,  4 Jun 2017 10:50:07 +0200
-Message-ID: <20170604085009.11902-2-linus.walleij@linaro.org>
-References: <20170604085009.11902-1-linus.walleij@linaro.org>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20170604085009.11902-1-linus.walleij@linaro.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org
-Cc: Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, John Feng-Hsin Chiang <john453@faraday-tech.com>, Greentime Hu <green.hu@gmail.com>
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <uwe@kleine-koenig.org>
+Subject: [RFC PATCH] gpio: use "output-active" and "output-inactive" for gpio-hogs
+Date: Sun,  4 Jun 2017 12:10:49 +0200
+Message-ID: <20170604101049.4592-1-uwe@kleine-koenig.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree bindings for the Cortina Systems Gemini
-PATA to SATA bridge.
+Using the following gpio hog:
 
-Cc: devicetree@vger.kernel.org
-Cc: John Feng-Hsin Chiang <john453@faraday-tech.com>
-Cc: Greentime Hu <green.hu@gmail.com>
-Acked-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-ChangeLog v3->v4:
-- No changes, just resending to keep the patch set together.
-ChangeLog v2->v3:
-- No changes, just resending to keep the patch set together.
-ChangeLog v1->v2:
-- Fix ata0 misspelled as ata1 in one place.
----
- .../bindings/ata/cortina,gemini-sata-bridge.txt    | 55 ++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt
+	{
+		gpio-hog;
+		gpios = <17 GPIO_ACTIVE_LOW>;
+		output-high;
+	}
 
-diff --git a/Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt b/Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt
-new file mode 100644
-index 000000000000..1c3d3cc70051
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/cortina,gemini-sata-bridge.txt
-@@ -0,0 +1,55 @@
-+* Cortina Systems Gemini SATA Bridge
-+
-+The Gemini SATA bridge in a SoC-internal PATA to SATA bridge that
-+takes two Faraday Technology FTIDE010 PATA controllers and bridges
-+them in different configurations to two SATA ports.
-+
-+Required properties:
-+- compatible: should be
-+  "cortina,gemini-sata-bridge"
-+- reg: registers and size for the block
-+- resets: phandles to the reset lines for both SATA bridges
-+- reset-names: must be "sata0", "sata1"
-+- clocks: phandles to the compulsory peripheral clocks
-+- clock-names: must be "SATA0_PCLK", "SATA1_PCLK"
-+- syscon: a phandle to the global Gemini system controller
-+- cortina,gemini-ata-muxmode: tell the desired multiplexing mode for
-+  the ATA controller and SATA bridges. Values 0..3:
-+  Mode 0: ata0 master <-> sata0
-+          ata1 master <-> sata1
-+          ata0 slave interface brought out on IDE pads
-+  Mode 1: ata0 master <-> sata0
-+          ata1 master <-> sata1
-+          ata1 slave interface brought out on IDE pads
-+  Mode 2: ata1 master <-> sata1
-+          ata1 slave  <-> sata0
-+          ata0 master and slave interfaces brought out
-+               on IDE pads
-+  Mode 3: ata0 master <-> sata0
-+          ata0 slave  <-> sata1
-+          ata1 master and slave interfaces brought out
-+               on IDE pads
-+
-+Optional boolean properties:
-+- cortina,gemini-enable-ide-pins: enables the PATA to IDE connection.
-+  The muxmode setting decides whether ATA0 or ATA1 is brought out,
-+  and whether master, slave or both interfaces get brought out.
-+- cortina,gemini-enable-sata-bridge: enables the PATA to SATA bridge
-+  inside the Gemnini SoC. The Muxmode decides what PATA blocks will
-+  be muxed out and how.
-+
-+Example:
-+
-+sata: sata@46000000 {
-+	compatible = "cortina,gemini-sata-bridge";
-+	reg = <0x46000000 0x100>;
-+	resets = <&rcon 26>, <&rcon 27>;
-+	reset-names = "sata0", "sata1";
-+	clocks = <&gcc GEMINI_CLK_GATE_SATA0>,
-+		 <&gcc GEMINI_CLK_GATE_SATA1>;
-+	clock-names = "SATA0_PCLK", "SATA1_PCLK";
-+	syscon = <&syscon>;
-+	cortina,gemini-ata-muxmode = <3>;
-+	cortina,gemini-enable-ide-pins;
-+	cortina,gemini-enable-sata-bridge;
-+};
+results in the gpio to be set to (physically) low value, which is
+surprising. So support "output-active" which makes the semantic more
+obvious. The old semantic is still supported for backward compatibility.
+
+Signed-off-by: Uwe Kleine-König <uwe@kleine-koenig.org>
+---
+Hello,
+
+the next logical step would be to go through all in-tree dts files and
+substitute the old properties by the new ones. I can do this as soon as
+the idea is discussed and considered to be good.
+
+Maybe the same idea can be applied to the cpp definitions GPIOD_OUT_LOW
+and GPIOD_OUT_HIGH.
+
+And btw I wondered about the binding that defines what should happen in
+this case:
+
+	{
+		gpio-hog;
+		gpios = <...>;
+		output-high;
+		output-low;
+	}
+
+I would have defined as undefined instead of inactive.
+
+Best regards
+Uwe
+
+ Documentation/devicetree/bindings/gpio/gpio.txt | 10 ++++++----
+ drivers/gpio/gpiolib-of.c                       |  4 ++++
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 68d28f62a6f4..4d29e0b33435 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -196,10 +196,12 @@ This means that when multiple properties are present they will be searched
+ in the order presented below and the first match is taken as the intended
+ configuration.
+ - input:      A property specifying to set the GPIO direction as input.
+-- output-low  A property specifying to set the GPIO direction as output with
+-	      the value low.
+-- output-high A property specifying to set the GPIO direction as output with
+-	      the value high.
++- output-inactive: A property specifying to set the GPIO direction as output
++	      using the inactive level as value.
++- output-active: A property specifying to set the GPIO direction as output
++	      using the active level as value.
++- output-low  A deprecated alias for "output-inactive".
++- output-high A deprecated alias for "output-active".
+ 
+ Optional properties:
+ - line-name:  The GPIO label name. If not present the node name is used.
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 193f15d50bba..c465511eae8a 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -209,6 +209,10 @@ static struct gpio_desc *of_parse_own_gpio(struct device_node *np,
+ 
+ 	if (of_property_read_bool(np, "input"))
+ 		*dflags |= GPIOD_IN;
++	else if (of_property_read_bool(np, "output-inactive"))
++		*dflags |= GPIOD_OUT_LOW;
++	else if (of_property_read_bool(np, "output-active"))
++		*dflags |= GPIOD_OUT_HIGH;
+ 	else if (of_property_read_bool(np, "output-low"))
+ 		*dflags |= GPIOD_OUT_LOW;
+ 	else if (of_property_read_bool(np, "output-high"))
 -- 
-2.9.4
+2.11.0
 
