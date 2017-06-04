@@ -1,70 +1,50 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
-Date: Sun, 4 Jun 2017 11:00:14 -0700
-Message-ID: <3e953953-7bf4-912f-73f7-db568d5df504@gmail.com>
-References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
- <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
- <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
- <c50c3c5f-71cf-fa73-f5a8-a4b5f59a87dc@gmail.com>
- <20170530065632.GK29527@valkosipuli.retiisi.org.uk>
- <ab04379b-d005-1251-343b-5e490ee6e72d@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <ab04379b-d005-1251-343b-5e490ee6e72d@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH 0/3] use the Meson8b clock controller driver on Meson8 SoCs
+Date: Sun,  4 Jun 2017 20:33:38 +0200
+Message-ID: <20170604183341.21417-1-martin.blumenstingl@googlemail.com>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: narmstrong@baylibre.com, jbrunet@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
+Based on the code from Amlogic's GPL kernel sources the clock controller
+in the Meson8 (S802), Meson8b (S805) and Meson8m2 (S812) SoCs is very
+similar.
+
+a more detailed list of differences between the clock controller on each SoC
+can be found in the description of the first patch.
+
+This series adds new of_device_ids / compatibles for the Meson8 and Meson8m2
+SoCs to the existing Meson8b clock controller driver (and updates the
+documentation, Kconfig help and comments accordingly).
+It also enables CONFIG_COMMON_CLK_MESON8B for MACH_MESON8.
+Finally it adds the clock controller to meson8.dtsi and replaces the
+static clk81 instance with the clk81 provided by the clock controller.
+
+This is also the first preparation step for Meson8m2 SoC support by making
+the clock controller available.
+I am planning to post several follow-up series which will:
+- add lots of missing devices to meson8.dtsi and meson8b.dtsi such as (but
+  not limited to) PWM, USB controllers and PHYs, SAR ADC, HW random number
+  generator and the SCU (Snoop Control Unit)
+- add Meson8m2 SoC support
+- once it's ready: the SDIO driver (allows connecting the SD card, SDIO wifi
+  and eMMC flash)
 
 
-On 06/03/2017 11:02 AM, Steve Longerbeam wrote:
-> Hi Sakari,
-> 
-> 
-> On 05/29/2017 11:56 PM, Sakari Ailus wrote:
->> Hi Steve,
->>
->> On Mon, May 29, 2017 at 02:50:34PM -0700, Steve Longerbeam wrote:
->>>> <snip>
->>>>
->>>>> +
->>>>> +static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
->>>>> +{
->>>>> +    struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
->>>>> +    struct ov5640_dev *sensor = to_ov5640_dev(sd);
->>>>> +    int ret = 0;
->>>>> +
->>>>> +    mutex_lock(&sensor->lock);
->>>> Could you use the same lock for the controls as you use for the 
->>>> rest? Just
->>>> setting handler->lock after handler init does the trick.
->>>
->>> Can you please rephrase, I don't follow. "same lock for the controls as
->>> you use for the rest" - there's only one device lock owned by this 
->>> driver
->>> and I am already using that same lock.
->>
->> There's another in the control handler. You could use your own lock 
->> for the
->> control handler as well.
-> 
-> I still don't understand.
-> 
+Martin Blumenstingl (3):
+  clk: meson: meson8b: add compatibles for Meson8 and Meson8m2
+  arm: meson: select the clock controller for Meson8
+  ARM: dts: meson8: add and use the real clock controller
 
-Hi Sakari, sorry I see what you are referring to now. The lock
-in 'struct v4l2_ctrl_handler' can be overridden by a caller's own
-lock. Yes that's a good idea, I'll do that.
+ .../bindings/clock/amlogic,meson8b-clkc.txt        |  5 +++-
+ arch/arm/boot/dts/meson8.dtsi                      | 32 +++++++++++-----------
+ arch/arm/mach-meson/Kconfig                        |  1 +
+ drivers/clk/meson/Kconfig                          |  6 ++--
+ drivers/clk/meson/meson8b.c                        |  5 +++-
+ 5 files changed, 28 insertions(+), 21 deletions(-)
 
-Steve
+-- 
+2.13.0
+
