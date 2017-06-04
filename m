@@ -1,66 +1,70 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH v2 11/11] [DO NOT MERGE] ARM: sun8i: h3: enable
- TV output on Orange Pi PC
-Date: Mon,  5 Jun 2017 00:01:49 +0800
-Message-ID: <20170604160149.30230-12-icenowy@aosc.io>
-References: <20170604160149.30230-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
+Date: Sun, 4 Jun 2017 11:00:14 -0700
+Message-ID: <3e953953-7bf4-912f-73f7-db568d5df504@gmail.com>
+References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
+ <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
+ <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
+ <c50c3c5f-71cf-fa73-f5a8-a4b5f59a87dc@gmail.com>
+ <20170530065632.GK29527@valkosipuli.retiisi.org.uk>
+ <ab04379b-d005-1251-343b-5e490ee6e72d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB7W62DEQKGQEWSSFEXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170604160149.30230-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, =?UTF-8?q?Jernej=20=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <ab04379b-d005-1251-343b-5e490ee6e72d@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, hverkuil@xs4all.nl, Steve Longerbeam <steve_longerbeam@mentor.com>, pavel@ucw.cz, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, sudipm.mukherjee@gmail
 List-Id: devicetree@vger.kernel.org
 
-Orange Pi PC features a 3.5mm jack with TV output in it.
 
-Enable the TV output.
 
-As it currently do not have jack detection feature, do not merge this
-patch.
+On 06/03/2017 11:02 AM, Steve Longerbeam wrote:
+> Hi Sakari,
+> 
+> 
+> On 05/29/2017 11:56 PM, Sakari Ailus wrote:
+>> Hi Steve,
+>>
+>> On Mon, May 29, 2017 at 02:50:34PM -0700, Steve Longerbeam wrote:
+>>>> <snip>
+>>>>
+>>>>> +
+>>>>> +static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
+>>>>> +{
+>>>>> +    struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
+>>>>> +    struct ov5640_dev *sensor = to_ov5640_dev(sd);
+>>>>> +    int ret = 0;
+>>>>> +
+>>>>> +    mutex_lock(&sensor->lock);
+>>>> Could you use the same lock for the controls as you use for the 
+>>>> rest? Just
+>>>> setting handler->lock after handler init does the trick.
+>>>
+>>> Can you please rephrase, I don't follow. "same lock for the controls as
+>>> you use for the rest" - there's only one device lock owned by this 
+>>> driver
+>>> and I am already using that same lock.
+>>
+>> There's another in the control handler. You could use your own lock 
+>> for the
+>> control handler as well.
+> 
+> I still don't understand.
+> 
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Hi Sakari, sorry I see what you are referring to now. The lock
+in 'struct v4l2_ctrl_handler' can be overridden by a caller's own
+lock. Yes that's a good idea, I'll do that.
 
-diff --git a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-index 998b60f8d295..a81d25e722e9 100644
---- a/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-+++ b/arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts
-@@ -98,6 +98,10 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -177,6 +181,14 @@
- 	status = "okay";
- };
- 
-+&tcon1 {
-+	status = "okay";
-+};
-+
-+&tve0 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pins_a>;
--- 
-2.12.2
+Steve
