@@ -1,52 +1,65 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [PATCH v4 1/6] pinctrl: qcom: Add ipq8074 pinctrl driver
-Date: Sun, 04 Jun 2017 02:33:50 +0200
-Message-ID: <3316949.YG4fliAlpW@debian64>
-References: <1496474875-7190-1-git-send-email-varada@codeaurora.org> <1496474875-7190-2-git-send-email-varada@codeaurora.org>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC 5/5] ARM: dts: vf-colibri-eval: use IRQ_TYPE_* to
+ specify irq flags
+Date: Sun, 4 Jun 2017 11:49:03 +0800
+Message-ID: <20170604034902.GC4094@dragon>
+References: <20170526180609.2699-1-uwe@kleine-koenig.org>
+ <20170526180609.2699-5-uwe@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1496474875-7190-2-git-send-email-varada@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Varadarajan Narayanan <varada@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bjorn.andersson@linaro.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, mraghava@codeaurora.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170526180609.2699-5-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday, June 3, 2017 12:57:50 PM CEST Varadarajan Narayanan wrote:
-> +- function:
-> +       Usage: required
-> +       Value type: <string>
-> +       Definition: Specify the alternative function to be configured for the
-> +                   specified pins. Functions are only valid for gpio pins.
-> +                   Valid values are:
-> +                   atest_char, atest_char0, atest_char1, atest_char2,
-> +                   atest_char3, audio_rxbclk, audio_rxd, audio_rxfsync,
-> +                   audio_rxmclk, audio_txbclk, audio_txd, audio_txfsync,
-> +                   audio_txmclk, blsp0_i2c, blsp0_spi, blsp0_uart, blsp1_i2c,
-> +                   blsp1_spi, blsp1_uart, blsp2_i2c, blsp2_spi, blsp2_uart,
-> +                   blsp3_i2c, blsp3_spi, blsp3_spi0, blsp3_spi1, blsp3_spi2,
-> +                   blsp3_spi3, blsp3_uart, blsp4_i2c0, blsp4_i2c1, blsp4_spi0,
-> +                   blsp4_spi1, blsp4_uart0, blsp4_uart1, blsp5_i2c, blsp5_spi,
-> +                   blsp5_uart, burn0, burn1, cri_trng, cri_trng0, cri_trng1,
-> +                   cxc0, cxc1, dbg_out, gcc_plltest, gcc_tlmm, gpio, ldo_en,
-> +                   ldo_update, led0, led1, led2, mac0_sa0, mac0_sa1, mac1_sa0,
-> +                   mac1_sa1, mac1_sa2, mac1_sa3, mac2_sa0, mac2_sa1, mdc,
-> +                   mdio, NA, pcie0_clk, pcie0_rst, pcie0_wake, pcie1_clk,
-> +                   pcie1_rst, pcie1_wake, pcm_drx, pcm_dtx, pcm_fsync,
-> +                   pcm_pclk, pcm_zsi0, pcm_zsi1, prng_rosc, pta1_0, pta1_1,
-> +                   pta1_2, pta2_0, pta2_1, pta2_2, pwm0, pwm1, pwm2, pwm3,
-> +                   qdss_cti_trig_in_a0, qdss_cti_trig_in_a1,
-> +                   qdss_cti_trig_in_b0, qdss_cti_trig_in_b1,
-> +                   qdss_cti_trig_out_a0, qdss_cti_trig_out_a1,
-> +                   qdss_cti_trig_out_b0, qdss_cti_trig_out_b1,
-> +                   qdss_traceclk_a, qdss_traceclk_b, qdss_tracectl_a,
-> +                   qdss_tracectl_b, qdss_tracedata_a, qdss_tracedata_b,
-> +                   qpic, rx0, rx1, rx2, sd_card, sd_write, tsens_max, wci2a,
-> +                   wci2b, wci2c, wci2d, NA
+On Fri, May 26, 2017 at 08:06:09PM +0200, Uwe Kleine-König wrote:
+> According to the binding documentation and the source code the
+> vf610-gpio controller takes IRQ_TYPE_* as its flags values, not
+> GPIO_ACTIVE_*.
+> 
+> This patch uses the right variable type which yields the same result
+> when compiled. Note that this might be wrong and actually
+> IRQ_TYPE_LEVEL_LOW is intended by the dt author.
+> 
+> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+> ---
+> Hello,
+> 
+> can somebody with the hardware or it's documentation please check which
+> flag is the right one?
 
-The "NA" function is listed twice. It should be there at all.
+@Stefan, can you help to confirm?
 
+Shawn
 
-
-
+> 
+> Best regards
+> Uwe
+> 
+>  arch/arm/boot/dts/vf-colibri-eval-v3.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> index 091b738041a0..3e0c84d79c43 100644
+> --- a/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/vf-colibri-eval-v3.dtsi
+> @@ -117,7 +117,7 @@
+>  		clocks = <&clk16m>;
+>  		spi-max-frequency = <10000000>;
+>  		interrupt-parent = <&gpio1>;
+> -		interrupts = <11 GPIO_ACTIVE_LOW>;
+> +		interrupts = <11 IRQ_TYPE_EDGE_RISING>;
+>  	};
+>  };
+>  
+> -- 
+> 2.11.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
