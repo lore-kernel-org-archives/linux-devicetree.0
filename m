@@ -1,54 +1,94 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v15 00/13] mux controller abstraction and iio/i2c muxes
-Date: Sun, 4 Jun 2017 09:46:29 +0200
-Message-ID: <20170604074629.GA1463@katana>
-References: <1494791476-14599-1-git-send-email-peda@lysator.liu.se>
- <20170603102627.GA24274@kroah.com>
- <20170603103121.GA9599@kroah.com>
- <b1de713b-2256-a67c-86bb-31439aa66e54@axentia.se>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <b1de713b-2256-a67c-86bb-31439aa66e54@axentia.se>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Peter Rosin <peda@lysator.liu.se>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Jonathan Corbet <corbet@lwn.net>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-doc@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Colin Ian King <colin.king@canonical.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Philipp Zabel <p.zabel@pengutronix.de>, kernel@pengutronix.de
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 1/4 v4] ata: Add DT bindings for Faraday Technology FTIDE010
+Date: Sun,  4 Jun 2017 10:50:06 +0200
+Message-ID: <20170604085009.11902-1-linus.walleij@linaro.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org
+Cc: Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, John Feng-Hsin Chiang <john453@faraday-tech.com>, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+This adds device tree bindings for the Faraday Technology
+FTIDE010 found in the Storlink/Storm/Cortina Systems Gemini SoC.
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I am not 100% sure that this part is from Faraday Technology but
+a lot points in that direction:
 
+- A later IDE interface called FTIDE020 exist and share some
+  properties.
 
-> > All now queued up, nice work, thanks for sticking with this.
->=20
-> *big sigh of relief*
+- The SATA bridge has the same Built In Self Test (BIST) that the
+  Faraday FTSATA100 seems to have, and it has version number 0100
+  in the device ID register, so this is very likely a FTSATA100
+  bundled with the FTIDE010.
 
-I can imagine. Great work, Peda! Congrats.
+Cc: devicetree@vger.kernel.org
+Cc: John Feng-Hsin Chiang <john453@faraday-tech.com>
+Cc: Greentime Hu <green.hu@gmail.com>
+Acked-by: Hans Ulli Kroll <ulli.kroll@googlemail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v3->v4:
+- No changes, just resending to keep the patch set together.
+ChangeLog v2->v3:
+- No changes, just resending to keep the patch set together.
+ChangeLog v1->v2:
+- Cut the timings defintions from the device tree. Hard-code
+  it in the driver instead, keeping the nice layout and
+  configurability by making it easy to tweak the timings
+  in the code.
+- Fix up some confused references to 50 MHz in 66 MHz
+  properties.
+---
+ .../devicetree/bindings/ata/faraday,ftide010.txt   | 38 ++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/faraday,ftide010.txt
 
+diff --git a/Documentation/devicetree/bindings/ata/faraday,ftide010.txt b/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
+new file mode 100644
+index 000000000000..a0c64a29104d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/faraday,ftide010.txt
+@@ -0,0 +1,38 @@
++* Faraday Technology FTIDE010 PATA controller
++
++This controller is the first Faraday IDE interface block, used in the
++StorLink SL2312 and SL3516, later known as the Cortina Systems Gemini
++platform. The controller can do PIO modes 0 through 4, Multi-word DMA
++(MWDM)modes 0 through 2 and Ultra DMA modes 0 through 6.
++
++On the Gemini platform, this PATA block is accompanied by a PATA to
++SATA bridge in order to support SATA. This is why a phandle to that
++controller is compulsory on that platform.
++
++The timing properties are unique per-SoC, not per-board.
++
++Required properties:
++- compatible: should be one of
++  "cortina,gemini-pata", "faraday,ftide010"
++  "faraday,ftide010"
++- interrupts: interrupt for the block
++- reg: registers and size for the block
++
++Optional properties:
++- clocks: a SoC clock running the peripheral.
++- clock-names: should be set to "PCLK" for the peripheral clock.
++
++Required properties for "cortina,gemini-pata" compatible:
++- sata: a phande to the Gemini PATA to SATA bridge, see
++  cortina,gemini-sata-bridge.txt for details.
++
++Example:
++
++ata@63000000 {
++	compatible = "cortina,gemini-pata", "faraday,ftide010";
++	reg = <0x63000000 0x100>;
++	interrupts = <4 IRQ_TYPE_EDGE_RISING>;
++	clocks = <&gcc GEMINI_CLK_GATE_IDE>;
++	clock-names = "PCLK";
++	sata = <&sata>;
++};
+-- 
+2.9.4
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlkzutEACgkQFA3kzBSg
-Kbbdrg/+JVNvcC4c3DmtKU1rvIGFHBnDsTdyUK2O7bgf3qHGTa+kOjkunL9Ls2SY
-IdA8ePTtuXf7vPDQmm4KFLnIXEkenz/VIKcz1DHqVF4O49xrBtzMJF+tIsj+L+vb
-QUkOqu1Z5JKXroovpjsx0sKyWpJyLDUdAoi/i3+LmIbnIKUYh8s2vvhAoUSzMxp9
-EoC7D4BLNaawONvyFvi72YGJ+eDP/cu2Tahup0Ev6fqDJBeul2xqnSqL4/hKM7bx
-EVkig1XMtIS9zIkPt4Hg85Y9U1/k+b6KlyVITBGPnEacFbR/5DW3IF0yGz20R6gQ
-/y8CVjAW6g8ntnNnZ3ctru1iWKaTKhl9j8pVhzT5oeI9M4phOhJR2AVEvV6wgsEU
-qleAoMJOtsynPgFpG2JxVofxaDQoFQaq1/tlXMe7bzH79UFmWGFiZPpclAKhuTGQ
-rww9G9FxLEsmi796MHijV/NlShfLC4QN3LlHLW4XmoeLxG/NuPDZ/ta7QsIRprwQ
-4778JObhxqKRx0dcK3NsDpVrjC+yF3WcwQKKnIJNEsuVxGt3PR9RwMxsFGbZ7Nc7
-zJxBFgdnYHtd8V/c3KN5yvOXk2UfgrCR7Pw0bMfbTlld32aHTcCyYngieBQnet/z
-aPmXDiM7/U/xiHTEQm/xGc4Mw0l154phlfqurrPC73N5pfaJWCI=
-=g6r2
------END PGP SIGNATURE-----
-
---r5Pyd7+fXNt84Ff3--
