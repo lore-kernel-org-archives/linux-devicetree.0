@@ -1,244 +1,145 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2 04/11] drm: sun4i: add support for H3's TCON0/1
-Date: Mon, 05 Jun 2017 03:03:47 +0800
-Message-ID: <493AC6F2-3CB3-48F5-9568-A34AA927238F@aosc.io>
-References: <20170604160149.30230-1-icenowy@aosc.io> <20170604160149.30230-5-icenowy@aosc.io> <3642057.oKT9kIlu8M@jernej-laptop>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] clk: meson: meson8b: add compatibles for Meson8 and
+ Meson8m2
+Date: Sun, 04 Jun 2017 21:58:45 +0200
+Message-ID: <1496606325.3552.16.camel@baylibre.com>
+References: <20170604183341.21417-1-martin.blumenstingl@googlemail.com>
+         <20170604183341.21417-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBIFT2HEQKGQEEJAALYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <3642057.oKT9kIlu8M@jernej-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170604183341.21417-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Sun, 2017-06-04 at 20:33 +0200, Martin Blumenstingl wrote:
+> The clock controller on Meson8, Meson8b and Meson8m2 is very similar
+> based on the code from the Amlogic GPL kernel sources. Add separate
+> compatibles for each SoC to make sure that we can easily implement
+> all the small differences for each SoC later on.
+> 
+> In general the Meson8 and Meson8m2 seem to be almost identical as they
+> even share the same mach-meson8 directory in Amlogic's GPL kernel
+> sources.
+> The main clocks on Meson8, Meson8b and Meson8m2 are very similar,
+> because they are all using the same PLL values, 90% of the clock gates
+> are the same (the actual diffstat of the mach-meson8/clock.c and
+> mach-meson8b/clock.c files is around 30 to 40 lines, when excluding
+> all commented out code).
+> The difference between the Meson8 and Meson8b clock gates seem to be:
+> - Meson8 has AIU_PCLK, HDMI_RX, VCLK2_ENCT, VCLK2_ENCL, UART3,
+>   CSI_DIG_CLKIN gates which don't seem to be available on Meson8b
+> - the gate on Meson8 for bit 7 seems to be named "_1200XXX" instead
+>   of "PERIPHS_TOP" (on Meson8b)
+> - Meson8b has a SANA gate which doesn't seem to exist on Meson8 (or
+>   on Meson8 the same bit is used by the UART3 gate in Amlogic's GPL
+>   kernel sources)
+> None of these gates is added for now, since it's unclear whether these
+> definitions are actually correct (the VCLK2_ENCT gate for example is
+> defined, but only used in some commented block).
+> 
+> The main difference between all three SoCs seem to be the video (VPU)
+> clocks. Apart from different supported clock rates (according to vpu.c
+> in mach-meson8 and mach-meson8b from Amlogic's GPL kernel sources) the
+> most notable difference is that Meson8m2 has a GP_PLL clock and a mux
+> (probably the same as on the Meson GX SoCs) to support glitch-free
+> (clock rate) switching.
+> None of these VPU clocks are not supported by our mainline meson8b
+> clock driver yet though.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  .../devicetree/bindings/clock/amlogic,meson8b-clkc.txt        | 11 +++++++---
 
+I think you should split the binding documentation and clk changes into separate
+patches.
 
-=E4=BA=8E 2017=E5=B9=B46=E6=9C=885=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882:4=
-6:24, "Jernej =C5=A0krabec" <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> =E5=86=99=E5=88=B0:
->Hi,
->
->Dne nedelja, 04. junij 2017 ob 18:01:42 CEST je Icenowy Zheng
->napisal(a):
->> From: Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
->>=20
->> Allwinner H3 has two special TCONs, both come without channel0. And
->the
->> TCON1 of H3 has no special clocks even for the channel1.
->>=20
->> Add support for these kinds of TCON.
->>=20
->> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> ---
->> Changes in v2:
->> - Merged TCON0 and TCON1 quirks and compatibles.
->>=20
->>  drivers/gpu/drm/sun4i/sun4i_tcon.c | 52
->> +++++++++++++++++++++++++-------------
->drivers/gpu/drm/sun4i/sun4i_tcon.h |
->>  1 +
->>  2 files changed, 36 insertions(+), 17 deletions(-)
->>=20
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> b/drivers/gpu/drm/sun4i/sun4i_tcon.c index 568cea0e5f8f..62ba4fc19f18
->> 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
->> @@ -59,6 +59,7 @@ void sun4i_tcon_channel_disable(struct sun4i_tcon
->*tcon,
->> int channel)
->>=20
->>  	/* Disable the TCON's channel */
->>  	if (channel =3D=3D 0) {
->> +		WARN_ON(!tcon->quirks->has_channel_0);
->>  		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
->>  				   SUN4I_TCON0_CTL_TCON_ENABLE, 0);
->>  		clk_disable_unprepare(tcon->dclk);
->> @@ -78,6 +79,7 @@ void sun4i_tcon_channel_enable(struct sun4i_tcon
->*tcon,
->> int channel)
->>=20
->>  	/* Enable the TCON's channel */
->>  	if (channel =3D=3D 0) {
->> +		WARN_ON(!tcon->quirks->has_channel_0);
->>  		regmap_update_bits(tcon->regs, SUN4I_TCON0_CTL_REG,
->>  				   SUN4I_TCON0_CTL_TCON_ENABLE,
->>  				   SUN4I_TCON0_CTL_TCON_ENABLE);
->> @@ -159,6 +161,7 @@ void sun4i_tcon0_mode_set(struct sun4i_tcon
->*tcon,
->>=20
->>  	/* Configure the dot clock */
->>  	clk_set_rate(tcon->dclk, mode->crtc_clock * 1000);
->> +	WARN_ON(!tcon->quirks->has_channel_0);
->>=20
->>  	/* Adjust clock delay */
->>  	clk_delay =3D sun4i_tcon_get_clk_delay(mode, 0);
->> @@ -366,10 +369,12 @@ static int sun4i_tcon_init_clocks(struct device
->*dev,
->>  	}
->>  	clk_prepare_enable(tcon->clk);
->>=20
->> -	tcon->sclk0 =3D devm_clk_get(dev, "tcon-ch0");
->> -	if (IS_ERR(tcon->sclk0)) {
->> -		dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
->> -		return PTR_ERR(tcon->sclk0);
->> +	if (tcon->quirks->has_channel_0) {
->> +		tcon->sclk0 =3D devm_clk_get(dev, "tcon-ch0");
->> +		if (IS_ERR(tcon->sclk0)) {
->> +			dev_err(dev, "Couldn't get the TCON channel 0 clock\n");
->> +			return PTR_ERR(tcon->sclk0);
->> +		}
->>  	}
->>=20
->>  	if (tcon->quirks->has_channel_1) {
->> @@ -594,10 +599,12 @@ static int sun4i_tcon_bind(struct device *dev,
->struct
->> device *master, goto err_free_clocks;
->>  	}
->>=20
->> -	ret =3D sun4i_dclk_create(dev, tcon);
->> -	if (ret) {
->> -		dev_err(dev, "Couldn't create our TCON dot clock\n");
->> -		goto err_free_clocks;
->> +	if (tcon->quirks->has_channel_0) {
->> +		ret =3D sun4i_dclk_create(dev, tcon);
->> +		if (ret) {
->> +			dev_err(dev, "Couldn't create our TCON dot clock\n");
->> +			goto err_free_clocks;
->> +		}
->>  	}
->>=20
->>  	ret =3D sun4i_tcon_init_irq(dev, tcon);
->> @@ -622,7 +629,8 @@ static int sun4i_tcon_bind(struct device *dev,
->struct
->> device *master, return 0;
->>=20
->>  err_free_dotclock:
->> -	sun4i_dclk_free(tcon);
->> +	if (tcon->quirks->has_channel_0)
->> +		sun4i_dclk_free(tcon);
->>  err_free_clocks:
->>  	sun4i_tcon_free_clocks(tcon);
->>  err_assert_reset:
->> @@ -636,7 +644,9 @@ static void sun4i_tcon_unbind(struct device *dev,
->struct
->> device *master, struct sun4i_tcon *tcon =3D dev_get_drvdata(dev);
->>=20
->>  	list_del(&tcon->list);
->> -	sun4i_dclk_free(tcon);
->> +
->> +	if (tcon->quirks->has_channel_0)
->> +		sun4i_dclk_free(tcon);
->>  	sun4i_tcon_free_clocks(tcon);
->>  }
->>=20
->> @@ -667,24 +677,32 @@ static int sun4i_tcon_remove(struct
->platform_device
->> *pdev) }
->>=20
->>  static const struct sun4i_tcon_quirks sun5i_a13_quirks =3D {
->> -	.has_unknown_mux =3D true,
->> -	.has_channel_1	=3D true,
->> +	.has_unknown_mux	=3D true,
->> +	.has_channel_0		=3D true,
->> +	.has_channel_1		=3D true,
->>  };
->>=20
->>  static const struct sun4i_tcon_quirks sun6i_a31_quirks =3D {
->> -	.has_channel_1	=3D true,
->> +	.has_channel_0		=3D true,
->> +	.has_channel_1		=3D true,
->>  };
->>=20
->>  static const struct sun4i_tcon_quirks sun6i_a31s_quirks =3D {
->> -	.has_channel_1	=3D true,
->> +	.has_channel_0		=3D true,
->> +	.has_channel_1		=3D true,
->>  };
->>=20
->>  static const struct sun4i_tcon_quirks sun8i_a33_quirks =3D {
->> -	/* nothing is supported */
->> +	.has_channel_0	=3D true,
->>  };
->>=20
->>  static const struct sun4i_tcon_quirks sun8i_v3s_quirks =3D {
->> -	/* nothing is supported */
->> +	.has_channel_0	=3D true,
->> +};
->> +
->> +static const struct sun4i_tcon_quirks sun8i_h3_quirks =3D {
->> +	.has_channel_1		=3D true,
->> +	.swappable_input	=3D true,
->>  };
->>=20
->>  static const struct of_device_id sun4i_tcon_of_table[] =3D {
->> @@ -693,7 +711,7 @@ static const struct of_device_id
->sun4i_tcon_of_table[] =3D
->> { { .compatible =3D "allwinner,sun6i-a31s-tcon", .data =3D
->&sun6i_a31s_quirks
->> }, { .compatible =3D "allwinner,sun8i-a33-tcon", .data =3D
->&sun8i_a33_quirks },
->> { .compatible =3D "allwinner,sun8i-v3s-tcon", .data =3D &sun8i_v3s_quirk=
-s
->},
->> -	{ }
->> +	{ .compatible =3D "allwinner,sun8i-h3-tcon", .data =3D &sun8i_h3_quirk=
-s
->},
->
->I think you need to leave empty entry as a sentinel.
+> -
+>  drivers/clk/meson/Kconfig                                     |  6 +++---
+>  drivers/clk/meson/meson8b.c                                   |  5 ++++-
 
-Sorry.
+The change being more platform than clock related, I'd prefer if Kevin or Carlo
+ack it before we apply it.
 
->
->>  };
->>  MODULE_DEVICE_TABLE(of, sun4i_tcon_of_table);
->>=20
->> diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h
->> b/drivers/gpu/drm/sun4i/sun4i_tcon.h index c3e01c06e9a0..9c706a0bd478
->> 100644
->> --- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
->> +++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
->> @@ -145,6 +145,7 @@
->>=20
->>  struct sun4i_tcon_quirks {
->>  	bool	has_unknown_mux; /* sun5i has undocumented mux */
->> +	bool	has_channel_0;	/* some A83T+ TCONs don't have channel 0*/
->>  	bool	has_channel_1;	/* a33 does not have channel 1 */
->>  	/* Some DE2 can swap the mixer<->TCON connection */
->>  	bool	swappable_input;
->> --
->> 2.12.2
->
->You missed sun4i_rgb_init() function which should also be guarded with
->"if=20
->(tcon->quirks->has_channel_0)".
->
+Apart from this, the change looks good to me. Nice to see people taking interest
+ in these SoCs. Would you mind telling us a bit more about the board you have
+used for this task and the tests you have done ? It would maybe allow other
+people to help you.
 
-Yes...
+Cheers
+Jerome
 
->You should also expand function sun4i_drv_node_is_tcon() at sun4i_drv.c
->with=20
->new entries, but I'm not sure if this fits in this patch.
+>  3 files changed, 14 insertions(+), 8 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+> b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+> index 2b7b3fa588d7..606da38c0959 100644
+> --- a/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+> +++ b/Documentation/devicetree/bindings/clock/amlogic,meson8b-clkc.txt
+> @@ -1,11 +1,14 @@
+> -* Amlogic Meson8b Clock and Reset Unit
+> +* Amlogic Meson8, Meson8b and Meson8m2 Clock and Reset Unit
+>  
+> -The Amlogic Meson8b clock controller generates and supplies clock to various
+> -controllers within the SoC.
+> +The Amlogic Meson8 / Meson8b / Meson8m2 clock controller generates and
+> +supplies clock to various controllers within the SoC.
+>  
+>  Required Properties:
+>  
+> -- compatible: should be "amlogic,meson8b-clkc"
+> +- compatible: must be one of:
+> +	- "amlogic,meson8-clkc" for Meson8 (S802) SoCs
+> +	- "amlogic,meson8b-clkc" for Meson8 (S805) SoCs
+> +	- "amlogic,meson8m2-clkc" for Meson8m2 (S812) SoCs
+>  - reg: it must be composed by two tuples:
+>  	0) physical base address of the xtal register and length of memory
+>  	   mapped region.
+> diff --git a/drivers/clk/meson/Kconfig b/drivers/clk/meson/Kconfig
+> index 19480bcc7046..4a806203b73c 100644
+> --- a/drivers/clk/meson/Kconfig
+> +++ b/drivers/clk/meson/Kconfig
+> @@ -7,9 +7,9 @@ config COMMON_CLK_MESON8B
+>  	bool
+>  	depends on COMMON_CLK_AMLOGIC
+>  	help
+> -	  Support for the clock controller on AmLogic S805 devices, aka
+> -	  meson8b. Say Y if you want peripherals and CPU frequency scaling to
+> -	  work.
+> +	  Support for the clock controller on AmLogic S802 (Meson8),
+> +	  S805 (Meson8b) and S812 (Meson8m2) devices. Say Y if you
+> +	  want peripherals and CPU frequency scaling to work.
+>  
+>  config COMMON_CLK_GXBB
+>  	bool
+> diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+> index bfd1690724de..94c55e79cdde 100644
+> --- a/drivers/clk/meson/meson8b.c
+> +++ b/drivers/clk/meson/meson8b.c
+> @@ -1,5 +1,6 @@
+>  /*
+> - * AmLogic S805 / Meson8b Clock Controller Driver
+> + * AmLogic S802 (Meson8) / S805 (Meson8b) / S812 (Meson8m2) Clock Controller
+> + * Driver
+>   *
+>   * Copyright (c) 2015 Endless Mobile, Inc.
+>   * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+> @@ -777,7 +778,9 @@ static int meson8b_clkc_probe(struct platform_device
+> *pdev)
+>  }
+>  
+>  static const struct of_device_id meson8b_clkc_match_table[] = {
+> +	{ .compatible = "amlogic,meson8-clkc" },
+>  	{ .compatible = "amlogic,meson8b-clkc" },
+> +	{ .compatible = "amlogic,meson8m2-clkc" },
+>  	{ }
+>  };
+>  
 
-Instead I think it should be renamed to something like
-"sun4i_drv_node_is_tcon_with_ch0".
-
->
->Best regards,
->Jernej
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
