@@ -1,145 +1,25 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: allwinner: a64: Convert CCU raw
- number references to macros
-Date: Mon,  5 Jun 2017 17:00:33 +0800
-Message-ID: <20170605090033.31663-3-wens@csie.org>
-References: <20170605090033.31663-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBNF32TEQKGQE6DQUNII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170605090033.31663-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: [PATCH 0/2] Broadcom Stingray SATA PHY support
+Date: Mon,  5 Jun 2017 14:30:33 +0530
+Message-ID: <1496653235-22757-1-git-send-email-srinath.mannam@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tejun Heo <tj@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <ray.jui@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Srinath Mannam <srinath.mannam@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The A64 device tree file has some remnants of raw number references
-to the CCU node, likely from when the CCU bindings and device tree
-changes were first merged.
+This patchset extends the Broadcom SATA PHY driver to add
+support for Stingray SATA PHY.
 
-Convert these, and the R_CCU ones, to use the proper defined macros
-from their respective device tree binding header files.
+All patches are based on Linux-4.12-rc2.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 35 ++++++++++++++-------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+Srinath Mannam (2):
+  dt-bindings: Update documentation for stingray SATA phy
+  phy: Add stingray SATA phy support
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 166c9ef884dc..23a531c80308 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -43,6 +43,7 @@
-  */
- 
- #include <dt-bindings/clock/sun50i-a64-ccu.h>
-+#include <dt-bindings/clock/sun8i-r-ccu.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/reset/sun50i-a64-ccu.h>
- 
-@@ -303,8 +304,8 @@
- 			interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&ccu 67>;
--			resets = <&ccu 46>;
-+			clocks = <&ccu CLK_BUS_UART0>;
-+			resets = <&ccu RST_BUS_UART0>;
- 			status = "disabled";
- 		};
- 
-@@ -314,8 +315,8 @@
- 			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&ccu 68>;
--			resets = <&ccu 47>;
-+			clocks = <&ccu CLK_BUS_UART1>;
-+			resets = <&ccu RST_BUS_UART1>;
- 			status = "disabled";
- 		};
- 
-@@ -325,8 +326,8 @@
- 			interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&ccu 69>;
--			resets = <&ccu 48>;
-+			clocks = <&ccu CLK_BUS_UART2>;
-+			resets = <&ccu RST_BUS_UART2>;
- 			status = "disabled";
- 		};
- 
-@@ -336,8 +337,8 @@
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&ccu 70>;
--			resets = <&ccu 49>;
-+			clocks = <&ccu CLK_BUS_UART3>;
-+			resets = <&ccu RST_BUS_UART3>;
- 			status = "disabled";
- 		};
- 
-@@ -347,8 +348,8 @@
- 			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&ccu 71>;
--			resets = <&ccu 50>;
-+			clocks = <&ccu CLK_BUS_UART4>;
-+			resets = <&ccu RST_BUS_UART4>;
- 			status = "disabled";
- 		};
- 
-@@ -356,8 +357,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x01c2ac00 0x400>;
- 			interrupts = <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 63>;
--			resets = <&ccu 42>;
-+			clocks = <&ccu CLK_BUS_I2C0>;
-+			resets = <&ccu RST_BUS_I2C0>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -367,8 +368,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x01c2b000 0x400>;
- 			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 64>;
--			resets = <&ccu 43>;
-+			clocks = <&ccu CLK_BUS_I2C1>;
-+			resets = <&ccu RST_BUS_I2C1>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -378,8 +379,8 @@
- 			compatible = "allwinner,sun6i-a31-i2c";
- 			reg = <0x01c2b400 0x400>;
- 			interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu 65>;
--			resets = <&ccu 44>;
-+			clocks = <&ccu CLK_BUS_I2C2>;
-+			resets = <&ccu RST_BUS_I2C2>;
- 			status = "disabled";
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -417,7 +418,7 @@
- 			compatible = "allwinner,sun50i-a64-r-pinctrl";
- 			reg = <0x01f02c00 0x400>;
- 			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&r_ccu 3>, <&osc24M>, <&osc32k>;
-+			clocks = <&r_ccu CLK_APB0_PIO>, <&osc24M>, <&osc32k>;
- 			clock-names = "apb", "hosc", "losc";
- 			gpio-controller;
- 			#gpio-cells = <3>;
+ .../devicetree/bindings/phy/brcm-sata-phy.txt      |  7 ++-
+ drivers/phy/phy-brcm-sata.c                        | 73 ++++++++++++++++++++++
+ 2 files changed, 77 insertions(+), 3 deletions(-)
+
 -- 
-2.11.0
+2.7.4
