@@ -1,77 +1,111 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v4 00/23] mtd: nand: denali: Denali NAND IP patch bomb
-Date: Tue,  6 Jun 2017 08:21:39 +0900
-Message-ID: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v4 06/23] mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
+Date: Tue,  6 Jun 2017 08:21:45 +0900
+Message-ID: <1496704922-12261-7-git-send-email-yamada.masahiro@socionext.com>
+References: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, Graham Moore <grmoore@opensource.altera.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series intends to solve various problems.
+Add two compatible strings for UniPhier SoC family.
 
-[1] The driver just retrieves the OOB area as-is
-    whereas the controller uses syndrome page layout.
-[2] Many NAND chip specific parameters are hard-coded in the driver.
-[3] ONFi devices are not working
-[4] It can not read Bad Block Marker
+"socionext,uniphier-denali-nand-v5a" is used on UniPhier sLD3, LD4,
+Pro4, sLD8.
 
-Outstanding changes are:
-- Fix raw/oob callbacks for syndrome page layout
-- Implement setup_data_interface() callback
-- Fix/implement more commands for ONFi devices
-- Allow to skip the driver internal bounce buffer
-- Support PIO in case DMA is not supported
-- Switch from ->cmdfunc over to ->cmd_ctrl
+"socionext,uniphier-denali-nand-v5b" is used on UniPhier Pro5, PXs2,
+LD6b, LD11, LD20.
 
-18 patches were merged at v2.
-11 patches were merged at v3.
-Here is the rest of the series.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-v1: https://lkml.org/lkml/2016/11/26/144
-v2: https://lkml.org/lkml/2017/3/22/804
-v3: https://lkml.org/lkml/2017/3/30/90
+Changes in v4:
+  - Adjusted to generic helpers for ECC engine caps
 
+Changes in v3: None
+Changes in v2:
+  - Change the compatible strings
+  - Fix the ecc_strength_capability
+  - Override revision number for the newer one
 
-Masahiro Yamada (23):
-  mtd: nand: denali_dt: clean up resource ioremap
-  mtd: nand: denali: use BIT() and GENMASK() for register macros
-  mtd: nand: add generic helpers to check, match, maximize ECC settings
-  mtd: nand: denali: avoid hard-coding ECC step, strength, bytes
-  mtd: nand: denali: remove Toshiba and Hynix specific fixup code
-  mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
-  mtd: nand: denali: set NAND_ECC_CUSTOM_PAGE_ACCESS
-  mtd: nand: denali: do not propagate NAND_STATUS_FAIL to waitfunc()
-  mtd: nand: denali: remove unneeded find_valid_banks()
-  mtd: nand: denali: handle timing parameters by setup_data_interface()
-  mtd: nand: denali: rework interrupt handling
-  mtd: nand: denali: fix NAND_CMD_STATUS handling
-  mtd: nand: denali: fix NAND_CMD_PARAM handling
-  mtd: nand: denali: switch over to cmd_ctrl instead of cmdfunc
-  mtd: nand: denali: fix bank reset function to detect the number of
-    chips
-  mtd: nand: denali: use interrupt instead of polling for bank reset
-  mtd: nand: denali: propagate page to helpers via function argument
-  mtd: nand: denali: merge struct nand_buf into struct denali_nand_info
-  mtd: nand: denali: use flag instead of register macro for direction
-  mtd: nand: denali: fix raw and oob accessors for syndrome page layout
-  mtd: nand: denali: skip driver internal bounce buffer when possible
-  mtd: nand: denali: use non-managed kmalloc() for DMA buffer
-  mtd: nand: denali: enable bad block table scan
+ .../devicetree/bindings/mtd/denali-nand.txt        |  6 +++++
+ drivers/mtd/nand/denali_dt.c                       | 31 ++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
 
- .../devicetree/bindings/mtd/denali-nand.txt        |   13 +
- drivers/mtd/nand/denali.c                          | 1701 +++++++++-----------
- drivers/mtd/nand/denali.h                          |  294 ++--
- drivers/mtd/nand/denali_dt.c                       |   54 +-
- drivers/mtd/nand/denali_pci.c                      |   15 +-
- drivers/mtd/nand/nand_base.c                       |  219 +++
- include/linux/mtd/nand.h                           |   35 +
- 7 files changed, 1235 insertions(+), 1096 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+index b7742a7..504291d 100644
+--- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+@@ -3,6 +3,8 @@
+ Required properties:
+   - compatible : should be one of the following:
+       "altr,socfpga-denali-nand"            - for Altera SOCFPGA
++      "socionext,uniphier-denali-nand-v5a"  - for Socionext UniPhier (v5a)
++      "socionext,uniphier-denali-nand-v5b"  - for Socionext UniPhier (v5b)
+   - reg : should contain registers location and length for data and reg.
+   - reg-names: Should contain the reg names "nand_data" and "denali_reg"
+   - interrupts : The interrupt number.
+@@ -10,8 +12,12 @@ Required properties:
+ Optional properties:
+   - nand-ecc-step-size: see nand.txt for details.  If present, the value must be
+       512        for "altr,socfpga-denali-nand"
++      1024       for "socionext,uniphier-denali-nand-v5a"
++      1024       for "socionext,uniphier-denali-nand-v5b"
+   - nand-ecc-strength: see nand.txt for details.  Valid values are:
+       8, 15      for "altr,socfpga-denali-nand"
++      8, 16, 24  for "socionext,uniphier-denali-nand-v5a"
++      8, 16      for "socionext,uniphier-denali-nand-v5b"
+   - nand-ecc-maximize: see nand.txt for details
+ 
+ The device tree may optionally contain sub-nodes describing partitions of the
+diff --git a/drivers/mtd/nand/denali_dt.c b/drivers/mtd/nand/denali_dt.c
+index 8c09bbe..38800ae 100644
+--- a/drivers/mtd/nand/denali_dt.c
++++ b/drivers/mtd/nand/denali_dt.c
+@@ -45,11 +45,42 @@ static const struct denali_dt_data denali_socfpga_data = {
+ 	},
+ };
+ 
++static const int denali_uniphier_strengths[] = {8, 16, 24};
++static const struct denali_dt_data denali_uniphier_v5a_data = {
++	.caps = DENALI_CAP_HW_ECC_FIXUP |
++		DENALI_CAP_DMA_64BIT,
++	.stepinfo = {
++		.stepsize = 1024,
++		.strengths = denali_uniphier_strengths,
++		.nstrengths = ARRAY_SIZE(denali_uniphier_strengths),
++	},
++};
++
++static const struct denali_dt_data denali_uniphier_v5b_data = {
++	.revision = 0x0501,
++	.caps = DENALI_CAP_HW_ECC_FIXUP |
++		DENALI_CAP_DMA_64BIT,
++	.stepinfo = {
++		.stepsize = 1024,
++		.strengths = denali_uniphier_strengths,
++		/* no support for strength=24 */
++		.nstrengths = ARRAY_SIZE(denali_uniphier_strengths) - 1,
++	},
++};
++
+ static const struct of_device_id denali_nand_dt_ids[] = {
+ 	{
+ 		.compatible = "altr,socfpga-denali-nand",
+ 		.data = &denali_socfpga_data,
+ 	},
++	{
++		.compatible = "socionext,uniphier-denali-nand-v5a",
++		.data = &denali_uniphier_v5a_data,
++	},
++	{
++		.compatible = "socionext,uniphier-denali-nand-v5b",
++		.data = &denali_uniphier_v5b_data,
++	},
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, denali_nand_dt_ids);
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
