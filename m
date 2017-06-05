@@ -1,153 +1,135 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-cm-fx6: add sdio wifi/bt nodes
-Date: Mon, 5 Jun 2017 22:51:43 +0800
-Message-ID: <20170605145141.GJ4094@dragon>
-References: <1a13681b84564bc18937eb54b8345957@rwthex-s1-b.rwth-ad.de>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v13 8/9] arm64: dts: hi6220: register debug module
+Date: Mon, 5 Jun 2017 16:02:46 +0100
+Message-ID: <59357296.7040707@hisilicon.com>
+References: <1495727836-30094-1-git-send-email-leo.yan@linaro.org>
+ <1495727836-30094-9-git-send-email-leo.yan@linaro.org>
+ <59351771.5080807@hisilicon.com>
+ <CANLsYkyGK7xwVczYEqP=bKuE1kOd7-ghCRX8L1t5BN4Am6SSiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1a13681b84564bc18937eb54b8345957-gtPewvpZjL8umhiu9RXYRl5UTUQ924AY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org, Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkyGK7xwVczYEqP=bKuE1kOd7-ghCRX8L1t5BN4Am6SSiw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Leo Yan <leo.yan@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, Stephen Boyd <sboyd@codeaurora.org>, Mike Leach <mike.leach@li>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 10:16:01PM +0200, christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org wrote:
-> From: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> 
-> The cm-fx6 module has an on-board AW-NH387 WiFi/BT module which is
-> based on Marvell's SD8787 chip and is connected to the usdhc1
-> controller.
-> 
-> Unfortunately, the chip gets unresponsive if the Bluetooth AMP
-> (Alternate Mac/Phy) function gets probed but the loaded firmware
-> doesn't support it. For instance, this is the case for the most
-> recent firmware in linux-firmware (Version 14.66.35.p52).
-> 
-> Thus, just add the required nodes but leave the usdhc1 node disabled
-> explicitly. Users who disabled the Bluetooth (AMP) support of their
-> OS can then conveniently enable WiFi (or even plain Bluetooth) support
-> with a simple device tree overlay/bootloader configuration.
-> 
-> Signed-off-by: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-> ---
-> 
-> Hi all,
-> 
-> some more information on the Bluetooth AMP dilemma: the vendor (CompuLab) just
-> remove Bluetooth AMP support from the kernel. However, this is not an option
-> here, since it would introduce a regression for its actual users.
-> 
-> Neither is degrading the firmware a good option: recent firmare (without AMP
-> support) provides WiFi that is more stable (in particular, for access points).
-> 
-> I wrote a RFC to linux-bluetooth [1] two weeks ago about this problem and the
-> only feedback I got was that Marvell has to provide information about how to
-> detect whether the firmware supports AMP properly -- but this is unlikely given
-> Marvell's information policy (in particular, since the sd8787 seems to be
-> unsupported as of now).
-> 
-> IMHO this patch is currently the best option, since it allows users in a
-> convenient way to enable WiFi support (e.g. no pinctrl handling in overlays),
-> even when they are using distribution kernels/device trees. Furthermore, the
-> hardware description is entirely accurate -- we have a driver/firmware problem
-> here.
+Hi Mathieu,
 
-Hi Valentin, Igor,
+On 2017/6/5 15:17, Mathieu Poirier wrote:
+> On 5 June 2017 at 02:33, Wei Xu <xuwei5@hisilicon.com> wrote:
+>> Hi Leo,
+>>
+>> On 2017/5/25 16:57, Leo Yan wrote:
+>>> Bind debug module driver for Hi6220.
+>>>
+>>> Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+>>> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+>>
+>> Thanks!
+>> Fine to me.
+>> Acked-by: Wei Xu <xuwei5@hisilicon.com>
+>>
+>> Hi Mathieu,
+>>
+>> Can you help to pick up this patch as well?
+>> Thanks!
+> 
+> Sure - I'll add this to my tree.
 
-Are you guys fine with the patch?
+Thanks!
 
-Shawn
+BR,
+Wei
 
 > 
-> Thanks,
-> Christopher
+>>
+>> Best Regards,
+>> Wei
+>>
+>>> ---
+>>>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 64 +++++++++++++++++++++++++++++++
+>>>  1 file changed, 64 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>>> index 1e5129b..21805b9 100644
+>>> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>>> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+>>> @@ -916,5 +916,69 @@
+>>>                               };
+>>>                       };
+>>>               };
+>>> +
+>>> +             debug@f6590000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf6590000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu0>;
+>>> +             };
+>>> +
+>>> +             debug@f6592000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf6592000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu1>;
+>>> +             };
+>>> +
+>>> +             debug@f6594000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf6594000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu2>;
+>>> +             };
+>>> +
+>>> +             debug@f6596000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf6596000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu3>;
+>>> +             };
+>>> +
+>>> +             debug@f65d0000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf65d0000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu4>;
+>>> +             };
+>>> +
+>>> +             debug@f65d2000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf65d2000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu5>;
+>>> +             };
+>>> +
+>>> +             debug@f65d4000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf65d4000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu6>;
+>>> +             };
+>>> +
+>>> +             debug@f65d6000 {
+>>> +                     compatible = "arm,coresight-cpu-debug","arm,primecell";
+>>> +                     reg = <0 0xf65d6000 0 0x1000>;
+>>> +                     clocks = <&sys_ctrl HI6220_DAPB_CLK>;
+>>> +                     clock-names = "apb_pclk";
+>>> +                     cpu = <&cpu7>;
+>>> +             };
+>>>       };
+>>>  };
+>>>
+>>
 > 
-> [1] https://www.spinics.net/lists/linux-bluetooth/msg70493.html
+> .
 > 
->  arch/arm/boot/dts/imx6q-cm-fx6.dts | 41 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6q-cm-fx6.dts b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> index a8af382..fe6ab0a 100644
-> --- a/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> +++ b/arch/arm/boot/dts/imx6q-cm-fx6.dts
-> @@ -64,6 +64,14 @@
->  		};
->  	};
->  
-> +	awnh387_pwrseq: pwrseq {
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_pwrseq>;
-> +		compatible = "mmc-pwrseq-sd8787";
-> +		powerdown-gpios = <&gpio7 12 GPIO_ACTIVE_HIGH>;
-> +		reset-gpios = <&gpio6 16 GPIO_ACTIVE_HIGH>;
-> +	};
-> +
->  	reg_pcie_power_on_gpio: regulator-pcie-power-on-gpio {
->  		compatible = "regulator-fixed";
->  		regulator-name = "regulator-pcie-power-on-gpio";
-> @@ -304,6 +312,13 @@
->  		>;
->  	};
->  
-> +	pinctrl_pwrseq: pwrseqgrp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_GPIO_17__GPIO7_IO12		0x1b0b0
-> +			MX6QDL_PAD_NANDF_CS3__GPIO6_IO16	0x1b0b0
-> +		>;
-> +	};
-> +
->  	pinctrl_spdif: spdifgrp {
->  		fsl,pins = <
->  			MX6QDL_PAD_GPIO_16__SPDIF_IN  0x1b0b0
-> @@ -330,6 +345,17 @@
->  			MX6QDL_PAD_EIM_D22__GPIO3_IO22	0x130b0
->  		>;
->  	};
-> +
-> +	pinctrl_usdhc1: usdhc1grp {
-> +		fsl,pins = <
-> +			MX6QDL_PAD_SD1_CMD__SD1_CMD	0x17071
-> +			MX6QDL_PAD_SD1_CLK__SD1_CLK	0x10071
-> +			MX6QDL_PAD_SD1_DAT0__SD1_DATA0	0x17071
-> +			MX6QDL_PAD_SD1_DAT1__SD1_DATA1	0x17071
-> +			MX6QDL_PAD_SD1_DAT2__SD1_DATA2	0x17071
-> +			MX6QDL_PAD_SD1_DAT3__SD1_DATA3	0x17071
-> +		>;
-> +	};
->  };
->  
->  &pcie {
-> @@ -382,3 +408,18 @@
->  	dr_mode = "otg";
->  	status = "okay";
->  };
-> +
-> +&usdhc1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_usdhc1>;
-> +	mmc-pwrseq = <&awnh387_pwrseq>;
-> +	non-removable;
-> +	/*
-> +	 * If the OS probes the Bluetooth AMP function advertised on this bus
-> +	 * but the firmware in place does not support it, the WiFi/BT module
-> +	 * gets unresponsive.
-> +	 * Users who configured their OS properly can enable this node to gain
-> +	 * WiFi and/or plain Bluetooth support.
-> +	 */
-> +	status = "disabled";
-> +};
-> -- 
-> 2.10.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
