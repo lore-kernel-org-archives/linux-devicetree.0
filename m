@@ -1,72 +1,85 @@
-From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Subject: [PATCH v2 0/6] Add phylib support for MV88X3310 10G phy
-Date: Mon, 5 Jun 2017 12:22:03 +0100
-Message-ID: <20170605112203.GA10680@n2100.armlinux.org.uk>
-References: <20170601102327.GF27796@n2100.armlinux.org.uk>
+From: Russell King <rmk+kernel@armlinux.org.uk>
+Subject: [PATCH 5/6] net: phy: add XAUI and 10GBASE-KR PHY connection types
+Date: Mon, 05 Jun 2017 12:23:10 +0100
+Message-ID: <E1dHq6I-0005XE-VR@rmk-PC.armlinux.org.uk>
+References: <20170605112203.GA10680@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170605112203.GA10680@n2100.armlinux.org.uk>
 Content-Disposition: inline
-In-Reply-To: <20170601102327.GF27796-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+XAUI allows XGMII to reach an extended distance by using a XGXS layer at
+each end of the MAC to PHY link, operating over four Serdes lanes.
 
-This patch series adds support for the Marvell 88x3310 PHY found on
-the SolidRun Macchiatobin board.
+10GBASE-KR is a single lane Serdes backplane ethernet connection method
+with autonegotiation on the link.  Some PHYs use this to connect to the
+ethernet interface at 10G speeds, switching to other connection types
+when utilising slower speeds.
 
-The first patch introduces a set of generic Clause 45 PHY helpers that
-C45 PHY drivers can make use of if they wish.
+10GBASE-KR is also used for XFI and SFI to connect to XFP and SFP fiber
+modules.
 
-Patch 2 ensures that the Clause 22 aneg_done function will not be
-called for incompatible Clause 45 PHYs.
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+---
+ Documentation/ABI/testing/sysfs-class-net-phydev   | 2 +-
+ Documentation/devicetree/bindings/net/ethernet.txt | 2 ++
+ include/linux/phy.h                                | 7 +++++++
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-Patch 3 fixes the aneg restart to be compatible with C45 PHYs - it can
-currently only cope with C22 PHYs.
-
-Patch 4 moves the "gen10g" driver into the Clause 45 code, grouping all
-core clause 45 code together.
-
-Patch 5 adds the phy_interface_t types for XAUI and 10GBase-KR links.
-As 10GBase-KR appears to be compatible with XFI and SFI, XFI and SFI,
-I currently see no reason to add XFI and SFI interface modes.  There
-seems to be vendor code out there using these, but they all alias back
-to the same hardware settings.
-
-Patch 6 adds support for the MV88X3310 PHY, which supports both the
-copper and fiber interfaces.  It should be noted that the MV88X3310
-automatically switches its MAC facing interface between 10GBase-KR
-and SGMII depending on the negotiated speed.  This was discussed with
-Florian, and we agreed to update the phy interface mode depending on
-the properties of the actual link mode to the PHY.
-
-v2:
-- update sysfs-class-net-phydev documentation
-- avoid genphy_aneg_done for non-C22 PHYs
-- expand comment about 0x30 constant
-- add comment about lack of reset
-- configure driver using MARVELL_10G_PHY
-
- Documentation/ABI/testing/sysfs-class-net-phydev   |   2 +-
- Documentation/devicetree/bindings/net/ethernet.txt |   2 +
- MAINTAINERS                                        |   6 +
- drivers/net/phy/Kconfig                            |   5 +
- drivers/net/phy/Makefile                           |   3 +-
- drivers/net/phy/marvell10g.c                       | 368 +++++++++++++++++++++
- drivers/net/phy/phy-c45.c                          | 298 +++++++++++++++++
- drivers/net/phy/phy.c                              |  29 +-
- drivers/net/phy/phy_device.c                       | 113 ++-----
- include/linux/phy.h                                |  20 ++
- 10 files changed, 748 insertions(+), 98 deletions(-)
-
+diff --git a/Documentation/ABI/testing/sysfs-class-net-phydev b/Documentation/ABI/testing/sysfs-class-net-phydev
+index c768d5fd8496..6ebabfb27912 100644
+--- a/Documentation/ABI/testing/sysfs-class-net-phydev
++++ b/Documentation/ABI/testing/sysfs-class-net-phydev
+@@ -32,5 +32,5 @@ Contact:	netdev@vger.kernel.org
+ 		<empty> (not available), mii, gmii, sgmii, tbi, rev-mii,
+ 		rmii, rgmii, rgmii-id, rgmii-rxid, rgmii-txid, rtbi, smii
+ 		xgmii, moca, qsgmii, trgmii, 1000base-x, 2500base-x, rxaui,
+-		unknown
++		xaui, 10gbase-kr, unknown
+ 
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 3a6916909d90..d4abe9a98109 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -32,6 +32,8 @@
+   * "2000base-x",
+   * "2500base-x",
+   * "rxaui"
++  * "xaui"
++  * "10gbase-kr" (10GBASE-KR, XFI, SFI)
+ - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
+ - phy-handle: phandle, specifies a reference to a node representing a PHY
+   device; this property is described in ePAPR and so preferred;
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index e6fcee188c8d..37feb502e1ae 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -83,6 +83,9 @@ typedef enum {
+ 	PHY_INTERFACE_MODE_1000BASEX,
+ 	PHY_INTERFACE_MODE_2500BASEX,
+ 	PHY_INTERFACE_MODE_RXAUI,
++	PHY_INTERFACE_MODE_XAUI,
++	/* 10GBASE-KR, XFI, SFI - single lane 10G Serdes */
++	PHY_INTERFACE_MODE_10GKR,
+ 	PHY_INTERFACE_MODE_MAX,
+ } phy_interface_t;
+ 
+@@ -149,6 +152,10 @@ static inline const char *phy_modes(phy_interface_t interface)
+ 		return "2500base-x";
+ 	case PHY_INTERFACE_MODE_RXAUI:
+ 		return "rxaui";
++	case PHY_INTERFACE_MODE_XAUI:
++		return "xaui";
++	case PHY_INTERFACE_MODE_10GKR:
++		return "10gbase-kr";
+ 	default:
+ 		return "unknown";
+ 	}
 -- 
-RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
-according to speedtest.net.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
