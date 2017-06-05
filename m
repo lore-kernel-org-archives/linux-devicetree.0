@@ -1,106 +1,146 @@
-From: Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: Re: [PATCH] Documentation: clock: address more for clock-cells property
-Date: Mon, 5 Jun 2017 11:15:25 +0800
-Message-ID: <CAG2=9p_fOV6QBTTHWeSAaMa=3J2tkpD7z+ju+PEy+fQCV59BUA@mail.gmail.com>
-References: <1496306801-19239-1-git-send-email-zhang.chunyan@linaro.org> <20170602225621.GE20170@codeaurora.org>
+From: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH linux-next v3 1/4] spi: imx: introduce fifo_size and has_dmamode in spi_imx_devtype_data
+Date: Mon, 5 Jun 2017 12:38:06 +0900
+Message-ID: <20170605033809.13726-2-jiada_wang@mentor.com>
+References: <20170605033809.13726-1-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170602225621.GE20170@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lyra Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170605033809.13726-1-jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Different ECSPI controller has different fifosize and DMA capability,
+instead of calling functions to identify these information by check
+devtype. add fifo_size and has_dmamode to spi_imx_devtype_data.
+so that these information can be directly accessed.
 
-On 3 June 2017 at 06:56, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 06/01, Chunyan Zhang wrote:
->> The value of property 'clock-cells' is not determined only by the number of
->> clock outputs in one clock node, it is actually determined by whether the
->> clock output in this node can be referenced directly without index.  If
->> the output clock has to be referenced by a index, the clock-cell of this
->> clock node can't be defined 0.
->>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
->> ---
->>  Documentation/devicetree/bindings/clock/clock-bindings.txt | 10 ++++++++--
->>  1 file changed, 8 insertions(+), 2 deletions(-)
->
-> I'm leaving this patch for Rob/DT maintainers to apply.
->
->>
->> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> index 2ec489e..cef3db5 100644
->> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> @@ -15,8 +15,14 @@ value of a #clock-cells property in the clock provider node.
->>
->>  Required properties:
->>  #clock-cells:           Number of cells in a clock specifier; Typically 0 for nodes
->> -                with a single clock output and 1 for nodes with multiple
->> -                clock outputs.
->> +                with a single clock output and it must be able to be
->> +                referenced without index, and 1 for nodes with single or
->> +                multiple clock outputs which have to be referenced by index.
->> +
->> +                Please note that if a node with a single clock output
->> +                but it has "clock-indices" property (see bellow), it has
->> +                to be referenced by index, its "#clock-cells" cannot be
->> +                defined 0.
->
-> Maybe this should be added to the clock-indices area of the
-> document instead of here? It seems to me that you can't have
-> clock-indices if you have #clock-cells=<0>, and that's sort of
-> obvious because 0 cells means 1 output and >0 cells means
-> potentially many outputs.
+Signed-off-by: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+---
+ drivers/spi/spi-imx.c | 27 ++++++++++++++++++---------
+ 1 file changed, 18 insertions(+), 9 deletions(-)
 
-Sorry for not being able to document clear enough.
-Let me try to explain why I added this paragraph here rather than
-clock-indices area.
+diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+index b402530..e48989a 100644
+--- a/drivers/spi/spi-imx.c
++++ b/drivers/spi/spi-imx.c
+@@ -78,6 +78,8 @@ struct spi_imx_devtype_data {
+ 	void (*trigger)(struct spi_imx_data *);
+ 	int (*rx_available)(struct spi_imx_data *);
+ 	void (*reset)(struct spi_imx_data *);
++	bool has_dmamode;
++	unsigned int fifo_size;
+ 	enum spi_imx_devtype devtype;
+ };
+ 
+@@ -128,11 +130,6 @@ static inline int is_imx51_ecspi(struct spi_imx_data *d)
+ 	return d->devtype_data->devtype == IMX51_ECSPI;
+ }
+ 
+-static inline unsigned spi_imx_get_fifosize(struct spi_imx_data *d)
+-{
+-	return is_imx51_ecspi(d) ? 64 : 8;
+-}
+-
+ #define MXC_SPI_BUF_RX(type)						\
+ static void spi_imx_buf_rx_##type(struct spi_imx_data *spi_imx)		\
+ {									\
+@@ -229,7 +226,7 @@ static bool spi_imx_can_dma(struct spi_master *master, struct spi_device *spi,
+ 	if (bpw != 1 && bpw != 2 && bpw != 4)
+ 		return false;
+ 
+-	for (i = spi_imx_get_fifosize(spi_imx) / 2; i > 0; i--) {
++	for (i = spi_imx->devtype_data->fifo_size / 2; i > 0; i--) {
+ 		if (!(transfer->len % (i * bpw)))
+ 			break;
+ 	}
+@@ -704,6 +701,8 @@ static struct spi_imx_devtype_data imx1_cspi_devtype_data = {
+ 	.trigger = mx1_trigger,
+ 	.rx_available = mx1_rx_available,
+ 	.reset = mx1_reset,
++	.fifo_size = 8,
++	.has_dmamode = false,
+ 	.devtype = IMX1_CSPI,
+ };
+ 
+@@ -713,6 +712,8 @@ static struct spi_imx_devtype_data imx21_cspi_devtype_data = {
+ 	.trigger = mx21_trigger,
+ 	.rx_available = mx21_rx_available,
+ 	.reset = mx21_reset,
++	.fifo_size = 8,
++	.has_dmamode = false,
+ 	.devtype = IMX21_CSPI,
+ };
+ 
+@@ -723,6 +724,8 @@ static struct spi_imx_devtype_data imx27_cspi_devtype_data = {
+ 	.trigger = mx21_trigger,
+ 	.rx_available = mx21_rx_available,
+ 	.reset = mx21_reset,
++	.fifo_size = 8,
++	.has_dmamode = false,
+ 	.devtype = IMX27_CSPI,
+ };
+ 
+@@ -732,6 +735,8 @@ static struct spi_imx_devtype_data imx31_cspi_devtype_data = {
+ 	.trigger = mx31_trigger,
+ 	.rx_available = mx31_rx_available,
+ 	.reset = mx31_reset,
++	.fifo_size = 8,
++	.has_dmamode = false,
+ 	.devtype = IMX31_CSPI,
+ };
+ 
+@@ -742,6 +747,8 @@ static struct spi_imx_devtype_data imx35_cspi_devtype_data = {
+ 	.trigger = mx31_trigger,
+ 	.rx_available = mx31_rx_available,
+ 	.reset = mx31_reset,
++	.fifo_size = 8,
++	.has_dmamode = true,
+ 	.devtype = IMX35_CSPI,
+ };
+ 
+@@ -751,6 +758,8 @@ static struct spi_imx_devtype_data imx51_ecspi_devtype_data = {
+ 	.trigger = mx51_ecspi_trigger,
+ 	.rx_available = mx51_ecspi_rx_available,
+ 	.reset = mx51_ecspi_reset,
++	.fifo_size = 64,
++	.has_dmamode = true,
+ 	.devtype = IMX51_ECSPI,
+ };
+ 
+@@ -802,7 +811,7 @@ static void spi_imx_chipselect(struct spi_device *spi, int is_active)
+ 
+ static void spi_imx_push(struct spi_imx_data *spi_imx)
+ {
+-	while (spi_imx->txfifo < spi_imx_get_fifosize(spi_imx)) {
++	while (spi_imx->txfifo < spi_imx->devtype_data->fifo_size) {
+ 		if (!spi_imx->count)
+ 			break;
+ 		spi_imx->tx(spi_imx);
+@@ -956,7 +965,7 @@ static int spi_imx_sdma_init(struct device *dev, struct spi_imx_data *spi_imx,
+ 	if (of_machine_is_compatible("fsl,imx6dl"))
+ 		return 0;
+ 
+-	spi_imx->wml = spi_imx_get_fifosize(spi_imx) / 2;
++	spi_imx->wml = spi_imx->devtype_data->fifo_size / 2;
+ 
+ 	/* Prepare for TX DMA: */
+ 	master->dma_tx = dma_request_slave_channel_reason(dev, "tx");
+@@ -1282,7 +1291,7 @@ static int spi_imx_probe(struct platform_device *pdev)
+ 	 * Only validated on i.mx35 and i.mx6 now, can remove the constraint
+ 	 * if validated on other chips.
+ 	 */
+-	if (is_imx35_cspi(spi_imx) || is_imx51_ecspi(spi_imx)) {
++	if (spi_imx->devtype_data->has_dmamode) {
+ 		ret = spi_imx_sdma_init(&pdev->dev, spi_imx, master);
+ 		if (ret == -EPROBE_DEFER)
+ 			goto out_clk_put;
+-- 
+2.9.3
 
-The sentence "0 for nodes with a single clock output" made me confused.
-In the platform I'm working on, some clock has a single clock output
-though, the identifying number for the clock output , #clock-cells
-cannot be set 0.
-
-I just wanted to make this sort of cases being cleared.  My point was
-that clock-cells with zero was not for all kinds of clocks which has
-one single output.
-
-I tried to rewrite the description below, would it be better? :)
-
---- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-+++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-@@ -18,6 +18,9 @@ Required properties:
-                   with a single clock output and 1 for nodes with multiple
-                   clock outputs.
-
-+                  There's one exception, please see the description for
-+                  clock-indices below.
-+
- Optional properties:
- clock-output-names: Recommended to be a list of strings of clock output signal
-                    names indexed by the first cell in the clock specifier.
-@@ -48,6 +51,13 @@ clock-indices:          If the identifying number
-for the clocks in the node
-                   is not linear from zero, then this allows the mapping of
-                   identifiers into the clock-output-names array.
-
-+                  This property not only servers for clocks with multiple
-+                  clock outputs, but also for clocks with a single clock
-+                  output whose identifying number is not zero.
-+
-+                  So long as clock-indices is set, clock-cells cannot be
-+                  set zero.
-+
- For example, if we have two clocks <&oscillator 1> and <&oscillator 3>:
-
-
-Thanks for the review,
-Chunyan
-
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
