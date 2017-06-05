@@ -1,139 +1,217 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH 1/3] Documentation: DT: add Keystone DSP remoteproc binding
-Date: Mon, 5 Jun 2017 13:21:32 -0500
-Message-ID: <39a18ffb-cd33-29a7-c3e9-f8e2e6d3432b@ti.com>
-References: <20170526165317.23164-1-s-anna@ti.com>
- <20170526165317.23164-2-s-anna@ti.com>
- <20170531191231.5qt2lfv73p572gmd@rob-hp-laptop>
- <884f5585-eac2-57b2-a2be-879bf23f2e00@ti.com>
- <20170605172648.6xonnkvbwmd3cehg@rob-hp-laptop>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Mon, 05 Jun 2017 21:43:06 +0300
+Message-ID: <1496688186.12947.10.camel@hp800z>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170605172648.6xonnkvbwmd3cehg@rob-hp-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Santosh Shilimkar <ssantosh@kernel.org>, "Andrew F. Davis" <afd@ti.com>, linux-arm-kernel@lists.infradead.org, Sam Nelson <sam.nelson@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefani Seibold <stefani.seibold.ext@huawei.com>
+Cc: Stefani Seibold <stefani@seibold.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Holm Rauchfuss <holm.rauchfuss@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Stefani,
 
->>
->> On 05/31/2017 02:12 PM, Rob Herring wrote:
->>> On Fri, May 26, 2017 at 11:53:15AM -0500, Suman Anna wrote:
->>>> Add the device tree bindings document for the Texas Instrument's
->>>> Keystone 2 DSP remoteproc devices.
->>>>
->>>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>>> Signed-off-by: Sam Nelson <sam.nelson@ti.com>
->>>> ---
->>>>  .../bindings/remoteproc/ti,keystone-rproc.txt      | 132 +++++++++++++++++++++
->>>>  1 file changed, 132 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
->>>> new file mode 100644
->>>> index 000000000000..f1ba88edd00d
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
->>>> @@ -0,0 +1,132 @@
->>>> +TI Keystone DSP devices
->>>> +=======================
->>>> +
->>>> +Binding status: Unstable - Subject to changes for using multiple memory regions
->>>
->>> I don't really see what would be unstable here. memory-region is easily 
->>> extended to multiple entries.
->>
->> OK will drop this line.
->>
->>>
->>>> +
->>>> +The TI Keystone 2 family of SoCs usually have one or more (upto 8) TI DSP Core
->>>> +sub-systems that are used to offload some of the processor-intensive tasks or
->>>> +algorithms, for achieving various system level goals.
->>>> +
->>>> +These processor sub-systems usually contain additional sub-modules like L1
->>>> +and/or L2 caches/SRAMs, an Interrupt Controller, an external memory controller,
->>>> +a dedicated local power/sleep controller etc. The DSP processor core in
->>>> +Keystone 2 SoCs is usually a TMS320C66x CorePac processor.
->>>> +
->>>> +DSP Device Node:
->>>> +================
->>>> +Each DSP Core sub-system is represented as a single DT node. Each node has a
->>>> +number of required or optional properties that enable the OS running on the
->>>> +host processor (ARM CorePac) to perform the device management of the remote
->>>> +processor and to communicate with the remote processor.
->>>> +
->>>> +Required properties:
->>>> +--------------------
->>>> +The following are the mandatory properties:
->>>> +
->>>> +- compatible:		Should be one of the following,
->>>> +			    "ti,k2hk-dsp" for DSPs on Keystone 2 66AK2H/K SoCs
->>>> +			    "ti,k2l-dsp" for DSPs on Keystone 2 66AK2L SoCs
->>>> +			    "ti,k2e-dsp" for DSPs on Keystone 2 66AK2E SoCs
->>>> +
->>>> +- reg:			Should contain an entry for each value in 'reg-names'.
->>>> +			Each entry should have the memory region's start address
->>>> +			and the size of the region, the representation matching
->>>> +			the parent node's '#address-cells' and '#size-cells' values.
->>>> +
->>>> +- reg-names:		Should contain strings with the following names, each
->>>> +			representing a specific internal memory region, and
->>>> +			should be defined in this order,
->>>> +			     "l2sram", "l1pram", "l1dram"
->>>> +
->>>> +- label:		Should contain a string identifying the DSP instance
->>>> +			within the SoC. Should be the string "dsp" followed by
->>>> +			the instance number. Eg: "dsp0", "dsp1",..."dsp7" etc
->>>
->>> Why does a user need to know or care?
->>
->> This is used to distinguish the exact DSP instance from others since the
->> DT node name is a generic "dsp". One of the uses is to be able to
->> construct a firmware name within the driver using this label.
+On Mon, 2017-06-05 at 14:59 +0200, Stefani Seibold wrote:
+> From: Stefani Seibold <stefani@seibold.net>
 > 
-> firmware-name doesn't work for you?
+> This patch enables external references for symbols which are not
+> exported by the current device tree. For example
+> 
+> // RASPI example (only for testing)
+> /dts-v1/;
+> /plugin/;
+> 
+> / {
+>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> 
+>     fragment@0 {
+>         target-path = "/soc/i2s@7e203000";
+>         __overlay__ {
+>             #address-cells = <0x00000001>;
+>             #size-cells = <0x00000001>;
+>             test = "test";
+>             timer = <&timer>;
+>         };
+>     };
+> 
+>     __external_symbols__ {
+>         timer = "/soc/timer@7e003000";
+>     };
+> };
+> 
 
-Has the stance changed w.r.t coding up the firmware-name in DT now? My
-understanding was that this has to be coded up in the driver from a
-previous related discussion on this [1]. I am more than happy to move
-the firmware name into DT for all remoteprocs if that is an accepted
-solution now.
+I understand the problem. I am just not fond of the __external_symbols__
+solution.
 
-> It was obvious that you are using this to number instances. Why do you 
-> care which instance is which? For example, I want dsp0 because it has X 
-> or runs at XXMHz, etc. If each instance is different (i.e. not a pool of 
-> DSPs), then you should describe the difference some way.
+There's a facility in the DT source language that allows to declare
+pathspec labels.
 
-Well, I am not exactly using the label to number the instance, it is a
-possibility outside of using it to encode the firmware name. The
-partitioning is really upto the application/SoC s/w system integration
-aspects.  Most of the times, you are not running identical software on
-these DSPs or other remote processors. For example, you might have one
-DSP running an OpenCL stack, another DSP dedicated for audio
-post-processing etc.
+The 'timer = <&timer>;' statement could be rewritten as 
+'timer = <&{/soc/timer@7e0030000}>;'
 
-That said, I do have a need for numbering the instances. This is needed
-usually for constructing a destination address to encode the processor
-when using a common Inter-Processor Communication API across all
-processors (Linux or otherwise). Pre-DT, I have used the platform device
-id for this on Linux behaving as the master processor. For DT, my
-preferred solution for that is an alias. If an alias is not acceptable,
-then I still have to provide an equivalent functionality through a
-driver-specific scheme.
+Internally you can 'catch' that this refers to a symbol in the base tree
+and then do the same symbol insertion as the patch you've submitted.
 
-regards
-Suman
+The benefit to the above is that you don't introduce manually edited
+special nodes.
 
-[1] http://www.spinics.net/lists/devicetree-spec/msg00140.html
+Regards
+
+-- Pantelis
+
+> The "timer" symbol is not exported by the RASPI device tree, because it is
+> missing in the __symbols__ section of the device tree.
+> 
+> In case of the RASPI device tree this could be simple fixed by modifing
+> the device tree source, but when the device tree is provided by a closed
+> source BIOS this kind of missing symbol could not be fixed.
+> 
+> An additional benefit is to override a (possible broken) symbol exported
+> by the currect live device tree.
+> 
+> The patch is based and tested on linux 4.12-rc3.
+> 
+> Signed-off-by: Stefani Seibold <stefani.seibold.ext@huawei.com>
+> Signed-off-by: Stefani Seibold <stefani@seibold.net>
+> ---
+>  drivers/of/overlay.c  | 19 +++++++++++++++++++
+>  drivers/of/resolver.c | 27 ++++++++++++++++++++++-----
+>  2 files changed, 41 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 7827786718d8..de6516ea0fcd 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
+> @@ -50,6 +50,7 @@ struct of_overlay {
+>  	int id;
+>  	struct list_head node;
+>  	int count;
+> +	struct device_node *tree;
+>  	struct of_overlay_info *ovinfo_tab;
+>  	struct of_changeset cset;
+>  };
+> @@ -422,6 +423,8 @@ int of_overlay_create(struct device_node *tree)
+>  	/* add to the tail of the overlay list */
+>  	list_add_tail(&ov->node, &ov_list);
+>  
+> +	ov->tree = tree;
+> +
+>  	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
+>  
+>  	mutex_unlock(&of_mutex);
+> @@ -524,6 +527,7 @@ int of_overlay_destroy(int id)
+>  {
+>  	struct of_overlay *ov;
+>  	int err;
+> +	phandle phandle;
+>  
+>  	mutex_lock(&of_mutex);
+>  
+> @@ -540,6 +544,8 @@ int of_overlay_destroy(int id)
+>  		goto out;
+>  	}
+>  
+> +	phandle = ov->tree->phandle;
+> +
+>  	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
+>  	list_del(&ov->node);
+>  	__of_changeset_revert(&ov->cset);
+> @@ -549,6 +555,19 @@ int of_overlay_destroy(int id)
+>  	of_changeset_destroy(&ov->cset);
+>  	kfree(ov);
+>  
+> +	if (phandle) {
+> +		struct device_node *node;
+> +		unsigned long flags;
+> +
+> +		raw_spin_lock_irqsave(&devtree_lock, flags);
+> +		for_each_of_allnodes(node) {
+> +			if (node->phandle >= phandle)
+> +				node->phandle = 0;
+> +		}
+> +		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +	}
+> +
+> +
+>  	err = 0;
+>  
+>  out:
+> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> index 771f4844c781..31b5f32c9b27 100644
+> --- a/drivers/of/resolver.c
+> +++ b/drivers/of/resolver.c
+> @@ -286,13 +286,14 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
+>  int of_resolve_phandles(struct device_node *overlay)
+>  {
+>  	struct device_node *child, *local_fixups, *refnode;
+> -	struct device_node *tree_symbols, *overlay_fixups;
+> +	struct device_node *tree_symbols, *ext_symbols, *overlay_fixups;
+>  	struct property *prop;
+>  	const char *refpath;
+>  	phandle phandle, phandle_delta;
+>  	int err;
+>  
+>  	tree_symbols = NULL;
+> +	ext_symbols = NULL;
+>  
+>  	if (!overlay) {
+>  		pr_err("null overlay\n");
+> @@ -321,6 +322,9 @@ int of_resolve_phandles(struct device_node *overlay)
+>  	for_each_child_of_node(overlay, child) {
+>  		if (!of_node_cmp(child->name, "__fixups__"))
+>  			overlay_fixups = child;
+> +		else
+> +		if (!of_node_cmp(child->name, "__external_symbols__"))
+> +			ext_symbols = child;
+>  	}
+>  
+>  	if (!overlay_fixups) {
+> @@ -329,20 +333,30 @@ int of_resolve_phandles(struct device_node *overlay)
+>  	}
+>  
+>  	tree_symbols = of_find_node_by_path("/__symbols__");
+> -	if (!tree_symbols) {
+> -		pr_err("no symbols in root of device tree.\n");
+> +	if (!tree_symbols && !ext_symbols) {
+> +		pr_err("no symbols for resolve in device tree.\n");
+>  		err = -EINVAL;
+>  		goto out;
+>  	}
+>  
+> +	phandle_delta = live_tree_max_phandle() + 1;
+> +
+>  	for_each_property_of_node(overlay_fixups, prop) {
+>  
+>  		/* skip properties added automatically */
+>  		if (!of_prop_cmp(prop->name, "name"))
+>  			continue;
+>  
+> -		err = of_property_read_string(tree_symbols,
+> -				prop->name, &refpath);
+> +		err = -1;
+> +
+> +		if (ext_symbols)
+> +			err = of_property_read_string(ext_symbols,
+> +					prop->name, &refpath);
+> +
+> +		if (err && tree_symbols)
+> +			err = of_property_read_string(tree_symbols,
+> +					prop->name, &refpath);
+> +
+>  		if (err)
+>  			goto out;
+>  
+> @@ -352,6 +366,9 @@ int of_resolve_phandles(struct device_node *overlay)
+>  			goto out;
+>  		}
+>  
+> +		if (!refnode->phandle)
+> +			refnode->phandle = ++phandle_delta;
+> +
+>  		phandle = refnode->phandle;
+>  		of_node_put(refnode);
+>  
