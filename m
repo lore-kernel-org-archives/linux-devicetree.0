@@ -1,47 +1,40 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM/arm64: sunxi: convert CCU raw
- numbers to macros
-Date: Mon, 5 Jun 2017 16:17:06 +0800
-Message-ID: <CAGb2v66eV4cX-w1ZBNRGrkJ8HNv0HY0ei2bZ7T+=zwTHhVkRew@mail.gmail.com>
-References: <20170605043224.20687-1-wens@csie.org> <20170605081423.sx7qqjq73646enlm@flea.lan>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 1/3] clk: meson: meson8b: add compatibles for Meson8 and
+ Meson8m2
+Date: Mon, 05 Jun 2017 10:23:28 +0200
+Message-ID: <1496651008.3552.24.camel@baylibre.com>
+References: <20170604183341.21417-1-martin.blumenstingl@googlemail.com>
+         <20170604183341.21417-2-martin.blumenstingl@googlemail.com>
+         <1496606325.3552.16.camel@baylibre.com>
+         <CAFBinCCLL5ZqiZzWi-RsfZ-5_h20O5LRRY3+K7dt=U4qrveQ_w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBGVH2TEQKGQECSK2COI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170605081423.sx7qqjq73646enlm-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCCLL5ZqiZzWi-RsfZ-5_h20O5LRRY3+K7dt=U4qrveQ_w@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: narmstrong@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 5, 2017 at 4:14 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jun 05, 2017 at 12:32:22PM +0800, Chen-Yu Tsai wrote:
->> Hi Maxime,
->>
->> These are some clean up patches for 4.12. They convert raw number
->> references for the CCU and R_CCU nodes, from when the CCU/R_CCU stuff
->> was first added, to the defined macros in the device tree header files.
->>
->> These affect the A64 and H3/H5.
->>
->> These are based on our sunxi/fixes-for-4.12 branch. Once these are merged,
->> I think it's time to send off pull requests for our fixes branches.
->>
->> ChenYu
->
-> Applied both, thanks!
-> Maxime
+On Mon, 2017-06-05 at 00:27 +0200, Martin Blumenstingl wrote:
+> > I think you should split the binding documentation and clk changes into
+> > separate
+> > patches.
+> 
+> OK, from what I know is that for "trivial" changes the driver and
+> dt-binding changes can go through one patch.
+> this patch started as a four-line patch which added two lines of
+> documentation and two lines of driver code.
 
-Argh... Could you fix the build break on patch 1? It's simply
+I'm not aware of such tolerance but if you've have seen that the DT maintainers
+are OK with it, feel free to point me to it.
 
-    sed -i -e 's/RST_IR/RST_APB0_IR/' arch/arm/boot/dts/sunxi-h3-h5.dtsi
+Last time I heard about it, DT guys were using filter-branch on the kernel tree
+to create a separate tree, so I was thinking that this "documentation as a
+separate patch" was a hard rule ... but I may be wrong
 
-Thanks
-ChenYu
+> however, with all the Kconfig/comment/etc updates I think that you are
+> right and it's worth splitting this into two patches (one for the
+> clock driver and one for the dt-binding changes)
+
