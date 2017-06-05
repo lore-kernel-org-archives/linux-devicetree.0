@@ -1,217 +1,85 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH] external references for device tree overlays
-Date: Mon, 05 Jun 2017 21:43:06 +0300
-Message-ID: <1496688186.12947.10.camel@hp800z>
-References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 3/7] dt-bindings: net: Document Intel pch_gbe binding
+Date: Mon, 5 Jun 2017 21:45:21 +0300
+Message-ID: <ff45315f-72ae-4d32-3f25-3444f4d4f1fc@cogentembedded.com>
+References: <20170602234042.22782-1-paul.burton@imgtec.com>
+ <20170605173136.10795-1-paul.burton@imgtec.com>
+ <20170605173136.10795-4-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefani Seibold <stefani.seibold.ext@huawei.com>
-Cc: Stefani Seibold <stefani@seibold.net>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Holm Rauchfuss <holm.rauchfuss@huawei.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170605173136.10795-4-paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, Eric Dumazet <edumazet-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jarod Wilson <jarod-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefani,
+Hello!
 
-On Mon, 2017-06-05 at 14:59 +0200, Stefani Seibold wrote:
-> From: Stefani Seibold <stefani@seibold.net>
-> 
-> This patch enables external references for symbols which are not
-> exported by the current device tree. For example
-> 
-> // RASPI example (only for testing)
-> /dts-v1/;
-> /plugin/;
-> 
-> / {
->     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
-> 
->     fragment@0 {
->         target-path = "/soc/i2s@7e203000";
->         __overlay__ {
->             #address-cells = <0x00000001>;
->             #size-cells = <0x00000001>;
->             test = "test";
->             timer = <&timer>;
->         };
->     };
-> 
->     __external_symbols__ {
->         timer = "/soc/timer@7e003000";
->     };
-> };
-> 
+On 06/05/2017 08:31 PM, Paul Burton wrote:
 
-I understand the problem. I am just not fond of the __external_symbols__
-solution.
-
-There's a facility in the DT source language that allows to declare
-pathspec labels.
-
-The 'timer = <&timer>;' statement could be rewritten as 
-'timer = <&{/soc/timer@7e0030000}>;'
-
-Internally you can 'catch' that this refers to a symbol in the base tree
-and then do the same symbol insertion as the patch you've submitted.
-
-The benefit to the above is that you don't introduce manually edited
-special nodes.
-
-Regards
-
--- Pantelis
-
-> The "timer" symbol is not exported by the RASPI device tree, because it is
-> missing in the __symbols__ section of the device tree.
-> 
-> In case of the RASPI device tree this could be simple fixed by modifing
-> the device tree source, but when the device tree is provided by a closed
-> source BIOS this kind of missing symbol could not be fixed.
-> 
-> An additional benefit is to override a (possible broken) symbol exported
-> by the currect live device tree.
-> 
-> The patch is based and tested on linux 4.12-rc3.
-> 
-> Signed-off-by: Stefani Seibold <stefani.seibold.ext@huawei.com>
-> Signed-off-by: Stefani Seibold <stefani@seibold.net>
+> Introduce documentation for a device tree binding for the Intel Platform
+> Controller Hub (PCH) GigaBit Ethernet (GBE) device. Although this is a
+> PCIe device & thus largely auto-detectable, this binding will be used to
+> provide the driver with the PHY reset GPIO.
+>
+> Signed-off-by: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+> Cc: Eric Dumazet <edumazet-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Jarod Wilson <jarod-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>
 > ---
->  drivers/of/overlay.c  | 19 +++++++++++++++++++
->  drivers/of/resolver.c | 27 ++++++++++++++++++++++-----
->  2 files changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 7827786718d8..de6516ea0fcd 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
-> @@ -50,6 +50,7 @@ struct of_overlay {
->  	int id;
->  	struct list_head node;
->  	int count;
-> +	struct device_node *tree;
->  	struct of_overlay_info *ovinfo_tab;
->  	struct of_changeset cset;
->  };
-> @@ -422,6 +423,8 @@ int of_overlay_create(struct device_node *tree)
->  	/* add to the tail of the overlay list */
->  	list_add_tail(&ov->node, &ov_list);
->  
-> +	ov->tree = tree;
+>
+> Changes in v4: None
+>
+> Changes in v3:
+> - New patch.
+>
+> Changes in v2: None
+>
+>  Documentation/devicetree/bindings/net/pch_gbe.txt | 25 +++++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/pch_gbe.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/pch_gbe.txt b/Documentation/devicetree/bindings/net/pch_gbe.txt
+> new file mode 100644
+> index 000000000000..5de479c26b04
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/pch_gbe.txt
+> @@ -0,0 +1,25 @@
+> +Intel Platform Controller Hub (PCH) GigaBit Ethernet (GBE)
 > +
->  	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
->  
->  	mutex_unlock(&of_mutex);
-> @@ -524,6 +527,7 @@ int of_overlay_destroy(int id)
->  {
->  	struct of_overlay *ov;
->  	int err;
-> +	phandle phandle;
->  
->  	mutex_lock(&of_mutex);
->  
-> @@ -540,6 +544,8 @@ int of_overlay_destroy(int id)
->  		goto out;
->  	}
->  
-> +	phandle = ov->tree->phandle;
+> +Required properties:
+> +- compatible:		Should be the PCI vendor & device ID, eg. "pci8086,8802".
+> +- reg:			Should be a PCI device number as specified by the PCI bus
+> +			binding to IEEE Std 1275-1994.
+> +- phy-reset-gpios:	Should be a GPIO list containing a single GPIO that
+> +			resets the attached PHY when active.
 > +
->  	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
->  	list_del(&ov->node);
->  	__of_changeset_revert(&ov->cset);
-> @@ -549,6 +555,19 @@ int of_overlay_destroy(int id)
->  	of_changeset_destroy(&ov->cset);
->  	kfree(ov);
->  
-> +	if (phandle) {
-> +		struct device_node *node;
-> +		unsigned long flags;
+> +Example:
 > +
-> +		raw_spin_lock_irqsave(&devtree_lock, flags);
-> +		for_each_of_allnodes(node) {
-> +			if (node->phandle >= phandle)
-> +				node->phandle = 0;
-> +		}
-> +		raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +	}
+> +	eg20t_mac@2,0,1 {
+> +		compatible = "pci8086,8802";
+> +		reg = <0x00020100 0 0 0 0>;
+> +		phy-reset-gpios = <&eg20t_gpio 6
+> +				   GPIO_ACTIVE_LOW>;
+> +	};
 > +
-> +
->  	err = 0;
->  
->  out:
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 771f4844c781..31b5f32c9b27 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -286,13 +286,14 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
->  int of_resolve_phandles(struct device_node *overlay)
->  {
->  	struct device_node *child, *local_fixups, *refnode;
-> -	struct device_node *tree_symbols, *overlay_fixups;
-> +	struct device_node *tree_symbols, *ext_symbols, *overlay_fixups;
->  	struct property *prop;
->  	const char *refpath;
->  	phandle phandle, phandle_delta;
->  	int err;
->  
->  	tree_symbols = NULL;
-> +	ext_symbols = NULL;
->  
->  	if (!overlay) {
->  		pr_err("null overlay\n");
-> @@ -321,6 +322,9 @@ int of_resolve_phandles(struct device_node *overlay)
->  	for_each_child_of_node(overlay, child) {
->  		if (!of_node_cmp(child->name, "__fixups__"))
->  			overlay_fixups = child;
-> +		else
-> +		if (!of_node_cmp(child->name, "__external_symbols__"))
-> +			ext_symbols = child;
->  	}
->  
->  	if (!overlay_fixups) {
-> @@ -329,20 +333,30 @@ int of_resolve_phandles(struct device_node *overlay)
->  	}
->  
->  	tree_symbols = of_find_node_by_path("/__symbols__");
-> -	if (!tree_symbols) {
-> -		pr_err("no symbols in root of device tree.\n");
-> +	if (!tree_symbols && !ext_symbols) {
-> +		pr_err("no symbols for resolve in device tree.\n");
->  		err = -EINVAL;
->  		goto out;
->  	}
->  
-> +	phandle_delta = live_tree_max_phandle() + 1;
-> +
->  	for_each_property_of_node(overlay_fixups, prop) {
->  
->  		/* skip properties added automatically */
->  		if (!of_prop_cmp(prop->name, "name"))
->  			continue;
->  
-> -		err = of_property_read_string(tree_symbols,
-> -				prop->name, &refpath);
-> +		err = -1;
-> +
-> +		if (ext_symbols)
-> +			err = of_property_read_string(ext_symbols,
-> +					prop->name, &refpath);
-> +
-> +		if (err && tree_symbols)
-> +			err = of_property_read_string(tree_symbols,
-> +					prop->name, &refpath);
-> +
->  		if (err)
->  			goto out;
->  
-> @@ -352,6 +366,9 @@ int of_resolve_phandles(struct device_node *overlay)
->  			goto out;
->  		}
->  
-> +		if (!refnode->phandle)
-> +			refnode->phandle = ++phandle_delta;
-> +
->  		phandle = refnode->phandle;
->  		of_node_put(refnode);
->  
+> +	eg20t_gpio: eg20t_gpio@2,0,2 {
+
+    Name it "gpio@2,0,2" please -- the node names need to be generic and 
+"gpio" is explicitly listed in the DT 1.0 spec...
+
+MBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
