@@ -1,17 +1,20 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] ARM/arm64: sunxi: convert CCU raw
- numbers to macros
-Date: Mon, 5 Jun 2017 15:52:43 +0200
-Message-ID: <20170605135243.6mznky5jiri7wd2x@flea.lan>
-References: <20170605090033.31663-1-wens@csie.org>
+Subject: Re: [PATCH 10/19] drm/sun4i: hdmi: Rename internal DDC
+ clock to avoid name collision
+Date: Mon, 5 Jun 2017 16:00:12 +0200
+Message-ID: <20170605140012.rlx7rm7xhriwqaza@flea.lan>
+References: <20170602101024.18940-1-wens@csie.org>
+ <20170602101024.18940-11-wens@csie.org>
+ <20170602193012.xwuziggyx6evmusz@flea.lan>
+ <CAGb2v64Vgdjm1MAwn+L0PVc0CA0QOCn=0RONKoGDWLpzVBzvmQ@mail.gmail.com>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="exux3rvlqvuda3a6"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLGE2XEQKGQEC4A6QUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="rglkvp77czxqdczo"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB3OH2XEQKGQEWGG32EY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170605090033.31663-1-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <CAGb2v64Vgdjm1MAwn+L0PVc0CA0QOCn=0RONKoGDWLpzVBzvmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -19,40 +22,54 @@ List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---exux3rvlqvuda3a6
+--rglkvp77czxqdczo
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Jun 05, 2017 at 05:00:31PM +0800, Chen-Yu Tsai wrote:
-> Hi Maxime,
+On Sat, Jun 03, 2017 at 10:33:25PM +0800, Chen-Yu Tsai wrote:
+> On Sat, Jun 3, 2017 at 3:30 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > On Fri, Jun 02, 2017 at 06:10:15PM +0800, Chen-Yu Tsai wrote:
+> >> The DDC parent clock on the A31 SoC is also conveniently named
+> >> "hdmi-ddc", which results in a name collision when the hdmi driver
+> >> registers its internal DDC divider clock.
+> >>
+> >> Rename the internal clock to "hdmi-ddc-divider".
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> >> ---
+> >>  drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+> >> index e1071838f487..9a6b6243e977 100644
+> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_ddc_clk.c
+> >> @@ -125,7 +125,7 @@ static int _sun4i_ddc_create(struct sun4i_hdmi *hdmi, struct clk *parent,
+> >>       if (!ddc)
+> >>               return -ENOMEM;
+> >>
+> >> -     init.name = "hdmi-ddc";
+> >> +     init.name = "hdmi-ddc-divider";
+> >
+> > Can't we rename the CCU clock instead? Having the clock called
+> > hdmi-ddc being the actual clock output on the DDC bus feels more
+> > natural.
 > 
-> This is a fixed version of my "convert CCU raw numbers to macros" series.
-> Please take these instead.
-> 
-> Changes since v1:
-> 
->   - Fixed incorrect macro name for IR reset control phandle
-> 
->   - Fixed header filename typo
-> 
-> These are some clean up patches for 4.12. They convert raw number
-> references for the CCU and R_CCU nodes, from when the CCU/R_CCU stuff
-> was first added, to the defined macros in the device tree header files.
-> 
-> These affect the A64 and H3/H5.
-> 
-> These are based on our sunxi/fixes-for-4.12 branch. Once these are merged,
-> I think it's time to send off pull requests for our fixes branches.
+> Do you have any suggestions? The manual labels the conflicting one
+> in the CCU as "HDMI_DDC"...
 
-Applied both, thanks!
+DDC as the main CCU clock, and hdmi-ddc as the one actually generated
+by the HDMI controller?
+
 Maxime
 
 -- 
 Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
---exux3rvlqvuda3a6--
+--rglkvp77czxqdczo--
