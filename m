@@ -1,75 +1,74 @@
-From: Alan Tull <atull@kernel.org>
-Subject: Re: [PATCH v12 5/6] lib: add bitrev8x4()
-Date: Mon, 5 Jun 2017 10:12:30 -0500
-Message-ID: <CANk1AXQbyaRAn7dzz3P4gneOqYbnhU1GNS5dwSbnUt3_Z-903g@mail.gmail.com>
+From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 6/6] fpga-manager: altera-ps-spi: use bitrev8x4
+Date: Mon, 5 Jun 2017 10:13:07 -0500
+Message-ID: <CANk1AXQW3kYLjafW+-f_y8+frAhy_ivxPT2nKg4xpjnJJ=36yg@mail.gmail.com>
 References: <20170525172911.11467-1-stillcompiling@gmail.com>
  <684ea151ba9aa2c6555a299daf56552ddc11f596.1496434383.git.stillcompiling@gmail.com>
- <7108de698ffdeaa3c61a23997bc0877120bf114e.1496434383.git.stillcompiling@gmail.com>
+ <9486718188ff6ec3d4cb4e196b4caa33c5af48e1.1496434383.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7108de698ffdeaa3c61a23997bc0877120bf114e.1496434383.git.stillcompiling@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joshua Clayton <stillcompiling@gmail.com>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Anatolij Gustschin <agust@denx.de>, Bastian Stender <bst@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King <linux@armlinux.org.uk>, linux-fpga@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9486718188ff6ec3d4cb4e196b4caa33c5af48e1.1496434383.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Bastian Stender <bst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 2, 2017 at 3:30 PM, Joshua Clayton <stillcompiling@gmail.com> wrote:
-> Add a function to reverse bytes within a 32 bit word.
-> Operate on a u32 rather than individual bytes.
->
-> Signed-off-by: Joshua Clayton <stillcompiling@gmail.com>
+On Fri, Jun 2, 2017 at 3:30 PM, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Signed-off-by: Alan Tull <atull@kernel.org>
+Hi Joshua,
+
+Thanks for your work on this!
+
+Alan
+
+> Speed up bit reversal by using hardware bit reversal
+> Add extra code to handle less than 4byte remnants, if any
+>
+> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  include/linux/bitrev.h | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+>  drivers/fpga/altera-ps-spi.c | 19 +++++++++++++++----
+>  1 file changed, 15 insertions(+), 4 deletions(-)
 >
-> diff --git a/include/linux/bitrev.h b/include/linux/bitrev.h
-> index fb790b8449c1..b97be27e5a85 100644
-> --- a/include/linux/bitrev.h
-> +++ b/include/linux/bitrev.h
-> @@ -29,6 +29,8 @@ static inline u32 __bitrev32(u32 x)
+> diff --git a/drivers/fpga/altera-ps-spi.c b/drivers/fpga/altera-ps-spi.c
+> index 0db8def668ed..14f14efdf0d5 100644
+> --- a/drivers/fpga/altera-ps-spi.c
+> +++ b/drivers/fpga/altera-ps-spi.c
+> @@ -149,12 +149,23 @@ static int altera_ps_write_init(struct fpga_manager *mgr,
 >
->  #endif /* CONFIG_HAVE_ARCH_BITREVERSE */
+>  static void rev_buf(char *buf, size_t len)
+>  {
+> -       const char *fw_end = (buf + len);
+> +       u32 *fw32 = (u32 *)buf;
+> +       size_t extra_bytes = (len & 0x03);
+> +       const u32 *fw_end = (u32 *)(buf + len - extra_bytes);
 >
-> +#define __bitrev8x4(x) (__bitrev32(swab32(x)))
+>         /* set buffer to lsb first */
+> -       while (buf < fw_end) {
+> -               *buf = bitrev8(*buf);
+> -               buf++;
+> +       while (fw32 < fw_end) {
+> +               *fw32 = bitrev8x4(*fw32);
+> +               fw32++;
+> +       }
 > +
->  #define __constant_bitrev32(x) \
->  ({                                     \
->         u32 __x = x;                    \
-> @@ -50,6 +52,15 @@ static inline u32 __bitrev32(u32 x)
->         __x;                                                            \
->  })
+> +       if (extra_bytes) {
+> +               buf = (char *)fw_end;
+> +               while (extra_bytes) {
+> +                       *buf = bitrev8(*buf);
+> +                       buf++;
+> +                       extra_bytes--;
+> +               }
+>         }
+>  }
 >
-> +#define __constant_bitrev8x4(x) \
-> +({                     \
-> +       u32 __x = x;    \
-> +       __x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);      \
-> +       __x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);      \
-> +       __x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);      \
-> +       __x;                                                            \
-> +})
-> +
->  #define __constant_bitrev8(x)  \
->  ({                                     \
->         u8 __x = x;                     \
-> @@ -75,6 +86,14 @@ static inline u32 __bitrev32(u32 x)
->         __bitrev16(__x);                                \
->   })
->
-> +#define bitrev8x4(x) \
-> +({                     \
-> +       u32 __x = x;    \
-> +       __builtin_constant_p(__x) ?     \
-> +       __constant_bitrev8x4(__x) :                     \
-> +       __bitrev8x4(__x);                               \
-> + })
-> +
->  #define bitrev8(x) \
->  ({                     \
->         u8 __x = x;     \
 > --
 > 2.11.0
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
