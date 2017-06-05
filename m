@@ -1,191 +1,51 @@
-From: Stefani Seibold <stefani.seibold.ext@huawei.com>
-Subject: [PATCH] external references for device tree overlays
-Date: Mon,  5 Jun 2017 14:59:27 +0200
-Message-ID: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Holm Rauchfuss <holm.rauchfuss@huawei.com>, Stefani Seibold <stefani@seibold.net>, Stefani Seibold <stefani.seibold.ext@huawei.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/3] pinctrl: sun8i: Add support for A83T R_PIO
+Date: Mon, 5 Jun 2017 15:51:28 +0200
+Message-ID: <20170605135128.cjease7t25kjc6lp@flea.lan>
+References: <20170603144427.22855-1-wens@csie.org>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3v3y4wumdnqyymgd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBYOD2XEQKGQEOVCVJLY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170603144427.22855-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stefani Seibold <stefani@seibold.net>
 
-This patch enables external references for symbols which are not
-exported by the current device tree. For example
+--3v3y4wumdnqyymgd
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-// RASPI example (only for testing)
-/dts-v1/;
-/plugin/;
+On Sat, Jun 03, 2017 at 10:44:24PM +0800, Chen-Yu Tsai wrote:
+> Hi,
+> 
+> This series adds support for the R_PIO pin controller on the A83T.
+> The pins managed this controller are mainly used for communicating
+> with the PMIC and codec, and various GPIOs for enabling power switches
+> for USB ports and WiFi.
+> 
+> Patch 1 updates the sunxi pinctrl bindings.
+> 
+> Patch 2 adds the pinctrl driver.
+> 
+> Patch 3 adds a device node for the pin controller.
 
-/ {
-    compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-    fragment@0 {
-        target-path = "/soc/i2s@7e203000";
-        __overlay__ {
-            #address-cells = <0x00000001>;
-            #size-cells = <0x00000001>;
-            test = "test";
-            timer = <&timer>;
-        };
-    };
+Maxime
 
-    __external_symbols__ {
-        timer = "/soc/timer@7e003000";
-    };
-};
-
-The "timer" symbol is not exported by the RASPI device tree, because it is
-missing in the __symbols__ section of the device tree.
-
-In case of the RASPI device tree this could be simple fixed by modifing
-the device tree source, but when the device tree is provided by a closed
-source BIOS this kind of missing symbol could not be fixed.
-
-An additional benefit is to override a (possible broken) symbol exported
-by the currect live device tree.
-
-The patch is based and tested on linux 4.12-rc3.
-
-Signed-off-by: Stefani Seibold <stefani.seibold.ext@huawei.com>
-Signed-off-by: Stefani Seibold <stefani@seibold.net>
----
- drivers/of/overlay.c  | 19 +++++++++++++++++++
- drivers/of/resolver.c | 27 ++++++++++++++++++++++-----
- 2 files changed, 41 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 7827786718d8..de6516ea0fcd 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -50,6 +50,7 @@ struct of_overlay {
- 	int id;
- 	struct list_head node;
- 	int count;
-+	struct device_node *tree;
- 	struct of_overlay_info *ovinfo_tab;
- 	struct of_changeset cset;
- };
-@@ -422,6 +423,8 @@ int of_overlay_create(struct device_node *tree)
- 	/* add to the tail of the overlay list */
- 	list_add_tail(&ov->node, &ov_list);
- 
-+	ov->tree = tree;
-+
- 	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
- 
- 	mutex_unlock(&of_mutex);
-@@ -524,6 +527,7 @@ int of_overlay_destroy(int id)
- {
- 	struct of_overlay *ov;
- 	int err;
-+	phandle phandle;
- 
- 	mutex_lock(&of_mutex);
- 
-@@ -540,6 +544,8 @@ int of_overlay_destroy(int id)
- 		goto out;
- 	}
- 
-+	phandle = ov->tree->phandle;
-+
- 	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
- 	list_del(&ov->node);
- 	__of_changeset_revert(&ov->cset);
-@@ -549,6 +555,19 @@ int of_overlay_destroy(int id)
- 	of_changeset_destroy(&ov->cset);
- 	kfree(ov);
- 
-+	if (phandle) {
-+		struct device_node *node;
-+		unsigned long flags;
-+
-+		raw_spin_lock_irqsave(&devtree_lock, flags);
-+		for_each_of_allnodes(node) {
-+			if (node->phandle >= phandle)
-+				node->phandle = 0;
-+		}
-+		raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+	}
-+
-+
- 	err = 0;
- 
- out:
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 771f4844c781..31b5f32c9b27 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -286,13 +286,14 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
- int of_resolve_phandles(struct device_node *overlay)
- {
- 	struct device_node *child, *local_fixups, *refnode;
--	struct device_node *tree_symbols, *overlay_fixups;
-+	struct device_node *tree_symbols, *ext_symbols, *overlay_fixups;
- 	struct property *prop;
- 	const char *refpath;
- 	phandle phandle, phandle_delta;
- 	int err;
- 
- 	tree_symbols = NULL;
-+	ext_symbols = NULL;
- 
- 	if (!overlay) {
- 		pr_err("null overlay\n");
-@@ -321,6 +322,9 @@ int of_resolve_phandles(struct device_node *overlay)
- 	for_each_child_of_node(overlay, child) {
- 		if (!of_node_cmp(child->name, "__fixups__"))
- 			overlay_fixups = child;
-+		else
-+		if (!of_node_cmp(child->name, "__external_symbols__"))
-+			ext_symbols = child;
- 	}
- 
- 	if (!overlay_fixups) {
-@@ -329,20 +333,30 @@ int of_resolve_phandles(struct device_node *overlay)
- 	}
- 
- 	tree_symbols = of_find_node_by_path("/__symbols__");
--	if (!tree_symbols) {
--		pr_err("no symbols in root of device tree.\n");
-+	if (!tree_symbols && !ext_symbols) {
-+		pr_err("no symbols for resolve in device tree.\n");
- 		err = -EINVAL;
- 		goto out;
- 	}
- 
-+	phandle_delta = live_tree_max_phandle() + 1;
-+
- 	for_each_property_of_node(overlay_fixups, prop) {
- 
- 		/* skip properties added automatically */
- 		if (!of_prop_cmp(prop->name, "name"))
- 			continue;
- 
--		err = of_property_read_string(tree_symbols,
--				prop->name, &refpath);
-+		err = -1;
-+
-+		if (ext_symbols)
-+			err = of_property_read_string(ext_symbols,
-+					prop->name, &refpath);
-+
-+		if (err && tree_symbols)
-+			err = of_property_read_string(tree_symbols,
-+					prop->name, &refpath);
-+
- 		if (err)
- 			goto out;
- 
-@@ -352,6 +366,9 @@ int of_resolve_phandles(struct device_node *overlay)
- 			goto out;
- 		}
- 
-+		if (!refnode->phandle)
-+			refnode->phandle = ++phandle_delta;
-+
- 		phandle = refnode->phandle;
- 		of_node_put(refnode);
- 
 -- 
-2.13.0
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--3v3y4wumdnqyymgd--
