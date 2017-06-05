@@ -1,59 +1,150 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] dt-bindings: mfd: hi6421: Add hi6421v530
- compatible string
-Date: Mon, 5 Jun 2017 17:03:55 +0800
-Message-ID: <CAFGCpxywcinia_eD4wFGrswt6vPoVYAbiTwpUj9mWv0XbmCZNA@mail.gmail.com>
-References: <20170602105156.11351-1-guodong.xu@linaro.org> <20170602105156.11351-2-guodong.xu@linaro.org>
- <20170605081451.d7pd6r7aeza54pgv@dell>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: Add DT bindings documentation for
+ the max7360 mfd driver
+Date: Mon, 5 Jun 2017 10:23:43 +0100
+Message-ID: <20170605092343.ei5v7dafta6zrzth@dell>
+References: <20170602162158.4432-1-valentin_sitdikov@mentor.com>
+ <20170602162158.4432-2-valentin_sitdikov@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170605081451.d7pd6r7aeza54pgv@dell>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170602162158.4432-2-valentin_sitdikov@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Valentin Sitdikov <valentin_sitdikov@mentor.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrei Dranitca <Andrei_Dranitca@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 5, 2017 at 4:14 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, 02 Jun 2017, Guodong Xu wrote:
->
->> Add compatible string for HiSilicon Hi6421v530 PMIC.
->>
->> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/mfd/hi6421.txt | 4 +++-
->>  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> For my own reference:
->   Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
+On Fri, 02 Jun 2017, Valentin Sitdikov wrote:
 
-Thanks Lee.
+> This patch adds documentation for the max7360 bindings.
+> The max7360 is multifunctional device containing GPIO, keypad, PWM and rotary encoder submodules.
+> 
+> Signed-off-by: Andrei Dranitca <Andrei_Dranitca@mentor.com>
+> Signed-off-by: Valentin Sitdikov <valentin_sitdikov@mentor.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/max7360.txt | 74 +++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max7360.txt b/Documentation/devicetree/bindings/mfd/max7360.txt
+> new file mode 100644
+> index 0000000..a38ca9e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max7360.txt
+> @@ -0,0 +1,74 @@
+> +* Maxim MAX7360 multi-function device
 
->> diff --git a/Documentation/devicetree/bindings/mfd/hi6421.txt b/Document=
-ation/devicetree/bindings/mfd/hi6421.txt
->> index 0d5a446..22da96d 100644
->> --- a/Documentation/devicetree/bindings/mfd/hi6421.txt
->> +++ b/Documentation/devicetree/bindings/mfd/hi6421.txt
->> @@ -1,7 +1,9 @@
->>  * HI6421 Multi-Functional Device (MFD), by HiSilicon Ltd.
->>
->>  Required parent device properties:
->> -- compatible : contains "hisilicon,hi6421-pmic";
->> +- compatible    : One of the following chip-specific strings:
->> +     "hisilicon,hi6421-pmic";
->> +     "hisilicon,hi6421v530-pmic";
->>  - reg                : register range space of hi6421;
->>
->>  Supported Hi6421 sub-devices include:
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Multi-Function Device
+
+> +The Maxim MAX7360 is a multifunction device which includes
+
+Multi-Function Device
+
+> +64 key switches, eight LED drivers/GPIOs, PWM intensity control,
+
+s/eight/8/
+
+> +and rotary switch control.
+> +
+> +Required properties:
+> +- compatible: Should be the following: "maxim,max7360"
+> +- reg: Specifies the i2c slave address of the max7360 block.
+
+I2C
+
+> +  It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
+> +
+> +Optional properties:
+> +- interrupt-parent: Specifies the phandle of the interrupt controller to which
+> +  the interrupts from MAX7360 are routed to.
+
+Either use a full-stop, or don't, but please do not mix.
+
+> +- interrupts: list of IRQ lines specifiers
+> +- interrupt-names: list of "inti" and "intk"
+> +- interrupt-controller:  Identifies the device as an interrupt controller.
+> +- #interrupt-cells :  Number of cells to encode an interrupt source, shall be 1.
+
+Tab these out.
+
+> +Required properties:
+> +- compatible:		Should be the following: "maxim,max7360"
+> +- reg:			Specifies the i2c slave address of the max7360 block.
+> +  				It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
+> +
+> +Optional properties:
+> +- interrupt-parent:		Specifies the phandle of the interrupt controller to which
+> +  				the interrupts from MAX7360 are routed to.
+> +- interrupts: 		list of IRQ lines specifiers
+> +- interrupt-names: 		list of "inti" and "intk"
+> +- interrupt-controller:  	Identifies the device as an interrupt controller.
+> +- #interrupt-cells : 	Number of cells to encode an interrupt source, shall be 1.
+
+Descriptions should *all* start with an upper case character.
+
+> +Examples:
+> +
+> +Without subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "inti", "intk";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+
+Remove this line.
+
+> +	};
+> +
+> +With subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "inti", "intk";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +
+> +		gpio {
+> +			compatible = "maxim,max7360-gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <0x2>;
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x2>;
+> +			interrupts = <0>;
+> +		};
+> +
+> +		keypad {
+> +			compatible = "maxim,max7360-keypad";
+> +			maxim,debounce_reg = /bits/ 8 <0xef>;
+> +			maxim,ports_reg = /bits/ 8 <0xae>;
+> +			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
+> +					 MATRIX_KEY(1, 0, KEY_F4) >;
+> +			keypad,num-rows = <2>;
+> +			keypad,num-columns = <1>;
+> +			interrupts = <1>;
+> +		};
+> +
+> +		pwm {
+> +			compatible = "maxim,max7360-pwm";
+> +			#pwm-cells = <0x2>;
+> +		};
+> +
+> +		rotary-encoder {
+> +			compatible = "maxim,max7360-rotary";
+> +			interrupts = <2>;
+> +		};
+> +
+> +	};
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
