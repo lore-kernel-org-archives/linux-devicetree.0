@@ -1,85 +1,587 @@
-From: Russell King <rmk+kernel@armlinux.org.uk>
-Subject: [PATCH 5/6] net: phy: add XAUI and 10GBASE-KR PHY connection types
-Date: Mon, 05 Jun 2017 12:23:10 +0100
-Message-ID: <E1dHq6I-0005XE-VR@rmk-PC.armlinux.org.uk>
-References: <20170605112203.GA10680@n2100.armlinux.org.uk>
+From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 5/7] drm/vc4: Add support for the TXP (transposer) block
+Date: Mon, 5 Jun 2017 12:25:50 +0100
+Message-ID: <20170605112549.GA32480@e106950-lin.cambridge.arm.com>
+References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1496392332-8722-6-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170605112203.GA10680@n2100.armlinux.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1496392332-8722-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eben Upton <eben>
 List-Id: devicetree@vger.kernel.org
 
-XAUI allows XGMII to reach an extended distance by using a XGXS layer at
-each end of the MAC to PHY link, operating over four Serdes lanes.
+Hi Boris,
 
-10GBASE-KR is a single lane Serdes backplane ethernet connection method
-with autonegotiation on the link.  Some PHYs use this to connect to the
-ethernet interface at 10G speeds, switching to other connection types
-when utilising slower speeds.
+I can't speak for the HW-specific details, but the writeback part
+looks pretty good (and familiar ;-) to me. There certainly seems to be
+some scope for code-sharing there, but I think it's fine not to do it
+yet.
 
-10GBASE-KR is also used for XFI and SFI to connect to XFP and SFP fiber
-modules.
+I've a further query below about the handling of CRTC events.
 
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
----
- Documentation/ABI/testing/sysfs-class-net-phydev   | 2 +-
- Documentation/devicetree/bindings/net/ethernet.txt | 2 ++
- include/linux/phy.h                                | 7 +++++++
- 3 files changed, 10 insertions(+), 1 deletion(-)
+On Fri, Jun 02, 2017 at 10:32:10AM +0200, Boris Brezillon wrote:
+>The TXP block is providing writeback support. Add a driver to expose this
+>feature.
+>
+>Supporting this engine requires reworking the CRTC because it's not using
+>the usual 'HVS -> PV -> VC4 Encoder' scheme. Instead, the TXP block is
+>directly connected to HVS FIFO2, and the PV is completely bypassed.
+>
+>In order to make things work, we have to detect when the TXP is enabled,
+>avoid enabling the PV when this is the case, and generate fake VBLANK
+>events when the TXP is done writing the frame back to memory.
+>
+>Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>---
 
-diff --git a/Documentation/ABI/testing/sysfs-class-net-phydev b/Documentation/ABI/testing/sysfs-class-net-phydev
-index c768d5fd8496..6ebabfb27912 100644
---- a/Documentation/ABI/testing/sysfs-class-net-phydev
-+++ b/Documentation/ABI/testing/sysfs-class-net-phydev
-@@ -32,5 +32,5 @@ Contact:	netdev@vger.kernel.org
- 		<empty> (not available), mii, gmii, sgmii, tbi, rev-mii,
- 		rmii, rgmii, rgmii-id, rgmii-rxid, rgmii-txid, rtbi, smii
- 		xgmii, moca, qsgmii, trgmii, 1000base-x, 2500base-x, rxaui,
--		unknown
-+		xaui, 10gbase-kr, unknown
- 
-diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-index 3a6916909d90..d4abe9a98109 100644
---- a/Documentation/devicetree/bindings/net/ethernet.txt
-+++ b/Documentation/devicetree/bindings/net/ethernet.txt
-@@ -32,6 +32,8 @@
-   * "2000base-x",
-   * "2500base-x",
-   * "rxaui"
-+  * "xaui"
-+  * "10gbase-kr" (10GBASE-KR, XFI, SFI)
- - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
- - phy-handle: phandle, specifies a reference to a node representing a PHY
-   device; this property is described in ePAPR and so preferred;
-diff --git a/include/linux/phy.h b/include/linux/phy.h
-index e6fcee188c8d..37feb502e1ae 100644
---- a/include/linux/phy.h
-+++ b/include/linux/phy.h
-@@ -83,6 +83,9 @@ typedef enum {
- 	PHY_INTERFACE_MODE_1000BASEX,
- 	PHY_INTERFACE_MODE_2500BASEX,
- 	PHY_INTERFACE_MODE_RXAUI,
-+	PHY_INTERFACE_MODE_XAUI,
-+	/* 10GBASE-KR, XFI, SFI - single lane 10G Serdes */
-+	PHY_INTERFACE_MODE_10GKR,
- 	PHY_INTERFACE_MODE_MAX,
- } phy_interface_t;
- 
-@@ -149,6 +152,10 @@ static inline const char *phy_modes(phy_interface_t interface)
- 		return "2500base-x";
- 	case PHY_INTERFACE_MODE_RXAUI:
- 		return "rxaui";
-+	case PHY_INTERFACE_MODE_XAUI:
-+		return "xaui";
-+	case PHY_INTERFACE_MODE_10GKR:
-+		return "10gbase-kr";
- 	default:
- 		return "unknown";
- 	}
--- 
-2.7.4
+[snip]
+
+>diff --git a/drivers/gpu/drm/vc4/vc4_txp.c b/drivers/gpu/drm/vc4/vc4_txp.c
+>new file mode 100644
+>index 000000000000..1886e031bef3
+>--- /dev/null
+>+++ b/drivers/gpu/drm/vc4/vc4_txp.c
+>@@ -0,0 +1,509 @@
+>+/*
+>+ * Copyright © 2017 Broadcom
+>+ *
+>+ * Author: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>+ *
+>+ * Permission is hereby granted, free of charge, to any person obtaining a
+>+ * copy of this software and associated documentation files (the "Software"),
+>+ * to deal in the Software without restriction, including without limitation
+>+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+>+ * and/or sell copies of the Software, and to permit persons to whom the
+>+ * Software is furnished to do so, subject to the following conditions:
+>+ *
+>+ * The above copyright notice and this permission notice (including the next
+>+ * paragraph) shall be included in all copies or substantial portions of the
+>+ * Software.
+>+ *
+>+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+>+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+>+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+>+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+>+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+>+ * IN THE SOFTWARE.
+>+ */
+>+
+>+#include <drm/drm_atomic.h>
+>+#include <drm/drm_atomic_helper.h>
+>+#include <drm/drm_fb_cma_helper.h>
+>+#include <drm/drm_crtc_helper.h>
+>+#include <drm/drm_edid.h>
+>+#include <drm/drm_panel.h>
+>+#include <drm/drm_writeback.h>
+>+#include <linux/clk.h>
+>+#include <linux/component.h>
+>+#include <linux/of_graph.h>
+>+#include <linux/of_platform.h>
+>+#include <linux/pm_runtime.h>
+>+
+>+#include "vc4_drv.h"
+>+#include "vc4_regs.h"
+>+
+>+/* Base address of the output.  Raster formats must be 4-byte aligned,
+>+ * T and LT must be 16-byte aligned or maybe utile-aligned (docs are
+>+ * inconsistent, but probably utile).
+>+ */
+>+#define TXP_DST_PTR		0x00
+>+
+>+/* Pitch in bytes for raster images, 16-byte aligned.  For tiled, it's
+>+ * the width in tiles.
+>+ */
+>+#define TXP_DST_PITCH		0x04
+>+/* For T-tiled imgaes, DST_PITCH should be the number of tiles wide,
+>+ * shifted up.
+>+ */
+>+# define TXP_T_TILE_WIDTH_SHIFT		7
+>+/* For LT-tiled images, DST_PITCH should be the number of utiles wide,
+>+ * shifted up.
+>+ */
+>+# define TXP_LT_TILE_WIDTH_SHIFT	4
+>+
+>+/* Pre-rotation width/height of the image.  Must match HVS config.
+>+ *
+>+ * If TFORMAT and 32-bit, limit is 1920 for 32-bit and 3840 to 16-bit
+>+ * and width/height must be tile or utile-aligned as appropriate.  If
+>+ * transposing (rotating), width is limited to 1920.
+>+ *
+>+ * Height is limited to various numbers between 4088 and 4095.  I'd
+>+ * just use 4088 to be safe.
+>+ */
+>+#define TXP_DIM			0x08
+>+# define TXP_HEIGHT_SHIFT		16
+>+# define TXP_HEIGHT_MASK		GENMASK(31, 16)
+>+# define TXP_WIDTH_SHIFT		0
+>+# define TXP_WIDTH_MASK			GENMASK(15, 0)
+>+
+>+#define TXP_DST_CTRL		0x0c
+>+/* These bits are set to 0x54 */
+>+#define TXP_PILOT_SHIFT			24
+>+#define TXP_PILOT_MASK			GENMASK(31, 24)
+>+/* Bits 22-23 are set to 0x01 */
+>+#define TXP_VERSION_SHIFT		22
+>+#define TXP_VERSION_MASK		GENMASK(23, 22)
+>+
+>+/* Powers down the internal memory. */
+>+# define TXP_POWERDOWN			BIT(21)
+>+
+>+/* Enables storing the alpha component in 8888/4444, instead of
+>+ * filling with ~ALPHA_INVERT.
+>+ */
+>+# define TXP_ALPHA_ENABLE		BIT(20)
+>+
+>+/* 4 bits, each enables stores for a channel in each set of 4 bytes.
+>+ * Set to 0xf for normal operation.
+>+ */
+>+# define TXP_BYTE_ENABLE_SHIFT		16
+>+# define TXP_BYTE_ENABLE_MASK		GENMASK(19, 16)
+>+
+>+/* Debug: Generate VSTART again at EOF. */
+>+# define TXP_VSTART_AT_EOF		BIT(15)
+>+
+>+/* Debug: Terminate the current frame immediately.  Stops AXI
+>+ * writes.
+>+ */
+>+# define TXP_ABORT			BIT(14)
+>+
+>+# define TXP_DITHER			BIT(13)
+>+
+>+/* Inverts alpha if TXP_ALPHA_ENABLE, chooses fill value for
+>+ * !TXP_ALPHA_ENABLE.
+>+ */
+>+# define TXP_ALPHA_INVERT		BIT(12)
+>+
+>+/* Note: I've listed the channels here in high bit (in byte 3/2/1) to
+>+ * low bit (in byte 0) order.
+>+ */
+>+# define TXP_FORMAT_SHIFT		8
+>+# define TXP_FORMAT_MASK		GENMASK(11, 8)
+>+# define TXP_FORMAT_ABGR4444		0
+>+# define TXP_FORMAT_ARGB4444		1
+>+# define TXP_FORMAT_BGRA4444		2
+>+# define TXP_FORMAT_RGBA4444		3
+>+# define TXP_FORMAT_BGR565		6
+>+# define TXP_FORMAT_RGB565		7
+>+/* 888s are non-rotated, raster-only */
+>+# define TXP_FORMAT_BGR888		8
+>+# define TXP_FORMAT_RGB888		9
+>+# define TXP_FORMAT_ABGR8888		12
+>+# define TXP_FORMAT_ARGB8888		13
+>+# define TXP_FORMAT_BGRA8888		14
+>+# define TXP_FORMAT_RGBA8888		15
+>+
+>+/* If TFORMAT is set, generates LT instead of T format. */
+>+# define TXP_LINEAR_UTILE		BIT(7)
+>+
+>+/* Rotate output by 90 degrees. */
+>+# define TXP_TRANSPOSE			BIT(6)
+>+
+>+/* Generate a tiled format for V3D. */
+>+# define TXP_TFORMAT			BIT(5)
+>+
+>+/* Generates some undefined test mode output. */
+>+# define TXP_TEST_MODE			BIT(4)
+>+
+>+/* Request odd field from HVS. */
+>+# define TXP_FIELD			BIT(3)
+>+
+>+/* Raise interrupt when idle. */
+>+# define TXP_EI				BIT(2)
+>+
+>+/* Set when generating a frame, clears when idle. */
+>+# define TXP_BUSY			BIT(1)
+>+
+>+/* Starts a frame.  Self-clearing. */
+>+# define TXP_GO				BIT(0)
+>+
+>+/* Number of lines received and committed to memory. */
+>+#define TXP_PROGRESS		0x10
+>+
+>+#define TXP_READ(offset) readl(txp->regs + (offset))
+>+#define TXP_WRITE(offset, val) writel(val, txp->regs + (offset))
+>+
+>+struct vc4_txp {
+>+	struct platform_device *pdev;
+>+
+>+	struct drm_writeback_connector connector;
+>+
+>+	void __iomem *regs;
+>+};
+>+
+>+static inline struct vc4_txp *connector_to_vc4_txp(struct drm_connector *conn)
+>+{
+>+	return container_of(conn, struct vc4_txp, connector.base);
+>+}
+>+
+>+#define TXP_REG(reg) { reg, #reg }
+>+static const struct {
+>+	u32 reg;
+>+	const char *name;
+>+} txp_regs[] = {
+>+	TXP_REG(TXP_DST_PTR),
+>+	TXP_REG(TXP_DST_PITCH),
+>+	TXP_REG(TXP_DIM),
+>+	TXP_REG(TXP_DST_CTRL),
+>+	TXP_REG(TXP_PROGRESS),
+>+};
+>+
+>+#ifdef CONFIG_DEBUG_FS
+>+int vc4_txp_debugfs_regs(struct seq_file *m, void *unused)
+>+{
+>+	struct drm_info_node *node = (struct drm_info_node *)m->private;
+>+	struct drm_device *dev = node->minor->dev;
+>+	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>+	struct vc4_txp *txp = vc4->txp;
+>+	int i;
+>+
+>+	if (!txp)
+>+		return 0;
+>+
+>+	for (i = 0; i < ARRAY_SIZE(txp_regs); i++) {
+>+		seq_printf(m, "%s (0x%04x): 0x%08x\n",
+>+			   txp_regs[i].name, txp_regs[i].reg,
+>+			   TXP_READ(txp_regs[i].reg));
+>+	}
+>+
+>+	return 0;
+>+}
+>+#endif
+>+
+>+static int vc4_txp_connector_get_modes(struct drm_connector *connector)
+>+{
+>+	struct drm_device *dev = connector->dev;
+>+
+>+	return drm_add_modes_noedid(connector, dev->mode_config.max_width,
+>+				    dev->mode_config.max_height);
+>+}
+>+
+>+static enum drm_mode_status
+>+vc4_txp_connector_mode_valid(struct drm_connector *connector,
+>+			     struct drm_display_mode *mode)
+>+{
+>+	struct drm_device *dev = connector->dev;
+>+	struct drm_mode_config *mode_config = &dev->mode_config;
+>+	int w = mode->hdisplay, h = mode->vdisplay;
+>+
+>+	if (w < mode_config->min_width || w > mode_config->max_width)
+>+		return MODE_BAD_HVALUE;
+>+
+>+	if (h < mode_config->min_height || h > mode_config->max_height)
+>+		return MODE_BAD_VVALUE;
+>+
+>+	return MODE_OK;
+>+}
+>+
+>+static const u32 vc4_txp_formats[] = {
+>+	DRM_FORMAT_RGB888,
+>+	DRM_FORMAT_BGR888,
+>+	DRM_FORMAT_XRGB8888,
+>+	DRM_FORMAT_XBGR8888,
+>+	DRM_FORMAT_ARGB8888,
+>+	DRM_FORMAT_ABGR8888,
+>+	DRM_FORMAT_RGBX8888,
+>+	DRM_FORMAT_BGRX8888,
+>+	DRM_FORMAT_RGBA8888,
+>+	DRM_FORMAT_BGRA8888,
+>+};
+>+
+>+static int
+>+vc4_txp_connector_atomic_check(struct drm_connector *connector,
+>+			       struct drm_connector_state *conn_state)
+>+{
+>+	struct drm_crtc_state *crtc_state;
+>+	struct drm_gem_cma_object *gem;
+>+	struct drm_framebuffer *fb;
+>+	int i;
+>+
+>+	if (!conn_state->crtc)
+>+		return 0;
+>+
+>+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb)
+>+		return 0;
+>+
+>+	crtc_state = drm_atomic_get_crtc_state(conn_state->state,
+>+					       conn_state->crtc);
+>+	fb = conn_state->writeback_job->fb;
+>+	if (fb->width != crtc_state->mode.hdisplay ||
+>+	    fb->height != crtc_state->mode.vdisplay) {
+>+		DRM_DEBUG_KMS("Invalid framebuffer size %ux%u\n",
+>+			      fb->width, fb->height);
+>+		return -EINVAL;
+>+	}
+>+
+>+	for (i = 0; i < ARRAY_SIZE(vc4_txp_formats); i++) {
+>+		if (fb->format->format == vc4_txp_formats[i])
+>+			break;
+>+	}
+>+
+>+	if (i == ARRAY_SIZE(vc4_txp_formats))
+>+		return -EINVAL;
+>+
+>+	gem = drm_fb_cma_get_gem_obj(fb, 0);
+>+
+>+	/* Pitch must be aligned on 16 bytes. */
+>+	if (fb->pitches[0] & GENMASK(3, 0))
+>+		return -EINVAL;
+>+
+>+	return 0;
+>+}
+>+
+>+void vc4_txp_atomic_commit(struct drm_device *dev,
+>+			   struct drm_atomic_state *old_state)
+>+{
+>+	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>+	struct vc4_txp *txp = vc4->txp;
+>+	struct drm_connector_state *conn_state = txp->connector.base.state;
+>+	struct drm_display_mode *mode;
+>+	struct drm_gem_cma_object *gem;
+>+	struct drm_framebuffer *fb;
+>+	u32 ctrl = TXP_GO | TXP_EI;
+>+
+>+	/* Writeback connector is disabled, nothing to do. */
+>+	if (!conn_state->crtc)
+>+		return;
+>+
+>+	/* Writeback connector is enabled, but has no FB assigned to it. Fake a
+>+	 * vblank event to complete ->flip_done.
+>+	 */
+>+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb) {
+>+		vc4_crtc_eof_event(conn_state->crtc);
+
+I'm not sure about hiding away the one-shot thing like this. If the
+CRTC remains "active" from the API point of view, I'd expect it to be
+able to keep generating VBLANK events.
+
+I don't know how to do if, but if there were some notion of
+"auto-disabling" CRTCs then this quirk would go away, and you'd also
+be able to enforce that the CRTC can't be enabled without a writeback
+framebuffer.
+
+I'm also not sure how (if?) this works today with a CRTC driving a DSI
+command-mode panel. Does the CRTC keep generating VBLANKs even when
+there are no updates?
+
+>+		return;
+>+	}
+>+
+>+	fb = conn_state->writeback_job->fb;
+>+
+>+	switch (fb->format->format) {
+>+	case DRM_FORMAT_ARGB8888:
+>+		ctrl |= TXP_ALPHA_ENABLE;
+>+	case DRM_FORMAT_XRGB8888:
+>+		ctrl |= VC4_SET_FIELD(TXP_FORMAT_ARGB8888, TXP_FORMAT) |
+>+			VC4_SET_FIELD(0xf, TXP_BYTE_ENABLE);
+>+		break;
+>+
+>+	case DRM_FORMAT_ABGR8888:
+>+		ctrl |= TXP_ALPHA_ENABLE;
+>+	case DRM_FORMAT_XBGR8888:
+>+		ctrl |= VC4_SET_FIELD(TXP_FORMAT_ABGR8888, TXP_FORMAT) |
+>+			VC4_SET_FIELD(0xf, TXP_BYTE_ENABLE);
+>+		break;
+>+
+>+	case DRM_FORMAT_RGBA8888:
+>+		ctrl |= TXP_ALPHA_ENABLE;
+>+	case DRM_FORMAT_RGBX8888:
+>+		ctrl |= VC4_SET_FIELD(TXP_FORMAT_RGBA8888, TXP_FORMAT) |
+>+			VC4_SET_FIELD(0xf, TXP_BYTE_ENABLE);
+>+		break;
+>+
+>+	case DRM_FORMAT_BGRA8888:
+>+		ctrl |= TXP_ALPHA_ENABLE;
+>+	case DRM_FORMAT_BGRX8888:
+>+		ctrl |= VC4_SET_FIELD(TXP_FORMAT_BGRA8888, TXP_FORMAT) |
+>+			VC4_SET_FIELD(0xf, TXP_BYTE_ENABLE);
+>+		break;
+>+
+>+	case DRM_FORMAT_BGR888:
+>+		ctrl |= VC4_SET_FIELD(TXP_FORMAT_BGR888, TXP_FORMAT) |
+>+			VC4_SET_FIELD(0xf, TXP_BYTE_ENABLE);
+>+		break;
+>+
+>+	case DRM_FORMAT_RGB888:
+>+		ctrl |= VC4_SET_FIELD(TXP_FORMAT_RGB888, TXP_FORMAT) |
+>+			VC4_SET_FIELD(0xf, TXP_BYTE_ENABLE);
+>+		break;
+>+	default:
+>+		WARN_ON(1);
+>+		return;
+>+	}
+>+
+>+	if (!(ctrl & TXP_ALPHA_ENABLE))
+>+		ctrl |= TXP_ALPHA_INVERT;
+>+
+>+	mode = &conn_state->crtc->state->adjusted_mode;
+>+	gem = drm_fb_cma_get_gem_obj(fb, 0);
+>+	TXP_WRITE(TXP_DST_PTR, gem->paddr + fb->offsets[0]);
+>+	TXP_WRITE(TXP_DST_PITCH, fb->pitches[0]);
+>+	TXP_WRITE(TXP_DIM,
+>+		  VC4_SET_FIELD(mode->hdisplay, TXP_WIDTH) |
+>+		  VC4_SET_FIELD(mode->vdisplay, TXP_HEIGHT));
+>+
+>+	TXP_WRITE(TXP_DST_CTRL, ctrl);
+>+
+>+	drm_writeback_queue_job(&txp->connector, conn_state->writeback_job);
+>+	conn_state->writeback_job = NULL;
+>+}
+>+
+>+bool vc4_is_txp_encoder(struct drm_device *dev, struct drm_encoder *encoder)
+>+{
+>+	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>+
+>+	return encoder == &vc4->txp->connector.encoder;
+>+}
+>+
+>+static const struct drm_connector_helper_funcs vc4_txp_connector_helper_funcs = {
+>+	.get_modes = vc4_txp_connector_get_modes,
+>+	.mode_valid = vc4_txp_connector_mode_valid,
+>+	.atomic_check = vc4_txp_connector_atomic_check,
+
+huh. This hook didn't exist when I did Mali-DP. I wonder if we should
+switch Mali-DP to it too. Do you know if the semantics are any
+different from the encoder atomic_check?
+
+Cheers,
+-Brian
+
+>+};
+>+
+>+static enum drm_connector_status
+>+vc4_txp_connector_detect(struct drm_connector *connector, bool force)
+>+{
+>+	return connector_status_disconnected;
+>+}
+>+
+>+static void vc4_txp_connector_destroy(struct drm_connector *connector)
+>+{
+>+	drm_connector_unregister(connector);
+>+	drm_connector_cleanup(connector);
+>+}
+>+
+>+static const struct drm_connector_funcs vc4_txp_connector_funcs = {
+>+	.dpms = drm_atomic_helper_connector_dpms,
+>+	.detect = vc4_txp_connector_detect,
+>+	.fill_modes = drm_helper_probe_single_connector_modes,
+>+	.set_property = drm_atomic_helper_connector_set_property,
+>+	.destroy = vc4_txp_connector_destroy,
+>+	.reset = drm_atomic_helper_connector_reset,
+>+	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+>+	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+>+};
+>+
+>+static const struct drm_encoder_funcs vc4_txp_encoder_funcs = {
+>+	.destroy = drm_encoder_cleanup,
+>+};
+>+
+>+static irqreturn_t vc4_txp_interrupt(int irq, void *data)
+>+{
+>+	struct vc4_txp *txp = data;
+>+	struct drm_crtc *crtc = txp->connector.base.state->crtc;
+>+
+>+	TXP_WRITE(TXP_DST_CTRL, 0);
+>+	vc4_crtc_eof_event(crtc);
+>+	drm_writeback_signal_completion(&txp->connector, 0);
+>+
+>+	return IRQ_HANDLED;
+>+}
+>+
+>+static int vc4_txp_bind(struct device *dev, struct device *master, void *data)
+>+{
+>+	struct platform_device *pdev = to_platform_device(dev);
+>+	struct drm_device *drm = dev_get_drvdata(master);
+>+	struct vc4_dev *vc4 = to_vc4_dev(drm);
+>+	struct vc4_txp *txp;
+>+	int ret, irq;
+>+
+>+	irq = platform_get_irq(pdev, 0);
+>+	if (irq < 0)
+>+		return irq;
+>+
+>+	txp = devm_kzalloc(dev, sizeof(*txp), GFP_KERNEL);
+>+	if (!txp)
+>+		return -ENOMEM;
+>+
+>+	txp->pdev = pdev;
+>+
+>+	txp->regs = vc4_ioremap_regs(pdev, 0);
+>+	if (IS_ERR(txp->regs))
+>+		return PTR_ERR(txp->regs);
+>+
+>+	drm_connector_helper_add(&txp->connector.base,
+>+				 &vc4_txp_connector_helper_funcs);
+>+	ret = drm_writeback_connector_init(drm, &txp->connector,
+>+					   &vc4_txp_connector_funcs,
+>+					   NULL,
+>+					   vc4_txp_formats,
+>+					   ARRAY_SIZE(vc4_txp_formats));
+>+	if (ret)
+>+		return ret;
+>+
+>+	ret = devm_request_irq(dev, irq, vc4_txp_interrupt, 0,
+>+			       dev_name(dev), txp);
+>+	if (ret)
+>+		return ret;
+>+
+>+	dev_set_drvdata(dev, txp);
+>+	vc4->txp = txp;
+>+
+>+	return 0;
+>+}
+>+
+>+static void vc4_txp_unbind(struct device *dev, struct device *master,
+>+			   void *data)
+>+{
+>+	struct drm_device *drm = dev_get_drvdata(master);
+>+	struct vc4_dev *vc4 = to_vc4_dev(drm);
+>+	struct vc4_txp *txp = dev_get_drvdata(dev);
+>+
+>+	vc4_txp_connector_destroy(&txp->connector.base);
+>+
+>+	vc4->txp = NULL;
+>+}
+>+
+>+static const struct component_ops vc4_txp_ops = {
+>+	.bind   = vc4_txp_bind,
+>+	.unbind = vc4_txp_unbind,
+>+};
+>+
+>+static int vc4_txp_dev_probe(struct platform_device *pdev)
+>+{
+>+	return component_add(&pdev->dev, &vc4_txp_ops);
+>+}
+>+
+>+static int vc4_txp_dev_remove(struct platform_device *pdev)
+>+{
+>+	component_del(&pdev->dev, &vc4_txp_ops);
+>+	return 0;
+>+}
+>+
+>+static const struct of_device_id vc4_txp_dt_match[] = {
+>+	{ .compatible = "brcm,bcm2835-txp" },
+>+	{ /* sentinel */ },
+>+};
+>+
+>+struct platform_driver vc4_txp_driver = {
+>+	.probe = vc4_txp_dev_probe,
+>+	.remove = vc4_txp_dev_remove,
+>+	.driver = {
+>+		.name = "vc4_txp",
+>+		.of_match_table = vc4_txp_dt_match,
+>+	},
+>+};
+>-- 
+>2.7.4
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
