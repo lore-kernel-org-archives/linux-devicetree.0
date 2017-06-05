@@ -1,65 +1,52 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH 1/4] thermal: uniphier: add UniPhier thermal driver
-Date: Mon, 5 Jun 2017 17:42:28 +0900
-Message-ID: <CAK7LNARtQfhx+854FHZenymX4Em4LYWSWUsH2iPp4fb9D7xXHA@mail.gmail.com>
-References: <1496049345-14649-2-git-send-email-hayashi.kunihiko@socionext.com>
- <20170529164816.GA14822@localhost.localdomain> <20170530182141.6865.4A936039@socionext.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM/arm64: sunxi: convert CCU raw
+ numbers to macros
+Date: Mon,  5 Jun 2017 17:00:31 +0800
+Message-ID: <20170605090033.31663-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170530182141.6865.4A936039-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBM532TEQKGQEWW3A63A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-05-30 18:21 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+Hi Maxime,
 
->> > +static const struct uniphier_tm_soc_data uniphier_pxs2_tm_data = {
->> > +   .map_base        = 0xe000,
->> > +   .block_base      = 0xe000,
->> > +   .tmod_setup_addr = 0xe904,
->> > +};
->> > +
->> > +static const struct uniphier_tm_soc_data uniphier_ld20_tm_data = {
->> > +   .map_base        = 0xe000,
->> > +   .block_base      = 0xe800,
->> > +   .tmod_setup_addr = 0xe938,
->>
->> Shouldn't these be in your device tree using the register properties?
->> I see at least the map base as possible to be done in DT.
+This is a fixed version of my "convert CCU raw numbers to macros" series.
+Please take these instead.
 
-True for simple-bus.
+Changes since v1:
 
-However, the combination of "simple-mfd" and "syscon"
-seems a well established strategy when
-registers are mixed/interleaved in a syscon block.
+  - Fixed incorrect macro name for IR reset control phandle
 
-(For example, chip-control@ea0000 node of
-arch/arm/boot/dts/berlin2.dtsi)
+  - Fixed header filename typo
 
+These are some clean up patches for 4.12. They convert raw number
+references for the CCU and R_CCU nodes, from when the CCU/R_CCU stuff
+was first added, to the defined macros in the device tree header files.
 
-> I think so.
-> However, the iomap of this device are included in sysctrl(simple-mfd),
-> and I can't find the method to express offset from base-address of sysctrl
-> on DT, instead of map_base, in resonable way.
->
-> I think that mfd node has register property then the lower node of mfd,
-> that is the thermal node, can't have register property.
->
-> If the driver gets offset address from DT, I'll define new property
-> like 'socionext,reg_offset' in the thermal node. But I'm not sure that.
+These affect the A64 and H3/H5.
 
-socionext,uniphier-{pxs2,ld20}-thermal is an SoC-specific compatible string.
-The internal-offset is included
-in the HW-spec associated with the compatible.
-I believe 'socionext,reg_offset' is pointless.
+These are based on our sunxi/fixes-for-4.12 branch. Once these are merged,
+I think it's time to send off pull requests for our fixes branches.
 
+ChenYu
+
+Chen-Yu Tsai (2):
+  ARM: sunxi: h3-h5: Convert R_CCU raw numbers to macros
+  arm64: allwinner: a64: Convert CCU raw number references to macros
+
+ arch/arm/boot/dts/sunxi-h3-h5.dtsi            |  8 +++---
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 35 ++++++++++++++-------------
+ 2 files changed, 23 insertions(+), 20 deletions(-)
 
 -- 
-Best Regards
-Masahiro Yamada
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
