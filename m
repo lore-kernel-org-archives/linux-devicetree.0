@@ -1,55 +1,69 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 0/3] Preparation for further fwnode property cleanup
-Date: Mon, 5 Jun 2017 10:12:24 -0500
-Message-ID: <CAL_JsqJtB-UVNLo3SM6apB-MODOSWwZzgeAE+ifsmT7U-5WJmw@mail.gmail.com>
-References: <1495637635-26057-1-git-send-email-sakari.ailus@linux.intel.com> <20170531122849.GG1019@valkosipuli.retiisi.org.uk>
+From: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v12 4/6] ARM: dts: imx6q-evi: support altera-ps-spi
+Date: Mon, 5 Jun 2017 10:12:14 -0500
+Message-ID: <CANk1AXQ3i-mmQRBKUpi7_6fYtLGtgKni5qKGLmvncWpkmw+tRQ@mail.gmail.com>
+References: <20170525172911.11467-1-stillcompiling@gmail.com>
+ <684ea151ba9aa2c6555a299daf56552ddc11f596.1496434383.git.stillcompiling@gmail.com>
+ <8253d3ad7de8ba991de9f23fd68b8f9502c1ffe0.1496434383.git.stillcompiling@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170531122849.GG1019@valkosipuli.retiisi.org.uk>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8253d3ad7de8ba991de9f23fd68b8f9502c1ffe0.1496434383.git.stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Moritz Fischer <moritz.fischer-+aYTwkv1SeIAvxtiuMwx3w@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Bastian Stender <bst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-fpga-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 31, 2017 at 7:28 AM, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> Hi Rob,
+On Fri, Jun 2, 2017 at 3:30 PM, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add support for Altera FPGA connected to an spi port
+> to the evi devicetree file
 >
-> On Wed, May 24, 2017 at 05:53:52PM +0300, Sakari Ailus wrote:
->> Hi Rob, Frank, others,
->>
->> Here's the 6th version of what used to be a single patch to prepare for
->> fwnode property cleanup.
->>
->> Beyond this, I have a couple of other patchsets I'll post in the near
->> future:
->>
->> - fwnode property cleanup (for linux-pm) which moves the property API
->> implementation to FW specific locations; depends on these patches,
->>
->> - V4L2 fwnode patches (for media_tree, no unmerged dependencies, pull
->>   request sent) and
->>
->> - fwnode const patchset which allows making the fwnode argument for the
->>   property API functions const. It depends on both of the previous sets.
->>   Might be for linux-pm.
->
-> I figured out that others are starting to have patches that depend on my
-> other patchsets getting merged. Those patches are for the fwnode property
-> API that most likely should go through the linux-pm tree as well as for the
-> media tree.
->
-> <URL:http://www.spinics.net/lists/linux-media/msg115893.html>
->
-> I have hopes of being able to get the fwnode cleanup patchset (which the
-> aforementioned patches depend on) in within this merge window --- assuming I
-> could have your ack on the OF portions.
->
-> Would it be possible to have an immutable branch for these or would you
-> accept a pull request on v4.12-rc1?
+> Signed-off-by: Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I've applied this series. The stable branch is here:
+Signed-off-by: Alan Tull <atull-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/property-move
-
-Rob
+> ---
+>  arch/arm/boot/dts/imx6q-evi.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx6q-evi.dts b/arch/arm/boot/dts/imx6q-evi.dts
+> index 24fe093a66db..59aebbc95671 100644
+> --- a/arch/arm/boot/dts/imx6q-evi.dts
+> +++ b/arch/arm/boot/dts/imx6q-evi.dts
+> @@ -82,6 +82,15 @@
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_ecspi1 &pinctrl_ecspi1cs>;
+>         status = "okay";
+> +
+> +       fpga: fpga@0 {
+> +               compatible = "altr,fpga-passive-serial";
+> +               spi-max-frequency = <20000000>;
+> +               reg = <0>;
+> +               pinctrl-0 = <&pinctrl_fpgaspi>;
+> +               nconfig-gpios = <&gpio4 9 GPIO_ACTIVE_LOW>;
+> +               nstat-gpios = <&gpio4 11 GPIO_ACTIVE_LOW>;
+> +       };
+>  };
+>
+>  &ecspi3 {
+> @@ -313,6 +322,13 @@
+>                 >;
+>         };
+>
+> +       pinctrl_fpgaspi: fpgaspigrp {
+> +               fsl,pins = <
+> +                       MX6QDL_PAD_KEY_ROW1__GPIO4_IO09 0x1b0b0
+> +                       MX6QDL_PAD_KEY_ROW2__GPIO4_IO11 0x1b0b0
+> +               >;
+> +       };
+> +
+>         pinctrl_gpminand: gpminandgrp {
+>                 fsl,pins = <
+>                         MX6QDL_PAD_NANDF_CLE__NAND_CLE 0xb0b1
+> --
+> 2.11.0
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
