@@ -1,106 +1,72 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [v2 1/1] usb:host:xhci support option to disable xHCI 1.0 USB2 HW
- LPM
-Date: Mon, 5 Jun 2017 14:14:19 +0300
-Message-ID: <59353D0B.1070005@linux.intel.com>
-References: <1495265096-14851-1-git-send-email-tqnguyen@apm.com>
+From: Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Subject: [PATCH v2 0/6] Add phylib support for MV88X3310 10G phy
+Date: Mon, 5 Jun 2017 12:22:03 +0100
+Message-ID: <20170605112203.GA10680@n2100.armlinux.org.uk>
+References: <20170601102327.GF27796@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1495265096-14851-1-git-send-email-tqnguyen@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Thang Q. Nguyen" <tqnguyen@apm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Duc Tran <dxtran@apm.com>, Quang Han <qhan@apm.com>, Tung Nguyen <tunguyen@apm.com>, patches@apm.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170601102327.GF27796-l+eeeJia6m9URfEZ8mYm6t73F7V6hmMc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20.05.2017 10:24, Thang Q. Nguyen wrote:
-> XHCI specification 1.1 does not require xHCI 1.0 compliant controllers
-> to always enable hardware USB2 LPM.
-> However, the current xHCI driver always enable it by setting HLE=1 when
-> seeing HLC=1. This makes certain xHCI controllers that have broken USB2
-> HW LPM fail to work as there is no way to disable this feature.
-> This patch adds support to control disabling USB2 Hardware LPM via
-> DT/ACPI attribute.
->
-> Signed-off-by: Tung Nguyen <tunguyen@apm.com>
-> Signed-off-by: Thang Q. Nguyen <tqnguyen@apm.com>
-> ---
-> Changes since v1:
->   - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
->    be consistent with other attribute names.
-> ---
->   Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
->   drivers/usb/host/xhci-plat.c                       |    3 +++
->   drivers/usb/host/xhci.c                            |    7 ++++++-
->   drivers/usb/host/xhci.h                            |    1 +
->   4 files changed, 11 insertions(+), 1 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 2d80b60..96f1ac0 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -26,6 +26,7 @@ Required properties:
->
->   Optional properties:
->     - clocks: reference to a clock
-> +  - usb2-lpm-disable: disable USB2 LPM for hardware does not support it
->     - usb3-lpm-capable: determines if platform is USB3 LPM capable
->     - quirk-broken-port-ped: set if the controller has broken port disable mechanism
->
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 7c2a9e7..950eaf0 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -267,6 +267,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
->   		goto disable_clk;
->   	}
->
-> +	if (device_property_read_bool(&pdev->dev, "usb2-lpm-disable"))
-> +		xhci->quirks |= XHCI_USB2_LPM_DISABLE;
-> +
->   	if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
->   		xhci->quirks |= XHCI_LPM_SUPPORT;
->
-> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-> index 2d13102..47d51d4 100644
-> --- a/drivers/usb/host/xhci.c
-> +++ b/drivers/usb/host/xhci.c
-> @@ -4055,6 +4055,7 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
->   	unsigned long	flags;
->   	int		hird, exit_latency;
->   	int		ret;
-> +	int		usb2_lpm_disable = 0;
->
->   	if (hcd->speed >= HCD_USB3 || !xhci->hw_lpm_support ||
->   			!udev->lpm_capable)
-> @@ -4079,7 +4080,11 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
->   	xhci_dbg(xhci, "%s port %d USB2 hardware LPM\n",
->   			enable ? "enable" : "disable", port_num + 1);
->
-> -	if (enable) {
-> +	/* Check for optional disable USB2 LPM if XHCI 1.0 */
-> +	if ((xhci->quirks & XHCI_USB2_LPM_DISABLE) && (xhci->hci_version == 0x100))
-> +		usb2_lpm_disable = 1;
-> +
-> +	if (enable && !usb2_lpm_disable) {
-  
-Wouldn't it be better to just keep  xhci->hw_lpm_support = 0 if the host
-doesn't support Hardware LPM Capability, (HLC)?
+Hi,
 
-This should prevent all those extra steps getting here just to do nothing.
+This patch series adds support for the Marvell 88x3310 PHY found on
+the SolidRun Macchiatobin board.
 
-the quirk check could be done in xhci-mem.c in xhci_add_in_port()
+The first patch introduces a set of generic Clause 45 PHY helpers that
+C45 PHY drivers can make use of if they wish.
 
-if (temp & XHCI_HLC &&) {
-         xhci_dbg_trace(xhci, trace_xhci_dbg_init,
-	                                "xHCI 1.0: support USB2 hardware lpm");
-         xhci->hw_lpm_support = 1;
-}
+Patch 2 ensures that the Clause 22 aneg_done function will not be
+called for incompatible Clause 45 PHYs.
 
-Sidenote, the only purpose of the HLC bit is to inform the driver that the host port
-is HLC (Hardware LPM Capable). No wonder driver sets HW LPM if HLC is set.
+Patch 3 fixes the aneg restart to be compatible with C45 PHYs - it can
+currently only cope with C22 PHYs.
 
-The HW LPM can also be disabled (per device) in sysfs if needed.
+Patch 4 moves the "gen10g" driver into the Clause 45 code, grouping all
+core clause 45 code together.
 
--Mathias   
+Patch 5 adds the phy_interface_t types for XAUI and 10GBase-KR links.
+As 10GBase-KR appears to be compatible with XFI and SFI, XFI and SFI,
+I currently see no reason to add XFI and SFI interface modes.  There
+seems to be vendor code out there using these, but they all alias back
+to the same hardware settings.
+
+Patch 6 adds support for the MV88X3310 PHY, which supports both the
+copper and fiber interfaces.  It should be noted that the MV88X3310
+automatically switches its MAC facing interface between 10GBase-KR
+and SGMII depending on the negotiated speed.  This was discussed with
+Florian, and we agreed to update the phy interface mode depending on
+the properties of the actual link mode to the PHY.
+
+v2:
+- update sysfs-class-net-phydev documentation
+- avoid genphy_aneg_done for non-C22 PHYs
+- expand comment about 0x30 constant
+- add comment about lack of reset
+- configure driver using MARVELL_10G_PHY
+
+ Documentation/ABI/testing/sysfs-class-net-phydev   |   2 +-
+ Documentation/devicetree/bindings/net/ethernet.txt |   2 +
+ MAINTAINERS                                        |   6 +
+ drivers/net/phy/Kconfig                            |   5 +
+ drivers/net/phy/Makefile                           |   3 +-
+ drivers/net/phy/marvell10g.c                       | 368 +++++++++++++++++++++
+ drivers/net/phy/phy-c45.c                          | 298 +++++++++++++++++
+ drivers/net/phy/phy.c                              |  29 +-
+ drivers/net/phy/phy_device.c                       | 113 ++-----
+ include/linux/phy.h                                |  20 ++
+ 10 files changed, 748 insertions(+), 98 deletions(-)
+
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line: currently at 9.6Mbps down 400kbps up
+according to speedtest.net.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
