@@ -1,675 +1,219 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v8 19/24] drivers/fsi: Add GPIO based FSI master
-Date: Tue,  6 Jun 2017 16:08:54 -0500
-Message-ID: <20170606210859.80431-20-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v8 09/24] drivers/fsi: scan slaves & register devices
+Date: Tue,  6 Jun 2017 16:08:44 -0500
+Message-ID: <20170606210859.80431-10-cbostic@linux.vnet.ibm.com>
 References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, "Edward A . James" <eajames@us.ibm.com>, Jeremy Kerr <jk@ozlabs.org>
+Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
-Implement a FSI master using GPIO.  Will generate FSI protocol for
-read and write commands to particular addresses.  Sends master command
-and waits for and decodes a slave response.
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Includes changes from Edward A. James <eajames@us.ibm.com> and Jeremy
-Kerr <jk@ozlabs.org>.
+Now that we have fsi_slave devices, scan each for endpoints, and
+register them on the fsi bus.
 
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
+Includes contributions from Christopher Bostic
+<cbostic@linux.vnet.ibm.com>.
+
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
-v7 - Move global spinlock to struct fsi_master_gpio
-   - Remove redundant checks for valid gpio descriptors
-   - Clarify 'active low' comments
-   - More descriptive comments for build_abs_ar_command()
-   - Test MTOE count with == instead of >=
-   - Clean up multi line and redundant comments
-   - Check for negative return codes in issue_term()
-   - Simplify input data processing in poll_for_response()
-   - Remove empty function fsi_master_gpio_release()
-   - Check return code for fsi_master_register()
+ drivers/fsi/fsi-core.c | 128 ++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/fsi.h    |   4 ++
+ 2 files changed, 131 insertions(+), 1 deletion(-)
 
-v6 - Kconfig: remove 'depends on FSI' for GPIO master
-   - Remove explicit kfree of devm_kzalloc master struct
----
- drivers/fsi/Kconfig           |  12 +
- drivers/fsi/Makefile          |   1 +
- drivers/fsi/fsi-master-gpio.c | 594 ++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 607 insertions(+)
- create mode 100644 drivers/fsi/fsi-master-gpio.c
-
-diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
-index e1006c6..ba16637 100644
---- a/drivers/fsi/Kconfig
-+++ b/drivers/fsi/Kconfig
-@@ -10,4 +10,16 @@ config FSI
- 	---help---
- 	  FSI - the FRU Support Interface - is a simple bus for low-level
- 	  access to POWER-based hardware.
-+
-+if FSI
-+
-+config FSI_MASTER_GPIO
-+	tristate "GPIO-based FSI master"
-+	depends on GPIOLIB
-+	select CRC4
-+	---help---
-+	This option enables a FSI master driver using GPIO lines.
-+
-+endif
-+
- endmenu
-diff --git a/drivers/fsi/Makefile b/drivers/fsi/Makefile
-index db0e5e7..ed28ac0 100644
---- a/drivers/fsi/Makefile
-+++ b/drivers/fsi/Makefile
-@@ -1,2 +1,3 @@
+diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+index 04795f2..eac0bc4 100644
+--- a/drivers/fsi/fsi-core.c
++++ b/drivers/fsi/fsi-core.c
+@@ -19,9 +19,23 @@
+ #include <linux/idr.h>
+ #include <linux/module.h>
+ #include <linux/slab.h>
++#include <linux/bitops.h>
  
- obj-$(CONFIG_FSI) += fsi-core.o
-+obj-$(CONFIG_FSI_MASTER_GPIO) += fsi-master-gpio.o
-diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-new file mode 100644
-index 0000000..d467e61
---- /dev/null
-+++ b/drivers/fsi/fsi-master-gpio.c
-@@ -0,0 +1,594 @@
-+/*
-+ * A FSI master controller, using a simple GPIO bit-banging interface
-+ */
+ #include "fsi-master.h"
+ 
++#define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
++#define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
++#define FSI_SLAVE_CONF_SLOTS_SHIFT	16
++#define FSI_SLAVE_CONF_VERSION_MASK	GENMASK(15, 12)
++#define FSI_SLAVE_CONF_VERSION_SHIFT	12
++#define FSI_SLAVE_CONF_TYPE_MASK	GENMASK(11, 4)
++#define FSI_SLAVE_CONF_TYPE_SHIFT	4
++#define FSI_SLAVE_CONF_CRC_SHIFT	4
++#define FSI_SLAVE_CONF_CRC_MASK		GENMASK(3, 0)
++#define FSI_SLAVE_CONF_DATA_BITS	28
 +
-+#include <linux/crc4.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/fsi.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
++static const int engine_page_size = 0x400;
 +
-+#include "fsi-master.h"
+ #define FSI_SLAVE_BASE			0x800
+ 
+ /*
+@@ -62,6 +76,30 @@ static int fsi_master_read(struct fsi_master *master, int link,
+ static int fsi_master_write(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
+ 
++/* FSI endpoint-device support */
 +
-+#define	FSI_GPIO_STD_DLY	1	/* Standard pin delay in nS */
-+#define	FSI_ECHO_DELAY_CLOCKS	16	/* Number clocks for echo delay */
-+#define	FSI_PRE_BREAK_CLOCKS	50	/* Number clocks to prep for break */
-+#define	FSI_BREAK_CLOCKS	256	/* Number of clocks to issue break */
-+#define	FSI_POST_BREAK_CLOCKS	16000	/* Number clocks to set up cfam */
-+#define	FSI_INIT_CLOCKS		5000	/* Clock out any old data */
-+#define	FSI_GPIO_STD_DELAY	10	/* Standard GPIO delay in nS */
-+					/* todo: adjust down as low as */
-+					/* possible or eliminate */
-+#define	FSI_GPIO_CMD_DPOLL      0x2
-+#define	FSI_GPIO_CMD_TERM	0x3f
-+#define FSI_GPIO_CMD_ABS_AR	0x4
-+
-+#define	FSI_GPIO_DPOLL_CLOCKS	100      /* < 21 will cause slave to hang */
-+
-+/* Bus errors */
-+#define	FSI_GPIO_ERR_BUSY	1	/* Slave stuck in busy state */
-+#define	FSI_GPIO_RESP_ERRA	2	/* Any (misc) Error */
-+#define	FSI_GPIO_RESP_ERRC	3	/* Slave reports master CRC error */
-+#define	FSI_GPIO_MTOE		4	/* Master time out error */
-+#define	FSI_GPIO_CRC_INVAL	5	/* Master reports slave CRC error */
-+
-+/* Normal slave responses */
-+#define	FSI_GPIO_RESP_BUSY	1
-+#define	FSI_GPIO_RESP_ACK	0
-+#define	FSI_GPIO_RESP_ACKD	4
-+
-+#define	FSI_GPIO_MAX_BUSY	100
-+#define	FSI_GPIO_MTOE_COUNT	1000
-+#define	FSI_GPIO_DRAIN_BITS	20
-+#define	FSI_GPIO_CRC_SIZE	4
-+#define	FSI_GPIO_MSG_ID_SIZE		2
-+#define	FSI_GPIO_MSG_RESPID_SIZE	2
-+#define	FSI_GPIO_PRIME_SLAVE_CLOCKS	100
-+
-+struct fsi_master_gpio {
-+	struct fsi_master	master;
-+	struct device		*dev;
-+	spinlock_t		cmd_lock;	/* Lock for commands */
-+	struct gpio_desc	*gpio_clk;
-+	struct gpio_desc	*gpio_data;
-+	struct gpio_desc	*gpio_trans;	/* Voltage translator */
-+	struct gpio_desc	*gpio_enable;	/* FSI enable */
-+	struct gpio_desc	*gpio_mux;	/* Mux control */
-+};
-+
-+#define to_fsi_master_gpio(m) container_of(m, struct fsi_master_gpio, master)
-+
-+struct fsi_gpio_msg {
-+	uint64_t	msg;
-+	uint8_t		bits;
-+};
-+
-+static void clock_toggle(struct fsi_master_gpio *master, int count)
++static void fsi_device_release(struct device *_device)
 +{
-+	int i;
++	struct fsi_device *device = to_fsi_dev(_device);
 +
-+	for (i = 0; i < count; i++) {
-+		ndelay(FSI_GPIO_STD_DLY);
-+		gpiod_set_value(master->gpio_clk, 0);
-+		ndelay(FSI_GPIO_STD_DLY);
-+		gpiod_set_value(master->gpio_clk, 1);
-+	}
++	kfree(device);
 +}
 +
-+static int sda_in(struct fsi_master_gpio *master)
++static struct fsi_device *fsi_create_device(struct fsi_slave *slave)
 +{
-+	int in;
++	struct fsi_device *dev;
 +
-+	ndelay(FSI_GPIO_STD_DLY);
-+	in = gpiod_get_value(master->gpio_data);
-+	return in ? 1 : 0;
++	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
++	if (!dev)
++		return NULL;
++
++	dev->dev.parent = &slave->dev;
++	dev->dev.bus = &fsi_bus_type;
++	dev->dev.release = fsi_device_release;
++
++	return dev;
 +}
 +
-+static void sda_out(struct fsi_master_gpio *master, int value)
+ /* FSI slave support */
+ static int fsi_slave_calc_addr(struct fsi_slave *slave, uint32_t *addrp,
+ 		uint8_t *idp)
+@@ -115,6 +153,91 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
+ 			addr, val, size);
+ }
+ 
++static int fsi_slave_scan(struct fsi_slave *slave)
 +{
-+	gpiod_set_value(master->gpio_data, value);
-+}
-+
-+static void set_sda_input(struct fsi_master_gpio *master)
-+{
-+	gpiod_direction_input(master->gpio_data);
-+	gpiod_set_value(master->gpio_trans, 0);
-+}
-+
-+static void set_sda_output(struct fsi_master_gpio *master, int value)
-+{
-+	gpiod_set_value(master->gpio_trans, 1);
-+	gpiod_direction_output(master->gpio_data, value);
-+}
-+
-+static void clock_zeros(struct fsi_master_gpio *master, int count)
-+{
-+	set_sda_output(master, 1);
-+	clock_toggle(master, count);
-+}
-+
-+static void serial_in(struct fsi_master_gpio *master, struct fsi_gpio_msg *msg,
-+			uint8_t num_bits)
-+{
-+	uint8_t bit, in_bit;
-+
-+	set_sda_input(master);
-+
-+	for (bit = 0; bit < num_bits; bit++) {
-+		clock_toggle(master, 1);
-+		in_bit = sda_in(master);
-+		msg->msg <<= 1;
-+		msg->msg |= ~in_bit & 0x1;	/* Data is active low */
-+	}
-+	msg->bits += num_bits;
-+}
-+
-+static void serial_out(struct fsi_master_gpio *master,
-+			const struct fsi_gpio_msg *cmd)
-+{
-+	uint8_t bit;
-+	uint64_t msg = ~cmd->msg;	/* Data is active low */
-+	uint64_t sda_mask = 0x1ULL << (cmd->bits - 1);
-+	uint64_t last_bit = ~0;
-+	int next_bit;
-+
-+	if (!cmd->bits) {
-+		dev_warn(master->dev, "trying to output 0 bits\n");
-+		return;
-+	}
-+	set_sda_output(master, 0);
-+
-+	/* Send the start bit */
-+	sda_out(master, 0);
-+	clock_toggle(master, 1);
-+
-+	/* Send the message */
-+	for (bit = 0; bit < cmd->bits; bit++) {
-+		next_bit = (msg & sda_mask) >> (cmd->bits - 1);
-+		if (last_bit ^ next_bit) {
-+			sda_out(master, next_bit);
-+			last_bit = next_bit;
-+		}
-+		clock_toggle(master, 1);
-+		msg <<= 1;
-+	}
-+}
-+
-+static void msg_push_bits(struct fsi_gpio_msg *msg, uint64_t data, int bits)
-+{
-+	msg->msg <<= bits;
-+	msg->msg |= data & ((1ull << bits) - 1);
-+	msg->bits += bits;
-+}
-+
-+static void msg_push_crc(struct fsi_gpio_msg *msg)
-+{
-+	uint8_t crc;
-+	int top;
-+
-+	top = msg->bits & 0x3;
-+
-+	/* start bit, and any non-aligned top bits */
-+	crc = crc4(0, 1 << top | msg->msg >> (msg->bits - top), top + 1);
-+
-+	/* aligned bits */
-+	crc = crc4(crc, msg->msg, msg->bits - top);
-+
-+	msg_push_bits(msg, crc, 4);
-+}
-+
-+/*
-+ * Encode an Absolute Address command
-+ */
-+static void build_abs_ar_command(struct fsi_gpio_msg *cmd,
-+		uint8_t id, uint32_t addr, size_t size, const void *data)
-+{
-+	bool write = !!data;
-+	uint8_t ds;
-+	int i;
-+
-+	cmd->bits = 0;
-+	cmd->msg = 0;
-+
-+	msg_push_bits(cmd, id, 2);
-+	msg_push_bits(cmd, FSI_GPIO_CMD_ABS_AR, 3);
-+	msg_push_bits(cmd, write ? 0 : 1, 1);
++	uint32_t engine_addr;
++	uint32_t conf;
++	int rc, i;
 +
 +	/*
-+	 * The read/write size is encoded in the lower bits of the address
-+	 * (as it must be naturally-aligned), and the following ds bit.
++	 * scan engines
 +	 *
-+	 *	size	addr:1	addr:0	ds
-+	 *	1	x	x	0
-+	 *	2	x	0	1
-+	 *	4	0	1	1
-+	 *
++	 * We keep the peek mode and slave engines for the core; so start
++	 * at the third slot in the configuration table. We also need to
++	 * skip the chip ID entry at the start of the address space.
 +	 */
-+	ds = size > 1 ? 1 : 0;
-+	addr &= ~(size - 1);
-+	if (size == 4)
-+		addr |= 1;
++	engine_addr = engine_page_size * 3;
++	for (i = 2; i < engine_page_size / sizeof(uint32_t); i++) {
++		uint8_t slots, version, type, crc;
++		struct fsi_device *dev;
 +
-+	msg_push_bits(cmd, addr & ((1 << 21) - 1), 21);
-+	msg_push_bits(cmd, ds, 1);
-+	for (i = 0; write && i < size; i++)
-+		msg_push_bits(cmd, ((uint8_t *)data)[i], 8);
++		rc = fsi_slave_read(slave, (i + 1) * sizeof(conf),
++				&conf, sizeof(conf));
++		if (rc) {
++			dev_warn(&slave->dev,
++				"error reading slave registers\n");
++			return -1;
++		}
++		conf = be32_to_cpu(conf);
 +
-+	msg_push_crc(cmd);
-+}
++		crc = crc4(0, conf, 32);
++		if (crc) {
++			dev_warn(&slave->dev,
++				"crc error in slave register at 0x%04x\n",
++				i);
++			return -1;
++		}
 +
-+static void build_dpoll_command(struct fsi_gpio_msg *cmd, uint8_t slave_id)
-+{
-+	cmd->bits = 0;
-+	cmd->msg = 0;
++		slots = (conf & FSI_SLAVE_CONF_SLOTS_MASK)
++			>> FSI_SLAVE_CONF_SLOTS_SHIFT;
++		version = (conf & FSI_SLAVE_CONF_VERSION_MASK)
++			>> FSI_SLAVE_CONF_VERSION_SHIFT;
++		type = (conf & FSI_SLAVE_CONF_TYPE_MASK)
++			>> FSI_SLAVE_CONF_TYPE_SHIFT;
 +
-+	msg_push_bits(cmd, slave_id, 2);
-+	msg_push_bits(cmd, FSI_GPIO_CMD_DPOLL, 3);
-+	msg_push_crc(cmd);
-+}
++		/*
++		 * Unused address areas are marked by a zero type value; this
++		 * skips the defined address areas
++		 */
++		if (type != 0 && slots != 0) {
 +
-+static void echo_delay(struct fsi_master_gpio *master)
-+{
-+	set_sda_output(master, 1);
-+	clock_toggle(master, FSI_ECHO_DELAY_CLOCKS);
-+}
++			/* create device */
++			dev = fsi_create_device(slave);
++			if (!dev)
++				return -ENOMEM;
 +
-+static void build_term_command(struct fsi_gpio_msg *cmd, uint8_t slave_id)
-+{
-+	cmd->bits = 0;
-+	cmd->msg = 0;
++			dev->slave = slave;
++			dev->engine_type = type;
++			dev->version = version;
++			dev->unit = i;
++			dev->addr = engine_addr;
++			dev->size = slots * engine_page_size;
 +
-+	msg_push_bits(cmd, slave_id, 2);
-+	msg_push_bits(cmd, FSI_GPIO_CMD_TERM, 6);
-+	msg_push_crc(cmd);
-+}
++			dev_dbg(&slave->dev,
++			"engine[%i]: type %x, version %x, addr %x size %x\n",
++					dev->unit, dev->engine_type, version,
++					dev->addr, dev->size);
 +
-+/*
-+ * Store information on master errors so handler can detect and clean
-+ * up the bus
-+ */
-+static void fsi_master_gpio_error(struct fsi_master_gpio *master, int error)
-+{
++			dev_set_name(&dev->dev, "%02x:%02x:%02x:%02x",
++					slave->master->idx, slave->link,
++					slave->id, i - 2);
 +
-+}
-+
-+static int read_one_response(struct fsi_master_gpio *master,
-+		uint8_t data_size, struct fsi_gpio_msg *msgp, uint8_t *tagp)
-+{
-+	struct fsi_gpio_msg msg;
-+	uint8_t id, tag;
-+	uint32_t crc;
-+	int i;
-+
-+	/* wait for the start bit */
-+	for (i = 0; i < FSI_GPIO_MTOE_COUNT; i++) {
-+		msg.bits = 0;
-+		msg.msg = 0;
-+		serial_in(master, &msg, 1);
-+		if (msg.msg)
-+			break;
-+	}
-+	if (i == FSI_GPIO_MTOE_COUNT) {
-+		dev_dbg(master->dev,
-+			"Master time out waiting for response\n");
-+		fsi_master_gpio_error(master, FSI_GPIO_MTOE);
-+		return -EIO;
-+	}
-+
-+	msg.bits = 0;
-+	msg.msg = 0;
-+
-+	/* Read slave ID & response tag */
-+	serial_in(master, &msg, 4);
-+
-+	id = (msg.msg >> FSI_GPIO_MSG_RESPID_SIZE) & 0x3;
-+	tag = msg.msg & 0x3;
-+
-+	/* If we have an ACK and we're expecting data, clock the data in too */
-+	if (tag == FSI_GPIO_RESP_ACK && data_size)
-+		serial_in(master, &msg, data_size * 8);
-+
-+	/* read CRC */
-+	serial_in(master, &msg, FSI_GPIO_CRC_SIZE);
-+
-+	/* we have a whole message now; check CRC */
-+	crc = crc4(0, 1, 1);
-+	crc = crc4(crc, msg.msg, msg.bits);
-+	if (crc) {
-+		dev_dbg(master->dev, "ERR response CRC\n");
-+		fsi_master_gpio_error(master, FSI_GPIO_CRC_INVAL);
-+		return -EIO;
-+	}
-+
-+	if (msgp)
-+		*msgp = msg;
-+	if (tagp)
-+		*tagp = tag;
-+
-+	return 0;
-+}
-+
-+static int issue_term(struct fsi_master_gpio *master, uint8_t slave)
-+{
-+	struct fsi_gpio_msg cmd;
-+	uint8_t tag;
-+	int rc;
-+
-+	build_term_command(&cmd, slave);
-+	serial_out(master, &cmd);
-+	echo_delay(master);
-+
-+	rc = read_one_response(master, 0, NULL, &tag);
-+	if (rc < 0) {
-+		dev_err(master->dev,
-+				"TERM failed; lost communication with slave\n");
-+		return -EIO;
-+	} else if (tag != FSI_GPIO_RESP_ACK) {
-+		dev_err(master->dev, "TERM failed; response %d\n", tag);
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int poll_for_response(struct fsi_master_gpio *master,
-+		uint8_t slave, uint8_t size, void *data)
-+{
-+	struct fsi_gpio_msg response, cmd;
-+	int busy_count = 0, rc, i;
-+	uint8_t tag;
-+	uint8_t *data_byte = data;
-+
-+retry:
-+	rc = read_one_response(master, size, &response, &tag);
-+	if (rc)
-+		return rc;
-+
-+	switch (tag) {
-+	case FSI_GPIO_RESP_ACK:
-+		if (size && data) {
-+			uint64_t val = response.msg;
-+			/* clear crc & mask */
-+			val >>= 4;
-+			val &= (1ull << (size * 8)) - 1;
-+
-+			for (i = 0; i < size; i++) {
-+				data_byte[size-i-1] = val;
-+				val >>= 8;
++			rc = device_register(&dev->dev);
++			if (rc) {
++				dev_warn(&slave->dev, "add failed: %d\n", rc);
++				put_device(&dev->dev);
 +			}
 +		}
-+		break;
-+	case FSI_GPIO_RESP_BUSY:
-+		/*
-+		 * Its necessary to clock slave before issuing
-+		 * d-poll, not indicated in the hardware protocol
-+		 * spec. < 20 clocks causes slave to hang, 21 ok.
-+		 */
-+		clock_zeros(master, FSI_GPIO_DPOLL_CLOCKS);
-+		if (busy_count++ < FSI_GPIO_MAX_BUSY) {
-+			build_dpoll_command(&cmd, slave);
-+			serial_out(master, &cmd);
-+			echo_delay(master);
-+			goto retry;
-+		}
-+		dev_warn(master->dev,
-+			"ERR slave is stuck in busy state, issuing TERM\n");
-+		issue_term(master, slave);
-+		rc = -EIO;
-+		break;
 +
-+	case FSI_GPIO_RESP_ERRA:
-+	case FSI_GPIO_RESP_ERRC:
-+		dev_dbg(master->dev, "ERR%c received: 0x%x\n",
-+			tag == FSI_GPIO_RESP_ERRA ? 'A' : 'C',
-+			(int)response.msg);
-+		fsi_master_gpio_error(master, response.msg);
-+		rc = -EIO;
-+		break;
++		engine_addr += slots * engine_page_size;
++
++		if (!(conf & FSI_SLAVE_CONF_NEXT_MASK))
++			break;
 +	}
-+
-+	/* Clock the slave enough to be ready for next operation */
-+	clock_zeros(master, FSI_GPIO_PRIME_SLAVE_CLOCKS);
-+	return rc;
-+}
-+
-+static int fsi_master_gpio_xfer(struct fsi_master_gpio *master, uint8_t slave,
-+		struct fsi_gpio_msg *cmd, size_t resp_len, void *resp)
-+{
-+	unsigned long flags;
-+	int rc;
-+
-+	spin_lock_irqsave(&master->cmd_lock, flags);
-+	serial_out(master, cmd);
-+	echo_delay(master);
-+	rc = poll_for_response(master, slave, resp_len, resp);
-+	spin_unlock_irqrestore(&master->cmd_lock, flags);
-+
-+	return rc;
-+}
-+
-+static int fsi_master_gpio_read(struct fsi_master *_master, int link,
-+		uint8_t id, uint32_t addr, void *val, size_t size)
-+{
-+	struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
-+	struct fsi_gpio_msg cmd;
-+
-+	if (link != 0)
-+		return -ENODEV;
-+
-+	build_abs_ar_command(&cmd, id, addr, size, NULL);
-+	return fsi_master_gpio_xfer(master, id, &cmd, size, val);
-+}
-+
-+static int fsi_master_gpio_write(struct fsi_master *_master, int link,
-+		uint8_t id, uint32_t addr, const void *val, size_t size)
-+{
-+	struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
-+	struct fsi_gpio_msg cmd;
-+
-+	if (link != 0)
-+		return -ENODEV;
-+
-+	build_abs_ar_command(&cmd, id, addr, size, val);
-+	return fsi_master_gpio_xfer(master, id, &cmd, 0, NULL);
-+}
-+
-+static int fsi_master_gpio_term(struct fsi_master *_master,
-+		int link, uint8_t id)
-+{
-+	struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
-+	struct fsi_gpio_msg cmd;
-+
-+	if (link != 0)
-+		return -ENODEV;
-+
-+	build_term_command(&cmd, id);
-+	return fsi_master_gpio_xfer(master, id, &cmd, 0, NULL);
-+}
-+
-+static int fsi_master_gpio_break(struct fsi_master *_master, int link)
-+{
-+	struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
-+
-+	if (link != 0)
-+		return -ENODEV;
-+
-+	set_sda_output(master, 1);
-+	sda_out(master, 1);
-+	clock_toggle(master, FSI_PRE_BREAK_CLOCKS);
-+	sda_out(master, 0);
-+	clock_toggle(master, FSI_BREAK_CLOCKS);
-+	echo_delay(master);
-+	sda_out(master, 1);
-+	clock_toggle(master, FSI_POST_BREAK_CLOCKS);
-+
-+	/* Wait for logic reset to take effect */
-+	udelay(200);
 +
 +	return 0;
 +}
 +
-+static void fsi_master_gpio_init(struct fsi_master_gpio *master)
-+{
-+	gpiod_direction_output(master->gpio_mux, 1);
-+	gpiod_direction_output(master->gpio_trans, 1);
-+	gpiod_direction_output(master->gpio_enable, 1);
-+	gpiod_direction_output(master->gpio_clk, 1);
-+	gpiod_direction_output(master->gpio_data, 1);
-+
-+	/* todo: evaluate if clocks can be reduced */
-+	clock_zeros(master, FSI_INIT_CLOCKS);
-+}
-+
-+static int fsi_master_gpio_link_enable(struct fsi_master *_master, int link)
-+{
-+	struct fsi_master_gpio *master = to_fsi_master_gpio(_master);
-+
-+	if (link != 0)
-+		return -ENODEV;
-+	gpiod_set_value(master->gpio_enable, 1);
-+
-+	return 0;
-+}
-+
-+static int fsi_master_gpio_probe(struct platform_device *pdev)
-+{
-+	struct fsi_master_gpio *master;
-+	struct gpio_desc *gpio;
-+
-+	master = devm_kzalloc(&pdev->dev, sizeof(*master), GFP_KERNEL);
-+	if (!master)
-+		return -ENOMEM;
-+
-+	master->dev = &pdev->dev;
-+	master->master.dev.parent = master->dev;
-+
-+	gpio = devm_gpiod_get(&pdev->dev, "clock", 0);
-+	if (IS_ERR(gpio)) {
-+		dev_err(&pdev->dev, "failed to get clock gpio\n");
-+		return PTR_ERR(gpio);
-+	}
-+	master->gpio_clk = gpio;
-+
-+	gpio = devm_gpiod_get(&pdev->dev, "data", 0);
-+	if (IS_ERR(gpio)) {
-+		dev_err(&pdev->dev, "failed to get data gpio\n");
-+		return PTR_ERR(gpio);
-+	}
-+	master->gpio_data = gpio;
-+
-+	/* Optional GPIOs */
-+	gpio = devm_gpiod_get_optional(&pdev->dev, "trans", 0);
-+	if (IS_ERR(gpio)) {
-+		dev_err(&pdev->dev, "failed to get trans gpio\n");
-+		return PTR_ERR(gpio);
-+	}
-+	master->gpio_trans = gpio;
-+
-+	gpio = devm_gpiod_get_optional(&pdev->dev, "enable", 0);
-+	if (IS_ERR(gpio)) {
-+		dev_err(&pdev->dev, "failed to get enable gpio\n");
-+		return PTR_ERR(gpio);
-+	}
-+	master->gpio_enable = gpio;
-+
-+	gpio = devm_gpiod_get_optional(&pdev->dev, "mux", 0);
-+	if (IS_ERR(gpio)) {
-+		dev_err(&pdev->dev, "failed to get mux gpio\n");
-+		return PTR_ERR(gpio);
-+	}
-+	master->gpio_mux = gpio;
-+
-+	master->master.n_links = 1;
-+	master->master.read = fsi_master_gpio_read;
-+	master->master.write = fsi_master_gpio_write;
-+	master->master.term = fsi_master_gpio_term;
-+	master->master.send_break = fsi_master_gpio_break;
-+	master->master.link_enable = fsi_master_gpio_link_enable;
-+	platform_set_drvdata(pdev, master);
-+	spin_lock_init(&master->cmd_lock);
-+
-+	fsi_master_gpio_init(master);
-+
-+	return fsi_master_register(&master->master);
-+}
-+
-+
-+static int fsi_master_gpio_remove(struct platform_device *pdev)
-+{
-+	struct fsi_master_gpio *master = platform_get_drvdata(pdev);
-+
-+	devm_gpiod_put(&pdev->dev, master->gpio_clk);
-+	devm_gpiod_put(&pdev->dev, master->gpio_data);
-+	if (master->gpio_trans)
-+		devm_gpiod_put(&pdev->dev, master->gpio_trans);
-+	if (master->gpio_enable)
-+		devm_gpiod_put(&pdev->dev, master->gpio_enable);
-+	if (master->gpio_mux)
-+		devm_gpiod_put(&pdev->dev, master->gpio_mux);
-+	fsi_master_unregister(&master->master);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id fsi_master_gpio_match[] = {
-+	{ .compatible = "fsi-master-gpio" },
-+	{ },
-+};
-+
-+static struct platform_driver fsi_master_gpio_driver = {
-+	.driver = {
-+		.name		= "fsi-master-gpio",
-+		.of_match_table	= fsi_master_gpio_match,
-+	},
-+	.probe	= fsi_master_gpio_probe,
-+	.remove = fsi_master_gpio_remove,
-+};
-+
-+module_platform_driver(fsi_master_gpio_driver);
-+MODULE_LICENSE("GPL");
+ /* Encode slave local bus echo delay */
+ static inline uint32_t fsi_smode_echodly(int x)
+ {
+@@ -230,7 +353,10 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 		return rc;
+ 	}
+ 
+-	/* todo: perform engine scan */
++	rc = fsi_slave_scan(slave);
++	if (rc)
++		dev_dbg(&master->dev, "failed during slave scan with: %d\n",
++				rc);
+ 
+ 	return rc;
+ }
+diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+index 273cbf6..efa55ba 100644
+--- a/include/linux/fsi.h
++++ b/include/linux/fsi.h
+@@ -21,6 +21,10 @@ struct fsi_device {
+ 	struct device		dev;
+ 	u8			engine_type;
+ 	u8			version;
++	u8			unit;
++	struct fsi_slave	*slave;
++	uint32_t		addr;
++	uint32_t		size;
+ };
+ 
+ struct fsi_device_id {
 -- 
 1.8.2.2
