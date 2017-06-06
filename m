@@ -1,42 +1,90 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4 1/2] Documentation: dt-bindings: Add documentation for
- the Meson GXL USB2 PHY
-Date: Tue, 6 Jun 2017 14:24:14 +0530
-Message-ID: <00dbbfb5-72ce-c056-8d36-7cdebf8b6712@ti.com>
-References: <20170417191142.26099-1-martin.blumenstingl@googlemail.com>
- <20170520135041.25679-1-martin.blumenstingl@googlemail.com>
- <20170520135041.25679-2-martin.blumenstingl@googlemail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 12/20] ARM: dts: uniphier: Add generic compatible
+ string for I2C EEPROM
+Date: Tue, 6 Jun 2017 11:04:31 +0200
+Message-ID: <CABxcv=mPzDVTh_ZH1VtuHMUhVrR+hxz8GwcQT38hwJJqHY+fJA@mail.gmail.com>
+References: <20170523133448.4794-1-javier@dowhile0.org> <20170523133448.4794-13-javier@dowhile0.org>
+ <CAK7LNATDvesYLKimY=aKfT6kAiidq6Ufd=kCWGQcCZ_Xy-27tw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170520135041.25679-2-martin.blumenstingl@googlemail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, hendrik@consetetur.de, carlo@caione.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNATDvesYLKimY=aKfT6kAiidq6Ufd=kCWGQcCZ_Xy-27tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello Masahiro,
 
-On Saturday 20 May 2017 07:20 PM, Martin Blumenstingl wrote:
-> This adds the DT binding documentation for the USB2 PHY(s) found in the
-> Meson GXL and GXM SoCs.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+On Mon, Jun 5, 2017 at 7:13 AM, Masahiro Yamada
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> Hi.
+>
+> 2017-05-23 22:34 GMT+09:00 Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>:
+>> The at24 driver allows to register I2C EEPROM chips using different vendor
+>> and devices, but the I2C subsystem does not take the vendor into account
+>> when matching using the I2C table since it only has device entries.
+>>
+>> But when matching using an OF table, both the vendor and device has to be
+>> taken into account so the driver defines only a set of compatible strings
+>> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+>>
+>> So add this generic fallback to the device node compatible string to make
+>> the device to match the driver using the OF device ID table.
+>>
+>> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+>>
+>> ---
+>>
+>> Changes in v5:
+>> - Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
+>>
+>> Changes in v4:
+>> - Only use the atmel manufacturer in the compatible string instead of
+>>   keeping the deprecated ones (Rob Herring).
+>>
+>> Changes in v3: None
+>> Changes in v2: None
+>>
+>>  arch/arm/boot/dts/uniphier-pro4-ace.dts    | 2 +-
+>>  arch/arm/boot/dts/uniphier-pro4-sanji.dts  | 2 +-
+>>  arch/arm/boot/dts/uniphier-pxs2-gentil.dts | 2 +-
+>>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+>
+> Why didn't you touch
+> arch/arm/boot/dts/uniphier-ref-daughter.dtsi ?
+>
 
-changed $subject to
-dt-bindings: phy: meson-gxl-usb2-phy: Add documentation for the Meson GXL USB2 PHY
+Because the compatible string "microchip,24lc128" used by the I2C
+EEPROM node on that DTS is not supported by the
+drivers/misc/eeprom/at24.c driver (in fact the only occurrence for
+24lc128 I see is in that DTS).
 
-and merged.
+Maybe is a typo and it should be "microchip,24c128" instead ? In any
+case, I think this should be fixed as a separate patch and is out of
+scope for this series.
 
-Thanks
-Kishon
+>
+>
+> BTW, has the driver change merged?
+>
+
+No, it hasn't been merged yet but there's no strict order in which the
+changes should be picked so the DTS patches can be applied
+independently. I haven't had feedback from Wolfram yet, but he was the
+one who suggested this and so I guess he will be Ok with the driver
+changes.
+
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+Best regards,
+Javier
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
