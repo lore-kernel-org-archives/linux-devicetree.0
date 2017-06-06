@@ -1,18 +1,28 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: rsnd: Document optional reset properties" to the asoc tree
-Date: Tue, 06 Jun 2017 20:05:50 +0100
-Message-ID: <E1dIJna-000796-Tu@debutante>
-References: <1496313375-27892-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1496313375-27892-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.orgalsa-devel@alsa-project.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: sun8i-codec-analog: prepare a mixer
+ control/widget/route set for V3s" to the asoc tree
+Date: Tue, 06 Jun 2017 20:06:14 +0100
+Message-ID: <E1dIJny-0007GB-CN@debutante>
+References: <20170605132722.6459-2-icenowy@aosc.io>
+Reply-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQ2L75W5QGBBMX23PEQKGQEOIYAXJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170605132722.6459-2-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The patch
 
-   ASoC: rsnd: Document optional reset properties
+   ASoC: sun8i-codec-analog: prepare a mixer control/widget/route set for V3s
 
 has been applied to the asoc tree at
 
@@ -37,36 +47,176 @@ to this mail.
 Thanks,
 Mark
 
->From 5f440c48c5d5a11f1892819c409e183b2056e4ba Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Thu, 1 Jun 2017 12:36:15 +0200
-Subject: [PATCH] ASoC: rsnd: Document optional reset properties
+>From 50aadc14cee74009c72e7d66954b15f27d45c02f Mon Sep 17 00:00:00 2001
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Date: Mon, 5 Jun 2017 21:27:20 +0800
+Subject: [PATCH] ASoC: sun8i-codec-analog: prepare a mixer
+ control/widget/route set for V3s
 
-Document the optional properties for describing module resets, to
-support resetting these modules on R-Car Gen2 and Gen3.
+Allwinner V3s has an analog codec without MIC2 and Line In, which will
+need a special set of mixer controls/widgets/routes, otherwise meaningless
+controls will be exported to userspace and confuse the user.
 
-Note that the audio module has resets for the Serial Sound Interfaces
-only.
+Add the special set, and use it when the SoC has no MIC2 and Line In.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/sound/renesas,rsnd.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ sound/soc/sunxi/sun8i-codec-analog.c | 101 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 100 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-index 13cb21d53b8b..7246bb268bf9 100644
---- a/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-+++ b/Documentation/devicetree/bindings/sound/renesas,rsnd.txt
-@@ -379,6 +379,9 @@ Optional properties:
- - clock-frequency		: for all audio_clkout0/1/2/3
- - clkout-lr-asynchronous	: boolean property. it indicates that audio_clkoutn
- 				  is asynchronizes with lr-clock.
-+- resets			: References to SSI resets.
-+- reset-names			: List of valid reset names.
-+				  "ssi-all", "ssi.X"
+diff --git a/sound/soc/sunxi/sun8i-codec-analog.c b/sound/soc/sunxi/sun8i-codec-analog.c
+index edcc3eb7cd9a..29c446068151 100644
+--- a/sound/soc/sunxi/sun8i-codec-analog.c
++++ b/sound/soc/sunxi/sun8i-codec-analog.c
+@@ -219,6 +219,22 @@ static const struct snd_kcontrol_new sun8i_codec_mixer_controls[] = {
+ 			  SUN8I_ADDA_LOMIXSC_MIC2, 1, 0),
+ };
  
- SSI subnode properties:
- - interrupts			: Should contain SSI interrupt for PIO transfer
++/* mixer controls */
++static const struct snd_kcontrol_new sun8i_v3s_codec_mixer_controls[] = {
++	SOC_DAPM_DOUBLE_R("DAC Playback Switch",
++			  SUN8I_ADDA_LOMIXSC,
++			  SUN8I_ADDA_ROMIXSC,
++			  SUN8I_ADDA_LOMIXSC_DACL, 1, 0),
++	SOC_DAPM_DOUBLE_R("DAC Reversed Playback Switch",
++			  SUN8I_ADDA_LOMIXSC,
++			  SUN8I_ADDA_ROMIXSC,
++			  SUN8I_ADDA_LOMIXSC_DACR, 1, 0),
++	SOC_DAPM_DOUBLE_R("Mic1 Playback Switch",
++			  SUN8I_ADDA_LOMIXSC,
++			  SUN8I_ADDA_ROMIXSC,
++			  SUN8I_ADDA_LOMIXSC_MIC1, 1, 0),
++};
++
+ /* ADC mixer controls */
+ static const struct snd_kcontrol_new sun8i_codec_adc_mixer_controls[] = {
+ 	SOC_DAPM_DOUBLE_R("Mixer Capture Switch",
+@@ -243,6 +259,22 @@ static const struct snd_kcontrol_new sun8i_codec_adc_mixer_controls[] = {
+ 			  SUN8I_ADDA_LADCMIXSC_MIC2, 1, 0),
+ };
+ 
++/* ADC mixer controls */
++static const struct snd_kcontrol_new sun8i_v3s_codec_adc_mixer_controls[] = {
++	SOC_DAPM_DOUBLE_R("Mixer Capture Switch",
++			  SUN8I_ADDA_LADCMIXSC,
++			  SUN8I_ADDA_RADCMIXSC,
++			  SUN8I_ADDA_LADCMIXSC_OMIXRL, 1, 0),
++	SOC_DAPM_DOUBLE_R("Mixer Reversed Capture Switch",
++			  SUN8I_ADDA_LADCMIXSC,
++			  SUN8I_ADDA_RADCMIXSC,
++			  SUN8I_ADDA_LADCMIXSC_OMIXRR, 1, 0),
++	SOC_DAPM_DOUBLE_R("Mic1 Capture Switch",
++			  SUN8I_ADDA_LADCMIXSC,
++			  SUN8I_ADDA_RADCMIXSC,
++			  SUN8I_ADDA_LADCMIXSC_MIC1, 1, 0),
++};
++
+ /* volume / mute controls */
+ static const DECLARE_TLV_DB_SCALE(sun8i_codec_out_mixer_pregain_scale,
+ 				  -450, 150, 0);
+@@ -292,8 +324,9 @@ static const struct snd_soc_dapm_widget sun8i_codec_common_widgets[] = {
+ 	/* Mic input path */
+ 	SND_SOC_DAPM_PGA("Mic1 Amplifier", SUN8I_ADDA_MIC1G_MICBIAS_CTRL,
+ 			 SUN8I_ADDA_MIC1G_MICBIAS_CTRL_MIC1AMPEN, 0, NULL, 0),
++};
+ 
+-	/* Mixers */
++static const struct snd_soc_dapm_widget sun8i_codec_mixer_widgets[] = {
+ 	SND_SOC_DAPM_MIXER("Left Mixer", SUN8I_ADDA_DAC_PA_SRC,
+ 			   SUN8I_ADDA_DAC_PA_SRC_LMIXEN, 0,
+ 			   sun8i_codec_mixer_controls,
+@@ -312,10 +345,31 @@ static const struct snd_soc_dapm_widget sun8i_codec_common_widgets[] = {
+ 			   ARRAY_SIZE(sun8i_codec_adc_mixer_controls)),
+ };
+ 
++static const struct snd_soc_dapm_widget sun8i_v3s_codec_mixer_widgets[] = {
++	SND_SOC_DAPM_MIXER("Left Mixer", SUN8I_ADDA_DAC_PA_SRC,
++			   SUN8I_ADDA_DAC_PA_SRC_LMIXEN, 0,
++			   sun8i_v3s_codec_mixer_controls,
++			   ARRAY_SIZE(sun8i_v3s_codec_mixer_controls)),
++	SND_SOC_DAPM_MIXER("Right Mixer", SUN8I_ADDA_DAC_PA_SRC,
++			   SUN8I_ADDA_DAC_PA_SRC_RMIXEN, 0,
++			   sun8i_v3s_codec_mixer_controls,
++			   ARRAY_SIZE(sun8i_v3s_codec_mixer_controls)),
++	SND_SOC_DAPM_MIXER("Left ADC Mixer", SUN8I_ADDA_ADC_AP_EN,
++			   SUN8I_ADDA_ADC_AP_EN_ADCLEN, 0,
++			   sun8i_v3s_codec_adc_mixer_controls,
++			   ARRAY_SIZE(sun8i_v3s_codec_adc_mixer_controls)),
++	SND_SOC_DAPM_MIXER("Right ADC Mixer", SUN8I_ADDA_ADC_AP_EN,
++			   SUN8I_ADDA_ADC_AP_EN_ADCREN, 0,
++			   sun8i_v3s_codec_adc_mixer_controls,
++			   ARRAY_SIZE(sun8i_v3s_codec_adc_mixer_controls)),
++};
++
+ static const struct snd_soc_dapm_route sun8i_codec_common_routes[] = {
+ 	/* Microphone Routes */
+ 	{ "Mic1 Amplifier", NULL, "MIC1"},
++};
+ 
++static const struct snd_soc_dapm_route sun8i_codec_mixer_routes[] = {
+ 	/* Left Mixer Routes */
+ 	{ "Left Mixer", "DAC Playback Switch", "Left DAC" },
+ 	{ "Left Mixer", "DAC Reversed Playback Switch", "Right DAC" },
+@@ -714,6 +768,48 @@ static const struct sun8i_codec_analog_quirks sun8i_h3_quirks = {
+ 	.has_mic2	= true,
+ };
+ 
++static int sun8i_codec_analog_add_mixer(struct snd_soc_component *cmpnt,
++					const struct sun8i_codec_analog_quirks *quirks)
++{
++	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(cmpnt);
++	struct device *dev = cmpnt->dev;
++	int ret;
++
++	if (!quirks->has_mic2 && !quirks->has_linein) {
++		/*
++		 * Apply the special widget set which has uses a control
++		 * without MIC2 and Line In, for SoCs without these.
++		 * TODO: not all special cases are supported now, this case
++		 * is present because it's the case of V3s.
++		 */
++		ret = snd_soc_dapm_new_controls(dapm,
++						sun8i_v3s_codec_mixer_widgets,
++						ARRAY_SIZE(sun8i_v3s_codec_mixer_widgets));
++		if (ret) {
++			dev_err(dev, "Failed to add V3s Mixer DAPM widgets: %d\n", ret);
++			return ret;
++		}
++	} else {
++		/* Apply the generic mixer widget set. */
++		ret = snd_soc_dapm_new_controls(dapm,
++						sun8i_codec_mixer_widgets,
++						ARRAY_SIZE(sun8i_codec_mixer_widgets));
++		if (ret) {
++			dev_err(dev, "Failed to add Mixer DAPM widgets: %d\n", ret);
++			return ret;
++		}
++	}
++
++	ret = snd_soc_dapm_add_routes(dapm, sun8i_codec_mixer_routes,
++				      ARRAY_SIZE(sun8i_codec_mixer_routes));
++	if (ret) {
++		dev_err(dev, "Failed to add Mixer DAPM routes: %d\n", ret);
++		return ret;
++	}
++
++	return 0;
++}
++
+ static int sun8i_codec_analog_cmpnt_probe(struct snd_soc_component *cmpnt)
+ {
+ 	struct device *dev = cmpnt->dev;
+@@ -728,6 +824,9 @@ static int sun8i_codec_analog_cmpnt_probe(struct snd_soc_component *cmpnt)
+ 	quirks = of_device_get_match_data(dev);
+ 
+ 	/* Add controls, widgets, and routes for individual features */
++	ret = sun8i_codec_analog_add_mixer(cmpnt, quirks);
++	if (ret)
++		return ret;
+ 
+ 	if (quirks->has_headphone) {
+ 		ret = sun8i_codec_add_headphone(cmpnt);
 -- 
 2.11.0
