@@ -1,110 +1,65 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH v3 0/2] ARM: dts: imx7: add NAND support
-Date: Mon, 05 Jun 2017 22:16:07 -0700
-Message-ID: <09d82df6ce12a9f6df1f838df5eca9a6@agner.ch>
-References: <20170601192044.6548-1-stefan@agner.ch>
- <3c086d95-96e5-71ec-b44f-12ed41903fcf@nxp.com>
- <e57ba49dc2b91b70b5848875e28b17ae@agner.ch>
- <1dd0abe0-81a3-d4ea-69c1-98fe354f91f4@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1dd0abe0-81a3-d4ea-69c1-98fe354f91f4@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Han Xu <han.xu@nxp.com>
-Cc: shawnguo@kernel.org, kernel@pengutronix.de, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@atmel.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@freescale.com, "LW@KARO-electronics.de" <LW@karo-electronics.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 00/10] irqchip: sunxi-nmi: Cleanups and fix A31 R_INTC register offset
+Date: Tue,  6 Jun 2017 13:59:22 +0800
+Message-ID: <20170606055932.22548-1-wens@csie.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-06-02 13:09, Han Xu wrote:
-> On 06/01/2017 08:48 PM, Stefan Agner wrote:
->> Hi Han,
->>
->> On 2017-06-01 14:14, Han Xu wrote:
->>> On 06/01/2017 02:20 PM, Stefan Agner wrote:
->>>> This are the missing device tree parts to add NAND support for i.MX 7.
->>>> See previous patchset:
->>>> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2017%2F4%2F21%2F832&data=01%7C01%7Chan.xu%40nxp.com%7C3b9081a68c94476c4a2108d4a9235512%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0&sdata=mQ2aq5rW%2B9uADY5mSzFxk8P6bAVq%2BosPJQAi0PL9SQg%3D&reserved=0
->>>>
->>>> The previous version also included driver changes, which are already
->>>> merged.
->>>>
->>>> --
->>>> Stefan
->>>>
->>>> Changes since v2:
->>>> - Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
->>> Hi Stefan, sorry I didn't reply your last patch. I was unable to fully
->>> test on i.MX7 since the work bandwidth, but the quick test shows DMA
->>> cannot work WITHOUT IMX7D_NAND_ROOT_CLK on my side, I will fully check
->>> it tomorrow morning and let you know the result.
->> How did you test that?
->>
->> Since DMA can only use NAND in i.MX 7, testing is somewhat hard.
->>
->> Fact is, I can access DMA registers using just NAND_USDHC_BUS_CLK_ROOT
->>
->> mw.l 0x30388980 0x11000000 # Enable NAND_USDHC_BUS_CLK_ROOT
->> mw.l 0x3038aa00 0x00000000 # Enable NAND_CLK_ROOT
-> 
-> NAND_ROOT_CLK offset is 0x4140 which control the CCGR20 to gate on/off 
-> the rawnand module, including APBH/GPMI/BCH. Without enabling it, the 
-> mxs-dma hangs during initialization. I guess this bit was enabled in 
-> some early stage.
+Hi everyone,
 
-You are right, that clock gate was turned on, and it allowed access to
-the APBH DMA.
+This is an alternative to Icenowy's recent A64 R_INTC patches.
 
-However, while the gate was enabled, disabling the NAND_CLK_ROOT still
-allowed to access APBH DMA, so the clock root itself is really not
-required, but the gate is...
+This is a two part series. The first four patches clean up the existing
+sunxi-nmi driver. Patches five and six add a new "sun6i-a31-r-intc"
+compatible, which mainly adjusts or removes the awkward register region
+offset the old "sun6i-a31-sc-nmi" compatible needed. The remaining
+patches fix or add device nodes for SoC's having this hardware.
 
-The clock which is required is NAND_USDHC_BUS_CLK_ROOT, but the gate is
-part of NAND_CLK_ROOT. The clock tree is wrong: The gate is actually
-shared, both clocks use the same gate.
+Using "sun6i-a31-r-intc" introduced in this series, instead of Icenowy's
+"sun50i-a64-r-intc" is preferred. This follows our policy of naming
+hardware blocks and compatibles after their first occurrence.
 
-In fact, assigning NAND_USDHC_BUS_CLK_ROOT directly to peripherals is
-wrong since the gate is between the root clock and the peripherals (see
-Figure 5-13 in RM). If we add the shared gate to NAND_USDHC_BUS_CLK_ROOT
-directly, it will get enabled when using SDHC instances (since that root
-clock is assigned to the sdhc instances, see
-https://patchwork.kernel.org/patch/9674281/)
+The first six patches should go through the irqchip tree, while we
+(sunxi) can take the device tree changes after the driver has been
+merged, to avoid breaking linux-next as a whole.
 
-How about introducing NAND_USDHC_BUS_CLK_RAWNAND/NAND_CLK_RAWNAND which
-has the shared gate in between?
+
+Regards
+ChenYu
+
+
+Chen-Yu Tsai (9):
+  irqchip: sunxi-nmi: Convert magic numbers to defines
+  irqchip: sunxi-nmi: Document interrupt disabling and clearing at probe
+    time
+  irqchip: sunxi-nmi: Reorder sunxi_sc_nmi_reg_offs' in ascending order
+  irqchip: sunxi-nmi: const-ify sunxi_sc_nmi_reg_offs structures
+  dt-bindings: interrupt-controller: sunxi-nmi: Add compatible for A31
+    R_INTC
+  irqchip: sunxi-nmi: Support sun6i-a31-r-intc compatible
+  ARM: sun6i: a31: Use new sun6i-a31-r-intc compatible for NMI/R_INTC
+  ARM: sun8i: a23/a33: Use new sun6i-a31-r-intc compatible for
+    NMI/R_INTC
+  ARM: sun8i: a83t: Add device node for R_INTC interrupt controller
+
+Icenowy Zheng (1):
+  arm64: allwinner: a64: add NMI (R_INTC) controller on A64
+
+ .../interrupt-controller/allwinner,sunxi-nmi.txt   |  7 ++-
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |  6 +-
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi               |  6 +-
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  |  9 +++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  9 +++
+ drivers/irqchip/irq-sunxi-nmi.c                    | 68 +++++++++++++++++-----
+ 6 files changed, 83 insertions(+), 22 deletions(-)
+
+-- 
+2.11.0
 
 --
-Stefan
-
-> 
->> md.l 0x33000100 0 # Access APBH_CH0_CURCMDAR
->>
->> This works for me.
->>
->> I can *boot* from a UBIFS using this driver and Linux 4.12-rc1 with my
->> patchset applied...
->>
->> Monitoring clocks in /sys/kernel/debug/clk/clk_summary show that
->> NAND_ROOT_CLK gets turned off and back on if NAND access happens, the
->> system seems stable.
->>
->> All that said, this patchset v3 actually does not remove the
->> NAND_ROOT_CLK as intended to. Will send a v4.
->>
->> --
->> Stefan
->>
->>>> - Dropped driver changes, alreay merged
->>>>
->>>> Changes since v1:
->>>> - Make clks_count const
->>>> - Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
->>>>
->>>> Stefan Agner (2):
->>>>     ARM: dts: imx7: add GPMI NAND
->>>>     ARM: dts: imx7-colibri: add NAND support
->>>>
->>>>    arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++
->>>>    arch/arm/boot/dts/imx7s.dtsi        | 31 +++++++++++++++++++++++++++++++
->>>>    2 files changed, 40 insertions(+)
->>>>
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
