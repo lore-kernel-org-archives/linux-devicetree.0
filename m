@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 07/10] ARM: sun6i: a31: Use new sun6i-a31-r-intc compatible for NMI/R_INTC
-Date: Tue,  6 Jun 2017 13:59:29 +0800
-Message-ID: <20170606055932.22548-8-wens@csie.org>
+Subject: [PATCH 09/10] ARM: sun8i: a83t: Add device node for R_INTC interrupt controller
+Date: Tue,  6 Jun 2017 13:59:31 +0800
+Message-ID: <20170606055932.22548-10-wens@csie.org>
 References: <20170606055932.22548-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170606055932.22548-1-wens@csie.org>
@@ -10,36 +10,44 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Gleixner <tglx@linu
 Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-We introduced a new compatible for the NMI or R_INTC interrupt
-controller. This new compatible has the register region aligned
-to the boundary listed in the SoC's memory map.
+The R_INTC interrupt controller handles the NMI interrupt pin for the
+SoC. While there is no documentation or code from the vendor for this
+device on the A83T, existing mainline kernel drivers and bindings show
+this to be similar to the old Allwinner interrupt controller found on
+the A10 SoC, but with only the NMI interrupt wired. Register poking
+experiments confirm this.
 
-This patch converts the NMI/R_INTC node to using the new compatible,
-and fixes up the register region and device node name.
+The device seems to be the same across all recent Allwinner SoCs, apart
+from the A20 and A80, which have a separate set of registers to handle
+the NMI interrupt. We already have a set of bindings supporting this
+on the A31.
+
+Add a device node for it, with an SoC specific compatible.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index d0cede5aaeb5..d36211ceb950 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -1154,11 +1154,11 @@
- 				     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 49aeb56970ba..4d64dfdc10d3 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -271,6 +271,15 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_HIGH)>;
  		};
  
--		nmi_intc: interrupt-controller@01f00c0c {
--			compatible = "allwinner,sun6i-a31-sc-nmi";
-+		nmi_intc: interrupt-controller@1f00c00 {
-+			compatible = "allwinner,sun6i-a31-r-intc";
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
--			reg = <0x01f00c0c 0x38>;
++		r_intc: interrupt-controller@1f00c00 {
++			compatible = "allwinner,sun8i-a83t-r-intc",
++				     "allwinner,sun6i-a31-r-intc";
++			interrupt-controller;
++			#interrupt-cells = <2>;
 +			reg = <0x01f00c00 0x400>;
- 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 
++			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++		};
++
+ 		r_ccu: clock@1f01400 {
+ 			compatible = "allwinner,sun8i-a83t-r-ccu";
+ 			reg = <0x01f01400 0x400>;
 -- 
 2.11.0
