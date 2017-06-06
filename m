@@ -1,394 +1,110 @@
-From: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v7 1/1] clk: bcm: Add clocks for Stingray SOC
-Date: Tue,  6 Jun 2017 09:53:58 +0530
-Message-ID: <1496723038-4693-2-git-send-email-anup.patel@broadcom.com>
-References: <1496723038-4693-1-git-send-email-anup.patel@broadcom.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496723038-4693-1-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH v3 0/2] ARM: dts: imx7: add NAND support
+Date: Mon, 05 Jun 2017 22:16:07 -0700
+Message-ID: <09d82df6ce12a9f6df1f838df5eca9a6@agner.ch>
+References: <20170601192044.6548-1-stefan@agner.ch>
+ <3c086d95-96e5-71ec-b44f-12ed41903fcf@nxp.com>
+ <e57ba49dc2b91b70b5848875e28b17ae@agner.ch>
+ <1dd0abe0-81a3-d4ea-69c1-98fe354f91f4@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1dd0abe0-81a3-d4ea-69c1-98fe354f91f4@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Han Xu <han.xu@nxp.com>
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@atmel.com, robh+dt@kernel.org, mark.rutland@arm.com, fabio.estevam@freescale.com, "LW@KARO-electronics.de" <LW@karo-electronics.de>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On 2017-06-02 13:09, Han Xu wrote:
+> On 06/01/2017 08:48 PM, Stefan Agner wrote:
+>> Hi Han,
+>>
+>> On 2017-06-01 14:14, Han Xu wrote:
+>>> On 06/01/2017 02:20 PM, Stefan Agner wrote:
+>>>> This are the missing device tree parts to add NAND support for i.MX 7.
+>>>> See previous patchset:
+>>>> https://emea01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flkml.org%2Flkml%2F2017%2F4%2F21%2F832&data=01%7C01%7Chan.xu%40nxp.com%7C3b9081a68c94476c4a2108d4a9235512%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0&sdata=mQ2aq5rW%2B9uADY5mSzFxk8P6bAVq%2BosPJQAi0PL9SQg%3D&reserved=0
+>>>>
+>>>> The previous version also included driver changes, which are already
+>>>> merged.
+>>>>
+>>>> --
+>>>> Stefan
+>>>>
+>>>> Changes since v2:
+>>>> - Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
+>>> Hi Stefan, sorry I didn't reply your last patch. I was unable to fully
+>>> test on i.MX7 since the work bandwidth, but the quick test shows DMA
+>>> cannot work WITHOUT IMX7D_NAND_ROOT_CLK on my side, I will fully check
+>>> it tomorrow morning and let you know the result.
+>> How did you test that?
+>>
+>> Since DMA can only use NAND in i.MX 7, testing is somewhat hard.
+>>
+>> Fact is, I can access DMA registers using just NAND_USDHC_BUS_CLK_ROOT
+>>
+>> mw.l 0x30388980 0x11000000 # Enable NAND_USDHC_BUS_CLK_ROOT
+>> mw.l 0x3038aa00 0x00000000 # Enable NAND_CLK_ROOT
+> 
+> NAND_ROOT_CLK offset is 0x4140 which control the CCGR20 to gate on/off 
+> the rawnand module, including APBH/GPMI/BCH. Without enabling it, the 
+> mxs-dma hangs during initialization. I guess this bit was enabled in 
+> some early stage.
 
-This patch adds support for Stingray clocks in iproc
-ccf. The Stingray SOC has various plls based on iproc
-pll architecture.
+You are right, that clock gate was turned on, and it allowed access to
+the APBH DMA.
 
-Signed-off-by: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
----
- drivers/clk/bcm/Kconfig  |   8 ++
- drivers/clk/bcm/Makefile |   1 +
- drivers/clk/bcm/clk-sr.c | 327 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 336 insertions(+)
- create mode 100644 drivers/clk/bcm/clk-sr.c
+However, while the gate was enabled, disabling the NAND_CLK_ROOT still
+allowed to access APBH DMA, so the clock root itself is really not
+required, but the gate is...
 
-diff --git a/drivers/clk/bcm/Kconfig b/drivers/clk/bcm/Kconfig
-index b5ae531..1d9187d 100644
---- a/drivers/clk/bcm/Kconfig
-+++ b/drivers/clk/bcm/Kconfig
-@@ -46,3 +46,11 @@ config CLK_BCM_NS2
- 	default ARCH_BCM_IPROC
- 	help
- 	  Enable common clock framework support for the Broadcom Northstar 2 SoC
-+
-+config CLK_BCM_SR
-+	bool "Broadcom Stingray clock support"
-+	depends on ARCH_BCM_IPROC || COMPILE_TEST
-+	select COMMON_CLK_IPROC
-+	default ARCH_BCM_IPROC
-+	help
-+	  Enable common clock framework support for the Broadcom Stingray SoC
-diff --git a/drivers/clk/bcm/Makefile b/drivers/clk/bcm/Makefile
-index d9dc848..a0c14fa 100644
---- a/drivers/clk/bcm/Makefile
-+++ b/drivers/clk/bcm/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_ARCH_BCM_53573)	+= clk-bcm53573-ilp.o
- obj-$(CONFIG_CLK_BCM_CYGNUS)	+= clk-cygnus.o
- obj-$(CONFIG_CLK_BCM_NSP)	+= clk-nsp.o
- obj-$(CONFIG_CLK_BCM_NS2)	+= clk-ns2.o
-+obj-$(CONFIG_CLK_BCM_SR)	+= clk-sr.o
-diff --git a/drivers/clk/bcm/clk-sr.c b/drivers/clk/bcm/clk-sr.c
-new file mode 100644
-index 0000000..adc74f4
---- /dev/null
-+++ b/drivers/clk/bcm/clk-sr.c
-@@ -0,0 +1,327 @@
-+/*
-+ * Copyright 2017 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License, version 2, as
-+ * published by the Free Software Foundation (the "GPL").
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License version 2 (GPLv2) for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * version 2 (GPLv2) along with this source code.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/clk-provider.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+
-+#include <dt-bindings/clock/bcm-sr.h>
-+#include "clk-iproc.h"
-+
-+#define REG_VAL(o, s, w) { .offset = o, .shift = s, .width = w, }
-+
-+#define AON_VAL(o, pw, ps, is) { .offset = o, .pwr_width = pw, \
-+	.pwr_shift = ps, .iso_shift = is }
-+
-+#define SW_CTRL_VAL(o, s) { .offset = o, .shift = s, }
-+
-+#define RESET_VAL(o, rs, prs) { .offset = o, .reset_shift = rs, \
-+	.p_reset_shift = prs }
-+
-+#define DF_VAL(o, kis, kiw, kps, kpw, kas, kaw) { .offset = o, \
-+	.ki_shift = kis, .ki_width = kiw, .kp_shift = kps, .kp_width = kpw, \
-+	.ka_shift = kas, .ka_width = kaw }
-+
-+#define VCO_CTRL_VAL(uo, lo) { .u_offset = uo, .l_offset = lo }
-+
-+#define ENABLE_VAL(o, es, hs, bs) { .offset = o, .enable_shift = es, \
-+	.hold_shift = hs, .bypass_shift = bs }
-+
-+
-+static const struct iproc_pll_ctrl sr_genpll0 = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
-+		IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 5, 1, 0),
-+	.reset = RESET_VAL(0x0, 12, 11),
-+	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
-+	.sw_ctrl = SW_CTRL_VAL(0x10, 31),
-+	.ndiv_int = REG_VAL(0x10, 20, 10),
-+	.ndiv_frac = REG_VAL(0x10, 0, 20),
-+	.pdiv = REG_VAL(0x14, 0, 4),
-+	.status = REG_VAL(0x30, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_genpll0_clk[] = {
-+	[BCM_SR_GENPLL0_SATA_CLK] = {
-+		.channel = BCM_SR_GENPLL0_SATA_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 6, 0, 12),
-+		.mdiv = REG_VAL(0x18, 0, 9),
-+	},
-+	[BCM_SR_GENPLL0_SCR_CLK] = {
-+		.channel = BCM_SR_GENPLL0_SCR_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 7, 1, 13),
-+		.mdiv = REG_VAL(0x18, 10, 9),
-+	},
-+	[BCM_SR_GENPLL0_250M_CLK] = {
-+		.channel = BCM_SR_GENPLL0_250M_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 8, 2, 14),
-+		.mdiv = REG_VAL(0x18, 20, 9),
-+	},
-+	[BCM_SR_GENPLL0_PCIE_AXI_CLK] = {
-+		.channel = BCM_SR_GENPLL0_PCIE_AXI_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 9, 3, 15),
-+		.mdiv = REG_VAL(0x1c, 0, 9),
-+	},
-+	[BCM_SR_GENPLL0_PAXC_AXI_X2_CLK] = {
-+		.channel = BCM_SR_GENPLL0_PAXC_AXI_X2_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 10, 4, 16),
-+		.mdiv = REG_VAL(0x1c, 10, 9),
-+	},
-+	[BCM_SR_GENPLL0_PAXC_AXI_CLK] = {
-+		.channel = BCM_SR_GENPLL0_PAXC_AXI_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 11, 5, 17),
-+		.mdiv = REG_VAL(0x1c, 20, 9),
-+	},
-+};
-+
-+static int sr_genpll0_clk_init(struct platform_device *pdev)
-+{
-+	iproc_pll_clk_setup(pdev->dev.of_node,
-+			    &sr_genpll0, NULL, 0, sr_genpll0_clk,
-+			    ARRAY_SIZE(sr_genpll0_clk));
-+	return 0;
-+}
-+
-+static const struct iproc_pll_ctrl sr_genpll3 = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
-+		IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 1, 19, 18),
-+	.reset = RESET_VAL(0x0, 12, 11),
-+	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
-+	.sw_ctrl = SW_CTRL_VAL(0x10, 31),
-+	.ndiv_int = REG_VAL(0x10, 20, 10),
-+	.ndiv_frac = REG_VAL(0x10, 0, 20),
-+	.pdiv = REG_VAL(0x14, 0, 4),
-+	.status = REG_VAL(0x30, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_genpll3_clk[] = {
-+	[BCM_SR_GENPLL3_HSLS_CLK] = {
-+		.channel = BCM_SR_GENPLL3_HSLS_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 6, 0, 12),
-+		.mdiv = REG_VAL(0x18, 0, 9),
-+	},
-+	[BCM_SR_GENPLL3_SDIO_CLK] = {
-+		.channel = BCM_SR_GENPLL3_SDIO_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 7, 1, 13),
-+		.mdiv = REG_VAL(0x18, 10, 9),
-+	},
-+};
-+
-+static void sr_genpll3_clk_init(struct device_node *node)
-+{
-+	iproc_pll_clk_setup(node, &sr_genpll3, NULL, 0, sr_genpll3_clk,
-+			    ARRAY_SIZE(sr_genpll3_clk));
-+}
-+CLK_OF_DECLARE(sr_genpll3_clk, "brcm,sr-genpll3", sr_genpll3_clk_init);
-+
-+static const struct iproc_pll_ctrl sr_genpll4 = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
-+		IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 1, 25, 24),
-+	.reset = RESET_VAL(0x0, 12, 11),
-+	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
-+	.sw_ctrl = SW_CTRL_VAL(0x10, 31),
-+	.ndiv_int = REG_VAL(0x10, 20, 10),
-+	.ndiv_frac = REG_VAL(0x10, 0, 20),
-+	.pdiv = REG_VAL(0x14, 0, 4),
-+	.status = REG_VAL(0x30, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_genpll4_clk[] = {
-+	[BCM_SR_GENPLL4_CCN_CLK] = {
-+		.channel = BCM_SR_GENPLL4_CCN_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 6, 0, 12),
-+		.mdiv = REG_VAL(0x18, 0, 9),
-+	},
-+};
-+
-+static int sr_genpll4_clk_init(struct platform_device *pdev)
-+{
-+	iproc_pll_clk_setup(pdev->dev.of_node,
-+			    &sr_genpll4, NULL, 0, sr_genpll4_clk,
-+			    ARRAY_SIZE(sr_genpll4_clk));
-+	return 0;
-+}
-+
-+static const struct iproc_pll_ctrl sr_genpll5 = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_HAS_NDIV_FRAC |
-+		IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 1, 1, 0),
-+	.reset = RESET_VAL(0x0, 12, 11),
-+	.dig_filter = DF_VAL(0x0, 4, 3, 0, 4, 7, 3),
-+	.sw_ctrl = SW_CTRL_VAL(0x10, 31),
-+	.ndiv_int = REG_VAL(0x10, 20, 10),
-+	.ndiv_frac = REG_VAL(0x10, 0, 20),
-+	.pdiv = REG_VAL(0x14, 0, 4),
-+	.status = REG_VAL(0x30, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_genpll5_clk[] = {
-+	[BCM_SR_GENPLL5_FS_CLK] = {
-+		.channel = BCM_SR_GENPLL5_FS_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 6, 0, 12),
-+		.mdiv = REG_VAL(0x18, 0, 9),
-+	},
-+	[BCM_SR_GENPLL5_SPU_CLK] = {
-+		.channel = BCM_SR_GENPLL5_SPU_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x4, 6, 0, 12),
-+		.mdiv = REG_VAL(0x18, 10, 9),
-+	},
-+};
-+
-+static int sr_genpll5_clk_init(struct platform_device *pdev)
-+{
-+	iproc_pll_clk_setup(pdev->dev.of_node,
-+			    &sr_genpll5, NULL, 0, sr_genpll5_clk,
-+			    ARRAY_SIZE(sr_genpll5_clk));
-+	return 0;
-+}
-+
-+static const struct iproc_pll_ctrl sr_lcpll0 = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 2, 19, 18),
-+	.reset = RESET_VAL(0x0, 31, 30),
-+	.sw_ctrl = SW_CTRL_VAL(0x4, 31),
-+	.ndiv_int = REG_VAL(0x4, 16, 10),
-+	.pdiv = REG_VAL(0x4, 26, 4),
-+	.status = REG_VAL(0x38, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_lcpll0_clk[] = {
-+	[BCM_SR_LCPLL0_SATA_REF_CLK] = {
-+		.channel = BCM_SR_LCPLL0_SATA_REF_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 7, 1, 13),
-+		.mdiv = REG_VAL(0x14, 0, 9),
-+	},
-+	[BCM_SR_LCPLL0_USB_REF_CLK] = {
-+		.channel = BCM_SR_LCPLL0_USB_REF_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 8, 2, 14),
-+		.mdiv = REG_VAL(0x14, 10, 9),
-+	},
-+	[BCM_SR_LCPLL0_SATA_REFPN_CLK] = {
-+		.channel = BCM_SR_LCPLL0_SATA_REFPN_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 9, 3, 15),
-+		.mdiv = REG_VAL(0x14, 20, 9),
-+	},
-+};
-+
-+static int sr_lcpll0_clk_init(struct platform_device *pdev)
-+{
-+	iproc_pll_clk_setup(pdev->dev.of_node,
-+			    &sr_lcpll0, NULL, 0, sr_lcpll0_clk,
-+			    ARRAY_SIZE(sr_lcpll0_clk));
-+	return 0;
-+}
-+
-+static const struct iproc_pll_ctrl sr_lcpll1 = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 2, 22, 21),
-+	.reset = RESET_VAL(0x0, 31, 30),
-+	.sw_ctrl = SW_CTRL_VAL(0x4, 31),
-+	.ndiv_int = REG_VAL(0x4, 16, 10),
-+	.pdiv = REG_VAL(0x4, 26, 4),
-+	.status = REG_VAL(0x38, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_lcpll1_clk[] = {
-+	[BCM_SR_LCPLL1_WAN_CLK] = {
-+		.channel = BCM_SR_LCPLL1_WAN_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 7, 1, 13),
-+		.mdiv = REG_VAL(0x14, 0, 9),
-+	},
-+};
-+
-+static int sr_lcpll1_clk_init(struct platform_device *pdev)
-+{
-+	iproc_pll_clk_setup(pdev->dev.of_node,
-+			    &sr_lcpll1, NULL, 0, sr_lcpll1_clk,
-+			    ARRAY_SIZE(sr_lcpll1_clk));
-+	return 0;
-+}
-+
-+static const struct iproc_pll_ctrl sr_lcpll_pcie = {
-+	.flags = IPROC_CLK_AON | IPROC_CLK_PLL_NEEDS_SW_CFG,
-+	.aon = AON_VAL(0x0, 2, 25, 24),
-+	.reset = RESET_VAL(0x0, 31, 30),
-+	.sw_ctrl = SW_CTRL_VAL(0x4, 31),
-+	.ndiv_int = REG_VAL(0x4, 16, 10),
-+	.pdiv = REG_VAL(0x4, 26, 4),
-+	.status = REG_VAL(0x38, 12, 1),
-+};
-+
-+static const struct iproc_clk_ctrl sr_lcpll_pcie_clk[] = {
-+	[BCM_SR_LCPLL_PCIE_PHY_REF_CLK] = {
-+		.channel = BCM_SR_LCPLL_PCIE_PHY_REF_CLK,
-+		.flags = IPROC_CLK_AON,
-+		.enable = ENABLE_VAL(0x0, 7, 1, 13),
-+		.mdiv = REG_VAL(0x14, 0, 9),
-+	},
-+};
-+
-+static int sr_lcpll_pcie_clk_init(struct platform_device *pdev)
-+{
-+	iproc_pll_clk_setup(pdev->dev.of_node,
-+			    &sr_lcpll_pcie, NULL, 0, sr_lcpll_pcie_clk,
-+			    ARRAY_SIZE(sr_lcpll_pcie_clk));
-+	return 0;
-+}
-+
-+static const struct of_device_id sr_clk_dt_ids[] = {
-+	{ .compatible = "brcm,sr-genpll0", .data = sr_genpll0_clk_init },
-+	{ .compatible = "brcm,sr-genpll4", .data = sr_genpll4_clk_init },
-+	{ .compatible = "brcm,sr-genpll5", .data = sr_genpll5_clk_init },
-+	{ .compatible = "brcm,sr-lcpll0", .data = sr_lcpll0_clk_init },
-+	{ .compatible = "brcm,sr-lcpll1", .data = sr_lcpll1_clk_init },
-+	{ .compatible = "brcm,sr-lcpll-pcie", .data = sr_lcpll_pcie_clk_init },
-+	{ /* sentinel */ }
-+};
-+
-+static int sr_clk_probe(struct platform_device *pdev)
-+{
-+	int (*probe_func)(struct platform_device *);
-+
-+	probe_func = of_device_get_match_data(&pdev->dev);
-+	if (!probe_func)
-+		return -ENODEV;
-+
-+	return probe_func(pdev);
-+}
-+
-+static struct platform_driver sr_clk_driver = {
-+	.driver = {
-+		.name = "sr-clk",
-+		.of_match_table = sr_clk_dt_ids,
-+	},
-+	.probe = sr_clk_probe,
-+};
-+builtin_platform_driver(sr_clk_driver);
--- 
-2.7.4
+The clock which is required is NAND_USDHC_BUS_CLK_ROOT, but the gate is
+part of NAND_CLK_ROOT. The clock tree is wrong: The gate is actually
+shared, both clocks use the same gate.
+
+In fact, assigning NAND_USDHC_BUS_CLK_ROOT directly to peripherals is
+wrong since the gate is between the root clock and the peripherals (see
+Figure 5-13 in RM). If we add the shared gate to NAND_USDHC_BUS_CLK_ROOT
+directly, it will get enabled when using SDHC instances (since that root
+clock is assigned to the sdhc instances, see
+https://patchwork.kernel.org/patch/9674281/)
+
+How about introducing NAND_USDHC_BUS_CLK_RAWNAND/NAND_CLK_RAWNAND which
+has the shared gate in between?
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+> 
+>> md.l 0x33000100 0 # Access APBH_CH0_CURCMDAR
+>>
+>> This works for me.
+>>
+>> I can *boot* from a UBIFS using this driver and Linux 4.12-rc1 with my
+>> patchset applied...
+>>
+>> Monitoring clocks in /sys/kernel/debug/clk/clk_summary show that
+>> NAND_ROOT_CLK gets turned off and back on if NAND access happens, the
+>> system seems stable.
+>>
+>> All that said, this patchset v3 actually does not remove the
+>> NAND_ROOT_CLK as intended to. Will send a v4.
+>>
+>> --
+>> Stefan
+>>
+>>>> - Dropped driver changes, alreay merged
+>>>>
+>>>> Changes since v1:
+>>>> - Make clks_count const
+>>>> - Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
+>>>>
+>>>> Stefan Agner (2):
+>>>>     ARM: dts: imx7: add GPMI NAND
+>>>>     ARM: dts: imx7-colibri: add NAND support
+>>>>
+>>>>    arch/arm/boot/dts/imx7-colibri.dtsi |  9 +++++++++
+>>>>    arch/arm/boot/dts/imx7s.dtsi        | 31 +++++++++++++++++++++++++++++++
+>>>>    2 files changed, 40 insertions(+)
+>>>>
