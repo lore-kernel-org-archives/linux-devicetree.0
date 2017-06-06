@@ -1,95 +1,84 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv3 1/4] ARM: dts: socfpga: Add Altera I2C Controller to CycloneV
-Date: Tue, 06 Jun 2017 08:40:53 +0200
-Message-ID: <73vao9vcsq.fsf@pengutronix.de>
-References: <1496447559-19782-1-git-send-email-thor.thayer@linux.intel.com> <1496447559-19782-2-git-send-email-thor.thayer@linux.intel.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Tue, 6 Jun 2017 00:20:15 -0700
+Message-ID: <593657AF.8050208@gmail.com>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1496447559-19782-2-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com
-Cc: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, mchehab@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Stefani Seibold <stefani.seibold.ext@huawei.com>, Stefani Seibold <stefani@seibold.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Holm Rauchfuss <holm.rauchfuss@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+On 06/05/17 05:59, Stefani Seibold wrote:
+> From: Stefani Seibold <stefani@seibold.net>
+> 
+> This patch enables external references for symbols which are not
+> exported by the current device tree. For example
+> 
+> // RASPI example (only for testing)
+> /dts-v1/;
+> /plugin/;
+> 
+> / {
+>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> 
+>     fragment@0 {
+>         target-path = "/soc/i2s@7e203000";
+>         __overlay__ {
+>             #address-cells = <0x00000001>;
+>             #size-cells = <0x00000001>;
+>             test = "test";
+>             timer = <&timer>;
+>         };
+>     };
+> 
+>     __external_symbols__ {
+>         timer = "/soc/timer@7e003000";
+>     };
+> };
 
-Hi!
+My hope is that the dtc compiler will stop supporting specification of the
+__symbols__ node in dts source, and only generate it automatically in the dtb.
+That change to dtc would not allow any node name specified in a dts to begin
+with an underscore.  Thus node __external_symbols__ would not be allowed.
 
-thor.thayer@linux.intel.com writes:
 
-> From: Thor Thayer <thor.thayer@linux.intel.com>
->
-> Add the Altera I2C Controller to the CycloneV SoCFPGA device tree.
->
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> The "timer" symbol is not exported by the RASPI device tree, because it is
+> missing in the __symbols__ section of the device tree.
+> 
+> In case of the RASPI device tree this could be simple fixed by modifing
+> the device tree source, but when the device tree is provided by a closed
+> source BIOS this kind of missing symbol could not be fixed.
+
+Is there a real example of this issue, or is this a theoretical concern?
+If this is a real example, we should be discouraging such behavior.
+
+The suggestion by Pantelis should work, but that is just a hack to get
+you out of a bad situation, not a good practice.
+
+> 
+> An additional benefit is to override a (possible broken) symbol exported
+> by the currect live device tree.
+> 
+> The patch is based and tested on linux 4.12-rc3.
+> 
+> Signed-off-by: Stefani Seibold <stefani.seibold.ext@huawei.com>
+> Signed-off-by: Stefani Seibold <stefani@seibold.net>
 > ---
-> v2  Remove altr, from fifo-size.
->     Rename compatible string to "altr,softip-i2c"
-> v3  Add version to commpatible string "altr,softip-i2c-v1.0"
-> ---
->  arch/arm/boot/dts/socfpga.dtsi               | 13 ++++++++++---
->  arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 28 +++++++++++++++++++++++++++-
->  2 files changed, 37 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> index b2674bd..d69c13d 100644
-> --- a/arch/arm/boot/dts/socfpga.dtsi
-> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> @@ -133,6 +133,13 @@
->  					#address-cells = <1>;
->  					#size-cells = <0>;
->  
-> +					clk_0: clk_0 {
-> +						compatible = "fixed-clock";
-> +						#clock-cells = <0>;
-> +						clock-frequency = <50000000>;
-> +						clock-output-names = "clk_0-clk";
-> +					};
-> +
->  					osc1: osc1 {
->  						#clock-cells = <0>;
->  						compatible = "fixed-clock";
-> @@ -529,11 +536,11 @@
->  				};
->  		};
->  
-> -		fpga_bridge0: fpga_bridge@ff400000 {
-> +		fpga_bridge0: fpga_bridge@ff200000 {
->  			compatible = "altr,socfpga-lwhps2fpga-bridge";
-> -			reg = <0xff400000 0x100000>;
-> +			reg = <0xff200000 0x00200000>;
->  			resets = <&rst LWHPS2FPGA_RESET>;
-> -			clocks = <&l4_main_clk>;
-> +			clocks = <&clk_0>;
->  		};
->
+>  drivers/of/overlay.c  | 19 +++++++++++++++++++
+>  drivers/of/resolver.c | 27 ++++++++++++++++++++++-----
+>  2 files changed, 41 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> index 7827786718d8..de6516ea0fcd 100644
+> --- a/drivers/of/overlay.c
+> +++ b/drivers/of/overlay.c
 
-Why this change? This looks wrong and unrelated. The LWHPS2FPGA bridge
-is at 0xff400000, so it is correct the way it is or not?
+< snip >
 
->  		fpga_bridge1: fpga_bridge@ff500000 {
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-> index 155829f..f99576b 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
-> @@ -68,6 +68,7 @@
->  		regulator-min-microvolt = <3300000>;
->  		regulator-max-microvolt = <3300000>;
->  	};
-> +
->  };
-
-???
-
-
-(...)
-
-
-Best regards,
-Steffen
-
--- 
-Pengutronix e.K.                           | Steffen Trumtrar            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+-Frank
