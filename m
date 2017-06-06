@@ -1,51 +1,41 @@
-From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH 3/4] ARM: dts: iwg20m: Add iWave RZG1M Qseven SOM
-Date: Tue, 6 Jun 2017 10:31:38 +0000
-Message-ID: <KL1PR06MB17024AD50F89CF891E16A367B8CB0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1496420523-23506-1-git-send-email-biju.das@bp.renesas.com>
- <1496420523-23506-4-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdV8Ugz_kvHLbV7sii-2v1WdHTSFm3meM8faVtx3jBpC+Q@mail.gmail.com>
+From: varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Subject: Re: [PATCH v3 2/5] dt-bindings: qcom: Add IPQ8074 bindings
+Date: Tue, 06 Jun 2017 16:01:43 +0530
+Message-ID: <a6e380b57702b182cde8dc5317511e58@codeaurora.org>
+References: <1496316482-25468-1-git-send-email-varada@codeaurora.org>
+ <1496316482-25468-3-git-send-email-varada@codeaurora.org>
+ <20170605165414.zbcwbvto77awdk45@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdV8Ugz_kvHLbV7sii-2v1WdHTSFm3meM8faVtx3jBpC+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170605165414.zbcwbvto77awdk45@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mraghava-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sjaganat-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQo+IE9uIEZyaSwgSnVuIDIsIDIwMTcgYXQgNjoyMiBQTSwgQmlqdSBEYXMgPGJpanUuZGFzQGJw
-LnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBBZGQgc3VwcG9ydCBmb3IgaVdhdmUgUlpHMU0gUXNl
-dmVuIFN5c3RlbSBPbiBNb2R1bGUuDQo+ID4gaHR0cDovL3d3dy5pd2F2ZXN5c3RlbXMuY29tL3J6
-LWcxbS1xc2V2ZW4tbW9kdWxlLmh0bWwNCj4NCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPg0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4g
-PiBSZXZpZXdlZC1ieTogQ2hyaXMgUGF0ZXJzb24gPGNocmlzLnBhdGVyc29uMkByZW5lc2FzLmNv
-bT4NCj4NCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhh
-Nzc0My1pd2cyMG0uZHRzaQ0KPiA+IEBAIC0wLDAgKzEsMjcgQEANCj4gPiArLyoNCj4gPiArICog
-RGV2aWNlIFRyZWUgU291cmNlIGZvciB0aGUgaVdhdmUtUlpHMU0tMjBNIFFzZXZlbiBTT00NCj4g
-PiArICoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE3IFJlbmVzYXMgRWxlY3Ryb25pY3MgQ29y
-cC4NCj4gPiArICoNCj4gPiArICogVGhpcyBmaWxlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJt
-cyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljDQo+ID4gK0xpY2Vuc2UNCj4gPiArICogdmVyc2lv
-biAyLiAgVGhpcyBwcm9ncmFtIGlzIGxpY2Vuc2VkICJhcyBpcyIgd2l0aG91dCBhbnkgd2FycmFu
-dHkNCj4gPiArb2YgYW55DQo+ID4gKyAqIGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBvciBpbXBsaWVk
-Lg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlICJyOGE3NzQzLmR0c2kiDQo+ID4gKw0K
-PiA+ICsvIHsNCj4NCj4gR2l2ZW4gdGhpcyBpcyBhIHN1Yi1ib2FyZCB3aXRoIG1hbnkgb3RoZXIg
-Y29tcG9uZW50cywgSSB0aGluayBpdCBzaG91bGQgaGF2ZQ0KPiBpdHMgb3duIChkb2N1bWVudGVk
-KSBjb21wYXRpYmxlIHZhbHVlLCBlLmcuDQo+DQo+ICAgICBjb21wYXRpYmxlID0gIml3YXZlLGcy
-MG0iLCAicmVuZXNhcyxyOGE3NzQzIjsNCg0KVGhhbmtzIGZvciB0aGUgaW5wdXQuIEkgd2lsbCBk
-b2N1bWVudCB0aGlzIHN5c3RlbSBvbiBtb2R1bGUgYW5kIGFwcGx5IHRoZSBhYm92ZSBjaGFuZ2Uu
-DQoNCj4gPiArICAgICAgIG1lbW9yeUA0MDAwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGRl
-dmljZV90eXBlID0gIm1lbW9yeSI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4NDAw
-MDAwMDAgMCAweDIwMDAwMDAwPjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAg
-bWVtb3J5QDIwMDAwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1l
-bW9yeSI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwyIDB4MDAwMDAwMDAgMCAweDIwMDAw
-MDAwPjsNCj4gPiArICAgICAgIH07DQo+ID4gK307DQo+DQoNCls+XQ0KUmVnYXJkcywNCkJpanUN
-Cg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxs
-Ym9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVn
-aXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDku
-DQo=
+On 2017-06-05 22:24, Rob Herring wrote:
+> On Thu, Jun 01, 2017 at 04:57:59PM +0530, Varadarajan Narayanan wrote:
+>> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
+>>  1 file changed, 2 insertions(+)
+> 
+> I acked v2. Please add acks when posting new versions.
+> 
+
+Sorry for missing that here. I posted V4 to which I added.
+
+Varada
+
+> Rob
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
