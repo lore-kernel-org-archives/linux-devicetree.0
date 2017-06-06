@@ -1,77 +1,82 @@
-From: John Youn <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] usb: dwc2: add support for the DWC2 controller on
- Meson8 SoCs
-Date: Tue, 6 Jun 2017 01:48:58 +0000
-Message-ID: <2B3535C5ECE8B5419E3ECBE300772909021B5387A9@US01WEMBX2.internal.synopsys.com>
-References: <20170506173745.19593-1-martin.blumenstingl@googlemail.com>
- <CAFBinCBBN9xAoqjqJKeu66wEXOtp-mN2EQK3ibnvNuw1nOMa=g@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v6 00/11] Broadcom Stingray SOC Initial Support
+Date: Mon, 5 Jun 2017 19:08:03 -0700
+Message-ID: <c26e95e1-4bfa-0d24-33cc-8d5ae3102864@gmail.com>
+References: <1496385275-6899-1-git-send-email-anup.patel@broadcom.com>
+ <4c15213f-4ac6-a0a7-f2b8-cde2b4cee891@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <4c15213f-4ac6-a0a7-f2b8-cde2b4cee891@gmail.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, "John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <John.Youn-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On 5/25/2017 10:39 AM, Martin Blumenstingl wrote:
-> Hi John,
->
-> On Sat, May 6, 2017 at 7:37 PM, Martin Blumenstingl
-> <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
->> USB support in the Meson8 SoCs is provided by a DWC2 controller which
->> works with the same settings as Meson8b and GXBB. Using the generic
->> "snps,dwc2" binding results in an endless stream of "Overcurrent change
->> detected" messages.
+
+
+On 06/05/2017 09:51 AM, Florian Fainelli wrote:
+> On 06/01/2017 11:34 PM, Anup Patel wrote:
+>> This patchset adds initial support of Broadcom Stingray SOC
+>> by reusing existing Broadcom iProc device drivers.
 >>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> do you want me to re-send this with Rob's ACK?
-> also please let me know if something is still missing in this patch
->
->> ---
->>  Documentation/devicetree/bindings/usb/dwc2.txt | 1 +
->>  drivers/usb/dwc2/params.c                      | 2 ++
->>  2 files changed, 3 insertions(+)
+>> Most of the patches in this patchset are DT patches except
+>> the Stingray clock tree support which just one patch.
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
->> index 6c7c2bce6d0c..b55be381ae85 100644
->> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
->> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
->> @@ -10,6 +10,7 @@ Required properties:
->>    - "rockchip,rk3288-usb", "rockchip,rk3066-usb", "snps,dwc2": for rk3288 Soc;
->>    - "lantiq,arx100-usb": The DWC2 USB controller instance in Lantiq ARX SoCs;
->>    - "lantiq,xrx200-usb": The DWC2 USB controller instance in Lantiq XRX SoCs;
->> +  - "amlogic,meson8-usb": The DWC2 USB controller instance in Amlogic Meson8 SoCs;
->>    - "amlogic,meson8b-usb": The DWC2 USB controller instance in Amlogic Meson8b SoCs;
->>    - "amlogic,meson-gxbb-usb": The DWC2 USB controller instance in Amlogic S905 SoCs;
->>    - "amcc,dwc-otg": The DWC2 USB controller instance in AMCC Canyonlands 460EX SoCs;
->> diff --git a/drivers/usb/dwc2/params.c b/drivers/usb/dwc2/params.c
->> index 2990c347289f..0d6290ed66ea 100644
->> --- a/drivers/usb/dwc2/params.c
->> +++ b/drivers/usb/dwc2/params.c
->> @@ -128,6 +128,8 @@ const struct of_device_id dwc2_of_match_table[] = {
->>         { .compatible = "lantiq,xrx200-usb", .data = dwc2_set_ltq_params },
->>         { .compatible = "snps,dwc2" },
->>         { .compatible = "samsung,s3c6400-hsotg" },
->> +       { .compatible = "amlogic,meson8-usb",
->> +         .data = dwc2_set_amlogic_params },
->>         { .compatible = "amlogic,meson8b-usb",
->>           .data = dwc2_set_amlogic_params },
->>         { .compatible = "amlogic,meson-gxbb-usb",
->> --
->> 2.12.2
+>> This patchset is based on Linux-4.12-rc3 and it is also available
+>> at stingray-v6 branch of https://github.com/Broadcom/arm64-linux.git
 >>
->
+>> Changes since v5:
+>>  - Rebased patches for Linux-4.12-rc3
+>>  - Update DT node names to match register offset
+>>
+>> Changes since v4:
+>>  - Reduce number of include headers in Stingray clk driver
+>>
+>> Changes since v3:
+>>  - Rebased patches for Linux-4.12-rc1
+>>  - Updated PATCH3 to have all clocks except genpll3 to be
+>>    registered via platform driver probe
+>>
+>> Changes since v2:
+>>  - Remove default bootargs from chosen DT node
+>>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
+>>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
+>>
+>> Changes since v1:
+>>  - Rebased patches for Linux-4.12-rc1
+>>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
+>>  - Use ranges DT property to clear view of memory-layout
+>>  - Make bcm-sr.h part of clock DT bindings patch
+>>
+>> Anup Patel (3):
+>>   dt-bindings: bcm: Add Broadcom Stingray bindings document
+>>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
+>>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
+>>
+>> Oza Pawandeep (1):
+>>   arm64: dts: Add I2C DT nodes for Stingray SoC
+>>
+>> Pramod Kumar (3):
+>>   arm64: dts: Add NAND DT nodes for Stingray SOC
+>>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
+>>   arm64: dts: Add GPIO DT nodes for Stingray SOC
+>>
+>> Sandeep Tripathy (3):
+>>   dt-bindings: clk: Extend binding doc for Stingray SOC
+>>   clk: bcm: Add clocks for Stingray SOC
+>>   arm64: dts: Add clock DT nodes for Stingray SOC
+>>
+>> Srinath Mannam (1):
+>>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
+> 
+> Applied patches 1, 4-11 to devicetree-arm64/next, thanks!
 
-Adding Felipe
+Also took patch 2, to make sure everything builds properly, Stephen, let
+me know if you want me to take patch #3 as well.
 
-
-Acked-by: John Youn <johnyoun-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-
-John
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+-- 
+Florian
