@@ -1,74 +1,92 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 1/2] drm/bridge: Add Cadence DSI driver
-Date: Tue, 6 Jun 2017 16:08:07 +0200
-Message-ID: <20170606160807.4e717916@bbrezillon>
-References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
- <cc37dbaf-8a6b-eb2c-81d4-87a290c56a25@ti.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
+Date: Tue, 6 Jun 2017 16:23:38 +0200
+Message-ID: <20170606142338.GA23506@ulmo>
+References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
+ <20170523144756.6gfagkwfy7ocogqe@rob-hp-laptop>
+ <20170524122322.ebopabnddozamqit@phenom.ffwll.local>
+ <20170524123735.fm2nyr6rpyfsomdq@sapphire.tkos.co.il>
+ <20170524155131.h53lrilrhn2eouqc@phenom.ffwll.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <cc37dbaf-8a6b-eb2c-81d4-87a290c56a25@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, dri-devel@lists.freedesktop.org, Richard Sproul <sproul@cadence.com>, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Neil Webb <neilw@cadence.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170524155131.h53lrilrhn2eouqc-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCA2IEp1biAyMDE3IDE2OjMwOjE1ICswMzAwClRvbWkgVmFsa2VpbmVuIDx0b21pLnZh
-bGtlaW5lbkB0aS5jb20+IHdyb3RlOgoKPiBPbiAwMi8wNi8xNyAxNTowNCwgQm9yaXMgQnJlemls
-bG9uIHdyb3RlOgo+IAo+ID4gK2VudW0gY2Ruc19kc2lfb3V0cHV0X3R5cGUgewo+ID4gKwlDRE5T
-X0RTSV9QQU5FTCA9IDAsCj4gPiArCUNETlNfRFNJX0JSSURHRSA9IDEsCj4gPiArfTsgIAo+IAo+
-IEp1c3QgbXkgb3BpbmlvbiwgYnV0IEkgdGhpbmsgeW91IHNob3VsZCBvbmx5IGRlZmluZSB2YWx1
-ZXMgZm9yIGVudW1zCj4gd2hlbiB0aG9zZSB2YWx1ZXMgYWN0dWFsbHkgbWVhbiBzb21ldGhpbmcg
-YW5kIGFyZSBuZWVkZWQuIEluIHRoaXMgY2FzZSwKPiBpdCBkb2Vzbid0IG1hdHRlciB3aGljaCB2
-YWx1ZXMgdGhvc2UgZW51bXMgaGF2ZS4KCkFjdHVhbGx5LCB0aGlzIHdpbGwgZ28gYXdheSBpbiB0
-aGUgbmV4dCB2ZXJzaW9uIChzZWUgQXJjaGl0J3MgY29tbWVudCkuCgo+IAo+ID4gK3N0YXRpYyBp
-bnQgY2Ruc19kc2lfaW5pdF9saW5rKHN0cnVjdCBjZG5zX2RzaSAqZHNpKQo+ID4gK3sKPiA+ICsJ
-dTMyIHZhbDsKPiA+ICsJaW50IGk7Cj4gPiArCj4gPiArCXdyaXRlbChDTEtfVU5JVF9JTlRFUlZB
-TCgxNiksIGRzaS0+cmVncyArIE1DVExfRFBIWV9TVEFUSUMpOwo+ID4gKwl3cml0ZWwoQ0xLX0RJ
-VigweGIpIHwgSFNUWF9USU1FT1VUKDB4ZWQ4YWZmZiksCj4gPiArCSAgICAgICBkc2ktPnJlZ3Mg
-KyBNQ1RMX0RQSFlfVElNRU9VVDEpOwo+ID4gKwl3cml0ZWwoTFBSWF9USU1FT1VUKDB4ZjMwZmZm
-ZmYpLCBkc2ktPnJlZ3MgKyBNQ1RMX0RQSFlfVElNRU9VVDIpOwo+ID4gKwo+ID4gKwl2YWwgPSBX
-QUlUX0JVUlNUX1RJTUUoMHhmKTsKPiA+ICsJZm9yIChpID0gMTsgaSA8IGRzaS0+b3V0cHV0LT5k
-ZXYtPmxhbmVzOyBpKyspCj4gPiArCQl2YWwgfD0gREFUQV9MQU5FX0VOKGkpOwo+ID4gKwo+ID4g
-KwlpZiAoIShkc2ktPm91dHB1dC0+ZGV2LT5tb2RlX2ZsYWdzICYgTUlQSV9EU0lfQ0xPQ0tfTk9O
-X0NPTlRJTlVPVVMpKQo+ID4gKwkJdmFsIHw9IENMS19DT05USU5VT1VTOwo+ID4gKwo+ID4gKwl3
-cml0ZWwodmFsLCBkc2ktPnJlZ3MgKyBNQ1RMX01BSU5fUEhZX0NUTCk7Cj4gPiArCj4gPiArCXdy
-aXRlbChDTEtfTEFORV9VTFBPVVRfVElNRSgweDEwNSkgfCBEQVRBX0xBTkVfVUxQT1VUX1RJTUUo
-MHgxZDUpLAo+ID4gKwkgICAgICAgZHNpLT5yZWdzICsgTUNUTF9VTFBPVVRfVElNRSk7Cj4gPiAr
-Cj4gPiArCXdyaXRlbChMSU5LX0VOLCBkc2ktPnJlZ3MgKyBNQ1RMX01BSU5fREFUQV9DVEwpOwo+
-ID4gKwo+ID4gKwl2YWwgPSBDTEtfTEFORV9FTiB8IFBMTF9TVEFSVDsKPiA+ICsJZm9yIChpID0g
-MDsgaSA8IGRzaS0+b3V0cHV0LT5kZXYtPmxhbmVzOyBpKyspCj4gPiArCQl2YWwgfD0gREFUQV9M
-QU5FX1NUQVJUKGkpOwo+ID4gKwo+ID4gKwl3cml0ZWwodmFsLCBkc2ktPnJlZ3MgKyBNQ1RMX01B
-SU5fRU4pOwo+ID4gKwo+ID4gKwluZGVsYXkoMTAwKTsKPiA+ICsKPiA+ICsJcmV0dXJuIDA7Cj4g
-PiArfSAgCj4gCj4gVGhlcmUgYXJlIHF1aXRlIGEgYml0IG9mIG1hZ2ljIHZhbHVlcyBoZXJlIChl
-bHNld2hlcmUgdG9vKS4gTG9va2luZyBhdAo+IHRoZSBuYW1lcyBvZiB0aGUgbWFjcm9zLCBtYW55
-IG9mIHRoZW0gcHJvYmFibHkgcmVwcmVzZW50IHNwYW5zIG9mIHRpbWUsCj4gaW4gY2xvY2sgdGlj
-a3M/IFdvdWxkIGl0IG1ha2UgbW9yZSBzZW5zZSB0byBoYXZlIHRoZSB0aW1lcyBkZWZpbmVkIGlu
-LAo+IHNheSwgbmFub3NlY29uZHMsIGFuZCBhIGZ1bmN0aW9uIHRvIGNvbnZlcnQgdGhlIG5zIHRv
-IGNsb2NrIHRpY2tzPwo+IAo+IEFuZCBhIGhhcmRjb2RlZCBDTEtfRElWLCBkb2VzIHRoYXQgd29y
-az8gSXMgdGhlIGNsb2NrIHJhdGUgZml4ZWQ/CgpPa2F5LCBpdCBzZWVtcyBJIGhhdmUgYWxsIHRo
-ZSBuZWNlc3NhcnkgaW5mb3JtYXRpb24gdG8gZHluYW1pY2FsbHkKY2FsY3VsYXRlIFVMUE9VVF9U
-SU1FIHZhbHVlcyAodGhlc2UgdmFsdWVzIGFyZSBiYXNlZCBvbiBzeXNjbGsgYW5kClVMUE9VVF9U
-SU1FIHNob3VsZCBiZSAxbXMpLgoKSXQncyBhIGJpdCBtb3JlIGNvbXBsaWNhdGVkIGZvciBNQ1RM
-X0RQSFlfVElNRU9VVDEgYW5kCk1DVExfRFBIWV9USU1FT1VUMiwgYmVjYXVzZSBjb3VudGVycyBh
-cmUgYmFzZWQgb24gdGhlIGRzaV90eF9ieXRlIGNsb2NrCndoaWNoIGlzIGRlcml2ZWQgZnJvbSB0
-aGUgRFBIWSBQTEwsIGFuZCBJIGRvbid0IGhhdmUgdGhlIGZpbmFsCnNwZWMgb2YgdGhlIERQSFkg
-YmxvY2sgeWV0LCB3aGljaCBtZWFucyBJIGNhbid0IGV4dHJhY3QgdGhlIGRzaV90eF9ieXRlCmNs
-b2NrIHJhdGUuCkEgdGVtcG9yYXJ5IHNvbHV0aW9uIHdvdWxkIGJlIHRvIGhhcmRjb3JlIHRoZSB0
-eF9ieXRlX2NsayBpbiB0aGUgZHJpdmVyCmFuZCBkbyBhbGwgdGhlIGNhbGN1bGF0aW9uIGJhc2Vk
-IG9uIHRoaXMgaGFyZGNvZGVkIHZhbHVlLiBPciBtYXliZSB3ZQpzaG91bGQgZXhwb3NlIHRoZSBE
-UEhZIFBMTCBpbiB0aGUgRFQuCgpJIGFsc28gZG9uJ3Qga25vdyB3aGF0IENMS19VTklUX0lOVEVS
-VkFMKCkgaXMgZW5jb2RpbmcuIEknbGwgY2hlY2sgd2l0aApDYWRlbmNlIGVuZ2luZWVycy4KClRo
-YW5rcywKCkJvcmlzCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 24, 2017 at 05:51:31PM +0200, Daniel Vetter wrote:
+> On Wed, May 24, 2017 at 03:37:36PM +0300, Baruch Siach wrote:
+> > Hi Daniel,
+> >=20
+> > On Wed, May 24, 2017 at 02:23:22PM +0200, Daniel Vetter wrote:
+> > > On Tue, May 23, 2017 at 09:47:56AM -0500, Rob Herring wrote:
+> > > > On Tue, May 16, 2017 at 11:19:04AM +0300, Baruch Siach wrote:
+> > > > > Fixes: 14da3ed8dd08 ("devicetree/bindings: display: Document comm=
+on panel properties")
+> > > > > Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> > > > > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/display/panel/panel-common.txt=
+ | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > >=20
+> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > >=20
+> > > We now have a pile of acks on these patches, but no one to push them.
+> > > Seems like it's for the panel tree, but Thierry isn't on cc afaics.
+> > >=20
+> > > Someone needs to take care of this (and no it's no going to be me).
+> >=20
+> > Thanks for looking into this.
+> >=20
+> > Just for the record, Thierry has been on To/Cc of all messages in this =
+thread,=20
+> > accept yours.
+>=20
+> Ah, that might be his dri-devel settings, there's a mailman option to
+> remove the cc if you're subscribed. And I got the mails through the m-l.
+>=20
+> I think this wasn't the first time this happened either ...
+
+Sorry, I've been busy moving house for the past few weeks. And yes,
+indeed, this seems to have been the mailmain option. I've switched that
+around now, so hopefully this won't happen again.
+
+Thierry
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlk2uuQACgkQ3SOs138+
+s6H01xAAhTEDgUKXBqm7s0cKvrLzC08wMBDp6LEHCFAXmCGyp3GtqotU+NYaxftB
+vSiAsrR+EsmL0M7EnETUnzjrKntvPL37MhnXS6AR5zBCxJ88DLimSsrCBQOnQXMs
+eq+J5epM7W5n9VqoUTd847uXyyh0/H3afdC5gQVH375oAtmexmw+CWtRuVZAY1IV
+feiTFJzqevnbsWlFou34mtSHR4eIvaszjPaYbx9VSeqU6W/R/floVJrocP31RFAg
+1WVDr4XG/DJOIljLsEDu5awjXceUojf7vKhe+oM1OQiAjC7A5hEngmBMdYMgkInR
+zuwReDd9cHOVElE+ti0ci3TTaaHsSPUJo5GismkrLhryf0Q44zj9i12nZMxKQtsI
+p6H62CxbH7Xaub8x6kg4hDDktWhpkYttYJZ3bUy8f+A7PCpJHXj8sHS3wg6j1G45
+wuQGi4hcRsHHfj7Tjbv2rpH6Pk+sLgjdiB7TTsjxlsih4qZPRWk24MFlF4zzCr6y
+rkZySMy/jBHUoS+vZ4UYxJ6SxQHbHBex4KuALuSgpHUXyta496SfQgIO8zbZixEV
+mfjwvjdkHO9IVI3okf2tsYT/zyLCrS9mzLZTe407FAt+oTmbP1VHibqqemyMzCuD
+P/E5Q5ent+6TkEXhRYNLjFiBYSTmWtG7rY4SQSdl6fl3d7xxMj4=
+=QR0w
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
