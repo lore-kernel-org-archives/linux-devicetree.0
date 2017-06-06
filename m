@@ -1,65 +1,39 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 00/10] irqchip: sunxi-nmi: Cleanups and fix A31 R_INTC register offset
-Date: Tue,  6 Jun 2017 13:59:22 +0800
-Message-ID: <20170606055932.22548-1-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 02/10] irqchip: sunxi-nmi: Document interrupt disabling and clearing at probe time
+Date: Tue,  6 Jun 2017 13:59:24 +0800
+Message-ID: <20170606055932.22548-3-wens@csie.org>
+References: <20170606055932.22548-1-wens@csie.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606055932.22548-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The sunxi-nmi disables all its interrupts and clears any pending
+interrupts at probe time.
 
-This is an alternative to Icenowy's recent A64 R_INTC patches.
+Add comments documenting it, just to make it clear.
 
-This is a two part series. The first four patches clean up the existing
-sunxi-nmi driver. Patches five and six add a new "sun6i-a31-r-intc"
-compatible, which mainly adjusts or removes the awkward register region
-offset the old "sun6i-a31-sc-nmi" compatible needed. The remaining
-patches fix or add device nodes for SoC's having this hardware.
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/irqchip/irq-sunxi-nmi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Using "sun6i-a31-r-intc" introduced in this series, instead of Icenowy's
-"sun50i-a64-r-intc" is preferred. This follows our policy of naming
-hardware blocks and compatibles after their first occurrence.
-
-The first six patches should go through the irqchip tree, while we
-(sunxi) can take the device tree changes after the driver has been
-merged, to avoid breaking linux-next as a whole.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (9):
-  irqchip: sunxi-nmi: Convert magic numbers to defines
-  irqchip: sunxi-nmi: Document interrupt disabling and clearing at probe
-    time
-  irqchip: sunxi-nmi: Reorder sunxi_sc_nmi_reg_offs' in ascending order
-  irqchip: sunxi-nmi: const-ify sunxi_sc_nmi_reg_offs structures
-  dt-bindings: interrupt-controller: sunxi-nmi: Add compatible for A31
-    R_INTC
-  irqchip: sunxi-nmi: Support sun6i-a31-r-intc compatible
-  ARM: sun6i: a31: Use new sun6i-a31-r-intc compatible for NMI/R_INTC
-  ARM: sun8i: a23/a33: Use new sun6i-a31-r-intc compatible for
-    NMI/R_INTC
-  ARM: sun8i: a83t: Add device node for R_INTC interrupt controller
-
-Icenowy Zheng (1):
-  arm64: allwinner: a64: add NMI (R_INTC) controller on A64
-
- .../interrupt-controller/allwinner,sunxi-nmi.txt   |  7 ++-
- arch/arm/boot/dts/sun6i-a31.dtsi                   |  6 +-
- arch/arm/boot/dts/sun8i-a23-a33.dtsi               |  6 +-
- arch/arm/boot/dts/sun8i-a83t.dtsi                  |  9 +++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi      |  9 +++
- drivers/irqchip/irq-sunxi-nmi.c                    | 68 +++++++++++++++++-----
- 6 files changed, 83 insertions(+), 22 deletions(-)
-
+diff --git a/drivers/irqchip/irq-sunxi-nmi.c b/drivers/irqchip/irq-sunxi-nmi.c
+index 177efb473c7d..9a7f6971cc3a 100644
+--- a/drivers/irqchip/irq-sunxi-nmi.c
++++ b/drivers/irqchip/irq-sunxi-nmi.c
+@@ -201,7 +201,10 @@ static int __init sunxi_sc_nmi_irq_init(struct device_node *node,
+ 	gc->chip_types[1].regs.type		= reg_offs->ctrl;
+ 	gc->chip_types[1].handler		= handle_edge_irq;
+ 
++	/* Disable any active interrupts */
+ 	sunxi_sc_nmi_write(gc, reg_offs->enable, 0);
++
++	/* Clear any pending NMI interrupts */
+ 	sunxi_sc_nmi_write(gc, reg_offs->pend, SUNXI_NMI_IRQ_BIT);
+ 
+ 	irq_set_chained_handler_and_data(irq, sunxi_sc_nmi_handle_irq, domain);
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
