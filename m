@@ -1,100 +1,104 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 00/10] irqchip: sunxi-nmi: Cleanups and fix A31 R_INTC
- register offset
-Date: Tue, 6 Jun 2017 20:47:13 +0200
-Message-ID: <20170606184713.4qxvap65o33rkzwz@flea.lan>
-References: <20170606055932.22548-1-wens@csie.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1860001948059505052=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170606055932.22548-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [RFC 0/3] misc: new serdev based drivers for w2sg00x4 GPS module and w2cbw003 wifi/bluetooth
+Date: Tue, 6 Jun 2017 20:50:39 +0200
+Message-ID: <5429321F-A126-446B-B679-B98B4366F7A9@goldelico.com>
+References: <cover.1495363443.git.hns@goldelico.com> <CAL_Jsq+fmi2QwE7J8xv47ece1b+jqnOo99NghfjtocnrRvBkPg@mail.gmail.com> <78B1501A-B9AD-4C6E-A481-26F647AA2BCE@goldelico.com> <CAL_JsqJamBBggr9AOQtQWtZOG+FevK1XEU_D=nYL6=hyvjviVw@mail.gmail.com> <0D94BEA0-F98D-48F6-9DDC-99F932AE7834@goldelico.com> <CAL_JsqK5NxL+rHU2enW0Lo+e+HThp-iK3hpW-UxeFREbivRZOw@mail.gmail.com> <889E8F7F-FC0F-490E-B924-D04D9F4D3402@goldelico.com> <CAL_JsqLE5ANtLNQ9oQR3djEV8V8RX8Kuw_iK34_-YrpTp6+GiA@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLE5ANtLNQ9oQR3djEV8V8RX8Kuw_iK34_-YrpTp6+GiA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, kernel@pyra-handheld.com, Marcel Holtmann <marcel@holtmann.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
+thanks for all the comments.
 
---===============1860001948059505052==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mbkfhanm6bemdkip"
-Content-Disposition: inline
-
-
---mbkfhanm6bemdkip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 06, 2017 at 01:59:22PM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
+> Am 25.05.2017 um 14:48 schrieb Rob Herring <robh+dt@kernel.org>:
 >=20
-> This is an alternative to Icenowy's recent A64 R_INTC patches.
+> On Tue, May 23, 2017 at 8:49 AM, H. Nikolaus Schaller =
+<hns@goldelico.com> wrote:
+>> Hi Rob,
+>>=20
+>>> Am 23.05.2017 um 15:10 schrieb Rob Herring <robh+dt@kernel.org>:
+>>>=20
+>>> +Marcel
+>>=20
+>> Good!
+>>=20
+>> Hm. Well:
+>>=20
+>> root@letux:~# hciconfig hci0 up
+>> Can't get device info: No such device
+>> root@letux:~#
+>>=20
+>> I wonder how I can tell hciconfig about the UART port if not by =
+running hciattach /dev/ttyBT0?
 >=20
-> This is a two part series. The first four patches clean up the existing
-> sunxi-nmi driver. Patches five and six add a new "sun6i-a31-r-intc"
-> compatible, which mainly adjusts or removes the awkward register region
-> offset the old "sun6i-a31-sc-nmi" compatible needed. The remaining
-> patches fix or add device nodes for SoC's having this hardware.
+> You don't create a tty device. Instead you call
+> hci_uart_register_device from the serdev probe.
+
+I see. That is also brand new API in 4.12.
+
 >=20
-> Using "sun6i-a31-r-intc" introduced in this series, instead of Icenowy's
-> "sun50i-a64-r-intc" is preferred. This follows our policy of naming
-> hardware blocks and compatibles after their first occurrence.
+>>>> Or do you have a link to what you think about?
+>>>=20
+>>> Look at the nokia BT or TI (HCI_LL) BT drivers. Those both have f/w
+>>> downloading and some GPIO controls. Given that this module is based =
+on
+>>> Marvell chipset, I'd expect you need to add serdev support to
+>>> hci_mrvl.c.
+>>=20
+>> The w2cb003 has a Marvell WiFi (libertas) but a CSR Bluetooth side.
+>>=20
+>> It has built-in firmware and already talks serial HCI over simple =
+UART right
+>> after power-on. This is why our serdev driver has no firmware =
+download.
 >=20
-> The first six patches should go through the irqchip tree, while we
-> (sunxi) can take the device tree changes after the driver has been
-> merged, to avoid breaking linux-next as a whole.
+> Okay, then probably add serdev support to hci_bcsp. In any case,
+> hci_uart_register_device just needs to register the correct protocol.
 
-For the whole serie:
-Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Hm. I have tried to understand the hci_bcsp stuff but I must admit that =
+we lack
+quick enough understanding of such magic, to be able to add serdev =
+support with
+reasonable efforts. Is there a good description how hci_bcsp it works?
 
-Thanks!
-Maxime
+And I found:
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+	  BCSP (BlueCore Serial Protocol) is serial protocol for =
+communication=20
+	  between Bluetooth device and host. This protocol is required =
+for non
+	  USB Bluetooth devices based on CSR BlueCore chip, including =
+PCMCIA and
+	  CF cards.
 
---mbkfhanm6bemdkip
-Content-Type: application/pgp-signature; name="signature.asc"
+It appears as if the w2cbw003 bluetooth is really based on a BlueCore =
+chip
+(there are 2 references in =
+http://www.wi2wi.com/mgr/docs/W2CBW003_Datasheet_Rev1.8.pdf ).
 
------BEGIN PGP SIGNATURE-----
+Therefore it might be possible to use BCSP but that are completely new =
+horizons.
+But so far we have simply used "hciattach any" mode for years.
 
-iQIcBAEBAgAGBQJZNvixAAoJEBx+YmzsjxAgEAgP/RPGS6+SSXB//UV1jvgjfThI
-Tv/R9cZ8HI4RAorCftq+wPuhH07Ol4yZz+59+MQP9C2i5VIxyilHo3TU5ZLXT5kW
-tp1Rr5Bl4J7ValByZhDLJF75Z6dfqXcNYr7i6fM3gUlUryVo2PX4SyJAXJ+2R4Zh
-SjbVWk1BK5LMUV1TAnG46NfQuoNc3O0o9QGDlFyBadA1zAKG58/t+R2PSYyYH9Va
-bfknOnL0xKCCkcEu8Ayc1p1z7DBjq3Nwi8ah3CEijzM5I4t67HureE3VIqkx7mIl
-bEMRu3jADDA7IbDC5/m225x/xsCPErxcFAeZD7jVM4rvKXHj7S15fnBQmx7Ho33N
-G4D1iMjLjgP3U4+29FFUEWZozoM03AfZb9e/DTn+LHFHNN/+4zbMmteKz14VVFS3
-dVrHDU0plGcW1bOtdW9IqtADD6yRhSvt1RUkvebqHTW1wOJFb2muFRXEY8830jkM
-9fmjA7YEIYtHEzIvkj9xa4FvxpCp+P9BUVOP82OAoqTWtaPXx2VP66p76efqmkDZ
-jVi6hypAvTDfI+akaDpaGe9pRzZO77FR2XYNBFye2920j+g6cMwCScJ8apN3711u
-zomP6cRkp3wjaH03eALqM3k4bTfe8OYS9orJeMwTWH+f1m4Sp6DyA9nDdH5K9+vr
-DXpWsPF2+zn9f7v1uXyV
-=awfE
------END PGP SIGNATURE-----
+We also know that the Gumstix Storm uses the same w2cbw wifi/bluetooth =
+combo
+(omap3-overo-base.dtsi) but there also appears to be no BCSP support in =
+the kernel.
 
---mbkfhanm6bemdkip--
+BTW: it looks as if they simply turn on bluetooth as soon as WiFi is =
+configured up. So they
+could be interested in a more precise power management driver like what =
+we propose.
 
+Maybe someone who owns an older Gumstix with the same chip (they were =
+phased out in 2015
+and replaced by TI modules) can help or jump into this discussion.
 
---===============1860001948059505052==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============1860001948059505052==--
+Thanks and BR,
+Nikolaus=
