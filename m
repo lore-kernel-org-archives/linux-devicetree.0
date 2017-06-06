@@ -1,99 +1,48 @@
-From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH RFC 2/5] ARM: dts: am335x-baltos: use IRQ_TYPE_* to
- specify irq flags
-Date: Tue, 6 Jun 2017 16:33:23 +0200
-Message-ID: <CAGm1_kuKxVOetzMLdnVO+xQ7egX+paqOHLS+ckz6nFwKD5QBuQ@mail.gmail.com>
-References: <20170526180609.2699-1-uwe@kleine-koenig.org> <20170526180609.2699-2-uwe@kleine-koenig.org>
- <20170531171932.GH3730@atomide.com> <CAGm1_ktJp+3t9ExuFJhKTmbM63yt-82PGP26KkEHGqK-tnfWRg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGm1_ktJp+3t9ExuFJhKTmbM63yt-82PGP26KkEHGqK-tnfWRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2 0/5] ARM: dts: Add iWave RZ/G1M board support
+Date: Tue,  6 Jun 2017 16:10:13 +0100
+Message-ID: <1496761818-62126-1-git-send-email-biju.das@bp.renesas.com>
+References: <1496420523-23506-4-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1496420523-23506-4-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 31, 2017 at 7:22 PM, Yegor Yefremov
-<yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Hi Uwe, Tony,
->
-> On Wed, May 31, 2017 at 7:19 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
->> * Uwe Kleine-K=C3=B6nig <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> [170526 11:09]:
->>> According to the binding documentation and the source code the omap-gpi=
-o
->>> controller takes IRQ_TYPE_* as its flags values, not GPIO_ACTIVE_*.
->>>
->>> This patch uses the right variable type which yields the same result
->>> when compiled. Note that this might be wrong and actually
->>> IRQ_TYPE_LEVEL_LOW is intended by the dt author.
->>>
->>> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
->>> ---
->>> Hello,
->>>
->>> can somebody with the hardware or it's documentation please check which
->>> flag is the right one?
->>
->> I'll wait on this one until we have somebody test it.
->
-> I'll look at it this week.
+Hello,
 
-This is what works for me (at least it doesn't produce "irq 88: nobody
-cared (try booting with the "irqpoll" option)").
+This series aims to add iWave RZ/G1M R8A7743 based Qseven SOM and RainboW-G20D- Qseven board support. 
 
-As for tca6416 it is working with all possible settings (from
-IRQ_TYPE_EDGE_RISING till IRQ_TYPE_LEVEL_LOW). "cat /proc/interrupts"
-always shows Level type:
+This series has been tested against linux-next tag next-20170606.
 
-47:          5  44e07000.gpio  20 Level     1-0020
+Modifications:
+v1->v2
+-Documented iWave iW-RainboW-G20M-Qseven-RZG1M system on module
+-Documented iW-RainboW-G20D-Qseven-RZG1M board in alphabatical order
+-Added compatible string in iWave RZG1M Qseven SOM
+-Modified the compatible string in iWave G20D-Q7 board 
 
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-index 1b215c4..944b095 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
-@@ -85,7 +85,7 @@
-                gpio-controller;
-                #gpio-cells =3D <2>;
-                interrupt-parent =3D <&gpio0>;
--               interrupts =3D <20 IRQ_TYPE_EDGE_RISING>;
-+               interrupts =3D <20 IRQ_TYPE_LEVEL_LOW>;
-                pinctrl-names =3D "default";
-                pinctrl-0 =3D <&tca6416_pins>;
-        };
-diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-index 832ead8..ae5692b 100644
---- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-+++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
-@@ -94,7 +94,7 @@
-                gpio-controller;
-                #gpio-cells =3D <2>;
-                interrupt-parent =3D <&gpio0>;
--               interrupts =3D <20 IRQ_TYPE_EDGE_RISING>;
-+               interrupts =3D <20 IRQ_TYPE_LEVEL_LOW>;
-                pinctrl-names =3D "default";
-                pinctrl-0 =3D <&tca6416_pins>;
-        };
-diff --git a/arch/arm/boot/dts/am335x-baltos.dtsi
-b/arch/arm/boot/dts/am335x-baltos.dtsi
-index e3234d4..863942d 100644
---- a/arch/arm/boot/dts/am335x-baltos.dtsi
-+++ b/arch/arm/boot/dts/am335x-baltos.dtsi
-@@ -249,7 +249,7 @@
-                gpio-controller;
-                #gpio-cells =3D <2>;
-                interrupt-parent =3D <&gpio1>;
--               interrupts =3D <28 IRQ_TYPE_EDGE_RISING>;
-+               interrupts =3D <28 IRQ_TYPE_EDGE_FALLING>;
-                pinctrl-names =3D "default";
-                pinctrl-0 =3D <&tps65910_pins>;
-        };
+History:
+-------
+[v1]: http://www.spinics.net/lists/devicetree/msg179565.html
 
-Yegor
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Biju Das (5):
+  of: Add vendor prefix for iWave Systems Technologies Pvt. Ltd
+  ARM: shmobile: document iW-RainboW-G20M-Qseven-RZG1M system on module
+  ARM: shmobile: document iW-RainboW-G20D-Qseven-RZG1M board
+  ARM: dts: iwg20m: Add iWave RZG1M Qseven SOM
+  ARM: dts: iwg20d-q7: Add support for iWave G20D-Q7 board based on
+    RZ/G1M
+
+ Documentation/devicetree/bindings/arm/shmobile.txt |  4 +++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ arch/arm/boot/dts/Makefile                         |  1 +
+ arch/arm/boot/dts/r8a7743-iwg20d-q7.dts            | 25 +++++++++++++++++++
+ arch/arm/boot/dts/r8a7743-iwg20m.dtsi              | 29 ++++++++++++++++++++++
+ 5 files changed, 60 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
+ create mode 100644 arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+
+-- 
+1.9.1
