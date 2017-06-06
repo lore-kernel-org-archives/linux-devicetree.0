@@ -1,134 +1,131 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v8 01/24] drivers/fsi: Add fsi master definition
-Date: Tue,  6 Jun 2017 16:08:36 -0500
-Message-ID: <20170606210859.80431-2-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v8 04/24] lib: Add crc4 module
+Date: Tue,  6 Jun 2017 16:08:39 -0500
+Message-ID: <20170606210859.80431-5-cbostic@linux.vnet.ibm.com>
 References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606210859.80431-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Chris Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-Add a `struct fsi_master` to represent a FSI master controller.
+Add a little helper for crc4 calculations. This works 4-bits-at-a-time,
+using a simple table approach.
 
-FSI master drivers register one of these structs to provide
-device-specific of the standard operations: read/write/term/break and
-link control.
+We will need this in the FSI core code, as well as any master
+implementations that need to calculate CRCs in software.
 
-Includes changes from Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org> & Jeremy Kerr
-<jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>.
-
-Signed-off-by: Jeremy Kerr <jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Chris Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/fsi/fsi-core.c   | 35 +++++++++++++++++++++++++++++++++++
- drivers/fsi/fsi-master.h | 41 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+)
- create mode 100644 drivers/fsi/fsi-master.h
+ include/linux/crc4.h |  8 ++++++++
+ lib/Kconfig          |  8 ++++++++
+ lib/Makefile         |  1 +
+ lib/crc4.c           | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 63 insertions(+)
+ create mode 100644 include/linux/crc4.h
+ create mode 100644 lib/crc4.c
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 3d55bd5..ca02913 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -15,8 +15,43 @@
- 
- #include <linux/device.h>
- #include <linux/fsi.h>
-+#include <linux/idr.h>
- #include <linux/module.h>
- 
-+#include "fsi-master.h"
-+
-+static DEFINE_IDA(master_ida);
-+
-+/* FSI master support */
-+int fsi_master_register(struct fsi_master *master)
-+{
-+	int rc;
-+
-+	if (!master)
-+		return -EINVAL;
-+
-+	master->idx = ida_simple_get(&master_ida, 0, INT_MAX, GFP_KERNEL);
-+	dev_set_name(&master->dev, "fsi%d", master->idx);
-+
-+	rc = device_register(&master->dev);
-+	if (rc)
-+		ida_simple_remove(&master_ida, master->idx);
-+
-+	return rc;
-+}
-+EXPORT_SYMBOL_GPL(fsi_master_register);
-+
-+void fsi_master_unregister(struct fsi_master *master)
-+{
-+	if (master->idx >= 0) {
-+		ida_simple_remove(&master_ida, master->idx);
-+		master->idx = -1;
-+	}
-+
-+	device_unregister(&master->dev);
-+}
-+EXPORT_SYMBOL_GPL(fsi_master_unregister);
-+
- /* FSI core & Linux bus type definitions */
- 
- static int fsi_bus_match(struct device *dev, struct device_driver *drv)
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
+diff --git a/include/linux/crc4.h b/include/linux/crc4.h
 new file mode 100644
-index 0000000..7764b00
+index 0000000..8f739f1
 --- /dev/null
-+++ b/drivers/fsi/fsi-master.h
-@@ -0,0 +1,41 @@
++++ b/include/linux/crc4.h
+@@ -0,0 +1,8 @@
++#ifndef _LINUX_CRC4_H
++#define _LINUX_CRC4_H
++
++#include <linux/types.h>
++
++extern uint8_t crc4(uint8_t c, uint64_t x, int bits);
++
++#endif /* _LINUX_CRC4_H */
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 0c8b78a..d2fd262 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -158,6 +158,14 @@ config CRC32_BIT
+ 
+ endchoice
+ 
++config CRC4
++	tristate "CRC4 functions"
++	help
++	  This option is provided for the case where no in-kernel-tree
++	  modules require CRC4 functions, but a module built outside
++	  the kernel tree does. Such modules that use library CRC4
++	  functions require M here.
++
+ config CRC7
+ 	tristate "CRC7 functions"
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index 0166fbc..90cf124 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -99,6 +99,7 @@ obj-$(CONFIG_CRC_T10DIF)+= crc-t10dif.o
+ obj-$(CONFIG_CRC_ITU_T)	+= crc-itu-t.o
+ obj-$(CONFIG_CRC32)	+= crc32.o
+ obj-$(CONFIG_CRC32_SELFTEST)	+= crc32test.o
++obj-$(CONFIG_CRC4)	+= crc4.o
+ obj-$(CONFIG_CRC7)	+= crc7.o
+ obj-$(CONFIG_LIBCRC32C)	+= libcrc32c.o
+ obj-$(CONFIG_CRC8)	+= crc8.o
+diff --git a/lib/crc4.c b/lib/crc4.c
+new file mode 100644
+index 0000000..cf6db46
+--- /dev/null
++++ b/lib/crc4.c
+@@ -0,0 +1,46 @@
 +/*
-+ * FSI master definitions. These comprise the core <--> master interface,
-+ * to allow the core to interact with the (hardware-specific) masters.
++ * crc4.c - simple crc-4 calculations.
 + *
-+ * Copyright (C) IBM Corporation 2016
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This source code is licensed under the GNU General Public License, Version
++ * 2. See the file COPYING for more details.
 + */
 +
-+#ifndef DRIVERS_FSI_MASTER_H
-+#define DRIVERS_FSI_MASTER_H
++#include <linux/crc4.h>
++#include <linux/module.h>
 +
-+#include <linux/device.h>
-+
-+struct fsi_master {
-+	struct device	dev;
-+	int		idx;
-+	int		n_links;
-+	int		flags;
-+	int		(*read)(struct fsi_master *, int link, uint8_t id,
-+				uint32_t addr, void *val, size_t size);
-+	int		(*write)(struct fsi_master *, int link, uint8_t id,
-+				uint32_t addr, const void *val, size_t size);
-+	int		(*term)(struct fsi_master *, int link, uint8_t id);
-+	int		(*send_break)(struct fsi_master *, int link);
-+	int		(*link_enable)(struct fsi_master *, int link);
++static const uint8_t crc4_tab[] = {
++	0x0, 0x7, 0xe, 0x9, 0xb, 0xc, 0x5, 0x2,
++	0x1, 0x6, 0xf, 0x8, 0xa, 0xd, 0x4, 0x3,
 +};
 +
-+#define dev_to_fsi_master(d) container_of(d, struct fsi_master, dev)
++/**
++ * crc4 - calculate the 4-bit crc of a value.
++ * @crc:  starting crc4
++ * @x:    value to checksum
++ * @bits: number of bits in @x to checksum
++ *
++ * Returns the crc4 value of @x, using polynomial 0b10111.
++ *
++ * The @x value is treated as left-aligned, and bits above @bits are ignored
++ * in the crc calculations.
++ */
++uint8_t crc4(uint8_t c, uint64_t x, int bits)
++{
++	int i;
 +
-+extern int fsi_master_register(struct fsi_master *master);
-+extern void fsi_master_unregister(struct fsi_master *master);
++	/* mask off anything above the top bit */
++	x &= (1ull << bits) - 1;
 +
-+#endif /* DRIVERS_FSI_MASTER_H */
++	/* Align to 4-bits */
++	bits = (bits + 3) & ~0x3;
++
++	/* Calculate crc4 over four-bit nibbles, starting at the MSbit */
++	for (i = bits - 4; i >= 0; i -= 4)
++		c = crc4_tab[c ^ ((x >> i) & 0xf)];
++
++	return c;
++}
++EXPORT_SYMBOL_GPL(crc4);
++
++MODULE_DESCRIPTION("CRC4 calculations");
++MODULE_LICENSE("GPL");
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
