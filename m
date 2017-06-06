@@ -1,50 +1,61 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 2/8] mfd: hi6421-pmic: cleanup: update dev_err messages
-Date: Tue,  6 Jun 2017 16:51:37 +0800
-Message-ID: <20170606085143.13154-3-guodong.xu@linaro.org>
-References: <20170606085143.13154-1-guodong.xu@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606085143.13154-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Rafal Ozieblo <rafalo@cadence.com>
+Subject: RE: [PATCH v2 4/4] net: macb: Add hardware PTP support
+Date: Tue, 6 Jun 2017 08:54:50 +0000
+Message-ID: <BN3PR07MB251673623B941CAF5DEAB474C9CB0@BN3PR07MB2516.namprd07.prod.outlook.com>
+References: <1496413439-12900-1-git-send-email-rafalo@cadence.com>
+ <1496413690-22826-1-git-send-email-rafalo@cadence.com>
+ <20170604205516.GA7848@localhost.localdomain>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170604205516.GA7848@localhost.localdomain>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: David Miller <davem@davemloft.net>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>, "andrei.pistirica@microchip.com" <andrei.pistirica@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Update dev_err messages to make them more readable.
+> From: Richard Cochran [mailto:richardcochran@gmail.com]
+> Sent: 4 czerwca 2017 22:55
+> To: Rafal Ozieblo <rafalo@cadence.com>
+> Cc: David Miller <davem@davemloft.net>; nicolas.ferre@atmel.com;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> harini.katakam@xilinx.com; andrei.pistirica@microchip.com
+> Subject: Re: [PATCH v2 4/4] net: macb: Add hardware PTP support
+>=20
+> On Fri, Jun 02, 2017 at 03:28:10PM +0100, Rafal Ozieblo wrote:
+>=20
+> > +int gem_get_hwtst(struct net_device *dev, struct ifreq *rq)
+> > +{
+> > +	struct macb *bp =3D netdev_priv(dev);
+> > +	struct hwtstamp_config *tstamp_config =3D &bp->tstamp_config;
+> > +
+> > +	if ((bp->hw_dma_cap & HW_DMA_CAP_PTP) =3D=3D 0)
+> > +		return -EFAULT;
+>=20
+> Segmentation fault?  Really?
+>=20
+> ...
+>=20
+> > +int gem_set_hwtst(struct net_device *dev, struct ifreq *ifr, int cmd)
+> > +{
+> > +	struct macb *bp =3D netdev_priv(dev);
+> > +	struct hwtstamp_config *tstamp_config =3D &bp->tstamp_config;
+> > +	enum macb_bd_control tx_bd_control =3D TSTAMP_DISABLED;
+> > +	enum macb_bd_control rx_bd_control =3D TSTAMP_DISABLED;
+> > +	u32 regval;
+> > +
+> > +	if ((bp->hw_dma_cap & HW_DMA_CAP_PTP) =3D=3D 0)
+> > +		return -EFAULT;
+>=20
+> here again
+Would "ENOTSUP" be sufficient ?
 
-Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/mfd/hi6421-pmic-core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> Thanks,
+> Richard
 
-diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-core.c
-index ad9e3d8..b1139d4 100644
---- a/drivers/mfd/hi6421-pmic-core.c
-+++ b/drivers/mfd/hi6421-pmic-core.c
-@@ -52,8 +52,8 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
- 	pmic->regmap = devm_regmap_init_mmio_clk(&pdev->dev, NULL, base,
- 						 &hi6421_regmap_config);
- 	if (IS_ERR(pmic->regmap)) {
--		dev_err(&pdev->dev,
--			"regmap init failed: %ld\n", PTR_ERR(pmic->regmap));
-+		dev_err(&pdev->dev, "Failed to initialise Regmap: %ld\n",
-+						PTR_ERR(pmic->regmap));
- 		return PTR_ERR(pmic->regmap);
- 	}
- 
-@@ -70,7 +70,7 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
- 	ret = devm_mfd_add_devices(&pdev->dev, 0, hi6421_devs,
- 				   ARRAY_SIZE(hi6421_devs), NULL, 0, NULL);
- 	if (ret) {
--		dev_err(&pdev->dev, "add mfd devices failed: %d\n", ret);
-+		dev_err(&pdev->dev, "Failed to add child devices: %d\n", ret);
- 		return ret;
- 	}
- 
--- 
-2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Rafal
