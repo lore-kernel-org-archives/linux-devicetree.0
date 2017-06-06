@@ -1,39 +1,51 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2] ARM64: dts: meson-gx: Fix sensors reporting from SCP
-Date: Tue,  6 Jun 2017 12:23:42 +0200
-Message-ID: <20170606102342.32166-1-carlo@caione.org>
+From: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH 3/4] ARM: dts: iwg20m: Add iWave RZG1M Qseven SOM
+Date: Tue, 6 Jun 2017 10:31:38 +0000
+Message-ID: <KL1PR06MB17024AD50F89CF891E16A367B8CB0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1496420523-23506-1-git-send-email-biju.das@bp.renesas.com>
+ <1496420523-23506-4-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdV8Ugz_kvHLbV7sii-2v1WdHTSFm3meM8faVtx3jBpC+Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdV8Ugz_kvHLbV7sii-2v1WdHTSFm3meM8faVtx3jBpC+Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org
-Cc: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
-
-Switch to use the new compatible for the SCPI sensors so that the
-sensor readings are reported using the correct scale.
-
-Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 436b875..603491d 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -200,7 +200,7 @@
- 		};
- 
- 		scpi_sensors: sensors {
--			compatible = "arm,scpi-sensors";
-+			compatible = "amlogic,meson-gxbb-scpi-sensors", "arm,scpi-sensors";
- 			#thermal-sensor-cells = <1>;
- 		};
- 	};
--- 
-2.9.3
-
+DQo+IE9uIEZyaSwgSnVuIDIsIDIwMTcgYXQgNjoyMiBQTSwgQmlqdSBEYXMgPGJpanUuZGFzQGJw
+LnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiBBZGQgc3VwcG9ydCBmb3IgaVdhdmUgUlpHMU0gUXNl
+dmVuIFN5c3RlbSBPbiBNb2R1bGUuDQo+ID4gaHR0cDovL3d3dy5pd2F2ZXN5c3RlbXMuY29tL3J6
+LWcxbS1xc2V2ZW4tbW9kdWxlLmh0bWwNCj4NCj4gVGhhbmtzIGZvciB5b3VyIHBhdGNoIQ0KPg0K
+PiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4g
+PiBSZXZpZXdlZC1ieTogQ2hyaXMgUGF0ZXJzb24gPGNocmlzLnBhdGVyc29uMkByZW5lc2FzLmNv
+bT4NCj4NCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvcjhh
+Nzc0My1pd2cyMG0uZHRzaQ0KPiA+IEBAIC0wLDAgKzEsMjcgQEANCj4gPiArLyoNCj4gPiArICog
+RGV2aWNlIFRyZWUgU291cmNlIGZvciB0aGUgaVdhdmUtUlpHMU0tMjBNIFFzZXZlbiBTT00NCj4g
+PiArICoNCj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE3IFJlbmVzYXMgRWxlY3Ryb25pY3MgQ29y
+cC4NCj4gPiArICoNCj4gPiArICogVGhpcyBmaWxlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJt
+cyBvZiB0aGUgR05VIEdlbmVyYWwgUHVibGljDQo+ID4gK0xpY2Vuc2UNCj4gPiArICogdmVyc2lv
+biAyLiAgVGhpcyBwcm9ncmFtIGlzIGxpY2Vuc2VkICJhcyBpcyIgd2l0aG91dCBhbnkgd2FycmFu
+dHkNCj4gPiArb2YgYW55DQo+ID4gKyAqIGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBvciBpbXBsaWVk
+Lg0KPiA+ICsgKi8NCj4gPiArDQo+ID4gKyNpbmNsdWRlICJyOGE3NzQzLmR0c2kiDQo+ID4gKw0K
+PiA+ICsvIHsNCj4NCj4gR2l2ZW4gdGhpcyBpcyBhIHN1Yi1ib2FyZCB3aXRoIG1hbnkgb3RoZXIg
+Y29tcG9uZW50cywgSSB0aGluayBpdCBzaG91bGQgaGF2ZQ0KPiBpdHMgb3duIChkb2N1bWVudGVk
+KSBjb21wYXRpYmxlIHZhbHVlLCBlLmcuDQo+DQo+ICAgICBjb21wYXRpYmxlID0gIml3YXZlLGcy
+MG0iLCAicmVuZXNhcyxyOGE3NzQzIjsNCg0KVGhhbmtzIGZvciB0aGUgaW5wdXQuIEkgd2lsbCBk
+b2N1bWVudCB0aGlzIHN5c3RlbSBvbiBtb2R1bGUgYW5kIGFwcGx5IHRoZSBhYm92ZSBjaGFuZ2Uu
+DQoNCj4gPiArICAgICAgIG1lbW9yeUA0MDAwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGRl
+dmljZV90eXBlID0gIm1lbW9yeSI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwwIDB4NDAw
+MDAwMDAgMCAweDIwMDAwMDAwPjsNCj4gPiArICAgICAgIH07DQo+ID4gKw0KPiA+ICsgICAgICAg
+bWVtb3J5QDIwMDAwMDAwMCB7DQo+ID4gKyAgICAgICAgICAgICAgIGRldmljZV90eXBlID0gIm1l
+bW9yeSI7DQo+ID4gKyAgICAgICAgICAgICAgIHJlZyA9IDwyIDB4MDAwMDAwMDAgMCAweDIwMDAw
+MDAwPjsNCj4gPiArICAgICAgIH07DQo+ID4gK307DQo+DQoNCls+XQ0KUmVnYXJkcywNCkJpanUN
+Cg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVhZG93LCBNaWxs
+Ym9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZILCBVSy4gUmVn
+aXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDku
+DQo=
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
