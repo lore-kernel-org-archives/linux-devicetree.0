@@ -1,54 +1,59 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH 4/4] ARM: dts: iwg20d-q7: Add support for iWave G20D-Q7
- board based on RZ/G1M
-Date: Tue, 6 Jun 2017 10:37:40 +0000
-Message-ID: <KL1PR06MB1702A62F3ECB628FC9FC1D43B8CB0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1496420523-23506-1-git-send-email-biju.das@bp.renesas.com>
- <1496420523-23506-5-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdUWJL-oH7wWzjs5O=WrOshdL_AxijBJe66HrYBx7x8F9w@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 0/7] dra7: Fixes for MMC devicetree node
+Date: Tue, 6 Jun 2017 03:51:31 -0700
+Message-ID: <20170606105131.GZ3730@atomide.com>
+References: <20170601143401.16852-1-kishon@ti.com>
+ <CAPDyKFqHHjZQnnaGLP=xDj3eYgzADDYoomzBuXRviBgh-n2QFw@mail.gmail.com>
+ <f78dd61c-6689-4dbc-d1db-128f92be8e51@ti.com>
+ <1d15c9e9-f257-fd97-a9a2-055ee90d7e84@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUWJL-oH7wWzjs5O=WrOshdL_AxijBJe66HrYBx7x8F9w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1d15c9e9-f257-fd97-a9a2-055ee90d7e84-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBPbiBGcmksIEp1biAyLCAyMDE3IGF0IDY6MjIgUE0sIEJpanUgRGFzIDxiaWp1LmRhc0BicC5y
-ZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIHN1cHBvcnQgZm9yIGlXYXZlIFJhaW5ib1ctRzIw
-RC1Rc2V2ZW4gYm9hcmQgYmFzZWQgb24gUlovRzFNLg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0
-Y2ghDQo+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMu
-Y29tPg0KPiA+IFJldmlld2VkLWJ5OiBDaHJpcyBQYXRlcnNvbiA8Y2hyaXMucGF0ZXJzb24yQHJl
-bmVzYXMuY29tPg0KPg0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCty
-ZW5lc2FzQGdsaWRlci5iZT4NCj4NCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9NYWtlZmls
-ZQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlDQo+ID4gQEAgLTcxMSw2ICs3
-MTEsNyBAQCBkdGItJChDT05GSUdfQVJDSF9SRU5FU0FTKSArPSBcDQo+ID4gICAgICAgICByOGE3
-M2E0LWFwZTZldm0uZHRiIFwNCj4gPiAgICAgICAgIHI4YTc3NDAtYXJtYWRpbGxvODAwZXZhLmR0
-YiBcDQo+ID4gICAgICAgICByOGE3NzQzLXNrLXJ6ZzFtLmR0YiBcDQo+ID4gKyAgICAgICByOGE3
-NzQzLWl3ZzIwZC1xNy5kdGIgXA0KPg0KPiBQbGVhc2UgcHJlc2VydmUgc29ydCBvcmRlci4NCj4N
-Cj4gPiAgICAgICAgIHI4YTc3NDUtc2stcnpnMWUuZHRiIFwNCj4gPiAgICAgICAgIHI4YTc3Nzgt
-Ym9ja3cuZHRiIFwNCj4gPiAgICAgICAgIHI4YTc3NzktbWFyemVuLmR0YiBcDQo+DQo+ID4gLS0t
-IC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMtaXdnMjBkLXE3
-LmR0cw0KPiA+IEBAIC0wLDAgKzEsMjUgQEANCj4gPiArLyoNCj4gPiArICogRGV2aWNlIFRyZWUg
-U291cmNlIGZvciB0aGUgaVdhdmUtUlpHMU0gUXNldmVuIGNhcnJpZXIgYm9hcmQNCj4gPiArICoN
-Cj4gPiArICogQ29weXJpZ2h0IChDKSAyMDE3IFJlbmVzYXMgRWxlY3Ryb25pY3MgQ29ycC4NCj4g
-PiArICoNCj4gPiArICogVGhpcyBmaWxlIGlzIGxpY2Vuc2VkIHVuZGVyIHRoZSB0ZXJtcyBvZiB0
-aGUgR05VIEdlbmVyYWwgUHVibGljDQo+ID4gK0xpY2Vuc2UNCj4gPiArICogdmVyc2lvbiAyLiAg
-VGhpcyBwcm9ncmFtIGlzIGxpY2Vuc2VkICJhcyBpcyIgd2l0aG91dCBhbnkgd2FycmFudHkNCj4g
-PiArb2YgYW55DQo+ID4gKyAqIGtpbmQsIHdoZXRoZXIgZXhwcmVzcyBvciBpbXBsaWVkLg0KPiA+
-ICsgKi8NCj4gPiArDQo+ID4gKy9kdHMtdjEvOw0KPiA+ICsjaW5jbHVkZSAicjhhNzc0My1pd2cy
-MG0uZHRzaSINCj4gPiArDQo+ID4gKy8gew0KPiA+ICsgICAgICAgbW9kZWwgPSAiaVdhdmUgU3lz
-dGVtcyBSYWluYm9XLUcyMEQtUXNldmVuIGJvYXJkIGJhc2VkIG9uDQo+IFJaL0cxTSI7DQo+ID4g
-KyAgICAgICBjb21wYXRpYmxlID0gIml3YXZlLGcyMGQiLCAicmVuZXNhcyxyOGE3NzQzIjsNCj4N
-Cj4gV2l0aCBteSBjb21tZW50IG9uIHBhdGNoIFszLzRdLCB0aGlzIHNob3VsZCBiZWNvbWU6DQo+
-DQo+IGNvbXBhdGlibGUgPSAiaXdhdmUsZzIwZCIsICJpd2F2ZSxnMjBtIiwgInJlbmVzYXMscjhh
-Nzc0MyI7DQo+DQoNCkFncmVlZC4gSSB3aWxsIGRvIHRoaXMgY2hhbmdlLg0KDQo+ID4gKw0KPiA+
-ICsgICAgICAgYWxpYXNlcyB7DQo+ID4gKyAgICAgICAgICAgICAgIHNlcmlhbDAgPSAmc2NpZjA7
-DQo+ID4gKyAgICAgICB9Ow0KPiA+ICt9Ow0KPiA+ICsNCj4gPiArJnNjaWYwIHsNCj4gPiArICAg
-ICAgIHN0YXR1cyA9ICJva2F5IjsNCj4gPiArfTsNCj4NCg0KDQpSZWdhcmRzLA0KQmlqdQ0KDQoN
-Cg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2Fy
-ZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3Rl
-cmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170606 03:40]:
+> omap3-overo-base.dtsi has the following dt node for mmc.
+> /* optional on board WiFi */
+> &mmc2 {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&mmc2_pins>;
+>         vmmc-supply = <&w3cbw003c_npoweron>;
+>         vqmmc-supply = <&w3cbw003c_bt_nreset>;
+>         vmmc_aux-supply = <&w3cbw003c_wifi_nreset>;
+>         bus-width = <4>;
+>         cap-sdio-irq;
+>         non-removable;
+> };
+> 
+> It has both "vqmmc-supply" and "vmmc_aux-supply". However omap-hsmmc driver has
+> never parsed vqmmc so far. So I'd assume bt was never functional and it's used
+> only for wifi.
+
+Hmm yeah the vqmmc-supply probably got copied from some
+other SoC for w3cbw003c.
+
+> So for the change suggested by Ulf, Can I do something like below, so that we
+> can keep wifi functional (ignoring bt since that was never functional)?
+> -       vqmmc-supply = <&w3cbw003c_bt_nreset>;
+> -       vmmc_aux-supply = <&w3cbw003c_wifi_nreset>;
+> +       vqmmc-supply = <&w3cbw003c_wifi_nreset>;
+
+Optional sdio pins 4 - 8 need separate power and that's
+why we have the vmmc_aux supply to start with. But here
+there are only four pins, so my guess is that only one
+regulator is needed and the the other two are gpio pins
+for wland and bt that nowadays should be handled by the
+mmc power sequence driver.
+
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
