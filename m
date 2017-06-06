@@ -1,111 +1,60 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 2/4] dt-bindings: thermal: add binding documentation for
- UniPhier thermal monitor
-Date: Tue, 6 Jun 2017 11:46:26 +0900
-Message-ID: <CAK7LNAS-1+p7u4RMuF5FVNyuSHvX+SfAYk4+YbQSdEaAVma=zg@mail.gmail.com>
-References: <1496049345-14649-1-git-send-email-hayashi.kunihiko@socionext.com> <1496049345-14649-3-git-send-email-hayashi.kunihiko@socionext.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: sun8i: a83t: Add dt node for the
+ syscon control module
+Date: Tue, 6 Jun 2017 10:57:30 +0800
+Message-ID: <CAGb2v64Z0oQazFZ27sFtgp_YtEnj01bTfj5yLZHai3fhHQ-49w@mail.gmail.com>
+References: <20170605192130.25320-1-clabbe.montjoie@gmail.com> <20170605192130.25320-5-clabbe.montjoie@gmail.com>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496049345-14649-3-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBMVU3DEQKGQETX2WPUI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170605192130.25320-5-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2017-05-29 18:15 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
-> Add devicetree binding documentation for thermal monitor implemented on
-> Socionext UniPhier SoCs.
+On Tue, Jun 6, 2017 at 3:21 AM, Corentin Labbe
+<clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch add the dt node for the syscon register present on the
+> Allwinner A83T
 >
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../bindings/thermal/uniphier-thermal.txt          | 54 ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+>  arch/arm/boot/dts/sun8i-a83t.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-> new file mode 100644
-> index 0000000..72834e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
-> @@ -0,0 +1,54 @@
-> +* UniPhier Thermal bindings
-> +
-> +This describes the devicetree bindings for thermal monitor supported by
-> +PVT(Process, Voltage and Temperature) monitoring unit implemented on Socionext
-> +UniPhier SoCs.
+> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> index 1dc4cfe81534..ae559dc42caa 100644
+> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> @@ -163,6 +163,12 @@
+>                 #size-cells = <1>;
+>                 ranges;
+>
+> +               syscon: syscon@1c00000 {
+> +                       compatible = "syscon",
+> +                               "allwinner,sun8i-a83t-system-controller";
 
-This paragraph implies this might be a HWMON driver if more features
-are implemented,
-but I assume you use only the Temperature part for a thermal driver at
-the moment.
-(I do not know if other sensors are useful or not, so I do not mind it much.)
+syscon is the most generic compatible string here.
+It should be the last one in the list.
 
+Otherwise,
 
+Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-> +Required properties:
-> +- compatible :
-> +  - "socionext,uniphier-pxs2-thermal" : For UniPhier PXs2 SoC
-> +  - "socionext,uniphier-ld20-thermal" : For UniPhier LD20 SoC
-> +- reg : Offset address of the thermal registers from sysctrl
-
-
-This "reg" does not exist in the example.
-
-Your driver code uses regmap for register access.
-
-
-
-
-> +- interrupts : IRQ for the temperature alarm
-> +- #thermal-sensor-cells : Should be 0. See ./thermal.txt for details.
-> +
-> +Optional properties:
-> +- socionext,tmod-calibration: A pair of calibrated values referred from PVT,
-> +                              in case that the values aren't set on SoC,
-> +                              like a reference board.
-> +
-> +Example:
-> +
-> +       sysctrl@61840000 {
-> +               compatible = "socionext,uniphier-ld20-sysctrl",
-> +                            "simple-mfd", "syscon";
-> +               reg = <0x61840000 0x10000>;
-> +               ...
-> +               pvtctl: pvtctl {
-> +                       compatible = "socionext,uniphier-ld20-thermal";
-> +                       interrupts = <0 3 1>;
-> +                       #thermal-sensor-cells = <0>;
+> +                       reg = <0x01c00000 0x1000>;
 > +               };
-> +               ...
-> +       };
 > +
-> +       thermal-zones {
-> +               cpu_thermal {
-> +                       polling-delay-passive = <250>;  /* 250ms */
-> +                       polling-delay = <1000>;         /* 1000ms */
-> +                       thermal-sensors = <&pvtctl>;
-> +
-> +                       trips {
-> +                               cpu_crit: cpu_crit {
-> +                                       temperature = <95000>;  /* 95C */
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                               cpu_alert: cpu_alert {
-> +                                       temperature = <85000>;  /* 85C */
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +                       };
-> +               };
-> +       };
+>                 dma: dma-controller@1c02000 {
+>                         compatible = "allwinner,sun8i-a83t-dma";
+>                         reg = <0x01c02000 0x1000>;
 > --
-> 2.7.4
+> 2.13.0
 >
-
-
-
--- 
-Best Regards
-Masahiro Yamada
