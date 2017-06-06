@@ -1,89 +1,101 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 00/23] mtd: nand: denali: Denali NAND IP patch bomb
-Date: Wed, 7 Jun 2017 00:09:11 +0200
-Message-ID: <20170607000911.521d559d@bbrezillon>
-References: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 00/11] Broadcom Stingray SOC Initial Support
+Date: Tue, 6 Jun 2017 15:30:27 -0700
+Message-ID: <20170606223027.GL20170@codeaurora.org>
+References: <1496385275-6899-1-git-send-email-anup.patel@broadcom.com>
+ <4c15213f-4ac6-a0a7-f2b8-cde2b4cee891@gmail.com>
+ <c26e95e1-4bfa-0d24-33cc-8d5ae3102864@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496704922-12261-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <c26e95e1-4bfa-0d24-33cc-8d5ae3102864-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Masahiro,
-
-On Tue,  6 Jun 2017 08:21:39 +0900
-Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-
-> This patch series intends to solve various problems.
-> 
-> [1] The driver just retrieves the OOB area as-is
->     whereas the controller uses syndrome page layout.
-> [2] Many NAND chip specific parameters are hard-coded in the driver.
-> [3] ONFi devices are not working
-> [4] It can not read Bad Block Marker
-> 
-> Outstanding changes are:
-> - Fix raw/oob callbacks for syndrome page layout
-> - Implement setup_data_interface() callback
-> - Fix/implement more commands for ONFi devices
-> - Allow to skip the driver internal bounce buffer
-> - Support PIO in case DMA is not supported
-> - Switch from ->cmdfunc over to ->cmd_ctrl
-> 
-> 18 patches were merged at v2.
-> 11 patches were merged at v3.
-> Here is the rest of the series.
-> 
-> v1: https://lkml.org/lkml/2016/11/26/144
-> v2: https://lkml.org/lkml/2017/3/22/804
-> v3: https://lkml.org/lkml/2017/3/30/90
+On 06/05, Florian Fainelli wrote:
 > 
 > 
-> Masahiro Yamada (23):
->   mtd: nand: denali_dt: clean up resource ioremap
->   mtd: nand: denali: use BIT() and GENMASK() for register macros
->   mtd: nand: add generic helpers to check, match, maximize ECC settings
->   mtd: nand: denali: avoid hard-coding ECC step, strength, bytes
->   mtd: nand: denali: remove Toshiba and Hynix specific fixup code
->   mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
->   mtd: nand: denali: set NAND_ECC_CUSTOM_PAGE_ACCESS
->   mtd: nand: denali: do not propagate NAND_STATUS_FAIL to waitfunc()
->   mtd: nand: denali: remove unneeded find_valid_banks()
->   mtd: nand: denali: handle timing parameters by setup_data_interface()
->   mtd: nand: denali: rework interrupt handling
->   mtd: nand: denali: fix NAND_CMD_STATUS handling
->   mtd: nand: denali: fix NAND_CMD_PARAM handling
->   mtd: nand: denali: switch over to cmd_ctrl instead of cmdfunc
->   mtd: nand: denali: fix bank reset function to detect the number of
->     chips
->   mtd: nand: denali: use interrupt instead of polling for bank reset
->   mtd: nand: denali: propagate page to helpers via function argument
->   mtd: nand: denali: merge struct nand_buf into struct denali_nand_info
->   mtd: nand: denali: use flag instead of register macro for direction
->   mtd: nand: denali: fix raw and oob accessors for syndrome page layout
->   mtd: nand: denali: skip driver internal bounce buffer when possible
->   mtd: nand: denali: use non-managed kmalloc() for DMA buffer
->   mtd: nand: denali: enable bad block table scan
-
-I'd like to apply as much patches as possible from this series (already
-applied patches 1 and 2). Can you point patches that actually depend on
-patches 3 and 4?
-
+> On 06/05/2017 09:51 AM, Florian Fainelli wrote:
+> > On 06/01/2017 11:34 PM, Anup Patel wrote:
+> >> This patchset adds initial support of Broadcom Stingray SOC
+> >> by reusing existing Broadcom iProc device drivers.
+> >>
+> >> Most of the patches in this patchset are DT patches except
+> >> the Stingray clock tree support which just one patch.
+> >>
+> >> This patchset is based on Linux-4.12-rc3 and it is also available
+> >> at stingray-v6 branch of https://github.com/Broadcom/arm64-linux.git
+> >>
+> >> Changes since v5:
+> >>  - Rebased patches for Linux-4.12-rc3
+> >>  - Update DT node names to match register offset
+> >>
+> >> Changes since v4:
+> >>  - Reduce number of include headers in Stingray clk driver
+> >>
+> >> Changes since v3:
+> >>  - Rebased patches for Linux-4.12-rc1
+> >>  - Updated PATCH3 to have all clocks except genpll3 to be
+> >>    registered via platform driver probe
+> >>
+> >> Changes since v2:
+> >>  - Remove default bootargs from chosen DT node
+> >>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
+> >>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
+> >>
+> >> Changes since v1:
+> >>  - Rebased patches for Linux-4.12-rc1
+> >>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
+> >>  - Use ranges DT property to clear view of memory-layout
+> >>  - Make bcm-sr.h part of clock DT bindings patch
+> >>
+> >> Anup Patel (3):
+> >>   dt-bindings: bcm: Add Broadcom Stingray bindings document
+> >>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
+> >>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
+> >>
+> >> Oza Pawandeep (1):
+> >>   arm64: dts: Add I2C DT nodes for Stingray SoC
+> >>
+> >> Pramod Kumar (3):
+> >>   arm64: dts: Add NAND DT nodes for Stingray SOC
+> >>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
+> >>   arm64: dts: Add GPIO DT nodes for Stingray SOC
+> >>
+> >> Sandeep Tripathy (3):
+> >>   dt-bindings: clk: Extend binding doc for Stingray SOC
+> >>   clk: bcm: Add clocks for Stingray SOC
+> >>   arm64: dts: Add clock DT nodes for Stingray SOC
+> >>
+> >> Srinath Mannam (1):
+> >>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
+> > 
+> > Applied patches 1, 4-11 to devicetree-arm64/next, thanks!
 > 
->  .../devicetree/bindings/mtd/denali-nand.txt        |   13 +
->  drivers/mtd/nand/denali.c                          | 1701 +++++++++-----------
->  drivers/mtd/nand/denali.h                          |  294 ++--
->  drivers/mtd/nand/denali_dt.c                       |   54 +-
->  drivers/mtd/nand/denali_pci.c                      |   15 +-
->  drivers/mtd/nand/nand_base.c                       |  219 +++
->  include/linux/mtd/nand.h                           |   35 +
->  7 files changed, 1235 insertions(+), 1096 deletions(-)
+> Also took patch 2, to make sure everything builds properly, Stephen, let
+> me know if you want me to take patch #3 as well.
 > 
 
+Usually clk tree takes includes and hosts that in a stable branch
+for arm-soc maintainers to take. It seems that now arm-soc
+maintainers are asking that dts files use plain numbers and then
+switch to defines later after -rc1.
+
+Should I go apply patch 2 myself so I can apply patch 3 to the
+clk tree? Personally, I think this is fine because git doesn't
+care about duplicate commits anyway and this is just #defines
+we're talking about. Alternatively, you can host patch 2 in a
+stable branch on v4.12-rc1 that I can pull into clk tree and then
+apply patch 3 on top of and merge up into clk-next. Or you can
+send me a PR for this clk driver and I can merge it into clk-next
+where patch 2 is the parent of the clk driver change.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
