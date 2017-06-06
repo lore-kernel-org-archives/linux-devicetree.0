@@ -1,128 +1,81 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 5/7] drm/vc4: Add support for the TXP (transposer) block
-Date: Tue, 6 Jun 2017 21:13:00 +0200
-Message-ID: <20170606211300.61e93ec1@bbrezillon>
-References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
- <1496392332-8722-6-git-send-email-boris.brezillon@free-electrons.com>
- <20170605112549.GA32480@e106950-lin.cambridge.arm.com>
+From: Stefani Seibold <stefani@seibold.net>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Tue, 06 Jun 2017 21:22:54 +0200
+Message-ID: <1496776974.3821.6.camel@seibold.net>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+         <593657AF.8050208@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170605112549.GA32480@e106950-lin.cambridge.arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Starkey <brian.starkey@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee@kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, dri-devel@lists.freedesktop.org, Gerd Hoffmann <kraxel@redhat.com>, Florian Fainelli <f.fainelli@gmail.com>, Eben Upton <eben@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, "Hollingworth, Gordon" <gordon@raspberrypi.org>, "Cobley,
- Dom" <dom@raspberrypi.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Scott Branden <sbranden@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <593657AF.8050208@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>, Stefani Seibold <stefani.seibold.ext@huawei.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Holm Rauchfuss <holm.rauchfuss@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQnJpYW4sCgpMZSBNb24sIDUgSnVuIDIwMTcgMTI6MjU6NTAgKzAxMDAsCkJyaWFuIFN0YXJr
-ZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4gYSDDqWNyaXQgOgoKPiBIaSBCb3JpcywKPiAKPiBJ
-IGNhbid0IHNwZWFrIGZvciB0aGUgSFctc3BlY2lmaWMgZGV0YWlscywgYnV0IHRoZSB3cml0ZWJh
-Y2sgcGFydAo+IGxvb2tzIHByZXR0eSBnb29kIChhbmQgZmFtaWxpYXIgOy0pIHRvIG1lLiBUaGVy
-ZSBjZXJ0YWlubHkgc2VlbXMgdG8gYmUKPiBzb21lIHNjb3BlIGZvciBjb2RlLXNoYXJpbmcgdGhl
-cmUsIGJ1dCBJIHRoaW5rIGl0J3MgZmluZSBub3QgdG8gZG8gaXQKPiB5ZXQuCgpBZ3JlZWQuCgo+
-IAo+IEkndmUgYSBmdXJ0aGVyIHF1ZXJ5IGJlbG93IGFib3V0IHRoZSBoYW5kbGluZyBvZiBDUlRD
-IGV2ZW50cy4KPiAKClsuLi5dCgo+ID4rCj4gPit2b2lkIHZjNF90eHBfYXRvbWljX2NvbW1pdChz
-dHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ID4rCQkJICAgc3RydWN0IGRybV9hdG9taWNfc3RhdGUg
-Km9sZF9zdGF0ZSkKPiA+K3sKPiA+KwlzdHJ1Y3QgdmM0X2RldiAqdmM0ID0gdG9fdmM0X2Rldihk
-ZXYpOwo+ID4rCXN0cnVjdCB2YzRfdHhwICp0eHAgPSB2YzQtPnR4cDsKPiA+KwlzdHJ1Y3QgZHJt
-X2Nvbm5lY3Rvcl9zdGF0ZSAqY29ubl9zdGF0ZSA9IHR4cC0+Y29ubmVjdG9yLmJhc2Uuc3RhdGU7
-Cj4gPisJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGU7Cj4gPisJc3RydWN0IGRybV9nZW1f
-Y21hX29iamVjdCAqZ2VtOwo+ID4rCXN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiOwo+ID4rCXUz
-MiBjdHJsID0gVFhQX0dPIHwgVFhQX0VJOwo+ID4rCj4gPisJLyogV3JpdGViYWNrIGNvbm5lY3Rv
-ciBpcyBkaXNhYmxlZCwgbm90aGluZyB0byBkby4gKi8KPiA+KwlpZiAoIWNvbm5fc3RhdGUtPmNy
-dGMpCj4gPisJCXJldHVybjsKPiA+Kwo+ID4rCS8qIFdyaXRlYmFjayBjb25uZWN0b3IgaXMgZW5h
-YmxlZCwgYnV0IGhhcyBubyBGQiBhc3NpZ25lZCB0byBpdC4gRmFrZSBhCj4gPisJICogdmJsYW5r
-IGV2ZW50IHRvIGNvbXBsZXRlIC0+ZmxpcF9kb25lLgo+ID4rCSAqLwo+ID4rCWlmICghY29ubl9z
-dGF0ZS0+d3JpdGViYWNrX2pvYiB8fCAhY29ubl9zdGF0ZS0+d3JpdGViYWNrX2pvYi0+ZmIpIHsK
-PiA+KwkJdmM0X2NydGNfZW9mX2V2ZW50KGNvbm5fc3RhdGUtPmNydGMpOyAgCj4gCj4gSSdtIG5v
-dCBzdXJlIGFib3V0IGhpZGluZyBhd2F5IHRoZSBvbmUtc2hvdCB0aGluZyBsaWtlIHRoaXMuIElm
-IHRoZQo+IENSVEMgcmVtYWlucyAiYWN0aXZlIiBmcm9tIHRoZSBBUEkgcG9pbnQgb2Ygdmlldywg
-SSdkIGV4cGVjdCBpdCB0byBiZQo+IGFibGUgdG8ga2VlcCBnZW5lcmF0aW5nIFZCTEFOSyBldmVu
-dHMuCj4gCj4gSSBkb24ndCBrbm93IGhvdyB0byBkbyBpZiwgYnV0IGlmIHRoZXJlIHdlcmUgc29t
-ZSBub3Rpb24gb2YKPiAiYXV0by1kaXNhYmxpbmciIENSVENzIHRoZW4gdGhpcyBxdWlyayB3b3Vs
-ZCBnbyBhd2F5LCBhbmQgeW91J2QgYWxzbwo+IGJlIGFibGUgdG8gZW5mb3JjZSB0aGF0IHRoZSBD
-UlRDIGNhbid0IGJlIGVuYWJsZWQgd2l0aG91dCBhIHdyaXRlYmFjawo+IGZyYW1lYnVmZmVyLgoK
-SSBkb24ndCBoYXZlIGEgc3Ryb25nIG9waW5pb24gb24gImF1dG8tZGlzYWJsaW5nIENSVEMiIHZz
-ICJmYWtlIFZCTEFOSwpldmVudHMiLiBOb3RlIHRoYXQgSSdtIGFscmVhZHkgZmFraW5nIGEgVkJM
-QU5LIGV2ZW50IHdoZW4gYWN0aXZhdGluZwp3cml0ZWJhY2ssIGJlY2F1c2UgdGhlcmUncyBubyBz
-dWNoIGNvbmNlcHQgYXQgdGhlIEhWUy9UWFAgbGV2ZWwuIFdlCmRvIGhhdmUgRU9GIChFbmQgT2Yg
-RnJhbWUpIGFuZCB3cml0ZWJhY2sgZG9uZSBldmVudHMsIGJ1dCB0aGVzZSBhcmUKcXVpdGUgaW5k
-ZXBlbmRlbnQgZnJvbSB0aGUgVkJMQU5LIGV2ZW50cyBnZW5lcmF0ZWQgYnkgdGhlIHBpeGVsdmFs
-dmUKYmxvY2sgKHRoZSBibG9jayByZXNwb25zaWJsZSBmb3IgZ2VuZXJhdGluZyB0aGUgSFNZTkMv
-VlNZTkMgc2lnbmFscykuCgo+IAo+IEknbSBhbHNvIG5vdCBzdXJlIGhvdyAoaWY/KSB0aGlzIHdv
-cmtzIHRvZGF5IHdpdGggYSBDUlRDIGRyaXZpbmcgYSBEU0kKPiBjb21tYW5kLW1vZGUgcGFuZWwu
-IERvZXMgdGhlIENSVEMga2VlcCBnZW5lcmF0aW5nIFZCTEFOS3MgZXZlbiB3aGVuCj4gdGhlcmUg
-YXJlIG5vIHVwZGF0ZXM/CgpJIGRvbid0IGtub3cuIElzIHRoaXMgbWFuZGF0b3J5IHRvIGhhdmUg
-VkJMQU5LIGV2ZW50cz8gSSBtZWFuLCB0aGUKY29yZSBpcyB1c2luZyBWQkxBTksgZXZlbnRzIHRv
-IGRldGVjdCB3aGVuIHBhZ2UgZmxpcHMgaGF2ZSBiZWVuIGRvbmUsCnRoYXQgaXMsIHdoZW4gb2xk
-IGZyYW1lYnVmZmVycyBhcmUgdW51c2VkIGFuZCBuZXcgb25lcyBzdGFydGVkIHRvIGJlCmZldGNo
-ZWQgYnkgdGhlIENSVEMsIGJ1dCBvbiBzb21lIEhXLCBWQkxBTksgaXMgbm90IHRoZSBvbmx5IHdh
-eSB0bwpkZXRlY3Qgc3VjaCBzaXR1YXRpb25zLiBUaGUgcXVlc3Rpb24gaXMsIGFyZSB0aGVyZSBv
-dGhlciBzaXR1YXRpb25zCndoZXJlIFZCTEFOSyBldmVudHMgYXJlIHJlcXVpcmVkLCBvciBpcyB0
-aGVyZSBhbiBpbXBsaWNpdCBydWxlIHN0YXRpbmcKdGhhdCBhIENSVEMgaGFzIHRvIGdlbmVyYXRl
-IFZCTEFOSyBldmVudHMgYXQgYSB2cmVmcmVzaCByYXRlIGV2ZW4gd2hlbgp0aGUgZGlzcGxheSBp
-cyBhY3R1YWxseSBub3QgdXBkYXRlZCB3aGVuIG5vdGhpbmcgY2hhbmdlcz8KCj4gCj4gPisJCXJl
-dHVybjsKPiA+Kwl9Cj4gPisKPiA+KwlmYiA9IGNvbm5fc3RhdGUtPndyaXRlYmFja19qb2ItPmZi
-Owo+ID4rCj4gPisJc3dpdGNoIChmYi0+Zm9ybWF0LT5mb3JtYXQpIHsKPiA+KwljYXNlIERSTV9G
-T1JNQVRfQVJHQjg4ODg6Cj4gPisJCWN0cmwgfD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNl
-IERSTV9GT1JNQVRfWFJHQjg4ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9S
-TUFUX0FSR0I4ODg4LCBUWFBfRk9STUFUKSB8Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQ
-X0JZVEVfRU5BQkxFKTsKPiA+KwkJYnJlYWs7Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfQUJH
-Ujg4ODg6Cj4gPisJCWN0cmwgfD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNlIERSTV9GT1JN
-QVRfWEJHUjg4ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX0FCR1I4
-ODg4LCBUWFBfRk9STUFUKSB8Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQX0JZVEVfRU5B
-QkxFKTsKPiA+KwkJYnJlYWs7Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfUkdCQTg4ODg6Cj4g
-PisJCWN0cmwgfD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNlIERSTV9GT1JNQVRfUkdCWDg4
-ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX1JHQkE4ODg4LCBUWFBf
-Rk9STUFUKSB8Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQX0JZVEVfRU5BQkxFKTsKPiA+
-KwkJYnJlYWs7Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfQkdSQTg4ODg6Cj4gPisJCWN0cmwg
-fD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNlIERSTV9GT1JNQVRfQkdSWDg4ODg6Cj4gPisJ
-CWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX0JHUkE4ODg4LCBUWFBfRk9STUFUKSB8
-Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQX0JZVEVfRU5BQkxFKTsKPiA+KwkJYnJlYWs7
-Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfQkdSODg4Ogo+ID4rCQljdHJsIHw9IFZDNF9TRVRf
-RklFTEQoVFhQX0ZPUk1BVF9CR1I4ODgsIFRYUF9GT1JNQVQpIHwKPiA+KwkJCVZDNF9TRVRfRklF
-TEQoMHhmLCBUWFBfQllURV9FTkFCTEUpOwo+ID4rCQlicmVhazsKPiA+Kwo+ID4rCWNhc2UgRFJN
-X0ZPUk1BVF9SR0I4ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX1JH
-Qjg4OCwgVFhQX0ZPUk1BVCkgfAo+ID4rCQkJVkM0X1NFVF9GSUVMRCgweGYsIFRYUF9CWVRFX0VO
-QUJMRSk7Cj4gPisJCWJyZWFrOwo+ID4rCWRlZmF1bHQ6Cj4gPisJCVdBUk5fT04oMSk7Cj4gPisJ
-CXJldHVybjsKPiA+Kwl9Cj4gPisKPiA+KwlpZiAoIShjdHJsICYgVFhQX0FMUEhBX0VOQUJMRSkp
-Cj4gPisJCWN0cmwgfD0gVFhQX0FMUEhBX0lOVkVSVDsKPiA+Kwo+ID4rCW1vZGUgPSAmY29ubl9z
-dGF0ZS0+Y3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7Cj4gPisJZ2VtID0gZHJtX2ZiX2NtYV9n
-ZXRfZ2VtX29iaihmYiwgMCk7Cj4gPisJVFhQX1dSSVRFKFRYUF9EU1RfUFRSLCBnZW0tPnBhZGRy
-ICsgZmItPm9mZnNldHNbMF0pOwo+ID4rCVRYUF9XUklURShUWFBfRFNUX1BJVENILCBmYi0+cGl0
-Y2hlc1swXSk7Cj4gPisJVFhQX1dSSVRFKFRYUF9ESU0sCj4gPisJCSAgVkM0X1NFVF9GSUVMRCht
-b2RlLT5oZGlzcGxheSwgVFhQX1dJRFRIKSB8Cj4gPisJCSAgVkM0X1NFVF9GSUVMRChtb2RlLT52
-ZGlzcGxheSwgVFhQX0hFSUdIVCkpOwo+ID4rCj4gPisJVFhQX1dSSVRFKFRYUF9EU1RfQ1RSTCwg
-Y3RybCk7Cj4gPisKPiA+Kwlkcm1fd3JpdGViYWNrX3F1ZXVlX2pvYigmdHhwLT5jb25uZWN0b3Is
-IGNvbm5fc3RhdGUtPndyaXRlYmFja19qb2IpOwo+ID4rCWNvbm5fc3RhdGUtPndyaXRlYmFja19q
-b2IgPSBOVUxMOwo+ID4rfQo+ID4rCj4gPitib29sIHZjNF9pc190eHBfZW5jb2RlcihzdHJ1Y3Qg
-ZHJtX2RldmljZSAqZGV2LCBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gPit7Cj4gPisJ
-c3RydWN0IHZjNF9kZXYgKnZjNCA9IHRvX3ZjNF9kZXYoZGV2KTsKPiA+Kwo+ID4rCXJldHVybiBl
-bmNvZGVyID09ICZ2YzQtPnR4cC0+Y29ubmVjdG9yLmVuY29kZXI7Cj4gPit9Cj4gPisKPiA+K3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgdmM0X3R4cF9jb25u
-ZWN0b3JfaGVscGVyX2Z1bmNzID0gewo+ID4rCS5nZXRfbW9kZXMgPSB2YzRfdHhwX2Nvbm5lY3Rv
-cl9nZXRfbW9kZXMsCj4gPisJLm1vZGVfdmFsaWQgPSB2YzRfdHhwX2Nvbm5lY3Rvcl9tb2RlX3Zh
-bGlkLAo+ID4rCS5hdG9taWNfY2hlY2sgPSB2YzRfdHhwX2Nvbm5lY3Rvcl9hdG9taWNfY2hlY2ss
-ICAKPiAKPiBodWguIFRoaXMgaG9vayBkaWRuJ3QgZXhpc3Qgd2hlbiBJIGRpZCBNYWxpLURQLiBJ
-IHdvbmRlciBpZiB3ZSBzaG91bGQKPiBzd2l0Y2ggTWFsaS1EUCB0byBpdCB0b28uIERvIHlvdSBr
-bm93IGlmIHRoZSBzZW1hbnRpY3MgYXJlIGFueQo+IGRpZmZlcmVudCBmcm9tIHRoZSBlbmNvZGVy
-IGF0b21pY19jaGVjaz8KCkl0IHNlZW1zIHRoYXQgY29ubmVjdG9yLT5hdG9taWNfY2hlY2soKSBp
-cyBjYWxsZWQgZXZlbiB3aGVuIHRoZQpDUlRDIC0+IGVuY29kZXIgLT4gY29ubmVjdG9yIHJvdXRp
-bmcgZGlkIG5vdCBjaGFuZ2UgaWYgYXQgbGVhc3Qgb25lIG9mCnRoZSBwcm9wZXJ0eSBhdHRhY2hl
-ZCB0byB0aGUgY29ubmVjdG9yIHdhcyBjaGFuZ2VkLCB3aGljaCBpcyBhIGdvb2QgZml0CmZvciB3
-cml0ZWJhY2sgY29ubmVjdG9ycyA7LSkuCkFsc28sIGJ5IHVzaW5nIGNvbm5lY3Rvci0+YXRvbWlj
-X2NoZWNrKCkgSSBnZXQgcmlkIG9mIHRoZQpkdW1teSBlbmNvZGVyX2hlbHBlcl9mdW5jcyBvYmpl
-Y3QuCgpUaGFua3MgZm9yIHRoZSByZXZpZXcsCgpCb3JpcwpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Frank,
+
+On 06.06.2017, 00:20 -0700 Frank Rowand wrote::
+> On 06/05/17 05:59, Stefani Seibold wrote:
+> > From: Stefani Seibold <stefani@seibold.net>
+> > 
+> > This patch enables external references for symbols which are not
+> > exported by the current device tree. For example
+> > 
+> > // RASPI example (only for testing)
+> > /dts-v1/;
+> > /plugin/;
+> > 
+> > / {
+> >     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> > 
+> >     fragment@0 {
+> >         target-path = "/soc/i2s@7e203000";
+> >         __overlay__ {
+> >             #address-cells = <0x00000001>;
+> >             #size-cells = <0x00000001>;
+> >             test = "test";
+> >             timer = <&timer>;
+> >         };
+> >     };
+> > 
+> >     __external_symbols__ {
+> >         timer = "/soc/timer@7e003000";
+> >     };
+> > };
+> 
+> My hope is that the dtc compiler will stop supporting specification
+> of the
+> __symbols__ node in dts source, and only generate it automatically in
+> the dtb.
+> That change to dtc would not allow any node name specified in a dts
+> to begin
+> with an underscore.  Thus node __external_symbols__ would not be
+> allowed.
+> 
+
+The name is not so important to me, only the solution.
+
+> > In case of the RASPI device tree this could be simple fixed by
+> > modifing
+> > the device tree source, but when the device tree is provided by a
+> > closed
+> > source BIOS this kind of missing symbol could not be fixed.
+> 
+> Is there a real example of this issue, or is this a theoretical
+> concern?
+> If this is a real example, we should be discouraging such behavior.
+> 
+
+Yes, I have a BIOS on some ARM64 servers which provides broken device tree. It also lacks some devices in this tree which needs references to other devices which lacks a phandle.
+
+
+> The suggestion by Pantelis should work, but that is just a hack to
+> get
+> you out of a bad situation, not a good practice.
+> 
+
+I tried it, but it doesn't work. Look at my post to Pantelis.
+
+- Stefani
