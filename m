@@ -1,92 +1,139 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt/bindings: display: fix display-timing reference
-Date: Tue, 6 Jun 2017 16:23:38 +0200
-Message-ID: <20170606142338.GA23506@ulmo>
-References: <eabeec88c2831eb8541b78a4977ee7342b810b39.1494922745.git.baruch@tkos.co.il>
- <20170523144756.6gfagkwfy7ocogqe@rob-hp-laptop>
- <20170524122322.ebopabnddozamqit@phenom.ffwll.local>
- <20170524123735.fm2nyr6rpyfsomdq@sapphire.tkos.co.il>
- <20170524155131.h53lrilrhn2eouqc@phenom.ffwll.local>
+From: Mylene Josserand <mylene.josserand@free-electrons.com>
+Subject: Re: [PATCH 1/2] Input: Add driver for Cypress Generation 5
+ touchscreen
+Date: Tue, 6 Jun 2017 16:32:46 +0200
+Message-ID: <0232a641-c741-1f95-9086-840b31f5d055@free-electrons.com>
+References: <20170529144538.29187-1-mylene.josserand@free-electrons.com>
+ <20170529144538.29187-2-mylene.josserand@free-electrons.com>
+ <20170530080225.rgvy5too2cy5m2zp@flea.lan>
+ <c732ffe4-e0fb-16d7-c27a-d18a1995c360@free-electrons.com>
+ <20170606120400.ekfbbaai7myscitu@flea.lan>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170524155131.h53lrilrhn2eouqc-dv86pmgwkMBes7Z6vYuT8azUEOm+Xw19@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
-Cc: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20170606120400.ekfbbaai7myscitu@flea.lan>
+Sender: linux-input-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: dmitry.torokhov@gmail.com, fery@cypress.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
+Maxime,
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/06/2017 14:04, Maxime Ripard wrote:
+> On Tue, Jun 06, 2017 at 10:03:48AM +0200, Mylene Josserand wrote:
+>>>> +static int cyttsp5_hid_output_bl_launch_app(struct cyttsp5 *ts)
+>>>> +{
+>>>> +	int rc, t;
+>>>> +	u8 cmd[HID_OUTPUT_BL_LAUNCH_APP];
+>>>> +	u16 crc;
+>>>> +
+>>>> +	mutex_lock(&ts->system_lock);
+>>>> +	ts->hid_cmd_state = HID_OUTPUT_BL_LAUNCH_APP + 1;
+>>>> +	mutex_unlock(&ts->system_lock);
+>>>> +
+>>>> +	cmd[0] = LOW_BYTE(HID_OUTPUT_BL_LAUNCH_APP_SIZE);
+>>>> +	cmd[1] = HI_BYTE(HID_OUTPUT_BL_LAUNCH_APP_SIZE);
+>>>> +	cmd[2] = HID_BL_OUTPUT_REPORT_ID;
+>>>> +	cmd[3] = 0x0; /* Reserved */
+>>>> +	cmd[4] = HID_OUTPUT_BL_SOP;
+>>>> +	cmd[5] = HID_OUTPUT_BL_LAUNCH_APP;
+>>>> +	cmd[6] = 0x0; /* Low bytes of data */
+>>>> +	cmd[7] = 0x0; /* Hi bytes of data */
+>>>> +	crc = cyttsp5_compute_crc(&cmd[4], 4);
+>>>> +	cmd[8] = LOW_BYTE(crc);
+>>>> +	cmd[9] = HI_BYTE(crc);
+>>>> +	cmd[10] = HID_OUTPUT_BL_EOP;
+>>>> +
+>>>> +	rc = cyttsp5_write(ts, HID_OUTPUT_REG, cmd,
+>>>> +			   HID_OUTPUT_BL_LAUNCH_APP_SIZE);
+>>>
+>>> It seems like you'll send HID_OUTPUT_BL_LAUNCH_APP_SIZE twice here,
+>>> once as setup in cyttsp5_write, and once in the buffer you want to
+>>> send. Is that on purpose?
+>>
+>> I am not sure to see the second time it is sent. What do you mean by "as
+>> setup in cyttsp5_write"? Anyway, the size is needed in the buffer of the
+>> frame.
+>
+> Nevermind, I confused the HID_OUTPUT_BL_LAUNCH_APP_SIZE with the
+> register, my bad.
+>
 
-On Wed, May 24, 2017 at 05:51:31PM +0200, Daniel Vetter wrote:
-> On Wed, May 24, 2017 at 03:37:36PM +0300, Baruch Siach wrote:
-> > Hi Daniel,
-> >=20
-> > On Wed, May 24, 2017 at 02:23:22PM +0200, Daniel Vetter wrote:
-> > > On Tue, May 23, 2017 at 09:47:56AM -0500, Rob Herring wrote:
-> > > > On Tue, May 16, 2017 at 11:19:04AM +0300, Baruch Siach wrote:
-> > > > > Fixes: 14da3ed8dd08 ("devicetree/bindings: display: Document comm=
-on panel properties")
-> > > > > Cc: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > > > > Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > > > > Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/display/panel/panel-common.txt=
- | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > >=20
-> > > > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > >=20
-> > > We now have a pile of acks on these patches, but no one to push them.
-> > > Seems like it's for the panel tree, but Thierry isn't on cc afaics.
-> > >=20
-> > > Someone needs to take care of this (and no it's no going to be me).
-> >=20
-> > Thanks for looking into this.
-> >=20
-> > Just for the record, Thierry has been on To/Cc of all messages in this =
-thread,=20
-> > accept yours.
->=20
-> Ah, that might be his dri-devel settings, there's a mailman option to
-> remove the cc if you're subscribed. And I got the mails through the m-l.
->=20
-> I think this wasn't the first time this happened either ...
+No problem.
 
-Sorry, I've been busy moving house for the past few weeks. And yes,
-indeed, this seems to have been the mailmain option. I've switched that
-around now, so hopefully this won't happen again.
+>>>> +	/* Call platform init function */
+>>>> +	ts->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+>>>> +	if (IS_ERR(ts->reset_gpio)) {
+>>>> +		rc = PTR_ERR(ts->reset_gpio);
+>>>> +		dev_err(dev, "Failed to request reset gpio, error %d\n", rc);
+>>>> +		return rc;
+>>>> +	}
+>>>> +
+>>>> +	/* Need a delay to have device up */
+>>>> +	msleep(20);
+>>>
+>>> In the case where the device has already been out of reset, this means
+>>> that this alone is not sufficient to reset it and bring it out of
+>>> reset, which also means that you do not have any guarantee on the
+>>> current state of the device. I'm not sure how it would impact the
+>>> proper operations though.
+>>
+>> Okay. A reset frame can be sent to perform a "software
+>> reset". Should I add it on startup to be in a "known behavior"?
+>
+> I guess you'd be safer just getting the GPIO with the low level by
+> default, and then changing to high. That way you know that you went
+> through a reset state, before bringing up the device.
 
-Thierry
+Okay, I will update the driver, thanks!
 
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
+>>>> +	ts->input = input_allocate_device();
+>>>> +	if (!ts->input) {
+>>>> +		dev_err(dev, "%s: Error, failed to allocate input device\n",
+>>>> +			__func__);
+>>>> +		rc = -ENODEV;
+>>>> +		goto error_startup;
+>>>> +	}
+>>>
+>>> In error_startup, you never uninitialize the device. Given your
+>>> comment in cyttsp5_startup, this means that you might end up in a
+>>> situation where your driver probes again with the device initialized
+>>> and no longer in a bootloader mode, which is likely to cause some
+>>> error.
+>>>
+>>> Putting the call to cyttsp5_startup later will make you less likely to
+>>> fail (especially because of the DT parsing), and putting the device
+>>> back into reset will probably address the issue once and for all.
+>>
+>> Hm, I am not sure to understand what you want to say, here.
+>> Could you explain me more what you have in mind?
+>
+> I meant to say that there was still an issue with the reset here, and
+> moving the DT parsing code further would ease the reset operation.
 
------BEGIN PGP SIGNATURE-----
+Okay
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlk2uuQACgkQ3SOs138+
-s6H01xAAhTEDgUKXBqm7s0cKvrLzC08wMBDp6LEHCFAXmCGyp3GtqotU+NYaxftB
-vSiAsrR+EsmL0M7EnETUnzjrKntvPL37MhnXS6AR5zBCxJ88DLimSsrCBQOnQXMs
-eq+J5epM7W5n9VqoUTd847uXyyh0/H3afdC5gQVH375oAtmexmw+CWtRuVZAY1IV
-feiTFJzqevnbsWlFou34mtSHR4eIvaszjPaYbx9VSeqU6W/R/floVJrocP31RFAg
-1WVDr4XG/DJOIljLsEDu5awjXceUojf7vKhe+oM1OQiAjC7A5hEngmBMdYMgkInR
-zuwReDd9cHOVElE+ti0ci3TTaaHsSPUJo5GismkrLhryf0Q44zj9i12nZMxKQtsI
-p6H62CxbH7Xaub8x6kg4hDDktWhpkYttYJZ3bUy8f+A7PCpJHXj8sHS3wg6j1G45
-wuQGi4hcRsHHfj7Tjbv2rpH6Pk+sLgjdiB7TTsjxlsih4qZPRWk24MFlF4zzCr6y
-rkZySMy/jBHUoS+vZ4UYxJ6SxQHbHBex4KuALuSgpHUXyta496SfQgIO8zbZixEV
-mfjwvjdkHO9IVI3okf2tsYT/zyLCrS9mzLZTe407FAt+oTmbP1VHibqqemyMzCuD
-P/E5Q5ent+6TkEXhRYNLjFiBYSTmWtG7rY4SQSdl6fl3d7xxMj4=
-=QR0w
------END PGP SIGNATURE-----
+>
+>> Notice that the DT parsing uses a sysinfo's variable (si->num_btns)
+>> which is retrieved in the startup function (thanks to
+>> get_sysinfo). So, currently, it is not possible to move the startup
+>> function after the DT parsing.
+>
+> Can't that be made the other way around? You parse the number of
+> buttons in the DT, and check the consistency with the hardware?
 
---ew6BAiZeqk4r7MaW--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It could be possible but currently, it was designed to enable every 
+button from hardware's configuration and DT binding was just a way to 
+customize button's keycode (default is KEY_RESERVED).
+If I base it on the DT, it means that some buttons could never be 
+reported (such as deactivated) because they will not be present in the 
+DT. I am not sure if it is the behavior we want. What do you think?
+
+
+Best regards,
+
+-- 
+Mylène Josserand, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
