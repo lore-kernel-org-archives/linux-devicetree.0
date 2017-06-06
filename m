@@ -1,494 +1,129 @@
-From: Mylene Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] Input: Add driver for Cypress Generation 5
- touchscreen
-Date: Tue, 6 Jun 2017 15:20:54 +0200
-Message-ID: <3ba818ac-4505-70c9-c884-2d39c3623e1d@free-electrons.com>
-References: <20170529144538.29187-1-mylene.josserand@free-electrons.com>
- <20170529144538.29187-2-mylene.josserand@free-electrons.com>
- <20170530104302.6db658f0@free-electrons.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] drm/bridge: Add Cadence DSI driver
+Date: Tue, 6 Jun 2017 16:30:15 +0300
+Message-ID: <cc37dbaf-8a6b-eb2c-81d4-87a290c56a25@ti.com>
+References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature";
+        boundary="cgrjWv4Jt9RbNcTNIu2X7xOX6e4S12GM7"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170530104302.6db658f0-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1496405096-18275-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fery-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Thomas,
+--cgrjWv4Jt9RbNcTNIu2X7xOX6e4S12GM7
+Content-Type: multipart/mixed; boundary="P190XFrL3DC9TurVVlT8AlUT3APuAMuTU";
+ protected-headers="v1"
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
+ David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>,
+ dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
+ Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>,
+ Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
+ Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell
+ <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>,
+ Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
+ Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>,
+ Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
+ Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Message-ID: <cc37dbaf-8a6b-eb2c-81d4-87a290c56a25-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] drm/bridge: Add Cadence DSI driver
+References: <1496405096-18275-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1496405096-18275-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-On 30/05/2017 10:43, Thomas Petazzoni wrote:
-> Hello,
->
-> A few more comments :)
+--P190XFrL3DC9TurVVlT8AlUT3APuAMuTU
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for the review!
+On 02/06/17 15:04, Boris Brezillon wrote:
 
->
-> On Mon, 29 May 2017 16:45:37 +0200, Mylène Josserand wrote:
->> +struct cyttsp5 {
->> +	struct device *dev;
->> +	struct mutex system_lock;
->> +	struct mutex btn_lock;
->> +	struct mutex mt_lock;
->
-> Three mutexes for such a driver is probably excessive, especially when
-> they are in fact used "sequentially".
+> +enum cdns_dsi_output_type {
+> +	CDNS_DSI_PANEL =3D 0,
+> +	CDNS_DSI_BRIDGE =3D 1,
+> +};
 
-Yes, I will have a look at these tree mutexes to see if there are 
-necessary or not.
+Just my opinion, but I think you should only define values for enums
+when those values actually mean something and are needed. In this case,
+it doesn't matter which values those enums have.
 
->
->> +static int cyttsp5_parse_dt_key_code(struct device *dev)
->> +{
->> +	struct cyttsp5 *ts = dev_get_drvdata(dev);
->> +	struct cyttsp5_sysinfo *si = &ts->sysinfo;
->> +	struct device_node *np, *pp;
->> +	int rc, i;
->> +
->> +	np = dev->of_node;
->> +	if (!np)
->> +		return -EINVAL;
->> +
->> +	if (si->num_btns) {
->
-> Invert the test, and remove one indentation level:
+> +static int cdns_dsi_init_link(struct cdns_dsi *dsi)
+> +{
+> +	u32 val;
+> +	int i;
+> +
+> +	writel(CLK_UNIT_INTERVAL(16), dsi->regs + MCTL_DPHY_STATIC);
+> +	writel(CLK_DIV(0xb) | HSTX_TIMEOUT(0xed8afff),
+> +	       dsi->regs + MCTL_DPHY_TIMEOUT1);
+> +	writel(LPRX_TIMEOUT(0xf30fffff), dsi->regs + MCTL_DPHY_TIMEOUT2);
+> +
+> +	val =3D WAIT_BURST_TIME(0xf);
+> +	for (i =3D 1; i < dsi->output->dev->lanes; i++)
+> +		val |=3D DATA_LANE_EN(i);
+> +
+> +	if (!(dsi->output->dev->mode_flags & MIPI_DSI_CLOCK_NON_CONTINUOUS))
+> +		val |=3D CLK_CONTINUOUS;
+> +
+> +	writel(val, dsi->regs + MCTL_MAIN_PHY_CTL);
+> +
+> +	writel(CLK_LANE_ULPOUT_TIME(0x105) | DATA_LANE_ULPOUT_TIME(0x1d5),
+> +	       dsi->regs + MCTL_ULPOUT_TIME);
+> +
+> +	writel(LINK_EN, dsi->regs + MCTL_MAIN_DATA_CTL);
+> +
+> +	val =3D CLK_LANE_EN | PLL_START;
+> +	for (i =3D 0; i < dsi->output->dev->lanes; i++)
+> +		val |=3D DATA_LANE_START(i);
+> +
+> +	writel(val, dsi->regs + MCTL_MAIN_EN);
+> +
+> +	ndelay(100);
+> +
+> +	return 0;
+> +}
 
-Thanks!
+There are quite a bit of magic values here (elsewhere too). Looking at
+the names of the macros, many of them probably represent spans of time,
+in clock ticks? Would it make more sense to have the times defined in,
+say, nanoseconds, and a function to convert the ns to clock ticks?
 
->
-> 	if (!si->num_btns)
-> 		return 0;
->
->> +		si->btn = devm_kzalloc(dev,
->> +				       si->num_btns * sizeof(struct cyttsp5_btn),
->> +				       GFP_KERNEL);
->> +		if (!si->btn)
->> +			return -ENOMEM;
->> +
->> +		/* Initialized the button to RESERVED */
->
-> Initialized -> Initialize
->
->> +		for (i = 0; i < si->num_btns; i++) {
->> +			struct cyttsp5_btn *btns = &si->btn[i];
->> +			btns->key_code = KEY_RESERVED;
->> +			btns->enabled = true;
->
-> Does it make sense to have the button as "enabled" when it in fact
-> isn't really? Also setting btns->enabled = true is done again below.
+And a hardcoded CLK_DIV, does that work? Is the clock rate fixed?
 
-No, it was used in the initial driver. I can remove it now.
+(I don't have the datasheet yet =3D)
 
->
->> +		}
->> +	}
->> +
->> +	i = 0;
->> +	for_each_child_of_node(np, pp) {
->> +		struct cyttsp5_btn *btns = &si->btn[i];
->> +
->> +		rc = of_property_read_u32(pp, "linux,code", &btns->key_code);
->> +		if (rc) {
->> +			dev_err(dev, "%s: Inval linux,code prop\n", pp->name);
->> +			return -EINVAL;
->
-> Propagate "rc".
->
->> +		}
->
-> Add blank line here.
->
->> +		btns->enabled = true;
->> +
->> +		i++;
->> +	}
->
-> si->num_btns comes from the HW (calculated in function
-> cyttsp5_si_get_btn_data), but then you are trusting the DT to have the
-> exact same number of buttons.
->
-> If the DT has more button that si->num_btns, then you have a buffer
-> overflow here because you for_each_child_of_node() loop will loop after
-> the end of si->btn[].
+ Tomi
 
-Oh, thanks for the catch!
 
->
->> +static int cyttsp5_btn_attention(struct device *dev)
->> +{
->> +	struct cyttsp5 *ts = dev_get_drvdata(dev);
->> +	struct cyttsp5_sysinfo *si = &ts->sysinfo;
->> +	int cur_btn;
->> +	int cur_btn_state;
->> +
->> +	if (si->xy_mode[2] != HID_BTN_REPORT_ID)
->> +		return 0;
->> +
->> +	/* core handles handshake */
->> +	mutex_lock(&ts->btn_lock);
->> +
->> +	/* extract button press/release touch information */
->> +	if (si->num_btns > 0) {
->
-> Invert this test:
->
-> 	if (!si->num_btns)
-> 		return 0;
->
-> and then you save one indentation level.
->
-> Of course, move the test outside the mutex lock/unlock section.
+--P190XFrL3DC9TurVVlT8AlUT3APuAMuTU--
 
-ACK
+--cgrjWv4Jt9RbNcTNIu2X7xOX6e4S12GM7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
->
->
->> +static void cyttsp5_si_get_btn_data(struct cyttsp5 *ts)
->> +{
->> +	struct cyttsp5_sysinfo *si = &ts->sysinfo;
->> +	int i;
->> +	int num_btns = 0;
->> +	unsigned int btns = ts->response_buf[HID_SYSINFO_BTN_OFFSET]
->> +		& HID_SYSINFO_BTN_MASK;
->> +
->> +	for (i = 0; i < HID_SYSINFO_MAX_BTN; i++) {
->> +		if (btns & (1 << i))
->
-> Replace (1 << i) by BIT(i)
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-ACK
+iQIcBAEBCAAGBQJZNq5nAAoJEPo9qoy8lh717zMP/3tLA14AoRVGZuAv0mhHBF1w
+1sb7+x3A2MSFZthRDfy4XnDdvxE2Snn8tPOUk98MoszM7qkkrX6ge5rFRAJjVq4m
+GDQqfol9Z2dSCKYloPDmExOzcii1qJCbexcHuLHMsdeI9Aoh8kZsKNW02MccX2PY
+OTiwR/ECaUteM/hKwAOC/Mz6tKdD3Bb9zM2COn0NUxgCE1XgV5aYmVpon6kXGnmf
+LxBvSuFq0gp4s6cu8uki9KCSxqiKIjNAdfEe07O8U08oVRU7JEkxr1FM90LHjvwQ
+vWVG3y101fOkjHzd0bIYF9ceEzbCRFEzVSh9u81Wkmpb24dGdq1DrAyJ2SVLoXYs
+4pLXB4VNhA2r6WtCZ6mjkA0zpBfTU6jlTIiizVMkgjtYr0tXbcJ3BM8/+p/6Va8F
+ClFF4JfmV3xSqzAMh7M3L36fphGy89hZmHBFhMi3jBOhS9H1APzPoIURpiObNYLS
+I9gGjztTe6CPaC1Dpmtb2oHqtGRnA+zProYbbjuNuvd+TsXveuh8s39Dqs/P1qLW
+K7qpZ1ZjWD3iqgyYXCXjXBUN+qWe1BEOUyaOQE+o6YDhky7MzrG404AmgcSlPEsh
+4Z8fU/4ma4uoKM74ES6c4hQuAb41B9n9bxysQXhHwYEPd3RChieHHvK8HO4JKQt2
+g7TvtYGCUCj9R9OnMauN
+=dGyD
+-----END PGP SIGNATURE-----
 
->
->> +			num_btns++;
->> +	}
->> +	si->num_btns = num_btns;
->
-> Does it really make sense to have a temporary variable, rather than
-> using si->num_btns directly?
-
-Not at all :)
-
->
->> +static int cyttsp5_get_sysinfo_regs(struct cyttsp5 *ts)
->> +{
->> +	struct cyttsp5_sensing_conf_data *scd = &ts->sysinfo.sensing_conf_data;
->> +	struct cyttsp5_sensing_conf_data_dev *scd_dev =
->> +		(struct cyttsp5_sensing_conf_data_dev *)
->> +		&ts->response_buf[HID_SYSINFO_SENSING_OFFSET];
->> +	struct cyttsp5_sysinfo *si = &ts->sysinfo;
->> +
->> +	cyttsp5_si_get_btn_data(ts);
->> +
->> +	scd->max_tch = scd_dev->max_num_of_tch_per_refresh_cycle;
->> +	scd->res_x = get_unaligned_le16(&scd_dev->res_x);
->> +	scd->res_y = get_unaligned_le16(&scd_dev->res_y);
->> +	scd->max_z = get_unaligned_le16(&scd_dev->max_z);
->> +	scd->len_x = get_unaligned_le16(&scd_dev->len_x);
->> +	scd->len_y = get_unaligned_le16(&scd_dev->len_y);
->> +
->> +	si->xy_data = devm_kzalloc(ts->dev, scd->max_tch * TOUCH_REPORT_SIZE,
->> +				   GFP_KERNEL);
->> +	if (!si->xy_data)
->> +		return -ENOMEM;
->> +
->> +	si->xy_mode = devm_kzalloc(ts->dev, TOUCH_INPUT_HEADER_SIZE, GFP_KERNEL);
->> +	if (!si->xy_mode) {
->> +		devm_kfree(ts->dev, si->xy_data);
->
-> The point of devm_kzalloc() is to not need to do a devm_kfree(). Of
-> course, check you're doing this only in the ->probe() but it seems to
-> be the case.
-
-Okay
-
->
->> +		return -ENOMEM;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->> +static int cyttsp5_hid_output_get_sysinfo(struct cyttsp5 *ts)
->> +{
->> +	int rc, t;
->> +	u8 cmd[HID_OUTPUT_GET_SYSINFO_SIZE];
->> +
->> +	mutex_lock(&ts->system_lock);
->> +	ts->hid_cmd_state = HID_OUTPUT_GET_SYSINFO + 1;
->> +	mutex_unlock(&ts->system_lock);
->
-> This is called only from the _startup() function, itself called from
-> the _probe() function. So taking a mutex is useless here, there is no
-> concurrency.
->
-> This hid_cmd_state thing is a bit strange. It's set to the following
-> values:
->
-> +	ts->hid_cmd_state = 1;
-> +	ts->hid_cmd_state = HID_OUTPUT_GET_SYSINFO + 1;
-> +	ts->hid_cmd_state = HID_OUTPUT_BL_LAUNCH_APP + 1;
->
-> and when the interrupt occurs it's set back to 0.
->
-> So: why those values? Why this "1" and then those magic values + 1 ? Do
-> you need something else than BUSY/DONE ?
->
-> What about:
->
-> 	enum { HID_CMD_DONE, HID_CMD_BUSY } hid_cmd_state;
->
-
-The initial driver was doing it like this, I missed this refactoring 
-during my clean-up.
-Thank you for the remark, it is much more understandable like that.
-
->> +
->> +	/* HI bytes of Output register address */
->> +	cmd[0] = LOW_BYTE(HID_OUTPUT_GET_SYSINFO_SIZE);
->> +	cmd[1] = HI_BYTE(HID_OUTPUT_GET_SYSINFO_SIZE);
->> +	cmd[2] = HID_APP_OUTPUT_REPORT_ID;
->> +	cmd[3] = 0x0; /* Reserved */
->> +	cmd[4] = HID_OUTPUT_GET_SYSINFO;
->> +
->> +	rc = cyttsp5_write(ts, HID_OUTPUT_REG, cmd,
->> +			   HID_OUTPUT_GET_SYSINFO_SIZE);
->> +	if (rc) {
->> +		dev_err(ts->dev, "%s: Failed to write command %d",
->> +			__func__, rc);
->> +		goto error;
->> +	}
->> +
->> +	t = wait_event_timeout(ts->wait_q, (ts->hid_cmd_state == 0),
->> +			       msecs_to_jiffies(CY_HID_OUTPUT_GET_SYSINFO_TIMEOUT));
->> +	if (IS_TMO(t)) {
->
-> I don't think this IS_TMO() macro makes sense. And you case use "rc" as
-> the return value.
-
-Yep, it is true.
-
->
->> +		dev_err(ts->dev, "%s: HID output cmd execution timed out\n",
->> +			__func__);
->> +		rc = -ETIME;
->> +		goto error;
->> +	}
->> +
->> +	rc = cyttsp5_validate_cmd_response(ts, HID_OUTPUT_GET_SYSINFO);
->> +	goto exit;
->
-> It's really weird for the "normal" case to jump to an "exit" label. Why
-> don't you handle the normal case here? Also, this code means that
-> you're currently ignoring the return value of
-> cyttsp5_validate_cmd_response().
-
-Fixed for V2
-
->
->> +
->> +error:
->> +	mutex_lock(&ts->system_lock);
->> +	ts->hid_cmd_state = 0;
->> +	mutex_unlock(&ts->system_lock);
->> +	return rc;
->> +exit:
->> +	rc = cyttsp5_get_sysinfo_regs(ts);
->> +
->> +	return rc;
->> +}
->> +
->> +static int cyttsp5_hid_output_bl_launch_app(struct cyttsp5 *ts)
->> +{
->> +	int rc, t;
->> +	u8 cmd[HID_OUTPUT_BL_LAUNCH_APP];
->> +	u16 crc;
->> +
->> +	mutex_lock(&ts->system_lock);
->> +	ts->hid_cmd_state = HID_OUTPUT_BL_LAUNCH_APP + 1;
->> +	mutex_unlock(&ts->system_lock);
->> +
->> +	cmd[0] = LOW_BYTE(HID_OUTPUT_BL_LAUNCH_APP_SIZE);
->> +	cmd[1] = HI_BYTE(HID_OUTPUT_BL_LAUNCH_APP_SIZE);
->> +	cmd[2] = HID_BL_OUTPUT_REPORT_ID;
->> +	cmd[3] = 0x0; /* Reserved */
->> +	cmd[4] = HID_OUTPUT_BL_SOP;
->> +	cmd[5] = HID_OUTPUT_BL_LAUNCH_APP;
->> +	cmd[6] = 0x0; /* Low bytes of data */
->> +	cmd[7] = 0x0; /* Hi bytes of data */
->> +	crc = cyttsp5_compute_crc(&cmd[4], 4);
->> +	cmd[8] = LOW_BYTE(crc);
->> +	cmd[9] = HI_BYTE(crc);
->> +	cmd[10] = HID_OUTPUT_BL_EOP;
->> +
->> +	rc = cyttsp5_write(ts, HID_OUTPUT_REG, cmd,
->> +			   HID_OUTPUT_BL_LAUNCH_APP_SIZE);
->> +	if (rc) {
->> +		dev_err(ts->dev, "%s: Failed to write command %d",
->> +			__func__, rc);
->> +		goto error;
->> +	}
->> +
->> +	t = wait_event_timeout(ts->wait_q, (ts->hid_cmd_state == 0),
->> +			       msecs_to_jiffies(CY_HID_OUTPUT_TIMEOUT));
->> +	if (IS_TMO(t)) {
->> +		dev_err(ts->dev, "%s: HID output cmd execution timed out\n",
->> +			__func__);
->> +		rc = -ETIME;
->> +		goto error;
->> +	}
->> +
->> +	rc = cyttsp5_validate_cmd_response(ts, HID_OUTPUT_BL_LAUNCH_APP);
->> +	goto exit;
->
-> Same comments as for the previous function.
->
->> +	/* Set HID descriptor register */
->> +	memcpy(cmd, &hid_desc_register, sizeof(hid_desc_register));
->> +
->> +	regmap_write(ts->regmap, HID_DESC_REG, cmd[0]);
->
-> Return value?
->
->> +	rc = regmap_write(ts->regmap, HID_DESC_REG, cmd[1]);
->
-> Why are you sending these through two regmap_write() calls and not a
-> regmap_bulk_write() ?
-
-You are right. I will even update the cyttysp5_write function to be more 
-generic to use it in that case (ie send the register without any data).
-
->
->> +	if (rc < 0) {
->> +		dev_err(dev, "%s: failed to get HID descriptor, rc=%d\n",
->> +			__func__, rc);
->> +		goto error;
->> +	}
->> +
->> +	t = wait_event_timeout(ts->wait_q, (ts->hid_cmd_state == 0),
->> +			       msecs_to_jiffies(CY_HID_GET_HID_DESCRIPTOR_TIMEOUT));
->> +	if (IS_TMO(t)) {
->
-> Same comment as above: don't use IS_TMO(), use "rc" instead of "t".
-
-ACK
-
->
->> +		dev_err(ts->dev, "%s: HID get descriptor timed out\n",
->> +			__func__);
->> +		rc = -ETIME;
->> +		goto error;
->> +	}
->> +
->> +	memcpy((u8 *)desc, ts->response_buf, sizeof(struct cyttsp5_hid_desc));
->
-> I don't see why the u8* cast would be needed here.
-
-ACK
-
->
->> +static int fill_tch_abs(struct cyttsp5_tch_abs_params *tch_abs, int report_size,
->> +			int offset)
->> +{
->> +	tch_abs->ofs = offset / 8;
->> +	tch_abs->size = report_size / 8;
->> +	if (report_size % 8)
->> +		tch_abs->size += 1;
->> +	tch_abs->min = 0;
->> +	tch_abs->max = 1 << report_size;
->> +	tch_abs->bofs = offset - (tch_abs->ofs << 3);
->> +
->> +	return 0;
->> +}
->> +
->> +static int move_button_data(struct cyttsp5 *ts, struct cyttsp5_sysinfo *si)
->> +{
->> +	memcpy(si->xy_mode, ts->input_buf, BTN_INPUT_HEADER_SIZE);
->> +	memcpy(si->xy_data, &ts->input_buf[BTN_INPUT_HEADER_SIZE],
->> +	       BTN_REPORT_SIZE);
->> +
->> +	return 0;
->> +}
->> +
->> +static int move_touch_data(struct cyttsp5 *ts, struct cyttsp5_sysinfo *si)
->> +{
->> +	int max_tch = si->sensing_conf_data.max_tch;
->> +	int num_cur_tch;
->> +	int length;
->> +	struct cyttsp5_tch_abs_params *tch = &si->tch_hdr;
->> +
->> +	memcpy(si->xy_mode, ts->input_buf, TOUCH_INPUT_HEADER_SIZE);
->> +
->> +	cyttsp5_get_touch_axis(&num_cur_tch, tch->size,
->> +			       tch->max, si->xy_mode + 3 + tch->ofs, tch->bofs);
->> +	if (unlikely(num_cur_tch > max_tch))
->> +		num_cur_tch = max_tch;
->> +
->> +	length = num_cur_tch * TOUCH_REPORT_SIZE;
->> +
->> +	memcpy(si->xy_data, &ts->input_buf[TOUCH_INPUT_HEADER_SIZE], length);
->
-> Blank line here.
->
->> +	return 0;
->> +}
->> +
->> +static irqreturn_t cyttsp5_handle_irq(int irq, void *handle)
->> +{
->> +	struct cyttsp5 *ts = handle;
->> +	int report_id;
->> +	int size;
->> +	int rc;
->> +
->> +	rc = cyttsp5_read(ts, ts->input_buf, CY_MAX_INPUT);
->> +	if (!rc) {
->
-> Same as usual: to remove one indentation level, invert the test, by
-> doing:
->
-> 	if (rc)
-> 		return IRQ_HANDLED;
->
->
-
-ACK
-
->> +static int cyttsp5_deassert_int(struct cyttsp5 *ts)
->> +{
->> +	u16 size;
->> +	u8 buf[2];
->> +	int rc;
->> +
->> +	rc = regmap_bulk_read(ts->regmap, 0, buf, 2);
->
-> Which register are you reading here?
-
-In fact, for the read part, it is using an Input Report Register and it 
-does not care about the register address. The only frame to send to 
-perform a read is a frame with the I2C device address. It is possible to 
-send anything as register address, it will still work.
-I guess that for some consistency, I will set it to the Input Register 
-(0x3) but, for what I understood, it does not mean anything to the device.
-
-I will also add a comment to explain this specificity in the code.
-
->
->> +	scnprintf(ts->phys, sizeof(ts->phys), "%s/input%d", dev_name(dev), 0);
->
-> Why use %d if the value is always 0 ?
->
-
-No explanation, it is a rest of the old driver :) I will update it.
-
-Thanks!
-
-Best regards,
-
--- 
-Mylène Josserand, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+--cgrjWv4Jt9RbNcTNIu2X7xOX6e4S12GM7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
