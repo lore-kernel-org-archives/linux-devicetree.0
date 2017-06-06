@@ -1,80 +1,105 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v8 06/24] drivers/fsi: Set up links for slave communication
-Date: Tue,  6 Jun 2017 16:08:41 -0500
-Message-ID: <20170606210859.80431-7-cbostic@linux.vnet.ibm.com>
+From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v8 11/24] drivers/fsi: Add master unscan
+Date: Tue,  6 Jun 2017 16:08:46 -0500
+Message-ID: <20170606210859.80431-12-cbostic@linux.vnet.ibm.com>
 References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606210859.80431-1-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org, mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
-Enable each link and send a break command, and try to detect a slave by
-reading from the SMODE register.
+Allow a master to undo a previous scan.  Should a master scan a bus
+twice it will need to ensure it doesn't double register any
+previously detected device.
 
-Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+----
+v7 - Unscan when unregistering master
+   - Remove leading '__'s from function names
+   - Return fail state for sysfs rescan file
 ---
- drivers/fsi/fsi-core.c | 37 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+ drivers/fsi/fsi-core.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 1ec9790..235f17a 100644
+index d7a6e76..fcb0c81 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -133,12 +133,45 @@ static int fsi_master_write(struct fsi_master *master, int link,
- 	return master->write(master, link, slave_id, addr, val, size);
- }
+@@ -71,6 +71,7 @@ struct fsi_slave {
+ 	uint32_t		size;	/* size of slave address space */
+ };
  
-+static int fsi_master_link_enable(struct fsi_master *master, int link)
-+{
-+	if (master->link_enable)
-+		return master->link_enable(master, link);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Issue a break command on this link
-+ */
-+static int fsi_master_break(struct fsi_master *master, int link)
-+{
-+	if (master->send_break)
-+		return master->send_break(master, link);
-+
-+	return 0;
-+}
-+
- static int fsi_master_scan(struct fsi_master *master)
- {
--	int link;
-+	int link, rc;
-+
-+	for (link = 0; link < master->n_links; link++) {
-+		rc = fsi_master_link_enable(master, link);
-+		if (rc) {
-+			dev_dbg(&master->dev,
-+				"enable link %d failed: %d\n", link, rc);
-+			continue;
-+		}
-+		rc = fsi_master_break(master, link);
-+		if (rc) {
-+			dev_dbg(&master->dev,
-+				"break to link %d failed: %d\n", link, rc);
-+			continue;
-+		}
++#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
  
--	for (link = 0; link < master->n_links; link++)
- 		fsi_slave_init(master, link, 0);
-+	}
- 
+ static int fsi_master_read(struct fsi_master *master, int link,
+@@ -488,6 +489,40 @@ static int fsi_master_scan(struct fsi_master *master)
  	return 0;
  }
+ 
++static int fsi_slave_remove_device(struct device *dev, void *arg)
++{
++	device_unregister(dev);
++	return 0;
++}
++
++static int fsi_master_remove_slave(struct device *dev, void *arg)
++{
++	device_for_each_child(dev, NULL, fsi_slave_remove_device);
++	device_unregister(dev);
++	return 0;
++}
++
++static void fsi_master_unscan(struct fsi_master *master)
++{
++	device_for_each_child(&master->dev, NULL, fsi_master_remove_slave);
++}
++
++static ssize_t master_rescan_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct fsi_master *master = to_fsi_master(dev);
++	int rc;
++
++	fsi_master_unscan(master);
++	rc = fsi_master_scan(master);
++	if (rc < 0)
++		return rc;
++
++	return count;
++}
++
++static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
++
+ int fsi_master_register(struct fsi_master *master)
+ {
+ 	int rc;
+@@ -504,7 +539,15 @@ int fsi_master_register(struct fsi_master *master)
+ 		return rc;
+ 	}
+ 
++	rc = device_create_file(&master->dev, &dev_attr_rescan);
++	if (rc) {
++		device_unregister(&master->dev);
++		ida_simple_remove(&master_ida, master->idx);
++		return rc;
++	}
++
+ 	fsi_master_scan(master);
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(fsi_master_register);
+@@ -516,6 +559,7 @@ void fsi_master_unregister(struct fsi_master *master)
+ 		master->idx = -1;
+ 	}
+ 
++	fsi_master_unscan(master);
+ 	device_unregister(&master->dev);
+ }
+ EXPORT_SYMBOL_GPL(fsi_master_unregister);
 -- 
 1.8.2.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
