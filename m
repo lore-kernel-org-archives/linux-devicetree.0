@@ -1,147 +1,182 @@
-From: <patrice.chotard@st.com>
-Subject: [PATCH 3/3] ARM: dts: stm32h743: Add stm32h743i-disco board
-Date: Tue, 6 Jun 2017 18:13:33 +0200
-Message-ID: <1496765613-697-4-git-send-email-patrice.chotard@st.com>
-References: <1496765613-697-1-git-send-email-patrice.chotard@st.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/6] Add support for the ICU unit in Marvell Armada 7K/8K
+Date: Tue, 06 Jun 2017 18:28:47 +0200
+Message-ID: <87o9u1nkqo.fsf@free-electrons.com>
+References: <1496398017-6487-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496765613-697-1-git-send-email-patrice.chotard@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com
-Cc: Patrice Chotard <patrice.chotard@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496398017-6487-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+        (Thomas Petazzoni's message of "Fri, 2 Jun 2017 12:06:51 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+Hi Thomas,
+ 
+ On ven., juin 02 2017, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Add basic support for stm32h743i-discovery board
+> Hello,
+>
+> The Marvell Armada 7K/8K SoCs are composed of two parts: the AP (which
+> contains the CPU cores) and the CP (which contains most
+> peripherals). The 7K SoCs have one CP, while the 8K SoCs have two CPs,
+> doubling the number of available peripherals.
+>
+> In terms of interrupt handling, all devices in the CPs are connected
+> through wired interrupt to a unit called ICU located in each CP. This
+> unit converts the wired interrupts from the devices into memory
+> transactions.
+>
+> Inside the AP, there is a GIC extension called GICP, which allows a
+> memory write transaction to trigger a GIC SPI interrupt. The ICUs in
+> each CP are therefore configured to trigger a memory write into the
+> appropriate GICP register so that a wired interrupt from a CP device
+> is converted into a memory write, itself converted into a regular GIC
+> SPI interrupt.
+>
+> Until now, the configuration of the ICU was done statically by the
+> firmware, and therefore the Device Tree files in Linux were specifying
+> directly GIC interrupts for the interrupts of CP devices. However,
+> with the growing number of devices in the CP, a static allocation
+> scheme doesn't work for the long term.
+>
+> This patch series therefore makes Linux aware of the ICU: GIC SPI
+> interrupts are dynamically allocated, and the ICU is configured
+> accordingly to route a CP wired interrupt to the allocated GIC SPI
+> interrupt.
+>
+> In detail:
+>
+>  - The first two patches are the Device Tree binding patches
+>
+>  - The third patch is a minimal driver for the GICP unit, which simply
+>    allows to allocate GICP interrupts.
+>
+>  - The fourth patch is the most important done, which adds the driver
+>    for the ICU itself.
+>
+>  - The fifth patch adjust Kconfig.platforms to select the GICP and ICU
+>    drivers.
+>
+>  - The last patch adjusts the Device Tree files of the Armada 7K/8K to
+>    use the ICU.
+>
+> Changes since v1:
+>
+>  - Fix the #interrupt-cells value in the ICU DT binding
+>    example. Pointed by Marc Zyngier.
+>
+>  - Add details about the possible group types in the ICU DT binding
+>    documentation, as requested by Marc Zyngier. This allowed to
+>    discover that the list of types listed was not matching the macros
+>    provided in <dt-bindings/interrupt-controller/mvebu-icu.h>, so this
+>    was fixed as well.
+>
+>  - Changed the "gicp" property of the ICU to "marvell,gicp", as
+>    suggested by Marc Zyngier.
+>
+>  - Add a marvell,spi-ranges property to the gicp node, which defines
+>    which ranges of GIC SPI interrupts are available for us by the
+>    GICP.
+>
+>  - Move more GICP logic into the gicp driver. Indeed, it was confusing
+>    to have in the ICU driver some global logic mixed with per-ICU
+>    logic: there is only one GICP per system, but one ICU per CP (so in
+>    an Armada 8K we have one GICP but two ICUs). So it makes more sense
+>    to handle the GICP aspects in one driver (which has only one
+>    device) and the ICU aspects in another driver (which has one device
+>    per ICU).
+>
+>  - Use writel_relaxed() as suggested by Marc Zyngier.
+>
+>  - Use irq_set_irqchip_state() in the ICU driver to clear any pending
+>    interrupt when allocating an interrupt. This ensures we don't get
+>    bothered by an interrupt left pending by the firmware. This
+>    replaces a more manual pending interrupt clearing done in the GICP
+>    driver, which wasn't suitable for edge triggered
+>    interrupts. Suggested by Marc Zyngier.
+>
+>  - Use devm_kstrdup() instead of kstrdup() to fix a potential memory
+>    leak in the error path of ICU's ->probe() function. Noticed by Marc
+>    Zyngier.
+>
+>  - Change compatible strings from "marvell,gicp" to
+>    "marvell,ap806-gicp" and "marvell,icu" to "marvell,cp110-icu", as
+>    future versions of those IP blocks may be different. Suggested by
+>    Yehuda Yitschak.
+>
+>  - Use a shorter name for the irqchip domain, suggested by Grégory
+>    Clement.
+>
+>  - Rename ICU_{SATA0,SATA1}_IRQ_INT to ICU_{SATA0,SATA1}_ICU_ID to
+>    clarify we're talking about ICU identifiers and not interrupt
+>    numbers. Suggested by Yehuda Yitschak.
+>
+>  - Fix bogus message when checking the ICU group type, make sure the
+>    message says "wrong ICU group type" and not "wrong ICU
+>    type". Suggested by Yehuda Yitschak.
+>
+>  - Add a check that the ICU identifier used in the DT is not higher
+>    than ICU_MAX_IRQS. Suggested by Yehuda Yitschak.
+>
+> Best regards,
+>
+> Thomas
+>
+>
+> Thomas Petazzoni (6):
+>   dt-bindings: interrupt-controller: add DT binding for the Marvell GICP
+>   dt-bindings: interrupt-controller: add DT binding for the Marvell ICU
+>   irqchip: irq-mvebu-gicp: new driver for Marvell GICP
+>   irqchip: irq-mvebu-icu: new driver for Marvell ICU
+>   arm64: marvell: enable ICU and GICP drivers
+>   arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K
 
-This board offers :
-  _ 2MBytes Flash
-  _ 1 x micro USB OTG port
-  _ 1 x STLink connector (micro USB)
-  _ 1 x micro SD card slot
-  _ 1 x RJ45 connector
-  _ 1 x RCA connector
-  _ 2 x Audio jack connectors (in and out)
-  _ 2 x speaker connectors (left and right)
-  _ 1 x joystick
-  _ 1 x DCMI connector (Digital camera interface)
-  _ 1 x 4 inch DSI LCD (Display Serial Interface)
-  _ Arduino Uno Connectors
-  _ 2 x PIO connectors (PMOD and PMOD+)
-  _ 1 x wakeup button
-  _ 1 x reset button
+The series looks very good now, for all the patches:
+Reviewed-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- arch/arm/boot/dts/Makefile             |  3 +-
- arch/arm/boot/dts/stm32h743i-disco.dts | 74 ++++++++++++++++++++++++++++++++++
- 2 files changed, 76 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/stm32h743i-disco.dts
+Once the binding and the drivers will be approved I will applu patch 5
+and 6 to the mvebu trees.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 9c5e1d9..52839d0 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -792,7 +792,8 @@ dtb-$(CONFIG_ARCH_STM32)+= \
- 	stm32f469-disco.dtb \
- 	stm32429i-eval.dtb \
- 	stm32746g-eval.dtb \
--	stm32h743i-eval.dtb
-+	stm32h743i-eval.dtb \
-+	stm32h743i-disco.dtb
- dtb-$(CONFIG_MACH_SUN4I) += \
- 	sun4i-a10-a1000.dtb \
- 	sun4i-a10-ba10-tvbox.dtb \
-diff --git a/arch/arm/boot/dts/stm32h743i-disco.dts b/arch/arm/boot/dts/stm32h743i-disco.dts
-new file mode 100644
-index 0000000..582a2b8
---- /dev/null
-+++ b/arch/arm/boot/dts/stm32h743i-disco.dts
-@@ -0,0 +1,74 @@
-+/*
-+ * Copyright 2017 - Patrice Chotard <patrice.chotard@st.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "stm32h743.dtsi"
-+#include "stm32h743-pinctrl.dtsi"
-+
-+/ {
-+	model = "STMicroelectronics STM32H743i-Discovery board";
-+	compatible = "st,stm32h743i-disco", "st,stm32h743";
-+
-+	chosen {
-+		bootargs = "root=/dev/ram";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0xd0000000 0x2000000>;
-+	};
-+
-+	aliases {
-+		serial0 = &usart2;
-+	};
-+};
-+
-+&clk_hse {
-+	clock-frequency = <125000000>;
-+};
-+
-+&usart2 {
-+	pinctrl-0 = <&usart2_pins>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
+Thanks,
+
+Gregory
+
+
+>
+>  .../bindings/interrupt-controller/marvell,gicp.txt |  24 ++
+>  .../bindings/interrupt-controller/marvell,icu.txt  |  54 ++++
+>  arch/arm64/Kconfig.platforms                       |   2 +
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |   6 +
+>  .../boot/dts/marvell/armada-cp110-master.dtsi      |  60 ++--
+>  .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi |  54 ++--
+>  drivers/irqchip/Kconfig                            |   6 +
+>  drivers/irqchip/Makefile                           |   2 +
+>  drivers/irqchip/irq-mvebu-gicp.c                   | 170 ++++++++++
+>  drivers/irqchip/irq-mvebu-gicp.h                   |  15 +
+>  drivers/irqchip/irq-mvebu-icu.c                    | 346 +++++++++++++++++++++
+>  .../dt-bindings/interrupt-controller/mvebu-icu.h   |  15 +
+>  12 files changed, 706 insertions(+), 48 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+>  create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
+>  create mode 100644 drivers/irqchip/irq-mvebu-gicp.h
+>  create mode 100644 drivers/irqchip/irq-mvebu-icu.c
+>  create mode 100644 include/dt-bindings/interrupt-controller/mvebu-icu.h
+>
+> -- 
+> 2.7.4
+>
+
 -- 
-1.9.1
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
