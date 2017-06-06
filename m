@@ -1,1153 +1,246 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] drm/bridge/synopsys: Add MIPI DSI host controller
- bridge
-Date: Tue, 6 Jun 2017 10:07:48 +0200
-Message-ID: <d09c5cee-164f-1c06-c591-08365c574bba@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 6/6] drm/stm: Add STM32 DSI host driver
+Date: Tue, 6 Jun 2017 10:11:16 +0200
+Message-ID: <e1872ac0-c0e0-b615-4b5e-d45d9ae96f85@baylibre.com>
 References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
- <1496414235-20098-4-git-send-email-philippe.cornu@st.com>
+ <1496414235-20098-7-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496414235-20098-4-git-send-email-philippe.cornu-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Yao <mark.yao@rock-chips.>
-Cc: Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1496414235-20098-7-git-send-email-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Archit Taneja <architt@codeaurora.org>, Eric Anholt <eric@anholt.net>, Chris Zhong <zyw@rock-chips.com>, Andrzej Hajda <a.hajda@samsung.com>, Xinliang Liu <xinliang.liu@linaro.org>, zourongrong@gmail.com, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Chen Feng <puck.chen@hisilicon.com>, Mark Yao <mark.yao@rock-chips.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Fabien Dessenne <fabien.dessenne@st.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, Ludovic Barre <ludovic.barre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2017 04:37 PM, Philippe CORNU wrote:
-> Add a Synopsys Designware MIPI DSI host DRM bridge driver, based on the
-> Rockchip version from rockchip/dw-mipi-dsi.c with phy & bridge APIs.
-
-Hi Philippe,
-
-Small nit, but please use "DesignWare" everywhere if possible.
-
-Thanks,
-Neil
-
-> 
-> Signed-off-by: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/gpu/drm/bridge/synopsys/Kconfig       |    9 +
->  drivers/gpu/drm/bridge/synopsys/Makefile      |    2 +
->  drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c | 1022 +++++++++++++++++++++++++
->  include/drm/bridge/dw_mipi_dsi.h              |   42 +
->  4 files changed, 1075 insertions(+)
->  create mode 100644 drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
->  create mode 100644 include/drm/bridge/dw_mipi_dsi.h
-> 
-> diff --git a/drivers/gpu/drm/bridge/synopsys/Kconfig b/drivers/gpu/drm/bridge/synopsys/Kconfig
-> index 40d2827..d7fbdff 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/Kconfig
-> +++ b/drivers/gpu/drm/bridge/synopsys/Kconfig
-> @@ -21,3 +21,12 @@ config DRM_DW_HDMI_I2S_AUDIO
->  	help
->  	  Support the I2S Audio interface which is part of the Synopsys
->  	  Designware HDMI block.
-Yes I know this one is bad....
-
-> +
-> +config DRM_DW_MIPI_DSI
-> +	tristate "Synopsys DesignWare MIPI DSI host controller bridge"
-> +	select DRM_KMS_HELPER
-> +	select DRM_MIPI_DSI
-> +	select DRM_PANEL
-> +	help
-> +	  Choose this if you want to use the Synopsys DesignWare MIPI DSI host
-> +	  controller bridge.
-> diff --git a/drivers/gpu/drm/bridge/synopsys/Makefile b/drivers/gpu/drm/bridge/synopsys/Makefile
-> index 17aa7a6..5f57d36 100644
-> --- a/drivers/gpu/drm/bridge/synopsys/Makefile
-> +++ b/drivers/gpu/drm/bridge/synopsys/Makefile
-> @@ -3,3 +3,5 @@
->  obj-$(CONFIG_DRM_DW_HDMI) += dw-hdmi.o
->  obj-$(CONFIG_DRM_DW_HDMI_AHB_AUDIO) += dw-hdmi-ahb-audio.o
->  obj-$(CONFIG_DRM_DW_HDMI_I2S_AUDIO) += dw-hdmi-i2s-audio.o
-> +
-> +obj-$(CONFIG_DRM_DW_MIPI_DSI) += dw-mipi-dsi.o
-> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> new file mode 100644
-> index 0000000..6b25629
-> --- /dev/null
-> +++ b/drivers/gpu/drm/bridge/synopsys/dw-mipi-dsi.c
-> @@ -0,0 +1,1022 @@
-> +/*
-> + * Copyright (c) 2016, Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * Modified by Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
-> + * This generic Synopsys Designware MIPI DSI host driver is based on the
-------------------------------/\
-Like here
-
-> + * Rockchip version from rockchip/dw-mipi-dsi.c with phy & bridge APIs.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/component.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/reset.h>
-> +#include <drm/drmP.h>
-> +#include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_crtc.h>
-> +#include <drm/drm_crtc_helper.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_of.h>
-> +#include <drm/drm_panel.h>
-> +#include <drm/bridge/dw_mipi_dsi.h>
-> +#include <video/mipi_display.h>
-> +
-> +#define DSI_VERSION			0x00
-> +#define DSI_PWR_UP			0x04
-> +#define RESET				0
-> +#define POWERUP				BIT(0)
-> +
-> +#define DSI_CLKMGR_CFG			0x08
-> +#define TO_CLK_DIVIDSION(div)		(((div) & 0xff) << 8)
-> +#define TX_ESC_CLK_DIVIDSION(div)	(((div) & 0xff) << 0)
-> +
-> +#define DSI_DPI_VCID			0x0c
-> +#define DPI_VID(vid)			(((vid) & 0x3) << 0)
-> +
-> +#define DSI_DPI_COLOR_CODING		0x10
-> +#define EN18_LOOSELY			BIT(8)
-> +#define DPI_COLOR_CODING_16BIT_1	0x0
-> +#define DPI_COLOR_CODING_16BIT_2	0x1
-> +#define DPI_COLOR_CODING_16BIT_3	0x2
-> +#define DPI_COLOR_CODING_18BIT_1	0x3
-> +#define DPI_COLOR_CODING_18BIT_2	0x4
-> +#define DPI_COLOR_CODING_24BIT		0x5
-> +
-> +#define DSI_DPI_CFG_POL			0x14
-> +#define COLORM_ACTIVE_LOW		BIT(4)
-> +#define SHUTD_ACTIVE_LOW		BIT(3)
-> +#define HSYNC_ACTIVE_LOW		BIT(2)
-> +#define VSYNC_ACTIVE_LOW		BIT(1)
-> +#define DATAEN_ACTIVE_LOW		BIT(0)
-> +
-> +#define DSI_DPI_LP_CMD_TIM		0x18
-> +#define OUTVACT_LPCMD_TIME(p)		(((p) & 0xff) << 16)
-> +#define INVACT_LPCMD_TIME(p)		((p) & 0xff)
-> +
-> +#define DSI_DBI_CFG			0x20
-> +#define DSI_DBI_CMDSIZE			0x28
-> +
-> +#define DSI_PCKHDL_CFG			0x2c
-> +#define EN_CRC_RX			BIT(4)
-> +#define EN_ECC_RX			BIT(3)
-> +#define EN_BTA				BIT(2)
-> +#define EN_EOTP_RX			BIT(1)
-> +#define EN_EOTP_TX			BIT(0)
-> +
-> +#define DSI_MODE_CFG			0x34
-> +#define ENABLE_VIDEO_MODE		0
-> +#define ENABLE_CMD_MODE			BIT(0)
-> +
-> +#define DSI_VID_MODE_CFG		0x38
-> +#define FRAME_BTA_ACK			BIT(14)
-> +#define ENABLE_LOW_POWER		(0x3f << 8)
-> +#define ENABLE_LOW_POWER_MASK		(0x3f << 8)
-> +#define VID_MODE_TYPE_NON_BURST_SYNC_PULSES	0x0
-> +#define VID_MODE_TYPE_NON_BURST_SYNC_EVENTS	0x1
-> +#define VID_MODE_TYPE_BURST			0x2
-> +#define VID_MODE_TYPE_MASK			0x3
-> +
-> +#define DSI_VID_PKT_SIZE		0x3c
-> +#define VID_PKT_SIZE(p)			(((p) & 0x3fff) << 0)
-> +#define VID_PKT_MAX_SIZE		0x3fff
-> +
-> +#define DSI_VID_HSA_TIME		0x48
-> +#define DSI_VID_HBP_TIME		0x4c
-> +#define DSI_VID_HLINE_TIME		0x50
-> +#define DSI_VID_VSA_LINES		0x54
-> +#define DSI_VID_VBP_LINES		0x58
-> +#define DSI_VID_VFP_LINES		0x5c
-> +#define DSI_VID_VACTIVE_LINES		0x60
-> +#define DSI_CMD_MODE_CFG		0x68
-> +#define MAX_RD_PKT_SIZE_LP		BIT(24)
-> +#define DCS_LW_TX_LP			BIT(19)
-> +#define DCS_SR_0P_TX_LP			BIT(18)
-> +#define DCS_SW_1P_TX_LP			BIT(17)
-> +#define DCS_SW_0P_TX_LP			BIT(16)
-> +#define GEN_LW_TX_LP			BIT(14)
-> +#define GEN_SR_2P_TX_LP			BIT(13)
-> +#define GEN_SR_1P_TX_LP			BIT(12)
-> +#define GEN_SR_0P_TX_LP			BIT(11)
-> +#define GEN_SW_2P_TX_LP			BIT(10)
-> +#define GEN_SW_1P_TX_LP			BIT(9)
-> +#define GEN_SW_0P_TX_LP			BIT(8)
-> +#define EN_ACK_RQST			BIT(1)
-> +#define EN_TEAR_FX			BIT(0)
-> +
-> +#define CMD_MODE_ALL_LP			(MAX_RD_PKT_SIZE_LP | \
-> +					 DCS_LW_TX_LP | \
-> +					 DCS_SR_0P_TX_LP | \
-> +					 DCS_SW_1P_TX_LP | \
-> +					 DCS_SW_0P_TX_LP | \
-> +					 GEN_LW_TX_LP | \
-> +					 GEN_SR_2P_TX_LP | \
-> +					 GEN_SR_1P_TX_LP | \
-> +					 GEN_SR_0P_TX_LP | \
-> +					 GEN_SW_2P_TX_LP | \
-> +					 GEN_SW_1P_TX_LP | \
-> +					 GEN_SW_0P_TX_LP)
-> +
-> +#define DSI_GEN_HDR			0x6c
-> +#define GEN_HDATA(data)			(((data) & 0xffff) << 8)
-> +#define GEN_HDATA_MASK			(0xffff << 8)
-> +#define GEN_HTYPE(type)			(((type) & 0xff) << 0)
-> +#define GEN_HTYPE_MASK			0xff
-> +
-> +#define DSI_GEN_PLD_DATA		0x70
-> +
-> +#define DSI_CMD_PKT_STATUS		0x74
-> +#define GEN_CMD_EMPTY			BIT(0)
-> +#define GEN_CMD_FULL			BIT(1)
-> +#define GEN_PLD_W_EMPTY			BIT(2)
-> +#define GEN_PLD_W_FULL			BIT(3)
-> +#define GEN_PLD_R_EMPTY			BIT(4)
-> +#define GEN_PLD_R_FULL			BIT(5)
-> +#define GEN_RD_CMD_BUSY			BIT(6)
-> +
-> +#define DSI_TO_CNT_CFG			0x78
-> +#define HSTX_TO_CNT(p)			(((p) & 0xffff) << 16)
-> +#define LPRX_TO_CNT(p)			((p) & 0xffff)
-> +
-> +#define DSI_BTA_TO_CNT			0x8c
-> +#define DSI_LPCLK_CTRL			0x94
-> +#define AUTO_CLKLANE_CTRL		BIT(1)
-> +#define PHY_TXREQUESTCLKHS		BIT(0)
-> +
-> +#define DSI_PHY_TMR_LPCLK_CFG		0x98
-> +#define PHY_CLKHS2LP_TIME(lbcc)		(((lbcc) & 0x3ff) << 16)
-> +#define PHY_CLKLP2HS_TIME(lbcc)		((lbcc) & 0x3ff)
-> +
-> +#define DSI_PHY_TMR_CFG			0x9c
-> +#define PHY_HS2LP_TIME(lbcc)		(((lbcc) & 0xff) << 24)
-> +#define PHY_LP2HS_TIME(lbcc)		(((lbcc) & 0xff) << 16)
-> +#define MAX_RD_TIME(lbcc)		((lbcc) & 0x7fff)
-> +
-> +#define DSI_PHY_RSTZ			0xa0
-> +#define PHY_DISFORCEPLL			0
-> +#define PHY_ENFORCEPLL			BIT(3)
-> +#define PHY_DISABLECLK			0
-> +#define PHY_ENABLECLK			BIT(2)
-> +#define PHY_RSTZ			0
-> +#define PHY_UNRSTZ			BIT(1)
-> +#define PHY_SHUTDOWNZ			0
-> +#define PHY_UNSHUTDOWNZ			BIT(0)
-> +
-> +#define DSI_PHY_IF_CFG			0xa4
-> +#define N_LANES(n)			((((n) - 1) & 0x3) << 0)
-> +#define PHY_STOP_WAIT_TIME(cycle)	(((cycle) & 0xff) << 8)
-> +
-> +#define DSI_PHY_STATUS			0xb0
-> +#define LOCK				BIT(0)
-> +#define STOP_STATE_CLK_LANE		BIT(2)
-> +
-> +#define DSI_PHY_TST_CTRL0		0xb4
-> +#define PHY_TESTCLK			BIT(1)
-> +#define PHY_UNTESTCLK			0
-> +#define PHY_TESTCLR			BIT(0)
-> +#define PHY_UNTESTCLR			0
-> +
-> +#define DSI_PHY_TST_CTRL1		0xb8
-> +#define PHY_TESTEN			BIT(16)
-> +#define PHY_UNTESTEN			0
-> +#define PHY_TESTDOUT(n)			(((n) & 0xff) << 8)
-> +#define PHY_TESTDIN(n)			(((n) & 0xff) << 0)
-> +
-> +#define DSI_INT_ST0			0xbc
-> +#define DSI_INT_ST1			0xc0
-> +#define DSI_INT_MSK0			0xc4
-> +#define DSI_INT_MSK1			0xc8
-> +
-> +#define PHY_STATUS_TIMEOUT_US		10000
-> +#define CMD_PKT_STATUS_TIMEOUT_US	20000
-> +
-> +struct dw_mipi_dsi {
-> +	struct drm_bridge bridge;
-> +	struct drm_connector connector;
-> +	struct mipi_dsi_host dsi_host;
-> +	struct drm_panel *panel;
-> +	struct device *dev;
-> +	void __iomem *base;
-> +
-> +	struct clk *pclk;
-> +
-> +	int dpms_mode;
-> +	unsigned int lane_mbps; /* per lane */
-> +	u32 channel;
-> +	u32 lanes;
-> +	u32 format;
-> +	unsigned long mode_flags;
-> +
-> +	const struct dw_mipi_dsi_plat_data *plat_data;
-> +};
-> +
-> +/*
-> + * The controller should generate 2 frames before
-> + * preparing the peripheral.
-> + */
-> +static void dw_mipi_dsi_wait_for_two_frames(struct drm_display_mode *mode)
-> +{
-> +	int refresh, two_frames;
-> +
-> +	refresh = drm_mode_vrefresh(mode);
-> +	two_frames = DIV_ROUND_UP(MSEC_PER_SEC, refresh) * 2;
-> +	msleep(two_frames);
-> +}
-> +
-> +static inline struct dw_mipi_dsi *host_to_dsi(struct mipi_dsi_host *host)
-> +{
-> +	return container_of(host, struct dw_mipi_dsi, dsi_host);
-> +}
-> +
-> +static inline struct dw_mipi_dsi *con_to_dsi(struct drm_connector *con)
-> +{
-> +	return container_of(con, struct dw_mipi_dsi, connector);
-> +}
-> +
-> +static inline struct dw_mipi_dsi *bridge_to_dsi(struct drm_bridge *bridge)
-> +{
-> +	return container_of(bridge, struct dw_mipi_dsi, bridge);
-> +}
-> +
-> +static inline void dsi_write(struct dw_mipi_dsi *dsi, u32 reg, u32 val)
-> +{
-> +	writel_relaxed(val, dsi->base + reg);
-> +}
-> +
-> +static inline u32 dsi_read(struct dw_mipi_dsi *dsi, u32 reg)
-> +{
-> +	return readl_relaxed(dsi->base + reg);
-> +}
-> +
-> +static int dw_mipi_dsi_host_attach(struct mipi_dsi_host *host,
-> +				   struct mipi_dsi_device *device)
-> +{
-> +	struct dw_mipi_dsi *dsi = host_to_dsi(host);
-> +
-> +	if (device->lanes > dsi->plat_data->max_data_lanes) {
-> +		dev_err(dsi->dev, "the number of data lanes(%u) is too many\n",
-> +			device->lanes);
-> +		return -EINVAL;
-> +	}
-> +
-> +	dsi->lanes = device->lanes;
-> +	dsi->channel = device->channel;
-> +	dsi->format = device->format;
-> +	dsi->mode_flags = device->mode_flags;
-> +	dsi->panel = of_drm_find_panel(device->dev.of_node);
-> +	if (dsi->panel)
-> +		return drm_panel_attach(dsi->panel, &dsi->connector);
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +static int dw_mipi_dsi_host_detach(struct mipi_dsi_host *host,
-> +				   struct mipi_dsi_device *device)
-> +{
-> +	struct dw_mipi_dsi *dsi = host_to_dsi(host);
-> +
-> +	drm_panel_detach(dsi->panel);
-> +
-> +	return 0;
-> +}
-> +
-> +static void dw_mipi_message_config(struct dw_mipi_dsi *dsi,
-> +				   const struct mipi_dsi_msg *msg)
-> +{
-> +	bool lpm = msg->flags & MIPI_DSI_MSG_USE_LPM;
-> +	u32 val = 0;
-> +
-> +	if (msg->flags & MIPI_DSI_MSG_REQ_ACK)
-> +		val |= EN_ACK_RQST;
-> +	if (lpm)
-> +		val |= CMD_MODE_ALL_LP;
-> +
-> +	dsi_write(dsi, DSI_LPCLK_CTRL, lpm ? 0 : PHY_TXREQUESTCLKHS);
-> +	dsi_write(dsi, DSI_CMD_MODE_CFG, val);
-> +}
-> +
-> +static int dw_mipi_dsi_gen_pkt_hdr_write(struct dw_mipi_dsi *dsi, u32 hdr_val)
-> +{
-> +	int ret;
-> +	u32 val, mask;
-> +
-> +	ret = readl_poll_timeout(dsi->base + DSI_CMD_PKT_STATUS,
-> +				 val, !(val & GEN_CMD_FULL), 1000,
-> +				 CMD_PKT_STATUS_TIMEOUT_US);
-> +	if (ret < 0) {
-> +		dev_err(dsi->dev, "failed to get available command FIFO\n");
-> +		return ret;
-> +	}
-> +
-> +	dsi_write(dsi, DSI_GEN_HDR, hdr_val);
-> +
-> +	mask = GEN_CMD_EMPTY | GEN_PLD_W_EMPTY;
-> +	ret = readl_poll_timeout(dsi->base + DSI_CMD_PKT_STATUS,
-> +				 val, (val & mask) == mask,
-> +				 1000, CMD_PKT_STATUS_TIMEOUT_US);
-> +	if (ret < 0) {
-> +		dev_err(dsi->dev, "failed to write command FIFO\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int dw_mipi_dsi_dcs_short_write(struct dw_mipi_dsi *dsi,
-> +				       const struct mipi_dsi_msg *msg)
-> +{
-> +	const u8 *tx_buf = msg->tx_buf;
-> +	u16 data = 0;
-> +	u32 val;
-> +
-> +	if (msg->tx_len > 0)
-> +		data |= tx_buf[0];
-> +	if (msg->tx_len > 1)
-> +		data |= tx_buf[1] << 8;
-> +
-> +	if (msg->tx_len > 2) {
-> +		dev_err(dsi->dev, "too long tx buf length %zu for short write\n",
-> +			msg->tx_len);
-> +		return -EINVAL;
-> +	}
-> +
-> +	val = GEN_HDATA(data) | GEN_HTYPE(msg->type);
-> +	return dw_mipi_dsi_gen_pkt_hdr_write(dsi, val);
-> +}
-> +
-> +static int dw_mipi_dsi_dcs_long_write(struct dw_mipi_dsi *dsi,
-> +				      const struct mipi_dsi_msg *msg)
-> +{
-> +	const u8 *tx_buf = msg->tx_buf;
-> +	int len = msg->tx_len, pld_data_bytes = sizeof(u32), ret;
-> +	u32 hdr_val = GEN_HDATA(msg->tx_len) | GEN_HTYPE(msg->type);
-> +	u32 remainder;
-> +	u32 val;
-> +
-> +	if (msg->tx_len < 3) {
-> +		dev_err(dsi->dev, "wrong tx buf length %zu for long write\n",
-> +			msg->tx_len);
-> +		return -EINVAL;
-> +	}
-> +
-> +	while (DIV_ROUND_UP(len, pld_data_bytes)) {
-> +		if (len < pld_data_bytes) {
-> +			remainder = 0;
-> +			memcpy(&remainder, tx_buf, len);
-> +			dsi_write(dsi, DSI_GEN_PLD_DATA, remainder);
-> +			len = 0;
-> +		} else {
-> +			memcpy(&remainder, tx_buf, pld_data_bytes);
-> +			dsi_write(dsi, DSI_GEN_PLD_DATA, remainder);
-> +			tx_buf += pld_data_bytes;
-> +			len -= pld_data_bytes;
-> +		}
-> +
-> +		ret = readl_poll_timeout(dsi->base + DSI_CMD_PKT_STATUS,
-> +					 val, !(val & GEN_PLD_W_FULL), 1000,
-> +					 CMD_PKT_STATUS_TIMEOUT_US);
-> +		if (ret < 0) {
-> +			dev_err(dsi->dev,
-> +				"failed to get available write payload FIFO\n");
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return dw_mipi_dsi_gen_pkt_hdr_write(dsi, hdr_val);
-> +}
-> +
-> +static ssize_t dw_mipi_dsi_host_transfer(struct mipi_dsi_host *host,
-> +					 const struct mipi_dsi_msg *msg)
-> +{
-> +	struct dw_mipi_dsi *dsi = host_to_dsi(host);
-> +	int ret;
-> +
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * use mipi_dsi_create_packet() instead of all following
-> +	 * functions and code (no switch cases, no
-> +	 * dw_mipi_dsi_dcs_short_write(), only the loop in long_write...)
-> +	 * and use packet.header...
-> +	 */
-> +	dw_mipi_message_config(dsi, msg);
-> +
-> +	switch (msg->type) {
-> +	case MIPI_DSI_DCS_SHORT_WRITE:
-> +	case MIPI_DSI_DCS_SHORT_WRITE_PARAM:
-> +	case MIPI_DSI_SET_MAXIMUM_RETURN_PACKET_SIZE:
-> +		ret = dw_mipi_dsi_dcs_short_write(dsi, msg);
-> +		break;
-> +	case MIPI_DSI_DCS_LONG_WRITE:
-> +		ret = dw_mipi_dsi_dcs_long_write(dsi, msg);
-> +		break;
-> +	default:
-> +		dev_err(dsi->dev, "unsupported message type 0x%02x\n",
-> +			msg->type);
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct mipi_dsi_host_ops dw_mipi_dsi_host_ops = {
-> +	.attach = dw_mipi_dsi_host_attach,
-> +	.detach = dw_mipi_dsi_host_detach,
-> +	.transfer = dw_mipi_dsi_host_transfer,
-> +};
-> +
-> +static void dw_mipi_dsi_video_mode_config(struct dw_mipi_dsi *dsi)
-> +{
-> +	u32 val;
-> +
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * enabling low power is panel-dependent, we should use the
-> +	 * panel configuration here...
-> +	 */
-> +	val = ENABLE_LOW_POWER;
-> +
-> +	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-> +		val |= VID_MODE_TYPE_BURST;
-> +	else if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
-> +		val |= VID_MODE_TYPE_NON_BURST_SYNC_PULSES;
-> +	else
-> +		val |= VID_MODE_TYPE_NON_BURST_SYNC_EVENTS;
-> +
-> +	dsi_write(dsi, DSI_VID_MODE_CFG, val);
-> +}
-> +
-> +static void dw_mipi_dsi_set_mode(struct dw_mipi_dsi *dsi,
-> +				 unsigned long mode_flags)
-> +{
-> +	dsi_write(dsi, DSI_PWR_UP, RESET);
-> +
-> +	if (mode_flags & MIPI_DSI_MODE_VIDEO) {
-> +		dsi_write(dsi, DSI_MODE_CFG, ENABLE_VIDEO_MODE);
-> +		dw_mipi_dsi_video_mode_config(dsi);
-> +		dsi_write(dsi, DSI_LPCLK_CTRL, PHY_TXREQUESTCLKHS);
-> +	} else {
-> +		dsi_write(dsi, DSI_MODE_CFG, ENABLE_CMD_MODE);
-> +	}
-> +
-> +	dsi_write(dsi, DSI_PWR_UP, POWERUP);
-> +}
-> +
-> +static void dw_mipi_dsi_disable(struct dw_mipi_dsi *dsi)
-> +{
-> +	dsi_write(dsi, DSI_PWR_UP, RESET);
-> +	dsi_write(dsi, DSI_PHY_RSTZ, PHY_RSTZ);
-> +}
-> +
-> +static void dw_mipi_dsi_init(struct dw_mipi_dsi *dsi)
-> +{
-> +	/*
-> +	 * The maximum permitted escape clock is 20MHz and it is derived from
-> +	 * lanebyteclk, which is running at "lane_mbps / 8".  Thus we want:
-> +	 *
-> +	 *     (lane_mbps >> 3) / esc_clk_division < 20
-> +	 * which is:
-> +	 *     (lane_mbps >> 3) / 20 > esc_clk_division
-> +	 */
-> +	u32 esc_clk_division = (dsi->lane_mbps >> 3) / 20 + 1;
-> +
-> +	dsi_write(dsi, DSI_PWR_UP, RESET);
-> +
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * timeout clock division should be computed with the
-> +	 * high speed transmission counter timeout and byte lane...
-> +	 */
-> +	dsi_write(dsi, DSI_CLKMGR_CFG, TO_CLK_DIVIDSION(10) |
-> +		  TX_ESC_CLK_DIVIDSION(esc_clk_division));
-> +}
-> +
-> +static void dw_mipi_dsi_dpi_config(struct dw_mipi_dsi *dsi,
-> +				   struct drm_display_mode *mode)
-> +{
-> +	u32 val = 0, color = 0;
-> +
-> +	switch (dsi->format) {
-> +	case MIPI_DSI_FMT_RGB888:
-> +		color = DPI_COLOR_CODING_24BIT;
-> +		break;
-> +	case MIPI_DSI_FMT_RGB666:
-> +		color = DPI_COLOR_CODING_18BIT_2 | EN18_LOOSELY;
-> +		break;
-> +	case MIPI_DSI_FMT_RGB666_PACKED:
-> +		color = DPI_COLOR_CODING_18BIT_1;
-> +		break;
-> +	case MIPI_DSI_FMT_RGB565:
-> +		color = DPI_COLOR_CODING_16BIT_1;
-> +		break;
-> +	}
-> +
-> +	if (mode->flags & DRM_MODE_FLAG_NVSYNC)
-> +		val |= VSYNC_ACTIVE_LOW;
-> +	if (mode->flags & DRM_MODE_FLAG_NHSYNC)
-> +		val |= HSYNC_ACTIVE_LOW;
-> +
-> +	dsi_write(dsi, DSI_DPI_VCID, DPI_VID(dsi->channel));
-> +	dsi_write(dsi, DSI_DPI_COLOR_CODING, color);
-> +	dsi_write(dsi, DSI_DPI_CFG_POL, val);
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * largest packet sizes during hfp or during vsa/vpb/vfp
-> +	 * should be computed according to byte lane, lane number and only
-> +	 * if sending lp cmds in high speed is enable (PHY_TXREQUESTCLKHS)
-> +	 */
-> +	dsi_write(dsi, DSI_DPI_LP_CMD_TIM, OUTVACT_LPCMD_TIME(4)
-> +		  | INVACT_LPCMD_TIME(4));
-> +}
-> +
-> +static void dw_mipi_dsi_packet_handler_config(struct dw_mipi_dsi *dsi)
-> +{
-> +	dsi_write(dsi, DSI_PCKHDL_CFG, EN_CRC_RX | EN_ECC_RX | EN_BTA);
-> +}
-> +
-> +static void dw_mipi_dsi_video_packet_config(struct dw_mipi_dsi *dsi,
-> +					    struct drm_display_mode *mode)
-> +{
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * only burst mode is supported here. For non-burst video modes,
-> +	 * we should compute DSI_VID_PKT_SIZE, DSI_VCCR.NUMC &
-> +	 * DSI_VNPCR.NPSIZE... especially because this driver supports
-> +	 * non-burst video modes, see dw_mipi_dsi_video_mode_config()...
-> +	 */
-> +	dsi_write(dsi, DSI_VID_PKT_SIZE, VID_PKT_SIZE(mode->hdisplay));
-> +}
-> +
-> +static void dw_mipi_dsi_command_mode_config(struct dw_mipi_dsi *dsi)
-> +{
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * compute high speed transmission counter timeout according
-> +	 * to the timeout clock division (TO_CLK_DIVIDSION) and byte lane...
-> +	 */
-> +	dsi_write(dsi, DSI_TO_CNT_CFG, HSTX_TO_CNT(1000) | LPRX_TO_CNT(1000));
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * the Bus-Turn-Around Timeout Counter should be computed
-> +	 * according to byte lane...
-> +	 */
-> +	dsi_write(dsi, DSI_BTA_TO_CNT, 0xd00);
-> +	dsi_write(dsi, DSI_MODE_CFG, ENABLE_CMD_MODE);
-> +}
-> +
-> +/* Get lane byte clock cycles. */
-> +static u32 dw_mipi_dsi_get_hcomponent_lbcc(struct dw_mipi_dsi *dsi,
-> +					   struct drm_display_mode *mode,
-> +					   u32 hcomponent)
-> +{
-> +	u32 frac, lbcc;
-> +
-> +	lbcc = hcomponent * dsi->lane_mbps * MSEC_PER_SEC / 8;
-> +
-> +	frac = lbcc % mode->clock;
-> +	lbcc = lbcc / mode->clock;
-> +	if (frac)
-> +		lbcc++;
-> +
-> +	return lbcc;
-> +}
-> +
-> +static void dw_mipi_dsi_line_timer_config(struct dw_mipi_dsi *dsi,
-> +					  struct drm_display_mode *mode)
-> +{
-> +	u32 htotal, hsa, hbp, lbcc;
-> +
-> +	htotal = mode->htotal;
-> +	hsa = mode->hsync_end - mode->hsync_start;
-> +	hbp = mode->htotal - mode->hsync_end;
-> +
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * computations below may be improved...
-> +	 */
-> +	lbcc = dw_mipi_dsi_get_hcomponent_lbcc(dsi, mode, htotal);
-> +	dsi_write(dsi, DSI_VID_HLINE_TIME, lbcc);
-> +
-> +	lbcc = dw_mipi_dsi_get_hcomponent_lbcc(dsi, mode, hsa);
-> +	dsi_write(dsi, DSI_VID_HSA_TIME, lbcc);
-> +
-> +	lbcc = dw_mipi_dsi_get_hcomponent_lbcc(dsi, mode, hbp);
-> +	dsi_write(dsi, DSI_VID_HBP_TIME, lbcc);
-> +}
-> +
-> +static void dw_mipi_dsi_vertical_timing_config(struct dw_mipi_dsi *dsi,
-> +					       struct drm_display_mode *mode)
-> +{
-> +	u32 vactive, vsa, vfp, vbp;
-> +
-> +	vactive = mode->vdisplay;
-> +	vsa = mode->vsync_end - mode->vsync_start;
-> +	vfp = mode->vsync_start - mode->vdisplay;
-> +	vbp = mode->vtotal - mode->vsync_end;
-> +
-> +	dsi_write(dsi, DSI_VID_VACTIVE_LINES, vactive);
-> +	dsi_write(dsi, DSI_VID_VSA_LINES, vsa);
-> +	dsi_write(dsi, DSI_VID_VFP_LINES, vfp);
-> +	dsi_write(dsi, DSI_VID_VBP_LINES, vbp);
-> +}
-> +
-> +static void dw_mipi_dsi_dphy_timing_config(struct dw_mipi_dsi *dsi)
-> +{
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * data & clock lane timers should be computed according to panel
-> +	 * blankings and to the automatic clock lane control mode...
-> +	 * note: DSI_PHY_TMR_CFG.MAX_RD_TIME should be in line with
-> +	 * DSI_CMD_MODE_CFG.MAX_RD_PKT_SIZE_LP (see CMD_MODE_ALL_LP)
-> +	 */
-> +	dsi_write(dsi, DSI_PHY_TMR_CFG, PHY_HS2LP_TIME(0x40)
-> +		  | PHY_LP2HS_TIME(0x40) | MAX_RD_TIME(10000));
-> +
-> +	dsi_write(dsi, DSI_PHY_TMR_LPCLK_CFG, PHY_CLKHS2LP_TIME(0x40)
-> +		  | PHY_CLKLP2HS_TIME(0x40));
-> +}
-> +
-> +static void dw_mipi_dsi_dphy_interface_config(struct dw_mipi_dsi *dsi)
-> +{
-> +	/*
-> +	 * TODO dw drv improvements
-> +	 * stop wait time should be the maximum between host dsi
-> +	 * and panel stop wait times
-> +	 */
-> +	dsi_write(dsi, DSI_PHY_IF_CFG, PHY_STOP_WAIT_TIME(0x20) |
-> +		  N_LANES(dsi->lanes));
-> +}
-> +
-> +static void dw_mipi_dsi_dphy_init(struct dw_mipi_dsi *dsi)
-> +{
-> +	/* Clear PHY state */
-> +	dsi_write(dsi, DSI_PHY_RSTZ, PHY_DISFORCEPLL | PHY_DISABLECLK
-> +		  | PHY_RSTZ | PHY_SHUTDOWNZ);
-> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLR);
-> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_TESTCLR);
-> +	dsi_write(dsi, DSI_PHY_TST_CTRL0, PHY_UNTESTCLR);
-> +}
-> +
-> +static void dw_mipi_dsi_dphy_enable(struct dw_mipi_dsi *dsi)
-> +{
-> +	u32 val;
-> +	int ret;
-> +
-> +	dsi_write(dsi, DSI_PHY_RSTZ, PHY_ENFORCEPLL | PHY_ENABLECLK |
-> +		  PHY_UNRSTZ | PHY_UNSHUTDOWNZ);
-> +
-> +	ret = readl_poll_timeout(dsi->base + DSI_PHY_STATUS,
-> +				 val, val & LOCK, 1000, PHY_STATUS_TIMEOUT_US);
-> +	if (ret < 0)
-> +		DRM_DEBUG_DRIVER("failed to wait phy lock state\n");
-> +
-> +	ret = readl_poll_timeout(dsi->base + DSI_PHY_STATUS,
-> +				 val, val & STOP_STATE_CLK_LANE, 1000,
-> +				 PHY_STATUS_TIMEOUT_US);
-> +	if (ret < 0)
-> +		DRM_DEBUG_DRIVER("failed to wait phy clk lane stop state\n");
-> +}
-> +
-> +static void dw_mipi_dsi_clear_err(struct dw_mipi_dsi *dsi)
-> +{
-> +	dsi_read(dsi, DSI_INT_ST0);
-> +	dsi_read(dsi, DSI_INT_ST1);
-> +	dsi_write(dsi, DSI_INT_MSK0, 0);
-> +	dsi_write(dsi, DSI_INT_MSK1, 0);
-> +}
-> +
-> +static void dw_mipi_dsi_bridge_disable(struct drm_bridge *bridge)
-> +{
-> +	struct dw_mipi_dsi *dsi = bridge_to_dsi(bridge);
-> +
-> +	if (dsi->dpms_mode != DRM_MODE_DPMS_ON)
-> +		return;
-> +
-> +	if (clk_enable(dsi->pclk)) {
-> +		dev_err(dsi->dev, "%s: Failed to enable pclk\n", __func__);
-> +		return;
-> +	}
-> +
-> +	drm_panel_disable(dsi->panel);
-> +
-> +	/* Switch to dsi command mode for the panel de-initialization */
-> +	dw_mipi_dsi_set_mode(dsi, 0);
-> +	drm_panel_unprepare(dsi->panel);
-> +
-> +	dw_mipi_dsi_disable(dsi);
-> +	pm_runtime_put(dsi->dev);
-> +	clk_disable(dsi->pclk);
-> +	dsi->dpms_mode = DRM_MODE_DPMS_OFF;
-> +}
-> +
-> +static void dw_mipi_dsi_bridge_enable(struct drm_bridge *bridge)
-> +{
-> +	struct dw_mipi_dsi *dsi = bridge_to_dsi(bridge);
-> +	struct drm_encoder *encoder = bridge->encoder;
-> +	struct drm_display_mode *mode = &encoder->crtc->state->adjusted_mode;
-> +	const struct dw_mipi_dsi_phy_ops *phy_ops = dsi->plat_data->phy_ops;
-> +	void *priv_data = dsi->plat_data->priv_data;
-> +	int ret;
-> +
-> +	if (dsi->dpms_mode == DRM_MODE_DPMS_ON)
-> +		return;
-> +
-> +	if (clk_enable(dsi->pclk)) {
-> +		dev_err(dsi->dev, "%s: Failed to enable pclk\n", __func__);
-> +		return;
-> +	}
-> +
-> +	ret = phy_ops->get_lane_mbps(priv_data, mode, dsi->mode_flags,
-> +				     dsi->lanes, dsi->format, &dsi->lane_mbps);
-> +	if (ret)
-> +		DRM_DEBUG_DRIVER("Phy get_lane_mbps() failed\n");
-> +
-> +	pm_runtime_get_sync(dsi->dev);
-> +	dw_mipi_dsi_init(dsi);
-> +	dw_mipi_dsi_dpi_config(dsi, mode);
-> +	dw_mipi_dsi_packet_handler_config(dsi);
-> +	dw_mipi_dsi_video_mode_config(dsi);
-> +	dw_mipi_dsi_video_packet_config(dsi, mode);
-> +	dw_mipi_dsi_command_mode_config(dsi);
-> +	dw_mipi_dsi_line_timer_config(dsi, mode);
-> +	dw_mipi_dsi_vertical_timing_config(dsi, mode);
-> +
-> +	dw_mipi_dsi_dphy_init(dsi);
-> +	dw_mipi_dsi_dphy_timing_config(dsi);
-> +	dw_mipi_dsi_dphy_interface_config(dsi);
-> +
-> +	dw_mipi_dsi_clear_err(dsi);
-> +
-> +	ret = phy_ops->init(priv_data);
-> +	if (ret)
-> +		DRM_DEBUG_DRIVER("Phy init() failed\n");
-> +
-> +	dw_mipi_dsi_dphy_enable(dsi);
-> +
-> +	dw_mipi_dsi_wait_for_two_frames(mode);
-> +
-> +	/* Switch to dsi command mode for the panel initialization */
-> +	dw_mipi_dsi_set_mode(dsi, 0);
-> +	if (drm_panel_prepare(dsi->panel))
-> +		dev_err(dsi->dev, "failed to prepare panel\n");
-> +
-> +	/* Switch to dsi video mode to send image data to the panel */
-> +	dw_mipi_dsi_set_mode(dsi, MIPI_DSI_MODE_VIDEO);
-> +	drm_panel_enable(dsi->panel);
-> +
-> +	clk_disable(dsi->pclk);
-> +
-> +	dsi->dpms_mode = DRM_MODE_DPMS_ON;
-> +}
-> +
-> +static int dw_mipi_dsi_connector_get_modes(struct drm_connector *connector)
-> +{
-> +	struct dw_mipi_dsi *dsi = con_to_dsi(connector);
-> +
-> +	return drm_panel_get_modes(dsi->panel);
-> +}
-> +
-> +static enum drm_mode_status
-> +dw_mipi_dsi_mode_valid(struct drm_connector *connector,
-> +		       struct drm_display_mode *mode)
-> +{
-> +	struct dw_mipi_dsi *dsi = con_to_dsi(connector);
-> +	const struct dw_mipi_dsi_plat_data *pdata = dsi->plat_data;
-> +	enum drm_mode_status mode_status = MODE_OK;
-> +
-> +	if (pdata->mode_valid)
-> +		mode_status = pdata->mode_valid(pdata->priv_data,
-> +						connector, mode);
-> +
-> +	return mode_status;
-> +}
-> +
-> +static struct drm_connector_helper_funcs dw_mipi_dsi_connector_helper_funcs = {
-> +	.get_modes = dw_mipi_dsi_connector_get_modes,
-> +	.mode_valid = dw_mipi_dsi_mode_valid,
-> +};
-> +
-> +static void dw_mipi_dsi_drm_connector_destroy(struct drm_connector *connector)
-> +{
-> +	drm_connector_unregister(connector);
-> +	drm_connector_cleanup(connector);
-> +}
-> +
-> +static const struct drm_connector_funcs dw_mipi_dsi_atomic_connector_funcs = {
-> +	.dpms = drm_atomic_helper_connector_dpms,
-> +	.fill_modes = drm_helper_probe_single_connector_modes,
-> +	.destroy = dw_mipi_dsi_drm_connector_destroy,
-> +	.reset = drm_atomic_helper_connector_reset,
-> +	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> +};
-> +
-> +static int dw_mipi_dsi_bridge_attach(struct drm_bridge *bridge)
-> +{
-> +	struct dw_mipi_dsi *dsi = bridge_to_dsi(bridge);
-> +	struct drm_connector *connector = &dsi->connector;
-> +
-> +	if (!bridge->encoder) {
-> +		DRM_ERROR("Parent encoder object not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	/* Set the encoder type as caller does not know it */
-> +	bridge->encoder->encoder_type = DRM_MODE_ENCODER_DSI;
-> +
-> +	connector->polled = DRM_CONNECTOR_POLL_HPD;
-> +
-> +	drm_connector_helper_add(connector,
-> +				 &dw_mipi_dsi_connector_helper_funcs);
-> +
-> +	drm_connector_init(bridge->dev, connector,
-> +			   &dw_mipi_dsi_atomic_connector_funcs,
-> +			   DRM_MODE_CONNECTOR_DSI);
-> +
-> +	drm_mode_connector_attach_encoder(connector, bridge->encoder);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct drm_bridge_funcs dw_mipi_dsi_bridge_funcs = {
-> +	.enable = dw_mipi_dsi_bridge_enable,
-> +	.disable = dw_mipi_dsi_bridge_disable,
-> +	.attach = dw_mipi_dsi_bridge_attach,
-> +};
-> +
-> +static struct dw_mipi_dsi *
-> +__dw_mipi_dsi_probe(struct platform_device *pdev,
-> +		    const struct dw_mipi_dsi_plat_data *plat_data)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct reset_control *apb_rst;
-> +	struct dw_mipi_dsi *dsi;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
-> +	if (!dsi)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	dsi->dev = dev;
-> +	dsi->plat_data = plat_data;
-> +	dsi->dpms_mode = DRM_MODE_DPMS_OFF;
-> +
-> +	if (!plat_data->phy_ops->init || !plat_data->phy_ops->get_lane_mbps) {
-> +		DRM_ERROR("Phy not properly configured\n");
-> +		return ERR_PTR(-ENODEV);
-> +	}
-> +
-> +	if (!plat_data->base) {
-> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +		if (!res)
-> +			return ERR_PTR(-ENODEV);
-> +
-> +		dsi->base = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(dsi->base))
-> +			return ERR_PTR(-ENODEV);
-> +
-> +	} else {
-> +		dsi->base = plat_data->base;
-> +	}
-> +
-> +	dsi->pclk = devm_clk_get(dev, "pclk");
-> +	if (IS_ERR(dsi->pclk)) {
-> +		ret = PTR_ERR(dsi->pclk);
-> +		dev_err(dev, "Unable to get pclk: %d\n", ret);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	/*
-> +	 * Note that the reset was not defined in the initial device tree, so
-> +	 * we have to be prepared for it not being found.
-> +	 */
-> +	apb_rst = devm_reset_control_get(dev, "apb");
-> +	if (IS_ERR(apb_rst)) {
-> +		ret = PTR_ERR(apb_rst);
-> +		if (ret == -ENOENT) {
-> +			apb_rst = NULL;
-> +		} else {
-> +			dev_err(dev, "Unable to get reset control: %d\n", ret);
-> +			return ERR_PTR(ret);
-> +		}
-> +	}
-> +
-> +	if (apb_rst) {
-> +		ret = clk_prepare_enable(dsi->pclk);
-> +		if (ret) {
-> +			dev_err(dev, "%s: Failed to enable pclk\n", __func__);
-> +			return ERR_PTR(ret);
-> +		}
-> +
-> +		reset_control_assert(apb_rst);
-> +		usleep_range(10, 20);
-> +		reset_control_deassert(apb_rst);
-> +
-> +		clk_disable(dsi->pclk);
-> +	}
-> +
-> +	pm_runtime_enable(dev);
-> +
-> +	dsi->dsi_host.ops = &dw_mipi_dsi_host_ops;
-> +	dsi->dsi_host.dev = dev;
-> +	ret = mipi_dsi_host_register(&dsi->dsi_host);
-> +	if (ret) {
-> +		dev_err(dev, "Failed to register MIPI host: %d\n", ret);
-> +		return ERR_PTR(ret);
-> +	}
-> +
-> +	dsi->bridge.driver_private = dsi;
-> +	dsi->bridge.funcs = &dw_mipi_dsi_bridge_funcs;
-> +#ifdef CONFIG_OF
-> +	dsi->bridge.of_node = pdev->dev.of_node;
-> +#endif
-> +
-> +	clk_enable(dsi->pclk);
-> +
-> +	dev_set_drvdata(dev, dsi);
-> +
-> +	return dsi;
-> +}
-> +
-> +static void __dw_mipi_dsi_remove(struct dw_mipi_dsi *dsi)
-> +{
-> +	pm_runtime_disable(dsi->dev);
-> +}
-> +
-> +/*
-> + * Probe/remove API, used from platforms based on the DRM bridge API.
-> + */
-> +int dw_mipi_dsi_probe(struct platform_device *pdev,
-> +		      const struct dw_mipi_dsi_plat_data *plat_data)
-> +{
-> +	struct dw_mipi_dsi *dsi;
-> +	int ret;
-> +
-> +	dsi = __dw_mipi_dsi_probe(pdev, plat_data);
-> +	if (IS_ERR(dsi))
-> +		return PTR_ERR(dsi);
-> +
-> +	ret = drm_bridge_add(&dsi->bridge);
-> +	if (ret < 0) {
-> +		__dw_mipi_dsi_remove(dsi);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dw_mipi_dsi_probe);
-> +
-> +void dw_mipi_dsi_remove(struct platform_device *pdev)
-> +{
-> +	struct dw_mipi_dsi *dsi = platform_get_drvdata(pdev);
-> +
-> +	mipi_dsi_host_unregister(&dsi->dsi_host);
-> +	drm_bridge_remove(&dsi->bridge);
-> +
-> +	__dw_mipi_dsi_remove(dsi);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_mipi_dsi_remove);
-> +
-> +/*
-> + * Bind/unbind API, used from platforms based on the component framework.
-> + */
-> +int dw_mipi_dsi_bind(struct platform_device *pdev, struct drm_encoder *encoder,
-> +		     const struct dw_mipi_dsi_plat_data *plat_data)
-> +{
-> +	struct dw_mipi_dsi *dsi;
-> +	int ret;
-> +
-> +	dsi = __dw_mipi_dsi_probe(pdev, plat_data);
-> +	if (IS_ERR(dsi))
-> +		return PTR_ERR(dsi);
-> +
-> +	ret = drm_bridge_attach(encoder, &dsi->bridge, NULL);
-> +	if (ret) {
-> +		dw_mipi_dsi_remove(pdev);
-> +		DRM_ERROR("Failed to initialize bridge with drm\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(dw_mipi_dsi_bind);
-> +
-> +void dw_mipi_dsi_unbind(struct device *dev)
-> +{
-> +	struct dw_mipi_dsi *dsi = dev_get_drvdata(dev);
-> +
-> +	__dw_mipi_dsi_remove(dsi);
-> +}
-> +EXPORT_SYMBOL_GPL(dw_mipi_dsi_unbind);
-> +
-> +MODULE_AUTHOR("Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>");
-> +MODULE_AUTHOR("Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>");
-> +MODULE_DESCRIPTION("DW MIPI DSI host controller driver");
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:dw-mipi-dsi");
-> diff --git a/include/drm/bridge/dw_mipi_dsi.h b/include/drm/bridge/dw_mipi_dsi.h
-> new file mode 100644
-> index 0000000..2043a37
-> --- /dev/null
-> +++ b/include/drm/bridge/dw_mipi_dsi.h
-> @@ -0,0 +1,42 @@
-> +/*
-> + * Copyright (C) STMicroelectronics SA 2017
-> + *
-> + * Authors: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
-> + *          Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
-> + *
-> + * License terms:  GNU General Public License (GPL), version 2
-> + */
-> +
-> +#ifndef __DW_MIPI_DSI__
-> +#define __DW_MIPI_DSI__
-> +
-> +#include <drm/drmP.h>
-> +
-> +struct dw_mipi_dsi_phy_ops {
-> +	int (*init)(void *priv_data);
-> +	int (*get_lane_mbps)(void *priv_data, struct drm_display_mode *mode,
-> +			     unsigned long mode_flags, u32 lanes, u32 format,
-> +			     unsigned int *lane_mbps);
-> +};
-> +
-> +struct dw_mipi_dsi_plat_data {
-> +	void __iomem *base;
-> +	unsigned int max_data_lanes;
-> +
-> +	enum drm_mode_status (*mode_valid)(void *priv_data,
-> +					   struct drm_connector *connector,
-> +					   struct drm_display_mode *mode);
-> +
-> +	const struct dw_mipi_dsi_phy_ops *phy_ops;
-> +
-> +	void *priv_data;
-> +};
-> +
-> +int dw_mipi_dsi_probe(struct platform_device *pdev,
-> +		      const struct dw_mipi_dsi_plat_data *plat_data);
-> +void dw_mipi_dsi_remove(struct platform_device *pdev);
-> +int dw_mipi_dsi_bind(struct platform_device *pdev, struct drm_encoder *encoder,
-> +		     const struct dw_mipi_dsi_plat_data *plat_data);
-> +void dw_mipi_dsi_unbind(struct device *dev);
-> +
-> +#endif /* __DW_MIPI_DSI__ */
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGhpbGlwcGUsCgpPbiAwNi8wMi8yMDE3IDA0OjM3IFBNLCBQaGlsaXBwZSBDT1JOVSB3cm90
+ZToKPiBBZGQgdGhlIFNUTTMyIERTSSBob3N0IGRyaXZlciB0aGF0IHVzZXMgdGhlIFN5bm9wc3lz
+IERlc2lnbldhcmUKPiBNSVBJIERTSSBEUk0gYnJpZGdlLgo+IAo+IFNpZ25lZC1vZmYtYnk6IFBo
+aWxpcHBlIENPUk5VIDxwaGlsaXBwZS5jb3JudUBzdC5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1
+L2RybS9zdG0vS2NvbmZpZyAgICAgICAgICAgfCAgIDggKwo+ICBkcml2ZXJzL2dwdS9kcm0vc3Rt
+L01ha2VmaWxlICAgICAgICAgIHwgICAyICsKPiAgZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBp
+X2RzaS1zdG0uYyB8IDM1MyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDMg
+ZmlsZXMgY2hhbmdlZCwgMzYzIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
+aXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMKPiAKPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL3N0bS9LY29uZmlnIGIvZHJpdmVycy9ncHUvZHJtL3N0bS9LY29uZmlnCj4g
+aW5kZXggNGI4ODIyMy4uNGMwZDY3MCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vc3Rt
+L0tjb25maWcKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vc3RtL0tjb25maWcKPiBAQCAtMTQsMyAr
+MTQsMTEgQEAgY29uZmlnIERSTV9TVE0KPiAgCSAgU1RNaWNyb2VsZWN0cm9uaWNzIFNUTTMyIE1D
+VXMuCj4gIAkgIFRvIGNvbXBpbGUgdGhpcyBkcml2ZXIgYXMgYSBtb2R1bGUsIGNob29zZSBNIGhl
+cmU6IHRoZSBtb2R1bGUKPiAgCSAgd2lsbCBiZSBjYWxsZWQgc3RtLWRybS4KPiArCj4gK2NvbmZp
+ZyBEUk1fU1RNX0RTSQo+ICsJdHJpc3RhdGUgIlNUTWljcm9lbGVjdHJvbmljcyBzcGVjaWZpYyBl
+eHRlbnNpb25zIGZvciBTeW5vcHN5cyBNSVBJIERTSSIKPiArCWRlcGVuZHMgb24gRFJNX1NUTQo+
+ICsJc2VsZWN0IERSTV9NSVBJX0RTSQo+ICsJc2VsZWN0IERSTV9EV19NSVBJX0RTSQo+ICsJaGVs
+cAo+ICsJICBDaG9vc2UgdGhpcyBvcHRpb24gZm9yIE1JUEkgRFNJIHN1cHBvcnQgb24gU1RNaWNy
+b2VsZWN0cm9uaWNzIFNvQy4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9NYWtl
+ZmlsZSBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUKPiBpbmRleCBhMDllY2Y0Li5kODgz
+YWRjIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9zdG0vTWFrZWZpbGUKPiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vc3RtL01ha2VmaWxlCj4gQEAgLTIsNCArMiw2IEBAIHN0bS1kcm0teSA6
+PSBcCj4gIAlkcnYubyBcCj4gIAlsdGRjLm8KPiAgCj4gK29iai0kKENPTkZJR19EUk1fU1RNX0RT
+SSkgKz0gZHdfbWlwaV9kc2ktc3RtLm8KPiArCj4gIG9iai0kKENPTkZJR19EUk1fU1RNKSArPSBz
+dG0tZHJtLm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1z
+dG0uYyBiL2RyaXZlcnMvZ3B1L2RybS9zdG0vZHdfbWlwaV9kc2ktc3RtLmMKPiBuZXcgZmlsZSBt
+b2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLjhkZWRjNWMKPiAtLS0gL2Rldi9udWxsCj4gKysr
+IGIvZHJpdmVycy9ncHUvZHJtL3N0bS9kd19taXBpX2RzaS1zdG0uYwo+IEBAIC0wLDAgKzEsMzUz
+IEBACj4gKy8qCj4gKyAqIENvcHlyaWdodCAoQykgU1RNaWNyb2VsZWN0cm9uaWNzIFNBIDIwMTcK
+PiArICoKPiArICogQXV0aG9yczogUGhpbGlwcGUgQ29ybnUgPHBoaWxpcHBlLmNvcm51QHN0LmNv
+bT4KPiArICogICAgICAgICAgWWFubmljayBGZXJ0cmUgPHlhbm5pY2suZmVydHJlQHN0LmNvbT4K
+PiArICoKPiArICogTGljZW5zZSB0ZXJtczogIEdOVSBHZW5lcmFsIFB1YmxpYyBMaWNlbnNlIChH
+UEwpLCB2ZXJzaW9uIDIKPiArICovCj4gKwo+ICsjaW5jbHVkZSA8bGludXgvY2xrLmg+Cj4gKyNp
+bmNsdWRlIDxsaW51eC9pb3BvbGwuaD4KPiArI2luY2x1ZGUgPGxpbnV4L21hdGg2NC5oPgo+ICsj
+aW5jbHVkZSA8bGludXgvbW9kdWxlLmg+Cj4gKyNpbmNsdWRlIDxkcm0vZHJtUC5oPgo+ICsjaW5j
+bHVkZSA8ZHJtL2RybV9taXBpX2RzaS5oPgo+ICsjaW5jbHVkZSA8ZHJtL2JyaWRnZS9kd19taXBp
+X2RzaS5oPgo+ICsjaW5jbHVkZSA8dmlkZW8vbWlwaV9kaXNwbGF5Lmg+Cj4gKwo+ICsvKiBEU0kg
+d3JhcHBlciByZWdpc3RlciAmIGJpdCBkZWZpbml0aW9ucyAqLwo+ICsvKiBOb3RlOiByZWdpc3Rl
+cnMgYXJlIG5hbWVkIGFzIGluIHRoZSBSZWZlcmVuY2UgTWFudWFsICovCj4gKyNkZWZpbmUgRFNJ
+X1dDRkdSCTB4MDQwMAkJLyogV3JhcHBlciBDb25GaUd1cmF0aW9uIFJlZyAqLwo+ICsjZGVmaW5l
+IFdDRkdSX0RTSU0JQklUKDApCQkvKiBEU0kgTW9kZSAqLwo+ICsjZGVmaW5lIFdDRkdSX0NPTE1V
+WAlHRU5NQVNLKDMsIDEpCS8qIENPTG9yIE1VbHRpcGxlWGluZyAqLwo+ICsKPiArI2RlZmluZSBE
+U0lfV0NSCQkweDA0MDQJCS8qIFdyYXBwZXIgQ29udHJvbCBSZWcgKi8KPiArI2RlZmluZSBXQ1Jf
+RFNJRU4JQklUKDMpCQkvKiBEU0kgRU5hYmxlICovCj4gKwo+ICsjZGVmaW5lIERTSV9XSVNSCTB4
+MDQwQwkJLyogV3JhcHBlciBJbnRlcnJ1cHQgYW5kIFN0YXR1cyBSZWcgKi8KPiArI2RlZmluZSBX
+SVNSX1BMTExTCUJJVCg4KQkJLyogUExMIExvY2sgU3RhdHVzICovCj4gKyNkZWZpbmUgV0lTUl9S
+UlMJQklUKDEyKQkJLyogUmVndWxhdG9yIFJlYWR5IFN0YXR1cyAqLwo+ICsKPiArI2RlZmluZSBE
+U0lfV1BDUjAJMHgwNDE4CQkvKiBXcmFwcGVyIFBoeSBDb25mIFJlZyAwICovCj4gKyNkZWZpbmUg
+V1BDUjBfVUlYNAlHRU5NQVNLKDUsIDApCS8qIFVuaXQgSW50ZXJ2YWwgWCA0ICovCj4gKyNkZWZp
+bmUgV1BDUjBfVERETAlCSVQoMTYpCQkvKiBUdXJuIERpc2FibGUgRGF0YSBMYW5lcyAqLwo+ICsK
+PiArI2RlZmluZSBEU0lfV1JQQ1IJMHgwNDMwCQkvKiBXcmFwcGVyIFJlZ3VsYXRvciAmIFBsbCBD
+dHJsIFJlZyAqLwo+ICsjZGVmaW5lIFdSUENSX1BMTEVOCUJJVCgwKQkJLyogUExMIEVOYWJsZSAq
+Lwo+ICsjZGVmaW5lIFdSUENSX05ESVYJR0VOTUFTSyg4LCAyKQkvKiBwbGwgbG9vcCBESVZpc2lv
+biBGYWN0b3IgKi8KPiArI2RlZmluZSBXUlBDUl9JREYJR0VOTUFTSygxNCwgMTEpCS8qIHBsbCBJ
+bnB1dCBEaXZpc2lvbiBGYWN0b3IgKi8KPiArI2RlZmluZSBXUlBDUl9PREYJR0VOTUFTSygxNywg
+MTYpCS8qIHBsbCBPdXRwdXQgRGl2aXNpb24gRmFjdG9yICovCj4gKyNkZWZpbmUgV1JQQ1JfUkVH
+RU4JQklUKDI0KQkJLyogUkVHdWxhdG9yIEVOYWJsZSAqLwo+ICsjZGVmaW5lIFdSUENSX0JHUkVO
+CUJJVCgyOCkJCS8qIEJhbmRHYXAgUmVmZXJlbmNlIEVOYWJsZSAqLwo+ICsjZGVmaW5lIElERl9N
+SU4JCTEKPiArI2RlZmluZSBJREZfTUFYCQk3Cj4gKyNkZWZpbmUgTkRJVl9NSU4JMTAKPiArI2Rl
+ZmluZSBORElWX01BWAkxMjUKPiArI2RlZmluZSBPREZfTUlOCQkxCj4gKyNkZWZpbmUgT0RGX01B
+WAkJOAo+ICsKPiArLyogZHNpIGNvbG9yIGZvcm1hdCBjb2RpbmcgYWNjb3JkaW5nIHRvIHRoZSBk
+YXRhc2hlZXQgKi8KPiArZW51bSBkc2lfY29sb3Igewo+ICsJRFNJX1JHQjU2NV9DT05GMSwKPiAr
+CURTSV9SR0I1NjVfQ09ORjIsCj4gKwlEU0lfUkdCNTY1X0NPTkYzLAo+ICsJRFNJX1JHQjY2Nl9D
+T05GMSwKPiArCURTSV9SR0I2NjZfQ09ORjIsCj4gKwlEU0lfUkdCODg4LAo+ICt9Owo+ICsKPiAr
+I2RlZmluZSBMQU5FX01JTl9LQlBTCTMxMjUwCj4gKyNkZWZpbmUgTEFORV9NQVhfS0JQUwk1MDAw
+MDAKPiArCj4gKy8qIFNsZWVwICYgdGltZW91dCBmb3IgcmVndWxhdG9yIG9uL29mZiwgcGxsIGxv
+Y2svdW5sb2NrICYgZmlmbyBlbXB0eSAqLwo+ICsjZGVmaW5lIFNMRUVQX1VTCTEwMDAKPiArI2Rl
+ZmluZSBUSU1FT1VUX1VTCTIwMDAwMAo+ICsKPiArc3RydWN0IGR3X21pcGlfZHNpX3N0bSB7Cj4g
+Kwl2b2lkIF9faW9tZW0gKmJhc2U7Cj4gKwlzdHJ1Y3QgY2xrICpwbGxyZWZfY2xrOwo+ICt9Owo+
+ICsKPiArc3RhdGljIGlubGluZSB2b2lkIGRzaV93cml0ZShzdHJ1Y3QgZHdfbWlwaV9kc2lfc3Rt
+ICpkc2ksIHUzMiByZWcsIHUzMiB2YWwpCj4gK3sKPiArCXdyaXRlbF9yZWxheGVkKHZhbCwgZHNp
+LT5iYXNlICsgcmVnKTsKPiArfQo+ICsKPiArc3RhdGljIGlubGluZSB1MzIgZHNpX3JlYWQoc3Ry
+dWN0IGR3X21pcGlfZHNpX3N0bSAqZHNpLCB1MzIgcmVnKQo+ICt7Cj4gKwlyZXR1cm4gcmVhZGxf
+cmVsYXhlZChkc2ktPmJhc2UgKyByZWcpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW5saW5lIHZvaWQg
+ZHNpX3NldChzdHJ1Y3QgZHdfbWlwaV9kc2lfc3RtICpkc2ksIHUzMiByZWcsIHUzMiBtYXNrKQo+
+ICt7Cj4gKwlkc2lfd3JpdGUoZHNpLCByZWcsIGRzaV9yZWFkKGRzaSwgcmVnKSB8IG1hc2spOwo+
+ICt9Cj4gKwo+ICtzdGF0aWMgaW5saW5lIHZvaWQgZHNpX2NsZWFyKHN0cnVjdCBkd19taXBpX2Rz
+aV9zdG0gKmRzaSwgdTMyIHJlZywgdTMyIG1hc2spCj4gK3sKPiArCWRzaV93cml0ZShkc2ksIHJl
+ZywgZHNpX3JlYWQoZHNpLCByZWcpICYgfm1hc2spOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW5saW5l
+IHZvaWQgZHNpX3VwZGF0ZV9iaXRzKHN0cnVjdCBkd19taXBpX2RzaV9zdG0gKmRzaSwgdTMyIHJl
+ZywKPiArCQkJCSAgIHUzMiBtYXNrLCB1MzIgdmFsKQo+ICt7Cj4gKwlkc2lfd3JpdGUoZHNpLCBy
+ZWcsIChkc2lfcmVhZChkc2ksIHJlZykgJiB+bWFzaykgfCB2YWwpOwo+ICt9Cj4gKwo+ICtzdGF0
+aWMgZW51bSBkc2lfY29sb3IgZHNpX2NvbG9yX2Zyb21fbWlwaShlbnVtIG1pcGlfZHNpX3BpeGVs
+X2Zvcm1hdCBmbXQpCj4gK3sKPiArCXN3aXRjaCAoZm10KSB7Cj4gKwljYXNlIE1JUElfRFNJX0ZN
+VF9SR0I4ODg6Cj4gKwkJcmV0dXJuIERTSV9SR0I4ODg7Cj4gKwljYXNlIE1JUElfRFNJX0ZNVF9S
+R0I2NjY6Cj4gKwkJcmV0dXJuIERTSV9SR0I2NjZfQ09ORjI7Cj4gKwljYXNlIE1JUElfRFNJX0ZN
+VF9SR0I2NjZfUEFDS0VEOgo+ICsJCXJldHVybiBEU0lfUkdCNjY2X0NPTkYxOwo+ICsJY2FzZSBN
+SVBJX0RTSV9GTVRfUkdCNTY1Ogo+ICsJCXJldHVybiBEU0lfUkdCNTY1X0NPTkYxOwo+ICsJZGVm
+YXVsdDoKPiArCQlEUk1fREVCVUdfRFJJVkVSKCJNSVBJIGNvbG9yIGludmFsaWQsIHNvIHdlIHVz
+ZSByZ2I4ODhcbiIpOwo+ICsJfQo+ICsJcmV0dXJuIERTSV9SR0I4ODg7Cj4gK30KPiArCj4gK3N0
+YXRpYyBpbnQgZHNpX3BsbF9nZXRfY2xrb3V0X2toeihpbnQgY2xraW5fa2h6LCBpbnQgaWRmLCBp
+bnQgbmRpdiwgaW50IG9kZikKPiArewo+ICsJLyogcHJldmVudCBmcm9tIGRpdmlzaW9uIGJ5IDAg
+Ki8KPiArCWlmIChpZGYgKiBvZGYpCj4gKwkJcmV0dXJuIERJVl9ST1VORF9DTE9TRVNUKGNsa2lu
+X2toeiAqIG5kaXYsIGlkZiAqIG9kZik7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0
+YXRpYyBpbnQgZHNpX3BsbF9nZXRfcGFyYW1zKGludCBjbGtpbl9raHosIGludCBjbGtvdXRfa2h6
+LAo+ICsJCQkgICAgICBpbnQgKmlkZiwgaW50ICpuZGl2LCBpbnQgKm9kZikKPiArewo+ICsJaW50
+IGksIG8sIG4sIG5fbWluLCBuX21heDsKPiArCWludCBmdmNvX21pbiwgZnZjb19tYXgsIGRlbHRh
+LCBiZXN0X2RlbHRhOyAvKiBhbGwgaW4ga2h6ICovCj4gKwo+ICsJLyogRWFybHkgY2hlY2tzIHBy
+ZXZlbnRpbmcgZGl2aXNpb24gYnkgMCAmIG9kZCByZXN1bHRzICovCj4gKwlpZiAoKGNsa2luX2to
+eiA8PSAwKSB8fCAoY2xrb3V0X2toeiA8PSAwKSkKPiArCQlyZXR1cm4gLUVJTlZBTDsKPiArCj4g
+KwlmdmNvX21pbiA9IExBTkVfTUlOX0tCUFMgKiAyICogT0RGX01BWDsKPiArCWZ2Y29fbWF4ID0g
+TEFORV9NQVhfS0JQUyAqIDIgKiBPREZfTUlOOwo+ICsKPiArCWJlc3RfZGVsdGEgPSAxMDAwMDAw
+OyAvKiBiaWcgc3RhcnRlZCB2YWx1ZSAoMTAwMDAwMGtoeikgKi8KPiArCj4gKwlmb3IgKGkgPSBJ
+REZfTUlOOyBpIDw9IElERl9NQVg7IGkrKykgewo+ICsJCS8qIENvbXB1dGUgbmRpdiByYW5nZSBh
+Y2NvcmRpbmcgdG8gRnZjbyAqLwo+ICsJCW5fbWluID0gKChmdmNvX21pbiAqIGkpIC8gKDIgKiBj
+bGtpbl9raHopKSArIDE7Cj4gKwkJbl9tYXggPSAoZnZjb19tYXggKiBpKSAvICgyICogY2xraW5f
+a2h6KTsKPiArCj4gKwkJLyogTm8gbmVlZCB0byBjb250aW51ZSBpZGYgbG9vcCBpZiB3ZSByZWFj
+aCBuZGl2IG1heCAqLwo+ICsJCWlmIChuX21pbiA+PSBORElWX01BWCkKPiArCQkJYnJlYWs7Cj4g
+Kwo+ICsJCS8qIENsYW1wIG5kaXYgdG8gdmFsaWQgdmFsdWVzICovCj4gKwkJaWYgKG5fbWluIDwg
+TkRJVl9NSU4pCj4gKwkJCW5fbWluID0gTkRJVl9NSU47Cj4gKwkJaWYgKG5fbWF4ID4gTkRJVl9N
+QVgpCj4gKwkJCW5fbWF4ID0gTkRJVl9NQVg7Cj4gKwo+ICsJCWZvciAobyA9IE9ERl9NSU47IG8g
+PD0gT0RGX01BWDsgbyAqPSAyKSB7Cj4gKwkJCW4gPSBESVZfUk9VTkRfQ0xPU0VTVChpICogbyAq
+IGNsa291dF9raHosIGNsa2luX2toeik7Cj4gKwkJCS8qIENoZWNrIG5kaXYgYWNjb3JkaW5nIHRv
+IHZjbyByYW5nZSAqLwo+ICsJCQlpZiAoKG4gPCBuX21pbikgfHwgKG4gPiBuX21heCkpCj4gKwkJ
+CQljb250aW51ZTsKPiArCQkJLyogQ2hlY2sgaWYgbmV3IGRlbHRhIGlzIGJldHRlciAmIHNhdmVz
+IHBhcmFtZXRlcnMgKi8KPiArCQkJZGVsdGEgPSBkc2lfcGxsX2dldF9jbGtvdXRfa2h6KGNsa2lu
+X2toeiwgaSwgbiwgbykgLQo+ICsJCQkJY2xrb3V0X2toejsKPiArCQkJaWYgKGRlbHRhIDwgMCkK
+PiArCQkJCWRlbHRhID0gLWRlbHRhOwo+ICsJCQlpZiAoZGVsdGEgPCBiZXN0X2RlbHRhKSB7Cj4g
+KwkJCQkqaWRmID0gaTsKPiArCQkJCSpuZGl2ID0gbjsKPiArCQkJCSpvZGYgPSBvOwo+ICsJCQkJ
+YmVzdF9kZWx0YSA9IGRlbHRhOwo+ICsJCQl9Cj4gKwkJCS8qIGZhc3QgcmV0dXJuIGluIGNhc2Ug
+b2YgInBlcmZlY3QgcmVzdWx0IiAqLwo+ICsJCQlpZiAoIWRlbHRhKQo+ICsJCQkJcmV0dXJuIDA7
+Cj4gKwkJfQo+ICsJfQo+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGR3
+X21pcGlfZHNpX3BoeV9pbml0KHZvaWQgKnByaXZfZGF0YSkKPiArewo+ICsJc3RydWN0IGR3X21p
+cGlfZHNpX3N0bSAqZHNpID0gcHJpdl9kYXRhOwo+ICsJdTMyIHZhbDsKPiArCWludCByZXQ7Cj4g
+Kwo+ICsJLyogRW5hYmxlIHRoZSByZWd1bGF0b3IgKi8KPiArCWRzaV9zZXQoZHNpLCBEU0lfV1JQ
+Q1IsIFdSUENSX1JFR0VOIHwgV1JQQ1JfQkdSRU4pOwo+ICsJcmV0ID0gcmVhZGxfcG9sbF90aW1l
+b3V0KGRzaS0+YmFzZSArIERTSV9XSVNSLCB2YWwsIHZhbCAmIFdJU1JfUlJTLAo+ICsJCQkJIFNM
+RUVQX1VTLCBUSU1FT1VUX1VTKTsKPiArCWlmIChyZXQpCj4gKwkJRFJNX0RFQlVHX0RSSVZFUigi
+IVRJTUVPVVQhIHdhaXRpbmcgUkVHVSwgbGV0J3MgY29udGludWVcbiIpOwo+ICsKPiArCS8qIEVu
+YWJsZSB0aGUgRFNJIFBMTCAmIHdhaXQgZm9yIGl0cyBsb2NrICovCj4gKwlkc2lfc2V0KGRzaSwg
+RFNJX1dSUENSLCBXUlBDUl9QTExFTik7Cj4gKwlyZXQgPSByZWFkbF9wb2xsX3RpbWVvdXQoZHNp
+LT5iYXNlICsgRFNJX1dJU1IsIHZhbCwgdmFsICYgV0lTUl9QTExMUywKPiArCQkJCSBTTEVFUF9V
+UywgVElNRU9VVF9VUyk7Cj4gKwlpZiAocmV0KQo+ICsJCURSTV9ERUJVR19EUklWRVIoIiFUSU1F
+T1VUISB3YWl0aW5nIFBMTCwgbGV0J3MgY29udGludWVcbiIpOwo+ICsKPiArCS8qIEVuYWJsZSB0
+aGUgRFNJIHdyYXBwZXIgKi8KPiArCWRzaV9zZXQoZHNpLCBEU0lfV0NSLCBXQ1JfRFNJRU4pOwo+
+ICsKPiArCXJldHVybiAwOwo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50Cj4gK2R3X21pcGlfZHNpX2dl
+dF9sYW5lX21icHModm9pZCAqcHJpdl9kYXRhLCBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9k
+ZSwKPiArCQkJICB1bnNpZ25lZCBsb25nIG1vZGVfZmxhZ3MsIHUzMiBsYW5lcywgdTMyIGZvcm1h
+dCwKPiArCQkJICB1bnNpZ25lZCBpbnQgKmxhbmVfbWJwcykKPiArewo+ICsJc3RydWN0IGR3X21p
+cGlfZHNpX3N0bSAqZHNpID0gcHJpdl9kYXRhOwo+ICsJdW5zaWduZWQgaW50IGlkZiwgbmRpdiwg
+b2RmLCBwbGxfaW5fa2h6LCBwbGxfb3V0X2toejsKPiArCWludCByZXQsIGJwcDsKPiArCXUzMiB2
+YWw7Cj4gKwo+ICsJcGxsX2luX2toeiA9ICh1bnNpZ25lZCBpbnQpKGNsa19nZXRfcmF0ZShkc2kt
+PnBsbHJlZl9jbGspIC8gMTAwMCk7Cj4gKwo+ICsJLyogQ29tcHV0ZSByZXF1ZXN0ZWQgcGxsIG91
+dCAqLwo+ICsJYnBwID0gbWlwaV9kc2lfcGl4ZWxfZm9ybWF0X3RvX2JwcChmb3JtYXQpOwo+ICsJ
+cGxsX291dF9raHogPSBtb2RlLT5jbG9jayAqIGJwcCAvIGxhbmVzOwo+ICsJLyogQWRkIDIwJSB0
+byBwbGwgb3V0IHRvIGJlIGhpZ2hlciB0aGFuIHBpeGVsIGJ3IChidXJzdCBtb2RlIG9ubHkpICov
+Cj4gKwlwbGxfb3V0X2toeiA9IChwbGxfb3V0X2toeiAqIDEyKSAvIDEwOwo+ICsJaWYgKHBsbF9v
+dXRfa2h6ID4gTEFORV9NQVhfS0JQUykgewo+ICsJCXBsbF9vdXRfa2h6ID0gTEFORV9NQVhfS0JQ
+UzsKPiArCQlEUk1fREVCVUdfRFJJVkVSKCJXYXJuaW5nIG1heCBwaHkgbWJwcyBpcyB1c2VkXG4i
+KTsKPiArCX0KPiArCWlmIChwbGxfb3V0X2toeiA8IExBTkVfTUlOX0tCUFMpIHsKPiArCQlwbGxf
+b3V0X2toeiA9IExBTkVfTUlOX0tCUFM7Cj4gKwkJRFJNX0RFQlVHX0RSSVZFUigiV2FybmluZyBt
+aW4gcGh5IG1icHMgaXMgdXNlZFxuIik7Cj4gKwl9Cj4gKwo+ICsJLyogQ29tcHV0ZSBiZXN0IHBs
+bCBwYXJhbWV0ZXJzICovCj4gKwlyZXQgPSBkc2lfcGxsX2dldF9wYXJhbXMocGxsX2luX2toeiwg
+cGxsX291dF9raHosICZpZGYsICZuZGl2LCAmb2RmKTsKPiArCWlmIChyZXQpCj4gKwkJRFJNX0RF
+QlVHX0RSSVZFUigiV2FybmluZyBkc2lfcGxsX2dldF9wYXJhbXMoKTogYmFkIHBhcmFtc1xuIik7
+Cj4gKwo+ICsJLyogR2V0IHRoZSBhZGp1c3RlZCBwbGwgb3V0IHZhbHVlICovCj4gKwlwbGxfb3V0
+X2toeiA9IGRzaV9wbGxfZ2V0X2Nsa291dF9raHoocGxsX2luX2toeiwgaWRmLCBuZGl2LCBvZGYp
+Owo+ICsKPiArCS8qIFNldCB0aGUgUExMIGRpdmlzaW9uIGZhY3RvcnMgKi8KPiArCWRzaV91cGRh
+dGVfYml0cyhkc2ksIERTSV9XUlBDUiwJV1JQQ1JfTkRJViB8IFdSUENSX0lERiB8IFdSUENSX09E
+RiwKPiArCQkJKG5kaXYgPDwgMikgfCAoaWRmIDw8IDExKSB8ICgoZmZzKG9kZikgLSAxKSA8PCAx
+NikpOwo+ICsKPiArCS8qIENvbXB1dGUgdWl4NCAmIHNldCB0aGUgYml0IHBlcmlvZCBpbiBoaWdo
+LXNwZWVkIG1vZGUgKi8KPiArCXZhbCA9IDQwMDAwMDAgLyBwbGxfb3V0X2toejsKPiArCWRzaV91
+cGRhdGVfYml0cyhkc2ksIERTSV9XUENSMCwgV1BDUjBfVUlYNCwgdmFsKTsKPiArCj4gKwkvKiBT
+ZWxlY3QgdmlkZW8gbW9kZSBieSByZXNldHRpbmcgRFNJTSBiaXQgKi8KPiArCWRzaV9jbGVhcihk
+c2ksIERTSV9XQ0ZHUiwgV0NGR1JfRFNJTSk7Cj4gKwo+ICsJLyogU2VsZWN0IHRoZSBjb2xvciBj
+b2RpbmcgKi8KPiArCWRzaV91cGRhdGVfYml0cyhkc2ksIERTSV9XQ0ZHUiwgV0NGR1JfQ09MTVVY
+LAo+ICsJCQlkc2lfY29sb3JfZnJvbV9taXBpKGZvcm1hdCkgPDwgMSk7Cj4gKwo+ICsJKmxhbmVf
+bWJwcyA9IHBsbF9vdXRfa2h6IC8gMTAwMDsKPiArCj4gKwlEUk1fREVCVUdfRFJJVkVSKCJwbGxf
+aW4gJXVrSHogcGxsX291dCAldWtIeiBsYW5lX21icHMgJXVNSHpcbiIsCj4gKwkJCSBwbGxfaW5f
+a2h6LCBwbGxfb3V0X2toeiwgKmxhbmVfbWJwcyk7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiAr
+Cj4gK3N0YXRpYyBzdHJ1Y3QgZHdfbWlwaV9kc2lfcGh5X29wcyBkd19taXBpX2RzaV9zdG1fcGh5
+X29wcyA9IHsKPiArCS5pbml0ID0gZHdfbWlwaV9kc2lfcGh5X2luaXQsCj4gKwkuZ2V0X2xhbmVf
+bWJwcyA9IGR3X21pcGlfZHNpX2dldF9sYW5lX21icHMsCj4gK307Cj4gKwo+ICtzdGF0aWMgc3Ry
+dWN0IGR3X21pcGlfZHNpX3BsYXRfZGF0YSBkd19taXBpX2RzaV9zdG1fcGxhdF9kYXRhID0gewo+
+ICsJLm1heF9kYXRhX2xhbmVzID0gMiwKPiArCS5waHlfb3BzID0gJmR3X21pcGlfZHNpX3N0bV9w
+aHlfb3BzLAo+ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZHdf
+bWlwaV9kc2lfc3RtX2R0X2lkc1tdID0gewo+ICsJewo+ICsJIC5jb21wYXRpYmxlID0gInN0LHN0
+bTMyLWRzaSIsCj4gKwkgLmRhdGEgPSAmZHdfbWlwaV9kc2lfc3RtX3BsYXRfZGF0YSwKCkFsaWdu
+ZW1lbnQgaXMgd2VpcmQgaGVyZSAhCgoKPiArCX0sCj4gKwl7IC8qIHNlbnRpbmVsICovIH0KPiAr
+fTsKPiArTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgZHdfbWlwaV9kc2lfc3RtX2R0X2lkcyk7Cj4g
+Kwo+ICtzdGF0aWMgaW50IGR3X21pcGlfZHNpX3N0bV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQo+ICt7Cj4gKwlzdHJ1Y3QgZGV2aWNlICpkZXYgPSAmcGRldi0+ZGV2Owo+ICsJ
+c3RydWN0IGR3X21pcGlfZHNpX3N0bSAqZHNpOwo+ICsJc3RydWN0IHJlc291cmNlICpyZXM7Cj4g
+KwlpbnQgcmV0Owo+ICsKPiArCWRzaSA9IGRldm1fa3phbGxvYyhkZXYsIHNpemVvZigqZHNpKSwg
+R0ZQX0tFUk5FTCk7Cj4gKwlpZiAoIWRzaSkKPiArCQlyZXR1cm4gLUVOT01FTTsKPiArCj4gKwly
+ZXMgPSBwbGF0Zm9ybV9nZXRfcmVzb3VyY2UocGRldiwgSU9SRVNPVVJDRV9NRU0sIDApOwo+ICsJ
+aWYgKCFyZXMpIHsKPiArCQlEUk1fRVJST1IoIlVuYWJsZSB0byBnZXQgcmVzb3VyY2VcbiIpOwo+
+ICsJCXJldHVybiAtRU5PREVWOwo+ICsJfQo+ICsKPiArCWRzaS0+YmFzZSA9IGRldm1faW9yZW1h
+cF9yZXNvdXJjZShkZXYsIHJlcyk7Cj4gKwlpZiAoSVNfRVJSKGRzaS0+YmFzZSkpIHsKPiArCQlE
+Uk1fRVJST1IoIlVuYWJsZSB0byBnZXQgZHNpIHJlZ2lzdGVyc1xuIik7Cj4gKwkJcmV0dXJuIFBU
+Ul9FUlIoZHNpLT5iYXNlKTsKPiArCX0KPiArCj4gKwlkc2ktPnBsbHJlZl9jbGsgPSBkZXZtX2Ns
+a19nZXQoZGV2LCAicmVmIik7Cj4gKwlpZiAoSVNfRVJSKGRzaS0+cGxscmVmX2NsaykpIHsKPiAr
+CQlyZXQgPSBQVFJfRVJSKGRzaS0+cGxscmVmX2Nsayk7Cj4gKwkJZGV2X2VycihkZXYsICJVbmFi
+bGUgdG8gZ2V0IHBsbCByZWZlcmVuY2UgY2xvY2s6ICVkXG4iLCByZXQpOwo+ICsJCXJldHVybiBy
+ZXQ7Cj4gKwl9Cj4gKwo+ICsJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGRzaS0+cGxscmVmX2Ns
+ayk7Cj4gKwlpZiAocmV0KSB7Cj4gKwkJZGV2X2VycihkZXYsICIlczogRmFpbGVkIHRvIGVuYWJs
+ZSBwbGxyZWZfY2xrXG4iLCBfX2Z1bmNfXyk7Cj4gKwkJcmV0dXJuIHJldDsKPiArCX0KPiArCj4g
+Kwlkd19taXBpX2RzaV9zdG1fcGxhdF9kYXRhLmJhc2UgPSBkc2ktPmJhc2U7Cj4gKwlkd19taXBp
+X2RzaV9zdG1fcGxhdF9kYXRhLnByaXZfZGF0YSA9IGRzaTsKPiArCj4gKwlyZXQgPSBkd19taXBp
+X2RzaV9wcm9iZShwZGV2LCAmZHdfbWlwaV9kc2lfc3RtX3BsYXRfZGF0YSk7Cj4gKwlpZiAocmV0
+KSB7Cj4gKwkJRFJNX0VSUk9SKCJGYWlsZWQgdG8gaW5pdGlhbGl6ZSBtaXBpIGRzaSBob3N0XG4i
+KTsKPiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZHNpLT5wbGxyZWZfY2xrKTsKPiArCX0KPiAr
+Cj4gKwlyZXR1cm4gcmV0Owo+ICt9Cj4gKwo+ICtzdGF0aWMgaW50IGR3X21pcGlfZHNpX3N0bV9y
+ZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiArewo+ICsJc3RydWN0IGR3X21p
+cGlfZHNpX3N0bSAqZHNpID0gZHdfbWlwaV9kc2lfc3RtX3BsYXRfZGF0YS5wcml2X2RhdGE7Cj4g
+Kwo+ICsJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKGRzaS0+cGxscmVmX2Nsayk7Cj4gKwlkd19taXBp
+X2RzaV9yZW1vdmUocGRldik7Cj4gKwo+ICsJcmV0dXJuIDA7Cj4gK30KPiArCj4gK3N0YXRpYyBz
+dHJ1Y3QgcGxhdGZvcm1fZHJpdmVyIGR3X21pcGlfZHNpX3N0bV9kcml2ZXIgPSB7Cj4gKwkucHJv
+YmUJCT0gZHdfbWlwaV9kc2lfc3RtX3Byb2JlLAo+ICsJLnJlbW92ZQkJPSBkd19taXBpX2RzaV9z
+dG1fcmVtb3ZlLAo+ICsJLmRyaXZlcgkJPSB7Cj4gKwkJLm9mX21hdGNoX3RhYmxlID0gZHdfbWlw
+aV9kc2lfc3RtX2R0X2lkcywKPiArCQkubmFtZQk9ICJkd19taXBpX2RzaS1zdG0iLAo+ICsJfSwK
+PiArfTsKPiArCj4gK21vZHVsZV9wbGF0Zm9ybV9kcml2ZXIoZHdfbWlwaV9kc2lfc3RtX2RyaXZl
+cik7Cj4gKwo+ICtNT0RVTEVfQVVUSE9SKCJQaGlsaXBwZSBDb3JudSA8cGhpbGlwcGUuY29ybnVA
+c3QuY29tPiIpOwo+ICtNT0RVTEVfQVVUSE9SKCJZYW5uaWNrIEZlcnRyZSA8eWFubmljay5mZXJ0
+cmVAc3QuY29tPiIpOwo+ICtNT0RVTEVfREVTQ1JJUFRJT04oIlNUTWljcm9lbGVjdHJvbmljcyBE
+VyBNSVBJIERTSSBob3N0IGNvbnRyb2xsZXIgZHJpdmVyIik7Cj4gK01PRFVMRV9MSUNFTlNFKCJH
+UEwgdjIiKTsKPiAKCkEgcGFydCBmcm9tIHRoaXMgc21hbGwgbml0LApSZXZpZXdlZC1ieTogTmVp
+bCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmkt
+ZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+L21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
