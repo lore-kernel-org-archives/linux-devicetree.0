@@ -1,225 +1,136 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v8 16/24] drivers/fsi: Add tracepoints for low-level operations
-Date: Tue,  6 Jun 2017 16:08:51 -0500
-Message-ID: <20170606210859.80431-17-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v8 10/24] drivers/fsi: Add device read/write/peek API
+Date: Tue,  6 Jun 2017 16:08:45 -0500
+Message-ID: <20170606210859.80431-11-cbostic@linux.vnet.ibm.com>
 References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, "Edward A . James" <eajames@us.ibm.com>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-Trace low level read and write FSI bus operations.
+This change introduces the fsi device API: simple read, write and peek
+accessors for the devices' address spaces.
 
+Includes contributions from Christopher Bostic
+<cbostic@linux.vnet.ibm.com> and Edward A. James <eajames@us.ibm.com>.
+
+Signed-off-by: Edward A. James <eajames@us.ibm.com>
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
 Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
-v8 - type cast to 'int' to clean up build warnings
----
- drivers/fsi/fsi-core.c     |  27 +++++++---
- include/trace/events/fsi.h | 127 +++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 148 insertions(+), 6 deletions(-)
- create mode 100644 include/trace/events/fsi.h
+ drivers/fsi/fsi-core.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/fsi.h    |  7 ++++++-
+ 2 files changed, 55 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 3681365..db54561 100644
+index eac0bc4..d7a6e76 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -23,6 +23,9 @@
+@@ -34,6 +34,8 @@
+ #define FSI_SLAVE_CONF_CRC_MASK		GENMASK(3, 0)
+ #define FSI_SLAVE_CONF_DATA_BITS	28
  
- #include "fsi-master.h"
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsi.h>
++#define FSI_PEEK_BASE			0x410
 +
- #define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
- #define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
- #define FSI_SLAVE_CONF_SLOTS_SHIFT	16
-@@ -542,11 +545,16 @@ static int fsi_master_read(struct fsi_master *master, int link,
- {
- 	int rc;
+ static const int engine_page_size = 0x400;
  
-+	trace_fsi_master_read(master, link, slave_id, addr, size);
-+
- 	rc = fsi_check_access(addr, size);
--	if (rc)
--		return rc;
-+	if (!rc)
-+		rc = master->read(master, link, slave_id, addr, val, size);
-+
-+	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
-+			false, val, rc);
- 
--	return master->read(master, link, slave_id, addr, val, size);
-+	return rc;
- }
- 
+ #define FSI_SLAVE_BASE			0x800
+@@ -75,8 +77,54 @@ static int fsi_master_read(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, void *val, size_t size);
  static int fsi_master_write(struct fsi_master *master, int link,
-@@ -554,11 +562,16 @@ static int fsi_master_write(struct fsi_master *master, int link,
+ 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
++static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
++		void *val, size_t size);
++static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
++		const void *val, size_t size);
++
++/*
++ * fsi_device_read() / fsi_device_write() / fsi_device_peek()
++ *
++ * FSI endpoint-device support
++ *
++ * Read / write / peek accessors for a client
++ *
++ * Parameters:
++ * dev:  Structure passed to FSI client device drivers on probe().
++ * addr: FSI address of given device.  Client should pass in its base address
++ *       plus desired offset to access its register space.
++ * val:  For read/peek this is the value read at the specified address. For
++ *       write this is value to write to the specified address.
++ *       The data in val must be FSI bus endian (big endian).
++ * size: Size in bytes of the operation.  Sizes supported are 1, 2 and 4 bytes.
++ *       Addresses must be aligned on size boundaries or an error will result.
++ */
++int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
++		size_t size)
++{
++	if (addr > dev->size || size > dev->size || addr > dev->size - size)
++		return -EINVAL;
+ 
+-/* FSI endpoint-device support */
++	return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
++}
++EXPORT_SYMBOL_GPL(fsi_device_read);
++
++int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
++		size_t size)
++{
++	if (addr > dev->size || size > dev->size || addr > dev->size - size)
++		return -EINVAL;
++
++	return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
++}
++EXPORT_SYMBOL_GPL(fsi_device_write);
++
++int fsi_device_peek(struct fsi_device *dev, void *val)
++{
++	uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
++
++	return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
++}
+ 
+ static void fsi_device_release(struct device *_device)
  {
- 	int rc;
+diff --git a/include/linux/fsi.h b/include/linux/fsi.h
+index efa55ba..66bce48 100644
+--- a/include/linux/fsi.h
++++ b/include/linux/fsi.h
+@@ -27,6 +27,12 @@ struct fsi_device {
+ 	uint32_t		size;
+ };
  
-+	trace_fsi_master_write(master, link, slave_id, addr, size, val);
++extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
++		void *val, size_t size);
++extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
++		const void *val, size_t size);
++extern int fsi_device_peek(struct fsi_device *dev, void *val);
 +
- 	rc = fsi_check_access(addr, size);
--	if (rc)
--		return rc;
-+	if (!rc)
-+		rc = master->write(master, link, slave_id, addr, val, size);
+ struct fsi_device_id {
+ 	u8	engine_type;
+ 	u8	version;
+@@ -40,7 +46,6 @@ struct fsi_device_id {
+ #define FSI_DEVICE_VERSIONED(t, v) \
+ 	.engine_type = (t), .version = (v),
  
--	return master->write(master, link, slave_id, addr, val, size);
-+	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
-+			true, val, rc);
-+
-+	return rc;
- }
- 
- static int fsi_master_link_enable(struct fsi_master *master, int link)
-@@ -574,6 +587,8 @@ static int fsi_master_link_enable(struct fsi_master *master, int link)
-  */
- static int fsi_master_break(struct fsi_master *master, int link)
- {
-+	trace_fsi_master_break(master, link);
-+
- 	if (master->send_break)
- 		return master->send_break(master, link);
- 
-diff --git a/include/trace/events/fsi.h b/include/trace/events/fsi.h
-new file mode 100644
-index 0000000..697ee66
---- /dev/null
-+++ b/include/trace/events/fsi.h
-@@ -0,0 +1,127 @@
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM fsi
-+
-+#if !defined(_TRACE_FSI_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_FSI_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(fsi_master_read,
-+	TP_PROTO(const struct fsi_master *master, int link, int id,
-+			uint32_t addr, size_t size),
-+	TP_ARGS(master, link, id, addr, size),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+		__field(int,	id)
-+		__field(__u32,	addr)
-+		__field(size_t,	size)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+		__entry->id = id;
-+		__entry->addr = addr;
-+		__entry->size = size;
-+	),
-+	TP_printk("fsi%d:%02d:%02d %08x[%zd]",
-+		__entry->master_idx,
-+		__entry->link,
-+		__entry->id,
-+		__entry->addr,
-+		__entry->size
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_write,
-+	TP_PROTO(const struct fsi_master *master, int link, int id,
-+			uint32_t addr, size_t size, const void *data),
-+	TP_ARGS(master, link, id, addr, size, data),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+		__field(int,	id)
-+		__field(__u32,	addr)
-+		__field(size_t,	size)
-+		__field(__u32,	data)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+		__entry->id = id;
-+		__entry->addr = addr;
-+		__entry->size = size;
-+		__entry->data = 0;
-+		memcpy(&__entry->data, data, size);
-+	),
-+	TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
-+		__entry->master_idx,
-+		__entry->link,
-+		__entry->id,
-+		__entry->addr,
-+		__entry->size,
-+		(int)__entry->size, &__entry->data
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_rw_result,
-+	TP_PROTO(const struct fsi_master *master, int link, int id,
-+			uint32_t addr, size_t size,
-+			bool write, const void *data, int ret),
-+	TP_ARGS(master, link, id, addr, size, write, data, ret),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+		__field(int,	id)
-+		__field(__u32,	addr)
-+		__field(size_t,	size)
-+		__field(bool,	write)
-+		__field(__u32,	data)
-+		__field(int,	ret)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+		__entry->id = id;
-+		__entry->addr = addr;
-+		__entry->size = size;
-+		__entry->write = write;
-+		__entry->data = 0;
-+		__entry->ret = ret;
-+		if (__entry->write || !__entry->ret)
-+			memcpy(&__entry->data, data, size);
-+	),
-+	TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
-+		__entry->master_idx,
-+		__entry->link,
-+		__entry->id,
-+		__entry->addr,
-+		__entry->size,
-+		__entry->write ? "<=" : "=>",
-+		(int)__entry->size, &__entry->data,
-+		__entry->ret
-+	)
-+);
-+
-+TRACE_EVENT(fsi_master_break,
-+	TP_PROTO(const struct fsi_master *master, int link),
-+	TP_ARGS(master, link),
-+	TP_STRUCT__entry(
-+		__field(int,	master_idx)
-+		__field(int,	link)
-+	),
-+	TP_fast_assign(
-+		__entry->master_idx = master->idx;
-+		__entry->link = link;
-+	),
-+	TP_printk("fsi%d:%d",
-+		__entry->master_idx,
-+		__entry->link
-+	)
-+);
-+
-+
-+#endif /* _TRACE_FSI_H */
-+
-+#include <trace/define_trace.h>
+-
+ struct fsi_driver {
+ 	struct device_driver		drv;
+ 	const struct fsi_device_id	*id_table;
 -- 
 1.8.2.2
