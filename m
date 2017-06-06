@@ -1,82 +1,111 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v6 00/11] Broadcom Stingray SOC Initial Support
-Date: Mon, 5 Jun 2017 19:08:03 -0700
-Message-ID: <c26e95e1-4bfa-0d24-33cc-8d5ae3102864@gmail.com>
-References: <1496385275-6899-1-git-send-email-anup.patel@broadcom.com>
- <4c15213f-4ac6-a0a7-f2b8-cde2b4cee891@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 2/4] dt-bindings: thermal: add binding documentation for
+ UniPhier thermal monitor
+Date: Tue, 6 Jun 2017 11:46:26 +0900
+Message-ID: <CAK7LNAS-1+p7u4RMuF5FVNyuSHvX+SfAYk4+YbQSdEaAVma=zg@mail.gmail.com>
+References: <1496049345-14649-1-git-send-email-hayashi.kunihiko@socionext.com> <1496049345-14649-3-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <4c15213f-4ac6-a0a7-f2b8-cde2b4cee891@gmail.com>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Anup Patel <anup.patel@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Oza Pawandeep <oza.oza@broadcom.com>, Srinath Mannam <srinath.mannam@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>, Sandeep Tripathy <sandeep.tripathy@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496049345-14649-3-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>, linux-pm@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+2017-05-29 18:15 GMT+09:00 Kunihiko Hayashi <hayashi.kunihiko@socionext.com>:
+> Add devicetree binding documentation for thermal monitor implemented on
+> Socionext UniPhier SoCs.
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  .../bindings/thermal/uniphier-thermal.txt          | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+>
+> diff --git a/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+> new file mode 100644
+> index 0000000..72834e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/thermal/uniphier-thermal.txt
+> @@ -0,0 +1,54 @@
+> +* UniPhier Thermal bindings
+> +
+> +This describes the devicetree bindings for thermal monitor supported by
+> +PVT(Process, Voltage and Temperature) monitoring unit implemented on Socionext
+> +UniPhier SoCs.
+
+This paragraph implies this might be a HWMON driver if more features
+are implemented,
+but I assume you use only the Temperature part for a thermal driver at
+the moment.
+(I do not know if other sensors are useful or not, so I do not mind it much.)
 
 
-On 06/05/2017 09:51 AM, Florian Fainelli wrote:
-> On 06/01/2017 11:34 PM, Anup Patel wrote:
->> This patchset adds initial support of Broadcom Stingray SOC
->> by reusing existing Broadcom iProc device drivers.
->>
->> Most of the patches in this patchset are DT patches except
->> the Stingray clock tree support which just one patch.
->>
->> This patchset is based on Linux-4.12-rc3 and it is also available
->> at stingray-v6 branch of https://github.com/Broadcom/arm64-linux.git
->>
->> Changes since v5:
->>  - Rebased patches for Linux-4.12-rc3
->>  - Update DT node names to match register offset
->>
->> Changes since v4:
->>  - Reduce number of include headers in Stingray clk driver
->>
->> Changes since v3:
->>  - Rebased patches for Linux-4.12-rc1
->>  - Updated PATCH3 to have all clocks except genpll3 to be
->>    registered via platform driver probe
->>
->> Changes since v2:
->>  - Remove default bootargs from chosen DT node
->>  - Remove "linux" prefix from stdout DT attribute of chosen DT node
->>  - Remove use of GIC_CPU_MASK_xxx() for PPIs
->>
->> Changes since v1:
->>  - Rebased patches for Linux-4.12-rc1
->>  - Removed unwanted /memreserve/ from bcm958742-base.dtsi
->>  - Use ranges DT property to clear view of memory-layout
->>  - Make bcm-sr.h part of clock DT bindings patch
->>
->> Anup Patel (3):
->>   dt-bindings: bcm: Add Broadcom Stingray bindings document
->>   arm64: dts: Initial DTS files for Broadcom Stingray SOC
->>   arm64: dts: Add PL022, PL330 and SP805 DT nodes for Stingray
->>
->> Oza Pawandeep (1):
->>   arm64: dts: Add I2C DT nodes for Stingray SoC
->>
->> Pramod Kumar (3):
->>   arm64: dts: Add NAND DT nodes for Stingray SOC
->>   arm64: dts: Add pinctrl DT nodes for Stingray SOC
->>   arm64: dts: Add GPIO DT nodes for Stingray SOC
->>
->> Sandeep Tripathy (3):
->>   dt-bindings: clk: Extend binding doc for Stingray SOC
->>   clk: bcm: Add clocks for Stingray SOC
->>   arm64: dts: Add clock DT nodes for Stingray SOC
->>
->> Srinath Mannam (1):
->>   arm64: dts: Add PWM and SDHCI DT nodes for Stingray SOC
-> 
-> Applied patches 1, 4-11 to devicetree-arm64/next, thanks!
 
-Also took patch 2, to make sure everything builds properly, Stephen, let
-me know if you want me to take patch #3 as well.
+> +Required properties:
+> +- compatible :
+> +  - "socionext,uniphier-pxs2-thermal" : For UniPhier PXs2 SoC
+> +  - "socionext,uniphier-ld20-thermal" : For UniPhier LD20 SoC
+> +- reg : Offset address of the thermal registers from sysctrl
 
-Thanks!
+
+This "reg" does not exist in the example.
+
+Your driver code uses regmap for register access.
+
+
+
+
+> +- interrupts : IRQ for the temperature alarm
+> +- #thermal-sensor-cells : Should be 0. See ./thermal.txt for details.
+> +
+> +Optional properties:
+> +- socionext,tmod-calibration: A pair of calibrated values referred from PVT,
+> +                              in case that the values aren't set on SoC,
+> +                              like a reference board.
+> +
+> +Example:
+> +
+> +       sysctrl@61840000 {
+> +               compatible = "socionext,uniphier-ld20-sysctrl",
+> +                            "simple-mfd", "syscon";
+> +               reg = <0x61840000 0x10000>;
+> +               ...
+> +               pvtctl: pvtctl {
+> +                       compatible = "socionext,uniphier-ld20-thermal";
+> +                       interrupts = <0 3 1>;
+> +                       #thermal-sensor-cells = <0>;
+> +               };
+> +               ...
+> +       };
+> +
+> +       thermal-zones {
+> +               cpu_thermal {
+> +                       polling-delay-passive = <250>;  /* 250ms */
+> +                       polling-delay = <1000>;         /* 1000ms */
+> +                       thermal-sensors = <&pvtctl>;
+> +
+> +                       trips {
+> +                               cpu_crit: cpu_crit {
+> +                                       temperature = <95000>;  /* 95C */
+> +                                       hysteresis = <2000>;
+> +                                       type = "critical";
+> +                               };
+> +                               cpu_alert: cpu_alert {
+> +                                       temperature = <85000>;  /* 85C */
+> +                                       hysteresis = <2000>;
+> +                                       type = "passive";
+> +                               };
+> +                       };
+> +               };
+> +       };
+> --
+> 2.7.4
+>
+
+
+
 -- 
-Florian
+Best Regards
+Masahiro Yamada
