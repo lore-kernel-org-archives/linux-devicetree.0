@@ -1,139 +1,99 @@
-From: Mylene Josserand <mylene.josserand@free-electrons.com>
-Subject: Re: [PATCH 1/2] Input: Add driver for Cypress Generation 5
- touchscreen
-Date: Tue, 6 Jun 2017 16:32:46 +0200
-Message-ID: <0232a641-c741-1f95-9086-840b31f5d055@free-electrons.com>
-References: <20170529144538.29187-1-mylene.josserand@free-electrons.com>
- <20170529144538.29187-2-mylene.josserand@free-electrons.com>
- <20170530080225.rgvy5too2cy5m2zp@flea.lan>
- <c732ffe4-e0fb-16d7-c27a-d18a1995c360@free-electrons.com>
- <20170606120400.ekfbbaai7myscitu@flea.lan>
+From: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH RFC 2/5] ARM: dts: am335x-baltos: use IRQ_TYPE_* to
+ specify irq flags
+Date: Tue, 6 Jun 2017 16:33:23 +0200
+Message-ID: <CAGm1_kuKxVOetzMLdnVO+xQ7egX+paqOHLS+ckz6nFwKD5QBuQ@mail.gmail.com>
+References: <20170526180609.2699-1-uwe@kleine-koenig.org> <20170526180609.2699-2-uwe@kleine-koenig.org>
+ <20170531171932.GH3730@atomide.com> <CAGm1_ktJp+3t9ExuFJhKTmbM63yt-82PGP26KkEHGqK-tnfWRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20170606120400.ekfbbaai7myscitu@flea.lan>
-Sender: linux-input-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: dmitry.torokhov@gmail.com, fery@cypress.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGm1_ktJp+3t9ExuFJhKTmbM63yt-82PGP26KkEHGqK-tnfWRg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Maxime,
-
-On 06/06/2017 14:04, Maxime Ripard wrote:
-> On Tue, Jun 06, 2017 at 10:03:48AM +0200, Mylene Josserand wrote:
->>>> +static int cyttsp5_hid_output_bl_launch_app(struct cyttsp5 *ts)
->>>> +{
->>>> +	int rc, t;
->>>> +	u8 cmd[HID_OUTPUT_BL_LAUNCH_APP];
->>>> +	u16 crc;
->>>> +
->>>> +	mutex_lock(&ts->system_lock);
->>>> +	ts->hid_cmd_state = HID_OUTPUT_BL_LAUNCH_APP + 1;
->>>> +	mutex_unlock(&ts->system_lock);
->>>> +
->>>> +	cmd[0] = LOW_BYTE(HID_OUTPUT_BL_LAUNCH_APP_SIZE);
->>>> +	cmd[1] = HI_BYTE(HID_OUTPUT_BL_LAUNCH_APP_SIZE);
->>>> +	cmd[2] = HID_BL_OUTPUT_REPORT_ID;
->>>> +	cmd[3] = 0x0; /* Reserved */
->>>> +	cmd[4] = HID_OUTPUT_BL_SOP;
->>>> +	cmd[5] = HID_OUTPUT_BL_LAUNCH_APP;
->>>> +	cmd[6] = 0x0; /* Low bytes of data */
->>>> +	cmd[7] = 0x0; /* Hi bytes of data */
->>>> +	crc = cyttsp5_compute_crc(&cmd[4], 4);
->>>> +	cmd[8] = LOW_BYTE(crc);
->>>> +	cmd[9] = HI_BYTE(crc);
->>>> +	cmd[10] = HID_OUTPUT_BL_EOP;
->>>> +
->>>> +	rc = cyttsp5_write(ts, HID_OUTPUT_REG, cmd,
->>>> +			   HID_OUTPUT_BL_LAUNCH_APP_SIZE);
+On Wed, May 31, 2017 at 7:22 PM, Yegor Yefremov
+<yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> Hi Uwe, Tony,
+>
+> On Wed, May 31, 2017 at 7:19 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> * Uwe Kleine-K=C3=B6nig <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> [170526 11:09]:
+>>> According to the binding documentation and the source code the omap-gpi=
+o
+>>> controller takes IRQ_TYPE_* as its flags values, not GPIO_ACTIVE_*.
 >>>
->>> It seems like you'll send HID_OUTPUT_BL_LAUNCH_APP_SIZE twice here,
->>> once as setup in cyttsp5_write, and once in the buffer you want to
->>> send. Is that on purpose?
+>>> This patch uses the right variable type which yields the same result
+>>> when compiled. Note that this might be wrong and actually
+>>> IRQ_TYPE_LEVEL_LOW is intended by the dt author.
+>>>
+>>> Signed-off-by: Uwe Kleine-K=C3=B6nig <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+>>> ---
+>>> Hello,
+>>>
+>>> can somebody with the hardware or it's documentation please check which
+>>> flag is the right one?
 >>
->> I am not sure to see the second time it is sent. What do you mean by "as
->> setup in cyttsp5_write"? Anyway, the size is needed in the buffer of the
->> frame.
+>> I'll wait on this one until we have somebody test it.
 >
-> Nevermind, I confused the HID_OUTPUT_BL_LAUNCH_APP_SIZE with the
-> register, my bad.
->
+> I'll look at it this week.
 
-No problem.
+This is what works for me (at least it doesn't produce "irq 88: nobody
+cared (try booting with the "irqpoll" option)").
 
->>>> +	/* Call platform init function */
->>>> +	ts->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
->>>> +	if (IS_ERR(ts->reset_gpio)) {
->>>> +		rc = PTR_ERR(ts->reset_gpio);
->>>> +		dev_err(dev, "Failed to request reset gpio, error %d\n", rc);
->>>> +		return rc;
->>>> +	}
->>>> +
->>>> +	/* Need a delay to have device up */
->>>> +	msleep(20);
->>>
->>> In the case where the device has already been out of reset, this means
->>> that this alone is not sufficient to reset it and bring it out of
->>> reset, which also means that you do not have any guarantee on the
->>> current state of the device. I'm not sure how it would impact the
->>> proper operations though.
->>
->> Okay. A reset frame can be sent to perform a "software
->> reset". Should I add it on startup to be in a "known behavior"?
->
-> I guess you'd be safer just getting the GPIO with the low level by
-> default, and then changing to high. That way you know that you went
-> through a reset state, before bringing up the device.
+As for tca6416 it is working with all possible settings (from
+IRQ_TYPE_EDGE_RISING till IRQ_TYPE_LEVEL_LOW). "cat /proc/interrupts"
+always shows Level type:
 
-Okay, I will update the driver, thanks!
+47:          5  44e07000.gpio  20 Level     1-0020
 
->>>> +	ts->input = input_allocate_device();
->>>> +	if (!ts->input) {
->>>> +		dev_err(dev, "%s: Error, failed to allocate input device\n",
->>>> +			__func__);
->>>> +		rc = -ENODEV;
->>>> +		goto error_startup;
->>>> +	}
->>>
->>> In error_startup, you never uninitialize the device. Given your
->>> comment in cyttsp5_startup, this means that you might end up in a
->>> situation where your driver probes again with the device initialized
->>> and no longer in a bootloader mode, which is likely to cause some
->>> error.
->>>
->>> Putting the call to cyttsp5_startup later will make you less likely to
->>> fail (especially because of the DT parsing), and putting the device
->>> back into reset will probably address the issue once and for all.
->>
->> Hm, I am not sure to understand what you want to say, here.
->> Could you explain me more what you have in mind?
->
-> I meant to say that there was still an issue with the reset here, and
-> moving the DT parsing code further would ease the reset operation.
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
+b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
+index 1b215c4..944b095 100644
+--- a/arch/arm/boot/dts/am335x-baltos-ir3220.dts
++++ b/arch/arm/boot/dts/am335x-baltos-ir3220.dts
+@@ -85,7 +85,7 @@
+                gpio-controller;
+                #gpio-cells =3D <2>;
+                interrupt-parent =3D <&gpio0>;
+-               interrupts =3D <20 IRQ_TYPE_EDGE_RISING>;
++               interrupts =3D <20 IRQ_TYPE_LEVEL_LOW>;
+                pinctrl-names =3D "default";
+                pinctrl-0 =3D <&tca6416_pins>;
+        };
+diff --git a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
+b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
+index 832ead8..ae5692b 100644
+--- a/arch/arm/boot/dts/am335x-baltos-ir5221.dts
++++ b/arch/arm/boot/dts/am335x-baltos-ir5221.dts
+@@ -94,7 +94,7 @@
+                gpio-controller;
+                #gpio-cells =3D <2>;
+                interrupt-parent =3D <&gpio0>;
+-               interrupts =3D <20 IRQ_TYPE_EDGE_RISING>;
++               interrupts =3D <20 IRQ_TYPE_LEVEL_LOW>;
+                pinctrl-names =3D "default";
+                pinctrl-0 =3D <&tca6416_pins>;
+        };
+diff --git a/arch/arm/boot/dts/am335x-baltos.dtsi
+b/arch/arm/boot/dts/am335x-baltos.dtsi
+index e3234d4..863942d 100644
+--- a/arch/arm/boot/dts/am335x-baltos.dtsi
++++ b/arch/arm/boot/dts/am335x-baltos.dtsi
+@@ -249,7 +249,7 @@
+                gpio-controller;
+                #gpio-cells =3D <2>;
+                interrupt-parent =3D <&gpio1>;
+-               interrupts =3D <28 IRQ_TYPE_EDGE_RISING>;
++               interrupts =3D <28 IRQ_TYPE_EDGE_FALLING>;
+                pinctrl-names =3D "default";
+                pinctrl-0 =3D <&tps65910_pins>;
+        };
 
-Okay
-
->
->> Notice that the DT parsing uses a sysinfo's variable (si->num_btns)
->> which is retrieved in the startup function (thanks to
->> get_sysinfo). So, currently, it is not possible to move the startup
->> function after the DT parsing.
->
-> Can't that be made the other way around? You parse the number of
-> buttons in the DT, and check the consistency with the hardware?
-
-It could be possible but currently, it was designed to enable every 
-button from hardware's configuration and DT binding was just a way to 
-customize button's keycode (default is KEY_RESERVED).
-If I base it on the DT, it means that some buttons could never be 
-reported (such as deactivated) because they will not be present in the 
-DT. I am not sure if it is the behavior we want. What do you think?
-
-
-Best regards,
-
--- 
-Mylène Josserand, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Yegor
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
