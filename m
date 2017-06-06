@@ -1,85 +1,74 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 4/4] ARM: dts: iwg20d-q7: Add support for iWave G20D-Q7
- board based on RZ/G1M
-Date: Tue, 6 Jun 2017 09:42:00 +0200
-Message-ID: <CAMuHMdUWJL-oH7wWzjs5O=WrOshdL_AxijBJe66HrYBx7x8F9w@mail.gmail.com>
-References: <1496420523-23506-1-git-send-email-biju.das@bp.renesas.com> <1496420523-23506-5-git-send-email-biju.das@bp.renesas.com>
+From: Baolin Wang <baolin.wang@spreadtrum.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: sprd: Add Spreadtrum pin control driver
+Date: Tue, 6 Jun 2017 15:40:24 +0800
+Message-ID: <20170606074023.GB11506@spreadtrum.com>
+References: <ee404d190712f5826662c7b079caf75dba455145.1496664241.git.baolin.wang@spreadtrum.com>
+ <201706060334.Gr0opyQJ%fengguang.wu@intel.com>
+ <20170606072055.GA11506@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <1496420523-23506-5-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170606072055.GA11506@spreadtrum.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>, kbuild-all@01.org, linus.walleij@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Biju,
+Hi,
 
-On Fri, Jun 2, 2017 at 6:22 PM, Biju Das <biju.das@bp.renesas.com> wrote:
-> Add support for iWave RainboW-G20D-Qseven board based on RZ/G1M.
+O 二,  6月 06, 2017 at 03:20:55下午 +0800, Baolin Wang wrote:
+> Hi,
+> 
+> O 二,  6月 06, 2017 at 03:07:22上午 +0800, kbuild test robot wrote:
+> > Hi Baolin,
+> > 
+> > [auto build test WARNING on robh/for-next]
+> > [also build test WARNING on v4.12-rc4]
+> > [cannot apply to pinctrl/devel next-20170605]
+> > [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> > 
+> > url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/DT-pinctrl-Add-binding-documentation-for-Spreadtrum-pin-controller/20170605-222351
+> > base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> > config: i386-allmodconfig (attached as .config)
+> > compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
+> > reproduce:
+> >         # save the attached .config to linux build tree
+> >         make ARCH=i386 
+> > 
+> > All warnings (new ones prefixed by >>):
+> > 
+> >    drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_pinconf_set':
+> > >> drivers/pinctrl/sprd/pinctrl-sprd.c:484:4: warning: case value '129' not in enumerated type 'enum pin_config_param' [-Wswitch]
+> >        case SPRD_PIN_CONFIG_SLEEP_MODE:
+> >        ^~~~
+> >    drivers/pinctrl/sprd/pinctrl-sprd.c:497:4: warning: case value '131' not in enumerated type 'enum pin_config_param' [-Wswitch]
+> >        case SPRD_PIN_CONFIG_INPUT_SLEEP:
+> >        ^~~~
+> >    drivers/pinctrl/sprd/pinctrl-sprd.c:502:4: warning: case value '132' not in enumerated type 'enum pin_config_param' [-Wswitch]
+> >        case SPRD_PIN_CONFIG_OUTPUT_SLEEP:
+> >        ^~~~
+> >    drivers/pinctrl/sprd/pinctrl-sprd.c:534:4: warning: case value '130' not in enumerated type 'enum pin_config_param' [-Wswitch]
+> >        case SPRD_PIN_CONFIG_PULLUP:
+> >        ^~~~
+> >    drivers/pinctrl/sprd/pinctrl-sprd.c:543:4: warning: case value '133' not in enumerated type 'enum pin_config_param' [-Wswitch]
+> >        case SPRD_PIN_CONFIG_PULLUP_SLEEP:
+> >        ^~~~
+> >    drivers/pinctrl/sprd/pinctrl-sprd.c:548:4: warning: case value '134' not in enumerated type 'enum pin_config_param' [-Wswitch]
+> >        case SPRD_PIN_CONFIG_PULLDOWN_SLEEP:
+> >        ^~~~
+> 
+> From kernel doc for 'enum pin_config_param', user need use
+> PIN_CONFIG_END + 1 as the base offset if the user need to
+> pass in custom configuration to the pin controller. So I do
+> not think I need to fix this warning. Thanks.
 
-Thanks for your patch!
+Sorry for misunderstanding the warning, I've found the reason
+of the warning and I will fix it in next version. Thanks.
 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -711,6 +711,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
->         r8a73a4-ape6evm.dtb \
->         r8a7740-armadillo800eva.dtb \
->         r8a7743-sk-rzg1m.dtb \
-> +       r8a7743-iwg20d-q7.dtb \
-
-Please preserve sort order.
-
->         r8a7745-sk-rzg1e.dtb \
->         r8a7778-bockw.dtb \
->         r8a7779-marzen.dtb \
-
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
-> @@ -0,0 +1,25 @@
-> +/*
-> + * Device Tree Source for the iWave-RZG1M Qseven carrier board
-> + *
-> + * Copyright (C) 2017 Renesas Electronics Corp.
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + */
-> +
-> +/dts-v1/;
-> +#include "r8a7743-iwg20m.dtsi"
-> +
-> +/ {
-> +       model = "iWave Systems RainboW-G20D-Qseven board based on RZ/G1M";
-> +       compatible = "iwave,g20d", "renesas,r8a7743";
-
-With my comment on patch [3/4], this should become:
-
-compatible = "iwave,g20d", "iwave,g20m", "renesas,r8a7743";
-
-> +
-> +       aliases {
-> +               serial0 = &scif0;
-> +       };
-> +};
-> +
-> +&scif0 {
-> +       status = "okay";
-> +};
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+> 
+> > ---
+> > 0-DAY kernel test infrastructure                Open Source Technology Center
+> > https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> 
+> 
