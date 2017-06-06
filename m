@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v4 21/28] ARM: dts: s500: Set CPU enable-method
-Date: Tue,  6 Jun 2017 02:54:19 +0200
-Message-ID: <20170606005426.26446-22-afaerber@suse.de>
+Subject: [PATCH v4 22/28] dt-bindings: power: Add Owl SPS power domains
+Date: Tue,  6 Jun 2017 02:54:20 +0200
+Message-ID: <20170606005426.26446-23-afaerber@suse.de>
 References: <20170606005426.26446-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,52 +10,71 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170606005426.26446-1-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: mp-cs@actions-semi.com, Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, 96boards@ucrobotics.com, support@lemaker.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org
+Cc: mp-cs@actions-semi.com, Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, 96boards@ucrobotics.com, support@lemaker.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use a custom S500 enable-method for all CPUs.
+Define power domains for all non-reserved S500 power gates.
 
+Acked-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Andreas Färber <afaerber@suse.de>
 ---
  v3 -> v4: Unchanged
  
  v3: new
  
- arch/arm/boot/dts/s500.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/power/actions,owl-sps.txt     | 17 +++++++++++++++++
+ include/dt-bindings/power/s500-powergate.h            | 19 +++++++++++++++++++
+ 2 files changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/actions,owl-sps.txt
+ create mode 100644 include/dt-bindings/power/s500-powergate.h
 
-diff --git a/arch/arm/boot/dts/s500.dtsi b/arch/arm/boot/dts/s500.dtsi
-index fc9f71a4106a..6d6024027ee2 100644
---- a/arch/arm/boot/dts/s500.dtsi
-+++ b/arch/arm/boot/dts/s500.dtsi
-@@ -28,24 +28,28 @@
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0x0>;
-+			enable-method = "actions,s500-smp";
- 		};
- 
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0x1>;
-+			enable-method = "actions,s500-smp";
- 		};
- 
- 		cpu2: cpu@2 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0x2>;
-+			enable-method = "actions,s500-smp";
- 		};
- 
- 		cpu3: cpu@3 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a9";
- 			reg = <0x3>;
-+			enable-method = "actions,s500-smp";
- 		};
- 	};
- 
+diff --git a/Documentation/devicetree/bindings/power/actions,owl-sps.txt b/Documentation/devicetree/bindings/power/actions,owl-sps.txt
+new file mode 100644
+index 000000000000..c5eed06c771e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/actions,owl-sps.txt
+@@ -0,0 +1,17 @@
++Actions Semi Owl Smart Power System (SPS)
++
++Required properties:
++- compatible          :  "actions,s500-sps" for S500
++- reg                 :  Offset and length of the register set for the device.
++- #power-domain-cells :  Must be 1.
++                         See macros in:
++                          include/dt-bindings/power/s500-powergate.h for S500
++
++
++Example:
++
++		sps: power-controller@b01b0100 {
++			compatible = "actions,s500-sps";
++			reg = <0xb01b0100 0x100>;
++			#power-domain-cells = <1>;
++		};
+diff --git a/include/dt-bindings/power/s500-powergate.h b/include/dt-bindings/power/s500-powergate.h
+new file mode 100644
+index 000000000000..ccc4ac37bc42
+--- /dev/null
++++ b/include/dt-bindings/power/s500-powergate.h
+@@ -0,0 +1,19 @@
++/*
++ * Copyright (c) 2017 Andreas Färber
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++#ifndef DT_BINDINGS_POWER_S500_POWERGATE_H
++#define DT_BINDINGS_POWER_S500_POWERGATE_H
++
++#define S500_PD_VDE	0
++#define S500_PD_VCE_SI	1
++#define S500_PD_USB2_1	2
++#define S500_PD_CPU2	3
++#define S500_PD_CPU3	4
++#define S500_PD_DMA	5
++#define S500_PD_DS	6
++#define S500_PD_USB3	7
++#define S500_PD_USB2_0	8
++
++#endif
 -- 
 2.12.3
