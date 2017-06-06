@@ -1,150 +1,44 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] mfd: hi6421-pmic: add support for HiSilicon
- Hi6421v530
-Date: Tue, 6 Jun 2017 14:54:46 +0100
-Message-ID: <20170606135446.ceqow7bfdlhk4kuv@dell>
+Subject: Re: [PATCH v4 0/8] MFD: add driver for HiSilicon Hi6421v530 PMIC
+Date: Tue, 6 Jun 2017 14:58:29 +0100
+Message-ID: <20170606135829.dxi3mf7so4j5ml3q@dell>
 References: <20170606085143.13154-1-guodong.xu@linaro.org>
- <20170606085143.13154-5-guodong.xu@linaro.org>
+ <CAK8P3a25o6HOFw4MWrsnKjHJf4YuO+UvGk+=f30LREnFHM3QwQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170606085143.13154-5-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <CAK8P3a25o6HOFw4MWrsnKjHJf4YuO+UvGk+=f30LREnFHM3QwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 06 Jun 2017, Guodong Xu wrote:
+On Tue, 06 Jun 2017, Arnd Bergmann wrote:
 
-> Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
-> main SoC via memory-mapped I/O.
+> On Tue, Jun 6, 2017 at 10:51 AM, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > This patchset adds driver for HiSilicon Hi6421v530 PMIC.
+> >
+> > Mainline kernel already has driver support to a similar chip, Hi6421.
+> > Hi6421 and Hi6421v530 are both from the same vendor, HiSilicon, but
+> > they are at different revisions. They both use the same Memory-mapped
+> > I/O method to communicate with Main SoC. However, they differ quite a
+> > lot in their regulator designs. Eg. they have completely different LDO
+> > voltage points.
+> >
+> > Patch 1 and 2 are hi6421-pmic cleaning up.
+> > Patch 3 and 4 extends hi6421-pmic-core.c to support Hi6421v530 revision.
+> > Patch 5 add hi6421v530-regulator.c driver for LDO regulators.
+> > Patch 6 fixes an issue for hi6421 regulator, which is not related to v530
+> >          but it's found in this review.
+> > Patch 7 is dts change, it depends on and can be applied to hi3660/hikey960
+> >         patchset [1].
+> > Patch 8 enables the relevant config items.
 > 
-> Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon,
-> but at different revisions. They share the same memory-mapped I/O
-> design. They differ in integrated devices, such as regulator details,
-> LDO voltage points.
-> 
-> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/mfd/hi6421-pmic-core.c  | 68 ++++++++++++++++++++++++++++++-----------
->  include/linux/mfd/hi6421-pmic.h |  5 +++
->  2 files changed, 55 insertions(+), 18 deletions(-)
-> 
-> diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-core.c
-> index b1139d4..4568a43 100644
-> --- a/drivers/mfd/hi6421-pmic-core.c
-> +++ b/drivers/mfd/hi6421-pmic-core.c
+> Looks good to me,
 
-[...]
-
->  static int hi6421_pmic_probe(struct platform_device *pdev)
->  {
->  	struct hi6421_pmic *pmic;
->  	struct resource *res;
-> +	const struct of_device_id *id;
-> +	const struct mfd_cell *subdevs;
->  	void __iomem *base;
-> -	int ret;
-> +	int n_subdevs, ret;
-> +
-> +	id = of_match_device(of_hi6421_pmic_match, &pdev->dev);
-> +	if (!id)
-> +		return -EINVAL;
->  
->  	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
->  	if (!pmic)
-> @@ -57,18 +80,33 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
->  		return PTR_ERR(pmic->regmap);
->  	}
->  
-> -	/* set over-current protection debounce 8ms */
-> -	regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
-> +	platform_set_drvdata(pdev, pmic);
-> +
-> +	switch ((unsigned long)id->data) {
-
-Whilst this is not a blocker, it would be nicer to place this into a
-'type' variable, in order to clarify what data you are using.
-
-> +	case HI6421:
-> +		/* set over-current protection debounce 8ms */
-> +		regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
->  				(HI6421_OCP_DEB_SEL_MASK
->  				 | HI6421_OCP_EN_DEBOUNCE_MASK
->  				 | HI6421_OCP_AUTO_STOP_MASK),
->  				(HI6421_OCP_DEB_SEL_8MS
->  				 | HI6421_OCP_EN_DEBOUNCE_ENABLE));
->  
-> -	platform_set_drvdata(pdev, pmic);
-> +		subdevs = hi6421_devs;
-> +		n_subdevs = ARRAY_SIZE(hi6421_devs);
-> +		break;
-> +	case HI6421_V530:
-> +		subdevs = hi6421v530_devs;
-> +		n_subdevs = ARRAY_SIZE(hi6421v530_devs);
-> +		break;
-> +	default:
-> +		dev_err(&pdev->dev, "Unknown device type %ld\n",
-> +						(unsigned long)id->data);
-> +		return -EINVAL;
-> +	}
->  
-> -	ret = devm_mfd_add_devices(&pdev->dev, 0, hi6421_devs,
-> -				   ARRAY_SIZE(hi6421_devs), NULL, 0, NULL);
-> +	ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
-> +				   subdevs, n_subdevs, NULL, 0, NULL);
->  	if (ret) {
->  		dev_err(&pdev->dev, "Failed to add child devices: %d\n", ret);
->  		return ret;
-> @@ -77,16 +115,10 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -static const struct of_device_id of_hi6421_pmic_match_tbl[] = {
-> -	{ .compatible = "hisilicon,hi6421-pmic", },
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match_tbl);
-> -
->  static struct platform_driver hi6421_pmic_driver = {
->  	.driver = {
-> -		.name	= "hi6421_pmic",
-> -		.of_match_table = of_hi6421_pmic_match_tbl,
-> +		.name = "hi6421_pmic",
-> +		.of_match_table = of_hi6421_pmic_match,
->  	},
->  	.probe	= hi6421_pmic_probe,
->  };
-> diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
-> index 587273e..2457438 100644
-> --- a/include/linux/mfd/hi6421-pmic.h
-> +++ b/include/linux/mfd/hi6421-pmic.h
-> @@ -38,4 +38,9 @@ struct hi6421_pmic {
->  	struct regmap		*regmap;
->  };
->  
-> +enum hi6421_type {
-> +	HI6421      = 1,
-> +	HI6421_V530 = 2,
-> +};
-> +
-
-As programmers we usually start counting at 0.  Then you can rely on
-the C standard to populate the remaining values.
-
-Something like:
-
-enum hi6421_type {
-	HI6421 = 0,
-	HI6421_V530,
-};
-
-... is more normal.
-
->  #endif		/* __HI6421_PMIC_H */
+Is that an Ack?
 
 -- 
 Lee Jones
