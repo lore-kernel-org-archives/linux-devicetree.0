@@ -1,108 +1,85 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v8 23/24] drivers/fsi: Use asynchronous slave mode
-Date: Tue,  6 Jun 2017 16:08:58 -0500
-Message-ID: <20170606210859.80431-24-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v8 03/24] drivers/fsi: Add empty master scan
+Date: Tue,  6 Jun 2017 16:08:38 -0500
+Message-ID: <20170606210859.80431-4-cbostic@linux.vnet.ibm.com>
 References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Cc: Chris Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
 List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-For slaves that are behind a software-clocked master, we want FSI CFAMs
-to run asynchronously to the FSI clock, so set up our slaves to be in
-async mode.
+When a new fsi master is added, we will need to scan its links, and
+slaves attached to those links. This change introduces a little shell to
+iterate the links, which we will populate with the actual slave scan in
+a later change.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Chris Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
 ---
- drivers/fsi/fsi-core.c        | 22 +++++++++++++++++++++-
- drivers/fsi/fsi-master-gpio.c |  1 +
- drivers/fsi/fsi-master.h      |  2 ++
- 3 files changed, 24 insertions(+), 1 deletion(-)
+ drivers/fsi/fsi-core.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index c9ff8d3..b56f4ed 100644
+index 2f19509..e90d45d 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -49,6 +49,7 @@
- #define FSI_SMODE		0x0	/* R/W: Mode register */
- #define FSI_SISC		0x8	/* R/W: Interrupt condition */
- #define FSI_SSTAT		0x14	/* R  : Slave status */
-+#define FSI_LLMODE		0x100	/* R/W: Link layer mode register */
+@@ -32,7 +32,25 @@ struct fsi_slave {
  
- /*
-  * SMODE fields
-@@ -64,6 +65,11 @@
- #define FSI_SMODE_LBCRR_SHIFT	8		/* Clk ratio shift */
- #define FSI_SMODE_LBCRR_MASK	0xf		/* Clk ratio mask */
+ #define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
  
-+/*
-+ * LLMODE fields
-+ */
-+#define FSI_LLMODE_ASYNC	0x1
++/* FSI slave support */
++static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
++{
++	/* todo: initialise slave device, perform engine scan */
 +
- #define FSI_SLAVE_SIZE_23b		0x800000
- 
- static DEFINE_IDA(master_ida);
-@@ -557,8 +563,8 @@ static void fsi_slave_release(struct device *dev)
- 
- static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
++	return -ENODEV;
++}
++
+ /* FSI master support */
++static int fsi_master_scan(struct fsi_master *master)
++{
++	int link;
++
++	for (link = 0; link < master->n_links; link++)
++		fsi_slave_init(master, link, 0);
++
++	return 0;
++}
++
+ int fsi_master_register(struct fsi_master *master)
  {
-+	uint32_t chip_id, llmode;
- 	struct fsi_slave *slave;
--	uint32_t chip_id;
- 	uint8_t crc;
  	int rc;
+@@ -44,10 +62,13 @@ int fsi_master_register(struct fsi_master *master)
+ 	dev_set_name(&master->dev, "fsi%d", master->idx);
  
-@@ -594,6 +600,20 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- 		return -ENODEV;
- 	}
- 
-+	/* If we're behind a master that doesn't provide a self-running bus
-+	 * clock, put the slave into async mode
-+	 */
-+	if (master->flags & FSI_MASTER_FLAG_SWCLOCK) {
-+		llmode = cpu_to_be32(FSI_LLMODE_ASYNC);
-+		rc = fsi_master_write(master, link, id,
-+				FSI_SLAVE_BASE + FSI_LLMODE,
-+				&llmode, sizeof(llmode));
-+		if (rc)
-+			dev_warn(&master->dev,
-+				"can't set llmode on slave:%02x:%02x %d\n",
-+				link, id, rc);
+ 	rc = device_register(&master->dev);
+-	if (rc)
++	if (rc) {
+ 		ida_simple_remove(&master_ida, master->idx);
++		return rc;
 +	}
-+
- 	/* We can communicate with a slave; create the slave device and
- 	 * register.
- 	 */
-diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-index a5d6e70..ae26187 100644
---- a/drivers/fsi/fsi-master-gpio.c
-+++ b/drivers/fsi/fsi-master-gpio.c
-@@ -554,6 +554,7 @@ static int fsi_master_gpio_probe(struct platform_device *pdev)
- 	master->gpio_mux = gpio;
  
- 	master->master.n_links = 1;
-+	master->master.flags = FSI_MASTER_FLAG_SWCLOCK;
- 	master->master.read = fsi_master_gpio_read;
- 	master->master.write = fsi_master_gpio_write;
- 	master->master.term = fsi_master_gpio_term;
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-index 7764b00..12f7b11 100644
---- a/drivers/fsi/fsi-master.h
-+++ b/drivers/fsi/fsi-master.h
-@@ -19,6 +19,8 @@
+-	return rc;
++	fsi_master_scan(master);
++	return 0;
+ }
+ EXPORT_SYMBOL_GPL(fsi_master_register);
  
- #include <linux/device.h>
- 
-+#define FSI_MASTER_FLAG_SWCLOCK		0x1
-+
- struct fsi_master {
- 	struct device	dev;
- 	int		idx;
 -- 
 1.8.2.2
