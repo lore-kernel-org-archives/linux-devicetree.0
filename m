@@ -1,56 +1,53 @@
-From: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH V2 0/3] add UniPhier watchdog support
-Date: Tue,  6 Jun 2017 18:11:31 +0900
-Message-ID: <1496740294-12653-1-git-send-email-hayashibara.keiji@socionext.com>
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
-Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Subject: [PATCH V2 3/3] arm64: dts: uniphier: add watchdog node for LD11 and LD20
+Date: Tue,  6 Jun 2017 18:11:34 +0900
+Message-ID: <1496740294-12653-4-git-send-email-hayashibara.keiji@socionext.com>
+References: <1496740294-12653-1-git-send-email-hayashibara.keiji@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496740294-12653-1-git-send-email-hayashibara.keiji@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: wim@iguana.be, linux@roeck-us.net
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, yamada.masahiro@socionext.com, hayashi.kunihiko@socionext.com, owada.kiyoshi@socionext.com, Keiji Hayashibara <hayashibara.keiji@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for watchdog timer implemented on UniPhier LD11 and
-LD20 SoCs. This driver supports watchdog and system reset for SoCs.
+Add nodes of watchdog timer for UniPhier LD11 and LD20 SoC.
+The watchdog timer is included in sysctrl.
 
-patch V1
-http://www.spinics.net/lists/linux-watchdog/msg11782.html
+Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+---
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi | 4 ++++
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 4 ++++
+ 2 files changed, 8 insertions(+)
 
-Changes between V2 and V1
-=========================
-1. Add barrier code in uniphier_watchdog_ping() and __uniphier_watchdog_start().
-
- When writing WDTCTRL_CLEAR to WDTCTRL register, WDTCTRL_STATUS is updated
- about 62.5usec(2cycle of 32kHz) later. However, if WDTCTRL_CLEAR is written
- before WDTCTRL_STATUS is updated, it can't reboot as SoC specification.
- Therefore, I added barrier code, it waits until WDTCTRL_STATUS is updated.
-   
-2. Fix issues according to review comments.
-
- * Use WDOG_STOP_ON_REBOOT instead of shutdown method of struct platform_driver.
- * Separate uniphier-wdt bindings documentation as a patch.
- * Remove delay.h and add bitops.h header file.
- * Use devm_watchdog_register_device().
- * Remove unnecessary code.
-
-Keiji Hayashibara (3):
-  devicetree: add UniPhier WDT devicetree bindings documentation
-  watchdog: uniphier: add UniPhier watchdog driver
-  arm64: dts: uniphier: add watchdog node for LD11 and LD20
-
- .../devicetree/bindings/watchdog/uniphier-wdt.txt  |  20 ++
- Documentation/watchdog/watchdog-parameters.txt     |   6 +
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   |   4 +
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |   4 +
- drivers/watchdog/Kconfig                           |  11 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/uniphier_wdt.c                    | 275 +++++++++++++++++++++
- 7 files changed, 321 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
- create mode 100644 drivers/watchdog/uniphier_wdt.c
-
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+index da881f5..5fee3e3 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi
+@@ -393,6 +393,10 @@
+ 				compatible = "socionext,uniphier-ld11-reset";
+ 				#reset-cells = <1>;
+ 			};
++
++			watchdog {
++				compatible = "socionext,uniphier-wdt";
++			};
+ 		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+index a6b3a70..d4d82c8 100644
+--- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
+@@ -417,6 +417,10 @@
+ 				compatible = "socionext,uniphier-ld20-reset";
+ 				#reset-cells = <1>;
+ 			};
++
++			watchdog {
++				compatible = "socionext,uniphier-wdt";
++			};
+ 		};
+ 	};
+ };
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
