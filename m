@@ -1,68 +1,52 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 05/10] dt-bindings: interrupt-controller: sunxi-nmi: Add
- compatible for A31 R_INTC
-Date: Tue,  6 Jun 2017 13:59:27 +0800
-Message-ID: <20170606055932.22548-6-wens@csie.org>
-References: <20170606055932.22548-1-wens@csie.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM64: dts: meson-gx: Fix sensors reporting from SCP
+Date: Tue, 6 Jun 2017 08:20:32 +0200
+Message-ID: <CAOQ7t2Z1rh-K4dgmGKC7YPSQcfQ+RDrS0Asek0L9cUPT9Nmc1A@mail.gmail.com>
+References: <20170605200350.1113-1-carlo@caione.org> <m2mv9mdrt3.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170606055932.22548-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Icenowy Zheng <icenowy@aosc.io>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <m2mv9mdrt3.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Upstreaming Team <linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The A31 and later have an R_INTC block which handles the NMI interrupt
-pin on the SoC. This interrupt pin is used by the external PMIC to
-signal interrupts to the SoC.
+On Mon, Jun 5, 2017 at 11:54 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
+>
+>> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>>
+>> Switch to use the new compatible for the SCPI sensors so that the
+>> sensor readings are reported using the correct scale.
+>>
+>> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> index 436b875..3128fa5 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+>> @@ -200,7 +200,7 @@
+>>               };
+>>
+>>               scpi_sensors: sensors {
+>> -                     compatible = "arm,scpi-sensors";
+>> +                     compatible = "amlogic,meson-gxbb-scpi-sensors";
+>
+> Shouldn't this be:
+>
+>                         compatible = "amlogic,meson-gxbb-scpi-sensors", "arm,scpi-sensors";
+>
+> For a safe fallback on kernels without the new compatible?
 
-While this hardware block is undocumented, the interrupt offsets
-combined with the register regions for the existing "sun6i-a31-sc-nmi"
-compatible line up with the old interrupt controller found on the A10.
-Experiments show that only the first 32 interrupt lines can be enabled,
-and only the first (NMI) interrupt is actually connected.
+Yeah, it should.
 
-This patch adds a new, properly named compatible for the A31 R_INTC
-block, which requires the register region to be properly aligned to
-the block boundary. For comparison, the old "sun6i-a31-sc-nmi"
-compatible had its register region aligned with the first used
-register. This didn't match up with the memory map in the SoC's
-datasheet/user manual.
-
-Since the new compatible supercedes the old one, deprecate the old one.
-
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- .../bindings/interrupt-controller/allwinner,sunxi-nmi.txt          | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
-index 81cd3692405e..4ae553eb333d 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/allwinner,sunxi-nmi.txt
-@@ -3,8 +3,11 @@ Allwinner Sunxi NMI Controller
- 
- Required properties:
- 
--- compatible : should be "allwinner,sun7i-a20-sc-nmi" or
--  "allwinner,sun6i-a31-sc-nmi" or "allwinner,sun9i-a80-nmi"
-+- compatible : should be one of the following:
-+  - "allwinner,sun7i-a20-sc-nmi"
-+  - "allwinner,sun6i-a31-sc-nmi" (deprecated)
-+  - "allwinner,sun6i-a31-r-intc"
-+  - "allwinner,sun9i-a80-nmi"
- - reg : Specifies base physical address and size of the registers.
- - interrupt-controller : Identifies the node as an interrupt controller
- - #interrupt-cells : Specifies the number of cells needed to encode an
 -- 
-2.11.0
+Carlo Caione
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
