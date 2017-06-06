@@ -1,178 +1,273 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v4 4/8] mfd: hi6421-pmic: add support for HiSilicon Hi6421v530
-Date: Tue,  6 Jun 2017 16:51:39 +0800
-Message-ID: <20170606085143.13154-5-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH v4 5/8] regulator: hi6421v530: add driver for hi6421v530 voltage regulator
+Date: Tue,  6 Jun 2017 16:51:40 +0800
+Message-ID: <20170606085143.13154-6-guodong.xu@linaro.org>
 References: <20170606085143.13154-1-guodong.xu@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606085143.13154-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606085143.13154-1-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, horms+renesas@verge.net.au, olof@lixom.net, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, damm+renesas@opensource.se, ard.biesheuvel@linaro.org, linus.walleij@linaro.org, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hw.wangxiaoyin@hisilicon.com, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
-main SoC via memory-mapped I/O.
+From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
 
-Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon,
-but at different revisions. They share the same memory-mapped I/O
-design. They differ in integrated devices, such as regulator details,
-LDO voltage points.
+add the driver for hi6421v530 voltage regulator
 
-Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- drivers/mfd/hi6421-pmic-core.c  | 68 ++++++++++++++++++++++++++++++-----------
- include/linux/mfd/hi6421-pmic.h |  5 +++
- 2 files changed, 55 insertions(+), 18 deletions(-)
+ drivers/regulator/Kconfig                |  10 ++
+ drivers/regulator/Makefile               |   1 +
+ drivers/regulator/hi6421v530-regulator.c | 207 +++++++++++++++++++++++++++++++
+ 3 files changed, 218 insertions(+)
+ create mode 100644 drivers/regulator/hi6421v530-regulator.c
 
-diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-core.c
-index b1139d4..4568a43 100644
---- a/drivers/mfd/hi6421-pmic-core.c
-+++ b/drivers/mfd/hi6421-pmic-core.c
-@@ -1,9 +1,9 @@
- /*
-- * Device driver for Hi6421 IC
-+ * Device driver for Hi6421 PMIC
-  *
-  * Copyright (c) <2011-2014> HiSilicon Technologies Co., Ltd.
-  *              http://www.hisilicon.com
-- * Copyright (c) <2013-2014> Linaro Ltd.
-+ * Copyright (c) <2013-2017> Linaro Ltd.
-  *              http://www.linaro.org
-  *
-  * Author: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-@@ -16,16 +16,20 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/mfd/core.h>
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+index 48db87d..78cd8d8 100644
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -296,6 +296,16 @@ config REGULATOR_HI6421
+ 	  21 general purpose LDOs, 3 dedicated LDOs, and 5 BUCKs. All
+ 	  of them come with support to either ECO (idle) or sleep mode.
+ 
++config REGULATOR_HI6421V530
++	tristate "HiSilicon Hi6421v530 PMIC voltage regulator support"
++	depends on MFD_HI6421_PMIC && OF
++	help
++	  This driver provides support for the voltage regulators on
++	  HiSilicon Hi6421v530 PMU / Codec IC.
++	  Hi6421v530 is a multi-function device which, on regulator part,
++	  provides 5 general purpose LDOs, and all of them come with support
++	  to either ECO (idle) or sleep mode.
++
+ config REGULATOR_HI655X
+ 	tristate "Hisilicon HI655X PMIC regulators support"
+ 	depends on ARCH_HISI || COMPILE_TEST
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+index dc3503f..36e2b75 100644
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -38,6 +38,7 @@ obj-$(CONFIG_REGULATOR_DB8500_PRCMU) += db8500-prcmu.o
+ obj-$(CONFIG_REGULATOR_FAN53555) += fan53555.o
+ obj-$(CONFIG_REGULATOR_GPIO) += gpio-regulator.o
+ obj-$(CONFIG_REGULATOR_HI6421) += hi6421-regulator.o
++obj-$(CONFIG_REGULATOR_HI6421V530) += hi6421v530-regulator.o
+ obj-$(CONFIG_REGULATOR_HI655X) += hi655x-regulator.o
+ obj-$(CONFIG_REGULATOR_ISL6271A) += isl6271a-regulator.o
+ obj-$(CONFIG_REGULATOR_ISL9305) += isl9305.o
+diff --git a/drivers/regulator/hi6421v530-regulator.c b/drivers/regulator/hi6421v530-regulator.c
+new file mode 100644
+index 0000000..46bbba9
+--- /dev/null
++++ b/drivers/regulator/hi6421v530-regulator.c
+@@ -0,0 +1,207 @@
++/*
++ * Device driver for regulators in Hi6421V530 IC
++ *
++ * Copyright (c) <2017> HiSilicon Technologies Co., Ltd.
++ *              http://www.hisilicon.com
++ * Copyright (c) <2017> Linaro Ltd.
++ *              http://www.linaro.org
++ *
++ * Author: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
++ *         Guodong Xu <guodong.xu@linaro.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
 +#include <linux/mfd/hi6421-pmic.h>
- #include <linux/module.h>
--#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
--#include <linux/mfd/hi6421-pmic.h>
- 
- static const struct mfd_cell hi6421_devs[] = {
- 	{ .name = "hi6421-regulator", },
- };
- 
-+static const struct mfd_cell hi6421v530_devs[] = {
-+	{ .name = "hi6421v530-regulator", },
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/regulator/driver.h>
++
++/*
++ * struct hi6421v530_regulator_info - hi6421v530 regulator information
++ * @desc: regulator description
++ * @mode_mask: ECO mode bitmask of LDOs; for BUCKs, this masks sleep
++ * @eco_microamp: eco mode load upper limit (in uA), valid for LDOs only
++ */
++struct hi6421v530_regulator_info {
++	struct regulator_desc rdesc;
++	u8 mode_mask;
++	u32 eco_microamp;
 +};
 +
- static const struct regmap_config hi6421_regmap_config = {
- 	.reg_bits = 32,
- 	.reg_stride = 4,
-@@ -33,12 +37,31 @@ static const struct regmap_config hi6421_regmap_config = {
- 	.max_register = HI6421_REG_TO_BUS_ADDR(HI6421_REG_MAX),
- };
- 
-+static const struct of_device_id of_hi6421_pmic_match[] = {
-+	{
-+		.compatible = "hisilicon,hi6421-pmic",
-+		.data = (void *)HI6421
-+	},
-+	{
-+		.compatible = "hisilicon,hi6421v530-pmic",
-+		.data = (void *)HI6421_V530
-+	},
-+	{ },
++/* HI6421v530 regulators */
++enum hi6421v530_regulator_id {
++	HI6421V530_LDO3,
++	HI6421V530_LDO9,
++	HI6421V530_LDO11,
++	HI6421V530_LDO15,
++	HI6421V530_LDO16,
 +};
-+MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match);
 +
- static int hi6421_pmic_probe(struct platform_device *pdev)
- {
- 	struct hi6421_pmic *pmic;
- 	struct resource *res;
-+	const struct of_device_id *id;
-+	const struct mfd_cell *subdevs;
- 	void __iomem *base;
--	int ret;
-+	int n_subdevs, ret;
++static const unsigned int ldo_3_voltages[] = {
++	1800000, 1825000, 1850000, 1875000,
++	1900000, 1925000, 1950000, 1975000,
++	2000000, 2025000, 2050000, 2075000,
++	2100000, 2125000, 2150000, 2200000,
++};
 +
-+	id = of_match_device(of_hi6421_pmic_match, &pdev->dev);
-+	if (!id)
-+		return -EINVAL;
- 
- 	pmic = devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
- 	if (!pmic)
-@@ -57,18 +80,33 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
- 		return PTR_ERR(pmic->regmap);
- 	}
- 
--	/* set over-current protection debounce 8ms */
--	regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
-+	platform_set_drvdata(pdev, pmic);
++static const unsigned int ldo_9_11_voltages[] = {
++	1750000, 1800000, 1825000, 2800000,
++	2850000, 2950000, 3000000, 3300000,
++};
 +
-+	switch ((unsigned long)id->data) {
-+	case HI6421:
-+		/* set over-current protection debounce 8ms */
-+		regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
- 				(HI6421_OCP_DEB_SEL_MASK
- 				 | HI6421_OCP_EN_DEBOUNCE_MASK
- 				 | HI6421_OCP_AUTO_STOP_MASK),
- 				(HI6421_OCP_DEB_SEL_8MS
- 				 | HI6421_OCP_EN_DEBOUNCE_ENABLE));
- 
--	platform_set_drvdata(pdev, pmic);
-+		subdevs = hi6421_devs;
-+		n_subdevs = ARRAY_SIZE(hi6421_devs);
++static const unsigned int ldo_15_16_voltages[] = {
++	1750000, 1800000, 2400000, 2600000,
++	2700000, 2850000, 2950000, 3000000,
++};
++
++static const struct regulator_ops hi6421v530_ldo_ops;
++
++#define HI6421V530_LDO_ENABLE_TIME (350)
++
++/*
++ * _id - LDO id name string
++ * v_table - voltage table
++ * vreg - voltage select register
++ * vmask - voltage select mask
++ * ereg - enable register
++ * emask - enable mask
++ * odelay - off/on delay time in uS
++ * ecomask - eco mode mask
++ * ecoamp - eco mode load uppler limit in uA
++ */
++#define HI6421V530_LDO(_ID, v_table, vreg, vmask, ereg, emask,		\
++		   odelay, ecomask, ecoamp) {				\
++	.rdesc = {							\
++		.name		 = #_ID,				\
++		.of_match        = of_match_ptr(#_ID),			\
++		.regulators_node = of_match_ptr("regulators"),		\
++		.ops		 = &hi6421v530_ldo_ops,			\
++		.type		 = REGULATOR_VOLTAGE,			\
++		.id		 = HI6421V530_##_ID,			\
++		.owner		 = THIS_MODULE,				\
++		.n_voltages	 = ARRAY_SIZE(v_table),			\
++		.volt_table	 = v_table,				\
++		.vsel_reg	 = HI6421_REG_TO_BUS_ADDR(vreg),	\
++		.vsel_mask	 = vmask,				\
++		.enable_reg	 = HI6421_REG_TO_BUS_ADDR(ereg),	\
++		.enable_mask	 = emask,				\
++		.enable_time	 = HI6421V530_LDO_ENABLE_TIME,		\
++		.off_on_delay	 = odelay,				\
++	},								\
++	.mode_mask	= ecomask,					\
++	.eco_microamp	= ecoamp,					\
++}
++
++/* HI6421V530 regulator information */
++
++static struct hi6421v530_regulator_info hi6421v530_regulator_info[] = {
++	HI6421V530_LDO(LDO3, ldo_3_voltages, 0x061, 0xf, 0x060, 0x2,
++		   20000, 0x6, 8000),
++	HI6421V530_LDO(LDO9, ldo_9_11_voltages, 0x06b, 0x7, 0x06a, 0x2,
++		   40000, 0x6, 8000),
++	HI6421V530_LDO(LDO11, ldo_9_11_voltages, 0x06f, 0x7, 0x06e, 0x2,
++		   40000, 0x6, 8000),
++	HI6421V530_LDO(LDO15, ldo_15_16_voltages, 0x077, 0x7, 0x076, 0x2,
++		   40000, 0x6, 8000),
++	HI6421V530_LDO(LDO16, ldo_15_16_voltages, 0x079, 0x7, 0x078, 0x2,
++		   40000, 0x6, 8000),
++};
++
++static unsigned int hi6421v530_regulator_ldo_get_mode(
++					struct regulator_dev *rdev)
++{
++	struct hi6421v530_regulator_info *info;
++	unsigned int reg_val;
++
++	info = rdev_get_drvdata(rdev);
++	regmap_read(rdev->regmap, rdev->desc->enable_reg, &reg_val);
++
++	if (reg_val & (info->mode_mask))
++		return REGULATOR_MODE_IDLE;
++
++	return REGULATOR_MODE_NORMAL;
++}
++
++static int hi6421v530_regulator_ldo_set_mode(struct regulator_dev *rdev,
++						unsigned int mode)
++{
++	struct hi6421v530_regulator_info *info;
++	unsigned int new_mode;
++
++	info = rdev_get_drvdata(rdev);
++	switch (mode) {
++	case REGULATOR_MODE_NORMAL:
++		new_mode = 0;
 +		break;
-+	case HI6421_V530:
-+		subdevs = hi6421v530_devs;
-+		n_subdevs = ARRAY_SIZE(hi6421v530_devs);
++	case REGULATOR_MODE_IDLE:
++		new_mode = info->mode_mask;
 +		break;
 +	default:
-+		dev_err(&pdev->dev, "Unknown device type %ld\n",
-+						(unsigned long)id->data);
 +		return -EINVAL;
 +	}
- 
--	ret = devm_mfd_add_devices(&pdev->dev, 0, hi6421_devs,
--				   ARRAY_SIZE(hi6421_devs), NULL, 0, NULL);
-+	ret = devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
-+				   subdevs, n_subdevs, NULL, 0, NULL);
- 	if (ret) {
- 		dev_err(&pdev->dev, "Failed to add child devices: %d\n", ret);
- 		return ret;
-@@ -77,16 +115,10 @@ static int hi6421_pmic_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id of_hi6421_pmic_match_tbl[] = {
--	{ .compatible = "hisilicon,hi6421-pmic", },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match_tbl);
--
- static struct platform_driver hi6421_pmic_driver = {
- 	.driver = {
--		.name	= "hi6421_pmic",
--		.of_match_table = of_hi6421_pmic_match_tbl,
-+		.name = "hi6421_pmic",
-+		.of_match_table = of_hi6421_pmic_match,
- 	},
- 	.probe	= hi6421_pmic_probe,
- };
-diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421-pmic.h
-index 587273e..2457438 100644
---- a/include/linux/mfd/hi6421-pmic.h
-+++ b/include/linux/mfd/hi6421-pmic.h
-@@ -38,4 +38,9 @@ struct hi6421_pmic {
- 	struct regmap		*regmap;
- };
- 
-+enum hi6421_type {
-+	HI6421      = 1,
-+	HI6421_V530 = 2,
++
++	regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
++			   info->mode_mask, new_mode);
++
++	return 0;
++}
++
++
++static const struct regulator_ops hi6421v530_ldo_ops = {
++	.is_enabled = regulator_is_enabled_regmap,
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.list_voltage = regulator_list_voltage_table,
++	.map_voltage = regulator_map_voltage_ascend,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_mode = hi6421v530_regulator_ldo_get_mode,
++	.set_mode = hi6421v530_regulator_ldo_set_mode,
 +};
 +
- #endif		/* __HI6421_PMIC_H */
++static int hi6421v530_regulator_probe(struct platform_device *pdev)
++{
++	struct hi6421_pmic *pmic;
++	struct regulator_dev *rdev;
++	struct regulator_config config = { };
++	unsigned int i;
++
++	pmic = dev_get_drvdata(pdev->dev.parent);
++	if (!pmic) {
++		dev_err(&pdev->dev, "no pmic in the regulator parent node\n");
++		return -ENODEV;
++	}
++
++	for (i = 0; i < ARRAY_SIZE(hi6421v530_regulator_info); i++) {
++		config.dev = pdev->dev.parent;
++		config.regmap = pmic->regmap;
++		config.driver_data = &hi6421v530_regulator_info[i];
++
++		rdev = devm_regulator_register(&pdev->dev,
++				&hi6421v530_regulator_info[i].rdesc,
++				&config);
++		if (IS_ERR(rdev)) {
++			dev_err(&pdev->dev, "failed to register regulator %s\n",
++				hi6421v530_regulator_info[i].rdesc.name);
++			return PTR_ERR(rdev);
++		}
++	}
++	return 0;
++}
++
++static struct platform_driver hi6421v530_regulator_driver = {
++	.driver = {
++		.name	= "hi6421v530-regulator",
++	},
++	.probe	= hi6421v530_regulator_probe,
++};
++module_platform_driver(hi6421v530_regulator_driver);
++
++MODULE_AUTHOR("Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>");
++MODULE_DESCRIPTION("Hi6421v530 regulator driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
