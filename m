@@ -1,63 +1,50 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 04/10] irqchip: sunxi-nmi: const-ify sunxi_sc_nmi_reg_offs structures
-Date: Tue,  6 Jun 2017 13:59:26 +0800
-Message-ID: <20170606055932.22548-5-wens@csie.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH 08/10] ARM: sun8i: a23/a33: Use new sun6i-a31-r-intc compatible for NMI/R_INTC
+Date: Tue,  6 Jun 2017 13:59:30 +0800
+Message-ID: <20170606055932.22548-9-wens@csie.org>
 References: <20170606055932.22548-1-wens@csie.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170606055932.22548-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170606055932.22548-1-wens-jdAy2FN1RRM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The sunxi_sc_nmi_reg_offs, which hold the register offsets for the
-various variants, is never modified, and only used at init time within
-the init functions referenced by IRQCHIP_DECLARE, which themselves are
-tagged __init.
+We introduced a new compatible for the NMI or R_INTC interrupt
+controller. This new compatible has the register region aligned
+to the boundary listed in the SoC's memory map.
 
-Const-ify the sunxi_sc_nmi_reg_offs structures, and tag them as
-__initconst.
+This patch converts the NMI/R_INTC node to using the new compatible,
+and fixes up the register region and device node name.
 
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 ---
- drivers/irqchip/irq-sunxi-nmi.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/sun8i-a23-a33.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/irqchip/irq-sunxi-nmi.c b/drivers/irqchip/irq-sunxi-nmi.c
-index 76f2431b6b7b..e713ec66322b 100644
---- a/drivers/irqchip/irq-sunxi-nmi.c
-+++ b/drivers/irqchip/irq-sunxi-nmi.c
-@@ -52,19 +52,19 @@ struct sunxi_sc_nmi_reg_offs {
- 	u32 enable;
- };
+diff --git a/arch/arm/boot/dts/sun8i-a23-a33.dtsi b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+index a8b978d0f35b..ea50dda75adc 100644
+--- a/arch/arm/boot/dts/sun8i-a23-a33.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23-a33.dtsi
+@@ -519,11 +519,11 @@
+ 			#clock-cells = <1>;
+ 		};
  
--static struct sunxi_sc_nmi_reg_offs sun6i_reg_offs = {
-+static const struct sunxi_sc_nmi_reg_offs sun6i_reg_offs __initconst = {
- 	.ctrl	= SUN6I_NMI_CTRL,
- 	.pend	= SUN6I_NMI_PENDING,
- 	.enable	= SUN6I_NMI_ENABLE,
- };
+-		nmi_intc: interrupt-controller@01f00c0c {
+-			compatible = "allwinner,sun6i-a31-sc-nmi";
++		nmi_intc: interrupt-controller@1f00c00 {
++			compatible = "allwinner,sun6i-a31-r-intc";
+ 			interrupt-controller;
+ 			#interrupt-cells = <2>;
+-			reg = <0x01f00c0c 0x38>;
++			reg = <0x01f00c00 0x400>;
+ 			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
  
--static struct sunxi_sc_nmi_reg_offs sun7i_reg_offs = {
-+static const struct sunxi_sc_nmi_reg_offs sun7i_reg_offs __initconst = {
- 	.ctrl	= SUN7I_NMI_CTRL,
- 	.pend	= SUN7I_NMI_PENDING,
- 	.enable	= SUN7I_NMI_ENABLE,
- };
- 
--static struct sunxi_sc_nmi_reg_offs sun9i_reg_offs = {
-+static const struct sunxi_sc_nmi_reg_offs sun9i_reg_offs __initconst = {
- 	.ctrl	= SUN9I_NMI_CTRL,
- 	.pend	= SUN9I_NMI_PENDING,
- 	.enable	= SUN9I_NMI_ENABLE,
-@@ -142,7 +142,7 @@ static int sunxi_sc_nmi_set_type(struct irq_data *data, unsigned int flow_type)
- }
- 
- static int __init sunxi_sc_nmi_irq_init(struct device_node *node,
--					struct sunxi_sc_nmi_reg_offs *reg_offs)
-+					const struct sunxi_sc_nmi_reg_offs *reg_offs)
- {
- 	struct irq_domain *domain;
- 	struct irq_chip_generic *gc;
 -- 
 2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
