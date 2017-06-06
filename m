@@ -1,118 +1,317 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: drm/bridge: Document Cadence DSI
- bridge bindings
-Date: Tue, 6 Jun 2017 11:35:45 +0200
-Message-ID: <20170606113545.3a9ab2d0@bbrezillon>
-References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
- <1496405096-18275-2-git-send-email-boris.brezillon@free-electrons.com>
- <60f8b8ec-c83b-0609-c5e5-44b3f9302808@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <60f8b8ec-c83b-0609-c5e5-44b3f9302808@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Cyprian Wronka <cwronka@cadence.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Simon Hatliff <hatliff@cadence.com>, dri-devel@lists.freedesktop.org, Alan Douglas <adouglas@cadence.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Richard Sproul <sproul@cadence.com>, Neil Webb <neilw@cadence.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: [PATCH v7 3/6] device property: Move fwnode graph ops to firmware specific locations
+Date: Tue,  6 Jun 2017 12:37:38 +0300
+Message-ID: <1496741861-8240-4-git-send-email-sakari.ailus@linux.intel.com>
+References: <1496741861-8240-1-git-send-email-sakari.ailus@linux.intel.com>
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <1496741861-8240-1-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: linux-acpi@vger.kernel.org
+Cc: devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, kieran.bingham@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCAzIEp1biAyMDE3IDIzOjQzOjE3ICswNTMwCkFyY2hpdCBUYW5lamEgPGFyY2hpdHRA
-Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgoKPiBIaSwKPiAKPiBPbiAwNi8wMi8yMDE3IDA1OjM0IFBN
-LCBCb3JpcyBCcmV6aWxsb24gd3JvdGU6Cj4gPiBEb2N1bWVudCB0aGUgYmluZGluZ3MgdXNlZCBm
-b3IgdGhlIENhZGVuY2UgRFNJIGJyaWRnZS4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBCb3JpcyBC
-cmV6aWxsb24gPGJvcmlzLmJyZXppbGxvbkBmcmVlLWVsZWN0cm9ucy5jb20+Cj4gPiAtLS0KPiA+
-ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0ICAgICAgICAgICB8IDU1
-ICsrKysrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgNTUgaW5zZXJ0aW9u
-cygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Rucyxkc2kudHh0Cj4gPgo+ID4gZGlmZiAtLWdpdCBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLGRzaS50
-eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvY2Ru
-cyxkc2kudHh0Cj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gaW5kZXggMDAwMDAwMDAwMDAw
-Li43NzBjNWM1YjFlOTMKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9jZG5zLGRzaS50eHQKPiA+IEBAIC0w
-LDAgKzEsNTUgQEAKPiA+ICtDYWRlbmNlIERTSSBicmlkZ2UKPiA+ICs9PT09PT09PT09PT09PT09
-PT0KPiA+ICsKPiA+ICtUaGUgQ2FkZW5jZSBEU0kgYnJpZGdlIGlzIGEgRFBJIHRvIERTSSBicmlk
-Z2Ugc3VwcG9ydGluZyB1cCB0byA0IERTSSBsYW5lcy4gIAo+IAo+IElzIHRoaXMgYSBzZXBhcmF0
-ZSBjaGlwLCBvciBhbiBJUCBpbnRlZ3JhdGVkIGludG8gU29Dcz8KCkl0J3Mgc3VwcG9zZWQgdG8g
-YmUgaW50ZWdyYXRlZCBpbnRvIFNvQ3MuCgo+IElmIGl0J3MgdGhlIAo+IGxhdHRlciwgSSBkb24n
-dCB0aGluayBEUEkgb24gdGhlIGl0cyBpbnB1dCBzaWRlIGlzIHRoZSByaWdodCB0ZXJtIHRvIAo+
-IHVzZS4gTWF5YmUgUkdCIHdvdWxkIGJlIG1vcmUgYXBwcm9wcmlhdGUgaGVyZS4KCldlbGwsIHRo
-ZSBkYXRhc2hlZXQgZXhwbGljaXRseSBtZW50aW9ucyBEUEksIGFuZCB5b3UgY2FuIGFsc28gc2Vu
-ZApwaXhlbHMgaW4gWVVWNDIyIGFuZCBZVVY0MjAgZm9ybWF0IG9uIHRoaXMgYnVzLCBzbyBJIGRv
-bid0IHRoaW5rIFJHQiBpcwphcHByb3ByaWF0ZSwgYnV0IGlmIHlvdSByZWFsbHkgd2FudCBtZSB0
-byB1c2UgUkdCIEkgY2FuIGNoYW5nZSB0aGF0LgoKQlRXLCBjYW4geW91IGRldGFpbCB3aHkgRFBJ
-IGlzIG5vdCBhcHByb3ByaWF0ZSBmb3IgaW50ZXJuYWwgcGFyYWxsZWwKYnVzc2VzLiBJIGRvbid0
-IHVuZGVyc3RhbmQgd2h5IGl0IG1ha2VzIGEgZGlmZmVyZW5jZSB3aGVuIHRoZSBidXMgaXMgZXhw
-b3NlZAp0aHJvdWdoIGV4dGVybmFsIHBpbnMuCgo+IAo+ID4gKwo+ID4gK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4gPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgc2V0IHRvICJjZG5zLGRzaSIuICAK
-PiAKPiBXb3VsZCBpdCBiZSBiZXR0ZXIgdG8gdGFrZSBhIGR3LWhkbWkgbGlrZSBhcHByb2FjaCBo
-ZXJlPyBJLmUsIHRoZQo+IGJpbmRpbmcgc2hvdWxkIGJlIHNwZWNpZmljIHRvIHRoZSBTb0MgdGhh
-dCBpbnRlZ3JhdGVzIHRoaXMgRFNJCj4gYnJpZGdlPwoKSG0sIEkgd2FzIGNvbnNpZGVyaW5nIHNv
-bWV0aGluZyBzbGlnaHRseSBkaWZmZXJlbnQ6IGFkZGluZyBuZXcgY29tcGF0CnN0cmluZ3MgdG8g
-dGhlIERTSSBicmlkZ2UgZHJpdmVyIGFuZCBrZWVwIHRoZSBpbnRlcmZhY2UgdG8gdGhlIGRpc3Bs
-YXkKY29udHJvbGxlciBkcml2ZXJzIGFzIHNpbXBsZSBhcyBwb3NzaWJsZSB0byBhdm9pZCBkdXBs
-aWNhdGluZyB0aGUgZ2x1ZQp1c2VkIHRvIGJpbmQgdGhlIGNvbXBvbmVudCBpbiBhbGwgZGlzcGxh
-eSBjb250cm9sbGVyIGRyaXZlcnMgZW1iZWRkaW5nCnRoaXMgYnJpZGdlLgoKTm90ZSB0aGF0IHJp
-Z2h0IG5vdyB3ZSBkb24ndCBoYXZlIGFueSBTb0MgZW1iZWRkaW5nIHRoaXMgSVAuIEl0IGhhcwpi
-ZWVuIHRlc3RlZCBvbiBhbiBGUEdBIHdpdGggYSB2ZXJ5IGJhc2ljIGRpc3BsYXkgY29udHJvbGxl
-ciAoZGVzaWduZWQKZm9yIHRlc3RpbmcgcHVycG9zZSBvbmx5KS4gQnkgZXhwb3NpbmcgdGhpcyBJ
-UCBhcyBhIHNpbXBsZSBicmlkZ2UsIHdlCmNhbiBlYXNpbHkgYXR0YWNoIGl0IHRvIGFueSBraW5k
-IG9mIGRpc3BsYXkgY29udHJvbGxlciwgYW5kIGlmIHdlIGV2ZXIKbmVlZCB0byB1c2UgdGhlIGNv
-bXBvbmVudCBmcmFtZXdvcmssIHRoZW4gaXQgc2hvdWxkIGJlIHByZXR0eSBlYXN5IHRvCmFkZCBz
-dXBwb3J0IGZvciB0aGlzIGZlYXR1cmUgYXMgYSBmb2xsb3ctdXAgcGF0Y2guCgo+IAo+ID4gKy0g
-cmVnOiBwaHlzaWNhbCBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgY29udHJvbGxlcidz
-IHJlZ2lzdGVycy4KPiA+ICstIGludGVycnVwdHM6IGludGVycnVwdCBsaW5lIGNvbm5lY3RlZCB0
-byB0aGUgRFNJIGJyaWRnZS4KPiA+ICstIGNsb2NrczogRFNJIGJyaWRnZSBjbG9ja3MuCj4gPiAr
-LSBjbG9jay1uYW1lczogbXVzdCBjb250YWluICJwY2xrIiBhbmQgInN5c2NsayIuCj4gPiArLSBw
-aHlzOiBwaGFuZGxlIGxpbmsgdG8gdGhlIE1JUEkgRC1QSFkgY29udHJvbGxlci4KPiA+ICstIHBo
-eS1uYW1lczogbXVzdCBjb250YWluICJkcGh5Ii4KPiA+ICstICNhZGRyZXNzLWNlbGxzOiBtdXN0
-IGJlIHNldCB0byAxLgo+ID4gKy0gI3NpemUtY2VsbHM6IG11c3QgYmUgc2V0IHRvIDAuCj4gPiAr
-Cj4gPiArUmVxdWlyZWQgc3Vibm9kZXM6Cj4gPiArLSBwb3J0czogUG9ydHMgYXMgZGVzY3JpYmVk
-IGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50eHQuCj4gPiArICBD
-dXJyZW50bHkgY29udGFpbnMgYSBzaW5nbGUgaW5wdXQgcG9ydCBhdCBhZGRyZXNzIDAgcmVwcmVz
-ZW50aW5nIHRoZSBEUEkKPiA+ICsgIGlucHV0LiBPdGhlciBwb3J0cyB3aWxsIGJlIGFkZGVkIGxh
-dGVyIHRvIHN1cHBvcnQgdGhlIFNESSBpbnB1dHMuCj4gPiArICBQb3J0IDAgc2hvdWxkIGJlIGNv
-bm5lY3RlZCB0byBhIERQSSBlbmNvZGVyIG91dHB1dC4gIAo+IAo+IFRoZSBvdXRwdXQgb2YgdGhl
-IERTSSBicmlkZ2UgbWF5IGJlIGFub3RoZXIgYnJpZGdlLCB3aGljaCBjb3VsZCBiZSBpMmMKPiBj
-b250cm9sbGVkLiBJbiB0aGF0IGNhc2UsIGl0IHdvbid0IGJlIGEgY2hpbGQgb2YgdGhlIERTSSBi
-cmlkZ2UuIEZvcgo+IHN1Y2ggc2NlbmFyaW9zLCB3ZSBtaWdodCB3YW50IHRvIGRlZmluZSBhbiBv
-dXRwdXQgcG9ydCBmb3IgdGhlIGJyaWRnZS4KCkhtLCBva2F5LiBJSVJDLCB0aGlzIGlzIHNvbWV0
-aGluZyB5b3UgbWVudGlvbmVkIHdoZW4gSSBhc2tlZCBob3cgdG8KZGVzY3JpYmUgaW5wdXQvb3V0
-cHV0IHBvcnRzIGZvciBhIERTSSBicmlkZ2UgYSB3aGlsZSBhZ28uCgpJJ20gc3RpbGwgbm90IHN1
-cmUgaG93IHRoZSBsaW5rcyBiZXR3ZWVuIGlucHV0IGFuZCBvdXRwdXQgZW5kcG9pbnQgYXJlCnN1
-cHBvc2VkIHRvIGJlIGRlc2NyaWJlZC4KCkZvciBleGFtcGxlLCBpZiB5b3UgdGFrZSB0aGUgY2Fz
-ZSB3aGVyZSB5b3UgaGF2ZSB0aGUgRFNJIGRldmljZQpkaXJlY3RseSBkZXNjcmliZWQgdW5kZXIg
-dGhlIERTSSBob3N0IGNvbnRyb2xsZXIsIHNob3VsZCBJIGNyZWF0ZQphbm90aGVyIG5vZGUgZm9y
-IHRoaXMgb3V0cHV0IHBvcnQ/IFNvbWV0aGluZyBsaWtlIHRoZSBmb2xsb3dpbmc/CgoJZHNpQHh4
-eCB7CgkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CgkJI3NpemUtY2VsbHMgPSA8MD47CgoJCXBvcnRz
-IHsKCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CgkJCSNzaXplLWNlbGxzID0gPDA+OwoJCQlkcGlf
-aW46IHBvcnRAMCB7CgkJCQlyZWcgPSA8MD47CgkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKCQkJ
-CSNzaXplLWNlbGxzID0gPDA+OwoKCQkJCWVuZHBvaW50QDAgewoJCQkJCXJlbW90ZS1lbmRwb2lu
-dCA9IDwmZHBpX291dD47CgkJCQl9OwoJCQl9OwoKCQkJZHNpX291dDA6IHBvcnRAMSB7CgkJCQly
-ZWcgPSA8MT47CgkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKCQkJCSNzaXplLWNlbGxzID0gPDA+
-OwoKCQkJCWRzaV9vdXQwOiBlbmRwb2ludEAwIHsKCQkJCQlyZW1vdGUtZW5kcG9pbnQgPSA8JmRz
-aV9wYW5lbDBfaW4+OwoJCQkJfTsKCQkJfTsKCgkJCWRzaV9vdXQwOiBwb3J0QDIgewoJCQkJcmVn
-ID0gPDI+OwoJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CgkJCQkjc2l6ZS1jZWxscyA9IDwwPjsK
-CgkJCQlkc2lfb3V0MTogZW5kcG9pbnRAMCB7CgkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lf
-cGFuZWwxX2luPjsKCQkJCX07CgkJCX07CgkJfTsKCgkJcGFuZWxAMCB7CgkJCWNvbXBhdGlibGUg
-PSAiLi4uIjsKCQkJcmVnID0gPDA+OwoJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKCQkJI3NpemUt
-Y2VsbHMgPSA8MD47CgoJCQlwb3J0QDAgewoJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47CgkJICAg
-ICAgICAgICAgICAgICNzaXplLWNlbGxzID0gPDA+OwoJCQkJcmVnID0gPDA+OwoKCQkJCWRzaV9w
-YW5lbDBfaW46IGVuZHBvaW50QDAgewoJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZHNpX291dDA+
-OwoJCQkJfTsKCQkJfTsKCQl9OwoKCQlwYW5lbEAxIHsKCQkJY29tcGF0aWJsZSA9ICIuLi4iOwoJ
-CQlyZWcgPSA8MT47CgkJCSNhZGRyZXNzLWNlbGxzID0gPDE+OwoJCQkjc2l6ZS1jZWxscyA9IDww
-PjsKCgkJCXBvcnRAMCB7CgkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKCQkgICAgICAgICAgICAg
-ICAgI3NpemUtY2VsbHMgPSA8MD47CgkJCQlyZWcgPSA8MD47CgoJCQkJZHNpX3BhbmVsMV9pbjog
-ZW5kcG9pbnRAMCB7CgkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZkc2lfb3V0MT47CgkJCQl9OwoJ
-CQl9OwoJCX07Cgl9OwoKVGhhbmtzIGZvciB0aGUgcmV2aWV3LAoKQm9yaXMKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
-dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Move firmware specific implementations of the fwnode graph operations to
+firmware specific locations.
+
+Depends-on: ("of: Make of_fwnode_handle() safer")
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/acpi/property.c | 40 ++++++++++++++++++++++
+ drivers/base/property.c | 91 +++++--------------------------------------------
+ drivers/of/property.c   | 52 ++++++++++++++++++++++++++++
+ include/linux/fwnode.h  | 14 ++++++++
+ 4 files changed, 114 insertions(+), 83 deletions(-)
+
+diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
+index 14013f6..a24ca61 100644
+--- a/drivers/acpi/property.c
++++ b/drivers/acpi/property.c
+@@ -1179,6 +1179,42 @@ acpi_fwnode_get_named_child_node(struct fwnode_handle *fwnode,
+ 	return NULL;
+ }
+ 
++static struct fwnode_handle *
++acpi_fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
++				    struct fwnode_handle *prev)
++{
++	struct fwnode_handle *endpoint;
++
++	endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
++	if (IS_ERR(endpoint))
++		return NULL;
++
++	return endpoint;
++}
++
++static struct fwnode_handle *
++acpi_fwnode_graph_get_remote_endpoint(struct fwnode_handle *fwnode)
++{
++	struct fwnode_handle *endpoint = NULL;
++
++	acpi_graph_get_remote_endpoint(fwnode, NULL, NULL, &endpoint);
++
++	return endpoint;
++}
++
++static int acpi_fwnode_graph_parse_endpoint(struct fwnode_handle *fwnode,
++					    struct fwnode_endpoint *endpoint)
++{
++	struct fwnode_handle *port_fwnode = fwnode_get_parent(fwnode);
++
++	endpoint->local_fwnode = fwnode;
++
++	fwnode_property_read_u32(port_fwnode, "port", &endpoint->port);
++	fwnode_property_read_u32(fwnode, "endpoint", &endpoint->id);
++
++	return 0;
++}
++
+ const struct fwnode_operations acpi_fwnode_ops = {
+ 	.property_present = acpi_fwnode_property_present,
+ 	.property_read_int_array = acpi_fwnode_property_read_int_array,
+@@ -1186,4 +1222,8 @@ const struct fwnode_operations acpi_fwnode_ops = {
+ 	.get_parent = acpi_node_get_parent,
+ 	.get_next_child_node = acpi_get_next_subnode,
+ 	.get_named_child_node = acpi_fwnode_get_named_child_node,
++	.graph_get_next_endpoint = acpi_fwnode_graph_get_next_endpoint,
++	.graph_get_remote_endpoint = acpi_fwnode_graph_get_remote_endpoint,
++	.graph_get_port_parent = acpi_node_get_parent,
++	.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint,
+ };
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index fee0705..e1a58ac 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -1156,24 +1156,7 @@ struct fwnode_handle *
+ fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
+ 			       struct fwnode_handle *prev)
+ {
+-	struct fwnode_handle *endpoint = NULL;
+-
+-	if (is_of_node(fwnode)) {
+-		struct device_node *node;
+-
+-		node = of_graph_get_next_endpoint(to_of_node(fwnode),
+-						  to_of_node(prev));
+-
+-		if (node)
+-			endpoint = &node->fwnode;
+-	} else if (is_acpi_node(fwnode)) {
+-		endpoint = acpi_graph_get_next_endpoint(fwnode, prev);
+-		if (IS_ERR(endpoint))
+-			endpoint = NULL;
+-	}
+-
+-	return endpoint;
+-
++	return fwnode_call_ptr_op(fwnode, graph_get_next_endpoint, prev);
+ }
+ EXPORT_SYMBOL_GPL(fwnode_graph_get_next_endpoint);
+ 
+@@ -1186,22 +1169,12 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_next_endpoint);
+ struct fwnode_handle *
+ fwnode_graph_get_remote_port_parent(struct fwnode_handle *fwnode)
+ {
+-	struct fwnode_handle *parent = NULL;
++	struct fwnode_handle *port, *parent;
+ 
+-	if (is_of_node(fwnode)) {
+-		struct device_node *node;
++	port = fwnode_graph_get_remote_port(fwnode);
++	parent = fwnode_call_ptr_op(port, graph_get_port_parent);
+ 
+-		node = of_graph_get_remote_port_parent(to_of_node(fwnode));
+-		if (node)
+-			parent = &node->fwnode;
+-	} else if (is_acpi_node(fwnode)) {
+-		int ret;
+-
+-		ret = acpi_graph_get_remote_endpoint(fwnode, &parent, NULL,
+-						     NULL);
+-		if (ret)
+-			return NULL;
+-	}
++	fwnode_handle_put(port);
+ 
+ 	return parent;
+ }
+@@ -1215,23 +1188,7 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port_parent);
+  */
+ struct fwnode_handle *fwnode_graph_get_remote_port(struct fwnode_handle *fwnode)
+ {
+-	struct fwnode_handle *port = NULL;
+-
+-	if (is_of_node(fwnode)) {
+-		struct device_node *node;
+-
+-		node = of_graph_get_remote_port(to_of_node(fwnode));
+-		if (node)
+-			port = &node->fwnode;
+-	} else if (is_acpi_node(fwnode)) {
+-		int ret;
+-
+-		ret = acpi_graph_get_remote_endpoint(fwnode, NULL, &port, NULL);
+-		if (ret)
+-			return NULL;
+-	}
+-
+-	return port;
++	return fwnode_get_next_parent(fwnode_graph_get_remote_endpoint(fwnode));
+ }
+ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port);
+ 
+@@ -1244,25 +1201,7 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_port);
+ struct fwnode_handle *
+ fwnode_graph_get_remote_endpoint(struct fwnode_handle *fwnode)
+ {
+-	struct fwnode_handle *endpoint = NULL;
+-
+-	if (is_of_node(fwnode)) {
+-		struct device_node *node;
+-
+-		node = of_parse_phandle(to_of_node(fwnode), "remote-endpoint",
+-					0);
+-		if (node)
+-			endpoint = &node->fwnode;
+-	} else if (is_acpi_node(fwnode)) {
+-		int ret;
+-
+-		ret = acpi_graph_get_remote_endpoint(fwnode, NULL, NULL,
+-						     &endpoint);
+-		if (ret)
+-			return NULL;
+-	}
+-
+-	return endpoint;
++	return fwnode_call_ptr_op(fwnode, graph_get_remote_endpoint);
+ }
+ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_endpoint);
+ 
+@@ -1278,22 +1217,8 @@ EXPORT_SYMBOL_GPL(fwnode_graph_get_remote_endpoint);
+ int fwnode_graph_parse_endpoint(struct fwnode_handle *fwnode,
+ 				struct fwnode_endpoint *endpoint)
+ {
+-	struct fwnode_handle *port_fwnode = fwnode_get_parent(fwnode);
+-
+ 	memset(endpoint, 0, sizeof(*endpoint));
+ 
+-	endpoint->local_fwnode = fwnode;
+-
+-	if (is_acpi_node(port_fwnode)) {
+-		fwnode_property_read_u32(port_fwnode, "port", &endpoint->port);
+-		fwnode_property_read_u32(fwnode, "endpoint", &endpoint->id);
+-	} else {
+-		fwnode_property_read_u32(port_fwnode, "reg", &endpoint->port);
+-		fwnode_property_read_u32(fwnode, "reg", &endpoint->id);
+-	}
+-
+-	fwnode_handle_put(port_fwnode);
+-
+-	return 0;
++	return fwnode_call_int_op(fwnode, graph_parse_endpoint, endpoint);
+ }
+ EXPORT_SYMBOL(fwnode_graph_parse_endpoint);
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 2508592..e859e41 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -844,6 +844,54 @@ of_fwnode_get_named_child_node(struct fwnode_handle *fwnode,
+ 	return NULL;
+ }
+ 
++static struct fwnode_handle *
++of_fwnode_graph_get_next_endpoint(struct fwnode_handle *fwnode,
++				  struct fwnode_handle *prev)
++{
++	return of_fwnode_handle(of_graph_get_next_endpoint(to_of_node(fwnode),
++							   to_of_node(prev)));
++}
++
++static struct fwnode_handle *
++of_fwnode_graph_get_remote_endpoint(struct fwnode_handle *fwnode)
++{
++	return of_fwnode_handle(of_parse_phandle(to_of_node(fwnode),
++						 "remote-endpoint", 0));
++}
++
++static struct fwnode_handle *
++of_fwnode_graph_get_port_parent(struct fwnode_handle *fwnode)
++{
++	struct device_node *np;
++
++	/* Get the parent of the port */
++	np = of_get_next_parent(to_of_node(fwnode));
++	if (!np)
++		return NULL;
++
++	/* Is this the "ports" node? If not, it's the port parent. */
++	if (of_node_cmp(np->name, "ports"))
++		return of_fwnode_handle(np);
++
++	return of_fwnode_handle(of_get_next_parent(np));
++}
++
++static int of_fwnode_graph_parse_endpoint(struct fwnode_handle *fwnode,
++					  struct fwnode_endpoint *endpoint)
++{
++	struct device_node *node = to_of_node(fwnode);
++	struct device_node *port_node = of_get_parent(node);
++
++	endpoint->local_fwnode = fwnode;
++
++	of_property_read_u32(port_node, "reg", &endpoint->port);
++	of_property_read_u32(node, "reg", &endpoint->id);
++
++	of_node_put(port_node);
++
++	return 0;
++}
++
+ const struct fwnode_operations of_fwnode_ops = {
+ 	.get = of_fwnode_get,
+ 	.put = of_fwnode_put,
+@@ -853,4 +901,8 @@ const struct fwnode_operations of_fwnode_ops = {
+ 	.get_parent = of_fwnode_get_parent,
+ 	.get_next_child_node = of_fwnode_get_next_child_node,
+ 	.get_named_child_node = of_fwnode_get_named_child_node,
++	.graph_get_next_endpoint = of_fwnode_graph_get_next_endpoint,
++	.graph_get_remote_endpoint = of_fwnode_graph_get_remote_endpoint,
++	.graph_get_port_parent = of_fwnode_graph_get_port_parent,
++	.graph_parse_endpoint = of_fwnode_graph_parse_endpoint,
+ };
+diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+index 8f64b3a..e315d86 100644
+--- a/include/linux/fwnode.h
++++ b/include/linux/fwnode.h
+@@ -57,6 +57,11 @@ struct fwnode_endpoint {
+  * @get_parent: Return the parent of an fwnode.
+  * @get_next_child_node: Return the next child node in an iteration.
+  * @get_named_child_node: Return a child node with a given name.
++ * @graph_get_next_endpoint: Return an endpoint node in an iteration.
++ * @graph_get_remote_endpoint: Return the remote endpoint node of a local
++ *			       endpoint node.
++ * @graph_get_port_parent: Return the parent node of a port node.
++ * @graph_parse_endpoint: Parse endpoint for port and endpoint id.
+  */
+ struct fwnode_operations {
+ 	void (*get)(struct fwnode_handle *fwnode);
+@@ -76,6 +81,15 @@ struct fwnode_operations {
+ 			       struct fwnode_handle *child);
+ 	struct fwnode_handle *
+ 	(*get_named_child_node)(struct fwnode_handle *fwnode, const char *name);
++	struct fwnode_handle *
++	(*graph_get_next_endpoint)(struct fwnode_handle *fwnode,
++				   struct fwnode_handle *prev);
++	struct fwnode_handle *
++	(*graph_get_remote_endpoint)(struct fwnode_handle *fwnode);
++	struct fwnode_handle *
++	(*graph_get_port_parent)(struct fwnode_handle *fwnode);
++	int (*graph_parse_endpoint)(struct fwnode_handle *fwnode,
++				    struct fwnode_endpoint *endpoint);
+ };
+ 
+ #define fwnode_has_op(fwnode, op)				\
+-- 
+2.7.4
+
