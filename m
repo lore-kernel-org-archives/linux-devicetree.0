@@ -1,219 +1,225 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v8 09/24] drivers/fsi: scan slaves & register devices
-Date: Tue,  6 Jun 2017 16:08:44 -0500
-Message-ID: <20170606210859.80431-10-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v8 16/24] drivers/fsi: Add tracepoints for low-level operations
+Date: Tue,  6 Jun 2017 16:08:51 -0500
+Message-ID: <20170606210859.80431-17-cbostic@linux.vnet.ibm.com>
 References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, benh@kernel.crashing.org, joel@jms.id.au
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-Now that we have fsi_slave devices, scan each for endpoints, and
-register them on the fsi bus.
-
-Includes contributions from Christopher Bostic
-<cbostic@linux.vnet.ibm.com>.
+Trace low level read and write FSI bus operations.
 
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 ---
- drivers/fsi/fsi-core.c | 128 ++++++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/fsi.h    |   4 ++
- 2 files changed, 131 insertions(+), 1 deletion(-)
+v8 - type cast to 'int' to clean up build warnings
+---
+ drivers/fsi/fsi-core.c     |  27 +++++++---
+ include/trace/events/fsi.h | 127 +++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 148 insertions(+), 6 deletions(-)
+ create mode 100644 include/trace/events/fsi.h
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 04795f2..eac0bc4 100644
+index 3681365..db54561 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -19,9 +19,23 @@
- #include <linux/idr.h>
- #include <linux/module.h>
- #include <linux/slab.h>
-+#include <linux/bitops.h>
+@@ -23,6 +23,9 @@
  
  #include "fsi-master.h"
  
-+#define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
-+#define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
-+#define FSI_SLAVE_CONF_SLOTS_SHIFT	16
-+#define FSI_SLAVE_CONF_VERSION_MASK	GENMASK(15, 12)
-+#define FSI_SLAVE_CONF_VERSION_SHIFT	12
-+#define FSI_SLAVE_CONF_TYPE_MASK	GENMASK(11, 4)
-+#define FSI_SLAVE_CONF_TYPE_SHIFT	4
-+#define FSI_SLAVE_CONF_CRC_SHIFT	4
-+#define FSI_SLAVE_CONF_CRC_MASK		GENMASK(3, 0)
-+#define FSI_SLAVE_CONF_DATA_BITS	28
++#define CREATE_TRACE_POINTS
++#include <trace/events/fsi.h>
 +
-+static const int engine_page_size = 0x400;
-+
- #define FSI_SLAVE_BASE			0x800
- 
- /*
-@@ -62,6 +76,30 @@ static int fsi_master_read(struct fsi_master *master, int link,
- static int fsi_master_write(struct fsi_master *master, int link,
- 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
- 
-+/* FSI endpoint-device support */
-+
-+static void fsi_device_release(struct device *_device)
-+{
-+	struct fsi_device *device = to_fsi_dev(_device);
-+
-+	kfree(device);
-+}
-+
-+static struct fsi_device *fsi_create_device(struct fsi_slave *slave)
-+{
-+	struct fsi_device *dev;
-+
-+	dev = kzalloc(sizeof(*dev), GFP_KERNEL);
-+	if (!dev)
-+		return NULL;
-+
-+	dev->dev.parent = &slave->dev;
-+	dev->dev.bus = &fsi_bus_type;
-+	dev->dev.release = fsi_device_release;
-+
-+	return dev;
-+}
-+
- /* FSI slave support */
- static int fsi_slave_calc_addr(struct fsi_slave *slave, uint32_t *addrp,
- 		uint8_t *idp)
-@@ -115,6 +153,91 @@ static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
- 			addr, val, size);
- }
- 
-+static int fsi_slave_scan(struct fsi_slave *slave)
-+{
-+	uint32_t engine_addr;
-+	uint32_t conf;
-+	int rc, i;
-+
-+	/*
-+	 * scan engines
-+	 *
-+	 * We keep the peek mode and slave engines for the core; so start
-+	 * at the third slot in the configuration table. We also need to
-+	 * skip the chip ID entry at the start of the address space.
-+	 */
-+	engine_addr = engine_page_size * 3;
-+	for (i = 2; i < engine_page_size / sizeof(uint32_t); i++) {
-+		uint8_t slots, version, type, crc;
-+		struct fsi_device *dev;
-+
-+		rc = fsi_slave_read(slave, (i + 1) * sizeof(conf),
-+				&conf, sizeof(conf));
-+		if (rc) {
-+			dev_warn(&slave->dev,
-+				"error reading slave registers\n");
-+			return -1;
-+		}
-+		conf = be32_to_cpu(conf);
-+
-+		crc = crc4(0, conf, 32);
-+		if (crc) {
-+			dev_warn(&slave->dev,
-+				"crc error in slave register at 0x%04x\n",
-+				i);
-+			return -1;
-+		}
-+
-+		slots = (conf & FSI_SLAVE_CONF_SLOTS_MASK)
-+			>> FSI_SLAVE_CONF_SLOTS_SHIFT;
-+		version = (conf & FSI_SLAVE_CONF_VERSION_MASK)
-+			>> FSI_SLAVE_CONF_VERSION_SHIFT;
-+		type = (conf & FSI_SLAVE_CONF_TYPE_MASK)
-+			>> FSI_SLAVE_CONF_TYPE_SHIFT;
-+
-+		/*
-+		 * Unused address areas are marked by a zero type value; this
-+		 * skips the defined address areas
-+		 */
-+		if (type != 0 && slots != 0) {
-+
-+			/* create device */
-+			dev = fsi_create_device(slave);
-+			if (!dev)
-+				return -ENOMEM;
-+
-+			dev->slave = slave;
-+			dev->engine_type = type;
-+			dev->version = version;
-+			dev->unit = i;
-+			dev->addr = engine_addr;
-+			dev->size = slots * engine_page_size;
-+
-+			dev_dbg(&slave->dev,
-+			"engine[%i]: type %x, version %x, addr %x size %x\n",
-+					dev->unit, dev->engine_type, version,
-+					dev->addr, dev->size);
-+
-+			dev_set_name(&dev->dev, "%02x:%02x:%02x:%02x",
-+					slave->master->idx, slave->link,
-+					slave->id, i - 2);
-+
-+			rc = device_register(&dev->dev);
-+			if (rc) {
-+				dev_warn(&slave->dev, "add failed: %d\n", rc);
-+				put_device(&dev->dev);
-+			}
-+		}
-+
-+		engine_addr += slots * engine_page_size;
-+
-+		if (!(conf & FSI_SLAVE_CONF_NEXT_MASK))
-+			break;
-+	}
-+
-+	return 0;
-+}
-+
- /* Encode slave local bus echo delay */
- static inline uint32_t fsi_smode_echodly(int x)
+ #define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
+ #define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
+ #define FSI_SLAVE_CONF_SLOTS_SHIFT	16
+@@ -542,11 +545,16 @@ static int fsi_master_read(struct fsi_master *master, int link,
  {
-@@ -230,7 +353,10 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
- 		return rc;
- 	}
+ 	int rc;
  
--	/* todo: perform engine scan */
-+	rc = fsi_slave_scan(slave);
-+	if (rc)
-+		dev_dbg(&master->dev, "failed during slave scan with: %d\n",
-+				rc);
++	trace_fsi_master_read(master, link, slave_id, addr, size);
++
+ 	rc = fsi_check_access(addr, size);
+-	if (rc)
+-		return rc;
++	if (!rc)
++		rc = master->read(master, link, slave_id, addr, val, size);
++
++	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
++			false, val, rc);
  
- 	return rc;
+-	return master->read(master, link, slave_id, addr, val, size);
++	return rc;
  }
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index 273cbf6..efa55ba 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -21,6 +21,10 @@ struct fsi_device {
- 	struct device		dev;
- 	u8			engine_type;
- 	u8			version;
-+	u8			unit;
-+	struct fsi_slave	*slave;
-+	uint32_t		addr;
-+	uint32_t		size;
- };
  
- struct fsi_device_id {
+ static int fsi_master_write(struct fsi_master *master, int link,
+@@ -554,11 +562,16 @@ static int fsi_master_write(struct fsi_master *master, int link,
+ {
+ 	int rc;
+ 
++	trace_fsi_master_write(master, link, slave_id, addr, size, val);
++
+ 	rc = fsi_check_access(addr, size);
+-	if (rc)
+-		return rc;
++	if (!rc)
++		rc = master->write(master, link, slave_id, addr, val, size);
+ 
+-	return master->write(master, link, slave_id, addr, val, size);
++	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
++			true, val, rc);
++
++	return rc;
+ }
+ 
+ static int fsi_master_link_enable(struct fsi_master *master, int link)
+@@ -574,6 +587,8 @@ static int fsi_master_link_enable(struct fsi_master *master, int link)
+  */
+ static int fsi_master_break(struct fsi_master *master, int link)
+ {
++	trace_fsi_master_break(master, link);
++
+ 	if (master->send_break)
+ 		return master->send_break(master, link);
+ 
+diff --git a/include/trace/events/fsi.h b/include/trace/events/fsi.h
+new file mode 100644
+index 0000000..697ee66
+--- /dev/null
++++ b/include/trace/events/fsi.h
+@@ -0,0 +1,127 @@
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM fsi
++
++#if !defined(_TRACE_FSI_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_FSI_H
++
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(fsi_master_read,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size),
++	TP_ARGS(master, link, id, addr, size),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd]",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size
++	)
++);
++
++TRACE_EVENT(fsi_master_write,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size, const void *data),
++	TP_ARGS(master, link, id, addr, size, data),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++		__field(__u32,	data)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++		__entry->data = 0;
++		memcpy(&__entry->data, data, size);
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size,
++		(int)__entry->size, &__entry->data
++	)
++);
++
++TRACE_EVENT(fsi_master_rw_result,
++	TP_PROTO(const struct fsi_master *master, int link, int id,
++			uint32_t addr, size_t size,
++			bool write, const void *data, int ret),
++	TP_ARGS(master, link, id, addr, size, write, data, ret),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++		__field(int,	id)
++		__field(__u32,	addr)
++		__field(size_t,	size)
++		__field(bool,	write)
++		__field(__u32,	data)
++		__field(int,	ret)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++		__entry->id = id;
++		__entry->addr = addr;
++		__entry->size = size;
++		__entry->write = write;
++		__entry->data = 0;
++		__entry->ret = ret;
++		if (__entry->write || !__entry->ret)
++			memcpy(&__entry->data, data, size);
++	),
++	TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
++		__entry->master_idx,
++		__entry->link,
++		__entry->id,
++		__entry->addr,
++		__entry->size,
++		__entry->write ? "<=" : "=>",
++		(int)__entry->size, &__entry->data,
++		__entry->ret
++	)
++);
++
++TRACE_EVENT(fsi_master_break,
++	TP_PROTO(const struct fsi_master *master, int link),
++	TP_ARGS(master, link),
++	TP_STRUCT__entry(
++		__field(int,	master_idx)
++		__field(int,	link)
++	),
++	TP_fast_assign(
++		__entry->master_idx = master->idx;
++		__entry->link = link;
++	),
++	TP_printk("fsi%d:%d",
++		__entry->master_idx,
++		__entry->link
++	)
++);
++
++
++#endif /* _TRACE_FSI_H */
++
++#include <trace/define_trace.h>
 -- 
 1.8.2.2
