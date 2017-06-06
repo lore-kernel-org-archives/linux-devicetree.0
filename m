@@ -1,76 +1,29 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH V2 1/2] leds: leds-qti-rgb: Add LED driver for QTI
- TRI_LED module
-Date: Tue, 6 Jun 2017 22:13:42 +0200
-Message-ID: <20170606201342.GB32171@amd>
-References: <20170601072723.12760-1-fenglinw@codeaurora.org>
- <8058ed85-5a64-8dc3-99ea-1ad8128e043d@gmail.com>
- <20170605211609.GA9035@amd>
- <e4efce59-f611-14e5-1d11-09cb660585b2@gmail.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] net: macb: macb.c changed to macb_main.c
+Date: Tue, 6 Jun 2017 22:22:59 +0200
+Message-ID: <20170606202259.GE4233@localhost.localdomain>
+References: <1496413439-12900-1-git-send-email-rafalo@cadence.com>
+ <1496413661-21452-1-git-send-email-rafalo@cadence.com>
+ <20170606183933.GA1205@localhost.localdomain>
+ <20170606.150015.1247326483451270973.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <e4efce59-f611-14e5-1d11-09cb660585b2@gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: fenglinw@codeaurora.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, subbaram@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
+In-Reply-To: <20170606.150015.1247326483451270973.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: rafalo-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jun 06, 2017 at 03:00:15PM -0400, David Miller wrote:
+> He's adjusting the Makefile so that it build macb_main.c into macb.o
 
---FkmkrVfFsRoUs1wW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Duh, sorry, brain shutting down...
 
-Hi!
-
-> >> Generally I came to a conclusion that it will be best to register
-> >> additional LED RGB class device in an addition to three LED class
-> >> devices representing each color. In order to avoid hard to solve
-> >> locking problems I propose to allow for simultaneous access to LED
-> >> class devices and LED RGB class device gathering them.
-> >>
-> >> All in all, currently we also don't give an exclusive access to
-> >> a particular LED class device, which always can lead to overwriting
-> >> current brightness by another process. These issues must be arbitrated
-> >> by user space.
-> >>
-> >> I propose that LED RGB class device exposed following files:
-> >>
-> >> - red_brightness
-> >> - green_brightness
-> >> - blue_brightness
-> >> - latch_color
-> >=20
-> > Actually, I'd just do single file, "rgb_brightness" with 3
-> > values. Overhead of writing 3 values is pretty much 0.
->=20
-> You've always been strongly in favor of one-value-per-file
-> sysfs rule of thumb, but I'm OK with this approach as well :-)
-
-Being values of same type (etc), this is actually permitted. And it is
-better than hack with latch_color :-).
-
-Good.
-								Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---FkmkrVfFsRoUs1wW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlk3DPYACgkQMOfwapXb+vJ06wCeOst8aduqRiHtSFpzgzojv4fL
-2pcAni1rUmGq/T70v9M+zuQwB5u3hR7C
-=AMl9
------END PGP SIGNATURE-----
-
---FkmkrVfFsRoUs1wW--
+Thanks,
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
