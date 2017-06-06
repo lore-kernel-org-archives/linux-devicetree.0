@@ -1,55 +1,44 @@
-From: <patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/3] ARM: dts: stm32h743: Add usart2_pins
-Date: Tue, 6 Jun 2017 18:13:31 +0200
-Message-ID: <1496765613-697-2-git-send-email-patrice.chotard@st.com>
+From: <patrice.chotard@st.com>
+Subject: [PATCH 2/3] ARM: dts: stm32h743: Add usart2 support
+Date: Tue, 6 Jun 2017 18:13:32 +0200
+Message-ID: <1496765613-697-3-git-send-email-patrice.chotard@st.com>
 References: <1496765613-697-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496765613-697-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496765613-697-1-git-send-email-patrice.chotard@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com
+Cc: Patrice Chotard <patrice.chotard@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+From: Patrice Chotard <patrice.chotard@st.com>
 
-Add usart2 pins definition in order to add usart2 support
-dedicated for console output on stm32h743i-disco board.
+This usart is used for console output on stm32h743i-disco board
 
-Signed-off-by: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 ---
- arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/stm32h743.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-index fcc1e06..76bbd65 100644
---- a/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stm32h743-pinctrl.dtsi
-@@ -151,6 +151,19 @@
- 					bias-disable;
- 				};
- 			};
-+
-+			usart2_pins: usart2@0 {
-+				pins1 {
-+					pinmux = <STM32H7_PD5_FUNC_USART2_TX>;
-+					bias-disable;
-+					drive-push-pull;
-+					slew-rate = <0>;
-+				};
-+				pins2 {
-+					pinmux = <STM32H7_PD6_FUNC_USART2_RX>;
-+					bias-disable;
-+				};
-+			};
+diff --git a/arch/arm/boot/dts/stm32h743.dtsi b/arch/arm/boot/dts/stm32h743.dtsi
+index 4685629..36a99db 100644
+--- a/arch/arm/boot/dts/stm32h743.dtsi
++++ b/arch/arm/boot/dts/stm32h743.dtsi
+@@ -68,6 +68,14 @@
+ 
  		};
- 	};
- };
+ 
++		usart2: serial@40004400 {
++			compatible = "st,stm32f7-usart", "st,stm32f7-uart";
++			reg = <0x40004400 0x400>;
++			interrupts = <38>;
++			status = "disabled";
++			clocks = <&timer_clk>;
++		};
++
+ 		timer5: timer@40000c00 {
+ 			compatible = "st,stm32-timer";
+ 			reg = <0x40000c00 0x400>;
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
