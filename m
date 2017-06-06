@@ -1,26 +1,49 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] ARM: dts: imx7-colibri: add NAND support
-Date: Tue, 6 Jun 2017 13:35:18 -0300
-Message-ID: <CAOMZO5BMXwnMbYWUPDMhzu-eCbNjqj3HWK_q5RsWDXG3+C1O0w@mail.gmail.com>
-References: <cover.b62c3a17bd60de48d8fb2ade6dde4f2bc60aaf3c.1496730576.git-series.stefan@agner.ch>
- <c740386a55dc28db37f250eccc11687c1b111554.1496730576.git-series.stefan@agner.ch>
+From: Markus Mayer <code@mmayer.net>
+Subject: Re: [PATCH 1/2] Documentation: devicetree: add binding for Broadcom
+ STB AVS TMON
+Date: Tue, 6 Jun 2017 10:07:08 -0700
+Message-ID: <CANEuBv6y+FD86oH7hHctjrt=5Oh_4_iitgNHLppMOPt=D5yXig@mail.gmail.com>
+References: <20170605210930.65432-1-code@mmayer.net> <20170605210930.65432-2-code@mmayer.net>
+ <e5da2edfae3bd593fd7819db1d7e2337@milecki.pl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <c740386a55dc28db37f250eccc11687c1b111554.1496730576.git-series.stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, han.xu-3arQi8VN3Tc@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?Q?Lothar_Wa=C3=9Fmann?= <LW-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-clk
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <e5da2edfae3bd593fd7819db1d7e2337@milecki.pl>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc: Markus Mayer <code@mmayer.net>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 6, 2017 at 3:30 AM, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org> wrote:
-> The Colibri iMX7 modules come with 512MB on-module SLC NAND flash
-> populated. Make use of it by enabling the GPMI controller.
+On 6 June 2017 at 05:21, Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl> wrote:
+> On 2017-06-05 23:09, Markus Mayer wrote:
+>>
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/thermal/brcm,avs-tmon.txt
+>> @@ -0,0 +1,20 @@
+>> +* Broadcom STB thermal management
+>> +
+>> +Thermal management core, provided by the AVS TMON hardware block.
+>> +
+>> +Required properties:
+>> +- compatible: must be one of "brcm,avs-tmon" or "brcm,avs-tmon-bcm7445"
 >
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+>
+> Is the "one of" correct here? I'm not native English but it sounds like
+> setting both is a wrong thing.
 
-Reviewed-by: Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You are right. It should not say "one of". I'll fix the wording.
+
+>> +- reg: address range for the AVS TMON registers
+>> +- interrupts: temperature monitor interrupt, for high/low threshold
+>> triggers
+>> +- interrupt-names: should be "tmon"
+>> +- interrupt-parent: the parent interrupt controller
+>> +
+>> +Example:
+>> +
+>> +       thermal@f04d1500 {
+>> +               compatible =3D "brcm,avs-tmon-bcm7445", "brcm,avs-tmon";
+>
+>
+> Yet here you use both bindings.
