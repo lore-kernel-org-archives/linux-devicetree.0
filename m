@@ -1,52 +1,64 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gx: Fix sensors reporting from SCP
-Date: Tue, 6 Jun 2017 08:20:32 +0200
-Message-ID: <CAOQ7t2Z1rh-K4dgmGKC7YPSQcfQ+RDrS0Asek0L9cUPT9Nmc1A@mail.gmail.com>
-References: <20170605200350.1113-1-carlo@caione.org> <m2mv9mdrt3.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <m2mv9mdrt3.fsf-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Upstreaming Team <linux-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v5 0/3] ARM: dts: imx7: add NAND support
+Date: Mon,  5 Jun 2017 23:30:47 -0700
+Message-ID: <cover.b62c3a17bd60de48d8fb2ade6dde4f2bc60aaf3c.1496730576.git-series.stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, sboyd@codeaurora.org
+Cc: aisheng.dong@nxp.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@KARO-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 5, 2017 at 11:54 PM, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> writes:
->
->> From: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->>
->> Switch to use the new compatible for the SCPI sensors so that the
->> sensor readings are reported using the correct scale.
->>
->> Signed-off-by: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
->> ---
->>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> index 436b875..3128fa5 100644
->> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
->> @@ -200,7 +200,7 @@
->>               };
->>
->>               scpi_sensors: sensors {
->> -                     compatible = "arm,scpi-sensors";
->> +                     compatible = "amlogic,meson-gxbb-scpi-sensors";
->
-> Shouldn't this be:
->
->                         compatible = "amlogic,meson-gxbb-scpi-sensors", "arm,scpi-sensors";
->
-> For a safe fallback on kernels without the new compatible?
+This revision alters the clock tree such that the clock required by
+the APBH DMA (NAND_USDHC_BUS_CLK_ROOT _after_ gate CCGR20) is available
+as an independent clock.
 
-Yeah, it should.
+So far the gate CCGR20 was used by the NAND_ROOT_CLK only. A previous
+patch added the NAND_ROOT_CLK which also lead to the effect that the
+clock gate CCGR20 gets enabled:
+https://patchwork.ozlabs.org/patch/551967/
 
--- 
-Carlo Caione
+The data sheet seems to indicate that the APBH DMA only uses hclk which
+is connected to NAND_USDHC_BUS_CLK_ROOT through gate CCGR20. Tests
+seem to confirm this wiring.
+
+By adding a new clock IMX7D_NAND_USDHC_BUS_RAWNAND_CLK we can assign
+a clock which also enables the shared CCGR20 gate without changing the
+DMA driver. This better reflects the true wiring and encapsulates the
+SoC specific clock wiring in the clock tree instead leaking it into
+the driver code.
+
+Versions 2 and earlier also included NAND driver changes, which are
+already merged.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+Changes since v4:
+- Introduce *_RAWNAND_CLK which represent clocks after CCGR20
+-
+- Add assigned-clocks to set a reasonable parent for raw NAND
+
+Changes since v3:
+- Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
+
+Changes since v2:
+- Dropped driver changes, alreay merged
+
+Changes since v1:
+- Make clks_count const
+- Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
+
+Stefan Agner (3):
+  clk: imx7d: create clocks behind rawnand clock gate
+  ARM: dts: imx7: add GPMI NAND and APBH DMA
+  ARM: dts: imx7-colibri: add NAND support
+
+ arch/arm/boot/dts/imx7-colibri.dtsi     |  9 +++++++-
+ arch/arm/boot/dts/imx7s.dtsi            | 32 ++++++++++++++++++++++++++-
+ drivers/clk/imx/clk-imx7d.c             |  6 +++--
+ include/dt-bindings/clock/imx7d-clock.h |  4 ++-
+ 4 files changed, 48 insertions(+), 3 deletions(-)
+
+base-commit: e2bb3be2c6c623ff0bad975dc9435531f450f0c5
+-- 
+git-series 0.9.1
