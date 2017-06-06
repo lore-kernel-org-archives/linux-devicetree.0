@@ -1,84 +1,67 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] external references for device tree overlays
-Date: Tue, 6 Jun 2017 00:20:15 -0700
-Message-ID: <593657AF.8050208@gmail.com>
-References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+From: Baolin Wang <baolin.wang@spreadtrum.com>
+Subject: Re: [PATCH v2 2/2] pinctrl: sprd: Add Spreadtrum pin control driver
+Date: Tue, 6 Jun 2017 15:20:55 +0800
+Message-ID: <20170606072055.GA11506@spreadtrum.com>
+References: <ee404d190712f5826662c7b079caf75dba455145.1496664241.git.baolin.wang@spreadtrum.com>
+ <201706060334.Gr0opyQJ%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefani Seibold <stefani.seibold.ext@huawei.com>, Stefani Seibold <stefani@seibold.net>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Holm Rauchfuss <holm.rauchfuss@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201706060334.Gr0opyQJ%fengguang.wu@intel.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: kbuild-all@01.org, linus.walleij@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/17 05:59, Stefani Seibold wrote:
-> From: Stefani Seibold <stefani@seibold.net>
-> 
-> This patch enables external references for symbols which are not
-> exported by the current device tree. For example
-> 
-> // RASPI example (only for testing)
-> /dts-v1/;
-> /plugin/;
-> 
-> / {
->     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
-> 
->     fragment@0 {
->         target-path = "/soc/i2s@7e203000";
->         __overlay__ {
->             #address-cells = <0x00000001>;
->             #size-cells = <0x00000001>;
->             test = "test";
->             timer = <&timer>;
->         };
->     };
-> 
->     __external_symbols__ {
->         timer = "/soc/timer@7e003000";
->     };
-> };
+Hi,
 
-My hope is that the dtc compiler will stop supporting specification of the
-__symbols__ node in dts source, and only generate it automatically in the dtb.
-That change to dtc would not allow any node name specified in a dts to begin
-with an underscore.  Thus node __external_symbols__ would not be allowed.
-
-
+O 二,  6月 06, 2017 at 03:07:22上午 +0800, kbuild test robot wrote:
+> Hi Baolin,
 > 
-> The "timer" symbol is not exported by the RASPI device tree, because it is
-> missing in the __symbols__ section of the device tree.
+> [auto build test WARNING on robh/for-next]
+> [also build test WARNING on v4.12-rc4]
+> [cannot apply to pinctrl/devel next-20170605]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 > 
-> In case of the RASPI device tree this could be simple fixed by modifing
-> the device tree source, but when the device tree is provided by a closed
-> source BIOS this kind of missing symbol could not be fixed.
+> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/DT-pinctrl-Add-binding-documentation-for-Spreadtrum-pin-controller/20170605-222351
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> config: i386-allmodconfig (attached as .config)
+> compiler: gcc-6 (Debian 6.2.0-3) 6.2.0 20160901
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386 
+> 
+> All warnings (new ones prefixed by >>):
+> 
+>    drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_pinconf_set':
+> >> drivers/pinctrl/sprd/pinctrl-sprd.c:484:4: warning: case value '129' not in enumerated type 'enum pin_config_param' [-Wswitch]
+>        case SPRD_PIN_CONFIG_SLEEP_MODE:
+>        ^~~~
+>    drivers/pinctrl/sprd/pinctrl-sprd.c:497:4: warning: case value '131' not in enumerated type 'enum pin_config_param' [-Wswitch]
+>        case SPRD_PIN_CONFIG_INPUT_SLEEP:
+>        ^~~~
+>    drivers/pinctrl/sprd/pinctrl-sprd.c:502:4: warning: case value '132' not in enumerated type 'enum pin_config_param' [-Wswitch]
+>        case SPRD_PIN_CONFIG_OUTPUT_SLEEP:
+>        ^~~~
+>    drivers/pinctrl/sprd/pinctrl-sprd.c:534:4: warning: case value '130' not in enumerated type 'enum pin_config_param' [-Wswitch]
+>        case SPRD_PIN_CONFIG_PULLUP:
+>        ^~~~
+>    drivers/pinctrl/sprd/pinctrl-sprd.c:543:4: warning: case value '133' not in enumerated type 'enum pin_config_param' [-Wswitch]
+>        case SPRD_PIN_CONFIG_PULLUP_SLEEP:
+>        ^~~~
+>    drivers/pinctrl/sprd/pinctrl-sprd.c:548:4: warning: case value '134' not in enumerated type 'enum pin_config_param' [-Wswitch]
+>        case SPRD_PIN_CONFIG_PULLDOWN_SLEEP:
+>        ^~~~
 
-Is there a real example of this issue, or is this a theoretical concern?
-If this is a real example, we should be discouraging such behavior.
+>From kernel doc for 'enum pin_config_param', user need use
+PIN_CONFIG_END + 1 as the base offset if the user need to
+pass in custom configuration to the pin controller. So I do
+not think I need to fix this warning. Thanks.
 
-The suggestion by Pantelis should work, but that is just a hack to get
-you out of a bad situation, not a good practice.
-
-> 
-> An additional benefit is to override a (possible broken) symbol exported
-> by the currect live device tree.
-> 
-> The patch is based and tested on linux 4.12-rc3.
-> 
-> Signed-off-by: Stefani Seibold <stefani.seibold.ext@huawei.com>
-> Signed-off-by: Stefani Seibold <stefani@seibold.net>
 > ---
->  drivers/of/overlay.c  | 19 +++++++++++++++++++
->  drivers/of/resolver.c | 27 ++++++++++++++++++++++-----
->  2 files changed, 41 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-> index 7827786718d8..de6516ea0fcd 100644
-> --- a/drivers/of/overlay.c
-> +++ b/drivers/of/overlay.c
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
 
-< snip >
 
--Frank
