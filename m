@@ -1,76 +1,89 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] external references for device tree overlays
-Date: Tue, 6 Jun 2017 17:05:18 -0500
-Message-ID: <CAL_JsqJwzipUt5Rd02jvygS-vJHPZavU2dK5=3nAYhQDjZOvVw@mail.gmail.com>
-References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
- <1496688186.12947.10.camel@hp800z> <1496776664.3821.3.camel@seibold.net>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 00/23] mtd: nand: denali: Denali NAND IP patch bomb
+Date: Wed, 7 Jun 2017 00:09:11 +0200
+Message-ID: <20170607000911.521d559d@bbrezillon>
+References: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496776664.3821.3.camel-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
+In-Reply-To: <1496704922-12261-1-git-send-email-yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Holm Rauchfuss <holm.rauchfuss-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 6, 2017 at 2:17 PM, Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org> wrote:
-> Hi Pantelis,
->
-> thanks for the suggestion. This feature is not very well documented. I
-> tried this on my rasp1 running 4.12.0-rc3 and it doesn't work. My
-> source is:
->
-> // rapsi example
-> /dts-v1/;
-> /plugin/;
->
-> / {
->     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
->
->     fragment@0 {
->         target-path = "/soc/i2s@7e203000";
->         __overlay__ {
->             #address-cells = <0x00000001>;
->             #size-cells = <0x00000001>;
->             test = "test";
->             timer = <&{/soc/timer@7e0030000}>;
->         };
->     };
-> };
->
->
-> The resulting overlay is (decompiled with fdtdump):
->
-> /dts-v1/;
-> // magic:               0xd00dfeed
-> // totalsize:           0x19a (410)
-> // off_dt_struct:       0x38
-> // off_dt_strings:      0x148
-> // off_mem_rsvmap:      0x28
-> // version:             17
-> // last_comp_version:   16
-> // boot_cpuid_phys:     0x0
-> // size_dt_strings:     0x52
-> // size_dt_struct:      0x110
->
-> / {
->     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
->     fragment@0 {
->         target-path = "/soc/i2s@7e203000";
->         __overlay__ {
->             #address-cells = <0x00000001>;
->             #size-cells = <0x00000001>;
->             test = "test";
->             timer = <0xdeadbeef>;
->         };
->     };
->     __fixups__ {
->         /soc/timer@7e0030000 = "/fragment@0/__overlay__:timer:0";
+Hi Masahiro,
 
-Looks like you (Pantelis had the typo) have an extra 0 in 7e0030000
-compared to your original example.
+On Tue,  6 Jun 2017 08:21:39 +0900
+Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
 
-Rob
+> This patch series intends to solve various problems.
+> 
+> [1] The driver just retrieves the OOB area as-is
+>     whereas the controller uses syndrome page layout.
+> [2] Many NAND chip specific parameters are hard-coded in the driver.
+> [3] ONFi devices are not working
+> [4] It can not read Bad Block Marker
+> 
+> Outstanding changes are:
+> - Fix raw/oob callbacks for syndrome page layout
+> - Implement setup_data_interface() callback
+> - Fix/implement more commands for ONFi devices
+> - Allow to skip the driver internal bounce buffer
+> - Support PIO in case DMA is not supported
+> - Switch from ->cmdfunc over to ->cmd_ctrl
+> 
+> 18 patches were merged at v2.
+> 11 patches were merged at v3.
+> Here is the rest of the series.
+> 
+> v1: https://lkml.org/lkml/2016/11/26/144
+> v2: https://lkml.org/lkml/2017/3/22/804
+> v3: https://lkml.org/lkml/2017/3/30/90
+> 
+> 
+> Masahiro Yamada (23):
+>   mtd: nand: denali_dt: clean up resource ioremap
+>   mtd: nand: denali: use BIT() and GENMASK() for register macros
+>   mtd: nand: add generic helpers to check, match, maximize ECC settings
+>   mtd: nand: denali: avoid hard-coding ECC step, strength, bytes
+>   mtd: nand: denali: remove Toshiba and Hynix specific fixup code
+>   mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
+>   mtd: nand: denali: set NAND_ECC_CUSTOM_PAGE_ACCESS
+>   mtd: nand: denali: do not propagate NAND_STATUS_FAIL to waitfunc()
+>   mtd: nand: denali: remove unneeded find_valid_banks()
+>   mtd: nand: denali: handle timing parameters by setup_data_interface()
+>   mtd: nand: denali: rework interrupt handling
+>   mtd: nand: denali: fix NAND_CMD_STATUS handling
+>   mtd: nand: denali: fix NAND_CMD_PARAM handling
+>   mtd: nand: denali: switch over to cmd_ctrl instead of cmdfunc
+>   mtd: nand: denali: fix bank reset function to detect the number of
+>     chips
+>   mtd: nand: denali: use interrupt instead of polling for bank reset
+>   mtd: nand: denali: propagate page to helpers via function argument
+>   mtd: nand: denali: merge struct nand_buf into struct denali_nand_info
+>   mtd: nand: denali: use flag instead of register macro for direction
+>   mtd: nand: denali: fix raw and oob accessors for syndrome page layout
+>   mtd: nand: denali: skip driver internal bounce buffer when possible
+>   mtd: nand: denali: use non-managed kmalloc() for DMA buffer
+>   mtd: nand: denali: enable bad block table scan
+
+I'd like to apply as much patches as possible from this series (already
+applied patches 1 and 2). Can you point patches that actually depend on
+patches 3 and 4?
+
+> 
+>  .../devicetree/bindings/mtd/denali-nand.txt        |   13 +
+>  drivers/mtd/nand/denali.c                          | 1701 +++++++++-----------
+>  drivers/mtd/nand/denali.h                          |  294 ++--
+>  drivers/mtd/nand/denali_dt.c                       |   54 +-
+>  drivers/mtd/nand/denali_pci.c                      |   15 +-
+>  drivers/mtd/nand/nand_base.c                       |  219 +++
+>  include/linux/mtd/nand.h                           |   35 +
+>  7 files changed, 1235 insertions(+), 1096 deletions(-)
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
