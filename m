@@ -1,136 +1,174 @@
 From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v8 10/24] drivers/fsi: Add device read/write/peek API
-Date: Tue,  6 Jun 2017 16:08:45 -0500
-Message-ID: <20170606210859.80431-11-cbostic@linux.vnet.ibm.com>
+Subject: [PATCH v8 14/24] drivers/fsi: Add sysfs files for FSI master & slave accesses
+Date: Tue,  6 Jun 2017 16:08:49 -0500
+Message-ID: <20170606210859.80431-15-cbostic@linux.vnet.ibm.com>
 References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rostedt@goodmis.org, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, andrew@aj.id.au, alistair@popple.id.au, linux-kernel@vger.kernel.org, Jeremy Kerr <jk@ozlabs.org>, "Edward A . James" <eajames@us.ibm.com>, benh@kernel.crashing.org, joel@jms.id.au
+Cc: Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org, Christopher Bostic <cbostic@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Jeremy Kerr <jk@ozlabs.org>
 
-This change introduces the fsi device API: simple read, write and peek
-accessors for the devices' address spaces.
+This change adds a 'raw' file for reads & writes, and a 'term' file for
+the TERM command, and a 'break' file for issuing a BREAK.
 
-Includes contributions from Christopher Bostic
-<cbostic@linux.vnet.ibm.com> and Edward A. James <eajames@us.ibm.com>.
-
-Signed-off-by: Edward A. James <eajames@us.ibm.com>
 Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
 ---
- drivers/fsi/fsi-core.c | 50 +++++++++++++++++++++++++++++++++++++++++++++++++-
- include/linux/fsi.h    |  7 ++++++-
- 2 files changed, 55 insertions(+), 2 deletions(-)
+ drivers/fsi/fsi-core.c | 116 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 116 insertions(+)
 
 diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index eac0bc4..d7a6e76 100644
+index e9fbd9f..626cc06 100644
 --- a/drivers/fsi/fsi-core.c
 +++ b/drivers/fsi/fsi-core.c
-@@ -34,6 +34,8 @@
- #define FSI_SLAVE_CONF_CRC_MASK		GENMASK(3, 0)
- #define FSI_SLAVE_CONF_DATA_BITS	28
+@@ -287,6 +287,95 @@ static int fsi_slave_scan(struct fsi_slave *slave)
+ 	return 0;
+ }
  
-+#define FSI_PEEK_BASE			0x410
-+
- static const int engine_page_size = 0x400;
- 
- #define FSI_SLAVE_BASE			0x800
-@@ -75,8 +77,54 @@ static int fsi_master_read(struct fsi_master *master, int link,
- 		uint8_t slave_id, uint32_t addr, void *val, size_t size);
- static int fsi_master_write(struct fsi_master *master, int link,
- 		uint8_t slave_id, uint32_t addr, const void *val, size_t size);
-+static int fsi_slave_read(struct fsi_slave *slave, uint32_t addr,
-+		void *val, size_t size);
-+static int fsi_slave_write(struct fsi_slave *slave, uint32_t addr,
-+		const void *val, size_t size);
-+
-+/*
-+ * fsi_device_read() / fsi_device_write() / fsi_device_peek()
-+ *
-+ * FSI endpoint-device support
-+ *
-+ * Read / write / peek accessors for a client
-+ *
-+ * Parameters:
-+ * dev:  Structure passed to FSI client device drivers on probe().
-+ * addr: FSI address of given device.  Client should pass in its base address
-+ *       plus desired offset to access its register space.
-+ * val:  For read/peek this is the value read at the specified address. For
-+ *       write this is value to write to the specified address.
-+ *       The data in val must be FSI bus endian (big endian).
-+ * size: Size in bytes of the operation.  Sizes supported are 1, 2 and 4 bytes.
-+ *       Addresses must be aligned on size boundaries or an error will result.
-+ */
-+int fsi_device_read(struct fsi_device *dev, uint32_t addr, void *val,
-+		size_t size)
++static ssize_t fsi_slave_sysfs_raw_read(struct file *file,
++		struct kobject *kobj, struct bin_attribute *attr, char *buf,
++		loff_t off, size_t count)
 +{
-+	if (addr > dev->size || size > dev->size || addr > dev->size - size)
-+		return -EINVAL;
- 
--/* FSI endpoint-device support */
-+	return fsi_slave_read(dev->slave, dev->addr + addr, val, size);
-+}
-+EXPORT_SYMBOL_GPL(fsi_device_read);
++	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
++	size_t total_len, read_len;
++	int rc;
 +
-+int fsi_device_write(struct fsi_device *dev, uint32_t addr, const void *val,
-+		size_t size)
-+{
-+	if (addr > dev->size || size > dev->size || addr > dev->size - size)
++	if (off < 0)
 +		return -EINVAL;
 +
-+	return fsi_slave_write(dev->slave, dev->addr + addr, val, size);
-+}
-+EXPORT_SYMBOL_GPL(fsi_device_write);
++	if (off > 0xffffffff || count > 0xffffffff || off + count > 0xffffffff)
++		return -EINVAL;
 +
-+int fsi_device_peek(struct fsi_device *dev, void *val)
++	for (total_len = 0; total_len < count; total_len += read_len) {
++		read_len = min_t(size_t, count, 4);
++		read_len -= off & 0x3;
++
++		rc = fsi_slave_read(slave, off, buf + total_len, read_len);
++		if (rc)
++			return rc;
++
++		off += read_len;
++	}
++
++	return count;
++}
++
++static ssize_t fsi_slave_sysfs_raw_write(struct file *file,
++		struct kobject *kobj, struct bin_attribute *attr,
++		char *buf, loff_t off, size_t count)
 +{
-+	uint32_t addr = FSI_PEEK_BASE + ((dev->unit - 2) * sizeof(uint32_t));
++	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
++	size_t total_len, write_len;
++	int rc;
 +
-+	return fsi_slave_read(dev->slave, addr, val, sizeof(uint32_t));
++	if (off < 0)
++		return -EINVAL;
++
++	if (off > 0xffffffff || count > 0xffffffff || off + count > 0xffffffff)
++		return -EINVAL;
++
++	for (total_len = 0; total_len < count; total_len += write_len) {
++		write_len = min_t(size_t, count, 4);
++		write_len -= off & 0x3;
++
++		rc = fsi_slave_write(slave, off, buf + total_len, write_len);
++		if (rc)
++			return rc;
++
++		off += write_len;
++	}
++
++	return count;
 +}
- 
- static void fsi_device_release(struct device *_device)
++
++static struct bin_attribute fsi_slave_raw_attr = {
++	.attr = {
++		.name = "raw",
++		.mode = 0600,
++	},
++	.size = 0,
++	.read = fsi_slave_sysfs_raw_read,
++	.write = fsi_slave_sysfs_raw_write,
++};
++
++static ssize_t fsi_slave_sysfs_term_write(struct file *file,
++		struct kobject *kobj, struct bin_attribute *attr,
++		char *buf, loff_t off, size_t count)
++{
++	struct fsi_slave *slave = to_fsi_slave(kobj_to_dev(kobj));
++	struct fsi_master *master = slave->master;
++
++	if (!master->term)
++		return -ENODEV;
++
++	master->term(master, slave->link, slave->id);
++	return count;
++}
++
++static struct bin_attribute fsi_slave_term_attr = {
++	.attr = {
++		.name = "term",
++		.mode = 0200,
++	},
++	.size = 0,
++	.write = fsi_slave_sysfs_term_write,
++};
++
+ /* Encode slave local bus echo delay */
+ static inline uint32_t fsi_smode_echodly(int x)
  {
-diff --git a/include/linux/fsi.h b/include/linux/fsi.h
-index efa55ba..66bce48 100644
---- a/include/linux/fsi.h
-+++ b/include/linux/fsi.h
-@@ -27,6 +27,12 @@ struct fsi_device {
- 	uint32_t		size;
- };
+@@ -402,6 +491,14 @@ static int fsi_slave_init(struct fsi_master *master, int link, uint8_t id)
+ 		return rc;
+ 	}
  
-+extern int fsi_device_read(struct fsi_device *dev, uint32_t addr,
-+		void *val, size_t size);
-+extern int fsi_device_write(struct fsi_device *dev, uint32_t addr,
-+		const void *val, size_t size);
-+extern int fsi_device_peek(struct fsi_device *dev, void *val);
++	rc = device_create_bin_file(&slave->dev, &fsi_slave_raw_attr);
++	if (rc)
++		dev_warn(&slave->dev, "failed to create raw attr: %d\n", rc);
 +
- struct fsi_device_id {
- 	u8	engine_type;
- 	u8	version;
-@@ -40,7 +46,6 @@ struct fsi_device_id {
- #define FSI_DEVICE_VERSIONED(t, v) \
- 	.engine_type = (t), .version = (v),
++	rc = device_create_bin_file(&slave->dev, &fsi_slave_term_attr);
++	if (rc)
++		dev_warn(&slave->dev, "failed to create term attr: %d\n", rc);
++
+ 	rc = fsi_slave_scan(slave);
+ 	if (rc)
+ 		dev_dbg(&master->dev, "failed during slave scan with: %d\n",
+@@ -523,6 +620,18 @@ static ssize_t master_rescan_store(struct device *dev,
  
--
- struct fsi_driver {
- 	struct device_driver		drv;
- 	const struct fsi_device_id	*id_table;
+ static DEVICE_ATTR(rescan, 0200, NULL, master_rescan_store);
+ 
++static ssize_t master_break_store(struct device *dev,
++		struct device_attribute *attr, const char *buf, size_t count)
++{
++	struct fsi_master *master = to_fsi_master(dev);
++
++	fsi_master_break(master, 0);
++
++	return count;
++}
++
++static DEVICE_ATTR(break, 0200, NULL, master_break_store);
++
+ int fsi_master_register(struct fsi_master *master)
+ {
+ 	int rc;
+@@ -546,6 +655,13 @@ int fsi_master_register(struct fsi_master *master)
+ 		return rc;
+ 	}
+ 
++	rc = device_create_file(&master->dev, &dev_attr_break);
++	if (rc) {
++		device_unregister(&master->dev);
++		ida_simple_remove(&master_ida, master->idx);
++		return rc;
++	}
++
+ 	fsi_master_scan(master);
+ 
+ 	return 0;
 -- 
 1.8.2.2
