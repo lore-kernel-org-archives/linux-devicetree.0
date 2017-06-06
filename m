@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 02/10] irqchip: sunxi-nmi: Document interrupt disabling and clearing at probe time
-Date: Tue,  6 Jun 2017 13:59:24 +0800
-Message-ID: <20170606055932.22548-3-wens@csie.org>
+Subject: [PATCH 03/10] irqchip: sunxi-nmi: Reorder sunxi_sc_nmi_reg_offs' in ascending order
+Date: Tue,  6 Jun 2017 13:59:25 +0800
+Message-ID: <20170606055932.22548-4-wens@csie.org>
 References: <20170606055932.22548-1-wens@csie.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170606055932.22548-1-wens@csie.org>
@@ -10,30 +10,42 @@ To: Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Gleixner <tglx@linu
 Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
 List-Id: devicetree@vger.kernel.org
 
-The sunxi-nmi disables all its interrupts and clears any pending
-interrupts at probe time.
-
-Add comments documenting it, just to make it clear.
+This is a pure code move to reorder the various sunxi_sc_nmi_reg_offs'
+by family and alphabetical order. No functionality changes.
 
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/irqchip/irq-sunxi-nmi.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/irqchip/irq-sunxi-nmi.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/irqchip/irq-sunxi-nmi.c b/drivers/irqchip/irq-sunxi-nmi.c
-index 177efb473c7d..9a7f6971cc3a 100644
+index 9a7f6971cc3a..76f2431b6b7b 100644
 --- a/drivers/irqchip/irq-sunxi-nmi.c
 +++ b/drivers/irqchip/irq-sunxi-nmi.c
-@@ -201,7 +201,10 @@ static int __init sunxi_sc_nmi_irq_init(struct device_node *node,
- 	gc->chip_types[1].regs.type		= reg_offs->ctrl;
- 	gc->chip_types[1].handler		= handle_edge_irq;
+@@ -52,18 +52,18 @@ struct sunxi_sc_nmi_reg_offs {
+ 	u32 enable;
+ };
  
-+	/* Disable any active interrupts */
- 	sunxi_sc_nmi_write(gc, reg_offs->enable, 0);
+-static struct sunxi_sc_nmi_reg_offs sun7i_reg_offs = {
+-	.ctrl	= SUN7I_NMI_CTRL,
+-	.pend	= SUN7I_NMI_PENDING,
+-	.enable	= SUN7I_NMI_ENABLE,
+-};
+-
+ static struct sunxi_sc_nmi_reg_offs sun6i_reg_offs = {
+ 	.ctrl	= SUN6I_NMI_CTRL,
+ 	.pend	= SUN6I_NMI_PENDING,
+ 	.enable	= SUN6I_NMI_ENABLE,
+ };
+ 
++static struct sunxi_sc_nmi_reg_offs sun7i_reg_offs = {
++	.ctrl	= SUN7I_NMI_CTRL,
++	.pend	= SUN7I_NMI_PENDING,
++	.enable	= SUN7I_NMI_ENABLE,
++};
 +
-+	/* Clear any pending NMI interrupts */
- 	sunxi_sc_nmi_write(gc, reg_offs->pend, SUNXI_NMI_IRQ_BIT);
- 
- 	irq_set_chained_handler_and_data(irq, sunxi_sc_nmi_handle_irq, domain);
+ static struct sunxi_sc_nmi_reg_offs sun9i_reg_offs = {
+ 	.ctrl	= SUN9I_NMI_CTRL,
+ 	.pend	= SUN9I_NMI_PENDING,
 -- 
 2.11.0
