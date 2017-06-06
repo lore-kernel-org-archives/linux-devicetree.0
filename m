@@ -1,78 +1,128 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: mediatek: Add bindings for mediatek MT7622 soc
- platform" to the spi tree
-Date: Tue, 06 Jun 2017 20:07:14 +0100
-Message-ID: <E1dIJow-0007ZA-UM@debutante>
-References: <1496387923-31674-2-git-send-email-leilk.liu@mediatek.com>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 5/7] drm/vc4: Add support for the TXP (transposer) block
+Date: Tue, 6 Jun 2017 21:13:00 +0200
+Message-ID: <20170606211300.61e93ec1@bbrezillon>
+References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1496392332-8722-6-git-send-email-boris.brezillon@free-electrons.com>
+ <20170605112549.GA32480@e106950-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496387923-31674-2-git-send-email-leilk.liu@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Leilk Liu <leilk.liu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170605112549.GA32480@e106950-lin.cambridge.arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Brian Starkey <brian.starkey@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee@kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, dri-devel@lists.freedesktop.org, Gerd Hoffmann <kraxel@redhat.com>, Florian Fainelli <f.fainelli@gmail.com>, Eben Upton <eben@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, "Hollingworth, Gordon" <gordon@raspberrypi.org>, "Cobley,
+ Dom" <dom@raspberrypi.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Scott Branden <sbranden@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   spi: mediatek: Add bindings for mediatek MT7622 soc platform
-
-has been applied to the spi tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From d27ae103bf89a0ed28976da58a8f5e1c4c85ecb5 Mon Sep 17 00:00:00 2001
-From: Leilk Liu <leilk.liu@mediatek.com>
-Date: Fri, 2 Jun 2017 15:18:41 +0800
-Subject: [PATCH] spi: mediatek: Add bindings for mediatek MT7622 soc platform
-
-This patch adds a DT binding documentation for the MT7622 soc.
-
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-index e43f4cf4cf35..c0b1f0134390 100644
---- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible: should be one of the following.
-     - mediatek,mt2701-spi: for mt2701 platforms
-     - mediatek,mt6589-spi: for mt6589 platforms
-+    - mediatek,mt7622-spi: for mt7622 platforms
-     - mediatek,mt8135-spi: for mt8135 platforms
-     - mediatek,mt8173-spi: for mt8173 platforms
- 
--- 
-2.11.0
+SGkgQnJpYW4sCgpMZSBNb24sIDUgSnVuIDIwMTcgMTI6MjU6NTAgKzAxMDAsCkJyaWFuIFN0YXJr
+ZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4gYSDDqWNyaXQgOgoKPiBIaSBCb3JpcywKPiAKPiBJ
+IGNhbid0IHNwZWFrIGZvciB0aGUgSFctc3BlY2lmaWMgZGV0YWlscywgYnV0IHRoZSB3cml0ZWJh
+Y2sgcGFydAo+IGxvb2tzIHByZXR0eSBnb29kIChhbmQgZmFtaWxpYXIgOy0pIHRvIG1lLiBUaGVy
+ZSBjZXJ0YWlubHkgc2VlbXMgdG8gYmUKPiBzb21lIHNjb3BlIGZvciBjb2RlLXNoYXJpbmcgdGhl
+cmUsIGJ1dCBJIHRoaW5rIGl0J3MgZmluZSBub3QgdG8gZG8gaXQKPiB5ZXQuCgpBZ3JlZWQuCgo+
+IAo+IEkndmUgYSBmdXJ0aGVyIHF1ZXJ5IGJlbG93IGFib3V0IHRoZSBoYW5kbGluZyBvZiBDUlRD
+IGV2ZW50cy4KPiAKClsuLi5dCgo+ID4rCj4gPit2b2lkIHZjNF90eHBfYXRvbWljX2NvbW1pdChz
+dHJ1Y3QgZHJtX2RldmljZSAqZGV2LAo+ID4rCQkJICAgc3RydWN0IGRybV9hdG9taWNfc3RhdGUg
+Km9sZF9zdGF0ZSkKPiA+K3sKPiA+KwlzdHJ1Y3QgdmM0X2RldiAqdmM0ID0gdG9fdmM0X2Rldihk
+ZXYpOwo+ID4rCXN0cnVjdCB2YzRfdHhwICp0eHAgPSB2YzQtPnR4cDsKPiA+KwlzdHJ1Y3QgZHJt
+X2Nvbm5lY3Rvcl9zdGF0ZSAqY29ubl9zdGF0ZSA9IHR4cC0+Y29ubmVjdG9yLmJhc2Uuc3RhdGU7
+Cj4gPisJc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGU7Cj4gPisJc3RydWN0IGRybV9nZW1f
+Y21hX29iamVjdCAqZ2VtOwo+ID4rCXN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiOwo+ID4rCXUz
+MiBjdHJsID0gVFhQX0dPIHwgVFhQX0VJOwo+ID4rCj4gPisJLyogV3JpdGViYWNrIGNvbm5lY3Rv
+ciBpcyBkaXNhYmxlZCwgbm90aGluZyB0byBkby4gKi8KPiA+KwlpZiAoIWNvbm5fc3RhdGUtPmNy
+dGMpCj4gPisJCXJldHVybjsKPiA+Kwo+ID4rCS8qIFdyaXRlYmFjayBjb25uZWN0b3IgaXMgZW5h
+YmxlZCwgYnV0IGhhcyBubyBGQiBhc3NpZ25lZCB0byBpdC4gRmFrZSBhCj4gPisJICogdmJsYW5r
+IGV2ZW50IHRvIGNvbXBsZXRlIC0+ZmxpcF9kb25lLgo+ID4rCSAqLwo+ID4rCWlmICghY29ubl9z
+dGF0ZS0+d3JpdGViYWNrX2pvYiB8fCAhY29ubl9zdGF0ZS0+d3JpdGViYWNrX2pvYi0+ZmIpIHsK
+PiA+KwkJdmM0X2NydGNfZW9mX2V2ZW50KGNvbm5fc3RhdGUtPmNydGMpOyAgCj4gCj4gSSdtIG5v
+dCBzdXJlIGFib3V0IGhpZGluZyBhd2F5IHRoZSBvbmUtc2hvdCB0aGluZyBsaWtlIHRoaXMuIElm
+IHRoZQo+IENSVEMgcmVtYWlucyAiYWN0aXZlIiBmcm9tIHRoZSBBUEkgcG9pbnQgb2Ygdmlldywg
+SSdkIGV4cGVjdCBpdCB0byBiZQo+IGFibGUgdG8ga2VlcCBnZW5lcmF0aW5nIFZCTEFOSyBldmVu
+dHMuCj4gCj4gSSBkb24ndCBrbm93IGhvdyB0byBkbyBpZiwgYnV0IGlmIHRoZXJlIHdlcmUgc29t
+ZSBub3Rpb24gb2YKPiAiYXV0by1kaXNhYmxpbmciIENSVENzIHRoZW4gdGhpcyBxdWlyayB3b3Vs
+ZCBnbyBhd2F5LCBhbmQgeW91J2QgYWxzbwo+IGJlIGFibGUgdG8gZW5mb3JjZSB0aGF0IHRoZSBD
+UlRDIGNhbid0IGJlIGVuYWJsZWQgd2l0aG91dCBhIHdyaXRlYmFjawo+IGZyYW1lYnVmZmVyLgoK
+SSBkb24ndCBoYXZlIGEgc3Ryb25nIG9waW5pb24gb24gImF1dG8tZGlzYWJsaW5nIENSVEMiIHZz
+ICJmYWtlIFZCTEFOSwpldmVudHMiLiBOb3RlIHRoYXQgSSdtIGFscmVhZHkgZmFraW5nIGEgVkJM
+QU5LIGV2ZW50IHdoZW4gYWN0aXZhdGluZwp3cml0ZWJhY2ssIGJlY2F1c2UgdGhlcmUncyBubyBz
+dWNoIGNvbmNlcHQgYXQgdGhlIEhWUy9UWFAgbGV2ZWwuIFdlCmRvIGhhdmUgRU9GIChFbmQgT2Yg
+RnJhbWUpIGFuZCB3cml0ZWJhY2sgZG9uZSBldmVudHMsIGJ1dCB0aGVzZSBhcmUKcXVpdGUgaW5k
+ZXBlbmRlbnQgZnJvbSB0aGUgVkJMQU5LIGV2ZW50cyBnZW5lcmF0ZWQgYnkgdGhlIHBpeGVsdmFs
+dmUKYmxvY2sgKHRoZSBibG9jayByZXNwb25zaWJsZSBmb3IgZ2VuZXJhdGluZyB0aGUgSFNZTkMv
+VlNZTkMgc2lnbmFscykuCgo+IAo+IEknbSBhbHNvIG5vdCBzdXJlIGhvdyAoaWY/KSB0aGlzIHdv
+cmtzIHRvZGF5IHdpdGggYSBDUlRDIGRyaXZpbmcgYSBEU0kKPiBjb21tYW5kLW1vZGUgcGFuZWwu
+IERvZXMgdGhlIENSVEMga2VlcCBnZW5lcmF0aW5nIFZCTEFOS3MgZXZlbiB3aGVuCj4gdGhlcmUg
+YXJlIG5vIHVwZGF0ZXM/CgpJIGRvbid0IGtub3cuIElzIHRoaXMgbWFuZGF0b3J5IHRvIGhhdmUg
+VkJMQU5LIGV2ZW50cz8gSSBtZWFuLCB0aGUKY29yZSBpcyB1c2luZyBWQkxBTksgZXZlbnRzIHRv
+IGRldGVjdCB3aGVuIHBhZ2UgZmxpcHMgaGF2ZSBiZWVuIGRvbmUsCnRoYXQgaXMsIHdoZW4gb2xk
+IGZyYW1lYnVmZmVycyBhcmUgdW51c2VkIGFuZCBuZXcgb25lcyBzdGFydGVkIHRvIGJlCmZldGNo
+ZWQgYnkgdGhlIENSVEMsIGJ1dCBvbiBzb21lIEhXLCBWQkxBTksgaXMgbm90IHRoZSBvbmx5IHdh
+eSB0bwpkZXRlY3Qgc3VjaCBzaXR1YXRpb25zLiBUaGUgcXVlc3Rpb24gaXMsIGFyZSB0aGVyZSBv
+dGhlciBzaXR1YXRpb25zCndoZXJlIFZCTEFOSyBldmVudHMgYXJlIHJlcXVpcmVkLCBvciBpcyB0
+aGVyZSBhbiBpbXBsaWNpdCBydWxlIHN0YXRpbmcKdGhhdCBhIENSVEMgaGFzIHRvIGdlbmVyYXRl
+IFZCTEFOSyBldmVudHMgYXQgYSB2cmVmcmVzaCByYXRlIGV2ZW4gd2hlbgp0aGUgZGlzcGxheSBp
+cyBhY3R1YWxseSBub3QgdXBkYXRlZCB3aGVuIG5vdGhpbmcgY2hhbmdlcz8KCj4gCj4gPisJCXJl
+dHVybjsKPiA+Kwl9Cj4gPisKPiA+KwlmYiA9IGNvbm5fc3RhdGUtPndyaXRlYmFja19qb2ItPmZi
+Owo+ID4rCj4gPisJc3dpdGNoIChmYi0+Zm9ybWF0LT5mb3JtYXQpIHsKPiA+KwljYXNlIERSTV9G
+T1JNQVRfQVJHQjg4ODg6Cj4gPisJCWN0cmwgfD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNl
+IERSTV9GT1JNQVRfWFJHQjg4ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9S
+TUFUX0FSR0I4ODg4LCBUWFBfRk9STUFUKSB8Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQ
+X0JZVEVfRU5BQkxFKTsKPiA+KwkJYnJlYWs7Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfQUJH
+Ujg4ODg6Cj4gPisJCWN0cmwgfD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNlIERSTV9GT1JN
+QVRfWEJHUjg4ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX0FCR1I4
+ODg4LCBUWFBfRk9STUFUKSB8Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQX0JZVEVfRU5B
+QkxFKTsKPiA+KwkJYnJlYWs7Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfUkdCQTg4ODg6Cj4g
+PisJCWN0cmwgfD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNlIERSTV9GT1JNQVRfUkdCWDg4
+ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX1JHQkE4ODg4LCBUWFBf
+Rk9STUFUKSB8Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQX0JZVEVfRU5BQkxFKTsKPiA+
+KwkJYnJlYWs7Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfQkdSQTg4ODg6Cj4gPisJCWN0cmwg
+fD0gVFhQX0FMUEhBX0VOQUJMRTsKPiA+KwljYXNlIERSTV9GT1JNQVRfQkdSWDg4ODg6Cj4gPisJ
+CWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX0JHUkE4ODg4LCBUWFBfRk9STUFUKSB8
+Cj4gPisJCQlWQzRfU0VUX0ZJRUxEKDB4ZiwgVFhQX0JZVEVfRU5BQkxFKTsKPiA+KwkJYnJlYWs7
+Cj4gPisKPiA+KwljYXNlIERSTV9GT1JNQVRfQkdSODg4Ogo+ID4rCQljdHJsIHw9IFZDNF9TRVRf
+RklFTEQoVFhQX0ZPUk1BVF9CR1I4ODgsIFRYUF9GT1JNQVQpIHwKPiA+KwkJCVZDNF9TRVRfRklF
+TEQoMHhmLCBUWFBfQllURV9FTkFCTEUpOwo+ID4rCQlicmVhazsKPiA+Kwo+ID4rCWNhc2UgRFJN
+X0ZPUk1BVF9SR0I4ODg6Cj4gPisJCWN0cmwgfD0gVkM0X1NFVF9GSUVMRChUWFBfRk9STUFUX1JH
+Qjg4OCwgVFhQX0ZPUk1BVCkgfAo+ID4rCQkJVkM0X1NFVF9GSUVMRCgweGYsIFRYUF9CWVRFX0VO
+QUJMRSk7Cj4gPisJCWJyZWFrOwo+ID4rCWRlZmF1bHQ6Cj4gPisJCVdBUk5fT04oMSk7Cj4gPisJ
+CXJldHVybjsKPiA+Kwl9Cj4gPisKPiA+KwlpZiAoIShjdHJsICYgVFhQX0FMUEhBX0VOQUJMRSkp
+Cj4gPisJCWN0cmwgfD0gVFhQX0FMUEhBX0lOVkVSVDsKPiA+Kwo+ID4rCW1vZGUgPSAmY29ubl9z
+dGF0ZS0+Y3J0Yy0+c3RhdGUtPmFkanVzdGVkX21vZGU7Cj4gPisJZ2VtID0gZHJtX2ZiX2NtYV9n
+ZXRfZ2VtX29iaihmYiwgMCk7Cj4gPisJVFhQX1dSSVRFKFRYUF9EU1RfUFRSLCBnZW0tPnBhZGRy
+ICsgZmItPm9mZnNldHNbMF0pOwo+ID4rCVRYUF9XUklURShUWFBfRFNUX1BJVENILCBmYi0+cGl0
+Y2hlc1swXSk7Cj4gPisJVFhQX1dSSVRFKFRYUF9ESU0sCj4gPisJCSAgVkM0X1NFVF9GSUVMRCht
+b2RlLT5oZGlzcGxheSwgVFhQX1dJRFRIKSB8Cj4gPisJCSAgVkM0X1NFVF9GSUVMRChtb2RlLT52
+ZGlzcGxheSwgVFhQX0hFSUdIVCkpOwo+ID4rCj4gPisJVFhQX1dSSVRFKFRYUF9EU1RfQ1RSTCwg
+Y3RybCk7Cj4gPisKPiA+Kwlkcm1fd3JpdGViYWNrX3F1ZXVlX2pvYigmdHhwLT5jb25uZWN0b3Is
+IGNvbm5fc3RhdGUtPndyaXRlYmFja19qb2IpOwo+ID4rCWNvbm5fc3RhdGUtPndyaXRlYmFja19q
+b2IgPSBOVUxMOwo+ID4rfQo+ID4rCj4gPitib29sIHZjNF9pc190eHBfZW5jb2RlcihzdHJ1Y3Qg
+ZHJtX2RldmljZSAqZGV2LCBzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCj4gPit7Cj4gPisJ
+c3RydWN0IHZjNF9kZXYgKnZjNCA9IHRvX3ZjNF9kZXYoZGV2KTsKPiA+Kwo+ID4rCXJldHVybiBl
+bmNvZGVyID09ICZ2YzQtPnR4cC0+Y29ubmVjdG9yLmVuY29kZXI7Cj4gPit9Cj4gPisKPiA+K3N0
+YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfZnVuY3MgdmM0X3R4cF9jb25u
+ZWN0b3JfaGVscGVyX2Z1bmNzID0gewo+ID4rCS5nZXRfbW9kZXMgPSB2YzRfdHhwX2Nvbm5lY3Rv
+cl9nZXRfbW9kZXMsCj4gPisJLm1vZGVfdmFsaWQgPSB2YzRfdHhwX2Nvbm5lY3Rvcl9tb2RlX3Zh
+bGlkLAo+ID4rCS5hdG9taWNfY2hlY2sgPSB2YzRfdHhwX2Nvbm5lY3Rvcl9hdG9taWNfY2hlY2ss
+ICAKPiAKPiBodWguIFRoaXMgaG9vayBkaWRuJ3QgZXhpc3Qgd2hlbiBJIGRpZCBNYWxpLURQLiBJ
+IHdvbmRlciBpZiB3ZSBzaG91bGQKPiBzd2l0Y2ggTWFsaS1EUCB0byBpdCB0b28uIERvIHlvdSBr
+bm93IGlmIHRoZSBzZW1hbnRpY3MgYXJlIGFueQo+IGRpZmZlcmVudCBmcm9tIHRoZSBlbmNvZGVy
+IGF0b21pY19jaGVjaz8KCkl0IHNlZW1zIHRoYXQgY29ubmVjdG9yLT5hdG9taWNfY2hlY2soKSBp
+cyBjYWxsZWQgZXZlbiB3aGVuIHRoZQpDUlRDIC0+IGVuY29kZXIgLT4gY29ubmVjdG9yIHJvdXRp
+bmcgZGlkIG5vdCBjaGFuZ2UgaWYgYXQgbGVhc3Qgb25lIG9mCnRoZSBwcm9wZXJ0eSBhdHRhY2hl
+ZCB0byB0aGUgY29ubmVjdG9yIHdhcyBjaGFuZ2VkLCB3aGljaCBpcyBhIGdvb2QgZml0CmZvciB3
+cml0ZWJhY2sgY29ubmVjdG9ycyA7LSkuCkFsc28sIGJ5IHVzaW5nIGNvbm5lY3Rvci0+YXRvbWlj
+X2NoZWNrKCkgSSBnZXQgcmlkIG9mIHRoZQpkdW1teSBlbmNvZGVyX2hlbHBlcl9mdW5jcyBvYmpl
+Y3QuCgpUaGFua3MgZm9yIHRoZSByZXZpZXcsCgpCb3JpcwpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
