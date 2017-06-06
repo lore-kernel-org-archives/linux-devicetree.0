@@ -1,42 +1,45 @@
-From: varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: Re: [PATCH v3 2/5] dt-bindings: qcom: Add IPQ8074 bindings
-Date: Tue, 06 Jun 2017 16:01:43 +0530
-Message-ID: <a6e380b57702b182cde8dc5317511e58@codeaurora.org>
-References: <1496316482-25468-1-git-send-email-varada@codeaurora.org>
- <1496316482-25468-3-git-send-email-varada@codeaurora.org>
- <20170605165414.zbcwbvto77awdk45@rob-hp-laptop>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH 2/4] ARM: shmobile: document iW-RainboW-G20D-Qseven-RZG1M
+ board
+Date: Tue, 6 Jun 2017 10:35:38 +0000
+Message-ID: <KL1PR06MB1702F51A1FE7A965C0EC9FEBB8CB0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1496420523-23506-1-git-send-email-biju.das@bp.renesas.com>
+ <1496420523-23506-3-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdUHetaZMhfxBXF-1y0yv5UdUQrxH7NpkUfymty5hs_7EQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170605165414.zbcwbvto77awdk45@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mraghava-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sjaganat-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUHetaZMhfxBXF-1y0yv5UdUQrxH7NpkUfymty5hs_7EQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2017-06-05 22:24, Rob Herring wrote:
-> On Thu, Jun 01, 2017 at 04:57:59PM +0530, Varadarajan Narayanan wrote:
->> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/qcom.txt | 2 ++
->>  1 file changed, 2 insertions(+)
-> 
-> I acked v2. Please add acks when posting new versions.
-> 
-
-Sorry for missing that here. I posted V4 to which I added.
-
-Varada
-
-> Rob
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiBPbiBGcmksIEp1biAyLCAyMDE3IGF0IDY6MjIgUE0sIEJpanUgRGFzIDxiaWp1LmRhc0BicC5y
+ZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gRG9jdW1lbnQgdGhlIGlXLVJhaW5ib1ctRzIwRC1Rc2V2
+ZW4tUlpHMU0gZGV2aWNlIHRyZWUgYmluZGluZ3MsDQo+ID4gbGlzdGluZyBpdCBhcyBhIHN1cHBv
+cnRlZCBib2FyZC4NCj4gPg0KPiA+IFRoaXMgYWxsb3dzIHRvIHVzZSBjaGVja3BhdGNoLnBsIHRv
+IHZhbGlkYXRlIC5kdHMgZmlsZXMgcmVmZXJyaW5nIHRvDQo+ID4gdGhlIGlXLVJhaW5ib1ctRzIw
+RC1Rc2V2ZW4tUlpHMU0gYm9hcmQuDQo+DQo+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+ID4g
+UmV2aWV3ZWQtYnk6IENocmlzIFBhdGVyc29uIDxjaHJpcy5wYXRlcnNvbjJAcmVuZXNhcy5jb20+
+DQo+DQo+IFJldmlld2VkLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xp
+ZGVyLmJlPg0KPg0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9h
+cm0vc2htb2JpbGUudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2FybS9zaG1vYmlsZS50eHQNCj4gPiBAQCAtNjksNiArNjksOCBAQCBCb2FyZHM6DQo+ID4g
+ICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMsa3ptOWQiLCAicmVuZXNhcyxlbWV2MiINCj4gPiAg
+ICAtIEt5b3RvIE1pY3JvY29tcHV0ZXIgQ28uIEtaTS1BOS1HVA0KPiA+ICAgICAgY29tcGF0aWJs
+ZSA9ICJyZW5lc2FzLGt6bTlnIiwgInJlbmVzYXMsc2g3M2EwIg0KPiA+ICsgIC0gaVdhdmUgU3lz
+dGVtcyBSWi9HMU0gUXNldmVuIERldmVsb3BtZW50IFBsYXRmb3JtIChpVy1SYWluYm9XLQ0KPiBH
+MjBELVFzZXZlbikNCj4gPiArICAgIGNvbXBhdGlibGUgPSAiaXdhdmUsZzIwZCIsICJyZW5lc2Fz
+LHI4YTc3NDMiDQo+DQo+IFBsZWFzZSBrZWVwIHRoZSBsaXN0IHNvcnRlZCBhbHBoYWJldGljYWxs
+eS4NCg0KVGhhbmtzIGZvciB0aGUgaW5wdXQuIEkgd2lsbCBjb3JyZWN0IGl0Lg0KDQo+ID4gICAg
+LSBMYWdlciAoUlRQMFJDNzc5MFNFQjAwMDEwUykNCj4gPiAgICAgIGNvbXBhdGlibGUgPSAicmVu
+ZXNhcyxsYWdlciIsICJyZW5lc2FzLHI4YTc3OTAiDQo+ID4gICAgLSBNM1VMQ0IgKFItQ2FyIFN0
+YXJ0ZXIgS2l0IFBybywgUlRQMFJDNzc5NlNLQjAwMDEwUykNCg0KUmVnYXJkcywNCkJpanUNCg0K
+DQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxi
+b2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdp
+c3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4N
+Cg==
