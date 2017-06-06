@@ -1,90 +1,53 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 12/20] ARM: dts: uniphier: Add generic compatible
- string for I2C EEPROM
-Date: Tue, 6 Jun 2017 11:04:31 +0200
-Message-ID: <CABxcv=mPzDVTh_ZH1VtuHMUhVrR+hxz8GwcQT38hwJJqHY+fJA@mail.gmail.com>
-References: <20170523133448.4794-1-javier@dowhile0.org> <20170523133448.4794-13-javier@dowhile0.org>
- <CAK7LNATDvesYLKimY=aKfT6kAiidq6Ufd=kCWGQcCZ_Xy-27tw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNATDvesYLKimY=aKfT6kAiidq6Ufd=kCWGQcCZ_Xy-27tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: [PATCH V2 1/3] devicetree: add UniPhier WDT devicetree bindings documentation
+Date: Tue,  6 Jun 2017 18:11:32 +0900
+Message-ID: <1496740294-12653-2-git-send-email-hayashibara.keiji@socionext.com>
+References: <1496740294-12653-1-git-send-email-hayashibara.keiji@socionext.com>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496740294-12653-1-git-send-email-hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
+Cc: linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Masahiro,
+Add uniphier-wdt bindings documentation.
 
-On Mon, Jun 5, 2017 at 7:13 AM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-> Hi.
->
-> 2017-05-23 22:34 GMT+09:00 Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>:
->> The at24 driver allows to register I2C EEPROM chips using different vendor
->> and devices, but the I2C subsystem does not take the vendor into account
->> when matching using the I2C table since it only has device entries.
->>
->> But when matching using an OF table, both the vendor and device has to be
->> taken into account so the driver defines only a set of compatible strings
->> using the "atmel" vendor as a generic fallback for compatible I2C devices.
->>
->> So add this generic fallback to the device node compatible string to make
->> the device to match the driver using the OF device ID table.
->>
->> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
->>
->> ---
->>
->> Changes in v5:
->> - Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
->>
->> Changes in v4:
->> - Only use the atmel manufacturer in the compatible string instead of
->>   keeping the deprecated ones (Rob Herring).
->>
->> Changes in v3: None
->> Changes in v2: None
->>
->>  arch/arm/boot/dts/uniphier-pro4-ace.dts    | 2 +-
->>  arch/arm/boot/dts/uniphier-pro4-sanji.dts  | 2 +-
->>  arch/arm/boot/dts/uniphier-pxs2-gentil.dts | 2 +-
->>  3 files changed, 3 insertions(+), 3 deletions(-)
->
->
-> Why didn't you touch
-> arch/arm/boot/dts/uniphier-ref-daughter.dtsi ?
->
+Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/uniphier-wdt.txt    | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
 
-Because the compatible string "microchip,24lc128" used by the I2C
-EEPROM node on that DTS is not supported by the
-drivers/misc/eeprom/at24.c driver (in fact the only occurrence for
-24lc128 I see is in that DTS).
+diff --git a/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt b/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
+new file mode 100644
+index 0000000..a59d1ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
+@@ -0,0 +1,20 @@
++UniPhier watchdog timer controller
++
++This UniPhier watchdog timer controller must be under sysctrl compatible node.
++
++Required properties:
++- compatible: should be "socionext,uniphier-wdt"
++
++Example:
++
++	sysctrl@61840000 {
++		compatible = "socionext,uniphier-ld11-sysctrl",
++			     "simple-mfd", "syscon";
++		reg = <0x61840000 0x4000>;
++
++		sys_wdt: watchdog {
++			compatible = "socionext,uniphier-wdt";
++		}
++
++		other nodes ...
++	};
+-- 
+2.7.4
 
-Maybe is a typo and it should be "microchip,24c128" instead ? In any
-case, I think this should be fixed as a separate patch and is out of
-scope for this series.
-
->
->
-> BTW, has the driver change merged?
->
-
-No, it hasn't been merged yet but there's no strict order in which the
-changes should be picked so the DTS patches can be applied
-independently. I haven't had feedback from Wolfram yet, but he was the
-one who suggested this and so I guess he will be Ok with the driver
-changes.
-
->
->
-> --
-> Best Regards
-> Masahiro Yamada
-
-Best regards,
-Javier
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
