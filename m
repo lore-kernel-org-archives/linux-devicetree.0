@@ -1,281 +1,95 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH v4 14/28] ARM64: dts: Add Actions Semi S900 and Bubblegum-96
-Date: Tue,  6 Jun 2017 02:54:12 +0200
-Message-ID: <20170606005426.26446-15-afaerber@suse.de>
-References: <20170606005426.26446-1-afaerber@suse.de>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v14 4/7] usb: core: add power sequence handling for USB
+ devices
+Date: Tue, 6 Jun 2017 09:32:17 +0800
+Message-ID: <20170606013217.GA26189@b29397-desktop>
+References: <20170605065537.GE20014@b29397-desktop>
+ <Pine.LNX.4.44L0.1706051013300.1795-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170606005426.26446-1-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mp-cs@actions-semi.com, Thomas Liau <thomas.liau@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, 96boards@ucrobotics.com, support@lemaker.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1706051013300.1795-100000@iolanthe.rowland.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Peter Chen <peter.chen@nxp.com>, gregkh@linuxfoundation.org, ulf.hansson@linaro.org, broonie@kernel.org, sre@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, dbaryshkov@gmail.com, mark.rutland@arm.com, heiko@sntech.de, stephen.boyd@linaro.org, frank.li@nxp.com, gary.bisson@boundarydevices.com, festevam@gmail.com, stillcompiling@gmail.com, arnd@arndb.de, vaibhav.hiremath@linaro.org, krzk@kernel.org, mka@chromium.org, devicetree@vger.kernel.org, mail@maciej.szmigiero.name, pawel.moll@arm.com, Linux-pm mailing list <linux-pm@vger.kernel.org>, s.hauer@pengutronix.de, troy.kisky@boundarydevices.com, linux-arm-kernel@lists.infradead.org, hverkuil@xs4all.nl, oscar@naiandei.net, USB
 List-Id: devicetree@vger.kernel.org
 
-UART0/1/4/6 interrupts are guesses.
+On Mon, Jun 05, 2017 at 10:16:34AM -0400, Alan Stern wrote:
+> On Mon, 5 Jun 2017, Peter Chen wrote:
+> 
+> > On Thu, May 18, 2017 at 08:49:00AM +0800, Peter Chen wrote:
+> > > Some hard-wired USB devices need to do power sequence to let the
+> > > device work normally, the typical power sequence like: enable USB
+> > > PHY clock, toggle reset pin, etc. But current Linux USB driver
+> > > lacks of such code to do it, it may cause some hard-wired USB devices
+> > > works abnormal or can't be recognized by controller at all.
+> > > 
+> > > In this patch, it calls power sequence library APIs to finish
+> > > the power sequence events. It will do power on sequence at hub's
+> > > probe for all devices under this hub (includes root hub).
+> > > At hub_disconnect, it will do power off sequence which is at powered
+> > > on list.
+> > > 
+> > 
+> > Greg, Alan, would you please help on reviewing it? It seems Rafael
+> > is waiting for USB MAINTAINERS's comments or ack. It resolves some
+> > USB HUB issues for several persons.
+> > 
+> > Peter
+> > 
+> > > Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> > > Tested-by Joshua Clayton <stillcompiling@gmail.com>
+> > > Tested-by: Maciej S. Szmigiero <mail@maciej.szmigiero.name>
+> > > Reviewed-by: Vaibhav Hiremath <hvaibhav.linux@gmail.com>
+> 
+> Acked-by: Alan Stern <stern@rowland.harvard.edu>
+> 
+> > > ---
+> > >  drivers/usb/Kconfig    |  1 +
+> > >  drivers/usb/core/hub.c | 49 +++++++++++++++++++++++++++++++++++++++++++++----
+> > >  drivers/usb/core/hub.h |  1 +
+> > >  3 files changed, 47 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/Kconfig b/drivers/usb/Kconfig
+> > > index 939a63b..b6f626e 100644
+> > > --- a/drivers/usb/Kconfig
+> > > +++ b/drivers/usb/Kconfig
+> > > @@ -39,6 +39,7 @@ config USB
+> > >  	tristate "Support for Host-side USB"
+> > >  	depends on USB_ARCH_HAS_HCD
+> > >  	select USB_COMMON
+> > > +	select POWER_SEQUENCE
+> > >  	select NLS  # for UTF-8 strings
+> > >  	---help---
+> > >  	  Universal Serial Bus (USB) is a specification for a serial bus
+> > > diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> > > index 9dca59e..7a67296 100644
+> > > --- a/drivers/usb/core/hub.c
+> > > +++ b/drivers/usb/core/hub.c
+> > > @@ -28,6 +28,7 @@
+> > >  #include <linux/mutex.h>
+> > >  #include <linux/random.h>
+> > >  #include <linux/pm_qos.h>
+> > > +#include <linux/power/pwrseq.h>
+> > >  
+> > >  #include <linux/uaccess.h>
+> > >  #include <asm/byteorder.h>
+> > > @@ -1619,6 +1620,7 @@ static void hub_disconnect(struct usb_interface *intf)
+> > >  	hub->error = 0;
+> > >  	hub_quiesce(hub, HUB_DISCONNECT);
+> > >  
+> > > +	of_pwrseq_off_list(&hub->pwrseq_on_list);
+> 
+> Things like this look a little peculiar -- you are passing an "on_list" 
+> to a function named "...off_list".
+> 
+> How about naming the new field hub->pwrseq_list instead?
+> 
 
-Cc: 96boards@ucrobotics.com
-Signed-off-by: Andreas Färber <afaerber@suse.de>
----
- v3 -> v4:
- * Adopted lower-case timer interrupt-names (Mark)
- 
- v2 -> v3:
- * Added remaining UART nodes -- some interrupts are guesses
- * Added timer node -- only TIMER1 interrupt known
- 
- v1 -> v2:
- * Reworded subject
- * Added memory@0 node for Bubblegum-96 (Mark)
- * Filled in reserved-memory sub-node for Bubblegum-96 (Mark)
- * Added arm-pmu interrupt-affinity property (Mark)
- * Changed second GIC reg size 0x1000 -> 0x2000 for Bubblegum-96 (Mark)
- * Updated ARCH_OWL to ARCH_ACTIONS (Arnd)
- * Renamed s900-bubblegum96.dts to s900-bubblegum-96.dts
- * Adopted "actions" vendor prefix
- * Dropped irq.h include
- * Adopted SPDX-License-Identifier (Rob)
- 
- arch/arm64/boot/dts/Makefile                      |   1 +
- arch/arm64/boot/dts/actions/Makefile              |   5 +
- arch/arm64/boot/dts/actions/s900-bubblegum-96.dts |  35 +++++
- arch/arm64/boot/dts/actions/s900.dtsi             | 164 ++++++++++++++++++++++
- 4 files changed, 205 insertions(+)
- create mode 100644 arch/arm64/boot/dts/actions/Makefile
- create mode 100644 arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
- create mode 100644 arch/arm64/boot/dts/actions/s900.dtsi
+Thanks, Alan. I will change it at next revision.
 
-diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefile
-index 78f7991a5906..8e1951273fd7 100644
---- a/arch/arm64/boot/dts/Makefile
-+++ b/arch/arm64/boot/dts/Makefile
-@@ -1,3 +1,4 @@
-+dts-dirs += actions
- dts-dirs += al
- dts-dirs += allwinner
- dts-dirs += altera
-diff --git a/arch/arm64/boot/dts/actions/Makefile b/arch/arm64/boot/dts/actions/Makefile
-new file mode 100644
-index 000000000000..62922d688ce3
---- /dev/null
-+++ b/arch/arm64/boot/dts/actions/Makefile
-@@ -0,0 +1,5 @@
-+dtb-$(CONFIG_ARCH_ACTIONS) += s900-bubblegum-96.dtb
-+
-+always		:= $(dtb-y)
-+subdir-y	:= $(dts-dirs)
-+clean-files	:= *.dtb
-diff --git a/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-new file mode 100644
-index 000000000000..a0c3484dbd12
---- /dev/null
-+++ b/arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
-@@ -0,0 +1,35 @@
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+/dts-v1/;
-+
-+#include "s900.dtsi"
-+
-+/ {
-+	compatible = "ucrobotics,bubblegum-96", "actions,s900";
-+	model = "Bubblegum-96";
-+
-+	aliases {
-+		serial5 = &uart5;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial5:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x0 0x0 0x0 0x80000000>;
-+	};
-+};
-+
-+&timer {
-+	clocks = <&hosc>;
-+};
-+
-+&uart5 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/actions/s900.dtsi b/arch/arm64/boot/dts/actions/s900.dtsi
-new file mode 100644
-index 000000000000..11406f6d3a6d
---- /dev/null
-+++ b/arch/arm64/boot/dts/actions/s900.dtsi
-@@ -0,0 +1,164 @@
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ *
-+ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+/ {
-+	compatible = "actions,s900";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+
-+	cpus {
-+		#address-cells = <2>;
-+		#size-cells = <0>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x0>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x1>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu2: cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x2>;
-+			enable-method = "psci";
-+		};
-+
-+		cpu3: cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a53", "arm,armv8";
-+			reg = <0x0 0x3>;
-+			enable-method = "psci";
-+		};
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		secmon@1f000000 {
-+			reg = <0x0 0x1f000000 0x0 0x1000000>;
-+			no-map;
-+		};
-+	};
-+
-+	psci {
-+		compatible = "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
-+	arm-pmu {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+		             <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+		             <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
-+	};
-+
-+	timer {
-+		compatible = "arm,armv8-timer";
-+		interrupts = <GIC_PPI 13
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 14
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 11
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
-+			     <GIC_PPI 10
-+			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+	};
-+
-+	hosc: hosc {
-+		compatible = "fixed-clock";
-+		clock-frequency = <24000000>;
-+		#clock-cells = <0>;
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		gic: interrupt-controller@e00f1000 {
-+			compatible = "arm,gic-400";
-+			reg = <0x0 0xe00f1000 0x0 0x1000>,
-+			      <0x0 0xe00f2000 0x0 0x2000>,
-+			      <0x0 0xe00f4000 0x0 0x2000>,
-+			      <0x0 0xe00f6000 0x0 0x2000>;
-+			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+		};
-+
-+		uart0: serial@e0120000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0120000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@e0122000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0122000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@e0124000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0124000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@e0126000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0126000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@e0128000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe0128000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart5: serial@e012a000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe012a000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		uart6: serial@e012c000 {
-+			compatible = "actions,s900-uart", "actions,owl-uart";
-+			reg = <0x0 0xe012c000 0x0 0x2000>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			status = "disabled";
-+		};
-+
-+		timer: timer@e0228000 {
-+			compatible = "actions,s900-timer";
-+			reg = <0x0 0xe0228000 0x0 0x8000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "timer1";
-+		};
-+	};
-+};
 -- 
-2.12.3
+
+Best Regards,
+Peter Chen
