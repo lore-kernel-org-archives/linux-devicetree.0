@@ -1,152 +1,133 @@
 From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v2 2/2] dt-bindings: drm/bridge: Document Cadence DSI
  bridge bindings
-Date: Tue, 6 Jun 2017 15:58:59 +0300
-Message-ID: <9ca829e6-4696-7c3a-aed3-6a2af3161557@ti.com>
+Date: Tue, 6 Jun 2017 16:01:45 +0300
+Message-ID: <99525652-0270-4eb0-73bc-c65ac51bc39e@ti.com>
 References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
  <1496405096-18275-2-git-send-email-boris.brezillon@free-electrons.com>
- <60f8b8ec-c83b-0609-c5e5-44b3f9302808@codeaurora.org>
- <20170606113545.3a9ab2d0@bbrezillon>
- <902ba6cf-4125-fac6-62dd-6b6198f541f3@ti.com>
- <20170606144810.1efa0c79@bbrezillon>
+ <62284d00-c204-dc2e-a780-0357b2094b62@ti.com>
+ <20170606143723.52962a22@bbrezillon>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
         protocol="application/pgp-signature";
-        boundary="rmnPV0GuBLS1d852fvDtLqC6A8AL9Gijw"
+        boundary="CaAUlSHmf0NjHnCpWJVjoEN5tedxwHoEm"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606144810.1efa0c79@bbrezillon>
+In-Reply-To: <20170606143723.52962a22@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---rmnPV0GuBLS1d852fvDtLqC6A8AL9Gijw
-Content-Type: multipart/mixed; boundary="tNvFdllEliT9CrHfCt8M4khED6AAoqe18";
+--CaAUlSHmf0NjHnCpWJVjoEN5tedxwHoEm
+Content-Type: multipart/mixed; boundary="23EnX5mkJjVugh3OpA7j0TrRLG9qvSrei";
  protected-headers="v1"
 From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>,
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>,
+ dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>,
  Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org,
  Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>,
  Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
  Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell
  <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>,
- dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>,
- Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>,
+ Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>,
+ Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>,
  Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>,
  Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Message-ID: <9ca829e6-4696-7c3a-aed3-6a2af3161557-l0cyMroinI0@public.gmane.org>
+Message-ID: <99525652-0270-4eb0-73bc-c65ac51bc39e-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH v2 2/2] dt-bindings: drm/bridge: Document Cadence DSI
  bridge bindings
 References: <1496405096-18275-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
  <1496405096-18275-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
- <60f8b8ec-c83b-0609-c5e5-44b3f9302808-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
- <20170606113545.3a9ab2d0@bbrezillon>
- <902ba6cf-4125-fac6-62dd-6b6198f541f3-l0cyMroinI0@public.gmane.org>
- <20170606144810.1efa0c79@bbrezillon>
-In-Reply-To: <20170606144810.1efa0c79@bbrezillon>
+ <62284d00-c204-dc2e-a780-0357b2094b62-l0cyMroinI0@public.gmane.org>
+ <20170606143723.52962a22@bbrezillon>
+In-Reply-To: <20170606143723.52962a22@bbrezillon>
 
---tNvFdllEliT9CrHfCt8M4khED6AAoqe18
+--23EnX5mkJjVugh3OpA7j0TrRLG9qvSrei
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 06/06/17 15:48, Boris Brezillon wrote:
-
-> Okay. Thanks for the clarification. Can you confirm that this version
-> is correct?
+On 06/06/17 15:37, Boris Brezillon wrote:
+> Hi Tomi,
 >=20
->  	dsi@xxx {
->  		#address-cells =3D <1>;
->  		#size-cells =3D <0>;
-> =20
->  		ports {
->  			#address-cells =3D <1>;
->  			#size-cells =3D <0>;
-> 			dpi_in: port@0 {
->  				reg =3D <0>;
->  				#address-cells =3D <1>;
->  				#size-cells =3D <0>;
-> =20
->  				endpoint@0 {
->  					remote-endpoint =3D <&dpi_out>;
->  				};
->  			};
-> =20
->  			dsi_out: port@1 {
->  				reg =3D <1>;
-> 				#address-cells =3D <1>;
->  				#size-cells =3D <0>;
-> =20
->  				dsi_out_vc0: endpoint@0 {
-> 					reg =3D <0>;
->  					remote-endpoint =3D <&dsi_panel0_in>;
-> 				};
+> On Tue, 6 Jun 2017 15:30:26 +0300
+> Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> wrote:
 >=20
->  				dsi_out_vc1: endpoint@1 {
-> 					reg =3D <1>;
->  					remote-endpoint =3D <&dsi_panel1_in>;
->  				};
->  			};
->  		};
-> =20
->  		panel@0 {
->  			compatible =3D "...";
->  			reg =3D <0>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <0>;
-> =20
->  			port@0 {
->  				#address-cells =3D <1>;
->  		                #size-cells =3D <0>;
->  				reg =3D <0>;
-> =20
->  				dsi_panel0_in: endpoint@0 {
-> 					reg =3D <0>;
->  					remote-endpoint =3D <&dsi_out_vc0>;
->  				};
->  			};
->  		};
-> =20
->  		panel@1 {
->  			compatible =3D "...";
->  			reg =3D <1>;
->  			#address-cells =3D <1>;
->  			#size-cells =3D <0>;
-> =20
->  			port@0 {
->  				#address-cells =3D <1>;
->  		                #size-cells =3D <0>;
->  				reg =3D <0>;
-> =20
->  				dsi_panel1_in: endpoint@0 {
-> 					reg =3D <0>;
->  					remote-endpoint =3D <&dsi_out_vc1>;
->  				};
->  			};
->  		};
->  	};
+>> On 02/06/17 15:04, Boris Brezillon wrote:
+>>> Document the bindings used for the Cadence DSI bridge.
+>>>
+>>> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  .../bindings/display/bridge/cdns,dsi.txt           | 55 ++++++++++++=
+++++++++++
+>>>  1 file changed, 55 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/display/bridge/=
+cdns,dsi.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/display/bridge/cdns,ds=
+i.txt b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+>>> new file mode 100644
+>>> index 000000000000..770c5c5b1e93
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/display/bridge/cdns,dsi.txt
+>>> @@ -0,0 +1,55 @@
+>>> +Cadence DSI bridge
+>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>> +
+>>> +The Cadence DSI bridge is a DPI to DSI bridge supporting up to 4 DSI=
+ lanes.
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be set to "cdns,dsi".
+>>> +- reg: physical base address and length of the controller's register=
+s.
+>>> +- interrupts: interrupt line connected to the DSI bridge.
+>>> +- clocks: DSI bridge clocks.
+>>> +- clock-names: must contain "pclk" and "sysclk". =20
+>>
+>> clock-names doesn't match the example below.
 >=20
+> Indeed. I'll fix the example.
+>=20
+>>
+>>> +- phys: phandle link to the MIPI D-PHY controller.
+>>> +- phy-names: must contain "dphy".
+>>> +- #address-cells: must be set to 1.
+>>> +- #size-cells: must be set to 0.
+>>> +
+>>> +Required subnodes:
+>>> +- ports: Ports as described in Documentation/devicetree/bindings/gra=
+ph.txt.
+>>> +  Currently contains a single input port at address 0 representing t=
+he DPI
+>>> +  input. Other ports will be added later to support the SDI inputs. =
+=20
+>>
+>> Typo with "SDI".
+>=20
+> No, the 2nd and 3rd input ports are really called SDI. Here
+> is the datasheet description:
+>=20
+> "
+> SDI:=20
+> Serial Display Interface - this is the name of the block that is built
+> to interface the Display application processor to the DSI link. This is=
 
-Looks correct to me. I think it can be a bit shorter though:
+> a proprietary interface.
+> "
 
-- You don't need #address-cells and #size-cells for all. I think those
-are inherited from the parent.
-- If there's just one port and one endpoint, you can leave the 'reg'
-out, as it's considered to be 0 by default.
+Ok. Well, I think that's a bit pointless comment in the binding doc,
+it'll only confuse =3D). Describe what the current binding is, not what
+might be added later (but that can be mentioned in the commit desc if
+you want).
 
-So for the panel, you can have just:
-
-port {
-	dsi_panel1_in: endpoint {
-		remote-endpoint =3D <&dsi_out_vc1>;
-	};
-};
+ Tomi
 
 
---tNvFdllEliT9CrHfCt8M4khED6AAoqe18--
+--23EnX5mkJjVugh3OpA7j0TrRLG9qvSrei--
 
---rmnPV0GuBLS1d852fvDtLqC6A8AL9Gijw
+--CaAUlSHmf0NjHnCpWJVjoEN5tedxwHoEm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -154,22 +135,22 @@ Content-Disposition: attachment; filename="signature.asc"
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBCAAGBQJZNqcTAAoJEPo9qoy8lh71tskP/3c2uvI1zQ3btgTmZG4HKfz+
-BHVY/OGFtEvtSX4B7MS5fIH/rxC51OJbVlYIhuT9HPWecdZYqKXe+z9pZmqPe8sy
-5tT+cCWjJnIUshF78VleRKQ5NgsdNcS3zIBQ7x8jlbpOiU7kpSEEz4OedySNKe64
-VJ9J5idSNE1nb3Hkzo32Rq760zQ5nmyhPNlis9U0iZ/rhsKW+fxc15L5/8DSv+lU
-H223el+DyK6UQdwbQbgfcZiq76U0/HFodNhoKGfplqj9jw1KdRfpEUCKPqPG2+Js
-O9LuFAbKgupS+r9fZIJqdXswdvvFrVNaeXkKJWuANB8WuQHE/2ytOK7UjYW83D38
-OxMHo2WO55Z45xqtL3KUjWado7y+aqAImorJLqKTjK6lrkRsiB9ukjGKhMyJAVEn
-xNih3FQ8LJDSYAM9D/DZPUxwxXoJ62MYwUuLUMgprtcyFOO0uwVn/veCw69PsASg
-bT0NNv/FXXn8ni0sAr0dT6zCgFfIzO8jazlNYnoqw0D7bk4UfDfUBYJU6WGbJ6SZ
-qoGS8e6rXBuogAPX4aXn/nu9wHz5f223GCdIFmxWpWWhOXyOzR3uOSNcFbrIluZz
-qAPFXLGgpkczG34sUJ1Ke2vDUQE4tu3ihoYZ0+I9/MOeixNmxB0rhZmxlF0tQYxv
-p50aTnFuxvoJCKwArTLj
-=woFO
+iQIcBAEBCAAGBQJZNqe6AAoJEPo9qoy8lh71kg4QAJQDYsjzeTlMuyr1g47RDNj7
++Ud6cv+7ZDddLKM6xaKGR9n+jX0cuPKys67jZgj4LPm/s6cS0Lc3LMhMA3qaPCeZ
+X8U5ef6QC2QtRPhlVpdeYYNCXqdj4spKmU3lcF8h+W1j+sJuOvLWSFFflWtXPTg8
+kObbL8JKmcb4puDsOQ5SE8hv5W9rPxbZvPOTAlOXm7nDZAdCXZEANtxf+OS/s45L
+ysTtUl+xcZXjIuX+DQNjIqZy9VheJD98+XNuqbLWJIng9Z9HQLUDz3d+/d4EBC4p
+coCyCu1S6c9YgaY8mGcKCHylvHzFCxtZGNrQ1twf9DOzGXfO+ru5k18+OrynrKwQ
+W5ZOIRNv6xm265ZNfHZH2rVNBAmhdqZBme9faze6V8WLrMQeUojLZG1pd83Efl6O
+N92ueJr7jy38EYT3Q0ChIvTniL7ElHOBfC7i9jO/TpZSIXY7CZ1XBLVdYLl9Ro1b
++XNK6BArtrhVP5giWq0nt9NgAkgUE/WkZQ8bsPOBWaD3ymJ6Nop0030OHUpE8MA6
+7vLuwWa0KfogCcBN8DM/PzxceQBCDVPDFd+hfjWuimtpwN+B0AwH936N+v3Pkoxj
+V1EeX+5VpeNJVuiCie6/8vFTit7QJbby6E3wLXzRF2qUAqjqlMuNJ+j8xFQ+87Zm
+ApPiT65r6/Lu6Ks3rQ3n
+=PyYY
 -----END PGP SIGNATURE-----
 
---rmnPV0GuBLS1d852fvDtLqC6A8AL9Gijw--
+--CaAUlSHmf0NjHnCpWJVjoEN5tedxwHoEm--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
