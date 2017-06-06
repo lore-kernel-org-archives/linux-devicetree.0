@@ -1,46 +1,72 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM64: dts: meson-gx: Add SoC info register
-Date: Tue,  6 Jun 2017 11:45:39 +0200
-Message-ID: <1496742340-10307-3-git-send-email-narmstrong@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: [PATCH v2 1/3] dt-bindings: arm: amlogic: Add SoC information bindings
+Date: Tue,  6 Jun 2017 11:45:38 +0200
+Message-ID: <1496742340-10307-2-git-send-email-narmstrong@baylibre.com>
 References: <1496742340-10307-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496742340-10307-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1496742340-10307-1-git-send-email-narmstrong@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: khilman@baylibre.com, carlo@caione.org
+Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add node for the Amlogic Meson GX SoC information register.
+Add bindings for the SoC information register of the Amlogic SoCs.
 
-Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ Documentation/devicetree/bindings/arm/amlogic.txt | 32 +++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 436b875..50d001a 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -365,6 +365,15 @@
- 				#reset-cells = <1>;
- 			};
- 
-+			sec_AO: ao-secure@140 {
-+				compatible = "amlogic,meson-gx-ao-secure", "syscon", "simple-mfd";
-+				reg = <0x0 0x140 0x0 0x140>;
+diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+index 5c01e65..ae3e8ed 100644
+--- a/Documentation/devicetree/bindings/arm/amlogic.txt
++++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+@@ -60,3 +60,35 @@ Board compatible values (alphabetically, grouped by SoC):
+   - "amlogic,q201" (Meson gxm s912)
+   - "kingnovel,r-box-pro" (Meson gxm S912)
+   - "nexbox,a1" (Meson gxm s912)
 +
-+				chipid {
-+					compatible = "amlogic,meson-gx-chipid";
-+				};
-+			};
++Amlogic Meson Firmware registers Interface
++------------------------------------------
 +
- 			uart_AO: serial@4c0 {
- 				compatible = "amlogic,meson-uart";
- 				reg = <0x0 0x004c0 0x0 0x14>;
++The Meson SoCs have a register bank with status and data shared with the
++secure firmware.
++
++Required properties:
++ - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon", "simple-mfd"
++
++Sub-nodes should indentify components of this register interface :
++
++Meson GX SoC Information
++------------------------
++A firmware register encodes the SoC type, package and revision information on
++the Meson GX SoCs.
++If present, a device node for this register should be added.
++
++Required properties:
++  - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-chipid".
++
++Example
++-------
++
++ao-secure@140 {
++	compatible = "amlogic,meson-gx-ao-secure", "syscon", "simple-mfd";
++	reg = <0x0 0x140 0x0 0x140>;
++
++	chipid {
++		compatible = "amlogic,meson-gx-chipid";
++	};
++};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
