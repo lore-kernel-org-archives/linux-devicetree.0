@@ -1,68 +1,60 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: rng: add generic bindings for MediaTek
- SoCs
-Date: Tue, 6 Jun 2017 13:07:44 +0200
-Message-ID: <9eb87222-ca89-0abb-4532-3887008f6e7a@gmail.com>
-References: <cover.1496255334.git.sean.wang@mediatek.com>
- <1d9c981e1b45bf2f04732a02d90e6857cc203ce5.1496255334.git.sean.wang@mediatek.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH v9 2/4] arm64: dts: hisi: add kirin pcie node
+Date: Tue, 6 Jun 2017 19:19:53 +0800
+Message-ID: <CAFGCpxxuboZJJS=zExmhDBLbb86zyN7me=dfnGKaf+LAPvCRGg@mail.gmail.com>
+References: <20170531070109.81569-3-songxiaowei@hisilicon.com>
+ <201706040735.pu1PIspV%fengguang.wu@intel.com> <CAK8P3a0K2jwiSQUVQWwebBEwXPVa04egcS_7q7gLgs-qt+J-sw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1d9c981e1b45bf2f04732a02d90e6857cc203ce5.1496255334.git.sean.wang@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <CAK8P3a0K2jwiSQUVQWwebBEwXPVa04egcS_7q7gLgs-qt+J-sw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com, herbert@gondor.apana.org.au, mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com
-Cc: devicetree@vger.kernel.org, keyhaede@gmail.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-crypto@vger.kernel.org, weiyongjun1@huawei.com, linux-arm-kernel@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: kbuild test robot <lkp@intel.com>, Xiaowei Song <songxiaowei@hisilicon.com>, kbuild-all@01.org, Bjorn Helgaas <bhelgaas@google.com>, Kishon <kishon@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Keith Busch <keith.busch@intel.com>, Niklas Cassel <niklas.cassel@axis.com>, Duc Dang <dhdang@apm.com>, "liudongdong (C)" <liudongdong3@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, chenyao11@huawei.com, Chen Feng <puck.chen@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, Suzhuangluan <suzhuangluan@hisilicon.com>, linux-pci <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi, Arnd
 
+On Tue, Jun 6, 2017 at 5:23 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Sun, Jun 4, 2017 at 2:03 AM, kbuild test robot <lkp@intel.com> wrote:
+>> Hi Xiaowei,
+>>
+>> [auto build test ERROR on pci/next]
+>> [also build test ERROR on v4.12-rc3 next-20170602]
+>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>>
+>> url:    https://github.com/0day-ci/linux/commits/Xiaowei-Song/add-PCIe-driver-for-Kirin-PCIe/20170531-182118
+>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+>> config: arm64-allnoconfig (attached as .config)
+>> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+>> reproduce:
+>>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>         chmod +x ~/bin/make.cross
+>>         # save the attached .config to linux build tree
+>>         make.cross ARCH=arm64
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>>> Error: arch/arm64/boot/dts/hisilicon/hi3660.dtsi:180.24-25 syntax error
+>>>> FATAL ERROR: Unable to parse input tree
+>
+> We keep getting the build errors for patch submissions. Obviously the patch is
+> still broken and can't be merged as-is. What is the plan for merging the series?
+>
 
-On 31/05/17 20:44, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> Add the generic binding for allowing the support of RNG on MediaTek SoCs
-> such as MT7622.
-> 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
->   Documentation/devicetree/bindings/rng/mtk-rng.txt | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> index a6d62a2..0772913 100644
-> --- a/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> +++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> @@ -2,7 +2,8 @@ Device-Tree bindings for Mediatek random number generator
->   found in Mediatek SoC family
->   
->   Required properties:
-> -- compatible	    : Should be "mediatek,mt7623-rng"
-> +- compatible	    : Should be "mediatek,generic-rng" or
-> +				"mediatek,mt7623-rng".
+This dts patch can be applied to dts series [1]. For upstream review
+purpose, hi3660-hikey960 dts patches, which don't have a related
+driver changes, are sent in [1]. Other patches, which need driver
+changes, like this one, are sent together with driver.
 
-What does generic-rng mean. Is it for all mt7xxx, or also for mt6xxx and 
-mt8xxx based SoCs? I think we should stick with SoC specific bindings, 
-as we don't know if Mediatek won't publish a new IP block next year 
-which is differnet.
+Patchset [1] is now at its v2 review. Rob Herring already gave his ACK
+for some of them in v1. Hopefully I can get more ACK for remaining
+ones, and make them ready for v4.13 merging window.
 
-Just in case we should add a binding for the actual SoC + a fallback. 
-For example.
-- compatible " Should be
-	"mediatek,mt7622-rng", 	"mediatek,mt7623-rng" for SoC mt7622
-	"mediatek,mt7623-rng" for SoC mt7623
+[1], http://www.spinics.net/lists/devicetree/msg178303.html
 
-This will also eliminate the need of adding mt6722-rng to the driver, as 
-it will use mt7623-rng as fallback. If in the future we realize that 
-mt7622-rng has a extra feature/bug, we can still work around it, without 
-breaking the bindings.
+-Guodong
 
-Makes sense?
-
-Regards,
-Matthias
-
->   - clocks	    : list of clock specifiers, corresponding to
->   		      entries in clock-names property;
->   - clock-names	    : Should contain "rng" entries;
-> 
+> The other patches all seem fine IIRC.
+>
+>        Arnd
