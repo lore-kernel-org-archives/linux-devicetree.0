@@ -1,226 +1,313 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 14/19] drm/sun4i: hdmi: Add support for
- A31's HDMI controller
-Date: Tue, 6 Jun 2017 21:27:44 +0200
-Message-ID: <20170606192744.sktuiwm3udn623gt@flea.lan>
-References: <20170602101024.18940-1-wens@csie.org>
- <20170602101024.18940-15-wens@csie.org>
- <20170602194110.goale2ssyg5vuqiv@flea.lan>
- <CAGb2v65eFAmAybmHkQcKjF+ZKxh+_G6q9i2GPzMs5854X8bQug@mail.gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Stefani Seibold <stefani@seibold.net>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Tue, 06 Jun 2017 21:17:44 +0200
+Message-ID: <1496776664.3821.3.camel@seibold.net>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+         <1496688186.12947.10.camel@hp800z>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kaeyxzg3n7kjyrdh"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMME3TEQKGQE6KVZJUQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v65eFAmAybmHkQcKjF+ZKxh+_G6q9i2GPzMs5854X8bQug-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496688186.12947.10.camel@hp800z>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Stefani Seibold <stefani.seibold.ext@huawei.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Holm Rauchfuss <holm.rauchfuss@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Pantelis,
 
---kaeyxzg3n7kjyrdh
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+thanks for the suggestion. This feature is not very well documented. I
+tried this on my rasp1 running 4.12.0-rc3 and it doesn't work. My
+source is:
 
-On Sat, Jun 03, 2017 at 11:19:09PM +0800, Chen-Yu Tsai wrote:
-> On Sat, Jun 3, 2017 at 3:41 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > On Fri, Jun 02, 2017 at 06:10:19PM +0800, Chen-Yu Tsai wrote:
-> >> The HDMI controller found in the A31 SoCs is slightly different
-> >> from the one already supported, which is found in the A10s:
-> >>
-> >>   - Need different initial values for the PLL related registers
-> >>
-> >>   - Different behavior of the DDC and TMDS clocks
-> >>
-> >>   - Different register layout for the DDC portion
-> >>
-> >>   - Separate DDC parent clock
-> >>
-> >> This patch adds support for it.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> >> ---
-> >>  drivers/gpu/drm/sun4i/sun4i_hdmi.h     |   3 +
-> >>  drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c | 141 +++++++++++++++++++++++++++++++++
-> >>  2 files changed, 144 insertions(+)
-> >>
-> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi.h b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-> >> index c63d0bd95963..2589bc92be59 100644
-> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi.h
-> >> @@ -56,10 +56,13 @@
-> >>  #define SUN4I_HDMI_PAD_CTRL0_TXEN            BIT(23)
-> >>
-> >>  #define SUN4I_HDMI_PAD_CTRL1_REG     0x204
-> >> +#define SUN4I_HDMI_PAD_CTRL1_UNKNOWN         BIT(24) /* set on A31 */
-> >>  #define SUN4I_HDMI_PAD_CTRL1_AMP_OPT         BIT(23)
-> >>  #define SUN4I_HDMI_PAD_CTRL1_AMPCK_OPT               BIT(22)
-> >>  #define SUN4I_HDMI_PAD_CTRL1_EMP_OPT         BIT(20)
-> >>  #define SUN4I_HDMI_PAD_CTRL1_EMPCK_OPT               BIT(19)
-> >> +#define SUN4I_HDMI_PAD_CTRL1_PWSCK           BIT(18)
-> >> +#define SUN4I_HDMI_PAD_CTRL1_PWSDT           BIT(17)
-> >>  #define SUN4I_HDMI_PAD_CTRL1_REG_DEN         BIT(15)
-> >>  #define SUN4I_HDMI_PAD_CTRL1_REG_DENCK               BIT(14)
-> >>  #define SUN4I_HDMI_PAD_CTRL1_REG_EMP(n)              (((n) & 7) << 10)
-> >> diff --git a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> >> index 9ded40aaed32..e9abf93eb41c 100644
-> >> --- a/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> >> +++ b/drivers/gpu/drm/sun4i/sun4i_hdmi_enc.c
-> >> @@ -293,6 +293,109 @@ static const struct drm_connector_helper_funcs sun4i_hdmi_connector_helper_funcs
-> >>       .get_modes      = sun4i_hdmi_get_modes,
-> >>  };
-> >>
-> >> +static int sun6i_hdmi_read_sub_block(struct sun4i_hdmi *hdmi,
-> >> +                                  unsigned int blk, unsigned int offset,
-> >> +                                  u8 *buf, unsigned int count)
-> >> +{
-> >> +     unsigned long reg;
-> >> +     int i;
-> >> +
-> >> +     reg = readl(hdmi->base + SUN6I_HDMI_DDC_FIFO_CTRL_REG);
-> >> +     writel(reg | SUN6I_HDMI_DDC_FIFO_CTRL_CLEAR,
-> >> +            hdmi->base + SUN6I_HDMI_DDC_FIFO_CTRL_REG);
-> >> +     writel(SUN6I_HDMI_DDC_ADDR_SEGMENT(offset >> 8) |
-> >> +            SUN6I_HDMI_DDC_ADDR_EDDC(DDC_SEGMENT_ADDR << 1) |
-> >> +            SUN6I_HDMI_DDC_ADDR_OFFSET(offset) |
-> >> +            SUN6I_HDMI_DDC_ADDR_SLAVE(DDC_ADDR),
-> >> +            hdmi->base + SUN6I_HDMI_DDC_ADDR_REG);
-> >> +
-> >> +     writel(SUN6I_HDMI_DDC_CMD_EXPLICIT_EDDC_READ |
-> >> +            SUN6I_HDMI_DDC_CMD_BYTE_COUNT(count),
-> >> +            hdmi->base + SUN6I_HDMI_DDC_CMD_REG);
-> >> +
-> >> +     reg = readl(hdmi->base + SUN6I_HDMI_DDC_CTRL_REG);
-> >> +     writel(reg | SUN6I_HDMI_DDC_CTRL_START_CMD,
-> >> +            hdmi->base + SUN6I_HDMI_DDC_CTRL_REG);
-> >> +
-> >> +     if (readl_poll_timeout(hdmi->base + SUN6I_HDMI_DDC_CTRL_REG, reg,
-> >> +                            !(reg & SUN6I_HDMI_DDC_CTRL_START_CMD),
-> >> +                            100, 100000))
-> >> +             return -EIO;
-> >> +
-> >> +     for (i = 0; i < count; i++)
-> >> +             buf[i] = readb(hdmi->base + SUN6I_HDMI_DDC_FIFO_DATA_REG);
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int sun6i_hdmi_read_edid_block(void *data, u8 *buf, unsigned int blk,
-> >> +                                   size_t length)
-> >> +{
-> >> +     struct sun4i_hdmi *hdmi = data;
-> >> +     int retry = 2, i;
-> >> +
-> >> +     do {
-> >> +             for (i = 0; i < length; i += SUN4I_HDMI_DDC_FIFO_SIZE) {
-> >> +                     unsigned char offset = blk * EDID_LENGTH + i;
-> >> +                     unsigned int count = min((unsigned int)SUN4I_HDMI_DDC_FIFO_SIZE,
-> >> +                                              length - i);
-> >> +                     int ret;
-> >> +
-> >> +                     ret = sun6i_hdmi_read_sub_block(hdmi, blk, offset,
-> >> +                                                     buf + i, count);
-> >> +                     if (ret)
-> >> +                             return ret;
-> >> +             }
-> >> +     } while (!drm_edid_block_valid(buf, blk, true, NULL) && (retry--));
-> >> +
-> >> +     return 0;
-> >> +}
-> >> +
-> >> +static int sun6i_hdmi_get_modes(struct drm_connector *connector)
-> >> +{
-> >> +     struct sun4i_hdmi *hdmi = drm_connector_to_sun4i_hdmi(connector);
-> >> +     u32 reg;
-> >> +     struct edid *edid;
-> >> +     int ret;
-> >> +
-> >> +     clk_set_rate(hdmi->ddc_clk, 100000);
-> >> +     clk_prepare_enable(hdmi->ddc_clk);
-> >> +
-> >> +     /* Reset i2c controller */
-> >> +     writel(SUN6I_HDMI_DDC_CTRL_ENABLE | SUN6I_HDMI_DDC_CTRL_RESET |
-> >> +            SUN6I_HDMI_DDC_CTRL_SDA_ENABLE |
-> >> +            SUN6I_HDMI_DDC_CTRL_SCL_ENABLE,
-> >> +            hdmi->base + SUN6I_HDMI_DDC_CTRL_REG);
-> >> +     if (readl_poll_timeout(hdmi->base + SUN6I_HDMI_DDC_CTRL_REG, reg,
-> >> +                            !(reg & SUN6I_HDMI_DDC_CTRL_RESET),
-> >> +                            100, 2000)) {
-> >> +             dev_err(hdmi->dev, "DDC reset timeout: %08x\n", reg);
-> >> +             clk_disable_unprepare(hdmi->ddc_clk);
-> >> +             return -EIO;
-> >> +     }
-> >> +
-> >> +     edid = drm_do_get_edid(connector, sun6i_hdmi_read_edid_block, hdmi);
-> >> +
-> >> +     clk_disable_unprepare(hdmi->ddc_clk);
-> >> +
-> >> +     if (!edid)
-> >> +             return 0;
-> >> +
-> >> +     hdmi->hdmi_monitor = drm_detect_hdmi_monitor(edid);
-> >> +     DRM_DEBUG_DRIVER("Monitor is %s monitor\n",
-> >> +                      hdmi->hdmi_monitor ? "an HDMI" : "a DVI");
-> >> +
-> >> +     drm_mode_connector_update_edid_property(connector, edid);
-> >> +     ret = drm_add_edid_modes(connector, edid);
-> >> +     kfree(edid);
-> >> +
-> >> +     return ret;
-> >> +}
-> >> +
-> >> +static const struct drm_connector_helper_funcs sun6i_hdmi_connector_helper_funcs = {
-> >> +     .get_modes      = sun6i_hdmi_get_modes,
-> >> +};
-> >> +
-> >
-> > Every thing here can be handled through regfield without having to
-> > duplicate the logic.
+// rapsi example
+/dts-v1/;
+/plugin/;
+
+/ {
+    compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+
+    fragment@0 {
+        target-path = "/soc/i2s@7e203000";
+        __overlay__ {
+            #address-cells = <0x00000001>;
+            #size-cells = <0x00000001>;
+            test = "test";
+            timer = <&{/soc/timer@7e0030000}>;
+        };
+    };
+};
+
+
+The resulting overlay is (decompiled with fdtdump):
+
+/dts-v1/;
+// magic:		0xd00dfeed
+// totalsize:		0x19a (410)
+// off_dt_struct:	0x38
+// off_dt_strings:	0x148
+// off_mem_rsvmap:	0x28
+// version:		17
+// last_comp_version:	16
+// boot_cpuid_phys:	0x0
+// size_dt_strings:	0x52
+// size_dt_struct:	0x110
+
+/ {
+    compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+    fragment@0 {
+        target-path = "/soc/i2s@7e203000";
+        __overlay__ {
+            #address-cells = <0x00000001>;
+            #size-cells = <0x00000001>;
+            test = "test";
+            timer = <0xdeadbeef>;
+        };
+    };
+    __fixups__ {
+        /soc/timer@7e0030000 = "/fragment@0/__overlay__:timer:0";
+    };
+};
+
+But this will not apply:
+
+OF: resolver: overlay phandle fixup failed: -22
+create_overlay: Failed to resolve tree
+
+
+Anyway, the reason for my patch is that i can reference to nodes which
+lacks a phandle. The phandle will be created on the fly and also
+destroyed when the overlay is unloaded.
+
+I have a real use case for this patch:
+
+I have a BIOS on some ARM64 servers which provides broken device tree.
+It also lacks some devices in this tree which needs references to other
+devices which lacks a phandle.
+
+Since the BIOSes are closed source i need a way to work arround this
+problem without patching all the drivers involved to this devices.
+
+Hope this helps to understand the reason for this patch.
+
+- Stefani
+
+Am Montag, den 05.06.2017, 21:43 +0300 schrieb Pantelis Antoniou:
+> Hi Stefani,
 > 
-> Hmm... You're right. Does that mean we should convert the entire driver to
-> using regmap? Or just the DDC bits here, since they won't conflict with
-> any other access patterns in the whole HDMI driver?
-
-I guess we could just convert everything (and I wish I would have done
-it before...)
-
-> >>  static enum drm_connector_status
-> >>  sun4i_hdmi_connector_detect(struct drm_connector *connector, bool force)
-> >>  {
-> >> @@ -367,6 +470,43 @@ static const struct sun4i_hdmi_variant sun5i_variant = {
-> >>                                 SUN4I_HDMI_PLL_CTRL_PLL_EN,
-> >>  };
-> >>
-> >> +static const struct sun4i_hdmi_variant sun6i_variant = {
-> >> +     .connector_helpers      = &sun6i_hdmi_connector_helper_funcs,
-> >> +     .ddc_create             = sun6i_ddc_create,
-> >> +     .tmds_create            = sun6i_tmds_create,
-> >> +     .has_ddc_parent_clk     = true,
-> >> +     .has_reset_control      = true,
-> >> +     .pad_ctrl0_init_val     = 0xff |
-> >
-> > What is this 0xff for?
+> On Mon, 2017-06-05 at 14:59 +0200, Stefani Seibold wrote:
+> > From: Stefani Seibold <stefani@seibold.net>
+> > 
+> > This patch enables external references for symbols which are not
+> > exported by the current device tree. For example
+> > 
+> > // RASPI example (only for testing)
+> > /dts-v1/;
+> > /plugin/;
+> > 
+> > / {
+> >     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> > 
+> >     fragment@0 {
+> >         target-path = "/soc/i2s@7e203000";
+> >         __overlay__ {
+> >             #address-cells = <0x00000001>;
+> >             #size-cells = <0x00000001>;
+> >             test = "test";
+> >             timer = <&timer>;
+> >         };
+> >     };
+> > 
+> >     __external_symbols__ {
+> >         timer = "/soc/timer@7e003000";
+> >     };
+> > };
+> > 
 > 
-> Unknown. It is set in the mainline U-boot driver.
+> I understand the problem. I am just not fond of the
+> __external_symbols__
+> solution.
 > 
-> Looking at an old 3.3 kernel from the BSP, it seems the higher 4 bits
-> control the transmitter. But the lower 4 bits are still unknown.
-
-Can you add a comment for that?
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---kaeyxzg3n7kjyrdh--
+> There's a facility in the DT source language that allows to declare
+> pathspec labels.
+> 
+> The 'timer = <&timer>;' statement could be rewritten as 
+> 'timer = <&{/soc/timer@7e0030000}>;'
+> 
+> Internally you can 'catch' that this refers to a symbol in the base
+> tree
+> and then do the same symbol insertion as the patch you've submitted.
+> 
+> The benefit to the above is that you don't introduce manually edited
+> special nodes.
+> 
+> Regards
+> 
+> -- Pantelis
+> 
+> > The "timer" symbol is not exported by the RASPI device tree,
+> > because it is
+> > missing in the __symbols__ section of the device tree.
+> > 
+> > In case of the RASPI device tree this could be simple fixed by
+> > modifing
+> > the device tree source, but when the device tree is provided by a
+> > closed
+> > source BIOS this kind of missing symbol could not be fixed.
+> > 
+> > An additional benefit is to override a (possible broken) symbol
+> > exported
+> > by the currect live device tree.
+> > 
+> > The patch is based and tested on linux 4.12-rc3.
+> > 
+> > Signed-off-by: Stefani Seibold <stefani.seibold.ext@huawei.com>
+> > Signed-off-by: Stefani Seibold <stefani@seibold.net>
+> > ---
+> >  drivers/of/overlay.c  | 19 +++++++++++++++++++
+> >  drivers/of/resolver.c | 27 ++++++++++++++++++++++-----
+> >  2 files changed, 41 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> > index 7827786718d8..de6516ea0fcd 100644
+> > --- a/drivers/of/overlay.c
+> > +++ b/drivers/of/overlay.c
+> > @@ -50,6 +50,7 @@ struct of_overlay {
+> >  	int id;
+> >  	struct list_head node;
+> >  	int count;
+> > +	struct device_node *tree;
+> >  	struct of_overlay_info *ovinfo_tab;
+> >  	struct of_changeset cset;
+> >  };
+> > @@ -422,6 +423,8 @@ int of_overlay_create(struct device_node *tree)
+> >  	/* add to the tail of the overlay list */
+> >  	list_add_tail(&ov->node, &ov_list);
+> >  
+> > +	ov->tree = tree;
+> > +
+> >  	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
+> >  
+> >  	mutex_unlock(&of_mutex);
+> > @@ -524,6 +527,7 @@ int of_overlay_destroy(int id)
+> >  {
+> >  	struct of_overlay *ov;
+> >  	int err;
+> > +	phandle phandle;
+> >  
+> >  	mutex_lock(&of_mutex);
+> >  
+> > @@ -540,6 +544,8 @@ int of_overlay_destroy(int id)
+> >  		goto out;
+> >  	}
+> >  
+> > +	phandle = ov->tree->phandle;
+> > +
+> >  	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
+> >  	list_del(&ov->node);
+> >  	__of_changeset_revert(&ov->cset);
+> > @@ -549,6 +555,19 @@ int of_overlay_destroy(int id)
+> >  	of_changeset_destroy(&ov->cset);
+> >  	kfree(ov);
+> >  
+> > +	if (phandle) {
+> > +		struct device_node *node;
+> > +		unsigned long flags;
+> > +
+> > +		raw_spin_lock_irqsave(&devtree_lock, flags);
+> > +		for_each_of_allnodes(node) {
+> > +			if (node->phandle >= phandle)
+> > +				node->phandle = 0;
+> > +		}
+> > +		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> > +	}
+> > +
+> > +
+> >  	err = 0;
+> >  
+> >  out:
+> > diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> > index 771f4844c781..31b5f32c9b27 100644
+> > --- a/drivers/of/resolver.c
+> > +++ b/drivers/of/resolver.c
+> > @@ -286,13 +286,14 @@ static int
+> > adjust_local_phandle_references(struct device_node *local_fixups,
+> >  int of_resolve_phandles(struct device_node *overlay)
+> >  {
+> >  	struct device_node *child, *local_fixups, *refnode;
+> > -	struct device_node *tree_symbols, *overlay_fixups;
+> > +	struct device_node *tree_symbols, *ext_symbols,
+> > *overlay_fixups;
+> >  	struct property *prop;
+> >  	const char *refpath;
+> >  	phandle phandle, phandle_delta;
+> >  	int err;
+> >  
+> >  	tree_symbols = NULL;
+> > +	ext_symbols = NULL;
+> >  
+> >  	if (!overlay) {
+> >  		pr_err("null overlay\n");
+> > @@ -321,6 +322,9 @@ int of_resolve_phandles(struct device_node
+> > *overlay)
+> >  	for_each_child_of_node(overlay, child) {
+> >  		if (!of_node_cmp(child->name, "__fixups__"))
+> >  			overlay_fixups = child;
+> > +		else
+> > +		if (!of_node_cmp(child->name,
+> > "__external_symbols__"))
+> > +			ext_symbols = child;
+> >  	}
+> >  
+> >  	if (!overlay_fixups) {
+> > @@ -329,20 +333,30 @@ int of_resolve_phandles(struct device_node
+> > *overlay)
+> >  	}
+> >  
+> >  	tree_symbols = of_find_node_by_path("/__symbols__");
+> > -	if (!tree_symbols) {
+> > -		pr_err("no symbols in root of device tree.\n");
+> > +	if (!tree_symbols && !ext_symbols) {
+> > +		pr_err("no symbols for resolve in device
+> > tree.\n");
+> >  		err = -EINVAL;
+> >  		goto out;
+> >  	}
+> >  
+> > +	phandle_delta = live_tree_max_phandle() + 1;
+> > +
+> >  	for_each_property_of_node(overlay_fixups, prop) {
+> >  
+> >  		/* skip properties added automatically */
+> >  		if (!of_prop_cmp(prop->name, "name"))
+> >  			continue;
+> >  
+> > -		err = of_property_read_string(tree_symbols,
+> > -				prop->name, &refpath);
+> > +		err = -1;
+> > +
+> > +		if (ext_symbols)
+> > +			err = of_property_read_string(ext_symbols,
+> > +					prop->name, &refpath);
+> > +
+> > +		if (err && tree_symbols)
+> > +			err =
+> > of_property_read_string(tree_symbols,
+> > +					prop->name, &refpath);
+> > +
+> >  		if (err)
+> >  			goto out;
+> >  
+> > @@ -352,6 +366,9 @@ int of_resolve_phandles(struct device_node
+> > *overlay)
+> >  			goto out;
+> >  		}
+> >  
+> > +		if (!refnode->phandle)
+> > +			refnode->phandle = ++phandle_delta;
+> > +
+> >  		phandle = refnode->phandle;
+> >  		of_node_put(refnode);
+> >  
+> 
+> 
