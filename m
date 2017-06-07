@@ -1,43 +1,56 @@
-From: Wesley Terpstra <wesley@sifive.com>
-Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V interrupt controllers
-Date: Wed, 7 Jun 2017 13:31:55 -0700
-Message-ID: <CAMgXwTg9f_i00GFiAfkb7zCzyxjGvRbd9Hrt2gbQwwLb4-F6Yg@mail.gmail.com>
-References: <20170523004107.536-1-palmer@dabbelt.com> <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-9-palmer@dabbelt.com> <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
- <20170607101343.GC29370@leverpostej> <CAMgXwTiz0jXgSw=veJ3O7xzVgm==YisZZLWpZFH7aJMXV4j7qA@mail.gmail.com>
- <CAL_JsqKtFVdSkW+4Ph2nPpcepoNWiYYCcsd0nnXReFshdrhwSg@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add bcm2835aux interrupt controller
+Date: Wed, 7 Jun 2017 22:37:38 +0200 (CEST)
+Message-ID: <1357388068.219504.1496867858076@email.1und1.de>
+References: <6dc301c8-e5a2-1334-c476-1ce7e303787f@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKtFVdSkW+4Ph2nPpcepoNWiYYCcsd0nnXReFshdrhwSg@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6dc301c8-e5a2-1334-c476-1ce7e303787f-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Cc: alexanders83-S0/GAf8tV78@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I've reread the relevant sections now, and you are correct. We should
-remove the address-cells from the PLIC's dts.
+Hi Phil,
 
-On Wed, Jun 7, 2017 at 12:57 PM, Rob Herring <robh+dt@kernel.org> wrote:
-> On Wed, Jun 7, 2017 at 1:57 PM, Wesley Terpstra <wesley@sifive.com> wrote:
->> On Wed, Jun 7, 2017 at 3:13 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->>>> > +RISC-V Hart-Level Interrupt Controller (HLIC)
->>>> > +---------------------------------------------
+> Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 7. Juni 2017 um 13:11 geschrieben:
+> 
+> 
+> Devices in the AUX block share a common interrupt line, with a register
+> indicating which devices have active IRQs. Expose this as a nested
+> interrupt controller to avoid IRQ sharing problems (easily observed if
+> UART1 and SPI1/2 are enabled simultaneously).
+> 
+> The interrupt functionality could arguably be forked off as a separate
+> irqchip driver, but the clock driver has already claimed the AUX_IRQ
+> register so some driver and DT surgery would still be required.
+> Eric Anholt thought that including it here is reasonable, but I'm
+> prepared to split it out if this is considered too hacky.
+
+in order to give the maintainers (e.g. irqchip) a chance, they should be included into CC.
+
+> 
+> Phil Elwell (2):
+>   clk: bcm2835: Add AUX interrupt controller
+
+Either way the dt-binding must be updated as a separate patch. So Rob can review it.
+
+Thanks for submitting this upstream.
+
+Stefan
+
+>   ARM: dts: bcm283x: Enable AUX interrupt controller
+> 
+>  arch/arm/boot/dts/bcm283x.dtsi    |  12 +++-
+>  drivers/clk/bcm/clk-bcm2835-aux.c | 120 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 129 insertions(+), 3 deletions(-)
+> 
+> -- 
+> 1.9.1
 >
-> [...]
->
->>>> > +       plic: interrupt-controller@c000000 {
->>>> > +               #address-cells = <0>;
->>>
->>> This can go, given you don't have sub-nodes, nor a #size-cells property.
->>
->> The device-tree-specification seems to indicate that this is mandatory
->> for an interrupt-controller. Or have I understood this wrongly? When
->> you use interrupts-extended, doesn't it use the address-cells of the
->> interrupt controller? We should add that size-cells = 0, though.
->
-> It's only needed if you have an interrupt-map property AIUI.
-> #size-cells should never be needed (unless you have child nodes of
-> this one).
->
-> Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
