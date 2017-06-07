@@ -1,100 +1,128 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v8 33/34] media: imx: Drop warning upon multiple S_STREAM disable calls
-Date: Wed,  7 Jun 2017 11:34:12 -0700
-Message-ID: <1496860453-6282-34-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v8 31/34] media: imx: capture: add frame sizes/interval
+ enumeration
+Date: Wed,  7 Jun 2017 11:34:10 -0700
+Message-ID: <1496860453-6282-32-git-send-email-steve_longerbeam@mentor.com>
 References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Marek Vasut <marex@denx.de>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Calling S_STREAM OFF multiple times on a video device is valid, although
-dubious, practice. Instead of warning about it and setting stream count
-lower than zero, just ignore the subsequent S_STREAM calls and correct
-the stream count to zero.
+Add support for enumerating frame sizes and frame intervals from the
+first subdev via the V4L2 interfaces.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- drivers/staging/media/imx/imx-ic-prp.c      | 3 ++-
- drivers/staging/media/imx/imx-ic-prpencvf.c | 3 ++-
- drivers/staging/media/imx/imx-media-csi.c   | 3 ++-
- drivers/staging/media/imx/imx-media-vdic.c  | 3 ++-
- drivers/staging/media/imx/imx6-mipi-csi2.c  | 3 ++-
- 5 files changed, 10 insertions(+), 5 deletions(-)
+ drivers/staging/media/imx/imx-media-capture.c | 73 +++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-diff --git a/drivers/staging/media/imx/imx-ic-prp.c b/drivers/staging/media/imx/imx-ic-prp.c
-index 783a515..c2bb5ef 100644
---- a/drivers/staging/media/imx/imx-ic-prp.c
-+++ b/drivers/staging/media/imx/imx-ic-prp.c
-@@ -391,7 +391,8 @@ static int prp_s_stream(struct v4l2_subdev *sd, int enable)
+diff --git a/drivers/staging/media/imx/imx-media-capture.c b/drivers/staging/media/imx/imx-media-capture.c
+index f07ed9a..ddab4c2 100644
+--- a/drivers/staging/media/imx/imx-media-capture.c
++++ b/drivers/staging/media/imx/imx-media-capture.c
+@@ -81,6 +81,76 @@ static int vidioc_querycap(struct file *file, void *fh,
+ 	return 0;
+ }
  
- update_count:
- 	priv->stream_count += enable ? 1 : -1;
--	WARN_ON(priv->stream_count < 0);
-+	if (priv->stream_count < 0)
-+		priv->stream_count = 0;
- out:
- 	mutex_unlock(&priv->lock);
- 	return ret;
-diff --git a/drivers/staging/media/imx/imx-ic-prpencvf.c b/drivers/staging/media/imx/imx-ic-prpencvf.c
-index 5e9c817..ed363fe 100644
---- a/drivers/staging/media/imx/imx-ic-prpencvf.c
-+++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
-@@ -1140,7 +1140,8 @@ static int prp_s_stream(struct v4l2_subdev *sd, int enable)
++static int capture_enum_framesizes(struct file *file, void *fh,
++				   struct v4l2_frmsizeenum *fsize)
++{
++	struct capture_priv *priv = video_drvdata(file);
++	const struct imx_media_pixfmt *cc;
++	struct v4l2_subdev_frame_size_enum fse = {
++		.index = fsize->index,
++		.pad = priv->src_sd_pad,
++		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
++	};
++	int ret;
++
++	cc = imx_media_find_format(fsize->pixel_format, CS_SEL_ANY, true);
++	if (!cc)
++		return -EINVAL;
++
++	fse.code = cc->codes[0];
++
++	ret = v4l2_subdev_call(priv->src_sd, pad, enum_frame_size, NULL, &fse);
++	if (ret)
++		return ret;
++
++	if (fse.min_width == fse.max_width &&
++	    fse.min_height == fse.max_height) {
++		fsize->type = V4L2_FRMSIZE_TYPE_DISCRETE;
++		fsize->discrete.width = fse.min_width;
++		fsize->discrete.height = fse.min_height;
++	} else {
++		fsize->type = V4L2_FRMSIZE_TYPE_CONTINUOUS;
++		fsize->stepwise.min_width = fse.min_width;
++		fsize->stepwise.max_width = fse.max_width;
++		fsize->stepwise.min_height = fse.min_height;
++		fsize->stepwise.max_height = fse.max_height;
++		fsize->stepwise.step_width = 1;
++		fsize->stepwise.step_height = 1;
++	}
++
++	return 0;
++}
++
++static int capture_enum_frameintervals(struct file *file, void *fh,
++				       struct v4l2_frmivalenum *fival)
++{
++	struct capture_priv *priv = video_drvdata(file);
++	const struct imx_media_pixfmt *cc;
++	struct v4l2_subdev_frame_interval_enum fie = {
++		.index = fival->index,
++		.pad = priv->src_sd_pad,
++		.width = fival->width,
++		.height = fival->height,
++		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
++	};
++	int ret;
++
++	cc = imx_media_find_format(fival->pixel_format, CS_SEL_ANY, true);
++	if (!cc)
++		return -EINVAL;
++
++	fie.code = cc->codes[0];
++
++	ret = v4l2_subdev_call(priv->src_sd, pad, enum_frame_interval, NULL, &fie);
++	if (ret)
++		return ret;
++
++	fival->type = V4L2_FRMIVAL_TYPE_DISCRETE;
++	fival->discrete = fie.interval;
++
++	return 0;
++}
++
+ static int capture_enum_fmt_vid_cap(struct file *file, void *fh,
+ 				    struct v4l2_fmtdesc *f)
+ {
+@@ -269,6 +339,9 @@ static int capture_s_parm(struct file *file, void *fh,
+ static const struct v4l2_ioctl_ops capture_ioctl_ops = {
+ 	.vidioc_querycap	= vidioc_querycap,
  
- update_count:
- 	priv->stream_count += enable ? 1 : -1;
--	WARN_ON(priv->stream_count < 0);
-+	if (priv->stream_count < 0)
-+		priv->stream_count = 0;
- out:
- 	mutex_unlock(&priv->lock);
- 	return ret;
-diff --git a/drivers/staging/media/imx/imx-media-csi.c b/drivers/staging/media/imx/imx-media-csi.c
-index c6e8d2c..c306146 100644
---- a/drivers/staging/media/imx/imx-media-csi.c
-+++ b/drivers/staging/media/imx/imx-media-csi.c
-@@ -863,7 +863,8 @@ static int csi_s_stream(struct v4l2_subdev *sd, int enable)
- 
- update_count:
- 	priv->stream_count += enable ? 1 : -1;
--	WARN_ON(priv->stream_count < 0);
-+	if (priv->stream_count < 0)
-+		priv->stream_count = 0;
- out:
- 	mutex_unlock(&priv->lock);
- 	return ret;
-diff --git a/drivers/staging/media/imx/imx-media-vdic.c b/drivers/staging/media/imx/imx-media-vdic.c
-index c0b6d7f..7eabdc4 100644
---- a/drivers/staging/media/imx/imx-media-vdic.c
-+++ b/drivers/staging/media/imx/imx-media-vdic.c
-@@ -536,7 +536,8 @@ static int vdic_s_stream(struct v4l2_subdev *sd, int enable)
- 
- update_count:
- 	priv->stream_count += enable ? 1 : -1;
--	WARN_ON(priv->stream_count < 0);
-+	if (priv->stream_count < 0)
-+		priv->stream_count = 0;
- out:
- 	mutex_unlock(&priv->lock);
- 	return ret;
-diff --git a/drivers/staging/media/imx/imx6-mipi-csi2.c b/drivers/staging/media/imx/imx6-mipi-csi2.c
-index cae1cb2..5061f3f 100644
---- a/drivers/staging/media/imx/imx6-mipi-csi2.c
-+++ b/drivers/staging/media/imx/imx6-mipi-csi2.c
-@@ -397,7 +397,8 @@ static int csi2_s_stream(struct v4l2_subdev *sd, int enable)
- 
- update_count:
- 	csi2->stream_count += enable ? 1 : -1;
--	WARN_ON(csi2->stream_count < 0);
-+	if (csi2->stream_count < 0)
-+		csi2->stream_count = 0;
- out:
- 	mutex_unlock(&csi2->lock);
- 	return ret;
++	.vidioc_enum_framesizes = capture_enum_framesizes,
++	.vidioc_enum_frameintervals = capture_enum_frameintervals,
++
+ 	.vidioc_enum_fmt_vid_cap        = capture_enum_fmt_vid_cap,
+ 	.vidioc_g_fmt_vid_cap           = capture_g_fmt_vid_cap,
+ 	.vidioc_try_fmt_vid_cap         = capture_try_fmt_vid_cap,
 -- 
 2.7.4
