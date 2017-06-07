@@ -1,42 +1,76 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] Support for USB DRD Phy driver for NS2
-Date: Wed, 7 Jun 2017 19:09:21 +0530
-Message-ID: <d3ded8c2-33c4-96fa-59f1-47dbc5b7e165@ti.com>
-References: <1496408439-30431-1-git-send-email-raviteja.garimella@broadcom.com>
- <4824c415-ea31-f252-7e94-ed3e3b2c064c@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4824c415-ea31-f252-7e94-ed3e3b2c064c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] ARM64: dts: meson-gx: use specific compatible for the AO pwms
+Date: Wed,  7 Jun 2017 15:48:41 +0200
+Message-ID: <20170607134841.6822-1-jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Use the specific compatiable for AO pwms so the pwms input can
+be correctly set
 
+FDIV4 is not present on the pwm A0, so change kadhas vim input
+clocks to xtal.
 
-On Friday 02 June 2017 09:23 PM, Florian Fainelli wrote:
-> 
-> 
-> On 06/02/2017 06:00 AM, Raviteja Garimella wrote:
->>
->> Raviteja Garimella (3):
->>   dt-bindings:phy:Add DT bindings documentation for NS2 USB DRD phy
->>   phy:phy-bcm-ns2-usbdrd:Broadcom USB DRD Phy driver for Northstar2
->>   arm64: dts: NS2: Add USB DRD PHY device tree node
-> 
-> For future submission can you be consistent in how you create your
-> subjects and how PHY vs. Phy or phy is used? For instance this would be
-> much better:
-> 
-> dt-bindings: phy: Add DT bindings documentation for NS2 USB DRD PHY
-> phy: phy-bcm-ns2-usbdrd: Broadcom USB DRD PHY driver for Northstar 2
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+This patch depends on the pwm patchset available here [0]
 
-+1
+On the Khadas Vim I chose to replace FDIV4 with the crytal.
+Only PWM_AO_B is actually used and It is used for led dimming.
+The frequency, as long as it is high enough, does not matter.
+Only the duty cycle does. After testing, xtal seems to be fast
+enough.
 
--Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PWM_AO_A is outputed on the general purpose header, but no usage is
+defined for it.
+
+It might be bit late for that but I wonder why it defined and enabled ?
+Same goes for the other peripherals activated on this general purpose
+header.
+
+I know that's what shows the schematics but one could choose to do
+anything else possible with it ? like use in GPIO mode, or another
+function. In addition, we never which setting will be required ? (eg
+which clock source ?).
+
+Should we keep those ? or remove them ?
+
+[0]: https://lkml.kernel.org/r/20170607133013.4766-1-jbrunet@baylibre.com
+
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi                  | 2 +-
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+index 436b875060e7..fbaa6b598fca 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+@@ -391,7 +391,7 @@
+ 			};
+ 
+ 			pwm_AO_ab: pwm@550 {
+-				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
++				compatible = "amlogic,meson-gx-ao-pwm", "amlogic,meson-gxbb-ao-pwm";
+ 				reg = <0x0 0x00550 0x0 0x10>;
+ 				#pwm-cells = <3>;
+ 				status = "disabled";
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+index 6a81f0168da5..371f43cdd3ab 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
+@@ -86,8 +86,8 @@
+ 	status = "okay";
+ 	pinctrl-0 = <&pwm_ao_a_3_pins>, <&pwm_ao_b_pins>;
+ 	pinctrl-names = "default";
+-	clocks = <&clkc CLKID_FCLK_DIV4>;
+-	clock-names = "clkin0";
++	clocks = <&xtal> , <&xtal>;
++	clock-names = "clkin0", "clkin1" ;
+ };
+ 
+ &pwm_ef {
+-- 
+2.9.4
