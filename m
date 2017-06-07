@@ -1,132 +1,44 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V interrupt controllers
-Date: Wed, 7 Jun 2017 09:11:31 +0200
-Message-ID: <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
-References: <20170523004107.536-1-palmer@dabbelt.com> <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-9-palmer@dabbelt.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 0/8] MFD: add driver for HiSilicon Hi6421v530 PMIC
+Date: Wed, 7 Jun 2017 09:12:32 +0200
+Message-ID: <CAK8P3a1F+DJQfvZdtUT69N3XoqL=c==U+dHEmOaviuJ1pepN8w@mail.gmail.com>
+References: <20170606085143.13154-1-guodong.xu@linaro.org> <CAK8P3a25o6HOFw4MWrsnKjHJf4YuO+UvGk+=f30LREnFHM3QwQ@mail.gmail.com>
+ <20170606135829.dxi3mf7so4j5ml3q@dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20170606230007.19101-9-palmer@dabbelt.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, albert@sifive.com, patches@groups.riscv.org, "Wesley W. Terpstra" <wesley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606135829.dxi3mf7so4j5ml3q@dell>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Guodong Xu <guodong.xu@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Simon Horman <horms+renesas@verge.net.au>, Olof Johansson <olof@lixom.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, treding@nvidia.com, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, damm+renesas@opensource.se, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-CC irqchip and devicetree folks
+On Tue, Jun 6, 2017 at 3:58 PM, Lee Jones <lee.jones@linaro.org> wrote:
+> On Tue, 06 Jun 2017, Arnd Bergmann wrote:
+>
+>> On Tue, Jun 6, 2017 at 10:51 AM, Guodong Xu <guodong.xu@linaro.org> wrote:
+>> > This patchset adds driver for HiSilicon Hi6421v530 PMIC.
+>> >
+>> > Mainline kernel already has driver support to a similar chip, Hi6421.
+>> > Hi6421 and Hi6421v530 are both from the same vendor, HiSilicon, but
+>> > they are at different revisions. They both use the same Memory-mapped
+>> > I/O method to communicate with Main SoC. However, they differ quite a
+>> > lot in their regulator designs. Eg. they have completely different LDO
+>> > voltage points.
+>> >
+>> > Patch 1 and 2 are hi6421-pmic cleaning up.
+>> > Patch 3 and 4 extends hi6421-pmic-core.c to support Hi6421v530 revision.
+>> > Patch 5 add hi6421v530-regulator.c driver for LDO regulators.
+>> > Patch 6 fixes an issue for hi6421 regulator, which is not related to v530
+>> >          but it's found in this review.
+>> > Patch 7 is dts change, it depends on and can be applied to hi3660/hikey960
+>> >         patchset [1].
+>> > Patch 8 enables the relevant config items.
+>>
+>> Looks good to me,
+>
+> Is that an Ack?
 
-On Wed, Jun 7, 2017 at 12:59 AM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> From: "Wesley W. Terpstra" <wesley@sifive.com>
->
-> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> ---
->  .../interrupt-controller/riscv,cpu-intc.txt        | 46 ++++++++++++++++++++++
->  .../bindings/interrupt-controller/riscv,plic0.txt  | 44 +++++++++++++++++++++
->  2 files changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
->
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> new file mode 100644
-> index 000000000000..62f02e834ff9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> @@ -0,0 +1,46 @@
-> +RISC-V Hart-Level Interrupt Controller (HLIC)
-> +---------------------------------------------
-> +
-> +RISC-V cores include Control Status Registers (CSRs) which are local to each
-> +hart and can be read or written by software. Some of these CSRs are used to
-> +control local interrupts connected to the core.
-> +
-> +Typical examples of local interrupts on a RISC-V core include: software IPI
-> +interrupts, timer interrupts, and a link to the PLIC interrupt controller.
-> +
-> +Required properties:
-> +- compatible : "riscv,cpu-intc"
-> +- #interrupt-cells : should be <1>
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +
-> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
-> +definition of the hart whose CSRs control these local interrupts.
-> +
-> +Example:
-> +
-> +       cpu1: cpu@1 {
-> +               clock-frequency = <1600000000>;
-> +               compatible = "riscv";
-> +               d-cache-block-size = <64>;
-> +               d-cache-sets = <64>;
-> +               d-cache-size = <16384>;
-> +               d-tlb-sets = <1>;
-> +               d-tlb-size = <32>;
-> +               device_type = "cpu";
-> +               i-cache-block-size = <64>;
-> +               i-cache-sets = <64>;
-> +               i-cache-size = <16384>;
-> +               i-tlb-sets = <1>;
-> +               i-tlb-size = <32>;
-> +               mmu-type = "riscv,sv39";
-> +               next-level-cache = <&L2>;
-> +               reg = <1>;
-> +               riscv,isa = "rv64imac";
-> +               status = "okay";
-> +               tlb-split;
-> +               cpu1-intc: interrupt-controller {
-> +                       #interrupt-cells = <1>;
-> +                       compatible = "riscv,cpu-intc";
-> +                       interrupt-controller;
-> +               };
-> +       };
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
-> new file mode 100644
-> index 000000000000..c05b5806f7d2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
-> @@ -0,0 +1,44 @@
-> +RISC-V Platform-Level Interrupt Controller (PLIC)
-> +-------------------------------------------------
-> +
-> +RISC-V cores typically include a PLIC, which route interrupts from multiple
-> +devices to multiple hart contexts.  The PLIC is connected to the interrupt
-> +controller embedded in a RISC-V core via the interrupt-related CSRs.
-> +
-> +A hart context is a priviledge mode in a hardware execution thread.  For
-> +example, in an 4 core system with 2-way SMT, you have 8 harts and probably
-> +at least two priviledge modes per hart; machine mode and supervisor mode.
-> +
-> +Each interrupt can be enabled on per-context basis. Any context can claim
-> +a pending enabled interrupt and then release it once it has been handled.
-> +
-> +Each interrupt has a configurable priority. Higher priority interrupts are
-> +serviced firs. Each context can specify a priority threshold. Interrupts
-> +with priority below this threshold will not cause the PLIC to raise its
-> +interrupt line leading to the context.
-> +
-> +Required properties:
-> +- compatible : "riscv,plic0"
-> +- #address-cells : should be <0>
-> +- #interrupt-cells : should be <1>
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- reg : Should contain 1 register range (address and length)
-> +- riscv,ndev : Specifies the number of interrupts attached to the PLIC
-> +- interrupts-extended : Specifies which contexts are connected to the PLIC
-> +
-> +Example:
-> +
-> +       plic: interrupt-controller@c000000 {
-> +               #address-cells = <0>;
-> +               #interrupt-cells = <1>;
-> +               compatible = "riscv,plic0";
-> +               interrupt-controller;
-> +               interrupts-extended = <
-> +                       &cpu0-intc 11
-> +                       &cpu1-intc 11 &cpu1-intc 9
-> +                       &cpu2-intc 11 &cpu2-intc 9
-> +                       &cpu3-intc 11 &cpu3-intc 9
-> +                       &cpu4-intc 11 &cpu4-intc 9>;
-> +               reg = <0xc000000 0x4000000>;
-> +               riscv,ndev = <10>;
-> +       };
-> --
-> 2.13.0
+Yes, sorry for not being explicit about this.
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
