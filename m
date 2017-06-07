@@ -1,95 +1,74 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] ARM64: dts: meson-gx: use specific compatible for the AO
- pwms
-Date: Wed, 7 Jun 2017 15:52:28 +0200
-Message-ID: <b3812e40-cb59-a30f-9558-2926ca49a29a@baylibre.com>
-References: <20170607134841.6822-1-jbrunet@baylibre.com>
+From: Steve Twiss <stwiss.opensource@diasemi.com>
+Subject: RE: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
+ driver
+Date: Wed, 7 Jun 2017 14:09:56 +0000
+Message-ID: <6ED8E3B22081A4459DAC7699F3695FB7018CD927CE@SW-EX-MBX02.diasemi.com>
+References: <cover.1496823229.git.stwiss.opensource@diasemi.com>
+ <cb544b5c855ded286f2d0c824eb864630495c984.1496823229.git.stwiss.opensource@diasemi.com>
+ <20170607094159.uua5zxmeq2z4zrbu@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170607134841.6822-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170607094159.uua5zxmeq2z4zrbu@sirena.org.uk>
+Content-Language: en-US
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <Support.Opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2017 03:48 PM, Jerome Brunet wrote:
-> Use the specific compatiable for AO pwms so the pwms input can
------------------------/\
-s/compatiable/compatible/
+Hi Mark,
 
-> be correctly set
-> 
-> FDIV4 is not present on the pwm A0, so change kadhas vim input
-> clocks to xtal.
-> 
-> Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
-> This patch depends on the pwm patchset available here [0]
-> 
-> On the Khadas Vim I chose to replace FDIV4 with the crytal.
-> Only PWM_AO_B is actually used and It is used for led dimming.
-> The frequency, as long as it is high enough, does not matter.
-> Only the duty cycle does. After testing, xtal seems to be fast
-> enough.
-> 
-> PWM_AO_A is outputed on the general purpose header, but no usage is
-> defined for it.
+On 07 June 2017 10:42, Mark Brown wrote:
 
-Seems we will need to define what to enable by default on these SBC
-headers somehow, and leave future out-of-tree DT overlays do the work.
+> Subject: Re: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator driver
+> 
+> On Wed, Jun 07, 2017 at 09:13:48AM +0100, Steve Twiss wrote:
+> > From: Steve Twiss <stwiss.opensource@diasemi.com>
+> >
+> > Regulator support for the DA9061 is added into the DA9062 regulator driver.
+> 
+> I'm missing the other patches in this series and the cover letter, what
+> are the dependencies here?
 
-> 
-> It might be bit late for that but I wonder why it defined and enabled ?
-> Same goes for the other peripherals activated on this general purpose
-> header.
-> 
-> I know that's what shows the schematics but one could choose to do
-> anything else possible with it ? like use in GPIO mode, or another
-> function. In addition, we never which setting will be required ? (eg
-> which clock source ?).
-> 
-> Should we keep those ? or remove them ?
-> 
-> [0]: https://lkml.kernel.org/r/20170607133013.4766-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-> 
->  arch/arm64/boot/dts/amlogic/meson-gx.dtsi                  | 2 +-
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> index 436b875060e7..fbaa6b598fca 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-> @@ -391,7 +391,7 @@
->  			};
->  
->  			pwm_AO_ab: pwm@550 {
-> -				compatible = "amlogic,meson-gx-pwm", "amlogic,meson-gxbb-pwm";
-> +				compatible = "amlogic,meson-gx-ao-pwm", "amlogic,meson-gxbb-ao-pwm";
->  				reg = <0x0 0x00550 0x0 0x10>;
->  				#pwm-cells = <3>;
->  				status = "disabled";
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-> index 6a81f0168da5..371f43cdd3ab 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-khadas-vim.dts
-> @@ -86,8 +86,8 @@
->  	status = "okay";
->  	pinctrl-0 = <&pwm_ao_a_3_pins>, <&pwm_ao_b_pins>;
->  	pinctrl-names = "default";
-> -	clocks = <&clkc CLKID_FCLK_DIV4>;
-> -	clock-names = "clkin0";
-> +	clocks = <&xtal> , <&xtal>;
-> +	clock-names = "clkin0", "clkin1" ;
->  };
->  
->  &pwm_ef {
-> 
+My apologies Mark. I didn't re-send the cover letter because this regulator
+patch is the last one and I assumed it would not add anything.
+Am I confusing you here by not renaming the patch and leaving its subject
+as [PATCH V7 5/7]?
 
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This whole DA9061 patch set was a very long time in the submission process.
+You Acked the DA9061 regulator patch back in 2016, but it had a compile
+dependency with the DA9061 MFD patch so it had to wait until that got
+approved. If the regulator patch had got in first, it would have broken
+the build.
+
+The MFD patch contained a change to the ./include/linux/mfd/da9062/core.h
+file -- it had a new enum for da9062_compatible_types and these values were
+used in the MFD, but also appeared in the regulator patch as part of the
+da9062_regulator_probe().
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=656211b1dfb9e0b68d4e634931432e29a6facf46
+
+According to my records, I think the MFD made it into linux-mainline/v4.12-rc1
+as part of Lee Jones'  e-mail "[GIT PULL] MFD for v4.12"
+https://lkml.org/lkml/2017/5/3/91 [I can't check that link, LKML is down atm].
+Once the MFD change for DA9062/1 had been added, this unblocked the 
+patch for the regulators.
+
+In my test environment here, I've tested the DA9061 and the build by patching 
+v4.12-rc2 with the remaining DA9061 regulator patch.
+
+I'm not sure the cover letter for the original V7 patch set will explain much, but I
+will resend again, this time with the cover letter.
+
+Regards,
+Steve
+
+The original components of the PATCH V7 are as follows:
+[v7,1] https://patchwork.kernel.org/patch/9649905/
+[v7,2] https://patchwork.kernel.org/patch/9649921/
+[v7,3] https://patchwork.kernel.org/patch/9649889/
+[v7,4] https://patchwork.kernel.org/patch/9649927/
+[v7,5] https://patchwork.kernel.org/patch/9649895/
+[v7,6] https://patchwork.kernel.org/patch/9649917/
+[v7,7] https://patchwork.kernel.org/patch/9649913/
