@@ -1,52 +1,259 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH linux-next v3 1/4] spi: imx: introduce fifo_size and
- has_dmamode in spi_imx_devtype_data
-Date: Wed, 7 Jun 2017 20:09:01 +0100
-Message-ID: <20170607190901.eo7nmitwj6v3yw5e@sirena.org.uk>
-References: <20170605033809.13726-1-jiada_wang@mentor.com>
- <20170605033809.13726-2-jiada_wang@mentor.com>
+From: Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v8 16/24] drivers/fsi: Add tracepoints for low-level
+ operations
+Date: Wed, 7 Jun 2017 15:16:10 -0400
+Message-ID: <20170607151610.52f7bc88@gandalf.local.home>
+References: <20170606210859.80431-1-cbostic@linux.vnet.ibm.com>
+        <20170606210859.80431-17-cbostic@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="icplb52xiufeap5i"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170605033809.13726-2-jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606210859.80431-17-cbostic@linux.vnet.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, mingo@redhat.com, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jeremy Kerr <jk@ozlabs.org>, joel@jms.id.au, linux-kernel@vger.kernel.org, andrew@aj.id.au, alistair@popple.id.au, benh@kernel.crashing.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue,  6 Jun 2017 16:08:51 -0500
+Christopher Bostic <cbostic@linux.vnet.ibm.com> wrote:
 
---icplb52xiufeap5i
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Jeremy Kerr <jk@ozlabs.org>
+> 
+> Trace low level read and write FSI bus operations.
+> 
+> Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+> ---
+> v8 - type cast to 'int' to clean up build warnings
+> ---
+>  drivers/fsi/fsi-core.c     |  27 +++++++---
+>  include/trace/events/fsi.h | 127 +++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 148 insertions(+), 6 deletions(-)
+>  create mode 100644 include/trace/events/fsi.h
+> 
+> diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
+> index 3681365..db54561 100644
+> --- a/drivers/fsi/fsi-core.c
+> +++ b/drivers/fsi/fsi-core.c
+> @@ -23,6 +23,9 @@
+>  
+>  #include "fsi-master.h"
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/fsi.h>
+> +
+>  #define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
+>  #define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
+>  #define FSI_SLAVE_CONF_SLOTS_SHIFT	16
+> @@ -542,11 +545,16 @@ static int fsi_master_read(struct fsi_master *master, int link,
+>  {
+>  	int rc;
+>  
+> +	trace_fsi_master_read(master, link, slave_id, addr, size);
+> +
+>  	rc = fsi_check_access(addr, size);
+> -	if (rc)
+> -		return rc;
+> +	if (!rc)
+> +		rc = master->read(master, link, slave_id, addr, val, size);
+> +
+> +	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
+> +			false, val, rc);
+>  
+> -	return master->read(master, link, slave_id, addr, val, size);
+> +	return rc;
+>  }
+>  
+>  static int fsi_master_write(struct fsi_master *master, int link,
+> @@ -554,11 +562,16 @@ static int fsi_master_write(struct fsi_master *master, int link,
+>  {
+>  	int rc;
+>  
+> +	trace_fsi_master_write(master, link, slave_id, addr, size, val);
+> +
+>  	rc = fsi_check_access(addr, size);
+> -	if (rc)
+> -		return rc;
+> +	if (!rc)
+> +		rc = master->write(master, link, slave_id, addr, val, size);
+>  
+> -	return master->write(master, link, slave_id, addr, val, size);
+> +	trace_fsi_master_rw_result(master, link, slave_id, addr, size,
+> +			true, val, rc);
+> +
+> +	return rc;
+>  }
+>  
+>  static int fsi_master_link_enable(struct fsi_master *master, int link)
+> @@ -574,6 +587,8 @@ static int fsi_master_link_enable(struct fsi_master *master, int link)
+>   */
+>  static int fsi_master_break(struct fsi_master *master, int link)
+>  {
+> +	trace_fsi_master_break(master, link);
+> +
+>  	if (master->send_break)
+>  		return master->send_break(master, link);
+>  
+> diff --git a/include/trace/events/fsi.h b/include/trace/events/fsi.h
+> new file mode 100644
+> index 0000000..697ee66
+> --- /dev/null
+> +++ b/include/trace/events/fsi.h
+> @@ -0,0 +1,127 @@
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM fsi
+> +
+> +#if !defined(_TRACE_FSI_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_FSI_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(fsi_master_read,
+> +	TP_PROTO(const struct fsi_master *master, int link, int id,
+> +			uint32_t addr, size_t size),
+> +	TP_ARGS(master, link, id, addr, size),
+> +	TP_STRUCT__entry(
+> +		__field(int,	master_idx)
+> +		__field(int,	link)
+> +		__field(int,	id)
+> +		__field(__u32,	addr)
+> +		__field(size_t,	size)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->master_idx = master->idx;
+> +		__entry->link = link;
+> +		__entry->id = id;
+> +		__entry->addr = addr;
+> +		__entry->size = size;
+> +	),
+> +	TP_printk("fsi%d:%02d:%02d %08x[%zd]",
+> +		__entry->master_idx,
+> +		__entry->link,
+> +		__entry->id,
+> +		__entry->addr,
+> +		__entry->size
+> +	)
+> +);
+> +
+> +TRACE_EVENT(fsi_master_write,
+> +	TP_PROTO(const struct fsi_master *master, int link, int id,
+> +			uint32_t addr, size_t size, const void *data),
+> +	TP_ARGS(master, link, id, addr, size, data),
+> +	TP_STRUCT__entry(
+> +		__field(int,	master_idx)
+> +		__field(int,	link)
+> +		__field(int,	id)
+> +		__field(__u32,	addr)
+> +		__field(size_t,	size)
+> +		__field(__u32,	data)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->master_idx = master->idx;
+> +		__entry->link = link;
+> +		__entry->id = id;
+> +		__entry->addr = addr;
+> +		__entry->size = size;
+> +		__entry->data = 0;
+> +		memcpy(&__entry->data, data, size);
 
-On Mon, Jun 05, 2017 at 12:38:06PM +0900, Jiada Wang wrote:
-> Different ECSPI controller has different fifosize and DMA capability,
-> instead of calling functions to identify these information by check
-> devtype. add fifo_size and has_dmamode to spi_imx_devtype_data.
-> so that these information can be directly accessed.
 
-This doesn't apply against current code, please check and resend
-(probably due to Sascha's cleanup series).
+Um, can size ever be greater than 4? If so, this is a bug.
 
---icplb52xiufeap5i
-Content-Type: application/pgp-signature; name="signature.asc"
+I think you may want to use a dynamic array here.
 
------BEGIN PGP SIGNATURE-----
+	TP_STRUCT__entry(
+		[..]
+		__dynamic_array(char, data, size)
+	[..]
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlk4T00ACgkQJNaLcl1U
-h9BaRgf+Kf80tlEIHfMhocfgMIGwG03ytlg6GO5Jeiw99alh9MBNS242YsMH9hW/
-CsPb3IxsGmXOS+ka2IYbkMIvtULvVQmzTA2dGcMwZKnClIHrb0MvyovhQUZ+4VfC
-oiarGILgYV480I/6kdtgmABglw93OQC337COldDnhXgOCmcj67yQMi8AqYb0hyVB
-GrC7/AgN/ltZdr98c+ni3Fz37IAOeyCiEXd1jiHNYTvyrcTSZoXAsTJOPjkyacie
-uc5sR2WAprAFwCcQD2mEyi2N1STVJcBm5FQ34Ew+Gj373rTacmqYiia1qJPjoekf
-blH03Ss+Un0vYeuTQvHt4UlhClkdEA==
-=2+Ci
------END PGP SIGNATURE-----
+	TP_fast_assign(
+		[..]
+		memcpy(__get_dynamic_array(data), data, size);
+	[..]
 
---icplb52xiufeap5i--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	TP_printk(...
+		[..]
+		__entry->size,
+		__get_dynamic_array(data)
+
+You may also want to look at __print_array() too.
+
+Same with below.
+
+-- Steve
+
+
+> +	),
+> +	TP_printk("fsi%d:%02d:%02d %08x[%zd] <= {%*ph}",
+> +		__entry->master_idx,
+> +		__entry->link,
+> +		__entry->id,
+> +		__entry->addr,
+> +		__entry->size,
+> +		(int)__entry->size, &__entry->data
+> +	)
+> +);
+> +
+> +TRACE_EVENT(fsi_master_rw_result,
+> +	TP_PROTO(const struct fsi_master *master, int link, int id,
+> +			uint32_t addr, size_t size,
+> +			bool write, const void *data, int ret),
+> +	TP_ARGS(master, link, id, addr, size, write, data, ret),
+> +	TP_STRUCT__entry(
+> +		__field(int,	master_idx)
+> +		__field(int,	link)
+> +		__field(int,	id)
+> +		__field(__u32,	addr)
+> +		__field(size_t,	size)
+> +		__field(bool,	write)
+> +		__field(__u32,	data)
+> +		__field(int,	ret)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->master_idx = master->idx;
+> +		__entry->link = link;
+> +		__entry->id = id;
+> +		__entry->addr = addr;
+> +		__entry->size = size;
+> +		__entry->write = write;
+> +		__entry->data = 0;
+> +		__entry->ret = ret;
+> +		if (__entry->write || !__entry->ret)
+> +			memcpy(&__entry->data, data, size);
+> +	),
+> +	TP_printk("fsi%d:%02d:%02d %08x[%zd] %s {%*ph} ret %d",
+> +		__entry->master_idx,
+> +		__entry->link,
+> +		__entry->id,
+> +		__entry->addr,
+> +		__entry->size,
+> +		__entry->write ? "<=" : "=>",
+> +		(int)__entry->size, &__entry->data,
+> +		__entry->ret
+> +	)
+> +);
+> +
+> +TRACE_EVENT(fsi_master_break,
+> +	TP_PROTO(const struct fsi_master *master, int link),
+> +	TP_ARGS(master, link),
+> +	TP_STRUCT__entry(
+> +		__field(int,	master_idx)
+> +		__field(int,	link)
+> +	),
+> +	TP_fast_assign(
+> +		__entry->master_idx = master->idx;
+> +		__entry->link = link;
+> +	),
+> +	TP_printk("fsi%d:%d",
+> +		__entry->master_idx,
+> +		__entry->link
+> +	)
+> +);
+> +
+> +
+> +#endif /* _TRACE_FSI_H */
+> +
+> +#include <trace/define_trace.h>
