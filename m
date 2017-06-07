@@ -1,75 +1,108 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v8 02/34] [media] dt-bindings: Add bindings for i.MX media driver
-Date: Wed,  7 Jun 2017 11:33:41 -0700
-Message-ID: <1496860453-6282-3-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v8 01/34] dt-bindings: Add bindings for video-multiplexer
+ device
+Date: Wed,  7 Jun 2017 11:33:40 -0700
+Message-ID: <1496860453-6282-2-git-send-email-steve_longerbeam@mentor.com>
 References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for the i.MX media driver.
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
+Add bindings documentation for the video multiplexer device.
+
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- Documentation/devicetree/bindings/media/imx.txt | 47 +++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+ .../devicetree/bindings/media/video-mux.txt        | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/video-mux.txt
 
-diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
+diff --git a/Documentation/devicetree/bindings/media/video-mux.txt b/Documentation/devicetree/bindings/media/video-mux.txt
 new file mode 100644
-index 0000000..c1e1e2b
+index 0000000..63b9dc9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/media/imx.txt
-@@ -0,0 +1,47 @@
-+Freescale i.MX Media Video Device
-+=================================
++++ b/Documentation/devicetree/bindings/media/video-mux.txt
+@@ -0,0 +1,60 @@
++Video Multiplexer
++=================
 +
-+Video Media Controller node
-+---------------------------
-+
-+This is the media controller node for video capture support. It is a
-+virtual device that lists the camera serial interface nodes that the
-+media device will control.
++Video multiplexers allow to select between multiple input ports. Video received
++on the active input port is passed through to the output port. Muxes described
++by this binding are controlled by a multiplexer controller that is described by
++the bindings in Documentation/devicetree/bindings/mux/mux-controller.txt
 +
 +Required properties:
-+- compatible : "fsl,imx-capture-subsystem";
-+- ports      : Should contain a list of phandles pointing to camera
-+		sensor interface ports of IPU devices
++- compatible : should be "video-mux"
++- mux-controls : mux controller node to use for operating the mux
++- #address-cells: should be <1>
++- #size-cells: should be <0>
++- port@*: at least three port nodes containing endpoints connecting to the
++  source and sink devices according to of_graph bindings. The last port is
++  the output port, all others are inputs.
 +
-+example:
++Optionally, #address-cells, #size-cells, and port nodes can be grouped under a
++ports node as described in Documentation/devicetree/bindings/graph.txt.
 +
-+capture-subsystem {
-+	compatible = "fsl,imx-capture-subsystem";
-+	ports = <&ipu1_csi0>, <&ipu1_csi1>;
++Example:
++
++	mux: mux-controller {
++		compatible = "gpio-mux";
++		#mux-control-cells = <0>;
++
++		mux-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
++	};
++
++	video-mux {
++		compatible = "video-mux";
++		mux-controls = <&mux>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		port@0 {
++			reg = <0>;
++
++			mux_in0: endpoint {
++				remote-endpoint = <&video_source0_out>;
++			};
++		};
++
++		port@1 {
++			reg = <1>;
++
++			mux_in1: endpoint {
++				remote-endpoint = <&video_source1_out>;
++			};
++		};
++
++		port@2 {
++			reg = <2>;
++
++			mux_out: endpoint {
++				remote-endpoint = <&capture_interface_in>;
++			};
++		};
++	};
 +};
-+
-+
-+mipi_csi2 node
-+--------------
-+
-+This is the device node for the MIPI CSI-2 Receiver, required for MIPI
-+CSI-2 sensors.
-+
-+Required properties:
-+- compatible	: "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
-+- reg           : physical base address and length of the register set;
-+- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
-+		  (the D-PHY clock), video_27m (D-PHY PLL reference
-+		  clock), and eim_podf;
-+- clock-names	: must contain "dphy", "ref", "pix";
-+- port@*        : five port nodes must exist, containing endpoints
-+		  connecting to the source and sink devices according to
-+		  of_graph bindings. The first port is an input port,
-+		  connecting with a MIPI CSI-2 source, and ports 1
-+		  through 4 are output ports connecting with parallel
-+		  bus sink endpoint nodes and correspond to the four
-+		  MIPI CSI-2 virtual channel outputs.
-+
-+Optional properties:
-+- interrupts	: must contain two level-triggered interrupts,
-+		  in order: 100 and 101;
 -- 
 2.7.4
