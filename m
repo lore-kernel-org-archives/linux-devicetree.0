@@ -1,75 +1,78 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] media: mtk-mdp: Fix mdp device tree
-Date: Wed, 7 Jun 2017 11:15:21 +0200
-Message-ID: <8dadf7c7-d600-ec0d-b78f-3bb492873edc@xs4all.nl>
-References: <1495509851-29159-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1495509851-29159-4-git-send-email-minghsiu.tsai@mediatek.com>
- <e7996ad5-03a1-7b53-5d61-ae171473581f@gmail.com>
- <2407aa14-610d-0252-f264-edf22961752e@xs4all.nl>
- <59ac9ca0-3f2f-fa65-011d-c832e4ced265@gmail.com>
- <9ca0b2c5-db3d-4794-1431-89f5a093252f@xs4all.nl>
- <35fb23dd-00e2-e0f1-c3ed-e317883ed007@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] Input: Add driver for Cypress Generation 5
+ touchscreen
+Date: Wed, 7 Jun 2017 11:16:23 +0200
+Message-ID: <20170607091623.ot5qbsrrsf5ktgen@flea.lan>
+References: <20170529144538.29187-1-mylene.josserand@free-electrons.com>
+ <20170529144538.29187-2-mylene.josserand@free-electrons.com>
+ <20170530080225.rgvy5too2cy5m2zp@flea.lan>
+ <c732ffe4-e0fb-16d7-c27a-d18a1995c360@free-electrons.com>
+ <20170606120400.ekfbbaai7myscitu@flea.lan>
+ <0232a641-c741-1f95-9086-840b31f5d055@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="chb7mygfr7ml42e7"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <35fb23dd-00e2-e0f1-c3ed-e317883ed007-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <0232a641-c741-1f95-9086-840b31f5d055-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wu-Cheng Li <wuchengli-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mylene Josserand <mylene.josserand-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fery-+wT8y+m8/X5BDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/17 11:13, Matthias Brugger wrote:
-> 
-> 
-> On 07/06/17 11:11, Hans Verkuil wrote:
->> On 07/06/17 11:07, Matthias Brugger wrote:
->>>
->>>
->>> On 07/06/17 10:56, Hans Verkuil wrote:
->>>> On 07/06/17 10:44, Matthias Brugger wrote:
->>>>> Hi Hans, hi Mauro,
->>>>>
->>>>> On 23/05/17 05:24, Minghsiu Tsai wrote:
->>>>>> From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>>>
->>>>>> If the mdp_* nodes are under an mdp sub-node, their corresponding
->>>>>> platform device does not automatically get its iommu assigned properly.
->>>>>>
->>>>>> Fix this by moving the mdp component nodes up a level such that they are
->>>>>> siblings of mdp and all other SoC subsystems.  This also simplifies the
->>>>>> device tree.
->>>>>>
->>>>>> Although it fixes iommu assignment issue, it also break compatibility
->>>>>> with old device tree. So, the patch in driver is needed to iterate over
->>>>>> sibling mdp device nodes, not child ones, to keep driver work properly.
->>>>>>
->>>>>> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>>>>> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>>>>> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>>
->>>>>
->>>>> Are you OK to take this patch, or do you have any further comments?
->>>>
->>>> Nope, it's all good. Queued for 4.13.
->>>>
->>>
->>> Thanks!
->>>
->>> I queued the other two in v4.12-next/dts64
->>
->> Media bindings normally go through the media subsystem, but you've taken
->> that one as well? I need to know, because then I drop it in my tree.
->>
-> 
-> My fault, I'll drop it from my tree. After that I only queued patch 2/3.
 
-OK, thanks. Then I'll take patch 1/3 and 3/3.
+--chb7mygfr7ml42e7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
+On Tue, Jun 06, 2017 at 04:32:46PM +0200, Mylene Josserand wrote:
+> > > Notice that the DT parsing uses a sysinfo's variable (si->num_btns)
+> > > which is retrieved in the startup function (thanks to
+> > > get_sysinfo). So, currently, it is not possible to move the startup
+> > > function after the DT parsing.
+> >=20
+> > Can't that be made the other way around? You parse the number of
+> > buttons in the DT, and check the consistency with the hardware?
+>=20
+> It could be possible but currently, it was designed to enable every button
+> from hardware's configuration and DT binding was just a way to customize
+> button's keycode (default is KEY_RESERVED).
+> If I base it on the DT, it means that some buttons could never be reported
+> (such as deactivated) because they will not be present in the DT. I am not
+> sure if it is the behavior we want. What do you think?
 
-	Hans
+I don't really know. Both look reasonable, and it seems to be more a
+matter of policy. Dmitry?
 
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--chb7mygfr7ml42e7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZN8RnAAoJEBx+YmzsjxAgSjsP/RF000JaCdJpyj50L4feWBc0
+L8ARPUg/Fm06ZeZOwl6tLp4JHDTFNWiinsIsksNjLm2mxfy08pJCWLiJh28MbxoW
+tSfGhz39Ukc4MgdnjzWObx/YgmwiEc2C1GBypPxp/vR+sYa5eECU+UMW8BQPJI0A
+U8V7/ZM1wGt6e2a/IqR0olGl7vL2zLrkZcOE7sgmxcvBbjpZyO4038GRkOw3lv/y
+1gDO1lqFJZ81C7cWCnnHWhjbmQ1IK//uooTl2HjBJSrYHKIrAoIHmUxLBxd5N4MM
+MQNzpOtJEpqWOA96r29cAEPmAENkQV9zA0ddbghVNZ5nkDmfzL+FgDYA0ADxYuRj
+fnoqc2C1aF4fEEz0P/wP18rFYLzuxmO/IVvx3ZnP2JI1qhRMOnWAbytc08UkKcOp
+3LGi+gBkLrwp8XTw4x82mTZa6e9a+2x8h7Ol0QJ9d8cRuIide91jZRykZCe9E4TL
+CeT0k3sdlVTSPh84GdFszJXTQtlvFcEPZ1g5frxDSMVl+A28IrRLFA9ZlbeJqtJs
+auyFJqHahAp/TJmoyM+PKYbDUys7qdEEcVqUfQ0UBU3y5e3riY1x3w32O096wH2O
+XJ6nHz2Ik5VsRk4tsfV+UkX0FiCzZaQei+H97IcyA/fvbddGYyRy1L5F0fx7y2OY
+wAKx3gs7Cv5EUz5AjGIA
+=AujU
+-----END PGP SIGNATURE-----
+
+--chb7mygfr7ml42e7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
