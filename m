@@ -1,100 +1,69 @@
-From: Alexander Stein <alexanders83@web.de>
-Subject: Re: [PATCH 1/2] clk: bcm2835: Add AUX interrupt controller
-Date: Wed, 07 Jun 2017 19:25:07 +0200
-Message-ID: <2599573.4PsWGx6B1X@localhost>
-References: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org> <3148562.tSrsoIclEp@ws-stein> <369bb235-77fb-60ad-61d8-3de039e0f838@raspberrypi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <369bb235-77fb-60ad-61d8-3de039e0f838@raspberrypi.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Phil Elwell <phil@raspberrypi.org>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: [PATCH v2 2/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
+Date: Wed,  7 Jun 2017 19:33:45 +0200
+Message-ID: <20170607173345.22462-3-clabbe.montjoie@gmail.com>
+References: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
- On Wednesday, June 7, 2017, 2:37:41 PM CEST Phil Elwell wrote:
-> On 07/06/2017 13:07, Alexander Stein wrote:
-> > On Wednesday 07 June 2017 12:11:45, Phil Elwell wrote:
-> >> Devices in the AUX block share a common interrupt line, with a register
-> >> indicating which devices have active IRQs. Expose this as a nested
-> >> interrupt controller to avoid IRQ sharing problems (easily observed if
-> >> UART1 and SPI1/2 are enabled simultaneously).
-> >> 
-> >> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-> >> ---
-> >> 
-> >>  drivers/clk/bcm/clk-bcm2835-aux.c | 120
-> >> 
-> >> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 120 insertions(+)
-> >> 
-> >> diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c
-> >> b/drivers/clk/bcm/clk-bcm2835-aux.c index bd750cf..41e0702 100644
-> >> --- a/drivers/clk/bcm/clk-bcm2835-aux.c
-> >> +++ b/drivers/clk/bcm/clk-bcm2835-aux.c
-> >> [...]
-> >> +struct auxirq_state {
-> >> +	void __iomem      *status;
-> >> +	u32                enables;
-> >> +	struct irq_domain *domain;
-> >> +	struct regmap     *local_regmap;
-> >> +};
-> >> +
-> >> +static struct auxirq_state auxirq __read_mostly;
-> >> +
-> >> +static irqreturn_t bcm2835_auxirq_handler(int irq, void *dev_id)
-> >> +{
-> >> +	u32 stat = readl_relaxed(auxirq.status);
-> >> +	u32 masked = stat & auxirq.enables;
-> > 
-> > Doesn't this hide any spurious interrupts? Is this acceptable? I mean
-> > getting informed about spurious interrupts seems nice to me, as it
-> > indicates a hardware/configuration problem.
-> 
-> Thanks for the reply. This interrupt handler is capable of dispatching
-> multiple interrupts but must return a single value - IRQ_HANDLED or
-> IRQ_NONE. I've assumed that returning IRQ_NONE repeatedly will trigger the
-> spurious interrupt detection.
-> 
-> This implementation returns IRQ_HANDLED if any unmasked interrupts are
-> raised, otherwise it returns IRQ_NONE. Therefore provided any spurious
-> interrupt isn't always coincident with a real interrupt then it ought
-> eventually to be identified as spurious. The alternative - returning
-> IRQ_NONE if there are any spurious interrupts - seems prone to causing
-> collateral damage.
-> 
-> What did you have in mind?
+The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
+This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
 
-I was wondering about "stat & auxirq.enables". With that you wouldn't forward 
-any spurious interrupts to e.g. SPI1. I don't know which way is better, 
-returning IRQ_NONE is a masked interrupt happens, or pass it further down. I 
-guess this also raises a warning if the SPI driver also returns IRQ_NONE.
-BTW: Is it even allowed to call generic_handle_irq on a masked irq?
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-> >> +	if (masked & BCM2835_AUXIRQ_UART_MASK)
-> >> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> >> +						     BCM2835_AUXIRQ_UART_IRQ));
-> >> +
-> >> +	if (masked & BCM2835_AUXIRQ_SPI1_MASK)
-> >> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> >> +						     BCM2835_AUXIRQ_SPI1_IRQ));
-> >> +
-> >> +	if (masked & BCM2835_AUXIRQ_SPI2_MASK)
-> >> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> >> +						     BCM2835_AUXIRQ_SPI2_IRQ));
-> >> +
-> >> +	return (masked & BCM2835_AUXIRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
-> >> +}
-> > 
-> > How does interrupt acknowledgement work in these 3 interrupts work?
-> 
-> The interrupt "controller" is just combinatorial logic on the three
-> level-sensitive interrupt lines from the devices. Interrupts must be
-> acknowledged and cleared at source.
-
-Thanks for the info.
-
-Best regards,
-Alexander
-
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 01a83406f9ae..7d719b4aeaa9 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -200,6 +200,14 @@
+ 			#interrupt-cells = <3>;
+ 			#gpio-cells = <3>;
+ 
++			emac_rgmii_pins: emac-rgmii-pins {
++				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
++				       "PD11", "PD12", "PD13", "PD14", "PD18",
++				       "PD19", "PD21", "PD22", "PD23";
++				function = "gmac";
++				drive-strength = <40>;
++			};
++
+ 			mmc0_pins: mmc0-pins {
+ 				pins = "PF0", "PF1", "PF2",
+ 				       "PF3", "PF4", "PF5";
+@@ -266,6 +274,26 @@
+ 			status = "disabled";
+ 		};
+ 
++		emac: ethernet@1c30000 {
++			compatible = "allwinner,sun8i-a83t-emac";
++			syscon = <&syscon>;
++			reg = <0x01c30000 0x104>;
++			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq";
++			resets = <&ccu 13>;
++			reset-names = "stmmaceth";
++			clocks = <&ccu 27>;
++			clock-names = "stmmaceth";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++
++			mdio: mdio {
++				#address-cells = <1>;
++				#size-cells = <0>;
++			};
++		};
++
+ 		gic: interrupt-controller@1c81000 {
+ 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
+ 			reg = <0x01c81000 0x1000>,
+-- 
+2.13.0
