@@ -1,49 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [RESEND PATCH V7 5/7] regulator: da9061: BUCK and LDO regulator
- driver
-Date: Wed, 7 Jun 2017 10:41:59 +0100
-Message-ID: <20170607094159.uua5zxmeq2z4zrbu@sirena.org.uk>
-References: <cover.1496823229.git.stwiss.opensource@diasemi.com>
- <cb544b5c855ded286f2d0c824eb864630495c984.1496823229.git.stwiss.opensource@diasemi.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 10/11] ARM: sun8i: h3: add display engine
+ pipeline for TVE
+Date: Wed, 7 Jun 2017 11:42:41 +0200
+Message-ID: <20170607094241.65dcm42aacrn4eev@flea.lan>
+References: <20170604160149.30230-1-icenowy@aosc.io>
+ <20170604160149.30230-11-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tmexwjw6at6kavrg"
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cfwhan3eeejuewto"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBHEV37EQKGQE2IF3K6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <cb544b5c855ded286f2d0c824eb864630495c984.1496823229.git.stwiss.opensource@diasemi.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Steve Twiss <stwiss.opensource@diasemi.com>
-Cc: LINUX-KERNEL <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, DEVICETREE <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Eduardo Valentin <edubezval@gmail.com>, Guenter Roeck <linux@roeck-us.net>, LINUX-INPUT <linux-input@vger.kernel.org>, LINUX-PM <linux-pm@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Wim Van Sebroeck <wim@iguana.be>, Zhang Rui <rui.zhang@intel.com>
+In-Reply-To: <20170604160149.30230-11-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---tmexwjw6at6kavrg
-Content-Type: text/plain; charset=us-ascii
+--cfwhan3eeejuewto
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 07, 2017 at 09:13:48AM +0100, Steve Twiss wrote:
-> From: Steve Twiss <stwiss.opensource@diasemi.com>
->=20
-> Regulator support for the DA9061 is added into the DA9062 regulator drive=
-r.
+On Mon, Jun 05, 2017 at 12:01:48AM +0800, Icenowy Zheng wrote:
+> +	soc {
+> +		display_clocks: clock@1000000 {
+> +			compatible = "allwinner,sun8i-a83t-de2-clk";
+> +			reg = <0x01000000 0x100000>;
+> +			clocks = <&ccu CLK_BUS_DE>,
+> +				 <&ccu CLK_DE>;
+> +			clock-names = "bus",
+> +				      "mod";
+> +			resets = <&ccu RST_BUS_DE>;
+> +			#clock-cells = <1>;
+> +			#reset-cells = <1>;
+> +			assigned-clocks = <&ccu CLK_DE>;
+> +			assigned-clock-parents = <&ccu CLK_PLL_DE>;
+> +			assigned-clock-rates = <432000000>;
+> +		};
 
-I'm missing the other patches in this series and the cover letter, what
-are the dependencies here?
+We discussed that already a few times, but there's no reason to do
+so. If you need a downstream clock at a particular rate, call
+clk_set_rate on it, period.
 
---tmexwjw6at6kavrg
-Content-Type: application/pgp-signature; name="signature.asc"
+Whether its parent will be coming from PLL_DE or some other more
+appriopriate clock is not relevant and doesn't make any difference.
 
------BEGIN PGP SIGNATURE-----
+Maxime
 
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlk3ymcACgkQJNaLcl1U
-h9D8uwgAgRT/Z6xS6pKyfLP+DJdpuEfpBwUMmWOnNcfBao6esGvwdoQyXMYGu54I
-yLISRiu+vkWYTBQySqpEMkLMrkLU6Tl3AKbzboIOFvggSUaUmTZeDqa1yoF+c3UI
-EuafVC28phq2MFlE6CXVUgdu+w4qUVoSz+dSFrr91ed++mhKXvjIhIwF9JTEz+gN
-2NyT3ibTvNA/lNaWcxo6j1i6sc8aBDPqojAYNA3zWh2MtftDWr8ELFqUX8xBLLcU
-6ehoECOuCoBtkDC0nLcrqbd07YsDQZzmGtog5oCeJmBHeUnFi7mLoBIS99yz9XLX
-KOrSGDmwqWzMcN4N5DnSfJvZUVTNlQ==
-=rX2e
------END PGP SIGNATURE-----
-
---tmexwjw6at6kavrg--
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--cfwhan3eeejuewto--
