@@ -1,51 +1,176 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 04/23] mtd: nand: denali: avoid hard-coding ECC step,
- strength, bytes
-Date: Wed, 7 Jun 2017 09:02:50 +0200
-Message-ID: <20170607090250.729625c9@bbrezillon>
-References: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
-        <1496704922-12261-5-git-send-email-yamada.masahiro@socionext.com>
-        <20170607000133.69fbf82b@bbrezillon>
-        <CAK7LNATXygK2f71J8gggGQRuEdJ21CJfg9WVCYXgO=+NRBwcLg@mail.gmail.com>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 4/8] mfd: hi6421-pmic: add support for HiSilicon Hi6421v530
+Date: Wed, 7 Jun 2017 15:04:51 +0800
+Message-ID: <CAFGCpxxkseX0DnvbMva3ZEUJ0xuv1NA=QFKdn8Z3rN7wCzF7Bw@mail.gmail.com>
+References: <20170606085143.13154-1-guodong.xu@linaro.org> <20170606085143.13154-5-guodong.xu@linaro.org>
+ <20170606135446.ceqow7bfdlhk4kuv@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNATXygK2f71J8gggGQRuEdJ21CJfg9WVCYXgO=+NRBwcLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170606135446.ceqow7bfdlhk4kuv@dell>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 7 Jun 2017 12:09:31 +0900
-Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-
-> >> +
-> >> +static int denali_ecc_setup(struct mtd_info *mtd, struct nand_chip *chip,
-> >> +                         struct denali_nand_info *denali)
-> >> +{
-> >> +     struct nand_ecc_caps caps;
-> >> +     int ret;
-> >> +
-> >> +     caps.stepinfos = denali->stepinfo;
-> >> +     caps.nstepinfos = 1;
-> >> +     caps.calc_ecc_bytes = denali_calc_ecc_bytes;
-> >> +     caps.oob_reserve_bytes = denali->bbtskipbytes;  
+On Tue, Jun 6, 2017 at 9:54 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>
+> On Tue, 06 Jun 2017, Guodong Xu wrote:
+>
+> > Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
+> > main SoC via memory-mapped I/O.
 > >
-> > If you get rid of this oob_reserve_bytes field, you can define caps as
-> > a static const and even directly store ecc_caps in denali_nand_info.  
-> 
-> To make caps static const, denali_calc_ecc_bytes must be exported
-> to be referenced from denali_dt/denali_pci.
-> I am reluctant to do it.
+> > Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon,
+> > but at different revisions. They share the same memory-mapped I/O
+> > design. They differ in integrated devices, such as regulator details,
+> > LDO voltage points.
+> >
+> > Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> > Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/mfd/hi6421-pmic-core.c  | 68 ++++++++++++++++++++++++++++++---=
+--------
+> >  include/linux/mfd/hi6421-pmic.h |  5 +++
+> >  2 files changed, 55 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-c=
+ore.c
+> > index b1139d4..4568a43 100644
+> > --- a/drivers/mfd/hi6421-pmic-core.c
+> > +++ b/drivers/mfd/hi6421-pmic-core.c
+>
+> [...]
+>
+> >  static int hi6421_pmic_probe(struct platform_device *pdev)
+> >  {
+> >       struct hi6421_pmic *pmic;
+> >       struct resource *res;
+> > +     const struct of_device_id *id;
+> > +     const struct mfd_cell *subdevs;
+> >       void __iomem *base;
+> > -     int ret;
+> > +     int n_subdevs, ret;
+> > +
+> > +     id =3D of_match_device(of_hi6421_pmic_match, &pdev->dev);
+> > +     if (!id)
+> > +             return -EINVAL;
+> >
+> >       pmic =3D devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
+> >       if (!pmic)
+> > @@ -57,18 +80,33 @@ static int hi6421_pmic_probe(struct platform_device=
+ *pdev)
+> >               return PTR_ERR(pmic->regmap);
+> >       }
+> >
+> > -     /* set over-current protection debounce 8ms */
+> > -     regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
+> > +     platform_set_drvdata(pdev, pmic);
+> > +
+> > +     switch ((unsigned long)id->data) {
+>
+> Whilst this is not a blocker, it would be nicer to place this into a
+> 'type' variable, in order to clarify what data you are using.
+>
 
-You already duplicate other information in denali_dt.c and
-denali_pci.c, so what prevents you from duplicating this one-line
-function?
+I will add that.
+enum hi6421_type type;
 
-Also, denali core already exports 2 functions, I don't see the problem
-in exporting the common nand_ecc_caps object. Why are you reluctant to
-that?
+
+>
+> > +     case HI6421:
+> > +             /* set over-current protection debounce 8ms */
+> > +             regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
+> >                               (HI6421_OCP_DEB_SEL_MASK
+> >                                | HI6421_OCP_EN_DEBOUNCE_MASK
+> >                                | HI6421_OCP_AUTO_STOP_MASK),
+> >                               (HI6421_OCP_DEB_SEL_8MS
+> >                                | HI6421_OCP_EN_DEBOUNCE_ENABLE));
+> >
+> > -     platform_set_drvdata(pdev, pmic);
+> > +             subdevs =3D hi6421_devs;
+> > +             n_subdevs =3D ARRAY_SIZE(hi6421_devs);
+> > +             break;
+> > +     case HI6421_V530:
+> > +             subdevs =3D hi6421v530_devs;
+> > +             n_subdevs =3D ARRAY_SIZE(hi6421v530_devs);
+> > +             break;
+> > +     default:
+> > +             dev_err(&pdev->dev, "Unknown device type %ld\n",
+> > +                                             (unsigned long)id->data);
+> > +             return -EINVAL;
+> > +     }
+> >
+> > -     ret =3D devm_mfd_add_devices(&pdev->dev, 0, hi6421_devs,
+> > -                                ARRAY_SIZE(hi6421_devs), NULL, 0, NULL=
+);
+> > +     ret =3D devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
+> > +                                subdevs, n_subdevs, NULL, 0, NULL);
+> >       if (ret) {
+> >               dev_err(&pdev->dev, "Failed to add child devices: %d\n", =
+ret);
+> >               return ret;
+> > @@ -77,16 +115,10 @@ static int hi6421_pmic_probe(struct platform_devic=
+e *pdev)
+> >       return 0;
+> >  }
+> >
+> > -static const struct of_device_id of_hi6421_pmic_match_tbl[] =3D {
+> > -     { .compatible =3D "hisilicon,hi6421-pmic", },
+> > -     { },
+> > -};
+> > -MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match_tbl);
+> > -
+> >  static struct platform_driver hi6421_pmic_driver =3D {
+> >       .driver =3D {
+> > -             .name   =3D "hi6421_pmic",
+> > -             .of_match_table =3D of_hi6421_pmic_match_tbl,
+> > +             .name =3D "hi6421_pmic",
+> > +             .of_match_table =3D of_hi6421_pmic_match,
+> >       },
+> >       .probe  =3D hi6421_pmic_probe,
+> >  };
+> > diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421=
+-pmic.h
+> > index 587273e..2457438 100644
+> > --- a/include/linux/mfd/hi6421-pmic.h
+> > +++ b/include/linux/mfd/hi6421-pmic.h
+> > @@ -38,4 +38,9 @@ struct hi6421_pmic {
+> >       struct regmap           *regmap;
+> >  };
+> >
+> > +enum hi6421_type {
+> > +     HI6421      =3D 1,
+> > +     HI6421_V530 =3D 2,
+> > +};
+> > +
+>
+> As programmers we usually start counting at 0.  Then you can rely on
+> the C standard to populate the remaining values.
+>
+> Something like:
+>
+> enum hi6421_type {
+>         HI6421 =3D 0,
+>         HI6421_V530,
+> };
+>
+> ... is more normal.
+
+
+:) sure. thanks. I will do.
+
+-Guodong
+
+>
+>
+> >  #endif               /* __HI6421_PMIC_H */
+>
+> --
+> Lee Jones
+> Linaro STMicroelectronics Landing Team Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
