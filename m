@@ -1,49 +1,44 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm64: allwinner: h5: enable
- dwmac-sun8i for Nano Pi NEO2
-Date: Wed, 7 Jun 2017 15:27:07 +0200
-Message-ID: <20170607132707.nh2icuxnbest6swx@flea.lan>
-References: <20170607002305.15897-1-icenowy@aosc.io>
- <20170607002305.15897-3-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] net: macb: Add hardware PTP support
+Date: Wed, 7 Jun 2017 15:28:17 +0200
+Message-ID: <20170607132817.GA28329@localhost.localdomain>
+References: <1496413439-12900-1-git-send-email-rafalo@cadence.com>
+ <1496413690-22826-1-git-send-email-rafalo@cadence.com>
+ <20170606183358.GA25220@localhost.localdomain>
+ <BN3PR07MB2516A47C2CFEB58BCFFB2C46C9C80@BN3PR07MB2516.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lai34mdvavhhvvpj"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBLH637EQKGQEQWOLOAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170607002305.15897-3-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <BN3PR07MB2516A47C2CFEB58BCFFB2C46C9C80-EldUQEzkDQfxGZiqM5fOI+FPX92sqiQdvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rafal Ozieblo <rafalo-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---lai34mdvavhhvvpj
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Jun 07, 2017 at 08:23:05AM +0800, Icenowy Zheng wrote:
-> Add the required DT parts to enable Ethernet (dwmac-sun8i driver) on
-> the Nano Pi NEO2 board. It uses an external Realtek RTL8211E PHY
-> connected via RGMII to provide GbE network. Specially unlike other
-> Allwinner boards, the phy is connected to MDIO address 7, not 1.
+On Wed, Jun 07, 2017 at 11:13:36AM +0000, Rafal Ozieblo wrote:
+> Please look at following call-stack:
 > 
-> This includes the regulator (which is controlled by a GPIO pin) and
-> the actual Ethernet MAC node, referring the RGMII pins of the device.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> 1. macb_interrupt()   // spin_lock(&bp->lock) is taken
+> 2. macb_tx_interrupt()
+> 3. macb_handle_txtstamp()
+> 4. skb_tstamp_tx()
+> 5. __skb_tstamp_tx()
+> 6. skb_may_tx_timestamp()
+> 7. read_lock_bh() // second lock is taken
 
-Applied all three, thanks!
-Maxime
+Well, you can always drop the lock, or postpone the call to
+skb_tstamp_tx() until after the spin lock is released...
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---lai34mdvavhhvvpj--
+> I know that those are different locks and different types. But this could lead 
+> to deadlocks. This is the reason of warning I could see.
+
+Can you please post the lockdep splat?
+
+Thanks,
+Richard
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
