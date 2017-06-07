@@ -1,69 +1,33 @@
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: [PATCH v2 2/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
-Date: Wed,  7 Jun 2017 19:33:45 +0200
-Message-ID: <20170607173345.22462-3-clabbe.montjoie@gmail.com>
-References: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, maxime.ripard@free-electrons.com, wens@csie.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: sunxi: Enable dwmac-sun8i on more boards
+Date: Wed,  7 Jun 2017 19:33:43 +0200
+Message-ID: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
-This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
+Hello
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
----
- arch/arm/boot/dts/sun8i-a83t.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Since the first 3 patch of v1 was applied, it remains this two patchs for
+enabling dwmac-sun8i on A83T
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-index 01a83406f9ae..7d719b4aeaa9 100644
---- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-@@ -200,6 +200,14 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
- 
-+			emac_rgmii_pins: emac-rgmii-pins {
-+				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
-+				       "PD11", "PD12", "PD13", "PD14", "PD18",
-+				       "PD19", "PD21", "PD22", "PD23";
-+				function = "gmac";
-+				drive-strength = <40>;
-+			};
-+
- 			mmc0_pins: mmc0-pins {
- 				pins = "PF0", "PF1", "PF2",
- 				       "PF3", "PF4", "PF5";
-@@ -266,6 +274,26 @@
- 			status = "disabled";
- 		};
- 
-+		emac: ethernet@1c30000 {
-+			compatible = "allwinner,sun8i-a83t-emac";
-+			syscon = <&syscon>;
-+			reg = <0x01c30000 0x104>;
-+			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq";
-+			resets = <&ccu 13>;
-+			reset-names = "stmmaceth";
-+			clocks = <&ccu 27>;
-+			clock-names = "stmmaceth";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+
-+			mdio: mdio {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+			};
-+		};
-+
- 		gic: interrupt-controller@1c81000 {
- 			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
- 			reg = <0x01c81000 0x1000>,
+Changes since v1:
+- Ordered compatible of syscon
+- Renamed pins to emac-rgmii-pins
+
+Corentin Labbe (2):
+  ARM: sun8i: a83t: Add dt node for the syscon control module
+  ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
+
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
 -- 
 2.13.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
