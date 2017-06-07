@@ -1,32 +1,37 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v3 0/3] nvmem: upstream snvs_lpgpr driver
-Date: Wed,  7 Jun 2017 08:41:55 +0200
-Message-ID: <20170607064158.16422-1-o.rempel@pengutronix.de>
+Subject: [PATCH v3 3/3] ARM: dts: imx6qdl.dtsi: add "fsl,imx6q-snvs-lpgpr" node
+Date: Wed,  7 Jun 2017 08:41:58 +0200
+Message-ID: <20170607064158.16422-4-o.rempel@pengutronix.de>
+References: <20170607064158.16422-1-o.rempel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170607064158.16422-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-changes v3:
- - remove regmap and offset properties.
+This node is for Low Power General Purpose Register which can
+be used as Non-Volatile Storage.
 
-changes v2:
- - correct typos: Registe, parrent...
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Oleksij Rempel (3):
-  nvmem: dt: document SNVS LPGPR binding
-  nvmem: add snvs_lpgpr driver
-  ARM: dts: imx6qdl.dtsi: add "fsl,imx6q-snvs-lpgpr" node
-
- .../devicetree/bindings/nvmem/snvs-lpgpr.txt       |  19 +++
- arch/arm/boot/dts/imx6qdl.dtsi                     |   4 +
- drivers/nvmem/Kconfig                              |  13 ++
- drivers/nvmem/Makefile                             |   2 +
- drivers/nvmem/snvs_lpgpr.c                         | 143 +++++++++++++++++++++
- 5 files changed, 181 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
- create mode 100644 drivers/nvmem/snvs_lpgpr.c
-
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index e426faa9c243..94e992558238 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -769,6 +769,10 @@
+ 					mask = <0x60>;
+ 					status = "disabled";
+ 				};
++
++				snvs_lpgpr: snvs-lpgpr {
++					compatible = "fsl,imx6q-snvs-lpgpr";
++				};
+ 			};
+ 
+ 			epit1: epit@020d0000 { /* EPIT1 */
 -- 
 2.11.0
