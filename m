@@ -1,45 +1,56 @@
-From: Liam Breck <liam@networkimprov.net>
-Subject: [PATCH v14 01/11] devicetree: property-units: Add uWh and uAh units
-Date: Wed,  7 Jun 2017 11:37:49 -0700
-Message-ID: <20170607183759.20261-2-liam@networkimprov.net>
-References: <20170607183759.20261-1-liam@networkimprov.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170607183759.20261-1-liam@networkimprov.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Pali Rohar <pali.rohar@gmail.com>, linux-pm@vger.kernel.org
-Cc: Enric Balletbo <enric.balletbo@collabora.com>, Paul Kocialkowski <contact@paulk.fr>, Quentin Schulz <quentin.schulz@free-electrons.com>, Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Ranostay <matt@ranostay.consulting>, Liam Breck <kernel@networkimprov.net>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v8 13/34] ARM: dts: imx6-sabreauto: add pinctrl for gpt input
+ capture
+Date: Wed,  7 Jun 2017 11:33:52 -0700
+Message-ID: <1496860453-6282-14-git-send-email-steve_longerbeam@mentor.com>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Matt Ranostay <matt@ranostay.consulting>
+Add pinctrl groups for both GPT input capture channels.
 
-Add entries for microwatt-hours and microamp-hours.
-
-Cc: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Matt Ranostay <matt@ranostay.consulting>
-Signed-off-by: Liam Breck <kernel@networkimprov.net>
-Acked-by: Sebastian Reichel <sre@kernel.org>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
 ---
- Documentation/devicetree/bindings/property-units.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index 12278d79..0849618a 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -25,8 +25,10 @@ Distance
- Electricity
- ----------------------------------------
- -microamp	: micro amps
-+-microamp-hours : micro amp-hours
- -ohms		: Ohms
- -micro-ohms	: micro Ohms
-+-microwatt-hours: micro Watt-hours
- -microvolt	: micro volts
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 21dea5f..1212f82 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -456,6 +456,18 @@
+ 			>;
+ 		};
  
- Temperature
++		pinctrl_gpt_input_capture0: gptinputcapture0grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_DAT0__GPT_CAPTURE1	0x1b0b0
++			>;
++		};
++
++		pinctrl_gpt_input_capture1: gptinputcapture1grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_DAT1__GPT_CAPTURE2	0x1b0b0
++			>;
++		};
++
+ 		pinctrl_spdif: spdifgrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_KEY_COL3__SPDIF_IN 0x1b0b0
 -- 
-2.13.0
+2.7.4
