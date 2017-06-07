@@ -1,42 +1,68 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5] media: platform: Renesas IMR driver
-Date: Wed, 7 Jun 2017 15:02:51 +0300
-Message-ID: <061fdbb3-1b97-10e3-4306-874b8e093569@cogentembedded.com>
-References: <20170309200818.786255823@cogentembedded.com>
- <87be3653-66f0-deda-f862-b52a2de23ecf@xs4all.nl>
+From: Alexander Stein <alexanders83@web.de>
+Subject: Re: [PATCH 1/2] clk: bcm2835: Add AUX interrupt controller
+Date: Wed, 07 Jun 2017 14:07:32 +0200
+Message-ID: <3148562.tSrsoIclEp@ws-stein>
+References: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87be3653-66f0-deda-f862-b52a2de23ecf-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Konstantin Kozhevnikov <Konstantin.Kozhevnikov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Phil Elwell <phil@raspberrypi.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Wednesday 07 June 2017 12:11:45, Phil Elwell wrote:
+> Devices in the AUX block share a common interrupt line, with a register
+> indicating which devices have active IRQs. Expose this as a nested
+> interrupt controller to avoid IRQ sharing problems (easily observed if
+> UART1 and SPI1/2 are enabled simultaneously).
+> 
+> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+> ---
+>  drivers/clk/bcm/clk-bcm2835-aux.c | 120
+> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 120 insertions(+)
+> 
+> diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c
+> b/drivers/clk/bcm/clk-bcm2835-aux.c index bd750cf..41e0702 100644
+> --- a/drivers/clk/bcm/clk-bcm2835-aux.c
+> +++ b/drivers/clk/bcm/clk-bcm2835-aux.c
+> [...]
+> +struct auxirq_state {
+> +	void __iomem      *status;
+> +	u32                enables;
+> +	struct irq_domain *domain;
+> +	struct regmap     *local_regmap;
+> +};
+> +
+> +static struct auxirq_state auxirq __read_mostly;
+> +
+> +static irqreturn_t bcm2835_auxirq_handler(int irq, void *dev_id)
+> +{
+> +	u32 stat = readl_relaxed(auxirq.status);
+> +	u32 masked = stat & auxirq.enables;
 
-On 06/07/2017 10:26 AM, Hans Verkuil wrote:
+Doesn't this hide any spurious interrupts? Is this acceptable? I mean getting 
+informed about spurious interrupts seems nice to me, as it indicates a 
+hardware/configuration problem.
 
-> Any progress on this?
+> +	if (masked & BCM2835_AUXIRQ_UART_MASK)
+> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
+> +						     BCM2835_AUXIRQ_UART_IRQ));
+> +
+> +	if (masked & BCM2835_AUXIRQ_SPI1_MASK)
+> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
+> +						     BCM2835_AUXIRQ_SPI1_IRQ));
+> +
+> +	if (masked & BCM2835_AUXIRQ_SPI2_MASK)
+> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
+> +						     BCM2835_AUXIRQ_SPI2_IRQ));
+> +
+> +	return (masked & BCM2835_AUXIRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
+> +}
 
-    Yes. :-)
+How does interrupt acknowledgement work in these 3 interrupts work?
 
-> There where a bunch of comments,
-
-    I think I've addresses most of those (except those I didn't quite understand).
-
-> but I haven't seen anything since.
-
-    I'm still busy documenting the driver. :-(
-
-> Regards,
->
-> 	Hans
-
-MBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Alexander
