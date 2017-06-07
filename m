@@ -1,90 +1,53 @@
-From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Subject: Re: [PATCH 1/2] clk: bcm2835: Add AUX interrupt controller
-Date: Wed, 7 Jun 2017 13:37:41 +0100
-Message-ID: <369bb235-77fb-60ad-61d8-3de039e0f838@raspberrypi.org>
-References: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
- <3148562.tSrsoIclEp@ws-stein>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 12/20] ARM: dts: uniphier: Add generic compatible
+ string for I2C EEPROM
+Date: Wed, 7 Jun 2017 14:42:43 +0200
+Message-ID: <CABxcv=msBQVW2P+RkcAq+5jhBkMorZvToaGDoLF6rT_knb3qhw@mail.gmail.com>
+References: <20170523133448.4794-1-javier@dowhile0.org> <20170523133448.4794-13-javier@dowhile0.org>
+ <CAK7LNATDvesYLKimY=aKfT6kAiidq6Ufd=kCWGQcCZ_Xy-27tw@mail.gmail.com>
+ <CABxcv=mPzDVTh_ZH1VtuHMUhVrR+hxz8GwcQT38hwJJqHY+fJA@mail.gmail.com> <CAK7LNASBztX033t36vz_MXAgeyHd76roMBtRZ4mi-q9VFB4Lkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3148562.tSrsoIclEp@ws-stein>
-Content-Language: en-GB
+In-Reply-To: <CAK7LNASBztX033t36vz_MXAgeyHd76roMBtRZ4mi-q9VFB4Lkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/2017 13:07, Alexander Stein wrote:
-> On Wednesday 07 June 2017 12:11:45, Phil Elwell wrote:
->> Devices in the AUX block share a common interrupt line, with a register
->> indicating which devices have active IRQs. Expose this as a nested
->> interrupt controller to avoid IRQ sharing problems (easily observed if
->> UART1 and SPI1/2 are enabled simultaneously).
+Hello Masahiro,
+
+On Wed, Jun 7, 2017 at 3:10 AM, Masahiro Yamada
+<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+
+[snip]
+
+>>>
+>>> Why didn't you touch
+>>> arch/arm/boot/dts/uniphier-ref-daughter.dtsi ?
+>>>
 >>
->> Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
->> ---
->>  drivers/clk/bcm/clk-bcm2835-aux.c | 120
->> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 120 insertions(+)
+>> Because the compatible string "microchip,24lc128" used by the I2C
+>> EEPROM node on that DTS is not supported by the
+>> drivers/misc/eeprom/at24.c driver (in fact the only occurrence for
+>> 24lc128 I see is in that DTS).
 >>
->> diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c
->> b/drivers/clk/bcm/clk-bcm2835-aux.c index bd750cf..41e0702 100644
->> --- a/drivers/clk/bcm/clk-bcm2835-aux.c
->> +++ b/drivers/clk/bcm/clk-bcm2835-aux.c
->> [...]
->> +struct auxirq_state {
->> +	void __iomem      *status;
->> +	u32                enables;
->> +	struct irq_domain *domain;
->> +	struct regmap     *local_regmap;
->> +};
->> +
->> +static struct auxirq_state auxirq __read_mostly;
->> +
->> +static irqreturn_t bcm2835_auxirq_handler(int irq, void *dev_id)
->> +{
->> +	u32 stat = readl_relaxed(auxirq.status);
->> +	u32 masked = stat & auxirq.enables;
-> 
-> Doesn't this hide any spurious interrupts? Is this acceptable? I mean getting 
-> informed about spurious interrupts seems nice to me, as it indicates a 
-> hardware/configuration problem.
+>> Maybe is a typo and it should be "microchip,24c128" instead ?
+>
+> I do not think so.
+> I consulted a board developer.
+>
+> I also see 24LC128 on Microchip web site:
+> http://www.microchip.com/wwwproducts/en/24LC128
+>
 
-Thanks for the reply. This interrupt handler is capable of dispatching multiple
-interrupts but must return a single value - IRQ_HANDLED or IRQ_NONE. I've assumed
-that returning IRQ_NONE repeatedly will trigger the spurious interrupt detection.
+Ah Ok, it was just a wild guess I did since the at24 driver didn't
+have support for this chip variant.
+My point stands though, this is an unrelated change to the goal of
+this patch-series and should be fixed separately.
 
-This implementation returns IRQ_HANDLED if any unmasked interrupts are raised,
-otherwise it returns IRQ_NONE. Therefore provided any spurious interrupt isn't
-always coincident with a real interrupt then it ought eventually to be identified
-as spurious. The alternative - returning IRQ_NONE if there are any spurious
-interrupts - seems prone to causing collateral damage.
-
-What did you have in mind?
-
->> +	if (masked & BCM2835_AUXIRQ_UART_MASK)
->> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
->> +						     BCM2835_AUXIRQ_UART_IRQ));
->> +
->> +	if (masked & BCM2835_AUXIRQ_SPI1_MASK)
->> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
->> +						     BCM2835_AUXIRQ_SPI1_IRQ));
->> +
->> +	if (masked & BCM2835_AUXIRQ_SPI2_MASK)
->> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
->> +						     BCM2835_AUXIRQ_SPI2_IRQ));
->> +
->> +	return (masked & BCM2835_AUXIRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
->> +}
-> 
-> How does interrupt acknowledgement work in these 3 interrupts work?
-
-The interrupt "controller" is just combinatorial logic on the three level-sensitive
-interrupt lines from the devices. Interrupts must be acknowledged and cleared at
-source.
-
-Phil
-
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
