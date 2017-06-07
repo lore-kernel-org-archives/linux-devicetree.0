@@ -1,131 +1,227 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: Re: [RFC 2/3] misc: Add w2sg0004 (gps receiver) power control driver
-Date: Wed, 7 Jun 2017 12:08:17 +0200
-Message-ID: <8F1B0629-A5FD-4794-9A50-BA6D18C0C34C@goldelico.com>
-References: <cover.1495363443.git.hns@goldelico.com> <24579fa76fbf454526fddabe0b20070e46d488ba.1495363443.git.hns@goldelico.com> <20170607073459.qg4giwqdajtmpy4n@lenoch>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V
+ interrupt controllers
+Date: Wed, 7 Jun 2017 11:13:43 +0100
+Message-ID: <20170607101343.GC29370@leverpostej>
+References: <20170523004107.536-1-palmer@dabbelt.com>
+ <20170606230007.19101-1-palmer@dabbelt.com>
+ <20170606230007.19101-9-palmer@dabbelt.com>
+ <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170607073459.qg4giwqdajtmpy4n@lenoch>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jarkko Sakkinen <jarkko.sakkinen-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, kernel-Jl6IXVxNIMRxAtABVqVhTwC/G2K4zDHf@public.gmane.org
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, albert@sifive.com, patches@groups.riscv.org, "Wesley W. Terpstra" <wesley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ladislav,
+On Wed, Jun 07, 2017 at 09:11:31AM +0200, Geert Uytterhoeven wrote:
+> CC irqchip and devicetree folks
 
-> Am 07.06.2017 um 09:34 schrieb Ladislav Michl <ladis-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>:
->=20
-> Dear Nikolaus,
->=20
-> On Sun, May 21, 2017 at 12:44:03PM +0200, H. Nikolaus Schaller wrote:
->> Add driver for Wi2Wi W2SG0004/84 GPS module connected through uart.
->>=20
->> Use serdev API hooks to monitor and forward the UART traffic to =
-/dev/BTn
->> and turn on/off the module. It also detects if the module is turned =
-on (sends data)
->> but should be off, e.g. if it was already turned on during boot or =
-power-on-reset.
->>=20
->> Additionally, rfkill block/unblock can be used to control an external =
-LNA
->> (and power down the module if not needed).
->>=20
->> The driver concept is based on code developed by NeilBrown =
-<neilb-l3A5Bk7waGM@public.gmane.org>
->> but simplified and adapted to use the new serdev API introduced in =
-4.11.
-> [snip]
->> diff --git =
-a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt =
-b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
->> new file mode 100644
->> index 000000000000..b7125c7a598c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
->> @@ -0,0 +1,20 @@
->> +Wi2Wi GPS module connected through UART
->> +
->> +Should be a subnode of the SoC UART it is connected to (serdev).
->> +
->> +Required properties:
->> +- compatible:	wi2wi,w2sg0004 or wi2wi,w2sg0084
->> +- on-off-gpio:	the GPIO that controls the module's on-off =
-toggle input
->> +
->> +Optional properties:
->> +- lna-suppy:	an (optional) LNA regulator that is enabled =
-together with the GPS receiver
->> +
->> +Example:
->> +
->> +&uart2 {
->> +	gps: w2sg0004 {
->> +		compatible =3D "wi2wi,w2sg0004";
->> +		lna-supply =3D <&vsim>;   /* LNA regulator */
->> +		on-off-gpios =3D <&gpio5 17 GPIO_ACTIVE_HIGH>;    /* =
-GPIO_145: trigger for turning on/off w2sg0004 */
->> +        };
->> +};
->=20
-> Here it seems is nothing specific to GPS receiver in this driver
+Thanks Geert.
 
-Well, most serdev subnodes will look similar to this but still will
-need different drivers (timing, pulses, other logic, special functions,
-firmware download etc.).
+Palmer, in future, you can ensure (most) relevant parties are Cc'd by
+using scripts/get_maintainer.pl to find them, and adding Cc: lines to
+the relevant patches.
 
-> and
-> basically UART connected GSM modules could benefit from such =
-functionality
-> too - as they need power supply, had reset and ignition pin and often
-> status pin. See for example:
-> http://simcom.ee/documents/SIM5300E/SIM5300E_Hardware_Design_V1.08.pdf
-> page 14 or
-> http://www.robotshop.com/media/files/pdf/datasheet-gsm-tc35.pdf
-> page 19 for block diagrams.
-> So I wonder if you would accept making this driver a bit more generic
-> to cover also GSM modems use case.
+You can either hand that a patch or a path, e.g.
 
-We also have such a 2G/3G/4G module in the GTA04 and Pyra devices but =
-there
-we have significantly different power control needs because they are =
-connected
-through USB and not as UART / serdev.
+[mark@leverpostej:~/src/linux]% ./scripts/get_maintainer.pl -f Documentation/devicetree/bindings/interrupt-controller/                  
+Thomas Gleixner <tglx@linutronix.de> (maintainer:IRQCHIP DRIVERS)
+Jason Cooper <jason@lakedaemon.net> (maintainer:IRQCHIP DRIVERS)
+Marc Zyngier <marc.zyngier@arm.com> (maintainer:IRQCHIP DRIVERS)
+Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
+linux-kernel@vger.kernel.org (open list:IRQCHIP DRIVERS)
+devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
 
-But you could simply try to use and extend our proposed w2cbw003 =
-bluetooth
-driver [RFC 3/3] for that purpose.
+Otherwise, I have a few comments inline below.
 
-It already has most of what you need: provides a user-space /dev/tty for =
-the
-serdev and controls some power-control gpio or regulator.
+> On Wed, Jun 7, 2017 at 12:59 AM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
+> > From: "Wesley W. Terpstra" <wesley@sifive.com>
+> >
+> > Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> > ---
+> >  .../interrupt-controller/riscv,cpu-intc.txt        | 46 ++++++++++++++++++++++
+> >  .../bindings/interrupt-controller/riscv,plic0.txt  | 44 +++++++++++++++++++++
+> >  2 files changed, 90 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> > new file mode 100644
+> > index 000000000000..62f02e834ff9
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> > @@ -0,0 +1,46 @@
+> > +RISC-V Hart-Level Interrupt Controller (HLIC)
+> > +---------------------------------------------
+> > +
+> > +RISC-V cores include Control Status Registers (CSRs) which are local to each
+> > +hart and can be read or written by software. Some of these CSRs are used to
+> > +control local interrupts connected to the core.
+> > +
+> > +Typical examples of local interrupts on a RISC-V core include: software IPI
+> > +interrupts, timer interrupts, and a link to the PLIC interrupt controller.
 
-This w2sg0004 gps chip is very specific for this chip since it has no =
-simple
-power-enable to be controlled. This also differs too much from GSM =
-modules
-with ignition. Especially it has no status feedback.
+So IIUC those interrupts are routed directly to the HLIC, and are (only)
+controlled thought the HLIC?
 
-Another aspect is that there are plans to have some gps infrastructure =
-in the
-kernel. Then, this driver wouldn't be the right solution for gsm.
+Is the HLIC architecturally mandated? i.e. is this guaranteed to be
+present on any RISC-V implementation?
 
-Therefore it is and should remain a special purpose driver for this type =
-of
-gps chips.
+Does the presence of the HLIC imply the presence of a PLIC (or
+vice/versa)? Typically, the per-cpu and platform-wide parts of the
+top-level interrupt controller are fairly intimately coupled.
 
-The common denominator of all these things is the serdev and gpio =
-infrastructure.
+> > +
+> > +Required properties:
+> > +- compatible : "riscv,cpu-intc"
 
-Feel free to take both drivers as blueprints to propose some new driver
-for your chips.
+You'll need to allocate the "riscv" vendor prefix in 
+Documentation/devicetree/bindings/vendor-prefixes.txt
 
-BR,
-Nikolaus
+... if that was done in some other patch, I didn't receive it.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +- #interrupt-cells : should be <1>
+
+What about the flags?
+
+Are all HLIC interrupts edge triggered (or level triggered)?
+
+> > +- interrupt-controller : Identifies the node as an interrupt controller
+> > +
+> > +Furthermore, this interrupt-controller MUST be embedded inside the cpu
+> > +definition of the hart whose CSRs control these local interrupts.
+> > +
+> > +Example:
+> > +
+> > +       cpu1: cpu@1 {
+> > +               clock-frequency = <1600000000>;
+> > +               compatible = "riscv";
+> > +               d-cache-block-size = <64>;
+> > +               d-cache-sets = <64>;
+> > +               d-cache-size = <16384>;
+> > +               d-tlb-sets = <1>;
+> > +               d-tlb-size = <32>;
+> > +               device_type = "cpu";
+> > +               i-cache-block-size = <64>;
+> > +               i-cache-sets = <64>;
+> > +               i-cache-size = <16384>;
+> > +               i-tlb-sets = <1>;
+> > +               i-tlb-size = <32>;
+> > +               mmu-type = "riscv,sv39";
+> > +               next-level-cache = <&L2>;
+> > +               reg = <1>;
+> > +               riscv,isa = "rv64imac";
+> > +               status = "okay";
+> > +               tlb-split;
+
+We can probably replace most of these with a "...", as they're largely
+irrelevany to this binding.
+
+> > +               cpu1-intc: interrupt-controller {
+> > +                       #interrupt-cells = <1>;
+> > +                       compatible = "riscv,cpu-intc";
+> > +                       interrupt-controller;
+> > +               };
+> > +       };
+> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> > new file mode 100644
+> > index 000000000000..c05b5806f7d2
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> > @@ -0,0 +1,44 @@
+> > +RISC-V Platform-Level Interrupt Controller (PLIC)
+> > +-------------------------------------------------
+> > +
+> > +RISC-V cores typically include a PLIC, which route interrupts from multiple
+> > +devices to multiple hart contexts.  The PLIC is connected to the interrupt
+> > +controller embedded in a RISC-V core via the interrupt-related CSRs.
+
+Do you mean that the PLIC is connected to the HLIC, or that the HLIC is
+also managed in part through CSRs?
+
+> > +
+> > +A hart context is a priviledge mode in a hardware execution thread.  For
+> > +example, in an 4 core system with 2-way SMT, you have 8 harts and probably
+> > +at least two priviledge modes per hart; machine mode and supervisor mode.
+> > +
+> > +Each interrupt can be enabled on per-context basis. Any context can claim
+> > +a pending enabled interrupt and then release it once it has been handled.
+> > +
+> > +Each interrupt has a configurable priority. Higher priority interrupts are
+> > +serviced firs. Each context can specify a priority threshold. Interrupts
+> > +with priority below this threshold will not cause the PLIC to raise its
+> > +interrupt line leading to the context.
+> > +
+> > +Required properties:
+> > +- compatible : "riscv,plic0"
+> > +- #address-cells : should be <0>
+> > +- #interrupt-cells : should be <1>
+
+As with the HLIC, what about the flags?
+
+> > +- interrupt-controller : Identifies the node as an interrupt controller
+> > +- reg : Should contain 1 register range (address and length)
+> > +- riscv,ndev : Specifies the number of interrupts attached to the PLIC
+
+Why do we need to know this?
+
+I suspect this ia actually the number of interrupts implemented in the
+PLIC, rather than the number of interrupts attached. i.e. the PLIC can
+be implemented with a subset of the potential registers/bits. Is that
+correct?
+
+If so, something like "riscv,num-interrupts" would be better, along with
+a clearer description.
+
+> > +- interrupts-extended : Specifies which contexts are connected to the PLIC
+
+That description doesn't sound right.
+
+I take it that these are the HLIC interrupts that the PLIC can raise?
+
+You will need to be explicit about the order of interrupts in this
+property. i.e. which interrupt is routed to which context?
+
+Is the interrupt at the HLIC well known? From the example I see that
+here local interrupts 11 adn 9 are used. Is that mandated, or just the
+case for this particular implementation?
+
+Also, please consider how you will handle the case when the Linux
+logical CPU ID is not the same as the physical ID, and how you will
+handle physical IDs being sparse.
+
+We went though a lot of pain trying to do something similar for the ARM
+PMU interrupts (see the interrupt-affinity property in
+Documentation/devicetree/bindings/arm/pmu.txt), and it's still painful
+to deal with.
+
+> > +
+> > +Example:
+> > +
+> > +       plic: interrupt-controller@c000000 {
+> > +               #address-cells = <0>;
+
+This can go, given you don't have sub-nodes, nor a #size-cells property.
+
+Thanks,
+Mark.
+
+> > +               #interrupt-cells = <1>;
+> > +               compatible = "riscv,plic0";
+> > +               interrupt-controller;
+> > +               interrupts-extended = <
+> > +                       &cpu0-intc 11
+> > +                       &cpu1-intc 11 &cpu1-intc 9
+> > +                       &cpu2-intc 11 &cpu2-intc 9
+> > +                       &cpu3-intc 11 &cpu3-intc 9
+> > +                       &cpu4-intc 11 &cpu4-intc 9>;
+> > +               reg = <0xc000000 0x4000000>;
+> > +               riscv,ndev = <10>;
+> > +       };
+> > --
+> > 2.13.0
