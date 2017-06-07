@@ -1,409 +1,269 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v8 16/34] platform: add video-multiplexer subdevice driver
-Date: Wed,  7 Jun 2017 11:33:55 -0700
-Message-ID: <1496860453-6282-17-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v8 09/34] ARM: dts: imx6-sabrelite: add OV5642 and OV5640
+ camera sensors
+Date: Wed,  7 Jun 2017 11:33:48 -0700
+Message-ID: <1496860453-6282-10-git-send-email-steve_longerbeam@mentor.com>
 References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Sascha Hauer <s.hauer@pengutronix.de>, Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel@pengutronix.de>
+Adds the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
+Both hang off the same i2c2 bus, so they require different (and non-
+default) i2c slave addresses.
 
-This driver can handle SoC internal and external video bus multiplexers,
-controlled by mux controllers provided by the mux controller framework,
-such as MMIO register bitfields or GPIOs. The subdevice passes through
-the mbus configuration of the active input to the output side.
+The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
 
-Since the mux framework is not yet merged, this driver contains
-temporary mmio-mux support to work without the framework. The driver
-should be converted to use the multiplexer API once the "mux: minimal
-mux subsystem" and "mux: mmio-based syscon mux controller" patches are
-merged.
+The OV5640 connects to the input port on the MIPI CSI-2 receiver on
+mipi_csi.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+The OV5642 node is disabled temporarily while the subdev driver is
+cleaned up and submitted later.
+
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-Acked-by: Pavel Machek <pavel@ucw.cz>
 ---
- drivers/media/platform/Kconfig     |   6 +
- drivers/media/platform/Makefile    |   2 +
- drivers/media/platform/video-mux.c | 334 +++++++++++++++++++++++++++++++++++++
- 3 files changed, 342 insertions(+)
- create mode 100644 drivers/media/platform/video-mux.c
+ arch/arm/boot/dts/imx6dl-sabrelite.dts   |   5 ++
+ arch/arm/boot/dts/imx6q-sabrelite.dts    |   5 ++
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 148 +++++++++++++++++++++++++++++++
+ 3 files changed, 158 insertions(+)
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index 288d3b0..1940d87 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -74,6 +74,12 @@ config VIDEO_M32R_AR_M64278
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called arv.
+diff --git a/arch/arm/boot/dts/imx6dl-sabrelite.dts b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+index 2f90452..3304076 100644
+--- a/arch/arm/boot/dts/imx6dl-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6dl-sabrelite.dts
+@@ -48,3 +48,8 @@
+ 	model = "Freescale i.MX6 DualLite SABRE Lite Board";
+ 	compatible = "fsl,imx6dl-sabrelite", "fsl,imx6dl";
+ };
++
++&ipu1_csi1_from_ipu1_csi1_mux {
++	clock-lanes = <0>;
++	data-lanes = <1 2>;
++};
+diff --git a/arch/arm/boot/dts/imx6q-sabrelite.dts b/arch/arm/boot/dts/imx6q-sabrelite.dts
+index 02a7cdf..dc51262e 100644
+--- a/arch/arm/boot/dts/imx6q-sabrelite.dts
++++ b/arch/arm/boot/dts/imx6q-sabrelite.dts
+@@ -52,3 +52,8 @@
+ &sata {
+ 	status = "okay";
+ };
++
++&ipu1_csi1_from_mipi_vc1 {
++	clock-lanes = <0>;
++	data-lanes = <1 2>;
++};
+diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+index 89dce27..afe7449 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
+@@ -39,6 +39,8 @@
+  *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+  *     OTHER DEALINGS IN THE SOFTWARE.
+  */
++
++#include <dt-bindings/clock/imx6qdl-clock.h>
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/input/input.h>
  
-+config VIDEO_MUX
-+	tristate "Video Multiplexer"
-+	depends on OF && VIDEO_V4L2_SUBDEV_API && MEDIA_CONTROLLER
-+	help
-+	  This driver provides support for N:1 video bus multiplexers.
+@@ -94,6 +96,42 @@
+ 			pinctrl-0 = <&pinctrl_can_xcvr>;
+ 			gpio = <&gpio1 2 GPIO_ACTIVE_LOW>;
+ 		};
 +
- config VIDEO_OMAP3
- 	tristate "OMAP 3 Camera support"
- 	depends on VIDEO_V4L2 && I2C && VIDEO_V4L2_SUBDEV_API && ARCH_OMAP3
-diff --git a/drivers/media/platform/Makefile b/drivers/media/platform/Makefile
-index 231f3c2..a9ff99d 100644
---- a/drivers/media/platform/Makefile
-+++ b/drivers/media/platform/Makefile
-@@ -28,6 +28,8 @@ obj-$(CONFIG_VIDEO_SH_VEU)		+= sh_veu.o
++		reg_1p5v: regulator@4 {
++			compatible = "regulator-fixed";
++			reg = <4>;
++			regulator-name = "1P5V";
++			regulator-min-microvolt = <1500000>;
++			regulator-max-microvolt = <1500000>;
++			regulator-always-on;
++		};
++
++		reg_1p8v: regulator@5 {
++			compatible = "regulator-fixed";
++			reg = <5>;
++			regulator-name = "1P8V";
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <1800000>;
++			regulator-always-on;
++		};
++
++		reg_2p8v: regulator@6 {
++			compatible = "regulator-fixed";
++			reg = <6>;
++			regulator-name = "2P8V";
++			regulator-min-microvolt = <2800000>;
++			regulator-max-microvolt = <2800000>;
++			regulator-always-on;
++		};
++	};
++
++	mipi_xclk: mipi_xclk {
++		compatible = "pwm-clock";
++		#clock-cells = <0>;
++		clock-frequency = <22000000>;
++		clock-output-names = "mipi_pwm3";
++		pwms = <&pwm3 0 45>; /* 1 / 45 ns = 22 MHz */
++		status = "okay";
+ 	};
  
- obj-$(CONFIG_VIDEO_MEM2MEM_DEINTERLACE)	+= m2m-deinterlace.o
+ 	gpio-keys {
+@@ -220,6 +258,22 @@
+ 	};
+ };
  
-+obj-$(CONFIG_VIDEO_MUX)			+= video-mux.o
-+
- obj-$(CONFIG_VIDEO_S3C_CAMIF) 		+= s3c-camif/
- obj-$(CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS) 	+= exynos4-is/
- obj-$(CONFIG_VIDEO_SAMSUNG_S5P_JPEG)	+= s5p-jpeg/
-diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
-new file mode 100644
-index 0000000..6657447
---- /dev/null
-+++ b/drivers/media/platform/video-mux.c
-@@ -0,0 +1,334 @@
-+/*
-+ * video stream multiplexer controlled via mux control
-+ *
-+ * Copyright (C) 2013 Pengutronix, Sascha Hauer <kernel@pengutronix.de>
-+ * Copyright (C) 2016-2017 Pengutronix, Philipp Zabel <kernel@pengutronix.de>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version 2
-+ * of the License, or (at your option) any later version.
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/platform_device.h>
-+#include <media/v4l2-async.h>
-+#include <media/v4l2-device.h>
-+#include <media/v4l2-subdev.h>
-+
-+struct video_mux {
-+	struct v4l2_subdev subdev;
-+	struct media_pad *pads;
-+	struct v4l2_mbus_framefmt *format_mbus;
-+	struct regmap_field *field;
-+	struct mutex lock;
-+	int active;
++&ipu1_csi0_from_ipu1_csi0_mux {
++	bus-width = <8>;
++	data-shift = <12>; /* Lines 19:12 used */
++	hsync-active = <1>;
++	vync-active = <1>;
 +};
 +
-+static inline struct video_mux *v4l2_subdev_to_video_mux(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct video_mux, subdev);
-+}
-+
-+static int video_mux_link_setup(struct media_entity *entity,
-+				const struct media_pad *local,
-+				const struct media_pad *remote, u32 flags)
-+{
-+	struct v4l2_subdev *sd = media_entity_to_v4l2_subdev(entity);
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+	int ret = 0;
-+
-+	/*
-+	 * The mux state is determined by the enabled sink pad link.
-+	 * Enabling or disabling the source pad link has no effect.
-+	 */
-+	if (local->flags & MEDIA_PAD_FL_SOURCE)
-+		return 0;
-+
-+	dev_dbg(sd->dev, "link setup '%s':%d->'%s':%d[%d]",
-+		remote->entity->name, remote->index, local->entity->name,
-+		local->index, flags & MEDIA_LNK_FL_ENABLED);
-+
-+	mutex_lock(&vmux->lock);
-+
-+	if (flags & MEDIA_LNK_FL_ENABLED) {
-+		if (vmux->active == local->index)
-+			goto out;
-+
-+		if (vmux->active >= 0) {
-+			ret = -EBUSY;
-+			goto out;
-+		}
-+
-+		dev_dbg(sd->dev, "setting %d active\n", local->index);
-+		ret = regmap_field_write(vmux->field, local->index);
-+		if (ret < 0)
-+			goto out;
-+		vmux->active = local->index;
-+	} else {
-+		if (vmux->active != local->index)
-+			goto out;
-+
-+		dev_dbg(sd->dev, "going inactive\n");
-+		vmux->active = -1;
-+	}
-+
-+out:
-+	mutex_unlock(&vmux->lock);
-+	return ret;
-+}
-+
-+static const struct media_entity_operations video_mux_ops = {
-+	.link_setup = video_mux_link_setup,
-+	.link_validate = v4l2_subdev_link_validate,
++&ipu1_csi0_mux_from_parallel_sensor {
++	remote-endpoint = <&ov5642_to_ipu1_csi0_mux>;
 +};
 +
-+static int video_mux_s_stream(struct v4l2_subdev *sd, int enable)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+	struct v4l2_subdev *upstream_sd;
-+	struct media_pad *pad;
-+
-+	if (vmux->active == -1) {
-+		dev_err(sd->dev, "Can not start streaming on inactive mux\n");
-+		return -EINVAL;
-+	}
-+
-+	pad = media_entity_remote_pad(&sd->entity.pads[vmux->active]);
-+	if (!pad) {
-+		dev_err(sd->dev, "Failed to find remote source pad\n");
-+		return -ENOLINK;
-+	}
-+
-+	if (!is_media_entity_v4l2_subdev(pad->entity)) {
-+		dev_err(sd->dev, "Upstream entity is not a v4l2 subdev\n");
-+		return -ENODEV;
-+	}
-+
-+	upstream_sd = media_entity_to_v4l2_subdev(pad->entity);
-+
-+	return v4l2_subdev_call(upstream_sd, video, s_stream, enable);
-+}
-+
-+static const struct v4l2_subdev_video_ops video_mux_subdev_video_ops = {
-+	.s_stream = video_mux_s_stream,
++&ipu1_csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi0>;
 +};
 +
-+static struct v4l2_mbus_framefmt *
-+__video_mux_get_pad_format(struct v4l2_subdev *sd,
-+			   struct v4l2_subdev_pad_config *cfg,
-+			   unsigned int pad, u32 which)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
+ &audmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_audmux>;
+@@ -298,6 +352,53 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c2>;
+ 	status = "okay";
 +
-+	switch (which) {
-+	case V4L2_SUBDEV_FORMAT_TRY:
-+		return v4l2_subdev_get_try_format(sd, cfg, pad);
-+	case V4L2_SUBDEV_FORMAT_ACTIVE:
-+		return &vmux->format_mbus[pad];
-+	default:
-+		return NULL;
-+	}
-+}
++	ov5640: camera@40 {
++		compatible = "ovti,ov5640";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5640>;
++		reg = <0x40>;
++		clocks = <&mipi_xclk>;
++		clock-names = "xclk";
++		DOVDD-supply = <&reg_1p8v>;
++		AVDD-supply = <&reg_2p8v>;
++		DVDD-supply = <&reg_1p5v>;
++		reset-gpios = <&gpio2 5 GPIO_ACTIVE_LOW>; /* NANDF_D5 */
++		powerdown-gpios = <&gpio6 9 GPIO_ACTIVE_HIGH>; /* NANDF_WP_B */
 +
-+static int video_mux_get_format(struct v4l2_subdev *sd,
-+			    struct v4l2_subdev_pad_config *cfg,
-+			    struct v4l2_subdev_format *sdformat)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
++		port {
++			#address-cells = <1>;
++			#size-cells = <0>;
 +
-+	mutex_lock(&vmux->lock);
++			ov5640_to_mipi_csi2: endpoint {
++				remote-endpoint = <&mipi_csi2_in>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
 +
-+	sdformat->format = *__video_mux_get_pad_format(sd, cfg, sdformat->pad,
-+						       sdformat->which);
++	ov5642: camera@42 {
++		compatible = "ovti,ov5642";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5642>;
++		clocks = <&clks IMX6QDL_CLK_CKO2>;
++		clock-names = "xclk";
++		reg = <0x42>;
++		reset-gpios = <&gpio1 8 GPIO_ACTIVE_LOW>;
++		powerdown-gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
++		gp-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
++		status = "disabled";
 +
-+	mutex_unlock(&vmux->lock);
++		port {
++			ov5642_to_ipu1_csi0_mux: endpoint {
++				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
++				bus-width = <8>;
++				hsync-active = <1>;
++				vsync-active = <1>;
++			};
++		};
++	};
+ };
+ 
+ &i2c3 {
+@@ -411,6 +512,23 @@
+ 			>;
+ 		};
+ 
++		pinctrl_ipu1_csi0: ipu1csi0grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19    0x1b0b0
++				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x1b0b0
++				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x1b0b0
++				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x1b0b0
++				MX6QDL_PAD_CSI0_DATA_EN__IPU1_CSI0_DATA_EN 0x1b0b0
++			>;
++		};
 +
-+	return 0;
-+}
+ 		pinctrl_j15: j15grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_DI0_DISP_CLK__IPU1_DI0_DISP_CLK 0x10
+@@ -444,6 +562,22 @@
+ 			>;
+ 		};
+ 
++		pinctrl_ov5640: ov5640grp {
++			fsl,pins = <
++				MX6QDL_PAD_NANDF_D5__GPIO2_IO05   0x000b0
++				MX6QDL_PAD_NANDF_WP_B__GPIO6_IO09 0x0b0b0
++			>;
++		};
 +
-+static int video_mux_set_format(struct v4l2_subdev *sd,
-+			    struct v4l2_subdev_pad_config *cfg,
-+			    struct v4l2_subdev_format *sdformat)
-+{
-+	struct video_mux *vmux = v4l2_subdev_to_video_mux(sd);
-+	struct v4l2_mbus_framefmt *mbusformat;
-+	struct media_pad *pad = &vmux->pads[sdformat->pad];
++		pinctrl_ov5642: ov5642grp {
++			fsl,pins = <
++				MX6QDL_PAD_SD1_DAT0__GPIO1_IO16 0x1b0b0
++				MX6QDL_PAD_GPIO_6__GPIO1_IO06   0x1b0b0
++				MX6QDL_PAD_GPIO_8__GPIO1_IO08   0x130b0
++				MX6QDL_PAD_GPIO_3__CCM_CLKO2    0x000b0
++			>;
++		};
 +
-+	mbusformat = __video_mux_get_pad_format(sd, cfg, sdformat->pad,
-+					    sdformat->which);
-+	if (!mbusformat)
-+		return -EINVAL;
+ 		pinctrl_pwm1: pwm1grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD1_DAT3__PWM1_OUT 0x1b0b1
+@@ -598,3 +732,17 @@
+ 	vmmc-supply = <&reg_3p3v>;
+ 	status = "okay";
+ };
 +
-+	mutex_lock(&vmux->lock);
++&mipi_csi {
++	status = "okay";
 +
-+	/* Source pad mirrors active sink pad, no limitations on sink pads */
-+	if ((pad->flags & MEDIA_PAD_FL_SOURCE) && vmux->active >= 0)
-+		sdformat->format = vmux->format_mbus[vmux->active];
++	port@0 {
++		reg = <0>;
 +
-+	*mbusformat = sdformat->format;
-+
-+	mutex_unlock(&vmux->lock);
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_pad_ops video_mux_pad_ops = {
-+	.get_fmt = video_mux_get_format,
-+	.set_fmt = video_mux_set_format,
++		mipi_csi2_in: endpoint {
++			remote-endpoint = <&ov5640_to_mipi_csi2>;
++			clock-lanes = <0>;
++			data-lanes = <1 2>;
++		};
++	};
 +};
-+
-+static const struct v4l2_subdev_ops video_mux_subdev_ops = {
-+	.pad = &video_mux_pad_ops,
-+	.video = &video_mux_subdev_video_ops,
-+};
-+
-+static int video_mux_probe_mmio_mux(struct video_mux *vmux)
-+{
-+	struct device *dev = vmux->subdev.dev;
-+	struct of_phandle_args args;
-+	struct reg_field field;
-+	struct regmap *regmap;
-+	u32 reg, mask;
-+	int ret;
-+
-+	ret = of_parse_phandle_with_args(dev->of_node, "mux-controls",
-+					 "#mux-control-cells", 0, &args);
-+	if (ret)
-+		return ret;
-+
-+	if (!of_device_is_compatible(args.np, "mmio-mux"))
-+		return -EINVAL;
-+
-+	regmap = syscon_node_to_regmap(args.np->parent);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	ret = of_property_read_u32_index(args.np, "mux-reg-masks",
-+					 2 * args.args[0], &reg);
-+	if (!ret)
-+		ret = of_property_read_u32_index(args.np, "mux-reg-masks",
-+						 2 * args.args[0] + 1, &mask);
-+	if (ret < 0)
-+		return ret;
-+
-+	field.reg = reg;
-+	field.msb = fls(mask) - 1;
-+	field.lsb = ffs(mask) - 1;
-+
-+	vmux->field = devm_regmap_field_alloc(dev, regmap, field);
-+	if (IS_ERR(vmux->field))
-+		return PTR_ERR(vmux->field);
-+
-+	return 0;
-+}
-+
-+static int video_mux_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *ep;
-+	struct video_mux *vmux;
-+	unsigned int num_pads = 0;
-+	int ret;
-+	int i;
-+
-+	vmux = devm_kzalloc(dev, sizeof(*vmux), GFP_KERNEL);
-+	if (!vmux)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, vmux);
-+
-+	v4l2_subdev_init(&vmux->subdev, &video_mux_subdev_ops);
-+	snprintf(vmux->subdev.name, sizeof(vmux->subdev.name), "%s", np->name);
-+	vmux->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	vmux->subdev.dev = dev;
-+
-+	/*
-+	 * The largest numbered port is the output port. It determines
-+	 * total number of pads.
-+	 */
-+	for_each_endpoint_of_node(np, ep) {
-+		struct of_endpoint endpoint;
-+
-+		of_graph_parse_endpoint(ep, &endpoint);
-+		num_pads = max(num_pads, endpoint.port + 1);
-+	}
-+
-+	if (num_pads < 2) {
-+		dev_err(dev, "Not enough ports %d\n", num_pads);
-+		return -EINVAL;
-+	}
-+
-+	ret = video_mux_probe_mmio_mux(vmux);
-+	if (ret) {
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get mux: %d\n", ret);
-+		return ret;
-+	}
-+
-+	mutex_init(&vmux->lock);
-+	vmux->active = -1;
-+	vmux->pads = devm_kcalloc(dev, num_pads, sizeof(*vmux->pads),
-+				  GFP_KERNEL);
-+	vmux->format_mbus = devm_kcalloc(dev, num_pads,
-+					 sizeof(*vmux->format_mbus),
-+					 GFP_KERNEL);
-+
-+	for (i = 0; i < num_pads - 1; i++)
-+		vmux->pads[i].flags = MEDIA_PAD_FL_SINK;
-+	vmux->pads[num_pads - 1].flags = MEDIA_PAD_FL_SOURCE;
-+
-+	vmux->subdev.entity.function = MEDIA_ENT_F_VID_MUX;
-+	ret = media_entity_pads_init(&vmux->subdev.entity, num_pads,
-+				     vmux->pads);
-+	if (ret < 0)
-+		return ret;
-+
-+	vmux->subdev.entity.ops = &video_mux_ops;
-+
-+	return v4l2_async_register_subdev(&vmux->subdev);
-+}
-+
-+static int video_mux_remove(struct platform_device *pdev)
-+{
-+	struct video_mux *vmux = platform_get_drvdata(pdev);
-+	struct v4l2_subdev *sd = &vmux->subdev;
-+
-+	v4l2_async_unregister_subdev(sd);
-+	media_entity_cleanup(&sd->entity);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id video_mux_dt_ids[] = {
-+	{ .compatible = "video-mux", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, video_mux_dt_ids);
-+
-+static struct platform_driver video_mux_driver = {
-+	.probe		= video_mux_probe,
-+	.remove		= video_mux_remove,
-+	.driver		= {
-+		.of_match_table = video_mux_dt_ids,
-+		.name = "video-mux",
-+	},
-+};
-+
-+module_platform_driver(video_mux_driver);
-+
-+MODULE_DESCRIPTION("video stream multiplexer");
-+MODULE_AUTHOR("Sascha Hauer, Pengutronix");
-+MODULE_AUTHOR("Philipp Zabel, Pengutronix");
-+MODULE_LICENSE("GPL");
 -- 
 2.7.4
