@@ -1,134 +1,77 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: rng: add generic bindings for MediaTek
- SoCs
-Date: Wed, 7 Jun 2017 22:48:57 +0800
-Message-ID: <1496846937.30833.10.camel@mtkswgap22>
-References: <cover.1496255334.git.sean.wang@mediatek.com>
- <1d9c981e1b45bf2f04732a02d90e6857cc203ce5.1496255334.git.sean.wang@mediatek.com>
- <9eb87222-ca89-0abb-4532-3887008f6e7a@gmail.com>
- <1496841619.30833.5.camel@mtkswgap22>
- <a8b797e9-db6f-7f92-2cee-72d456815310@gmail.com>
+From: Han Xu <han.xu-3arQi8VN3Tc@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] ARM: dts: imx7: add GPMI NAND and APBH DMA
+Date: Wed, 7 Jun 2017 15:33:26 +0000
+Message-ID: <9d66efda-d7c1-89a2-e163-c86056e08fb1@nxp.com>
+References: <cover.b62c3a17bd60de48d8fb2ade6dde4f2bc60aaf3c.1496730576.git-series.stefan@agner.ch>
+ <151ddece1e1427d0b69c4ff11b86a69b6a035d0d.1496730576.git-series.stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <a8b797e9-db6f-7f92-2cee-72d456815310-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, romain.perier-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, prasannatsmkumar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, weiyongjun1-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, mpm-VDJrAJ4Gl5ZBDgjK7y7TUQ@public.gmane.org, shannon.nelson-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, keyhaede-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <151ddece1e1427d0b69c4ff11b86a69b6a035d0d.1496730576.git-series.stefan-XLVq0VzYD2Y@public.gmane.org>
+Content-Language: en-US
+Content-ID: <F00862B47729364989D44108CF5F95EC-jdb/QiT5osKcE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, "shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "A.S. Dong" <aisheng.dong-3arQi8VN3Tc@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "richard-/L3Ra7n9ekc@public.gmane.org" <richard-/L3Ra7n9ekc@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org" <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>li
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-06-07 at 15:25 +0200, Matthias Brugger wrote:
-> 
-> On 07/06/17 15:20, Sean Wang wrote:
-> > On Tue, 2017-06-06 at 13:07 +0200, Matthias Brugger wrote:
-> >>
-> >> On 31/05/17 20:44, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> >>> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>
-> >>> Add the generic binding for allowing the support of RNG on MediaTek SoCs
-> >>> such as MT7622.
-> >>>
-> >>> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>> ---
-> >>>    Documentation/devicetree/bindings/rng/mtk-rng.txt | 3 ++-
-> >>>    1 file changed, 2 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/rng/mtk-rng.txt b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> >>> index a6d62a2..0772913 100644
-> >>> --- a/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> >>> +++ b/Documentation/devicetree/bindings/rng/mtk-rng.txt
-> >>> @@ -2,7 +2,8 @@ Device-Tree bindings for Mediatek random number generator
-> >>>    found in Mediatek SoC family
-> >>>    
-> >>>    Required properties:
-> >>> -- compatible	    : Should be "mediatek,mt7623-rng"
-> >>> +- compatible	    : Should be "mediatek,generic-rng" or
-> >>> +				"mediatek,mt7623-rng".
-> >>
-> >> What does generic-rng mean. Is it for all mt7xxx, or also for mt6xxx and
-> >> mt8xxx based SoCs? I think we should stick with SoC specific bindings,
-> >> as we don't know if Mediatek won't publish a new IP block next year
-> >> which is differnet.
-> >>
-> > 
-> > Yes, what I mean is generic-rng can be applied to all
-> > platform MediaTek provides.
-> > 
-> > 
-> >> Just in case we should add a binding for the actual SoC + a fallback.
-> >> For example.
-> >> - compatible " Should be
-> >> 	"mediatek,mt7622-rng", 	"mediatek,mt7623-rng" for SoC mt7622
-> >> 	"mediatek,mt7623-rng" for SoC mt7623
-> >>
-> >> This will also eliminate the need of adding mt6722-rng to the driver, as
-> >> it will use mt7623-rng as fallback. If in the future we realize that
-> >> mt7622-rng has a extra feature/bug, we can still work around it, without
-> >> breaking the bindings.
-> >>
-> > 
-> > I knew the fallback rules you said here because I saw them being used in
-> > many drivers such as sysirq and uart driver, such kind of basic drivers.
-> > 
-> > These drivers are basic enough, various following chipsets almost fall
-> > back into the oldest one. So the clues let me think the hardware
-> > interface shouldn't have too much differences among them.
-> > 
-> > If there is string used like generic-uart or generic-sysirq, it can
-> > stop we blindly add new string into the binding document when a new
-> > platform is introduced.
-> > 
-> > And they easily allows users unfamiliar MediaTek platform (they didn't
-> > know what the oldest MediaTek chipset is) pick up the right compatible
-> > string to start bring up the new platform.
-> > 
-> > The specific one can be added after new feature required is added or
-> > critical hardware bug is found. Otherwise the generic one can fit
-> > all generic needs for those.
-> > 
-> > Those are only opinions, if you don't like it, I still can accept the
-> > original way as you suggest :)
-> > 
-> 
-> I can see your reasoning, but the device tree maintainers prefer to have 
-> the bindings updated for a new SoC. As I mentioned before, just imagine 
-> next year Mediatek changes the IP block and from now on, it uses the new 
-> device in all SoCs. In 5 years we would have a binding which states 
-> 'generic' although it is not compatible with any SoC of the last So
-> 
-> So please keep with the bindings as done up to now.
 
-Understood, I'll follow up. 
 
-And that also reminds me that all missing bindings need to be added for
-each driver on the MT7623 which can fall back to other existing SoCs.
+On 06/06/2017 01:30 AM, Stefan Agner wrote:
+> Add i.MX 7 APBH DMA and GPMI NAND modules.
+>
+> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/imx7s.dtsi | 32 ++++++++++++++++++++++++++++++++
+>   1 file changed, 32 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index c4f12fd..d71acd8 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -995,5 +995,37 @@
+>   				status =3D "disabled";
+>   			};
+>   		};
+> +
+> +		dma_apbh: dma-apbh@33000000 {
+> +			compatible =3D "fsl,imx7d-dma-apbh", "fsl,imx28-dma-apbh";
+> +			reg =3D <0x33000000 0x2000>;
+> +			interrupts =3D <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names =3D "gpmi0", "gpmi1", "gpmi2", "gpmi3";
+> +			#dma-cells =3D <1>;
+> +			dma-channels =3D <4>;
+> +			clocks =3D <&clks IMX7D_NAND_USDHC_BUS_RAWNAND_CLK>;
+> +			clock-names =3D "dma_apbh_bch", "dma_apbh_io";
 
-Thank you a lot
+please remove the clock names, I am good with all other changes.
 
-	Sean
-
-> 
-> Best regards,
-> Matthias
-> 
-> > 
-> >> Makes sense?
-> >>
-> >> Regards,
-> >> Matthias
-> >>
-> >>>    - clocks	    : list of clock specifiers, corresponding to
-> >>>    		      entries in clock-names property;
-> >>>    - clock-names	    : Should contain "rng" entries;
-> >>>
-> > 
-> > 
+> +		};
+> +
+> +		gpmi: gpmi-nand@33002000{
+> +			compatible =3D "fsl,imx7d-gpmi-nand";
+> +			#address-cells =3D <1>;
+> +			#size-cells =3D <1>;
+> +			reg =3D <0x33002000 0x2000>, <0x33004000 0x4000>;
+> +			reg-names =3D "gpmi-nand", "bch";
+> +			interrupts =3D <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> +			interrupt-names =3D "bch";
+> +			clocks =3D <&clks IMX7D_NAND_RAWNAND_CLK>,
+> +				<&clks IMX7D_NAND_USDHC_BUS_RAWNAND_CLK>;
+> +			clock-names =3D "gpmi_io", "gpmi_bch_apb";
+> +			dmas =3D <&dma_apbh 0>;
+> +			dma-names =3D "rx-tx";
+> +			status =3D "disabled";
+> +			assigned-clocks =3D <&clks IMX7D_NAND_ROOT_SRC>;
+> +			assigned-clock-parents =3D <&clks IMX7D_PLL_ENET_MAIN_500M_CLK>;
+> +		};
+>   	};
+>   };
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
