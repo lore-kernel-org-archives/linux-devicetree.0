@@ -1,54 +1,69 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 12/20] ARM: dts: uniphier: Add generic compatible
- string for I2C EEPROM
-Date: Wed, 7 Jun 2017 14:42:43 +0200
-Message-ID: <CABxcv=msBQVW2P+RkcAq+5jhBkMorZvToaGDoLF6rT_knb3qhw@mail.gmail.com>
-References: <20170523133448.4794-1-javier@dowhile0.org> <20170523133448.4794-13-javier@dowhile0.org>
- <CAK7LNATDvesYLKimY=aKfT6kAiidq6Ufd=kCWGQcCZ_Xy-27tw@mail.gmail.com>
- <CABxcv=mPzDVTh_ZH1VtuHMUhVrR+hxz8GwcQT38hwJJqHY+fJA@mail.gmail.com> <CAK7LNASBztX033t36vz_MXAgeyHd76roMBtRZ4mi-q9VFB4Lkg@mail.gmail.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
+Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
+Date: Wed, 7 Jun 2017 14:52:47 +0200
+Message-ID: <cb7ad267-8f95-2222-9e38-aae11d23d8ee@tronnes.org>
+References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
+ <1496404155-8344-5-git-send-email-noralf@tronnes.org>
+ <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
+ <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
+ <CAKb7UvguXEE2-kFVPvrca=KfP3qdGD0PZWYLJC=bNzCK2qy=2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNASBztX033t36vz_MXAgeyHd76roMBtRZ4mi-q9VFB4Lkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKb7UvguXEE2-kFVPvrca=KfP3qdGD0PZWYLJC=bNzCK2qy=2w@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Ilia Mirkin <imirkin@alum.mit.edu>
+Cc: devicetree <devicetree@vger.kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, ML dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Masahiro,
-
-On Wed, Jun 7, 2017 at 3:10 AM, Masahiro Yamada
-<yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
-
-[snip]
-
->>>
->>> Why didn't you touch
->>> arch/arm/boot/dts/uniphier-ref-daughter.dtsi ?
->>>
->>
->> Because the compatible string "microchip,24lc128" used by the I2C
->> EEPROM node on that DTS is not supported by the
->> drivers/misc/eeprom/at24.c driver (in fact the only occurrence for
->> 24lc128 I see is in that DTS).
->>
->> Maybe is a typo and it should be "microchip,24c128" instead ?
->
-> I do not think so.
-> I consulted a board developer.
->
-> I also see 24LC128 on Microchip web site:
-> http://www.microchip.com/wwwproducts/en/24LC128
->
-
-Ah Ok, it was just a wild guess I did since the at24 driver didn't
-have support for this chip variant.
-My point stands though, this is an unrelated change to the goal of
-this patch-series and should be fixed separately.
-
-Best regards,
-Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CkRlbiAwNy4wNi4yMDE3IDE0LjExLCBza3JldiBJbGlhIE1pcmtpbjoKPiBPbiBXZWQsIEp1biA3
+LCAyMDE3IGF0IDc6NTIgQU0sIE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3JnPiB3
+cm90ZToKPj4gSGkgRW1pbCwKPj4KPj4KPj4gRGVuIDA3LjA2LjIwMTcgMTEuMzAsIHNrcmV2IEVt
+aWwgVmVsaWtvdjoKPj4+IEhpIE5vcmFsZiwKPj4+Cj4+PiBTbWFsbCBkcml2ZS1ieSBjb21tZW50
+LCBub3RpY2VkIHdoaWxlIGdvaW5nIHRocm91Z2ggbXkgbW9ybmluZyBjb2ZmZWUuCj4+PiBCeSBu
+byBtZWFucyBhIGZ1bGwgcmV2aWV3Lgo+Pj4KPj4+IE9uIDIgSnVuZSAyMDE3IGF0IDEyOjQ5LCBO
+b3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4gd3JvdGU6Cj4+Pgo+Pj4KPj4+PiAr
+LyogcGl4ZWxzIG9uIGRpc3BsYXkgYXJlIG51bWJlcmVkIGZyb20gMSAqLwo+Pj4+ICtzdGF0aWMg
+dm9pZCByZXBhcGVyX2FsbF9waXhlbHMoc3RydWN0IHJlcGFwZXJfZXBkICplcGQsIHU4ICoqcHAs
+Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHU4ICpkYXRhLCB1OCBm
+aXhlZF92YWx1ZSwgY29uc3QgdTgKPj4+PiAqbWFzaywKPj4+PiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgZW51bSByZXBhcGVyX3N0YWdlIHN0YWdlKQo+Pj4+ICt7Cj4+Pj4gKyAgICAg
+ICB1bnNpZ25lZCBpbnQgYjsKPj4+PiArCj4+Pj4gKyAgICAgICBmb3IgKGIgPSBlcGQtPndpZHRo
+IC8gODsgYiA+IDA7IGItLSkgewo+Pj4+ICsgICAgICAgICAgICAgICBpZiAoZGF0YSkgewo+Pj4+
+ICsgICAgICAgICAgICAgICAgICAgICAgIHUxNiBwaXhlbHMgPSByZXBhcGVyX2ludGVybGVhdmVf
+Yml0cyhkYXRhW2IgLQo+Pj4+IDFdKTsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICB1MTYg
+cGl4ZWxfbWFzayA9IDB4ZmZmZjsKPj4+PiArCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
+aWYgKG1hc2spIHsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHUxNiBwaXhl
+bF9tYXNrID0KPj4+PiByZXBhcGVyX2ludGVybGVhdmVfYml0cyhtYXNrW2IgLSAxXSk7Cj4+Pj4g
+Kwo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGl4ZWxfbWFzayA9IChwaXhl
+bF9tYXNrIF4gcGl4ZWxzKSAmCj4+Pj4gMHg1NTU1Owo+Pj4+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgcGl4ZWxfbWFzayB8PSBwaXhlbF9tYXNrIDw8IDE7Cj4+PiBUaGUgc2Vjb25k
+IHUxNiBwaXhlbF9tYXNrIHNlZW1zIHZlcnkgc3VzcGljaW91cyAtIGxpa2VseSBhIGNvcHkvcGFz
+dGUKPj4+IG1pc3Rha2UgPwo+Pgo+PiBBY3R1YWxseSBpdCdzIGEgY29ycmVjdCBjb3B5LiBUaGUg
+c2FtZSBwYXR0ZXJuIGlzIHVzZWQgaW4gdGhyZWUgcGxhY2VzLgo+PiBJIGRpZCBsb29rIGF0IHRo
+ZSBkYXRhc2hlZXQgdG8gdHJ5IGFuZCB1bmRlcnN0YW5kIHdoYXQgd2FzIGdvaW5nIG9uLAo+PiBi
+dXQgdGhlIGN1cnJlbnQgYW5kIHByZXZpb3VzIGZyYW1lIGlzIGFwcGxpZWQgaW4gbm9ybWFsIGFu
+ZCBpbnZlcnRlZAo+PiBmb3JtIGluIHNldmVyYWwgc3RhZ2VzLCB0aGUgcGl4ZWxzIGFyZSBjb252
+ZXJ0ZWQgdG8gYmxhY2svd2hpdGUvbm9jaGFuZ2UKPj4gYW5kIHRoZW4gSSBsb3N0IHRyYWNrIG9m
+IGl0IGFsbC4KPj4gU28gSSBkZWNpZGVkIHRoYXQgdGhlIFBlcnZhc2l2ZSBwZW9wbGUgd2hvIHdy
+b3RlIHRoZSBkcml2ZXIgcHJvYmFibHkKPj4ga25ldyB3aGF0IHRoZXkgd2hlcmUgZG9pbmcuIEF0
+IGxlYXN0IGl0IHdvcmtzIQo+IEl0J3MgZG91YmxpbmcgdXAgdGhlIGJpdHMuLi4gMHg1NTU1IGlz
+IGEgMDEwMTAxMDEwMTAxMDEwMSBwYXR0ZXJuLCBzbwo+IHBpeGVsX21hc2sgfD0gcGl4ZWxfbWFz
+ayA8PCAxIChhZnRlciBwaXhlbF9tYXNrIGlzIHggJiAweDU1NTUpIGlzIGp1c3QKPiBzYXlpbmcg
+dGhhdCB0aGUgc2FtZSBiaXQgc2hvdWxkIGJlIHJlcGVhdGVkIHR3aWNlLgo+Cj4gQXMgZm9yIHdo
+eSB5b3UnZCB3YW50IHRvIGRvIHRoYXQgLi4uIG5vIGNsdWUuIE1heWJlIGl0J3MgYQo+IDItYml0
+LXBlci1waXhlbCBwYWNrZWQgbWFzayBhbmQgeW91IHdhbnQgdG8gc2V0IGVhY2ggcGl4ZWwgdG8g
+MTEgb3IgMDAKPiBoZXJlPwo+CgpZZXMgZWFjaCBwaXhlbCBpcyByZXByZXNlbnRlZCB3aXRoIDIg
+Yml0czoKMTEgLSBibGFjawoxMCAtIHdoaXRlCjAwIC0gbm90aGluZwoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
