@@ -1,132 +1,112 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 2/2] Documentation: DT: bindings: input: Add
- documentation for cyttsp5
-Date: Wed, 7 Jun 2017 13:40:32 -0700
-Message-ID: <20170607204032.GH13116@dtor-ws>
-References: <20170529144538.29187-1-mylene.josserand@free-electrons.com>
- <20170529144538.29187-3-mylene.josserand@free-electrons.com>
- <20170607202603.f7qh46gjkjrxx3cp@rob-hp-laptop>
+From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCHv3 1/4] ARM: dts: socfpga: Add Altera I2C Controller to
+ CycloneV
+Date: Wed, 7 Jun 2017 15:45:50 -0500
+Message-ID: <b5b5dd02-9c07-1ecd-086d-ef668f280514@linux.intel.com>
+References: <1496447559-19782-1-git-send-email-thor.thayer@linux.intel.com>
+ <1496447559-19782-2-git-send-email-thor.thayer@linux.intel.com>
+ <73vao9vcsq.fsf@pengutronix.de>
+Reply-To: thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170607202603.f7qh46gjkjrxx3cp@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: =?iso-8859-1?Q?Myl=E8ne?= Josserand <mylene.josserand@free-electrons.com>, fery@cypress.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, thomas.petazzoni@free-electrons.com, maxime.ripard@free-electrons.com
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <73vao9vcsq.fsf-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 03:26:03PM -0500, Rob Herring wrote:
-> On Mon, May 29, 2017 at 04:45:38PM +0200, Mylène Josserand wrote:
-> > Add the Cypress TrueTouch Generation 5 touchscreen device tree bindings
-> > documentation. It can use I2C or SPI bus.
-> > This touchscreen can handle some defined zone that are designed and
-> > sent as button. To be able to customize the keycode sent, the
-> > "linux,code" property in a "button" sub-node can be used.
-> 
-> "documentation" twice in the subject makes for a long subject. 
-> The preferred subject prefix is "dt-bindings: input: ..."
-> 
-> > 
-> > Signed-off-by: Mylène Josserand <mylene.josserand@free-electrons.com>
-> > ---
-> >  .../bindings/input/touchscreen/cyttsp5.txt         | 55 ++++++++++++++++++++++
-> 
-> cypress,cyttsp5.txt matching the compatible is preferred.
-> 
-> >  1 file changed, 55 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/cyttsp5.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/cyttsp5.txt b/Documentation/devicetree/bindings/input/touchscreen/cyttsp5.txt
-> > new file mode 100644
-> > index 000000000000..713a377b5039
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/input/touchscreen/cyttsp5.txt
-> > @@ -0,0 +1,55 @@
-> > +* Cypress cyttsp touchscreen controller, generation 5
-> > +
-> > +Required properties:
-> > + - compatible		: must be "cypress,cyttsp5"
-> > + - reg			: Device I2C address or SPI chip select number
-> > + - interrupt-parent	: the phandle for the gpio controller
-> > +			  (see interrupt binding[0]).
-> > + - interrupts		: (gpio) interrupt to which the chip is connected
-> > +			  (see interrupt binding[0]).
-> > +
-> > +Optional properties (many of them coming from touchscreen binding[1]):
-> > + - reset-gpios		: the reset gpio the chip is connected to
-> > +			  (see GPIO binding[2] for more details).
-> > + - touchscreen-size-x	: horizontal resolution of touchscreen (in pixels)
-> 
-> Just "see ./touchscreen.txt" is enough description.
-> 
-> > + - touchscreen-size-y	: vertical resolution of touchscreen (in pixels)
-> > + - touchscreen-fuzz-x	: horizontal noise value of the absolute input device
-> > +			  (in pixels)
-> > + - touchscreen-fuzz-y	: vertical noise value of the absolute input device
-> > +			  (in pixels)
-> > +
-> > +This touchscreen can handle some buttons that are touchscreen's defined zones.
-> > +Each button's event can be customized using a sub-node properties:
-> > +	- linux,code: Keycode to emit.
-> > +
-> > +[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> > +[1]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> > +[2]: Documentation/devicetree/bindings/gpio/gpio.txt
-> > +
-> > +Example:
-> > +&i2c0 {
-> > +	[...]
-> > +
-> > +	tsc@24 {
-> 
-> touchscreen@24
-> 
-> > +		compatible = "cypress,cyttsp5";
-> > +		reg = <0x24>;
-> > +
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&tp_reset_ds203>;
-> > +		interrupt-parent = <&pio>;
-> > +		interrupts = <1 5 IRQ_TYPE_LEVEL_LOW>;
-> > +		reset-gpios = <&pio 7 1 GPIO_ACTIVE_HIGH>;
-> > +
-> > +		button@0 {
-> 
-> unit addresses need a reg property. If 0,1,2 are meaningful numbers for 
-> the hardware, then it makes sense to add here.
+Hi Steffen,
 
-Another option would be just say:
+On 06/06/2017 01:40 AM, Steffen Trumtrar wrote:
+> 
+> Hi!
+> 
+> thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org writes:
+> 
+>> From: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>
+>> Add the Altera I2C Controller to the CycloneV SoCFPGA device tree.
+>>
+>> Signed-off-by: Thor Thayer <thor.thayer-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> ---
+>> v2  Remove altr, from fifo-size.
+>>      Rename compatible string to "altr,softip-i2c"
+>> v3  Add version to commpatible string "altr,softip-i2c-v1.0"
+>> ---
+>>   arch/arm/boot/dts/socfpga.dtsi               | 13 ++++++++++---
+>>   arch/arm/boot/dts/socfpga_cyclone5_socdk.dts | 28 +++++++++++++++++++++++++++-
+>>   2 files changed, 37 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> index b2674bd..d69c13d 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -133,6 +133,13 @@
+>>   					#address-cells = <1>;
+>>   					#size-cells = <0>;
+>>   
+>> +					clk_0: clk_0 {
+>> +						compatible = "fixed-clock";
+>> +						#clock-cells = <0>;
+>> +						clock-frequency = <50000000>;
+>> +						clock-output-names = "clk_0-clk";
+>> +					};
+>> +
+>>   					osc1: osc1 {
+>>   						#clock-cells = <0>;
+>>   						compatible = "fixed-clock";
+>> @@ -529,11 +536,11 @@
+>>   				};
+>>   		};
+>>   
+>> -		fpga_bridge0: fpga_bridge@ff400000 {
+>> +		fpga_bridge0: fpga_bridge@ff200000 {
+>>   			compatible = "altr,socfpga-lwhps2fpga-bridge";
+>> -			reg = <0xff400000 0x100000>;
+>> +			reg = <0xff200000 0x00200000>;
+>>   			resets = <&rst LWHPS2FPGA_RESET>;
+>> -			clocks = <&l4_main_clk>;
+>> +			clocks = <&clk_0>;
+>>   		};
+>>
+> 
+> Why this change? This looks wrong and unrelated. The LWHPS2FPGA bridge
+> is at 0xff400000, so it is correct the way it is or not?
+> 
+Yes, good point. I was using the LWHPS2FPGA slave bus so I shouldn't 
+change this one. I'll add the slave version.
 
-		linux,keycodes = <KEY_HOMEPAGE>, <KEY_MENU>, <KEY_BACK>;
+Thanks,
 
-I am wondering though: you read number of button supported by the device
-from HID_SYSINFO_BTN_OFFSET, can you also get button assignment form
-the device as well?
-
-And the biggest question of all: since you refer to HID descriptors in
-your driver, is it a HID device and should it be driven by HID susbystem
-instead of relying on a custom driver?
+Thor
+>>   		fpga_bridge1: fpga_bridge@ff500000 {
+>> diff --git a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> index 155829f..f99576b 100644
+>> --- a/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> +++ b/arch/arm/boot/dts/socfpga_cyclone5_socdk.dts
+>> @@ -68,6 +68,7 @@
+>>   		regulator-min-microvolt = <3300000>;
+>>   		regulator-max-microvolt = <3300000>;
+>>   	};
+>> +
+>>   };
+> 
+> ???
+> 
+Whoops. I should remove the extra space. Thanks!
 
 > 
-> > +			linux,code = <KEY_HOMEPAGE>;
-> > +		};
-> > +
-> > +		button@1 {
-> > +			linux,code = <KEY_MENU>;
-> > +		};
-> > +
-> > +		button@2 {
-> > +			linux,code = <KEY_BACK>;
-> > +		};
-> > +	};
-> > +};
-> > -- 
-> > 2.11.0
-> > 
+> (...)
+> 
+> 
+> Best regards,
+> Steffen
+> 
 
-Thanks.
-
--- 
-Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
