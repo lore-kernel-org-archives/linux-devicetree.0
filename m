@@ -1,150 +1,242 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 01/11] dt-bindings: update the binding
- for Allwinner H3 TVE support
-Date: Wed, 7 Jun 2017 10:45:44 +0200
-Message-ID: <20170607084544.kgclybyxxttfk3ko@flea.lan>
-References: <20170604160149.30230-1-icenowy@aosc.io>
- <20170604160149.30230-2-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3] arm: dts: mediatek: Add audio driver node for MT2701
+Date: Wed, 7 Jun 2017 10:48:17 +0200
+Message-ID: <202979f3-ad51-afb1-afd3-8c4a567c5ed9@gmail.com>
+References: <1496295730-24766-1-git-send-email-garlic.tseng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mbi7ai7gr2qcimma"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBOP233EQKGQEUW7MJMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170604160149.30230-2-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1496295730-24766-1-git-send-email-garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
+List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
+ <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ailsa.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, ir.lian-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---mbi7ai7gr2qcimma
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
 
-On Mon, Jun 05, 2017 at 12:01:39AM +0800, Icenowy Zheng wrote:
-> Allwinner H3 features a "DE2.0" and a TV Encoder.
+On 01/06/17 07:42, Garlic Tseng wrote:
+> Add audio driver node for mt2701
+> (fix intend problem in version 2)
 > 
-> Add device tree bindings for the following parts:
-> - H3 TCONs
-> - H3 Mixers
-> - The connection between H3 TCONs and H3 Mixers
-> - H3 TV Encoder
-> - H3 Display engine
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> Signed-off-by: Garlic Tseng <garlic.tseng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+Queued in v4.12-next/dts32
+
+Thanks a lot,
+Matthias
+
 > ---
-> Changes in v2:
-> - Changed endpoint reg definition on TCONs and Mixers. Now the endpoint
->   id is just the component id.
-> - Changed TVE and TCON1 binding -- now CLK_TVE is passed as TCON1 lcd-ch1.
+>   arch/arm/boot/dts/mt2701-evb.dts | 65 ++++++++++++++++++++++++++
+>   arch/arm/boot/dts/mt2701.dtsi    | 98 ++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 163 insertions(+)
 > 
->  .../bindings/display/sunxi/sun4i-drm.txt           | 37 +++++++++++++++++++---
->  1 file changed, 33 insertions(+), 4 deletions(-)
+> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+> index 98bf12c..f484973 100644
+> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+> @@ -22,6 +22,40 @@
+>   	memory {
+>   		reg = <0 0x80000000 0 0x40000000>;
+>   	};
+> +
+> +	sound:sound {
+> +		compatible = "mediatek,mt2701-cs42448-machine";
+> +		mediatek,platform = <&afe>;
+> +		/* CS42448 Machine name */
+> +		audio-routing =
+> +		"Line Out Jack", "AOUT1L",
+> +		"Line Out Jack", "AOUT1R",
+> +		"Line Out Jack", "AOUT2L",
+> +		"Line Out Jack", "AOUT2R",
+> +		"Line Out Jack", "AOUT3L",
+> +		"Line Out Jack", "AOUT3R",
+> +		"Line Out Jack", "AOUT4L",
+> +		"Line Out Jack", "AOUT4R",
+> +		"AIN1L", "AMIC",
+> +		"AIN1R", "AMIC",
+> +		"AIN2L", "Tuner In",
+> +		"AIN2R", "Tuner In",
+> +		"AIN3L", "Satellite Tuner In",
+> +		"AIN3R", "Satellite Tuner In",
+> +		"AIN3L", "AUX In",
+> +		"AIN3R", "AUX In";
+> +		mediatek,audio-codec = <&cs42448>;
+> +		mediatek,audio-codec-bt-mrg = <&bt_sco_codec>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&aud_pins_default>;
+> +		i2s1-in-sel-gpio1 = <&pio 53 0>;
+> +		i2s1-in-sel-gpio2 = <&pio 54 0>;
+> +		status = "okay";
+> +	};
+> +
+> +	bt_sco_codec:bt_sco_codec {
+> +		compatible = "linux,bt-sco";
+> +	};
+>   };
+>   
+>   &auxadc {
+> @@ -44,6 +78,12 @@
+>   	pinctrl-names = "default";
+>   	pinctrl-0 = <&i2c2_pins_a>;
+>   	status = "okay";
+> +	cs42448: cs42448@48 {
+> +		compatible = "cirrus,cs42448";
+> +		reg = <0x48>;
+> +		clocks = <&topckgen CLK_TOP_AUD_I2S1_MCLK>;
+> +		clock-names = "mclk";
+> +	};
+>   };
+>   
+>   &pio {
+> @@ -81,6 +121,31 @@
+>   		};
+>   	};
+>   
+> +	aud_pins_default: audiodefault {
+> +		pins_cmd_dat {
+> +			pinmux = <MT2701_PIN_49_I2S0_DATA__FUNC_I2S0_DATA>,
+> +				 <MT2701_PIN_72_I2S0_DATA_IN__FUNC_I2S0_DATA_IN>,
+> +				 <MT2701_PIN_73_I2S0_LRCK__FUNC_I2S0_LRCK>,
+> +				 <MT2701_PIN_74_I2S0_BCK__FUNC_I2S0_BCK>,
+> +				 <MT2701_PIN_126_I2S0_MCLK__FUNC_I2S0_MCLK>,
+> +				 <MT2701_PIN_33_I2S1_DATA__FUNC_I2S1_DATA>,
+> +				 <MT2701_PIN_34_I2S1_DATA_IN__FUNC_I2S1_DATA_IN>,
+> +				 <MT2701_PIN_35_I2S1_BCK__FUNC_I2S1_BCK>,
+> +				 <MT2701_PIN_36_I2S1_LRCK__FUNC_I2S1_LRCK>,
+> +				 <MT2701_PIN_37_I2S1_MCLK__FUNC_I2S1_MCLK>,
+> +				 <MT2701_PIN_203_PWM0__FUNC_I2S2_DATA>,
+> +				 <MT2701_PIN_204_PWM1__FUNC_I2S3_DATA>,
+> +				 <MT2701_PIN_53_SPI0_CSN__FUNC_GPIO53>,
+> +				 <MT2701_PIN_54_SPI0_CK__FUNC_GPIO54>,
+> +				 <MT2701_PIN_18_PCM_CLK__FUNC_MRG_CLK>,
+> +				 <MT2701_PIN_19_PCM_SYNC__FUNC_MRG_SYNC>,
+> +				 <MT2701_PIN_20_PCM_RX__FUNC_MRG_TX>,
+> +				 <MT2701_PIN_21_PCM_TX__FUNC_MRG_RX>;
+> +			drive-strength = <MTK_DRIVE_12mA>;
+> +			bias-pull-down;
+> +		};
+> +	};
+> +
+>   	spi_pins_b: spi1@0 {
+>   		pins_spi {
+>   			pinmux = <MT2701_PIN_7_SPI1_CSN__FUNC_SPI1_CS>,
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 50a483c..f1efdc6 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -425,6 +425,104 @@
+>   		status = "disabled";
+>   	};
+>   
+> +	afe: audio-controller@11220000 {
+> +		compatible = "mediatek,mt2701-audio";
+> +		reg = <0 0x11220000 0 0x2000>,
+> +		      <0 0x112a0000 0 0x20000>;
+> +		interrupts = <GIC_SPI 132 IRQ_TYPE_LEVEL_LOW>;
+> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
+> +
+> +		clocks = <&infracfg CLK_INFRA_AUDIO>,
+> +			 <&topckgen CLK_TOP_AUD_MUX1_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_MUX2_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_MUX1_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_MUX2_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_48K_TIMING>,
+> +			 <&topckgen CLK_TOP_AUD_44K_TIMING>,
+> +			 <&topckgen CLK_TOP_AUDPLL_MUX_SEL>,
+> +			 <&topckgen CLK_TOP_APLL_SEL>,
+> +			 <&topckgen CLK_TOP_AUD1PLL_98M>,
+> +			 <&topckgen CLK_TOP_AUD2PLL_90M>,
+> +			 <&topckgen CLK_TOP_HADDS2PLL_98M>,
+> +			 <&topckgen CLK_TOP_HADDS2PLL_294M>,
+> +			 <&topckgen CLK_TOP_AUDPLL>,
+> +			 <&topckgen CLK_TOP_AUDPLL_D4>,
+> +			 <&topckgen CLK_TOP_AUDPLL_D8>,
+> +			 <&topckgen CLK_TOP_AUDPLL_D16>,
+> +			 <&topckgen CLK_TOP_AUDPLL_D24>,
+> +			 <&topckgen CLK_TOP_AUDINTBUS_SEL>,
+> +			 <&clk26m>,
+> +			 <&topckgen CLK_TOP_SYSPLL1_D4>,
+> +			 <&topckgen CLK_TOP_AUD_K1_SRC_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_K2_SRC_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_K3_SRC_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_K4_SRC_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_K5_SRC_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_K6_SRC_SEL>,
+> +			 <&topckgen CLK_TOP_AUD_K1_SRC_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_K2_SRC_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_K3_SRC_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_K4_SRC_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_K5_SRC_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_K6_SRC_DIV>,
+> +			 <&topckgen CLK_TOP_AUD_I2S1_MCLK>,
+> +			 <&topckgen CLK_TOP_AUD_I2S2_MCLK>,
+> +			 <&topckgen CLK_TOP_AUD_I2S3_MCLK>,
+> +			 <&topckgen CLK_TOP_AUD_I2S4_MCLK>,
+> +			 <&topckgen CLK_TOP_AUD_I2S5_MCLK>,
+> +			 <&topckgen CLK_TOP_AUD_I2S6_MCLK>,
+> +			 <&topckgen CLK_TOP_ASM_M_SEL>,
+> +			 <&topckgen CLK_TOP_ASM_H_SEL>,
+> +			 <&topckgen CLK_TOP_UNIVPLL2_D4>,
+> +			 <&topckgen CLK_TOP_UNIVPLL2_D2>,
+> +			 <&topckgen CLK_TOP_SYSPLL_D5>;
+> +
+> +		clock-names = "infra_sys_audio_clk",
+> +			 "top_audio_mux1_sel",
+> +			 "top_audio_mux2_sel",
+> +			 "top_audio_mux1_div",
+> +			 "top_audio_mux2_div",
+> +			 "top_audio_48k_timing",
+> +			 "top_audio_44k_timing",
+> +			 "top_audpll_mux_sel",
+> +			 "top_apll_sel",
+> +			 "top_aud1_pll_98M",
+> +			 "top_aud2_pll_90M",
+> +			 "top_hadds2_pll_98M",
+> +			 "top_hadds2_pll_294M",
+> +			 "top_audpll",
+> +			 "top_audpll_d4",
+> +			 "top_audpll_d8",
+> +			 "top_audpll_d16",
+> +			 "top_audpll_d24",
+> +			 "top_audintbus_sel",
+> +			 "clk_26m",
+> +			 "top_syspll1_d4",
+> +			 "top_aud_k1_src_sel",
+> +			 "top_aud_k2_src_sel",
+> +			 "top_aud_k3_src_sel",
+> +			 "top_aud_k4_src_sel",
+> +			 "top_aud_k5_src_sel",
+> +			 "top_aud_k6_src_sel",
+> +			 "top_aud_k1_src_div",
+> +			 "top_aud_k2_src_div",
+> +			 "top_aud_k3_src_div",
+> +			 "top_aud_k4_src_div",
+> +			 "top_aud_k5_src_div",
+> +			 "top_aud_k6_src_div",
+> +			 "top_aud_i2s1_mclk",
+> +			 "top_aud_i2s2_mclk",
+> +			 "top_aud_i2s3_mclk",
+> +			 "top_aud_i2s4_mclk",
+> +			 "top_aud_i2s5_mclk",
+> +			 "top_aud_i2s6_mclk",
+> +			 "top_asm_m_sel",
+> +			 "top_asm_h_sel",
+> +			 "top_univpll2_d4",
+> +			 "top_univpll2_d2",
+> +			 "top_syspll_d5";
+> +	};
+> +
+>   	mmsys: syscon@14000000 {
+>   		compatible = "mediatek,mt2701-mmsys", "syscon";
+>   		reg = <0 0x14000000 0 0x1000>;
 > 
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> index b83e6018041d..7ad164cb7dcb 100644
-> --- a/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> +++ b/Documentation/devicetree/bindings/display/sunxi/sun4i-drm.txt
-> @@ -49,7 +49,9 @@ The TV Encoder supports the composite and VGA output. It is one end of
->  the pipeline.
->  
->  Required properties:
-> - - compatible: value should be "allwinner,sun4i-a10-tv-encoder".
-> + - compatible: value must be either:
-> +    * allwinner,sun4i-a10-tv-encoder
-> +    * allwinner,sun8i-h3-tv-encoder
->   - reg: base address and size of memory-mapped region
->   - clocks: the clocks driving the TV encoder
->   - resets: phandle to the reset controller driving the encoder
-> @@ -69,23 +71,27 @@ Required properties:
->     * allwinner,sun6i-a31-tcon
->     * allwinner,sun6i-a31s-tcon
->     * allwinner,sun8i-a33-tcon
-> +   * allwinner,sun8i-h3-tcon
->     * allwinner,sun8i-v3s-tcon
->   - reg: base address and size of memory-mapped region
->   - interrupts: interrupt associated to this IP
->   - clocks: phandles to the clocks feeding the TCON. Three are needed:
->     - 'ahb': the interface clocks
-> -   - 'tcon-ch0': The clock driving the TCON channel 0
->   - resets: phandles to the reset controllers driving the encoder
->     - "lcd": the reset line for the TCON channel 0
->  
->   - clock-names: the clock names mentioned above
->   - reset-names: the reset names mentioned above
-> - - clock-output-names: Name of the pixel clock created
->  
->  - ports: A ports node with endpoint definitions as defined in
->    Documentation/devicetree/bindings/media/video-interfaces.txt. The
->    first port should be the input endpoint, the second one the output
->  
-> +  In the situation of Display Engine 2.0 that the connection between
-> +  the mixer and the TCON can be swapped, the input should have two
-> +  endpoints. The first input endpoint should be connected to mixer0
-> +  and the second should be connected to mixer1.
-> +
-
-AFAIK, this is also the case for dual-pipelines on DE1 (for example on
-the A31). And this is already covered by:
-
-"
-For the input port of all components up to the TCON in the display
-pipeline, if there are multiple components, the local endpoint IDs
-must correspond to the index of the upstream block. For example, if
-the remote endpoint is Frontend 1, then the local endpoint ID must
-be 1.
-"
-
->    The output may have multiple endpoints. The TCON has two channels,
->    usually with the first channel being used for the panels interfaces
->    (RGB, LVDS, etc.), and the second being used for the outputs that
-> @@ -94,7 +100,23 @@ Required properties:
->    channel the endpoint is associated to. If that property is not
->    present, the endpoint number will be used as the channel number.
->  
-> -On SoCs other than the A33 and V3s, there is one more clock required:
-> +For the following compatibles:
-> +   * allwinner,sun5i-a13-tcon
-> +   * allwinner,sun6i-a31-tcon
-> +   * allwinner,sun6i-a31s-tcon
-> +   * allwinner,sun8i-a33-tcon
-> +   * allwinner,sun8i-v3s-tcon
-> +there is one more clock and one more property required:
-> + - clocks:
-> +   - 'tcon-ch0': The clock driving the TCON channel 0
-> + - clock-output-names: Name of the pixel clock created
-> +
-> +For the following compatibles:
-> +   * allwinner,sun5i-a13-tcon
-> +   * allwinner,sun6i-a31-tcon
-> +   * allwinner,sun6i-a31s-tcon
-> +   * allwinner,sun8i-h3-tcon
-> +there is one more clock required:
->     - 'tcon-ch1': The clock driving the TCON channel 1
->  
->  DRC
-> @@ -189,6 +211,8 @@ supported.
->  Required properties:
->    - compatible: value must be one of:
->      * allwinner,sun8i-v3s-de2-mixer
-> +    * allwinner,sun8i-h3-de2-mixer0
-> +    * allwinner,sun8i-h3-de2-mixer1
-
-Again, please explain why we need to have different compatibles
-here. If it's only about the number of planes, this should be dealt
-with a property, not a compatible.
-
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---mbi7ai7gr2qcimma--
