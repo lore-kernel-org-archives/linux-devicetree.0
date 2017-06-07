@@ -1,71 +1,98 @@
-From: Ladislav Michl <ladis@linux-mips.org>
-Subject: Re: [RFC 2/3] misc: Add w2sg0004 (gps receiver) power control driver
-Date: Wed, 7 Jun 2017 09:34:59 +0200
-Message-ID: <20170607073459.qg4giwqdajtmpy4n@lenoch>
-References: <cover.1495363443.git.hns@goldelico.com>
- <24579fa76fbf454526fddabe0b20070e46d488ba.1495363443.git.hns@goldelico.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 04/23] mtd: nand: denali: avoid hard-coding ECC step,
+ strength, bytes
+Date: Wed, 7 Jun 2017 09:45:09 +0200
+Message-ID: <20170607094509.263f155d@bbrezillon>
+References: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
+        <1496704922-12261-5-git-send-email-yamada.masahiro@socionext.com>
+        <20170607000133.69fbf82b@bbrezillon>
+        <CAK7LNATXygK2f71J8gggGQRuEdJ21CJfg9WVCYXgO=+NRBwcLg@mail.gmail.com>
+        <20170607090250.729625c9@bbrezillon>
+        <CAK7LNATObBpfjdSJB9G5RgHQV2FaSepzk6Lb=b=_eMqfxYf7ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <24579fa76fbf454526fddabe0b20070e46d488ba.1495363443.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, =?iso-8859-2?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@armlinux.org.uk>, Thierry Reding <treding@nvidia.com>, Jonathan Cameron <jic23@kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, letux-kernel@openphoenux.org, kernel@pyra-handheld.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNATObBpfjdSJB9G5RgHQV2FaSepzk6Lb=b=_eMqfxYf7ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Nikolaus,
+On Wed, 7 Jun 2017 16:21:15 +0900
+Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
 
-On Sun, May 21, 2017 at 12:44:03PM +0200, H. Nikolaus Schaller wrote:
-> Add driver for Wi2Wi W2SG0004/84 GPS module connected through uart.
+> Hi Boris,
 > 
-> Use serdev API hooks to monitor and forward the UART traffic to /dev/BTn
-> and turn on/off the module. It also detects if the module is turned on (sends data)
-> but should be off, e.g. if it was already turned on during boot or power-on-reset.
 > 
-> Additionally, rfkill block/unblock can be used to control an external LNA
-> (and power down the module if not needed).
+> 2017-06-07 16:02 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> > On Wed, 7 Jun 2017 12:09:31 +0900
+> > Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+> >  
+> >> >> +
+> >> >> +static int denali_ecc_setup(struct mtd_info *mtd, struct nand_chip *chip,
+> >> >> +                         struct denali_nand_info *denali)
+> >> >> +{
+> >> >> +     struct nand_ecc_caps caps;
+> >> >> +     int ret;
+> >> >> +
+> >> >> +     caps.stepinfos = denali->stepinfo;
+> >> >> +     caps.nstepinfos = 1;
+> >> >> +     caps.calc_ecc_bytes = denali_calc_ecc_bytes;
+> >> >> +     caps.oob_reserve_bytes = denali->bbtskipbytes;  
+> >> >
+> >> > If you get rid of this oob_reserve_bytes field, you can define caps as
+> >> > a static const and even directly store ecc_caps in denali_nand_info.  
+> >>
+> >> To make caps static const, denali_calc_ecc_bytes must be exported
+> >> to be referenced from denali_dt/denali_pci.
+> >> I am reluctant to do it.  
+> >
+> > You already duplicate other information in denali_dt.c and
+> > denali_pci.c,  
 > 
-> The driver concept is based on code developed by NeilBrown <neilb@suse.de>
-> but simplified and adapted to use the new serdev API introduced in 4.11.
-[snip]
-> diff --git a/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-> new file mode 100644
-> index 000000000000..b7125c7a598c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/wi2wi,w2sg0004.txt
-> @@ -0,0 +1,20 @@
-> +Wi2Wi GPS module connected through UART
-> +
-> +Should be a subnode of the SoC UART it is connected to (serdev).
-> +
-> +Required properties:
-> +- compatible:	wi2wi,w2sg0004 or wi2wi,w2sg0084
-> +- on-off-gpio:	the GPIO that controls the module's on-off toggle input
-> +
-> +Optional properties:
-> +- lna-suppy:	an (optional) LNA regulator that is enabled together with the GPS receiver
-> +
-> +Example:
-> +
-> +&uart2 {
-> +	gps: w2sg0004 {
-> +		compatible = "wi2wi,w2sg0004";
-> +		lna-supply = <&vsim>;   /* LNA regulator */
-> +		on-off-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;    /* GPIO_145: trigger for turning on/off w2sg0004 */
-> +        };
-> +};
+> The ECC step-size and strength are tightly associated to each IP variant.
+> I see duplication between denali_dt and denali_pci, but it is just because
+> Intel and Altera happened to have the same parameters.
 
-Here it seems is nothing specific to GPS receiver in this driver and
-basically UART connected GSM modules could benefit from such functionality
-too - as they need power supply, had reset and ignition pin and often
-status pin. See for example:
-http://simcom.ee/documents/SIM5300E/SIM5300E_Hardware_Design_V1.08.pdf
-page 14 or
-http://www.robotshop.com/media/files/pdf/datasheet-gsm-tc35.pdf
-page 19 for block diagrams.
-So I wonder if you would accept making this driver a bit more generic
-to cover also GSM modems use case.
+It's still duplication.
 
-Best regards,
-	ladis
+> 
+> On the other hand, denali_calc_ecc_bytes() is common to all variants
+> because ECC algorithm is not customizable.
+
+Yes, I agree.
+
+> 
+> 
+> > so what prevents you from duplicating this one-line
+> > function?
+> >
+> > Also, denali core already exports 2 functions,  
+> 
+> They are entries for probe/remove.
+> 
+> > I don't see the problem
+> > in exporting the common nand_ecc_caps object. Why are you reluctant to
+> > that?  
+> 
+> denali_calc_ecc_bytes() is independent of DT, PCI, or whatever.
+> I see less reason to expose it.
+
+I don't get that one. The fact that it's a generic implementation makes
+it a good match for something you want to have in the core and expose
+to DT/PCI implems.
+
+> 
+> caps is only used on probing, so I used a local variable.
+> I do not think it is a big problem.
+> 
+
+It is to me, because you'll be the only user of the API at first, and
+people tend to copy&paste code from other drivers.
+nand_ecc_caps is really something that should be const and attached to
+a specific IP revision.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
