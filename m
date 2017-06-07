@@ -1,67 +1,29 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 00/11] arm64/firmware: Software Delegated Exception
- Interface
-Date: Wed, 07 Jun 2017 10:45:32 +0100
-Message-ID: <5937CB3C.6040800@arm.com>
-References: <20170515174400.29735-1-james.morse@arm.com>
- <20170606195944.GM9464@cbox>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v5 2/3] ARM: dts: twl4030: Add missing madc reference for bci subnode
+Date: Wed, 7 Jun 2017 11:50:36 +0200
+Message-ID: <86926E09-93B8-4C17-BD98-C1340CA48F21@goldelico.com>
+References: <cover.1495363097.git.hns@goldelico.com> <69d95172f257cee8d6abc1eaab57865e536be73c.1495363097.git.hns@goldelico.com> <20170606072358.GT3730@atomide.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-In-Reply-To: <20170606195944.GM9464@cbox>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Christoffer Dall <cdall@linaro.org>
-Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20170606072358.GT3730@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, Marek Belisko <marek@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Christoffer,
 
-On 06/06/17 20:59, Christoffer Dall wrote:
-> On Mon, May 15, 2017 at 06:43:48PM +0100, James Morse wrote:
->> Running the event handler behind VHE-KVM's back has some side effects: The
->> event handler will blindly use any registers that are shared between the host
->> and guest. The two that I think matter are TPIDR_EL1, and the debug state. The
->> guest may have set MDSCR_EL1 so debug exceptions must remain masked. The
->> guest's TPIDR_EL1 will be used by the event handler if it accesses per-cpu
->> variables. This needs fixing. The first part of this series juggles KVMs use
->> of TPIDR_EL2 so that we share it with the host on VHE systems. An equivalent
->> change for 32bit is on my todo list. (one alternative to this is to have a
->> parody world switch in the SDEI event handler, but this would mean special
->> casing interrupted guests, and be an ABI link to KVM.)
->>
->> Causing a synchronous exception from an event handler will cause KVM to
->> hyp-panic, but may silently succeed if the event didn't interrupt a guest.
->> (I may WARN_ON() if this happens in a later patch). You because of this you
+> Am 06.06.2017 um 09:23 schrieb Tony Lindgren <tony@atomide.com>:
 > 
-> The last sentence here doesn't make much sense to me.
+> * H. Nikolaus Schaller <hns@goldelico.com> [170521 03:44]:
+>> From: Marek Belisko <marek@goldelico.com>
+>> 
+>> The twl4030_charger driver expects an iio channel to detect the
+>> presence of an AC charger by looking at VAC (madc channel 11).
+>> This definition is missing in the device tree.
+> 
+> I'm picking this patch into omap-for-v4.13/dt thanks.
 
-If this interrupts a VHE-guest, KVM's hyp-vectors remain in vbar_el2. If we then
-take a synchronous exception, KVM will assume this happened during world switch
-and panic.
-In contrast if you didn't interrupt a guest, the kernel vectors are in vbar_el2,
-so the fault will be handled.
-
-This 'silently succeed' only occurred to me when writing the cover-letter,
-(hence its probably worded badly). I plan to catch it by save-restoring the
-exception registers, and warning if they've changed as this would hyp-panic if
-you interrupted a guest.
-
-
-> For the rest of the KVM part it looks mostly good to me, besides the
-> points I raised in the individual patches.
-
-Thanks for taking a look!
-
-
-Thanks,
-
-James
+Thanks and BR!
+Nikolaus
