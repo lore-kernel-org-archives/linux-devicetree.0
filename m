@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 10/15] MIPS: ingenic: Add machine info for supported boards
-Date: Wed,  7 Jun 2017 22:04:34 +0200
-Message-ID: <20170607200439.24450-11-paul@crapouillou.net>
+Subject: [PATCH 01/15] clk: ingenic: Fix recalc_rate for clocks with fixed divider
+Date: Wed,  7 Jun 2017 22:04:25 +0200
+Message-ID: <20170607200439.24450-2-paul@crapouillou.net>
 References: <20170607200439.24450-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170607200439.24450-1-paul@crapouillou.net>
@@ -10,135 +10,30 @@ To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.c
 Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-This makes sure that 'mips_machtype' will be initialized to the SoC
-version used on the board.
+Previously, the clocks with a fixed divider would report their rate
+as being the same as the one of their parent, independently of the
+divider in use. This commit fixes this behaviour.
+
+This went unnoticed as neither the jz4740 nor the jz4780 CGU code
+have clocks with fixed dividers yet.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/Kconfig         |  1 +
- arch/mips/jz4740/Makefile |  2 +-
- arch/mips/jz4740/boards.c | 16 ++++++++++++++++
- arch/mips/jz4740/setup.c  | 34 +++++++++++++++++++++++++++++-----
- 4 files changed, 47 insertions(+), 6 deletions(-)
- create mode 100644 arch/mips/jz4740/boards.c
+ drivers/clk/ingenic/cgu.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 2828ecde133d..f36ffb93efd9 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -370,6 +370,7 @@ config MACH_INGENIC
- 	select BUILTIN_DTB
- 	select USE_OF
- 	select LIBFDT
-+	select MIPS_MACHINE
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index e8248f9185f7..eb9002ccf3fc 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -328,6 +328,8 @@ ingenic_clk_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 		div *= clk_info->div.div;
  
- config LANTIQ
- 	bool "Lantiq based platforms"
-diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
-index 39d70bde8cfe..87feb246fafe 100644
---- a/arch/mips/jz4740/Makefile
-+++ b/arch/mips/jz4740/Makefile
-@@ -5,7 +5,7 @@
- # Object file lists.
+ 		rate /= div;
++	} else if (clk_info->type & CGU_CLK_FIXDIV) {
++		rate /= clk_info->fixdiv.div;
+ 	}
  
- obj-y += prom.o time.o reset.o setup.o \
--	platform.o timer.o
-+	platform.o timer.o boards.o
- 
- obj-$(CONFIG_MACH_JZ4740) += gpio.o
- 
-diff --git a/arch/mips/jz4740/boards.c b/arch/mips/jz4740/boards.c
-new file mode 100644
-index 000000000000..a3cf64cf004a
---- /dev/null
-+++ b/arch/mips/jz4740/boards.c
-@@ -0,0 +1,16 @@
-+/*
-+ * Ingenic boards support
-+ *
-+ * Copyright 2017, Paul Cercueil <paul@crapouillou.net>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 or later
-+ * as published by the Free Software Foundation.
-+ */
-+
-+#include <asm/bootinfo.h>
-+#include <asm/mips_machine.h>
-+
-+MIPS_MACHINE(MACH_INGENIC_JZ4740, "qi,lb60", "Qi Hardware Ben Nanonote", NULL);
-+MIPS_MACHINE(MACH_INGENIC_JZ4780, "img,ci20",
-+			"Imagination Technologies CI20", NULL);
-diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-index 6d0152321819..afd84ee966e8 100644
---- a/arch/mips/jz4740/setup.c
-+++ b/arch/mips/jz4740/setup.c
-@@ -22,6 +22,7 @@
- #include <linux/of_fdt.h>
- 
- #include <asm/bootinfo.h>
-+#include <asm/mips_machine.h>
- #include <asm/prom.h>
- 
- #include <asm/mach-jz4740/base.h>
-@@ -53,16 +54,34 @@ static void __init jz4740_detect_mem(void)
- 	add_memory_region(0, size, BOOT_MEM_RAM);
- }
- 
-+static unsigned long __init get_board_mach_type(const void *fdt)
-+{
-+	const struct mips_machine *mach;
-+
-+	for (mach = (struct mips_machine *)&__mips_machines_start;
-+			mach < (struct mips_machine *)&__mips_machines_end;
-+			mach++) {
-+		if (!fdt_node_check_compatible(fdt, 0, mach->mach_id))
-+			return mach->mach_type;
-+	}
-+
-+	return MACH_INGENIC_JZ4740;
-+}
-+
- void __init plat_mem_setup(void)
- {
- 	int offset;
- 
-+	if (!early_init_dt_scan(__dtb_start))
-+		return;
-+
- 	jz4740_reset_init();
--	__dt_setup_arch(__dtb_start);
- 
- 	offset = fdt_path_offset(__dtb_start, "/memory");
- 	if (offset < 0)
- 		jz4740_detect_mem();
-+
-+	mips_machtype = get_board_mach_type(__dtb_start);
- }
- 
- void __init device_tree_init(void)
-@@ -75,13 +94,18 @@ void __init device_tree_init(void)
- 
- const char *get_system_type(void)
- {
--	if (IS_ENABLED(CONFIG_MACH_JZ4780))
--		return "JZ4780";
--
--	return "JZ4740";
-+	return mips_get_machine_name();
- }
- 
- void __init arch_init_irq(void)
- {
- 	irqchip_init();
- }
-+
-+static int __init jz4740_machine_setup(void)
-+{
-+	mips_machine_setup();
-+
-+	return 0;
-+}
-+arch_initcall(jz4740_machine_setup);
+ 	return rate;
 -- 
 2.11.0
