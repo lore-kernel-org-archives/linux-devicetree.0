@@ -1,52 +1,49 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [RFC PATCH 3/8] firmware: arm_scmi: add common infrastructure and support for base protocol
-Date: Wed,  7 Jun 2017 17:10:07 +0100
-Message-ID: <1496851812-19623-4-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC PATCH 5/8] firmware: arm_scmi: add initial support for clock protocol
+Date: Wed,  7 Jun 2017 17:10:09 +0100
+Message-ID: <1496851812-19623-6-git-send-email-sudeep.holla@arm.com>
 References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496851812-19623-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The base protocol describes the properties of the implementation and
-provide generic error management. The base protocol provides commands
-to describe protocol version, discover implementation specific
-attributes and vendor/sub-vendor identification, list of protocols
-implemented and the various agents are in the system including OSPM
-and the platform. It also supports registering for notifications of
-platform errors.
+The clock protocol is intended for management of clocks. It is used to
+enable or disable clocks, and to set and get the clock rates. This
+protocol provides commands to describe the protocol version, discover
+various implementation specific attributes, describe a clock, enable
+and disable a clock and get/set the rate of the clock synchronously or
+asynchronously.
 
-This protocol is mandatory. This patch adds support for the same along
-with some basic infrastructure to add support for other protocols.
+This patch adds initial support for the clock protocol.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 ---
  drivers/firmware/arm_scmi/Makefile |   2 +-
- drivers/firmware/arm_scmi/base.c   | 290 +++++++++++++++++++++++++++++++++++++
- drivers/firmware/arm_scmi/common.h |  46 ++++++
- drivers/firmware/arm_scmi/driver.c |  67 +++++++++
- include/linux/scmi_protocol.h      |  28 ++++
- 5 files changed, 432 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/base.c
+ drivers/firmware/arm_scmi/clock.c  | 340 +++++++++++++++++++++++++++++++++++++
+ drivers/firmware/arm_scmi/common.h |   1 +
+ include/linux/scmi_protocol.h      |  18 ++
+ 4 files changed, 360 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/firmware/arm_scmi/clock.c
 
 diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 58e94c95e523..21d01d1d6b9c 100644
+index 159de726ee45..6836b1f38f7f 100644
 --- a/drivers/firmware/arm_scmi/Makefile
 +++ b/drivers/firmware/arm_scmi/Makefile
 @@ -1,2 +1,2 @@
  obj-$(CONFIG_ARM_SCMI_PROTOCOL)	= arm_scmi.o
--arm_scmi-y = driver.o
-+arm_scmi-y = base.o driver.o
-diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
+-arm_scmi-y = base.o driver.o perf.o
++arm_scmi-y = base.o clock.o driver.o perf.o
+diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
 new file mode 100644
-index 000000000000..1191a409ea73
+index 000000000000..e02827a48ab7
 --- /dev/null
-+++ b/drivers/firmware/arm_scmi/base.c
-@@ -0,0 +1,290 @@
++++ b/drivers/firmware/arm_scmi/clock.c
+@@ -0,0 +1,340 @@
 +/*
-+ * System Control and Management Interface (SCMI) Base Protocol
++ * System Control and Management Interface (SCMI) Clock Protocol
 + *
 + * Copyright (C) 2017 ARM Ltd.
 + *
@@ -65,228 +62,244 @@ index 000000000000..1191a409ea73
 +
 +#include "common.h"
 +
-+enum scmi_base_protocol_cmd {
-+	BASE_DISCOVER_VENDOR = 0x3,
-+	BASE_DISCOVER_SUB_VENDOR = 0x4,
-+	BASE_DISCOVER_IMPLEMENT_VERSION = 0x5,
-+	BASE_DISCOVER_LIST_PROTOCOLS = 0x6,
-+	BASE_DISCOVER_AGENT = 0x7,
-+	BASE_NOTIFY_ERRORS = 0x8,
++enum scmi_clock_protocol_cmd {
++	CLOCK_ATTRIBUTES = 0x3,
++	CLOCK_DESCRIBE_RATES = 0x4,
++	CLOCK_RATE_SET = 0x5,
++	CLOCK_RATE_GET = 0x6,
++	CLOCK_CONFIG_SET = 0x7,
 +};
 +
-+struct scmi_msg_resp_base_attributes {
-+	    u8 num_protocols;
-+	    u8 num_agents;
-+	__le16 reserved;
++struct scmi_msg_resp_clock_protocol_attributes {
++	__le16 num_clocks;
++	    u8 max_async_req;
++	    u8 reserved;
 +} __packed;
 +
-+/**
-+ * scmi_base_attributes_get() - gets the implementation details
-+ *	that are associated with the base protocol.
-+ *
-+ * @handle - SCMI entity handle
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_attributes_get(struct scmi_handle *handle)
++struct scmi_msg_resp_clock_attributes {
++	__le32 attributes;
++#define	CLOCK_ENABLE	BIT(0)
++	    u8 name[SCMI_MAX_STR_SIZE];
++} __packed;
++
++struct scmi_clock_set_config {
++	__le32 id;
++	__le32 attributes;
++} __packed;
++
++struct scmi_msg_clock_describe_rates {
++	__le32 id;
++	__le32 rate_index;
++} __packed;
++
++struct scmi_msg_resp_clock_describe_rates {
++	__le16 num_returned;
++#define NUM_RETURNED_MASK	(0xfff)
++#define RATE_DISCRETE(x)	((x) & BIT(12))
++	__le16 num_remaining;
++	struct {
++		__le32 value_low;
++		__le32 value_high;
++	} rate[0];
++#define RATE_TO_U64(X)		\
++({				\
++	typeof(X) x = (X);	\
++	le32_to_cpu((x).value_low) | (u64)le32_to_cpu((x).value_high) >> 32; \
++})
++} __packed;
++
++struct scmi_clock_set_rate {
++	__le32 flags;
++#define CLOCK_SET_ASYSC		BIT(0)
++#define CLOCK_SET_DELAYED	BIT(1)
++#define CLOCK_ROUND_UP		BIT(2)
++#define CLOCK_ROUND_AUTO	BIT(3)
++	__le32 id;
++	__le32 value_low;
++	__le32 value_high;
++} __packed;
++
++struct clock_info {
++	u32 attributes;
++	char name[SCMI_MAX_STR_SIZE];
++	union {
++		int num_rates;
++		u64 rates[MAX_NUM_RATES];
++		struct {
++			u64 min_rate;
++			u64 max_rate;
++			u64 step_size;
++		} range;
++	};
++};
++
++struct scmi_clock_info {
++	int num_clocks;
++	int max_async_req;
++	struct clock_info *clk;
++};
++
++static struct scmi_clock_info clocks;
++
++static int scmi_clock_protocol_attributes_get(struct scmi_handle *handle,
++					      struct scmi_clock_info *clocks)
 +{
 +	int ret;
 +	struct scmi_xfer *t;
-+	struct scmi_msg_resp_base_attributes *attr_info;
-+	struct scmi_revision_info *rev = handle->version;
++	struct scmi_msg_resp_clock_protocol_attributes *attr;
 +
 +	ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
-+				 SCMI_PROTOCOL_BASE, 0, sizeof(*attr_info), &t);
++				 SCMI_PROTOCOL_CLOCK, 0, sizeof(*attr), &t);
 +	if (ret)
 +		return ret;
++
++	attr = (struct scmi_msg_resp_clock_protocol_attributes *)t->rx.buf;
 +
 +	ret = scmi_do_xfer(handle, t);
 +	if (!ret) {
-+		attr_info = (struct scmi_msg_resp_base_attributes *)t->rx.buf;
-+		rev->num_protocols = attr_info->num_protocols;
-+		rev->num_agents = attr_info->num_agents;
++		clocks->num_clocks = le16_to_cpu(attr->num_clocks);
++		clocks->max_async_req = attr->max_async_req;
 +	}
 +
 +	scmi_put_one_xfer(handle, t);
 +	return ret;
 +}
 +
-+/**
-+ * scmi_base_vendor_id_get() - gets vendor/subvendor identifier ASCII string.
-+ *
-+ * @handle - SCMI entity handle
-+ * @sub_vendor - specify true if sub-vendor ID is needed
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_vendor_id_get(struct scmi_handle *handle, bool sub_vendor)
-+{
-+	u8 cmd;
-+	int ret, size;
-+	char *vendor_id;
-+	struct scmi_xfer *t;
-+	struct scmi_revision_info *rev = handle->version;
-+
-+	if (sub_vendor) {
-+		cmd = BASE_DISCOVER_SUB_VENDOR;
-+		vendor_id = rev->sub_vendor_id;
-+		size = ARRAY_SIZE(rev->sub_vendor_id);
-+	} else {
-+		cmd = BASE_DISCOVER_VENDOR;
-+		vendor_id = rev->vendor_id;
-+		size = ARRAY_SIZE(rev->vendor_id);
-+	}
-+
-+	ret = scmi_one_xfer_init(handle, cmd, SCMI_PROTOCOL_BASE, 0, size, &t);
-+	if (ret)
-+		return ret;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret)
-+		memcpy(vendor_id, t->rx.buf, size);
-+
-+	scmi_put_one_xfer(handle, t);
-+	return ret;
-+}
-+
-+/**
-+ * scmi_base_implementation_version_get() - gets a vendor-specific
-+ *	implementation 32-bit version. The format of the version number is
-+ *	vendor-specific
-+ *
-+ * @handle - SCMI entity handle
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_implementation_version_get(struct scmi_handle *handle)
++static int scmi_clock_attributes_get(struct scmi_handle *handle, u32 clk_id,
++				     struct clock_info *clk)
 +{
 +	int ret;
-+	u32 *impl_ver;
 +	struct scmi_xfer *t;
-+	struct scmi_revision_info *rev = handle->version;
++	struct scmi_msg_resp_clock_attributes *attr;
 +
-+	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_IMPLEMENT_VERSION,
-+				 SCMI_PROTOCOL_BASE, 0, sizeof(*impl_ver), &t);
++	ret = scmi_one_xfer_init(handle, CLOCK_ATTRIBUTES, SCMI_PROTOCOL_CLOCK,
++				 sizeof(clk_id), sizeof(*attr), &t);
 +	if (ret)
 +		return ret;
 +
++	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
++	attr = (struct scmi_msg_resp_clock_attributes *)t->rx.buf;
++
 +	ret = scmi_do_xfer(handle, t);
-+	if (ret) {
-+		impl_ver = (u32 *)t->rx.buf;
-+		rev->impl_ver = le32_to_cpu(*impl_ver);
++	if (!ret) {
++		clk->attributes = le32_to_cpu(attr->attributes);
++		memcpy(clk->name, attr->name, SCMI_MAX_STR_SIZE);
 +	}
 +
 +	scmi_put_one_xfer(handle, t);
 +	return ret;
 +}
 +
-+/**
-+ * scmi_base_implementation_list_get() - gets the list of protocols it is
-+ *	OSPM is allowed to access
-+ *
-+ * @handle - SCMI entity handle
-+ * @protocols_imp - pointer to hold the list of protocol identifiers
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_implementation_list_get(struct scmi_handle *handle,
-+					     u8 *protocols_imp)
++static int scmi_clock_describe_rates_get(struct scmi_handle *handle, u32 clk_id,
++					 struct clock_info *clk)
 +{
-+	u8 *list;
-+	int ret, loop;
++	u64 *rate;
++	int ret, cnt;
++	bool rate_discrete;
++	u32 tot_rate_cnt = 0;
++	u16 num_returned, num_remaining;
 +	struct scmi_xfer *t;
-+	__le32 *num_skip, *num_ret;
-+	u32 tot_num_ret = 0, loop_num_ret;
-+	struct device *dev = handle->dev;
++	struct scmi_msg_clock_describe_rates *clk_desc;
++	struct scmi_msg_resp_clock_describe_rates *rlist;
 +
-+	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_LIST_PROTOCOLS,
-+				 SCMI_PROTOCOL_BASE, sizeof(*num_skip), 0, &t);
++	ret = scmi_one_xfer_init(handle, CLOCK_DESCRIBE_RATES,
++				 SCMI_PROTOCOL_CLOCK, sizeof(*clk_desc), 0, &t);
 +	if (ret)
 +		return ret;
 +
-+	num_skip = (__le32 *)t->tx.buf;
-+	num_ret = (__le32 *)t->rx.buf;
-+	list = t->rx.buf + sizeof(*num_ret);
++	clk_desc = (struct scmi_msg_clock_describe_rates *)t->tx.buf;
++	rlist = (struct scmi_msg_resp_clock_describe_rates *)t->rx.buf;
 +
 +	do {
-+		/* Set the number of protocols to be skipped/already read */
-+		*num_skip = cpu_to_le32(tot_num_ret);
++		clk_desc->id = cpu_to_le32(clk_id);
++		/* Set the number of rates to be skipped/already read */
++		clk_desc->rate_index = cpu_to_le32(tot_rate_cnt);
 +
 +		ret = scmi_do_xfer(handle, t);
 +		if (ret)
 +			break;
 +
-+		loop_num_ret = le32_to_cpu(*num_ret);
-+		if (tot_num_ret + loop_num_ret > MAX_PROTOCOLS_IMP) {
-+			dev_err(dev, "No. of Protocol > MAX_PROTOCOLS_IMP");
++		num_returned = le16_to_cpu(rlist->num_returned);
++		num_remaining = le16_to_cpu(rlist->num_remaining);
++		rate_discrete = RATE_DISCRETE(num_remaining);
++		num_remaining &= NUM_RETURNED_MASK;
++
++		if (tot_rate_cnt + num_returned > MAX_NUM_RATES) {
++			dev_err(handle->dev, "No. of rates > MAX_NUM_RATES");
 +			break;
 +		}
 +
-+		for (loop = 0; loop < loop_num_ret; loop++)
-+			protocols_imp[tot_num_ret + loop] = *(list + loop);
++		if (!rate_discrete) {
++			clk->range.min_rate = RATE_TO_U64(rlist->rate[0]);
++			clk->range.max_rate = RATE_TO_U64(rlist->rate[1]);
++			clk->range.step_size = RATE_TO_U64(rlist->rate[2]);
++			dev_dbg(handle->dev, "Min %llu Max %llu Step %llu Hz\n",
++				clk->range.min_rate, clk->range.max_rate,
++				clk->range.step_size);
++			break;
++		}
 +
-+		tot_num_ret += loop_num_ret;
-+	} while (loop_num_ret);
++		rate = &clk->rates[tot_rate_cnt];
++		for (cnt = 0; cnt < num_returned; cnt++, rate++) {
++			*rate = RATE_TO_U64(rlist->rate[cnt]);
++			dev_dbg(handle->dev, "Rate %llu Hz\n", *rate);
++		}
++
++		tot_rate_cnt += num_returned;
++		/*
++		 * check for both returned and remaining to avoid infinite
++		 * loop due to buggy firmware
++		 */
++	} while (num_returned && num_remaining);
++
++	clk->num_rates = tot_rate_cnt;
 +
 +	scmi_put_one_xfer(handle, t);
 +	return ret;
 +}
 +
-+/**
-+ * scmi_base_discover_agent_get() - discover the name of an agent
-+ *
-+ * @handle - SCMI entity handle
-+ * @id - Agent identifier
-+ * @name - Agent identifier ASCII string
-+ *
-+ * An agent id of 0 is reserved to identify the platform itself.
-+ * Generally operating system is represented as "OSPM"
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
 +static int
-+scmi_base_discover_agent_get(struct scmi_handle *handle, int id, char *name)
++scmi_clock_rate_get(struct scmi_handle *handle, u32 clk_id, u64 *value)
 +{
 +	int ret;
 +	struct scmi_xfer *t;
 +
-+	ret = scmi_one_xfer_init(handle, BASE_DISCOVER_AGENT,
-+				 SCMI_PROTOCOL_BASE, sizeof(__le32),
-+				 SCMI_MAX_STR_SIZE, &t);
++	ret = scmi_one_xfer_init(handle, CLOCK_RATE_GET, SCMI_PROTOCOL_CLOCK,
++				 sizeof(__le32), sizeof(u64), &t);
 +	if (ret)
 +		return ret;
 +
-+	*(__le32 *)t->tx.buf = cpu_to_le32(id);
++	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
 +
 +	ret = scmi_do_xfer(handle, t);
-+	if (!ret)
-+		memcpy(name, t->rx.buf, SCMI_MAX_STR_SIZE);
++	if (!ret) {
++		__le32 *pval = (__le32 *)t->rx.buf;
++
++		*value = le32_to_cpu(*pval);
++		*value  |= le32_to_cpu(*(pval + 1));
++	}
 +
 +	scmi_put_one_xfer(handle, t);
 +	return ret;
 +}
 +
-+/**
-+ * scmi_base_error_notifications_enable() - register/unregister for
-+ *	notifications of errors in the platform
-+ *
-+ * @handle - SCMI entity handle
-+ * @enable - Enable/Disable the notification
-+ *
-+ * Return: 0 on success, else appropriate SCMI error.
-+ */
-+static int scmi_base_error_notifications_enable(struct scmi_handle *handle,
-+						bool enable)
++static int scmi_clock_rate_set(struct scmi_handle *handle, u32 clk_id,
++			       u32 config, u64 rate)
 +{
 +	int ret;
 +	struct scmi_xfer *t;
++	struct scmi_clock_set_rate *cfg;
 +
-+	ret = scmi_one_xfer_init(handle, BASE_NOTIFY_ERRORS, SCMI_PROTOCOL_BASE,
-+				 sizeof(__le32), 0, &t);
++	ret = scmi_one_xfer_init(handle, CLOCK_RATE_SET, SCMI_PROTOCOL_CLOCK,
++				 sizeof(*cfg), 0, &t);
 +	if (ret)
 +		return ret;
 +
-+	*(__le32 *)t->tx.buf = cpu_to_le32(enable & BIT(0));
++	cfg = (struct scmi_clock_set_rate *)t->tx.buf;
++	cfg->flags = cpu_to_le32(config);
++	cfg->id = cpu_to_le32(clk_id);
++	cfg->value_low = cpu_to_le32(rate & 0xffffffff);
++	cfg->value_high = cpu_to_le32(rate >> 32);
 +
 +	ret = scmi_do_xfer(handle, t);
 +
@@ -294,274 +307,138 @@ index 000000000000..1191a409ea73
 +	return ret;
 +}
 +
-+int scmi_base_protocol_init(struct scmi_handle *handle)
++static int
++scmi_clock_config_set(struct scmi_handle *handle, u32 clk_id, u32 config)
 +{
-+	int id, ret;
-+	u8 *prot_imp;
++	int ret;
++	struct scmi_xfer *t;
++	struct scmi_clock_set_config *cfg;
++
++	ret = scmi_one_xfer_init(handle, CLOCK_CONFIG_SET, SCMI_PROTOCOL_CLOCK,
++				 sizeof(*cfg), 0, &t);
++	if (ret)
++		return ret;
++
++	cfg = (struct scmi_clock_set_config *)t->tx.buf;
++	cfg->id = cpu_to_le32(clk_id);
++	cfg->attributes = cpu_to_le32(config);
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_put_one_xfer(handle, t);
++	return ret;
++}
++
++static int scmi_clock_enable(struct scmi_handle *handle, u32 clk_id)
++{
++	return scmi_clock_config_set(handle, clk_id, CLOCK_ENABLE);
++}
++
++static int scmi_clock_disable(struct scmi_handle *handle, u32 clk_id)
++{
++	return scmi_clock_config_set(handle, clk_id, 0);
++}
++
++static struct scmi_clk_ops clk_ops = {
++	.rate_get = scmi_clock_rate_get,
++	.rate_set = scmi_clock_rate_set,
++	.enable = scmi_clock_enable,
++	.disable = scmi_clock_disable,
++};
++
++int scmi_clock_protocol_init(struct scmi_handle *handle)
++{
++	int clk_id;
 +	u32 version;
-+	char name[SCMI_MAX_STR_SIZE];
-+	struct device *dev = handle->dev;
-+	struct scmi_revision_info *rev = handle->version;
 +
-+	ret = scmi_version_get(handle, SCMI_PROTOCOL_BASE, &version);
-+	if (ret)
-+		return ret;
++	if (!scmi_is_protocol_implemented(handle, SCMI_PROTOCOL_CLOCK)) {
++		dev_err(handle->dev, "SCMI Clock protocol not implemented\n");
++		return -EPROTONOSUPPORT;
++	}
 +
-+	prot_imp = devm_kcalloc(dev, MAX_PROTOCOLS_IMP, sizeof(u8), GFP_KERNEL);
-+	if (!prot_imp)
++	scmi_version_get(handle, SCMI_PROTOCOL_CLOCK, &version);
++
++	dev_dbg(handle->dev, "Clock Version %d.%d\n",
++		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
++
++	scmi_clock_protocol_attributes_get(handle, &clocks);
++
++	clocks.clk = devm_kcalloc(handle->dev, clocks.num_clocks,
++				  sizeof(struct clock_info), GFP_KERNEL);
++	if (!clocks.clk)
 +		return -ENOMEM;
 +
-+	rev->major_ver = PROTOCOL_REV_MAJOR(version),
-+	rev->minor_ver = PROTOCOL_REV_MINOR(version);
++	dev_info(handle->dev, "Num Clock %d Max Async Req %d\n",
++		 clocks.num_clocks, clocks.max_async_req);
 +
-+	scmi_base_attributes_get(handle);
-+	scmi_base_vendor_id_get(handle, false);
-+	scmi_base_vendor_id_get(handle, true);
-+	scmi_base_implementation_version_get(handle);
-+	scmi_base_implementation_list_get(handle, prot_imp);
-+	scmi_base_error_notifications_enable(handle, true);
-+	scmi_setup_protocol_implemented(handle, prot_imp);
++	for (clk_id = 0; clk_id < clocks.num_clocks; clk_id++) {
++		struct clock_info *clk = clocks.clk + clk_id;
 +
-+	dev_info(dev, "SCMI Protocol %d.%d '%s:%s' Firmware Version 0x%x\n",
-+		 rev->major_ver, rev->minor_ver, rev->vendor_id,
-+		 rev->sub_vendor_id, rev->impl_ver);
-+	dev_dbg(dev, "Found %d protocol(s) %d agent(s)\n", rev->num_protocols,
-+		rev->num_agents);
-+
-+	for (id = 0; id < rev->num_agents; id++) {
-+		scmi_base_discover_agent_get(handle, id, name);
-+		dev_dbg(dev, "Agent %d: %s\n", id, name);
++		scmi_clock_attributes_get(handle, clk_id, clk);
++		scmi_clock_describe_rates_get(handle, clk_id, clk);
 +	}
++
++	handle->clk_ops = &clk_ops;
 +
 +	return 0;
 +}
 diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index a3038efa3a8d..24bc51dcc6c5 100644
+index e153f05720e4..32873a315c76 100644
 --- a/drivers/firmware/arm_scmi/common.h
 +++ b/drivers/firmware/arm_scmi/common.h
-@@ -19,9 +19,50 @@
-  */
+@@ -31,6 +31,7 @@
+ #define PROTOCOL_REV_MINOR(x)	((x) & PROTOCOL_REV_MINOR_MASK)
+ #define MAX_PROTOCOLS_IMP	16
+ #define MAX_OPPS		16
++#define MAX_NUM_RATES		16
  
- #include <linux/completion.h>
-+#include <linux/device.h>
-+#include <linux/errno.h>
-+#include <linux/kernel.h>
- #include <linux/scmi_protocol.h>
- #include <linux/types.h>
- 
-+#define PROTOCOL_REV_MINOR_BITS	16
-+#define PROTOCOL_REV_MINOR_MASK	((1U << PROTOCOL_REV_MINOR_BITS) - 1)
-+#define PROTOCOL_REV_MAJOR(x)	((x) >> PROTOCOL_REV_MINOR_BITS)
-+#define PROTOCOL_REV_MINOR(x)	((x) & PROTOCOL_REV_MINOR_MASK)
-+#define MAX_PROTOCOLS_IMP	16
-+
-+enum scmi_std_protocol {
-+	SCMI_PROTOCOL_BASE = 0x10,
-+	SCMI_PROTOCOL_POWER = 0x11,
-+	SCMI_PROTOCOL_SYSTEM = 0x12,
-+	SCMI_PROTOCOL_PERF = 0x13,
-+	SCMI_PROTOCOL_CLOCK = 0x14,
-+	SCMI_PROTOCOL_SENSOR = 0x15,
-+};
-+
-+enum scmi_common_cmd {
-+	PROTOCOL_VERSION = 0x0,
-+	PROTOCOL_ATTRIBUTES = 0x1,
-+	PROTOCOL_MESSAGE_ATTRIBUTES = 0x2,
-+};
-+
-+/**
-+ * struct scmi_msg_resp_prot_version - Response for a message
-+ *
-+ * @major_version: Major version of the ABI that firmware supports
-+ * @minor_version: Minor version of the ABI that firmware supports
-+ *
-+ * In general, ABI version changes follow the rule that minor version increments
-+ * are backward compatible. Major revision changes in ABI may not be
-+ * backward compatible.
-+ *
-+ * Response to a generic message with message type SCMI_MSG_VERSION
-+ */
-+struct scmi_msg_resp_prot_version {
-+	__le16 minor_version;
-+	__le16 major_version;
-+} __packed;
-+
- /**
-  * struct scmi_msg_hdr - Message(Tx/Rx) header
-  *
-@@ -72,3 +113,8 @@ void scmi_put_one_xfer(struct scmi_handle *h, struct scmi_xfer *xfer);
- int scmi_do_xfer(struct scmi_handle *h, struct scmi_xfer *xfer);
- int scmi_one_xfer_init(struct scmi_handle *h, u8 msg_id, u8 msg_prot_id,
- 		       size_t tx_size, size_t rx_size, struct scmi_xfer **p);
-+int scmi_version_get(struct scmi_handle *h, u8 protocol, u32 *version);
-+bool scmi_is_protocol_implemented(struct scmi_handle *h, u8 prot_id);
-+void scmi_setup_protocol_implemented(struct scmi_handle *handle, u8 *prot_imp);
-+
-+int scmi_base_protocol_init(struct scmi_handle *h);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index f01e0643ac7d..7b653c932edc 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -108,18 +108,22 @@ struct scmi_desc {
-  * @dev: Device pointer
-  * @desc: SoC description for this instance
-  * @handle: Instance of SCMI handle to send to clients
-+ * @version: SCMI revision information containing protocol version,
-+ *	implementation version and (sub-)vendor identification.
-  * @cl: Mailbox Client
-  * @tx_chan: Transmit mailbox channel
-  * @rx_chan: Receive mailbox channel
-  * @tx_payload: Transmit mailbox channel payload area
-  * @rx_payload: Receive mailbox channel payload area
-  * @minfo: Message info
-+ * @protocols_imp: list of protocols implemented
-  * @node: list head
-  * @users: Number of users of this instance
-  */
- struct scmi_info {
- 	struct device *dev;
- 	const struct scmi_desc *desc;
-+	struct scmi_revision_info version;
- 	struct scmi_handle handle;
- 	struct mbox_client cl;
- 	struct mbox_chan *tx_chan;
-@@ -127,6 +131,7 @@ struct scmi_info {
- 	void __iomem *tx_payload;
- 	void __iomem *rx_payload;
- 	struct scmi_xfers_info minfo;
-+	u8 *protocols_imp;
- 	struct list_head node;
- 	int users;
- };
-@@ -445,6 +450,57 @@ int scmi_one_xfer_init(struct scmi_handle *handle, u8 msg_id, u8 msg_prot_id,
- }
- 
- /**
-+ * scmi_version_get() - command to get the revision of the SCMI entity
-+ *
-+ * @handle: Handle to SCMI entity information
-+ *
-+ * Updates the SCMI information in the internal data structure.
-+ *
-+ * Return: 0 if all went fine, else return appropriate error.
-+ */
-+int scmi_version_get(struct scmi_handle *handle, u8 protocol, u32 *version)
-+{
-+	int ret;
-+	__le32 *rev_info;
-+	struct scmi_xfer *t;
-+
-+	ret = scmi_one_xfer_init(handle, PROTOCOL_VERSION, protocol, 0,
-+				 sizeof(*version), &t);
-+	if (ret)
-+		return ret;
-+
-+	rev_info = (__le32 *)t->rx.buf;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret)
-+		*version = le32_to_cpu(*rev_info);
-+
-+	scmi_put_one_xfer(handle, t);
-+	return ret;
-+}
-+
-+void scmi_setup_protocol_implemented(struct scmi_handle *handle, u8 *prot_imp)
-+{
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+
-+	info->protocols_imp = prot_imp;
-+}
-+
-+bool scmi_is_protocol_implemented(struct scmi_handle *handle, u8 prot_id)
-+{
-+	int i;
-+	struct scmi_info *info = handle_to_scmi_info(handle);
-+
-+	if (!info->protocols_imp)
-+		return false;
-+
-+	for (i = 0; i < MAX_PROTOCOLS_IMP; i++)
-+		if (info->protocols_imp[i] == prot_id)
-+			return true;
-+	return false;
-+}
-+
-+/**
-  * scmi_handle_get() - Get the  SCMI handle for a device
-  *
-  * @dev: pointer to device for which we want SCMI handle
-@@ -642,6 +698,11 @@ static int scmi_probe(struct platform_device *pdev)
- 
- 	desc = of_match_device(scmi_of_match, dev)->data;
- 
-+	if (of_property_match_string(np, "method", "mailbox-doorbell") < 0) {
-+		dev_err(dev, "invalid method property in %s\n", np->full_name);
-+		return -EINVAL;
-+	}
-+
- 	info = devm_kzalloc(dev, sizeof(*info), GFP_KERNEL);
- 	if (!info)
- 		return -ENOMEM;
-@@ -687,6 +748,12 @@ static int scmi_probe(struct platform_device *pdev)
- 
- 	handle = &info->handle;
- 	handle->dev = info->dev;
-+	handle->version = &info->version;
-+	ret = scmi_base_protocol_init(handle);
-+	if (ret) {
-+		dev_err(dev, "unable to communicate with SCMI(%d)\n", ret);
-+		goto out;
-+	}
- 
- 	mutex_lock(&scmi_list_mutex);
- 	list_add_tail(&info->node, &scmi_list);
+ enum scmi_std_protocol {
+ 	SCMI_PROTOCOL_BASE = 0x10,
 diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 0c795a765110..901976fe211f 100644
+index 0f25a3defb4c..75ba10441f54 100644
 --- a/include/linux/scmi_protocol.h
 +++ b/include/linux/scmi_protocol.h
-@@ -17,13 +17,41 @@
-  */
- #include <linux/types.h>
+@@ -46,6 +46,22 @@ struct scmi_revision_info {
+ struct scmi_handle;
  
-+#define SCMI_MAX_STR_SIZE		16
-+
-+/**
-+ * struct scmi_revision_info - version information structure
+ /**
++ * struct scmi_clk_ops - represents the various operations provided
++ *	by SCMI Clock Protocol
 + *
-+ * @major_ver: Major ABI version. Change here implies risk of backward
-+ *	compatibility break.
-+ * @minor_ver: Minor ABI version. Change here implies new feature addition,
-+ *	or compatible change in ABI.
-+ * @num_protocols: Number of protocols that are implemented, excluding the
-+ *	base protocol.
-+ * @num_agents: Number of agents in the system.
-+ * @impl_ver: A vendor-specific implementation version.
-+ * @vendor_id: A vendor identifier(Null terminated ASCII string)
-+ * @sub_vendor_id: A sub-vendor identifier(Null terminated ASCII string)
++ * @rate_get: request the current clock rate of a clock
++ * @rate_set: set the clock rate of a clock
++ * @enable: enables the specified clock
++ * @disable: disables the specified clock
 + */
-+struct scmi_revision_info {
-+	u16 major_ver;
-+	u16 minor_ver;
-+	u8 num_protocols;
-+	u8 num_agents;
-+	u32 impl_ver;
-+	char vendor_id[SCMI_MAX_STR_SIZE];
-+	char sub_vendor_id[SCMI_MAX_STR_SIZE];
++struct scmi_clk_ops {
++	int (*rate_get)(struct scmi_handle *, u32, u64*);
++	int (*rate_set)(struct scmi_handle *, u32, u32, u64);
++	int (*enable)(struct scmi_handle *, u32);
++	int (*disable)(struct scmi_handle *, u32);
 +};
 +
- /**
-  * struct scmi_handle - Handle returned to ARM SCMI clients for usage.
++/**
+  * struct scmi_perf_ops - represents the various operations provided
+  *	by SCMI Performance Protocol
   *
+@@ -73,11 +89,13 @@ struct scmi_perf_ops {
   * @dev: pointer to the SCMI device
-+ * @version: pointer to the structure containing SCMI version information
+  * @version: pointer to the structure containing SCMI version information
+  * @perf_ops: pointer to set of performance protocol operations
++ * @clk_ops: pointer to set of clock protocol operations
   */
  struct scmi_handle {
  	struct device *dev;
-+	struct scmi_revision_info *version;
+ 	struct scmi_revision_info *version;
+ 	struct scmi_perf_ops *perf_ops;
++	struct scmi_clk_ops *clk_ops;
  };
  
- #if IS_REACHABLE(CONFIG_ARM_SCMI_PROTOCOL)
+ struct scmi_opp {
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
