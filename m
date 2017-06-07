@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 09/15] MIPS: platform: add machtype IDs for more Ingenic SoCs
-Date: Wed,  7 Jun 2017 22:04:33 +0200
-Message-ID: <20170607200439.24450-10-paul@crapouillou.net>
+Subject: [PATCH 06/15] serial: 8250_ingenic: Parse earlycon options
+Date: Wed,  7 Jun 2017 22:04:30 +0200
+Message-ID: <20170607200439.24450-7-paul@crapouillou.net>
 References: <20170607200439.24450-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170607200439.24450-1-paul@crapouillou.net>
@@ -10,26 +10,59 @@ To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.c
 Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add a machtype ID for the JZ4780 SoC, which was missing, and one for the
-newly supported JZ4770 SoC.
+In the devicetree, it is possible to specify the baudrate, parity,
+bits, flow of the early console, by passing a configuration string like
+this:
+
+aliases {
+	serial0 = &uart0;
+};
+
+chosen {
+	stdout-path = "serial0:57600n8";
+};
+
+This, for instance, will configure the early console for a baudrate of
+57600 bps, no parity, and 8 bits per baud.
+
+This patches implements parsing of this configuration string in the
+8250_ingenic driver, which previously just ignored it.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/include/asm/bootinfo.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/tty/serial/8250/8250_ingenic.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/bootinfo.h b/arch/mips/include/asm/bootinfo.h
-index e26a093bb17a..a301a8f4bc66 100644
---- a/arch/mips/include/asm/bootinfo.h
-+++ b/arch/mips/include/asm/bootinfo.h
-@@ -79,6 +79,8 @@ enum loongson_machine_type {
-  */
- #define  MACH_INGENIC_JZ4730	0	/* JZ4730 SOC		*/
- #define  MACH_INGENIC_JZ4740	1	/* JZ4740 SOC		*/
-+#define  MACH_INGENIC_JZ4770	2	/* JZ4770 SOC		*/
-+#define  MACH_INGENIC_JZ4780	3	/* JZ4780 SOC		*/
+diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
+index b31b2ca552d1..59f3e632df49 100644
+--- a/drivers/tty/serial/8250/8250_ingenic.c
++++ b/drivers/tty/serial/8250/8250_ingenic.c
+@@ -99,14 +99,24 @@ static int __init ingenic_early_console_setup(struct earlycon_device *dev,
+ 					      const char *opt)
+ {
+ 	struct uart_port *port = &dev->port;
+-	unsigned int baud, divisor;
++	unsigned int divisor;
++	int baud = 115200;
  
- extern char *system_type;
- const char *get_system_type(void);
+ 	if (!dev->port.membase)
+ 		return -ENODEV;
+ 
++	if (opt) {
++		char options[256];
++		unsigned int parity, bits, flow; /* unused for now */
++
++		strlcpy(options, opt, sizeof(options));
++		uart_parse_options(options, &baud, &parity, &bits, &flow);
++	}
++
+ 	ingenic_early_console_setup_clock(dev);
+ 
+-	baud = dev->baud ?: 115200;
++	if (dev->baud)
++		baud = dev->baud;
+ 	divisor = DIV_ROUND_CLOSEST(port->uartclk, 16 * baud);
+ 
+ 	early_out(port, UART_IER, 0);
 -- 
 2.11.0
