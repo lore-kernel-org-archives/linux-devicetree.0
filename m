@@ -1,227 +1,210 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V
- interrupt controllers
-Date: Wed, 7 Jun 2017 11:13:43 +0100
-Message-ID: <20170607101343.GC29370@leverpostej>
-References: <20170523004107.536-1-palmer@dabbelt.com>
- <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-9-palmer@dabbelt.com>
- <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, albert@sifive.com, patches@groups.riscv.org, "Wesley W. Terpstra" <wesley@sifive.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH 1/4] dt-bindings: tps65217: Update binding documentation.
+Date: Wed,  7 Jun 2017 12:32:39 +0200
+Message-ID: <20170607103242.16008-1-enric.balletbo@collabora.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Daniel Thompson <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 09:11:31AM +0200, Geert Uytterhoeven wrote:
-> CC irqchip and devicetree folks
+This patch adds a new binding documentation for the TPS65217 MFD and
+updates the documentation for all the sub-devices in accordance to get
+each individual sub-driver functioning correctly.
 
-Thanks Geert.
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ .../bindings/input/tps65218-pwrbutton.txt          |   2 +-
+ .../bindings/leds/backlight/tps65217-backlight.txt |  24 ++---
+ Documentation/devicetree/bindings/mfd/tps65217.txt | 100 +++++++++++++++++++++
+ .../devicetree/bindings/regulator/tps65217.txt     |   8 +-
+ 4 files changed, 119 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65217.txt
 
-Palmer, in future, you can ensure (most) relevant parties are Cc'd by
-using scripts/get_maintainer.pl to find them, and adding Cc: lines to
-the relevant patches.
+diff --git a/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt b/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
+index 8682ab6..603a3f0 100644
+--- a/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
++++ b/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
+@@ -1,7 +1,7 @@
+ Texas Instruments TPS65217 and TPS65218 power button
+ 
+ This module is part of the TPS65217/TPS65218. For more details about the whole
+-TPS65217 chip see Documentation/devicetree/bindings/regulator/tps65217.txt.
++TPS65217 chip see Documentation/devicetree/bindings/mfd/tps65217.txt.
+ 
+ This driver provides a simple power button event via an Interrupt.
+ 
+diff --git a/Documentation/devicetree/bindings/leds/backlight/tps65217-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/tps65217-backlight.txt
+index 5fb9279..a1bc465 100644
+--- a/Documentation/devicetree/bindings/leds/backlight/tps65217-backlight.txt
++++ b/Documentation/devicetree/bindings/leds/backlight/tps65217-backlight.txt
+@@ -1,11 +1,13 @@
+-TPS65217 family of regulators
++Texas Instruments TPS65217 backlight regulator
++
++This module is part of the TPS65217. For more details about the whole
++TPS65217 chip see Documentation/devicetree/bindings/mfd/tps65217.txt.
+ 
+ The TPS65217 chip contains a boost converter and current sinks which can be
+ used to drive LEDs for use as backlights.
+ 
+ Required properties:
+-- compatible: "ti,tps65217"
+-- reg: I2C slave address
++- compatible: "ti,tps65217-bl"
+ - backlight: node for specifying WLED1 and WLED2 lines in TPS65217
+ - isel: selection bit, valid values: 1 for ISEL1 (low-level) and 2 for ISEL2 (high-level)
+ - fdim: PWM dimming frequency, valid values: 100, 200, 500, 1000
+@@ -15,13 +17,13 @@ Each regulator is defined using the standard binding for regulators.
+ 
+ Example:
+ 
+-	tps: tps@24 {
+-		reg = <0x24>;
+-		compatible = "ti,tps65217";
+-		backlight {
+-			isel = <1>;  /* 1 - ISET1, 2 ISET2 */
+-			fdim = <100>; /* TPS65217_BL_FDIM_100HZ */
+-			default-brightness = <50>;
+-		};
++&tps {
++	backlight {
++		compatible = "ti,tps65217-bl";
++		status = "okay";
++		isel = <1>;  /* 1 - ISET1, 2 ISET2 */
++		fdim = <100>; /* TPS65217_BL_FDIM_100HZ */
++		default-brightness = <50>;
+ 	};
++};
+ 
+diff --git a/Documentation/devicetree/bindings/mfd/tps65217.txt b/Documentation/devicetree/bindings/mfd/tps65217.txt
+new file mode 100644
+index 0000000..40c84ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/tps65217.txt
+@@ -0,0 +1,100 @@
++Texas Instruments TPS65217 Single-Chip PMIC for Battery-Powered Systems
++
++Required properties:
++- compatible: "ti,tps65217"
++- reg: I2C slave address.
++- interrupt-controller: Marks the device node as an interrupt controller.
++- #interrupt-cells: The number of cells to describe an IRQ, this should be 1.
++- backlight: Child node that specify the backlight regulator sub-device. See:
++	Documentation/devicetree/bindings/leds/backlight/tps65217-backlight.txt
++- charger: Child node that specify the charger sub-device. See:
++	Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
++- pwrbutton: Child node that specify the power button sub-device. See:
++	Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
++- regulators: List of child nodes that specify the regulator initialization
++	data. See:
++	Documentation/devicetree/bindings/regulator/tps65217.txt.
++
++Optional properties:
++- ti,pmic-shutdown-controller: Telling the PMIC to shutdown on PWR_EN toggle.
++
++Example:
++
++	tps: tps@24 {
++		compatible = "ti,tps65217";
++		interrupt-controller;
++		#interrupt-cells = <1>;
++
++		ti,pmic-shutdown-controller;
++
++		backlight {
++			compatible = "ti,tps65217-bl";
++			status = "disabled";
++		};
++
++		charger {
++			compatible = "ti,tps65217-charger";
++			status = "disabled";
++		};
++
++		pwrbutton {
++			compatible = "ti,tps65217-pwrbutton";
++			status = "disabled";
++		};
++
++		regulators {
++			compatible = "ti,tps65217-pmic";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			dcdc1_reg: dcdc1 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			dcdc2_reg: dcdc2 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			dcdc3_reg: dcc3 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <1500000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo1_reg: ldo1 {
++				regulator-min-microvolt = <1000000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo2_reg: ldo2 {
++				regulator-min-microvolt = <900000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo3_reg: ldo3 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++
++			ldo4_reg: ldo4 {
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++		};
++	};
++
+diff --git a/Documentation/devicetree/bindings/regulator/tps65217.txt b/Documentation/devicetree/bindings/regulator/tps65217.txt
+index 4f05d20..2d9b519 100644
+--- a/Documentation/devicetree/bindings/regulator/tps65217.txt
++++ b/Documentation/devicetree/bindings/regulator/tps65217.txt
+@@ -1,8 +1,10 @@
+-TPS65217 family of regulators
++Texas Instruments TPS65217 family of regulators
++
++This module is part of the TPS65217. For more details about the whole
++TPS65217 chip see Documentation/devicetree/bindings/mfd/tps65217.txt.
+ 
+ Required properties:
+-- compatible: "ti,tps65217"
+-- reg: I2C slave address
++- compatible: "ti,tps65217-pmic"
+ - regulators: list of regulators provided by this controller, must be named
+   after their hardware counterparts: dcdc[1-3] and ldo[1-4]
+ - regulators: This is the list of child nodes that specify the regulator
+-- 
+2.9.3
 
-You can either hand that a patch or a path, e.g.
-
-[mark@leverpostej:~/src/linux]% ./scripts/get_maintainer.pl -f Documentation/devicetree/bindings/interrupt-controller/                  
-Thomas Gleixner <tglx@linutronix.de> (maintainer:IRQCHIP DRIVERS)
-Jason Cooper <jason@lakedaemon.net> (maintainer:IRQCHIP DRIVERS)
-Marc Zyngier <marc.zyngier@arm.com> (maintainer:IRQCHIP DRIVERS)
-Rob Herring <robh+dt@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-Mark Rutland <mark.rutland@arm.com> (maintainer:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-linux-kernel@vger.kernel.org (open list:IRQCHIP DRIVERS)
-devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS)
-
-Otherwise, I have a few comments inline below.
-
-> On Wed, Jun 7, 2017 at 12:59 AM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> > From: "Wesley W. Terpstra" <wesley@sifive.com>
-> >
-> > Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
-> > ---
-> >  .../interrupt-controller/riscv,cpu-intc.txt        | 46 ++++++++++++++++++++++
-> >  .../bindings/interrupt-controller/riscv,plic0.txt  | 44 +++++++++++++++++++++
-> >  2 files changed, 90 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> >  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> > new file mode 100644
-> > index 000000000000..62f02e834ff9
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
-> > @@ -0,0 +1,46 @@
-> > +RISC-V Hart-Level Interrupt Controller (HLIC)
-> > +---------------------------------------------
-> > +
-> > +RISC-V cores include Control Status Registers (CSRs) which are local to each
-> > +hart and can be read or written by software. Some of these CSRs are used to
-> > +control local interrupts connected to the core.
-> > +
-> > +Typical examples of local interrupts on a RISC-V core include: software IPI
-> > +interrupts, timer interrupts, and a link to the PLIC interrupt controller.
-
-So IIUC those interrupts are routed directly to the HLIC, and are (only)
-controlled thought the HLIC?
-
-Is the HLIC architecturally mandated? i.e. is this guaranteed to be
-present on any RISC-V implementation?
-
-Does the presence of the HLIC imply the presence of a PLIC (or
-vice/versa)? Typically, the per-cpu and platform-wide parts of the
-top-level interrupt controller are fairly intimately coupled.
-
-> > +
-> > +Required properties:
-> > +- compatible : "riscv,cpu-intc"
-
-You'll need to allocate the "riscv" vendor prefix in 
-Documentation/devicetree/bindings/vendor-prefixes.txt
-
-... if that was done in some other patch, I didn't receive it.
-
-> > +- #interrupt-cells : should be <1>
-
-What about the flags?
-
-Are all HLIC interrupts edge triggered (or level triggered)?
-
-> > +- interrupt-controller : Identifies the node as an interrupt controller
-> > +
-> > +Furthermore, this interrupt-controller MUST be embedded inside the cpu
-> > +definition of the hart whose CSRs control these local interrupts.
-> > +
-> > +Example:
-> > +
-> > +       cpu1: cpu@1 {
-> > +               clock-frequency = <1600000000>;
-> > +               compatible = "riscv";
-> > +               d-cache-block-size = <64>;
-> > +               d-cache-sets = <64>;
-> > +               d-cache-size = <16384>;
-> > +               d-tlb-sets = <1>;
-> > +               d-tlb-size = <32>;
-> > +               device_type = "cpu";
-> > +               i-cache-block-size = <64>;
-> > +               i-cache-sets = <64>;
-> > +               i-cache-size = <16384>;
-> > +               i-tlb-sets = <1>;
-> > +               i-tlb-size = <32>;
-> > +               mmu-type = "riscv,sv39";
-> > +               next-level-cache = <&L2>;
-> > +               reg = <1>;
-> > +               riscv,isa = "rv64imac";
-> > +               status = "okay";
-> > +               tlb-split;
-
-We can probably replace most of these with a "...", as they're largely
-irrelevany to this binding.
-
-> > +               cpu1-intc: interrupt-controller {
-> > +                       #interrupt-cells = <1>;
-> > +                       compatible = "riscv,cpu-intc";
-> > +                       interrupt-controller;
-> > +               };
-> > +       };
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
-> > new file mode 100644
-> > index 000000000000..c05b5806f7d2
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
-> > @@ -0,0 +1,44 @@
-> > +RISC-V Platform-Level Interrupt Controller (PLIC)
-> > +-------------------------------------------------
-> > +
-> > +RISC-V cores typically include a PLIC, which route interrupts from multiple
-> > +devices to multiple hart contexts.  The PLIC is connected to the interrupt
-> > +controller embedded in a RISC-V core via the interrupt-related CSRs.
-
-Do you mean that the PLIC is connected to the HLIC, or that the HLIC is
-also managed in part through CSRs?
-
-> > +
-> > +A hart context is a priviledge mode in a hardware execution thread.  For
-> > +example, in an 4 core system with 2-way SMT, you have 8 harts and probably
-> > +at least two priviledge modes per hart; machine mode and supervisor mode.
-> > +
-> > +Each interrupt can be enabled on per-context basis. Any context can claim
-> > +a pending enabled interrupt and then release it once it has been handled.
-> > +
-> > +Each interrupt has a configurable priority. Higher priority interrupts are
-> > +serviced firs. Each context can specify a priority threshold. Interrupts
-> > +with priority below this threshold will not cause the PLIC to raise its
-> > +interrupt line leading to the context.
-> > +
-> > +Required properties:
-> > +- compatible : "riscv,plic0"
-> > +- #address-cells : should be <0>
-> > +- #interrupt-cells : should be <1>
-
-As with the HLIC, what about the flags?
-
-> > +- interrupt-controller : Identifies the node as an interrupt controller
-> > +- reg : Should contain 1 register range (address and length)
-> > +- riscv,ndev : Specifies the number of interrupts attached to the PLIC
-
-Why do we need to know this?
-
-I suspect this ia actually the number of interrupts implemented in the
-PLIC, rather than the number of interrupts attached. i.e. the PLIC can
-be implemented with a subset of the potential registers/bits. Is that
-correct?
-
-If so, something like "riscv,num-interrupts" would be better, along with
-a clearer description.
-
-> > +- interrupts-extended : Specifies which contexts are connected to the PLIC
-
-That description doesn't sound right.
-
-I take it that these are the HLIC interrupts that the PLIC can raise?
-
-You will need to be explicit about the order of interrupts in this
-property. i.e. which interrupt is routed to which context?
-
-Is the interrupt at the HLIC well known? From the example I see that
-here local interrupts 11 adn 9 are used. Is that mandated, or just the
-case for this particular implementation?
-
-Also, please consider how you will handle the case when the Linux
-logical CPU ID is not the same as the physical ID, and how you will
-handle physical IDs being sparse.
-
-We went though a lot of pain trying to do something similar for the ARM
-PMU interrupts (see the interrupt-affinity property in
-Documentation/devicetree/bindings/arm/pmu.txt), and it's still painful
-to deal with.
-
-> > +
-> > +Example:
-> > +
-> > +       plic: interrupt-controller@c000000 {
-> > +               #address-cells = <0>;
-
-This can go, given you don't have sub-nodes, nor a #size-cells property.
-
-Thanks,
-Mark.
-
-> > +               #interrupt-cells = <1>;
-> > +               compatible = "riscv,plic0";
-> > +               interrupt-controller;
-> > +               interrupts-extended = <
-> > +                       &cpu0-intc 11
-> > +                       &cpu1-intc 11 &cpu1-intc 9
-> > +                       &cpu2-intc 11 &cpu2-intc 9
-> > +                       &cpu3-intc 11 &cpu3-intc 9
-> > +                       &cpu4-intc 11 &cpu4-intc 9>;
-> > +               reg = <0xc000000 0x4000000>;
-> > +               riscv,ndev = <10>;
-> > +       };
-> > --
-> > 2.13.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
