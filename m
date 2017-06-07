@@ -1,100 +1,107 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 07/11] drm: sun4i: add support for the TV
- encoder in H3 SoC
-Date: Wed, 7 Jun 2017 11:38:45 +0200
-Message-ID: <20170607093845.cu5kk55nj72roysf@flea.lan>
-References: <20170604160149.30230-1-icenowy@aosc.io>
- <20170604160149.30230-8-icenowy@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 7/8] ARM: OMAP2+: Add pdata-quirks for MMC/SD on DRA74x EVM
+Date: Wed, 7 Jun 2017 15:07:48 +0530
+Message-ID: <20170607093749.15656-8-kishon@ti.com>
+References: <20170607093749.15656-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yrw3slyluc5aqqtx"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMET37EQKGQE2BQTHXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170604160149.30230-8-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170607093749.15656-1-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, nsekhar@ti.com
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
+From: Sekhar Nori <nsekhar@ti.com>
 
---yrw3slyluc5aqqtx
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+DRA74x EVM Rev H EVM comes with revision 2.0 silicon.
+However, earlier versions of EVM can come with either
+revision 1.1 or revision 1.0 of silicon.
 
-On Mon, Jun 05, 2017 at 12:01:45AM +0800, Icenowy Zheng wrote:
-> Allwinner H3 features a TV encoder similar to the one in earlier SoCs,
-> but has a internal fixed clock divider that divides the TCON1 clock
-> (called TVE clock in datasheet) by 11.
-> 
-> Add support for it.
-> 
-> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-> ---
-> Changes in v2:
-> - Quirk part rewritten.
-> 
->  drivers/gpu/drm/sun4i/sun4i_tv.c | 35 ++++++++++++++++++++++++++++++++++-
->  1 file changed, 34 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
-> index 338b9e5bb2a3..b9ff6d5ea67a 100644
-> --- a/drivers/gpu/drm/sun4i/sun4i_tv.c
-> +++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
-> @@ -13,6 +13,7 @@
->  #include <linux/clk.h>
->  #include <linux/component.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_device.h>
->  #include <linux/regmap.h>
->  #include <linux/reset.h>
->  
-> @@ -169,14 +170,21 @@ struct tv_mode {
->  	const struct resync_parameters	*resync_params;
->  };
->  
-> +struct sun4i_tv_quirks {
-> +	int fixed_divider;
-> +};
-> +
->  struct sun4i_tv {
->  	struct drm_connector	connector;
->  	struct drm_encoder	encoder;
->  
->  	struct clk		*clk;
-> +	struct clk		*mod_clk;
->  	struct regmap		*regs;
->  	struct reset_control	*reset;
->  
-> +	const struct sun4i_tv_quirks *quirks;
-> +
->  	struct sun4i_drv	*drv;
->  };
->  
-> @@ -391,6 +399,12 @@ static void sun4i_tv_mode_set(struct drm_encoder *encoder,
->  	struct sun4i_tcon *tcon = crtc->tcon;
->  	const struct tv_mode *tv_mode = sun4i_tv_find_tv_by_mode(mode);
->  
-> +	if (tv->quirks->fixed_divider) {
-> +		DRM_DEBUG_DRIVER("Applying fixed divider %d on TVE clock\n",
-> +				 tv->quirks->fixed_divider);
-> +		mode->crtc_clock *= tv->quirks->fixed_divider;
-> +	}
-> +
+The device-tree file is written to support rev 2.0 of
+silicon. pdata quirks are used to then override the
+settings needed for PG 1.1 silicon.
 
-You're not allowed to change the mode in mode_set, and you shouldn't
-even change it. The output pixel clock is still 27MHz.
+PG 1.1 silicon has limitations w.r.t frequencies at
+which MMC1/2/3 can operate as well as different IOdelay
+numbers.
 
-You should implement that using the states, as we discussed already.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+---
+ arch/arm/mach-omap2/pdata-quirks.c       | 31 +++++++++++++++++++++++++++++++
+ include/linux/platform_data/hsmmc-omap.h |  3 +++
+ 2 files changed, 34 insertions(+)
 
+diff --git a/arch/arm/mach-omap2/pdata-quirks.c b/arch/arm/mach-omap2/pdata-quirks.c
+index 9700a8ef0f16..6b433fce65a5 100644
+--- a/arch/arm/mach-omap2/pdata-quirks.c
++++ b/arch/arm/mach-omap2/pdata-quirks.c
+@@ -434,6 +434,26 @@ static void __init omap5_uevm_legacy_init(void)
+ }
+ #endif
+ 
++#ifdef CONFIG_SOC_DRA7XX
++static struct omap_hsmmc_platform_data dra7_hsmmc_data_mmc1;
++static struct omap_hsmmc_platform_data dra7_hsmmc_data_mmc2;
++static struct omap_hsmmc_platform_data dra7_hsmmc_data_mmc3;
++
++static void __init dra7x_evm_mmc_quirk(void)
++{
++	if (omap_rev() == DRA752_REV_ES1_1 || omap_rev() == DRA752_REV_ES1_0) {
++		dra7_hsmmc_data_mmc1.version = "rev11";
++		dra7_hsmmc_data_mmc1.max_freq = 96000000;
++
++		dra7_hsmmc_data_mmc2.version = "rev11";
++		dra7_hsmmc_data_mmc2.max_freq = 48000000;
++
++		dra7_hsmmc_data_mmc3.version = "rev11";
++		dra7_hsmmc_data_mmc3.max_freq = 48000000;
++	}
++}
++#endif
++
+ static struct pcs_pdata pcs_pdata;
+ 
+ void omap_pcs_legacy_init(int irq, void (*rearm)(void))
+@@ -561,6 +581,14 @@ static struct of_dev_auxdata omap_auxdata_lookup[] __initdata = {
+ 	OF_DEV_AUXDATA("ti,omap4-iommu", 0x55082000, "55082000.mmu",
+ 		       &omap4_iommu_pdata),
+ #endif
++#ifdef CONFIG_SOC_DRA7XX
++	OF_DEV_AUXDATA("ti,dra7-hsmmc", 0x4809c000, "4809c000.mmc",
++		       &dra7_hsmmc_data_mmc1),
++	OF_DEV_AUXDATA("ti,dra7-hsmmc", 0x480b4000, "480b4000.mmc",
++		       &dra7_hsmmc_data_mmc2),
++	OF_DEV_AUXDATA("ti,dra7-hsmmc", 0x480ad000, "480ad000.mmc",
++		       &dra7_hsmmc_data_mmc3),
++#endif
+ 	/* Common auxdata */
+ 	OF_DEV_AUXDATA("pinctrl-single", 0, NULL, &pcs_pdata),
+ 	{ /* sentinel */ },
+@@ -590,6 +618,9 @@ static struct pdata_init pdata_quirks[] __initdata = {
+ #ifdef CONFIG_SOC_OMAP5
+ 	{ "ti,omap5-uevm", omap5_uevm_legacy_init, },
+ #endif
++#ifdef CONFIG_SOC_DRA7XX
++	{ "ti,dra7-evm", dra7x_evm_mmc_quirk, },
++#endif
+ 	{ /* sentinel */ },
+ };
+ 
+diff --git a/include/linux/platform_data/hsmmc-omap.h b/include/linux/platform_data/hsmmc-omap.h
+index 8e981be2e2c2..67bded22eae4 100644
+--- a/include/linux/platform_data/hsmmc-omap.h
++++ b/include/linux/platform_data/hsmmc-omap.h
+@@ -70,6 +70,9 @@ struct omap_hsmmc_platform_data {
+ #define HSMMC_HAS_HSPE_SUPPORT	(1 << 2)
+ 	unsigned features;
+ 
++	/* string specifying a particular variant of hardware */
++	char *version;
++
+ 	int gpio_cd;			/* gpio (card detect) */
+ 	int gpio_cod;			/* gpio (cover detect) */
+ 	int gpio_wp;			/* gpio (write protect) */
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---yrw3slyluc5aqqtx--
+2.11.0
