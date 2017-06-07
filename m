@@ -1,160 +1,73 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 3/3] ARM: dts: meson8: add and use the real clock
- controller
-Date: Wed, 7 Jun 2017 13:55:25 +0200
-Message-ID: <64d7a1cf-1a6f-2872-cef2-925782210c96@baylibre.com>
-References: <20170604183341.21417-1-martin.blumenstingl@googlemail.com>
- <20170604183341.21417-4-martin.blumenstingl@googlemail.com>
- <1496607638.3552.20.camel@baylibre.com>
- <CAFBinCBi4TrX58XoSkiCLiUECWQhsETdC-PeW1xR7+fMr=U3kg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCBi4TrX58XoSkiCLiUECWQhsETdC-PeW1xR7+fMr=U3kg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH v5 00/23] mtd: nand: denali: Denali NAND IP patch bomb
+Date: Wed,  7 Jun 2017 20:52:09 +0900
+Message-ID: <1496836352-8016-1-git-send-email-yamada.masahiro@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-mtd@lists.infradead.org
+Cc: Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Boris Brezillon <boris.brezillon@free-electrons.com>, Marek Vasut <marek.vasut@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/05/2017 12:13 AM, Martin Blumenstingl wrote:
-> Hi Jerome,
-> 
-> On Sun, Jun 4, 2017 at 10:20 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
->> On Sun, 2017-06-04 at 20:33 +0200, Martin Blumenstingl wrote:
->>> This removes the dummy clk81 gate and replaces it with the actual clock
->>> controller's CLKID_CLK81. This will also allow us to pass the real clock
->>> IDs to all devices where the clock is controlled by clkc in the future.
->>>
->>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->>
->> This is going in the right direction and at least align meson8 and meson8b.
->>
->> Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-> that was quick, thanks!
-> 
->> Later on, I'm wondering if some of these clock assignments should be moved to
->> meson.dtsi ? meson8.dtsi and meson8b.dtsi look very similar
-> actually I think that the Meson6/MX/<however it is called> clock
-> controller is different (based on a quick look).
-> so we may end up with a similar situation that we have on
-> GXBB/GXL/GXM: the clock controller will stay in the corresponding
-> .dtsi and we have to "duplicate" the clock assignments for each SoC
-> 
-> however, I guess at some point we can create a .dtsi with all the bits
-> that are shared between Meson8 and Meson8b (during my experiments
-> meson8m2.dtsi just inherits meson8.dtsi and overrides a bunch of
-> compatibles). we can discuss whether we want to move the clock
-> controller to that shared/common .dtsi as well once we start
-> generalizing this
+This patch series intends to solve various problems.
 
-Personally I think we should use the same schema as arm64 and leave the clock
-definitions in the SoCs dtsi files.
+[1] The driver just retrieves the OOB area as-is
+    whereas the controller uses syndrome page layout.
+[2] Many NAND chip specific parameters are hard-coded in the driver.
+[3] ONFi devices are not working
+[4] It can not read Bad Block Marker
 
-Neil
+Outstanding changes are:
+- Fix raw/oob callbacks for syndrome page layout
+- Implement setup_data_interface() callback
+- Fix/implement more commands for ONFi devices
+- Allow to skip the driver internal bounce buffer
+- Support PIO in case DMA is not supported
+- Switch from ->cmdfunc over to ->cmd_ctrl
 
-> 
->>> ---
->>>  arch/arm/boot/dts/meson8.dtsi | 32 ++++++++++++++++----------------
->>>  1 file changed, 16 insertions(+), 16 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
->>> index 6993077331c7..9b0b3ddbb17e 100644
->>> --- a/arch/arm/boot/dts/meson8.dtsi
->>> +++ b/arch/arm/boot/dts/meson8.dtsi
->>> @@ -43,6 +43,7 @@
->>>   *     OTHER DEALINGS IN THE SOFTWARE.
->>>   */
->>>
->>> +#include <dt-bindings/clock/meson8b-clkc.h>
->>>  #include <dt-bindings/gpio/meson8-gpio.h>
->>>  /include/ "meson.dtsi"
->>>
->>> @@ -82,13 +83,6 @@
->>>                       reg = <0x203>;
->>>               };
->>>       };
->>> -
->>> -     clk81: clk@0 {
->>> -             #clock-cells = <0>;
->>> -             compatible = "fixed-clock";
->>> -             clock-frequency = <141666666>;
->>> -     };
->>> -
->>>  }; /* end of / */
->>>
->>>  &aobus {
->>> @@ -126,6 +120,12 @@
->>>  };
->>>
->>>  &cbus {
->>> +     clkc: clock-controller@4000 {
->>> +             #clock-cells = <1>;
->>> +             compatible = "amlogic,meson8-clkc";
->>> +             reg = <0x8000 0x4>, <0x4000 0x460>;
->>> +     };
->>> +
->>>       pinctrl_cbus: pinctrl@9880 {
->>>               compatible = "amlogic,meson8-cbus-pinctrl";
->>>               reg = <0x9880 0x10>;
->>> @@ -172,20 +172,20 @@
->>>  };
->>>
->>>  &ethmac {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>       clock-names = "stmmaceth";
->>>  };
->>>
->>>  &i2c_AO {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>>
->>>  &i2c_A {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>>
->>>  &i2c_B {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>>
->>>  &L2 {
->>> @@ -195,21 +195,21 @@
->>>  };
->>>
->>>  &spifc {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>>
->>>  &uart_AO {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>>
->>>  &uart_A {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>>
->>>  &uart_B {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>>
->>>  &uart_C {
->>> -     clocks = <&clk81>;
->>> +     clocks = <&clkc CLKID_CLK81>;
->>>  };
->>
+18 patches were merged at v2.
+11 patches were merged at v3.
+2 patches were merged at 4.
+Here is the rest of the series.
+
+v1: https://lkml.org/lkml/2016/11/26/144
+v2: https://lkml.org/lkml/2017/3/22/804
+v3: https://lkml.org/lkml/2017/3/30/90
+
+
+Masahiro Yamada (23):
+  mtd: nand: add generic helpers to check, match, maximize ECC settings
+  mtd: nand: add a shorthand to generate nand_ecc_caps structure
+  mtd: nand: denali: avoid hard-coding ECC step, strength, bytes
+  mtd: nand: denali: remove Toshiba and Hynix specific fixup code
+  mtd: nand: denali_dt: add compatible strings for UniPhier SoC variants
+  mtd: nand: denali: set NAND_ECC_CUSTOM_PAGE_ACCESS
+  mtd: nand: denali: do not propagate NAND_STATUS_FAIL to waitfunc()
+  mtd: nand: denali: remove unneeded find_valid_banks()
+  mtd: nand: denali: handle timing parameters by setup_data_interface()
+  mtd: nand: denali: rework interrupt handling
+  mtd: nand: denali: fix NAND_CMD_STATUS handling
+  mtd: nand: denali: fix NAND_CMD_PARAM handling
+  mtd: nand: denali: switch over to cmd_ctrl instead of cmdfunc
+  mtd: nand: denali: fix bank reset function to detect the number of
+    chips
+  mtd: nand: denali: use interrupt instead of polling for bank reset
+  mtd: nand: denali: propagate page to helpers via function argument
+  mtd: nand: denali: merge struct nand_buf into struct denali_nand_info
+  mtd: nand: denali: use flag instead of register macro for direction
+  mtd: nand: denali: fix raw and oob accessors for syndrome page layout
+  mtd: nand: denali: support hardware-assisted erased page detection
+  mtd: nand: denali: skip driver internal bounce buffer when possible
+  mtd: nand: denali: use non-managed kmalloc() for DMA buffer
+  mtd: nand: denali: enable bad block table scan
+
+ .../devicetree/bindings/mtd/denali-nand.txt        |   13 +
+ drivers/mtd/nand/denali.c                          | 1686 +++++++++-----------
+ drivers/mtd/nand/denali.h                          |   60 +-
+ drivers/mtd/nand/denali_dt.c                       |   33 +-
+ drivers/mtd/nand/denali_pci.c                      |   10 +-
+ drivers/mtd/nand/nand_base.c                       |  220 +++
+ include/linux/mtd/nand.h                           |   47 +
+ 7 files changed, 1103 insertions(+), 966 deletions(-)
+
+-- 
+2.7.4
