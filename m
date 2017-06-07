@@ -1,51 +1,139 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2 04/11] drm: sun4i: add support for H3's TCON0/1
-Date: Wed, 07 Jun 2017 18:00:52 +0800
-Message-ID: <78252AF1-51FB-4B09-80C2-2597990680CE@aosc.io>
-References: <20170604160149.30230-1-icenowy@aosc.io> <20170604160149.30230-5-icenowy@aosc.io> <3642057.oKT9kIlu8M@jernej-laptop> <493AC6F2-3CB3-48F5-9568-A34AA927238F@aosc.io> <20170607094343.qqiwnu2mhmoi6jn7@flea.lan>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Rafal Ozieblo <rafalo@cadence.com>
+Subject: RE: [PATCH v2 4/4] net: macb: Add hardware PTP support
+Date: Wed, 7 Jun 2017 11:13:36 +0000
+Message-ID: <BN3PR07MB2516A47C2CFEB58BCFFB2C46C9C80@BN3PR07MB2516.namprd07.prod.outlook.com>
+References: <1496413439-12900-1-git-send-email-rafalo@cadence.com>
+ <1496413690-22826-1-git-send-email-rafalo@cadence.com>
+ <20170606183358.GA25220@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBU5537EQKGQEAFCRJTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170607094343.qqiwnu2mhmoi6jn7-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170606183358.GA25220@localhost.localdomain>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "nicolas.ferre@atmel.com" <nicolas.ferre@atmel.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "andrei.pistirica@microchip.com" <andrei.pistirica@microchip.com>, "harini.katakam@xilinx.com" <harini.katakam@xilinx.com>, David Miller <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+> From: Richard Cochran [mailto:richardcochran@gmail.com]
+> Sent: 6 czerwca 2017 20:34
+> To: Rafal Ozieblo <rafalo@cadence.com>
+> Cc: David Miller <davem@davemloft.net>; nicolas.ferre@atmel.com;
+> netdev@vger.kernel.org; linux-kernel@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> harini.katakam@xilinx.com; andrei.pistirica@microchip.com
+> Subject: Re: [PATCH v2 4/4] net: macb: Add hardware PTP support
+> 
+> On Fri, Jun 02, 2017 at 03:28:10PM +0100, Rafal Ozieblo wrote:
+> > +static void gem_ptp_clear_timer(struct macb *bp)
+> > +{
+> > +	bp->tsu_incr.ns = 0;
+> > +	bp->tsu_incr.sub_ns = 0;
+> 
+> What is the point of this function?
+Cleaning all bellow registers will stop hardware PTP clock.
 
+> 
+> > +	gem_writel(bp, TISUBN, GEM_BF(SUBNSINCR, 0));
+> > +	gem_writel(bp, TI, GEM_BF(NSINCR, 0));
+> > +	gem_writel(bp, TA, 0);
+> > +}
+(...)
+> > +int gem_ptp_txstamp(struct macb_queue *queue, struct sk_buff *skb,
+> > +		    struct macb_dma_desc *desc)
+> > +{
+> > +	struct gem_tx_ts *tx_timestamp;
+> > +	struct macb_dma_desc_ptp *desc_ptp;
+> > +	unsigned long head = queue->tx_ts_head;
+> > +	unsigned long tail = READ_ONCE(queue->tx_ts_tail);
+> > +
+> > +	if (!GEM_BFEXT(DMA_TXVALID, desc->ctrl))
+> > +		return -EINVAL;
+> > +
+> > +	if (CIRC_SPACE(head, tail, PTP_TS_BUFFER_SIZE) == 0)
+> > +		return -ENOMEM;
+> > +
+> > +	skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
+> > +	desc_ptp = macb_ptp_desc(queue->bp, desc);
+> > +	tx_timestamp = &queue->tx_timestamps[head];
+> > +	tx_timestamp->skb = skb;
+> > +	tx_timestamp->desc_ptp.ts_1 = desc_ptp->ts_1;
+> > +	tx_timestamp->desc_ptp.ts_2 = desc_ptp->ts_2;
+> > +	/* move head */
+> > +	smp_store_release(&queue->tx_ts_head,
+> > +			  (head + 1) & (PTP_TS_BUFFER_SIZE - 1));
+> > +
+> > +	schedule_work(&queue->tx_ts_task);
+> 
+> Since the time stamp is in the buffer descriptor, why delay the
+> delivery via the work item?
 
-=E4=BA=8E 2017=E5=B9=B46=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885:4=
-3:43, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->On Mon, Jun 05, 2017 at 03:03:47AM +0800, Icenowy Zheng wrote:
->> >You should also expand function sun4i_drv_node_is_tcon() at
->sun4i_drv.c
->> >with=20
->> >new entries, but I'm not sure if this fits in this patch.
->>=20
->> Instead I think it should be renamed to something like
->> "sun4i_drv_node_is_tcon_with_ch0".
->
->I'm not sure, or at least, it shouldn't make any difference, since
->TCON without a channel 0 will not have an endpoint 0, so this will be
->dealt with already.
+I put comment about that a few months ago:
+https://patchwork.ozlabs.org/patch/705629/
+Let me quote part about not doing it via worker:
 
-But that will prevent new coders from add CH1-less TCON
-compatibles to this function.
+" I think, you can not do it in that way. 
+It will hold two locks. If you enable appropriate option in kernel (as far as I 
+remember CONFIG_DEBUG_SPINLOCK) you will get a warning here.
 
->
->Maxime
+Please look at following call-stack:
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+1. macb_interrupt()   // spin_lock(&bp->lock) is taken
+2. macb_tx_interrupt()
+3. macb_handle_txtstamp()
+4. skb_tstamp_tx()
+5. __skb_tstamp_tx()
+6. skb_may_tx_timestamp()
+7. read_lock_bh() // second lock is taken
+
+I know that those are different locks and different types. But this could lead 
+to deadlocks. This is the reason of warning I could see.
+And this is the reason why I get timestamp in interrupt routine but pass it to 
+skb outside interrupt (using circular buffer).
+
+Please, refer to this:
+https://lkml.org/lkml/2016/11/18/168
+
+1. macb_tx_interrupt()
+2. macb_tx_timestamp_add() and schedule_work(&queue->tx_timestamp_task)
+
+Then, outside interrupt (without holding a lock) :
+1. macb_tx_timestamp_flush()
+2. macb_tstamp_tx()
+3. skb_tstamp_tx()"
+> 
+> > +	return 0;
+> > +}
+(...)
+> > +void gem_ptp_remove(struct net_device *ndev)
+> > +{
+> > +	struct macb *bp = netdev_priv(ndev);
+> > +
+> > +	if (bp->ptp_clock)
+> > +		ptp_clock_unregister(bp->ptp_clock);
+> > +
+> > +	gem_ptp_clear_timer(bp);
+> 
+> Why is this 'clear' needed?
+To stop hardware PTP clock.
+> 
+> > +	dev_info(&bp->pdev->dev, "%s ptp clock unregistered.\n",
+> > +		 GEM_PTP_TIMER_NAME);
+> > +}
+> 
+> Thanks,
+> Richard
+
+I'll correct all other issues.
+
+Regards,
+Rafal
