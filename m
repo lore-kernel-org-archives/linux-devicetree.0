@@ -1,69 +1,103 @@
-From: Christoffer Dall <cdall@linaro.org>
-Subject: Re: [PATCH 00/11] arm64/firmware: Software Delegated Exception
- Interface
-Date: Wed, 7 Jun 2017 11:53:26 +0200
-Message-ID: <20170607095326.GC24481@cbox>
-References: <20170515174400.29735-1-james.morse@arm.com>
- <20170606195944.GM9464@cbox> <5937CB3C.6040800@arm.com>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Subject: Re: [PATCH v3 5/7] docs-rst: media: Sort topic list alphabetically
+Date: Wed, 7 Jun 2017 06:54:52 -0300
+Message-ID: <20170607065452.5faeb157@vento.lan>
+References: <1491829376-14791-1-git-send-email-sakari.ailus@linux.intel.com>
+        <1491829376-14791-6-git-send-email-sakari.ailus@linux.intel.com>
+        <20170606094834.0152cd6f@vento.lan>
+        <4d1b8a9a-af82-c72d-3554-f1844d5a5b08@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-Content-Disposition: inline
-In-Reply-To: <5937CB3C.6040800@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: James Morse <james.morse@arm.com>
-Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <4d1b8a9a-af82-c72d-3554-f1844d5a5b08@linux.intel.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 10:45:32AM +0100, James Morse wrote:
-> Hi Christoffer,
+Em Tue, 6 Jun 2017 23:57:55 +0300
+Sakari Ailus <sakari.ailus@linux.intel.com> escreveu:
+
+> Hi Mauro,
 > 
-> On 06/06/17 20:59, Christoffer Dall wrote:
-> > On Mon, May 15, 2017 at 06:43:48PM +0100, James Morse wrote:
-> >> Running the event handler behind VHE-KVM's back has some side effects: The
-> >> event handler will blindly use any registers that are shared between the host
-> >> and guest. The two that I think matter are TPIDR_EL1, and the debug state. The
-> >> guest may have set MDSCR_EL1 so debug exceptions must remain masked. The
-> >> guest's TPIDR_EL1 will be used by the event handler if it accesses per-cpu
-> >> variables. This needs fixing. The first part of this series juggles KVMs use
-> >> of TPIDR_EL2 so that we share it with the host on VHE systems. An equivalent
-> >> change for 32bit is on my todo list. (one alternative to this is to have a
-> >> parody world switch in the SDEI event handler, but this would mean special
-> >> casing interrupted guests, and be an ABI link to KVM.)
+> Mauro Carvalho Chehab wrote:
+> > Em Mon, 10 Apr 2017 16:02:54 +0300
+> > Sakari Ailus <sakari.ailus@linux.intel.com> escreveu:
+> >  
+> >> Bring some order by alphabetically ordering the list of topics.
 > >>
-> >> Causing a synchronous exception from an event handler will cause KVM to
-> >> hyp-panic, but may silently succeed if the event didn't interrupt a guest.
-> >> (I may WARN_ON() if this happens in a later patch). You because of this you
-> > 
-> > The last sentence here doesn't make much sense to me.
+> >> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> >> ---
+> >>  Documentation/media/kapi/v4l2-core.rst | 18 +++++++++---------
+> >>  1 file changed, 9 insertions(+), 9 deletions(-)
+> >>
+> >> diff --git a/Documentation/media/kapi/v4l2-core.rst b/Documentation/media/kapi/v4l2-core.rst
+> >> index d8f6c46..2fbf532 100644
+> >> --- a/Documentation/media/kapi/v4l2-core.rst
+> >> +++ b/Documentation/media/kapi/v4l2-core.rst
+> >> @@ -4,23 +4,23 @@ Video4Linux devices
+> >>  .. toctree::
+> >>      :maxdepth: 1
+> >>
+> >> -    v4l2-intro  
+> >
+> > NACK.
+> >
+> > The order of the documentation should match what makes sense for the
+> > user that will be reading the docs, and *not* an alphabetical order.  
 > 
-> If this interrupts a VHE-guest, KVM's hyp-vectors remain in vbar_el2. If we then
-> take a synchronous exception, KVM will assume this happened during world switch
-> and panic.
-> In contrast if you didn't interrupt a guest, the kernel vectors are in vbar_el2,
-> so the fault will be handled.
+> I wrote the patch to address some of the review comments I got over the 
+> several versions of the patchset. I have no objections to maintaining 
+> the current order.
 
-Sorry, I actually just meant the grammar... "You because of this you..."
+Yeah, developers love putting things in alphabetical order ;)
 
-> 
-> This 'silently succeed' only occurred to me when writing the cover-letter,
-> (hence its probably worded badly). I plan to catch it by save-restoring the
-> exception registers, and warning if they've changed as this would hyp-panic if
-> you interrupted a guest.
-> 
+I remember I had myself the same doubt when I did conversions to ReST :-)
+See changeset 58759874002a71cbd48a01b615a210bb474e1f2b: there, everything
+but the introduction document (v4l2-framework - on that time) were in
+alphabetical order:
 
-But I didn't understand that before, and didn't realize that 'silently
-succeed' may not be what you want.
++.. toctree::
++    :maxdepth: 1
++
++    v4l2-framework
++    v4l2-async
++    v4l2-controls
++    v4l2-device
++    v4l2-dv-timings
++    v4l2-event
++    v4l2-flash-led-class
++    v4l2-mc
++    v4l2-mediabus
++    v4l2-mem2mem
++    v4l2-of
++    v4l2-rect
++    v4l2-subdev
++    v4l2-tuner
++    v4l2-tveeprom
++    v4l2-videobuf2
++    v4l2-videobuf
 
-Thanks for the explanation.
+However, after reading the documentation, it became clear to me that this
+was not a good idea, as the first topic out of v4l2-framework was
+V4L2 async framework (with is, IMHO, an "advanced" topic - as not every 
+"citizen" needs it). On the other hand, VB/VB2 were the last ones. 
+Clearly, VB2 were misplaced, and should come before v4l2-async.
 
--Christoffer
+So, the topics were reorganized at changeset f6fa883bb733 to place the
+more commonly used categories of functions at the beginning, and the
+less used ones at the end.
+
+That's said, the current order may not be perfect. IMHO, we should
+some day use multiple TOC trees, adding a description before each
+one.
+
+It would also make sense to improve VB2 documentation (currently, it
+has only 256 bytes with just include kernel headers), based on what's
+written at VB book (with is a real framework description), and move VB
+to a legacy section (or remove it, after we get rid of the last driver
+using it).
+
+Thanks,
+Mauro
