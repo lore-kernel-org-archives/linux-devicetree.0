@@ -1,38 +1,28 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V interrupt controllers
-Date: Wed, 7 Jun 2017 14:57:46 -0500
-Message-ID: <CAL_JsqKtFVdSkW+4Ph2nPpcepoNWiYYCcsd0nnXReFshdrhwSg@mail.gmail.com>
-References: <20170523004107.536-1-palmer@dabbelt.com> <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-9-palmer@dabbelt.com> <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
- <20170607101343.GC29370@leverpostej> <CAMgXwTiz0jXgSw=veJ3O7xzVgm==YisZZLWpZFH7aJMXV4j7qA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <CAMgXwTiz0jXgSw=veJ3O7xzVgm==YisZZLWpZFH7aJMXV4j7qA@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Wesley Terpstra <wesley@sifive.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Paul Cercueil <paul-icTtO2rgO2OTuSrc4Mpeew@public.gmane.org>
+Subject: [PATCH 00/15] Ingenic JZ4770 and GCW Zero patchset
+Date: Wed,  7 Jun 2017 22:04:24 +0200
+Message-ID: <20170607200439.24450-1-paul@crapouillou.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Maarten ter Huurne <maarten-Ph2Y2OKCxY1M656bX5wj8A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 7, 2017 at 1:57 PM, Wesley Terpstra <wesley@sifive.com> wrote:
-> On Wed, Jun 7, 2017 at 3:13 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->>> > +RISC-V Hart-Level Interrupt Controller (HLIC)
->>> > +---------------------------------------------
+Hi,
 
-[...]
+This set of 15 commits brings basic support of the JZ4770 SoC from
+Ingenic.
 
->>> > +       plic: interrupt-controller@c000000 {
->>> > +               #address-cells = <0>;
->>
->> This can go, given you don't have sub-nodes, nor a #size-cells property.
->
-> The device-tree-specification seems to indicate that this is mandatory
-> for an interrupt-controller. Or have I understood this wrongly? When
-> you use interrupts-extended, doesn't it use the address-cells of the
-> interrupt controller? We should add that size-cells = 0, though.
+The support is currently minimal, but enough to boot to a initramfs
+userspace from the serial console.
 
-It's only needed if you have an interrupt-map property AIUI.
-#size-cells should never be needed (unless you have child nodes of
-this one).
+The last patch introduces support for one JZ4770 based device, the
+open-source game console GCW Zero, successfully kickstarted in 2012.
 
-Rob
+Regards,
+-Paul
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
