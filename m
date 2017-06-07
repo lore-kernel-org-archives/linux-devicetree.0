@@ -1,68 +1,77 @@
-From: Alexander Stein <alexanders83@web.de>
-Subject: Re: [PATCH 1/2] clk: bcm2835: Add AUX interrupt controller
-Date: Wed, 07 Jun 2017 14:07:32 +0200
-Message-ID: <3148562.tSrsoIclEp@ws-stein>
-References: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
+From: Ilia Mirkin <imirkin-FrUbXkNCsVf2fBVCVOL8/A@public.gmane.org>
+Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
+Date: Wed, 7 Jun 2017 08:11:23 -0400
+Message-ID: <CAKb7UvguXEE2-kFVPvrca=KfP3qdGD0PZWYLJC=bNzCK2qy=2w@mail.gmail.com>
+References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
+ <1496404155-8344-5-git-send-email-noralf@tronnes.org> <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
+ <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Phil Elwell <phil@raspberrypi.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Florian Fainelli <f.fainelli@gmail.com>, Eric Anholt <eric@anholt.net>, Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e782fcac-9d84-00bf-6c5a-8d908d9570f2-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Cc: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 June 2017 12:11:45, Phil Elwell wrote:
-> Devices in the AUX block share a common interrupt line, with a register
-> indicating which devices have active IRQs. Expose this as a nested
-> interrupt controller to avoid IRQ sharing problems (easily observed if
-> UART1 and SPI1/2 are enabled simultaneously).
-> 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-> ---
->  drivers/clk/bcm/clk-bcm2835-aux.c | 120
-> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 120 insertions(+)
-> 
-> diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c
-> b/drivers/clk/bcm/clk-bcm2835-aux.c index bd750cf..41e0702 100644
-> --- a/drivers/clk/bcm/clk-bcm2835-aux.c
-> +++ b/drivers/clk/bcm/clk-bcm2835-aux.c
-> [...]
-> +struct auxirq_state {
-> +	void __iomem      *status;
-> +	u32                enables;
-> +	struct irq_domain *domain;
-> +	struct regmap     *local_regmap;
-> +};
-> +
-> +static struct auxirq_state auxirq __read_mostly;
-> +
-> +static irqreturn_t bcm2835_auxirq_handler(int irq, void *dev_id)
-> +{
-> +	u32 stat = readl_relaxed(auxirq.status);
-> +	u32 masked = stat & auxirq.enables;
+On Wed, Jun 7, 2017 at 7:52 AM, Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wr=
+ote:
+> Hi Emil,
+>
+>
+> Den 07.06.2017 11.30, skrev Emil Velikov:
+>>
+>> Hi Noralf,
+>>
+>> Small drive-by comment, noticed while going through my morning coffee.
+>> By no means a full review.
+>>
+>> On 2 June 2017 at 12:49, Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
+>>
+>>
+>>> +/* pixels on display are numbered from 1 */
+>>> +static void repaper_all_pixels(struct repaper_epd *epd, u8 **pp,
+>>> +                              const u8 *data, u8 fixed_value, const u8
+>>> *mask,
+>>> +                              enum repaper_stage stage)
+>>> +{
+>>> +       unsigned int b;
+>>> +
+>>> +       for (b =3D epd->width / 8; b > 0; b--) {
+>>> +               if (data) {
+>>> +                       u16 pixels =3D repaper_interleave_bits(data[b -
+>>> 1]);
+>>> +                       u16 pixel_mask =3D 0xffff;
+>>> +
+>>> +                       if (mask) {
+>>> +                               u16 pixel_mask =3D
+>>> repaper_interleave_bits(mask[b - 1]);
+>>> +
+>>> +                               pixel_mask =3D (pixel_mask ^ pixels) &
+>>> 0x5555;
+>>> +                               pixel_mask |=3D pixel_mask << 1;
+>>
+>> The second u16 pixel_mask seems very suspicious - likely a copy/paste
+>> mistake ?
+>
+>
+> Actually it's a correct copy. The same pattern is used in three places.
+> I did look at the datasheet to try and understand what was going on,
+> but the current and previous frame is applied in normal and inverted
+> form in several stages, the pixels are converted to black/white/nochange
+> and then I lost track of it all.
+> So I decided that the Pervasive people who wrote the driver probably
+> knew what they where doing. At least it works!
 
-Doesn't this hide any spurious interrupts? Is this acceptable? I mean getting 
-informed about spurious interrupts seems nice to me, as it indicates a 
-hardware/configuration problem.
+It's doubling up the bits... 0x5555 is a 0101010101010101 pattern, so
+pixel_mask |=3D pixel_mask << 1 (after pixel_mask is x & 0x5555) is just
+saying that the same bit should be repeated twice.
 
-> +	if (masked & BCM2835_AUXIRQ_UART_MASK)
-> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> +						     BCM2835_AUXIRQ_UART_IRQ));
-> +
-> +	if (masked & BCM2835_AUXIRQ_SPI1_MASK)
-> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> +						     BCM2835_AUXIRQ_SPI1_IRQ));
-> +
-> +	if (masked & BCM2835_AUXIRQ_SPI2_MASK)
-> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> +						     BCM2835_AUXIRQ_SPI2_IRQ));
-> +
-> +	return (masked & BCM2835_AUXIRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
-> +}
-
-How does interrupt acknowledgement work in these 3 interrupts work?
-
-Best regards,
-Alexander
+As for why you'd want to do that ... no clue. Maybe it's a
+2-bit-per-pixel packed mask and you want to set each pixel to 11 or 00
+here?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
