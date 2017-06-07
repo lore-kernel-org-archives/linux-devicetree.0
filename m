@@ -1,42 +1,29 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] net: macb: Add hardware PTP support
-Date: Wed, 7 Jun 2017 15:28:17 +0200
-Message-ID: <20170607132817.GA28329@localhost.localdomain>
-References: <1496413439-12900-1-git-send-email-rafalo@cadence.com>
- <1496413690-22826-1-git-send-email-rafalo@cadence.com>
- <20170606183358.GA25220@localhost.localdomain>
- <BN3PR07MB2516A47C2CFEB58BCFFB2C46C9C80@BN3PR07MB2516.namprd07.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/2] pwm: add pwm AO on meson gx
+Date: Wed,  7 Jun 2017 15:30:11 +0200
+Message-ID: <20170607133013.4766-1-jbrunet@baylibre.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <BN3PR07MB2516A47C2CFEB58BCFFB2C46C9C80-EldUQEzkDQfxGZiqM5fOI+FPX92sqiQdvxpqHgZTriW3zl9H0oFU5g@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rafal Ozieblo <rafalo-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org" <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <harini.katakam-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org" <andrei.pistirica-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 11:13:36AM +0000, Rafal Ozieblo wrote:
-> Please look at following call-stack:
-> 
-> 1. macb_interrupt()   // spin_lock(&bp->lock) is taken
-> 2. macb_tx_interrupt()
-> 3. macb_handle_txtstamp()
-> 4. skb_tstamp_tx()
-> 5. __skb_tstamp_tx()
-> 6. skb_may_tx_timestamp()
-> 7. read_lock_bh() // second lock is taken
+The pwms found in the AO domain of the meson gx family have different
+clock sources than the one found in the EE domain. The AO pwms have only
+2 connected clock input which are clk81 and the crytal.
 
-Well, you can always drop the lock, or postpone the call to
-skb_tstamp_tx() until after the spin lock is released...
+This patchset adds the necessary compatible and the clock data for it.
 
-> I know that those are different locks and different types. But this could lead 
-> to deadlocks. This is the reason of warning I could see.
+Jerome Brunet (2):
+  dt-bindings: pwm: meson: add comptabible for gxbb ao pwms
+  pwm: meson: add compatible for the gxbb ao pwms
 
-Can you please post the lockdep splat?
+ .../devicetree/bindings/pwm/pwm-meson.txt          |  4 ++-
+ drivers/pwm/pwm-meson.c                            | 32 ++++++++++++++++++++--
+ 2 files changed, 32 insertions(+), 4 deletions(-)
 
-Thanks,
-Richard
+-- 
+2.9.4
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
