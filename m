@@ -1,47 +1,81 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 3/3] Documentation: dt-bindings: Document deprecation of
- "vmmc_aux" and using "vqmmc"
-Date: Wed, 7 Jun 2017 14:06:12 +0530
-Message-ID: <20170607083612.14224-4-kishon@ti.com>
-References: <20170607083612.14224-1-kishon@ti.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] mfd: Add driver for RAVE Supervisory Processor
+Date: Wed, 07 Jun 2017 10:41:15 +0200
+Message-ID: <1496824875.30073.123.camel@pengutronix.de>
+References: <20170606180643.14258-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170607083612.14224-1-kishon@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, nsekhar@ti.com
-Cc: devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170606180643.14258-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, cphealy@gmail.com, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document deprecation of "vmmc_aux" for io regulator and use of generic
-mmc binding "vqmmc" in omap-hsmmc.
+Hi Andrey,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+no code review, just 2 drive-by comments.
 
-diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-index 74166a0d460d..0e026c151c1c 100644
---- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-@@ -18,7 +18,7 @@ Required properties:
- Optional properties:
- ti,dual-volt: boolean, supports dual voltage cards
- <supply-name>-supply: phandle to the regulator device tree node
--"supply-name" examples are "vmmc", "vmmc_aux" etc
-+"supply-name" examples are "vmmc", "vmmc_aux"(deprecated)/"vqmmc" etc
- ti,non-removable: non-removable slot (like eMMC)
- ti,needs-special-reset: Requires a special softreset sequence
- ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
--- 
-2.11.0
+Am Dienstag, den 06.06.2017, 11:06 -0700 schrieb Andrey Smirnov:
+> Add a driver for RAVE Supervisory Processor, an MCU implementing
+> varoius bits of housekeeping functionality (watchdoging, backlight
+> control, LED control, etc) on RAVE family of products by Zodiac
+> Inflight Innovations.
+> 
+> This driver implementes core MFD/serdev device as well as
+> communication subroutines necessary for commanding the device.
+> 
+> Cc: cphealy@gmail.com
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> ---
+[...]
+
+> +++ b/drivers/mfd/rave-sp.c
+> @@ -0,0 +1,1009 @@
+> +/*
+> + * rave-sp.c - Multifunction core driver for Zodiac Inflight Innovations
+> + * SP MCU that is connected via dedicated UART port
+> + *
+> + * Copyright (C) 2017 Zodiac Inflight Innovations
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+
+[...]
+
+> +MODULE_DEVICE_TABLE(of, rave_sp_dt_ids);
+> +MODULE_LICENSE("GPL");
+
+Header says GPL v2, so this should be changed to match.
+
+[...]
+> +
+> +#define COMPATIBLE_RAVE_SP_NIU		"zii,rave-sp-niu"
+> +#define COMPATIBLE_RAVE_SP_MEZZ		"zii,rave-sp-mezz"
+> +#define COMPATIBLE_RAVE_SP_ESB		"zii,rave-sp-esb"
+> +#define COMPATIBLE_RAVE_SP_RDU1		"zii,rave-sp-rdu1"
+> +#define COMPATIBLE_RAVE_SP_RDU2		"zii,rave-sp-rdu2"
+
+Can we get rid of those defines? They are only used in the of_device_id
+table.
+
+Regards,
+Lucas
