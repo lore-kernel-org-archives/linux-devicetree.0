@@ -1,32 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] ARM: shmobile: Update R-Car Gen3 ULCB board part numbers
-Date: Wed, 7 Jun 2017 17:12:03 -0500
-Message-ID: <20170607221203.hgjp3izxpjuvxd7t@rob-hp-laptop>
-References: <1496313269-27795-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH] gpio: mvebu: change compatible string for PWM support
+Date: Wed, 7 Jun 2017 17:13:32 -0500
+Message-ID: <20170607221332.vu2xnzyhtr7x6yoe@rob-hp-laptop>
+References: <20170601200820.22396-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1496313269-27795-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20170601200820.22396-1-ralph.sennhauser@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, Richard Genoud <richard.genoud@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 01, 2017 at 12:34:29PM +0200, Geert Uytterhoeven wrote:
-> The board part numbers for the R-Car H3 and M3 ULCB boards corresponded
-> to versions predating mass production.  Update them for mass production.
+On Thu, Jun 01, 2017 at 10:08:20PM +0200, Ralph Sennhauser wrote:
+> As it turns out more than just Armada 370 and XP support using GPIO
+> lines as PWM lines. For example the Armada 38x family has the same
+> hardware support. As such "marvell,armada-370-xp-gpio" for the
+> compatible string is a misnomer.
 > 
-> Note that the H3 ULCB board can be equipped with either revision ES1.1
-> or ES2.0 of the R-Car H3 SoC.  While these have different board part
-> numbers, no new compatible values are needed, as the revision can be
-> detected at runtime using the PRR register.
+> Change the compatible string to "marvell,armada-370-gpio" before the
+> driver makes it out of the -rc stage. This also follows the practice of
+> using only the first device family supported as part of the name.
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Also update the documentation and comments in the code accordingly.
+> 
+> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+> 
 > ---
-> See also http://elinux.org/index.php?title=R-Car/Boards/H3SK
 > 
->  Documentation/devicetree/bindings/arm/shmobile.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+> Hi everyone,
+> 
+> The suggestion to change the compatible string last minute comes from
+> Gregory CLEMENT after we realized the bad choice of name due to Richard
+> Genoud reporting an issue when he used the driver with an Armada-388.
+> 
+> Rob Herring just requested to use a separate compatible string but not
+> what it should look like. So I assume he is fine with the new one as
+> well. The rest of this patch is rather minor.
+> 
+> Nothing in tree is using this driver so far, first consumers will be
+> added with 4.13.
+> 
+> Ralph
+> 
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt | 6 +++---
+>  drivers/gpio/gpio-mvebu.c                             | 6 +++---
+>  2 files changed, 6 insertions(+), 6 deletions(-)
 
 Acked-by: Rob Herring <robh@kernel.org>
