@@ -1,74 +1,61 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 1/2] dt-bindings: leds: document new trigger-sources
- property
-Date: Wed, 7 Jun 2017 16:00:43 -0500
-Message-ID: <20170607210043.4uf6zltvppzx5nso@rob-hp-laptop>
-References: <20170529140142.13496-2-zajec5@gmail.com>
- <20170530092706.927-1-zajec5@gmail.com>
- <20170530092706.927-2-zajec5@gmail.com>
+Subject: Re: [PATCH V2 1/3] Documentation: devicetree: add multiple cpu port
+ DSA binding
+Date: Wed, 7 Jun 2017 16:10:02 -0500
+Message-ID: <20170607211002.ubljfplyexjb6dyl@rob-hp-laptop>
+References: <20170530104419.6052-1-john@phrozen.org>
+ <69dd02a6-59f9-59df-f630-0ebd948451c4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170530092706.927-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <69dd02a6-59f9-59df-f630-0ebd948451c4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 11:27:04AM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+On Tue, May 30, 2017 at 02:32:29PM -0700, Florian Fainelli wrote:
+> On 05/30/2017 03:44 AM, John Crispin wrote:
+> > Extend the DSA binding documentation, adding the new property required
+> > when there is more than one CPU port attached to the switch.
+> > 
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/net/dsa/dsa.txt | 61 ++++++++++++++++++++++-
+> >  1 file changed, 60 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/dsa/dsa.txt b/Documentation/devicetree/bindings/net/dsa/dsa.txt
+> > index cfe8f64eca4f..c164eb38ccc5 100644
+> > --- a/Documentation/devicetree/bindings/net/dsa/dsa.txt
+> > +++ b/Documentation/devicetree/bindings/net/dsa/dsa.txt
+> > @@ -55,6 +55,11 @@ A user port has the following optional property:
+> >  - label			: Describes the label associated with this port, which
+> >                            will become the netdev name.
+> >  
+> > +- cpu			: Option for non "cpu"/"dsa" ports. A phandle to a
+> > +			  "cpu" port, which will be used for passing packets
+> > +			  from this port to the host. If not present, the first
+> > +			  "cpu" port will be used.
 > 
-> Some LEDs can be related to a specific device(s) described in the DT.
-> This property allows specifying such relations. E.g. USB LED should
-> usually be used to indicate some USB port(s) state.
-> 
-> Please note this binding is designed to be generic and not influenced by
-> any operating system design. Linux developers may find "trigger" part a
-> bit confusing since in Linux triggers are separated drivers. It
-> shouldn't define the binding though (we shouldn't add an extra level of
-> indirection).
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
-> V2: Replace "usb-ports" with "led-triggers" property which is more generic and
->     allows specifying other devices as well.
-> V3: Use "trigger-sources" which is even more accurate as devices aren't
->     precisely triggers.
-> V4: Update example to use the correct property
-> ---
->  Documentation/devicetree/bindings/leds/common.txt | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 24b656014089..7efaa2cff624 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -49,6 +49,19 @@ Optional properties for child nodes:
->  - panic-indicator : This property specifies that the LED should be used,
->  		    if at all possible, as a panic indicator.
->  
-> +- trigger-sources : List of devices which should be used as a source triggering
-> +		    this LED activity. Some LEDs can be related to a specific
-> +		    device and should somehow indicate its state. E.g. USB 2.0
-> +		    LED may react to device(s) in a USB 2.0 port(s).
-> +		    Another common example is switch or router with multiple
-> +		    Ethernet ports each of them having its own LED assigned
-> +		    (assuming they are not hardwired). In such cases this
-> +		    property should contain phandle(s) of related source
-> +		    device(s).
-> +		    In many cases LED can be related to more than one device
-> +		    (e.g. one USB LED vs. multiple USB ports) so a list of
-> +		    sources can be specified.
-> +
+> So this option essentially allow us to "partition" the switch between
+> vectors of ports and their upstream/CPU port.
 
-Where's #source-cells documented?
+Could this be more generic? This is basically saying route all packets 
+on this port to another port. Maybe there's some usecase to route to 
+non-cpu ports?
 
-I really prefer if we have consistency in naming with "<prop>s" and 
-"#<prop>-cells". #source-cells is also not very clear what it is for. 
+> While using Device Tree is an obvious choice for making the initial
+> partitioning, it seems like we are missing a configuration mechanism
+> whereby we can properly assign ports to a specific upstream CPU port.
 
-Rob
+What determines how things are routed/partitioned? If it is purely user 
+choice then I don't think this should be in DT.
+
+> Let's move the actual discussion into patch 2 in order not to pollute
+> the DT maintainers' inbox.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
