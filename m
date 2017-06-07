@@ -1,350 +1,220 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] mfd: Add driver for RAVE Supervisory Processor
-Date: Tue, 6 Jun 2017 18:26:29 -0700
-Message-ID: <CAHQ1cqGfcZEyXKd2oLknsbdv9jwF57XjezC6zZKfw_qY3hSAYg@mail.gmail.com>
-References: <20170606180643.14258-1-andrew.smirnov@gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH v4 04/23] mtd: nand: denali: avoid hard-coding ECC step,
+ strength, bytes
+Date: Wed, 7 Jun 2017 12:09:31 +0900
+Message-ID: <CAK7LNATXygK2f71J8gggGQRuEdJ21CJfg9WVCYXgO=+NRBwcLg@mail.gmail.com>
+References: <1496704922-12261-1-git-send-email-yamada.masahiro@socionext.com>
+ <1496704922-12261-5-git-send-email-yamada.masahiro@socionext.com> <20170607000133.69fbf82b@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606180643.14258-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170607000133.69fbf82b@bbrezillon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Graham Moore <grmoore-yzvPICuk2ABMcg4IHK0kFoH6Mc4MB0Vx@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 6, 2017 at 11:06 AM, Andrey Smirnov
-<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Add a driver for RAVE Supervisory Processor, an MCU implementing
-> varoius bits of housekeeping functionality (watchdoging, backlight
-> control, LED control, etc) on RAVE family of products by Zodiac
-> Inflight Innovations.
->
-> This driver implementes core MFD/serdev device as well as
-> communication subroutines necessary for commanding the device.
->
-> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->
-> Note that the driver for "zii,rave-sp-watchdog" exists, but I haven't
-> submitted it yet, becuase I wanted to make sure that API exposed by
-> this MFD is acceptable and doesn't need drastic changes
->
->  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   33 +
->  drivers/mfd/Kconfig                                |    9 +
->  drivers/mfd/Makefile                               |    1 +
->  drivers/mfd/rave-sp.c                              | 1009 ++++++++++++++++++++
->  include/linux/rave-sp.h                            |   54 ++
->  5 files changed, 1106 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->  create mode 100644 drivers/mfd/rave-sp.c
->  create mode 100644 include/linux/rave-sp.h
->
-> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-> new file mode 100644
-> index 0000000..46a904c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
-> @@ -0,0 +1,33 @@
-> +Zodiac Inflight Innovations RAVE Supervisory Processor
-> +
-> +Required parent device properties:
-> +
-> + - compatible: Should be one of:
-> +       - "zii,rave-sp-niu"
-> +       - "zii,rave-sp-mezz"
-> +       - "zii,rave-sp-esb"
-> +       - "zii,rave-sp-rdu1"
-> +       - "zii,rave-sp-rdu2"
-> +
-> + - current-speed: Should be set to baud rate SP device is using
-> +
-> +RAVE SP consists of the following sub-devices:
-> +
-> +Device                          Description
-> +------                          -----------
-> +rave-sp-wdt                    : Watchdog
-> +
-> +
-> +Example of usage:
-> +
-> +       rdu {
-> +               compatible = "zii,rave-sp-rdu2";
-> +               current-speed = <1000000>;
-> +               status = "okay";
-> +
-> +               watchdog {
-> +                       compatible = "zii,rave-sp-watchdog";
-> +                       status = "okay";
-> +               };
-> +       };
-> +
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 3eb5c93..6cab311 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -867,6 +867,15 @@ config MFD_SPMI_PMIC
->           Say M here if you want to include support for the SPMI PMIC
->           series as a module.  The module will be called "qcom-spmi-pmic".
->
-> +config MFD_RAVE_SP
-> +       tristate "RAVE SP MCU core driver"
-> +       select MFD_CORE
-> +       select SERIAL_DEV_BUS
-> +       select CRC_CCITT
-> +       help
-> +         Select this to get support for the RAVE Supervisory
-> +         Processor driver
-> +
->  config MFD_RDC321X
->         tristate "RDC R-321x southbridge"
->         select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index c16bf1e..bc3df0a 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -221,3 +221,4 @@ obj-$(CONFIG_MFD_SUN4I_GPADC)       += sun4i-gpadc.o
->
->  obj-$(CONFIG_MFD_STM32_TIMERS)         += stm32-timers.o
->  obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
-> +obj-$(CONFIG_MFD_RAVE_SP)      += rave-sp.o
-> diff --git a/drivers/mfd/rave-sp.c b/drivers/mfd/rave-sp.c
-> new file mode 100644
-> index 0000000..1260f94
-> --- /dev/null
-> +++ b/drivers/mfd/rave-sp.c
-> @@ -0,0 +1,1009 @@
-> +/*
-> + * rave-sp.c - Multifunction core driver for Zodiac Inflight Innovations
-> + * SP MCU that is connected via dedicated UART port
-> + *
-> + * Copyright (C) 2017 Zodiac Inflight Innovations
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +/*
-> + * UART protocol using following entities:
-> + *  - message to MCU => ACK response
-> + *  - event from MCU => event ACK
-> + *
-> + * Frame structure:
-> + * <STX> <DATA> <CHECKSUM> <ETX>
-> + * Where:
-> + * - STX - is start of transmission character
-> + * - ETX - end of transmission
-> + * - DATA - payload
-> + * - CHECKSUM - checksum calculated on <DATA>
-> + *
-> + * If <DATA> or <CHECKSUM> contain one of control characters, then it is
-> + * escaped using <DLE> control code. Added <DLE> does not participate in
-> + * checksum calculation.
-> + */
-> +
-> +/* #define DEBUG */
-> +
-> +#include <linux/atomic.h>
-> +#include <linux/crc-ccitt.h>
-> +#include <linux/delay.h>
-> +#include <linux/export.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/sched.h>
-> +#include <linux/serdev.h>
-> +#include <linux/rave-sp.h>
-> +
-> +enum {
-> +       STX = 0x02,
-> +       ETX = 0x03,
-> +       DLE = 0x10,
-> +};
-> +
-> +enum {
-> +       RAVE_SP_BOOT_SOURCE_GET = 0,
-> +       RAVE_SP_BOOT_SOURCE_SET = 1,
-> +
-> +       RAVE_SP_MAX_DATA_SIZE   = 64,
-> +       RAVE_SP_CHECKSUM_SIZE   = 2, /* Worst case scenariou on RDU2 */
-> +       /*
-> +        * We don't store STX, ETX and unescaped bytes, so Rx is only
-> +        * DATA + CSUM
-> +        */
-> +       RAVE_SP_RX_BUFFER_SIZE  = RAVE_SP_MAX_DATA_SIZE +
-> +                                 RAVE_SP_CHECKSUM_SIZE,
-> +       RAVE_SP_STX_ETX_SIZE    = 2,
-> +       /*
-> +        * For Tx we have to have space for everything, STX, EXT and
-> +        * potentially stuffed DATA + CSUM data + csum
-> +        */
-> +       RAVE_SP_TX_BUFFER_SIZE  = RAVE_SP_STX_ETX_SIZE +
-> +                                 2 * RAVE_SP_RX_BUFFER_SIZE,
-> +};
-> +
-> +enum rave_sp_deframer_state {
-> +       RAVE_SP_EXPECT_SOF,
-> +       RAVE_SP_EXPECT_DATA,
-> +       RAVE_SP_EXPECT_ESCAPED_DATA,
-> +};
-> +
-> +struct rave_sp_deframer {
-> +       enum rave_sp_deframer_state state;
-> +       unsigned char data[RAVE_SP_RX_BUFFER_SIZE];
-> +       size_t length;
-> +};
-> +
-> +struct rave_sp_reply {
-> +       size_t length;
-> +       void  *data;
-> +       u8     code;
-> +       u8     ackid;
-> +       struct completion received;
-> +};
-> +
-> +struct rave_sp_checksum {
-> +       size_t length;
-> +       void (*subroutine)(const u8 *, size_t, u8 *);
-> +};
-> +
-> +enum rave_sp_boot_source {
-> +       RAVE_SP_BOOT_SOURCE_SD          = 0,
-> +       RAVE_SP_BOOT_SOURCE_EMMC        = 1,
-> +       RAVE_SP_BOOT_SOURCE_NOR         = 2,
-> +};
-> +
-> +struct rave_sp_variant {
-> +       const struct rave_sp_checksum *checksum;
-> +
-> +       struct {
-> +               int (*translate)(enum rave_sp_command);
-> +               int (*get_boot_source)(struct rave_sp *);
-> +               int (*set_boot_source)(struct rave_sp *,
-> +                                      enum rave_sp_boot_source);
-> +       } cmd;
-> +
-> +       void (*init)(struct rave_sp *);
-> +
-> +       struct attribute_group group;
-> +};
-> +
-> +struct rave_sp {
-> +       struct serdev_device *serdev;
-> +
-> +       struct rave_sp_deframer deframer;
-> +       atomic_t ackid;
-> +
-> +       struct mutex bus_lock;
-> +       struct mutex reply_lock;
-> +       struct rave_sp_reply *reply;
-> +
-> +       const char *part_number_firmware;
-> +       const char *part_number_bootloader;
-> +
-> +       const char *reset_reason;
-> +       const char *copper_rev_rmb;
-> +       const char *copper_rev_deb;
-> +       const char *silicon_devid;
-> +       const char *silicon_devrev;
-> +
-> +       const char *copper_mod_rmb;
-> +       const char *copper_mod_deb;
-> +
-> +       const struct rave_sp_variant *variant;
-> +
-> +       struct blocking_notifier_head event_notifier_list;
-> +
-> +       struct attribute_group *group;
-> +};
-> +
-> +struct rave_sp_rsp_status {
-> +       u8 bl_bytes[6];
-> +       u8 fw_bytes[6];
-> +       u8 gs_format;
-> +} __packed;
-> +
-> +static bool rave_sp_id_is_event(u8 code)
-> +{
-> +       return (code & 0xF0) == RAVE_SP_EVNT_BASE;
-> +}
-> +
-> +static void
-> +devm_rave_sp_unregister_event_notifier(struct device *dev, void *res)
-> +{
-> +       struct rave_sp *sp = dev_get_drvdata(dev->parent);
-> +       struct notifier_block *nb = *(struct notifier_block **)res;
-> +       struct blocking_notifier_head *bnh = &sp->event_notifier_list;
-> +
-> +       WARN_ON(blocking_notifier_chain_unregister(bnh, nb));
-> +}
-> +
-> +int devm_rave_sp_register_event_notifier(struct device *dev,
-> +                                        struct notifier_block *nb)
-> +{
-> +       struct rave_sp *sp = dev_get_drvdata(dev->parent);
-> +       struct notifier_block **rcnb;
-> +       int ret;
-> +
-> +       rcnb = devres_alloc(devm_rave_sp_unregister_event_notifier,
-> +                           sizeof(*rcnb), GFP_KERNEL);
-> +       if (!rcnb)
-> +               return -ENOMEM;
-> +
-> +       ret = blocking_notifier_chain_register(&sp->event_notifier_list, nb);
-> +       if (!ret) {
-> +               *rcnb = nb;
-> +               devres_add(dev, rcnb);
-> +       } else {
-> +               devres_free(rcnb);
-> +       }
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_rave_sp_register_event_notifier);
-> +
-> +static const char *devm_rave_sp_version(struct device *dev, const char *buf)
-> +{
-> +       return devm_kasprintf(dev, GFP_KERNEL, "%02d%02d%02d.%c%c\n",
-> +                             buf[0], le16_to_cpup((const __le16 *)&buf[1]),
-> +                             buf[3], buf[4], buf[5]);
-> +}
-> +
-> +static int rave_sp_get_status(struct rave_sp *sp,
-> +                             struct rave_sp_rsp_status *status)
-> +{
-> +       u8 cmd[] = {
-> +               [0] = RAVE_SP_CMD_STATUS,
-> +               [1] = 0
-> +       };
-> +       return rave_sp_exec(sp, cmd, sizeof(cmd), &status, sizeof(status));
+Hi Boris,
 
-Ugh, found a bug in my code, should be:
 
-return rave_sp_exec(sp, cmd, sizeof(cmd), status, sizeof(*status));
+2017-06-07 7:01 GMT+09:00 Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Tue,  6 Jun 2017 08:21:43 +0900
+> Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+>
+>> This driver was originally written for the Intel MRST platform with
+>> several platform-specific parameters hard-coded.
+>>
+>> Currently, the ECC settings are hard-coded as follows:
+>>
+>>   #define ECC_SECTOR_SIZE 512
+>>   #define ECC_8BITS       14
+>>   #define ECC_15BITS      26
+>>
+>> Therefore, the driver can only support two cases.
+>>  - ecc.size = 512, ecc.strength = 8    --> ecc.bytes = 14
+>>  - ecc.size = 512, ecc.strength = 15   --> ecc.bytes = 26
+>>
+>> However, these are actually customizable parameters, for example,
+>> UniPhier platform supports the following:
+>>
+>>  - ecc.size = 1024, ecc.strength = 8   --> ecc.bytes = 14
+>>  - ecc.size = 1024, ecc.strength = 16  --> ecc.bytes = 28
+>>  - ecc.size = 1024, ecc.strength = 24  --> ecc.bytes = 42
+>>
+>> So, we need to handle the ECC parameters in a more generic manner.
+>> Fortunately, the Denali User's Guide explains how to calculate the
+>> ecc.bytes.  The formula is:
+>>
+>>   ecc.bytes = 2 * CEIL(13 * ecc.strength / 16)  (for ecc.size = 512)
+>>   ecc.bytes = 2 * CEIL(14 * ecc.strength / 16)  (for ecc.size = 1024)
+>>
+>> For DT platforms, it would be reasonable to allow DT to specify ECC
+>> strength by either "nand-ecc-strength" or "nand-ecc-maximize".  If
+>> none of them is specified, the driver will try to meet the chip's ECC
+>> requirement.
+>>
+>> For PCI platforms, the max ECC strength is used to keep the original
+>> behavior.
+>>
+>> Newer versions of this IP need ecc.size and ecc.steps explicitly
+>> set up via the following registers:
+>>   CFG_DATA_BLOCK_SIZE       (0x6b0)
+>>   CFG_LAST_DATA_BLOCK_SIZE  (0x6c0)
+>>   CFG_NUM_DATA_BLOCKS       (0x6d0)
+>>
+>> For older IP versions, write accesses to these registers are just
+>> ignored.
+>>
+>> Signed-off-by: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>>
+>> Changes in v4:
+>>   - Rewrite by using generic helpers, nand_check_caps(),
+>>     nand_match_ecc_req(), nand_maximize_ecc().
+>>
+>> Changes in v3:
+>>   - Move DENALI_CAP_ define out of struct denali_nand_info
+>>   - Use chip->ecc_step_ds as a hint to choose chip->ecc.size
+>>     where possible
+>>
+>> Changes in v2:
+>>   - Change the capability prefix DENALI_CAPS_ -> DENALI_CAP_
+>>   - Make ECC 512 cap and ECC 1024 cap independent
+>>   - Set up three CFG_... registers
+>>
+>>  .../devicetree/bindings/mtd/denali-nand.txt        |   7 ++
+>>  drivers/mtd/nand/denali.c                          | 103 ++++++++++++++-------
+>>  drivers/mtd/nand/denali.h                          |  11 ++-
+>>  drivers/mtd/nand/denali_dt.c                       |   8 ++
+>>  drivers/mtd/nand/denali_pci.c                      |   9 ++
+>>  5 files changed, 101 insertions(+), 37 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/denali-nand.txt b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> index e593bbe..b7742a7 100644
+>> --- a/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/denali-nand.txt
+>> @@ -7,6 +7,13 @@ Required properties:
+>>    - reg-names: Should contain the reg names "nand_data" and "denali_reg"
+>>    - interrupts : The interrupt number.
+>>
+>> +Optional properties:
+>> +  - nand-ecc-step-size: see nand.txt for details.  If present, the value must be
+>> +      512        for "altr,socfpga-denali-nand"
+>> +  - nand-ecc-strength: see nand.txt for details.  Valid values are:
+>> +      8, 15      for "altr,socfpga-denali-nand"
+>> +  - nand-ecc-maximize: see nand.txt for details
+>> +
+>>  The device tree may optionally contain sub-nodes describing partitions of the
+>>  address space. See partition.txt for more detail.
+>>
+>> diff --git a/drivers/mtd/nand/denali.c b/drivers/mtd/nand/denali.c
+>> index 16634df..3204c51 100644
+>> --- a/drivers/mtd/nand/denali.c
+>> +++ b/drivers/mtd/nand/denali.c
+>> @@ -886,8 +886,6 @@ static int denali_hw_ecc_fixup(struct mtd_info *mtd,
+>>       return max_bitflips;
+>>  }
+>>
+>> -#define ECC_SECTOR_SIZE 512
+>> -
+>>  #define ECC_SECTOR(x)        (((x) & ECC_ERROR_ADDRESS__SECTOR_NR) >> 12)
+>>  #define ECC_BYTE(x)  (((x) & ECC_ERROR_ADDRESS__OFFSET))
+>>  #define ECC_CORRECTION_VALUE(x) ((x) & ERR_CORRECTION_INFO__BYTEMASK)
+>> @@ -899,6 +897,7 @@ static int denali_sw_ecc_fixup(struct mtd_info *mtd,
+>>                              struct denali_nand_info *denali,
+>>                              unsigned long *uncor_ecc_flags, uint8_t *buf)
+>>  {
+>> +     unsigned int ecc_size = denali->nand.ecc.size;
+>>       unsigned int bitflips = 0;
+>>       unsigned int max_bitflips = 0;
+>>       uint32_t err_addr, err_cor_info;
+>> @@ -928,9 +927,9 @@ static int denali_sw_ecc_fixup(struct mtd_info *mtd,
+>>                        * an erased sector.
+>>                        */
+>>                       *uncor_ecc_flags |= BIT(err_sector);
+>> -             } else if (err_byte < ECC_SECTOR_SIZE) {
+>> +             } else if (err_byte < ecc_size) {
+>>                       /*
+>> -                      * If err_byte is larger than ECC_SECTOR_SIZE, means error
+>> +                      * If err_byte is larger than ecc_size, means error
+>>                        * happened in OOB, so we ignore it. It's no need for
+>>                        * us to correct it err_device is represented the NAND
+>>                        * error bits are happened in if there are more than
+>> @@ -939,7 +938,7 @@ static int denali_sw_ecc_fixup(struct mtd_info *mtd,
+>>                       int offset;
+>>                       unsigned int flips_in_byte;
+>>
+>> -                     offset = (err_sector * ECC_SECTOR_SIZE + err_byte) *
+>> +                     offset = (err_sector * ecc_size + err_byte) *
+>>                                               denali->devnum + err_device;
+>>
+>>                       /* correct the ECC error */
+>> @@ -1345,13 +1344,55 @@ static void denali_hw_init(struct denali_nand_info *denali)
+>>       denali_irq_init(denali);
+>>  }
+>>
+>> -/*
+>> - * Althogh controller spec said SLC ECC is forceb to be 4bit,
+>> - * but denali controller in MRST only support 15bit and 8bit ECC
+>> - * correction
+>> - */
+>> -#define ECC_8BITS    14
+>> -#define ECC_15BITS   26
+>> +static int denali_calc_ecc_bytes(int step_size, int strength)
+>> +{
+>> +     int coef;
+>> +
+>> +     switch (step_size) {
+>> +     case 512:
+>> +             coef = 13;
+>> +             break;
+>> +     case 1024:
+>> +             coef = 14;
+>> +             break;
+>> +     default:
+>> +             return -ENOTSUPP;
+>> +     }
+>> +
+>> +     return DIV_ROUND_UP(strength * coef, 16) * 2;
+>
+> or just
+>
+>         return DIV_ROUND_UP(strength * fls(8 * step_size), 16) * 2;
 
-will be fixed in v2.
+Good idea.
 
-Sorry for missing that!
+I heard the Denali ECC engine uses BCH code.
+I am not familiar with the algorithm,
+but probably this generalized formula is correct.
 
-Andrey
+>> +}
+>> +
+>> +static int denali_ecc_setup(struct mtd_info *mtd, struct nand_chip *chip,
+>> +                         struct denali_nand_info *denali)
+>> +{
+>> +     struct nand_ecc_caps caps;
+>> +     int ret;
+>> +
+>> +     caps.stepinfos = denali->stepinfo;
+>> +     caps.nstepinfos = 1;
+>> +     caps.calc_ecc_bytes = denali_calc_ecc_bytes;
+>> +     caps.oob_reserve_bytes = denali->bbtskipbytes;
+>
+> If you get rid of this oob_reserve_bytes field, you can define caps as
+> a static const and even directly store ecc_caps in denali_nand_info.
+
+To make caps static const, denali_calc_ecc_bytes must be exported
+to be referenced from denali_dt/denali_pci.
+I am reluctant to do it.
+
+
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
