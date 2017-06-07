@@ -1,36 +1,49 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 6/6] dt-bindings: net: btusb: DT fix
- s/interrupt-name/interrupt-names/
-Date: Wed, 7 Jun 2017 17:43:18 -0500
-Message-ID: <20170607224318.wswmmhdwmqtvvqob@rob-hp-laptop>
-References: <1496407129-13527-1-git-send-email-geert+renesas@glider.be>
- <1496407129-13527-7-git-send-email-geert+renesas@glider.be>
+From: Ilia Mirkin <imirkin@alum.mit.edu>
+Subject: Re: [PATCH 19/19] ARM: sun6i: a31s: Enable HDMI display output on the
+ MSI Primo81 tablet
+Date: Wed, 7 Jun 2017 18:47:53 -0400
+Message-ID: <CAKb7UvgKhgCpeNzUX1ecFPuF6j+KvAWW3vprZ9nnVMBBJFi_zQ@mail.gmail.com>
+References: <20170602101024.18940-1-wens@csie.org> <20170602101024.18940-20-wens@csie.org>
+ <20170602194219.hiajr7dt2oikm52q@flea.lan> <20170607223625.aofk3cba3w4cvlys@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1496407129-13527-7-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Catalin Marinas <catalin.marinas@arm.com>, Chanho Min <chanho.min@lge.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170607223625.aofk3cba3w4cvlys@rob-hp-laptop>
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-sunxi@googlegroups.com, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMDIsIDIwMTcgYXQgMDI6Mzg6NDlQTSArMDIwMCwgR2VlcnQgVXl0dGVyaG9l
-dmVuIHdyb3RlOgo+IEZpeGVzOiBmZDkxM2VmN2NlNjE5NDY3ICgiQmx1ZXRvb3RoOiBidHVzYjog
-QWRkIG91dC1vZi1iYW5kIHdha2V1cCBzdXBwb3J0IikKPiBTaWduZWQtb2ZmLWJ5OiBHZWVydCBV
-eXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPgo+IC0tLQo+IHYzOgo+ICAgLSBO
-ZXcuCj4gLS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvYnR1c2Iu
-dHh0IHwgMiArLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKyksIDEgZGVsZXRpb24o
-LSkKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Jun 7, 2017 at 6:36 PM, Rob Herring <robh@kernel.org> wrote:
+> On Fri, Jun 02, 2017 at 09:42:19PM +0200, Maxime Ripard wrote:
+>> On Fri, Jun 02, 2017 at 06:10:24PM +0800, Chen-Yu Tsai wrote:
+>> > The MSI Primo81 tablet has a micro HDMI connector at the bottom.
+>> > This is connected to the SoCs HDMI output.
+>> >
+>> > Enable the display pipeline and the HDMI output.
+>> >
+>> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> > ---
+>> >  arch/arm/boot/dts/sun6i-a31s-primo81.dts | 25 +++++++++++++++++++++++++
+>> >  1 file changed, 25 insertions(+)
+>> >
+>> > diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>> > index f3712753fa42..26154b2f87a3 100644
+>> > --- a/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>> > +++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+>> > @@ -52,17 +52,42 @@
+>> >  / {
+>> >     model = "MSI Primo81 tablet";
+>> >     compatible = "msi,primo81", "allwinner,sun6i-a31s";
+>> > +
+>> > +   hdmi-connector {
+>> > +           compatible = "hdmi-connector";
+>> > +           type = "c";
+>>
+>> Should we add a connector type for this one?
+>
+> c as in USB Type C? I'd prefer to see a new compatible string. Is type
+> even documented?
+
+Probably as in HDMI Type C (there are Type A, C, and D connectors, aka
+"regular", "mini", and "micro").
