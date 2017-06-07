@@ -1,55 +1,66 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/2] Add bcm2835aux interrupt controller
-Date: Wed, 7 Jun 2017 22:37:38 +0200 (CEST)
-Message-ID: <1357388068.219504.1496867858076@email.1und1.de>
-References: <6dc301c8-e5a2-1334-c476-1ce7e303787f@raspberrypi.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH 6/8] firmware: arm_scmi: add initial support for power protocol
+Date: Wed, 7 Jun 2017 22:38:42 +0200
+Message-ID: <CAK8P3a3Vw2AvAr4hNd0A6Tih1YNorjiG2jkhcuo=CK1RF+aLFA@mail.gmail.com>
+References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com> <1496851812-19623-7-git-send-email-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6dc301c8-e5a2-1334-c476-1ce7e303787f-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+In-Reply-To: <1496851812-19623-7-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Cc: alexanders83-S0/GAf8tV78@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Phil,
+On Wed, Jun 7, 2017 at 6:10 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
 
-> Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org> hat am 7. Juni 2017 um 13:11 geschrieben:
-> 
-> 
-> Devices in the AUX block share a common interrupt line, with a register
-> indicating which devices have active IRQs. Expose this as a nested
-> interrupt controller to avoid IRQ sharing problems (easily observed if
-> UART1 and SPI1/2 are enabled simultaneously).
-> 
-> The interrupt functionality could arguably be forked off as a separate
-> irqchip driver, but the clock driver has already claimed the AUX_IRQ
-> register so some driver and DT surgery would still be required.
-> Eric Anholt thought that including it here is reasonable, but I'm
-> prepared to split it out if this is considered too hacky.
+> +struct scmi_msg_resp_power_attributes {
+> +       __le16 num_domains;
+> +       __le16 reserved;
+> +       __le32 stats_addr_low;
+> +       __le32 stats_addr_high;
+> +       __le32 stats_size;
+> +} __packed;
+> +
+> +struct scmi_msg_resp_power_domain_attributes {
+> +       __le32 flags;
+> +#define SUPPORTS_STATE_SET_NOTIFY(x)   ((x) & BIT(31))
+> +#define SUPPORTS_STATE_SET_ASYNC(x)    ((x) & BIT(30))
+> +#define SUPPORTS_STATE_SET_SYNC(x)     ((x) & BIT(29))
+> +           u8 name[SCMI_MAX_STR_SIZE];
+> +} __packed;
 
-in order to give the maintainers (e.g. irqchip) a chance, they should be included into CC.
+I think it would be better to leave out the __packed here, which
+can lead to rather inefficient code. It's only really a problem when
+building with -mstrict-align, but it's better to write code in a way that
+doesn't rely on that.
 
-> 
-> Phil Elwell (2):
->   clk: bcm2835: Add AUX interrupt controller
+> +static int
+> +scmi_power_domain_attributes_get(struct scmi_handle *handle, u32 domain,
+> +                                struct power_dom_info *dom_info)
+> +{
+> +       int ret;
+> +       struct scmi_xfer *t;
+> +       struct scmi_msg_resp_power_domain_attributes *attr;
+> +
+> +       ret = scmi_one_xfer_init(handle, POWER_DOMAIN_ATTRIBUTES,
+> +                                SCMI_PROTOCOL_POWER, sizeof(domain),
+> +                                sizeof(*attr), &t);
+> +       if (ret)
+> +               return ret;
+> +
+> +       *(__le32 *)t->tx.buf = cpu_to_le32(domain);
+> +       attr = (struct scmi_msg_resp_power_domain_attributes *)t->rx.buf;
 
-Either way the dt-binding must be updated as a separate patch. So Rob can review it.
+It seems you require a similar pattern in each caller of scmi_one_xfer_init(),
+but it seems a little clumsy to always require those casts, so maybe there
+is a nicer way to do this. How about making scmi_one_xfer_init() act
+as an allocation function and having it return the buffer or a PTR_ERR?
 
-Thanks for submitting this upstream.
+It also seems odd to have it named 'init' but actually allocate the scmi_xfer
+structure rather than filling a local variable that gets passed by reference.
 
-Stefan
-
->   ARM: dts: bcm283x: Enable AUX interrupt controller
-> 
->  arch/arm/boot/dts/bcm283x.dtsi    |  12 +++-
->  drivers/clk/bcm/clk-bcm2835-aux.c | 120 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 129 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 1.9.1
->
+       Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
