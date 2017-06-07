@@ -1,62 +1,160 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
-Date: Wed, 7 Jun 2017 13:52:50 +0200
-Message-ID: <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
-References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
- <1496404155-8344-5-git-send-email-noralf@tronnes.org>
- <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 3/3] ARM: dts: meson8: add and use the real clock
+ controller
+Date: Wed, 7 Jun 2017 13:55:25 +0200
+Message-ID: <64d7a1cf-1a6f-2872-cef2-925782210c96@baylibre.com>
+References: <20170604183341.21417-1-martin.blumenstingl@googlemail.com>
+ <20170604183341.21417-4-martin.blumenstingl@googlemail.com>
+ <1496607638.3552.20.camel@baylibre.com>
+ <CAFBinCBi4TrX58XoSkiCLiUECWQhsETdC-PeW1xR7+fMr=U3kg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFBinCBi4TrX58XoSkiCLiUECWQhsETdC-PeW1xR7+fMr=U3kg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, mturquette@baylibre.com, sboyd@codeaurora.org, linux@armlinux.org.uk, robh+dt@kernel.org, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Emil,
+On 06/05/2017 12:13 AM, Martin Blumenstingl wrote:
+> Hi Jerome,
+> 
+> On Sun, Jun 4, 2017 at 10:20 PM, Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> On Sun, 2017-06-04 at 20:33 +0200, Martin Blumenstingl wrote:
+>>> This removes the dummy clk81 gate and replaces it with the actual clock
+>>> controller's CLKID_CLK81. This will also allow us to pass the real clock
+>>> IDs to all devices where the clock is controlled by clkc in the future.
+>>>
+>>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>>
+>> This is going in the right direction and at least align meson8 and meson8b.
+>>
+>> Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+> that was quick, thanks!
+> 
+>> Later on, I'm wondering if some of these clock assignments should be moved to
+>> meson.dtsi ? meson8.dtsi and meson8b.dtsi look very similar
+> actually I think that the Meson6/MX/<however it is called> clock
+> controller is different (based on a quick look).
+> so we may end up with a similar situation that we have on
+> GXBB/GXL/GXM: the clock controller will stay in the corresponding
+> .dtsi and we have to "duplicate" the clock assignments for each SoC
+> 
+> however, I guess at some point we can create a .dtsi with all the bits
+> that are shared between Meson8 and Meson8b (during my experiments
+> meson8m2.dtsi just inherits meson8.dtsi and overrides a bunch of
+> compatibles). we can discuss whether we want to move the clock
+> controller to that shared/common .dtsi as well once we start
+> generalizing this
 
+Personally I think we should use the same schema as arm64 and leave the clock
+definitions in the SoCs dtsi files.
 
-Den 07.06.2017 11.30, skrev Emil Velikov:
-> Hi Noralf,
->
-> Small drive-by comment, noticed while going through my morning coffee.
-> By no means a full review.
->
-> On 2 June 2017 at 12:49, Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
->
->
->> +/* pixels on display are numbered from 1 */
->> +static void repaper_all_pixels(struct repaper_epd *epd, u8 **pp,
->> +                              const u8 *data, u8 fixed_value, const u8 *mask,
->> +                              enum repaper_stage stage)
->> +{
->> +       unsigned int b;
->> +
->> +       for (b = epd->width / 8; b > 0; b--) {
->> +               if (data) {
->> +                       u16 pixels = repaper_interleave_bits(data[b - 1]);
->> +                       u16 pixel_mask = 0xffff;
->> +
->> +                       if (mask) {
->> +                               u16 pixel_mask = repaper_interleave_bits(mask[b - 1]);
->> +
->> +                               pixel_mask = (pixel_mask ^ pixels) & 0x5555;
->> +                               pixel_mask |= pixel_mask << 1;
-> The second u16 pixel_mask seems very suspicious - likely a copy/paste mistake ?
+Neil
 
-Actually it's a correct copy. The same pattern is used in three places.
-I did look at the datasheet to try and understand what was going on,
-but the current and previous frame is applied in normal and inverted
-form in several stages, the pixels are converted to black/white/nochange
-and then I lost track of it all.
-So I decided that the Pervasive people who wrote the driver probably
-knew what they where doing. At least it works!
-
-Noralf.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>> ---
+>>>  arch/arm/boot/dts/meson8.dtsi | 32 ++++++++++++++++----------------
+>>>  1 file changed, 16 insertions(+), 16 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+>>> index 6993077331c7..9b0b3ddbb17e 100644
+>>> --- a/arch/arm/boot/dts/meson8.dtsi
+>>> +++ b/arch/arm/boot/dts/meson8.dtsi
+>>> @@ -43,6 +43,7 @@
+>>>   *     OTHER DEALINGS IN THE SOFTWARE.
+>>>   */
+>>>
+>>> +#include <dt-bindings/clock/meson8b-clkc.h>
+>>>  #include <dt-bindings/gpio/meson8-gpio.h>
+>>>  /include/ "meson.dtsi"
+>>>
+>>> @@ -82,13 +83,6 @@
+>>>                       reg = <0x203>;
+>>>               };
+>>>       };
+>>> -
+>>> -     clk81: clk@0 {
+>>> -             #clock-cells = <0>;
+>>> -             compatible = "fixed-clock";
+>>> -             clock-frequency = <141666666>;
+>>> -     };
+>>> -
+>>>  }; /* end of / */
+>>>
+>>>  &aobus {
+>>> @@ -126,6 +120,12 @@
+>>>  };
+>>>
+>>>  &cbus {
+>>> +     clkc: clock-controller@4000 {
+>>> +             #clock-cells = <1>;
+>>> +             compatible = "amlogic,meson8-clkc";
+>>> +             reg = <0x8000 0x4>, <0x4000 0x460>;
+>>> +     };
+>>> +
+>>>       pinctrl_cbus: pinctrl@9880 {
+>>>               compatible = "amlogic,meson8-cbus-pinctrl";
+>>>               reg = <0x9880 0x10>;
+>>> @@ -172,20 +172,20 @@
+>>>  };
+>>>
+>>>  &ethmac {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>       clock-names = "stmmaceth";
+>>>  };
+>>>
+>>>  &i2c_AO {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>>
+>>>  &i2c_A {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>>
+>>>  &i2c_B {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>>
+>>>  &L2 {
+>>> @@ -195,21 +195,21 @@
+>>>  };
+>>>
+>>>  &spifc {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>>
+>>>  &uart_AO {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>>
+>>>  &uart_A {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>>
+>>>  &uart_B {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>>
+>>>  &uart_C {
+>>> -     clocks = <&clk81>;
+>>> +     clocks = <&clkc CLKID_CLK81>;
+>>>  };
+>>
