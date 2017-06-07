@@ -1,192 +1,58 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 1/2] clk: bcm2835: Add AUX interrupt controller
-Date: Wed, 7 Jun 2017 22:57:11 +0200 (CEST)
-Message-ID: <1668075368.219772.1496869031097@email.1und1.de>
-References: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Add bcm2835aux interrupt controller
+Date: Wed, 7 Jun 2017 13:58:25 -0700
+Message-ID: <b3d5b3c1-a9ab-99bf-a1b2-3a1e4579c0ff@gmail.com>
+References: <6dc301c8-e5a2-1334-c476-1ce7e303787f@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Phil Elwell <phil@raspberrypi.org>
-Cc: alexanders83@web.de, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-rpi-kernel@lists.infradead.org, Florian Fainelli <f.fainelli@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6dc301c8-e5a2-1334-c476-1ce7e303787f-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Phil Elwell <phil@raspberrypi.org> hat am 7. Juni 2017 um 13:11 geschrieben:
-> 
-> 
+On 06/07/2017 04:11 AM, Phil Elwell wrote:
 > Devices in the AUX block share a common interrupt line, with a register
 > indicating which devices have active IRQs. Expose this as a nested
 > interrupt controller to avoid IRQ sharing problems (easily observed if
 > UART1 and SPI1/2 are enabled simultaneously).
 > 
-> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-> ---
->  drivers/clk/bcm/clk-bcm2835-aux.c | 120 ++++++++++++++++++++++++++++++++++++++
->  1 file changed, 120 insertions(+)
+> The interrupt functionality could arguably be forked off as a separate
+> irqchip driver, but the clock driver has already claimed the AUX_IRQ
+> register so some driver and DT surgery would still be required.
+> Eric Anholt thought that including it here is reasonable, but I'm
+> prepared to split it out if this is considered too hacky.
+
+You probably remember your fix to the irqchip drive being flamed because
+the irqchip driver was re-purposed as an ARM SMP secondary core bringup
+method, maybe we can avoid doing the same mistake and having this a
+separate interrupt controller be under drivers/irqchip/*?
+
+Even if the clock driver already claims the AUX_IRQ register space, we
+can still have an irqchip ioremap() the two register offsets that it
+cares about (AUXIRQ, AUXENB) and just manage that 8 bytes worth of
+register space. We just need to make sure that the clock driver really
+does not touch those (why would it) and that there won't be any
+conflicting request_mem_region() against the same register range.
+
+Thanks!
+
 > 
-> diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c b/drivers/clk/bcm/clk-bcm2835-aux.c
-> index bd750cf..41e0702 100644
-> --- a/drivers/clk/bcm/clk-bcm2835-aux.c
-> +++ b/drivers/clk/bcm/clk-bcm2835-aux.c
-> @@ -17,17 +17,107 @@
->  #include <linux/clk/bcm2835.h>
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/of_irq.h>
+> Phil Elwell (2):
+>   clk: bcm2835: Add AUX interrupt controller
+>   ARM: dts: bcm283x: Enable AUX interrupt controller
+> 
+>  arch/arm/boot/dts/bcm283x.dtsi    |  12 +++-
+>  drivers/clk/bcm/clk-bcm2835-aux.c | 120 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 129 insertions(+), 3 deletions(-)
+> 
 
-Please try to keep alphabetical order.
 
->  #include <dt-bindings/clock/bcm2835-aux.h>
->  
->  #define BCM2835_AUXIRQ		0x00
->  #define BCM2835_AUXENB		0x04
->  
-> +#define BCM2835_AUXIRQ_NUM_IRQS  3
-> +
-> +#define BCM2835_AUXIRQ_UART_IRQ  0
-> +#define BCM2835_AUXIRQ_SPI1_IRQ  1
-> +#define BCM2835_AUXIRQ_SPI2_IRQ  2
-> +
-> +#define BCM2835_AUXIRQ_UART_MASK 0x01
-> +#define BCM2835_AUXIRQ_SPI1_MASK 0x02
-> +#define BCM2835_AUXIRQ_SPI2_MASK 0x04
-
-I think these are candidates for the BIT macro.
-
-> +
-> +#define BCM2835_AUXIRQ_ALL_MASK \
-> +	(BCM2835_AUXIRQ_UART_MASK | \
-> +	 BCM2835_AUXIRQ_SPI1_MASK | \
-> +	 BCM2835_AUXIRQ_SPI2_MASK)
-> +
-> +struct auxirq_state {
-> +	void __iomem      *status;
-> +	u32                enables;
-> +	struct irq_domain *domain;
-> +	struct regmap     *local_regmap;
-
-This member isn't used, can it be dropped?
-
-> +};
-> +
-> +static struct auxirq_state auxirq __read_mostly;
-> +
-> +static irqreturn_t bcm2835_auxirq_handler(int irq, void *dev_id)
-> +{
-> +	u32 stat = readl_relaxed(auxirq.status);
-> +	u32 masked = stat & auxirq.enables;
-> +
-> +	if (masked & BCM2835_AUXIRQ_UART_MASK)
-> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> +						     BCM2835_AUXIRQ_UART_IRQ));
-> +
-> +	if (masked & BCM2835_AUXIRQ_SPI1_MASK)
-> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> +						     BCM2835_AUXIRQ_SPI1_IRQ));
-> +
-> +	if (masked & BCM2835_AUXIRQ_SPI2_MASK)
-> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
-> +						     BCM2835_AUXIRQ_SPI2_IRQ));
-> +
-> +	return (masked & BCM2835_AUXIRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
-> +}
-> +
-> +static int bcm2835_auxirq_xlate(struct irq_domain *d,
-> +				 struct device_node *ctrlr,
-> +				 const u32 *intspec, unsigned int intsize,
-> +				 unsigned long *out_hwirq,
-> +				 unsigned int *out_type)
-> +{
-> +	if (WARN_ON(intsize != 1))
-> +		return -EINVAL;
-> +
-> +	if (WARN_ON(intspec[0] >= BCM2835_AUXIRQ_NUM_IRQS))
-> +		return -EINVAL;
-> +
-> +	*out_hwirq = intspec[0];
-> +	*out_type = IRQ_TYPE_NONE;
-> +	return 0;
-> +}
-> +
-> +static void bcm2835_auxirq_mask(struct irq_data *data)
-> +{
-> +	irq_hw_number_t hwirq = irqd_to_hwirq(data);
-> +
-> +	auxirq.enables &= ~(1 << hwirq);
-> +}
-> +
-> +static void bcm2835_auxirq_unmask(struct irq_data *data)
-> +{
-> +	irq_hw_number_t hwirq = irqd_to_hwirq(data);
-> +
-> +	auxirq.enables |= (1 << hwirq);
-> +}
-> +
-> +static struct irq_chip bcm2835_auxirq_chip = {
-> +	.name = "bcm2835-auxirq",
-> +	.irq_mask = bcm2835_auxirq_mask,
-> +	.irq_unmask = bcm2835_auxirq_unmask,
-> +};
-> +
-> +static const struct irq_domain_ops bcm2835_auxirq_ops = {
-> +	.xlate = bcm2835_auxirq_xlate//irq_domain_xlate_onecell
-
-The C++ comment looks like an artifact
-
-> +};
-> +
->  static int bcm2835_aux_clk_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> +	struct device_node *node = dev->of_node;
->  	struct clk_hw_onecell_data *onecell;
->  	const char *parent;
->  	struct clk *parent_clk;
-> +	int parent_irq;
->  	struct resource *res;
->  	void __iomem *reg, *gate;
->  
-> @@ -41,6 +131,36 @@ static int bcm2835_aux_clk_probe(struct platform_device *pdev)
->  	if (IS_ERR(reg))
->  		return PTR_ERR(reg);
->  
-> +	parent_irq = irq_of_parse_and_map(node, 0);
-> +	if (parent_irq) {
-> +		int ret;
-> +		int i;
-> +
-> +		/* Manage the AUX irq as well */
-> +		auxirq.status = reg + BCM2835_AUXIRQ;
-> +		auxirq.domain = irq_domain_add_linear(node,
-> +						      BCM2835_AUXIRQ_NUM_IRQS,
-> +						      &bcm2835_auxirq_ops,
-> +						      NULL);
-> +		if (!auxirq.domain)
-> +			return -ENXIO;
-> +
-> +		for (i = 0; i < BCM2835_AUXIRQ_NUM_IRQS; i++) {
-> +			unsigned int irq = irq_create_mapping(auxirq.domain, i);
-> +
-> +			if (irq == 0)
-> +				return -ENXIO;
-> +
-> +			irq_set_chip_and_handler(irq, &bcm2835_auxirq_chip,
-> +						 handle_level_irq);
-> +		}
-> +
-> +		ret = devm_request_irq(dev, parent_irq, bcm2835_auxirq_handler,
-> +				       0, "bcm2835-auxirq", NULL);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	onecell = devm_kmalloc(dev, sizeof(*onecell) + sizeof(*onecell->hws) *
->  			       BCM2835_AUX_CLOCK_COUNT, GFP_KERNEL);
->  	if (!onecell)
-> -- 
-> 1.9.1
->
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
