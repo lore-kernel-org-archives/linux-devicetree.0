@@ -1,7 +1,7 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 06/15] serial: 8250_ingenic: Parse earlycon options
-Date: Wed,  7 Jun 2017 22:04:30 +0200
-Message-ID: <20170607200439.24450-7-paul@crapouillou.net>
+Subject: [PATCH 14/15] devicetree/bindings: Add GCW vendor prefix
+Date: Wed,  7 Jun 2017 22:04:38 +0200
+Message-ID: <20170607200439.24450-15-paul@crapouillou.net>
 References: <20170607200439.24450-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170607200439.24450-1-paul@crapouillou.net>
@@ -10,59 +10,25 @@ To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.c
 Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-In the devicetree, it is possible to specify the baudrate, parity,
-bits, flow of the early console, by passing a configuration string like
-this:
-
-aliases {
-	serial0 = &uart0;
-};
-
-chosen {
-	stdout-path = "serial0:57600n8";
-};
-
-This, for instance, will configure the early console for a baudrate of
-57600 bps, no parity, and 8 bits per baud.
-
-This patches implements parsing of this configuration string in the
-8250_ingenic driver, which previously just ignored it.
+Games Consoles Worldwide, mostly known under the acronym GCW, is the
+creator of the GCW Zero open-source video game system.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/tty/serial/8250/8250_ingenic.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
-index b31b2ca552d1..59f3e632df49 100644
---- a/drivers/tty/serial/8250/8250_ingenic.c
-+++ b/drivers/tty/serial/8250/8250_ingenic.c
-@@ -99,14 +99,24 @@ static int __init ingenic_early_console_setup(struct earlycon_device *dev,
- 					      const char *opt)
- {
- 	struct uart_port *port = &dev->port;
--	unsigned int baud, divisor;
-+	unsigned int divisor;
-+	int baud = 115200;
- 
- 	if (!dev->port.membase)
- 		return -ENODEV;
- 
-+	if (opt) {
-+		char options[256];
-+		unsigned int parity, bits, flow; /* unused for now */
-+
-+		strlcpy(options, opt, sizeof(options));
-+		uart_parse_options(options, &baud, &parity, &bits, &flow);
-+	}
-+
- 	ingenic_early_console_setup_clock(dev);
- 
--	baud = dev->baud ?: 115200;
-+	if (dev->baud)
-+		baud = dev->baud;
- 	divisor = DIV_ROUND_CLOSEST(port->uartclk, 16 * baud);
- 
- 	early_out(port, UART_IER, 0);
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index c03d20140366..abe0b72b05b6 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -114,6 +114,7 @@ focaltech	FocalTech Systems Co.,Ltd
+ friendlyarm	Guangzhou FriendlyARM Computer Tech Co., Ltd
+ fsl	Freescale Semiconductor
+ fujitsu	Fujitsu Ltd.
++gcw Games Consoles Worldwide
+ ge	General Electric Company
+ geekbuying	GeekBuying
+ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
 -- 
 2.11.0
