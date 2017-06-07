@@ -1,88 +1,81 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: rk1108: change to "max-frequency" from
- "clock-freq-min-max"
-Date: Wed, 07 Jun 2017 21:53:35 +0900
-Message-ID: <3ce2ba9f-5bb9-6a6c-212c-720e4a06a6fa@samsung.com>
-References: <CGME20170601044338epcas5p3c202667dad66dabd4f2ad866e8ad870e@epcas5p3.samsung.com>
-        <20170601044336.5745-1-jh80.chung@samsung.com>
-        <CANbgqAS9_xUfbH6j1u6oM9h8nHAaWUm4Afg8baq4Wxm1vCqg9w@mail.gmail.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
+Date: Wed, 7 Jun 2017 14:57:52 +0200
+Message-ID: <0b9aa6f8-9116-8d4c-ce32-1e9fa61b14e0@tronnes.org>
+References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
+ <1496404155-8344-5-git-send-email-noralf@tronnes.org>
+ <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
+ <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
+ <CACvgo51+eC8VnB_HspvW0hRX4c8Rn3wV=Rpz-wO-Pf_PR3POMw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CANbgqAS9_xUfbH6j1u6oM9h8nHAaWUm4Afg8baq4Wxm1vCqg9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CACvgo51+eC8VnB_HspvW0hRX4c8Rn3wV=Rpz-wO-Pf_PR3POMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Yan <andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 06/06/2017 10:15 AM, Andy Yan wrote:
-> Hi Jaehoon:
-> 
-> 
-> 2017-06-01 12:43 GMT+08:00 Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
-> 
->> "clock-freq-min-max" was deprecated. There is only using in rk1108.dtsi.
->> Use the "max-frequency" for removiing "clock-freq-min-max" in future.
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/rk1108.dtsi | 6 +++---
->>  1 file changed, 3 insertions(+), 3 deletions(-)
+Den 07.06.2017 14.14, skrev Emil Velikov:
+> On 7 June 2017 at 12:52, Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
+>> Hi Emil,
 >>
 >>
->   This file now renamed to rv1108.dtsi as rockchip official named it as
-> RV1108.
->    The rename patch now is in Heiko's linux-rockchip tree:v4.13 dts32,
-> maybe you should rebase this patch on it.
+>> Den 07.06.2017 11.30, skrev Emil Velikov:
+>>> Hi Noralf,
+>>>
+>>> Small drive-by comment, noticed while going through my morning coffee.
+>>> By no means a full review.
+>>>
+>>> On 2 June 2017 at 12:49, Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
+>>>
+>>>
+>>>> +/* pixels on display are numbered from 1 */
+>>>> +static void repaper_all_pixels(struct repaper_epd *epd, u8 **pp,
+>>>> +                              const u8 *data, u8 fixed_value, const u8
+>>>> *mask,
+>>>> +                              enum repaper_stage stage)
+>>>> +{
+>>>> +       unsigned int b;
+>>>> +
+>>>> +       for (b = epd->width / 8; b > 0; b--) {
+>>>> +               if (data) {
+>>>> +                       u16 pixels = repaper_interleave_bits(data[b -
+>>>> 1]);
+>>>> +                       u16 pixel_mask = 0xffff;
+>>>> +
+>>>> +                       if (mask) {
+>>>> +                               u16 pixel_mask =
+>>>> repaper_interleave_bits(mask[b - 1]);
+>>>> +
+>>>> +                               pixel_mask = (pixel_mask ^ pixels) &
+>>>> 0x5555;
+>>>> +                               pixel_mask |= pixel_mask << 1;
+>>> The second u16 pixel_mask seems very suspicious - likely a copy/paste
+>>> mistake ?
+>>
+>> Actually it's a correct copy. The same pattern is used in three places.
+>> I did look at the datasheet to try and understand what was going on,
+>> but the current and previous frame is applied in normal and inverted
+>> form in several stages, the pixels are converted to black/white/nochange
+>> and then I lost track of it all.
+>> So I decided that the Pervasive people who wrote the driver probably
+>> knew what they where doing. At least it works!
+>>
+> What I meant was:
+>
+> Within the 'if (mask)' block you have a second, shadowing declaration
+> of pixel_mask.
+> Hence all the calculation done within is discarded and not used
+> further down in the code.
 
-Thanks for noticing this. After checking it, i will resend the patch.
+Ah, I see, it's indeed lost and useless.
+I'll see what happens if I don't shadow the variable.
+Thanks.
 
-Best Regards,
-Jaehoon Chung
-
-> 
-> diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
->> index 1297924..a9b5293 100644
->> --- a/arch/arm/boot/dts/rk1108.dtsi
->> +++ b/arch/arm/boot/dts/rk1108.dtsi
->> @@ -174,7 +174,7 @@
->>
->>         emmc: dwmmc@30110000 {
->>                 compatible = "rockchip,rk1108-dw-mshc",
->> "rockchip,rk3288-dw-mshc";
->> -               clock-freq-min-max = <400000 150000000>;
->> +               max-frequency = <150000000>;
->>                 clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
->>                          <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
->>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> @@ -186,7 +186,7 @@
->>
->>         sdio: dwmmc@30120000 {
->>                 compatible = "rockchip,rk1108-dw-mshc",
->> "rockchip,rk3288-dw-mshc";
->> -               clock-freq-min-max = <400000 150000000>;
->> +               max-frequency = <150000000>;
->>                 clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
->>                          <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
->>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> @@ -198,7 +198,7 @@
->>
->>         sdmmc: dwmmc@30130000 {
->>                 compatible = "rockchip,rk1108-dw-mshc",
->> "rockchip,rk3288-dw-mshc";
->> -               clock-freq-min-max = <400000 100000000>;
->> +               max-frequency = <100000000>;
->>                 clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
->>                          <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
->>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
->> --
->> 2.10.2
->>
->>
-> 
+Noralf.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
