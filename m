@@ -1,49 +1,82 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 6/8] regulator: hi6421: Describe consumed platform device
-Date: Wed,  7 Jun 2017 15:06:04 +0800
-Message-ID: <20170607070606.8889-7-guodong.xu@linaro.org>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH v5 7/8] arm64: dts: hikey960: add device node for pmic and regulators
+Date: Wed,  7 Jun 2017 15:06:05 +0800
+Message-ID: <20170607070606.8889-8-guodong.xu@linaro.org>
 References: <20170607070606.8889-1-guodong.xu@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170607070606.8889-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170607070606.8889-1-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, horms+renesas@verge.net.au, olof@lixom.net, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, damm+renesas@opensource.se, ard.biesheuvel@linaro.org, linus.walleij@linaro.org, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The hi6421-regulator driver consumes a similarly named platform device.
-Adding that to the module device table, allows modprobe to locate this
-driver once the device is created.
+From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
 
-Cc: Jeremy Linton <lintonrjeremy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+add device node for hi6421 pmic core and hi6421v530
+voltage regulator,include LDO(1,3,9,11,15,16)
+
+Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
+Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
 ---
- drivers/regulator/hi6421-regulator.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 46 +++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/drivers/regulator/hi6421-regulator.c b/drivers/regulator/hi6421-regulator.c
-index 62c5f54..259c3a8 100644
---- a/drivers/regulator/hi6421-regulator.c
-+++ b/drivers/regulator/hi6421-regulator.c
-@@ -621,7 +621,14 @@ static int hi6421_regulator_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct platform_device_id hi6421_regulator_table[] = {
-+	{ .name = "hi6421-regulator" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, hi6421_regulator_table);
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+index ca448f0..e579333 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
++++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+@@ -97,6 +97,52 @@
+ 			default-state = "off";
+ 		};
+ 	};
 +
- static struct platform_driver hi6421_regulator_driver = {
-+	.id_table = hi6421_regulator_table,
- 	.driver = {
- 		.name	= "hi6421-regulator",
- 	},
++	pmic: pmic@fff34000 {
++		compatible = "hisilicon,hi6421v530-pmic";
++		reg = <0x0 0xfff34000 0x0 0x1000>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		regulators {
++			ldo3: LDO3 { /* HDMI */
++				regulator-name = "VOUT3_1V85";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <2200000>;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo9: LDO9 { /* SDCARD I/O */
++				regulator-name = "VOUT9_1V8_2V95";
++				regulator-min-microvolt = <1750000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-enable-ramp-delay = <240>;
++			};
++
++			ldo11: LDO11 { /* Low Speed Connector */
++				regulator-name = "VOUT11_1V8_2V95";
++				regulator-min-microvolt = <1750000>;
++				regulator-max-microvolt = <3300000>;
++				regulator-enable-ramp-delay = <240>;
++			};
++
++			ldo15: LDO15 { /* UFS VCC */
++				regulator-name = "VOUT15_3V0";
++				regulator-min-microvolt = <1750000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-boot-on;
++				regulator-always-on;
++				regulator-enable-ramp-delay = <120>;
++			};
++
++			ldo16: LDO16 { /* SD VDD */
++				regulator-name = "VOUT16_2V95";
++				regulator-min-microvolt = <1750000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-enable-ramp-delay = <360>;
++			};
++		};
++	};
+ };
+ 
+ &i2c0 {
 -- 
 2.10.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
