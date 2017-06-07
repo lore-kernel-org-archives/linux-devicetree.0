@@ -1,176 +1,45 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/8] mfd: hi6421-pmic: add support for HiSilicon Hi6421v530
-Date: Wed, 7 Jun 2017 15:04:51 +0800
-Message-ID: <CAFGCpxxkseX0DnvbMva3ZEUJ0xuv1NA=QFKdn8Z3rN7wCzF7Bw@mail.gmail.com>
-References: <20170606085143.13154-1-guodong.xu@linaro.org> <20170606085143.13154-5-guodong.xu@linaro.org>
- <20170606135446.ceqow7bfdlhk4kuv@dell>
+From: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 0/3] Add stm32h743i-disco board
+Date: Wed, 7 Jun 2017 09:04:56 +0200
+Message-ID: <f8d09cbf-8535-5906-28ee-6d9774a49c44@st.com>
+References: <1496765613-697-1-git-send-email-patrice.chotard@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606135446.ceqow7bfdlhk4kuv@dell>
+In-Reply-To: <1496765613-697-1-git-send-email-patrice.chotard-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: patrice.chotard-qxv4g6HH51o@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 6, 2017 at 9:54 PM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+Hi Patrice
+
+On 06/06/2017 06:13 PM, patrice.chotard-qxv4g6HH51o@public.gmane.org wrote:
+> From: Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>
 >
-> On Tue, 06 Jun 2017, Guodong Xu wrote:
+> This series adds basic support for the stm32h743i discovery board
+> based on stm32h7 MCU.
 >
-> > Add support for HiSilicon Hi6421v530 PMIC. Hi6421v530 communicates with
-> > main SoC via memory-mapped I/O.
-> >
-> > Hi6421v530 and Hi6421 are PMIC chips from the same vendor, HiSilicon,
-> > but at different revisions. They share the same memory-mapped I/O
-> > design. They differ in integrated devices, such as regulator details,
-> > LDO voltage points.
-> >
-> > Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> > Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/mfd/hi6421-pmic-core.c  | 68 ++++++++++++++++++++++++++++++---=
---------
-> >  include/linux/mfd/hi6421-pmic.h |  5 +++
-> >  2 files changed, 55 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/drivers/mfd/hi6421-pmic-core.c b/drivers/mfd/hi6421-pmic-c=
-ore.c
-> > index b1139d4..4568a43 100644
-> > --- a/drivers/mfd/hi6421-pmic-core.c
-> > +++ b/drivers/mfd/hi6421-pmic-core.c
+> Patrice Chotard (3):
+>   ARM: dts: stm32h743: Add usart2_pins
+>   ARM: dts: stm32h743: Add usart2 support
+>   ARM: dts: stm32h743: Add stm32h743i-disco board
 >
-> [...]
->
-> >  static int hi6421_pmic_probe(struct platform_device *pdev)
-> >  {
-> >       struct hi6421_pmic *pmic;
-> >       struct resource *res;
-> > +     const struct of_device_id *id;
-> > +     const struct mfd_cell *subdevs;
-> >       void __iomem *base;
-> > -     int ret;
-> > +     int n_subdevs, ret;
-> > +
-> > +     id =3D of_match_device(of_hi6421_pmic_match, &pdev->dev);
-> > +     if (!id)
-> > +             return -EINVAL;
-> >
-> >       pmic =3D devm_kzalloc(&pdev->dev, sizeof(*pmic), GFP_KERNEL);
-> >       if (!pmic)
-> > @@ -57,18 +80,33 @@ static int hi6421_pmic_probe(struct platform_device=
- *pdev)
-> >               return PTR_ERR(pmic->regmap);
-> >       }
-> >
-> > -     /* set over-current protection debounce 8ms */
-> > -     regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
-> > +     platform_set_drvdata(pdev, pmic);
-> > +
-> > +     switch ((unsigned long)id->data) {
->
-> Whilst this is not a blocker, it would be nicer to place this into a
-> 'type' variable, in order to clarify what data you are using.
+>  arch/arm/boot/dts/Makefile               |  3 +-
+>  arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 13 ++++++
+>  arch/arm/boot/dts/stm32h743.dtsi         |  8 ++++
+>  arch/arm/boot/dts/stm32h743i-disco.dts   | 74 ++++++++++++++++++++++++++++++++
+>  4 files changed, 97 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/arm/boot/dts/stm32h743i-disco.dts
 >
 
-I will add that.
-enum hi6421_type type;
+Series looks fine for me, but can you change commit header please. For 
+example: ARM: dts: stm32: Add usart2_pins on stm32h743.
 
+Soon it will be done, I will apply it for next pull request.
 
->
-> > +     case HI6421:
-> > +             /* set over-current protection debounce 8ms */
-> > +             regmap_update_bits(pmic->regmap, HI6421_OCP_DEB_CTRL_REG,
-> >                               (HI6421_OCP_DEB_SEL_MASK
-> >                                | HI6421_OCP_EN_DEBOUNCE_MASK
-> >                                | HI6421_OCP_AUTO_STOP_MASK),
-> >                               (HI6421_OCP_DEB_SEL_8MS
-> >                                | HI6421_OCP_EN_DEBOUNCE_ENABLE));
-> >
-> > -     platform_set_drvdata(pdev, pmic);
-> > +             subdevs =3D hi6421_devs;
-> > +             n_subdevs =3D ARRAY_SIZE(hi6421_devs);
-> > +             break;
-> > +     case HI6421_V530:
-> > +             subdevs =3D hi6421v530_devs;
-> > +             n_subdevs =3D ARRAY_SIZE(hi6421v530_devs);
-> > +             break;
-> > +     default:
-> > +             dev_err(&pdev->dev, "Unknown device type %ld\n",
-> > +                                             (unsigned long)id->data);
-> > +             return -EINVAL;
-> > +     }
-> >
-> > -     ret =3D devm_mfd_add_devices(&pdev->dev, 0, hi6421_devs,
-> > -                                ARRAY_SIZE(hi6421_devs), NULL, 0, NULL=
-);
-> > +     ret =3D devm_mfd_add_devices(&pdev->dev, PLATFORM_DEVID_NONE,
-> > +                                subdevs, n_subdevs, NULL, 0, NULL);
-> >       if (ret) {
-> >               dev_err(&pdev->dev, "Failed to add child devices: %d\n", =
-ret);
-> >               return ret;
-> > @@ -77,16 +115,10 @@ static int hi6421_pmic_probe(struct platform_devic=
-e *pdev)
-> >       return 0;
-> >  }
-> >
-> > -static const struct of_device_id of_hi6421_pmic_match_tbl[] =3D {
-> > -     { .compatible =3D "hisilicon,hi6421-pmic", },
-> > -     { },
-> > -};
-> > -MODULE_DEVICE_TABLE(of, of_hi6421_pmic_match_tbl);
-> > -
-> >  static struct platform_driver hi6421_pmic_driver =3D {
-> >       .driver =3D {
-> > -             .name   =3D "hi6421_pmic",
-> > -             .of_match_table =3D of_hi6421_pmic_match_tbl,
-> > +             .name =3D "hi6421_pmic",
-> > +             .of_match_table =3D of_hi6421_pmic_match,
-> >       },
-> >       .probe  =3D hi6421_pmic_probe,
-> >  };
-> > diff --git a/include/linux/mfd/hi6421-pmic.h b/include/linux/mfd/hi6421=
--pmic.h
-> > index 587273e..2457438 100644
-> > --- a/include/linux/mfd/hi6421-pmic.h
-> > +++ b/include/linux/mfd/hi6421-pmic.h
-> > @@ -38,4 +38,9 @@ struct hi6421_pmic {
-> >       struct regmap           *regmap;
-> >  };
-> >
-> > +enum hi6421_type {
-> > +     HI6421      =3D 1,
-> > +     HI6421_V530 =3D 2,
-> > +};
-> > +
->
-> As programmers we usually start counting at 0.  Then you can rely on
-> the C standard to populate the remaining values.
->
-> Something like:
->
-> enum hi6421_type {
->         HI6421 =3D 0,
->         HI6421_V530,
-> };
->
-> ... is more normal.
-
-
-:) sure. thanks. I will do.
-
--Guodong
-
->
->
-> >  #endif               /* __HI6421_PMIC_H */
->
-> --
-> Lee Jones
-> Linaro STMicroelectronics Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+Regards
+Alex
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
