@@ -1,35 +1,40 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: iio: stm32-adc: add support for
- STM32H7
-Date: Wed, 7 Jun 2017 15:09:40 -0500
-Message-ID: <20170607200940.j6i2mtyc3nu4hwkj@rob-hp-laptop>
-References: <1496050100-25854-1-git-send-email-fabrice.gasnier@st.com>
- <1496050100-25854-2-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v3] serial: 8250_of: Add reset support
+Date: Wed, 7 Jun 2017 15:10:23 -0500
+Message-ID: <20170607201023.pghqc5q6z5kgin2d@rob-hp-laptop>
+References: <20170529095753.1210-1-joel@jms.id.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1496050100-25854-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <20170529095753.1210-1-joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 29, 2017 at 11:28:16AM +0200, Fabrice Gasnier wrote:
-> Document support for STM32H7 Analog to Digital Converter.
-> Main difference is regarding compatible, clock definitions and new
-> features like differential channels support:
-> STM32H7 ADC block has two clock inputs, common clock for all ADCs.
-> One 'bus' clock for registers access, and one optional 'adc' clock
-> for analog circuitry (bus clock may be used for conversions).
+On Mon, May 29, 2017 at 07:27:52PM +0930, Joel Stanley wrote:
+> This adds the hooks for an optional reset controller in the 8250 device
+> tree node.
 > 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>
+> Reviewed-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
-> Changes in v2:
-> - remarks from Rob: one compatible per line, s/unused/not present/
-> - document resolutions available on stm32h7
-> ---
->  .../devicetree/bindings/iio/adc/st,stm32-adc.txt   | 28 ++++++++++++++++------
->  1 file changed, 21 insertions(+), 7 deletions(-)
+> v3:
+>  - deassert reset after disabling clock in _remove to to match _setup
+>  order
+> 
+> v2:
+>  Address Philipp's comments. Thanks for the review!
+>  - use _shared variant
+>  - remove unnecessary error handling
+> 
+>  Documentation/devicetree/bindings/serial/8250.txt |  1 +
+>  drivers/tty/serial/8250/8250_of.c                 | 10 ++++++++++
+>  2 files changed, 11 insertions(+)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
