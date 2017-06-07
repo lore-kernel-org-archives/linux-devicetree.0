@@ -1,263 +1,83 @@
-From: Tim Harvey <tharvey@gateworks.com>
-Subject: Re: [PATCH v6 3/6] irqdomain: Add irq_domain_{push,pop}_irq() functions.
-Date: Wed, 7 Jun 2017 09:09:29 -0700
-Message-ID: <CAJ+vNU2ejbQUTBGnJsLr+pYdJsUc=yHZvbrKNm0bo5nZL=DhBw@mail.gmail.com>
-References: <1491931269-15650-1-git-send-email-david.daney@cavium.com>
- <1491931269-15650-4-git-send-email-david.daney@cavium.com> <CACRpkdZ8byO6=rWS-TJDJ21-duvyau_EQpN2hWj27DF8ur6fnQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZ8byO6=rWS-TJDJ21-duvyau_EQpN2hWj27DF8ur6fnQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: David Daney <david.daney@cavium.com>, Bjorn Helgaas <helgaas@kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [RFC PATCH 0/8] firmware: ARM System Control and Management Interface(SCMI) support
+Date: Wed,  7 Jun 2017 17:10:04 +0100
+Message-ID: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 24, 2017 at 6:05 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> Sorry for top posting but we need to loop in Bjorn Helgass and the
-> linux-pci mailing list on this patch, at least so they see it, and can
-> recognize similar cases in the future.
->
-> (The patch set if very nice.)
->
-> Yours,
-> Linus Walleij
->
-> On Tue, Apr 11, 2017 at 7:21 PM, David Daney <david.daney@cavium.com> wrote:
->> For an already existing irqdomain hierarchy, as might be obtained via
->> a call to pci_enable_msix_range(), a PCI driver wishing to add an
->> additional irqdomain to the hierarchy needs to be able to insert the
->> irqdomain to that already initialized hierarchy.  Calling
->> irq_domain_create_hierarchy() allows the new irqdomain to be created,
->> but no existing code allows for initializing the associated irq_data.
->>
->> Add a couple of helper functions (irq_domain_push_irq() and
->> irq_domain_pop_irq()) to initialize the irq_data for the new
->> irqdomain added to an existing hierarchy.
->>
->> Signed-off-by: David Daney <david.daney@cavium.com>
->> ---
->>  include/linux/irqdomain.h |   3 +
->>  kernel/irq/irqdomain.c    | 178 ++++++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 181 insertions(+)
->>
->> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
->> index 9f36160..0316846 100644
->> --- a/include/linux/irqdomain.h
->> +++ b/include/linux/irqdomain.h
->> @@ -425,6 +425,9 @@ extern void irq_domain_free_irqs_common(struct irq_domain *domain,
->>  extern void irq_domain_free_irqs_top(struct irq_domain *domain,
->>                                      unsigned int virq, unsigned int nr_irqs);
->>
->> +extern int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg);
->> +extern int irq_domain_pop_irq(struct irq_domain *domain, int virq);
->> +
->>  extern int irq_domain_alloc_irqs_parent(struct irq_domain *domain,
->>                                         unsigned int irq_base,
->>                                         unsigned int nr_irqs, void *arg);
->> diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
->> index 31805f2..ea9d30d 100644
->> --- a/kernel/irq/irqdomain.c
->> +++ b/kernel/irq/irqdomain.c
->> @@ -1304,6 +1304,184 @@ int __irq_domain_alloc_irqs(struct irq_domain *domain, int irq_base,
->>         return ret;
->>  }
->>
->> +/* The irq_data was moved, fix the revmap to refer to the new location */
->> +static void irq_domain_fix_revmap(struct irq_data *d)
->> +{
->> +       void **slot;
->> +
->> +       if (d->hwirq < d->domain->revmap_size)
->> +               return; /* Not using radix tree. */
->> +
->> +       /* Fix up the revmap. */
->> +       mutex_lock(&revmap_trees_mutex);
->> +       slot = radix_tree_lookup_slot(&d->domain->revmap_tree, d->hwirq);
->> +       if (slot)
->> +               radix_tree_replace_slot(&d->domain->revmap_tree, slot, d);
->> +       mutex_unlock(&revmap_trees_mutex);
->> +}
->> +
->> +/**
->> + * irq_domain_push_irq() - Push a domain in to the top of a hierarchy.
->> + * @domain:    Domain to push.
->> + * @virq:      Irq to push the domain in to.
->> + * @arg:       Passed to the irq_domain_ops alloc() function.
->> + *
->> + * For an already existing irqdomain hierarchy, as might be obtained
->> + * via a call to pci_enable_msix(), add an additional domain to the
->> + * head of the processing chain.  Must be called before request_irq()
->> + * has been called.
->> + */
->> +int irq_domain_push_irq(struct irq_domain *domain, int virq, void *arg)
->> +{
->> +       struct irq_data *child_irq_data;
->> +       struct irq_data *root_irq_data = irq_get_irq_data(virq);
->> +       struct irq_desc *desc;
->> +       int rv = 0;
->> +
->> +       /*
->> +        * Check that no action has been set, which indicates the virq
->> +        * is in a state where this function doesn't have to deal with
->> +        * races between interrupt handling and maintaining the
->> +        * hierarchy.  This will catch gross misuse.  Attempting to
->> +        * make the check race free would require holding locks across
->> +        * calls to struct irq_domain_ops->alloc(), which could lead
->> +        * to deadlock, so we just do a simple check before starting.
->> +        */
->> +       desc = irq_to_desc(virq);
->> +       if (!desc)
->> +               return -EINVAL;
->> +       if (WARN_ON(desc->action))
->> +               return -EBUSY;
->> +
->> +       if (domain == NULL)
->> +               return -EINVAL;
->> +
->> +       if (WARN_ON(!domain->ops->alloc))
->> +               return -EINVAL;
->> +
->> +       if (!root_irq_data)
->> +               return -EINVAL;
->> +
->> +       child_irq_data = kzalloc_node(sizeof(*child_irq_data), GFP_KERNEL,
->> +                                     irq_data_get_node(root_irq_data));
->> +       if (!child_irq_data)
->> +               return -ENOMEM;
->> +
->> +       mutex_lock(&irq_domain_mutex);
->> +
->> +       /* Copy the original irq_data. */
->> +       *child_irq_data = *root_irq_data;
->> +
->> +       irq_domain_fix_revmap(child_irq_data);
->> +
->> +       /*
->> +        * Overwrite the root_irq_data, which is embedded in struct
->> +        * irq_desc, with values for this domain.
->> +        */
->> +       root_irq_data->parent_data = child_irq_data;
->> +       root_irq_data->domain = domain;
->> +       root_irq_data->mask = 0;
->> +       root_irq_data->hwirq = 0;
->> +       root_irq_data->chip = NULL;
->> +       root_irq_data->chip_data = NULL;
->> +       rv = domain->ops->alloc(domain, virq, 1, arg);
->> +       if (rv) {
->> +               /* Restore the original irq_data. */
->> +               *root_irq_data = *child_irq_data;
->> +               irq_domain_fix_revmap(root_irq_data);
->> +               goto error;
->> +       }
->> +
->> +       if (root_irq_data->hwirq < domain->revmap_size) {
->> +               domain->linear_revmap[root_irq_data->hwirq] = virq;
->> +       } else {
->> +               mutex_lock(&revmap_trees_mutex);
->> +               radix_tree_insert(&domain->revmap_tree,
->> +                                 root_irq_data->hwirq, root_irq_data);
->> +               mutex_unlock(&revmap_trees_mutex);
->> +       }
->> +error:
->> +       mutex_unlock(&irq_domain_mutex);
->> +
->> +       return rv;
->> +}
->> +EXPORT_SYMBOL_GPL(irq_domain_push_irq);
->> +
->> +/**
->> + * irq_domain_pop_irq() - Remove a domain from the top of a hierarchy.
->> + * @domain:    Domain to remove.
->> + * @virq:      Irq to remove the domain from.
->> + *
->> + * Undo the effects of a call to irq_domain_push_irq().  Must be
->> + * called either before request_irq() or after free_irq().
->> + */
->> +int irq_domain_pop_irq(struct irq_domain *domain, int virq)
->> +{
->> +       struct irq_data *root_irq_data = irq_get_irq_data(virq);
->> +       struct irq_data *child_irq_data;
->> +       struct irq_data *tmp_irq_data;
->> +       struct irq_desc *desc;
->> +
->> +       /*
->> +        * Check that no action is set, which indicates the virq is in
->> +        * a state where this function doesn't have to deal with races
->> +        * between interrupt handling and maintaining the hierarchy.
->> +        * This will catch gross misuse.  Attempting to make the check
->> +        * race free would require holding locks across calls to
->> +        * struct irq_domain_ops->free(), which could lead to
->> +        * deadlock, so we just do a simple check before starting.
->> +        */
->> +       desc = irq_to_desc(virq);
->> +       if (!desc)
->> +               return -EINVAL;
->> +       if (WARN_ON(desc->action))
->> +               return -EBUSY;
->> +
->> +       if (domain == NULL)
->> +               return -EINVAL;
->> +
->> +       if (!root_irq_data)
->> +               return -EINVAL;
->> +
->> +       tmp_irq_data = irq_domain_get_irq_data(domain, virq);
->> +
->> +       /* We can only "pop" if this domain is at the top of the list */
->> +       if (WARN_ON(root_irq_data != tmp_irq_data))
->> +               return -EINVAL;
->> +
->> +       if (WARN_ON(root_irq_data->domain != domain))
->> +               return -EINVAL;
->> +
->> +       child_irq_data = root_irq_data->parent_data;
->> +       if (WARN_ON(!child_irq_data))
->> +               return -EINVAL;
->> +
->> +       mutex_lock(&irq_domain_mutex);
->> +
->> +       root_irq_data->parent_data = NULL;
->> +
->> +       if (root_irq_data->hwirq >= domain->revmap_size) {
->> +               mutex_lock(&revmap_trees_mutex);
->> +               radix_tree_delete(&domain->revmap_tree, root_irq_data->hwirq);
->> +               mutex_unlock(&revmap_trees_mutex);
->> +       }
->> +
->> +       if (domain->ops->free)
->> +               domain->ops->free(domain, virq, 1);
->> +
->> +       /* Restore the original irq_data. */
->> +       *root_irq_data = *child_irq_data;
->> +
->> +       irq_domain_fix_revmap(root_irq_data);
->> +
->> +       mutex_unlock(&irq_domain_mutex);
->> +
->> +       kfree(child_irq_data);
->> +
->> +       return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(irq_domain_pop_irq);
->> +
->>  /**
->>   * irq_domain_free_irqs - Free IRQ number and associated data structures
->>   * @virq:      base IRQ number
->> --
->> 1.8.3.1
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-gpio" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi all,
 
-Linus,
+Let me begin admitting that we are introducing yet another protocol to
+achieve same things as many existing protocols like ARM SCPI, TI SCI,
+QCOM RPM, Nvidia Tegra BPMP, and so on.
 
-It looks like we are still waiting on ACK's for this from the IRQ
-folk. Are the right people cc'd? Seem's like there's been an adequate
-review period with no response.
+All I can say is that this new ARM System Control and Management
+Interface(SCMI) is more flexible and easily extensible than any of the
+existing ones. Many vendors were involved in the making of this formal
+specification and is now officially published[1].
 
+There is a strong trend in the industry to provide micro-controllers in
+systems to abstract various power, or other system management tasks.
+These controllers usually have similar interfaces, both in terms of the
+functions that are provided by them, and in terms of how requests are
+communicated to them.
+
+This specification is to standardise and avoid (any further)
+fragmentation in the design of such interface by various vendors.
+
+This patch set is intended to get feedback on the design and structure
+of the code. This is not complete and not fully tested due to
+non-availability of firmware with full feature set at this time.
+
+It currently doesn't support notification, asynchronous/delayed response,
+perf/power statistics region and sensor register region to name a few.
+I have borrowed some of the ideas of message allocation/management from
+TI SCI.
+
+--
 Regards,
+Sudeep
 
-Tim
+[1] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
+
+Sudeep Holla (8):
+  Documentation: add DT binding for ARM System Control and Management
+    Interface(SCMI) protocol
+  firmware: arm_scmi: add basic driver infrastructure for SCMI
+  firmware: arm_scmi: add common infrastructure and support for base
+    protocol
+  firmware: arm_scmi: add initial support for performance protocol
+  firmware: arm_scmi: add initial support for clock protocol
+  firmware: arm_scmi: add initial support for power protocol
+  firmware: arm_scmi: add initial support for sensor protocol
+  firmware: arm_scmi: probe and initialise all the supported protocols
+
+ Documentation/devicetree/bindings/arm/arm,scmi.txt | 193 +++++
+ drivers/firmware/Kconfig                           |  21 +
+ drivers/firmware/Makefile                          |   1 +
+ drivers/firmware/arm_scmi/Makefile                 |   2 +
+ drivers/firmware/arm_scmi/base.c                   | 290 +++++++
+ drivers/firmware/arm_scmi/clock.c                  | 340 +++++++++
+ drivers/firmware/arm_scmi/common.h                 | 127 ++++
+ drivers/firmware/arm_scmi/driver.c                 | 832 +++++++++++++++++++++
+ drivers/firmware/arm_scmi/perf.c                   | 398 ++++++++++
+ drivers/firmware/arm_scmi/power.c                  | 237 ++++++
+ drivers/firmware/arm_scmi/sensors.c                | 269 +++++++
+ include/linux/scmi_protocol.h                      | 160 ++++
+ 12 files changed, 2870 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
+ create mode 100644 drivers/firmware/arm_scmi/Makefile
+ create mode 100644 drivers/firmware/arm_scmi/base.c
+ create mode 100644 drivers/firmware/arm_scmi/clock.c
+ create mode 100644 drivers/firmware/arm_scmi/common.h
+ create mode 100644 drivers/firmware/arm_scmi/driver.c
+ create mode 100644 drivers/firmware/arm_scmi/perf.c
+ create mode 100644 drivers/firmware/arm_scmi/power.c
+ create mode 100644 drivers/firmware/arm_scmi/sensors.c
+ create mode 100644 include/linux/scmi_protocol.h
+
+--
+2.7.4
