@@ -1,77 +1,51 @@
-From: Ilia Mirkin <imirkin-FrUbXkNCsVf2fBVCVOL8/A@public.gmane.org>
-Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
-Date: Wed, 7 Jun 2017 08:11:23 -0400
-Message-ID: <CAKb7UvguXEE2-kFVPvrca=KfP3qdGD0PZWYLJC=bNzCK2qy=2w@mail.gmail.com>
-References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
- <1496404155-8344-5-git-send-email-noralf@tronnes.org> <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
- <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v2 04/11] drm: sun4i: add support for H3's TCON0/1
+Date: Wed, 07 Jun 2017 17:44:56 +0800
+Message-ID: <52F9F9C7-9A9C-435D-A0AF-FDD4317DAD69@aosc.io>
+References: <20170604160149.30230-1-icenowy@aosc.io> <20170604160149.30230-5-icenowy@aosc.io> <3642057.oKT9kIlu8M@jernej-laptop> <493AC6F2-3CB3-48F5-9568-A34AA927238F@aosc.io> <20170607094343.qqiwnu2mhmoi6jn7@flea.lan>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e782fcac-9d84-00bf-6c5a-8d908d9570f2-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Noralf_Tr=C3=B8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Cc: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBOW337EQKGQECWHBI3I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170607094343.qqiwnu2mhmoi6jn7-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 7, 2017 at 7:52 AM, Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wr=
-ote:
-> Hi Emil,
->
->
-> Den 07.06.2017 11.30, skrev Emil Velikov:
->>
->> Hi Noralf,
->>
->> Small drive-by comment, noticed while going through my morning coffee.
->> By no means a full review.
->>
->> On 2 June 2017 at 12:49, Noralf Tr=C3=B8nnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
->>
->>
->>> +/* pixels on display are numbered from 1 */
->>> +static void repaper_all_pixels(struct repaper_epd *epd, u8 **pp,
->>> +                              const u8 *data, u8 fixed_value, const u8
->>> *mask,
->>> +                              enum repaper_stage stage)
->>> +{
->>> +       unsigned int b;
->>> +
->>> +       for (b =3D epd->width / 8; b > 0; b--) {
->>> +               if (data) {
->>> +                       u16 pixels =3D repaper_interleave_bits(data[b -
->>> 1]);
->>> +                       u16 pixel_mask =3D 0xffff;
->>> +
->>> +                       if (mask) {
->>> +                               u16 pixel_mask =3D
->>> repaper_interleave_bits(mask[b - 1]);
->>> +
->>> +                               pixel_mask =3D (pixel_mask ^ pixels) &
->>> 0x5555;
->>> +                               pixel_mask |=3D pixel_mask << 1;
->>
->> The second u16 pixel_mask seems very suspicious - likely a copy/paste
->> mistake ?
->
->
-> Actually it's a correct copy. The same pattern is used in three places.
-> I did look at the datasheet to try and understand what was going on,
-> but the current and previous frame is applied in normal and inverted
-> form in several stages, the pixels are converted to black/white/nochange
-> and then I lost track of it all.
-> So I decided that the Pervasive people who wrote the driver probably
-> knew what they where doing. At least it works!
 
-It's doubling up the bits... 0x5555 is a 0101010101010101 pattern, so
-pixel_mask |=3D pixel_mask << 1 (after pixel_mask is x & 0x5555) is just
-saying that the same bit should be repeated twice.
 
-As for why you'd want to do that ... no clue. Maybe it's a
-2-bit-per-pixel packed mask and you want to set each pixel to 11 or 00
-here?
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+=E4=BA=8E 2017=E5=B9=B46=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=885:4=
+3:43, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Mon, Jun 05, 2017 at 03:03:47AM +0800, Icenowy Zheng wrote:
+>> >You should also expand function sun4i_drv_node_is_tcon() at
+>sun4i_drv.c
+>> >with=20
+>> >new entries, but I'm not sure if this fits in this patch.
+>>=20
+>> Instead I think it should be renamed to something like
+>> "sun4i_drv_node_is_tcon_with_ch0".
+>
+>I'm not sure, or at least, it shouldn't make any difference, since
+>TCON without a channel 0 will not have an endpoint 0, so this will be
+>dealt with already.
+
+But that will prevent new coders from add CH1-less TCON
+compatibles to this function.
+
+>
+>Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
