@@ -1,50 +1,93 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 0/3] Add R8A7743/SK-RZG1M PFC support
-Date: Wed, 7 Jun 2017 19:52:20 +0200
-Message-ID: <CAMuHMdUDO-+F_fOf4Z1ZPdZhs_MBn8J6ig-Pn4K0oMvv-EM2gw@mail.gmail.com>
-References: <20170420185132.258111787@cogentembedded.com> <20170424061217.GC14843@verge.net.au>
- <4937ae78-8800-1a11-547b-2269d063d45a@cogentembedded.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v2 03/11] drm: sun4i: ignore swapped
+ mixer<->tcon connection for DE2
+Date: Wed, 07 Jun 2017 20:15:12 +0200
+Message-ID: <74846068.xK7nHVXuC6@jernej-laptop>
+References: <20170604160149.30230-1-icenowy@aosc.io> <01A7F22E-C4FF-4B4B-A9BC-FF0C96B996B9@aosc.io> <20170607143827.4ng5gedvzn3f5pyx@flea.lan>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <4937ae78-8800-1a11-547b-2269d063d45a@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBN4F4HEQKGQEFRTTRQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170607143827.4ng5gedvzn3f5pyx-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+Hi!
 
-On Wed, Jun 7, 2017 at 6:16 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 04/24/2017 09:12 AM, Simon Horman wrote:
->
->>>    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
->>> 'renesas-devel-20170420-v4.11-rc7' tag.  We're adding the R8A7743 PFC
->>> node
->>> and then describing the pins for SCIF0 and Ether devices declared
->>> earlier.
->>> These patches depend on the R8A7743 PFC suport in order to work properly.
->>
->>
->> Thanks. I have marked these as deferred pending acceptance of the PFC
->> driver changes. Please repost or otherwise let me know when dependency
->> is satisfied.
->
->    FYI, Linus W. has pulled the R8A774x PFC patches for 4.13:
->
-> https://www.spinics.net/lists/linux-renesas-soc/msg14824.html
+Dne sreda, 07. junij 2017 ob 16:38:27 CEST je Maxime Ripard napisal(a):
+> On Wed, Jun 07, 2017 at 06:01:02PM +0800, Icenowy Zheng wrote:
+> > >I have no idea what this is supposed to be doing either.
+> > >
+> > >I might be wrong, but I really feel like there's a big mismatch
+> > >between your commit log, and what you actually implement.
+> > >
+> > >In your commit log, you should state:
+> > >
+> > >A) What is the current behaviour
+> > >B) Why that is a problem
+> > >C) How do you address it
+> > >
+> > >And you don't.
+> > >
+> > >However, after discussing it with Chen-Yu, it seems like you're trying
+> > >to have all the mixers probed before the TCONs. If that is so, there's
+> > >nothing specific to the H3 here, and we also have the same issue on
+> > >dual-pipeline DE1 (A10, A20, A31). Chen-Yu worked on that a bit, but
+> > >the easiest solution would be to move from a DFS algorithm to walk
+> > >down the graph to a BFS one.
+> > >
+> > >That way, we would add all mixers first, then the TCONs, then the
+> > >encoders, and the component framework will probe them in order.
+> > 
+> > No. I said that they're swappable, however, I don't want to
+> > implement the swap now, but hardcode 0-0 1-1 connection.
+> 
+> We're on the same page, it's definitely not what I was mentionning
+> here. This would require a significant rework, and the usecase is
+> still unclear for now.
+> 
+> > However, as you and Chen-Yu said, device tree should reflect the
+> > real hardware, there will be bonus endpoints for the swapped
+> > connection.
+> 
+> If by bonus you mean connections from mixer 0 to tcon 1 and mixer 1 to
+> tcon 0, then yes, we're going to need it.
+> 
+> > What I want to do is to ignore the bonus connection, in order to
+> > prevent them from confusing the code.
+> > 
+> > If you just change the bind sequence, I think it cannot be
+> > prevented that wrong connections will be bound.
+> 
+> This is where I don't follow you anymore. The component framework
+> doesn't list connections but devices. The swapped connections do not
+> matter here, we have the same set of devices: mixer0, mixer1, tcon0
+> and tcon1.
+> 
+> The thing that does change with your patch is that before, the binding
+> sequence would have been mixer0, tcon0, tcon1, mixer1. With your
+> patch, it's mixer0, tcon0, mixer1, tcon1.
+> 
+> So, again, stating what issue you were seeing before making this patch
+> would be very helpful to see what you're trying to do / fix.
 
-But Simon has to wait for v4.13-rc1 to apply the DTS parts, to avoid
-regressions in renesas/devel.
+If I understand correctly, she wants to make sure that DT has mixer0 - tcon0 
+and mixer1 - tcon1 relationship and discard mixed relationship. I also believe 
+that this is just temporary measure until mixed relationship is supported by 
+the driver.
 
-Gr{oetje,eeting}s,
+Maybe we could just leave this out for now and define only one endpoint in DT 
+for TVE instead of two? Vast majority of users will have 0-0 and 1-1 
+relationship, since there is not much point connecting HDMI with less capable 
+mixer than TVE.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Best regards,
+Jernej
