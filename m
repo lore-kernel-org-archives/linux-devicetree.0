@@ -1,98 +1,144 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 07/15] MIPS: Setup boot_command_line before plat_mem_setup
-Date: Wed,  7 Jun 2017 22:04:31 +0200
-Message-ID: <20170607200439.24450-8-paul@crapouillou.net>
+Subject: [PATCH 10/15] MIPS: ingenic: Add machine info for supported boards
+Date: Wed,  7 Jun 2017 22:04:34 +0200
+Message-ID: <20170607200439.24450-11-paul@crapouillou.net>
 References: <20170607200439.24450-1-paul@crapouillou.net>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170607200439.24450-1-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton@imgtec.com>
+This makes sure that 'mips_machtype' will be initialized to the SoC
+version used on the board.
 
-Platforms using DT will typically call __dt_setup_arch from
-plat_mem_setup. This in turn calls early_init_dt_scan. When
-CONFIG_CMDLINE is set, this leads to its value being copied into
-boot_command_line by early_init_dt_scan_chosen. If this happens before
-the code setting up boot_command_line in arch_mem_init runs, that code
-will go on to append CONFIG_CMDLINE (via builtin_cmdline) to
-boot_command_line again, duplicating it. For some command line
-parameters (eg. earlycon) this can be a problem. Set up
-boot_command_line before early_init_dt_scan_chosen gets called such that
-it will not write CONFIG_CMDLINE in this scenario & the arguments aren't
-duplicated.
-
-Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/kernel/setup.c | 39 ++++++++++++++++++++-------------------
- 1 file changed, 20 insertions(+), 19 deletions(-)
+ arch/mips/Kconfig         |  1 +
+ arch/mips/jz4740/Makefile |  2 +-
+ arch/mips/jz4740/boards.c | 16 ++++++++++++++++
+ arch/mips/jz4740/setup.c  | 34 +++++++++++++++++++++++++++++-----
+ 4 files changed, 47 insertions(+), 6 deletions(-)
+ create mode 100644 arch/mips/jz4740/boards.c
 
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 01d1dbde5fbf..89785600fde4 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -785,25 +785,6 @@ static void __init arch_mem_init(char **cmdline_p)
- 	struct memblock_region *reg;
- 	extern void plat_mem_setup(void);
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 2828ecde133d..f36ffb93efd9 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -370,6 +370,7 @@ config MACH_INGENIC
+ 	select BUILTIN_DTB
+ 	select USE_OF
+ 	select LIBFDT
++	select MIPS_MACHINE
  
--	/* call board setup routine */
--	plat_mem_setup();
--
--	/*
--	 * Make sure all kernel memory is in the maps.  The "UP" and
--	 * "DOWN" are opposite for initdata since if it crosses over
--	 * into another memory section you don't want that to be
--	 * freed when the initdata is freed.
--	 */
--	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
--			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
--			 BOOT_MEM_RAM);
--	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
--			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
--			 BOOT_MEM_INIT_RAM);
--
--	pr_info("Determined physical RAM map:\n");
--	print_memory_map();
--
- #if defined(CONFIG_CMDLINE_BOOL) && defined(CONFIG_CMDLINE_OVERRIDE)
- 	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
- #else
-@@ -831,6 +812,26 @@ static void __init arch_mem_init(char **cmdline_p)
- 	}
- #endif
- #endif
-+
-+	/* call board setup routine */
-+	plat_mem_setup();
-+
-+	/*
-+	 * Make sure all kernel memory is in the maps.  The "UP" and
-+	 * "DOWN" are opposite for initdata since if it crosses over
-+	 * into another memory section you don't want that to be
-+	 * freed when the initdata is freed.
-+	 */
-+	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
-+			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
-+			 BOOT_MEM_RAM);
-+	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
-+			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
-+			 BOOT_MEM_INIT_RAM);
-+
-+	pr_info("Determined physical RAM map:\n");
-+	print_memory_map();
-+
- 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
+ config LANTIQ
+ 	bool "Lantiq based platforms"
+diff --git a/arch/mips/jz4740/Makefile b/arch/mips/jz4740/Makefile
+index 39d70bde8cfe..87feb246fafe 100644
+--- a/arch/mips/jz4740/Makefile
++++ b/arch/mips/jz4740/Makefile
+@@ -5,7 +5,7 @@
+ # Object file lists.
  
- 	*cmdline_p = command_line;
+ obj-y += prom.o time.o reset.o setup.o \
+-	platform.o timer.o
++	platform.o timer.o boards.o
+ 
+ obj-$(CONFIG_MACH_JZ4740) += gpio.o
+ 
+diff --git a/arch/mips/jz4740/boards.c b/arch/mips/jz4740/boards.c
+new file mode 100644
+index 000000000000..a3cf64cf004a
+--- /dev/null
++++ b/arch/mips/jz4740/boards.c
+@@ -0,0 +1,16 @@
++/*
++ * Ingenic boards support
++ *
++ * Copyright 2017, Paul Cercueil <paul@crapouillou.net>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 or later
++ * as published by the Free Software Foundation.
++ */
++
++#include <asm/bootinfo.h>
++#include <asm/mips_machine.h>
++
++MIPS_MACHINE(MACH_INGENIC_JZ4740, "qi,lb60", "Qi Hardware Ben Nanonote", NULL);
++MIPS_MACHINE(MACH_INGENIC_JZ4780, "img,ci20",
++			"Imagination Technologies CI20", NULL);
+diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
+index 6d0152321819..afd84ee966e8 100644
+--- a/arch/mips/jz4740/setup.c
++++ b/arch/mips/jz4740/setup.c
+@@ -22,6 +22,7 @@
+ #include <linux/of_fdt.h>
+ 
+ #include <asm/bootinfo.h>
++#include <asm/mips_machine.h>
+ #include <asm/prom.h>
+ 
+ #include <asm/mach-jz4740/base.h>
+@@ -53,16 +54,34 @@ static void __init jz4740_detect_mem(void)
+ 	add_memory_region(0, size, BOOT_MEM_RAM);
+ }
+ 
++static unsigned long __init get_board_mach_type(const void *fdt)
++{
++	const struct mips_machine *mach;
++
++	for (mach = (struct mips_machine *)&__mips_machines_start;
++			mach < (struct mips_machine *)&__mips_machines_end;
++			mach++) {
++		if (!fdt_node_check_compatible(fdt, 0, mach->mach_id))
++			return mach->mach_type;
++	}
++
++	return MACH_INGENIC_JZ4740;
++}
++
+ void __init plat_mem_setup(void)
+ {
+ 	int offset;
+ 
++	if (!early_init_dt_scan(__dtb_start))
++		return;
++
+ 	jz4740_reset_init();
+-	__dt_setup_arch(__dtb_start);
+ 
+ 	offset = fdt_path_offset(__dtb_start, "/memory");
+ 	if (offset < 0)
+ 		jz4740_detect_mem();
++
++	mips_machtype = get_board_mach_type(__dtb_start);
+ }
+ 
+ void __init device_tree_init(void)
+@@ -75,13 +94,18 @@ void __init device_tree_init(void)
+ 
+ const char *get_system_type(void)
+ {
+-	if (IS_ENABLED(CONFIG_MACH_JZ4780))
+-		return "JZ4780";
+-
+-	return "JZ4740";
++	return mips_get_machine_name();
+ }
+ 
+ void __init arch_init_irq(void)
+ {
+ 	irqchip_init();
+ }
++
++static int __init jz4740_machine_setup(void)
++{
++	mips_machine_setup();
++
++	return 0;
++}
++arch_initcall(jz4740_machine_setup);
 -- 
 2.11.0
