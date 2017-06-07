@@ -1,49 +1,79 @@
-From: Ilia Mirkin <imirkin@alum.mit.edu>
-Subject: Re: [PATCH 19/19] ARM: sun6i: a31s: Enable HDMI display output on the
- MSI Primo81 tablet
-Date: Wed, 7 Jun 2017 18:47:53 -0400
-Message-ID: <CAKb7UvgKhgCpeNzUX1ecFPuF6j+KvAWW3vprZ9nnVMBBJFi_zQ@mail.gmail.com>
-References: <20170602101024.18940-1-wens@csie.org> <20170602101024.18940-20-wens@csie.org>
- <20170602194219.hiajr7dt2oikm52q@flea.lan> <20170607223625.aofk3cba3w4cvlys@rob-hp-laptop>
+From: Babu Moger <babu.moger@oracle.com>
+Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
+ arch/sparc: Define config parameter CPU_BIG_ENDIAN)
+Date: Wed, 7 Jun 2017 18:07:20 -0500
+Message-ID: <28d6c874-4653-b15d-39b7-57a032abc9c6@oracle.com>
+References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
+ <87a85v7to2.fsf@concordia.ellerman.id.au>
+ <CAMuHMdU1kne4tKRfyx0hr1LXh_c75bYMs0b=vncHqrhB69jqYg@mail.gmail.com>
+ <877f0z6oig.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170607223625.aofk3cba3w4cvlys@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, linux-sunxi@googlegroups.com, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Chen-Yu Tsai <wens@csie.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <877f0z6oig.fsf@concordia.ellerman.id.au>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 7, 2017 at 6:36 PM, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Jun 02, 2017 at 09:42:19PM +0200, Maxime Ripard wrote:
->> On Fri, Jun 02, 2017 at 06:10:24PM +0800, Chen-Yu Tsai wrote:
->> > The MSI Primo81 tablet has a micro HDMI connector at the bottom.
->> > This is connected to the SoCs HDMI output.
->> >
->> > Enable the display pipeline and the HDMI output.
->> >
->> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
->> > ---
->> >  arch/arm/boot/dts/sun6i-a31s-primo81.dts | 25 +++++++++++++++++++++++++
->> >  1 file changed, 25 insertions(+)
->> >
->> > diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->> > index f3712753fa42..26154b2f87a3 100644
->> > --- a/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->> > +++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
->> > @@ -52,17 +52,42 @@
->> >  / {
->> >     model = "MSI Primo81 tablet";
->> >     compatible = "msi,primo81", "allwinner,sun6i-a31s";
->> > +
->> > +   hdmi-connector {
->> > +           compatible = "hdmi-connector";
->> > +           type = "c";
->>
->> Should we add a connector type for this one?
->
-> c as in USB Type C? I'd prefer to see a new compatible string. Is type
-> even documented?
 
-Probably as in HDMI Type C (there are Type A, C, and D connectors, aka
-"regular", "mini", and "micro").
+On 5/29/2017 9:56 PM, Michael Ellerman wrote:
+> Geert Uytterhoeven <geert@linux-m68k.org> writes:
+>
+>> Hi Michael,
+>>
+>> On Mon, May 29, 2017 at 2:07 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
+>>> Geert Uytterhoeven <geert@linux-m68k.org> writes:
+>>>> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
+>>>>> Found this problem while enabling queued rwlock on SPARC.
+>>>>> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
+>>>>> specific byte in qrwlock structure. Without this parameter,
+>>>>> we clear the wrong byte. Here is the code.
+>>>>>
+>>>>> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
+>>>>>   {
+>>>>>          return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
+>>>>>   }
+>>>>>
+>>>>> Define CPU_BIG_ENDIAN for SPARC to fix it.
+>>>>> --- a/arch/sparc/Kconfig
+>>>>> +++ b/arch/sparc/Kconfig
+>>>>> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
+>>>>>   config ARCH_PROC_KCORE_TEXT
+>>>>>          def_bool y
+>>>>>
+>>>>> +config CPU_BIG_ENDIAN
+>>>>> +       bool
+>>>>> +       default y if SPARC
+>>>> Nice catch!
+>>>>
+>>>> Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
+>>>> architectures that may support both.  And it was checked in platform code
+>>>> and drivers only.
+>>>> Hence the symbol is lacking from most architectures. Heck, even
+>>>> architectures that support both may default to one endiannes, and declare
+>>>> only the symbol for the other endianness:
+>>> I guess there's a reason we can't use __BIG_ENDIAN__ / __LITTLE_ENDIAN__ ?
+>> I (C/asm) code we can, in Kconfig we cannot.
+>>
+>> So far we tried always doing that, but a few checks for the semi-existing
+>> Kconfig symbol crept in in generic code. Those could be replaced by the __*__
+>> variants, but consistently having the Kconfig symbols would be useful anyway
+>> (e.g. to avoid building the broken-on-big-endian ISDN drivers).
+> Ah OK, the original mail was citing C code, but yeah I guess it would be
+> handy in Makefiles etc.
+
+Thanks for all the responses.  I see couple of options here.
+
+1. Fix the c code in include/asm-generic/qrwlock.h using ifdef 
+__BIG_ENDIAN__
+     This will fix the issue for us.
+
+2. Define CPU_BIG_ENDIAN for all the missing fixed endian architectures. 
+Because the problem is only for fixed big endian archs.
+
+I prefer the option 1.  What do you guys think ?
+
+> cheers
