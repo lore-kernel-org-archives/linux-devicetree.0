@@ -1,97 +1,28 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] external references for device tree overlays
-Date: Wed, 7 Jun 2017 17:19:33 -0500
-Message-ID: <CAL_JsqJcWD_ZYLL0M5K=3Uy4VhArf2iO+ObjtQer6xFPLXTWdw@mail.gmail.com>
-References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
- <1496688186.12947.10.camel@hp800z> <1496776664.3821.3.camel@seibold.net> <1496823091.28265.3.camel@hp800z>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/7] dt-bindings: Document the VC4 TXP module nodes.
+Date: Wed, 7 Jun 2017 17:21:44 -0500
+Message-ID: <20170607222144.reoc2hzyvug62wir@rob-hp-laptop>
+References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1496392332-8722-7-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496823091.28265.3.camel@hp800z>
+Content-Disposition: inline
+In-Reply-To: <1496392332-8722-7-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>, Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Holm Rauchfuss <holm.rauchfuss-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eben Upton <eben-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Hollingworth,
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 7, 2017 at 3:11 AM, Pantelis Antoniou
-<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Stefani,
->
-> On Tue, 2017-06-06 at 21:17 +0200, Stefani Seibold wrote:
->> Hi Pantelis,
->>
->> thanks for the suggestion. This feature is not very well documented. I
->> tried this on my rasp1 running 4.12.0-rc3 and it doesn't work. My
->> source is:
->>
->> // rapsi example
->> /dts-v1/;
->> /plugin/;
->>
->> / {
->>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
->>
->>     fragment@0 {
->>         target-path = "/soc/i2s@7e203000";
->>         __overlay__ {
->>             #address-cells = <0x00000001>;
->>             #size-cells = <0x00000001>;
->>             test = "test";
->>             timer = <&{/soc/timer@7e0030000}>;
->>         };
->>     };
->> };
->>
->>
->> The resulting overlay is (decompiled with fdtdump):
->>
->> /dts-v1/;
->> // magic:             0xd00dfeed
->> // totalsize:         0x19a (410)
->> // off_dt_struct:     0x38
->> // off_dt_strings:    0x148
->> // off_mem_rsvmap:    0x28
->> // version:           17
->> // last_comp_version: 16
->> // boot_cpuid_phys:   0x0
->> // size_dt_strings:   0x52
->> // size_dt_struct:    0x110
->>
->> / {
->>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
->>     fragment@0 {
->>         target-path = "/soc/i2s@7e203000";
->>         __overlay__ {
->>             #address-cells = <0x00000001>;
->>             #size-cells = <0x00000001>;
->>             test = "test";
->>             timer = <0xdeadbeef>;
->>         };
->>     };
->>     __fixups__ {
->>         /soc/timer@7e0030000 = "/fragment@0/__overlay__:timer:0";
->>     };
->> };
->>
->> But this will not apply:
->>
->> OF: resolver: overlay phandle fixup failed: -22
->> create_overlay: Failed to resolve tree
->>
->>
->
-> Yes, it will not work as it is; my point is that you don't need the
-> magic __*__ node.
->
-> You will need to modify the overlay application code to live insert a
-> phandle (if it doesn't exist) when it encounters a /path fixup.
+On Fri, Jun 02, 2017 at 10:32:11AM +0200, Boris Brezillon wrote:
+> These are part of the vc4 display pipeline.
+> 
+> Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/display/brcm,bcm-vc4.txt | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
-phandles only exist if something in the base tree refers to that node.
-Adding them when they don't exist should definitely be something we
-support for overlays. But don't call that a broken DT. That would be a
-separate issue.
-
-Rob
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
