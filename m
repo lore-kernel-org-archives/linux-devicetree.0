@@ -1,50 +1,67 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 04/11] drm: sun4i: add support for H3's TCON0/1
-Date: Wed, 7 Jun 2017 11:43:43 +0200
-Message-ID: <20170607094343.qqiwnu2mhmoi6jn7@flea.lan>
-References: <20170604160149.30230-1-icenowy@aosc.io>
- <20170604160149.30230-5-icenowy@aosc.io>
- <3642057.oKT9kIlu8M@jernej-laptop>
- <493AC6F2-3CB3-48F5-9568-A34AA927238F@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 00/11] arm64/firmware: Software Delegated Exception
+ Interface
+Date: Wed, 07 Jun 2017 10:45:32 +0100
+Message-ID: <5937CB3C.6040800@arm.com>
+References: <20170515174400.29735-1-james.morse@arm.com>
+ <20170606195944.GM9464@cbox>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="u4bgzgql5drlytxk"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWUV37EQKGQEVUHZO2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <493AC6F2-3CB3-48F5-9568-A34AA927238F-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+In-Reply-To: <20170606195944.GM9464@cbox>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Christoffer Dall <cdall@linaro.org>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
 List-Id: devicetree@vger.kernel.org
 
+Hi Christoffer,
 
---u4bgzgql5drlytxk
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Jun 05, 2017 at 03:03:47AM +0800, Icenowy Zheng wrote:
-> >You should also expand function sun4i_drv_node_is_tcon() at sun4i_drv.c
-> >with 
-> >new entries, but I'm not sure if this fits in this patch.
+On 06/06/17 20:59, Christoffer Dall wrote:
+> On Mon, May 15, 2017 at 06:43:48PM +0100, James Morse wrote:
+>> Running the event handler behind VHE-KVM's back has some side effects: The
+>> event handler will blindly use any registers that are shared between the host
+>> and guest. The two that I think matter are TPIDR_EL1, and the debug state. The
+>> guest may have set MDSCR_EL1 so debug exceptions must remain masked. The
+>> guest's TPIDR_EL1 will be used by the event handler if it accesses per-cpu
+>> variables. This needs fixing. The first part of this series juggles KVMs use
+>> of TPIDR_EL2 so that we share it with the host on VHE systems. An equivalent
+>> change for 32bit is on my todo list. (one alternative to this is to have a
+>> parody world switch in the SDEI event handler, but this would mean special
+>> casing interrupted guests, and be an ABI link to KVM.)
+>>
+>> Causing a synchronous exception from an event handler will cause KVM to
+>> hyp-panic, but may silently succeed if the event didn't interrupt a guest.
+>> (I may WARN_ON() if this happens in a later patch). You because of this you
 > 
-> Instead I think it should be renamed to something like
-> "sun4i_drv_node_is_tcon_with_ch0".
+> The last sentence here doesn't make much sense to me.
 
-I'm not sure, or at least, it shouldn't make any difference, since
-TCON without a channel 0 will not have an endpoint 0, so this will be
-dealt with already.
+If this interrupts a VHE-guest, KVM's hyp-vectors remain in vbar_el2. If we then
+take a synchronous exception, KVM will assume this happened during world switch
+and panic.
+In contrast if you didn't interrupt a guest, the kernel vectors are in vbar_el2,
+so the fault will be handled.
 
-Maxime
+This 'silently succeed' only occurred to me when writing the cover-letter,
+(hence its probably worded badly). I plan to catch it by save-restoring the
+exception registers, and warning if they've changed as this would hyp-panic if
+you interrupted a guest.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---u4bgzgql5drlytxk--
+
+> For the rest of the KVM part it looks mostly good to me, besides the
+> points I raised in the individual patches.
+
+Thanks for taking a look!
+
+
+Thanks,
+
+James
