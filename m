@@ -1,57 +1,91 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/3] dt-bindings: Add Broadcom STB USB PHY binding document
-Date: Wed, 7 Jun 2017 18:02:49 +0530
-Message-ID: <dd1addfb-6bfd-cb0a-839b-6dac00decd47@ti.com>
-References: <1496426512-10590-1-git-send-email-alcooperx@gmail.com>
- <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
+From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: bcm2835: Add AUX interrupt controller
+Date: Wed, 7 Jun 2017 13:37:41 +0100
+Message-ID: <369bb235-77fb-60ad-61d8-3de039e0f838@raspberrypi.org>
+References: <79d4534c-49fe-3af4-13d8-2aaf22120d43@raspberrypi.org>
+ <3148562.tSrsoIclEp@ws-stein>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3148562.tSrsoIclEp@ws-stein>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Stein <alexanders83-S0/GAf8tV78@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Friday 02 June 2017 11:31 PM, Al Cooper wrote:
-> Add DT bindings document for Broadcom STB USB PHYs
+On 07/06/2017 13:07, Alexander Stein wrote:
+> On Wednesday 07 June 2017 12:11:45, Phil Elwell wrote:
+>> Devices in the AUX block share a common interrupt line, with a register
+>> indicating which devices have active IRQs. Expose this as a nested
+>> interrupt controller to avoid IRQ sharing problems (easily observed if
+>> UART1 and SPI1/2 are enabled simultaneously).
+>>
+>> Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+>> ---
+>>  drivers/clk/bcm/clk-bcm2835-aux.c | 120
+>> ++++++++++++++++++++++++++++++++++++++ 1 file changed, 120 insertions(+)
+>>
+>> diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c
+>> b/drivers/clk/bcm/clk-bcm2835-aux.c index bd750cf..41e0702 100644
+>> --- a/drivers/clk/bcm/clk-bcm2835-aux.c
+>> +++ b/drivers/clk/bcm/clk-bcm2835-aux.c
+>> [...]
+>> +struct auxirq_state {
+>> +	void __iomem      *status;
+>> +	u32                enables;
+>> +	struct irq_domain *domain;
+>> +	struct regmap     *local_regmap;
+>> +};
+>> +
+>> +static struct auxirq_state auxirq __read_mostly;
+>> +
+>> +static irqreturn_t bcm2835_auxirq_handler(int irq, void *dev_id)
+>> +{
+>> +	u32 stat = readl_relaxed(auxirq.status);
+>> +	u32 masked = stat & auxirq.enables;
 > 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
-> ---
->  .../bindings/phy/brcm,brcmstb-usb-phy.txt          | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> Doesn't this hide any spurious interrupts? Is this acceptable? I mean getting 
+> informed about spurious interrupts seems nice to me, as it indicates a 
+> hardware/configuration problem.
+
+Thanks for the reply. This interrupt handler is capable of dispatching multiple
+interrupts but must return a single value - IRQ_HANDLED or IRQ_NONE. I've assumed
+that returning IRQ_NONE repeatedly will trigger the spurious interrupt detection.
+
+This implementation returns IRQ_HANDLED if any unmasked interrupts are raised,
+otherwise it returns IRQ_NONE. Therefore provided any spurious interrupt isn't
+always coincident with a real interrupt then it ought eventually to be identified
+as spurious. The alternative - returning IRQ_NONE if there are any spurious
+interrupts - seems prone to causing collateral damage.
+
+What did you have in mind?
+
+>> +	if (masked & BCM2835_AUXIRQ_UART_MASK)
+>> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
+>> +						     BCM2835_AUXIRQ_UART_IRQ));
+>> +
+>> +	if (masked & BCM2835_AUXIRQ_SPI1_MASK)
+>> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
+>> +						     BCM2835_AUXIRQ_SPI1_IRQ));
+>> +
+>> +	if (masked & BCM2835_AUXIRQ_SPI2_MASK)
+>> +		generic_handle_irq(irq_linear_revmap(auxirq.domain,
+>> +						     BCM2835_AUXIRQ_SPI2_IRQ));
+>> +
+>> +	return (masked & BCM2835_AUXIRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
+>> +}
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-> new file mode 100644
-> index 0000000..e1e9b16
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-> @@ -0,0 +1,37 @@
-> +Broadcom STB USB PHY
-> +
-> +Required properties:
-> + - compatible: brcm,brcmstb-usb-phy
-> + - reg: two offset and length pairs. The second pair specifies optional
-> +        registers used by some of the SoCs that support USB 3.x
+> How does interrupt acknowledgement work in these 3 interrupts work?
 
-and the first pair?
-> + - #phy-cells: Shall be 1 as it expects one argument for setting
-> +	       the type of the PHY. Possible values are 0 (1.1 and 2.0),
-> +	       1 (3.x)
+The interrupt "controller" is just combinatorial logic on the three level-sensitive
+interrupt lines from the devices. Interrupts must be acknowledged and cleared at
+source.
 
-It should use PHY_TYPE_USB2 or PHY_TYPE_USB3 (see include/dt-bindings/phy/phy.h).
+Phil
 
-Thanks
-Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
