@@ -1,88 +1,103 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: [PATCH v2 00/11] Support for H3 Composite Output support
-Date: Wed, 07 Jun 2017 08:26:01 +0800
-Message-ID: <35fbf653e1c1d4638059913901216245@aosc.io>
-References: <20170604160149.30230-1-icenowy@aosc.io>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Tue, 6 Jun 2017 17:46:33 -0700
+Message-ID: <59374CE9.40406@gmail.com>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+ <593657AF.8050208@gmail.com> <1496776974.3821.6.camel@seibold.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBGUQ3XEQKGQEMROQMLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170604160149.30230-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, =?UTF-8?Q?Jernej_?= =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496776974.3821.6.camel-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>, Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Holm Rauchfuss <holm.rauchfuss-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-06-05 00:01=EF=BC=8CIcenowy Zheng =E5=86=99=E9=81=93=EF=BC=
-=9A
-> Allwinner H3 SoC features a TV Encoder like the one in Allwinner A13,
-> which can only output TV Composite signal.
->=20
-> The display pipeline of H3 is also special -- it has two mixers and
-> two TCONs, of which the connection can be swapped. The TCONs do not
-> have channel 0 (as they are all connected to internal bridges, TVE
-> and HDMI TX).
->=20
-> Add support for the display pipeline and the TVE in H3, in order to
-> make it possible to display something with mainline kernel with H3.
->=20
-> The image quality of TVE is bad, so HDMI is a better output -- this
-> patchset also prepared the mixers and TCONs for HDMI output, and
-> the HDMI controller driver is already done by Jernej Skrabec.
->=20
-> So if possible, please apply PATCH 1~5 and 8,9 as soon as possible,
-> so that Jernej can submit his HDMI patches.
->=20
-> Currently the jack detection feature of the TVE is still not so
-> clear -- so it's not implemented in this version. Thus the TV
-> output shouldn't be defaultly enabled now.
->=20
-> Icenowy Zheng (11):
->   dt-bindings: update the binding for Allwinner H3 TVE support
->   drm: sun4i: add support for H3 mixers
->   drm: sun4i: ignore swapped mixer<->tcon connection for DE2
->   drm: sun4i: add support for H3's TCON0/1
->   drm: sun4i: add compatible for H3 display engine
->   drm: sun4i: add color space correction support for DE2 mixer
->   drm: sun4i: add support for the TV encoder in H3 SoC
->   clk: sunxi-ng: allow CLK_DE to set CLK_PLL_DE for H3
->   clk: sunxi-ng: export CLK_PLL_DE for H3
->   ARM: sun8i: h3: add display engine pipeline for TVE
->   [DO NOT MERGE] ARM: sun8i: h3: enable TV output on Orange Pi PC
+On 06/06/17 12:22, Stefani Seibold wrote:
+> Hi Frank,
+> 
+> On 06.06.2017, 00:20 -0700 Frank Rowand wrote::
+>> On 06/05/17 05:59, Stefani Seibold wrote:
+>>> From: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
+>>>
+>>> This patch enables external references for symbols which are not
+>>> exported by the current device tree. For example
+>>>
+>>> // RASPI example (only for testing)
+>>> /dts-v1/;
+>>> /plugin/;
+>>>
+>>> / {
+>>>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+>>>
+>>>     fragment@0 {
+>>>         target-path = "/soc/i2s@7e203000";
+>>>         __overlay__ {
+>>>             #address-cells = <0x00000001>;
+>>>             #size-cells = <0x00000001>;
+>>>             test = "test";
+>>>             timer = <&timer>;
+>>>         };
+>>>     };
+>>>
+>>>     __external_symbols__ {
+>>>         timer = "/soc/timer@7e003000";
+>>>     };
+>>> };
+>>
+>> My hope is that the dtc compiler will stop supporting specification
+>> of the
+>> __symbols__ node in dts source, and only generate it automatically in
+>> the dtb.
+>> That change to dtc would not allow any node name specified in a dts
+>> to begin
+>> with an underscore.  Thus node __external_symbols__ would not be
+>> allowed.
+>>
+> 
+> The name is not so important to me, only the solution.
+> 
+>>> In case of the RASPI device tree this could be simple fixed by
+>>> modifing
+>>> the device tree source, but when the device tree is provided by a
+>>> closed
+>>> source BIOS this kind of missing symbol could not be fixed.
+>>
+>> Is there a real example of this issue, or is this a theoretical
+>> concern?
+>> If this is a real example, we should be discouraging such behavior.
+>>
+> 
+> Yes, I have a BIOS on some ARM64 servers which provides broken device
+> tree. It also lacks some devices in this tree which needs references
+> to other devices which lacks a phandle.
 
-Maxime, could you pick some patches that you think appliable in this
-series? (especially PATCH 1, the binding patch)
+Jon Masters is pushing a message that if the firmware on your arm64 server
+is broken, then insist that the vendor fix it.  I think he was talking
+about ACPI, but the same message should also apply to device tree.
 
-I think they can be useful.
+If you are having trouble getting your vendor to fix it, ask Jon if he
+is willing to help apply pressure.
 
-Thanks!
 
->=20
->  .../bindings/display/sunxi/sun4i-drm.txt           |  37 +++-
->  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  12 ++
->  arch/arm/boot/dts/sun8i-h3.dtsi                    | 186=20
-> +++++++++++++++++++++
->  drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |   2 +-
->  drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   3 +-
->  drivers/gpu/drm/sun4i/sun4i_drv.c                  |  46 +++++
->  drivers/gpu/drm/sun4i/sun4i_tcon.c                 | 113 ++++++++++---
->  drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   3 +
->  drivers/gpu/drm/sun4i/sun4i_tv.c                   |  35 +++-
->  drivers/gpu/drm/sun4i/sun8i_mixer.c                |  53 ++++++
->  drivers/gpu/drm/sun4i/sun8i_mixer.h                |   6 +-
->  include/dt-bindings/clock/sun8i-h3-ccu.h           |   2 +
->  12 files changed, 463 insertions(+), 35 deletions(-)
+>> The suggestion by Pantelis should work, but that is just a hack to
+>> get
+>> you out of a bad situation, not a good practice.
+>>
+> 
+> I tried it, but it doesn't work. Look at my post to Pantelis.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Yes, I realized that the method Pantelis gave would also require
+a code change.  I don't like that code change either.
+
+
+> 
+> - Stefani
+> .
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
