@@ -1,203 +1,333 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [RFC PATCH 07/11] drm: sun4i: add support for
- the TV encoder in H3 SoC
-Date: Wed, 7 Jun 2017 09:58:33 +0200
-Message-ID: <20170607075833.gazygmkckyycszzg@flea.lan>
-References: <20170517164354.16399-1-icenowy@aosc.io>
- <1958057.WDKm0nQKgW@jernej-laptop>
- <CAGb2v66aD=G+V75N-_nYo=dGqhxpKhadM84h9G-B34=dnDwCbg@mail.gmail.com>
- <3164416.5xR36OcyjH@jernej-laptop>
- <20170523125321.t7y7yfrrfokpkzgd@flea.home>
- <98c3572beee0a81755994b4bdc508b18@aosc.io>
- <20170524073019.bl6rojc2srrigalp@flea.home>
- <861ead704cc7d1bc0983d0f01138f190@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Wed, 07 Jun 2017 11:11:31 +0300
+Message-ID: <1496823091.28265.3.camel@hp800z>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+         <1496688186.12947.10.camel@hp800z> <1496776664.3821.3.camel@seibold.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="msiknyznkpcrkhss"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNHE33EQKGQEA2RIYLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <861ead704cc7d1bc0983d0f01138f190-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wens-jdAy2FN1RRM@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496776664.3821.3.camel@seibold.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefani Seibold <stefani@seibold.net>
+Cc: Stefani Seibold <stefani.seibold.ext@huawei.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Holm Rauchfuss <holm.rauchfuss@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Stefani,
 
---msiknyznkpcrkhss
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, 2017-06-06 at 21:17 +0200, Stefani Seibold wrote:
+> Hi Pantelis,
+> 
+> thanks for the suggestion. This feature is not very well documented. I
+> tried this on my rasp1 running 4.12.0-rc3 and it doesn't work. My
+> source is:
+> 
+> // rapsi example
+> /dts-v1/;
+> /plugin/;
+> 
+> / {
+>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> 
+>     fragment@0 {
+>         target-path = "/soc/i2s@7e203000";
+>         __overlay__ {
+>             #address-cells = <0x00000001>;
+>             #size-cells = <0x00000001>;
+>             test = "test";
+>             timer = <&{/soc/timer@7e0030000}>;
+>         };
+>     };
+> };
+> 
+> 
+> The resulting overlay is (decompiled with fdtdump):
+> 
+> /dts-v1/;
+> // magic:		0xd00dfeed
+> // totalsize:		0x19a (410)
+> // off_dt_struct:	0x38
+> // off_dt_strings:	0x148
+> // off_mem_rsvmap:	0x28
+> // version:		17
+> // last_comp_version:	16
+> // boot_cpuid_phys:	0x0
+> // size_dt_strings:	0x52
+> // size_dt_struct:	0x110
+> 
+> / {
+>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+>     fragment@0 {
+>         target-path = "/soc/i2s@7e203000";
+>         __overlay__ {
+>             #address-cells = <0x00000001>;
+>             #size-cells = <0x00000001>;
+>             test = "test";
+>             timer = <0xdeadbeef>;
+>         };
+>     };
+>     __fixups__ {
+>         /soc/timer@7e0030000 = "/fragment@0/__overlay__:timer:0";
+>     };
+> };
+> 
+> But this will not apply:
+> 
+> OF: resolver: overlay phandle fixup failed: -22
+> create_overlay: Failed to resolve tree
+> 
+> 
 
-On Sun, Jun 04, 2017 at 10:29:29PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> =E5=9C=A8 2017-05-24 15:30=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> > On Tue, May 23, 2017 at 09:00:59PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> > > =E5=9C=A8 2017-05-23 20:53=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=
-=EF=BC=9A
-> > > > On Mon, May 22, 2017 at 07:55:56PM +0200, Jernej =C5=A0krabec wrote=
-:
-> > > > > Hi,
-> > > > >
-> > > > > Dne sobota, 20. maj 2017 ob 03:37:53 CEST je Chen-Yu Tsai napisal=
-(a):
-> > > > > > On Sat, May 20, 2017 at 2:23 AM, Jernej =C5=A0krabec <jernej.sk=
-rabec-gGgVlfcn5nU@public.gmane.org>
-> > > > > wrote:
-> > > > > > > Hi,
-> > > > > > >
-> > > > > > > Dne petek, 19. maj 2017 ob 20:08:18 CEST je Icenowy Zheng nap=
-isal(a):
-> > > > > > >> =E4=BA=8E 2017=E5=B9=B45=E6=9C=8820=E6=97=A5 GMT+08:00 =E4=
-=B8=8A=E5=8D=882:03:30, Maxime Ripard <maxime.ripard@free-
-> > > > > > >
-> > > > > > > electrons.com> =E5=86=99=E5=88=B0:
-> > > > > > >> >On Thu, May 18, 2017 at 12:43:50AM +0800, Icenowy Zheng wro=
-te:
-> > > > > > >> >> Allwinner H3 features a TV encoder similar to the one in =
-earlier
-> > > > > > >> >
-> > > > > > >> >SoCs,
-> > > > > > >> >
-> > > > > > >> >> but with some different points about clocks:
-> > > > > > >> >> - It has a mod clock and a bus clock.
-> > > > > > >> >> - The mod clock must be at a fixed rate to generate signa=
-l.
-> > > > > > >> >
-> > > > > > >> >Why?
-> > > > > > >>
-> > > > > > >> It's experiment result by Jernej.
-> > > > > > >>
-> > > > > > >> The clock rates in BSP kernel is also specially designed
-> > > > > > >> (PLL_DE at 432MHz) in order to be able to feed the TVE.
-> > > > > > >
-> > > > > > > My experiments and search through BSP code showed that TVE se=
-ems to have
-> > > > > > > additional fixed predivider 8. So if you want to generate 27 =
-MHz clock,
-> > > > > > > unit has to be feed with 216 MHz.
-> > > > > > >
-> > > > > > > TVE has only one PLL source PLL_DE. And since 216 MHz is a bi=
-t low for
-> > > > > > > DE2,
-> > > > > > > BSP defaults to 432 MHz for PLL_DE and use divider 2 to gener=
-ate 216 MHz.
-> > > > > > > This clock is then divided by 8 internaly to get final 27 MHz=
-.
-> > > > > > >
-> > > > > > > Please note that I don't have any hard evidence to support th=
-at, only
-> > > > > > > experimental data. However, only that explanation make sense =
-to me.
-> > > > > > >
-> > > > > > > BTW, BSP H3/H5 TV driver supports only PAL and NTSC which bot=
-h use 27 MHz
-> > > > > > > base clock. Further experiments are needed to check if there =
-is any
-> > > > > > > possibility to have other resolutions by manipulating clocks =
-and give
-> > > > > > > other proper settings. I plan to do that, but not in very nea=
-r future.
-> > > > > >
-> > > > > > You only have composite video output, and those are the only 2 =
-standard
-> > > > > > resolutions that make any sense.
-> > > > >
-> > > > > Right, other resolutions are for VGA.
-> > > > >
-> > > > > Anyway, I did some more digging in A10 and R40 datasheets. I thin=
-k
-> > > > > that H3 TVE
-> > > > > unit is something in between. R40 TVE has a setting to select "up
-> > > > > sample".
-> > > >
-> > > > That might be just another translation of oversampling :)
-> > > >
-> > > > I didn't know it could be applied to composite signals though, but =
-I
-> > > > guess this is just another analog signal after all.
-> > > >
-> > > > > Possible settings are 27 MHz, 54 MHz, 108 MHz and 216 MHz. BSP
-> > > > > driver on R40
-> > > > > has this setting enabled only for PAL and NTSC and it is always 2=
-16
-> > > > > MHz. I
-> > > > > think that H3 may have this hardwired to 216 MHz and this would b=
-e
-> > > > > the reason
-> > > > > why 216 MHz is needed.
-> > > > >
-> > > > > Has anyone else any better explanation?
-> > > >
-> > > > That's already a pretty good one.
-> > > >
-> > > > Either way, wether this is upsampling, oversampling or just a
-> > > > pre-divider, this can and should be dealt with in the mode_set
-> > > > callback, and not in the probe.
-> > >=20
-> > > I got a better idea -- let TVE driver have the CLK_TVE as an
-> > > input and create a subclock output with divider 16, and feed this
-> > > subclock to TCON lcd-ch1.
-> > >=20
-> > > This is a model of the real hardware -- the clock divider is in
-> > > TVE, not TCON.
-> >=20
-> > That's definitely not a good representation of the hardware. There's
-> > one clock, it goes to the TCON, period.
-> >=20
-> > However, the TV encoder has a constraint on that clock rate. This can
-> > be easily implemented using a custom encoder state where you'd set the
-> > multiplier to set on that clock, and the TCON will use it.
->=20
-> P.S. how to do such a custom state?
->=20
-> Should I do the multiplying in sun4i_tv_mode_to_drm_mode?
+Yes, it will not work as it is; my point is that you don't need the
+magic __*__ node.
 
-You have an example of that in ebd14afe8fa7, but it basically boils
-down to:
-  - Create a structure subclassing drm_connector_state
-  - Adding your own reset and atomic_duplicate_state callback
-  - In the atomic_check, change the state to set the pre-divider, and
-    then use it in TCON's mode_set.
+You will need to modify the overlay application code to live insert a
+phandle (if it doesn't exist) when it encounters a /path fixup.
 
-Maxime
+> Anyway, the reason for my patch is that i can reference to nodes which
+> lacks a phandle. The phandle will be created on the fly and also
+> destroyed when the overlay is unloaded.
+> 
+> I have a real use case for this patch:
+> 
+> I have a BIOS on some ARM64 servers which provides broken device tree.
+> It also lacks some devices in this tree which needs references to other
+> devices which lacks a phandle.
+> 
+> Since the BIOSes are closed source i need a way to work arround this
+> problem without patching all the drivers involved to this devices.
+> 
+> Hope this helps to understand the reason for this patch.
+> 
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+FWIW your problem seems like something that would happen on the field.
+We can berate the vendor of not providing the correct device tree, but
+in the end workarounds for broken vendor things are common in the
+kernel.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards
 
---msiknyznkpcrkhss
-Content-Type: application/pgp-signature; name="signature.asc"
+-- Pantelis
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZN7IpAAoJEBx+YmzsjxAgNPAQAK2QLNgIISrNDYS3vfCNGUMB
-BH4XCgK5Flw+ggcs9oos5epeOrpIc0AodXbW/mPqfI8DVYy5L35TQmXAeicEupta
-0rsir8bYZaCAQOtyu6HC5Tc6aYcxxTZxvVUdv3ALHoykPvOlMvwja+dNnGalHI7C
-txtCO1YqFIPaDj8ndgXtwcMmpfxdwwW4o+zI2sKLIlDmH/NkTFpho4k0WaqM5cej
-TPDOeiMQy5rSELXMkUmazZox5sgJPR1CHLXuP6x1nO4RSyN6mXdER5BwOZLVd2x6
-G1NGMhmycmharI9n041UWP7bu4NcXvj61pduFRVxbTZ8s9WfFnn5JVTWTtxqMKdZ
-l492lrBp3QeOHVrlf7ERwOfDcSDGj+nXgy7/3iGa4R47UFYYndzJ8uTO/hZFg2c5
-4Wr6OUOPsUdAgdQnSJk4Z3vFoX87GkoS/m30J/t5Yg8VGN23e0tLobkyQAURYjxl
-K++KV0ZCbA2/UUxVzrr3YbB6SZ2AYOwF0F8Q2BRdE/X6WEqZbZ67/qdMMZkp97UV
-vxL9kWA9cbR1rQduU9zgW88xQ+FozgKy+IG2FfOG26DgCocTuzQBlaIu1g28skpY
-goO+q4MlMHFP/8r/ALE+2/EJfoxvoNyv3D58Op3iFcsdh9Gh6GfPlpnUussW/YmO
-nLvNjVBgmZY/6Pcudb1d
-=ZcJu
------END PGP SIGNATURE-----
-
---msiknyznkpcrkhss--
+> - Stefani
+> 
+> Am Montag, den 05.06.2017, 21:43 +0300 schrieb Pantelis Antoniou:
+> > Hi Stefani,
+> > 
+> > On Mon, 2017-06-05 at 14:59 +0200, Stefani Seibold wrote:
+> > > From: Stefani Seibold <stefani@seibold.net>
+> > > 
+> > > This patch enables external references for symbols which are not
+> > > exported by the current device tree. For example
+> > > 
+> > > // RASPI example (only for testing)
+> > > /dts-v1/;
+> > > /plugin/;
+> > > 
+> > > / {
+> > >     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> > > 
+> > >     fragment@0 {
+> > >         target-path = "/soc/i2s@7e203000";
+> > >         __overlay__ {
+> > >             #address-cells = <0x00000001>;
+> > >             #size-cells = <0x00000001>;
+> > >             test = "test";
+> > >             timer = <&timer>;
+> > >         };
+> > >     };
+> > > 
+> > >     __external_symbols__ {
+> > >         timer = "/soc/timer@7e003000";
+> > >     };
+> > > };
+> > > 
+> > 
+> > I understand the problem. I am just not fond of the
+> > __external_symbols__
+> > solution.
+> > 
+> > There's a facility in the DT source language that allows to declare
+> > pathspec labels.
+> > 
+> > The 'timer = <&timer>;' statement could be rewritten as 
+> > 'timer = <&{/soc/timer@7e0030000}>;'
+> > 
+> > Internally you can 'catch' that this refers to a symbol in the base
+> > tree
+> > and then do the same symbol insertion as the patch you've submitted.
+> > 
+> > The benefit to the above is that you don't introduce manually edited
+> > special nodes.
+> > 
+> > Regards
+> > 
+> > -- Pantelis
+> > 
+> > > The "timer" symbol is not exported by the RASPI device tree,
+> > > because it is
+> > > missing in the __symbols__ section of the device tree.
+> > > 
+> > > In case of the RASPI device tree this could be simple fixed by
+> > > modifing
+> > > the device tree source, but when the device tree is provided by a
+> > > closed
+> > > source BIOS this kind of missing symbol could not be fixed.
+> > > 
+> > > An additional benefit is to override a (possible broken) symbol
+> > > exported
+> > > by the currect live device tree.
+> > > 
+> > > The patch is based and tested on linux 4.12-rc3.
+> > > 
+> > > Signed-off-by: Stefani Seibold <stefani.seibold.ext@huawei.com>
+> > > Signed-off-by: Stefani Seibold <stefani@seibold.net>
+> > > ---
+> > >  drivers/of/overlay.c  | 19 +++++++++++++++++++
+> > >  drivers/of/resolver.c | 27 ++++++++++++++++++++++-----
+> > >  2 files changed, 41 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+> > > index 7827786718d8..de6516ea0fcd 100644
+> > > --- a/drivers/of/overlay.c
+> > > +++ b/drivers/of/overlay.c
+> > > @@ -50,6 +50,7 @@ struct of_overlay {
+> > >  	int id;
+> > >  	struct list_head node;
+> > >  	int count;
+> > > +	struct device_node *tree;
+> > >  	struct of_overlay_info *ovinfo_tab;
+> > >  	struct of_changeset cset;
+> > >  };
+> > > @@ -422,6 +423,8 @@ int of_overlay_create(struct device_node *tree)
+> > >  	/* add to the tail of the overlay list */
+> > >  	list_add_tail(&ov->node, &ov_list);
+> > >  
+> > > +	ov->tree = tree;
+> > > +
+> > >  	of_overlay_notify(ov, OF_OVERLAY_POST_APPLY);
+> > >  
+> > >  	mutex_unlock(&of_mutex);
+> > > @@ -524,6 +527,7 @@ int of_overlay_destroy(int id)
+> > >  {
+> > >  	struct of_overlay *ov;
+> > >  	int err;
+> > > +	phandle phandle;
+> > >  
+> > >  	mutex_lock(&of_mutex);
+> > >  
+> > > @@ -540,6 +544,8 @@ int of_overlay_destroy(int id)
+> > >  		goto out;
+> > >  	}
+> > >  
+> > > +	phandle = ov->tree->phandle;
+> > > +
+> > >  	of_overlay_notify(ov, OF_OVERLAY_PRE_REMOVE);
+> > >  	list_del(&ov->node);
+> > >  	__of_changeset_revert(&ov->cset);
+> > > @@ -549,6 +555,19 @@ int of_overlay_destroy(int id)
+> > >  	of_changeset_destroy(&ov->cset);
+> > >  	kfree(ov);
+> > >  
+> > > +	if (phandle) {
+> > > +		struct device_node *node;
+> > > +		unsigned long flags;
+> > > +
+> > > +		raw_spin_lock_irqsave(&devtree_lock, flags);
+> > > +		for_each_of_allnodes(node) {
+> > > +			if (node->phandle >= phandle)
+> > > +				node->phandle = 0;
+> > > +		}
+> > > +		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> > > +	}
+> > > +
+> > > +
+> > >  	err = 0;
+> > >  
+> > >  out:
+> > > diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+> > > index 771f4844c781..31b5f32c9b27 100644
+> > > --- a/drivers/of/resolver.c
+> > > +++ b/drivers/of/resolver.c
+> > > @@ -286,13 +286,14 @@ static int
+> > > adjust_local_phandle_references(struct device_node *local_fixups,
+> > >  int of_resolve_phandles(struct device_node *overlay)
+> > >  {
+> > >  	struct device_node *child, *local_fixups, *refnode;
+> > > -	struct device_node *tree_symbols, *overlay_fixups;
+> > > +	struct device_node *tree_symbols, *ext_symbols,
+> > > *overlay_fixups;
+> > >  	struct property *prop;
+> > >  	const char *refpath;
+> > >  	phandle phandle, phandle_delta;
+> > >  	int err;
+> > >  
+> > >  	tree_symbols = NULL;
+> > > +	ext_symbols = NULL;
+> > >  
+> > >  	if (!overlay) {
+> > >  		pr_err("null overlay\n");
+> > > @@ -321,6 +322,9 @@ int of_resolve_phandles(struct device_node
+> > > *overlay)
+> > >  	for_each_child_of_node(overlay, child) {
+> > >  		if (!of_node_cmp(child->name, "__fixups__"))
+> > >  			overlay_fixups = child;
+> > > +		else
+> > > +		if (!of_node_cmp(child->name,
+> > > "__external_symbols__"))
+> > > +			ext_symbols = child;
+> > >  	}
+> > >  
+> > >  	if (!overlay_fixups) {
+> > > @@ -329,20 +333,30 @@ int of_resolve_phandles(struct device_node
+> > > *overlay)
+> > >  	}
+> > >  
+> > >  	tree_symbols = of_find_node_by_path("/__symbols__");
+> > > -	if (!tree_symbols) {
+> > > -		pr_err("no symbols in root of device tree.\n");
+> > > +	if (!tree_symbols && !ext_symbols) {
+> > > +		pr_err("no symbols for resolve in device
+> > > tree.\n");
+> > >  		err = -EINVAL;
+> > >  		goto out;
+> > >  	}
+> > >  
+> > > +	phandle_delta = live_tree_max_phandle() + 1;
+> > > +
+> > >  	for_each_property_of_node(overlay_fixups, prop) {
+> > >  
+> > >  		/* skip properties added automatically */
+> > >  		if (!of_prop_cmp(prop->name, "name"))
+> > >  			continue;
+> > >  
+> > > -		err = of_property_read_string(tree_symbols,
+> > > -				prop->name, &refpath);
+> > > +		err = -1;
+> > > +
+> > > +		if (ext_symbols)
+> > > +			err = of_property_read_string(ext_symbols,
+> > > +					prop->name, &refpath);
+> > > +
+> > > +		if (err && tree_symbols)
+> > > +			err =
+> > > of_property_read_string(tree_symbols,
+> > > +					prop->name, &refpath);
+> > > +
+> > >  		if (err)
+> > >  			goto out;
+> > >  
+> > > @@ -352,6 +366,9 @@ int of_resolve_phandles(struct device_node
+> > > *overlay)
+> > >  			goto out;
+> > >  		}
+> > >  
+> > > +		if (!refnode->phandle)
+> > > +			refnode->phandle = ++phandle_delta;
+> > > +
+> > >  		phandle = refnode->phandle;
+> > >  		of_node_put(refnode);
+> > >  
+> > 
+> > 
