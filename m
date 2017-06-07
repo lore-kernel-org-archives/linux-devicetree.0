@@ -1,67 +1,57 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v7 16/34] [media] add Omnivision OV5640 sensor driver
-Date: Wed, 7 Jun 2017 15:31:32 +0300
-Message-ID: <20170607123131.GC1019@valkosipuli.retiisi.org.uk>
-References: <1495672189-29164-1-git-send-email-steve_longerbeam@mentor.com>
- <1495672189-29164-17-git-send-email-steve_longerbeam@mentor.com>
- <20170529155511.GI29527@valkosipuli.retiisi.org.uk>
- <c50c3c5f-71cf-fa73-f5a8-a4b5f59a87dc@gmail.com>
- <20170530065632.GK29527@valkosipuli.retiisi.org.uk>
- <ab04379b-d005-1251-343b-5e490ee6e72d@gmail.com>
- <3e953953-7bf4-912f-73f7-db568d5df504@gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/3] dt-bindings: Add Broadcom STB USB PHY binding document
+Date: Wed, 7 Jun 2017 18:02:49 +0530
+Message-ID: <dd1addfb-6bfd-cb0a-839b-6dac00decd47@ti.com>
+References: <1496426512-10590-1-git-send-email-alcooperx@gmail.com>
+ <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <3e953953-7bf4-912f-73f7-db568d5df504@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-me
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 04, 2017 at 11:00:14AM -0700, Steve Longerbeam wrote:
-> 
-> 
-> On 06/03/2017 11:02 AM, Steve Longerbeam wrote:
-> >Hi Sakari,
-> >
-> >
-> >On 05/29/2017 11:56 PM, Sakari Ailus wrote:
-> >>Hi Steve,
-> >>
-> >>On Mon, May 29, 2017 at 02:50:34PM -0700, Steve Longerbeam wrote:
-> >>>><snip>
-> >>>>
-> >>>>>+
-> >>>>>+static int ov5640_s_ctrl(struct v4l2_ctrl *ctrl)
-> >>>>>+{
-> >>>>>+    struct v4l2_subdev *sd = ctrl_to_sd(ctrl);
-> >>>>>+    struct ov5640_dev *sensor = to_ov5640_dev(sd);
-> >>>>>+    int ret = 0;
-> >>>>>+
-> >>>>>+    mutex_lock(&sensor->lock);
-> >>>>Could you use the same lock for the controls as you use for the
-> >>>>rest? Just
-> >>>>setting handler->lock after handler init does the trick.
-> >>>
-> >>>Can you please rephrase, I don't follow. "same lock for the controls as
-> >>>you use for the rest" - there's only one device lock owned by this
-> >>>driver
-> >>>and I am already using that same lock.
-> >>
-> >>There's another in the control handler. You could use your own lock for
-> >>the
-> >>control handler as well.
-> >
-> >I still don't understand.
-> >
-> 
-> Hi Sakari, sorry I see what you are referring to now. The lock
-> in 'struct v4l2_ctrl_handler' can be overridden by a caller's own
-> lock. Yes that's a good idea, I'll do that.
+Hi,
 
-Ack, good! :-)
+On Friday 02 June 2017 11:31 PM, Al Cooper wrote:
+> Add DT bindings document for Broadcom STB USB PHYs
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>  .../bindings/phy/brcm,brcmstb-usb-phy.txt          | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> new file mode 100644
+> index 0000000..e1e9b16
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> @@ -0,0 +1,37 @@
+> +Broadcom STB USB PHY
+> +
+> +Required properties:
+> + - compatible: brcm,brcmstb-usb-phy
+> + - reg: two offset and length pairs. The second pair specifies optional
+> +        registers used by some of the SoCs that support USB 3.x
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+and the first pair?
+> + - #phy-cells: Shall be 1 as it expects one argument for setting
+> +	       the type of the PHY. Possible values are 0 (1.1 and 2.0),
+> +	       1 (3.x)
+
+It should use PHY_TYPE_USB2 or PHY_TYPE_USB3 (see include/dt-bindings/phy/phy.h).
+
+Thanks
+Kishon
