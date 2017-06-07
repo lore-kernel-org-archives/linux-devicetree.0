@@ -1,69 +1,90 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf@tronnes.org>
-Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
-Date: Wed, 7 Jun 2017 14:52:47 +0200
-Message-ID: <cb7ad267-8f95-2222-9e38-aae11d23d8ee@tronnes.org>
-References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
- <1496404155-8344-5-git-send-email-noralf@tronnes.org>
- <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
- <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
- <CAKb7UvguXEE2-kFVPvrca=KfP3qdGD0PZWYLJC=bNzCK2qy=2w@mail.gmail.com>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: rk1108: change to "max-frequency" from
+ "clock-freq-min-max"
+Date: Wed, 07 Jun 2017 21:53:35 +0900
+Message-ID: <3ce2ba9f-5bb9-6a6c-212c-720e4a06a6fa@samsung.com>
+References: <CGME20170601044338epcas5p3c202667dad66dabd4f2ad866e8ad870e@epcas5p3.samsung.com>
+        <20170601044336.5745-1-jh80.chung@samsung.com>
+        <CANbgqAS9_xUfbH6j1u6oM9h8nHAaWUm4Afg8baq4Wxm1vCqg9w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAKb7UvguXEE2-kFVPvrca=KfP3qdGD0PZWYLJC=bNzCK2qy=2w@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ilia Mirkin <imirkin@alum.mit.edu>
-Cc: devicetree <devicetree@vger.kernel.org>, Emil Velikov <emil.l.velikov@gmail.com>, ML dri-devel <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CANbgqAS9_xUfbH6j1u6oM9h8nHAaWUm4Afg8baq4Wxm1vCqg9w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Yan <andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CkRlbiAwNy4wNi4yMDE3IDE0LjExLCBza3JldiBJbGlhIE1pcmtpbjoKPiBPbiBXZWQsIEp1biA3
-LCAyMDE3IGF0IDc6NTIgQU0sIE5vcmFsZiBUcsO4bm5lcyA8bm9yYWxmQHRyb25uZXMub3JnPiB3
-cm90ZToKPj4gSGkgRW1pbCwKPj4KPj4KPj4gRGVuIDA3LjA2LjIwMTcgMTEuMzAsIHNrcmV2IEVt
-aWwgVmVsaWtvdjoKPj4+IEhpIE5vcmFsZiwKPj4+Cj4+PiBTbWFsbCBkcml2ZS1ieSBjb21tZW50
-LCBub3RpY2VkIHdoaWxlIGdvaW5nIHRocm91Z2ggbXkgbW9ybmluZyBjb2ZmZWUuCj4+PiBCeSBu
-byBtZWFucyBhIGZ1bGwgcmV2aWV3Lgo+Pj4KPj4+IE9uIDIgSnVuZSAyMDE3IGF0IDEyOjQ5LCBO
-b3JhbGYgVHLDuG5uZXMgPG5vcmFsZkB0cm9ubmVzLm9yZz4gd3JvdGU6Cj4+Pgo+Pj4KPj4+PiAr
-LyogcGl4ZWxzIG9uIGRpc3BsYXkgYXJlIG51bWJlcmVkIGZyb20gMSAqLwo+Pj4+ICtzdGF0aWMg
-dm9pZCByZXBhcGVyX2FsbF9waXhlbHMoc3RydWN0IHJlcGFwZXJfZXBkICplcGQsIHU4ICoqcHAs
-Cj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHU4ICpkYXRhLCB1OCBm
-aXhlZF92YWx1ZSwgY29uc3QgdTgKPj4+PiAqbWFzaywKPj4+PiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgZW51bSByZXBhcGVyX3N0YWdlIHN0YWdlKQo+Pj4+ICt7Cj4+Pj4gKyAgICAg
-ICB1bnNpZ25lZCBpbnQgYjsKPj4+PiArCj4+Pj4gKyAgICAgICBmb3IgKGIgPSBlcGQtPndpZHRo
-IC8gODsgYiA+IDA7IGItLSkgewo+Pj4+ICsgICAgICAgICAgICAgICBpZiAoZGF0YSkgewo+Pj4+
-ICsgICAgICAgICAgICAgICAgICAgICAgIHUxNiBwaXhlbHMgPSByZXBhcGVyX2ludGVybGVhdmVf
-Yml0cyhkYXRhW2IgLQo+Pj4+IDFdKTsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICB1MTYg
-cGl4ZWxfbWFzayA9IDB4ZmZmZjsKPj4+PiArCj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-aWYgKG1hc2spIHsKPj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHUxNiBwaXhl
-bF9tYXNrID0KPj4+PiByZXBhcGVyX2ludGVybGVhdmVfYml0cyhtYXNrW2IgLSAxXSk7Cj4+Pj4g
-Kwo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGl4ZWxfbWFzayA9IChwaXhl
-bF9tYXNrIF4gcGl4ZWxzKSAmCj4+Pj4gMHg1NTU1Owo+Pj4+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgcGl4ZWxfbWFzayB8PSBwaXhlbF9tYXNrIDw8IDE7Cj4+PiBUaGUgc2Vjb25k
-IHUxNiBwaXhlbF9tYXNrIHNlZW1zIHZlcnkgc3VzcGljaW91cyAtIGxpa2VseSBhIGNvcHkvcGFz
-dGUKPj4+IG1pc3Rha2UgPwo+Pgo+PiBBY3R1YWxseSBpdCdzIGEgY29ycmVjdCBjb3B5LiBUaGUg
-c2FtZSBwYXR0ZXJuIGlzIHVzZWQgaW4gdGhyZWUgcGxhY2VzLgo+PiBJIGRpZCBsb29rIGF0IHRo
-ZSBkYXRhc2hlZXQgdG8gdHJ5IGFuZCB1bmRlcnN0YW5kIHdoYXQgd2FzIGdvaW5nIG9uLAo+PiBi
-dXQgdGhlIGN1cnJlbnQgYW5kIHByZXZpb3VzIGZyYW1lIGlzIGFwcGxpZWQgaW4gbm9ybWFsIGFu
-ZCBpbnZlcnRlZAo+PiBmb3JtIGluIHNldmVyYWwgc3RhZ2VzLCB0aGUgcGl4ZWxzIGFyZSBjb252
-ZXJ0ZWQgdG8gYmxhY2svd2hpdGUvbm9jaGFuZ2UKPj4gYW5kIHRoZW4gSSBsb3N0IHRyYWNrIG9m
-IGl0IGFsbC4KPj4gU28gSSBkZWNpZGVkIHRoYXQgdGhlIFBlcnZhc2l2ZSBwZW9wbGUgd2hvIHdy
-b3RlIHRoZSBkcml2ZXIgcHJvYmFibHkKPj4ga25ldyB3aGF0IHRoZXkgd2hlcmUgZG9pbmcuIEF0
-IGxlYXN0IGl0IHdvcmtzIQo+IEl0J3MgZG91YmxpbmcgdXAgdGhlIGJpdHMuLi4gMHg1NTU1IGlz
-IGEgMDEwMTAxMDEwMTAxMDEwMSBwYXR0ZXJuLCBzbwo+IHBpeGVsX21hc2sgfD0gcGl4ZWxfbWFz
-ayA8PCAxIChhZnRlciBwaXhlbF9tYXNrIGlzIHggJiAweDU1NTUpIGlzIGp1c3QKPiBzYXlpbmcg
-dGhhdCB0aGUgc2FtZSBiaXQgc2hvdWxkIGJlIHJlcGVhdGVkIHR3aWNlLgo+Cj4gQXMgZm9yIHdo
-eSB5b3UnZCB3YW50IHRvIGRvIHRoYXQgLi4uIG5vIGNsdWUuIE1heWJlIGl0J3MgYQo+IDItYml0
-LXBlci1waXhlbCBwYWNrZWQgbWFzayBhbmQgeW91IHdhbnQgdG8gc2V0IGVhY2ggcGl4ZWwgdG8g
-MTEgb3IgMDAKPiBoZXJlPwo+CgpZZXMgZWFjaCBwaXhlbCBpcyByZXByZXNlbnRlZCB3aXRoIDIg
-Yml0czoKMTEgLSBibGFjawoxMCAtIHdoaXRlCjAwIC0gbm90aGluZwoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+On 06/06/2017 10:15 AM, Andy Yan wrote:
+> Hi Jaehoon:
+> 
+> 
+> 2017-06-01 12:43 GMT+08:00 Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+> 
+>> "clock-freq-min-max" was deprecated. There is only using in rk1108.dtsi.
+>> Use the "max-frequency" for removiing "clock-freq-min-max" in future.
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/rk1108.dtsi | 6 +++---
+>>  1 file changed, 3 insertions(+), 3 deletions(-)
+>>
+>>
+>   This file now renamed to rv1108.dtsi as rockchip official named it as
+> RV1108.
+>    The rename patch now is in Heiko's linux-rockchip tree:v4.13 dts32,
+> maybe you should rebase this patch on it.
+
+Thanks for noticing this. After checking it, i will resend the patch.
+
+Best Regards,
+Jaehoon Chung
+
+> 
+> diff --git a/arch/arm/boot/dts/rk1108.dtsi b/arch/arm/boot/dts/rk1108.dtsi
+>> index 1297924..a9b5293 100644
+>> --- a/arch/arm/boot/dts/rk1108.dtsi
+>> +++ b/arch/arm/boot/dts/rk1108.dtsi
+>> @@ -174,7 +174,7 @@
+>>
+>>         emmc: dwmmc@30110000 {
+>>                 compatible = "rockchip,rk1108-dw-mshc",
+>> "rockchip,rk3288-dw-mshc";
+>> -               clock-freq-min-max = <400000 150000000>;
+>> +               max-frequency = <150000000>;
+>>                 clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
+>>                          <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
+>>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+>> @@ -186,7 +186,7 @@
+>>
+>>         sdio: dwmmc@30120000 {
+>>                 compatible = "rockchip,rk1108-dw-mshc",
+>> "rockchip,rk3288-dw-mshc";
+>> -               clock-freq-min-max = <400000 150000000>;
+>> +               max-frequency = <150000000>;
+>>                 clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
+>>                          <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
+>>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+>> @@ -198,7 +198,7 @@
+>>
+>>         sdmmc: dwmmc@30130000 {
+>>                 compatible = "rockchip,rk1108-dw-mshc",
+>> "rockchip,rk3288-dw-mshc";
+>> -               clock-freq-min-max = <400000 100000000>;
+>> +               max-frequency = <100000000>;
+>>                 clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
+>>                          <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
+>>                 clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
+>> --
+>> 2.10.2
+>>
+>>
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
