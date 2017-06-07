@@ -1,51 +1,62 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v6 0/3] Preparation for further fwnode property cleanup
-Date: Wed, 7 Jun 2017 14:42:45 +0300
-Message-ID: <20170607114244.GX1019@valkosipuli.retiisi.org.uk>
-References: <1495637635-26057-1-git-send-email-sakari.ailus@linux.intel.com>
- <20170531122849.GG1019@valkosipuli.retiisi.org.uk>
- <CAL_JsqJtB-UVNLo3SM6apB-MODOSWwZzgeAE+ifsmT7U-5WJmw@mail.gmail.com>
+From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
+Date: Wed, 7 Jun 2017 13:52:50 +0200
+Message-ID: <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
+References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
+ <1496404155-8344-5-git-send-email-noralf@tronnes.org>
+ <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJtB-UVNLo3SM6apB-MODOSWwZzgeAE+ifsmT7U-5WJmw@mail.gmail.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob / Frank,
+Hi Emil,
 
-On Mon, Jun 05, 2017 at 10:12:24AM -0500, Rob Herring wrote:
-> > I figured out that others are starting to have patches that depend on my
-> > other patchsets getting merged. Those patches are for the fwnode property
-> > API that most likely should go through the linux-pm tree as well as for the
-> > media tree.
-> >
-> > <URL:http://www.spinics.net/lists/linux-media/msg115893.html>
-> >
-> > I have hopes of being able to get the fwnode cleanup patchset (which the
-> > aforementioned patches depend on) in within this merge window --- assuming I
-> > could have your ack on the OF portions.
-> >
-> > Would it be possible to have an immutable branch for these or would you
-> > accept a pull request on v4.12-rc1?
-> 
-> I've applied this series. The stable branch is here:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/property-move
 
-Thanks you!
+Den 07.06.2017 11.30, skrev Emil Velikov:
+> Hi Noralf,
+>
+> Small drive-by comment, noticed while going through my morning coffee.
+> By no means a full review.
+>
+> On 2 June 2017 at 12:49, Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
+>
+>
+>> +/* pixels on display are numbered from 1 */
+>> +static void repaper_all_pixels(struct repaper_epd *epd, u8 **pp,
+>> +                              const u8 *data, u8 fixed_value, const u8 *mask,
+>> +                              enum repaper_stage stage)
+>> +{
+>> +       unsigned int b;
+>> +
+>> +       for (b = epd->width / 8; b > 0; b--) {
+>> +               if (data) {
+>> +                       u16 pixels = repaper_interleave_bits(data[b - 1]);
+>> +                       u16 pixel_mask = 0xffff;
+>> +
+>> +                       if (mask) {
+>> +                               u16 pixel_mask = repaper_interleave_bits(mask[b - 1]);
+>> +
+>> +                               pixel_mask = (pixel_mask ^ pixels) & 0x5555;
+>> +                               pixel_mask |= pixel_mask << 1;
+> The second u16 pixel_mask seems very suspicious - likely a copy/paste mistake ?
 
-Could I still have yours / Frank's ack on the fwnode cleanup set patches
-2--4 that touch the OF framework, please (naturally assuming you're fine
-with them)?
+Actually it's a correct copy. The same pattern is used in three places.
+I did look at the datasheet to try and understand what was going on,
+but the current and previous frame is applied in normal and inverted
+form in several stages, the pixels are converted to black/white/nochange
+and then I lost track of it all.
+So I decided that the Pervasive people who wrote the driver probably
+knew what they where doing. At least it works!
 
-<URL:http://www.spinics.net/lists/devicetree/msg179939.html>
+Noralf.
 
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
