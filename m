@@ -1,31 +1,51 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v10 1/5] irqchip/aspeed-i2c-ic: binding docs for Aspeed
- I2C Interrupt Controller
-Date: Wed, 7 Jun 2017 12:31:37 +0100
-Message-ID: <0862f162-646c-a9a3-a79e-313abf86b339@arm.com>
-References: <20170603012952.2192-1-brendanhiggins@google.com>
- <20170603012952.2192-2-brendanhiggins@google.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v6 0/3] Preparation for further fwnode property cleanup
+Date: Wed, 7 Jun 2017 14:42:45 +0300
+Message-ID: <20170607114244.GX1019@valkosipuli.retiisi.org.uk>
+References: <1495637635-26057-1-git-send-email-sakari.ailus@linux.intel.com>
+ <20170531122849.GG1019@valkosipuli.retiisi.org.uk>
+ <CAL_JsqJtB-UVNLo3SM6apB-MODOSWwZzgeAE+ifsmT7U-5WJmw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170603012952.2192-2-brendanhiggins@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org, benh@kernel.crashing.org, ryan_chen@aspeedtech.com
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-acpi-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJtB-UVNLo3SM6apB-MODOSWwZzgeAE+ifsmT7U-5WJmw@mail.gmail.com>
+Sender: linux-acpi-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 03/06/17 02:29, Brendan Higgins wrote:
-> Added device tree binding documentation for Aspeed I2C Interrupt
-> Controller.
+Hi Rob / Frank,
+
+On Mon, Jun 05, 2017 at 10:12:24AM -0500, Rob Herring wrote:
+> > I figured out that others are starting to have patches that depend on my
+> > other patchsets getting merged. Those patches are for the fwnode property
+> > API that most likely should go through the linux-pm tree as well as for the
+> > media tree.
+> >
+> > <URL:http://www.spinics.net/lists/linux-media/msg115893.html>
+> >
+> > I have hopes of being able to get the fwnode cleanup patchset (which the
+> > aforementioned patches depend on) in within this merge window --- assuming I
+> > could have your ack on the OF portions.
+> >
+> > Would it be possible to have an immutable branch for these or would you
+> > accept a pull request on v4.12-rc1?
 > 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Acked-by: Rob Herring <robh@kernel.org>
+> I've applied this series. The stable branch is here:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git dt/property-move
 
-I've queued this (and the next patch) for 4.13.
+Thanks you!
 
-Thanks,
+Could I still have yours / Frank's ack on the fwnode cleanup set patches
+2--4 that touch the OF framework, please (naturally assuming you're fine
+with them)?
 
-	M.
+<URL:http://www.spinics.net/lists/devicetree/msg179939.html>
+
 -- 
-Jazz is not dead. It just smells funny...
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
