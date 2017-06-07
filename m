@@ -1,112 +1,69 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3] mfd: lp87565: Add lp87565 PMIC support
-Date: Wed, 7 Jun 2017 16:11:49 -0500
-Message-ID: <20170607211149.ozftwb5pqnso5xgk@rob-hp-laptop>
-References: <1496150860-25919-1-git-send-email-j-keerthy@ti.com>
+Subject: Re: [PATCH v5 3/9] dt-bindings: add Amlogic Meson GPIO
+ interrupt-controller DT binding documentation
+Date: Wed, 7 Jun 2017 16:13:12 -0500
+Message-ID: <20170607211312.av5osk5xxa5k5pr2@rob-hp-laptop>
+References: <66c57893-0a9e-4f8c-a017-ab346abbdfd0@gmail.com>
+ <c190f764-b3af-8982-00e3-87e28eabecca@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1496150860-25919-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: broonie@kernel.org, lee.jones@linaro.org, t-kristo@ti.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, afd@ti.com
+In-Reply-To: <c190f764-b3af-8982-00e3-87e28eabecca@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 30, 2017 at 06:57:40PM +0530, Keerthy wrote:
-> The LP87565 chip is a power management IC for Portable Navigation Systems
-> and Tablet Computing devices. It contains the following components:
+On Tue, May 30, 2017 at 10:26:33PM +0200, Heiner Kallweit wrote:
+> Add dt binding documentation for Amlogic meson GPIO interrupt controller.
 > 
->         - Configurable Bucks(Single and multi-phase).
->         - Configurable General Purpose Output Signals (GPO).
-> 
-> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
-> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
-> output.
-> 
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 > ---
+> v5:
+> - added Reviewed-by
+> ---
+>  .../amlogic,meson-gpio-intc.txt                    | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
 > 
-> The other patches are already pulled by Mark. Hence posting
-> the remaining patch.
-> 
-> Changes in v3:
-> 
->   * Fixed License to GPL v2.
->   * Fixed an indentation issue.
-> 
-> Changes in v2:
-> 
->   * Fixed a bunch of whitespace errors.
->   * Changed the License to short form.
->   * Added the generic compatible lp87565
->   * Removed i2c_device_id table.
->   * Introduced probe_new function in place of probe.
-> 
->  Documentation/devicetree/bindings/mfd/lp87565.txt |  45 ++++
->  drivers/mfd/Kconfig                               |  14 ++
->  drivers/mfd/Makefile                              |   1 +
->  drivers/mfd/lp87565.c                             |  92 ++++++++
->  include/linux/mfd/lp87565.h                       | 270 ++++++++++++++++++++++
->  5 files changed, 422 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
->  create mode 100644 drivers/mfd/lp87565.c
->  create mode 100644 include/linux/mfd/lp87565.h
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/lp87565.txt b/Documentation/devicetree/bindings/mfd/lp87565.txt
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
 > new file mode 100644
-> index 0000000..f63d568
+> index 00000000..2f20d212
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/lp87565.txt
-> @@ -0,0 +1,45 @@
-> +TI LP87565 PMIC MFD driver
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+> @@ -0,0 +1,26 @@
+> +Amlogic meson GPIO interrupt controller
+> +
+> +Meson SoCs contains an interrupt controller which is able watch the SoC pads
+> +and generate an interrupt on edges or level. The controller is essentially a
+> +256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
+> +or level and polarity. The actual number of interrupt exposed depends on the
+> +SoC.
 > +
 > +Required properties:
-> +  - compatible:	"ti,lp87565", "ti,lp87565-q1"
-> +  - reg:		I2C slave address.
-> +  - gpio-controller:	Marks the device node as a GPIO Controller.
-> +  - #gpio-cells:	Should be two.  The first cell is the pin number and
-> +			the second cell is used to specify flags.
-> +			See ../gpio/gpio.txt for more information.
-> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
-> +			populated under regulators node. xxx should match
-> +			the supply_name populated in driver.
-> +  - regulators:	List of child nodes that specify the regulator
-> +			initialization data.
+> +
+> +- compatible : should be "amlogic,meson-gpio-intc".
+> +- reg : Specifies base physical address and size of the registers.
+> +- interrupt-controller : Identifies the node as an interrupt controller.
+> +- #interrupt-cells : should be 2.
+> +- parent-interrupts : list of GIC interrupts which can be used with the
+> +		      GPIO IRQ multiplexer
 
-This is a node, not a property.
+Just use "interrupts" here.
 
+> +
 > +Example:
 > +
-> +lp87565_pmic: lp87565@60 {
-
-pmic@60
-
-> +	compatible = "ti,lp87565-q1";
-> +	reg = <0x60>;
-> +	gpio-controller;
-> +	#gpio-cells = <2>;
-> +
-> +	buck10-in-supply = <&vsys_3v3>;
-> +	buck23-in-supply = <&vsys_3v3>;
-> +
-> +	regulators: regulators {
-> +		buck10_reg: buck10 {
-> +			/* VDD_MPU */
-> +			regulator-name = "buck10";
-> +			regulator-min-microvolt = <850000>;
-> +			regulator-max-microvolt = <1250000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		buck23_reg: buck23 {
-> +			/* VDD_GPU */
-> +			regulator-name = "buck23";
-> +			regulator-min-microvolt = <850000>;
-> +			regulator-max-microvolt = <1250000>;
-> +			regulator-boot-on;
-> +			regulator-always-on;
-> +		};
-> +	};
+> +gpio_intc: interrupt-controller@9880 {
+> +	compatible = "amlogic,meson-gpio-intc";
+> +	reg = <0x0 0x09880 0x0 0x10>;
+> +	interrupt-controller;
+> +	#interrupt-cells = <2>;
+> +	parent-interrupts = <64 65 66 67 68 69 70 71>;
 > +};
+> -- 
+> 2.13.0
+> 
+> 
