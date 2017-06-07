@@ -1,82 +1,62 @@
-From: =?UTF-8?Q?Noralf_Tr=c3=b8nnes?= <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH 4/4] drm/tinydrm: Add RePaper e-ink driver
-Date: Wed, 7 Jun 2017 14:57:52 +0200
-Message-ID: <0b9aa6f8-9116-8d4c-ce32-1e9fa61b14e0@tronnes.org>
-References: <1496404155-8344-1-git-send-email-noralf@tronnes.org>
- <1496404155-8344-5-git-send-email-noralf@tronnes.org>
- <CACvgo50+0DEeR=M9pyWvhgzKFnUivFVrmjisDL0jLPmB4ofz1w@mail.gmail.com>
- <e782fcac-9d84-00bf-6c5a-8d908d9570f2@tronnes.org>
- <CACvgo51+eC8VnB_HspvW0hRX4c8Rn3wV=Rpz-wO-Pf_PR3POMw@mail.gmail.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: [PATCH v6 3/7] media: i2c: max2175: Add MAX2175 support
+Date: Wed, 7 Jun 2017 10:17:21 -0300
+Message-ID: <20170607101721.064aafe4@vento.lan>
+References: <20170531084457.4800-1-ramesh.shanmugasundaram@bp.renesas.com>
+        <20170531084457.4800-4-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACvgo51+eC8VnB_HspvW0hRX4c8Rn3wV=Rpz-wO-Pf_PR3POMw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170531084457.4800-4-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Velikov <emil.l.velikov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: ML dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Em Wed, 31 May 2017 09:44:53 +0100
+Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> escreveu:
 
-Den 07.06.2017 14.14, skrev Emil Velikov:
-> On 7 June 2017 at 12:52, Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
->> Hi Emil,
->>
->>
->> Den 07.06.2017 11.30, skrev Emil Velikov:
->>> Hi Noralf,
->>>
->>> Small drive-by comment, noticed while going through my morning coffee.
->>> By no means a full review.
->>>
->>> On 2 June 2017 at 12:49, Noralf Trønnes <noralf-L59+Z2yzLopAfugRpC6u6w@public.gmane.org> wrote:
->>>
->>>
->>>> +/* pixels on display are numbered from 1 */
->>>> +static void repaper_all_pixels(struct repaper_epd *epd, u8 **pp,
->>>> +                              const u8 *data, u8 fixed_value, const u8
->>>> *mask,
->>>> +                              enum repaper_stage stage)
->>>> +{
->>>> +       unsigned int b;
->>>> +
->>>> +       for (b = epd->width / 8; b > 0; b--) {
->>>> +               if (data) {
->>>> +                       u16 pixels = repaper_interleave_bits(data[b -
->>>> 1]);
->>>> +                       u16 pixel_mask = 0xffff;
->>>> +
->>>> +                       if (mask) {
->>>> +                               u16 pixel_mask =
->>>> repaper_interleave_bits(mask[b - 1]);
->>>> +
->>>> +                               pixel_mask = (pixel_mask ^ pixels) &
->>>> 0x5555;
->>>> +                               pixel_mask |= pixel_mask << 1;
->>> The second u16 pixel_mask seems very suspicious - likely a copy/paste
->>> mistake ?
->>
->> Actually it's a correct copy. The same pattern is used in three places.
->> I did look at the datasheet to try and understand what was going on,
->> but the current and previous frame is applied in normal and inverted
->> form in several stages, the pixels are converted to black/white/nochange
->> and then I lost track of it all.
->> So I decided that the Pervasive people who wrote the driver probably
->> knew what they where doing. At least it works!
->>
-> What I meant was:
->
-> Within the 'if (mask)' block you have a second, shadowing declaration
-> of pixel_mask.
-> Hence all the calculation done within is discarded and not used
-> further down in the code.
+> +++ b/Documentation/media/v4l-drivers/max2175.rst
+> @@ -0,0 +1,60 @@
+> +Maxim Integrated MAX2175 RF to bits tuner driver
+> +================================================
+> +
+> +The MAX2175 driver implements the following driver-specific controls:
+> +
+> +``V4L2_CID_MAX2175_I2S_ENABLE``
+> +-------------------------------
+> +    Enable/Disable I2S output of the tuner.
+> +
+> +.. flat-table::
+> +    :header-rows:  0
+> +    :stub-columns: 0
+> +    :widths:       1 4
+> +
+> +    * - ``(0)``
+> +      - I2S output is disabled.
+> +    * - ``(1)``
+> +      - I2S output is enabled.
 
-Ah, I see, it's indeed lost and useless.
-I'll see what happens if I don't shadow the variable.
-Thanks.
+Hmm... There are other drivers at the subsystem that use I2S
+(for audio - not for SDR - but I guess the issue is similar).
 
-Noralf.
+On such drivers, the bridge driver controls it directly, being sure
+that I2S is enabled when it is expecting some data coming from the
+I2S bus.
 
+On some drivers, there are both I2S and A/D inputs at the
+bridge chipset. On such drivers, enabling/disabling I2S is
+done via VIDIOC_S_INPUT (and optionally via ALSA mixer), being
+transparent to the user if the stream comes from a tuner via I2S
+or from a directly connected A/D input.
+
+I don't think it is a good idea to enable it via a control, as,
+if the bridge driver is expecting data via I2S, disabling it will
+cause timeouts at the videobuf handling.
+
+Thanks,
+Mauro
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
