@@ -1,65 +1,100 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 6/8] ARM: dts: dra7: Add "max-frequency" property to MMC dt nodes
-Date: Wed, 7 Jun 2017 15:07:47 +0530
-Message-ID: <20170607093749.15656-7-kishon@ti.com>
-References: <20170607093749.15656-1-kishon@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 07/11] drm: sun4i: add support for the TV
+ encoder in H3 SoC
+Date: Wed, 7 Jun 2017 11:38:45 +0200
+Message-ID: <20170607093845.cu5kk55nj72roysf@flea.lan>
+References: <20170604160149.30230-1-icenowy@aosc.io>
+ <20170604160149.30230-8-icenowy@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170607093749.15656-1-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, nsekhar@ti.com
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Russell King <linux@armlinux.org.uk>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, kishon@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="yrw3slyluc5aqqtx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBMET37EQKGQE2BQTHXI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170604160149.30230-8-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add "max-frequency" property to MMC dt nodes and set the
-maximum frequency to 192MHz for MMC1/MMC2, 64MHz for MMC3
-and 192MHz for MMC4. pdata quirks must be utilized to
-detect presence of rev 1.1/1.0 of silicon and adjust
-maximum frequencies as per restrictions documented in i843.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+--yrw3slyluc5aqqtx
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index e7144662af45..c09a91e77f53 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1037,6 +1037,7 @@
- 			dma-names = "tx", "rx";
- 			status = "disabled";
- 			pbias-supply = <&pbias_mmc_reg>;
-+			max-frequency = <192000000>;
- 		};
- 
- 		mmc2: mmc@480b4000 {
-@@ -1048,6 +1049,7 @@
- 			dmas = <&sdma_xbar 47>, <&sdma_xbar 48>;
- 			dma-names = "tx", "rx";
- 			status = "disabled";
-+			max-frequency = <192000000>;
- 		};
- 
- 		mmc3: mmc@480ad000 {
-@@ -1059,6 +1061,8 @@
- 			dmas = <&sdma_xbar 77>, <&sdma_xbar 78>;
- 			dma-names = "tx", "rx";
- 			status = "disabled";
-+			/* Errata i887 limits max-frequency of MMC3 to 64 MHz */
-+			max-frequency = <64000000>;
- 		};
- 
- 		mmc4: mmc@480d1000 {
-@@ -1070,6 +1074,7 @@
- 			dmas = <&sdma_xbar 57>, <&sdma_xbar 58>;
- 			dma-names = "tx", "rx";
- 			status = "disabled";
-+			max-frequency = <192000000>;
- 		};
- 
- 		mmu0_dsp1: mmu@40d01000 {
+On Mon, Jun 05, 2017 at 12:01:45AM +0800, Icenowy Zheng wrote:
+> Allwinner H3 features a TV encoder similar to the one in earlier SoCs,
+> but has a internal fixed clock divider that divides the TCON1 clock
+> (called TVE clock in datasheet) by 11.
+> 
+> Add support for it.
+> 
+> Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> ---
+> Changes in v2:
+> - Quirk part rewritten.
+> 
+>  drivers/gpu/drm/sun4i/sun4i_tv.c | 35 ++++++++++++++++++++++++++++++++++-
+>  1 file changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c b/drivers/gpu/drm/sun4i/sun4i_tv.c
+> index 338b9e5bb2a3..b9ff6d5ea67a 100644
+> --- a/drivers/gpu/drm/sun4i/sun4i_tv.c
+> +++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/component.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_device.h>
+>  #include <linux/regmap.h>
+>  #include <linux/reset.h>
+>  
+> @@ -169,14 +170,21 @@ struct tv_mode {
+>  	const struct resync_parameters	*resync_params;
+>  };
+>  
+> +struct sun4i_tv_quirks {
+> +	int fixed_divider;
+> +};
+> +
+>  struct sun4i_tv {
+>  	struct drm_connector	connector;
+>  	struct drm_encoder	encoder;
+>  
+>  	struct clk		*clk;
+> +	struct clk		*mod_clk;
+>  	struct regmap		*regs;
+>  	struct reset_control	*reset;
+>  
+> +	const struct sun4i_tv_quirks *quirks;
+> +
+>  	struct sun4i_drv	*drv;
+>  };
+>  
+> @@ -391,6 +399,12 @@ static void sun4i_tv_mode_set(struct drm_encoder *encoder,
+>  	struct sun4i_tcon *tcon = crtc->tcon;
+>  	const struct tv_mode *tv_mode = sun4i_tv_find_tv_by_mode(mode);
+>  
+> +	if (tv->quirks->fixed_divider) {
+> +		DRM_DEBUG_DRIVER("Applying fixed divider %d on TVE clock\n",
+> +				 tv->quirks->fixed_divider);
+> +		mode->crtc_clock *= tv->quirks->fixed_divider;
+> +	}
+> +
+
+You're not allowed to change the mode in mode_set, and you shouldn't
+even change it. The output pixel clock is still 27MHz.
+
+You should implement that using the states, as we discussed already.
+
 -- 
-2.11.0
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--yrw3slyluc5aqqtx--
