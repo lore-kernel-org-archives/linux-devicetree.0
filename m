@@ -1,89 +1,88 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: [PATCH 3/3] arm64: allwinner: h5: enable dwmac-sun8i
- for Nano Pi NEO2
-Date: Wed,  7 Jun 2017 08:23:05 +0800
-Message-ID: <20170607002305.15897-3-icenowy@aosc.io>
-References: <20170607002305.15897-1-icenowy@aosc.io>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v2 00/11] Support for H3 Composite Output support
+Date: Wed, 07 Jun 2017 08:26:01 +0800
+Message-ID: <35fbf653e1c1d4638059913901216245@aosc.io>
+References: <20170604160149.30230-1-icenowy@aosc.io>
 Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBREP3XEQKGQE4RCKZTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBGUQ3XEQKGQEMROQMLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170607002305.15897-1-icenowy-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <20170604160149.30230-1-icenowy-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, =?UTF-8?Q?Jernej_?= =?UTF-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the required DT parts to enable Ethernet (dwmac-sun8i driver) on
-the Nano Pi NEO2 board. It uses an external Realtek RTL8211E PHY
-connected via RGMII to provide GbE network. Specially unlike other
-Allwinner boards, the phy is connected to MDIO address 7, not 1.
+=E5=9C=A8 2017-06-05 00:01=EF=BC=8CIcenowy Zheng =E5=86=99=E9=81=93=EF=BC=
+=9A
+> Allwinner H3 SoC features a TV Encoder like the one in Allwinner A13,
+> which can only output TV Composite signal.
+>=20
+> The display pipeline of H3 is also special -- it has two mixers and
+> two TCONs, of which the connection can be swapped. The TCONs do not
+> have channel 0 (as they are all connected to internal bridges, TVE
+> and HDMI TX).
+>=20
+> Add support for the display pipeline and the TVE in H3, in order to
+> make it possible to display something with mainline kernel with H3.
+>=20
+> The image quality of TVE is bad, so HDMI is a better output -- this
+> patchset also prepared the mixers and TCONs for HDMI output, and
+> the HDMI controller driver is already done by Jernej Skrabec.
+>=20
+> So if possible, please apply PATCH 1~5 and 8,9 as soon as possible,
+> so that Jernej can submit his HDMI patches.
+>=20
+> Currently the jack detection feature of the TVE is still not so
+> clear -- so it's not implemented in this version. Thus the TV
+> output shouldn't be defaultly enabled now.
+>=20
+> Icenowy Zheng (11):
+>   dt-bindings: update the binding for Allwinner H3 TVE support
+>   drm: sun4i: add support for H3 mixers
+>   drm: sun4i: ignore swapped mixer<->tcon connection for DE2
+>   drm: sun4i: add support for H3's TCON0/1
+>   drm: sun4i: add compatible for H3 display engine
+>   drm: sun4i: add color space correction support for DE2 mixer
+>   drm: sun4i: add support for the TV encoder in H3 SoC
+>   clk: sunxi-ng: allow CLK_DE to set CLK_PLL_DE for H3
+>   clk: sunxi-ng: export CLK_PLL_DE for H3
+>   ARM: sun8i: h3: add display engine pipeline for TVE
+>   [DO NOT MERGE] ARM: sun8i: h3: enable TV output on Orange Pi PC
 
-This includes the regulator (which is controlled by a GPIO pin) and
-the actual Ethernet MAC node, referring the RGMII pins of the device.
+Maxime, could you pick some patches that you think appliable in this
+series? (especially PATCH 1, the binding patch)
 
-Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
----
- .../boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts   | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+I think they can be useful.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-index f2767b99c28a..968908761194 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-nanopi-neo2.dts
-@@ -50,6 +50,7 @@
- 	compatible = "friendlyarm,nanopi-neo2", "allwinner,sun50i-h5";
- 
- 	aliases {
-+		ethernet0 = &emac;
- 		serial0 = &uart0;
- 	};
- 
-@@ -72,6 +73,16 @@
- 		};
- 	};
- 
-+	reg_gmac_3v3: gmac-3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "gmac-3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		startup-delay-us = <100000>;
-+		enable-active-high;
-+		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>;
-+	};
-+
- 	reg_vcc3v3: vcc3v3 {
- 		compatible = "regulator-fixed";
- 		regulator-name = "vcc3v3";
-@@ -98,6 +109,22 @@
- 	status = "okay";
- };
- 
-+&emac {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&emac_rgmii_pins>;
-+	phy-supply = <&reg_gmac_3v3>;
-+	phy-handle = <&ext_rgmii_phy>;
-+	phy-mode = "rgmii";
-+	status = "okay";
-+};
-+
-+&mdio {
-+	ext_rgmii_phy: ethernet-phy@7 {
-+		compatible = "ethernet-phy-ieee802.3-c22";
-+		reg = <7>;
-+	};
-+};
-+
- &mmc0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
--- 
-2.12.2
+Thanks!
+
+>=20
+>  .../bindings/display/sunxi/sun4i-drm.txt           |  37 +++-
+>  arch/arm/boot/dts/sun8i-h3-orangepi-pc.dts         |  12 ++
+>  arch/arm/boot/dts/sun8i-h3.dtsi                    | 186=20
+> +++++++++++++++++++++
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.c                |   2 +-
+>  drivers/clk/sunxi-ng/ccu-sun8i-h3.h                |   3 +-
+>  drivers/gpu/drm/sun4i/sun4i_drv.c                  |  46 +++++
+>  drivers/gpu/drm/sun4i/sun4i_tcon.c                 | 113 ++++++++++---
+>  drivers/gpu/drm/sun4i/sun4i_tcon.h                 |   3 +
+>  drivers/gpu/drm/sun4i/sun4i_tv.c                   |  35 +++-
+>  drivers/gpu/drm/sun4i/sun8i_mixer.c                |  53 ++++++
+>  drivers/gpu/drm/sun4i/sun8i_mixer.h                |   6 +-
+>  include/dt-bindings/clock/sun8i-h3-ccu.h           |   2 +
+>  12 files changed, 463 insertions(+), 35 deletions(-)
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
