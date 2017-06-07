@@ -1,55 +1,85 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: [PATCH v8 08/34] ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687 workaround
-Date: Wed,  7 Jun 2017 11:33:47 -0700
-Message-ID: <1496860453-6282-9-git-send-email-steve_longerbeam@mentor.com>
+Subject: [PATCH v8 03/34] [media] dt/bindings: Add bindings for OV5640
+Date: Wed,  7 Jun 2017 11:33:42 -0700
+Message-ID: <1496860453-6282-4-git-send-email-steve_longerbeam@mentor.com>
 References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
 In-Reply-To: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
 To: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-There is a pin conflict with GPIO_6. This pin functions as a power
-input pin to the OV5642 camera sensor, but ENET uses it as the h/w
-workaround for erratum ERR006687, to wake-up the ARM cores on normal
-RX and TX packet done events. So we need to remove the h/w workaround
-to support the OV5642. The result is that the CPUidle driver will no
-longer allow entering the deep idle states on the sabrelite.
-
-This is a partial revert of
-
-commit 6261c4c8f13e ("ARM: dts: imx6qdl-sabrelite: use GPIO_6 for FEC
-			interrupt.")
-commit a28eeb43ee57 ("ARM: dts: imx6: tag boards that have the HW workaround
-			for ERR006687")
+Add device tree binding documentation for the OV5640 camera sensor.
 
 Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+Acked-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 4 ----
- 1 file changed, 4 deletions(-)
+ .../devicetree/bindings/media/i2c/ov5640.txt       | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ov5640.txt
 
-diff --git a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-index 8413179..89dce27 100644
---- a/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabrelite.dtsi
-@@ -270,9 +270,6 @@
- 	txd1-skew-ps = <0>;
- 	txd2-skew-ps = <0>;
- 	txd3-skew-ps = <0>;
--	interrupts-extended = <&gpio1 6 IRQ_TYPE_LEVEL_HIGH>,
--			      <&intc 0 119 IRQ_TYPE_LEVEL_HIGH>;
--	fsl,err006687-workaround-present;
- 	status = "okay";
- };
- 
-@@ -373,7 +370,6 @@
- 				MX6QDL_PAD_RGMII_RX_CTL__RGMII_RX_CTL	0x1b030
- 				/* Phy reset */
- 				MX6QDL_PAD_EIM_D23__GPIO3_IO23		0x000b0
--				MX6QDL_PAD_GPIO_6__ENET_IRQ		0x000b1
- 			>;
- 		};
- 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov5640.txt b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+new file mode 100644
+index 0000000..540b36c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov5640.txt
+@@ -0,0 +1,45 @@
++* Omnivision OV5640 MIPI CSI-2 sensor
++
++Required Properties:
++- compatible: should be "ovti,ov5640"
++- clocks: reference to the xclk input clock.
++- clock-names: should be "xclk".
++- DOVDD-supply: Digital I/O voltage supply, 1.8 volts
++- AVDD-supply: Analog voltage supply, 2.8 volts
++- DVDD-supply: Digital core voltage supply, 1.5 volts
++
++Optional Properties:
++- reset-gpios: reference to the GPIO connected to the reset pin, if any.
++	       This is an active low signal to the OV5640.
++- powerdown-gpios: reference to the GPIO connected to the powerdown pin,
++		   if any. This is an active high signal to the OV5640.
++
++The device node must contain one 'port' child node for its digital output
++video port, in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++&i2c1 {
++	ov5640: camera@3c {
++		compatible = "ovti,ov5640";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_ov5640>;
++		reg = <0x3c>;
++		clocks = <&clks IMX6QDL_CLK_CKO>;
++		clock-names = "xclk";
++		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
++		AVDD-supply = <&vgen3_reg>;  /* 2.8v */
++		DVDD-supply = <&vgen2_reg>;  /* 1.5v */
++		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
++		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
++
++		port {
++			ov5640_to_mipi_csi2: endpoint {
++				remote-endpoint = <&mipi_csi2_from_ov5640>;
++				clock-lanes = <0>;
++				data-lanes = <1 2>;
++			};
++		};
++	};
++};
 -- 
 2.7.4
