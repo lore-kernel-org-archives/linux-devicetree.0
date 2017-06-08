@@ -1,38 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv3 3/4] dt-bindings: i2c: Add Altera I2C Controller
-Date: Thu, 8 Jun 2017 17:21:50 -0500
-Message-ID: <20170608222150.xxlrzrfhhqqvuovl@rob-hp-laptop>
-References: <1496447559-19782-1-git-send-email-thor.thayer@linux.intel.com>
- <1496447559-19782-4-git-send-email-thor.thayer@linux.intel.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: sunxi: Add compatible string
+ for A83T R_PIO
+Date: Thu, 8 Jun 2017 17:22:07 -0500
+Message-ID: <20170608222207.gi2m5gjetmtxiyxj@rob-hp-laptop>
+References: <20170603144427.22855-1-wens@csie.org>
+ <20170603144427.22855-2-wens@csie.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1496447559-19782-4-git-send-email-thor.thayer@linux.intel.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: thor.thayer@linux.intel.com
-Cc: wsa@the-dreams.de, mark.rutland@arm.com, dinguyen@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, mchehab@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170603144427.22855-2-wens@csie.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 02, 2017 at 06:52:38PM -0500, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
+On Sat, Jun 03, 2017 at 10:44:25PM +0800, Chen-Yu Tsai wrote:
+> The R_PIO on the A83T is almost the same as the one found on the A64,
+> except that the CIR_RX function was moved from pin PL11 to pin PL12.
 > 
-> Add the documentation to support the Altera synthesizable
-> logic I2C Controller in FPGA.
+> Add a compatible string for it.
 > 
-> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 > ---
-> v2  Change the subject to identify dt-bindings
->     Add synthesizable logic to description.
->     Change compatible string to "altr,softip-i2c"
->     Make description of clock phandle singular since 1 clock.
->     Remove altr, from fifo-size
->     Specify fifo-size is in bytes.
-> v3  Add version to compatible string "altr,softip-i2c-v1.0"
->     Add for use in FPGA in description.
-> ---
->  .../devicetree/bindings/i2c/i2c-altera.txt         | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
+>  Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
