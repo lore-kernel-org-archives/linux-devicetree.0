@@ -1,33 +1,89 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/8] omap*: Fixes/Cleanups for MMC devicetree node
-Date: Thu, 8 Jun 2017 01:46:20 -0700
-Message-ID: <20170608084619.GH3730@atomide.com>
-References: <20170607093749.15656-1-kishon@ti.com>
- <CAPDyKFrJh9qAz6q2-TH8rMshuMjDTkT5pHP==FUUH9KZEOehOQ@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the
+ Atmel ARM TC blocks
+Date: Thu, 8 Jun 2017 10:57:10 +0200
+Message-ID: <20170608105710.54a551d8@bbrezillon>
+References: <20170530215139.9983-47-alexandre.belloni@free-electrons.com>
+        <20170606152104.GC2345@mai>
+        <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
+        <20170607141735.GH2345@mai>
+        <20170607152750.tksmyf5p3oajbsac@piout.net>
+        <20170607210848.GJ2345@mai>
+        <20170607231715.ns2vcxza2eexnzjs@piout.net>
+        <20170608074236.62924f01@bbrezillon>
+        <20170608074446.GM2345@mai>
+        <20170608101334.4e60aa4c@bbrezillon>
+        <20170608084026.GB2244@mai>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFrJh9qAz6q2-TH8rMshuMjDTkT5pHP==FUUH9KZEOehOQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170608084026.GB2244@mai>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Ulf Hansson <ulf.hansson@linaro.org> [170608 00:24]:
-> If it helps, I can host a branch with the updates on the omap_hsmmc
-> driver, such it can be pulled in from arm soc?
+On Thu, 8 Jun 2017 10:40:26 +0200
+Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Great that works for me. Let's just make sure git bisect
-keeps working.
+> > > 
+> > > Alexandre, Boris, have a look at https://www.spinics.net/lists/arm-kernel/msg572652.html
+> > > 
+> > > That will tell you the story.  
+> > 
+> > Then we're in a deadlock situation here. I'm tired of hearing this kind
+> > of argument "DT is only supposed to describe HW, not configuration, bla
+> > bla". The truth is, we already have plenty of bindings that do not
+> > strictly describe HW.
+> > 
+> > A simple example: ECC configuration on NAND devices. This is clearly a
+> > configuration thing, the NAND controller is usually able to support
+> > several kind of strength+ECC-block-size config, but we are able to
+> > overload this with the nand-ecc-xxx properties. Another example, still
+> > MTD related: MTD partitions, this is purely a software configuration,
+> > still we allow users to pass this information in the DT. You want
+> > another one? What about the linux,code and linux,input-type properties
+> > described here [1]?
+> > 
+> > So please, let's not use these "this is not decribing HW" or "this is
+> > linux specific" arguments every time someone tries to encode something
+> > that can be considered a configuration detail.
+> > 
+> > Let's be pragmatic. How you want to use your timer counter blocks (I'm
+> > talking about atmel TCBs) is clearly board specific. Whether you want
+> > to use the PIT for your clocksource or use one or 2 channels of a TCB
+> > at a specific resolution is again board specific. We need a solution to
+> > assign timer channels to a linux function, and I'm not convinced
+> > passing this information through the command line makes much more sense
+> > than specifying it in the DT (and it's definitely less intuitive, since
+> > you have to reference something defined in the DT from the cmdline).
+> > 
+> > Now, in his review, Mark says:
+> > 
+> > "
+> > To me it sounds like what we need is Linux infrastructure that allows
+> > one to register a device as having both clockevent/clocksource
+> > functionality.
+> > 
+> > That way, we can choose to do something sane at boot time, and if the
+> > user really wants specific devices used in specific ways, they can
+> > request that.
+> > "
+> > 
+> > Does that mean that, after adding this "HW timer" infrastructure, we
+> > would have a standard way to assign a function to a specific timer
+> > block from the DT? How is this different from what I suggest below
+> > (note the linux, prefix on my linux,timer-function property, which
+> > clearly shows that this is Linux specific)?  
+> 
+> I like the 'chosen' approach with the nodes you are proposing below. Thanks for
+> the constructive suggestion. The binding description matches perfectly what we
+> are trying to achieve.
 
-> I guess you need that as, the DT changes relies on the new vqmmc
-> binding. Or you thing it doesn't matter, because for the current
-> changes that regulator is always an always on regulator?
-
-Or maybe we can just add the new regulator, then do a
-follow-up series to remove the old ones?
-
-Regards,
-
-Tony
+Actually, this is Alexandre who initially suggested the chosen
+approach (I thought it was important to mention that ;-)).
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
