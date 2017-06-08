@@ -1,148 +1,98 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: RE: [PATCH v6 3/7] media: i2c: max2175: Add MAX2175 support
-Date: Thu, 8 Jun 2017 11:04:00 +0000
-Message-ID: <KL1PR0601MB2038DA15F6AAB1CB46DBFB5FC3C90@KL1PR0601MB2038.apcprd06.prod.outlook.com>
-References: <20170531084457.4800-1-ramesh.shanmugasundaram@bp.renesas.com>
-        <20170531084457.4800-4-ramesh.shanmugasundaram@bp.renesas.com>
-        <20170607101721.064aafe4@vento.lan>
-        <KL1PR0601MB20385C566733E32AC4DCA987C3C90@KL1PR0601MB2038.apcprd06.prod.outlook.com>
- <20170608072317.2e018a90@vento.lan>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH 6/8] firmware: arm_scmi: add initial support for power protocol
+Date: Thu, 8 Jun 2017 13:06:48 +0200
+Message-ID: <CAK8P3a2wJ+hWro7+KYUBLRSTdbwKFjuzutajo436F-X=nMD5cQ@mail.gmail.com>
+References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
+ <1496851812-19623-7-git-send-email-sudeep.holla@arm.com> <CAK8P3a3Vw2AvAr4hNd0A6Tih1YNorjiG2jkhcuo=CK1RF+aLFA@mail.gmail.com>
+ <d610d205-aa19-cf2f-072a-8b64c8c8be66@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170608072317.2e018a90-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <d610d205-aa19-cf2f-072a-8b64c8c8be66-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org" <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "crope-X3B1VOXEql0@public.gmane.org" <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org" <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 8, 2017 at 11:39 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>
+>
+> On 07/06/17 21:38, Arnd Bergmann wrote:
+>> On Wed, Jun 7, 2017 at 6:10 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>>
+>>> +struct scmi_msg_resp_power_attributes {
+>>> +       __le16 num_domains;
+>>> +       __le16 reserved;
+>>> +       __le32 stats_addr_low;
+>>> +       __le32 stats_addr_high;
+>>> +       __le32 stats_size;
+>>> +} __packed;
+>>> +
+>>> +struct scmi_msg_resp_power_domain_attributes {
+>>> +       __le32 flags;
+>>> +#define SUPPORTS_STATE_SET_NOTIFY(x)   ((x) & BIT(31))
+>>> +#define SUPPORTS_STATE_SET_ASYNC(x)    ((x) & BIT(30))
+>>> +#define SUPPORTS_STATE_SET_SYNC(x)     ((x) & BIT(29))
+>>> +           u8 name[SCMI_MAX_STR_SIZE];
+>>> +} __packed;
+>>
+>> I think it would be better to leave out the __packed here, which
+>> can lead to rather inefficient code. It's only really a problem when
+>> building with -mstrict-align, but it's better to write code in a way that
+>> doesn't rely on that.
+>>
+>
+> I assume you are referring to above structure only and not general
+> across all the structures ? I will have a look at this one.
 
-> Em Thu, 8 Jun 2017 09:42:43 +0000
-> Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> escreveu=
-:
->=20
-> > > Subject: Re: [PATCH v6 3/7] media: i2c: max2175: Add MAX2175 support
-> > >
-> > > Em Wed, 31 May 2017 09:44:53 +0100
-> > > Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-> escreveu:
-> > >
-> > > > +++ b/Documentation/media/v4l-drivers/max2175.rst
-> > > > @@ -0,0 +1,60 @@
-> > > > +Maxim Integrated MAX2175 RF to bits tuner driver
-> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> > > > +
-> > > > +The MAX2175 driver implements the following driver-specific
-> controls:
-> > > > +
-> > > > +``V4L2_CID_MAX2175_I2S_ENABLE``
-> > > > +-------------------------------
-> > > > +    Enable/Disable I2S output of the tuner.
-> > > > +
-> > > > +.. flat-table::
-> > > > +    :header-rows:  0
-> > > > +    :stub-columns: 0
-> > > > +    :widths:       1 4
-> > > > +
-> > > > +    * - ``(0)``
-> > > > +      - I2S output is disabled.
-> > > > +    * - ``(1)``
-> > > > +      - I2S output is enabled.
-> > >
-> > > Hmm... There are other drivers at the subsystem that use I2S (for
-> > > audio - not for SDR - but I guess the issue is similar).
-> > >
-> > > On such drivers, the bridge driver controls it directly, being sure
-> > > that I2S is enabled when it is expecting some data coming from the I2=
-S
-> bus.
-> > >
-> > > On some drivers, there are both I2S and A/D inputs at the bridge
-> chipset.
-> > > On such drivers, enabling/disabling I2S is done via VIDIOC_S_INPUT
-> > > (and optionally via ALSA mixer), being transparent to the user if
-> > > the stream comes from a tuner via I2S or from a directly connected A/=
-D
-> input.
-> > >
-> > > I don't think it is a good idea to enable it via a control, as, if
-> > > the bridge driver is expecting data via I2S, disabling it will cause
-> > > timeouts at the videobuf handling.
-> >
-> > The MAX2175 device is exposed as a v4l2 subdev with tuner ops and can
-> interface with an SDR device. When the tuner is configured, the I2S outpu=
-t
-> is enabled by default. From an independent tuner device perspective, this
-> default behaviour is enough and this control may not be needed/used.
-> >
-> > However, for the use case here, the R-Car DRIF device acts as the main
-> SDR device and the Maxim MAX2175 provides a sub-dev interface with tuner
-> ops.
-> >
-> > +---------------------+                +---------------------+
-> > |                     |-----SCK------->|CLK                  |
-> > |       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-> > |      (MAX2175)      |-----SD0------->|D0                   |
-> > |                     |-----SD1------->|D1                   |
-> > +---------------------+                +---------------------+
-> >
-> > The DRIF device design is such that it involves separate register write=
-s
-> to enable Rx on each of the data line. To keep both the data lines in syn=
-c
-> it expects the master device to enable output after both the data line Rx
-> are enabled.
-> >
-> > This level of control is exposed as a feature in the MAX2175 using this
-> control. When interfaced with DRIF this control is used to achieve the
-> desired functionality. When not interfaced with DRIF, the MAX2175 default
-> behaviour does not have to change because of DRIF and hence this I2S
-> control may be unused. Like MAX2175, DRIF is also an independent device
-> and can interface with a different third party tuner.
-> >
-> > Hence, this I2S enable/disable is exposed as a user control. The end
-> user application (knowing both these devices) is expected to use these
-> controls appropriately. Please let me know if I need to explain anything
-> in further detail.
->=20
->=20
-> The usecase is clear. That's exactly what other drivers with I2S do,
-> except that, on those other drivers, they pass I2S control info via
-> platform_data (they're not platform drivers).
->=20
-> With those drivers, generic applications work as-is via the standard
-> video, radio or sdr devnodes, without knowing about I2S.
->=20
-> The main difference here is that you're requiring an specialized
-> application for this device to work,=20
+I meant all of them, from my first look they all seem to have natural
+alignment on all members anyway. If there is one that doesn't, I would
+suggest annotating the individual unaligned members with __packed.
 
-Specialized application may be needed for this specific combination of devi=
-ces (DRIF + MAX2175) only. For MAX2175 alone, a generic application itself =
-would be enough. The MAX2175 will have I2S output enabled by default and th=
-e SDR device have to just enable/disable its own RX during .start_streaming=
-/.stop_streaming.
+>>> +static int
+>>> +scmi_power_domain_attributes_get(struct scmi_handle *handle, u32 domain,
+>>> +                                struct power_dom_info *dom_info)
+>>> +{
+>>> +       int ret;
+>>> +       struct scmi_xfer *t;
+>>> +       struct scmi_msg_resp_power_domain_attributes *attr;
+>>> +
+>>> +       ret = scmi_one_xfer_init(handle, POWER_DOMAIN_ATTRIBUTES,
+>>> +                                SCMI_PROTOCOL_POWER, sizeof(domain),
+>>> +                                sizeof(*attr), &t);
+>>> +       if (ret)
+>>> +               return ret;
+>>> +
+>>> +       *(__le32 *)t->tx.buf = cpu_to_le32(domain);
+>>> +       attr = (struct scmi_msg_resp_power_domain_attributes *)t->rx.buf;
+>>
+>> It seems you require a similar pattern in each caller of scmi_one_xfer_init(),
+>> but it seems a little clumsy to always require those casts, so maybe there
+>> is a nicer way to do this. How about making scmi_one_xfer_init() act
+>> as an allocation function and having it return the buffer or a PTR_ERR?
+>>
+>
+> Yes I agree it doesn't looks all nice. I have changed these few times
+> while developing and then thought it's better to get some suggestions. I
+> am open to any suggestions that will help to make these nicer.
+>
+>> It also seems odd to have it named 'init' but actually allocate the scmi_xfer
+>> structure rather than filling a local variable that gets passed by reference.
+>>
+>
+> It does initialise but partially. scmi_one_xfer_get does pure allocation
+> while scmi_one_xfer_init initialise header variables and also tx/rx
+> size. But if you think it's odd, I will looks at ways to make it better.
 
-as a generic one won't be aware of
-> this device-specific control, and may end by exposing this "internal"
-> control to the end user. That is OK for embedded usage, but, as soon as
-> this is used on some non-embedded usecase (with is likely, as there are
-> several PC consumer products using other chips from Maxim), we'll have
-> problems.
->=20
-> I guess the solution here is to make such control visible only via the
-> subdev interface.
->=20
+Yes, I'm still thinking about it, but I think we can do better. If a function
+has both allocation and initialization parts in it, I would probably name
+it *_alloc() rather than *_init().
 
-Did you mean using v4l2_subdev_tuner_ops? It does not have a method as of t=
-oday to support this. The video, audio subdev ops supports s_stream method.=
- We may need to create one for tuner ops.
+What is the relation between scmi_one_xfer_get() and
+scmi_one_xfer_init()? Do we need both in some callers, or
+just one of the two?
 
-Thanks,
-Ramesh
+       Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
