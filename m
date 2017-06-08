@@ -1,90 +1,78 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 03/17] base: fix order of OF initialization
-Date: Thu, 8 Jun 2017 10:05:08 +0100
-Message-ID: <20170608090507.GA5765@leverpostej>
-References: <20170523004107.536-1-palmer@dabbelt.com>
- <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-4-palmer@dabbelt.com>
- <CAMuHMdXWH5fU8YKfR37D5SMi1GpSk75Bq-OcYmm5ZuHe+XK0PQ@mail.gmail.com>
- <20170607093523.GB29370@leverpostej>
- <CAMgXwTiE48KLCJe6TD6VCd5rYASyw0L+pYh8yfvGjhohAfo2dg@mail.gmail.com>
- <5938C957.2030005@gmail.com>
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 2/8] firmware: arm_scmi: add basic driver
+ infrastructure for SCMI
+Date: Thu, 8 Jun 2017 10:28:17 +0100
+Message-ID: <5310ae30-72b8-1dee-2b20-4759fad8b636@arm.com>
+References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
+ <1496851812-19623-3-git-send-email-sudeep.holla@arm.com>
+ <CAKWsp+xR_1u2zrG=-dSzSktRvrr2Nfp50Hxur_YEFgr6oQ7KZQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5938C957.2030005@gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Wesley Terpstra <wesley@sifive.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAKWsp+xR_1u2zrG=-dSzSktRvrr2Nfp50Hxur_YEFgr6oQ7KZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roy Franz <rfranz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 08:49:43PM -0700, Frank Rowand wrote:
-> On 06/07/17 11:39, Wesley Terpstra wrote:
-> > It was a while ago that I debugged this. I already reported this bug
-> > to Benjamin Herrenschmidt (now in CC), and I believe he has a patch of
-> > his own to fix the same issue.
-> > 
-> > As I understand it, of_core_init sets up the OF entries in
-> > /sys/firmware/devicetree. During platform bringup, when the system
-> > describes the cpu + cache hierarchy, it also makes an of_node symlink
-> > into that directory. However, if it doesn't exist yet, you get the
-> > warning.
-> > 
-> > # ls -l /sys/devices/system/cpu/cpu3/of_node
-> > lrwxrwxrwx    1 root     root             0 Jan  1 00:00
-> > /sys/devices/system/cpu/cpu3/of_node ->
-> > ../../../../firmware/devicetree/base/cpus/cpu@3
-> > 
-> > On Wed, Jun 7, 2017 at 2:35 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> On Wed, Jun 07, 2017 at 09:07:20AM +0200, Geert Uytterhoeven wrote:
-> >>> CC devicetree folks
-> >>>
-> >>> On Wed, Jun 7, 2017 at 12:59 AM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> >>>> From: "Wesley W. Terpstra" <wesley@sifive.com>
-> >>>>
-> >>>> This fixes: [    0.010000] cpu cpu0: Error -2 creating of_node link
-> >>>> ... which you get for every CPU on all architectures with a OF cpu/ node.
-> >>
-> >> I take it this means a /cpus node? Or the /cpus/cpu@* nodes?
-> >>
-> >> I'm not seeing this on arm64 when booting v4.12-rc4 with DT, so clearly
-> >> this doesn't affect all such architectures.
-> >>
-> >> What path are these errors happening in?
+Hi Roy,
+
+On 07/06/17 20:18, Roy Franz wrote:
+> On Wed, Jun 7, 2017 at 9:10 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+>> The SCMI is intended to allow OSPM to manage various functions that are
+>> provided by the hardware platform it is running on, including power and
+>> performance functions. SCMI provides two levels of abstraction, protocols
+>> and transports. Protocols define individual groups of system control and
+>> management messages. A protocol specification describes the messages
+>> that it supports. Transports describe the method by which protocol
+>> messages are communicated between agents and the platform.
+>>
+>> This patch adds basic infrastructure to manage the message allocation,
+>> initialisation, packing/unpacking and shared memory management.
+>>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  drivers/firmware/Kconfig           |  21 ++
+>>  drivers/firmware/Makefile          |   1 +
+>>  drivers/firmware/arm_scmi/Makefile |   2 +
+>>  drivers/firmware/arm_scmi/common.h |  74 ++++
+>>  drivers/firmware/arm_scmi/driver.c | 737 +++++++++++++++++++++++++++++++++++++
+>>  include/linux/scmi_protocol.h      |  48 +++
+>>  6 files changed, 883 insertions(+)
+>>  create mode 100644 drivers/firmware/arm_scmi/Makefile
+>>  create mode 100644 drivers/firmware/arm_scmi/common.h
+>>  create mode 100644 drivers/firmware/arm_scmi/driver.c
+>>  create mode 100644 include/linux/scmi_protocol.h
+>>
+
+[...]
+
+>> +
+>> +#define client_to_scmi_info(c) container_of(c, struct scmi_info, cl)
+>> +#define handle_to_scmi_info(h) container_of(h, struct scmi_info, handle)
+>> +
+>> +/*
+>> + * The SCP firmware only executes in little-endian mode, so any buffers
+>> + * shared through SCMI should have their contents converted to little-endian
+>> + */
 > 
-> On the surface, the patch looks reasonable.  But it is not obvious to me why
-> the error message is occurring.  I would like to understand the cause before
-> saying the patch is good.
+> nit:
+> This really has more to do with the SCMI protocol defining everything
+> as little endian, rather the endian-ness of the SCP, right?  There could be SCP
+> implementations that are not Cortex M3s or little endian.
 > 
-> What kernel version is showing the error?  For a specific architecture
-> (the patch lists 'riscv, nios, etc'), which config and device tree source?
-> 
-> And again, what is the calling path?
 
->From having grepped around, I think this affects architectures which
-select CONFIG_GENERIC_CPU_DEVICES, which includes nios2.
+Thanks for taking time to review this RFC, much appreciated. All valid
+points(on this and other patches) and fixed locally now. Also thanks for
+saving time in debugging these issues. I should be able to do some
+testing next week.
 
-In that case, driver_init() calls cpu_dev_init() before calling
-of_core_init(). Then we get the callchain:
-
-   cpu_dev_init()
--> cpu_dev_register_generic()
--> register_cpu(cpu, i)
--> device_register(&cpu->dev)
--> device_add(dev)
--> device_add_class_symlinks(dev)
-
-... in device_add_class_symlinks, we we dev->of_node, and call
-sysfs_create_link(), which fails because we haven't called
-of_core_init() to register the sysfs devicetree directory yet.
-
-Given that, this patch makes sense to me.
-
-FWIW, with the commit message updated to describe the particular
-ordering problem:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
