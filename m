@@ -1,77 +1,135 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [EXAMPLE V5 3/2] ARM: BCM53573: Specify ports for USB LED for Tenda AC9
-Date: Thu,  8 Jun 2017 18:08:33 +0200
-Message-ID: <20170608160833.1567-4-zajec5@gmail.com>
-References: <20170530092706.927-1-zajec5@gmail.com>
- <20170608160833.1567-1-zajec5@gmail.com>
+From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] power: tps65217_charger: add support for NTC
+ type, voltage and current charge
+Date: Thu, 8 Jun 2017 18:11:37 +0200
+Message-ID: <20170608161137.7kxkriaryr5m323h@earth>
+References: <20170526110413.24836-1-enric.balletbo@collabora.com>
+ <20170526110413.24836-4-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <20170608160833.1567-1-zajec5@gmail.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fmyal4pnucnwexfe"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170526110413.24836-4-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-This patch *should not* be applied. It's only an EXAMPLE and that's why it uses
-that weird 3/2 number.
+--fmyal4pnucnwexfe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It's a proof of concept, it was tested & will be submitted through ARM tree if
-previous patches get accepted.
+Hi Enric,
 
-V3: Switch to the new binding
-V5: Use #trigger-source-cells instead of #source-cells
----
- arch/arm/boot/dts/bcm47189-tenda-ac9.dts | 1 +
- arch/arm/boot/dts/bcm53573.dtsi          | 4 ++++
- 2 files changed, 5 insertions(+)
+On Fri, May 26, 2017 at 01:04:13PM +0200, Enric Balletbo i Serra wrote:
+> Allow the possibility to configure the charge and the current voltage of
+> the charger and also the NTC type for battery temperature measurement.
+>=20
+> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+> ---
+> Changes since v2:
+>  - Requested by Sebastian Reichel
+>    - Use the simple-battery framework
+>    - Use device_property_read_u32 instead of of_property_read_u32
+> Changes since v1:
+>  - None
+>=20
+>  drivers/power/supply/tps65217_charger.c | 194 ++++++++++++++++++++++++++=
+++++--
+>  include/linux/mfd/tps65217.h            |   2 +
+>  2 files changed, 188 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/power/supply/tps65217_charger.c b/drivers/power/supp=
+ly/tps65217_charger.c
+> index 1f52340..5939e77 100644
+> --- a/drivers/power/supply/tps65217_charger.c
+> +++ b/drivers/power/supply/tps65217_charger.c
+>
+> [...]
+>
+> +#ifdef CONFIG_OF
 
-diff --git a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-index 34417dac1cd0..ee44dec7d7ec 100644
---- a/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-+++ b/arch/arm/boot/dts/bcm47189-tenda-ac9.dts
-@@ -26,6 +26,7 @@
- 		usb {
- 			label = "bcm53xx:blue:usb";
- 			gpios = <&chipcommon 1 GPIO_ACTIVE_HIGH>;
-+			trigger-sources = <&ohci_port1>, <&ehci_port1>;
- 		};
- 
- 		wps {
-diff --git a/arch/arm/boot/dts/bcm53573.dtsi b/arch/arm/boot/dts/bcm53573.dtsi
-index eae623f76401..5c0b9b4d679a 100644
---- a/arch/arm/boot/dts/bcm53573.dtsi
-+++ b/arch/arm/boot/dts/bcm53573.dtsi
-@@ -138,10 +138,12 @@
- 
- 				ehci_port1: port@1 {
- 					reg = <1>;
-+					#trigger-source-cells = <0>;
- 				};
- 
- 				ehci_port2: port@2 {
- 					reg = <2>;
-+					#trigger-source-cells = <0>;
- 				};
- 			};
- 
-@@ -158,10 +160,12 @@
- 
- 				ohci_port1: port@1 {
- 					reg = <1>;
-+					#trigger-source-cells = <0>;
- 				};
- 
- 				ohci_port2: port@2 {
- 					reg = <2>;
-+					#trigger-source-cells = <0>;
- 				};
- 			};
- 		};
--- 
-2.11.0
+You can drop the #ifdef CONFIG_OF. device_properties can also be
+added via ACPI or boardcode and power_supply_get_battery_info is
+always available (but will return -EINVAL values for !OF at the
+moment).
+
+> +static struct tps65217_charger_platform_data *tps65217_charger_pdata_ini=
+t(
+> +		struct tps65217_charger *charger)
+> +{
+> +	struct tps65217_charger_platform_data *pdata;
+> +	struct power_supply_battery_info info =3D {};
+> +	int ret;
+> +
+> +	pdata =3D devm_kzalloc(charger->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	/*
+> +	 * If battery info is not supplied just ignore and program default
+> +	 * values.
+> +	 */
+> +	power_supply_get_battery_info(charger->psy, &info);
+> +
+> +	if (info.charge_voltage_uv > 0)
+> +		pdata->charge_voltage_uv =3D info.charge_voltage_uv;
+> +	else
+> +		pdata->charge_voltage_uv =3D 4100000;
+> +
+> +	if (info.charge_current_ua > 0)
+> +		pdata->charge_current_ua =3D info.charge_current_ua;
+> +	else
+> +		pdata->charge_current_ua =3D 500000;
+> +
+> +	ret =3D device_property_read_u32(charger->dev, "ti,ntc-type",
+> +				       &pdata->ntc_type);
+> +	if (ret)
+> +		pdata->ntc_type =3D 1;	/* 10k  (curve 2, B =3D 3480) */
+> +
+> +	return pdata;
+> +}
+> +#else /* CONFIG_OF */
+> +static struct tps65217_charger_platform_data *tps65217_charger_pdata_ini=
+t(
+> +		struct tps65217_charger *charger)
+> +{
+> +	return NULL;
+> +}
+> +#endif /* CONFIG_OF */
+> +
+> [...]
+>
+
+Otherwise looks fine to me.
+
+-- Sebastian
+
+--fmyal4pnucnwexfe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlk5dzYACgkQ2O7X88g7
++pq8bRAAnpmAEz34NFSfsTi3+hXmc72b6ytfDkX9REKTpqaMGNMxTctnkVla48B7
+VgXdvMzebw0l8i0c++IXRxW5tD2VegPmNlc4d+tYYNJ4yflFwWCqyrnFrryBbo6k
+j644TaOpPsz3nZgvvrWhlPNBR+dLAK1zZ934jvgIgOlwwwZYG79PEyWPxrLhz0OV
+WsJE5whUTiGGGJnXJVGD+GVuYUJsiSjSYXloBlQcOd3+gw9m1wzQNiTRtnUnRFm9
+ZqbX4QAgi2yCy/BImQeDADEqA8/51nuTuXrp1aNYl5t+bALw/4PqX3nE3DY7b4Ty
+5rji8J/9RoV0WCxcC8tlW34ae6A1A5KNcwFesqhfXhZr6vpHQfFjqZ37KIkgxyox
+bcnrjInjvy9BPQvaDcc1UG6xNwIAarVXQkc5bz2/HhpWKqgPOxSMoezK8pyglRb+
+jMA+aqv4ZudugQ9XU9u9AWOuQ5BirON+SzpU0RD+fCNf04g137rJWEpmR/XFmLGR
+j9CQ8s2tlCnQsa5UHim4C5FYhoV6wkmURz76ISgVv9ahwCMkBaHyJccMYf9JbfIa
+IKw6aJ1X+6qB9k1qDLFtn9nFjOevd72oD3W4W/tCSYv+BSSCvFoWLzyRrfxhtG2v
+HW9JNlGTOQN/45wo52R+Bp5Csk0FyOdBlRz7ShKwOsyxpKPq4os=
+=rC/s
+-----END PGP SIGNATURE-----
+
+--fmyal4pnucnwexfe--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
