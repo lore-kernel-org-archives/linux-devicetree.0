@@ -1,75 +1,63 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the
- Atmel ARM TC blocks
-Date: Thu, 8 Jun 2017 10:33:27 +0200
-Message-ID: <20170608103327.0fbc7bb5@bbrezillon>
-References: <20170530215139.9983-47-alexandre.belloni@free-electrons.com>
-        <20170606152104.GC2345@mai>
-        <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
-        <20170607141735.GH2345@mai>
-        <20170607152750.tksmyf5p3oajbsac@piout.net>
-        <20170607210848.GJ2345@mai>
-        <20170607231715.ns2vcxza2eexnzjs@piout.net>
-        <20170608074236.62924f01@bbrezillon>
-        <20170608074446.GM2345@mai>
-        <20170608075900.i554dgbh3p5sq5ml@piout.net>
-        <20170608082417.GA2244@mai>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: sun8i: a83t: Add dt node for the syscon
+ control module
+Date: Thu, 8 Jun 2017 10:33:56 +0200
+Message-ID: <20170608083356.foq5wfat4hvwjr5m@flea.home>
+References: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
+ <20170607173345.22462-2-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pe2faq2uzpeetqbk"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170608082417.GA2244@mai>
+Content-Disposition: inline
+In-Reply-To: <20170607173345.22462-2-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 8 Jun 2017 10:24:17 +0200
-Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-> On Thu, Jun 08, 2017 at 09:59:01AM +0200, Alexandre Belloni wrote:
-> > On 08/06/2017 at 09:44:46 +0200, Daniel Lezcano wrote:  
-> > > 
-> > > +Mark Rutland, +Rob Herring
-> > > 
-> > > 
-> > > Alexandre, Boris, have a look at https://www.spinics.net/lists/arm-kernel/msg572652.html
-> > > 
-> > > That will tell you the story.
-> > >   
-> > 
-> > Ok, so is the solution putting the driver back in mach-at91 were we can
-> > do whatever we want like mach-omap2 is doing?  
-> 
-> No. And putting a driver in mach-<whatever> does not give the permission to do
-> whatever you want. I won't tell you how OSS works, but moving code around or
-> using another tree to circumvent a code review is just the best way to upset
-> maintainers in general and hurt your karma.
-> 
-> That said, I think you misunderstood my comment (or I was not clear). In the
-> discussion given in the link above, I am in favor, somehow, to distinguish
-> clockevent and clocksource to solve exactly what you are facing.
-> 
-> Rob Herring told me it could be acceptable to have a property to tell if it is
-> a clockevent or a clocksource.
-> 
-> Mark Rutland disagreed on this.
-> 
-> I was alone in the discussion, no consensus have been found.
+--pe2faq2uzpeetqbk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Indeed, I misunderstood your point.
+On Wed, Jun 07, 2017 at 07:33:44PM +0200, Corentin Labbe wrote:
+> This patch add the dt node for the syscon register present on the
+> Allwinner A83T
+>=20
+> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 
-> 
-> Now, you have a particular use case and I would like to resurrect the
-> discussion in order to find a solution which can apply to all DT drivers.
+Applied, thanks!
+Maxime
 
-Ok, glad to see we're on the same page.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-Mark, can we re-open the discussion?
+--pe2faq2uzpeetqbk
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-Boris
+iQIcBAEBAgAGBQJZOQv0AAoJEBx+YmzsjxAgu3EP/i/TTnXsDc+Aj/rpZ+9uyMRb
+cykiygBO1sVxZWQaKe1nqotehOI7AIFGQsz8lsqJjhAmOG6azFyEkOVQ37C9APqX
+Oc8cE6fvB6buXb4akTrhVnRBF8gl8qSmTcDLPwz+GNXoOLdT7gL8tRJKt89u8bFx
+lDmZhBXDKVGioQ/EJwpF8Gzp6tGQybqpAFKlq+3OVttnNfIUVW8ffO9+CD+rP8OK
+6ILzBgN85U+wmO2JBAfXPHdtpsBHcEU4+c1YzWLlKAI8QmVcO+3phGMe19Is7/mu
+QnEeyZzbVEF/yZmvyNnhp6PTLUQnoGS6oNolRONaEBVVnmyY06VBdKNMOinRwN4n
+QKPH+M8XVHTHGTxCLzAGpKpyWeTxe7Lg0DypbXcMxV1TNyABwEui9VLxSa4zmqZ2
+MI3Tmzkn7VBa4j9f9mZSG26Ua0lQ4KNdxi5zFCInzFQO/AyHEL87LWjKozwr3fhA
+oEIHQJeIPTyjna71drulE91dAAvJC9vrEhsDw52bzt2Cnaudk1ETiwwcZMmG3zmr
+Z5Ml2WED2aW16khsI/UoVqLKRchQcgvAf7UFNYFzrtaasNBHsoQfisu1q6vf+OIB
+U1TbNfPoiiuZE9G0cwfd983/A3PtFkLjednwRxLgF4XrU3T79uX7HEhi5K/N3sTP
+RLb5a7wlSBaDBRJGD1Jb
+=h7jL
+-----END PGP SIGNATURE-----
+
+--pe2faq2uzpeetqbk--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
