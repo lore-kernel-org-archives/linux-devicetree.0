@@ -1,90 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 5/6] dt-bindings: display: stm32: Add DSI host driver
-Date: Thu, 8 Jun 2017 12:12:44 -0500
-Message-ID: <20170608171244.twgn4xmqd5pstb2i@rob-hp-laptop>
-References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
- <1496414235-20098-6-git-send-email-philippe.cornu@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <1496414235-20098-6-git-send-email-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Chris Zhong <zyw@rock-chips.com>, Mickael Reulier <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, Vincent Abriou <vincent.abriou@st.com>, Ludovic Barre <ludovic.barre@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, zourongrong@gmail.com, Gabriel Fernandez <gabriel.fernandez@st.com>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: [PATCH v10 0/6] i2c: designware: add I2C SLAVE support
+Date: Thu,  8 Jun 2017 18:36:44 +0100
+Message-ID: <cover.1496942505.git.lolivei@synopsys.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gMDIsIDIwMTcgYXQgMDQ6Mzc6MTRQTSArMDIwMCwgUGhpbGlwcGUgQ09STlUg
-d3JvdGU6Cj4gVGhpcyBwYXRjaCBhZGRzIGRvY3VtZW50YXRpb24gb2YgZGV2aWNlIHRyZWUgYmlu
-ZGluZ3MgZm9yIHRoZSBTVE0zMgo+IERTSSBob3N0IGRyaXZlciBiYXNlZCBvbiB0aGUgU3lub3Bz
-eXMgRFcgTUlQSSBEU0kgYnJpZGdlIGRyaXZlci4KPiAtLS0KPiAgLi4uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9zdCxzdG0zMi1sdGRjLnR4dCAgfCA4MyArKysrKysrKysrKysrKysrKysr
-KystCj4gIDEgZmlsZSBjaGFuZ2VkLCA4MiBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3N0LHN0bTMyLWx0ZGMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvc3Qsc3RtMzItbHRkYy50eHQKPiBpbmRleCA5MGE4NDU5Li40Y2QzMmJkIDEwMDY0NAo+
-IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMy
-LWx0ZGMudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvc3Qsc3RtMzItbHRkYy50eHQKPiBAQCAtMTIsOCArMTIsMzkgQEAKPiAgICBSZXF1aXJlZCBu
-b2RlczoKPiAgICAgIC0gVmlkZW8gcG9ydCBmb3IgUkdCIG91dHB1dC4KPiAgCj4gLUV4YW1wbGU6
-Cj4gKyogU1RNaWNyb2VsZWN0cm9uaWNzIFNUTTMyIGRzaSBzcGVjaWZpYyBleHRlbnNpb25zIHRv
-IFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSQo+ICsgIERTSSBob3N0IGNvbnRyb2xsZXIKPiAgCj4g
-K1RoZSBTVE1pY3JvZWxlY3Ryb25pY3MgU1RNMzIgZHNpIGRyaXZlciB1c2VzIHRoZSBTeW5vcHN5
-cyBEZXNpZ25XYXJlIE1JUEkKPiArRFNJIGhvc3QgY29udHJvbGxlciBkcml2ZXIgKHJlbGF0ZWQg
-ZG9jdW1lbnRhdGlvbiBpbiBbNV0pLgo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSAj
-YWRkcmVzcy1jZWxsczogU2hvdWxkIGJlIDwxPi4KPiArLSAjc2l6ZS1jZWxsczogU2hvdWxkIGJl
-IDwwPi4KPiArLSBjb21wYXRpYmxlOiAic3Qsc3RtMzItZHNpIi4KPiArLSByZWc6IE1lbW9yeSBt
-YXBwZWQgYmFzZSBhZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIERXQyBNSVBJIERTSSByZWdpc3Rl
-cnMuCj4gKy0gY2xvY2tzOiBSZWZlcmVuY2VzIHRvIGFsbCB0aGUgY2xvY2tzIHNwZWNpZmllZCBp
-biB0aGUgY2xvY2stbmFtZXMgcHJvcGVydHkKPiArICBhcyBzcGVjaWZpZWQgaW4gWzFdLgo+ICst
-IGNsb2NrLW5hbWVzOgo+ICsgIC0gcGVyaXBoZXJhbCBjbG9jayBzdHJpbmcgbmFtZSwgbXVzdCBi
-ZSAicGNsayIuCj4gKyAgLSBwaHkgcGxsIHJlZmVyZW5jZSBjbG9jayBzdHJpbmcgbmFtZSwgbXVz
-dCBiZSAicmVmIi4KCkkgc3RpbGwgaGF2ZSB0aGUgc2FtZSBjb21tZW50IGFzIHYxLgoKPiArLSBy
-ZXNldHM6IFJlZmVyZW5jZXMgdG8gYWxsIHRoZSByZXNldHMgc3BlY2lmaWVkIGluIHRoZSByZXNl
-dC1uYW1lcyBwcm9wZXJ0eQo+ICsgIGFzIHNwZWNpZmllZCBpbiBbMl0uCj4gKy0gcmVzZXQtbmFt
-ZXM6IHN0cmluZyByZXNldCBuYW1lLCBtdXN0IGJlICJhcGIiLgo+ICsKPiArUmVxdWlyZWQgbm9k
-ZXM6Cj4gKy0gZHNpIGlucHV0IHBvcnQgbm9kZTogY29ubmVjdGVkIHRvIHRoZSBsdGRjIHJnYiBv
-dXRwdXQgcG9ydCwgc2VlIFszXSAmIFs0XS4KPiArLSBwYW5lbCBvciBicmlkZ2Ugbm9kZTogc2Vl
-IFs2XS4KCk5lZWQgdG8gYmUgZXhwbGljaXQgaGVyZS4gUG9ydCAwIGlzIC4uLiBQb3J0IDEgaXMg
-Li4uCgo+ICsKPiArTm90ZTogWW91IGNhbiBmaW5kIG1vcmUgZG9jdW1lbnRhdGlvbgo+ICtbMV0g
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWJpbmRpbmdzLnR4
-dAo+ICtbMl0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Jlc2V0L3Jlc2V0LnR4
-dAo+ICtbM10gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3ZpZGVvLWlu
-dGVyZmFjZXMudHh0Cj4gK1s0XSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3Jh
-cGgudHh0Cj4gK1s1XSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvZHdfbWlwaV9kc2kudHh0Cj4gK1s2XSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9taXBpLWRzaS1idXMudHh0Cj4gKwo+ICtFeGFtcGxlIDE6IFJHQiBwYW5l
-bAo+ICAvIHsKPiAgCS4uLgo+ICAJc29jIHsKPiBAQCAtMzMsMyArNjQsNTMgQEAgRXhhbXBsZToK
-PiAgCQl9Owo+ICAJfTsKPiAgfTsKPiArCj4gK0V4YW1wbGUgMjogRFNJIHBhbmVsCj4gKwo+ICsv
-IHsKPiArCS4uLgo+ICsJc29jIHsKPiArCS4uLgo+ICsJCWx0ZGM6IGRpc3BsYXktY29udHJvbGxl
-ckA0MDAxNjgwMCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAic3Qsc3RtMzItbHRkYyI7Cj4gKwkJCXJl
-ZyA9IDwweDQwMDE2ODAwIDB4MjAwPjsKPiArCQkJaW50ZXJydXB0cyA9IDw4OD4sIDw4OT47Cj4g
-KwkJCXJlc2V0cyA9IDwmcmNjIFNUTTMyRjRfQVBCMl9SRVNFVChMVERDKT47Cj4gKwkJCWNsb2Nr
-cyA9IDwmcmNjIDEgQ0xLX0xDRD47Cj4gKwkJCWNsb2NrLW5hbWVzID0gImxjZCI7Cj4gKwo+ICsJ
-CQlwb3J0IHsKPiArCQkJCWx0ZGNfb3V0X2RzaTogZW5kcG9pbnQgewo+ICsJCQkJCXJlbW90ZS1l
-bmRwb2ludCA9IDwmZHNpX2luPjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwkJfTsKPiArCj4gKwo+
-ICsJCWRzaTogZHNpQDQwMDE2YzAwIHsKPiArCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gKwkJ
-CSNzaXplLWNlbGxzID0gPDA+Owo+ICsJCQljb21wYXRpYmxlID0gInN0LHN0bTMyLWRzaSI7Cj4g
-KwkJCXJlZyA9IDwweDQwMDE2YzAwIDB4ODAwPjsKPiArCQkJY2xvY2tzID0gPCZyY2MgMSBDTEtf
-RjQ2OV9EU0k+LCA8JmNsa19oc2U+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJyZWYiLCAicGNsayI7
-Cj4gKwkJCXJlc2V0cyA9IDwmcmNjIFNUTTMyRjRfQVBCMl9SRVNFVChEU0kpPjsKPiArCQkJcmVz
-ZXQtbmFtZXMgPSAiYXBiIjsKPiArCj4gKwkJCXBvcnQgewo+ICsJCQkJZHNpX2luOiBlbmRwb2lu
-dCB7Cj4gKwkJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdGRjX291dF9kc2k+Owo+ICsJCQkJfTsK
-PiArCQkJfTsKPiArCj4gKwkJCXBhbmVsLWRzaUAwIHsKClRoaXMgc2hvdWxkIHVzZSBncmFwaCBi
-aW5kaW5nIGluc3RlYWQuIE9yIGF0IGxlYXN0IHdlIHNob3VsZCBhbGxvdyB0aGF0IAphbmQgYmUg
-Y2xlYXIgYWJvdmUgdGhhdCB3ZSBkby4KCj4gKwkJCQlyZWcgPSA8MD47IC8qIGRzaSB2aXJ0dWFs
-IGNoYW5uZWwgKDAuLjMpICovCj4gKwkJCQljb21wYXRpYmxlID0gLi4uOwo+ICsJCQkJZW5hYmxl
-LWdwaW9zID0gLi4uOwo+ICsKPiArCQkJfTsKPiArCj4gKwkJfTsKPiArCj4gKwl9Owo+ICt9Owo+
-IC0tIAo+IDEuOS4xCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+The purpose of this patchset is to enable Linux to be a I2C slave by 
+enabling the slave functionality in the designware I2C controller and at
+the same time it does some cleaning of the existing code.
+
+The patch 1 is for cleaning and commentary fix.
+The patch 2 refactors the original i2c-designware-core and extracts all
+master functions to a i2c-designware-master source file as suggested by
+Andy Shevchenko when I first submited the update. The patch 3 then
+separates the MASTER flow from the common flow.
+The patch 4 introduces the SLAVE necessary definitions to the 
+i2c-designware library and adds a how-to-use example to the designware.txt
+in device tree bindings.
+The patch 5 adds the necessary functions to give the ability to be a SLAVE
+to the controller and for that changes also had to be made in the 
+Makefile and Kconfig.
+The patch 6 enables the SLAVE mode to be detected by the platform module.
+
+The functionality was tested using the hardware independent slave-eeprom
+driver based on top of i2c/for-next. The tree I used can be found here:
+
+https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/log/?h=i2c/for-next
+
+Luis Oliveira (6):
+  i2c: designware: Cleaning and comment style fixes.
+  i2c: designware: refactoring of the i2c-designware
+  i2c: designware: MASTER mode as separated driver
+  i2c: designware: introducing I2C_SLAVE definitions
+  i2c: designware: add SLAVE mode functions
+  i2c: designware: enable SLAVE in platform module
+
+ .../devicetree/bindings/i2c/i2c-designware.txt     |  16 +-
+ drivers/i2c/busses/Kconfig                         |  14 +-
+ drivers/i2c/busses/Makefile                        |   4 +
+ drivers/i2c/busses/i2c-designware-common.c         | 280 +++++++++++++
+ drivers/i2c/busses/i2c-designware-core.h           | 182 +++++++-
+ ...c-designware-core.c => i2c-designware-master.c} | 465 +++------------------
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |   8 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c        | 117 ++++--
+ drivers/i2c/busses/i2c-designware-slave.c          | 396 ++++++++++++++++++
+ 9 files changed, 1029 insertions(+), 453 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-designware-common.c
+ rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c} (60%)
+ create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+
+-- 
+2.13.0
