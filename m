@@ -1,137 +1,85 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/9] dt-bindings: regulator: Add document for MediaTek
- MT6380 regulator
-Date: Thu, 8 Jun 2017 17:01:30 -0500
-Message-ID: <20170608220130.wcsustafqzdzx3tj@rob-hp-laptop>
-References: <cover.1496425268.git.sean.wang@mediatek.com>
- <8764fea31386da58518dff7f5e2170dcd8f6c167.1496425268.git.sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: [PATCH v6 0/8] MFD: add driver for HiSilicon Hi6421v530 PMIC
+Date: Fri,  9 Jun 2017 06:08:33 +0800
+Message-ID: <20170608220841.26531-1-guodong.xu@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8764fea31386da58518dff7f5e2170dcd8f6c167.1496425268.git.sean.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: matthias.bgg@gmail.com, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, jamesjj.liao@mediatek.com, henryc.chen@mediatek.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, chen.zhong@mediatek.com, chenglin.xu@mediatek.com, linux-kernel@vger.kernel.org
+To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, horms+renesas@verge.net.au, olof@lixom.net, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, damm+renesas@opensource.se, ard.biesheuvel@linaro.org, linus.walleij@linaro.org, geert+renesas@glider.be
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hw.wangxiaoyin@hisilicon.com, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 03, 2017 at 01:55:43AM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> add dt-binding document for MediaTek MT6380 PMIC
-> 
-> Signed-off-by: Chenglin Xu <chenglin.xu@mediatek.com>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
->  .../bindings/regulator/mt6380-regulator.txt        | 90 ++++++++++++++++++++++
->  1 file changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-> new file mode 100644
-> index 0000000..9affeab
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/mt6380-regulator.txt
-> @@ -0,0 +1,90 @@
-> +Mediatek MT6380 Regulator Driver
-> +
-> +All voltage regulators are defined as subnodes of the regulators node. A list
-> +of regulators provided by this controller are defined as subnodes of the
-> +PMIC's node. Each regulator is named according to its regulator type,
-> +buck_<name> and ldo_<name>. The definition for each of these nodes is defined
-> +using the standard binding for regulators at
-> +Documentation/devicetree/bindings/regulator/regulator.txt.
-> +
-> +The valid names for regulators are::
-> +BUCK:
-> +  buck_vcore1, buck_vcore, buck_vrf
-> +LDO:
-> +  ldo_vmldo ,ldo_valdo , ldo_vphyldo, ldo_vddrldo, ldo_vtldo
+This patchset adds driver for HiSilicon Hi6421v530 PMIC.
 
-'ldo' twice in every name is redundant.
+Mainline kernel already has driver support to a similar chip, Hi6421.
+Hi6421 and Hi6421v530 are both from the same vendor, HiSilicon, but
+they are at different revisions. They both use the same Memory-mapped
+I/O method to communicate with Main SoC. However, they differ quite a
+lot in their regulator designs. Eg. they have completely different LDO
+voltage points.
 
-Use of '_' is discouraged, but if that's what prior PMICs did, it's 
-okay.
+Patch 1 and 2 are hi6421-pmic cleaning up.
+Patch 3 and 4 extends hi6421-pmic-core.c to support Hi6421v530 revision.
+Patch 5 add hi6421v530-regulator.c driver for LDO regulators.
+Patch 6 fixes an issue for hi6421 regulator, which is not related to v530
+         but it's found in this review.
+Patch 7 is dts change, it depends on and can be applied to hi3660/hikey960
+        patchset [1].
+Patch 8 enables the relevant config items.
 
-> +
-> +Example:
-> +
-> +	mt6380regulator: mt6380regulator {
+[1], http://www.spinics.net/lists/devicetree/msg178303.html
 
-just "regulators {"
+Major changes in v6:
+ - Patch 5, solve review comments from Mark Brown, add hi6421v530 regulator
+     driver to module device table.
+ - Add Acked-by from Arnd Bergmann
 
-> +		compatible = "mediatek,mt6380-regulator";
-> +
-> +		mt6380_vcpu_reg: buck_vcore1 {
-> +			regulator-name = "vcpu";
-> +			regulator-min-microvolt = < 600000>;
-> +			regulator-max-microvolt = <1393750>;
-> +			regulator-ramp-delay = <6250>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		mt6380_vcore_reg: buck_vcore {
-> +			regulator-name = "vcore";
-> +			regulator-min-microvolt = <600000>;
-> +			regulator-max-microvolt = <1393750>;
-> +			regulator-ramp-delay = <6250>;
-> +		};
-> +
-> +		mt6380_vrf_reg: buck_vrf {
-> +			regulator-name = "vrf";
-> +			regulator-min-microvolt = <1200000>;
-> +			regulator-max-microvolt = <1575000>;
-> +			regulator-ramp-delay = <0>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		mt6380_vm_reg: ldo_vmldo {
-> +			regulator-name = "vmldo";
-> +			regulator-min-microvolt = <1050000>;
-> +			regulator-max-microvolt = <1400000>;
-> +			regulator-ramp-delay = <0>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		mt6380_va_reg: ldo_valdo {
-> +			regulator-name = "valdo";
-> +			regulator-min-microvolt = <2200000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-ramp-delay = <0>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		mt6380_vphy_reg: ldo_vphyldo {
-> +			regulator-name = "vphyldo";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <1800000>;
-> +			regulator-ramp-delay = <0>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		mt6380_vddr_reg: ldo_vddrldo {
-> +			regulator-name = "vddr";
-> +			regulator-min-microvolt = <1240000>;
-> +			regulator-max-microvolt = <1840000>;
-> +			regulator-ramp-delay = <0>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +
-> +		mt6380_vt_reg: ldo_vtldo {
-> +			regulator-name = "vadc18";
-> +			regulator-min-microvolt = <2200000>;
-> +			regulator-max-microvolt = <3300000>;
-> +			regulator-ramp-delay = <0>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> -- 
-> 1.9.1
-> 
+Major changes in v5:
+ - Patch 3, solve review comments from Lee Johes
+
+Major changes in v4:
+ - put hi6421-pmic cleanup in separate patches.
+ - solve review comments from Lee Johes.
+ - regulator-name should not have '/' character. Otherwise it "Failed to
+     create debugfs directory"
+
+Major changes in v3:
+ - in hi6421-pmic-core.c
+    * use shorter license script.
+    * arrange #include in alphabetical order.
+    * using recommended error log messages from Lee Jones.
+ - in hi6421v530-regulator.c
+    * remove unused #include files
+    * arrange remaining ones in alphabetical order.
+
+Major changes in v2:
+ - instead of writing a new driver, extend hi6421-pmic-core.c
+     to support its v530 revision
+ - update hi6421v530-regulator.c to use modern regulator driver
+     design logics.
+
+Guodong Xu (6):
+  mfd: hi6421-pmic: cleanup: change license text to shorter form
+  mfd: hi6421-pmic: cleanup: update dev_err messages
+  dt-bindings: mfd: hi6421: Add hi6421v530 compatible string
+  mfd: hi6421-pmic: add support for HiSilicon Hi6421v530
+  regulator: hi6421: Describe consumed platform device
+  arm64: defconfig: enable support hi6421v530 PMIC
+
+Wang Xiaoyin (2):
+  regulator: hi6421v530: add driver for hi6421v530 voltage regulator
+  arm64: dts: hikey960: add device node for pmic and regulators
+
+ Documentation/devicetree/bindings/mfd/hi6421.txt  |   4 +-
+ arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts |  46 +++++
+ arch/arm64/configs/defconfig                      |   2 +
+ drivers/mfd/hi6421-pmic-core.c                    |  89 +++++----
+ drivers/regulator/Kconfig                         |  10 +
+ drivers/regulator/Makefile                        |   1 +
+ drivers/regulator/hi6421-regulator.c              |   7 +
+ drivers/regulator/hi6421v530-regulator.c          | 214 ++++++++++++++++++++++
+ include/linux/mfd/hi6421-pmic.h                   |   5 +
+ 9 files changed, 345 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/regulator/hi6421v530-regulator.c
+
+-- 
+2.10.2
