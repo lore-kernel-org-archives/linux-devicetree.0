@@ -1,79 +1,111 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 04/20] ARM: dts: turris-omnia: Add generic compatible string for I2C EEPROM
-Date: Thu, 08 Jun 2017 19:04:45 +0200
-Message-ID: <87tw3qpg0i.fsf@free-electrons.com>
-References: <20170523133448.4794-1-javier@dowhile0.org>
-        <20170523133448.4794-5-javier@dowhile0.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v8 02/34] [media] dt-bindings: Add bindings for i.MX media
+ driver
+Date: Thu, 8 Jun 2017 10:08:35 -0700
+Message-ID: <c7edc53b-bdfc-4a82-1c6c-70bf1c4db84a@gmail.com>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <1496860453-6282-3-git-send-email-steve_longerbeam@mentor.com>
+ <18997640-8cbd-734d-160e-a930f887d14f@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170523133448.4794-5-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> (Javier Martinez
-        Canillas's message of "Tue, 23 May 2017 15:34:32 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <18997640-8cbd-734d-160e-a930f887d14f@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: kernel@pengutronix.de, mchehab@kernel.org, hverkuil@xs4all.nl, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
- 
- On mar., mai 23 2017, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
 
-> The at24 driver allows to register I2C EEPROM chips using different vendor
-> and devices, but the I2C subsystem does not take the vendor into account
-> when matching using the I2C table since it only has device entries.
->
-> But when matching using an OF table, both the vendor and device has to be
-> taken into account so the driver defines only a set of compatible strings
-> using the "atmel" vendor as a generic fallback for compatible I2C devices.
->
-> So add this generic fallback to the device node compatible string to make
-> the device to match the driver using the OF device ID table.
->
-> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 
-Applied on mvebu/dt
-
-Thanks,
-
-Gregory
-
->
-> ---
->
-> Changes in v5: None
-> Changes in v4:
-> - Only use the atmel manufacturer in the compatible string instead of
->   keeping the deprecated ones (Rob Herring).
->
-> Changes in v3: None
-> Changes in v2: None
->
->  arch/arm/boot/dts/armada-385-turris-omnia.dts | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/armada-385-turris-omnia.dts b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-> index 28eede180e4f..be16ce39fb3d 100644
-> --- a/arch/arm/boot/dts/armada-385-turris-omnia.dts
-> +++ b/arch/arm/boot/dts/armada-385-turris-omnia.dts
-> @@ -171,7 +171,7 @@
->  			/* leds device (in STM32F0) at address 0x2b */
->  
->  			eeprom@54 {
-> -				compatible = "at,24c64";
-> +				compatible = "atmel,24c64";
->  				reg = <0x54>;
->  
->  				/* The EEPROM contains data for bootloader.
-> -- 
-> 2.9.3
+On 06/08/2017 09:45 AM, Steve Longerbeam wrote:
+> Hi Rob, Mark,
+> 
+> Are there any remaining technical issues with this
+> binding doc? At this point an Ack from you is the only
+> thing holding up merge of the imx-media driver.
+> 
 >
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Note that the Synopsys core in the i.MX6 is a differently configured
+Synopsys core from the core as described in the bindings at [1].
+
+Russell King provided more information on the differences between these
+cores at [2]. They are essentially different devices.
+
+So perhaps the "snps,dw-mipi-csi2" compatibility needs to be removed
+from this binding, for now, until this driver is moved to drivers/media/
+and is made compatible with other MIPI CSI-2 Synopsys cores with
+different configurations.
+
+
+[1] http://patchwork.ozlabs.org/patch/736177/
+[2] <20170403150342.GZ7909@n2100.armlinux.org.uk>
+
+> 
+> On 06/07/2017 11:33 AM, Steve Longerbeam wrote:
+>> Add bindings documentation for the i.MX media driver.
+>>
+>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+>> ---
+>>   Documentation/devicetree/bindings/media/imx.txt | 47 
+>> +++++++++++++++++++++++++
+>>   1 file changed, 47 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/imx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/imx.txt 
+>> b/Documentation/devicetree/bindings/media/imx.txt
+>> new file mode 100644
+>> index 0000000..c1e1e2b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/imx.txt
+>> @@ -0,0 +1,47 @@
+>> +Freescale i.MX Media Video Device
+>> +=================================
+>> +
+>> +Video Media Controller node
+>> +---------------------------
+>> +
+>> +This is the media controller node for video capture support. It is a
+>> +virtual device that lists the camera serial interface nodes that the
+>> +media device will control.
+>> +
+>> +Required properties:
+>> +- compatible : "fsl,imx-capture-subsystem";
+>> +- ports      : Should contain a list of phandles pointing to camera
+>> +        sensor interface ports of IPU devices
+>> +
+>> +example:
+>> +
+>> +capture-subsystem {
+>> +    compatible = "fsl,imx-capture-subsystem";
+>> +    ports = <&ipu1_csi0>, <&ipu1_csi1>;
+>> +};
+>> +
+>> +
+>> +mipi_csi2 node
+>> +--------------
+>> +
+>> +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
+>> +CSI-2 sensors.
+>> +
+>> +Required properties:
+>> +- compatible    : "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
+>> +- reg           : physical base address and length of the register set;
+>> +- clocks    : the MIPI CSI-2 receiver requires three clocks: hsi_tx
+>> +          (the D-PHY clock), video_27m (D-PHY PLL reference
+>> +          clock), and eim_podf;
+>> +- clock-names    : must contain "dphy", "ref", "pix";
+>> +- port@*        : five port nodes must exist, containing endpoints
+>> +          connecting to the source and sink devices according to
+>> +          of_graph bindings. The first port is an input port,
+>> +          connecting with a MIPI CSI-2 source, and ports 1
+>> +          through 4 are output ports connecting with parallel
+>> +          bus sink endpoint nodes and correspond to the four
+>> +          MIPI CSI-2 virtual channel outputs.
+>> +
+>> +Optional properties:
+>> +- interrupts    : must contain two level-triggered interrupts,
+>> +          in order: 100 and 101;
+>>
