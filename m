@@ -1,186 +1,89 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 5/5] phy: bcm-ns-usb3: add MDIO driver using proper bus layer
-Date: Thu,  8 Jun 2017 22:04:28 +0200
-Message-ID: <20170608200428.9187-6-zajec5@gmail.com>
-References: <20170511132925.14564-1-zajec5@gmail.com>
- <20170608200428.9187-1-zajec5@gmail.com>
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH v8 14/34] ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+Date: Thu, 8 Jun 2017 13:25:27 -0700
+Message-ID: <CAJ+vNU0C0=4hUq+g1P7yTzLzFPidfauQROPOVr4WQWKNZz_xmQ@mail.gmail.com>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com> <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170608200428.9187-1-zajec5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496860453-6282-15-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean-Christophe TROTIN <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renes>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On Wed, Jun 7, 2017 at 11:33 AM, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Enables the ADV7180 decoder sensor. The ADV7180 connects to the
+> parallel-bus mux input on ipu1_csi0_mux.
+>
+> The ADV7180 power pin is via max7310_b port expander.
+>
+> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>
+> - Use IRQ_TYPE_LEVEL_LOW instead of 0x8 for interrupt type for clarity.
+> - For 8-bit parallel IPU1-CSI0 bus connection only data[12-19] are used.
+>
+> Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 50 ++++++++++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> index 1212f82..c24af28 100644
+> --- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+> @@ -124,6 +124,21 @@
+>                         #size-cells = <0>;
+>                         reg = <1>;
+>
+> +                       adv7180: camera@21 {
+> +                               compatible = "adi,adv7180";
+> +                               reg = <0x21>;
+> +                               powerdown-gpios = <&max7310_b 2 GPIO_ACTIVE_LOW>;
+> +                               interrupt-parent = <&gpio1>;
+> +                               interrupts = <27 IRQ_TYPE_LEVEL_LOW>;
+> +
+> +                               port {
+> +                                       adv7180_to_ipu1_csi0_mux: endpoint {
+> +                                               remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
+> +                                               bus-width = <8>;
+> +                                       };
+> +                               };
+> +                       };
+> +
+>                         max7310_a: gpio@30 {
+>                                 compatible = "maxim,max7310";
+>                                 reg = <0x30>;
+> @@ -151,6 +166,25 @@
+>         };
+>  };
+>
+> +&ipu1_csi0_from_ipu1_csi0_mux {
+> +       bus-width = <8>;
+> +};
+> +
+> +&ipu1_csi0_mux_from_parallel_sensor {
+> +       remote-endpoint = <&adv7180_to_ipu1_csi0_mux>;
+> +       bus-width = <8>;
+> +};
+> +
+> +&ipu1_csi0 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_ipu1_csi0>;
+> +
+> +       /* enable frame interval monitor on this port */
+> +       fim {
+> +               status = "okay";
+> +       };
 
-As USB 3.0 PHY is attached to the MDIO bus this module should provide a
-MDIO driver and use a proper bus layer. This is a proper (cleaner)
-solution which doesn't require code to know this specific MDIO bus
-details. It also allows reusing the driver with other MDIO buses.
+Steve,
 
-For now keep platform device support in place. We may consider dropping
-it once MDIO bindings gets used "everywhere".
+You need to remove the fim node now that you've moved this to V4L2 controls.
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
-V2: Select MDIO_DEVICE which was introduced in 4.12.
-    Add info about possible removal of platform driver in the future.
----
- drivers/phy/broadcom/Kconfig           |   1 +
- drivers/phy/broadcom/phy-bcm-ns-usb3.c | 105 ++++++++++++++++++++++++++++++++-
- 2 files changed, 105 insertions(+), 1 deletion(-)
+Regards,
 
-diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
-index d2d99023ec50..517fe0f3e639 100644
---- a/drivers/phy/broadcom/Kconfig
-+++ b/drivers/phy/broadcom/Kconfig
-@@ -31,6 +31,7 @@ config PHY_BCM_NS_USB3
- 	depends on ARCH_BCM_IPROC || COMPILE_TEST
- 	depends on HAS_IOMEM && OF
- 	select GENERIC_PHY
-+	select MDIO_DEVICE
- 	help
- 	  Enable this to support Broadcom USB 3.0 PHY connected to the USB
- 	  controller on Northstar family.
-diff --git a/drivers/phy/broadcom/phy-bcm-ns-usb3.c b/drivers/phy/broadcom/phy-bcm-ns-usb3.c
-index 2c9a0d5f43d8..a53ae128eadf 100644
---- a/drivers/phy/broadcom/phy-bcm-ns-usb3.c
-+++ b/drivers/phy/broadcom/phy-bcm-ns-usb3.c
-@@ -16,7 +16,9 @@
- #include <linux/bcma/bcma.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/mdio.h>
- #include <linux/module.h>
-+#include <linux/of_address.h>
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/phy/phy.h>
-@@ -52,6 +54,7 @@ struct bcm_ns_usb3 {
- 	enum bcm_ns_family family;
- 	void __iomem *dmp;
- 	void __iomem *ccb_mii;
-+	struct mdio_device *mdiodev;
- 	struct phy *phy;
- 
- 	int (*phy_write)(struct bcm_ns_usb3 *usb3, u16 reg, u16 value);
-@@ -183,6 +186,77 @@ static const struct phy_ops ops = {
- };
- 
- /**************************************************
-+ * MDIO driver code
-+ **************************************************/
-+
-+static int bcm_ns_usb3_mdiodev_phy_write(struct bcm_ns_usb3 *usb3, u16 reg,
-+					 u16 value)
-+{
-+	struct mdio_device *mdiodev = usb3->mdiodev;
-+
-+	return mdiobus_write(mdiodev->bus, mdiodev->addr, reg, value);
-+}
-+
-+static int bcm_ns_usb3_mdio_probe(struct mdio_device *mdiodev)
-+{
-+	struct device *dev = &mdiodev->dev;
-+	const struct of_device_id *of_id;
-+	struct phy_provider *phy_provider;
-+	struct device_node *syscon_np;
-+	struct bcm_ns_usb3 *usb3;
-+	struct resource res;
-+	int err;
-+
-+	usb3 = devm_kzalloc(dev, sizeof(*usb3), GFP_KERNEL);
-+	if (!usb3)
-+		return -ENOMEM;
-+
-+	usb3->dev = dev;
-+	usb3->mdiodev = mdiodev;
-+
-+	of_id = of_match_device(bcm_ns_usb3_id_table, dev);
-+	if (!of_id)
-+		return -EINVAL;
-+	usb3->family = (enum bcm_ns_family)of_id->data;
-+
-+	syscon_np = of_parse_phandle(dev->of_node, "usb3-dmp-syscon", 0);
-+	err = of_address_to_resource(syscon_np, 0, &res);
-+	of_node_put(syscon_np);
-+	if (err)
-+		return err;
-+
-+	usb3->dmp = devm_ioremap_resource(dev, &res);
-+	if (IS_ERR(usb3->dmp)) {
-+		dev_err(dev, "Failed to map DMP regs\n");
-+		return PTR_ERR(usb3->dmp);
-+	}
-+
-+	usb3->phy_write = bcm_ns_usb3_mdiodev_phy_write;
-+
-+	usb3->phy = devm_phy_create(dev, NULL, &ops);
-+	if (IS_ERR(usb3->phy)) {
-+		dev_err(dev, "Failed to create PHY\n");
-+		return PTR_ERR(usb3->phy);
-+	}
-+
-+	phy_set_drvdata(usb3->phy, usb3);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+
-+	return PTR_ERR_OR_ZERO(phy_provider);
-+}
-+
-+static struct mdio_driver bcm_ns_usb3_mdio_driver = {
-+	.mdiodrv = {
-+		.driver = {
-+			.name = "bcm_ns_mdio_usb3",
-+			.of_match_table = bcm_ns_usb3_id_table,
-+		},
-+	},
-+	.probe = bcm_ns_usb3_mdio_probe,
-+};
-+
-+/**************************************************
-  * Platform driver code
-  **************************************************/
- 
-@@ -297,6 +371,35 @@ static struct platform_driver bcm_ns_usb3_driver = {
- 		.of_match_table = bcm_ns_usb3_id_table,
- 	},
- };
--module_platform_driver(bcm_ns_usb3_driver);
-+
-+static int __init bcm_ns_usb3_module_init(void)
-+{
-+	int err;
-+
-+	/*
-+	 * For backward compatibility we register as MDIO and platform driver.
-+	 * After getting MDIO binding commonly used (e.g. switching all DT files
-+	 * to use it) we should deprecate the old binding and eventually drop
-+	 * support for it.
-+	 */
-+
-+	err = mdio_driver_register(&bcm_ns_usb3_mdio_driver);
-+	if (err)
-+		return err;
-+
-+	err = platform_driver_register(&bcm_ns_usb3_driver);
-+	if (err)
-+		mdio_driver_unregister(&bcm_ns_usb3_mdio_driver);
-+
-+	return err;
-+}
-+module_init(bcm_ns_usb3_module_init);
-+
-+static void __exit bcm_ns_usb3_module_exit(void)
-+{
-+	platform_driver_unregister(&bcm_ns_usb3_driver);
-+	mdio_driver_unregister(&bcm_ns_usb3_mdio_driver);
-+}
-+module_exit(bcm_ns_usb3_module_exit)
- 
- MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+Tim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
