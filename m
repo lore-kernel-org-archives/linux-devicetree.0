@@ -1,100 +1,128 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
- arch/sparc: Define config parameter CPU_BIG_ENDIAN)
-Date: Thu, 8 Jun 2017 10:01:59 +0200
-Message-ID: <CAK8P3a1WfU9V1k2r=TfJSVRTymuD8n2hkJDr6u1KcmC_scAZMA@mail.gmail.com>
-References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
- <87a85v7to2.fsf@concordia.ellerman.id.au> <CAMuHMdU1kne4tKRfyx0hr1LXh_c75bYMs0b=vncHqrhB69jqYg@mail.gmail.com>
- <877f0z6oig.fsf@concordia.ellerman.id.au> <28d6c874-4653-b15d-39b7-57a032abc9c6@oracle.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <sparclinux-owner@vger.kernel.org>
-In-Reply-To: <28d6c874-4653-b15d-39b7-57a032abc9c6@oracle.com>
-Sender: sparclinux-owner@vger.kernel.org
-To: Babu Moger <babu.moger@oracle.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Geert Uytterhoeven <geert@linux-m68k.org>, "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] PCI: imx6: add regulator support
+Date: Thu,  8 Jun 2017 10:07:42 +0200
+Message-ID: <20170608080742.3910-1-quentin.schulz@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: hongxing.zhu-3arQi8VN3Tc@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 1:07 AM, Babu Moger <babu.moger@oracle.com> wrote:
->
-> On 5/29/2017 9:56 PM, Michael Ellerman wrote:
->>
->> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->>
->>> Hi Michael,
->>>
->>> On Mon, May 29, 2017 at 2:07 PM, Michael Ellerman <mpe@ellerman.id.au>
->>> wrote:
->>>>
->>>> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->>>>>
->>>>> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com>
->>>>> wrote:
+Some boards might require to control a regulator to power the PCIe port.
 
->>>
->>> So far we tried always doing that, but a few checks for the semi-existing
->>> Kconfig symbol crept in in generic code. Those could be replaced by the
->>> __*__
->>> variants, but consistently having the Kconfig symbols would be useful
->>> anyway
->>> (e.g. to avoid building the broken-on-big-endian ISDN drivers).
->>
->> Ah OK, the original mail was citing C code, but yeah I guess it would be
->> handy in Makefiles etc.
->
->
-> Thanks for all the responses.  I see couple of options here.
->
-> 1. Fix the c code in include/asm-generic/qrwlock.h using ifdef
-> __BIG_ENDIAN__
->     This will fix the issue for us.
->
-> 2. Define CPU_BIG_ENDIAN for all the missing fixed endian architectures.
-> Because the problem is only for fixed big endian archs.
->
-> I prefer the option 1.  What do you guys think ?
+This adds support for an optional regulator defined in Device Tree
+linked in the PCIe controller under `vpcie-supply`. If present, the
+regulator will be disabled and then enabled as part of the PCIe host
+initialization process and will be disabled when shutting down.
 
-I would prefer option 2. If we leave out CONFIG_CPU_LITTLE_ENDIAN,
-then the patch becomes much easier than what we had discussed earlier,
-and we just need to patch a few Kconfig files to add
+Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  4 +++
+ drivers/pci/dwc/pci-imx6.c                         | 34 +++++++++++++++++++++-
+ 2 files changed, 37 insertions(+), 1 deletion(-)
 
-config CPU_BIG_ENDIAN
-       def_bool y
-
-I would also suggest adding a sanity check like
-
-diff --git a/include/linux/byteorder/big_endian.h
-b/include/linux/byteorder/big_endian.h
-index 392041475c72..18a1ab5b0260 100644
---- a/include/linux/byteorder/big_endian.h
-+++ b/include/linux/byteorder/big_endian.h
-@@ -3,5 +3,9 @@
-
- #include <uapi/linux/byteorder/big_endian.h>
-
-+#ifndef CONFIG_CPU_BIG_ENDIAN
-+#warning inconsistent configuration, need CONFIG_CPU_BIG_ENDIAN
-+#endif
+diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+index e3d5680875b1..cf92d3ba5a26 100644
+--- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+@@ -33,6 +33,10 @@ Optional properties:
+ - reset-gpio-active-high: If present then the reset sequence using the GPIO
+   specified in the "reset-gpio" property is reversed (H=reset state,
+   L=operation state).
++- vpcie-supply: Should specify the regulator in charge of PCIe port power.
++  The regulator will be enabled when initializing the PCIe host and
++  disabled either as part of the init process or when shutting down the
++  host.
+ 
+ Additional required properties for imx6sx-pcie:
+ - clock names: Must include the following additional entries:
+diff --git a/drivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
+index 19a289b8cc94..f9b7500c9aff 100644
+--- a/drivers/pci/dwc/pci-imx6.c
++++ b/drivers/pci/dwc/pci-imx6.c
+@@ -24,6 +24,7 @@
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
+ #include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
+ #include <linux/resource.h>
+ #include <linux/signal.h>
+ #include <linux/types.h>
+@@ -59,6 +60,7 @@ struct imx6_pcie {
+ 	u32			tx_swing_full;
+ 	u32			tx_swing_low;
+ 	int			link_gen;
++	struct regulator	*vpcie;
+ };
+ 
+ /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+@@ -310,6 +312,13 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+ 				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
+ 		break;
+ 	}
 +
- #include <linux/byteorder/generic.h>
- #endif /* _LINUX_BYTEORDER_BIG_ENDIAN_H */
-diff --git a/include/linux/byteorder/little_endian.h
-b/include/linux/byteorder/little_endian.h
-index 08057377aa23..ba910bb9aad0 100644
---- a/include/linux/byteorder/little_endian.h
-+++ b/include/linux/byteorder/little_endian.h
-@@ -3,5 +3,9 @@
-
- #include <uapi/linux/byteorder/little_endian.h>
-
-+#ifdef CONFIG_CPU_BIG_ENDIAN
-+#warning inconsistent configuration, CONFIG_CPU_BIG_ENDIAN is set
-+#endif
++	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
++		int ret = regulator_disable(imx6_pcie->vpcie);
 +
- #include <linux/byteorder/generic.h>
- #endif /* _LINUX_BYTEORDER_LITTLE_ENDIAN_H */
++		if (ret)
++			pr_err("failed to disable vpcie regulator: %d\n", ret);
++	}
+ }
+ 
+ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+@@ -376,10 +385,19 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	struct device *dev = pci->dev;
+ 	int ret;
+ 
++	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
++		ret = regulator_enable(imx6_pcie->vpcie);
++		if (ret) {
++			dev_err(dev, "failed to enable vpcie regulator: %d\n",
++				ret);
++			return;
++		}
++	}
++
+ 	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
+ 	if (ret) {
+ 		dev_err(dev, "unable to enable pcie_phy clock\n");
+-		return;
++		goto err_pcie_phy;
+ 	}
+ 
+ 	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
+@@ -439,6 +457,13 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	clk_disable_unprepare(imx6_pcie->pcie_bus);
+ err_pcie_bus:
+ 	clk_disable_unprepare(imx6_pcie->pcie_phy);
++err_pcie_phy:
++	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
++		ret = regulator_disable(imx6_pcie->vpcie);
++		if (ret)
++			dev_err(dev, "failed to disable vpcie regulator: %d\n",
++				ret);
++	}
+ }
+ 
+ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+@@ -802,6 +827,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		imx6_pcie->link_gen = 1;
+ 
++	imx6_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
++	if (IS_ERR(imx6_pcie->vpcie)) {
++		if (PTR_ERR(imx6_pcie->vpcie) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		imx6_pcie->vpcie = NULL;
++	}
++
+ 	platform_set_drvdata(pdev, imx6_pcie);
+ 
+ 	ret = imx6_add_pcie_port(imx6_pcie, pdev);
+-- 
+2.11.0
 
-Fixing xtensa properly might still be tricky, but with that change, at least
-we detect when things go wrong in this area.
-
-        Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
