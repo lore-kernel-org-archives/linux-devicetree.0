@@ -1,45 +1,44 @@
-From: Mikko Perttunen <cyndis@kapsi.fi>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add bindings for
- nvidia,tegra186-ccplex-cluster
-Date: Thu, 8 Jun 2017 10:32:01 +0300
-Message-ID: <782ec765-f949-3023-93e3-a731f8bb524a@kapsi.fi>
-References: <1496304245-24024-1-git-send-email-mperttunen@nvidia.com>
- <1496304245-24024-2-git-send-email-mperttunen@nvidia.com>
- <20170607221102.2bctvsdciv7y26lk@rob-hp-laptop>
+From: Jianhong Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v6 10/12] mfd: rk808: Add RK805 gpio support
+Date: Thu,  8 Jun 2017 15:31:31 +0800
+Message-ID: <1496907091-27372-1-git-send-email-chenjh@rock-chips.com>
+References: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170607221102.2bctvsdciv7y26lk@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mikko Perttunen <mperttunen@nvidia.com>
-Cc: mark.rutland@arm.com, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <1496905959-29202-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, chenjh <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08.06.2017 01:11, Rob Herring wrote:
-> On Thu, Jun 01, 2017 at 11:04:04AM +0300, Mikko Perttunen wrote:
->> The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
->> registers that initiate CPU frequency/voltage transitions.
->
-> What the block is should also go in the binding doc. With that,
+From: chenjh <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-I don't know how to explain it in more detail; this thing is literally 
-just a few magic registers that route into some CPU control logic to 
-trigger frequency/voltage transitions :)
+Signed-off-by: chenjh <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ drivers/mfd/rk808.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Mikko
-
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
->>
->> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
->> ---
->>  .../arm/tegra/nvidia,tegra186-ccplex-cluster.txt        | 17 +++++++++++++++++
->>  1 file changed, 17 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
+diff --git a/drivers/mfd/rk808.c b/drivers/mfd/rk808.c
+index 7276555..f7cdcf5 100644
+--- a/drivers/mfd/rk808.c
++++ b/drivers/mfd/rk808.c
+@@ -97,6 +97,7 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+ static const struct mfd_cell rk805s[] = {
+ 	{ .name = "rk808-clkout", },
+ 	{ .name = "rk808-regulator", },
++	{ .name = "rk805-gpio", },
+ 	{
+ 		.name = "rk808-rtc",
+ 		.num_resources = ARRAY_SIZE(rtc_resources),
+-- 
+1.9.1
