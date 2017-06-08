@@ -1,42 +1,106 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] clk: meson: meson8b: add compatibles for Meson8 and
- Meson8m2
-Date: Thu, 8 Jun 2017 17:44:13 -0500
-Message-ID: <20170608224413.fdv4xlvnjld4bgtz@rob-hp-laptop>
-References: <20170604183341.21417-1-martin.blumenstingl@googlemail.com>
- <20170604183341.21417-2-martin.blumenstingl@googlemail.com>
- <1496606325.3552.16.camel@baylibre.com>
- <CAFBinCCLL5ZqiZzWi-RsfZ-5_h20O5LRRY3+K7dt=U4qrveQ_w@mail.gmail.com>
- <1496651008.3552.24.camel@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1496651008.3552.24.camel@baylibre.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, narmstrong@baylibre.com, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, carlo@caione.org, khilman@baylibre.com, linux@armlinux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH v9 14/34] ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+Date: Thu,  8 Jun 2017 16:40:20 -0700
+Message-ID: <1496965220-27028-1-git-send-email-steve_longerbeam@mentor.com>
+References: <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>, Tim Harvey <tharvey@gateworks.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 05, 2017 at 10:23:28AM +0200, Jerome Brunet wrote:
-> On Mon, 2017-06-05 at 00:27 +0200, Martin Blumenstingl wrote:
-> > > I think you should split the binding documentation and clk changes into
-> > > separate
-> > > patches.
-> > 
-> > OK, from what I know is that for "trivial" changes the driver and
-> > dt-binding changes can go through one patch.
-> > this patch started as a four-line patch which added two lines of
-> > documentation and two lines of driver code.
-> 
-> I'm not aware of such tolerance but if you've have seen that the DT maintainers
-> are OK with it, feel free to point me to it.
-> 
-> Last time I heard about it, DT guys were using filter-branch on the kernel tree
-> to create a separate tree, so I was thinking that this "documentation as a
-> separate patch" was a hard rule ... but I may be wrong
+Enables the ADV7180 decoder sensor. The ADV7180 connects to the
+parallel-bus mux input on ipu1_csi0_mux.
 
-That is one of the reasons, but there is no hard rule. It's not worth a 
-respin just for that either.
+The ADV7180 power pin is via max7310_b port expander.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+
+- Use IRQ_TYPE_LEVEL_LOW instead of 0x8 for interrupt type for clarity.
+- For 8-bit parallel IPU1-CSI0 bus connection only data[12-19] are used.
+
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+
+---
+Changes since v8 [1]:
+
+- drop no-longer-applicable fim node from ipu1_csi0 port.
+
+[1] https://patchwork.linuxtv.org/patch/41705/
+---
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 45 ++++++++++++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+index 1212f82..6a7594e 100644
+--- a/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-sabreauto.dtsi
+@@ -124,6 +124,21 @@
+ 			#size-cells = <0>;
+ 			reg = <1>;
+ 
++			adv7180: camera@21 {
++				compatible = "adi,adv7180";
++				reg = <0x21>;
++				powerdown-gpios = <&max7310_b 2 GPIO_ACTIVE_LOW>;
++				interrupt-parent = <&gpio1>;
++				interrupts = <27 IRQ_TYPE_LEVEL_LOW>;
++
++				port {
++					adv7180_to_ipu1_csi0_mux: endpoint {
++						remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
++						bus-width = <8>;
++					};
++				};
++			};
++
+ 			max7310_a: gpio@30 {
+ 				compatible = "maxim,max7310";
+ 				reg = <0x30>;
+@@ -151,6 +166,20 @@
+ 	};
+ };
+ 
++&ipu1_csi0_from_ipu1_csi0_mux {
++	bus-width = <8>;
++};
++
++&ipu1_csi0_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu1_csi0_mux>;
++	bus-width = <8>;
++};
++
++&ipu1_csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi0>;
++};
++
+ &clks {
+ 	assigned-clocks = <&clks IMX6QDL_PLL4_BYPASS_SRC>,
+ 			  <&clks IMX6QDL_PLL4_BYPASS>,
+@@ -444,6 +473,22 @@
+ 			>;
+ 		};
+ 
++		pinctrl_ipu1_csi0: ipu1csi0grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12  0x1b0b0
++				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13  0x1b0b0
++				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14  0x1b0b0
++				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15  0x1b0b0
++				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16  0x1b0b0
++				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17  0x1b0b0
++				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18  0x1b0b0
++				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19  0x1b0b0
++				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK 0x1b0b0
++				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC    0x1b0b0
++				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC   0x1b0b0
++			>;
++		};
++
+ 		pinctrl_max7310: max7310grp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_SD2_DAT0__GPIO1_IO15 0x1b0b0
+-- 
+2.7.4
