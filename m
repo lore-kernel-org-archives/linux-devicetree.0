@@ -1,238 +1,137 @@
-From: Jiada Wang <jiada_wang@mentor.com>
-Subject: [PATCH linux-next v4 3/4] ARM: dts: imx: change compatibility for SPI
- controllers on imx53 later soc
-Date: Thu, 8 Jun 2017 14:16:02 +0900
-Message-ID: <20170608051603.16070-4-jiada_wang@mentor.com>
-References: <20170608051603.16070-1-jiada_wang@mentor.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the
+ Atmel ARM TC blocks
+Date: Thu, 8 Jun 2017 07:42:36 +0200
+Message-ID: <20170608074236.62924f01@bbrezillon>
+References: <20170530215139.9983-1-alexandre.belloni@free-electrons.com>
+        <20170530215139.9983-47-alexandre.belloni@free-electrons.com>
+        <20170606152104.GC2345@mai>
+        <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
+        <20170607141735.GH2345@mai>
+        <20170607152750.tksmyf5p3oajbsac@piout.net>
+        <20170607210848.GJ2345@mai>
+        <20170607231715.ns2vcxza2eexnzjs@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170608051603.16070-1-jiada_wang@mentor.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170607231715.ns2vcxza2eexnzjs-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-for SPI controllers on imx53 and later SoCs, there is HW issue when
-work in slave mode, as new device type 'IMX53_ECSPI' has been added
-for these SPI controllers which is compatible with 'fsl,imx53-ecspi'.
+Le Thu, 8 Jun 2017 01:17:15 +0200,
+Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> a écrit :
 
-This patch updates DTS to make imx53 later SPI controller only be
-compatibile with 'fsl,imx53-ecspi'.
+> On 07/06/2017 at 23:08:48 +0200, Daniel Lezcano wrote:
+> > > I was going to agree but this is not flexible enough because the
+> > > quadrature decoder always uses the first two channels. So on some
+> > > products, we may have:
+> > >  - TCB0:
+> > >    o channels 0,1: qdec
+> > >    o channel 2: clocksource
+> > > 
+> > >  - TCB1:
+> > >    o channels 0,1: qdec
+> > >    o channel 2: clockevent
+> > > 
+> > > This avoids wasting TCB channels.  
+> > 
+> > Ok. In this case you can check if the interrupt is specified for the node, if
+> > yes, then it is a clockevent.
+> >   
+> 
+> But currently it is always specified in the SoC's dtsi. I don't find
+> that too practical to push that to the board's dts. Also, lying by
+> omission (the IRQ is always wired) in the DT is not different from
+> having a property selecting which timer is the clocksource and which is
+> the clockevent.
+> 
 
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- arch/arm/boot/dts/imx53.dtsi   | 4 ++--
- arch/arm/boot/dts/imx6q.dtsi   | 2 +-
- arch/arm/boot/dts/imx6qdl.dtsi | 8 ++++----
- arch/arm/boot/dts/imx6sl.dtsi  | 8 ++++----
- arch/arm/boot/dts/imx6sx.dtsi  | 8 ++++----
- arch/arm/boot/dts/imx6ul.dtsi  | 8 ++++----
- 6 files changed, 19 insertions(+), 19 deletions(-)
+I agree with Alexandre here. Really, there's not much we can do to
+detect which timer should be used as a clockevent and which one should
+be used as a clocksource except explicitly specifying it in the DT.
+Having an interrupt defined in one case (clockevent) and undefined in
+the other case (clocksource), is just as hack-ish as the detection logic
+Alexandre developed to avoid explicitly specifying the function
+assigned to a specific timer.
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 2e516f4..9eeafb9 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -243,7 +243,7 @@
- 				ecspi1: ecspi@50010000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx53-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx53-ecspi";
- 					reg = <0x50010000 0x4000>;
- 					interrupts = <36>;
- 					clocks = <&clks IMX5_CLK_ECSPI1_IPG_GATE>,
-@@ -662,7 +662,7 @@
- 			ecspi2: ecspi@63fac000 {
- 				#address-cells = <1>;
- 				#size-cells = <0>;
--				compatible = "fsl,imx53-ecspi", "fsl,imx51-ecspi";
-+				compatible = "fsl,imx53-ecspi";
- 				reg = <0x63fac000 0x4000>;
- 				interrupts = <37>;
- 				clocks = <&clks IMX5_CLK_ECSPI2_IPG_GATE>,
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index dd33849..b214442 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -90,7 +90,7 @@
- 				ecspi5: ecspi@02018000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6q-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02018000 0x4000>;
- 					interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6Q_CLK_ECSPI5>,
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index f325411..ac19c58 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -266,7 +266,7 @@
- 				ecspi1: ecspi@02008000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6q-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02008000 0x4000>;
- 					interrupts = <0 31 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6QDL_CLK_ECSPI1>,
-@@ -280,7 +280,7 @@
- 				ecspi2: ecspi@0200c000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6q-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x0200c000 0x4000>;
- 					interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6QDL_CLK_ECSPI2>,
-@@ -294,7 +294,7 @@
- 				ecspi3: ecspi@02010000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6q-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02010000 0x4000>;
- 					interrupts = <0 33 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6QDL_CLK_ECSPI3>,
-@@ -308,7 +308,7 @@
- 				ecspi4: ecspi@02014000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6q-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6q-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02014000 0x4000>;
- 					interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6QDL_CLK_ECSPI4>,
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 3243af4..d9b9053 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -168,7 +168,7 @@
- 				ecspi1: ecspi@02008000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sl-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sl-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02008000 0x4000>;
- 					interrupts = <0 31 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SL_CLK_ECSPI1>,
-@@ -180,7 +180,7 @@
- 				ecspi2: ecspi@0200c000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sl-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sl-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x0200c000 0x4000>;
- 					interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SL_CLK_ECSPI2>,
-@@ -192,7 +192,7 @@
- 				ecspi3: ecspi@02010000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sl-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sl-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02010000 0x4000>;
- 					interrupts = <0 33 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SL_CLK_ECSPI3>,
-@@ -204,7 +204,7 @@
- 				ecspi4: ecspi@02014000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sl-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sl-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02014000 0x4000>;
- 					interrupts = <0 34 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SL_CLK_ECSPI4>,
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index f16b9df..149ef79 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -251,7 +251,7 @@
- 				ecspi1: ecspi@02008000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sx-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sx-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02008000 0x4000>;
- 					interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SX_CLK_ECSPI1>,
-@@ -263,7 +263,7 @@
- 				ecspi2: ecspi@0200c000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sx-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sx-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x0200c000 0x4000>;
- 					interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SX_CLK_ECSPI2>,
-@@ -275,7 +275,7 @@
- 				ecspi3: ecspi@02010000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sx-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sx-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02010000 0x4000>;
- 					interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SX_CLK_ECSPI3>,
-@@ -287,7 +287,7 @@
- 				ecspi4: ecspi@02014000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6sx-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6sx-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02014000 0x4000>;
- 					interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6SX_CLK_ECSPI4>,
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 6da2b77..7226061 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -204,7 +204,7 @@
- 				ecspi1: ecspi@02008000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6ul-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02008000 0x4000>;
- 					interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6UL_CLK_ECSPI1>,
-@@ -216,7 +216,7 @@
- 				ecspi2: ecspi@0200c000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6ul-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x0200c000 0x4000>;
- 					interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6UL_CLK_ECSPI2>,
-@@ -228,7 +228,7 @@
- 				ecspi3: ecspi@02010000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6ul-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02010000 0x4000>;
- 					interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6UL_CLK_ECSPI3>,
-@@ -240,7 +240,7 @@
- 				ecspi4: ecspi@02014000 {
- 					#address-cells = <1>;
- 					#size-cells = <0>;
--					compatible = "fsl,imx6ul-ecspi", "fsl,imx51-ecspi";
-+					compatible = "fsl,imx6ul-ecspi", "fsl,imx53-ecspi";
- 					reg = <0x02014000 0x4000>;
- 					interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 					clocks = <&clks IMX6UL_CLK_ECSPI4>,
--- 
-2.9.3
+Can we please find a solution that makes everyone happy (DT,
+clocksoure/clockevent and at91 maintainers)?
+
+How about adding a linux,timer-function property to specify which
+function this timer is providing?
+
+Something like that for example:
+
+	tcb0: timer@fff7c000 {
+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0xfff7c000 0x100>;
+		interrupts = <18 4>;
+		clocks = <&tcb0_clk>, <&clk32k>;
+		clock-names = "t0_clk", "slow_clk";
+
+		timer@0 {
+			compatible = "atmel,tcb-timer";
+			reg = <0>, <1>;
+			linux,timer-function = "clocksource";
+		};
+
+		timer@2 {
+			compatible = "atmel,tcb-timer";
+			reg = <2>;
+			linux,timer-function = "clockevent";
+		};
+	};
+
+Alternatively, we could have a property or a node in chosen describing which
+timer should be used:
+
+	chosen {
+		clockevent {
+			timer = <&timer2>;
+		};
+
+		clocksource {
+			timer = <&timer0>;
+		};
+
+		/*
+		 * or
+		 *
+		 * clockevent = <&timer2>;
+		 * clocksource = <&timer0>;
+		 *
+		 * but I think the clocksource/clockevent node approach
+		 * is more future proof in case we need to add extra
+		 * information like the expected resolution/precision or
+		 * anything that could be tweakable.
+		 */
+	};
+
+	tcb0: timer@fff7c000 {
+		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+		#address-cells = <1>;
+		#size-cells = <0>;
+		reg = <0xfff7c000 0x100>;
+		interrupts = <18 4>;
+		clocks = <&tcb0_clk>, <&clk32k>;
+		clock-names = "t0_clk", "slow_clk";
+
+		timer0: timer@0 {
+			compatible = "atmel,tcb-timer";
+			reg = <0>, <1>;
+		};
+
+		timer2: timer@2 {
+			compatible = "atmel,tcb-timer";
+			reg = <2>;
+		};
+	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
