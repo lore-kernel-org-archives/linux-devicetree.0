@@ -1,79 +1,152 @@
-From: Jianhong Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v6 12/12] gpio: dt-bindings: add bindings for Rockchip RK805
- PMIC
-Date: Thu,  8 Jun 2017 15:33:13 +0800
-Message-ID: <1496907193-29294-1-git-send-email-chenjh@rock-chips.com>
-References: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the
+ Atmel ARM TC blocks
+Date: Thu, 8 Jun 2017 09:44:46 +0200
+Message-ID: <20170608074446.GM2345@mai>
+References: <20170530215139.9983-1-alexandre.belloni@free-electrons.com>
+ <20170530215139.9983-47-alexandre.belloni@free-electrons.com>
+ <20170606152104.GC2345@mai>
+ <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
+ <20170607141735.GH2345@mai>
+ <20170607152750.tksmyf5p3oajbsac@piout.net>
+ <20170607210848.GJ2345@mai>
+ <20170607231715.ns2vcxza2eexnzjs@piout.net>
+ <20170608074236.62924f01@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1496905959-29202-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, chenjh <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170608074236.62924f01@bbrezillon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Boris Brezillon <boris.brezillon@free-electrons.com>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: chenjh <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-Add device tree bindings documentation for Rockchip's RK805 PMIC
++Mark Rutland, +Rob Herring
 
-Signed-off-by: chenjh <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio-rk805.txt        | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rk805.txt
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-rk805.txt b/Documentation/devicetree/bindings/gpio/gpio-rk805.txt
-new file mode 100644
-index 0000000..98b75fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-rk805.txt
-@@ -0,0 +1,37 @@
-+RK805 GPIO controller
-+
-+This driver follows the usual GPIO bindings found in
-+Documentation/devicetree/bindings/gpio/gpio.txt
-+
-+Required properties:
-+- #gpio-cells: Should be two. The first cell is the pin number and the
-+  second is the GPIO flags.
-+- gpio-controller: Marks the device node as a GPIO controller.
-+
-+These properties must be added in the RK805 PMIC node, documented in
-+Documentation/devicetree/bindings/mfd/rk808.txt
-+
-+Example:
-+
-+rk805: pmic@18 {
-+	compatible = "rockchip,rk808";
-+	clock-output-names = "xin32k", "rk808-clkout2";
-+	interrupt-parent = <&gpio0>;
-+	interrupts = <4 IRQ_TYPE_LEVEL_LOW>;
-+	reg = <0x1a>;
-+	rockchip,system-power-controller;
-+	wakeup-source;
-+	#clock-cells = <1>;
-+	...
-+	gpio-controller;
-+	#gpio-cells = <2>;
-+};
-+
-+
-+Example of a peripheral using the PMIC GPIOs:
-+
-+wireless-bluetooth {
-+		compatible = "bluetooth-platdata";
-+		...
-+		gpios = <&rk805 0 GPIO_ACTIVE_HIGH>, <&rk805 1 GPIO_ACTIVE_HIGH>;
-+};
+Alexandre, Boris, have a look at https://www.spinics.net/lists/arm-kernel/msg572652.html
+
+That will tell you the story.
+
+On Thu, Jun 08, 2017 at 07:42:36AM +0200, Boris Brezillon wrote:
+> Le Thu, 8 Jun 2017 01:17:15 +0200,
+> Alexandre Belloni <alexandre.belloni@free-electrons.com> a écrit :
+> 
+> > On 07/06/2017 at 23:08:48 +0200, Daniel Lezcano wrote:
+> > > > I was going to agree but this is not flexible enough because the
+> > > > quadrature decoder always uses the first two channels. So on some
+> > > > products, we may have:
+> > > >  - TCB0:
+> > > >    o channels 0,1: qdec
+> > > >    o channel 2: clocksource
+> > > > 
+> > > >  - TCB1:
+> > > >    o channels 0,1: qdec
+> > > >    o channel 2: clockevent
+> > > > 
+> > > > This avoids wasting TCB channels.  
+> > > 
+> > > Ok. In this case you can check if the interrupt is specified for the node, if
+> > > yes, then it is a clockevent.
+> > >   
+> > 
+> > But currently it is always specified in the SoC's dtsi. I don't find
+> > that too practical to push that to the board's dts. Also, lying by
+> > omission (the IRQ is always wired) in the DT is not different from
+> > having a property selecting which timer is the clocksource and which is
+> > the clockevent.
+> > 
+> 
+> I agree with Alexandre here. Really, there's not much we can do to
+> detect which timer should be used as a clockevent and which one should
+> be used as a clocksource except explicitly specifying it in the DT.
+> Having an interrupt defined in one case (clockevent) and undefined in
+> the other case (clocksource), is just as hack-ish as the detection logic
+> Alexandre developed to avoid explicitly specifying the function
+> assigned to a specific timer.
+> 
+> Can we please find a solution that makes everyone happy (DT,
+> clocksoure/clockevent and at91 maintainers)?
+> 
+> How about adding a linux,timer-function property to specify which
+> function this timer is providing?
+> 
+> Something like that for example:
+> 
+> 	tcb0: timer@fff7c000 {
+> 		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 		reg = <0xfff7c000 0x100>;
+> 		interrupts = <18 4>;
+> 		clocks = <&tcb0_clk>, <&clk32k>;
+> 		clock-names = "t0_clk", "slow_clk";
+> 
+> 		timer@0 {
+> 			compatible = "atmel,tcb-timer";
+> 			reg = <0>, <1>;
+> 			linux,timer-function = "clocksource";
+> 		};
+> 
+> 		timer@2 {
+> 			compatible = "atmel,tcb-timer";
+> 			reg = <2>;
+> 			linux,timer-function = "clockevent";
+> 		};
+> 	};
+> 
+> Alternatively, we could have a property or a node in chosen describing which
+> timer should be used:
+> 
+> 	chosen {
+> 		clockevent {
+> 			timer = <&timer2>;
+> 		};
+> 
+> 		clocksource {
+> 			timer = <&timer0>;
+> 		};
+> 
+> 		/*
+> 		 * or
+> 		 *
+> 		 * clockevent = <&timer2>;
+> 		 * clocksource = <&timer0>;
+> 		 *
+> 		 * but I think the clocksource/clockevent node approach
+> 		 * is more future proof in case we need to add extra
+> 		 * information like the expected resolution/precision or
+> 		 * anything that could be tweakable.
+> 		 */
+> 	};
+> 
+> 	tcb0: timer@fff7c000 {
+> 		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
+> 		#address-cells = <1>;
+> 		#size-cells = <0>;
+> 		reg = <0xfff7c000 0x100>;
+> 		interrupts = <18 4>;
+> 		clocks = <&tcb0_clk>, <&clk32k>;
+> 		clock-names = "t0_clk", "slow_clk";
+> 
+> 		timer0: timer@0 {
+> 			compatible = "atmel,tcb-timer";
+> 			reg = <0>, <1>;
+> 		};
+> 
+> 		timer2: timer@2 {
+> 			compatible = "atmel,tcb-timer";
+> 			reg = <2>;
+> 		};
+> 	};
+
 -- 
-1.9.1
+
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
