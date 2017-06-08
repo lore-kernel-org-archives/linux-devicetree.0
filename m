@@ -1,180 +1,149 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V
- interrupt controllers
-Date: Thu, 8 Jun 2017 11:52:30 +0100
-Message-ID: <20170608105230.GC5765@leverpostej>
-References: <20170523004107.536-1-palmer@dabbelt.com>
- <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-9-palmer@dabbelt.com>
- <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
- <20170607101343.GC29370@leverpostej>
- <CAMgXwTiz0jXgSw=veJ3O7xzVgm==YisZZLWpZFH7aJMXV4j7qA@mail.gmail.com>
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Subject: RE: [PATCH v6 3/7] media: i2c: max2175: Add MAX2175 support
+Date: Thu, 8 Jun 2017 11:04:00 +0000
+Message-ID: <KL1PR0601MB2038DA15F6AAB1CB46DBFB5FC3C90@KL1PR0601MB2038.apcprd06.prod.outlook.com>
+References: <20170531084457.4800-1-ramesh.shanmugasundaram@bp.renesas.com>
+        <20170531084457.4800-4-ramesh.shanmugasundaram@bp.renesas.com>
+        <20170607101721.064aafe4@vento.lan>
+        <KL1PR0601MB20385C566733E32AC4DCA987C3C90@KL1PR0601MB2038.apcprd06.prod.outlook.com>
+ <20170608072317.2e018a90@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMgXwTiz0jXgSw=veJ3O7xzVgm==YisZZLWpZFH7aJMXV4j7qA@mail.gmail.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Wesley Terpstra <wesley@sifive.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170608072317.2e018a90-ch4gOOMV7nf/PtFMR13I2A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org" <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "crope-X3B1VOXEql0@public.gmane.org" <crope-X3B1VOXEql0@public.gmane.org>, Chris Paterson <Chris.Paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org" <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org" <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 11:57:17AM -0700, Wesley Terpstra wrote:
-> On Wed, Jun 7, 2017 at 3:13 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> >> > +RISC-V Hart-Level Interrupt Controller (HLIC)
-> >> > +---------------------------------------------
-> >> > +
-> >> > +RISC-V cores include Control Status Registers (CSRs) which are local to each
-> >> > +hart and can be read or written by software. Some of these CSRs are used to
-> >> > +control local interrupts connected to the core.
-> >> > +
-> >> > +Typical examples of local interrupts on a RISC-V core include: software IPI
-> >> > +interrupts, timer interrupts, and a link to the PLIC interrupt controller.
+
+> Em Thu, 8 Jun 2017 09:42:43 +0000
+> Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> escreveu=
+:
+>=20
+> > > Subject: Re: [PATCH v6 3/7] media: i2c: max2175: Add MAX2175 support
+> > >
+> > > Em Wed, 31 May 2017 09:44:53 +0100
+> > > Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> escreveu:
+> > >
+> > > > +++ b/Documentation/media/v4l-drivers/max2175.rst
+> > > > @@ -0,0 +1,60 @@
+> > > > +Maxim Integrated MAX2175 RF to bits tuner driver
+> > > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+> > > > +
+> > > > +The MAX2175 driver implements the following driver-specific
+> controls:
+> > > > +
+> > > > +``V4L2_CID_MAX2175_I2S_ENABLE``
+> > > > +-------------------------------
+> > > > +    Enable/Disable I2S output of the tuner.
+> > > > +
+> > > > +.. flat-table::
+> > > > +    :header-rows:  0
+> > > > +    :stub-columns: 0
+> > > > +    :widths:       1 4
+> > > > +
+> > > > +    * - ``(0)``
+> > > > +      - I2S output is disabled.
+> > > > +    * - ``(1)``
+> > > > +      - I2S output is enabled.
+> > >
+> > > Hmm... There are other drivers at the subsystem that use I2S (for
+> > > audio - not for SDR - but I guess the issue is similar).
+> > >
+> > > On such drivers, the bridge driver controls it directly, being sure
+> > > that I2S is enabled when it is expecting some data coming from the I2=
+S
+> bus.
+> > >
+> > > On some drivers, there are both I2S and A/D inputs at the bridge
+> chipset.
+> > > On such drivers, enabling/disabling I2S is done via VIDIOC_S_INPUT
+> > > (and optionally via ALSA mixer), being transparent to the user if
+> > > the stream comes from a tuner via I2S or from a directly connected A/=
+D
+> input.
+> > >
+> > > I don't think it is a good idea to enable it via a control, as, if
+> > > the bridge driver is expecting data via I2S, disabling it will cause
+> > > timeouts at the videobuf handling.
 > >
-> > So IIUC those interrupts are routed directly to the HLIC, and are (only)
-> > controlled thought the HLIC?
-> 
-> Yes. You can have a local interrupt that goes directly to a specific
-> core, not via the PLIC.
-> 
-> > Is the HLIC architecturally mandated? i.e. is this guaranteed to be
-> > present on any RISC-V implementation?
-> 
-> It's in the RISC-V privileged specification. Therefore, if a riscv
-> core can run linux it will have these CSRs.
-> 
-> > Does the presence of the HLIC imply the presence of a PLIC (or
-> > vice/versa)?
-> 
-> No. SiFive implementations always have a PLIC, though.
-> 
-> > Typically, the per-cpu and platform-wide parts of the
-> > top-level interrupt controller are fairly intimately coupled.
-> 
-> They are coupled if they both exist. The privileged specification does
-> explicitly call out interrupts 9 and 11 in the HLIC for attaching the
-> PLIC.
-> 
-> > You'll need to allocate the "riscv" vendor prefix in
-> > Documentation/devicetree/bindings/vendor-prefixes.txt
-> 
-> @palmer: Can you add this?
-> 
-> > What about the flags?
-> 
-> What flags?
-
-Edge vs level, active high vs active low. Typically some of these are
-programmable, and are described as flags in the interrupt-specifier.
-
-See the examples in:
-
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-
-> > Are all HLIC interrupts edge triggered (or level triggered)?
-> 
-> HLIC = level. PLIC = both.
-
-Ok. Given that, flags aren't necessary for the HLIC, and the
-interrupt-specifier is fine as-is.
-
-> >> > +RISC-V cores typically include a PLIC, which route interrupts from multiple
-> >> > +devices to multiple hart contexts.  The PLIC is connected to the interrupt
-> >> > +controller embedded in a RISC-V core via the interrupt-related CSRs.
+> > The MAX2175 device is exposed as a v4l2 subdev with tuner ops and can
+> interface with an SDR device. When the tuner is configured, the I2S outpu=
+t
+> is enabled by default. From an independent tuner device perspective, this
+> default behaviour is enough and this control may not be needed/used.
 > >
-> > Do you mean that the PLIC is connected to the HLIC, or that the HLIC is
-> > also managed in part through CSRs?
-> 
-> Both. The HLIC is entirely manager through CSRs. The PLIC is managed
-> through a memory mapped interface. The PLIC is attached to the HLIC.
-
-So do any CSRs affect the state of the PLIC? If it's just MMIO, the
-mention of CSRs above is just a little confusing.
-
-It might be best to just say "The PLIC is connect to the HLIC embedded
-in each RISC-V core".
-
-> >> > +Required properties:
-> >> > +- compatible : "riscv,plic0"
-> >> > +- #address-cells : should be <0>
-> >> > +- #interrupt-cells : should be <1>
+> > However, for the use case here, the R-Car DRIF device acts as the main
+> SDR device and the Maxim MAX2175 provides a sub-dev interface with tuner
+> ops.
 > >
-> > As with the HLIC, what about the flags?
-> 
-> Still unsure what flags we're talking about.
-
-As covered above for the HLIC.
-
-It sounds like we'd need these to distinguish edge/level interrupts,
-unless that's fixed at integration time and you can determine it from
-the PLIC itself?
-
-> >> > +- riscv,ndev : Specifies the number of interrupts attached to the PLIC
+> > +---------------------+                +---------------------+
+> > |                     |-----SCK------->|CLK                  |
+> > |       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
+> > |      (MAX2175)      |-----SD0------->|D0                   |
+> > |                     |-----SD1------->|D1                   |
+> > +---------------------+                +---------------------+
 > >
-> > Why do we need to know this?
+> > The DRIF device design is such that it involves separate register write=
+s
+> to enable Rx on each of the data line. To keep both the data lines in syn=
+c
+> it expects the master device to enable output after both the data line Rx
+> are enabled.
 > >
-> > I suspect this ia actually the number of interrupts implemented in the
-> > PLIC, rather than the number of interrupts attached. i.e. the PLIC can
-> > be implemented with a subset of the potential registers/bits. Is that
-> > correct?
-> 
-> You're in principle correct, although these are probably always the same.
+> > This level of control is exposed as a feature in the MAX2175 using this
+> control. When interfaced with DRIF this control is used to achieve the
+> desired functionality. When not interfaced with DRIF, the MAX2175 default
+> behaviour does not have to change because of DRIF and hence this I2S
+> control may be unused. Like MAX2175, DRIF is also an independent device
+> and can interface with a different third party tuner.
+> >
+> > Hence, this I2S enable/disable is exposed as a user control. The end
+> user application (knowing both these devices) is expected to use these
+> controls appropriately. Please let me know if I need to explain anything
+> in further detail.
+>=20
+>=20
+> The usecase is clear. That's exactly what other drivers with I2S do,
+> except that, on those other drivers, they pass I2S control info via
+> platform_data (they're not platform drivers).
+>=20
+> With those drivers, generic applications work as-is via the standard
+> video, radio or sdr devnodes, without knowing about I2S.
+>=20
+> The main difference here is that you're requiring an specialized
+> application for this device to work,=20
 
-For now, perhaps. Let's not embed an assumption we cannot guarantee.
+Specialized application may be needed for this specific combination of devi=
+ces (DRIF + MAX2175) only. For MAX2175 alone, a generic application itself =
+would be enough. The MAX2175 will have I2S output enabled by default and th=
+e SDR device have to just enable/disable its own RX during .start_streaming=
+/.stop_streaming.
 
-> > If so, something like "riscv,num-interrupts" would be better, along with
-> > a clearer description.
-> 
-> Uhm. I suppose we can change this. However, it would requires changes
-> to quite a number of riscv repositories. I believe this is also
-> included in the riscv platform specification. A better description is
-> easy, do we really need to change the key?
+as a generic one won't be aware of
+> this device-specific control, and may end by exposing this "internal"
+> control to the end user. That is OK for embedded usage, but, as soon as
+> this is used on some non-embedded usecase (with is likely, as there are
+> several PC consumer products using other chips from Maxim), we'll have
+> problems.
+>=20
+> I guess the solution here is to make such control visible only via the
+> subdev interface.
+>=20
 
-It's not too much of a problem, but if we end up having to change
-anything else from the proposed bindings, those trees are going to
-require updates anyway.
-
-If we can, I would like to change this to keep things as clear as
-possible from the outset.
-
-[...]
-
-> > You will need to be explicit about the order of interrupts in this
-> > property. i.e. which interrupt is routed to which context?
-> 
-> Yes. Order and position matter.
-
-Ok.
-
-Please update the binding to explicitly define the ordering requirement.
-
-[...]
-
-> > Also, please consider how you will handle the case when the Linux
-> > logical CPU ID is not the same as the physical ID, and how you will
-> > handle physical IDs being sparse.
-> 
-> We already deal with this. If the interrupt is '-1', we skip it.
-> That's done in plic.c:
->                 if (parent.args[0] == -1) continue; // skip context holes
-
-If this is what we expect people to do, it needs to be documented in the
-binding.
-
-Does this mean that you expect Linux logical CPU IDs to be equal to
-physical CPU IDs in all cases?
-
-That's going to be painful for very sparse ID ranges, and won't work for
-cases like kexec/kdump where you cannot guarantee which physical CPU
-will end up being CPU0 in the new kernel.
-
-I would strongly advise that you explicitly describe the relationship
-using phandles to CPU nodes.
-
-I would also advise that you try to decouple the physical CPU IDs and
-Linux logical IDs. While assuming they're the same might simplify things
-today, it will create longer term maintenance problems and get in the
-way of a number of features.
+Did you mean using v4l2_subdev_tuner_ops? It does not have a method as of t=
+oday to support this. The video, audio subdev ops supports s_stream method.=
+ We may need to create one for tuner ops.
 
 Thanks,
-Mark.
+Ramesh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
