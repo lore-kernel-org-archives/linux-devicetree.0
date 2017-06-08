@@ -1,92 +1,70 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] gpio: use "output-active" and "output-inactive" for
- gpio-hogs
-Date: Thu, 8 Jun 2017 17:33:46 -0500
-Message-ID: <20170608223346.unfwdh32v3kt2y52@rob-hp-laptop>
-References: <20170604101049.4592-1-uwe@kleine-koenig.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170604101049.4592-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: Stefan Agner <stefan@agner.ch>
+Subject: [PATCH v6 0/3] ARM: dts: imx7: add NAND support
+Date: Thu,  8 Jun 2017 15:34:46 -0700
+Message-ID: <cover.9fab78eaa869dbad4c9ad7e8578c9cef3e49daa8.1496961128.git-series.stefan@agner.ch>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: shawnguo@kernel.org, kernel@pengutronix.de, sboyd@codeaurora.org
+Cc: aisheng.dong@nxp.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@KARO-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 04, 2017 at 12:10:49PM +0200, Uwe Kleine-König wrote:
-> Using the following gpio hog:
-> 
-> 	{
-> 		gpio-hog;
-> 		gpios = <17 GPIO_ACTIVE_LOW>;
-> 		output-high;
-> 	}
-> 
-> results in the gpio to be set to (physically) low value, which is
-> surprising. So support "output-active" which makes the semantic more
-> obvious. The old semantic is still supported for backward compatibility.
+This revision alters the clock tree such that the clock required by
+the APBH DMA (NAND_USDHC_BUS_CLK_ROOT _after_ gate CCGR20) is available
+as an independent clock.
 
-Ugg. Can't say I'm a fan of the Linux GPIO subsystem inverting the logic 
-for GPIO_ACTIVE_LOW...
+So far the gate CCGR20 was used by the NAND_ROOT_CLK only. A previous
+patch added the NAND_ROOT_CLK to the APBH DMA which lead the clock
+gate CCGR20 getting enabled:
+https://patchwork.ozlabs.org/patch/551967/
 
-> 
-> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
-> ---
-> Hello,
-> 
-> the next logical step would be to go through all in-tree dts files and
-> substitute the old properties by the new ones. I can do this as soon as
-> the idea is discussed and considered to be good.
-> 
-> Maybe the same idea can be applied to the cpp definitions GPIOD_OUT_LOW
-> and GPIOD_OUT_HIGH.
-> 
-> And btw I wondered about the binding that defines what should happen in
-> this case:
-> 
-> 	{
-> 		gpio-hog;
-> 		gpios = <...>;
-> 		output-high;
-> 		output-low;
-> 	}
-> 
-> I would have defined as undefined instead of inactive.
-> 
-> Best regards
-> Uwe
-> 
->  Documentation/devicetree/bindings/gpio/gpio.txt | 10 ++++++----
->  drivers/gpio/gpiolib-of.c                       |  4 ++++
->  2 files changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
-> index 68d28f62a6f4..4d29e0b33435 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
-> @@ -196,10 +196,12 @@ This means that when multiple properties are present they will be searched
->  in the order presented below and the first match is taken as the intended
->  configuration.
->  - input:      A property specifying to set the GPIO direction as input.
-> -- output-low  A property specifying to set the GPIO direction as output with
-> -	      the value low.
-> -- output-high A property specifying to set the GPIO direction as output with
-> -	      the value high.
-> +- output-inactive: A property specifying to set the GPIO direction as output
-> +	      using the inactive level as value.
-> +- output-active: A property specifying to set the GPIO direction as output
-> +	      using the active level as value.
-> +- output-low  A deprecated alias for "output-inactive".
-> +- output-high A deprecated alias for "output-active".
+The data sheet seems to indicate that the APBH DMA only uses hclk which
+is connected to NAND_USDHC_BUS_CLK_ROOT, but also through gate CCGR20.
+Tests seem to confirm this wiring.
 
-The question is was this really what was expected. I guess based on the 
-code it was. I would have expected these gave low or high voltage 
-levels. Seems like Linuxisms defining the binding.
+By adding a new clock IMX7D_NAND_USDHC_BUS_RAWNAND_CLK we can assign
+a clock which also enables the shared CCGR20 gate without changing the
+DMA driver. This better reflects the true wiring and encapsulates the
+SoC specific clock wiring in the clock tree instead leaking it into
+the driver code.
 
-Rob
+The wording "rawnand" has been taken from Table 5-12, Module APBHDMA
+in the i.MX 7 Reference Manual.
+
+Versions 2 and earlier also included NAND driver changes, which are
+already merged.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
+
+Changes since v5:
+- Remove clock-names from dma-apbh node
+
+Changes since v4:
+- Introduce *_RAWNAND_CLK which represent clocks after CCGR20
+- Use *_RAWNAND_CLK for APBH DMA and GPMI NAND
+- Use assigned-clocks to set a reasonable parent for NAND_ROOT_SRC
+
+Changes since v3:
+- Only specify IMX7D_NAND_USDHC_BUS_ROOT_CLK which seems to be sufficent
+
+Changes since v2:
+- Dropped driver changes, alreay merged
+
+Changes since v1:
+- Make clks_count const
+- Introduce IS_IMX7D for i.MX 7 SoC's and make it part of GPMI_IS_MX6
+
+Stefan Agner (3):
+  clk: imx7d: create clocks behind rawnand clock gate
+  ARM: dts: imx7: add GPMI NAND and APBH DMA
+  ARM: dts: imx7-colibri: add NAND support
+
+ arch/arm/boot/dts/imx7-colibri.dtsi     |  9 ++++++++-
+ arch/arm/boot/dts/imx7s.dtsi            | 31 ++++++++++++++++++++++++++-
+ drivers/clk/imx/clk-imx7d.c             |  6 +++--
+ include/dt-bindings/clock/imx7d-clock.h |  4 ++-
+ 4 files changed, 47 insertions(+), 3 deletions(-)
+
+base-commit: e2bb3be2c6c623ff0bad975dc9435531f450f0c5
+-- 
+git-series 0.9.1
