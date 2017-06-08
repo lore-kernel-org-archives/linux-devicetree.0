@@ -1,105 +1,40 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V2 1/3] Documentation: devicetree: add multiple cpu port
- DSA binding
-Date: Thu, 8 Jun 2017 12:57:28 -0700
-Message-ID: <d89e500a-9757-d06d-7d37-23997fe2ad2b@gmail.com>
-References: <20170530104419.6052-1-john@phrozen.org>
- <69dd02a6-59f9-59df-f630-0ebd948451c4@gmail.com>
- <20170607211002.ubljfplyexjb6dyl@rob-hp-laptop>
- <64218746-fbb6-f958-ba15-5ed704214d25@gmail.com>
- <20170608193112.GF20216@lunn.ch>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V2 0/5] phy: bcm-ns-usb3: add MDIO driver
+Date: Thu,  8 Jun 2017 22:04:23 +0200
+Message-ID: <20170608200428.9187-1-zajec5@gmail.com>
+References: <20170511132925.14564-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170608193112.GF20216-g2DYL2Zd6BY@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170511132925.14564-1-zajec5@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2017 12:31 PM, Andrew Lunn wrote:
->> Right now we don't have any mechanism, and statically doing this from
->> Device Tree is too inflexible. I have been working on a parallel path
->> where we use the bridge (which is already accelerated when there is a
->> switch) in order to define groups of ports, the idea would be do to e.g:
->>
->> brctl addbr br-lan
->> brctl addbr br-lan eth0
->> brctl addbr br-lan lan1
->> ...
->> brctl addbr br-lan lan4
->>
->> brctl addbr br-wan
->> brctl addbr br-wan eth1
->> brctl addbr br-wan wan
->>
->> Assuming that lan1-lan4 are your LAN ports, and wan is your WAN port and
->> you have two CPU ports.
-> 
-> Hi Florian
-> 
-> I don't like this, on multiple levels.
-> 
-> My wan port typically never has more than 40Mbps of traffic on it. So
-> dedicating a whole 1Gbps ethernet to it makes no sense. I want to
-> share eth1 bandwidth with the wan port, and some of the other
-> ports. Meaning i would have to add eth1 to br-lan as well as
-> br-wan. Does the bridge allow that? And what sort of hacks do you have
-> to allow a port to be added to a bridge, but not used by the bridge?
+From: Rafał Miłecki <rafal@milecki.pl>
 
-This is AN example of how to configure a port grouping based on John's
-example and use case, not THE only example ;) The idea is obviously that
-you can define association between user-facing ports and CPU ports as
-you see fit, the idea is to use bridge to do that association because
-that's already what controls VLAN membership and forwarding.
+As explained in the commit 9200c6f177638 ("Revert "phy: Add USB3 PHY support
+for Broadcom NSP SoC"") this module should be modified to use MDIO bus as
+this is how PHY is really attached.
 
-> 
-> And what is the point of br-wan? It only has one real port in it. So
-> i'm adding per-packet overhead which i don't need, just in order to
-> signal to the hardware how it should statically route cpu traffic for
-> a port.
+This should allow reusing this driver on NSP and any other platform with
+MDIO bus and this particular PHY.
 
-No, it has two ports in it, adding eth1 is necessary do define the VLAN
-membership and forwarding rules, when eth1 is added we resolve the CPU
-port this corresponds to in the switch and we use that to define the
-forwarding decision between ports.
+V2: Rebase and update 4/5 and 5/5.
 
-The overhead per-packet is extremely limited because the first thing
-br_handle_frame() will do is see that eth1 is a DSA master network
-device and pass packets back up the stack for processing through dst->rcv().
+Rafał Miłecki (5):
+  phy: bcm-ns-usb3: always wait for idle after writing to the PHY reg
+  phy: bcm-ns-usb3: use pointer for PHY writing function
+  phy: bcm-ns-usb3: enable MDIO in the platform specific code
+  dt-bindings: phy: Modify Broadcom NS USB 3.0 PHY binding to use MDIO
+  phy: bcm-ns-usb3: add MDIO driver using proper bus layer
 
-> 
-> Now say i have one of the bigger marvell switches, with 11 ports, in
-> an industrial application. I setup 3 or 4 bridges. I then need to add
-> eth0 and eth1 to two different bridges. And say i use some ports> without a bridge. How do i configure them?
+ .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    |  27 ++-
+ drivers/phy/broadcom/Kconfig                       |   1 +
+ drivers/phy/broadcom/phy-bcm-ns-usb3.c             | 230 +++++++++++++++------
+ 3 files changed, 186 insertions(+), 72 deletions(-)
 
-If you don't add your conduit interface to the bridge, then the default
-CPU interface (which could be left to the driver to decide which one is
-relevant) gets used and things work as expected. When you add a DSA
-master network device to the bridge, only then do we use that
-information to refine the forwarding decision and map to the appropriate
-port vectors. Doing this becomes necessary if you create a second (or
-more) bridge to isolate a group of ports.
-
-> 
-> And how do i dump the current mapping?
-
-You look at both (or more) bridges' members, what's wrong or even any
-different from what happens today?
-
-> 
-> For me, this is the wrong architecture. What CPU port is used should
-> be a port property, not a bridge property. I think we should use
-> devlink. Add commands to dump the current mapping, and set it.
-
-In premise I agree, although just like we need a bridge today to
-configure VLAN memberships, it did not seem to me like a big stretch to
-use a bridge to configure which CPU port you want.
 -- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.11.0
