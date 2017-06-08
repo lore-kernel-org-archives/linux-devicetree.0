@@ -1,98 +1,136 @@
-From: "Keiji Hayashibara" <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: RE: [PATCH V2 1/3] devicetree: add UniPhier WDT devicetree bindings documentation
-Date: Thu, 8 Jun 2017 15:22:12 +0900
-Message-ID: <000101d2e01f$913fef20$b3bfcd60$@socionext.com>
-References: <1496740294-12653-1-git-send-email-hayashibara.keiji@socionext.com> <1496740294-12653-2-git-send-email-hayashibara.keiji@socionext.com> <CAK7LNATMRPW3PYU-fX+biRdez-mgkUKRbVi+w+dBNb3szOuXdw@mail.gmail.com>
+From: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Thu, 08 Jun 2017 08:48:30 +0200
+Message-ID: <1496904510.7999.1.camel@seibold.net>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+         <1496688186.12947.10.camel@hp800z> <1496776664.3821.3.camel@seibold.net>
+         <1496823091.28265.3.camel@hp800z>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNATMRPW3PYU-fX+biRdez-mgkUKRbVi+w+dBNb3szOuXdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ja
+In-Reply-To: <1496823091.28265.3.camel@hp800z>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Holm Rauchfuss <holm.rauchfuss-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Yamada-san
+Hi Pantelis,
 
-Thank you for your comment.
+On Wed, 2017-06-07 at 11:11 +0300, Pantelis Antoniou wrote:
+> Hi Stefani,
+> 
+> On Tue, 2017-06-06 at 21:17 +0200, Stefani Seibold wrote:
+> > Hi Pantelis,
+> > 
+> > thanks for the suggestion. This feature is not very well
+> > documented. I
+> > tried this on my rasp1 running 4.12.0-rc3 and it doesn't work. My
+> > source is:
+> > 
+> > // rapsi example
+> > /dts-v1/;
+> > /plugin/;
+> > 
+> > / {
+> >     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> > 
+> >     fragment@0 {
+> >         target-path = "/soc/i2s@7e203000";
+> >         __overlay__ {
+> >             #address-cells = <0x00000001>;
+> >             #size-cells = <0x00000001>;
+> >             test = "test";
+> >             timer = <&{/soc/timer@7e0030000}>;
+> >         };
+> >     };
+> > };
+> > 
+> > 
+> > The resulting overlay is (decompiled with fdtdump):
+> > 
+> > /dts-v1/;
+> > // magic:		0xd00dfeed
+> > // totalsize:		0x19a (410)
+> > // off_dt_struct:	0x38
+> > // off_dt_strings:	0x148
+> > // off_mem_rsvmap:	0x28
+> > // version:		17
+> > // last_comp_version:	16
+> > // boot_cpuid_phys:	0x0
+> > // size_dt_strings:	0x52
+> > // size_dt_struct:	0x110
+> > 
+> > / {
+> >     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+> >     fragment@0 {
+> >         target-path = "/soc/i2s@7e203000";
+> >         __overlay__ {
+> >             #address-cells = <0x00000001>;
+> >             #size-cells = <0x00000001>;
+> >             test = "test";
+> >             timer = <0xdeadbeef>;
+> >         };
+> >     };
+> >     __fixups__ {
+> >         /soc/timer@7e0030000 = "/fragment@0/__overlay__:timer:0";
+> >     };
+> > };
+> > 
+> > But this will not apply:
+> > 
+> > OF: resolver: overlay phandle fixup failed: -22
+> > create_overlay: Failed to resolve tree
+> > 
+> > 
+> 
+> Yes, it will not work as it is; my point is that you don't need the
+> magic __*__ node.
+> 
 
-> > Add uniphier-wdt bindings documentation.
-> >
-> > Signed-off-by: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-> 
-> 
-> Maybe "dt-bindings: watchdog: ..." for the subject.
-> 
-> This seems what Rob prefers.
-> 
-> For example,
-> https://patchwork.kernel.org/patch/9606365/
+The magic __fixups__ node was inserted by the device tree compiler. I
+use the dtc from https://github.com/pantoniou/dtc at commit
+d990b8013889b816ec054c7e07a77db59c56c400.
 
-OK. I will change the subject in v3 patch.
-
+> You will need to modify the overlay application code to live insert a
+> phandle (if it doesn't exist) when it encounters a /path fixup.
 > 
-> > ---
-> >  .../devicetree/bindings/watchdog/uniphier-wdt.txt    | 20 ++++++++++++++++++++
-> >  1 file changed, 20 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
-> b/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
-> > new file mode 100644
-> > index 0000000..a59d1ba
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
-> > @@ -0,0 +1,20 @@
-> > +UniPhier watchdog timer controller
-> > +
-> > +This UniPhier watchdog timer controller must be under sysctrl compatible node.
-> 
-> Do you mean "syscon compatible" ?
 
-The "compatible" word is inappropriate.
-I will remove it in v3 patch.
+That is part of my patch!
 
+> > Anyway, the reason for my patch is that i can reference to nodes
+> > which
+> > lacks a phandle. The phandle will be created on the fly and also
+> > destroyed when the overlay is unloaded.
+> > 
+> > I have a real use case for this patch:
+> > 
+> > I have a BIOS on some ARM64 servers which provides broken device
+> > tree.
+> > It also lacks some devices in this tree which needs references to
+> > other
+> > devices which lacks a phandle.
+> > 
+> > Since the BIOSes are closed source i need a way to work arround
+> > this
+> > problem without patching all the drivers involved to this devices.
+> > 
+> > Hope this helps to understand the reason for this patch.
+> > 
 > 
-> > +Required properties:
-> > +- compatible: should be "socionext,uniphier-wdt"
-> > +
-> > +Example:
-> > +
-> > +       sysctrl@61840000 {
-> > +               compatible = "socionext,uniphier-ld11-sysctrl",
-> > +                            "simple-mfd", "syscon";
-> > +               reg = <0x61840000 0x4000>;
-> > +
-> > +               sys_wdt: watchdog {
-> > +                       compatible = "socionext,uniphier-wdt";
-> > +               }
+> FWIW your problem seems like something that would happen on the
+> field.
+> We can berate the vendor of not providing the correct device tree,
+> but
+> in the end workarounds for broken vendor things are common in the
+> kernel.
 > 
-> Could you remove the "sys_dwt: " label?
-> I'd like the example matched with actual DT files.
 
-I will remove it.
+Yes, that is the way how linux do the things. Linux has a long history
+to bypassing bugs of BIOSes, ACPI or broken devices.
 
-> 
-> Thanks.
-> 
-> 
-> > +               other nodes ...
-> > +       };
-> > --
-> > 2.7.4
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-----------
-Best Regards,
-Keiji Hayashibara
-
+Greetings,
+Stefani
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
