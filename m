@@ -1,92 +1,71 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 1/4] drm/panel: simple: add support for NEC NL12880B20-05
-Date: Thu,  8 Jun 2017 20:07:55 +0200
-Message-ID: <20170608180758.31020-1-l.stach@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2 4/4] drm/panel: simple: add support for AUO P320HVN03
+Date: Thu,  8 Jun 2017 20:07:58 +0200
+Message-ID: <20170608180758.31020-4-l.stach@pengutronix.de>
+References: <20170608180758.31020-1-l.stach@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170608180758.31020-1-l.stach@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the NEC LCD Technologies, Ltd. 12.1"
-WXGA (1280x800) LVDS TFT LCD panel, which can be supported
-by the simple panel driver.
-
-Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
-v2: new patch in V2
----
- .../bindings/display/panel/nec,nl12880b20-05.txt   |  8 ++++++
- drivers/gpu/drm/panel/panel-simple.c               | 30 ++++++++++++++++++++++
- 2 files changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/display/panel/nec,nl12880b20-05.txt
-
-diff --git a/Documentation/devicetree/bindings/display/panel/nec,nl12880b20-05.txt b/Documentation/devicetree/bindings/display/panel/nec,nl12880b20-05.txt
-new file mode 100644
-index 000000000000..71cbc49ecfab
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/panel/nec,nl12880b20-05.txt
-@@ -0,0 +1,8 @@
-+NEC LCD Technologies, Ltd. 12.1" WXGA (1280x800) LVDS TFT LCD panel
-+
-+Required properties:
-+- compatible: should be "nec,nl12880bc20-05"
-+- power-supply: as specified in the base binding
-+
-+This binding is compatible with the simple-panel binding, which is specified
-+in simple-panel.txt in this directory.
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index c4566ce8fda7..585b37f9171a 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -1322,6 +1322,33 @@ static const struct panel_desc lg_lp129qe = {
- 	},
- };
- 
-+static const struct display_timing nec_nl12880bc20_05_timing = {
-+	.pixelclock = { 67000000, 71000000, 75000000 },
-+	.hactive = { 1280, 1280, 1280 },
-+	.hfront_porch = { 2, 30, 30 },
-+	.hback_porch = { 6, 100, 100 },
-+	.hsync_len = { 2, 30, 30 },
-+	.vactive = { 800, 800, 800 },
-+	.vfront_porch = { 5, 5, 5 },
-+	.vback_porch = { 11, 11, 11 },
-+	.vsync_len = { 7, 7, 7 },
-+};
-+
-+static const struct panel_desc nec_nl12880bc20_05 = {
-+	.timings = &nec_nl12880bc20_05_timing,
-+	.num_timings = 1,
-+	.bpc = 8,
-+	.size = {
-+		.width = 261,
-+		.height = 163,
-+	},
-+	.delay = {
-+		.enable = 50,
-+		.disable = 50,
-+	},
-+	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
-+};
-+
- static const struct drm_display_mode nec_nl4827hc19_05b_mode = {
- 	.clock = 10870,
- 	.hdisplay = 480,
-@@ -1972,6 +1999,9 @@ static const struct of_device_id platform_of_match[] = {
- 		.compatible = "lg,lp129qe",
- 		.data = &lg_lp129qe,
- 	}, {
-+		.compatible = "nec,nl12880bc20-05",
-+		.data = &nec_nl12880bc20_05,
-+	}, {
- 		.compatible = "nec,nl4827hc19-05b",
- 		.data = &nec_nl4827hc19_05b,
- 	}, {
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBVSBPcHRyb25pY3MgQ29ycG9yYXRpb24gMzEuNSIK
+RkhEICgxOTIweDEwODApIExWRFMgVEZUIExDRCBwYW5lbCwgd2hpY2ggY2FuIGJlIHN1cHBvcnRl
+ZApieSB0aGUgc2ltcGxlIHBhbmVsIGRyaXZlcgoKU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2gg
+PGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQp2MjogbWVudGlvbiBwb3dlci1zdXBwbHkgcHJv
+cGVydHkKLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8scDMyMGh2bjAzLnR4dCAg
+ICAgICB8ICA4ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAg
+ICAgICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQs
+IDM5IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8scDMyMGh2bjAzLnR4dAoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxw
+MzIwaHZuMDMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+cGFuZWwvYXVvLHAzMjBodm4wMy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAw
+MDAwMDAwLi41OWJiNmNkOGFhNzUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8scDMyMGh2bjAzLnR4dApAQCAtMCww
+ICsxLDggQEAKK0FVIE9wdHJvbmljcyBDb3Jwb3JhdGlvbiAzMS41IiBGSEQgKDE5MjB4MTA4MCkg
+VEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91
+bGQgYmUgImF1byxwMzIwaHZuMDMiCistIHBvd2VyLXN1cHBseTogYXMgc3BlY2lmaWVkIGluIHRo
+ZSBiYXNlIGJpbmRpbmcKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2lt
+cGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4
+dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
+YW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRl
+eCA5OTc1OGUzODUyNWUuLjQ3NGZhNzU5ZTA2ZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
+L3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1z
+aW1wbGUuYwpAQCAtNjM4LDYgKzYzOCwzNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rl
+c2MgYXVvX2cxODVoYW4wMSA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4
+XzFYN1g0X1NQV0csCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRpc3BsYXlfdGltaW5nIGF1
+b19wMzIwaHZuMDNfdGltaW5ncyA9IHsKKwkucGl4ZWxjbG9jayA9IHsgMTA2MDAwMDAwLCAxNDg1
+MDAwMDAsIDE2NDAwMDAwMCB9LAorCS5oYWN0aXZlID0geyAxOTIwLCAxOTIwLCAxOTIwIH0sCisJ
+Lmhmcm9udF9wb3JjaCA9IHsgMjUsIDUwLCAxMzAgfSwKKwkuaGJhY2tfcG9yY2ggPSB7IDI1LCA1
+MCwgMTMwIH0sCisJLmhzeW5jX2xlbiA9IHsgMjAsIDQwLCAxMDUgfSwKKwkudmFjdGl2ZSA9IHsg
+MTA4MCwgMTA4MCwgMTA4MCB9LAorCS52ZnJvbnRfcG9yY2ggPSB7IDgsIDE3LCAxNTAgfSwKKwku
+dmJhY2tfcG9yY2ggPSB7IDgsIDE3LCAxNTAgfSwKKwkudnN5bmNfbGVuID0geyA0LCAxMSwgMTAw
+IH0sCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXVvX3AzMjBodm4wMyA9
+IHsKKwkudGltaW5ncyA9ICZhdW9fcDMyMGh2bjAzX3RpbWluZ3MsCisJLm51bV90aW1pbmdzID0g
+MSwKKwkuYnBjID0gOCwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gNjk4LAorCQkuaGVpZ2h0ID0g
+MzkzLAorCX0sCisJLmRlbGF5ID0geworCQkucHJlcGFyZSA9IDEsCisJCS5lbmFibGUgPSA0NTAs
+CisJCS51bnByZXBhcmUgPSA1MDAsCisJfSwKKwkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRf
+UkdCODg4XzFYN1g0X0pFSURBLAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxh
+eV9tb2RlIGF1b190MjE1aHZuMDFfbW9kZSA9IHsKIAkuY2xvY2sgPSAxNDg4MDAsCiAJLmhkaXNw
+bGF5ID0gMTkyMCwKQEAgLTE5NDEsNiArMTk2OSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
+ZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxlID0gImF1byxn
+MTg1aGFuMDEiLAogCQkuZGF0YSA9ICZhdW9fZzE4NWhhbjAxLAogCX0sIHsKKwkJLmNvbXBhdGli
+bGUgPSAiYXVvLHAzMjBodm4wMyIsCisJCS5kYXRhID0gJmF1b19wMzIwaHZuMDMsCisJfSwgewog
+CQkuY29tcGF0aWJsZSA9ICJhdW8sdDIxNWh2bjAxIiwKIAkJLmRhdGEgPSAmYXVvX3QyMTVodm4w
+MSwKIAl9LCB7Ci0tIAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
