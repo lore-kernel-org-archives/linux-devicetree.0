@@ -1,202 +1,36 @@
-From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v4 2/3] nvmem: add snvs_lpgpr driver
-Date: Thu,  8 Jun 2017 18:51:33 +0200
-Message-ID: <20170608165134.14971-3-o.rempel@pengutronix.de>
-References: <20170608165134.14971-1-o.rempel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170608165134.14971-1-o.rempel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 4/6] dt-bindings: display: stm32: remove
+ st-display-subsystem parent node requirement
+Date: Thu, 8 Jun 2017 12:01:43 -0500
+Message-ID: <20170608170143.2wtctnpjw3uwgsgm@rob-hp-laptop>
+References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
+ <1496414235-20098-5-git-send-email-philippe.cornu@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1496414235-20098-5-git-send-email-philippe.cornu@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Chris Zhong <zyw@rock-chips.com>, Mickael Reulier <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, Vincent Abriou <vincent.abriou@st.com>, Ludovic Barre <ludovic.barre@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, zourongrong@gmail.com, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This is a driver for Low Power General Purpose Register (LPGPR)
-available on i.MX6 SoCs in Secure Non-Volatile Storage (SNVS)
-of this chip.
-
-It is a 32-bit read/write register located in the low power domain.
-Since LPGPR is located in the battery-backed power domain, LPGPR can
-be used by any application for retaining data during an SoC power-down
-mode.
-
-Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
----
- drivers/nvmem/Kconfig      |  10 ++++
- drivers/nvmem/Makefile     |   2 +
- drivers/nvmem/snvs_lpgpr.c | 136 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 148 insertions(+)
- create mode 100644 drivers/nvmem/snvs_lpgpr.c
-
-diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-index 101ced4c84be..ea3044c5d6ee 100644
---- a/drivers/nvmem/Kconfig
-+++ b/drivers/nvmem/Kconfig
-@@ -144,4 +144,14 @@ config MESON_EFUSE
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nvmem_meson_efuse.
- 
-+config NVMEM_SNVS_LPGPR
-+	tristate "Support for Low Power General Purpose Register"
-+	depends on SOC_IMX6 || COMPILE_TEST
-+	help
-+	  This is a driver for Low Power General Purpose Register (LPGPR) available on
-+	  i.MX6 SoCs in Secure Non-Volatile Storage (SNVS) of this chip.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called nvmem-snvs-lpgpr.
-+
- endif
-diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-index 173140658693..4c589184acee 100644
---- a/drivers/nvmem/Makefile
-+++ b/drivers/nvmem/Makefile
-@@ -30,3 +30,5 @@ obj-$(CONFIG_NVMEM_VF610_OCOTP)	+= nvmem-vf610-ocotp.o
- nvmem-vf610-ocotp-y		:= vf610-ocotp.o
- obj-$(CONFIG_MESON_EFUSE)	+= nvmem_meson_efuse.o
- nvmem_meson_efuse-y		:= meson-efuse.o
-+obj-$(CONFIG_NVMEM_SNVS_LPGPR)	+= nvmem_snvs_lpgpr.o
-+nvmem_snvs_lpgpr-y		:= snvs_lpgpr.o
-diff --git a/drivers/nvmem/snvs_lpgpr.c b/drivers/nvmem/snvs_lpgpr.c
-new file mode 100644
-index 000000000000..835d8f97d824
---- /dev/null
-+++ b/drivers/nvmem/snvs_lpgpr.c
-@@ -0,0 +1,136 @@
-+/*
-+ * Copyright (c) 2015 Pengutronix, Steffen Trumtrar <kernel@pengutronix.de>
-+ * Copyright (c) 2017 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/nvmem-provider.h>
-+#include <linux/of_device.h>
-+#include <linux/regmap.h>
-+
-+struct snvs_lpgpr_priv {
-+	struct device_d		*dev;
-+	struct regmap		*regmap;
-+	int			offset;
-+	struct nvmem_config	cfg;
-+};
-+
-+struct snvs_lpgpr_cfg {
-+	int offset;
-+};
-+
-+static const struct snvs_lpgpr_cfg snvs_lpgpr_cfg_imx6q = {
-+	.offset = 0x68,
-+};
-+
-+static int snvs_lpgpr_write(void *context, unsigned int offset, void *_val,
-+			    size_t bytes)
-+{
-+	struct snvs_lpgpr_priv *priv = context;
-+	const u32 *val = _val;
-+	int i = 0, words = bytes / 4;
-+
-+	while (words--)
-+		regmap_write(priv->regmap, priv->offset + offset + (i++ * 4),
-+			     *val++);
-+
-+	return 0;
-+}
-+
-+static int snvs_lpgpr_read(void *context, unsigned int offset, void *_val,
-+			   size_t bytes)
-+{
-+	struct snvs_lpgpr_priv *priv = context;
-+	u32 *val = _val;
-+	int i = 0, words = bytes / 4;
-+
-+	while (words--)
-+		regmap_read(priv->regmap, priv->offset + offset + (i++ * 4),
-+			    val++);
-+
-+	return 0;
-+}
-+
-+static int snvs_lpgpr_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	struct device_node *syscon_node;
-+	struct snvs_lpgpr_priv *priv;
-+	struct nvmem_config *cfg;
-+	struct nvmem_device *nvmem;
-+	const struct snvs_lpgpr_cfg *dcfg;
-+
-+	if (!node)
-+		return -ENOENT;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dcfg = of_device_get_match_data(dev);
-+	if (!dcfg)
-+		return -EINVAL;
-+
-+	syscon_node = of_get_parent(node);
-+	if (!syscon_node)
-+		return -ENODEV;
-+
-+	priv->regmap = syscon_node_to_regmap(syscon_node);
-+	of_node_put(syscon_node);
-+	if (IS_ERR(priv->regmap))
-+		return PTR_ERR(priv->regmap);
-+
-+	priv->offset = dcfg->offset;
-+
-+	cfg = &priv->cfg;
-+	cfg->priv = priv;
-+	cfg->name = dev_name(dev);
-+	cfg->dev = dev;
-+	cfg->stride = 4,
-+	cfg->word_size = 4,
-+	cfg->size = 4,
-+	cfg->owner = THIS_MODULE,
-+	cfg->reg_read  = snvs_lpgpr_read,
-+	cfg->reg_write = snvs_lpgpr_write,
-+
-+	nvmem = nvmem_register(cfg);
-+	if (IS_ERR(nvmem))
-+		return PTR_ERR(nvmem);
-+
-+	platform_set_drvdata(pdev, nvmem);
-+
-+	return 0;
-+}
-+
-+static int snvs_lpgpr_remove(struct platform_device *pdev)
-+{
-+	struct nvmem_device *nvmem = platform_get_drvdata(pdev);
-+
-+	return nvmem_unregister(nvmem);
-+}
-+
-+static const struct of_device_id snvs_lpgpr_dt_ids[] = {
-+	{ .compatible = "fsl,imx6q-snvs-lpgpr", .data = &snvs_lpgpr_cfg_imx6q },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, snvs_lpgpr_dt_ids);
-+
-+static struct platform_driver snvs_lpgpr_driver = {
-+	.probe	= snvs_lpgpr_probe,
-+	.remove	= snvs_lpgpr_remove,
-+	.driver = {
-+		.name	= "snvs_lpgpr",
-+		.of_match_table = snvs_lpgpr_dt_ids,
-+	},
-+};
-+module_platform_driver(snvs_lpgpr_driver);
-+
-+MODULE_AUTHOR("Oleksij Rempel <o.rempel@pengutronix.de>");
-+MODULE_DESCRIPTION("Low Power General Purpose Register in i.MX6 Secure Non-Volatile Storage");
-+MODULE_LICENSE("GPL v2");
--- 
-2.11.0
+T24gRnJpLCBKdW4gMDIsIDIwMTcgYXQgMDQ6Mzc6MTNQTSArMDIwMCwgUGhpbGlwcGUgQ09STlUg
+d3JvdGU6Cj4gVGhlcmUgaXMgbm8gbmVlZCBhbnltb3JlIHRvIGhhdmUgYSAic3QtZGlzcGxheS1z
+dWJzeXN0ZW0iIHBhcmVudCBub2RlCj4gaW4gdGhlIGRldmljZSB0cmVlIGZvciB0aGUgbHRkYy4K
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29t
+Pgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9zdCxz
+dG0zMi1sdGRjLnR4dCB8IDEgLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBkZWxldGlvbigtKQoKQWNr
+ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
+dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
