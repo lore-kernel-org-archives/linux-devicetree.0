@@ -1,122 +1,98 @@
-From: Keerthy <j-keerthy@ti.com>
-Subject: Re: [PATCH v3] mfd: lp87565: Add lp87565 PMIC support
-Date: Thu, 8 Jun 2017 09:10:41 +0530
-Message-ID: <0a5db53d-a875-ca31-2d40-0c6fa14be5c2@ti.com>
-References: <1496150860-25919-1-git-send-email-j-keerthy@ti.com>
- <20170607211149.ozftwb5pqnso5xgk@rob-hp-laptop>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 03/17] base: fix order of OF initialization
+Date: Wed, 7 Jun 2017 20:49:43 -0700
+Message-ID: <5938C957.2030005@gmail.com>
+References: <20170523004107.536-1-palmer@dabbelt.com>
+ <20170606230007.19101-1-palmer@dabbelt.com>
+ <20170606230007.19101-4-palmer@dabbelt.com>
+ <CAMuHMdXWH5fU8YKfR37D5SMi1GpSk75Bq-OcYmm5ZuHe+XK0PQ@mail.gmail.com>
+ <20170607093523.GB29370@leverpostej>
+ <CAMgXwTiE48KLCJe6TD6VCd5rYASyw0L+pYh8yfvGjhohAfo2dg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170607211149.ozftwb5pqnso5xgk@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: broonie@kernel.org, lee.jones@linaro.org, t-kristo@ti.com, tony@atomide.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, afd@ti.com
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <CAMgXwTiE48KLCJe6TD6VCd5rYASyw0L+pYh8yfvGjhohAfo2dg@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Wesley Terpstra <wesley@sifive.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Thursday 08 June 2017 02:41 AM, Rob Herring wrote:
-> On Tue, May 30, 2017 at 06:57:40PM +0530, Keerthy wrote:
->> The LP87565 chip is a power management IC for Portable Navigation Systems
->> and Tablet Computing devices. It contains the following components:
->>
->>         - Configurable Bucks(Single and multi-phase).
->>         - Configurable General Purpose Output Signals (GPO).
->>
->> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
->> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
->> output.
->>
->> Signed-off-by: Keerthy <j-keerthy@ti.com>
->> ---
->>
->> The other patches are already pulled by Mark. Hence posting
->> the remaining patch.
->>
->> Changes in v3:
->>
->>   * Fixed License to GPL v2.
->>   * Fixed an indentation issue.
->>
->> Changes in v2:
->>
->>   * Fixed a bunch of whitespace errors.
->>   * Changed the License to short form.
->>   * Added the generic compatible lp87565
->>   * Removed i2c_device_id table.
->>   * Introduced probe_new function in place of probe.
->>
->>  Documentation/devicetree/bindings/mfd/lp87565.txt |  45 ++++
->>  drivers/mfd/Kconfig                               |  14 ++
->>  drivers/mfd/Makefile                              |   1 +
->>  drivers/mfd/lp87565.c                             |  92 ++++++++
->>  include/linux/mfd/lp87565.h                       | 270 ++++++++++++++++++++++
->>  5 files changed, 422 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
->>  create mode 100644 drivers/mfd/lp87565.c
->>  create mode 100644 include/linux/mfd/lp87565.h
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/lp87565.txt b/Documentation/devicetree/bindings/mfd/lp87565.txt
->> new file mode 100644
->> index 0000000..f63d568
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/lp87565.txt
->> @@ -0,0 +1,45 @@
->> +TI LP87565 PMIC MFD driver
->> +
->> +Required properties:
->> +  - compatible:	"ti,lp87565", "ti,lp87565-q1"
->> +  - reg:		I2C slave address.
->> +  - gpio-controller:	Marks the device node as a GPIO Controller.
->> +  - #gpio-cells:	Should be two.  The first cell is the pin number and
->> +			the second cell is used to specify flags.
->> +			See ../gpio/gpio.txt for more information.
->> +  - xxx-in-supply:	Phandle to parent supply node of each regulator
->> +			populated under regulators node. xxx should match
->> +			the supply_name populated in driver.
->> +  - regulators:	List of child nodes that specify the regulator
->> +			initialization data.
+On 06/07/17 11:39, Wesley Terpstra wrote:
+> It was a while ago that I debugged this. I already reported this bug
+> to Benjamin Herrenschmidt (now in CC), and I believe he has a patch of
+> his own to fix the same issue.
 > 
-> This is a node, not a property.
-
-Okay
-
+> As I understand it, of_core_init sets up the OF entries in
+> /sys/firmware/devicetree. During platform bringup, when the system
+> describes the cpu + cache hierarchy, it also makes an of_node symlink
+> into that directory. However, if it doesn't exist yet, you get the
+> warning.
 > 
->> +Example:
->> +
->> +lp87565_pmic: lp87565@60 {
+> # ls -l /sys/devices/system/cpu/cpu3/of_node
+> lrwxrwxrwx    1 root     root             0 Jan  1 00:00
+> /sys/devices/system/cpu/cpu3/of_node ->
+> ../../../../firmware/devicetree/base/cpus/cpu@3
 > 
-> pmic@60
+> On Wed, Jun 7, 2017 at 2:35 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>> On Wed, Jun 07, 2017 at 09:07:20AM +0200, Geert Uytterhoeven wrote:
+>>> CC devicetree folks
+>>>
+>>> On Wed, Jun 7, 2017 at 12:59 AM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>>>> From: "Wesley W. Terpstra" <wesley@sifive.com>
+>>>>
+>>>> This fixes: [    0.010000] cpu cpu0: Error -2 creating of_node link
+>>>> ... which you get for every CPU on all architectures with a OF cpu/ node.
+>>
+>> I take it this means a /cpus node? Or the /cpus/cpu@* nodes?
+>>
+>> I'm not seeing this on arm64 when booting v4.12-rc4 with DT, so clearly
+>> this doesn't affect all such architectures.
+>>
+>> What path are these errors happening in?
 
-Okay. I will fix that.
+On the surface, the patch looks reasonable.  But it is not obvious to me why
+the error message is occurring.  I would like to understand the cause before
+saying the patch is good.
 
+What kernel version is showing the error?  For a specific architecture
+(the patch lists 'riscv, nios, etc'), which config and device tree source?
+
+And again, what is the calling path?
+
+- Frank
+
+>>
+>> Thanks,
+>> Mark.
+>>
+>>>>
+>>>> This affects riscv, nios, etc.
+>>>>
+>>>> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+>>>> ---
+>>>>  drivers/base/init.c | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/base/init.c b/drivers/base/init.c
+>>>> index 48c0e220acc0..0dcd17e561d0 100644
+>>>> --- a/drivers/base/init.c
+>>>> +++ b/drivers/base/init.c
+>>>> @@ -31,9 +31,9 @@ void __init driver_init(void)
+>>>>         /* These are also core pieces, but must come after the
+>>>>          * core core pieces.
+>>>>          */
+>>>> +       of_core_init();
+>>>>         platform_bus_init();
+>>>>         cpu_dev_init();
+>>>>         memory_dev_init();
+>>>>         container_dev_init();
+>>>> -       of_core_init();
+>>>>  }
+>>>> --
+>>>> 2.13.0
+>>> --
+>>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>>> the body of a message to majordomo@vger.kernel.org
+>>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
->> +	compatible = "ti,lp87565-q1";
->> +	reg = <0x60>;
->> +	gpio-controller;
->> +	#gpio-cells = <2>;
->> +
->> +	buck10-in-supply = <&vsys_3v3>;
->> +	buck23-in-supply = <&vsys_3v3>;
->> +
->> +	regulators: regulators {
->> +		buck10_reg: buck10 {
->> +			/* VDD_MPU */
->> +			regulator-name = "buck10";
->> +			regulator-min-microvolt = <850000>;
->> +			regulator-max-microvolt = <1250000>;
->> +			regulator-always-on;
->> +			regulator-boot-on;
->> +		};
->> +
->> +		buck23_reg: buck23 {
->> +			/* VDD_GPU */
->> +			regulator-name = "buck23";
->> +			regulator-min-microvolt = <850000>;
->> +			regulator-max-microvolt = <1250000>;
->> +			regulator-boot-on;
->> +			regulator-always-on;
->> +		};
->> +	};
->> +};
