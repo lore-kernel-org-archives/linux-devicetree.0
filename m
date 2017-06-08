@@ -1,88 +1,61 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2 4/5] dt-bindings: phy: Modify Broadcom NS USB 3.0 PHY binding to use MDIO
-Date: Thu,  8 Jun 2017 22:04:27 +0200
-Message-ID: <20170608200428.9187-5-zajec5@gmail.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V2 1/5] phy: bcm-ns-usb3: always wait for idle after writing
+ to the PHY reg
+Date: Thu,  8 Jun 2017 22:04:24 +0200
+Message-ID: <20170608200428.9187-2-zajec5@gmail.com>
 References: <20170511132925.14564-1-zajec5@gmail.com>
  <20170608200428.9187-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170608200428.9187-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170608200428.9187-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-
-Thanks to work done by Broadcom explaining their USB 3.0 PHY details we
-know it's attached to the MDIO bus. Use this knowledge to update the
-binding: make it a subnode to the MDIO bus and rework way of specifying
-required registers. This will describe hardware more precisely and will
-allow to support (describe) more devices attached to the MDIO.
-
-While compatibility strings remain the same there isn't a direct
-conflict (compatibility breakage) for the binding. Originally it wasn't
-supposed to be used for MDIO subnode so this change should be safe
-unless some operating system was probing MDIO subnodes as standalone
-devices.
-
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
-V2: Extend commit message to better describe reason and includ info on
-    (non-)breakage.
----
- .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    | 27 +++++++++++++++-------
- 1 file changed, 19 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-index 09aeba94538d..32f057260351 100644
---- a/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb3-phy.txt
-@@ -3,9 +3,10 @@ Driver for Broadcom Northstar USB 3.0 PHY
- Required properties:
- 
- - compatible: one of: "brcm,ns-ax-usb3-phy", "brcm,ns-bx-usb3-phy".
--- reg: register mappings for DMP (Device Management Plugin) and ChipCommon B
--       MMI.
--- reg-names: "dmp" and "ccb-mii"
-+- reg: address of MDIO bus device
-+- usb3-dmp-syscon: phandle to syscon with DMP (Device Management Plugin)
-+		   registers
-+- #phy-cells: must be 0
- 
- Initialization of USB 3.0 PHY depends on Northstar version. There are currently
- three known series: Ax, Bx and Cx.
-@@ -15,9 +16,19 @@ Known B1: BCM4707 rev 6
- Known C0: BCM47094 rev 0
- 
- Example:
--	usb3-phy {
--		compatible = "brcm,ns-ax-usb3-phy";
--		reg = <0x18105000 0x1000>, <0x18003000 0x1000>;
--		reg-names = "dmp", "ccb-mii";
--		#phy-cells = <0>;
-+	mdio: mdio@0 {
-+		reg = <0x0>;
-+		#size-cells = <1>;
-+		#address-cells = <0>;
-+
-+		usb3-phy@10 {
-+			compatible = "brcm,ns-ax-usb3-phy";
-+			reg = <0x10>;
-+			usb3-dmp-syscon = <&usb3_dmp>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	usb3_dmp: syscon@18105000 {
-+		reg = <0x18105000 0x1000>;
- 	};
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RnJvbTogUmFmYcWCIE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKTW92ZSBNRElPIHNwZWNp
+ZmljIGNvZGUgdG8gdGhlIHdyaXRpbmcgaGVscGVyIGZ1bmN0aW9uLiBUaGlzIG1ha2VzIGluaXQK
+Y29kZSBhIGJpdCBtb3JlIGdlbmVyaWMgYW5kIGRvZXNuJ3QgcmVxdWlyZSBpdCB0byB0cmFjayB3
+aGF0IGhhcHBlbnMKYWZ0ZXIgZXZlcnkgd3JpdGUuCgpTaWduZWQtb2ZmLWJ5OiBSYWZhxYIgTWnF
+gmVja2kgPHJhZmFsQG1pbGVja2kucGw+Ci0tLQogZHJpdmVycy9waHkvYnJvYWRjb20vcGh5LWJj
+bS1ucy11c2IzLmMgfCAxMSArLS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9u
+KCspLCAxMCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9icm9hZGNvbS9w
+aHktYmNtLW5zLXVzYjMuYyBiL2RyaXZlcnMvcGh5L2Jyb2FkY29tL3BoeS1iY20tbnMtdXNiMy5j
+CmluZGV4IDIyYjVlNzA0N2ZhNi4uNWU4OTMyNjg4NmRjIDEwMDY0NAotLS0gYS9kcml2ZXJzL3Bo
+eS9icm9hZGNvbS9waHktYmNtLW5zLXVzYjMuYworKysgYi9kcml2ZXJzL3BoeS9icm9hZGNvbS9w
+aHktYmNtLW5zLXVzYjMuYwpAQCAtMTEyLDcgKzExMiw3IEBAIHN0YXRpYyBpbnQgYmNtX25zX3Vz
+YjNfbWRpb19waHlfd3JpdGUoc3RydWN0IGJjbV9uc191c2IzICp1c2IzLCB1MTYgcmVnLAogCXRt
+cCB8PSB2YWx1ZTsKIAl3cml0ZWwodG1wLCB1c2IzLT5jY2JfbWlpICsgQkNNQV9DQ0JfTUlJX01O
+R19DTURfREFUQSk7CiAKLQlyZXR1cm4gMDsKKwlyZXR1cm4gYmNtX25zX3VzYjNfbWlpX21uZ193
+YWl0X2lkbGUodXNiMyk7CiB9CiAKIHN0YXRpYyBpbnQgYmNtX25zX3VzYjNfcGh5X2luaXRfbnNf
+Yngoc3RydWN0IGJjbV9uc191c2IzICp1c2IzKQpAQCAtMTQzLDkgKzE0Myw2IEBAIHN0YXRpYyBp
+bnQgYmNtX25zX3VzYjNfcGh5X2luaXRfbnNfYngoc3RydWN0IGJjbV9uc191c2IzICp1c2IzKQog
+CS8qIERlYWFzZXJ0aW5nIFBMTCBSZXNldCAqLwogCWJjbV9uc191c2IzX21kaW9fcGh5X3dyaXRl
+KHVzYjMsIEJDTV9OU19VU0IzX1BMTEFfQ09OVFJPTDEsIDB4ODAwMCk7CiAKLQkvKiBXYWl0aW5n
+IE1JSSBNZ3QgaW50ZXJmYWNlIGlkbGUgKi8KLQliY21fbnNfdXNiM19taWlfbW5nX3dhaXRfaWRs
+ZSh1c2IzKTsKLQogCS8qIERlYXNzZXJ0aW5nIFVTQjMgc3lzdGVtIHJlc2V0ICovCiAJd3JpdGVs
+KDAsIHVzYjMtPmRtcCArIEJDTUFfUkVTRVRfQ1RMKTsKIApAQCAtMTY5LDkgKzE2Niw2IEBAIHN0
+YXRpYyBpbnQgYmNtX25zX3VzYjNfcGh5X2luaXRfbnNfYngoc3RydWN0IGJjbV9uc191c2IzICp1
+c2IzKQogCS8qIEVuYWJsaW5nIFNTQyAqLwogCWJjbV9uc191c2IzX21kaW9fcGh5X3dyaXRlKHVz
+YjMsIEJDTV9OU19VU0IzX1RYX1BNRF9DT05UUk9MMSwgMHgxMDAzKTsKIAotCS8qIFdhaXRpbmcg
+TUlJIE1ndCBpbnRlcmZhY2UgaWRsZSAqLwotCWJjbV9uc191c2IzX21paV9tbmdfd2FpdF9pZGxl
+KHVzYjMpOwotCiAJcmV0dXJuIDA7CiB9CiAKQEAgLTIwNSw5ICsxOTksNiBAQCBzdGF0aWMgaW50
+IGJjbV9uc191c2IzX3BoeV9pbml0X25zX2F4KHN0cnVjdCBiY21fbnNfdXNiMyAqdXNiMykKIAog
+CWJjbV9uc191c2IzX21kaW9fcGh5X3dyaXRlKHVzYjMsIEJDTV9OU19VU0IzX1RYX1BNRF9DT05U
+Uk9MMSwgMHgxMDAzKTsKIAotCS8qIFdhaXRpbmcgTUlJIE1ndCBpbnRlcmZhY2UgaWRsZSAqLwot
+CWJjbV9uc191c2IzX21paV9tbmdfd2FpdF9pZGxlKHVzYjMpOwotCiAJLyogRGVhc3NlcnRpbmcg
+VVNCMyBzeXN0ZW0gcmVzZXQgKi8KIAl3cml0ZWwoMCwgdXNiMy0+ZG1wICsgQkNNQV9SRVNFVF9D
+VEwpOwogCi0tIAoyLjExLjAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
