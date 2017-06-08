@@ -1,29 +1,33 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 09/11] gpio: dt-bindings: Add documentation for gpio
- controllers on Armada 7K/8K
-Date: Thu, 8 Jun 2017 09:18:04 -0500
-Message-ID: <20170608141804.fm72esb5lpbqcp4m@rob-hp-laptop>
-References: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
- <7b92aabfb7309eb0b138c149cc3fc61e8f64cd61.1496413293.git-series.gregory.clement@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: CPU_BIG_ENDIAN in generic code
+Date: Thu, 8 Jun 2017 16:36:58 +0200
+Message-ID: <CAK8P3a2JDEQ+KjajVUhFbbfHmM+8AdkEzbJwretar78PsfOAKA@mail.gmail.com>
+References: <877f0z6oig.fsf@concordia.ellerman.id.au> <28d6c874-4653-b15d-39b7-57a032abc9c6@oracle.com>
+ <CAK8P3a1WfU9V1k2r=TfJSVRTymuD8n2hkJDr6u1KcmC_scAZMA@mail.gmail.com> <20170608.100222.1573468093040905016.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7b92aabfb7309eb0b138c149cc3fc61e8f64cd61.1496413293.git-series.gregory.clement@free-electrons.com>
+In-Reply-To: <20170608.100222.1573468093040905016.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+To: David Miller <davem@davemloft.net>
+Cc: Babu Moger <babu.moger@oracle.com>, Michael Ellerman <mpe@ellerman.id.au>, Geert Uytterhoeven <geert@linux-m68k.org>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, sparclinux <sparclinux@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 02, 2017 at 04:23:16PM +0200, Gregory CLEMENT wrote:
-> Document the device tree binding for the gpio controllers found on the
-> Marvell Armada 7K and Armada 8K SoCs.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt  | 20 ++++++++++++++++++++
->  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 24 +++++++++++++++++++++++-
->  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt                      | 24 +++++++++++++++++-------
->  3 files changed, 60 insertions(+), 8 deletions(-)
+On Thu, Jun 8, 2017 at 4:02 PM, David Miller <davem@davemloft.net> wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> Date: Thu, 8 Jun 2017 10:01:59 +0200
+>
+>> I would also suggest adding a sanity check like
+>
+> Hmm, but this will kill the build for non-fixed endian architectures
+> won't it?
 
-Acked-by: Rob Herring <robh@kernel.org>
+I think only xtensa, all others already define CONFIG_CPU_BIG_ENDIAN
+conditionally, and include the right header depending on that.
+
+For xtensa, the decision is apparently made by the toolchain, and the
+kernel just detects the macros set by the compiler, but that is slightly
+fragile because it prevents us from making Kconfig decisions based on
+endianess.
+
+       Arnd
