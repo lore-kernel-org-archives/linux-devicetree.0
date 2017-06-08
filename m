@@ -1,94 +1,42 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 02/34] [media] dt-bindings: Add bindings for i.MX media
- driver
-Date: Thu, 8 Jun 2017 09:45:14 -0700
-Message-ID: <18997640-8cbd-734d-160e-a930f887d14f@gmail.com>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <1496860453-6282-3-git-send-email-steve_longerbeam@mentor.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4 0/3] nvmem: upstream snvs_lpgpr driver
+Date: Thu,  8 Jun 2017 18:51:31 +0200
+Message-ID: <20170608165134.14971-1-o.rempel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496860453-6282-3-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Mark,
+changes v4:
+ - change dependencies in Kconfig
+ - remove unused includes and order them alphabetically
+ - set MODULE_LICENSE = GPL v2
+ - remove unused int err variable
 
-Are there any remaining technical issues with this
-binding doc? At this point an Ack from you is the only
-thing holding up merge of the imx-media driver.
+changes v3:
+ - remove regmap and offset properties.
 
-Thanks,
-Steve
+changes v2:
+ - correct typos: Registe, parrent...
 
+Oleksij Rempel (3):
+  nvmem: dt: document SNVS LPGPR binding
+  nvmem: add snvs_lpgpr driver
+  ARM: dts: imx6qdl.dtsi: add "fsl,imx6q-snvs-lpgpr" node
 
-On 06/07/2017 11:33 AM, Steve Longerbeam wrote:
-> Add bindings documentation for the i.MX media driver.
-> 
-> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-> ---
->   Documentation/devicetree/bindings/media/imx.txt | 47 +++++++++++++++++++++++++
->   1 file changed, 47 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/media/imx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
-> new file mode 100644
-> index 0000000..c1e1e2b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/imx.txt
-> @@ -0,0 +1,47 @@
-> +Freescale i.MX Media Video Device
-> +=================================
-> +
-> +Video Media Controller node
-> +---------------------------
-> +
-> +This is the media controller node for video capture support. It is a
-> +virtual device that lists the camera serial interface nodes that the
-> +media device will control.
-> +
-> +Required properties:
-> +- compatible : "fsl,imx-capture-subsystem";
-> +- ports      : Should contain a list of phandles pointing to camera
-> +		sensor interface ports of IPU devices
-> +
-> +example:
-> +
-> +capture-subsystem {
-> +	compatible = "fsl,imx-capture-subsystem";
-> +	ports = <&ipu1_csi0>, <&ipu1_csi1>;
-> +};
-> +
-> +
-> +mipi_csi2 node
-> +--------------
-> +
-> +This is the device node for the MIPI CSI-2 Receiver, required for MIPI
-> +CSI-2 sensors.
-> +
-> +Required properties:
-> +- compatible	: "fsl,imx6-mipi-csi2", "snps,dw-mipi-csi2";
-> +- reg           : physical base address and length of the register set;
-> +- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
-> +		  (the D-PHY clock), video_27m (D-PHY PLL reference
-> +		  clock), and eim_podf;
-> +- clock-names	: must contain "dphy", "ref", "pix";
-> +- port@*        : five port nodes must exist, containing endpoints
-> +		  connecting to the source and sink devices according to
-> +		  of_graph bindings. The first port is an input port,
-> +		  connecting with a MIPI CSI-2 source, and ports 1
-> +		  through 4 are output ports connecting with parallel
-> +		  bus sink endpoint nodes and correspond to the four
-> +		  MIPI CSI-2 virtual channel outputs.
-> +
-> +Optional properties:
-> +- interrupts	: must contain two level-triggered interrupts,
-> +		  in order: 100 and 101;
-> 
+ .../devicetree/bindings/nvmem/snvs-lpgpr.txt       |  19 +++
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   4 +
+ drivers/nvmem/Kconfig                              |  10 ++
+ drivers/nvmem/Makefile                             |   2 +
+ drivers/nvmem/snvs_lpgpr.c                         | 136 +++++++++++++++++++++
+ 5 files changed, 171 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+ create mode 100644 drivers/nvmem/snvs_lpgpr.c
+
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
