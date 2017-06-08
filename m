@@ -1,74 +1,84 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v6 4/9] ARM: dts: meson: add GPIO interrupt-controller support
-Date: Thu, 8 Jun 2017 21:38:58 +0200
-Message-ID: <92414130-4ccf-ae24-acca-cd389014b45e@gmail.com>
+From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 8/9] ARM: dts: meson: mark gpio controllers as interrupt
+ controllers
+Date: Thu, 8 Jun 2017 21:39:29 +0200
+Message-ID: <ac5a6566-e9eb-6c96-f2de-00e8919e3081@gmail.com>
 References: <04378047-4194-bb0f-3da3-e1d62345a86b@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <04378047-4194-bb0f-3da3-e1d62345a86b@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <04378047-4194-bb0f-3da3-e1d62345a86b-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the GPIO interupt controller of certain Amlogic Meson
-Soc's.
+Make the GPIO controllers act as interrupt controllers.
 
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
 v5:
-- split ARM and ARM64 into separate patches
-- added Reviewed-by
+- separate ARM / ARM64 DT changes
+- add Reviewed-by
 v6:
-- change parent-interrupts to interrupts
+- no changes
 ---
- arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
- arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
- 2 files changed, 16 insertions(+)
+ arch/arm/boot/dts/meson8.dtsi  | 4 ++++
+ arch/arm/boot/dts/meson8b.dtsi | 4 ++++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 69930773..b4c4175d 100644
+index b4c4175d..c64ddd58 100644
 --- a/arch/arm/boot/dts/meson8.dtsi
 +++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -126,6 +126,14 @@
- };
+@@ -106,6 +106,8 @@
+ 			reg-names = "mux", "pull", "gpio";
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 			gpio-ranges = <&pinctrl_aobus 0 120 16>;
+ 		};
  
- &cbus {
-+	gpio_intc: interrupt-controller@9880 {
-+		compatible = "amlogic,meson-gpio-intc";
-+		reg = <0x9880 0x10>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <64 65 66 67 68 79 70 71>;
-+	};
-+
- 	pinctrl_cbus: pinctrl@9880 {
- 		compatible = "amlogic,meson8-cbus-pinctrl";
- 		reg = <0x9880 0x10>;
+@@ -149,6 +151,8 @@
+ 			reg-names = "mux", "pull", "pull-enable", "gpio";
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 			gpio-ranges = <&pinctrl_cbus 0 0 120>;
+ 		};
+ 
 diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index d9f116a4..fedfef24 100644
+index fedfef24..dd7ed539 100644
 --- a/arch/arm/boot/dts/meson8b.dtsi
 +++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -112,6 +112,14 @@
- };
+@@ -99,6 +99,8 @@
+ 			reg-names = "mux", "pull", "gpio";
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 			gpio-ranges = <&pinctrl_aobus 0 130 16>;
+ 		};
  
- &cbus {
-+	gpio_intc: interrupt-controller@9880 {
-+		compatible = "amlogic,meson-gpio-intc";
-+		reg = <0x9880 0x10>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		interrupts = <64 65 66 67 68 79 70 71>;
-+	};
-+
- 	clkc: clock-controller@4000 {
- 		#clock-cells = <1>;
- 		compatible = "amlogic,meson8b-clkc";
+@@ -174,6 +176,8 @@
+ 			reg-names = "mux", "pull", "pull-enable", "gpio";
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 			gpio-ranges = <&pinctrl_cbus 0 0 130>;
+ 		};
+ 	};
 -- 
 2.13.0
 
 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
