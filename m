@@ -1,108 +1,191 @@
 From: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
 Subject: Re: [PATCH] external references for device tree overlays
-Date: Thu, 08 Jun 2017 08:51:14 +0200
-Message-ID: <1496904674.7999.3.camel@seibold.net>
+Date: Thu, 08 Jun 2017 09:08:45 +0200
+Message-ID: <1496905725.7999.5.camel@seibold.net>
 References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
-         <1496688186.12947.10.camel@hp800z> <1496776664.3821.3.camel@seibold.net>
-         <1496823091.28265.3.camel@hp800z>
-         <CAL_JsqJcWD_ZYLL0M5K=3Uy4VhArf2iO+ObjtQer6xFPLXTWdw@mail.gmail.com>
+         <593657AF.8050208@gmail.com> <1496776974.3821.6.camel@seibold.net>
+         <59374CE9.40406@gmail.com> <1496815399.6999.1.camel@seibold.net>
+         <5938BF8F.2010001@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJcWD_ZYLL0M5K=3Uy4VhArf2iO+ObjtQer6xFPLXTWdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5938BF8F.2010001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Holm Rauchfuss <holm.rauchfuss-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jcm-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org
+Cc: Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-06-07 at 17:19 -0500, Rob Herring wrote:
-> On Wed, Jun 7, 2017 at 3:11 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> > Hi Stefani,
-> > 
-> > On Tue, 2017-06-06 at 21:17 +0200, Stefani Seibold wrote:
-> > > Hi Pantelis,
-> > > 
-> > > thanks for the suggestion. This feature is not very well
-> > > documented. I
-> > > tried this on my rasp1 running 4.12.0-rc3 and it doesn't work. My
-> > > source is:
-> > > 
-> > > // rapsi example
-> > > /dts-v1/;
-> > > /plugin/;
-> > > 
-> > > / {
-> > >     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
-> > > 
-> > >     fragment@0 {
-> > >         target-path = "/soc/i2s@7e203000";
-> > >         __overlay__ {
-> > >             #address-cells = <0x00000001>;
-> > >             #size-cells = <0x00000001>;
-> > >             test = "test";
-> > >             timer = <&{/soc/timer@7e0030000}>;
-> > >         };
-> > >     };
-> > > };
-> > > 
-> > > 
-> > > The resulting overlay is (decompiled with fdtdump):
-> > > 
-> > > /dts-v1/;
-> > > // magic:             0xd00dfeed
-> > > // totalsize:         0x19a (410)
-> > > // off_dt_struct:     0x38
-> > > // off_dt_strings:    0x148
-> > > // off_mem_rsvmap:    0x28
-> > > // version:           17
-> > > // last_comp_version: 16
-> > > // boot_cpuid_phys:   0x0
-> > > // size_dt_strings:   0x52
-> > > // size_dt_struct:    0x110
-> > > 
-> > > / {
-> > >     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
-> > >     fragment@0 {
-> > >         target-path = "/soc/i2s@7e203000";
-> > >         __overlay__ {
-> > >             #address-cells = <0x00000001>;
-> > >             #size-cells = <0x00000001>;
-> > >             test = "test";
-> > >             timer = <0xdeadbeef>;
-> > >         };
-> > >     };
-> > >     __fixups__ {
-> > >         /soc/timer@7e0030000 = "/fragment@0/__overlay__:timer:0";
-> > >     };
-> > > };
-> > > 
-> > > But this will not apply:
-> > > 
-> > > OF: resolver: overlay phandle fixup failed: -22
-> > > create_overlay: Failed to resolve tree
-> > > 
-> > > 
-> > 
-> > Yes, it will not work as it is; my point is that you don't need the
-> > magic __*__ node.
-> > 
-> > You will need to modify the overlay application code to live insert
-> > a
-> > phandle (if it doesn't exist) when it encounters a /path fixup.
+Hi Frank,
+
+
+On Wed, 2017-06-07 at 20:07 -0700, Frank Rowand wrote:
+> Adding Jon.
 > 
-> phandles only exist if something in the base tree refers to that
-> node.
-> Adding them when they don't exist should definitely be something we
-> support for overlays. But don't call that a broken DT. That would be
-> a
-> separate issue.
+> Adding back the original distribution.
+> 
+> Hi Stefani,
+> 
+> On 06/06/17 23:03, Stefani Seibold wrote:
+> > Am Dienstag, den 06.06.2017, 17:46 -0700 schrieb Frank Rowand:
+> > > On 06/06/17 12:22, Stefani Seibold wrote:
+> > > > Hi Frank,
+> > > > 
+> > > > On 06.06.2017, 00:20 -0700 Frank Rowand wrote::
+> > > > > On 06/05/17 05:59, Stefani Seibold wrote:
+> > > > > > From: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
+> > > > > > 
+> > > > > > This patch enables external references for symbols which
+> > > > > > are
+> > > > > > not
+> > > > > > exported by the current device tree. For example
+> > > > > > 
+> > > > > > // RASPI example (only for testing)
+> > > > > > /dts-v1/;
+> > > > > > /plugin/;
+> > > > > > 
+> > > > > > / {
+> > > > > >     compatible = "brcm,bcm2835", "brcm,bcm2708",
+> > > > > > "brcm,bcm2709";
+> > > > > > 
+> > > > > >     fragment@0 {
+> > > > > >         target-path = "/soc/i2s@7e203000";
+> > > > > >         __overlay__ {
+> > > > > >             #address-cells = <0x00000001>;
+> > > > > >             #size-cells = <0x00000001>;
+> > > > > >             test = "test";
+> > > > > >             timer = <&timer>;
+> > > > > >         };
+> > > > > >     };
+> > > > > > 
+> > > > > >     __external_symbols__ {
+> > > > > >         timer = "/soc/timer@7e003000";
+> > > > > >     };
+> > > > > > };
+> > > > > 
+> > > > > My hope is that the dtc compiler will stop supporting 
+> > > > > specification of the __symbols__ node in dts source, and only
+> > > > > generate it automatically in the dtb. That change to dtc
+> > > > > would
+> > > > > not allow any node name specified in a dts to begin with an
+> > > > > underscore.  Thus node __external_symbols__ would not be 
+> > > > > allowed.
+> > > > > 
+> > > > 
+> > > > The name is not so important to me, only the solution.
+> > > > 
+> > > > > > In case of the RASPI device tree this could be simple fixed
+> > > > > > by modifing the device tree source, but when the device
+> > > > > > tree
+> > > > > > is provided by a closed source BIOS this kind of missing
+> > > > > > symbol could not be fixed.
+> > > > > 
+> > > > > Is there a real example of this issue, or is this a
+> > > > > theoretical concern? If this is a real example, we should be
+> > > > > discouraging such behavior.
+> > > > > 
+> > > > 
+> > > > Yes, I have a BIOS on some ARM64 servers which provides broken 
+> > > > device tree. It also lacks some devices in this tree which
+> > > > needs 
+> > > > references to other devices which lacks a phandle.
+> 
+> I want to make sure I understand the use case, or cases.
+> 
+> My interpretation of the patch email is that there is an ARM64 server
+> with a device tree that is missing a single symbol in the __symbols__
+> node.  I could also read that email as saying that there is no
+> __symbols__ node in the device tree.  Which is the actual case?
+> 
+> 
+> > > Jon Masters is pushing a message that if the firmware on your
+> > > arm64 server is broken, then insist that the vendor fix it.
+> > 
+> > Well with this kind of arguments you can also sit and wait until a 
+> > vendor decided to provide a kernel driver for an device. As we
+> > know 
+> > this would in 99% percent of the cases never happened.
+> > 
+> > So that is not a solution if the vendor does not do it. Fu....
+> > closed source is as it is. So i need a solution and i think other
+> > developer to.
+> > 
+> > > I think he was talking about ACPI, but the same message should
+> > > also
+> > > apply to device tree.
+> 
+> Jon, are you also interested in broken device trees?
+> 
+> 
+> > 
+> > I talk about a device tree, not ACPI!
+> > 
+> > > If you are having trouble getting your vendor to fix it, ask Jon
+> > > if he is willing to help apply pressure.
+> > > 
+> > 
+> > My vendor will not fix it. Believe me.
+> 
+> If you are not going to try to get your vendor to fix it (or have
+> already tried and failed), can you tell us the name and model of the
+> computer so that other people can be aware of the broken device tree?
+
+Due an NDA i am not allowed to give you this kind of information.
+
+> And can you describe the specific way the device tree is broken?
+> 
 > 
 
-Believe me it is broken. Due a NDA i am not able to give you more
-details about the vendor. But there forgot do provide an device node
-which must refer to the attached network and interrupt controller.
+In this case the device tree is broken due a missing device node which
+must refer to the network interface(s) and interrupt controller.
+
+Since there is no symbols for the network interfaces and there are also
+missing a phandle, this information must be generated on the fly.
+
+And that is what my patch do: provide an path to the node (symbol) and
+generate the phandle on the fly.
+
+> > And again: We need a solution when a closed source BIOS or
+> > bootloader is not fixed by the vendor, which is also a case for
+> > devices like single board computer, settop boxes, tv, smartphones
+> > and
+> > tablets.
+> 
+> The patch does not fix the general case of a broken device tree.  It
+> only potentially addresses a missing symbol from the base device tree
+> that is needed for an overlay.  The general case is an entirely
+> different discussion.
+> 
+
+IMHO i think this is the last puzzle piece for an general solution. All
+other things are there: Overlays and Symbols.
+
+With this patch i can overwrite and modify any part of a device tree.
+
+But here is another solution: decompile the broken device tree
+> and apply the fix to the decompiled tree.  This can be a bit
+> challenging since the original labels will be missing in the
+> decompiled tree (though you will be able to get them from the
+> __overlays__ node if that exists).
+> 
+
+You are wrong. This will not work as a general solution due some
+important information are provided by the BIOS, like the MAC addresses
+and the memory layout and the NUMA nodes and the IDs for RoCE and so
+one. 
+
+In this case i need to decompile a lot of machines and patch them. And
+every time the memory is changed i must do this again. Thats is not
+feasible solution and very error prone.
+
+> Lack of me providing another solution is not a reason to apply a
+> patch that I disagree with.
+
+The patch works exact the same way as the current __symbols__ node. It
+is very tiny and easy to review and has absolut no side effects.
+
+If you have no technical objections you should apply it until you have
+a better solution.
 
 - Stefani
 
