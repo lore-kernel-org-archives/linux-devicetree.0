@@ -1,31 +1,48 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 3/3] arm64: dts: NS2: Add USB DRD PHY device tree node
-Date: Thu, 8 Jun 2017 13:57:00 -0700
-Message-ID: <84aa2a67-3326-1a0a-c42f-23ef93306ed0@gmail.com>
-References: <1496918103-14948-1-git-send-email-raviteja.garimella@broadcom.com>
- <1496918103-14948-4-git-send-email-raviteja.garimella@broadcom.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 04/15] clk: Add Ingenic jz4770 CGU driver
+Date: Thu, 08 Jun 2017 23:10:06 +0200
+Message-ID: <f2ef2abdef9054e9916e10f588e8fec4@crapouillou.net>
+References: <20170607200439.24450-1-paul@crapouillou.net>
+ <20170607200439.24450-5-paul@crapouillou.net>
+ <20170607205943.GO20170@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496918103-14948-4-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170607205943.GO20170@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2017 03:35 AM, Raviteja Garimella wrote:
-> This patch adds device tree node for USB Dual Role Device PHY for
-> Broadcom's Northstar2 SoC.
-> 
-> Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Hi,
 
-Since Rob acked the binding, applied to devicetree-arm64/next, thanks
--- 
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +	register_syscore_ops(&jz4770_cgu_pm_ops);
+>> +#endif
+>> +}
+>> +CLK_OF_DECLARE(jz4770_cgu, "ingenic,jz4770-cgu", jz4770_cgu_init);
+> 
+> Any reason this can't be a platform driver? Please add a comment
+> above CLK_OF_DECLARE describing what is preventing that.
+
+It would probably be possible, if we cared about having a platform 
+driver.
+But we will only ever probe it from devicetree, just like with the
+already existing jz4740-cgu and jz4780-cgu drivers.
+
+>> diff --git a/include/dt-bindings/clock/jz4770-cgu.h 
+>> b/include/dt-bindings/clock/jz4770-cgu.h
+>> new file mode 100644
+>> index 000000000000..54b8b2ae4a73
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/jz4770-cgu.h
+> 
+> Can you split this file off into a different patch? That way clk
+> tree can apply clk patches on top of a stable branch where this
+> file lives by itself.
+
+Sure.
+
+Thanks,
+- Paul
