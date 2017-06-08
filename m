@@ -1,56 +1,45 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/5] ARM: dts: Add iWave RZ/G1M board support
-Date: Thu, 8 Jun 2017 15:41:42 +0200
-Message-ID: <20170608134142.GB19821@verge.net.au>
-References: <1496420523-23506-4-git-send-email-biju.das@bp.renesas.com>
- <1496761818-62126-1-git-send-email-biju.das@bp.renesas.com>
+Subject: Re: [PATCH] ARM: shmobile: Update R-Car Gen3 ULCB board part numbers
+Date: Thu, 8 Jun 2017 15:47:41 +0200
+Message-ID: <20170608134741.GD19821@verge.net.au>
+References: <1496313269-27795-1-git-send-email-geert+renesas@glider.be>
+ <20170607221203.hgjp3izxpjuvxd7t@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1496761818-62126-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170607221203.hgjp3izxpjuvxd7t@rob-hp-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Magnus Damm <magnus.damm@gmail.com>, Vladimir Barinov <vladimir.barinov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 06, 2017 at 04:10:13PM +0100, Biju Das wrote:
-> Hello,
+On Wed, Jun 07, 2017 at 05:12:03PM -0500, Rob Herring wrote:
+> On Thu, Jun 01, 2017 at 12:34:29PM +0200, Geert Uytterhoeven wrote:
+> > The board part numbers for the R-Car H3 and M3 ULCB boards corresponded
+> > to versions predating mass production.  Update them for mass production.
+> > 
+> > Note that the H3 ULCB board can be equipped with either revision ES1.1
+> > or ES2.0 of the R-Car H3 SoC.  While these have different board part
+> > numbers, no new compatible values are needed, as the revision can be
+> > detected at runtime using the PRR register.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > See also http://elinux.org/index.php?title=R-Car/Boards/H3SK
+> > 
+> >  Documentation/devicetree/bindings/arm/shmobile.txt | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
 > 
-> This series aims to add iWave RZ/G1M R8A7743 based Qseven SOM and RainboW-G20D- Qseven board support. 
-> 
-> This series has been tested against linux-next tag next-20170606.
-> 
-> Modifications:
-> v1->v2
-> -Documented iWave iW-RainboW-G20M-Qseven-RZG1M system on module
-> -Documented iW-RainboW-G20D-Qseven-RZG1M board in alphabatical order
-> -Added compatible string in iWave RZG1M Qseven SOM
-> -Modified the compatible string in iWave G20D-Q7 board 
-> 
-> History:
-> -------
-> [v1]: http://www.spinics.net/lists/devicetree/msg179565.html
-> 
-> Biju Das (5):
->   of: Add vendor prefix for iWave Systems Technologies Pvt. Ltd
->   ARM: shmobile: document iW-RainboW-G20M-Qseven-RZG1M system on module
->   ARM: shmobile: document iW-RainboW-G20D-Qseven-RZG1M board
->   ARM: dts: iwg20m: Add iWave RZG1M Qseven SOM
->   ARM: dts: iwg20d-q7: Add support for iWave G20D-Q7 board based on
->     RZ/G1M
-> 
->  Documentation/devicetree/bindings/arm/shmobile.txt |  4 +++
->  .../devicetree/bindings/vendor-prefixes.txt        |  1 +
->  arch/arm/boot/dts/Makefile                         |  1 +
->  arch/arm/boot/dts/r8a7743-iwg20d-q7.dts            | 25 +++++++++++++++++++
->  arch/arm/boot/dts/r8a7743-iwg20m.dtsi              | 29 ++++++++++++++++++++++
->  5 files changed, 60 insertions(+)
->  create mode 100644 arch/arm/boot/dts/r8a7743-iwg20d-q7.dts
->  create mode 100644 arch/arm/boot/dts/r8a7743-iwg20m.dtsi
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Thanks,
-
-I have queued these up after moving the Makefile change from the 2nd to
-last to the last patch. They should appear in the next and devel branches
-of the renesas tree later today.
+Thanks, I have queued this up for v4.13.
