@@ -1,150 +1,54 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] arm64: dts: mt7622: add basic nodes to the
- mt7622.dtsi file
-Date: Thu, 8 Jun 2017 15:52:57 +0200
-Message-ID: <1abcc8b1-de0f-859e-0200-ccdc2dce7354@gmail.com>
-References: <cover.1496250798.git.sean.wang@mediatek.com>
- <60640937c793184ce12f88e5c66f3f316e97cefa.1496250798.git.sean.wang@mediatek.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 6/7] [media] soc_camera: rcar_vin: use proper name for
+ the R-Car SoC
+Date: Thu, 8 Jun 2017 15:57:57 +0200
+Message-ID: <20170608135757.GA4205@katana>
+References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
+ <20170528093051.11816-7-wsa+renesas@sang-engineering.com>
+ <a133a7f7-e887-5043-83d3-cccbec581487@cogentembedded.com>
+ <20170529120202.GC4342@katana>
+ <20170608082731.7cdf32dd@vento.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <60640937c793184ce12f88e5c66f3f316e97cefa.1496250798.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170608082731.7cdf32dd@vento.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--FCuugMFkClbJLl1L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 31/05/17 19:29, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> add basic nodes into the mt7622.dtsi for the system
-> bring-up which includes ARM CPU, GIC, timer, MediaTek
-> UART, SYSIRQ and one reserved memory region for ATF.
-> 
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 103 +++++++++++++++++++++++++++++++
->   1 file changed, 103 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> new file mode 100644
-> index 0000000..2031b73
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -0,0 +1,103 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: Ming Huang <ming.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt7622";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			clock-frequency = <1300000000>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +			clock-frequency = <1300000000>;
-> +		};
-> +	};
-> +
-> +	uart_clk: dummy26m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +	};
-> +
-> +	psci {
-> +		compatible  = "arm,psci-0.2";
-> +		method      = "smc";
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
-> +		secmon_reserved: secmon@43000000 {
-> +			reg = <0 0x43000000 0 0x30000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>;
-> +	};
-> +
-> +	sysirq: interrupt-controller@10200620 {
-> +		compatible = "mediatek,mt7622-sysirq",
-> +			     "mediatek,mt6577-sysirq";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +		reg = <0 0x10200620 0 0x20>;
-> +	};
-> +
-> +	gic: interrupt-controller@10300000 {
-> +		compatible = "arm,gic-400";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +		reg = <0 0x10310000 0 0x1000>,
-> +		      <0 0x10320000 0 0x1000>,
-> +		      <0 0x10340000 0 0x2000>,
-> +		      <0 0x10360000 0 0x2000>;
-> +	};
-> +
-> +	uart0: serial@11002000 {
-> +		compatible = "mediatek,mt7622-uart",
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0 0x11002000 0 0x400>;
-> +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&uart_clk>;
 
-mt6577-uart has two clocks. Please fix this.
-I would appreciate if you could rebase on the mediatek for-next branch 
-(especially for 3/3), which will make it easier for me to take this.
+> Btw, I'm seeing only patches 6 and 7 here at media ML (and patchwork).
+> As those are trivial changes, I'll just apply what I have.
 
-Regards,
-Matthias
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Perfect, thanks!
+
+
+--FCuugMFkClbJLl1L
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlk5V90ACgkQFA3kzBSg
+Kba8ZRAAkB8Oj48j4i/AO9wZvm1lZA/MRk7KCG2CK/00GSWt6PNdCBarRY3elFnO
+yQpLYUWl6bhpA+ps3OdtCUEGaLYmJAboPGGDz00s1aHshh8zn8u8gwK7n3G1CxMv
+rt0V4GqHLnqbjncCjlDoqXAR6/VpxlJNoAbO1Nya3QUXxEoCqcG1HZuZ65Iy9LPB
+I+vprcvu91H6u+i1gg0+YSgInHIK4KWzPImkl9WKP6MTYC3Gdps3PQRM+AC5NNqM
+vg3nfYqb9E4N1uYo1qy1WSV2mHG+iOJgEglhkuuk1HObNVVpd6d9O93fugulUDmI
++5OopUMHiJTrYWRkEjRNZmPSRFI8yc3SBqyPqO3btQUhz8R4FnTpc+t7Zhs55Y6h
+Q1sIRvorxU6NMRfmpvhwN5CRdWKwVi+prcIjPqZ1sojf1m2Tn+hDCrIZY5qiY7On
+V+mrP4LN7KVtStrNGGt84p3jlCCIGi+SKufUcRjlfc3zWA1MOp7S3UwqjPzgZdrf
+0E8i3Bep3qi7sSUv42+TDFvHwUy+KTrCIdfPK3KqOLl33gaElqEN2e0ZkKrHK+6L
++QPvVxcf+0WAGGMI/dKkMb2a3Ggg3uorPpRPqlbDEk5NNvTCvmKxDH70l5lNnt0V
+o9HYj2bgDw5ZVRHpFVeV5uOUrZdMvhqcOM0oJi154cfN9dTplK8=
+=L4YH
+-----END PGP SIGNATURE-----
+
+--FCuugMFkClbJLl1L--
