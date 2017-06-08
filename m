@@ -1,165 +1,63 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] arm64: dts: mt7622: add basic nodes to the
- mt7622.dtsi file
-Date: Fri, 9 Jun 2017 00:07:42 +0800
-Message-ID: <1496938062.30833.13.camel@mtkswgap22>
-References: <cover.1496250798.git.sean.wang@mediatek.com>
-         <60640937c793184ce12f88e5c66f3f316e97cefa.1496250798.git.sean.wang@mediatek.com>
-         <1abcc8b1-de0f-859e-0200-ccdc2dce7354@gmail.com>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V5 0/2] usb: introduce "trigger-sources" DT property for usbport trigger
+Date: Thu,  8 Jun 2017 18:08:30 +0200
+Message-ID: <20170608160833.1567-1-zajec5@gmail.com>
+References: <20170530092706.927-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1abcc8b1-de0f-859e-0200-ccdc2dce7354-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <20170530092706.927-1-zajec5@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-leds@vger.kernel.org, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-06-08 at 15:52 +0200, Matthias Brugger wrote:
-> 
-> On 31/05/17 19:29, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > add basic nodes into the mt7622.dtsi for the system
-> > bring-up which includes ARM CPU, GIC, timer, MediaTek
-> > UART, SYSIRQ and one reserved memory region for ATF.
-> > 
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 103 +++++++++++++++++++++++++++++++
-> >   1 file changed, 103 insertions(+)
-> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > 
-> > diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > new file mode 100644
-> > index 0000000..2031b73
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> > @@ -0,0 +1,103 @@
-> > +/*
-> > + * Copyright (c) 2017 MediaTek Inc.
-> > + * Author: Ming Huang <ming.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > + *
-> > + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> > + */
-> > +
-> > +#include <dt-bindings/interrupt-controller/irq.h>
-> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +/ {
-> > +	compatible = "mediatek,mt7622";
-> > +	interrupt-parent = <&sysirq>;
-> > +	#address-cells = <2>;
-> > +	#size-cells = <2>;
-> > +
-> > +	cpus {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <0>;
-> > +
-> > +		cpu0: cpu@0 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x0>;
-> > +			enable-method = "psci";
-> > +			clock-frequency = <1300000000>;
-> > +		};
-> > +
-> > +		cpu1: cpu@1 {
-> > +			device_type = "cpu";
-> > +			compatible = "arm,cortex-a53", "arm,armv8";
-> > +			reg = <0x0 0x1>;
-> > +			enable-method = "psci";
-> > +			clock-frequency = <1300000000>;
-> > +		};
-> > +	};
-> > +
-> > +	uart_clk: dummy26m {
-> > +		compatible = "fixed-clock";
-> > +		#clock-cells = <0>;
-> > +		clock-frequency = <25000000>;
-> > +	};
-> > +
-> > +	psci {
-> > +		compatible  = "arm,psci-0.2";
-> > +		method      = "smc";
-> > +	};
-> > +
-> > +	reserved-memory {
-> > +		#address-cells = <2>;
-> > +		#size-cells = <2>;
-> > +		ranges;
-> > +
-> > +		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
-> > +		secmon_reserved: secmon@43000000 {
-> > +			reg = <0 0x43000000 0 0x30000>;
-> > +			no-map;
-> > +		};
-> > +	};
-> > +
-> > +	timer {
-> > +		compatible = "arm,armv8-timer";
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-> > +			      IRQ_TYPE_LEVEL_HIGH)>,
-> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-> > +			      IRQ_TYPE_LEVEL_HIGH)>,
-> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-> > +			      IRQ_TYPE_LEVEL_HIGH)>,
-> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-> > +			      IRQ_TYPE_LEVEL_HIGH)>;
-> > +	};
-> > +
-> > +	sysirq: interrupt-controller@10200620 {
-> > +		compatible = "mediatek,mt7622-sysirq",
-> > +			     "mediatek,mt6577-sysirq";
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-parent = <&gic>;
-> > +		reg = <0 0x10200620 0 0x20>;
-> > +	};
-> > +
-> > +	gic: interrupt-controller@10300000 {
-> > +		compatible = "arm,gic-400";
-> > +		interrupt-controller;
-> > +		#interrupt-cells = <3>;
-> > +		interrupt-parent = <&gic>;
-> > +		reg = <0 0x10310000 0 0x1000>,
-> > +		      <0 0x10320000 0 0x1000>,
-> > +		      <0 0x10340000 0 0x2000>,
-> > +		      <0 0x10360000 0 0x2000>;
-> > +	};
-> > +
-> > +	uart0: serial@11002000 {
-> > +		compatible = "mediatek,mt7622-uart",
-> > +			     "mediatek,mt6577-uart";
-> > +		reg = <0 0x11002000 0 0x400>;
-> > +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&uart_clk>;
-> 
-> mt6577-uart has two clocks. Please fix this.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-Those two real clocks which UART requires will be updated once the
-MT7622 clock driver and the relevant binding header are all ready.
-So currently the UART is using dummy clock node instead.
+This version of my patchset (V5) differs by renaming #source-cells to the
+#trigger-source-cells and documenting it in the leds/common.txt.
 
-Is it allowed? 
+I'd epxect both patches to go through Greg's usb.git if accepted.
 
+For a reference (and before someome comes with already rejected solution) see
+below history of this work:
 
-> I would appreciate if you could rebase on the mediatek for-next branch 
-> (especially for 3/3), which will make it easier for me to take this.
-> 
+1) [PATCH V2] leds: trigger: Introduce an USB port trigger
+My initial try of adding "usb-ports" property. Rob said it should be more
+generic.
 
-O.K. I will rebase on your tree
+2) [PATCH 1/2] dt-bindings: leds: document new usb-ports property
+Rob still didn't like it due to being USB specific.
 
-	Sean
+3) [PATCH V2 1/2] dt-bindings: leds: document new led-triggers property
+Jacek didn't like it's more generic than what Linux can already support. Later
+we agreed (?) that Linux limitations shouldn't influence DT structure.
+Jacek still wanted a specific trigger but Rob said he won't accept something
+specific to the USB.
+Jacek suggested "trigger-sources" and Rob agreed on the name.
+Jacek suggested trying triggers as separated nodes.
 
-> Regards,
-> Matthias
+4) [PATCH 1/4] dt-bindings: leds: document property for LED triggers
+This patch was trying to use separated nodes for triggers, e.g.:
+foo-trigger { trigger-type = "foo"; };
+Rob didn't like this extra level of indirection. He said Linux drivers shouldn't
+define/influence the binding.
 
+So finally I came with this patchset. It doesn't try to use separated nodes for
+triggers anymore and it uses the name that was mostly accepted I think. It
+should be generic and not influenced by Linux design.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rafał Miłecki (3):
+  dt-bindings: leds: document new trigger-sources property
+  usb: core: read USB ports from DT in the usbport LED trigger driver
+  ARM: BCM53573: Specify ports for USB LED for Tenda AC9
+
+ Documentation/devicetree/bindings/leds/common.txt | 35 +++++++++++++-
+ arch/arm/boot/dts/bcm47189-tenda-ac9.dts          |  1 +
+ arch/arm/boot/dts/bcm53573.dtsi                   |  4 ++
+ drivers/usb/core/ledtrig-usbport.c                | 56 +++++++++++++++++++++++
+ 4 files changed, 94 insertions(+), 2 deletions(-)
+
+-- 
+2.11.0
