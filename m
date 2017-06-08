@@ -1,66 +1,93 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH v5 00/23] mtd: nand: denali: Denali NAND IP patch bomb
-Date: Thu, 8 Jun 2017 16:12:49 +0900
-Message-ID: <CAK7LNASu=cmQo+gCmfY=MFLoGtm0oeZQ036Nst63bZOEwFxR4g@mail.gmail.com>
-References: <1496836352-8016-1-git-send-email-yamada.masahiro@socionext.com> <CAK7LNAQMCCxZAJc=7EwEPmpxD+-VsgOvMxwk5ySLfxLVsarqhw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK7LNAQMCCxZAJc=7EwEPmpxD+-VsgOvMxwk5ySLfxLVsarqhw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mtd@lists.infradead.org, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Enrico Jorns <ejo@pengutronix.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Dinh Nguyen <dinguyen@kernel.org>, Marek Vasut <marek.vasut@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Masami Hiramatsu <mhiramat@kernel.org>, Chuanxiao Dong <chuanxiao.dong@intel.com>, Jassi Brar <jaswinder.singh@linaro.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Brian Norris <computersforpeace@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Jianhong Chen <chenjh@rock-chips.com>
+Subject: [PATCH v6 00/12] rk808: Add RK805 support
+Date: Thu,  8 Jun 2017 15:12:27 +0800
+Message-ID: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: gnurou@gmail.com, linus.walleij@linaro.org, dmitry.torokhov@gmail.com
+Cc: linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, huangtao@rock-chips.com, tony.xie@rock-chips.com, zhangqing@rock-chips.com, devicetree@vger.kernel.org, w.egorov@phytec.de, lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, chenjh <chenjh@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-06-08 15:16 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
-> Hi Boris,
->
-> 2017-06-07 20:52 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
->> This patch series intends to solve various problems.
->>
->> [1] The driver just retrieves the OOB area as-is
->>     whereas the controller uses syndrome page layout.
->> [2] Many NAND chip specific parameters are hard-coded in the driver.
->> [3] ONFi devices are not working
->> [4] It can not read Bad Block Marker
->>
->> Outstanding changes are:
->> - Fix raw/oob callbacks for syndrome page layout
->> - Implement setup_data_interface() callback
->> - Fix/implement more commands for ONFi devices
->> - Allow to skip the driver internal bounce buffer
->> - Support PIO in case DMA is not supported
->> - Switch from ->cmdfunc over to ->cmd_ctrl
->
->
-> I am planning v6, but
-> how many can you pick-up from this series?
->
-> I did not see your comments for 01-05, so are they applicable?
->
-> Could you add
-> Acked-by: Rob Herring <robh@kernel.org>
-> for 05  (http://patchwork.ozlabs.org/patch/772388/)
->
-> He had already acked it, but I just missed it.
->
+From: chenjh <chenjh@rock-chips.com>
 
-BTW, this series can not apply to Boris's tree
-because of the following commit.
+change in v6:
+patch1~7 no changed in V6.
+add patch 8~12 for gpio and powerkey func for rk805.
 
-commit 4a78cc644eed3cf2dae00c3a959910a86c140fd6
-Author: Boris Brezillon <boris.brezillon@free-electrons.com>
-Date:   Fri May 26 17:10:15 2017 +0200
+change in v5:
+PATCH V5 1/7: NO change in V5
+PATCH V5 2/7: fix the rk805 reg addr in numerical order
+PATCH V5 3/7: NO change in V5
+PATCH V5 4/7: fix up the rk805_device_shutdown func
+PATCH V5 5/7: NO change in V5
+PATCH V5 6/7: NO change in V5
+PATCH V5 7/7: fix up the description of the rk805
 
-    mtd: nand: Make sure drivers not supporting SET/GET_FEATURES
-return -ENOTSUPP
+change in v4:
+PATCH V4 1/7: NO change in V4
+PATCH V4 2/7: rename the commit message
+PATCH V4 3/7: NO change in V4
+PATCH V4 4/7: Split this patch up into subsystems patch 5/7 6/7
+PATCH V4 5/7: new added
+PATCH V4 6/7: new added
+PATCH V4 7/7: NO change in V4
 
 
+change in V3:
+PATCH V3 1/5: NO change in V3
+PATCH V3 2/5: add rk805 RTC INT MASK define
+PATCH V3 3/5: RK805 set suspend enable and disable is different from rk808
+              use rk805_regs_ops and rk805_switch_ops
+PATCH V3 4/5: fix up the shutdown func
+              use pm_shutdown_prepare_fn to prepare shutdown
+              and pm_pwroff_fn pull down gpio to shut down rk805
+              it will update in the future(after rk808 support gpio func)
+PATCH V3 5/5: NO change in V3
 
-I will send v6 rebased on nand/next branch.
+change in V2:
+PATCH V2 1/5: NO change in V2
+PATCH V2 2/5: add rk805 BUCK ILMAX define
+PATCH V2 3/5: NO change in V2
+PATCH V2 4/5: setting RK805 BUCK ILMAX in pre init
+PATCH V2 5/5: Add RK805 device tree bindings document
 
+Elaine Zhang (7):
+  mfd: rk808: fix up the chip id get failed
+  mfd: rk808: add rk805 regs addr and ID
+  regulator: rk808: Add regulator driver for RK805
+  mfd: rk808: Add RK805 support
+  clk: Kconfig: Name RK805 in Kconfig for COMMON_CLK_RK808
+  rtc: Kconfig: Name RK805 in Kconfig for RTC_DRV_RK808
+  mfd: dt-bindings: Add RK805 device tree bindings document
 
+chenjh (5):
+  gpio: Add GPIO driver for the RK805 PMIC
+  Input: Add power key driver for Rockchip RK805 PMIC
+  mfd: rk808: Add RK805 gpio support
+  mfd: rk808: Add RK805 power key support
+  gpio: dt-bindings: add bindings for Rockchip RK805 PMIC
+
+ .../devicetree/bindings/gpio/gpio-rk805.txt        |  37 ++++
+ Documentation/devicetree/bindings/mfd/rk808.txt    |  22 +-
+ drivers/clk/Kconfig                                |   4 +-
+ drivers/gpio/Kconfig                               |   6 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-rk805.c                          | 234 +++++++++++++++++++++
+ drivers/input/misc/Kconfig                         |   6 +
+ drivers/input/misc/Makefile                        |   1 +
+ drivers/input/misc/rk805-pwrkey.c                  | 111 ++++++++++
+ drivers/mfd/Kconfig                                |   4 +-
+ drivers/mfd/rk808.c                                | 147 ++++++++++++-
+ drivers/regulator/Kconfig                          |   4 +-
+ drivers/regulator/rk808-regulator.c                | 130 ++++++++++++
+ drivers/rtc/Kconfig                                |   4 +-
+ include/linux/mfd/rk808.h                          | 121 +++++++++++
+ 15 files changed, 817 insertions(+), 15 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-rk805.txt
+ create mode 100644 drivers/gpio/gpio-rk805.c
+ create mode 100644 drivers/input/misc/rk805-pwrkey.c
 
 -- 
-Best Regards
-Masahiro Yamada
+1.9.1
+
+
