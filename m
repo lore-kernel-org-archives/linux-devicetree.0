@@ -1,51 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: Document img,boston-clock binding
-Date: Thu, 8 Jun 2017 17:20:47 -0500
-Message-ID: <20170608222047.c27en4hqbqkqybin@rob-hp-laptop>
-References: <20170602182003.16269-1-paul.burton@imgtec.com>
- <20170602182003.16269-2-paul.burton@imgtec.com>
+Subject: Re: [PATCHv3 3/4] dt-bindings: i2c: Add Altera I2C Controller
+Date: Thu, 8 Jun 2017 17:21:50 -0500
+Message-ID: <20170608222150.xxlrzrfhhqqvuovl@rob-hp-laptop>
+References: <1496447559-19782-1-git-send-email-thor.thayer@linux.intel.com>
+ <1496447559-19782-4-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170602182003.16269-2-paul.burton@imgtec.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Burton <paul.burton@imgtec.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Frank Rowand <frowand.list@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <1496447559-19782-4-git-send-email-thor.thayer@linux.intel.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: thor.thayer@linux.intel.com
+Cc: wsa@the-dreams.de, mark.rutland@arm.com, dinguyen@kernel.org, davem@davemloft.net, gregkh@linuxfoundation.org, mchehab@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 02, 2017 at 11:20:00AM -0700, Paul Burton wrote:
-> Add device tree binding documentation for the clocks provided by the
-> MIPS Boston development board from Imagination Technologies, and a
-> header file describing the available clocks for use by device trees &
-> driver.
+On Fri, Jun 02, 2017 at 06:52:38PM -0500, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-mips@linux-mips.org
+> Add the documentation to support the Altera synthesizable
+> logic I2C Controller in FPGA.
 > 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 > ---
-> 
-> Changes in v4:
-> - Move img,boston-clock node under platform register syscon node.
-> - Add MAINTAINERS entry.
-> 
-> Changes in v3: None
-> 
-> Changes in v2:
-> - Add BOSTON_CLK_INPUT to expose the input clock.
-> 
->  .../devicetree/bindings/clock/img,boston-clock.txt | 31 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 +++++
->  include/dt-bindings/clock/boston-clock.h           | 14 ++++++++++
->  3 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/img,boston-clock.txt
->  create mode 100644 include/dt-bindings/clock/boston-clock.h
+> v2  Change the subject to identify dt-bindings
+>     Add synthesizable logic to description.
+>     Change compatible string to "altr,softip-i2c"
+>     Make description of clock phandle singular since 1 clock.
+>     Remove altr, from fifo-size
+>     Specify fifo-size is in bytes.
+> v3  Add version to compatible string "altr,softip-i2c-v1.0"
+>     Add for use in FPGA in description.
+> ---
+>  .../devicetree/bindings/i2c/i2c-altera.txt         | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
