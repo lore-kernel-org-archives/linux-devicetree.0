@@ -1,100 +1,75 @@
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Subject: Re: [PATCH v6 3/7] media: i2c: max2175: Add MAX2175 support
-Date: Thu, 8 Jun 2017 07:23:17 -0300
-Message-ID: <20170608072317.2e018a90@vento.lan>
-References: <20170531084457.4800-1-ramesh.shanmugasundaram@bp.renesas.com>
-        <20170531084457.4800-4-ramesh.shanmugasundaram@bp.renesas.com>
-        <20170607101721.064aafe4@vento.lan>
-        <KL1PR0601MB20385C566733E32AC4DCA987C3C90@KL1PR0601MB2038.apcprd06.prod.outlook.com>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 03/11] KVM: arm64: Change hyp_panic()s dependency on
+ tpidr_el2
+Date: Thu, 08 Jun 2017 11:23:55 +0100
+Message-ID: <593925BB.30503@arm.com>
+References: <20170515174400.29735-1-james.morse@arm.com>
+ <20170515174400.29735-4-james.morse@arm.com> <20170606194525.GK9464@cbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <KL1PR0601MB20385C566733E32AC4DCA987C3C90@KL1PR0601MB2038.apcprd06.prod.outlook.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "hverkuil@xs4all.nl" <hverkuil@xs4all.nl>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, "crope@iki.fi" <crope@iki.fi>, Chris Paterson <Chris.Paterson2@renesas.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+In-Reply-To: <20170606194525.GK9464@cbox>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Christoffer Dall <cdall@linaro.org>
+Cc: devicetree@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu
 List-Id: devicetree@vger.kernel.org
 
-Em Thu, 8 Jun 2017 09:42:43 +0000
-Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com> escreveu:
+Hi Christoffer,
 
-> > Subject: Re: [PATCH v6 3/7] media: i2c: max2175: Add MAX2175 support
-> > 
-> > Em Wed, 31 May 2017 09:44:53 +0100
-> > Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com> escreveu:
-> >   
-> > > +++ b/Documentation/media/v4l-drivers/max2175.rst
-> > > @@ -0,0 +1,60 @@
-> > > +Maxim Integrated MAX2175 RF to bits tuner driver
-> > > +================================================
-> > > +
-> > > +The MAX2175 driver implements the following driver-specific controls:
-> > > +
-> > > +``V4L2_CID_MAX2175_I2S_ENABLE``
-> > > +-------------------------------
-> > > +    Enable/Disable I2S output of the tuner.
-> > > +
-> > > +.. flat-table::
-> > > +    :header-rows:  0
-> > > +    :stub-columns: 0
-> > > +    :widths:       1 4
-> > > +
-> > > +    * - ``(0)``
-> > > +      - I2S output is disabled.
-> > > +    * - ``(1)``
-> > > +      - I2S output is enabled.  
-> > 
-> > Hmm... There are other drivers at the subsystem that use I2S (for audio -
-> > not for SDR - but I guess the issue is similar).
-> > 
-> > On such drivers, the bridge driver controls it directly, being sure that
-> > I2S is enabled when it is expecting some data coming from the I2S bus.
-> > 
-> > On some drivers, there are both I2S and A/D inputs at the bridge chipset.
-> > On such drivers, enabling/disabling I2S is done via VIDIOC_S_INPUT (and
-> > optionally via ALSA mixer), being transparent to the user if the stream
-> > comes from a tuner via I2S or from a directly connected A/D input.
-> > 
-> > I don't think it is a good idea to enable it via a control, as, if the
-> > bridge driver is expecting data via I2S, disabling it will cause timeouts
-> > at the videobuf handling.  
+On 06/06/17 20:45, Christoffer Dall wrote:
+> On Mon, May 15, 2017 at 06:43:51PM +0100, James Morse wrote:
+>> KVM calls hyp_panic() when anything unexpected happens. This may occur
+>> while a guest owns the EL1 registers. KVM stashes the vcpu pointer in
+>> tpidr_el2, which it uses to find the host context in order to restore
+>> the host EL1 registers before parachuting into the host's panic().
+>>
+>> The host context is a struct kvm_cpu_context allocated in the per-cpu
+>> area, and mapped to hyp. Given the per-cpu offset for this CPU, this is
+>> easy to find. Change hyp_panic() to take a pointer to the
+>> struct kvm_cpu_context. Wrap these calls with an asm function that
+>> retrieves the struct kvm_cpu_context from the host's per-cpu area.
+>>
+>> Copy the per-cpu offset from the hosts tpidr_el1 into tpidr_el2 during
+>> kvm init. (Later patches will make this unnecessary for VHE hosts)
+>>
+>> We print out the vcpu pointer as part of the panic message. Add a back
+>> reference to the 'running vcpu' in the host cpu context to preserve this.
+
+>> diff --git a/arch/arm64/kvm/hyp/hyp-entry.S b/arch/arm64/kvm/hyp/hyp-entry.S
+>> index fce7cc507e0a..0f83e7e402ad 100644
+>> --- a/arch/arm64/kvm/hyp/hyp-entry.S
+>> +++ b/arch/arm64/kvm/hyp/hyp-entry.S
+>> @@ -163,6 +163,13 @@ ENTRY(__hyp_do_panic)
+>>  	eret
+>>  ENDPROC(__hyp_do_panic)
+>>  
+>> +ENTRY(__hyp_panic)
+>> +	ldr	x0, =kvm_host_cpu_state
 > 
-> The MAX2175 device is exposed as a v4l2 subdev with tuner ops and can interface with an SDR device. When the tuner is configured, the I2S output is enabled by default. From an independent tuner device perspective, this default behaviour is enough and this control may not be needed/used.
-> 
-> However, for the use case here, the R-Car DRIF device acts as the main SDR device and the Maxim MAX2175 provides a sub-dev interface with tuner ops.
-> 
-> +---------------------+                +---------------------+
-> |                     |-----SCK------->|CLK                  |   
-> |       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-> |      (MAX2175)      |-----SD0------->|D0                   |   
-> |                     |-----SD1------->|D1                   |   
-> +---------------------+                +---------------------+
-> 
-> The DRIF device design is such that it involves separate register writes to enable Rx on each of the data line. To keep both the data lines in sync it expects the master device to enable output after both the data line Rx are enabled.
-> 
-> This level of control is exposed as a feature in the MAX2175 using this control. When interfaced with DRIF this control is used to achieve the desired functionality. When not interfaced with DRIF, the MAX2175 default behaviour does not have to change because of DRIF and hence this I2S control may be unused. Like MAX2175, DRIF is also an independent device and can interface with a different third party tuner. 
-> 
-> Hence, this I2S enable/disable is exposed as a user control. The end user application (knowing both these devices) is expected to use these controls appropriately. Please let me know if I need to explain anything in further detail.
+> Why is this guaranteed to give us a valid EL2 address?
+
+... it doesn't. Its a host address from the constant pool which is used by
+hyp-panic as __host_ctxt:
+> void __hyp_text __noreturn hyp_panic(struct kvm_cpu_context *__host_ctxt);
+
+and fixed up with:
+> host_ctxt = kern_hyp_va(__host_ctxt);
+
+to give us the EL2 address before we access it.
+For VHE the last step is a nop as the host address can be accessed directly.
+
+I will add a comment here explaining this.
 
 
-The usecase is clear. That's exactly what other drivers with I2S do,
-except that, on those other drivers, they pass I2S control info via
-platform_data (they're not platform drivers).
+Thanks!
 
-With those drivers, generic applications work as-is via the standard
-video, radio or sdr devnodes, without knowing about I2S.
-
-The main difference here is that you're requiring an specialized
-application for this device to work, as a generic one won't be
-aware of this device-specific control, and may end by exposing this
-"internal" control to the end user. That is OK for embedded usage,
-but, as soon as this is used on some non-embedded usecase (with
-is likely, as there are several PC consumer products using other
-chips from Maxim), we'll have problems.
-
-I guess the solution here is to make such control visible only via the
-subdev interface.
-
-Thanks,
-Mauro
+James
