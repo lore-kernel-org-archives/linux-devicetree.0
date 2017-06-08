@@ -1,114 +1,92 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 4/4] mfd: tps65217: Instantiate sub-devices from device tree
-Date: Fri, 9 Jun 2017 00:30:51 +0200
-Message-ID: <CABxcv=mN6=hbDSqrVkwSL8zccCntN7m_3DP6ZCbkOT6CLw+skQ@mail.gmail.com>
-References: <20170607103242.16008-1-enric.balletbo@collabora.com>
- <20170607103242.16008-4-enric.balletbo@collabora.com> <6359abe2-9a21-78a2-f5ea-87e2e3335af3@ti.com>
- <CAFqH_53v32iODN4xhoh4ho4s6grxknEDS3Ak6CHBcTAQo6fDNw@mail.gmail.com>
- <578f348c-509f-79d3-9770-73c9fcffe19c@ti.com> <CAFqH_52rU7ZBG_Muy2JHoqJGdXOdsNfmtJxsZoPRyx3V1aWmFw@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH] gpio: use "output-active" and "output-inactive" for
+ gpio-hogs
+Date: Thu, 8 Jun 2017 17:33:46 -0500
+Message-ID: <20170608223346.unfwdh32v3kt2y52@rob-hp-laptop>
+References: <20170604101049.4592-1-uwe@kleine-koenig.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFqH_52rU7ZBG_Muy2JHoqJGdXOdsNfmtJxsZoPRyx3V1aWmFw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo Serra <eballetbo@gmail.com>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, linux-input@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>Pavel Machek <p>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170604101049.4592-1-uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 11:35 PM, Enric Balletbo Serra
-<eballetbo@gmail.com> wrote:
-> 2017-06-08 19:11 GMT+02:00 Grygorii Strashko <grygorii.strashko@ti.com>:
+On Sun, Jun 04, 2017 at 12:10:49PM +0200, Uwe Kleine-König wrote:
+> Using the following gpio hog:
+> 
+> 	{
+> 		gpio-hog;
+> 		gpios = <17 GPIO_ACTIVE_LOW>;
+> 		output-high;
+> 	}
+> 
+> results in the gpio to be set to (physically) low value, which is
+> surprising. So support "output-active" which makes the semantic more
+> obvious. The old semantic is still supported for backward compatibility.
 
-[snip]
+Ugg. Can't say I'm a fan of the Linux GPIO subsystem inverting the logic 
+for GPIO_ACTIVE_LOW...
 
->>>
->>> &tps {
->>>          charger {
->>>                  interrupts = <0>, <1>;
->>>                  interrupt-names = "USB", "AC";
->>>                  status = "okay";
->>>          };
->>>
->>>          pwrbutton {
->>>                  interrupts = <2>;
->>>                  status = "okay";
->>>          };
->>> };
->>
->> Sry, but this make no sense - those IRQ configuration is static,
->> so it should be defined in arch/arm/boot/dts/tps65217.dtsi at least.
+> 
+> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+> ---
+> Hello,
+> 
+> the next logical step would be to go through all in-tree dts files and
+> substitute the old properties by the new ones. I can do this as soon as
+> the idea is discussed and considered to be good.
+> 
+> Maybe the same idea can be applied to the cpp definitions GPIOD_OUT_LOW
+> and GPIOD_OUT_HIGH.
+> 
+> And btw I wondered about the binding that defines what should happen in
+> this case:
+> 
+> 	{
+> 		gpio-hog;
+> 		gpios = <...>;
+> 		output-high;
+> 		output-low;
+> 	}
+> 
+> I would have defined as undefined instead of inactive.
+> 
+> Best regards
+> Uwe
+> 
+>  Documentation/devicetree/bindings/gpio/gpio.txt | 10 ++++++----
+>  drivers/gpio/gpiolib-of.c                       |  4 ++++
+>  2 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+> index 68d28f62a6f4..4d29e0b33435 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+> @@ -196,10 +196,12 @@ This means that when multiple properties are present they will be searched
+>  in the order presented below and the first match is taken as the intended
+>  configuration.
+>  - input:      A property specifying to set the GPIO direction as input.
+> -- output-low  A property specifying to set the GPIO direction as output with
+> -	      the value low.
+> -- output-high A property specifying to set the GPIO direction as output with
+> -	      the value high.
+> +- output-inactive: A property specifying to set the GPIO direction as output
+> +	      using the inactive level as value.
+> +- output-active: A property specifying to set the GPIO direction as output
+> +	      using the active level as value.
+> +- output-low  A deprecated alias for "output-inactive".
+> +- output-high A deprecated alias for "output-active".
 
-Agreed.
+The question is was this really what was expected. I guess based on the 
+code it was. I would have expected these gave low or high voltage 
+levels. Seems like Linuxisms defining the binding.
 
->
-> I was describing the state-of-art not what should be. If you mean that
-> what doesn't make sense have these interrupts portions in the DT and
-> the resources in the driver I'm completely agree. So we have two
-> options:
->
->  1) Get rid of the irq resources from tps65217 MFD driver and
-> configure all with the DT (these patches)
->  2) Get rid of the DT portions as doesn't make sense have them in two places.
->
-> If we select 2) at least we have the problem that currently all
-> sub-devices are instantiated and there is no way to disable a
-> sub-device (the problem I'm trying to solve) hence I proposed 1)
->
-
-There's also an option (3) AFAICT. To do (1) but instead of hardcoding
-in the DTS[i], to do it in the charger driver since it seems the
-sub-devices are only used for this particular MFD device, and so the
-IRQ numbers are always going to be the same (it's already hardcoded in
-the MFD driver anyways).
-
-So you can just move TPS65217_IRQ_{AC,USB} to the driver. Not sure
-what's general opinion of having drivers calling irq_create_mapping()
-to get the virtual IRQ's though...
-
-[snip]
-
->>
->> I can't find links on corresponding discussions, but mfd_add_devices() is
->> preferred for MDF devices. Below is one commit i've found. Also you can compare number of
->> drivers using mfd_add_devices() and of_platform_populate().
-
-I'm not sure if we should use that as an argument, it may well be
-that's just the drivers being half converted to DT (which is pretty
-common TBH).
-
->>
->
-> I don't think this a valid argument, I can also provide you a commit
-> that does exactly the contrary, replaces mfd_add_devices for
-> of_platform_populate (commit bb03ffb96c72)
->
->>
-
-[snip]
-
->
->> ---
->> commit 4531156db726d27e593d35800d43c74be4e393b9
->> Author: Keerthy <j-keerthy@ti.com>
->> Date:   Mon Sep 19 13:09:05 2016 +0530
->>
->>     mfd: tps65218: Use mfd_add_devices instead of of_platform_populate
->>
->>     mfd_add_devices enables parsing device tree nodes without compatibles
->>     for regulators and gpio modules. Replace of_platform_populate with
->>     mfd_add_devices. mfd_cell currently is populated with regulators,
->>     gpio and powerbutton.
->>
-
-For tps65218 couldn't instead of using mfd_add_devices() for all the
-sub-devs, had used of_platform_populate() for the ones that have
-device nodes and mfd_add_devices() only for the "tps65218-regulator"?
-
-The commit talks about nodes without compatibles but's actually about
-sub-devices without an associated device node. For me it makes sense
-to use of_platform_populate() when the MFD has device nodes for their
-sub-devices and mfd_add_devices() when DT knows nothing about the
-sub-devices.
-
-Best regards,
-Javier
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
