@@ -1,49 +1,81 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v6 8/8] arm64: defconfig: enable support hi6421v530 PMIC
-Date: Fri,  9 Jun 2017 06:08:41 +0800
-Message-ID: <20170608220841.26531-9-guodong.xu@linaro.org>
-References: <20170608220841.26531-1-guodong.xu@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170608220841.26531-1-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: Add Broadcom STB USB PHY binding
+ document
+Date: Thu, 8 Jun 2017 17:11:04 -0500
+Message-ID: <20170608221104.7nsinggo4vngbmus@rob-hp-laptop>
+References: <1496426512-10590-1-git-send-email-alcooperx@gmail.com>
+ <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Al Cooper <alcooperx@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enable configs for hi6421v530 mfd and regulator driver
- + CONFIG_MFD_HI6421_PMIC=y
- + CONFIG_REGULATOR_HI6421V530=y
+On Fri, Jun 02, 2017 at 02:01:51PM -0400, Al Cooper wrote:
+> Add DT bindings document for Broadcom STB USB PHYs
+> 
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> ---
+>  .../bindings/phy/brcm,brcmstb-usb-phy.txt          | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> new file mode 100644
+> index 0000000..e1e9b16
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
+> @@ -0,0 +1,37 @@
+> +Broadcom STB USB PHY
+> +
+> +Required properties:
+> + - compatible: brcm,brcmstb-usb-phy
+> + - reg: two offset and length pairs. The second pair specifies optional
+> +        registers used by some of the SoCs that support USB 3.x
+> + - #phy-cells: Shall be 1 as it expects one argument for setting
+> +	       the type of the PHY. Possible values are 0 (1.1 and 2.0),
+> +	       1 (3.x)
+> +
+> +Optional Properties:
+> +- clocks : clock phandles.
+> +- clock-names: String, clock name.
+> +- brcm,ipp: Boolean, Invert Port Power.
+> +  Possible values are: 0 (Don't invert), 1 (Invert)
+> +- brcm,ioc: Boolean, Invert Over Current detection.
+> +  Possible values are: 0 (Don't invert), 1 (Invert)
+> +- brcm,has-xhci: Boolean indicating an optional 3.x only XHCI controller.
+> +- brcm,has-xhci-only: Boolean indicating an XHCI controller that supports
+> +  1.1, 2.0 and 3.0 devices
+> +- brcm,device: String, PHY Device mode.
+> +  Possible values are: off (Host), on (Device), dual (DRD)
+> +  or typec-pd (Type-C PD control)
 
-Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+I believe we have standard property for this though maybe not type C.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index ce07285..867d68c 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -305,6 +305,7 @@ CONFIG_S3C2410_WATCHDOG=y
- CONFIG_MESON_GXBB_WATCHDOG=m
- CONFIG_MESON_WATCHDOG=m
- CONFIG_MFD_EXYNOS_LPASS=m
-+CONFIG_MFD_HI6421_PMIC=y
- CONFIG_MFD_MAX77620=y
- CONFIG_MFD_RK808=y
- CONFIG_MFD_SPMI_PMIC=y
-@@ -315,6 +316,7 @@ CONFIG_MFD_CROS_EC=y
- CONFIG_MFD_CROS_EC_I2C=y
- CONFIG_REGULATOR_FIXED_VOLTAGE=y
- CONFIG_REGULATOR_GPIO=y
-+CONFIG_REGULATOR_HI6421V530=y
- CONFIG_REGULATOR_HI655X=y
- CONFIG_REGULATOR_MAX77620=y
- CONFIG_REGULATOR_PWM=y
--- 
-2.10.2
+off/on seem strange for meaning host/device as well.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +Example:
+> +
+> +usbphy_0: usb-phy@f0470200 {
+> +	reg = <0xf0470200 0xb8>,
+> +		<0xf0471940 0x6c0>;
+> +	compatible = "brcm,brcmstb-usb-phy";
+> +	#phy-cells = <1>;
+> +	brcm,ioc = <1>;
+> +	brcm,ipp = <1>;
+> +	brcm,has-xhci;
+> +	clocks = <&usb20>, <&usb30>;
+> +	clock-names = "sw_usb", "sw_usb3";
+> +};
+> -- 
+> 1.9.0.138.g2de3478
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
