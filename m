@@ -1,54 +1,24 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 6/7] [media] soc_camera: rcar_vin: use proper name for
- the R-Car SoC
-Date: Thu, 8 Jun 2017 15:57:57 +0200
-Message-ID: <20170608135757.GA4205@katana>
-References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
- <20170528093051.11816-7-wsa+renesas@sang-engineering.com>
- <a133a7f7-e887-5043-83d3-cccbec581487@cogentembedded.com>
- <20170529120202.GC4342@katana>
- <20170608082731.7cdf32dd@vento.lan>
+From: David Miller <davem@davemloft.net>
+Subject: Re: CPU_BIG_ENDIAN in generic code
+Date: Thu, 08 Jun 2017 10:02:22 -0400 (EDT)
+Message-ID: <20170608.100222.1573468093040905016.davem@davemloft.net>
+References: <877f0z6oig.fsf@concordia.ellerman.id.au>
+        <28d6c874-4653-b15d-39b7-57a032abc9c6@oracle.com>
+        <CAK8P3a1WfU9V1k2r=TfJSVRTymuD8n2hkJDr6u1KcmC_scAZMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="FCuugMFkClbJLl1L"
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170608082731.7cdf32dd@vento.lan>
+In-Reply-To: <CAK8P3a1WfU9V1k2r=TfJSVRTymuD8n2hkJDr6u1KcmC_scAZMA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, linux-renesas-soc@vger.kernel.org, Niklas =?utf-8?Q?S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: arnd@arndb.de
+Cc: babu.moger@oracle.com, mpe@ellerman.id.au, geert@linux-m68k.org, peterz@infradead.org, mingo@redhat.com, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 8 Jun 2017 10:01:59 +0200
 
---FCuugMFkClbJLl1L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I would also suggest adding a sanity check like
 
-
-> Btw, I'm seeing only patches 6 and 7 here at media ML (and patchwork).
-> As those are trivial changes, I'll just apply what I have.
-
-Perfect, thanks!
-
-
---FCuugMFkClbJLl1L
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlk5V90ACgkQFA3kzBSg
-Kba8ZRAAkB8Oj48j4i/AO9wZvm1lZA/MRk7KCG2CK/00GSWt6PNdCBarRY3elFnO
-yQpLYUWl6bhpA+ps3OdtCUEGaLYmJAboPGGDz00s1aHshh8zn8u8gwK7n3G1CxMv
-rt0V4GqHLnqbjncCjlDoqXAR6/VpxlJNoAbO1Nya3QUXxEoCqcG1HZuZ65Iy9LPB
-I+vprcvu91H6u+i1gg0+YSgInHIK4KWzPImkl9WKP6MTYC3Gdps3PQRM+AC5NNqM
-vg3nfYqb9E4N1uYo1qy1WSV2mHG+iOJgEglhkuuk1HObNVVpd6d9O93fugulUDmI
-+5OopUMHiJTrYWRkEjRNZmPSRFI8yc3SBqyPqO3btQUhz8R4FnTpc+t7Zhs55Y6h
-Q1sIRvorxU6NMRfmpvhwN5CRdWKwVi+prcIjPqZ1sojf1m2Tn+hDCrIZY5qiY7On
-V+mrP4LN7KVtStrNGGt84p3jlCCIGi+SKufUcRjlfc3zWA1MOp7S3UwqjPzgZdrf
-0E8i3Bep3qi7sSUv42+TDFvHwUy+KTrCIdfPK3KqOLl33gaElqEN2e0ZkKrHK+6L
-+QPvVxcf+0WAGGMI/dKkMb2a3Ggg3uorPpRPqlbDEk5NNvTCvmKxDH70l5lNnt0V
-o9HYj2bgDw5ZVRHpFVeV5uOUrZdMvhqcOM0oJi154cfN9dTplK8=
-=L4YH
------END PGP SIGNATURE-----
-
---FCuugMFkClbJLl1L--
+Hmm, but this will kill the build for non-fixed endian architectures
+won't it?
