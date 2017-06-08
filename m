@@ -1,76 +1,43 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] Add bcm2835aux interrupt controller
-Date: Thu, 8 Jun 2017 11:03:12 -0700
-Message-ID: <8501ed97-dea7-3e00-1ba6-7e123950ff27@gmail.com>
-References: <6dc301c8-e5a2-1334-c476-1ce7e303787f@raspberrypi.org>
- <b3d5b3c1-a9ab-99bf-a1b2-3a1e4579c0ff@gmail.com>
- <846fcded-190e-e3f7-c0cd-b7c9281e41e0@raspberrypi.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH v2 2/4] dt-bindings: add vendor prefix for NLT Technologies,
+ Ltd.
+Date: Thu,  8 Jun 2017 20:07:56 +0200
+Message-ID: <20170608180758.31020-2-l.stach@pengutronix.de>
+References: <20170608180758.31020-1-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <846fcded-190e-e3f7-c0cd-b7c9281e41e0-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170608180758.31020-1-l.stach@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/2017 02:55 AM, Phil Elwell wrote:
-> On 07/06/2017 21:58, Florian Fainelli wrote:
->> On 06/07/2017 04:11 AM, Phil Elwell wrote:
->>> Devices in the AUX block share a common interrupt line, with a register
->>> indicating which devices have active IRQs. Expose this as a nested
->>> interrupt controller to avoid IRQ sharing problems (easily observed if
->>> UART1 and SPI1/2 are enabled simultaneously).
->>>
->>> The interrupt functionality could arguably be forked off as a separate
->>> irqchip driver, but the clock driver has already claimed the AUX_IRQ
->>> register so some driver and DT surgery would still be required.
->>> Eric Anholt thought that including it here is reasonable, but I'm
->>> prepared to split it out if this is considered too hacky.
->>
->> You probably remember your fix to the irqchip drive being flamed because
->> the irqchip driver was re-purposed as an ARM SMP secondary core bringup
->> method, maybe we can avoid doing the same mistake and having this a
->> separate interrupt controller be under drivers/irqchip/*?
->>
->> Even if the clock driver already claims the AUX_IRQ register space, we
->> can still have an irqchip ioremap() the two register offsets that it
->> cares about (AUXIRQ, AUXENB) and just manage that 8 bytes worth of
->> register space. We just need to make sure that the clock driver really
->> does not touch those (why would it) and that there won't be any
->> conflicting request_mem_region() against the same register range.
->>
->> Thanks!
-> 
-> The "clock" driver (it's really just a block enabler) and IRQ functionality
-> each use one of two adjacent word registers. Is it not simpler, clearer and
-> more accurate to represent those as separate nodes in the device tree,
-> rather than continuing to allow the clock node to claim the neighbouring
-> register and expecting the IRQ driver to use other mechanisms to locate
-> (phandle node reference? hard-coded base address?) and use the register that
-> rightfully belongs to it?
-
-There is a possible DT binary compatibility here, although in that
-particular case, that would not be a problem, but I was thinking more in
-the lines of:
-
-- keeping the current clock controller node's "reg" property with the
-extra 8 bytes
-- add an interrupt controller node with a re "reg" property that covers
-these 8 bytes for AUX{IRQ,ENB} purposes
-
-You could have a subsequent patch that removes the 8 extra bytes from
-the clock controller node's at some point, but if we are guaranteed that
-a) the clock controller does not exclusively manage this region, and b)
-does not touch it, we are neither breaking DT binary compatibility, nor
-are we introducing problems.
-
-I don't think phandles or cross-node references of any kind would be
-necessary here.
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+TkxUIHRlY2hub2xvZ2llcyBpcyB0aGUgZm9ybWVyIE5FQyBkaXNwbGF5IGJ1c2luZXNzLCBidXQg
+Y2hhbmdlZCBpdHMKbmFtZSB0byBOTFQgVGVjaG5vbG9naWVzIHdoZW4gZm9ybWluZyBhIGpvaW50
+IHZlbnR1cmUgd2l0aApTaGVuemhlbiBBVklDIE9QVE9FTEVDVFJPTklDUywgTHRkLgoKU2lnbmVk
+LW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+CkFja2VkLWJ5OiBS
+b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KdjI6IG5vIGNoYW5nZQotLS0KIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArCiAx
+IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0CmluZGV4IGMwM2QyMDE0MDM2
+Ni4uZjA4Mjg0ZTc0MzliIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dApAQCAtMjE5LDYgKzIxOSw3IEBAIG5leGJveAlO
+ZXhib3gKIG5ld2hhdmVuCU5ld2hhdmVuIERpc3BsYXkgSW50ZXJuYXRpb25hbAogbmkJTmF0aW9u
+YWwgSW5zdHJ1bWVudHMKIG5pbnRlbmRvCU5pbnRlbmRvCitubHQJTkxUIFRlY2hub2xvZ2llcywg
+THRkLgogbm9raWEJTm9raWEKIG5vcmRpYwlOb3JkaWMgU2VtaWNvbmR1Y3RvcgogbnV2b3RvbglO
+dXZvdG9uIFRlY2hub2xvZ3kgQ29ycG9yYXRpb24KLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
