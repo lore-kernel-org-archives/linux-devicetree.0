@@ -1,116 +1,38 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 6/8] firmware: arm_scmi: add initial support for power
- protocol
-Date: Thu, 8 Jun 2017 12:14:38 +0100
-Message-ID: <4056bfe8-9df7-18cb-05ab-72186d44547e@arm.com>
-References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
- <1496851812-19623-7-git-send-email-sudeep.holla@arm.com>
- <CAK8P3a3Vw2AvAr4hNd0A6Tih1YNorjiG2jkhcuo=CK1RF+aLFA@mail.gmail.com>
- <d610d205-aa19-cf2f-072a-8b64c8c8be66@arm.com>
- <CAK8P3a2wJ+hWro7+KYUBLRSTdbwKFjuzutajo436F-X=nMD5cQ@mail.gmail.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: [PATCH 6/7] [media] soc_camera: rcar_vin: use proper name for
+ the R-Car SoC
+Date: Thu, 8 Jun 2017 08:27:31 -0300
+Message-ID: <20170608082731.7cdf32dd@vento.lan>
+References: <20170528093051.11816-1-wsa+renesas@sang-engineering.com>
+        <20170528093051.11816-7-wsa+renesas@sang-engineering.com>
+        <a133a7f7-e887-5043-83d3-cccbec581487@cogentembedded.com>
+        <20170529120202.GC4342@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK8P3a2wJ+hWro7+KYUBLRSTdbwKFjuzutajo436F-X=nMD5cQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170529120202.GC4342@katana>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Wolfram Sang <wsa+renesas-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Niklas =?UTF-8?B?U8O2ZGVybHVuZA==?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Em Mon, 29 May 2017 14:02:02 +0200
+Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> escreveu:
 
-
-On 08/06/17 12:06, Arnd Bergmann wrote:
-> On Thu, Jun 8, 2017 at 11:39 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>
->> On 07/06/17 21:38, Arnd Bergmann wrote:
->>> On Wed, Jun 7, 2017 at 6:10 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>>
->>>> +struct scmi_msg_resp_power_attributes {
->>>> +       __le16 num_domains;
->>>> +       __le16 reserved;
->>>> +       __le32 stats_addr_low;
->>>> +       __le32 stats_addr_high;
->>>> +       __le32 stats_size;
->>>> +} __packed;
->>>> +
->>>> +struct scmi_msg_resp_power_domain_attributes {
->>>> +       __le32 flags;
->>>> +#define SUPPORTS_STATE_SET_NOTIFY(x)   ((x) & BIT(31))
->>>> +#define SUPPORTS_STATE_SET_ASYNC(x)    ((x) & BIT(30))
->>>> +#define SUPPORTS_STATE_SET_SYNC(x)     ((x) & BIT(29))
->>>> +           u8 name[SCMI_MAX_STR_SIZE];
->>>> +} __packed;
->>>
->>> I think it would be better to leave out the __packed here, which
->>> can lead to rather inefficient code. It's only really a problem when
->>> building with -mstrict-align, but it's better to write code in a way that
->>> doesn't rely on that.
->>>
->>
->> I assume you are referring to above structure only and not general
->> across all the structures ? I will have a look at this one.
+> >    Why "soc_camera:" in the subject?  
 > 
-> I meant all of them, from my first look they all seem to have natural
-> alignment on all members anyway. If there is one that doesn't, I would
-> suggest annotating the individual unaligned members with __packed.
+> I used 'git log $file' and copied the most recent entry. Do I need to
+> resend?
 > 
 
-OK, I will take a deeper look. Thanks for the suggestion.
+No need to resend. I'll fix it when applying the patch.
 
->>>> +static int
->>>> +scmi_power_domain_attributes_get(struct scmi_handle *handle, u32 domain,
->>>> +                                struct power_dom_info *dom_info)
->>>> +{
->>>> +       int ret;
->>>> +       struct scmi_xfer *t;
->>>> +       struct scmi_msg_resp_power_domain_attributes *attr;
->>>> +
->>>> +       ret = scmi_one_xfer_init(handle, POWER_DOMAIN_ATTRIBUTES,
->>>> +                                SCMI_PROTOCOL_POWER, sizeof(domain),
->>>> +                                sizeof(*attr), &t);
->>>> +       if (ret)
->>>> +               return ret;
->>>> +
->>>> +       *(__le32 *)t->tx.buf = cpu_to_le32(domain);
->>>> +       attr = (struct scmi_msg_resp_power_domain_attributes *)t->rx.buf;
->>>
->>> It seems you require a similar pattern in each caller of scmi_one_xfer_init(),
->>> but it seems a little clumsy to always require those casts, so maybe there
->>> is a nicer way to do this. How about making scmi_one_xfer_init() act
->>> as an allocation function and having it return the buffer or a PTR_ERR?
->>>
->>
->> Yes I agree it doesn't looks all nice. I have changed these few times
->> while developing and then thought it's better to get some suggestions. I
->> am open to any suggestions that will help to make these nicer.
->>
->>> It also seems odd to have it named 'init' but actually allocate the scmi_xfer
->>> structure rather than filling a local variable that gets passed by reference.
->>>
->>
->> It does initialise but partially. scmi_one_xfer_get does pure allocation
->> while scmi_one_xfer_init initialise header variables and also tx/rx
->> size. But if you think it's odd, I will looks at ways to make it better.
-> 
-> Yes, I'm still thinking about it, but I think we can do better. If a function
-> has both allocation and initialization parts in it, I would probably name
-> it *_alloc() rather than *_init().
-> 
-> What is the relation between scmi_one_xfer_get() and
-> scmi_one_xfer_init()? Do we need both in some callers, or
-> just one of the two?
+Btw, I'm seeing only patches 6 and 7 here at media ML (and patchwork).
+As those are trivial changes, I'll just apply what I have.
 
-Currently only scmi_one_xfer_init is used. Initially I was using
-scmi_one_xfer_get and initialising at callsite. Strictly speaking, all
-the allocations are done at probe time, it's only grabbing and releasing
-one at a time at runtime, hence the name _get and _put. I can merge
-_init into _get. The way it-is is just artifact of how it got developed :(
--- 
-Regards,
-Sudeep
+Thanks,
+Mauro
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
