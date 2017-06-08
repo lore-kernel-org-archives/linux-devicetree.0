@@ -1,74 +1,95 @@
-From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 00/23] mtd: nand: denali: Denali NAND IP patch bomb
-Date: Thu, 8 Jun 2017 09:18:33 +0200
-Message-ID: <20170608091833.5dfd091b@bbrezillon>
-References: <1496836352-8016-1-git-send-email-yamada.masahiro@socionext.com>
-        <CAK7LNAQMCCxZAJc=7EwEPmpxD+-VsgOvMxwk5ySLfxLVsarqhw@mail.gmail.com>
-        <CAK7LNASu=cmQo+gCmfY=MFLoGtm0oeZQ036Nst63bZOEwFxR4g@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 0/8] omap*: Fixes/Cleanups for MMC devicetree node
+Date: Thu, 8 Jun 2017 09:20:42 +0200
+Message-ID: <CAPDyKFrJh9qAz6q2-TH8rMshuMjDTkT5pHP==FUUH9KZEOehOQ@mail.gmail.com>
+References: <20170607093749.15656-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNASu=cmQo+gCmfY=MFLoGtm0oeZQ036Nst63bZOEwFxR4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170607093749.15656-1-kishon@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le Thu, 8 Jun 2017 16:12:49 +0900,
-Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> a écrit :
+On 7 June 2017 at 11:37, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> There are the set of fixes that were sent initially as part
+> of [1].
+>
+> These are mostly fixes w.r.t populating regulators in
+> mmc dt node. It was working before because the regulators
+> connecting to the IO lines are always on regulators. This will
+> break once we add UHS support where voltage has to be changed
+> dynamically.
+>
+> It also includes a patch to replace all vmmc_aux-supply
+> with vqmmc-supply (In omap3-overo-base.dtsi remove the existing
+> vqmmc-supply and then replace vmmc_aux-supply with vqmmc-supply).
+> This will break old dt compatibility but not sure how better
+> to handle this.
+>
+> Performed enumeration testing on dra72-evm-revc, dra72-evm,
+> dra7-evm, am572x-evm, am571x-idk, am572x-idk, omap5-evm,
+> pandaboard-es, am43xx-evm, am335x-evm, beagleboard etc.,
+>
+> This is a preparation series for adding UHS mode support in
+> the above mentioned platforms.
+>
+> Changes from v1:
+> *) Included a patch to replace deprecated "vmmc_aux" with
+>    "vqmmc"
+>
+> [1] -> https://lkml.org/lkml/2017/5/19/196
+>
+> Kishon Vijay Abraham I (6):
+>   ARM: dts: dra72-evm-common: Correct vmmc-supply for mmc2
+>   ARM: dts: dra72-evm: Add vqmmc supply to mmc1
+>   ARM: dts: dra72-evm-revc: Add vqmmc supply to mmc1
+>   ARM: dts: am57xx-beagle-x15-revb1: Fix supply name used for MMC1 IO
+>     lines
+>   ARM: dts: dra7: Add "max-frequency" property to MMC dt nodes
+>   ARM: dts: omap*: Replace deprecated "vmmc_aux" with "vqmmc"
+>
+> Ravikumar Kattekola (1):
+>   ARM: dts: dra7-evm: Correct the vmmc-supply for mmc2
+>
+> Sekhar Nori (1):
+>   ARM: OMAP2+: Add pdata-quirks for MMC/SD on DRA74x EVM
+>
+>  arch/arm/boot/dts/am572x-idk.dts               |  2 +-
+>  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts  |  2 +-
+>  arch/arm/boot/dts/dra7-evm.dts                 | 12 ++++++++--
+>  arch/arm/boot/dts/dra7.dtsi                    |  5 +++++
+>  arch/arm/boot/dts/dra71-evm.dts                | 16 ++++++++++++-
+>  arch/arm/boot/dts/dra72-evm-common.dtsi        |  2 --
+>  arch/arm/boot/dts/dra72-evm-revc.dts           | 18 +++++++++++++++
+>  arch/arm/boot/dts/dra72-evm-tps65917.dtsi      |  2 +-
+>  arch/arm/boot/dts/dra72-evm.dts                | 18 +++++++++++++++
+>  arch/arm/boot/dts/omap3-beagle-xm.dts          |  2 +-
+>  arch/arm/boot/dts/omap3-beagle.dts             |  2 +-
+>  arch/arm/boot/dts/omap3-cm-t3517.dts           |  2 +-
+>  arch/arm/boot/dts/omap3-cm-t3730.dts           |  2 +-
+>  arch/arm/boot/dts/omap3-devkit8000-common.dtsi |  2 +-
+>  arch/arm/boot/dts/omap3-evm-common.dtsi        |  2 +-
+>  arch/arm/boot/dts/omap3-n900.dts               |  2 +-
+>  arch/arm/boot/dts/omap3-overo-base.dtsi        |  3 +--
+>  arch/arm/boot/dts/omap3-tao3530.dtsi           |  2 +-
+>  arch/arm/boot/dts/omap3-zoom3.dts              |  2 +-
+>  arch/arm/boot/dts/omap3430-sdp.dts             |  2 +-
+>  arch/arm/mach-omap2/pdata-quirks.c             | 31 ++++++++++++++++++++++++++
+>  include/linux/platform_data/hsmmc-omap.h       |  3 +++
+>  22 files changed, 114 insertions(+), 20 deletions(-)
+>
+> --
+> 2.11.0
+>
 
-> 2017-06-08 15:16 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> > Hi Boris,
-> >
-> > 2017-06-07 20:52 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:  
-> >> This patch series intends to solve various problems.
-> >>
-> >> [1] The driver just retrieves the OOB area as-is
-> >>     whereas the controller uses syndrome page layout.
-> >> [2] Many NAND chip specific parameters are hard-coded in the driver.
-> >> [3] ONFi devices are not working
-> >> [4] It can not read Bad Block Marker
-> >>
-> >> Outstanding changes are:
-> >> - Fix raw/oob callbacks for syndrome page layout
-> >> - Implement setup_data_interface() callback
-> >> - Fix/implement more commands for ONFi devices
-> >> - Allow to skip the driver internal bounce buffer
-> >> - Support PIO in case DMA is not supported
-> >> - Switch from ->cmdfunc over to ->cmd_ctrl  
-> >
-> >
-> > I am planning v6, but
-> > how many can you pick-up from this series?
-> >
-> > I did not see your comments for 01-05, so are they applicable?
-> >
-> > Could you add
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > for 05  (http://patchwork.ozlabs.org/patch/772388/)
-> >
-> > He had already acked it, but I just missed it.
-> >  
-> 
-> BTW, this series can not apply to Boris's tree
-> because of the following commit.
-> 
-> commit 4a78cc644eed3cf2dae00c3a959910a86c140fd6
-> Author: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Date:   Fri May 26 17:10:15 2017 +0200
-> 
->     mtd: nand: Make sure drivers not supporting SET/GET_FEATURES
-> return -ENOTSUPP
-> 
-> 
-> 
-> I will send v6 rebased on nand/next branch.
-> 
+If it helps, I can host a branch with the updates on the omap_hsmmc
+driver, such it can be pulled in from arm soc?
 
-Please wait a bit before spamming the ML again. I'd like to finish
-reviewing patches and apply uncontroversial ones.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess you need that as, the DT changes relies on the new vqmmc
+binding. Or you thing it doesn't matter, because for the current
+changes that regulator is always an always on regulator?
+
+Br
+Uffe
