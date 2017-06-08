@@ -1,173 +1,28 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 2/3] arm64: dts: mt7622: add basic nodes to the
- mt7622.dtsi file
-Date: Thu, 8 Jun 2017 18:24:24 +0200
-Message-ID: <2b59f1f1-c9ba-8c50-7d56-1c89a3cadf64@gmail.com>
-References: <cover.1496250798.git.sean.wang@mediatek.com>
- <60640937c793184ce12f88e5c66f3f316e97cefa.1496250798.git.sean.wang@mediatek.com>
- <1abcc8b1-de0f-859e-0200-ccdc2dce7354@gmail.com>
- <1496938062.30833.13.camel@mtkswgap22>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Update documentation for stingray
+ SATA phy
+Date: Thu, 8 Jun 2017 09:33:33 -0700
+Message-ID: <37f20f73-be4a-3004-f590-7dfce81fc88e@gmail.com>
+References: <1496921499-2808-1-git-send-email-srinath.mannam@broadcom.com>
+ <1496921499-2808-2-git-send-email-srinath.mannam@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496938062.30833.13.camel@mtkswgap22>
+In-Reply-To: <1496921499-2808-2-git-send-email-srinath.mannam@broadcom.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Srinath Mannam <srinath.mannam@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tejun Heo <tj@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <ray.jui@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
+On 06/08/2017 04:31 AM, Srinath Mannam wrote:
+> Update BRCM SATA phy dt-binding documentation for stingray.
+> 
+> Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
 
-
-On 08/06/17 18:07, Sean Wang wrote:
-> On Thu, 2017-06-08 at 15:52 +0200, Matthias Brugger wrote:
->>
->> On 31/05/17 19:29, sean.wang@mediatek.com wrote:
->>> From: Sean Wang <sean.wang@mediatek.com>
->>>
->>> add basic nodes into the mt7622.dtsi for the system
->>> bring-up which includes ARM CPU, GIC, timer, MediaTek
->>> UART, SYSIRQ and one reserved memory region for ATF.
->>>
->>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
->>> ---
->>>    arch/arm64/boot/dts/mediatek/mt7622.dtsi | 103 +++++++++++++++++++++++++++++++
->>>    1 file changed, 103 insertions(+)
->>>    create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>>
->>> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> new file mode 100644
->>> index 0000000..2031b73
->>> --- /dev/null
->>> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
->>> @@ -0,0 +1,103 @@
->>> +/*
->>> + * Copyright (c) 2017 MediaTek Inc.
->>> + * Author: Ming Huang <ming.huang@mediatek.com>
->>> + *	   Sean Wang <sean.wang@mediatek.com>
->>> + *
->>> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
->>> + */
->>> +
->>> +#include <dt-bindings/interrupt-controller/irq.h>
->>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
->>> +
->>> +/ {
->>> +	compatible = "mediatek,mt7622";
->>> +	interrupt-parent = <&sysirq>;
->>> +	#address-cells = <2>;
->>> +	#size-cells = <2>;
->>> +
->>> +	cpus {
->>> +		#address-cells = <2>;
->>> +		#size-cells = <0>;
->>> +
->>> +		cpu0: cpu@0 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a53", "arm,armv8";
->>> +			reg = <0x0 0x0>;
->>> +			enable-method = "psci";
->>> +			clock-frequency = <1300000000>;
->>> +		};
->>> +
->>> +		cpu1: cpu@1 {
->>> +			device_type = "cpu";
->>> +			compatible = "arm,cortex-a53", "arm,armv8";
->>> +			reg = <0x0 0x1>;
->>> +			enable-method = "psci";
->>> +			clock-frequency = <1300000000>;
->>> +		};
->>> +	};
->>> +
->>> +	uart_clk: dummy26m {
->>> +		compatible = "fixed-clock";
->>> +		#clock-cells = <0>;
->>> +		clock-frequency = <25000000>;
->>> +	};
->>> +
->>> +	psci {
->>> +		compatible  = "arm,psci-0.2";
->>> +		method      = "smc";
->>> +	};
->>> +
->>> +	reserved-memory {
->>> +		#address-cells = <2>;
->>> +		#size-cells = <2>;
->>> +		ranges;
->>> +
->>> +		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
->>> +		secmon_reserved: secmon@43000000 {
->>> +			reg = <0 0x43000000 0 0x30000>;
->>> +			no-map;
->>> +		};
->>> +	};
->>> +
->>> +	timer {
->>> +		compatible = "arm,armv8-timer";
->>> +		interrupt-parent = <&gic>;
->>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
->>> +			      IRQ_TYPE_LEVEL_HIGH)>,
->>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
->>> +			      IRQ_TYPE_LEVEL_HIGH)>,
->>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
->>> +			      IRQ_TYPE_LEVEL_HIGH)>,
->>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
->>> +			      IRQ_TYPE_LEVEL_HIGH)>;
->>> +	};
->>> +
->>> +	sysirq: interrupt-controller@10200620 {
->>> +		compatible = "mediatek,mt7622-sysirq",
->>> +			     "mediatek,mt6577-sysirq";
->>> +		interrupt-controller;
->>> +		#interrupt-cells = <3>;
->>> +		interrupt-parent = <&gic>;
->>> +		reg = <0 0x10200620 0 0x20>;
->>> +	};
->>> +
->>> +	gic: interrupt-controller@10300000 {
->>> +		compatible = "arm,gic-400";
->>> +		interrupt-controller;
->>> +		#interrupt-cells = <3>;
->>> +		interrupt-parent = <&gic>;
->>> +		reg = <0 0x10310000 0 0x1000>,
->>> +		      <0 0x10320000 0 0x1000>,
->>> +		      <0 0x10340000 0 0x2000>,
->>> +		      <0 0x10360000 0 0x2000>;
->>> +	};
->>> +
->>> +	uart0: serial@11002000 {
->>> +		compatible = "mediatek,mt7622-uart",
->>> +			     "mediatek,mt6577-uart";
->>> +		reg = <0 0x11002000 0 0x400>;
->>> +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
->>> +		clocks = <&uart_clk>;
->>
->> mt6577-uart has two clocks. Please fix this.
-> 
-> Those two real clocks which UART requires will be updated once the
-> MT7622 clock driver and the relevant binding header are all ready.
-> So currently the UART is using dummy clock node instead.
-> 
-> Is it allowed?
-> 
-
-Yes, no problem with dummy clocks at this point in time, but please 
-stick to the binding.
-
-Regards,
-Matthias
-
-> 
->> I would appreciate if you could rebase on the mediatek for-next branch
->> (especially for 3/3), which will make it easier for me to take this.
->>
-> 
-> O.K. I will rebase on your tree
-> 
-> 	Sean
-> 
->> Regards,
->> Matthias
-> 
-> 
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+-- 
+Florian
