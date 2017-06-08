@@ -1,283 +1,73 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell
- GICP
-Date: Thu, 8 Jun 2017 16:07:40 +0100
-Message-ID: <255f8d8d-8011-b980-5b29-b56c387af940@arm.com>
-References: <1496398017-6487-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1496398017-6487-4-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add Synopsys DW MIPI DSI
+ DRM bridge driver
+Date: Thu, 8 Jun 2017 10:40:28 -0500
+Message-ID: <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
+References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
+ <1496414235-20098-3-git-send-email-philippe.cornu@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496398017-6487-4-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1496414235-20098-3-git-send-email-philippe.cornu-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Cc: Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mickael Reulier <mickael.r>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On 02/06/17 11:06, Thomas Petazzoni wrote:
-> This commit adds a simple driver for the Marvell GICP, a hardware unit
-> that converts memory writes into GIC SPI interrupts. The driver provides
-> a number of functions to the ICU driver to allocate GICP interrupts, and
-> get the physical addresses that the ICUs should write to to set/clear
-> interrupts.
+On Fri, Jun 02, 2017 at 04:37:11PM +0200, Philippe CORNU wrote:
+> This patch adds documentation of device tree bindings for the
+> Synopsys DesignWare MIPI DSI host DRM bridge driver.
 > 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
 > ---
->  drivers/irqchip/Kconfig          |   3 +
->  drivers/irqchip/Makefile         |   1 +
->  drivers/irqchip/irq-mvebu-gicp.c | 170 +++++++++++++++++++++++++++++++++++++++
->  drivers/irqchip/irq-mvebu-gicp.h |  15 ++++
->  4 files changed, 189 insertions(+)
->  create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
->  create mode 100644 drivers/irqchip/irq-mvebu-gicp.h
+>  .../bindings/display/bridge/dw_mipi_dsi.txt        | 30 ++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
 > 
-> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-> index 478f8ac..e527ee5 100644
-> --- a/drivers/irqchip/Kconfig
-> +++ b/drivers/irqchip/Kconfig
-> @@ -268,6 +268,9 @@ config IRQ_MXS
->  	select IRQ_DOMAIN
->  	select STMP_DEVICE
->  
-> +config MVEBU_GICP
-> +	bool
-> +
->  config MVEBU_ODMI
->  	bool
->  	select GENERIC_MSI_IRQ_DOMAIN
-> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-> index b64c59b..11eb858 100644
-> --- a/drivers/irqchip/Makefile
-> +++ b/drivers/irqchip/Makefile
-> @@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_SA1100)		+= irq-sa11x0.o
->  obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
->  obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
->  obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
-> +obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
->  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
->  obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
->  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
-> diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
 > new file mode 100644
-> index 0000000..73c0117
+> index 0000000..1d7c438
 > --- /dev/null
-> +++ b/drivers/irqchip/irq-mvebu-gicp.c
-> @@ -0,0 +1,170 @@
-> +/*
-> + * Copyright (C) 2017 Marvell
-> + *
-> + * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2. This program is licensed "as is" without any
-> + * warranty of any kind, whether express or implied.
-> + */
+> +++ b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+> @@ -0,0 +1,30 @@
+> +Synopsys DesignWare MIPI DSI host controller
+> +============================================
 > +
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
+> +This document defines device tree properties for the Synopsys DesignWare MIPI
+> +DSI host controller. It doesn't constitue a device tree binding specification
+> +by itself but is meant to be referenced by platform-specific device tree
+> +bindings.
 > +
-> +#include "irq-mvebu-gicp.h"
+> +When referenced from platform device tree bindings the properties defined in
+> +this document are defined as follows. The platform device tree bindings are
+> +responsible for defining whether each property is required or optional.
 > +
-> +#define GICP_SETSPI_NSR_OFFSET	0x0
-> +#define GICP_CLRSPI_NSR_OFFSET	0x8
+> +- reg: Memory mapped base address and length of the DWC MIPI DSI
+> +  registers. (mandatory)
 > +
-> +struct mvebu_gicp_spi_range {
-> +	unsigned int start;
-> +	unsigned int count;
-> +};
+> +- clocks: References to all the clocks specified in the clock-names property
+> +  as specified in [1]. (mandatory)
 > +
-> +struct mvebu_gicp {
-> +	struct mvebu_gicp_spi_range *spi_ranges;
-> +	unsigned int spi_ranges_cnt;
-> +	unsigned int spi_cnt;
-> +	unsigned long *spi_bitmap;
-> +	spinlock_t spi_lock;
-> +	struct resource *res;
-> +};
+> +- clock-names: "pclk" is peripheral clock for either AHB and APB. (mandatory)
+
+Seems strange there's not also a pixel or bit clock? Or this gets driven 
+from the phy?
+
 > +
-> +int mvebu_gicp_alloc(struct mvebu_gicp *gicp)
-> +{
-> +	int idx;
+> +- resets: References to all the resets specified in the reset-names property
+> +  as specified in [2]. (optional)
 > +
-> +	spin_lock(&gicp->spi_lock);
-> +	idx = find_first_zero_bit(gicp->spi_bitmap, gicp->spi_cnt);
-> +	if (idx == gicp->spi_cnt) {
-> +		spin_unlock(&gicp->spi_lock);
-> +		return -ENOSPC;
-> +	}
-> +	set_bit(idx, gicp->spi_bitmap);
-> +	spin_unlock(&gicp->spi_lock);
+> +- reset-names: string reset name, must be "apb" if used. (optional)
 > +
-> +	return idx;
-> +}
+> +- panel or bridge node: see [3]. (mandatory)
 > +
-> +void mvebu_gicp_free(struct mvebu_gicp *gicp, int idx)
-> +{
-> +	spin_lock(&gicp->spi_lock);
-> +	clear_bit(idx, gicp->spi_bitmap);
-> +	spin_unlock(&gicp->spi_lock);
-> +}
-> +
-> +int mvebu_gicp_idx_to_spi(struct mvebu_gicp *gicp, int idx)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
-> +		struct mvebu_gicp_spi_range *r = &gicp->spi_ranges[i];
-> +
-> +		if (idx < r->count)
-> +			return r->start + idx;
-> +
-> +		idx -= r->count;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +int mvebu_gicp_spi_to_idx(struct mvebu_gicp *gicp, int spi)
-> +{
-> +	int i;
-> +	int idx = 0;
-> +
-> +	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
-> +		struct mvebu_gicp_spi_range *r = &gicp->spi_ranges[i];
-> +
-> +		if (spi >= r->start && spi < (r->start + r->count))
-> +			return idx + (spi - r->start);
-> +
-> +		idx += r->count;
-> +	}
-> +
-> +	return -EINVAL;
-> +}
-> +
-> +int mvebu_gicp_spi_count(struct mvebu_gicp *gicp)
-> +{
-> +	return gicp->spi_cnt;
-> +}
-> +
-> +phys_addr_t mvebu_gicp_setspi_phys_addr(struct mvebu_gicp *gicp)
-> +{
-> +	return gicp->res->start + GICP_SETSPI_NSR_OFFSET;
-> +}
-> +
-> +phys_addr_t mvebu_gicp_clrspi_phys_addr(struct mvebu_gicp *gicp)
-> +{
-> +	return gicp->res->start + GICP_CLRSPI_NSR_OFFSET;
-> +}
-> +
-> +static int mvebu_gicp_probe(struct platform_device *pdev)
-> +{
-> +	struct mvebu_gicp *gicp;
-> +	int ret, i;
-> +
-> +	gicp = devm_kzalloc(&pdev->dev, sizeof(*gicp), GFP_KERNEL);
-> +	if (!gicp)
-> +		return -ENOMEM;
-> +
-> +	gicp->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!gicp->res)
-> +		return -ENODEV;
-> +
-> +	ret = of_property_count_u32_elems(pdev->dev.of_node,
-> +					  "marvell,spi-ranges");
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	gicp->spi_ranges_cnt = ret / 2;
-> +
-> +	gicp->spi_ranges =
-> +		devm_kzalloc(&pdev->dev,
-> +			     gicp->spi_ranges_cnt *
-> +			     sizeof(struct mvebu_gicp_spi_range),
-> +			     GFP_KERNEL);
-> +	if (!gicp->spi_ranges)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
-> +		of_property_read_u32_index(pdev->dev.of_node,
-> +					   "marvell,spi-ranges",
-> +					   i * 2,
-> +					   &gicp->spi_ranges[i].start);
-> +
-> +		of_property_read_u32_index(pdev->dev.of_node,
-> +					   "marvell,spi-ranges",
-> +					   i * 2 + 1,
-> +					   &gicp->spi_ranges[i].count);
-> +
-> +		gicp->spi_cnt += gicp->spi_ranges[i].count;
-> +	}
-> +
-> +	gicp->spi_bitmap = devm_kzalloc(&pdev->dev,
-> +					BITS_TO_LONGS(gicp->spi_cnt),
-> +					GFP_KERNEL);
-> +	if (!gicp->spi_bitmap)
-> +		return -ENOMEM;
-> +
-> +	platform_set_drvdata(pdev, gicp);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id mvebu_gicp_of_match[] = {
-> +	{ .compatible = "marvell,ap806-gicp", },
-> +	{},
-> +};
-> +
-> +static struct platform_driver mvebu_gicp_driver = {
-> +	.probe  = mvebu_gicp_probe,
-> +	.driver = {
-> +		.name = "mvebu-gicp",
-> +		.of_match_table = mvebu_gicp_of_match,
-> +	},
-> +};
-> +builtin_platform_driver(mvebu_gicp_driver);
-> diff --git a/drivers/irqchip/irq-mvebu-gicp.h b/drivers/irqchip/irq-mvebu-gicp.h
-> new file mode 100644
-> index 0000000..7290166
-> --- /dev/null
-> +++ b/drivers/irqchip/irq-mvebu-gicp.h
-> @@ -0,0 +1,15 @@
-> +#ifndef __MVEBU_GICP_H__
-> +#define __MVEBU_GICP_H__
-> +
-> +struct mvebu_gicp;
-> +
-> +int mvebu_gicp_alloc(struct mvebu_gicp *gicp);
-> +void mvebu_gicp_free(struct mvebu_gicp *gicp, int idx);
-> +int mvebu_gicp_idx_to_spi(struct mvebu_gicp *gicp, int idx);
-> +int mvebu_gicp_spi_to_idx(struct mvebu_gicp *gicp, int spi);
-> +phys_addr_t mvebu_gicp_setspi_phys_addr(struct mvebu_gicp *gicp);
-> +phys_addr_t mvebu_gicp_clrspi_phys_addr(struct mvebu_gicp *gicp);
-> +int mvebu_gicp_spi_count(struct mvebu_gicp *gicp);
-> +
-> +#endif /* __MVEBU_GICP_H__ */
-> +
+> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +[2] Documentation/devicetree/bindings/reset/reset.txt
+> +[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
+> -- 
+> 1.9.1
 > 
-
-The more I look at this code, the more I think this should actually be
-an IRQ domain of its own. It already has an allocator, and I believe a
-number of these exported functions disappear by virtue of having linked
-data structures.
-
-Also, given that this GICP is a perfect clone of the equivalent GICv3
-feature, we could use it the same way should someone glue an ICU on a
-GICv3 system...
-
-I appreciate that I did say the exact opposite on IRC, but hey, I admit
-I was wrong! ;-)
-
-What do you think?
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
