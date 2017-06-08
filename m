@@ -1,45 +1,42 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v5 6/6] arm64: defconfig: Enable qcom ipq8074 clock and pinctrl
-Date: Thu,  8 Jun 2017 11:14:01 +0530
-Message-ID: <1496900641-27755-7-git-send-email-varada@codeaurora.org>
-References: <1496900641-27755-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496900641-27755-1-git-send-email-varada@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, Varadarajan Narayanan <varada@codeaurora.org>
+From: "Keiji Hayashibara" <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: RE: [PATCH V2 2/3] watchdog: uniphier: add UniPhier watchdog driver
+Date: Thu, 8 Jun 2017 14:51:21 +0900
+Message-ID: <000001d2e01b$41b00840$c51018c0$@socionext.com>
+References: <1496740294-12653-1-git-send-email-hayashibara.keiji@socionext.com> <1496740294-12653-3-git-send-email-hayashibara.keiji@socionext.com> <CAK7LNARQb3r7fvytCZ86G3iQBpWhu7-06DY9gcJswjH0heUonA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain;
+        charset="iso-2022-jp"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNARQb3r7fvytCZ86G3iQBpWhu7-06DY9gcJswjH0heUonA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: ja
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-2022-jp?B?WWFtYWRhLCBNYXNhaGlyby8bJEI7M0VEGyhCIBskQj8/OTAbKEI=?= <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?iso-2022-jp?B?SGF5YXNoaSwgS3VuaWhpa28vGyRCTlMbKEIgGyRCSy5JJxsoQg==?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?iso-2022-jp?B?T3dhZGEsIEtpeW9zaGkvGyRCQmdPQkVEGyhCIBskQkA2O1YbKEI=?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
+Hello Yamada-san,
 
-These configs are required for booting kernel in qcom
-ipq8074 boards.
+> > +
+> > +#include <linux/module.h>
+> > +#include <linux/mfd/syscon.h>
+> > +#include <linux/of.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/watchdog.h>
+> > +#include <linux/bitops.h>
+> 
+> I think you should have added <linux/bitops.h> on the top
+> to keep the includes alphabetically sorted.
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+Sorry, I will fix in v3 patch.
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 65cdd87..c20328e 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -267,6 +267,7 @@ CONFIG_SPI_S3C64XX=y
- CONFIG_SPI_SPIDEV=m
- CONFIG_SPMI=y
- CONFIG_PINCTRL_SINGLE=y
-+CONFIG_PINCTRL_IPQ8074=y
- CONFIG_PINCTRL_MAX77620=y
- CONFIG_PINCTRL_MSM8916=y
- CONFIG_PINCTRL_MSM8994=y
-@@ -450,6 +451,7 @@ CONFIG_CLK_QORIQ=y
- CONFIG_COMMON_CLK_PWM=y
- CONFIG_COMMON_CLK_QCOM=y
- CONFIG_QCOM_CLK_SMD_RPM=y
-+CONFIG_IPQ_GCC_8074=y
- CONFIG_MSM_GCC_8916=y
- CONFIG_MSM_GCC_8994=y
- CONFIG_MSM_MMCC_8996=y
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+----------
+Best Regards,
+Keiji Hayashibara
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
