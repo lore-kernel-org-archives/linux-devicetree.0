@@ -1,135 +1,173 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] power: tps65217_charger: add support for NTC
- type, voltage and current charge
-Date: Thu, 8 Jun 2017 18:11:37 +0200
-Message-ID: <20170608161137.7kxkriaryr5m323h@earth>
-References: <20170526110413.24836-1-enric.balletbo@collabora.com>
- <20170526110413.24836-4-enric.balletbo@collabora.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v3 2/3] arm64: dts: mt7622: add basic nodes to the
+ mt7622.dtsi file
+Date: Thu, 8 Jun 2017 18:24:24 +0200
+Message-ID: <2b59f1f1-c9ba-8c50-7d56-1c89a3cadf64@gmail.com>
+References: <cover.1496250798.git.sean.wang@mediatek.com>
+ <60640937c793184ce12f88e5c66f3f316e97cefa.1496250798.git.sean.wang@mediatek.com>
+ <1abcc8b1-de0f-859e-0200-ccdc2dce7354@gmail.com>
+ <1496938062.30833.13.camel@mtkswgap22>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="fmyal4pnucnwexfe"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170526110413.24836-4-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-RYWXG+zxWwBdeoIcmNTgJF6hYfS7NtTn@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496938062.30833.13.camel@mtkswgap22>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sean Wang <sean.wang@mediatek.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---fmyal4pnucnwexfe
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi Enric,
+On 08/06/17 18:07, Sean Wang wrote:
+> On Thu, 2017-06-08 at 15:52 +0200, Matthias Brugger wrote:
+>>
+>> On 31/05/17 19:29, sean.wang@mediatek.com wrote:
+>>> From: Sean Wang <sean.wang@mediatek.com>
+>>>
+>>> add basic nodes into the mt7622.dtsi for the system
+>>> bring-up which includes ARM CPU, GIC, timer, MediaTek
+>>> UART, SYSIRQ and one reserved memory region for ATF.
+>>>
+>>> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+>>> ---
+>>>    arch/arm64/boot/dts/mediatek/mt7622.dtsi | 103 +++++++++++++++++++++++++++++++
+>>>    1 file changed, 103 insertions(+)
+>>>    create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
+>>>
+>>> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+>>> new file mode 100644
+>>> index 0000000..2031b73
+>>> --- /dev/null
+>>> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+>>> @@ -0,0 +1,103 @@
+>>> +/*
+>>> + * Copyright (c) 2017 MediaTek Inc.
+>>> + * Author: Ming Huang <ming.huang@mediatek.com>
+>>> + *	   Sean Wang <sean.wang@mediatek.com>
+>>> + *
+>>> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+>>> + */
+>>> +
+>>> +#include <dt-bindings/interrupt-controller/irq.h>
+>>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>>> +
+>>> +/ {
+>>> +	compatible = "mediatek,mt7622";
+>>> +	interrupt-parent = <&sysirq>;
+>>> +	#address-cells = <2>;
+>>> +	#size-cells = <2>;
+>>> +
+>>> +	cpus {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <0>;
+>>> +
+>>> +		cpu0: cpu@0 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a53", "arm,armv8";
+>>> +			reg = <0x0 0x0>;
+>>> +			enable-method = "psci";
+>>> +			clock-frequency = <1300000000>;
+>>> +		};
+>>> +
+>>> +		cpu1: cpu@1 {
+>>> +			device_type = "cpu";
+>>> +			compatible = "arm,cortex-a53", "arm,armv8";
+>>> +			reg = <0x0 0x1>;
+>>> +			enable-method = "psci";
+>>> +			clock-frequency = <1300000000>;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	uart_clk: dummy26m {
+>>> +		compatible = "fixed-clock";
+>>> +		#clock-cells = <0>;
+>>> +		clock-frequency = <25000000>;
+>>> +	};
+>>> +
+>>> +	psci {
+>>> +		compatible  = "arm,psci-0.2";
+>>> +		method      = "smc";
+>>> +	};
+>>> +
+>>> +	reserved-memory {
+>>> +		#address-cells = <2>;
+>>> +		#size-cells = <2>;
+>>> +		ranges;
+>>> +
+>>> +		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
+>>> +		secmon_reserved: secmon@43000000 {
+>>> +			reg = <0 0x43000000 0 0x30000>;
+>>> +			no-map;
+>>> +		};
+>>> +	};
+>>> +
+>>> +	timer {
+>>> +		compatible = "arm,armv8-timer";
+>>> +		interrupt-parent = <&gic>;
+>>> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+>>> +			      IRQ_TYPE_LEVEL_HIGH)>,
+>>> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
+>>> +			      IRQ_TYPE_LEVEL_HIGH)>,
+>>> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
+>>> +			      IRQ_TYPE_LEVEL_HIGH)>,
+>>> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
+>>> +			      IRQ_TYPE_LEVEL_HIGH)>;
+>>> +	};
+>>> +
+>>> +	sysirq: interrupt-controller@10200620 {
+>>> +		compatible = "mediatek,mt7622-sysirq",
+>>> +			     "mediatek,mt6577-sysirq";
+>>> +		interrupt-controller;
+>>> +		#interrupt-cells = <3>;
+>>> +		interrupt-parent = <&gic>;
+>>> +		reg = <0 0x10200620 0 0x20>;
+>>> +	};
+>>> +
+>>> +	gic: interrupt-controller@10300000 {
+>>> +		compatible = "arm,gic-400";
+>>> +		interrupt-controller;
+>>> +		#interrupt-cells = <3>;
+>>> +		interrupt-parent = <&gic>;
+>>> +		reg = <0 0x10310000 0 0x1000>,
+>>> +		      <0 0x10320000 0 0x1000>,
+>>> +		      <0 0x10340000 0 0x2000>,
+>>> +		      <0 0x10360000 0 0x2000>;
+>>> +	};
+>>> +
+>>> +	uart0: serial@11002000 {
+>>> +		compatible = "mediatek,mt7622-uart",
+>>> +			     "mediatek,mt6577-uart";
+>>> +		reg = <0 0x11002000 0 0x400>;
+>>> +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+>>> +		clocks = <&uart_clk>;
+>>
+>> mt6577-uart has two clocks. Please fix this.
+> 
+> Those two real clocks which UART requires will be updated once the
+> MT7622 clock driver and the relevant binding header are all ready.
+> So currently the UART is using dummy clock node instead.
+> 
+> Is it allowed?
+> 
 
-On Fri, May 26, 2017 at 01:04:13PM +0200, Enric Balletbo i Serra wrote:
-> Allow the possibility to configure the charge and the current voltage of
-> the charger and also the NTC type for battery temperature measurement.
->=20
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
-> Changes since v2:
->  - Requested by Sebastian Reichel
->    - Use the simple-battery framework
->    - Use device_property_read_u32 instead of of_property_read_u32
-> Changes since v1:
->  - None
->=20
->  drivers/power/supply/tps65217_charger.c | 194 ++++++++++++++++++++++++++=
-++++--
->  include/linux/mfd/tps65217.h            |   2 +
->  2 files changed, 188 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/power/supply/tps65217_charger.c b/drivers/power/supp=
-ly/tps65217_charger.c
-> index 1f52340..5939e77 100644
-> --- a/drivers/power/supply/tps65217_charger.c
-> +++ b/drivers/power/supply/tps65217_charger.c
->
-> [...]
->
-> +#ifdef CONFIG_OF
+Yes, no problem with dummy clocks at this point in time, but please 
+stick to the binding.
 
-You can drop the #ifdef CONFIG_OF. device_properties can also be
-added via ACPI or boardcode and power_supply_get_battery_info is
-always available (but will return -EINVAL values for !OF at the
-moment).
+Regards,
+Matthias
 
-> +static struct tps65217_charger_platform_data *tps65217_charger_pdata_ini=
-t(
-> +		struct tps65217_charger *charger)
-> +{
-> +	struct tps65217_charger_platform_data *pdata;
-> +	struct power_supply_battery_info info =3D {};
-> +	int ret;
-> +
-> +	pdata =3D devm_kzalloc(charger->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	/*
-> +	 * If battery info is not supplied just ignore and program default
-> +	 * values.
-> +	 */
-> +	power_supply_get_battery_info(charger->psy, &info);
-> +
-> +	if (info.charge_voltage_uv > 0)
-> +		pdata->charge_voltage_uv =3D info.charge_voltage_uv;
-> +	else
-> +		pdata->charge_voltage_uv =3D 4100000;
-> +
-> +	if (info.charge_current_ua > 0)
-> +		pdata->charge_current_ua =3D info.charge_current_ua;
-> +	else
-> +		pdata->charge_current_ua =3D 500000;
-> +
-> +	ret =3D device_property_read_u32(charger->dev, "ti,ntc-type",
-> +				       &pdata->ntc_type);
-> +	if (ret)
-> +		pdata->ntc_type =3D 1;	/* 10k  (curve 2, B =3D 3480) */
-> +
-> +	return pdata;
-> +}
-> +#else /* CONFIG_OF */
-> +static struct tps65217_charger_platform_data *tps65217_charger_pdata_ini=
-t(
-> +		struct tps65217_charger *charger)
-> +{
-> +	return NULL;
-> +}
-> +#endif /* CONFIG_OF */
-> +
-> [...]
->
-
-Otherwise looks fine to me.
-
--- Sebastian
-
---fmyal4pnucnwexfe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlk5dzYACgkQ2O7X88g7
-+pq8bRAAnpmAEz34NFSfsTi3+hXmc72b6ytfDkX9REKTpqaMGNMxTctnkVla48B7
-VgXdvMzebw0l8i0c++IXRxW5tD2VegPmNlc4d+tYYNJ4yflFwWCqyrnFrryBbo6k
-j644TaOpPsz3nZgvvrWhlPNBR+dLAK1zZ934jvgIgOlwwwZYG79PEyWPxrLhz0OV
-WsJE5whUTiGGGJnXJVGD+GVuYUJsiSjSYXloBlQcOd3+gw9m1wzQNiTRtnUnRFm9
-ZqbX4QAgi2yCy/BImQeDADEqA8/51nuTuXrp1aNYl5t+bALw/4PqX3nE3DY7b4Ty
-5rji8J/9RoV0WCxcC8tlW34ae6A1A5KNcwFesqhfXhZr6vpHQfFjqZ37KIkgxyox
-bcnrjInjvy9BPQvaDcc1UG6xNwIAarVXQkc5bz2/HhpWKqgPOxSMoezK8pyglRb+
-jMA+aqv4ZudugQ9XU9u9AWOuQ5BirON+SzpU0RD+fCNf04g137rJWEpmR/XFmLGR
-j9CQ8s2tlCnQsa5UHim4C5FYhoV6wkmURz76ISgVv9ahwCMkBaHyJccMYf9JbfIa
-IKw6aJ1X+6qB9k1qDLFtn9nFjOevd72oD3W4W/tCSYv+BSSCvFoWLzyRrfxhtG2v
-HW9JNlGTOQN/45wo52R+Bp5Csk0FyOdBlRz7ShKwOsyxpKPq4os=
-=rC/s
------END PGP SIGNATURE-----
-
---fmyal4pnucnwexfe--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> I would appreciate if you could rebase on the mediatek for-next branch
+>> (especially for 3/3), which will make it easier for me to take this.
+>>
+> 
+> O.K. I will rebase on your tree
+> 
+> 	Sean
+> 
+>> Regards,
+>> Matthias
+> 
+> 
