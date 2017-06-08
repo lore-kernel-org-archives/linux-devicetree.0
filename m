@@ -1,45 +1,29 @@
-From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
-Subject: [PATCH v10 1/3] DT add arctic to vendor prefix for ArcticSand
-Date: Thu,  8 Jun 2017 10:12:02 -0400
-Message-ID: <1496931122-29094-1-git-send-email-olimpiu@arcticsand.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 09/11] gpio: dt-bindings: Add documentation for gpio
+ controllers on Armada 7K/8K
+Date: Thu, 8 Jun 2017 09:18:04 -0500
+Message-ID: <20170608141804.fm72esb5lpbqcp4m@rob-hp-laptop>
+References: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
+ <7b92aabfb7309eb0b138c149cc3fc61e8f64cd61.1496413293.git-series.gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7b92aabfb7309eb0b138c149cc3fc61e8f64cd61.1496413293.git-series.gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-dt-bindings: vendor-prefixes: add arctic to vendor prefix
+On Fri, Jun 02, 2017 at 04:23:16PM +0200, Gregory CLEMENT wrote:
+> Document the device tree binding for the gpio controllers found on the
+> Marvell Armada 7K and Armada 8K SoCs.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt  | 20 ++++++++++++++++++++
+>  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 24 +++++++++++++++++++++++-
+>  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt                      | 24 +++++++++++++++++-------
+>  3 files changed, 60 insertions(+), 8 deletions(-)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Reviewed-by: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 
-Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
----
-v9 => v10:
-- (Re-submit) Per Rob Herring's request changed vendor-prefix to arctic
-v8 => v9:
-- Version updated to match other patch in set. No other changes.
-v8:
-- Version to match other patches in set
-
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 16d3b5e..6f33a4b 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -28,6 +28,7 @@ andestech	Andes Technology Corporation
- apm	Applied Micro Circuits Corporation (APM)
- aptina	Aptina Imaging
- arasan	Arasan Chip Systems
-+arctic	Arctic Sand
- aries	Aries Embedded GmbH
- arm	ARM Ltd.
- armadeus	ARMadeus Systems SARL
--- 
-2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
