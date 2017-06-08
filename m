@@ -1,7 +1,7 @@
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v6 7/9] pinctrl: meson: update DT binding documentation
-Date: Thu, 8 Jun 2017 21:39:22 +0200
-Message-ID: <ebc39de6-6cb5-2c89-cb3c-0990cec24924@gmail.com>
+Subject: [PATCH v6 4/9] ARM: dts: meson: add GPIO interrupt-controller support
+Date: Thu, 8 Jun 2017 21:38:58 +0200
+Message-ID: <92414130-4ccf-ae24-acca-cd389014b45e@gmail.com>
 References: <04378047-4194-bb0f-3da3-e1d62345a86b@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -13,44 +13,60 @@ To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, M
 Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The GPIO controllers act as interrupt controllers now,
-therefore update the related DT binding documentation.
+Add support for the GPIO interupt controller of certain Amlogic Meson
+Soc's.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
 v5:
-- separate documentation update from actual DT update
-- add Reviewed-by
+- split ARM and ARM64 into separate patches
+- added Reviewed-by
 v6:
-- add Acked-by
+- change parent-interrupts to interrupts
 ---
- Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
+ arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
+ 2 files changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 2392557e..49a8118a 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -24,6 +24,8 @@ Required properties for sub-nodes are:
-    when it is missing the "pull" registers are used instead
-  - gpio-controller: identifies the node as a gpio controller
-  - #gpio-cells: must be 2
-+ - interrupt-controller: identifies the node as interrupt controller
-+ - #interrupt-cells: must be 2
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 69930773..b4c4175d 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -126,6 +126,14 @@
+ };
  
- === Other sub-nodes ===
+ &cbus {
++	gpio_intc: interrupt-controller@9880 {
++		compatible = "amlogic,meson-gpio-intc";
++		reg = <0x9880 0x10>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <64 65 66 67 68 79 70 71>;
++	};
++
+ 	pinctrl_cbus: pinctrl@9880 {
+ 		compatible = "amlogic,meson8-cbus-pinctrl";
+ 		reg = <0x9880 0x10>;
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index d9f116a4..fedfef24 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -112,6 +112,14 @@
+ };
  
-@@ -62,6 +64,8 @@ pinctrl-bindings.txt
- 			reg-names = "mux", "pull", "pull-enable", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-                };
- 
- 		nand {
+ &cbus {
++	gpio_intc: interrupt-controller@9880 {
++		compatible = "amlogic,meson-gpio-intc";
++		reg = <0x9880 0x10>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <64 65 66 67 68 79 70 71>;
++	};
++
+ 	clkc: clock-controller@4000 {
+ 		#clock-cells = <1>;
+ 		compatible = "amlogic,meson8b-clkc";
 -- 
 2.13.0
 
