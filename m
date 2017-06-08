@@ -1,79 +1,64 @@
-From: Babu Moger <babu.moger@oracle.com>
-Subject: Re: CPU_BIG_ENDIAN in generic code (was: Re: [PATCH v3 3/7]
- arch/sparc: Define config parameter CPU_BIG_ENDIAN)
-Date: Wed, 7 Jun 2017 18:07:20 -0500
-Message-ID: <28d6c874-4653-b15d-39b7-57a032abc9c6@oracle.com>
-References: <CAMuHMdVjh+1TR19mUUQYHSazHnBHa4uxn7KyHUO+jAh7WDxy5Q@mail.gmail.com>
- <87a85v7to2.fsf@concordia.ellerman.id.au>
- <CAMuHMdU1kne4tKRfyx0hr1LXh_c75bYMs0b=vncHqrhB69jqYg@mail.gmail.com>
- <877f0z6oig.fsf@concordia.ellerman.id.au>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH v2 3/3] remoteproc/keystone: Ensure the DSPs are in reset in
+ probe
+Date: Wed, 7 Jun 2017 19:24:47 -0500
+Message-ID: <20170608002447.47580-4-s-anna@ti.com>
+References: <20170608002447.47580-1-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <877f0z6oig.fsf@concordia.ellerman.id.au>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "David S. Miller" <davem@davemloft.net>, Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, sparclinux <sparclinux@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170608002447.47580-1-s-anna@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Ohad Ben-Cohen <ohad@wizery.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F. Davis" <afd@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, Sam Nelson <sam.nelson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+From: "Andrew F. Davis" <afd@ti.com>
 
-On 5/29/2017 9:56 PM, Michael Ellerman wrote:
-> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->
->> Hi Michael,
->>
->> On Mon, May 29, 2017 at 2:07 PM, Michael Ellerman <mpe@ellerman.id.au> wrote:
->>> Geert Uytterhoeven <geert@linux-m68k.org> writes:
->>>> On Tue, May 23, 2017 at 11:45 PM, Babu Moger <babu.moger@oracle.com> wrote:
->>>>> Found this problem while enabling queued rwlock on SPARC.
->>>>> The parameter CONFIG_CPU_BIG_ENDIAN is used to clear the
->>>>> specific byte in qrwlock structure. Without this parameter,
->>>>> we clear the wrong byte. Here is the code.
->>>>>
->>>>> static inline u8 *__qrwlock_write_byte(struct qrwlock *lock)
->>>>>   {
->>>>>          return (u8 *)lock + 3 * IS_BUILTIN(CONFIG_CPU_BIG_ENDIAN);
->>>>>   }
->>>>>
->>>>> Define CPU_BIG_ENDIAN for SPARC to fix it.
->>>>> --- a/arch/sparc/Kconfig
->>>>> +++ b/arch/sparc/Kconfig
->>>>> @@ -92,6 +92,10 @@ config ARCH_DEFCONFIG
->>>>>   config ARCH_PROC_KCORE_TEXT
->>>>>          def_bool y
->>>>>
->>>>> +config CPU_BIG_ENDIAN
->>>>> +       bool
->>>>> +       default y if SPARC
->>>> Nice catch!
->>>>
->>>> Traditionally, CPU_BIG_ENDIAN and CPU_LITTLE_ENDIAN were defined only on
->>>> architectures that may support both.  And it was checked in platform code
->>>> and drivers only.
->>>> Hence the symbol is lacking from most architectures. Heck, even
->>>> architectures that support both may default to one endiannes, and declare
->>>> only the symbol for the other endianness:
->>> I guess there's a reason we can't use __BIG_ENDIAN__ / __LITTLE_ENDIAN__ ?
->> I (C/asm) code we can, in Kconfig we cannot.
->>
->> So far we tried always doing that, but a few checks for the semi-existing
->> Kconfig symbol crept in in generic code. Those could be replaced by the __*__
->> variants, but consistently having the Kconfig symbols would be useful anyway
->> (e.g. to avoid building the broken-on-big-endian ISDN drivers).
-> Ah OK, the original mail was citing C code, but yeah I guess it would be
-> handy in Makefiles etc.
+The DSPs are expected to be in reset when the driver probes a device.
+If the DSPs are out of reset in probe, the system may crash when the
+firmware is being loaded. So, add a check to make sure the DSP resets
+are asserted, and if not, throw a eye-catchy warning and assert the
+resets specifically.
 
-Thanks for all the responses.  I see couple of options here.
+Signed-off-by: Andrew F. Davis <afd@ti.com>
+[s-anna@ti.com: replace warning with a WARN]
+Signed-off-by: Suman Anna <s-anna@ti.com>
+---
+v2: No code changes
 
-1. Fix the c code in include/asm-generic/qrwlock.h using ifdef 
-__BIG_ENDIAN__
-     This will fix the issue for us.
+ drivers/remoteproc/keystone_remoteproc.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-2. Define CPU_BIG_ENDIAN for all the missing fixed endian architectures. 
-Because the problem is only for fixed big endian archs.
-
-I prefer the option 1.  What do you guys think ?
-
-> cheers
+diff --git a/drivers/remoteproc/keystone_remoteproc.c b/drivers/remoteproc/keystone_remoteproc.c
+index 6e09ef76f7c7..5f776bfd674a 100644
+--- a/drivers/remoteproc/keystone_remoteproc.c
++++ b/drivers/remoteproc/keystone_remoteproc.c
+@@ -456,6 +456,16 @@ static int keystone_rproc_probe(struct platform_device *pdev)
+ 	if (of_reserved_mem_device_init(dev))
+ 		dev_warn(dev, "device does not have specific CMA pool\n");
+ 
++	/* ensure the DSP is in reset before loading firmware */
++	ret = reset_control_status(ksproc->reset);
++	if (ret < 0) {
++		dev_err(dev, "failed to get reset status, status = %d\n", ret);
++		goto release_mem;
++	} else if (ret == 0) {
++		WARN(1, "device is not in reset\n");
++		keystone_rproc_dsp_reset(ksproc);
++	}
++
+ 	ret = rproc_add(rproc);
+ 	if (ret) {
+ 		dev_err(dev, "failed to add register device with remoteproc core, status = %d\n",
+-- 
+2.12.0
