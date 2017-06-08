@@ -1,71 +1,35 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 4/4] drm/panel: simple: add support for AUO P320HVN03
-Date: Thu,  8 Jun 2017 20:07:58 +0200
-Message-ID: <20170608180758.31020-4-l.stach@pengutronix.de>
-References: <20170608180758.31020-1-l.stach@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 02/17] mfd: madera: Add DT bindings for Cirrus Logic
+ Madera codecs
+Date: Thu, 8 Jun 2017 14:12:52 -0500
+Message-ID: <20170608191252.enk4bmxibnum24ni@rob-hp-laptop>
+References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1496415790-19164-3-git-send-email-rf@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170608180758.31020-1-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1496415790-19164-3-git-send-email-rf@opensource.wolfsonmicro.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: lee.jones@linaro.org, broonie@kernel.org, linus.walleij@linaro.org, gnurou@gmail.com, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBVSBPcHRyb25pY3MgQ29ycG9yYXRpb24gMzEuNSIK
-RkhEICgxOTIweDEwODApIExWRFMgVEZUIExDRCBwYW5lbCwgd2hpY2ggY2FuIGJlIHN1cHBvcnRl
-ZApieSB0aGUgc2ltcGxlIHBhbmVsIGRyaXZlcgoKU2lnbmVkLW9mZi1ieTogTHVjYXMgU3RhY2gg
-PGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+Ci0tLQp2MjogbWVudGlvbiBwb3dlci1zdXBwbHkgcHJv
-cGVydHkKLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8scDMyMGh2bjAzLnR4dCAg
-ICAgICB8ICA4ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL3BhbmVsL3BhbmVsLXNpbXBsZS5jICAg
-ICAgICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQs
-IDM5IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8scDMyMGh2bjAzLnR4dAoKZGlmZiAtLWdp
-dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL2F1byxw
-MzIwaHZuMDMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvYXVvLHAzMjBodm4wMy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAw
-MDAwMDAwLi41OWJiNmNkOGFhNzUKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9hdW8scDMyMGh2bjAzLnR4dApAQCAtMCww
-ICsxLDggQEAKK0FVIE9wdHJvbmljcyBDb3Jwb3JhdGlvbiAzMS41IiBGSEQgKDE5MjB4MTA4MCkg
-VEZUIExDRCBwYW5lbAorCitSZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91
-bGQgYmUgImF1byxwMzIwaHZuMDMiCistIHBvd2VyLXN1cHBseTogYXMgc3BlY2lmaWVkIGluIHRo
-ZSBiYXNlIGJpbmRpbmcKKworVGhpcyBiaW5kaW5nIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgc2lt
-cGxlLXBhbmVsIGJpbmRpbmcsIHdoaWNoIGlzIHNwZWNpZmllZAoraW4gc2ltcGxlLXBhbmVsLnR4
-dCBpbiB0aGlzIGRpcmVjdG9yeS4KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9w
-YW5lbC1zaW1wbGUuYyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1zaW1wbGUuYwppbmRl
-eCA5OTc1OGUzODUyNWUuLjQ3NGZhNzU5ZTA2ZSAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXNpbXBsZS5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9wYW5lbC9wYW5lbC1z
-aW1wbGUuYwpAQCAtNjM4LDYgKzYzOCwzNCBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rl
-c2MgYXVvX2cxODVoYW4wMSA9IHsKIAkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRfUkdCODg4
-XzFYN1g0X1NQV0csCiB9OwogCitzdGF0aWMgY29uc3Qgc3RydWN0IGRpc3BsYXlfdGltaW5nIGF1
-b19wMzIwaHZuMDNfdGltaW5ncyA9IHsKKwkucGl4ZWxjbG9jayA9IHsgMTA2MDAwMDAwLCAxNDg1
-MDAwMDAsIDE2NDAwMDAwMCB9LAorCS5oYWN0aXZlID0geyAxOTIwLCAxOTIwLCAxOTIwIH0sCisJ
-Lmhmcm9udF9wb3JjaCA9IHsgMjUsIDUwLCAxMzAgfSwKKwkuaGJhY2tfcG9yY2ggPSB7IDI1LCA1
-MCwgMTMwIH0sCisJLmhzeW5jX2xlbiA9IHsgMjAsIDQwLCAxMDUgfSwKKwkudmFjdGl2ZSA9IHsg
-MTA4MCwgMTA4MCwgMTA4MCB9LAorCS52ZnJvbnRfcG9yY2ggPSB7IDgsIDE3LCAxNTAgfSwKKwku
-dmJhY2tfcG9yY2ggPSB7IDgsIDE3LCAxNTAgfSwKKwkudnN5bmNfbGVuID0geyA0LCAxMSwgMTAw
-IH0sCit9OworCitzdGF0aWMgY29uc3Qgc3RydWN0IHBhbmVsX2Rlc2MgYXVvX3AzMjBodm4wMyA9
-IHsKKwkudGltaW5ncyA9ICZhdW9fcDMyMGh2bjAzX3RpbWluZ3MsCisJLm51bV90aW1pbmdzID0g
-MSwKKwkuYnBjID0gOCwKKwkuc2l6ZSA9IHsKKwkJLndpZHRoID0gNjk4LAorCQkuaGVpZ2h0ID0g
-MzkzLAorCX0sCisJLmRlbGF5ID0geworCQkucHJlcGFyZSA9IDEsCisJCS5lbmFibGUgPSA0NTAs
-CisJCS51bnByZXBhcmUgPSA1MDAsCisJfSwKKwkuYnVzX2Zvcm1hdCA9IE1FRElBX0JVU19GTVRf
-UkdCODg4XzFYN1g0X0pFSURBLAorfTsKKwogc3RhdGljIGNvbnN0IHN0cnVjdCBkcm1fZGlzcGxh
-eV9tb2RlIGF1b190MjE1aHZuMDFfbW9kZSA9IHsKIAkuY2xvY2sgPSAxNDg4MDAsCiAJLmhkaXNw
-bGF5ID0gMTkyMCwKQEAgLTE5NDEsNiArMTk2OSw5IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkIHBsYXRmb3JtX29mX21hdGNoW10gPSB7CiAJCS5jb21wYXRpYmxlID0gImF1byxn
-MTg1aGFuMDEiLAogCQkuZGF0YSA9ICZhdW9fZzE4NWhhbjAxLAogCX0sIHsKKwkJLmNvbXBhdGli
-bGUgPSAiYXVvLHAzMjBodm4wMyIsCisJCS5kYXRhID0gJmF1b19wMzIwaHZuMDMsCisJfSwgewog
-CQkuY29tcGF0aWJsZSA9ICJhdW8sdDIxNWh2bjAxIiwKIAkJLmRhdGEgPSAmYXVvX3QyMTVodm4w
-MSwKIAl9LCB7Ci0tIAoyLjExLjAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+On Fri, Jun 02, 2017 at 04:02:55PM +0100, Richard Fitzgerald wrote:
+> Specification of the bindings for the parent MFD driver component
+> of the Cirrus Logic Madera codec drivers.
+> 
+> Note that although the interrupt controller and GPIO are child
+> drivers their required bindings are trivial, mandatory, and exist
+> within the parent MFD node so are documented here.
+> 
+> Signed-off-by: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+> ---
+> Changes since V2:
+> - Moved the gpio driver bindings into the main MFD binding doc
+> 
+>  Documentation/devicetree/bindings/mfd/madera.txt | 102 +++++++++++++++++++++++
+>  1 file changed, 102 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/madera.txt
+
+Acked-by: Rob Herring <robh@kernel.org>
