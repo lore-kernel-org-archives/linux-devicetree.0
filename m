@@ -1,226 +1,50 @@
-From: Jianhong Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v6 03/12] regulator: rk808: Add regulator driver for RK805
-Date: Thu,  8 Jun 2017 15:12:30 +0800
-Message-ID: <1496905959-29202-4-git-send-email-chenjh@rock-chips.com>
-References: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/3] omap_hsmmc: use mmc_regulator_get_supply() to get regulators
+Date: Thu, 8 Jun 2017 09:15:24 +0200
+Message-ID: <CAPDyKFrMnZ0EGjdm4J0mTuaq+dp8eTEr3W-pOCowuwNEV2zwYw@mail.gmail.com>
+References: <20170607083612.14224-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <1496905959-29202-1-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170607083612.14224-1-kishon@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+On 7 June 2017 at 10:36, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> This series deprecates "vmmc_aux" supply property and uses the generic
+> "vqmmc" property.
+>
+> Not sure how exactly to handle omap3-overo-base.dtsi which already has
+> both vqmmc-supply and vmmc_aux-supply without breaking old dt
+> compatibility. (vqmmc-supply seems to have been added there by mistake
+> from 3.15).
+>
+> In the dt series that will follow, will replace all vmmc_aux-supply
+> with vqmmc-supply (In omap3-overo-base.dtsi remove the existing
+> vqmmc-supply and then replace vmmc_aux-supply with vqmmc-supply).
+>
+> Kishon Vijay Abraham I (3):
+>   mmc: host: omap_hsmmc: Do not initialize MMC regulators to NULL on
+>     error
+>   mmc: host: omap_hsmmc: use mmc_regulator_get_supply() to get
+>     regulators
+>   Documentation: dt-bindings: Document deprecation of "vmmc_aux" and
+>     using "vqmmc"
+>
+>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |  2 +-
+>  drivers/mmc/host/omap_hsmmc.c                      | 55 +++++++++-------------
+>  2 files changed, 24 insertions(+), 33 deletions(-)
+>
+> --
+> 2.11.0
+>
 
-Add support for the rk805 regulator. The regulator module consists
-of 4 DCDCs, 3 LDOs.
+Besides the minor comment for patch2 this looks good to me.
 
-The output voltages are configurable and are meant to supply power
-to the main processor and other components.
+In case there are no other comments, and that you agree with my
+suggested change, you don't need to re-spin.
 
-Signed-off-by: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- drivers/regulator/Kconfig           |   4 +-
- drivers/regulator/rk808-regulator.c | 130 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 132 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index be06eb2..285e280 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -650,11 +650,11 @@ config REGULATOR_RC5T583
- 	  outputs which can be controlled by i2c communication.
- 
- config REGULATOR_RK808
--	tristate "Rockchip RK808/RK818 Power regulators"
-+	tristate "Rockchip RK805/RK808/RK818 Power regulators"
- 	depends on MFD_RK808
- 	help
- 	  Select this option to enable the power regulator of ROCKCHIP
--	  PMIC RK808 and RK818.
-+	  PMIC RK805,RK808 and RK818.
- 	  This driver supports the control of different power rails of device
- 	  through regulator interface. The device supports multiple DCDC/LDO
- 	  outputs which can be controlled by i2c communication.
-diff --git a/drivers/regulator/rk808-regulator.c b/drivers/regulator/rk808-regulator.c
-index fb44d52..128c81e 100644
---- a/drivers/regulator/rk808-regulator.c
-+++ b/drivers/regulator/rk808-regulator.c
-@@ -65,6 +65,27 @@
- /* max steps for increase voltage of Buck1/2, equal 100mv*/
- #define MAX_STEPS_ONE_TIME 8
- 
-+#define RK805_DESC(_id, _match, _supply, _min, _max, _step, _vreg,      \
-+	_vmask, _ereg, _emask, _etime)                                  \
-+	[_id] = {                                                       \
-+		.name           = (_match),                             \
-+		.supply_name    = (_supply),                            \
-+		.of_match       = of_match_ptr(_match),                 \
-+		.regulators_node = of_match_ptr("regulators"),          \
-+		.type           = REGULATOR_VOLTAGE,                    \
-+		.id             = (_id),                                \
-+		.n_voltages     = (((_max) - (_min)) / (_step) + 1),    \
-+		.owner          = THIS_MODULE,                          \
-+		.min_uV         = (_min) * 1000,                        \
-+		.uV_step        = (_step) * 1000,                       \
-+		.vsel_reg       = (_vreg),                              \
-+		.vsel_mask      = (_vmask),                             \
-+		.enable_reg     = (_ereg),                              \
-+		.enable_mask    = (_emask),                             \
-+		.enable_time    = (_etime),                             \
-+		.ops            = &rk805_reg_ops,                       \
-+	}
-+
- #define RK8XX_DESC(_id, _match, _supply, _min, _max, _step, _vreg,	\
- 	_vmask, _ereg, _emask, _etime)					\
- 	[_id] = {							\
-@@ -298,6 +319,28 @@ static int rk808_set_suspend_voltage_range(struct regulator_dev *rdev, int uv)
- 				  sel);
- }
- 
-+static int rk805_set_suspend_enable(struct regulator_dev *rdev)
-+{
-+	unsigned int reg;
-+
-+	reg = rdev->desc->enable_reg + RK808_SLP_SET_OFF_REG_OFFSET;
-+
-+	return regmap_update_bits(rdev->regmap, reg,
-+				  rdev->desc->enable_mask,
-+				  rdev->desc->enable_mask);
-+}
-+
-+static int rk805_set_suspend_disable(struct regulator_dev *rdev)
-+{
-+	unsigned int reg;
-+
-+	reg = rdev->desc->enable_reg + RK808_SLP_SET_OFF_REG_OFFSET;
-+
-+	return regmap_update_bits(rdev->regmap, reg,
-+				  rdev->desc->enable_mask,
-+				  0);
-+}
-+
- static int rk808_set_suspend_enable(struct regulator_dev *rdev)
- {
- 	unsigned int reg;
-@@ -320,6 +363,27 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
- 				  rdev->desc->enable_mask);
- }
- 
-+static struct regulator_ops rk805_reg_ops = {
-+		.list_voltage           = regulator_list_voltage_linear,
-+		.map_voltage            = regulator_map_voltage_linear,
-+		.get_voltage_sel        = regulator_get_voltage_sel_regmap,
-+		.set_voltage_sel        = regulator_set_voltage_sel_regmap,
-+		.enable                 = regulator_enable_regmap,
-+		.disable                = regulator_disable_regmap,
-+		.is_enabled             = regulator_is_enabled_regmap,
-+		.set_suspend_voltage    = rk808_set_suspend_voltage,
-+		.set_suspend_enable     = rk805_set_suspend_enable,
-+		.set_suspend_disable    = rk805_set_suspend_disable,
-+};
-+
-+static struct regulator_ops rk805_switch_ops = {
-+		.enable                 = regulator_enable_regmap,
-+		.disable                = regulator_disable_regmap,
-+		.is_enabled             = regulator_is_enabled_regmap,
-+		.set_suspend_enable     = rk805_set_suspend_enable,
-+		.set_suspend_disable    = rk805_set_suspend_disable,
-+};
-+
- static struct regulator_ops rk808_buck1_2_ops = {
- 	.list_voltage		= regulator_list_voltage_linear,
- 	.map_voltage		= regulator_map_voltage_linear,
-@@ -369,6 +433,68 @@ static int rk808_set_suspend_disable(struct regulator_dev *rdev)
- 	.set_suspend_disable	= rk808_set_suspend_disable,
- };
- 
-+static const struct regulator_desc rk805_reg[] = {
-+	{
-+		.name = "DCDC_REG1",
-+		.supply_name = "vcc1",
-+		.of_match = of_match_ptr("DCDC_REG1"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK805_ID_DCDC1,
-+		.ops = &rk805_reg_ops,
-+		.type = REGULATOR_VOLTAGE,
-+		.min_uV = 712500,
-+		.uV_step = 12500,
-+		.n_voltages = 64,
-+		.vsel_reg = RK805_BUCK1_ON_VSEL_REG,
-+		.vsel_mask = RK818_BUCK_VSEL_MASK,
-+		.enable_reg = RK805_DCDC_EN_REG,
-+		.enable_mask = BIT(0),
-+		.owner = THIS_MODULE,
-+	}, {
-+		.name = "DCDC_REG2",
-+		.supply_name = "vcc2",
-+		.of_match = of_match_ptr("DCDC_REG2"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK805_ID_DCDC2,
-+		.ops = &rk805_reg_ops,
-+		.type = REGULATOR_VOLTAGE,
-+		.min_uV = 712500,
-+		.uV_step = 12500,
-+		.n_voltages = 64,
-+		.vsel_reg = RK805_BUCK2_ON_VSEL_REG,
-+		.vsel_mask = RK818_BUCK_VSEL_MASK,
-+		.enable_reg = RK805_DCDC_EN_REG,
-+		.enable_mask = BIT(1),
-+		.owner = THIS_MODULE,
-+	}, {
-+		.name = "DCDC_REG3",
-+		.supply_name = "vcc3",
-+		.of_match = of_match_ptr("DCDC_REG3"),
-+		.regulators_node = of_match_ptr("regulators"),
-+		.id = RK805_ID_DCDC3,
-+		.ops = &rk805_switch_ops,
-+		.type = REGULATOR_VOLTAGE,
-+		.n_voltages = 1,
-+		.enable_reg = RK805_DCDC_EN_REG,
-+		.enable_mask = BIT(2),
-+		.owner = THIS_MODULE,
-+	},
-+
-+	RK805_DESC(RK805_ID_DCDC4, "DCDC_REG4", "vcc4", 800, 3400, 100,
-+		RK805_BUCK4_ON_VSEL_REG, RK818_BUCK4_VSEL_MASK,
-+		RK805_DCDC_EN_REG, BIT(3), 0),
-+
-+	RK805_DESC(RK805_ID_LDO1, "LDO_REG1", "vcc5", 800, 3400, 100,
-+		RK805_LDO1_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
-+		BIT(0), 400),
-+	RK805_DESC(RK805_ID_LDO2, "LDO_REG2", "vcc5", 800, 3400, 100,
-+		RK805_LDO2_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
-+		BIT(1), 400),
-+	RK805_DESC(RK805_ID_LDO3, "LDO_REG3", "vcc6", 800, 3400, 100,
-+		RK805_LDO3_ON_VSEL_REG, RK818_LDO_VSEL_MASK, RK805_LDO_EN_REG,
-+		BIT(2), 400),
-+};
-+
- static const struct regulator_desc rk808_reg[] = {
- 	{
- 		.name = "DCDC_REG1",
-@@ -625,6 +751,10 @@ static int rk808_regulator_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, pdata);
- 
- 	switch (rk808->variant) {
-+	case RK805_ID:
-+		regulators = rk805_reg;
-+		nregulators = RK805_NUM_REGULATORS;
-+		break;
- 	case RK808_ID:
- 		regulators = rk808_reg;
- 		nregulators = RK808_NUM_REGULATORS;
--- 
-1.9.1
+Kind regards
+Uffe
