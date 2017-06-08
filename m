@@ -1,98 +1,50 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH 6/8] firmware: arm_scmi: add initial support for power protocol
-Date: Thu, 8 Jun 2017 13:06:48 +0200
-Message-ID: <CAK8P3a2wJ+hWro7+KYUBLRSTdbwKFjuzutajo436F-X=nMD5cQ@mail.gmail.com>
-References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
- <1496851812-19623-7-git-send-email-sudeep.holla@arm.com> <CAK8P3a3Vw2AvAr4hNd0A6Tih1YNorjiG2jkhcuo=CK1RF+aLFA@mail.gmail.com>
- <d610d205-aa19-cf2f-072a-8b64c8c8be66@arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 03/12] regulator: rk808: Add regulator driver for RK805
+Date: Thu, 8 Jun 2017 12:11:16 +0100
+Message-ID: <20170608111116.2of33jmoac5b7ktf@sirena.org.uk>
+References: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com>
+ <1496905959-29202-4-git-send-email-chenjh@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ybzqzjvmu2vsivty"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d610d205-aa19-cf2f-072a-8b64c8c8be66-5wv7dgnIgG8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1496905959-29202-4-git-send-email-chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+To: Jianhong Chen <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, tony.xie-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w.egorov-guT5V/WYfQezQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 11:39 AM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->
->
-> On 07/06/17 21:38, Arnd Bergmann wrote:
->> On Wed, Jun 7, 2017 at 6:10 PM, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
->>
->>> +struct scmi_msg_resp_power_attributes {
->>> +       __le16 num_domains;
->>> +       __le16 reserved;
->>> +       __le32 stats_addr_low;
->>> +       __le32 stats_addr_high;
->>> +       __le32 stats_size;
->>> +} __packed;
->>> +
->>> +struct scmi_msg_resp_power_domain_attributes {
->>> +       __le32 flags;
->>> +#define SUPPORTS_STATE_SET_NOTIFY(x)   ((x) & BIT(31))
->>> +#define SUPPORTS_STATE_SET_ASYNC(x)    ((x) & BIT(30))
->>> +#define SUPPORTS_STATE_SET_SYNC(x)     ((x) & BIT(29))
->>> +           u8 name[SCMI_MAX_STR_SIZE];
->>> +} __packed;
->>
->> I think it would be better to leave out the __packed here, which
->> can lead to rather inefficient code. It's only really a problem when
->> building with -mstrict-align, but it's better to write code in a way that
->> doesn't rely on that.
->>
->
-> I assume you are referring to above structure only and not general
-> across all the structures ? I will have a look at this one.
 
-I meant all of them, from my first look they all seem to have natural
-alignment on all members anyway. If there is one that doesn't, I would
-suggest annotating the individual unaligned members with __packed.
+--ybzqzjvmu2vsivty
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>> +static int
->>> +scmi_power_domain_attributes_get(struct scmi_handle *handle, u32 domain,
->>> +                                struct power_dom_info *dom_info)
->>> +{
->>> +       int ret;
->>> +       struct scmi_xfer *t;
->>> +       struct scmi_msg_resp_power_domain_attributes *attr;
->>> +
->>> +       ret = scmi_one_xfer_init(handle, POWER_DOMAIN_ATTRIBUTES,
->>> +                                SCMI_PROTOCOL_POWER, sizeof(domain),
->>> +                                sizeof(*attr), &t);
->>> +       if (ret)
->>> +               return ret;
->>> +
->>> +       *(__le32 *)t->tx.buf = cpu_to_le32(domain);
->>> +       attr = (struct scmi_msg_resp_power_domain_attributes *)t->rx.buf;
->>
->> It seems you require a similar pattern in each caller of scmi_one_xfer_init(),
->> but it seems a little clumsy to always require those casts, so maybe there
->> is a nicer way to do this. How about making scmi_one_xfer_init() act
->> as an allocation function and having it return the buffer or a PTR_ERR?
->>
->
-> Yes I agree it doesn't looks all nice. I have changed these few times
-> while developing and then thought it's better to get some suggestions. I
-> am open to any suggestions that will help to make these nicer.
->
->> It also seems odd to have it named 'init' but actually allocate the scmi_xfer
->> structure rather than filling a local variable that gets passed by reference.
->>
->
-> It does initialise but partially. scmi_one_xfer_get does pure allocation
-> while scmi_one_xfer_init initialise header variables and also tx/rx
-> size. But if you think it's odd, I will looks at ways to make it better.
+On Thu, Jun 08, 2017 at 03:12:30PM +0800, Jianhong Chen wrote:
+> From: Elaine Zhang <zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>=20
+> Add support for the rk805 regulator. The regulator module consists
+> of 4 DCDCs, 3 LDOs.
 
-Yes, I'm still thinking about it, but I think we can do better. If a function
-has both allocation and initialization parts in it, I would probably name
-it *_alloc() rather than *_init().
+Acked-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-What is the relation between scmi_one_xfer_get() and
-scmi_one_xfer_init()? Do we need both in some callers, or
-just one of the two?
+--ybzqzjvmu2vsivty
+Content-Type: application/pgp-signature; name="signature.asc"
 
-       Arnd
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlk5MNMACgkQJNaLcl1U
+h9B2owf3XKzTQqpw3pyTsJP6uXg20TVD63hnZ0WPNrjnN0EtlaAVzRTlAnXVB/6W
+/zIqCFf8NSdKX+rlqLgFOZ78wV66i80nsYBXY3KjzicSg2PsiVnUhAvUrghxxCHX
+K6RnqsKixIkAVLfpF9au8yVhg2HLt+DQGbxINDRWqoet7h10W6gN6IAc9YzIGeIx
+bWKIGJhg1HDUwZYDipr54lGRO6Od/xw1WUbYR1n/7LlTCONMb9Pusa83qT/nPc/7
+pIA67QDbGML5uV2lI2bOKp97GLKMCa+VvQpYjM8oR8oD/UaAMLeZFV9yUYLWYYho
+3zpyuzUCER3xMMreb3H8VZZRJ7r1
+=NpaW
+-----END PGP SIGNATURE-----
+
+--ybzqzjvmu2vsivty--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
