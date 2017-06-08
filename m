@@ -1,43 +1,96 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: [PATCH v2 2/4] dt-bindings: add vendor prefix for NLT Technologies,
- Ltd.
-Date: Thu,  8 Jun 2017 20:07:56 +0200
-Message-ID: <20170608180758.31020-2-l.stach@pengutronix.de>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 3/4] drm/panel: simple: add support for NLT NL192108AC18-02D
+Date: Thu,  8 Jun 2017 20:07:57 +0200
+Message-ID: <20170608180758.31020-3-l.stach@pengutronix.de>
 References: <20170608180758.31020-1-l.stach@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170608180758.31020-1-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170608180758.31020-1-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, patchwork-lst-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TkxUIHRlY2hub2xvZ2llcyBpcyB0aGUgZm9ybWVyIE5FQyBkaXNwbGF5IGJ1c2luZXNzLCBidXQg
-Y2hhbmdlZCBpdHMKbmFtZSB0byBOTFQgVGVjaG5vbG9naWVzIHdoZW4gZm9ybWluZyBhIGpvaW50
-IHZlbnR1cmUgd2l0aApTaGVuemhlbiBBVklDIE9QVE9FTEVDVFJPTklDUywgTHRkLgoKU2lnbmVk
-LW9mZi1ieTogTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9uaXguZGU+CkFja2VkLWJ5OiBS
-b2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgotLS0KdjI6IG5vIGNoYW5nZQotLS0KIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0IHwgMSArCiAx
-IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy92ZW5kb3ItcHJlZml4ZXMudHh0CmluZGV4IGMwM2QyMDE0MDM2
-Ni4uZjA4Mjg0ZTc0MzliIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dApAQCAtMjE5LDYgKzIxOSw3IEBAIG5leGJveAlO
-ZXhib3gKIG5ld2hhdmVuCU5ld2hhdmVuIERpc3BsYXkgSW50ZXJuYXRpb25hbAogbmkJTmF0aW9u
-YWwgSW5zdHJ1bWVudHMKIG5pbnRlbmRvCU5pbnRlbmRvCitubHQJTkxUIFRlY2hub2xvZ2llcywg
-THRkLgogbm9raWEJTm9raWEKIG5vcmRpYwlOb3JkaWMgU2VtaWNvbmR1Y3RvcgogbnV2b3RvbglO
-dXZvdG9uIFRlY2hub2xvZ3kgQ29ycG9yYXRpb24KLS0gCjIuMTEuMAoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
-cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
-b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+This adds support for the NLT Technologies NL192108AC18-02D
+15.6" LVDS FullHD TFT LCD panel, which can be supported
+by the simple panel driver.
+
+Timings are taken from the preliminary datasheet, as a final
+one is not yet available.
+
+Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+v2: mention power-supply property
+---
+ .../display/panel/nlt,nl192108ac18-02d.txt         |  8 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++++++++
+ 2 files changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/nlt,nl192108ac18-02d.txt
+
+diff --git a/Documentation/devicetree/bindings/display/panel/nlt,nl192108ac18-02d.txt b/Documentation/devicetree/bindings/display/panel/nlt,nl192108ac18-02d.txt
+new file mode 100644
+index 000000000000..1a639fd8778d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/nlt,nl192108ac18-02d.txt
+@@ -0,0 +1,8 @@
++NLT Technologies, Ltd. 15.6" FHD (1920x1080) LVDS TFT LCD panel
++
++Required properties:
++- compatible: should be "nlt,nl192108ac18-02d"
++- power-supply: as specified in the base binding
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 585b37f9171a..99758e38525e 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -1398,6 +1398,32 @@ static const struct panel_desc netron_dy_e231732 = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB666_1X18,
+ };
+ 
++static const struct display_timing nlt_nl192108ac18_02d_timing = {
++	.pixelclock = { 130000000, 148350000, 163000000 },
++	.hactive = { 1920, 1920, 1920 },
++	.hfront_porch = { 80, 100, 100 },
++	.hback_porch = { 100, 120, 120 },
++	.hsync_len = { 50, 60, 60 },
++	.vactive = { 1080, 1080, 1080 },
++	.vfront_porch = { 12, 30, 30 },
++	.vback_porch = { 4, 10, 10 },
++	.vsync_len = { 4, 5, 5 },
++};
++
++static const struct panel_desc nlt_nl192108ac18_02d = {
++	.timings = &nlt_nl192108ac18_02d_timing,
++	.num_timings = 1,
++	.bpc = 8,
++	.size = {
++		.width = 344,
++		.height = 194,
++	},
++	.delay = {
++		.unprepare = 500,
++	},
++	.bus_format = MEDIA_BUS_FMT_RGB888_1X7X4_SPWG,
++};
++
+ static const struct drm_display_mode nvd_9128_mode = {
+ 	.clock = 29500,
+ 	.hdisplay = 800,
+@@ -2008,6 +2034,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "netron-dy,e231732",
+ 		.data = &netron_dy_e231732,
+ 	}, {
++		.compatible = "nlt,nl192108ac18-02d",
++		.data = &nlt_nl192108ac18_02d,
++	}, {
+ 		.compatible = "nvd,9128",
+ 		.data = &nvd_9128,
+ 	}, {
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
