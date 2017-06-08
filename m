@@ -1,47 +1,283 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] dt-bindings: mediatek: add bindings for MediaTek
- MT7622 SoC
-Date: Thu, 8 Jun 2017 16:37:11 +0200
-Message-ID: <dc04ea44-4f4c-a914-2f92-266b3d11eb54@gmail.com>
-References: <cover.1496250798.git.sean.wang@mediatek.com>
- <1b9dd0df077a59aea5a15e3cb7775f80224b0b06.1496250798.git.sean.wang@mediatek.com>
- <20170607213028.xsbgwwjgbgghk3vg@rob-hp-laptop>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell
+ GICP
+Date: Thu, 8 Jun 2017 16:07:40 +0100
+Message-ID: <255f8d8d-8011-b980-5b29-b56c387af940@arm.com>
+References: <1496398017-6487-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1496398017-6487-4-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170607213028.xsbgwwjgbgghk3vg@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <1496398017-6487-4-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Thomas,
 
-
-On 07/06/17 23:30, Rob Herring wrote:
-> On Thu, Jun 01, 2017 at 01:28:59AM +0800, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
->> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->>
->> This adds dt-binding documentation for MediaTek MT7622 SoC
->> which currently only includes basic items such as ARM CPU,
->> MediaTek SYSIRQ and UART.
->>
->> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/arm/mediatek.txt                    | 4 ++++
->>   .../devicetree/bindings/interrupt-controller/mediatek,sysirq.txt      | 3 ++-
->>   Documentation/devicetree/bindings/serial/mtk-uart.txt                 | 1 +
->>   3 files changed, 7 insertions(+), 1 deletion(-)
+On 02/06/17 11:06, Thomas Petazzoni wrote:
+> This commit adds a simple driver for the Marvell GICP, a hardware unit
+> that converts memory writes into GIC SPI interrupts. The driver provides
+> a number of functions to the ICU driver to allocate GICP interrupts, and
+> get the physical addresses that the ICUs should write to to set/clear
+> interrupts.
 > 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/irqchip/Kconfig          |   3 +
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-mvebu-gicp.c | 170 +++++++++++++++++++++++++++++++++++++++
+>  drivers/irqchip/irq-mvebu-gicp.h |  15 ++++
+>  4 files changed, 189 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
+>  create mode 100644 drivers/irqchip/irq-mvebu-gicp.h
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index 478f8ac..e527ee5 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -268,6 +268,9 @@ config IRQ_MXS
+>  	select IRQ_DOMAIN
+>  	select STMP_DEVICE
+>  
+> +config MVEBU_GICP
+> +	bool
+> +
+>  config MVEBU_ODMI
+>  	bool
+>  	select GENERIC_MSI_IRQ_DOMAIN
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index b64c59b..11eb858 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_SA1100)		+= irq-sa11x0.o
+>  obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
+>  obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
+>  obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
+> +obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
+>  obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
+>  obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
+>  obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
+> diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
+> new file mode 100644
+> index 0000000..73c0117
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-mvebu-gicp.c
+> @@ -0,0 +1,170 @@
+> +/*
+> + * Copyright (C) 2017 Marvell
+> + *
+> + * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "irq-mvebu-gicp.h"
+> +
+> +#define GICP_SETSPI_NSR_OFFSET	0x0
+> +#define GICP_CLRSPI_NSR_OFFSET	0x8
+> +
+> +struct mvebu_gicp_spi_range {
+> +	unsigned int start;
+> +	unsigned int count;
+> +};
+> +
+> +struct mvebu_gicp {
+> +	struct mvebu_gicp_spi_range *spi_ranges;
+> +	unsigned int spi_ranges_cnt;
+> +	unsigned int spi_cnt;
+> +	unsigned long *spi_bitmap;
+> +	spinlock_t spi_lock;
+> +	struct resource *res;
+> +};
+> +
+> +int mvebu_gicp_alloc(struct mvebu_gicp *gicp)
+> +{
+> +	int idx;
+> +
+> +	spin_lock(&gicp->spi_lock);
+> +	idx = find_first_zero_bit(gicp->spi_bitmap, gicp->spi_cnt);
+> +	if (idx == gicp->spi_cnt) {
+> +		spin_unlock(&gicp->spi_lock);
+> +		return -ENOSPC;
+> +	}
+> +	set_bit(idx, gicp->spi_bitmap);
+> +	spin_unlock(&gicp->spi_lock);
+> +
+> +	return idx;
+> +}
+> +
+> +void mvebu_gicp_free(struct mvebu_gicp *gicp, int idx)
+> +{
+> +	spin_lock(&gicp->spi_lock);
+> +	clear_bit(idx, gicp->spi_bitmap);
+> +	spin_unlock(&gicp->spi_lock);
+> +}
+> +
+> +int mvebu_gicp_idx_to_spi(struct mvebu_gicp *gicp, int idx)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
+> +		struct mvebu_gicp_spi_range *r = &gicp->spi_ranges[i];
+> +
+> +		if (idx < r->count)
+> +			return r->start + idx;
+> +
+> +		idx -= r->count;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +int mvebu_gicp_spi_to_idx(struct mvebu_gicp *gicp, int spi)
+> +{
+> +	int i;
+> +	int idx = 0;
+> +
+> +	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
+> +		struct mvebu_gicp_spi_range *r = &gicp->spi_ranges[i];
+> +
+> +		if (spi >= r->start && spi < (r->start + r->count))
+> +			return idx + (spi - r->start);
+> +
+> +		idx += r->count;
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +int mvebu_gicp_spi_count(struct mvebu_gicp *gicp)
+> +{
+> +	return gicp->spi_cnt;
+> +}
+> +
+> +phys_addr_t mvebu_gicp_setspi_phys_addr(struct mvebu_gicp *gicp)
+> +{
+> +	return gicp->res->start + GICP_SETSPI_NSR_OFFSET;
+> +}
+> +
+> +phys_addr_t mvebu_gicp_clrspi_phys_addr(struct mvebu_gicp *gicp)
+> +{
+> +	return gicp->res->start + GICP_CLRSPI_NSR_OFFSET;
+> +}
+> +
+> +static int mvebu_gicp_probe(struct platform_device *pdev)
+> +{
+> +	struct mvebu_gicp *gicp;
+> +	int ret, i;
+> +
+> +	gicp = devm_kzalloc(&pdev->dev, sizeof(*gicp), GFP_KERNEL);
+> +	if (!gicp)
+> +		return -ENOMEM;
+> +
+> +	gicp->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!gicp->res)
+> +		return -ENODEV;
+> +
+> +	ret = of_property_count_u32_elems(pdev->dev.of_node,
+> +					  "marvell,spi-ranges");
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	gicp->spi_ranges_cnt = ret / 2;
+> +
+> +	gicp->spi_ranges =
+> +		devm_kzalloc(&pdev->dev,
+> +			     gicp->spi_ranges_cnt *
+> +			     sizeof(struct mvebu_gicp_spi_range),
+> +			     GFP_KERNEL);
+> +	if (!gicp->spi_ranges)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
+> +		of_property_read_u32_index(pdev->dev.of_node,
+> +					   "marvell,spi-ranges",
+> +					   i * 2,
+> +					   &gicp->spi_ranges[i].start);
+> +
+> +		of_property_read_u32_index(pdev->dev.of_node,
+> +					   "marvell,spi-ranges",
+> +					   i * 2 + 1,
+> +					   &gicp->spi_ranges[i].count);
+> +
+> +		gicp->spi_cnt += gicp->spi_ranges[i].count;
+> +	}
+> +
+> +	gicp->spi_bitmap = devm_kzalloc(&pdev->dev,
+> +					BITS_TO_LONGS(gicp->spi_cnt),
+> +					GFP_KERNEL);
+> +	if (!gicp->spi_bitmap)
+> +		return -ENOMEM;
+> +
+> +	platform_set_drvdata(pdev, gicp);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id mvebu_gicp_of_match[] = {
+> +	{ .compatible = "marvell,ap806-gicp", },
+> +	{},
+> +};
+> +
+> +static struct platform_driver mvebu_gicp_driver = {
+> +	.probe  = mvebu_gicp_probe,
+> +	.driver = {
+> +		.name = "mvebu-gicp",
+> +		.of_match_table = mvebu_gicp_of_match,
+> +	},
+> +};
+> +builtin_platform_driver(mvebu_gicp_driver);
+> diff --git a/drivers/irqchip/irq-mvebu-gicp.h b/drivers/irqchip/irq-mvebu-gicp.h
+> new file mode 100644
+> index 0000000..7290166
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-mvebu-gicp.h
+> @@ -0,0 +1,15 @@
+> +#ifndef __MVEBU_GICP_H__
+> +#define __MVEBU_GICP_H__
+> +
+> +struct mvebu_gicp;
+> +
+> +int mvebu_gicp_alloc(struct mvebu_gicp *gicp);
+> +void mvebu_gicp_free(struct mvebu_gicp *gicp, int idx);
+> +int mvebu_gicp_idx_to_spi(struct mvebu_gicp *gicp, int idx);
+> +int mvebu_gicp_spi_to_idx(struct mvebu_gicp *gicp, int spi);
+> +phys_addr_t mvebu_gicp_setspi_phys_addr(struct mvebu_gicp *gicp);
+> +phys_addr_t mvebu_gicp_clrspi_phys_addr(struct mvebu_gicp *gicp);
+> +int mvebu_gicp_spi_count(struct mvebu_gicp *gicp);
+> +
+> +#endif /* __MVEBU_GICP_H__ */
+> +
 > 
 
-Pushed this one to v4.12-next/dts64
+The more I look at this code, the more I think this should actually be
+an IRQ domain of its own. It already has an allocator, and I believe a
+number of these exported functions disappear by virtue of having linked
+data structures.
+
+Also, given that this GICP is a perfect clone of the equivalent GICv3
+feature, we could use it the same way should someone glue an ICU on a
+GICv3 system...
+
+I appreciate that I did say the exact opposite on IRC, but hey, I admit
+I was wrong! ;-)
+
+What do you think?
 
 Thanks,
-Matthias
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
