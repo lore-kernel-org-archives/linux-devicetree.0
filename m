@@ -1,81 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: Add Broadcom STB USB PHY binding
- document
-Date: Thu, 8 Jun 2017 17:11:04 -0500
-Message-ID: <20170608221104.7nsinggo4vngbmus@rob-hp-laptop>
-References: <1496426512-10590-1-git-send-email-alcooperx@gmail.com>
- <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
+Subject: Re: [PATCH v4 1/4] dt-bindings: Document img,boston-clock binding
+Date: Thu, 8 Jun 2017 17:20:47 -0500
+Message-ID: <20170608222047.c27en4hqbqkqybin@rob-hp-laptop>
+References: <20170602182003.16269-1-paul.burton@imgtec.com>
+ <20170602182003.16269-2-paul.burton@imgtec.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1496426512-10590-3-git-send-email-alcooperx@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Al Cooper <alcooperx@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170602182003.16269-2-paul.burton@imgtec.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Paul Burton <paul.burton@imgtec.com>
+Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Frank Rowand <frowand.list@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 02, 2017 at 02:01:51PM -0400, Al Cooper wrote:
-> Add DT bindings document for Broadcom STB USB PHYs
+On Fri, Jun 02, 2017 at 11:20:00AM -0700, Paul Burton wrote:
+> Add device tree binding documentation for the clocks provided by the
+> MIPS Boston development board from Imagination Technologies, and a
+> header file describing the available clocks for use by device trees &
+> driver.
 > 
-> Signed-off-by: Al Cooper <alcooperx@gmail.com>
+> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Stephen Boyd <sboyd@codeaurora.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-clk@vger.kernel.org
+> Cc: linux-mips@linux-mips.org
+> 
 > ---
->  .../bindings/phy/brcm,brcmstb-usb-phy.txt          | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-> new file mode 100644
-> index 0000000..e1e9b16
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
-> @@ -0,0 +1,37 @@
-> +Broadcom STB USB PHY
-> +
-> +Required properties:
-> + - compatible: brcm,brcmstb-usb-phy
-> + - reg: two offset and length pairs. The second pair specifies optional
-> +        registers used by some of the SoCs that support USB 3.x
-> + - #phy-cells: Shall be 1 as it expects one argument for setting
-> +	       the type of the PHY. Possible values are 0 (1.1 and 2.0),
-> +	       1 (3.x)
-> +
-> +Optional Properties:
-> +- clocks : clock phandles.
-> +- clock-names: String, clock name.
-> +- brcm,ipp: Boolean, Invert Port Power.
-> +  Possible values are: 0 (Don't invert), 1 (Invert)
-> +- brcm,ioc: Boolean, Invert Over Current detection.
-> +  Possible values are: 0 (Don't invert), 1 (Invert)
-> +- brcm,has-xhci: Boolean indicating an optional 3.x only XHCI controller.
-> +- brcm,has-xhci-only: Boolean indicating an XHCI controller that supports
-> +  1.1, 2.0 and 3.0 devices
-> +- brcm,device: String, PHY Device mode.
-> +  Possible values are: off (Host), on (Device), dual (DRD)
-> +  or typec-pd (Type-C PD control)
-
-I believe we have standard property for this though maybe not type C.
-
-off/on seem strange for meaning host/device as well.
-
-> +
-> +Example:
-> +
-> +usbphy_0: usb-phy@f0470200 {
-> +	reg = <0xf0470200 0xb8>,
-> +		<0xf0471940 0x6c0>;
-> +	compatible = "brcm,brcmstb-usb-phy";
-> +	#phy-cells = <1>;
-> +	brcm,ioc = <1>;
-> +	brcm,ipp = <1>;
-> +	brcm,has-xhci;
-> +	clocks = <&usb20>, <&usb30>;
-> +	clock-names = "sw_usb", "sw_usb3";
-> +};
-> -- 
-> 1.9.0.138.g2de3478
+> Changes in v4:
+> - Move img,boston-clock node under platform register syscon node.
+> - Add MAINTAINERS entry.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Changes in v3: None
+> 
+> Changes in v2:
+> - Add BOSTON_CLK_INPUT to expose the input clock.
+> 
+>  .../devicetree/bindings/clock/img,boston-clock.txt | 31 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  7 +++++
+>  include/dt-bindings/clock/boston-clock.h           | 14 ++++++++++
+>  3 files changed, 52 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/img,boston-clock.txt
+>  create mode 100644 include/dt-bindings/clock/boston-clock.h
+
+Reviewed-by: Rob Herring <robh@kernel.org>
