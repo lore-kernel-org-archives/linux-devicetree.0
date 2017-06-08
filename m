@@ -1,53 +1,40 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] external references for device tree overlays
-Date: Thu, 08 Jun 2017 10:08:45 +0300
-Message-ID: <1496905725.28265.7.camel@hp800z>
-References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
-         <593657AF.8050208@gmail.com> <1496776974.3821.6.camel@seibold.net>
-         <59374CE9.40406@gmail.com> <1496815399.6999.1.camel@seibold.net>
-         <5938BF8F.2010001@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 2/3] mmc: host: omap_hsmmc: use mmc_regulator_get_supply()
+ to get regulators
+Date: Thu, 8 Jun 2017 09:12:40 +0200
+Message-ID: <CAPDyKFrsrUYTmpYE9WYgCfvNkvhtfaFDXUrgr8rxtNVUk0BxTQ@mail.gmail.com>
+References: <20170607083612.14224-1-kishon@ti.com> <20170607083612.14224-3-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5938BF8F.2010001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>, jcm-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org, Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170607083612.14224-3-kishon@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
-On Wed, 2017-06-07 at 20:07 -0700, Frank Rowand wrote:
-> Adding Jon.
-> 
+>         host->pbias = devm_regulator_get_optional(host->dev, "pbias");
+> @@ -2143,7 +2136,8 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
+>         if (ret)
+>                 goto err_irq;
+>
+> -       mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
+> +       if (mmc_pdata(host)->ocr_mask)
+> +               mmc->ocr_avail = mmc_pdata(host)->ocr_mask;
 
-[snip]
+This should rather be:
 
-> __overlays__ node if that exists).
-> 
+if (!mmc->ocr_avail)
+     mmc->ocr_avail = mmc_pdata(host)->ocr_mask
 
-For what is worth, I will shortly post a method for fixing up
-busted or incomplete device trees. It is unrelated to this specific
-problem but I think addresses that too (with a couple minor fixes).
+In other words, fall back to the platform ocr mask.
 
-The general problem has to do with phandles. We do have a method
-to apply overlays to modify the content of the tree, but we lack
-a method to add missing phandles to nodes that should have them.
+>
+>         omap_hsmmc_disable_irq(host);
+>
+> --
+> 2.11.0
+>
 
-The first missing part of the puzzle is to pick up symbols from
-applied overlays and then work from there.
-
-> -Frank
-> 
-> > 
-> > - Stefani
-
-Regards
-
--- Pantelis
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Uffe
