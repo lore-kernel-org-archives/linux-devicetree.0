@@ -1,13 +1,14 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH V2 0/5] phy: bcm-ns-usb3: add MDIO driver
-Date: Thu,  8 Jun 2017 22:04:23 +0200
-Message-ID: <20170608200428.9187-1-zajec5@gmail.com>
+Subject: [PATCH V2 2/5] phy: bcm-ns-usb3: use pointer for PHY writing function
+Date: Thu,  8 Jun 2017 22:04:25 +0200
+Message-ID: <20170608200428.9187-3-zajec5@gmail.com>
 References: <20170511132925.14564-1-zajec5@gmail.com>
+ <20170608200428.9187-1-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170511132925.14564-1-zajec5@gmail.com>
+In-Reply-To: <20170608200428.9187-1-zajec5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kishon Vijay Abraham I <kishon@ti.com>
 Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
@@ -15,26 +16,149 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rafał Miłecki <rafal@milecki.pl>
 
-As explained in the commit 9200c6f177638 ("Revert "phy: Add USB3 PHY support
-for Broadcom NSP SoC"") this module should be modified to use MDIO bus as
-this is how PHY is really attached.
+Our current writing function accesses PHY directly bypassing MDIO layer.
 
-This should allow reusing this driver on NSP and any other platform with
-MDIO bus and this particular PHY.
+The aim is to extend this module to also behave as MDIO driver. This
+will require using different writing function which can be handled
+cleanly by having an extra pointer like this.
 
-V2: Rebase and update 4/5 and 5/5.
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ drivers/phy/broadcom/phy-bcm-ns-usb3.c | 98 +++++++++++++++++++---------------
+ 1 file changed, 56 insertions(+), 42 deletions(-)
 
-Rafał Miłecki (5):
-  phy: bcm-ns-usb3: always wait for idle after writing to the PHY reg
-  phy: bcm-ns-usb3: use pointer for PHY writing function
-  phy: bcm-ns-usb3: enable MDIO in the platform specific code
-  dt-bindings: phy: Modify Broadcom NS USB 3.0 PHY binding to use MDIO
-  phy: bcm-ns-usb3: add MDIO driver using proper bus layer
-
- .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    |  27 ++-
- drivers/phy/broadcom/Kconfig                       |   1 +
- drivers/phy/broadcom/phy-bcm-ns-usb3.c             | 230 +++++++++++++++------
- 3 files changed, 186 insertions(+), 72 deletions(-)
-
+diff --git a/drivers/phy/broadcom/phy-bcm-ns-usb3.c b/drivers/phy/broadcom/phy-bcm-ns-usb3.c
+index 5e89326886dc..3d0fe5728029 100644
+--- a/drivers/phy/broadcom/phy-bcm-ns-usb3.c
++++ b/drivers/phy/broadcom/phy-bcm-ns-usb3.c
+@@ -53,6 +53,8 @@ struct bcm_ns_usb3 {
+ 	void __iomem *dmp;
+ 	void __iomem *ccb_mii;
+ 	struct phy *phy;
++
++	int (*phy_write)(struct bcm_ns_usb3 *usb3, u16 reg, u16 value);
+ };
+ 
+ static const struct of_device_id bcm_ns_usb3_id_table[] = {
+@@ -68,51 +70,10 @@ static const struct of_device_id bcm_ns_usb3_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(of, bcm_ns_usb3_id_table);
+ 
+-static int bcm_ns_usb3_wait_reg(struct bcm_ns_usb3 *usb3, void __iomem *addr,
+-				u32 mask, u32 value, unsigned long timeout)
+-{
+-	unsigned long deadline = jiffies + timeout;
+-	u32 val;
+-
+-	do {
+-		val = readl(addr);
+-		if ((val & mask) == value)
+-			return 0;
+-		cpu_relax();
+-		udelay(10);
+-	} while (!time_after_eq(jiffies, deadline));
+-
+-	dev_err(usb3->dev, "Timeout waiting for register %p\n", addr);
+-
+-	return -EBUSY;
+-}
+-
+-static inline int bcm_ns_usb3_mii_mng_wait_idle(struct bcm_ns_usb3 *usb3)
+-{
+-	return bcm_ns_usb3_wait_reg(usb3, usb3->ccb_mii + BCMA_CCB_MII_MNG_CTL,
+-				    0x0100, 0x0000,
+-				    usecs_to_jiffies(BCM_NS_USB3_MII_MNG_TIMEOUT_US));
+-}
+-
+ static int bcm_ns_usb3_mdio_phy_write(struct bcm_ns_usb3 *usb3, u16 reg,
+ 				      u16 value)
+ {
+-	u32 tmp = 0;
+-	int err;
+-
+-	err = bcm_ns_usb3_mii_mng_wait_idle(usb3);
+-	if (err < 0) {
+-		dev_err(usb3->dev, "Couldn't write 0x%08x value\n", value);
+-		return err;
+-	}
+-
+-	/* TODO: Use a proper MDIO bus layer */
+-	tmp |= 0x58020000; /* Magic value for MDIO PHY write */
+-	tmp |= reg << 18;
+-	tmp |= value;
+-	writel(tmp, usb3->ccb_mii + BCMA_CCB_MII_MNG_CMD_DATA);
+-
+-	return bcm_ns_usb3_mii_mng_wait_idle(usb3);
++	return usb3->phy_write(usb3, reg, value);
+ }
+ 
+ static int bcm_ns_usb3_phy_init_ns_bx(struct bcm_ns_usb3 *usb3)
+@@ -233,6 +194,57 @@ static const struct phy_ops ops = {
+ 	.owner		= THIS_MODULE,
+ };
+ 
++/**************************************************
++ * Platform driver code
++ **************************************************/
++
++static int bcm_ns_usb3_wait_reg(struct bcm_ns_usb3 *usb3, void __iomem *addr,
++				u32 mask, u32 value, unsigned long timeout)
++{
++	unsigned long deadline = jiffies + timeout;
++	u32 val;
++
++	do {
++		val = readl(addr);
++		if ((val & mask) == value)
++			return 0;
++		cpu_relax();
++		udelay(10);
++	} while (!time_after_eq(jiffies, deadline));
++
++	dev_err(usb3->dev, "Timeout waiting for register %p\n", addr);
++
++	return -EBUSY;
++}
++
++static inline int bcm_ns_usb3_mii_mng_wait_idle(struct bcm_ns_usb3 *usb3)
++{
++	return bcm_ns_usb3_wait_reg(usb3, usb3->ccb_mii + BCMA_CCB_MII_MNG_CTL,
++				    0x0100, 0x0000,
++				    usecs_to_jiffies(BCM_NS_USB3_MII_MNG_TIMEOUT_US));
++}
++
++static int bcm_ns_usb3_platform_phy_write(struct bcm_ns_usb3 *usb3, u16 reg,
++					  u16 value)
++{
++	u32 tmp = 0;
++	int err;
++
++	err = bcm_ns_usb3_mii_mng_wait_idle(usb3);
++	if (err < 0) {
++		dev_err(usb3->dev, "Couldn't write 0x%08x value\n", value);
++		return err;
++	}
++
++	/* TODO: Use a proper MDIO bus layer */
++	tmp |= 0x58020000; /* Magic value for MDIO PHY write */
++	tmp |= reg << 18;
++	tmp |= value;
++	writel(tmp, usb3->ccb_mii + BCMA_CCB_MII_MNG_CMD_DATA);
++
++	return bcm_ns_usb3_mii_mng_wait_idle(usb3);
++}
++
+ static int bcm_ns_usb3_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -266,6 +278,8 @@ static int bcm_ns_usb3_probe(struct platform_device *pdev)
+ 		return PTR_ERR(usb3->ccb_mii);
+ 	}
+ 
++	usb3->phy_write = bcm_ns_usb3_platform_phy_write;
++
+ 	usb3->phy = devm_phy_create(dev, NULL, &ops);
+ 	if (IS_ERR(usb3->phy)) {
+ 		dev_err(dev, "Failed to create PHY\n");
 -- 
 2.11.0
