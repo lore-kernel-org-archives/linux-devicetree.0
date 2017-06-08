@@ -1,24 +1,45 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: CPU_BIG_ENDIAN in generic code
-Date: Thu, 08 Jun 2017 10:02:22 -0400 (EDT)
-Message-ID: <20170608.100222.1573468093040905016.davem@davemloft.net>
-References: <877f0z6oig.fsf@concordia.ellerman.id.au>
-        <28d6c874-4653-b15d-39b7-57a032abc9c6@oracle.com>
-        <CAK8P3a1WfU9V1k2r=TfJSVRTymuD8n2hkJDr6u1KcmC_scAZMA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1WfU9V1k2r=TfJSVRTymuD8n2hkJDr6u1KcmC_scAZMA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arnd@arndb.de
-Cc: babu.moger@oracle.com, mpe@ellerman.id.au, geert@linux-m68k.org, peterz@infradead.org, mingo@redhat.com, sparclinux@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org
+From: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Subject: [PATCH v10 1/3] DT add arctic to vendor prefix for ArcticSand
+Date: Thu,  8 Jun 2017 10:12:02 -0400
+Message-ID: <1496931122-29094-1-git-send-email-olimpiu@arcticsand.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Thu, 8 Jun 2017 10:01:59 +0200
+dt-bindings: vendor-prefixes: add arctic to vendor prefix
 
-> I would also suggest adding a sanity check like
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Reviewed-by: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 
+Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+---
+v9 => v10:
+- (Re-submit) Per Rob Herring's request changed vendor-prefix to arctic
+v8 => v9:
+- Version updated to match other patch in set. No other changes.
+v8:
+- Version to match other patches in set
 
-Hmm, but this will kill the build for non-fixed endian architectures
-won't it?
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 16d3b5e..6f33a4b 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -28,6 +28,7 @@ andestech	Andes Technology Corporation
+ apm	Applied Micro Circuits Corporation (APM)
+ aptina	Aptina Imaging
+ arasan	Arasan Chip Systems
++arctic	Arctic Sand
+ aries	Aries Embedded GmbH
+ arm	ARM Ltd.
+ armadeus	ARMadeus Systems SARL
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
