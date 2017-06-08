@@ -1,215 +1,57 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the
- Atmel ARM TC blocks
-Date: Thu, 8 Jun 2017 10:42:17 +0200
-Message-ID: <20170608084217.doa7d7hw7pr2bryj@piout.net>
-References: <20170606152104.GC2345@mai>
- <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
- <20170607141735.GH2345@mai>
- <20170607152750.tksmyf5p3oajbsac@piout.net>
- <20170607210848.GJ2345@mai>
- <20170607231715.ns2vcxza2eexnzjs@piout.net>
- <20170608074236.62924f01@bbrezillon>
- <20170608074446.GM2345@mai>
- <20170608075900.i554dgbh3p5sq5ml@piout.net>
- <20170608082417.GA2244@mai>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
+Date: Thu, 8 Jun 2017 10:42:22 +0200
+Message-ID: <20170608084222.GA10830@Red>
+References: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
+ <20170607173345.22462-3-clabbe.montjoie@gmail.com>
+ <20170608083428.csv54tryvgwdb552@flea.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170608082417.GA2244@mai>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Boris Brezillon <boris.brezillon@free-electrons.com>, Rob Herring <robh@kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20170608083428.csv54tryvgwdb552@flea.home>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org, wens@csie.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/06/2017 at 10:24:17 +0200, Daniel Lezcano wrote:
-> On Thu, Jun 08, 2017 at 09:59:01AM +0200, Alexandre Belloni wrote:
-> > On 08/06/2017 at 09:44:46 +0200, Daniel Lezcano wrote:
-> > > 
-> > > +Mark Rutland, +Rob Herring
-> > > 
-> > > 
-> > > Alexandre, Boris, have a look at https://www.spinics.net/lists/arm-kernel/msg572652.html
-> > > 
-> > > That will tell you the story.
-> > > 
+On Thu, Jun 08, 2017 at 10:34:28AM +0200, Maxime Ripard wrote:
+> On Wed, Jun 07, 2017 at 07:33:45PM +0200, Corentin Labbe wrote:
+> > The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
+> > This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
 > > 
-> > Ok, so is the solution putting the driver back in mach-at91 were we can
-> > do whatever we want like mach-omap2 is doing?
-> 
-> No. And putting a driver in mach-<whatever> does not give the permission to do
-> whatever you want. I won't tell you how OSS works, but moving code around or
-> using another tree to circumvent a code review is just the best way to upset
-> maintainers in general and hurt your karma.
-> 
-
-I know that but some SoCs will not be able to even boot until we have a
-solution. And it has been one year since we raised the issue without any
-solution coming from the DT maintainers.
-
-
-> That said, I think you misunderstood my comment (or I was not clear). In the
-> discussion given in the link above, I am in favor, somehow, to distinguish
-> clockevent and clocksource to solve exactly what you are facing.
-> 
-> Rob Herring told me it could be acceptable to have a property to tell if it is
-> a clockevent or a clocksource.
-> 
-
-Ok, then let's do it!
-
-
-> Mark Rutland disagreed on this.
-> 
-> I was alone in the discussion, no consensus have been found.
-> 
-> Now, you have a particular use case and I would like to resurrect the
-> discussion in order to find a solution which can apply to all DT drivers.
-> 
-
-Again, it has been one year and it seems nobody actually cares. There is
-a whole family of SoCs that can't boot because of that. Should I resort
-to the evil vendor tree argument again?
-
-
-
-
-> > > On Thu, Jun 08, 2017 at 07:42:36AM +0200, Boris Brezillon wrote:
-> > > > Le Thu, 8 Jun 2017 01:17:15 +0200,
-> > > > Alexandre Belloni <alexandre.belloni@free-electrons.com> a écrit :
-> > > > 
-> > > > > On 07/06/2017 at 23:08:48 +0200, Daniel Lezcano wrote:
-> > > > > > > I was going to agree but this is not flexible enough because the
-> > > > > > > quadrature decoder always uses the first two channels. So on some
-> > > > > > > products, we may have:
-> > > > > > >  - TCB0:
-> > > > > > >    o channels 0,1: qdec
-> > > > > > >    o channel 2: clocksource
-> > > > > > > 
-> > > > > > >  - TCB1:
-> > > > > > >    o channels 0,1: qdec
-> > > > > > >    o channel 2: clockevent
-> > > > > > > 
-> > > > > > > This avoids wasting TCB channels.  
-> > > > > > 
-> > > > > > Ok. In this case you can check if the interrupt is specified for the node, if
-> > > > > > yes, then it is a clockevent.
-> > > > > >   
-> > > > > 
-> > > > > But currently it is always specified in the SoC's dtsi. I don't find
-> > > > > that too practical to push that to the board's dts. Also, lying by
-> > > > > omission (the IRQ is always wired) in the DT is not different from
-> > > > > having a property selecting which timer is the clocksource and which is
-> > > > > the clockevent.
-> > > > > 
-> > > > 
-> > > > I agree with Alexandre here. Really, there's not much we can do to
-> > > > detect which timer should be used as a clockevent and which one should
-> > > > be used as a clocksource except explicitly specifying it in the DT.
-> > > > Having an interrupt defined in one case (clockevent) and undefined in
-> > > > the other case (clocksource), is just as hack-ish as the detection logic
-> > > > Alexandre developed to avoid explicitly specifying the function
-> > > > assigned to a specific timer.
-> > > > 
-> > > > Can we please find a solution that makes everyone happy (DT,
-> > > > clocksoure/clockevent and at91 maintainers)?
-> > > > 
-> > > > How about adding a linux,timer-function property to specify which
-> > > > function this timer is providing?
-> > > > 
-> > > > Something like that for example:
-> > > > 
-> > > > 	tcb0: timer@fff7c000 {
-> > > > 		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-> > > > 		#address-cells = <1>;
-> > > > 		#size-cells = <0>;
-> > > > 		reg = <0xfff7c000 0x100>;
-> > > > 		interrupts = <18 4>;
-> > > > 		clocks = <&tcb0_clk>, <&clk32k>;
-> > > > 		clock-names = "t0_clk", "slow_clk";
-> > > > 
-> > > > 		timer@0 {
-> > > > 			compatible = "atmel,tcb-timer";
-> > > > 			reg = <0>, <1>;
-> > > > 			linux,timer-function = "clocksource";
-> > > > 		};
-> > > > 
-> > > > 		timer@2 {
-> > > > 			compatible = "atmel,tcb-timer";
-> > > > 			reg = <2>;
-> > > > 			linux,timer-function = "clockevent";
-> > > > 		};
-> > > > 	};
-> > > > 
-> > > > Alternatively, we could have a property or a node in chosen describing which
-> > > > timer should be used:
-> > > > 
-> > > > 	chosen {
-> > > > 		clockevent {
-> > > > 			timer = <&timer2>;
-> > > > 		};
-> > > > 
-> > > > 		clocksource {
-> > > > 			timer = <&timer0>;
-> > > > 		};
-> > > > 
-> > > > 		/*
-> > > > 		 * or
-> > > > 		 *
-> > > > 		 * clockevent = <&timer2>;
-> > > > 		 * clocksource = <&timer0>;
-> > > > 		 *
-> > > > 		 * but I think the clocksource/clockevent node approach
-> > > > 		 * is more future proof in case we need to add extra
-> > > > 		 * information like the expected resolution/precision or
-> > > > 		 * anything that could be tweakable.
-> > > > 		 */
-> > > > 	};
-> > > > 
-> > > > 	tcb0: timer@fff7c000 {
-> > > > 		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
-> > > > 		#address-cells = <1>;
-> > > > 		#size-cells = <0>;
-> > > > 		reg = <0xfff7c000 0x100>;
-> > > > 		interrupts = <18 4>;
-> > > > 		clocks = <&tcb0_clk>, <&clk32k>;
-> > > > 		clock-names = "t0_clk", "slow_clk";
-> > > > 
-> > > > 		timer0: timer@0 {
-> > > > 			compatible = "atmel,tcb-timer";
-> > > > 			reg = <0>, <1>;
-> > > > 		};
-> > > > 
-> > > > 		timer2: timer@2 {
-> > > > 			compatible = "atmel,tcb-timer";
-> > > > 			reg = <2>;
-> > > > 		};
-> > > > 	};
-> > > 
-> > > -- 
-> > > 
-> > >  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-> > > 
-> > > Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> > > <http://twitter.com/#!/linaroorg> Twitter |
-> > > <http://www.linaro.org/linaro-blog/> Blog
+> > Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+> >  arch/arm/boot/dts/sun8i-a83t.dtsi | 28 ++++++++++++++++++++++++++++
+> >  1 file changed, 28 insertions(+)
 > > 
-> > -- 
-> > Alexandre Belloni, Free Electrons
-> > Embedded Linux and Kernel engineering
-> > http://free-electrons.com
+> > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > index 01a83406f9ae..7d719b4aeaa9 100644
+> > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+> > @@ -200,6 +200,14 @@
+> >  			#interrupt-cells = <3>;
+> >  			#gpio-cells = <3>;
+> >  
+> > +			emac_rgmii_pins: emac-rgmii-pins {
+> > +				pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+> > +				       "PD11", "PD12", "PD13", "PD14", "PD18",
+> > +				       "PD19", "PD21", "PD22", "PD23";
+> > +				function = "gmac";
+> > +				drive-strength = <40>;
+> > +			};
+> > +
 > 
-> -- 
+> This is not used anywhere.
 > 
->  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-> 
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+But will be used by bpim3 board
