@@ -1,120 +1,116 @@
-From: Mark Yao <mark.yao@rock-chips.com>
-Subject: [PATCH v2 2/4] drm/rockchip: dw_hdmi: add RK3399 HDMI support
-Date: Fri,  9 Jun 2017 11:05:33 +0800
-Message-ID: <1496977533-32070-1-git-send-email-mark.yao@rock-chips.com>
+From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH v2 3/4] drm/rockchip: dw_hdmi: introduce the VPLL clock setting
+Date: Fri,  9 Jun 2017 11:18:22 +0800
+Message-ID: <1496978302-32741-1-git-send-email-mark.yao@rock-chips.com>
 References: <1496976070-29573-1-git-send-email-mark.yao@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1496976070-29573-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496976070-29573-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-UkszMzk5IGFuZCBSSzMyODggc2hhcmVkIHRoZSBzYW1lIEhETUkgSVAgY29udHJvbGxlciwgb25s
-eSBzb21lIGxpZ2h0CmRpZmZlcmVuY2Ugd2l0aCBHUkYgY29uZmlndXJlLgoKYmFzZSBvbiBZYWtp
-ciBZYW5nJ3MgcmszMzk5IHBhdGNoLCByZWJhc2UgdG8gbmV3ZXN0IHVwc3RyZW0ga2VybmVsOgog
-ICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC85MjIzMzIzCgpTaWduZWQtb2Zm
-LWJ5OiBNYXJrIFlhbyA8bWFyay55YW9Acm9jay1jaGlwcy5jb20+ClNpZ25lZC1vZmYtYnk6IFlh
-a2lyIFlhbmcgPHlra0Byb2NrLWNoaXBzLmNvbT4KCkNoYW5nZXMgaW4gdjI6CiAgcmV1c2UgaGRt
-aV9waHlfY29uZmlndXJlX2R3Y19oZG1pXzNkX3R4IGZvciBwaHkgY29uZmlndXJlCiAgZml4dXAg
-RG9jdW1lbnRhdGlvbgoKLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1p
-LXJvY2tjaGlwLnR4dCB8ICAzICstCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1y
-b2NrY2hpcC5jICAgICAgICB8IDY5ICsrKysrKysrKysrKysrKysrKy0tLS0KIDIgZmlsZXMgY2hh
-bmdlZCwgNjAgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1y
-b2NrY2hpcC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9y
-b2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dAppbmRleCAwNDYwNzZjLi40OTViY2Y1IDEwMDY0
-NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hp
-cC9kd19oZG1pLXJvY2tjaGlwLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dApAQCAtMTEsNyArMTEs
-OCBAQCBmb2xsb3dpbmcgZGV2aWNlLXNwZWNpZmljIHByb3BlcnRpZXMuCiAKIFJlcXVpcmVkIHBy
-b3BlcnRpZXM6CiAKLS0gY29tcGF0aWJsZTogU2hhbGwgY29udGFpbiAicm9ja2NoaXAscmszMjg4
-LWR3LWhkbWkiLgorLSBjb21wYXRpYmxlOiAicm9ja2NoaXAscmszMjg4LWR3LWhkbWkiLAorICAg
-ICAgICAgICAgICAicm9ja2NoaXAscmszMzk5LWR3LWhkbWkiOwogLSByZWc6IFNlZSBkd19oZG1p
-LnR4dC4KIC0gcmVnLWlvLXdpZHRoOiBTZWUgZHdfaGRtaS50eHQuIFNoYWxsIGJlIDQuCiAtIGlu
-dGVycnVwdHM6IEhETUkgaW50ZXJydXB0IG51bWJlcgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9kd19oZG1pLXJvY2tjaGlwLmMKaW5kZXggNjNkYWI2Zi4uMTVhODk4OSAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYworKysgYi9kcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCkBAIC0yMCwxMyArMjAsMzAgQEAK
-ICNpbmNsdWRlICJyb2NrY2hpcF9kcm1fZHJ2LmgiCiAjaW5jbHVkZSAicm9ja2NoaXBfZHJtX3Zv
-cC5oIgogCi0jZGVmaW5lIEdSRl9TT0NfQ09ONiAgICAgICAgICAgICAgICAgICAgMHgwMjVjCi0j
-ZGVmaW5lIEhETUlfU0VMX1ZPUF9MSVQgICAgICAgICAgICAgICAgKDEgPDwgNCkKKyNkZWZpbmUg
-UkszMjg4X0dSRl9TT0NfQ09ONgkJMHgwMjVDCisjZGVmaW5lIFJLMzI4OF9IRE1JX0xDRENfU0VM
-CQlCSVQoNCkKKyNkZWZpbmUgUkszMzk5X0dSRl9TT0NfQ09OMjAJCTB4NjI1MAorI2RlZmluZSBS
-SzMzOTlfSERNSV9MQ0RDX1NFTAkJQklUKDYpCisKKyNkZWZpbmUgSElXT1JEX1VQREFURSh2YWws
-IG1hc2spCSh2YWwgfCAobWFzaykgPDwgMTYpCisKKy8qKgorICogc3RydWN0IHJvY2tjaGlwX2hk
-bWlfY2hpcF9kYXRhIC0gc3BsaXRlIHRoZSBncmYgc2V0dGluZyBvZiBraW5kIG9mIGNoaXBzCisg
-KiBAbGNkc2VsX2dyZl9yZWc6IGdyZiByZWdpc3RlciBvZmZzZXQgb2YgbGNkYyBzZWxlY3QKKyAq
-IEBsY2RzZWxfYmlnOiByZWcgdmFsdWUgb2Ygc2VsZWN0aW5nIHZvcCBiaWcgZm9yIEhETUkKKyAq
-IEBsY2RzZWxfbGl0OiByZWcgdmFsdWUgb2Ygc2VsZWN0aW5nIHZvcCBsaXR0bGUgZm9yIEhETUkK
-KyAqLworc3RydWN0IHJvY2tjaGlwX2hkbWlfY2hpcF9kYXRhIHsKKwl1MzIJbGNkc2VsX2dyZl9y
-ZWc7CisJdTMyCWxjZHNlbF9iaWc7CisJdTMyCWxjZHNlbF9saXQ7Cit9OwogCiBzdHJ1Y3Qgcm9j
-a2NoaXBfaGRtaSB7CiAJc3RydWN0IGRldmljZSAqZGV2OwogCXN0cnVjdCByZWdtYXAgKnJlZ21h
-cDsKIAlzdHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsKKwljb25zdCBzdHJ1Y3Qgcm9ja2NoaXBf
-aGRtaV9jaGlwX2RhdGEgKmNoaXBfZGF0YTsKIH07CiAKICNkZWZpbmUgdG9fcm9ja2NoaXBfaGRt
-aSh4KQljb250YWluZXJfb2YoeCwgc3RydWN0IHJvY2tjaGlwX2hkbWksIHgpCkBAIC0xOTgsMTcg
-KzIxNSwyMCBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJfZW5hYmxlKHN0
-cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIHsKIAlzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSAqaGRt
-aSA9IHRvX3JvY2tjaGlwX2hkbWkoZW5jb2Rlcik7CiAJdTMyIHZhbDsKLQlpbnQgbXV4OworCWlu
-dCByZXQ7CiAKLQltdXggPSBkcm1fb2ZfZW5jb2Rlcl9hY3RpdmVfZW5kcG9pbnRfaWQoaGRtaS0+
-ZGV2LT5vZl9ub2RlLCBlbmNvZGVyKTsKLQlpZiAobXV4KQotCQl2YWwgPSBIRE1JX1NFTF9WT1Bf
-TElUIHwgKEhETUlfU0VMX1ZPUF9MSVQgPDwgMTYpOworCXJldCA9IGRybV9vZl9lbmNvZGVyX2Fj
-dGl2ZV9lbmRwb2ludF9pZChoZG1pLT5kZXYtPm9mX25vZGUsIGVuY29kZXIpOworCWlmIChyZXQp
-CisJCXZhbCA9IGhkbWktPmNoaXBfZGF0YS0+bGNkc2VsX2xpdDsKIAllbHNlCi0JCXZhbCA9IEhE
-TUlfU0VMX1ZPUF9MSVQgPDwgMTY7CisJCXZhbCA9IGhkbWktPmNoaXBfZGF0YS0+bGNkc2VsX2Jp
-ZzsKKworCXJldCA9IHJlZ21hcF93cml0ZShoZG1pLT5yZWdtYXAsIGhkbWktPmNoaXBfZGF0YS0+
-bGNkc2VsX2dyZl9yZWcsIHZhbCk7CisJaWYgKHJldCAhPSAwKQorCQlkZXZfZXJyKGhkbWktPmRl
-diwgIkNvdWxkIG5vdCB3cml0ZSB0byBHUkY6ICVkXG4iLCByZXQpOwogCi0JcmVnbWFwX3dyaXRl
-KGhkbWktPnJlZ21hcCwgR1JGX1NPQ19DT042LCB2YWwpOwogCWRldl9kYmcoaGRtaS0+ZGV2LCAi
-dm9wICVzIG91dHB1dCB0byBoZG1pXG4iLAotCQkobXV4KSA/ICJMSVQiIDogIkJJRyIpOworCQly
-ZXQgPyAiTElUIiA6ICJCSUciKTsKIH0KIAogc3RhdGljIGludApAQCAtMjMyLDE2ICsyNTIsNDIg
-QEAgc3RhdGljIHZvaWQgZHdfaGRtaV9yb2NrY2hpcF9lbmNvZGVyX2VuYWJsZShzdHJ1Y3QgZHJt
-X2VuY29kZXIgKmVuY29kZXIpCiAJLmF0b21pY19jaGVjayA9IGR3X2hkbWlfcm9ja2NoaXBfZW5j
-b2Rlcl9hdG9taWNfY2hlY2ssCiB9OwogCi1zdGF0aWMgY29uc3Qgc3RydWN0IGR3X2hkbWlfcGxh
-dF9kYXRhIHJvY2tjaGlwX2hkbWlfZHJ2X2RhdGEgPSB7CitzdGF0aWMgc3RydWN0IHJvY2tjaGlw
-X2hkbWlfY2hpcF9kYXRhIHJrMzI4OF9jaGlwX2RhdGEgPSB7CisJLmxjZHNlbF9ncmZfcmVnID0g
-UkszMjg4X0dSRl9TT0NfQ09ONiwKKwkubGNkc2VsX2JpZyA9IEhJV09SRF9VUERBVEUoMCwgUksz
-Mjg4X0hETUlfTENEQ19TRUwpLAorCS5sY2RzZWxfbGl0ID0gSElXT1JEX1VQREFURShSSzMyODhf
-SERNSV9MQ0RDX1NFTCwgUkszMjg4X0hETUlfTENEQ19TRUwpLAorfTsKKworc3RhdGljIGNvbnN0
-IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSByazMyODhfaGRtaV9kcnZfZGF0YSA9IHsKKwkubW9k
-ZV92YWxpZCA9IGR3X2hkbWlfcm9ja2NoaXBfbW9kZV92YWxpZCwKKwkubXBsbF9jZmcgICA9IHJv
-Y2tjaGlwX21wbGxfY2ZnLAorCS5jdXJfY3RyICAgID0gcm9ja2NoaXBfY3VyX2N0ciwKKwkucGh5
-X2NvbmZpZyA9IHJvY2tjaGlwX3BoeV9jb25maWcsCisJLmNvbmZpZ3VyZV9waHkgPSBoZG1pX3Bo
-eV9jb25maWd1cmVfZHdjX2hkbWlfM2RfdHgsCisJLnBoeV9kYXRhID0gJnJrMzI4OF9jaGlwX2Rh
-dGEsCit9OworCitzdGF0aWMgc3RydWN0IHJvY2tjaGlwX2hkbWlfY2hpcF9kYXRhIHJrMzM5OV9j
-aGlwX2RhdGEgPSB7CisJLmxjZHNlbF9ncmZfcmVnID0gUkszMzk5X0dSRl9TT0NfQ09OMjAsCisJ
-LmxjZHNlbF9iaWcgPSBISVdPUkRfVVBEQVRFKDAsIFJLMzM5OV9IRE1JX0xDRENfU0VMKSwKKwku
-bGNkc2VsX2xpdCA9IEhJV09SRF9VUERBVEUoUkszMzk5X0hETUlfTENEQ19TRUwsIFJLMzM5OV9I
-RE1JX0xDRENfU0VMKSwKK307CisKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgZHdfaGRtaV9wbGF0X2Rh
-dGEgcmszMzk5X2hkbWlfZHJ2X2RhdGEgPSB7CiAJLm1vZGVfdmFsaWQgPSBkd19oZG1pX3JvY2tj
-aGlwX21vZGVfdmFsaWQsCiAJLm1wbGxfY2ZnICAgPSByb2NrY2hpcF9tcGxsX2NmZywKIAkuY3Vy
-X2N0ciAgICA9IHJvY2tjaGlwX2N1cl9jdHIsCiAJLnBoeV9jb25maWcgPSByb2NrY2hpcF9waHlf
-Y29uZmlnLAorCS5jb25maWd1cmVfcGh5ID0gaGRtaV9waHlfY29uZmlndXJlX2R3Y19oZG1pXzNk
-X3R4LAorCS5waHlfZGF0YSA9ICZyazMzOTlfY2hpcF9kYXRhLAogfTsKIAogc3RhdGljIGNvbnN0
-IHN0cnVjdCBvZl9kZXZpY2VfaWQgZHdfaGRtaV9yb2NrY2hpcF9kdF9pZHNbXSA9IHsKIAl7IC5j
-b21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzI4OC1kdy1oZG1pIiwKLQkgIC5kYXRhID0gJnJvY2tj
-aGlwX2hkbWlfZHJ2X2RhdGEKKwkgIC5kYXRhID0gJnJrMzI4OF9oZG1pX2Rydl9kYXRhCisJfSwK
-Kwl7IC5jb21wYXRpYmxlID0gInJvY2tjaGlwLHJrMzM5OS1kdy1oZG1pIiwKKwkgIC5kYXRhID0g
-JnJrMzM5OV9oZG1pX2Rydl9kYXRhCiAJfSwKIAl7fSwKIH07CkBAIC0yNjgsNiArMzE0LDcgQEAg
-c3RhdGljIGludCBkd19oZG1pX3JvY2tjaGlwX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1
-Y3QgZGV2aWNlICptYXN0ZXIsCiAJbWF0Y2ggPSBvZl9tYXRjaF9ub2RlKGR3X2hkbWlfcm9ja2No
-aXBfZHRfaWRzLCBwZGV2LT5kZXYub2Zfbm9kZSk7CiAJcGxhdF9kYXRhID0gbWF0Y2gtPmRhdGE7
-CiAJaGRtaS0+ZGV2ID0gJnBkZXYtPmRldjsKKwloZG1pLT5jaGlwX2RhdGEgPSBwbGF0X2RhdGEt
-PnBoeV9kYXRhOwogCWVuY29kZXIgPSAmaGRtaS0+ZW5jb2RlcjsKIAogCWVuY29kZXItPnBvc3Np
-YmxlX2NydGNzID0gZHJtX29mX2ZpbmRfcG9zc2libGVfY3J0Y3MoZHJtLCBkZXYtPm9mX25vZGUp
-OwotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5v
-cmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
-ZWwK
+For RK3399 HDMI, there is an external clock need for HDMI PHY,
+and it should keep the same clock rate with VOP DCLK.
+
+VPLL have supported the clock for HDMI PHY, but there is no
+clock divider bewteen VPLL and HDMI PHY. So we need to set the
+VPLL rate manually in HDMI driver.
+
+Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+
+Changes in v2: describe vpll on Documentation.
+---
+ .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  2 +-
+ drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 25 +++++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+index 046076c..b76b7ee 100644
+--- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
++++ b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
+@@ -30,7 +30,7 @@ Optional properties
+   I2C master controller.
+ - clock-names: See dw_hdmi.txt. The "cec" clock is optional.
+ - clock-names: May contain "cec" as defined in dw_hdmi.txt.
+-
++- clock-names: May contain "vpll", external clock for some hdmi phy.
+ 
+ Example:
+ 
+diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+index 15a8989..69256cf 100644
+--- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
++++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
+@@ -7,10 +7,12 @@
+  * (at your option) any later version.
+  */
+ 
++#include <linux/clk.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+-#include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
++
+ #include <drm/drm_of.h>
+ #include <drm/drmP.h>
+ #include <drm/drm_crtc_helper.h>
+@@ -44,6 +46,7 @@ struct rockchip_hdmi {
+ 	struct regmap *regmap;
+ 	struct drm_encoder encoder;
+ 	const struct rockchip_hdmi_chip_data *chip_data;
++	struct clk *vpll_clk;
+ };
+ 
+ #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
+@@ -160,6 +163,7 @@ struct rockchip_hdmi {
+ static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
+ {
+ 	struct device_node *np = hdmi->dev->of_node;
++	int ret;
+ 
+ 	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
+ 	if (IS_ERR(hdmi->regmap)) {
+@@ -167,6 +171,22 @@ static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
+ 		return PTR_ERR(hdmi->regmap);
+ 	}
+ 
++	hdmi->vpll_clk = devm_clk_get(hdmi->dev, "vpll");
++	if (PTR_ERR(hdmi->vpll_clk) == -ENOENT) {
++		hdmi->vpll_clk = NULL;
++	} else if (PTR_ERR(hdmi->vpll_clk) == -EPROBE_DEFER) {
++		return -EPROBE_DEFER;
++	} else if (IS_ERR(hdmi->vpll_clk)) {
++		dev_err(hdmi->dev, "failed to get grf clock\n");
++		return PTR_ERR(hdmi->vpll_clk);
++	}
++
++	ret = clk_prepare_enable(hdmi->vpll_clk);
++	if (ret) {
++		dev_err(hdmi->dev, "Failed to enable HDMI vpll: %d\n", ret);
++		return ret;
++	}
++
+ 	return 0;
+ }
+ 
+@@ -209,6 +229,9 @@ static void dw_hdmi_rockchip_encoder_mode_set(struct drm_encoder *encoder,
+ 					      struct drm_display_mode *mode,
+ 					      struct drm_display_mode *adj_mode)
+ {
++	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
++
++	clk_set_rate(hdmi->vpll_clk, adj_mode->clock * 1000);
+ }
+ 
+ static void dw_hdmi_rockchip_encoder_enable(struct drm_encoder *encoder)
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
