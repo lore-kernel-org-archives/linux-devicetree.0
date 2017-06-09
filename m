@@ -1,53 +1,104 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: [RFC PATCH 3/4] ARM: l2x0: add arm,ecc-enable property for aurora
-Date: Fri, 09 Jun 2017 10:58:12 +0200
-Message-ID: <1496998692.3536.24.camel@pengutronix.de>
-References: <20170608041124.4624-1-chris.packham@alliedtelesis.co.nz>
- <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
+From: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Subject: Re: [PATCH v8 0/3] Support for USB DRD PHY driver for NS2
+Date: Fri, 9 Jun 2017 14:30:18 +0530
+Message-ID: <CAEHZuqNwPBgWM9mAeWTTQLQVJYjX8uNuUDRqsD_ZidgaSV9pcA@mail.gmail.com>
+References: <1496918103-14948-1-git-send-email-raviteja.garimella@broadcom.com>
+ <a5344bd7-f7b1-90b5-cce1-d513370103e5@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bp@alien8.de, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a5344bd7-f7b1-90b5-cce1-d513370103e5@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Do, 2017-06-08 at 16:11 +1200, Chris Packham wrote:
-> +       if (of_property_read_bool(np, "arm,ecc-enable")) {
-> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
-> +               val |= L2C_AUX_CTRL_EVTMON_ENABLE;
-> +       } else if (of_property_read_bool(np, "arm,ecc-disable")) {
-> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
-> +       }
+Hi,
 
-Unless I misunderstand the code in __l2c_init(), the mask is used to
-specify the bits to preserve:
-        old_aux = aux = readl_relaxed(l2x0_base + L2X0_AUX_CTRL);
-        aux &= aux_mask;
-        aux |= aux_val;
+On Fri, Jun 9, 2017 at 2:25 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi,
+>
+> On Thursday 08 June 2017 04:05 PM, Raviteja Garimella wrote:
+>> Changes in v8:
+>> =============
+>> -Renamed phy shutdown routine
+>> -Used devm_request_irq in stead of threaded irq
+>
+> That's not what I intended. Continue to use threaded irq but remove delayed work.
+>
 
-        if (old_aux != aux)
-                pr_warn("L2C: DT/platform modifies aux control register: 0x%08x -> 0x%08x\n",
-                        old_aux, aux);
+Yes I get that. We see intermittent connection issues without delayed
+work. Debounce delay matters there.
 
-So the arm,ecc-disable property will have no effect. This probably also
-applies to patch 2/4. The existing property *-disable code removes the
-corresponding bit from the mask.
+Thanks,
+Ravi
 
-Regards,
-Jan
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Thanks
+> Kishon
+>> -Removed devm_unregister calls in probe routine
+>>
+>> Changes in v7:
+>> =============
+>> Cleaned up unused variables in phy private data structure that's
+>> missed out in v6.
+>> Setting of phy mode to device/host is removed from phy power on.
+>> routine.
+>>
+>> Changes in v6:
+>> =============
+>> Removed spin locks which are not required as the references
+>> to phy_ops in the same driver were removed in v5.
+>>
+>> Removed host/device 'notify' routines which are registered
+>> using 'extcon_register_notifier'. The irq handler is sufficient
+>> to deal with the change in extcon events within the same driver.
+>>
+>> Changes in v5:
+>> =============
+>> Removed references to phy_ops in the same driver by connect_work
+>> event handler to change the phy modes.
+>>
+>> To support dynamically changing the mode of the phy, it does
+>> not require doing a phy reset/programming of PHY PLL. Changes
+>> are made to the connect_work routine to just program the required
+>> register bits to achieve this purpose.
+>>
+>> Changes in v4:
+>> =============
+>> Remove references to edev->name in debug prints.
+>>
+>> Changes in v3:
+>> =============
+>> Remove unnecessary checks for poweron as suggested in review.
+>>
+>> Changes in v2:
+>> =============
+>> 1. Initialize file operations .owner field with THIS_MODULE.
+>> 2. Remove unnecessary gpio example in DT bindings documentation.
+>>    This is previously acked by Rob Herring <robh@kernel.org>
+>>
+>> Introduction for PATCH v1:
+>>
+>> This patch adds support for USB Dual Role Device Phy for Broadcom
+>> Northstar2 SoC. Apart from the new phy driver, this patchset contains
+>> changes to Kconfig, Makefile, and Device tree files.
+>>
+>> This patchset is tested on Broadcom NS2 BCM958712K reference board.
+>>
+>> Repo: https://github.com/Broadcom/arm64-linux.git
+>> Branch: ns2_drdphy_v8
+>>
+>> Raviteja Garimella (3):
+>>   dt-bindings: phy: Add DT bindings documentation for NS2 USB DRD PHY
+>>   phy: phy-bcm-ns2-usbdrd: Broadcom USB DRD PHY driver for Northstar2
+>>   arm64: dts: NS2: Add USB DRD PHY device tree node
+>>
+>>  .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   |  30 ++
+>>  arch/arm64/boot/dts/broadcom/ns2.dtsi              |  14 +
+>>  drivers/phy/Kconfig                                |  13 +
+>>  drivers/phy/Makefile                               |   1 +
+>>  drivers/phy/phy-bcm-ns2-usbdrd.c                   | 437 +++++++++++++++++++++
+>>  5 files changed, 495 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+>>  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
+>>
