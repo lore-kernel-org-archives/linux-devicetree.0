@@ -1,59 +1,81 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: Re: [PATCH v2 01/11] dt-bindings: update the
- binding for Allwinner H3 TVE support
-Date: Sat, 10 Jun 2017 00:51:02 +0800
-Message-ID: <53E8FC74-8AC0-461A-B875-812EE4A3267E@aosc.io>
-References: <20170604160149.30230-1-icenowy@aosc.io> <20170604160149.30230-2-icenowy@aosc.io> <20170607084544.kgclybyxxttfk3ko@flea.lan> <092D4797-0034-4C39-A30A-92CFAB23AAF8@aosc.io> <20170609164915.enap3epreg5vr2gy@flea.home>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 5/7] ASoC: Add Odroid sound DT bindings
+ documentation
+Date: Fri, 09 Jun 2017 18:53:52 +0200
+Message-ID: <82c62742-679a-0d36-a6de-f94eb5e7eac0@samsung.com>
+References: <1492795191-31298-1-git-send-email-s.nawrocki@samsung.com>
+        <CGME20170421172040epcas5p2ee7191a899c52ea3f077837dc2e865ca@epcas5p2.samsung.com>
+        <1492795191-31298-6-git-send-email-s.nawrocki@samsung.com>
+        <20170428170335.7zoovrcs6v22x3lz@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBAFE5PEQKGQECOWSFZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170609164915.enap3epreg5vr2gy-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.orgMaxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-reply-to: <20170428170335.7zoovrcs6v22x3lz@rob-hp-laptop>
+Content-language: en-GB
+Sender: linux-clk-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, inki.dae@samsung.com, sw0312.kim@samsung.com, cw00.choi@samsung.com, krzk@kernel.org, jy0922.shim@samsung.com, broonie@kernel.org, b.zolnierkie@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+On 04/28/2017 07:03 PM, Rob Herring wrote:
+> On Fri, Apr 21, 2017 at 07:19:49PM +0200, Sylwester Nawrocki wrote:
 
-
-=E4=BA=8E 2017=E5=B9=B46=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812=
-:49:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0=
-:
->On Wed, Jun 07, 2017 at 04:48:50PM +0800, Icenowy Zheng wrote:
->> >> @@ -189,6 +211,8 @@ supported.
->> >>  Required properties:
->> >>    - compatible: value must be one of:
->> >>      * allwinner,sun8i-v3s-de2-mixer
->> >> +    * allwinner,sun8i-h3-de2-mixer0
->> >> +    * allwinner,sun8i-h3-de2-mixer1
->> >
->> >Again, please explain why we need to have different compatibles
->> >here. If it's only about the number of planes, this should be dealt
->> >with a property, not a compatible.
->>=20
->> Only mixer0 has "VEP" and write-back support, at least on H3.
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+>> @@ -0,0 +1,57 @@
+>> +Samsung Exynos Odroid XU3/XU4 audio complex with MAX98090 codec
+>> +
+>> +Required properties:
+>> +
+>> + - compatible - "samsung,odroidxu3-audio" - for Odroid XU3 board,
+>> +		"samsung,odroidxu4-audio" - for Odroid XU4 board
+>> + - model - the user-visible name of this sound complex
 >
->What is that VEP? writeback support can also be expressed by a
->property.
+> ASoC will support "label" soon (see graph support). Use that instead.
 
-I don't know what VEP is...
+I could change that but it now might be too late since the patch has been
+merged in v4.12-rc1. Sorry, I couldn't get back to this earlier.
 
-But we are really facing different cores, like sun50i-a64-mmc
-and sun50i-a64-emmc.
-
+>> + - clocks - should contain entries matching clock names in the clock-names
+>> +    property
+>> + - clock-names - should contain following entries:
+>> +    - "epll" - indicating the EPLL output clock
+>> +    - "i2s_rclk" - indicating the RCLK (root) clock of the I2S0 controller
 >
->Maxime
+> At least the 2nd one should be in the i2s node. This node isn't really a
+> h/w block, so it shouldn't have clocks IMO.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+"i2s_rclk" is a clock exposed by the I2S controller.
+
+The RCLK clock has already assigned clock parent in DT:
+
+&i2s0 {
+	assigned-clocks = <&i2s0 CLK_I2S_RCLK_SRC>;
+	assigned-clock-parents = <&clock_audss EXYNOS_SCLK_I2S>;
+};
+
+In fact the sound card is not a consumer of this clock, the clock is used
+only internally in the I2S device.  I could try to drop it and use ASoC
+internal API for CPU DAI clock setting.
+
+But I have no idea what else could be done with the PLL, it belongs to
+the audio card and the card driver must somehow get hold of that clock
+to configure its frequency depending on audio sampling rate.
+
+>> +Example:
+>> +
+>> +sound {
+>> +	compatible = "samsung,odroidxu3-audio";
+>
+>> +	samsung,cpu-dai = <&i2s0>;
+>> +	samsung,codec-dai = <&max98090>;
+>
+> Not documented. Nor needed?
+
+Yes, I will remove these, that's a leftover from initial versions
+of the binding.
+
+--
+Thanks,
+Sylwester
