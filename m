@@ -1,58 +1,69 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm64: allwinner: a64: Add initial NanoPi
- A64 support
-Date: Fri, 9 Jun 2017 16:52:36 +0200
-Message-ID: <20170609145236.tunnjyiorfggyhk5@flea.home>
-References: <1497013436-14107-1-git-send-email-jteki@openedev.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH v5 1/3] nvmem: dt: document SNVS LPGPR binding
+Date: Fri, 9 Jun 2017 16:59:00 +0200
+Message-ID: <8e50ff3d-d1f0-2795-5dc9-302979ca9694@i2se.com>
+References: <20170609125730.25502-1-o.rempel@pengutronix.de>
+ <20170609125730.25502-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="x245w2ai26kqyzfi"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBSXM5LEQKGQENXKG35Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <1497013436-14107-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170609125730.25502-2-o.rempel@pengutronix.de>
+Content-Language: de-DE
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Oleksij,
 
---x245w2ai26kqyzfi
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Am 09.06.2017 um 14:57 schrieb Oleksij Rempel:
+> Documentation bindings for the Low Power General Purpose Register
+> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
+>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/nvmem/snvs-lpgpr.txt          | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>
+> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+> new file mode 100644
+> index 000000000000..21910fb3159f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+> @@ -0,0 +1,19 @@
+> +Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
+> +Secure Non-Volatile Storage.
+> +
+> +This DT node should be represented as a sub-node of a "syscon",
+> +"simple-mfd" node.
+> +
+> +Required properties:
+> +- compatible: should be:
+> +	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
+> +
+> +Example:
+> +snvs: snvs@020cc000 {
+> +	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+> +	reg = <0x020cc000 0x4000>;
+> +
+> +	snvs_lpgpr: snvs-lpgpr {
+> +		compatible = "fsl,imx6q-snvs-lpgpr";
 
-On Fri, Jun 09, 2017 at 01:03:56PM +0000, Jagan Teki wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> 
-> NanoPi A64 is a new board of high performance with low cost
-> designed by FriendlyElec., using the Allwinner A64 SOC.
-> 
-> Nanopi A64 features
-> - Allwinner A64, 64-bit Quad-core Cortex-A53@648MHz to 1.152GHz, DVFS
-> - 1GB DDR3 RAM
-> - MicroSD
-> - Gigabit Ethernet (RTL8211E)
-> - Wi-Fi 802.11b/g/n
-> - IR receiver
-> - Audio In/Out
-> - Video In/Out
-> - Serial Debug Port
-> - microUSB 5V 2A DC power-supply
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+according to the reference manual at least the clock "lp_ipg_clk_s" is
+required for register R/W access.
+So it should be added to the binding and enabled by the driver.
 
-Hmmm, I'm confused, didn't you just send that DT already?
+Best regards
+Stefan
 
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---x245w2ai26kqyzfi--
+> +	};
+> +};
