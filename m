@@ -1,61 +1,66 @@
 From: Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: [PATCH v1 2/2] ARM: dts: rk322x: add spdif node
-Date: Fri,  9 Jun 2017 15:59:33 +0800
-Message-ID: <1496995173-63532-3-git-send-email-sugar.zhang@rock-chips.com>
+Subject: [PATCH v1 1/2] ASoC: rockchip: add bindings for spdif
+	controller
+Date: Fri,  9 Jun 2017 15:59:32 +0800
+Message-ID: <1496995173-63532-2-git-send-email-sugar.zhang@rock-chips.com>
 References: <1496995173-63532-1-git-send-email-sugar.zhang@rock-chips.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
 In-Reply-To: <1496995173-63532-1-git-send-email-sugar.zhang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
 To: heiko@sntech.de, broonie@kernel.org
-Cc: linux-rockchip@lists.infradead.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add spdif node for rk322x.
+this patch add compatible for rk3228/rk3328 spdif,
 
 Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-
 ---
 
- arch/arm/boot/dts/rk322x.dtsi | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ Documentation/devicetree/bindings/sound/rockchip-spdif.txt | 2 ++
+ sound/soc/rockchip/rockchip_spdif.c                        | 4 ++++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
-index 48a0c1c..56f0842 100644
---- a/arch/arm/boot/dts/rk322x.dtsi
-+++ b/arch/arm/boot/dts/rk322x.dtsi
-@@ -168,6 +168,20 @@
- 		status = "disabled";
- 	};
- 
-+	spdif: spdif@100d0000 {
-+		compatible = "rockchip,rk3228-spdif";
-+		reg = <0x100d0000 0x1000>;
-+		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF_8CH>;
-+		clock-names = "mclk", "hclk";
-+		dmas = <&pdma 10>;
-+		#dma-cells = <1>;
-+		dma-names = "tx";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&spdif_tx>;
-+		status = "disabled";
-+	};
-+
- 	i2s2: i2s2@100e0000 {
- 		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
- 		reg = <0x100e0000 0x4000>;
-@@ -651,6 +665,12 @@
- 			};
- 		};
- 
-+		spdif {
-+			spdif_tx: spdif-tx {
-+				rockchip,pins = <3 31 RK_FUNC_2 &pcfg_pull_none>;
-+			};
-+		};
-+
- 		tsadc {
- 			otp_gpio: otp-gpio {
- 				rockchip,pins = <0 24 RK_FUNC_GPIO &pcfg_pull_none>;
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+index 1104642..4706b96 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+@@ -9,7 +9,9 @@ Required properties:
+ - compatible: should be one of the following:
+    - "rockchip,rk3066-spdif"
+    - "rockchip,rk3188-spdif"
++   - "rockchip,rk3228-spdif"
+    - "rockchip,rk3288-spdif"
++   - "rockchip,rk3328-spdif"
+    - "rockchip,rk3366-spdif"
+    - "rockchip,rk3368-spdif"
+    - "rockchip,rk3399-spdif"
+diff --git a/sound/soc/rockchip/rockchip_spdif.c b/sound/soc/rockchip/rockchip_spdif.c
+index fa8101d..ee5055d 100644
+--- a/sound/soc/rockchip/rockchip_spdif.c
++++ b/sound/soc/rockchip/rockchip_spdif.c
+@@ -49,8 +49,12 @@ struct rk_spdif_dev {
+ 	  .data = (void *)RK_SPDIF_RK3066 },
+ 	{ .compatible = "rockchip,rk3188-spdif",
+ 	  .data = (void *)RK_SPDIF_RK3188 },
++	{ .compatible = "rockchip,rk3228-spdif",
++	  .data = (void *)RK_SPDIF_RK3366 },
+ 	{ .compatible = "rockchip,rk3288-spdif",
+ 	  .data = (void *)RK_SPDIF_RK3288 },
++	{ .compatible = "rockchip,rk3328-spdif",
++	  .data = (void *)RK_SPDIF_RK3366 },
+ 	{ .compatible = "rockchip,rk3366-spdif",
+ 	  .data = (void *)RK_SPDIF_RK3366 },
+ 	{ .compatible = "rockchip,rk3368-spdif",
 -- 
 1.9.1
