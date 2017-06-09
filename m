@@ -1,44 +1,92 @@
-From: Ralph Sennhauser <ralph.sennhauser@gmail.com>
-Subject: [PATCH] dt-bindings: Add vendor prefix for Linksys
-Date: Fri,  9 Jun 2017 11:04:21 +0200
-Message-ID: <20170609090421.4984-1-ralph.sennhauser@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] powerpc: dts: use #include "..." to include local DT
+Date: Fri, 9 Jun 2017 18:04:19 +0900
+Message-ID: <CAK7LNARnkHTyAMXjPZnOxOkP_b8vc6qvYOv-wf_Fn0eaPSdpeA@mail.gmail.com>
+References: <1495602744-18874-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1495602744-18874-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Imre Kaloz <kaloz@openwrt.org>, Ralph Sennhauser <ralph.sennhauser@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Linksys (http://www.linksys.com/us/) is a vendor of networking products
-mostly for use by home and small business user. The brand is currently
-owned by Belkin International, Inc. (http://www.belkin.com/us/).
+Hi
 
-The vendor prefix linksys is already used by various supported boards.
+(+Anatolij Gustschin <agust@denx.de>)
 
-Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
----
 
-Hi,
+Ping.
+I am not 100% sure who is responsible for this,
+but somebody, could take a look at this patch, please?
 
-Two weeks ago I asked for a vendor comment via Imre Kaloz but haven't heard
-back, so sending this one out for inclusion as-is.
 
-Ralph
+2017-05-24 14:12 GMT+09:00 Masahiro Yamada <yamada.masahiro@socionext.com>:
+> Most of DT files in PowerPC use #include "..." to make pre-processor
+> include DT in the same directory, but we have 3 exceptional files
+> that use #include <...> for that.
+>
+> Fix them to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
+> dtc_cpp_flags.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+>  arch/powerpc/boot/dts/ac14xx.dts     | 2 +-
+>  arch/powerpc/boot/dts/mpc5121ads.dts | 2 +-
+>  arch/powerpc/boot/dts/pdm360ng.dts   | 2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/powerpc/boot/dts/ac14xx.dts b/arch/powerpc/boot/dts/ac14xx.dts
+> index 27fcabc2f857..83bcfd865167 100644
+> --- a/arch/powerpc/boot/dts/ac14xx.dts
+> +++ b/arch/powerpc/boot/dts/ac14xx.dts
+> @@ -10,7 +10,7 @@
+>   */
+>
+>
+> -#include <mpc5121.dtsi>
+> +#include "mpc5121.dtsi"
+>
+>  / {
+>         model = "ac14xx";
+> diff --git a/arch/powerpc/boot/dts/mpc5121ads.dts b/arch/powerpc/boot/dts/mpc5121ads.dts
+> index 75888ce2c792..73c30621429b 100644
+> --- a/arch/powerpc/boot/dts/mpc5121ads.dts
+> +++ b/arch/powerpc/boot/dts/mpc5121ads.dts
+> @@ -9,7 +9,7 @@
+>   * option) any later version.
+>   */
+>
+> -#include <mpc5121.dtsi>
+> +#include "mpc5121.dtsi"
+>
+>  / {
+>         model = "mpc5121ads";
+> diff --git a/arch/powerpc/boot/dts/pdm360ng.dts b/arch/powerpc/boot/dts/pdm360ng.dts
+> index 0cec7244abe7..445b88114009 100644
+> --- a/arch/powerpc/boot/dts/pdm360ng.dts
+> +++ b/arch/powerpc/boot/dts/pdm360ng.dts
+> @@ -13,7 +13,7 @@
+>   * option) any later version.
+>   */
+>
+> -#include <mpc5121.dtsi>
+> +#include "mpc5121.dtsi"
+>
+>  / {
+>         model = "pdm360ng";
+> --
+> 2.7.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index c03d201..c0cddc8 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -174,6 +174,7 @@ lenovo	Lenovo Group Ltd.
- lg	LG Corporation
- licheepi	Lichee Pi
- linaro	Linaro Limited
-+linksys	Belkin International, Inc. (Linksys)
- linux	Linux-specific binding
- lltc	Linear Technology Corporation
- lsi	LSI Corp. (LSI Logic)
+
 -- 
-2.10.2
+Best Regards
+Masahiro Yamada
