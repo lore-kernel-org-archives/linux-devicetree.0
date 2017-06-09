@@ -1,7 +1,7 @@
 From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v4 5/7] ARM: dts: meson6: switch to new bindings for UART nodes
-Date: Fri,  9 Jun 2017 11:49:14 +0200
-Message-ID: <1497001756-942-6-git-send-email-narmstrong@baylibre.com>
+Subject: [PATCH v4 7/7] ARM: dts: meson8b: switch to new bindings for UART nodes
+Date: Fri,  9 Jun 2017 11:49:16 +0200
+Message-ID: <1497001756-942-8-git-send-email-narmstrong@baylibre.com>
 References: <1497001756-942-1-git-send-email-narmstrong@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1497001756-942-1-git-send-email-narmstrong@baylibre.com>
@@ -15,50 +15,56 @@ proper compatible strings.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- arch/arm/boot/dts/meson6.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm/boot/dts/meson8b.dtsi | 23 +++++++++++++++++++----
+ 1 file changed, 19 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/meson6.dtsi b/arch/arm/boot/dts/meson6.dtsi
-index b0fc91f..a334fbe 100644
---- a/arch/arm/boot/dts/meson6.dtsi
-+++ b/arch/arm/boot/dts/meson6.dtsi
-@@ -70,9 +70,37 @@
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index d9f116a..651ad4a 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -82,6 +82,13 @@
+ 			reg = <0x203>;
  		};
  	};
- 
++
 +	xtal: xtal-clk {
 +		compatible = "fixed-clock";
 +		clock-frequency = <24000000>;
 +		clock-output-names = "xtal";
 +		#clock-cells = <0>;
 +	};
-+
- 	clk81: clk@0 {
- 		#clock-cells = <0>;
- 		compatible = "fixed-clock";
- 		clock-frequency = <200000000>;
- 	};
  }; /* end of / */
-+
-+
-+&uart_AO {
-+	clocks = <&xtal>, <&clk81>, <&clk81>;
+ 
+ &aobus {
+@@ -178,17 +185,25 @@
+ };
+ 
+ &uart_AO {
+-	clocks = <&clkc CLKID_CLK81>;
++	compatible = "amlogic,meson8b-uart", "amlogic,meson-ao-uart";
++	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_A {
-+	clocks = <&xtal>, <&clk81>, <&clk81>;
+ };
+ 
+ &uart_A {
+-	clocks = <&clkc CLKID_CLK81>;
++	compatible = "amlogic,meson8b-uart";
++	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_B {
-+	clocks = <&xtal>, <&clk81>, <&clk81>;
+ };
+ 
+ &uart_B {
+-	clocks = <&clkc CLKID_CLK81>;
++	compatible = "amlogic,meson8b-uart";
++	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_C {
-+	clocks = <&xtal>, <&clk81>, <&clk81>;
+ };
+ 
+ &uart_C {
+-	clocks = <&clkc CLKID_CLK81>;
++	compatible = "amlogic,meson8b-uart";
++	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
 +	clock-names = "xtal", "pclk", "baud";
-+};
+ };
 -- 
 1.9.1
