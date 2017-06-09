@@ -1,47 +1,53 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH v10 1/6] i2c: designware: Cleaning and comment style
- fixes.
-Date: Fri, 9 Jun 2017 10:57:12 +0200
-Message-ID: <3276089c-58f0-d7de-d21e-3eccc94f830d@axentia.se>
-References: <cover.1496942505.git.lolivei@synopsys.com>
- <4fb5f66dafc24e3213aaa8fc93fa12fecb6d6aa1.1496942505.git.lolivei@synopsys.com>
- <5bc3077b-2e4c-eb27-bca1-b7cbfc2dec01@axentia.se>
- <1496997489.22624.63.camel@linux.intel.com>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
+Subject: Re: [RFC PATCH 3/4] ARM: l2x0: add arm,ecc-enable property for aurora
+Date: Fri, 09 Jun 2017 10:58:12 +0200
+Message-ID: <1496998692.3536.24.camel@pengutronix.de>
+References: <20170608041124.4624-1-chris.packham@alliedtelesis.co.nz>
+ <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1496997489.22624.63.camel@linux.intel.com>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, bp@alien8.de, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2017-06-09 10:38, Andy Shevchenko wrote:
-> On Fri, 2017-06-09 at 07:12 +0200, Peter Rosin wrote:
->> On 2017-06-08 19:36, Luis Oliveira wrote:
->>> @@ -984,12 +984,12 @@ int i2c_dw_probe(struct dw_i2c_dev *dev)
->>>  	}
->>>  
->>>  	i2c_dw_disable_int(dev);
->>> -	r = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr,
->>> irq_flags,
->>> +	ret = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr,
->>> irq_flags,
->>>  			     dev_name(dev->dev), dev);
->>
-> 
->> Two extra spaces needed to align with the opening bracket.
-> 
-> It's a bikeshedding, though it looks like v11 is needed anyway (see
-> kbuild bot complains), thus it might be addressed as well.
-> 
+On Do, 2017-06-08 at 16:11 +1200, Chris Packham wrote:
+> +       if (of_property_read_bool(np, "arm,ecc-enable")) {
+> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
+> +               val |= L2C_AUX_CTRL_EVTMON_ENABLE;
+> +       } else if (of_property_read_bool(np, "arm,ecc-disable")) {
+> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
+> +       }
 
-Bikeshedding or not, checkpatch.pl --strict notifies about the issue
-with:
+Unless I misunderstand the code in __l2c_init(), the mask is used to
+specify the bits to preserve:
+        old_aux = aux = readl_relaxed(l2x0_base + L2X0_AUX_CTRL);
+        aux &= aux_mask;
+        aux |= aux_val;
 
-CHECK: Alignment should match open parenthesis
+        if (old_aux != aux)
+                pr_warn("L2C: DT/platform modifies aux control register: 0x%08x -> 0x%08x\n",
+                        old_aux, aux);
 
-Cheers,
-peda
+So the arm,ecc-disable property will have no effect. This probably also
+applies to patch 2/4. The existing property *-disable code removes the
+corresponding bit from the mask.
+
+Regards,
+Jan
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
