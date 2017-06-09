@@ -1,76 +1,153 @@
-From: Mark Yao <mark.yao@rock-chips.com>
-Subject: [PATCH v3 3/3] drm/rockchip: dw_hdmi: introduce the pclk for grf
-Date: Fri,  9 Jun 2017 15:10:46 +0800
-Message-ID: <1496992247-10727-1-git-send-email-mark.yao@rock-chips.com>
-References: <1496992228-10582-1-git-send-email-mark.yao@rock-chips.com>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
+Date: Fri, 9 Jun 2017 15:26:57 +0800
+Message-ID: <CAA+hA=T56WHugmA+5V5ZC6TTxeSUVt1hr0v53YuDsUYgBcvKTw@mail.gmail.com>
+References: <SG2PR06MB11658EC3A3A80C57E6F539AC8A130@SG2PR06MB1165.apcprd06.prod.outlook.com>
+ <CAHp75VeLtOuty=iaxuCaH43rnBZDTT03iH7JyjDJBQhTD-EjzA@mail.gmail.com>
+ <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
+ <20170508160120.GB25206@w540> <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
+ <20170508172516.GC25206@w540> <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
+ <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ@mail.gmail.com>
+ <20170523183735.GC13664@w540> <CACRpkdYcaGzSvAN2Trqwer+8GbqXyfpE=VqiYcQvCOqhDO9MMw@mail.gmail.com>
+ <20170529104229.GB21347@w540>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1496992228-10582-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170529104229.GB21347@w540>
+Sender: linux-gpio-owner@vger.kernel.org
+To: jmondi <jacopo@jmondi.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Chris Brandt <Chris.Brandt@renesas.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Rm9yIFJLMzM5OSdzIEdSRiBtb2R1bGUsIGlmIHdlIHdhbnQgdG8gb3BlcmF0ZSB0aGUgZ3JhcGhp
-YyByZWxhdGVkIGdyZgpyZWdpc3RlcnMsIHdlIG5lZWQgdG8gZW5hYmxlIHRoZSBwY2xrX3Zpb19n
-cmYgd2hpY2ggc3VwcGx5IHBvd2VyIGZvciBWSU8KR1JGIElPcywgc28gaXQncyBiZXR0ZXIgdG8g
-aW50cm9kdWNlIGFuIG9wdGlvbmFsIGdyZiBjbG9jayBpbiBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5
-OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1vZmYtYnk6IE1hcmsgWWFv
-IDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KLS0tCkNoYW5nZXMgaW4gdjM6IG5vbmUKQ2hhbmdl
-cyBpbiB2MjogZGVzY3JpYmUgZ3JmIG9uIERvY3VtZW50YXRpb24uCgogLi4uL2JpbmRpbmdzL2Rp
-c3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQgICAgIHwgIDEgKwogZHJpdmVycy9n
-cHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyAgICAgICAgICAgIHwgMTggKysrKysr
-KysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykKCmRpZmYgLS1n
-aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9k
-d19oZG1pLXJvY2tjaGlwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0CmluZGV4IDc3OWU4YWMuLjZiY2U2
-MzkgMTAwNjQ0Ci0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0CkBAIC0z
-MSw2ICszMSw3IEBAIE9wdGlvbmFsIHByb3BlcnRpZXMKICAgSTJDIG1hc3RlciBjb250cm9sbGVy
-LgogLSBjbG9jay1uYW1lczogU2VlIGR3X2hkbWkudHh0LiBUaGUgImNlYyIgY2xvY2sgaXMgb3B0
-aW9uYWwuCiAtIGNsb2NrLW5hbWVzOiBNYXkgY29udGFpbiAiY2VjIiBhcyBkZWZpbmVkIGluIGR3
-X2hkbWkudHh0LgorLSBjbG9jay1uYW1lczogTWF5IGNvbnRhaW4gImdyZiIsIHBvd2VyIGZvciBn
-cmYgaW8uCiAtIGNsb2NrLW5hbWVzOiBNYXkgY29udGFpbiAidnBsbCIsIGV4dGVybmFsIGNsb2Nr
-IGZvciBzb21lIGhkbWkgcGh5LgogCiBFeGFtcGxlOgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
-ZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hp
-cC9kd19oZG1pLXJvY2tjaGlwLmMKaW5kZXggYWFhMGYzZS4uMmI5Y2I0NyAxMDA2NDQKLS0tIGEv
-ZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYworKysgYi9kcml2ZXJz
-L2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCkBAIC00Nyw2ICs0Nyw3IEBAIHN0
-cnVjdCByb2NrY2hpcF9oZG1pIHsKIAlzdHJ1Y3QgZHJtX2VuY29kZXIgZW5jb2RlcjsKIAljb25z
-dCBzdHJ1Y3Qgcm9ja2NoaXBfaGRtaV9jaGlwX2RhdGEgKmNoaXBfZGF0YTsKIAlzdHJ1Y3QgY2xr
-ICp2cGxsX2NsazsKKwlzdHJ1Y3QgY2xrICpncmZfY2xrOwogfTsKIAogI2RlZmluZSB0b19yb2Nr
-Y2hpcF9oZG1pKHgpCWNvbnRhaW5lcl9vZih4LCBzdHJ1Y3Qgcm9ja2NoaXBfaGRtaSwgeCkKQEAg
-LTE4MSw2ICsxODIsMTYgQEAgc3RhdGljIGludCByb2NrY2hpcF9oZG1pX3BhcnNlX2R0KHN0cnVj
-dCByb2NrY2hpcF9oZG1pICpoZG1pKQogCQlyZXR1cm4gUFRSX0VSUihoZG1pLT52cGxsX2Nsayk7
-CiAJfQogCisJaGRtaS0+Z3JmX2NsayA9IGRldm1fY2xrX2dldChoZG1pLT5kZXYsICJncmYiKTsK
-KwlpZiAoUFRSX0VSUihoZG1pLT5ncmZfY2xrKSA9PSAtRU5PRU5UKSB7CisJCWhkbWktPmdyZl9j
-bGsgPSBOVUxMOworCX0gZWxzZSBpZiAoUFRSX0VSUihoZG1pLT5ncmZfY2xrKSA9PSAtRVBST0JF
-X0RFRkVSKSB7CisJCXJldHVybiAtRVBST0JFX0RFRkVSOworCX0gZWxzZSBpZiAoSVNfRVJSKGhk
-bWktPmdyZl9jbGspKSB7CisJCWRldl9lcnIoaGRtaS0+ZGV2LCAiZmFpbGVkIHRvIGdldCBncmYg
-Y2xvY2tcbiIpOworCQlyZXR1cm4gUFRSX0VSUihoZG1pLT5ncmZfY2xrKTsKKwl9CisKIAlyZXQg
-PSBjbGtfcHJlcGFyZV9lbmFibGUoaGRtaS0+dnBsbF9jbGspOwogCWlmIChyZXQpIHsKIAkJZGV2
-X2VycihoZG1pLT5kZXYsICJGYWlsZWQgdG8gZW5hYmxlIEhETUkgdnBsbDogJWRcbiIsIHJldCk7
-CkBAIC0yNDYsMTAgKzI1NywxNyBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3JvY2tjaGlwX2VuY29k
-ZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIAllbHNlCiAJCXZhbCA9IGhk
-bWktPmNoaXBfZGF0YS0+bGNkc2VsX2JpZzsKIAorCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZSho
-ZG1pLT5ncmZfY2xrKTsKKwlpZiAocmV0IDwgMCkgeworCQlkZXZfZXJyKGhkbWktPmRldiwgImZh
-aWxlZCB0byBlbmFibGUgZ3JmY2xrICVkXG4iLCByZXQpOworCQlyZXR1cm47CisJfQorCiAJcmV0
-ID0gcmVnbWFwX3dyaXRlKGhkbWktPnJlZ21hcCwgaGRtaS0+Y2hpcF9kYXRhLT5sY2RzZWxfZ3Jm
-X3JlZywgdmFsKTsKIAlpZiAocmV0ICE9IDApCiAJCWRldl9lcnIoaGRtaS0+ZGV2LCAiQ291bGQg
-bm90IHdyaXRlIHRvIEdSRjogJWRcbiIsIHJldCk7CiAKKwljbGtfZGlzYWJsZV91bnByZXBhcmUo
-aGRtaS0+Z3JmX2Nsayk7CiAJZGV2X2RiZyhoZG1pLT5kZXYsICJ2b3AgJXMgb3V0cHV0IHRvIGhk
-bWlcbiIsCiAJCXJldCA/ICJMSVQiIDogIkJJRyIpOwogfQotLSAKMS45LjEKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
-aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
-a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Linus & j,
+
+On Mon, May 29, 2017 at 6:42 PM, jmondi <jacopo@jmondi.org> wrote:
+> Hi Linus,
+>
+> On Mon, May 29, 2017 at 10:45:44AM +0200, Linus Walleij wrote:
+>> On Tue, May 23, 2017 at 8:37 PM, jmondi <jacopo@jmondi.org> wrote:
+>>
+>> >> I did not follow too much.
+>> >> But it seems IMX7ULP/Vybrid to be also a fan of generic
+>> >> output-enable/input-enable
+>> >> property.
+>> >>
+>> >> See:
+>> >> Figure 5-2. GPIO PAD in Page 241
+>> >> http://www.nxp.com/assets/documents/data/en/reference-manuals/VFXXXRM.pdf
+>> >>
+>> >> It has separate register bits to control input buffer enable and
+>> >> output buffer enable
+>> >> and we need set it property for GPIO function.
+>> >
+>> > As it seems we have another user for 'output-enable' here, what if we just
+>> > add that one to the generic bindings properties list, and we keep
+>> > 'bi-directional' (which seems to be the most debated property we have
+>> > added) out of generic properties?
+>> >
+>> > We can handle 'bi-directional' pins with static tables in our pin
+>> > controller driver and not have it anywhere in DT.
+>>
+>> This sounds like a viable approach.
+>>
+>> I just want to know if "output-enable" is the right name?
+>> "output-buffer-enable"?
+>
+> Great! Thanks!
+>
+> On naming: if we need "output-buffer-enable" should we add
+> "input-buffer-enable" as well?
+>
+> Currently we are using "input-enable" to pair with "output-enable",
+> but as you said, just "output-enable" when "output-high" and
+> "output-low" are there already seems a bit confusing.
+> At the same time "input-buffer-enable" seems to actually be just
+> electrically equivalent to "input-enable", so adding it is a bit of a
+> waste as well.
+>
+> I see three options here:
+>
+> 1) Add "output-buffer-enable" and "input-buffer-enable"
+> we end up with
+> "output-high"
+> "output-low"
+> "input-enable"
+> "output-buffer-enable"
+> "input-buffer-enable"
+>
+> 2) Add "output-buffer-enable" only
+> we end up with
+> "output-high"
+> "output-low"
+> "input-enable"
+> "output-buffer-enable"
+>
+> Binding may be confusing as in one case we use "output-buffer-enable"
+> while in the other "input-enable"
+>
+> 3) Add "output-enable" only
+> "output-high"
+> "output-low"
+> "input-enable"
+> "output-enable"
+>
+> As you, I don't like "output-enable" that much but it pairs better with
+> "input-enable".
+>
+> I'll let you and DT people decide on this, as it's really an ABI definition
+> problem and you have better judgment there.
+>
+
+What's the final decision of this?
+
+I saw the following revert patch in pinctrl-next but did not see a successive
+patch to add output-enable back?
+
+IMX7ULP pinctrl driver is pending on this because it needs use both
+input-enable and output-enable if we want to make them generic property.
+
+commit b4d2ea2af95cb77e2f320e24da526280d4aa2f6b
+Author: Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon May 8 10:48:21 2017 +0200
+
+    Revert "pinctrl: generic: Add bi-directional and output-enable"
+
+    This reverts commit 8c58f1a7a4b6d1d723bf25fef9d842d5a11200d0.
+
+    It turns out that applying these generic properties was
+    premature: the properties used in the driver using this
+    are of unclear electrical nature and the subject need to
+    be discussed.
+
+    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+
+Regards
+Dong Aisheng
+
+>>
+>> > I see commit 42d5a11200d0[1] has not been reverted yet as Andy asked
+>> > in some previous email.
+>>
+>> I'm just overloaded. I sent that revert to Torvalds today.
+>
+> Thank you. Didn't want to put pressure ;)
+>>
+>> > I can send another version of that patch with
+>> > only 'output-enable' if you wish.
+>>
+>> That's what we want.
+>>
+>> > Once we reach consesus, I can then send v6 of our pin controller driver
+>> > based on that.
+>>
+>> OK sounds like a plan.
+>>
+>> Sorry for the mess, I'm just trying to get this right :/
+>
+> Not a mess, and thanks for your effort in maintaining  all of this
+>
+> Thanks
+>    j
+>>
+>> Yours,
+>> Linus Walleij
