@@ -1,132 +1,49 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v5 2/3] nvmem: add snvs_lpgpr driver
-Date: Fri, 9 Jun 2017 17:01:09 +0200
-Message-ID: <2b309881-0134-c3f8-2037-b0e106719a64@i2se.com>
-References: <20170609125730.25502-1-o.rempel@pengutronix.de>
- <20170609125730.25502-3-o.rempel@pengutronix.de>
+From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Subject: Re: Re: [PATCH] arm64: allwinner: a64: Add initial
+ NanoPi A64 support
+Date: Fri, 9 Jun 2017 20:37:44 +0530
+Message-ID: <affc8d55-b732-4a52-ff26-1564ebd8df6f@openedev.com>
+References: <1497013436-14107-1-git-send-email-jteki@openedev.com>
+ <20170609145236.tunnjyiorfggyhk5@flea.home>
+Reply-To: jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170609125730.25502-3-o.rempel@pengutronix.de>
-Content-Language: de-DE
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Return-path: <linux-sunxi+bncBDH5TZWAZAFBBS7T5LEQKGQE5MH4PWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170609145236.tunnjyiorfggyhk5-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+Content-Language: en-US
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleksij,
+On Friday 09 June 2017 08:22 PM, Maxime Ripard wrote:
+> On Fri, Jun 09, 2017 at 01:03:56PM +0000, Jagan Teki wrote:
+>> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>>
+>> NanoPi A64 is a new board of high performance with low cost
+>> designed by FriendlyElec., using the Allwinner A64 SOC.
+>>
+>> Nanopi A64 features
+>> - Allwinner A64, 64-bit Quad-core Cortex-A53@648MHz to 1.152GHz, DVFS
+>> - 1GB DDR3 RAM
+>> - MicroSD
+>> - Gigabit Ethernet (RTL8211E)
+>> - Wi-Fi 802.11b/g/n
+>> - IR receiver
+>> - Audio In/Out
+>> - Video In/Out
+>> - Serial Debug Port
+>> - microUSB 5V 2A DC power-supply
+>>
+>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> 
+> Hmmm, I'm confused, didn't you just send that DT already?
+Sorry, I forgot to add version number this is v3
 
-please add the NXP guys in CC in order to give them a chance to review.
-
-Am 09.06.2017 um 14:57 schrieb Oleksij Rempel:
-> This is a driver for Low Power General Purpose Register (LPGPR)
-> available on i.MX6 SoCs in Secure Non-Volatile Storage (SNVS)
-> of this chip.
->
-> It is a 32-bit read/write register located in the low power domain.
-> Since LPGPR is located in the battery-backed power domain, LPGPR can
-> be used by any application for retaining data during an SoC power-down
-> mode.
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/nvmem/Kconfig      |  10 ++++
->  drivers/nvmem/Makefile     |   2 +
->  drivers/nvmem/snvs_lpgpr.c | 138 +++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 150 insertions(+)
->  create mode 100644 drivers/nvmem/snvs_lpgpr.c
->
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index 101ced4c84be..ea3044c5d6ee 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -144,4 +144,14 @@ config MESON_EFUSE
->  	  This driver can also be built as a module. If so, the module
->  	  will be called nvmem_meson_efuse.
->  
-> +config NVMEM_SNVS_LPGPR
-> +	tristate "Support for Low Power General Purpose Register"
-> +	depends on SOC_IMX6 || COMPILE_TEST
-> +	help
-> +	  This is a driver for Low Power General Purpose Register (LPGPR) available on
-> +	  i.MX6 SoCs in Secure Non-Volatile Storage (SNVS) of this chip.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called nvmem-snvs-lpgpr.
-> +
->  endif
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 173140658693..4c589184acee 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -30,3 +30,5 @@ obj-$(CONFIG_NVMEM_VF610_OCOTP)	+= nvmem-vf610-ocotp.o
->  nvmem-vf610-ocotp-y		:= vf610-ocotp.o
->  obj-$(CONFIG_MESON_EFUSE)	+= nvmem_meson_efuse.o
->  nvmem_meson_efuse-y		:= meson-efuse.o
-> +obj-$(CONFIG_NVMEM_SNVS_LPGPR)	+= nvmem_snvs_lpgpr.o
-> +nvmem_snvs_lpgpr-y		:= snvs_lpgpr.o
-> diff --git a/drivers/nvmem/snvs_lpgpr.c b/drivers/nvmem/snvs_lpgpr.c
-> new file mode 100644
-> index 000000000000..acb3ddc0d990
-> --- /dev/null
-> +++ b/drivers/nvmem/snvs_lpgpr.c
-> @@ -0,0 +1,138 @@
-> +/*
-> + * Copyright (c) 2015 Pengutronix, Steffen Trumtrar <kernel@pengutronix.de>
-> + * Copyright (c) 2017 Pengutronix, Oleksij Rempel <kernel@pengutronix.de>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2
-> + * as published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/module.h>
-> +#include <linux/nvmem-provider.h>
-> +#include <linux/of_device.h>
-> +#include <linux/regmap.h>
-> +
-> +struct snvs_lpgpr_cfg {
-> +	int offset;
-> +};
-> +
-> +struct snvs_lpgpr_priv {
-> +	struct device_d			*dev;
-> +	struct regmap			*regmap;
-> +	struct nvmem_config		cfg;
-> +	const struct snvs_lpgpr_cfg	*dcfg;
-> +};
-> +
-> +static const struct snvs_lpgpr_cfg snvs_lpgpr_cfg_imx6q = {
-> +	.offset = 0x68,
-> +};
-> +
-> +static int snvs_lpgpr_write(void *context, unsigned int offset, void *_val,
-> +			    size_t bytes)
-> +{
-> +	struct snvs_lpgpr_priv *priv = context;
-> +	const struct snvs_lpgpr_cfg *dcfg = priv->dcfg;
-> +	const u32 *val = _val;
-> +	int i = 0, words = bytes / 4;
-> +
-> +	while (words--)
-> +		regmap_write(priv->regmap, dcfg->offset + offset + (i++ * 4),
-> +			     *val++);
-
-according to the reference manual "57.9.14 SNVS_LP General Purpose
-Register (SNVS_LPGPR)":
-
-    When GPR_SL or GPR_HL bit is set, the register cannot be programmed.
-
-I think the driver should handle this error case properly.
-
-Best regards
-Stefan
+Jagan.
