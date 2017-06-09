@@ -1,30 +1,84 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/1] gpio: of: provide option generic property for
- initial line states
-Date: Fri, 9 Jun 2017 10:41:30 -0500
-Message-ID: <CAL_JsqJeSCN88JnVnofb2Ncy4bDyXiKQbLniHmvbE4j854ZePA@mail.gmail.com>
-References: <20170609141622.21502-1-o.rempel@pengutronix.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: amlogic: Add SoC information bindings
+Date: Fri, 9 Jun 2017 10:46:37 -0500
+Message-ID: <CAL_JsqKGuq2sW1m+JpkYgN-aBj537aNfZn2wb_pnU+FLEa_igg@mail.gmail.com>
+References: <1496742340-10307-1-git-send-email-narmstrong@baylibre.com>
+ <1496742340-10307-2-git-send-email-narmstrong@baylibre.com>
+ <20170609133717.gkqnyatqezkrcaeg@rob-hp-laptop> <955d2903-9057-919b-004d-b1f5985dca5c@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170609141622.21502-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, barebox-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <955d2903-9057-919b-004d-b1f5985dca5c@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 9, 2017 at 9:16 AM, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> This property is needed for barebox or may be other bootloaders
-> to set proper gpio configuration as early as possible.
+On Fri, Jun 9, 2017 at 8:58 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On 06/09/2017 03:37 PM, Rob Herring wrote:
+>> On Tue, Jun 06, 2017 at 11:45:38AM +0200, Neil Armstrong wrote:
+>>> Add bindings for the SoC information register of the Amlogic SoCs.
+>>>
+>>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/amlogic.txt | 32 +++++++++++++++++++++++
+>>>  1 file changed, 32 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+>>> index 5c01e65..ae3e8ed 100644
+>>> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+>>> @@ -60,3 +60,35 @@ Board compatible values (alphabetically, grouped by SoC):
+>>>    - "amlogic,q201" (Meson gxm s912)
+>>>    - "kingnovel,r-box-pro" (Meson gxm S912)
+>>>    - "nexbox,a1" (Meson gxm s912)
+>>> +
+>>> +Amlogic Meson Firmware registers Interface
+>>> +------------------------------------------
+>>> +
+>>> +The Meson SoCs have a register bank with status and data shared with the
+>>> +secure firmware.
+>>> +
+>>> +Required properties:
+>>> + - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon", "simple-mfd"
+>>> +
+>>> +Sub-nodes should indentify components of this register interface :
+>>> +
+>>> +Meson GX SoC Information
+>>> +------------------------
+>>> +A firmware register encodes the SoC type, package and revision information on
+>>> +the Meson GX SoCs.
+>>> +If present, a device node for this register should be added.
+>>> +
+>>> +Required properties:
+>>> +  - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-chipid".
+>>> +
+>>> +Example
+>>> +-------
+>>> +
+>>> +ao-secure@140 {
+>>> +    compatible = "amlogic,meson-gx-ao-secure", "syscon", "simple-mfd";
+>>> +    reg = <0x0 0x140 0x0 0x140>;
+>>> +
+>>> +    chipid {
+>>> +            compatible = "amlogic,meson-gx-chipid";
+>>
+>> No registers for this block? If not, this node is pointless.
+>> "amlogic,meson-gx-ao-secure" should be specific enough to determine if
+>> you have this block or not and the driver for it can create a device if
+>> the OS needs it.
+>>
+>> Rob
+>>
 >
-> This example is mainly based on "lines-initial-states" property
-> from this binding documentation:
-> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> Well OK, but since it's a firmware interface, it can be handy to list the
+> possible capabilities, not especially tied to a driver.
 
-Don't we have a binding for this already based on gpio-hogs.
+A "has-chip-id;" property would do that.
+
+It would be better to just be very explicit about what version of
+firmware you have and that can imply anything and everything you need
+to know about the firmware without needing to up date the dtb every
+time you need to provide a new (to Linux) firmware capability.
 
 Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
