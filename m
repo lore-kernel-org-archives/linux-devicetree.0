@@ -1,103 +1,43 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 03/17] base: fix order of OF initialization
-Date: Thu, 8 Jun 2017 17:37:09 -0700
-Message-ID: <5939EDB5.2040306@gmail.com>
-References: <20170523004107.536-1-palmer@dabbelt.com>
- <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-4-palmer@dabbelt.com>
- <CAMuHMdXWH5fU8YKfR37D5SMi1GpSk75Bq-OcYmm5ZuHe+XK0PQ@mail.gmail.com>
- <20170607093523.GB29370@leverpostej>
- <CAMgXwTiE48KLCJe6TD6VCd5rYASyw0L+pYh8yfvGjhohAfo2dg@mail.gmail.com>
- <5938C957.2030005@gmail.com> <20170608090507.GA5765@leverpostej>
+From: Mark Yao <mark.yao@rock-chips.com>
+Subject: [PATCH v2 0/4] Add RK3399 HDMI Support
+Date: Fri,  9 Jun 2017 10:41:10 +0800
+Message-ID: <1496976070-29573-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20170608090507.GA5765@leverpostej>
-Sender: linux-arch-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Wesley Terpstra <wesley@sifive.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Jose Abreu <Jose.Abreu@synopsys.com>, Neil Armstrong <narmstrong@baylibre.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Mark Yao <mark.yao@rock-chips.com>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/08/17 02:05, Mark Rutland wrote:
-> On Wed, Jun 07, 2017 at 08:49:43PM -0700, Frank Rowand wrote:
->> On 06/07/17 11:39, Wesley Terpstra wrote:
->>> It was a while ago that I debugged this. I already reported this bug
->>> to Benjamin Herrenschmidt (now in CC), and I believe he has a patch of
->>> his own to fix the same issue.
->>>
->>> As I understand it, of_core_init sets up the OF entries in
->>> /sys/firmware/devicetree. During platform bringup, when the system
->>> describes the cpu + cache hierarchy, it also makes an of_node symlink
->>> into that directory. However, if it doesn't exist yet, you get the
->>> warning.
->>>
->>> # ls -l /sys/devices/system/cpu/cpu3/of_node
->>> lrwxrwxrwx    1 root     root             0 Jan  1 00:00
->>> /sys/devices/system/cpu/cpu3/of_node ->
->>> ../../../../firmware/devicetree/base/cpus/cpu@3
->>>
->>> On Wed, Jun 7, 2017 at 2:35 AM, Mark Rutland <mark.rutland@arm.com> wrote:
->>>> On Wed, Jun 07, 2017 at 09:07:20AM +0200, Geert Uytterhoeven wrote:
->>>>> CC devicetree folks
->>>>>
->>>>> On Wed, Jun 7, 2017 at 12:59 AM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
->>>>>> From: "Wesley W. Terpstra" <wesley@sifive.com>
->>>>>>
->>>>>> This fixes: [    0.010000] cpu cpu0: Error -2 creating of_node link
->>>>>> ... which you get for every CPU on all architectures with a OF cpu/ node.
->>>>
->>>> I take it this means a /cpus node? Or the /cpus/cpu@* nodes?
->>>>
->>>> I'm not seeing this on arm64 when booting v4.12-rc4 with DT, so clearly
->>>> this doesn't affect all such architectures.
->>>>
->>>> What path are these errors happening in?
->>
->> On the surface, the patch looks reasonable.  But it is not obvious to me why
->> the error message is occurring.  I would like to understand the cause before
->> saying the patch is good.
->>
->> What kernel version is showing the error?  For a specific architecture
->> (the patch lists 'riscv, nios, etc'), which config and device tree source?
->>
->> And again, what is the calling path?
-> 
->>From having grepped around, I think this affects architectures which
-> select CONFIG_GENERIC_CPU_DEVICES, which includes nios2.
-
-Thanks Mark!  The "#ifdef CONFIG_GENERIC_CPU_DEVICES" in cpu_dev_register_generic()
-explains why we don't see the error on ARM, ARM64, etc.  Without the CONFIG
-option, register_cpu(cpu, i) is not called.
-
-
-> In that case, driver_init() calls cpu_dev_init() before calling
-> of_core_init(). Then we get the callchain:
-> 
->    cpu_dev_init()
-> -> cpu_dev_register_generic()
-> -> register_cpu(cpu, i)
-> -> device_register(&cpu->dev)
-> -> device_add(dev)
-> -> device_add_class_symlinks(dev)
-> 
-> ... in device_add_class_symlinks, we we dev->of_node, and call
-> sysfs_create_link(), which fails because we haven't called
-> of_core_init() to register the sysfs devicetree directory yet.
-> 
-> Given that, this patch makes sense to me.
-> 
-> FWIW, with the commit message updated to describe the particular
-> ordering problem:
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Agree with Mark's request to update the commit message, and also
-I would like to see this shaken out in the -next tree.
-
-Acked-by: Frank Rowand <frowand.list@gmail.com>
-
-> 
-> Thanks,
-> Mark.
-> 
+UkszMzk5IGFuZCBSSzMyODggc2hhcmVkIHRoZSBzYW1lIEhETUkgSVAgY29udHJvbGxlciwgb25s
+eSBzb21lCmxpZ2h0IGRpZmZlcmVuY2Ugd2l0aCBHUkYgY29uZmlndXJlLCBhbmQgYW4gZXh0ZXJu
+YWwgVlBMTCBjbG9jawpuZWVkIHRvIGNvbmZpZ3VyZS4KCmJhc2Ugb24gWWFraXIncyB2MSB0aHJl
+YWQ6CiAgIGh0dHA6Ly9sa21sLml1LmVkdS9oeXBlcm1haWwvbGludXgva2VybmVsLzE2MDcuMS8w
+MTQ2OC5odG1sCgpTb21lIFlha2lyJ3MgaGRtaSBwYXRjaGVzIGNhdXNlIGhkbWkgbm8gZGlzcGxh
+eSBvbiBteSB0ZXN0LApzbyBJIHJlbW92ZSB0aGVtIG9uIHRoaXMgdGhyZWFkLgoKVGVzdGVkIG9u
+IHJrMzM5OSBldmIgYm9hcmQgd2l0aCBrZXJuZWwgNC4xMi4wLXJjMS4KCkNoYW5nZXMgaW4gdjI6
+CiAgcmViYXNlIHRvIG5ld2VzdCB1cHRyZWFtLCByZXVzZSBoZG1pX3BoeV9jb25maWd1cmVfZHdj
+X2hkbWlfM2RfdHgKCk1hcmsgWWFvICgyKToKICBkcm06IGJyaWRnZTogZHctaGRtaTogRXhwb3J0
+IGhkbWlfcGh5X2NvbmZpZ3VyZV9kd2NfaGRtaV8zZF90eAogIGRybS9yb2NrY2hpcDogZHdfaGRt
+aTogYWRkIFJLMzM5OSBIRE1JIHN1cHBvcnQKCllha2lyIFlhbmcgKDIpOgogIGRybS9yb2NrY2hp
+cDogZHdfaGRtaTogaW50cm9kdWNlIHRoZSBWUExMIGNsb2NrIHNldHRpbmcKICBkcm0vcm9ja2No
+aXA6IGR3X2hkbWk6IGludHJvZHVjZSB0aGUgcGNsayBmb3IgZ3JmCgogLi4uL2JpbmRpbmdzL2Rp
+c3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQgfCAgIDMgKy0KIGRyaXZlcnMvZ3B1
+L2RybS9icmlkZ2Uvc3lub3BzeXMvZHctaGRtaS5jICAgICAgICAgIHwgICAzICstCiBkcml2ZXJz
+L2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jICAgICAgICB8IDExMiArKysrKysr
+KysrKysrKysrKystLS0KIGluY2x1ZGUvZHJtL2JyaWRnZS9kd19oZG1pLmggICAgICAgICAgICAg
+ICAgICAgICAgIHwgICAzICsKIDQgZmlsZXMgY2hhbmdlZCwgMTA3IGluc2VydGlvbnMoKyksIDE0
+IGRlbGV0aW9ucygtKQoKLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
