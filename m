@@ -1,33 +1,42 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: exynos: Remove the display-timing and
- delay from rinato dts
-Date: Fri, 9 Jun 2017 09:45:09 +0200
-Message-ID: <20170609074509.GD4018@kozik-book>
-References: <1496984354-5271-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170609045939epcas1p2e4b50c78978b8f14630ca29550c1cb34@epcas1p2.samsung.com>
- <1496984354-5271-4-git-send-email-hoegeun.kwon@samsung.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH] gpio: mvebu: change compatible string for PWM support
+Date: Fri, 9 Jun 2017 09:45:39 +0200
+Message-ID: <CACQ1gAht7kPysPofvyykYrfcRgJ_i_FFC8NqyN+J2L9WXwHfcg@mail.gmail.com>
+References: <20170601200820.22396-1-ralph.sennhauser@gmail.com> <CACRpkdY7yy=U1DgFHXGd06UXg0hh5eC7mBKHLr7hq01hR__q8g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1496984354-5271-4-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, a.hajda@samsung.com, inki.dae@samsung.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdY7yy=U1DgFHXGd06UXg0hh5eC7mBKHLr7hq01hR__q8g@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ralph Sennhauser <ralph.sennhauser@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 01:59:14PM +0900, Hoegeun Kwon wrote:
-> The display-timing and delay are included in the panel driver. So it
-> should be removed in dts.
-> 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos3250-rinato.dts | 22 ----------------------
->  1 file changed, 22 deletions(-)
+2017-06-09 9:42 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+> On Thu, Jun 1, 2017 at 10:08 PM, Ralph Sennhauser
+> <ralph.sennhauser@gmail.com> wrote:
+>
+>> As it turns out more than just Armada 370 and XP support using GPIO
+>> lines as PWM lines. For example the Armada 38x family has the same
+>> hardware support. As such "marvell,armada-370-xp-gpio" for the
+>> compatible string is a misnomer.
+>>
+>> Change the compatible string to "marvell,armada-370-gpio" before the
+>> driver makes it out of the -rc stage. This also follows the practice of
+>> using only the first device family supported as part of the name.
+>>
+>> Also update the documentation and comments in the code accordingly.
+>>
+>> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+>> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+>
+> Patch applied for next with the tags.
+You mean for fixes right ?
+The goal was to correct "marvell,armada-370-xp-gpio" before 4.12 is out.
 
-I understand this depends on merging in the panel driver so this will
-have to wait till then. I'll take it when panel hits mainline (arm-soc
-folks discourage recently cross-tree merges for DT).
+>
+> Yours,
+> Linus Walleij
 
-Best regards,
-Krzysztof
+Regards,
+Richard
