@@ -1,43 +1,24 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 05/10] dt-bindings: interrupt-controller: sunxi-nmi: Add
- compatible for A31 R_INTC
-Date: Fri, 9 Jun 2017 08:25:04 -0500
-Message-ID: <20170609132504.idmlhbfjgxh6ifdb@rob-hp-laptop>
-References: <20170606055932.22548-1-wens@csie.org>
- <20170606055932.22548-6-wens@csie.org>
+Subject: Re: [PATCH v3 1/6] ARM: imx6q: provide documentation for new
+ fsl,pmic-stby-poweroff property
+Date: Fri, 9 Jun 2017 08:29:28 -0500
+Message-ID: <20170609132928.oajoylo7egnsuaya@rob-hp-laptop>
+References: <20170606073146.26882-1-o.rempel@pengutronix.de>
+ <20170606073146.26882-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170606055932.22548-6-wens@csie.org>
+In-Reply-To: <20170606073146.26882-2-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Icenowy Zheng <icenowy@aosc.io>
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 06, 2017 at 01:59:27PM +0800, Chen-Yu Tsai wrote:
-> The A31 and later have an R_INTC block which handles the NMI interrupt
-> pin on the SoC. This interrupt pin is used by the external PMIC to
-> signal interrupts to the SoC.
-> 
-> While this hardware block is undocumented, the interrupt offsets
-> combined with the register regions for the existing "sun6i-a31-sc-nmi"
-> compatible line up with the old interrupt controller found on the A10.
-> Experiments show that only the first 32 interrupt lines can be enabled,
-> and only the first (NMI) interrupt is actually connected.
-> 
-> This patch adds a new, properly named compatible for the A31 R_INTC
-> block, which requires the register region to be properly aligned to
-> the block boundary. For comparison, the old "sun6i-a31-sc-nmi"
-> compatible had its register region aligned with the first used
-> register. This didn't match up with the memory map in the SoC's
-> datasheet/user manual.
-> 
-> Since the new compatible supercedes the old one, deprecate the old one.
-> 
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+On Tue, Jun 06, 2017 at 09:31:41AM +0200, Oleksij Rempel wrote:
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
->  .../bindings/interrupt-controller/allwinner,sunxi-nmi.txt          | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
