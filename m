@@ -1,61 +1,109 @@
-From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: Re: [PATCH v8 0/3] Support for USB DRD PHY driver for NS2
-Date: Fri, 9 Jun 2017 17:06:08 +0530
-Message-ID: <CAEHZuqNskNCt6LqY==Qrw3v8RyagNa+K=ruWZMpn8tqrOfssdQ@mail.gmail.com>
-References: <1496918103-14948-1-git-send-email-raviteja.garimella@broadcom.com>
- <a5344bd7-f7b1-90b5-cce1-d513370103e5@ti.com> <CAEHZuqNwPBgWM9mAeWTTQLQVJYjX8uNuUDRqsD_ZidgaSV9pcA@mail.gmail.com>
- <2f492d5a-9016-f965-8dc2-f669d785ba4d@ti.com> <CAEHZuqO3zquZokENqBLmcn1ZnSCYSYitCXmKrQ-v9HMB0gJrvg@mail.gmail.com>
- <03f87297-a986-ac9d-b20b-0f75abcc12f7@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 08/12] gpio: Add GPIO driver for the RK805 PMIC
+Date: Fri, 9 Jun 2017 13:37:26 +0200
+Message-ID: <CACRpkdZRKWPgFoM=Owo+EXU3bA_oymn5_3WRS9cuMr3G7Hdi6Q@mail.gmail.com>
+References: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com> <1496907001-27107-1-git-send-email-chenjh@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <03f87297-a986-ac9d-b20b-0f75abcc12f7@ti.com>
+In-Reply-To: <1496907001-27107-1-git-send-email-chenjh@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, linux-arm-kernel@lists.infradead.org
+To: Jianhong Chen <chenjh@rock-chips.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, tony.xie@rock-chips.com, zhangqing@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, w.egorov@phytec.de, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Heiko, can you please look at this patch.
 
-On Fri, Jun 9, 2017 at 4:46 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->
->
-> On Friday 09 June 2017 04:23 PM, Raviteja Garimella wrote:
->> Hi Kishon,
->>
->> On Fri, Jun 9, 2017 at 2:36 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>> Hi,
->>>
->>> On Friday 09 June 2017 02:30 PM, Raviteja Garimella wrote:
->>>> Hi,
->>>>
->>>> On Fri, Jun 9, 2017 at 2:25 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>> Hi,
->>>>>
->>>>> On Thursday 08 June 2017 04:05 PM, Raviteja Garimella wrote:
->>>>>> Changes in v8:
->>>>>> =============
->>>>>> -Renamed phy shutdown routine
->>>>>> -Used devm_request_irq in stead of threaded irq
->>>>>
->>>>> That's not what I intended. Continue to use threaded irq but remove delayed work.
->>>>>
->>>>
->>>> Yes I get that. We see intermittent connection issues without delayed
->>>> work. Debounce delay matters there.
->>>
->>> All right!
->>>
->>> I'm unable to apply the series. Please rebase to linux-phy next (directory
->>> structure has changed)
->>>
->>
->> Ok. They got applied to linux-phy next for me without issues.
->> I will resend the patchset anyways after rebasing to linux-phy next.
->
-> the patch you sent is not rebased to the latest linux-phy next.
->
+On Thu, Jun 8, 2017 at 9:30 AM, Jianhong Chen <chenjh@rock-chips.com> wrote:
 
-Sorry.. That's correct, I am sending v9. Thanks.
+> From: chenjh <chenjh@rock-chips.com>
 
-> -Kishon
+Full name please.
+
+> RK805 has two configurable GPIOs that can be used for several
+> purposes. These are output only.
+>
+> This driver is generic for other Rockchip PMICs to be added.
+>
+> Signed-off-by: chenjh <chenjh@rock-chips.com>
+
+Dito.
+
+Your commit message says they are output-only, yet you implement
+.direction_input(). So what is is going to be?
+
+> +#include <linux/i2c.h>
+> +#include <linux/gpio.h>
+
+Only use:
+#include <linux/gpio/driver.h>
+
+> +/*
+> + * @mode: supported modes for this gpio, i.e. OUTPUT_MODE, OUTPUT_MODE...
+
+Are you saying this should be an enum or a set of flags?
+
+> +static int rk805_gpio_get(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       int ret, val;
+> +       struct rk805_gpio *gpio = gpiochip_get_data(chip);
+> +
+> +       ret = regmap_read(gpio->rk808->regmap, gpio->pins[offset].reg, &val);
+> +       if (ret) {
+> +               dev_err(gpio->dev, "gpio%d not support output mode\n", offset);
+> +               return ret;
+> +       }
+> +
+> +       return (val & gpio->pins[offset].val_msk) ? 1 : 0;
+
+Do this:
+
+return !!(val & gpio->pins[offset].val_msk)
+
+> +static int rk805_gpio_request(struct gpio_chip *chip, unsigned offset)
+> +{
+> +       int ret;
+> +       struct rk805_gpio *gpio = gpiochip_get_data(chip);
+> +
+> +       /* switch to gpio mode */
+> +       if (gpio->pins[offset].func_mask) {
+> +               ret = regmap_update_bits(gpio->rk808->regmap,
+> +                                        gpio->pins[offset].reg,
+> +                                        gpio->pins[offset].func_mask,
+> +                                        gpio->pins[offset].func_mask);
+> +               if (ret) {
+> +                       dev_err(gpio->dev, "set gpio%d func failed\n", offset);
+> +                       return ret;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+
+This is pin control. Why don't you implement a proper pin control
+driver for this chip?
+
+If you don't, this will just come back and haunt you.
+
+Why not merge the driver into drivers/pinctrl/* and name it
+pinctrl-rk805.c to begin with?
+
+> +static const struct gpio_chip rk805_chip = {
+> +       .label                  = "rk805-gpio",
+> +       .owner                  = THIS_MODULE,
+> +       .direction_input        = rk805_gpio_direction_input,
+> +       .direction_output       = rk805_gpio_direction_output,
+
+Please implement .get_direction()
+
+> +       .get                    = rk805_gpio_get,
+> +       .set                    = rk805_gpio_set,
+> +       .request                = rk805_gpio_request,
+> +       .base                   = -1,
+> +       .ngpio                  = 2,
+> +       .can_sleep              = true,
+
+Consider assigning the .names[] array some pin names.
+
+Yours,
+Linus Walleij
