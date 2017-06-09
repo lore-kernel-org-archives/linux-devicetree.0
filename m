@@ -1,44 +1,74 @@
-From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 1/6] ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff property
-Date: Fri,  9 Jun 2017 16:07:34 +0200
-Message-ID: <20170609140739.15726-2-o.rempel@pengutronix.de>
-References: <20170609140739.15726-1-o.rempel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170609140739.15726-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH 7/9] dt-bindings: media/s5p-cec.txt: document needs-hpd
+ property
+Date: Fri, 9 Jun 2017 16:11:03 +0200
+Message-ID: <2fa55431-bef2-9340-4ce8-e06f9648e109@xs4all.nl>
+References: <20170607144616.15247-1-hverkuil@xs4all.nl>
+ <20170607144616.15247-8-hverkuil@xs4all.nl>
+ <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/imx6q-clock.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On 09/06/17 16:07, Rob Herring wrote:
+> On Wed, Jun 07, 2017 at 04:46:14PM +0200, Hans Verkuil wrote:
+>> From: Hans Verkuil <hans.verkuil@cisco.com>
+>>
+>> Needed for boards that wire the CEC pin in such a way that it
+>> is unavailable when the HPD is low.
+>>
+>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+>> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+>> Cc: Andrzej Hajda <a.hajda@samsung.com>
+>> Cc: devicetree@vger.kernel.org
+>> ---
+>>  Documentation/devicetree/bindings/media/s5p-cec.txt | 6 ++++++
+>>  1 file changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/s5p-cec.txt b/Documentation/devicetree/bindings/media/s5p-cec.txt
+>> index 4bb08d9d940b..261af4d1a791 100644
+>> --- a/Documentation/devicetree/bindings/media/s5p-cec.txt
+>> +++ b/Documentation/devicetree/bindings/media/s5p-cec.txt
+>> @@ -17,6 +17,12 @@ Required properties:
+>>    - samsung,syscon-phandle - phandle to the PMU system controller
+>>    - hdmi-phandle - phandle to the HDMI controller
+>>  
+>> +Optional:
+>> +  - needs-hpd : if present the CEC support is only available when the HPD
+>> +    is high. Some boards only let the CEC pin through if the HPD is high, for
+>> +    example if there is a level converter that uses the HPD to power up
+>> +    or down.
+> 
+> Seems like something common. Can you document in a common location?
 
-diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-index 9252912a5b0e..8f93e1503e59 100644
---- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
-@@ -6,6 +6,14 @@ Required properties:
- - interrupts: Should contain CCM interrupt
- - #clock-cells: Should be <1>
- 
-+Optional properties:
-+- fsl,pmic-stby-poweroff: Configure CCM to assert PMIC_STBY_REQ signal
-+  on power off.
-+  Use this property if the SoC should be powered off by external power
-+  management IC (PMIC) triggered via PMIC_STBY_REQ signal.
-+  Boards that are designed to initiate poweroff on PMIC_ON_REQ signal should
-+  be using "syscon-poweroff" driver instead.
-+
- The clock consumer should specify the desired clock by having the clock
- ID in its "clocks" phandle cell.  See include/dt-bindings/clock/imx6qdl-clock.h
- for the full list of i.MX6 Quad and DualLite clock IDs.
--- 
-2.11.0
+Should we do the same with hdmi-phandle? It is also used by CEC drivers to find
+the HDMI driver.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Currently only used by s5p-cec and stih-cec, but there will be more.
+
+I guess this would be a sensible place to document this:
+
+Documentation/devicetree/bindings/media/cec.txt
+
+Regards,
+
+	Hans
+
+> 
+>> +
+>>  Example:
+>>  
+>>  hdmicec: cec@100B0000 {
+>> -- 
+>> 2.11.0
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
