@@ -1,81 +1,149 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/4] arm64: renesas: Add support for Salvator-XS
-Date: Fri,  9 Jun 2017 13:43:45 +0200
-Message-ID: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 4/4] arm64: dts: renesas: Add support for Salvator-XS with R-Car H3 ES2.0
+Date: Fri,  9 Jun 2017 13:43:49 +0200
+Message-ID: <1497008629-3974-5-git-send-email-geert+renesas@glider.be>
+References: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon, Magnus,
+Add initial support for the Renesas Salvator-XS (Salvator-X 2nd version)
+development board equipped with an R-Car H3 ES2.0 SiP.
 
-The Renesas Salvator-XS (Salvator-X 2nd version) development board can
-be equipped with either an R-Car H3 ES2.0 or M3-W ES1.x SiP, which are
-pin-compatible.
-
-This patch series adds initial support for the Renesas Salvator-XS
-development board equipped with an R-Car H3 ES2.0 SiP.  The support
-level is similar to the existing support for Salvator-X with the same
-SiP.  See below for exceptions.
-
-The Salvator-XS board is similar but not identical to the already
-supported Salvator-X board.  To avoid duplication, the common parts are
-extracted first into its own .dtsi file.
-Noteworthy differences are:
-  - The main clock crystal ticks at a slightly different rate.
-  - On R-Car H3 ES2.0, SATA no longer uses dedicated pins, but shares
-    them with the second PCIe channel.  To cater for this, a MAX4888B
-    multiplexer has been added to Salvator-XS.  As the default hardware
-    configuration enables PCIe, I disabled SATA.
-  - The Versaclock5 clock generator has been replaced by a similar
-    member of the Versaclock6 family.  As the latter is not supported by
-    Linux yet, I left it out.
-  - The USB3.0 micro-B connector is replaced by a USB2.0 micro-AB
-    connector (both are not yet supported, so no change is needed now).
-
-Dependencies:
-  - renesas-devel-20170608-v4.12-rc4,
-  - "arm64: dts: salvator-x: Add missing index to PWM pinctrl subnode
-    name".
-
-For your convenience, I've pushed this series, its dependencies, and a
-few related driver changes to the topic/r8a7795-salvator-xs branch of
-the git repository at
-https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git
-
-This has been tested on Salvator-XS with R-Car H3 ES2.0, and Salvator-X
-with R-Car H3 ES1.0.
-
-Thanks!
-
-Geert Uytterhoeven (4):
-  ARM: shmobile: Document Renesas H3-based Salvator-XS board DT bindings
-  arm64: dts: renesas: Extract common Salvator-X/XS board support
-  arm64: dts: renesas: Add common Salvator-XS board support
-  arm64: dts: renesas: Add support for Salvator-XS with R-Car H3 ES2.0
-
- Documentation/devicetree/bindings/arm/shmobile.txt |   2 +
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
  arch/arm64/boot/dts/renesas/Makefile               |   1 +
- .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 109 ++++
- .../{salvator-x.dtsi => salvator-common.dtsi}      |  17 +-
- arch/arm64/boot/dts/renesas/salvator-x.dtsi        | 616 +--------------------
- arch/arm64/boot/dts/renesas/salvator-xs.dtsi       |  20 +
- 6 files changed, 134 insertions(+), 631 deletions(-)
+ .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 109 +++++++++++++++++++++
+ 2 files changed, 110 insertions(+)
  create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
- copy arch/arm64/boot/dts/renesas/{salvator-x.dtsi => salvator-common.dtsi} (97%)
- create mode 100644 arch/arm64/boot/dts/renesas/salvator-xs.dtsi
 
+diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
+index d5451015950e3dfc..acc4bb30d485b6bc 100644
+--- a/arch/arm64/boot/dts/renesas/Makefile
++++ b/arch/arm64/boot/dts/renesas/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
++dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
+ dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-salvator-x.dtb r8a7795-es1-h3ulcb.dtb
+ dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
+ 
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+new file mode 100644
+index 0000000000000000..de354957144b4822
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+@@ -0,0 +1,109 @@
++/*
++ * Device Tree Source for the Salvator-X 2nd version board
++ *
++ * Copyright (C) 2015-2017 Renesas Electronics Corp.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#define CPG_AUDIO_CLK_I		R8A7795_CLK_S0D4
++
++/dts-v1/;
++#include "r8a7795.dtsi"
++#include "salvator-xs.dtsi"
++
++/ {
++	model = "Renesas Salvator-X 2nd version board based on r8a7795 ES2.0+";
++	compatible = "renesas,salvator-xs", "renesas,r8a7795";
++
++	memory@48000000 {
++		device_type = "memory";
++		/* first 128MB is reserved for secure area. */
++		reg = <0x0 0x48000000 0x0 0x38000000>;
++	};
++
++	memory@500000000 {
++		device_type = "memory";
++		reg = <0x5 0x00000000 0x0 0x40000000>;
++	};
++
++	memory@600000000 {
++		device_type = "memory";
++		reg = <0x6 0x00000000 0x0 0x40000000>;
++	};
++
++	memory@700000000 {
++		device_type = "memory";
++		reg = <0x7 0x00000000 0x0 0x40000000>;
++	};
++};
++
++&du {
++	clocks = <&cpg CPG_MOD 724>,
++		 <&cpg CPG_MOD 723>,
++		 <&cpg CPG_MOD 722>,
++		 <&cpg CPG_MOD 721>,
++		 <&cpg CPG_MOD 727>,
++		 <&x21_clk>,
++		 <&x22_clk>;
++	clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0",
++		      "dclkin.1", "dclkin.2";
++};
++
++&ehci2 {
++	status = "okay";
++};
++
++&hdmi0 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			reg = <1>;
++			rcar_dw_hdmi0_out: endpoint {
++				remote-endpoint = <&hdmi0_con>;
++			};
++		};
++	};
++};
++
++&hdmi0_con {
++	remote-endpoint = <&rcar_dw_hdmi0_out>;
++};
++
++&hdmi1 {
++	status = "okay";
++
++	ports {
++		port@1 {
++			reg = <1>;
++			rcar_dw_hdmi1_out: endpoint {
++				remote-endpoint = <&hdmi1_con>;
++			};
++		};
++	};
++};
++
++&hdmi1_con {
++	remote-endpoint = <&rcar_dw_hdmi1_out>;
++};
++
++&ohci2 {
++	status = "okay";
++};
++
++&pfc {
++	usb2_pins: usb2 {
++		groups = "usb2";
++		function = "usb2";
++	};
++};
++
++&usb2_phy2 {
++	pinctrl-0 = <&usb2_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
 -- 
 2.7.4
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
