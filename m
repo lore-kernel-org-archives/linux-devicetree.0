@@ -1,53 +1,63 @@
-From: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v2] arm64: allwinner: a64: Add initial
- NanoPi A64 support
-Date: Fri, 9 Jun 2017 20:56:26 +0530
-Message-ID: <3049841d-36f0-a761-fbed-57971462697c@openedev.com>
-References: <1497012052-14027-1-git-send-email-jteki@openedev.com>
- <1497012052-14027-2-git-send-email-jteki@openedev.com>
- <20170609145141.aknbsis25vmy3rj6@flea.home>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 7/9] dt-bindings: media/s5p-cec.txt: document needs-hpd
+ property
+Date: Fri, 9 Jun 2017 10:31:49 -0500
+Message-ID: <CAL_JsqLzxMSdQGCiCBa2-VKpe==djCsqP9GxywJ-X-defiRXMQ@mail.gmail.com>
+References: <20170607144616.15247-1-hverkuil@xs4all.nl>
+ <20170607144616.15247-8-hverkuil@xs4all.nl>
+ <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
+ <2fa55431-bef2-9340-4ce8-e06f9648e109@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170609145141.aknbsis25vmy3rj6-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <2fa55431-bef2-9340-4ce8-e06f9648e109@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel <dri-devel@lists.freedesktop.org>, Krzysztof Kozlowski <krzk@kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 09 June 2017 08:21 PM, Maxime Ripard wrote:
-> Hi Jagan,
-> 
-> On Fri, Jun 09, 2017 at 12:40:52PM +0000, Jagan Teki wrote:
->> +&i2c1 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&i2c1_pins>;
->> +	status = "okay";
->> +};
->> +
->> +&i2c1_pins {
->> +	bias-pull-up;
->> +};
-> 
-> What is connected on that bus?
-
-i2c1 connected with gpio/i2s
-
-> 
->> +&uart1 {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
->> +	status = "okay";
->> +};
-> 
-> And on that UART?
-
-uart1 for SDIO (Wifi connector, with RTS/CTS), this along with mmc1
-
-Jagan.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKdW4gOSwgMjAxNyBhdCA5OjExIEFNLCBIYW5zIFZlcmt1aWwgPGh2ZXJrdWlsQHhz
+NGFsbC5ubD4gd3JvdGU6Cj4gT24gMDkvMDYvMTcgMTY6MDcsIFJvYiBIZXJyaW5nIHdyb3RlOgo+
+PiBPbiBXZWQsIEp1biAwNywgMjAxNyBhdCAwNDo0NjoxNFBNICswMjAwLCBIYW5zIFZlcmt1aWwg
+d3JvdGU6Cj4+PiBGcm9tOiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4+
+Pgo+Pj4gTmVlZGVkIGZvciBib2FyZHMgdGhhdCB3aXJlIHRoZSBDRUMgcGluIGluIHN1Y2ggYSB3
+YXkgdGhhdCBpdAo+Pj4gaXMgdW5hdmFpbGFibGUgd2hlbiB0aGUgSFBEIGlzIGxvdy4KPj4+Cj4+
+PiBTaWduZWQtb2ZmLWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4+
+PiBDYzogS3J6eXN6dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPgo+Pj4gQ2M6IEFuZHJ6
+ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5jb20+Cj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtl
+cm5lbC5vcmcKPj4+IC0tLQo+Pj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZWRpYS9zNXAtY2VjLnR4dCB8IDYgKysrKysrCj4+PiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0
+aW9ucygrKQo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWVkaWEvczVwLWNlYy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWVkaWEvczVwLWNlYy50eHQKPj4+IGluZGV4IDRiYjA4ZDlkOTQwYi4uMjYxYWY0ZDFhNzkx
+IDEwMDY0NAo+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
+L3M1cC1jZWMudHh0Cj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bWVkaWEvczVwLWNlYy50eHQKPj4+IEBAIC0xNyw2ICsxNywxMiBAQCBSZXF1aXJlZCBwcm9wZXJ0
+aWVzOgo+Pj4gICAgLSBzYW1zdW5nLHN5c2Nvbi1waGFuZGxlIC0gcGhhbmRsZSB0byB0aGUgUE1V
+IHN5c3RlbSBjb250cm9sbGVyCj4+PiAgICAtIGhkbWktcGhhbmRsZSAtIHBoYW5kbGUgdG8gdGhl
+IEhETUkgY29udHJvbGxlcgo+Pj4KPj4+ICtPcHRpb25hbDoKPj4+ICsgIC0gbmVlZHMtaHBkIDog
+aWYgcHJlc2VudCB0aGUgQ0VDIHN1cHBvcnQgaXMgb25seSBhdmFpbGFibGUgd2hlbiB0aGUgSFBE
+Cj4+PiArICAgIGlzIGhpZ2guIFNvbWUgYm9hcmRzIG9ubHkgbGV0IHRoZSBDRUMgcGluIHRocm91
+Z2ggaWYgdGhlIEhQRCBpcyBoaWdoLCBmb3IKPj4+ICsgICAgZXhhbXBsZSBpZiB0aGVyZSBpcyBh
+IGxldmVsIGNvbnZlcnRlciB0aGF0IHVzZXMgdGhlIEhQRCB0byBwb3dlciB1cAo+Pj4gKyAgICBv
+ciBkb3duLgo+Pgo+PiBTZWVtcyBsaWtlIHNvbWV0aGluZyBjb21tb24uIENhbiB5b3UgZG9jdW1l
+bnQgaW4gYSBjb21tb24gbG9jYXRpb24/Cj4KPiBTaG91bGQgd2UgZG8gdGhlIHNhbWUgd2l0aCBo
+ZG1pLXBoYW5kbGU/IEl0IGlzIGFsc28gdXNlZCBieSBDRUMgZHJpdmVycyB0byBmaW5kCj4gdGhl
+IEhETUkgZHJpdmVyLgoKWWVzLgoKPiBDdXJyZW50bHkgb25seSB1c2VkIGJ5IHM1cC1jZWMgYW5k
+IHN0aWgtY2VjLCBidXQgdGhlcmUgd2lsbCBiZSBtb3JlLgo+Cj4gSSBndWVzcyB0aGlzIHdvdWxk
+IGJlIGEgc2Vuc2libGUgcGxhY2UgdG8gZG9jdW1lbnQgdGhpczoKPgo+IERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMudHh0CgpTb3VuZHMgZ29vZC4gWW91IGNhbiBk
+byB0aGlzIGFzIGEgZm9sbG93LXVwIHRvIHRoaXMgcGF0Y2ggaWYgeW91IHdhbnQuCkZvciB0aGlz
+IG9uZToKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBs
+aXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVz
+a3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
