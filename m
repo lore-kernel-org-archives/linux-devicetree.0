@@ -1,57 +1,103 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 4/4] mfd: tps65217: Instantiate sub-devices from device tree
-Date: Fri, 9 Jun 2017 02:00:01 +0200
-Message-ID: <CABxcv=nzCreCSm9wkY+Kv_-vmoQN12Ct=_VegsfTrbe6H-1hTw@mail.gmail.com>
-References: <20170607103242.16008-1-enric.balletbo@collabora.com>
- <20170607103242.16008-4-enric.balletbo@collabora.com> <6359abe2-9a21-78a2-f5ea-87e2e3335af3@ti.com>
- <CAFqH_53v32iODN4xhoh4ho4s6grxknEDS3Ak6CHBcTAQo6fDNw@mail.gmail.com>
- <578f348c-509f-79d3-9770-73c9fcffe19c@ti.com> <CAFqH_52rU7ZBG_Muy2JHoqJGdXOdsNfmtJxsZoPRyx3V1aWmFw@mail.gmail.com>
- <CABxcv=mN6=hbDSqrVkwSL8zccCntN7m_3DP6ZCbkOT6CLw+skQ@mail.gmail.com> <fba09819-7d7e-57bb-c147-46c39098cff8@ti.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 03/17] base: fix order of OF initialization
+Date: Thu, 8 Jun 2017 17:37:09 -0700
+Message-ID: <5939EDB5.2040306@gmail.com>
+References: <20170523004107.536-1-palmer@dabbelt.com>
+ <20170606230007.19101-1-palmer@dabbelt.com>
+ <20170606230007.19101-4-palmer@dabbelt.com>
+ <CAMuHMdXWH5fU8YKfR37D5SMi1GpSk75Bq-OcYmm5ZuHe+XK0PQ@mail.gmail.com>
+ <20170607093523.GB29370@leverpostej>
+ <CAMgXwTiE48KLCJe6TD6VCd5rYASyw0L+pYh8yfvGjhohAfo2dg@mail.gmail.com>
+ <5938C957.2030005@gmail.com> <20170608090507.GA5765@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fba09819-7d7e-57bb-c147-46c39098cff8@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: Enric Balletbo Serra <eballetbo@gmail.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, linux-input@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pav>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20170608090507.GA5765@leverpostej>
+Sender: linux-arch-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Wesley Terpstra <wesley@sifive.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Grygorii,
-
-[snip]
-
+On 06/08/17 02:05, Mark Rutland wrote:
+> On Wed, Jun 07, 2017 at 08:49:43PM -0700, Frank Rowand wrote:
+>> On 06/07/17 11:39, Wesley Terpstra wrote:
+>>> It was a while ago that I debugged this. I already reported this bug
+>>> to Benjamin Herrenschmidt (now in CC), and I believe he has a patch of
+>>> his own to fix the same issue.
+>>>
+>>> As I understand it, of_core_init sets up the OF entries in
+>>> /sys/firmware/devicetree. During platform bringup, when the system
+>>> describes the cpu + cache hierarchy, it also makes an of_node symlink
+>>> into that directory. However, if it doesn't exist yet, you get the
+>>> warning.
+>>>
+>>> # ls -l /sys/devices/system/cpu/cpu3/of_node
+>>> lrwxrwxrwx    1 root     root             0 Jan  1 00:00
+>>> /sys/devices/system/cpu/cpu3/of_node ->
+>>> ../../../../firmware/devicetree/base/cpus/cpu@3
+>>>
+>>> On Wed, Jun 7, 2017 at 2:35 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+>>>> On Wed, Jun 07, 2017 at 09:07:20AM +0200, Geert Uytterhoeven wrote:
+>>>>> CC devicetree folks
+>>>>>
+>>>>> On Wed, Jun 7, 2017 at 12:59 AM, Palmer Dabbelt <palmer@dabbelt.com> wrote:
+>>>>>> From: "Wesley W. Terpstra" <wesley@sifive.com>
+>>>>>>
+>>>>>> This fixes: [    0.010000] cpu cpu0: Error -2 creating of_node link
+>>>>>> ... which you get for every CPU on all architectures with a OF cpu/ node.
+>>>>
+>>>> I take it this means a /cpus node? Or the /cpus/cpu@* nodes?
+>>>>
+>>>> I'm not seeing this on arm64 when booting v4.12-rc4 with DT, so clearly
+>>>> this doesn't affect all such architectures.
+>>>>
+>>>> What path are these errors happening in?
 >>
->> For tps65218 couldn't instead of using mfd_add_devices() for all the
->> sub-devs, had used of_platform_populate() for the ones that have
->> device nodes and mfd_add_devices() only for the "tps65218-regulator"?
+>> On the surface, the patch looks reasonable.  But it is not obvious to me why
+>> the error message is occurring.  I would like to understand the cause before
+>> saying the patch is good.
 >>
->> The commit talks about nodes without compatibles but's actually about
->> sub-devices without an associated device node. For me it makes sense
->> to use of_platform_populate() when the MFD has device nodes for their
->> sub-devices and mfd_add_devices() when DT knows nothing about the
->> sub-devices.
->
-> FYI. Below is link discussion I'm referring to between Mark Brown and Andrew F. Davis
-> https://lkml.org/lkml/2015/10/22/823
-> the same - https://groups.google.com/forum/#!topic/linux.kernel/wQsdSpPMroQ
->
+>> What kernel version is showing the error?  For a specific architecture
+>> (the patch lists 'riscv, nios, etc'), which config and device tree source?
+>>
+>> And again, what is the calling path?
+> 
+>>From having grepped around, I think this affects architectures which
+> select CONFIG_GENERIC_CPU_DEVICES, which includes nios2.
 
-Thanks a lot for the pointer. There's a subtle difference between the
-argument you made and the one that Mark is making in this thread
-though.
+Thanks Mark!  The "#ifdef CONFIG_GENERIC_CPU_DEVICES" in cpu_dev_register_generic()
+explains why we don't see the error on ARM, ARM64, etc.  Without the CONFIG
+option, register_cpu(cpu, i) is not called.
 
-Because you said (sorry if I misunderstood) that mfd_add_devices()
-should be used instead of of_device_populate() even when sub-devices
-are described as DT nodes (as is the case in the commit you shared)
-while Mark is saying that if the sub-devs IP blocks are part of the
-MFD, then it shouldn't be exposed in the DT and be instantiated via
-mfd_add_devices() and I absolutely agree with that.
 
-So I was arguing for using of_device_populate() if the sub-devices are
-described in the DT. If that makes sense or not to expose the
-sub-devices in the DT for this particular driver is a different
-discussion and I can't comment on that since I'm not familiar with the
-HW.
+> In that case, driver_init() calls cpu_dev_init() before calling
+> of_core_init(). Then we get the callchain:
+> 
+>    cpu_dev_init()
+> -> cpu_dev_register_generic()
+> -> register_cpu(cpu, i)
+> -> device_register(&cpu->dev)
+> -> device_add(dev)
+> -> device_add_class_symlinks(dev)
+> 
+> ... in device_add_class_symlinks, we we dev->of_node, and call
+> sysfs_create_link(), which fails because we haven't called
+> of_core_init() to register the sysfs devicetree directory yet.
+> 
+> Given that, this patch makes sense to me.
+> 
+> FWIW, with the commit message updated to describe the particular
+> ordering problem:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Best regards,
-Javier
+Agree with Mark's request to update the commit message, and also
+I would like to see this shaken out in the -next tree.
+
+Acked-by: Frank Rowand <frowand.list@gmail.com>
+
+> 
+> Thanks,
+> Mark.
+> 
