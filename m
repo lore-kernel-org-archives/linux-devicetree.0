@@ -1,74 +1,56 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH 7/9] dt-bindings: media/s5p-cec.txt: document needs-hpd
- property
-Date: Fri, 9 Jun 2017 16:11:03 +0200
-Message-ID: <2fa55431-bef2-9340-4ce8-e06f9648e109@xs4all.nl>
-References: <20170607144616.15247-1-hverkuil@xs4all.nl>
- <20170607144616.15247-8-hverkuil@xs4all.nl>
- <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v1 1/1] gpio: of: provide option generic property for initial line states
+Date: Fri,  9 Jun 2017 16:16:22 +0200
+Message-ID: <20170609141622.21502-1-o.rempel@pengutronix.de>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: kernel@pengutronix.de, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, barebox@lists.infradead.org
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/17 16:07, Rob Herring wrote:
-> On Wed, Jun 07, 2017 at 04:46:14PM +0200, Hans Verkuil wrote:
->> From: Hans Verkuil <hans.verkuil@cisco.com>
->>
->> Needed for boards that wire the CEC pin in such a way that it
->> is unavailable when the HPD is low.
->>
->> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
->> Cc: Krzysztof Kozlowski <krzk@kernel.org>
->> Cc: Andrzej Hajda <a.hajda@samsung.com>
->> Cc: devicetree@vger.kernel.org
->> ---
->>  Documentation/devicetree/bindings/media/s5p-cec.txt | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/media/s5p-cec.txt b/Documentation/devicetree/bindings/media/s5p-cec.txt
->> index 4bb08d9d940b..261af4d1a791 100644
->> --- a/Documentation/devicetree/bindings/media/s5p-cec.txt
->> +++ b/Documentation/devicetree/bindings/media/s5p-cec.txt
->> @@ -17,6 +17,12 @@ Required properties:
->>    - samsung,syscon-phandle - phandle to the PMU system controller
->>    - hdmi-phandle - phandle to the HDMI controller
->>  
->> +Optional:
->> +  - needs-hpd : if present the CEC support is only available when the HPD
->> +    is high. Some boards only let the CEC pin through if the HPD is high, for
->> +    example if there is a level converter that uses the HPD to power up
->> +    or down.
-> 
-> Seems like something common. Can you document in a common location?
+This property is needed for barebox or may be other bootloaders
+to set proper gpio configuration as early as possible.
 
-Should we do the same with hdmi-phandle? It is also used by CEC drivers to find
-the HDMI driver.
+This example is mainly based on "lines-initial-states" property
+from this binding documentation:
+Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
 
-Currently only used by s5p-cec and stih-cec, but there will be more.
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ Documentation/devicetree/bindings/gpio/gpio.txt | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-I guess this would be a sensible place to document this:
+diff --git a/Documentation/devicetree/bindings/gpio/gpio.txt b/Documentation/devicetree/bindings/gpio/gpio.txt
+index 84ede036f73d..60f8e8d8ab32 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gpio.txt
+@@ -181,6 +181,26 @@ gpio-controller@00000000 {
+ 		"poweroff", "reset";
+ }
+ 
++Optionally, a GPIO controller may have a "gpio-lines-initial-states" property.
++This is an array of values that specifies the initial state of each line. When
++a value is set to one, the corresponding line will be initialized to the input
++(pulled-up) state. When the values is set to two, the line will be initialized
++the low-level output state. If values is set to zero the line will be
++initialized to the input state.
++If the property is not specified no specific configuration will be set. Driver
++should reuse HW configuration provided by bootloader or other system.
++
++Example:
++
++gpio-controller@00000000 {
++	compatible = "foo";
++	reg = <0x00000000 0x1000>;
++	gpio-controller;
++	#gpio-cells = <2>;
++	ngpios = <9>;
++	gpio-lines-initial-states = <0>, <1>, <2>, <0>, <0>, <2>, <2>, <1>, <1>;
++}
++
+ The GPIO chip may contain GPIO hog definitions. GPIO hogging is a mechanism
+ providing automatic GPIO request and configuration as part of the
+ gpio-controller's driver probe function.
+-- 
+2.11.0
 
-Documentation/devicetree/bindings/media/cec.txt
-
-Regards,
-
-	Hans
-
-> 
->> +
->>  Example:
->>  
->>  hdmicec: cec@100B0000 {
->> -- 
->> 2.11.0
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> https://lists.freedesktop.org/mailman/listinfo/dri-devel
