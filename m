@@ -1,25 +1,58 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 2/9] irqchip: add Amlogic Meson GPIO irqchip driver
-Date: Fri, 9 Jun 2017 09:31:50 +0200
-Message-ID: <CACRpkdbmmiM25=jt0UbB0U12ExbOSLZoj4OP25ovhHwkZsnoKQ@mail.gmail.com>
-References: <04378047-4194-bb0f-3da3-e1d62345a86b@gmail.com> <89d02a38-7386-fcdc-4dce-ea7e531c90b4@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v10 1/3] DT add arctic to vendor prefix for ArcticSand
+Date: Fri, 9 Jun 2017 08:35:34 +0100
+Message-ID: <20170609073534.5as5icygbmcx5zs5@dell>
+References: <1496931122-29094-1-git-send-email-olimpiu@arcticsand.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <89d02a38-7386-fcdc-4dce-ea7e531c90b4@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1496931122-29094-1-git-send-email-olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+Cc: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bdodge-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 9:38 PM, Heiner Kallweit <hkallweit1@gmail.com> wrote:
+On Thu, 08 Jun 2017, Olimpiu Dejeu wrote:
 
-> Add a driver supporting the GPIO interrupt controller on certain
-> Amlogic meson SoC's.
->
-> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+> dt-bindings: vendor-prefixes: add arctic to vendor prefix
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Reviewed-by: Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> 
+> Signed-off-by: Olimpiu Dejeu <olimpiu-eV7fy4qpoLhpLGFMi4vTTA@public.gmane.org>
+> ---
+> v9 => v10:
+> - (Re-submit) Per Rob Herring's request changed vendor-prefix to arctic
+> v8 => v9:
+> - Version updated to match other patch in set. No other changes.
+> v8:
+> - Version to match other patches in set
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Applied, thanks.
 
-Yours,
-Linus Walleij
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 16d3b5e..6f33a4b 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -28,6 +28,7 @@ andestech	Andes Technology Corporation
+>  apm	Applied Micro Circuits Corporation (APM)
+>  aptina	Aptina Imaging
+>  arasan	Arasan Chip Systems
+> +arctic	Arctic Sand
+>  aries	Aries Embedded GmbH
+>  arm	ARM Ltd.
+>  armadeus	ARMadeus Systems SARL
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
