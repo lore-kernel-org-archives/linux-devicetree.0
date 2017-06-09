@@ -1,27 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: stm32: remove useless check
-Date: Fri, 9 Jun 2017 10:03:43 +0200
-Message-ID: <CACRpkdbp8MKdH5UzTZN5UExZupj5Bo7JVqfPAqgg3QYi4hjFqA@mail.gmail.com>
-References: <1496221843-10697-1-git-send-email-alexandre.torgue@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Subject: [PATCH v1 2/2] ARM: dts: rk322x: add spdif node
+Date: Fri,  9 Jun 2017 15:59:33 +0800
+Message-ID: <1496995173-63532-3-git-send-email-sugar.zhang@rock-chips.com>
+References: <1496995173-63532-1-git-send-email-sugar.zhang@rock-chips.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496221843-10697-1-git-send-email-alexandre.torgue@st.com>
+In-Reply-To: <1496995173-63532-1-git-send-email-sugar.zhang@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre TORGUE <alexandre.torgue@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie Delaunay <amelie.delaunay@st.com>
+To: heiko@sntech.de, broonie@kernel.org
+Cc: linux-rockchip@lists.infradead.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 31, 2017 at 11:10 AM, Alexandre TORGUE
-<alexandre.torgue@st.com> wrote:
+This patch add spdif node for rk322x.
 
-> There is no link between the number of elements of tab which contains all
-> pin desc (located in each pinctrl-stm32xxxx.c files) and the pin number
-> (defined in the tab).
->
-> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-Patch applied.
+---
 
-Yours,
-Linus Walleij
+ arch/arm/boot/dts/rk322x.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 48a0c1c..56f0842 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -168,6 +168,20 @@
+ 		status = "disabled";
+ 	};
+ 
++	spdif: spdif@100d0000 {
++		compatible = "rockchip,rk3228-spdif";
++		reg = <0x100d0000 0x1000>;
++		interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru SCLK_SPDIF>, <&cru HCLK_SPDIF_8CH>;
++		clock-names = "mclk", "hclk";
++		dmas = <&pdma 10>;
++		#dma-cells = <1>;
++		dma-names = "tx";
++		pinctrl-names = "default";
++		pinctrl-0 = <&spdif_tx>;
++		status = "disabled";
++	};
++
+ 	i2s2: i2s2@100e0000 {
+ 		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
+ 		reg = <0x100e0000 0x4000>;
+@@ -651,6 +665,12 @@
+ 			};
+ 		};
+ 
++		spdif {
++			spdif_tx: spdif-tx {
++				rockchip,pins = <3 31 RK_FUNC_2 &pcfg_pull_none>;
++			};
++		};
++
+ 		tsadc {
+ 			otp_gpio: otp-gpio {
+ 				rockchip,pins = <0 24 RK_FUNC_GPIO &pcfg_pull_none>;
+-- 
+1.9.1
