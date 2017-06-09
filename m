@@ -1,55 +1,62 @@
-From: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v10 1/6] i2c: designware: Cleaning and comment style
- fixes.
-Date: Fri, 9 Jun 2017 08:57:42 +0100
-Message-ID: <c6048839-9d16-8f71-809b-82b9ab35390b@synopsys.com>
-References: <cover.1496942505.git.lolivei@synopsys.com>
- <4fb5f66dafc24e3213aaa8fc93fa12fecb6d6aa1.1496942505.git.lolivei@synopsys.com>
- <5bc3077b-2e4c-eb27-bca1-b7cbfc2dec01@axentia.se>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] DT: pinctrl: Add binding documentation for Spreadtrum
+ pin controller
+Date: Fri, 9 Jun 2017 09:59:03 +0200
+Message-ID: <CACRpkdaqCPLsmGWXXrfVdOgBqWHQO5pTSjgd6hZhjNFrjanKQA@mail.gmail.com>
+References: <a1fa5b612de318213bab4404997d133ed118f5d2.1495863824.git.baolin.wang@spreadtrum.com>
+ <CACRpkdZFUDrfoyvk-CramNP2OVwVAazVsw3S-wCayx8HP6cSZQ@mail.gmail.com> <20170531075827.GA31518@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5bc3077b-2e4c-eb27-bca1-b7cbfc2dec01-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170531075827.GA31518-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Rosin <peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org>, Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09-Jun-17 6:12, Peter Rosin wrote:
-> On 2017-06-08 19:36, Luis Oliveira wrote:
->> complicated to review. The work here won't bring any additional work to
->> backported fixes because is just style and reordering.
-> 
-> I challenge that. If there is an old bug that existed before this patch
-> that is fixed in the future after this patch has been applied, it might
-> very well be hard_er_ to backport that fix to a point before this patch
-> has been applied. So, what do you mean?
-> 
-Yes, that's true. But it will not be that hard since it's mostly style
-(comments, format, return variables, misspelled words).
-For my humble point of view the code looks better after this patch is applied.
-So if It's more easy to read it should be more easy to fix also if needed.
+On Wed, May 31, 2017 at 9:58 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> w=
+rote:
+> On =E4=B8=80,  5=E6=9C=88 29, 2017 at 06:18:29=E4=B8=8B=E5=8D=88 +0200, L=
+inus Walleij wrote:
 
->> @@ -984,12 +984,12 @@ int i2c_dw_probe(struct dw_i2c_dev *dev)
->>  	}
->>  
->>  	i2c_dw_disable_int(dev);
->> -	r = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr, irq_flags,
->> +	ret = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr, irq_flags,
->>  			     dev_name(dev->dev), dev);
-> 
-> Two extra spaces needed to align with the opening bracket.
-> 
-Thank you, you are right.
+>> > +pad driving level, system control select
+>>
+>> Actually I do not understand at all what "domain pad driving level"
+>> or "system control select" means, those are very generic terms.
+>> Can you describe precisely what it means? What domain? What
+>> is a domain pad? What kind of system control? What is it selecting
+>> between?
+>
+> I try to explain what they are on Spreadtrum platform. One pin can output
+> 3.0v or 1.8v, depending on the related domain pad driving selection, if
+> the related domain pad slect 3.0v, then the pin can output 3.0v.
 
-> Cheers,
-> peda
-> 
+This can probably use the generic pin control property
+PIN_CONFIG_POWER_SOURCE (see include/linux/pinctrl/pinconf-generic.h)
+and the corresponding DT binding "power-source" see
+drivers/pinctrl/pinconf-generic.c and
+Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
 
-Cheers,
-Luis
+> "system control" is used to choose this function (like: UART0) for which
+> system, since we have several systems (AP/CP/CM4) on one SoC.
+
+Aha, that sounds like a very spreadtrum-specific feature actually.
+
+> Since we have lots of different pin configuration to set, it will be hard=
+ to
+> use the standard pin config describing in binding files. But I will try t=
+o
+> remove the magic number and use the common pin config.
+
+It is possible to use generic config and add a few custom bindings
+"on top" of it. See for example:
+Documentation/devicetree/bindings/pinctrl/qcom,pmic-mpp.txt
+mixing a few generic and Qualcomm-specific pin config things,
+and their driver is here:
+drivers/pinctrl/qcom/pinctrl-spmi-mpp.c
+
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
