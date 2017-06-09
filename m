@@ -1,297 +1,432 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH v6 6/9] pinctrl: meson: add support for GPIO interrupts
-Date: Fri, 9 Jun 2017 20:09:51 +0200
-Message-ID: <ffd2b12e-f656-f0d6-4ce4-e72a897bb07d@gmail.com>
+From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v6 2/9] irqchip: add Amlogic Meson GPIO irqchip driver
+Date: Fri, 9 Jun 2017 20:38:16 +0200
+Message-ID: <d8b40a0e-ab78-1a0f-4667-95f838cf2d43@gmail.com>
 References: <04378047-4194-bb0f-3da3-e1d62345a86b@gmail.com>
- <a86d38af-9103-7557-9986-2dc187815569@gmail.com>
- <1496999185.3552.60.camel@baylibre.com>
+ <89d02a38-7386-fcdc-4dce-ea7e531c90b4@gmail.com>
+ <1496999266.3552.61.camel@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1496999185.3552.60.camel@baylibre.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496999266.3552.61.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 09.06.2017 um 11:06 schrieb Jerome Brunet:
-> On Thu, 2017-06-08 at 21:39 +0200, Heiner Kallweit wrote:
->> Add support for GPIO interrupts and make use of the just introduced
->> irqchip driver handling the GPIO interrupt-controller.
+Am 09.06.2017 um 11:07 schrieb Jerome Brunet:
+> On Thu, 2017-06-08 at 21:38 +0200, Heiner Kallweit wrote:
+>> Add a driver supporting the GPIO interrupt controller on certain
+>> Amlogic meson SoC's.
 >>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >> ---
 >> v5:
 >> - changed Kconfig entry based on Neil's suggestion
->> - extended comments
->> - fixed indentation
+>> - added authors
+>> - extended explanation why 2 * n hwirqs are used
 >> v6:
->> - no changes
+>> - change DT property parent-interrupts to interrupts
 >> ---
->>  drivers/pinctrl/Kconfig               |   1 +
->>  drivers/pinctrl/meson/pinctrl-meson.c | 170
->> +++++++++++++++++++++++++++++++++-
->>  2 files changed, 170 insertions(+), 1 deletion(-)
+>>  drivers/irqchip/Kconfig          |   5 +
+>>  drivers/irqchip/Makefile         |   1 +
+>>  drivers/irqchip/irq-meson-gpio.c | 295
+>> +++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 302 insertions(+)
+>>  create mode 100644 drivers/irqchip/irq-meson-gpio.c
 >>
->> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
->> index 7ae04a97..86834dea 100644
->> --- a/drivers/pinctrl/Kconfig
->> +++ b/drivers/pinctrl/Kconfig
->> @@ -166,6 +166,7 @@ config PINCTRL_MESON
->>  	select PINCONF
->>  	select GENERIC_PINCONF
->>  	select GPIOLIB
->> +	select GPIOLIB_IRQCHIP
->>  	select OF_GPIO
->>  	select REGMAP_MMIO
->>  
->> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c
->> b/drivers/pinctrl/meson/pinctrl-meson.c
->> index 66ed70c1..7bacd4e3 100644
->> --- a/drivers/pinctrl/meson/pinctrl-meson.c
->> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
->> @@ -62,6 +62,8 @@
->>  #include "../pinctrl-utils.h"
->>  #include "pinctrl-meson.h"
->>  
->> +static struct irq_domain *meson_pinctrl_irq_domain;
+>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>> index 478f8ace..bdc86e14 100644
+>> --- a/drivers/irqchip/Kconfig
+>> +++ b/drivers/irqchip/Kconfig
+>> @@ -301,3 +301,8 @@ config QCOM_IRQ_COMBINER
+>>  	help
+>>  	  Say yes here to add support for the IRQ combiner devices embedded
+>>  	  in Qualcomm Technologies chips.
 >> +
->>  /**
->>   * meson_get_bank() - find the bank containing a given pin
->>   *
->> @@ -497,6 +499,154 @@ static int meson_gpio_get(struct gpio_chip *chip,
->> unsigned gpio)
->>  	return !!(val & BIT(bit));
->>  }
->>  
->> +static struct meson_pinctrl *meson_gpio_data_to_pc(struct irq_data *data)
->> +{
->> +        struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+>> +config MESON_GPIO_INTC
+>> +	bool
+>> +	depends on ARCH_MESON
+>> +	default y
+>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>> index b64c59b8..1be482bd 100644
+>> --- a/drivers/irqchip/Makefile
+>> +++ b/drivers/irqchip/Makefile
+>> @@ -76,3 +76,4 @@ obj-$(CONFIG_EZNPS_GIC)			+= irq-
+>> eznps.o
+>>  obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
+>>  obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
+>>  obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
+>> +obj-$(CONFIG_MESON_GPIO_INTC)		+= irq-meson-gpio.o
+>> diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-
+>> gpio.c
+>> new file mode 100644
+>> index 00000000..b09228ea
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-meson-gpio.c
+>> @@ -0,0 +1,295 @@
+>> +/*
+>> + * Amlogic Meson GPIO IRQ chip driver
+>> + *
+>> + * Copyright (c) 2015 Endless Mobile, Inc.
+>> + * Author: Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+>> + * Copyright (c) 2016 BayLibre, SAS.
+>> + * Author: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> + * Copyright (c) 2017 Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation, version 2.
+>> + */
 >> +
->> +        return gpiochip_get_data(chip);
->> +}
+>> +#include <linux/device.h>
+>> +#include <linux/init.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/irqchip.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/regmap.h>
 >> +
->> +static int meson_gpio_bank_hwirq(struct meson_bank *bank, unsigned int
->> offset)
->> +{
->> +        int hwirq;
+>> +#define REG_EDGE_POL		0x00
+>> +#define REG_PIN_03_SEL		0x04
+>> +#define REG_PIN_47_SEL		0x08
+>> +#define REG_FILTER_SEL		0x0c
 >> +
->> +        if (bank->irq_first < 0)
->> +                /* this bank cannot generate irqs */
->> +                return 0;
+>> +#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
+>> +#define REG_EDGE_POL_EDGE(x)	BIT(x)
+>> +#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
 >> +
->> +        hwirq = offset - bank->first + bank->irq_first;
+>> +#define MAX_PARENT_IRQ_NUM	8
 >> +
->> +        if (hwirq > bank->irq_last)
->> +                /* this pin cannot generate irqs */
->> +                return 0;
->> +
->> +        return hwirq;
->> +}
->> +
->> +static int meson_gpio_to_hwirq(struct irq_data *data)
->> +{
->> +	struct meson_pinctrl *pc = meson_gpio_data_to_pc(data);
->> +	unsigned int offset = data->hwirq;
->> +        struct meson_bank *bank;
->> +        int hwirq, ret;
->> +
->> +        offset += pc->data->pin_base;
->> +
->> +        ret = meson_get_bank(pc, offset, &bank);
->> +        if (ret)
->> +                return ret;
->> +
->> +        hwirq = meson_gpio_bank_hwirq(bank, offset);
->> +        if (!hwirq)
->> +                dev_dbg(pc->dev, "no interrupt for pin %u\n", offset);
->> +
->> +        return hwirq;
->> +}
->> +
->> +static void meson_gpio_irq_handler(struct irq_desc *desc)
->> +{
->> +        struct irq_chip *chip = irq_desc_get_chip(desc);
->> +        struct irq_data *gpio_irq_data = irq_desc_get_handler_data(desc);
->> +
->> +        chained_irq_enter(chip, desc);
->> +
->> +        if (gpio_irq_data)
->> +                generic_handle_irq(gpio_irq_data->irq);
->> +
->> +        chained_irq_exit(chip, desc);
->> +}
->> +
->> +static void meson_gpio_irq_unmask(struct irq_data *data) {}
->> +static void meson_gpio_irq_mask(struct irq_data *data) {}
->> +
->> +static void meson_gpio_irq_shutdown(struct irq_data *data)
->> +{
->> +	int hwirq = meson_gpio_to_hwirq(data);
->> +	int irq;
->> +
->> +	if (hwirq <= 0)
->> +		return;
->> +
->> +	/*
->> +	 * In case of IRQ_TYPE_EDGE_BOTH we need two parent interrupts,
->> +	 * one for each edge. That's due to HW constraints.
->> +	 * We use format 2 * GPIO_HWIRQ +(0|1) for the hwirq, so we can
->> +	 * have one GPIO_HWIRQ twice and derive the GPIO_HWIRQ from hwirq
->> +	 * by shifting hwirq one bit to the right.
->> +	 */
->> +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2);
->> +	if (irq) {
->> +		irq_set_chained_handler_and_data(irq, handle_bad_irq, NULL);
->> +		irq_domain_free_irqs(irq, 1);
->> +	}
->> +
->> +	irq = irq_find_mapping(meson_pinctrl_irq_domain, hwirq * 2 + 1);
->> +	if (irq) {
->> +		irq_set_chained_handler_and_data(irq, handle_bad_irq, NULL);
->> +		irq_domain_free_irqs(irq, 1);
->> +	}
->> +}
->> +
->> +static int meson_gpio_irq_set_type(struct irq_data *data, unsigned int type)
->> +{
->> +	int hwirq = meson_gpio_to_hwirq(data);
->> +	struct irq_fwspec fwspec;
->> +        int irq, irq2, num_slots;
->> +
->> +	if (irqd_is_activated(data))
->> +		return -EBUSY;
+>> +/* maximum number of GPIO IRQs on supported platforms */
+>> +#define MAX_NUM_GPIO_IRQ	133
 > 
-> Again, your implementation assume that:
-> * irq_set_type should be called only once in the life of the irq.
-> * and/or irq_set_type cannot be called from irq context
+> Only valid on gxbb. Not gxl nor meson8
 > 
-> I don't agree with those assumptions.
-> If irq_set_type could not called several times, to change the type at runtime,
-> why would the irq framework bother providing "irq_set_irq_type" in the public
-> API ? Why bother with irq_set_type callback at all ? It could all be done in the
-> startup callback... 
-> 
-Due to the hardware restrictions we need a workaround for supporting
-IRQ_TYPE_EDGE_BOTH. It may not support each and every theoretically possible
-use case of irq_set_irq_type() but it works in the relevant scenarios and we
-would have something NOW.
-If somebody isn't happy with it he can still improve it.
-Else we go on discussing until these chips are discontinued.
+This max value is meant to be the max for all supported chips.
+Meson8 and GXL have less gpio irq sources.
 
-Against most negative side effects of calling irq_set_irq_type again we're
-protected by rejecting calls when the IRQ is activated already.
-
-And I made one more proposal:
-We could in general reserve two parent irq's. Then we don't have the issue
-with irq_set_irq_type (paying the price of supporting max. 4 gpio irq's).
-
+>> +
+>> +/*
+>> + * In case of IRQ_TYPE_EDGE_BOTH we need two parent interrupts, one for each
+>> + * edge. That's due to HW constraints.
+>> + * We use format 2 * GPIO_HWIRQ +(0|1) for the hwirq, so we can have one
+>> + * GPIO_HWIRQ twice and derive the GPIO_HWIRQ from hwirq by shifting hwirq
+>> + * one bit to the right.
+>> + */
+>> +#define NUM_GPIO_HWIRQ		(2 * MAX_NUM_GPIO_IRQ)
+> 
+> PSB
 > 
 >> +
->> +	if (hwirq < 0)
->> +		return hwirq;
->> +
->> +	if (!hwirq)
->> +		return -ENXIO;
->> +
->> +	fwspec.fwnode = meson_pinctrl_irq_domain->fwnode;
->> +	fwspec.param_count = 2;
->> +
->> +	/*
->> +	 * The chip can create an interrupt for either rising or falling edge
->> +	 * only. Therefore use two interrupts in case of IRQ_TYPE_EDGE_BOTH,
->> +	 * first for falling edge and second one for rising edge.
->> +	 */
->> +	num_slots = (type == IRQ_TYPE_EDGE_BOTH) ? 2 : 1;
->> +
->> +	/* see comment in meson_gpio_irq_shutdown why we shift one bit here
->> */
->> +	fwspec.param[0] = hwirq << 1;
->> +	if (num_slots == 1)
->> +		fwspec.param[1] = type;
->> +	else
->> +		fwspec.param[1] = IRQ_TYPE_EDGE_FALLING;
->> +
->> +	irq = irq_create_fwspec_mapping(&fwspec);
->> +	if (!irq)
->> +		return -EINVAL;
->> +
->> +	irq_set_chained_handler_and_data(irq, meson_gpio_irq_handler, data);
->> +
->> +	if (num_slots > 1) {
->> +		fwspec.param[0]++;
->> +		fwspec.param[1] = IRQ_TYPE_EDGE_RISING;
->> +		irq2 = irq_create_fwspec_mapping(&fwspec);
->> +		if (!irq2) {
->> +			irq_domain_free_irqs(irq, 1);
->> +			return -EINVAL;
->> +		}
->> +		irq_set_chained_handler_and_data(irq2,
->> meson_gpio_irq_handler, data);
->> +	}
->> +
->> +        return 0;
->> +}
->> +
->> +static struct irq_chip meson_gpio_irq_chip = {
->> +        .name = "GPIO",
->> +        .irq_set_type = meson_gpio_irq_set_type,
->> +        .irq_mask = meson_gpio_irq_mask,
->> +        .irq_unmask = meson_gpio_irq_unmask,
->> +        .irq_shutdown = meson_gpio_irq_shutdown,
+>> +struct meson_irq_slot {
+>> +	unsigned int irq;
+>> +	unsigned int owner;
 >> +};
 >> +
->>  static const struct of_device_id meson_pinctrl_dt_match[] = {
->>  	{
->>  		.compatible = "amlogic,meson8-cbus-pinctrl",
->> @@ -558,7 +708,8 @@ static int meson_gpiolib_register(struct meson_pinctrl
->> *pc)
->>  		return ret;
->>  	}
->>  
->> -	return 0;
->> +	return gpiochip_irqchip_add(&pc->chip, &meson_gpio_irq_chip, 0,
->> +				    handle_simple_irq, IRQ_TYPE_NONE);
->>  }
->>  
->>  static struct regmap_config meson_regmap_config = {
->> @@ -637,6 +788,23 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl
->> *pc,
->>  		return PTR_ERR(pc->reg_gpio);
->>  	}
->>  
->> +	if (!meson_pinctrl_irq_domain) {
+>> +struct meson_data {
+>> +	struct regmap *regmap;
+>> +	struct meson_irq_slot slots[MAX_PARENT_IRQ_NUM];
+>> +	unsigned int num_slots;
+>> +	struct mutex lock;
+>> +};
+>> +
+>> +static int meson_alloc_irq_slot(struct meson_data *md, unsigned int virq)
+>> +{
+>> +	int i, slot = -ENOSPC;
+>> +
+>> +	mutex_lock(&md->lock);
+>> +
+>> +	for (i = 0; i < md->num_slots && slot < 0; i++)
+>> +		if (!md->slots[i].owner) {
+>> +			md->slots[i].owner = virq;
+>> +			slot = i;
+>> +		}
+>> +
+>> +	mutex_unlock(&md->lock);
+>> +
+>> +	return slot;
+>> +}
+>> +
+>> +static void meson_free_irq_slot(struct meson_data *md, unsigned int virq)
+>> +{
+>> +	int i;
+>> +
+>> +	mutex_lock(&md->lock);
+>> +
+>> +	for (i = 0; i < md->num_slots; i++)
+>> +		if (md->slots[i].owner == virq) {
+>> +			md->slots[i].owner = 0;
+>> +			break;
+>> +		}
+>> +
+>> +	mutex_unlock(&md->lock);
+>> +}
+>> +
+>> +static int meson_find_irq_slot(struct meson_data *md, unsigned int virq)
+>> +{
+>> +	int i, slot = -EINVAL;
+>> +
+>> +	mutex_lock(&md->lock);
+>> +
+>> +	for (i = 0; i < md->num_slots && slot < 0; i++)
+>> +		if (md->slots[i].owner == virq)
+>> +			slot = i;
+>> +
+>> +	mutex_unlock(&md->lock);
+>> +
+>> +	return slot;
+>> +}
+>> +
+>> +static void meson_set_hwirq(struct meson_data *md, int idx, unsigned int
+>> hwirq)
+>> +{
+>> +	int reg = idx > 3 ? REG_PIN_47_SEL : REG_PIN_03_SEL;
+>> +	int shift = 8 * (idx % 4);
+>> +
+>> +	regmap_update_bits(md->regmap, reg, 0xff << shift,
+>> +			   hwirq << shift);
 > 
-> This be in " struct meson_pinctrl *pc" not a global.
-> Each instance should parse its own bindings and not rely on the other one for
-> this !
+> Access to the registers should be somehow protected. Several irqs use the same
+> registers. There is a potential race condition here.
 > 
-There can only be one such gpio irq controller node. Of course we could do
-exactly the same parsing with exactly the same result twice, bit I don't
-really see a benefit in it.
+regmap comes with an integrated locking.
 
->> +		np = of_find_compatible_node(NULL, NULL, "amlogic,meson-gpio-
->> intc");
->> +		if (!np) {
->> +			dev_err(pc->dev, "interrupt controller DT node not
->> found\n");
->> +			return -EINVAL;
->> +		}
+>> +}
 >> +
->> +		meson_pinctrl_irq_domain = irq_find_host(np);
->> +		if (!meson_pinctrl_irq_domain) {
->> +			dev_err(pc->dev, "interrupt controller not found\n");
->> +			of_node_put(np);
->> +			return -EINVAL;
->> +		}
+>> +static void meson_irq_set_hwirq(struct irq_data *data, unsigned int hwirq)
+>> +{
+>> +	struct meson_data *md = data->domain->host_data;
+>> +	int slot = meson_find_irq_slot(md, data->irq);
 >> +
->> +		of_node_put(np);
+>> +	if (slot >= 0)
+>> +		meson_set_hwirq(md, slot, hwirq);
+>> +}
+>> +
+>> +static int meson_irq_set_type(struct irq_data *data, unsigned int type)
+>> +{
+>> +	struct meson_data *md = data->domain->host_data;
+>> +	int slot;
+>> +	unsigned int val = 0;
+>> +
+>> +	if (type == IRQ_TYPE_EDGE_BOTH)
+>> +		return -EINVAL;
+>> +
+>> +	slot = meson_find_irq_slot(md, data->irq);
+>> +	if (slot < 0)
+>> +		return slot;
+>> +
+>> +	if (type & IRQ_TYPE_EDGE_BOTH)
+>> +		val |= REG_EDGE_POL_EDGE(slot);
+>> +
+>> +	if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_EDGE_FALLING))
+>> +		val |= REG_EDGE_POL_LOW(slot);
+>> +
+>> +	regmap_update_bits(md->regmap, REG_EDGE_POL,
+>> +			   REG_EDGE_POL_MASK(slot), val);
+> 
+> Same here.
+> 
+> 
+>> +
+>> +	if (type & IRQ_TYPE_EDGE_BOTH)
+>> +		val = IRQ_TYPE_EDGE_RISING;
+>> +	else
+>> +		val = IRQ_TYPE_LEVEL_HIGH;
+>> +
+>> +	return irq_chip_set_type_parent(data, val);
+>> +}
+>> +
+>> +static unsigned int meson_irq_startup(struct irq_data *data)
+>> +{
+>> +	irq_chip_unmask_parent(data);
+>> +	/*
+>> +	 * An extra bit was added to allow having the same gpio hwirq twice
+>> +	 * for handling IRQ_TYPE_EDGE_BOTH. Remove this bit to get the
+>> +	 * gpio hwirq.
+>> +	 */
+>> +	meson_irq_set_hwirq(data, data->hwirq >> 1);
+> 
+> Please keep in mind that any device can use this controller as irq parent.
+> It has to make sense, even when not serving the gpio driver.
+> 
+Yes, theoretically there could be other drivers accessing this
+gpio irq controller. But most likely they would face the same issue too
+(support for IRQ_TYPE_EDGE_BOTH) and is there any realistic foreseeable
+use case where another driver would access the gpio irq controller?
+
+For me the question is:
+Do we want to go with something that is 80% nice, supports all major
+use cases and is available now (it can still be improved later)?
+Or do we want to go on waiting (like since Oct 2016) for something that
+suddenly steps out of the dark, is 100% nice and covers all corner cases?
+
+I'm also a big fan of proper architecture. But I'm also somewhat
+result-driven. W/o this I'm afraid I would have lost my job long ago.
+
+Last but not least I think what we have here is still much better
+than most vendor drivers. And v6 of the patch set already includes major
+changes based on the various review comments.
+
+> This hack means that, in DT, we'd have to multiply by 2 the values given under
+> section "22.3 GPIO interrupts" of the datasheet. This is an example Linux
+> specific stuff in DT.
+> It also means that the controller declares a lot more lines that it really has
+> ... 
+> 
+> This is all to accommodate your hack around IRQ_TYPE_BOTH and creating the
+> mapping from the irq_set_type callback of the GPIO driver, which is still think
+> should be dropped at this point.
+> 
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void meson_irq_shutdown(struct irq_data *data)
+>> +{
+>> +	meson_irq_set_hwirq(data, 0xff);
+>> +	irq_chip_mask_parent(data);
+>> +}
+>> +
+>> +static struct irq_chip meson_irq_chip = {
+>> +	.name = "meson_gpio_intc",
+>> +	.irq_set_type = meson_irq_set_type,
+>> +	.irq_eoi = irq_chip_eoi_parent,
+>> +	.irq_mask = irq_chip_mask_parent,
+>> +	.irq_unmask = irq_chip_unmask_parent,
+>> +	.irq_startup = meson_irq_startup,
+>> +	.irq_shutdown = meson_irq_shutdown,
+>> +	.irq_set_affinity = irq_chip_set_affinity_parent,
+>> +};
+>> +
+>> +static int meson_irq_alloc(struct irq_domain *d, unsigned int virq,
+>> +			   unsigned int nr_irqs, void *data)
+>> +{
+>> +	struct irq_fwspec parent_fwspec, *fwspec = data;
+>> +	struct meson_data *md = d->host_data;
+>> +	irq_hw_number_t hwirq;
+>> +	int ret, slot;
+>> +
+>> +	slot = meson_alloc_irq_slot(md, virq);
+>> +	if (slot < 0)
+>> +		return slot;
+>> +
+>> +	hwirq = fwspec->param[0];
+>> +	irq_domain_set_hwirq_and_chip(d, virq, hwirq, &meson_irq_chip, NULL);
+>> +
+>> +	parent_fwspec.fwnode = d->parent->fwnode;
+>> +	parent_fwspec.param_count = 3;
+>> +	parent_fwspec.param[0] = 0; /* SPI */
+>> +	parent_fwspec.param[1] = md->slots[slot].irq;
+>> +	parent_fwspec.param[2] = IRQ_TYPE_NONE;
+>> +
+>> +	ret = irq_domain_alloc_irqs_parent(d, virq, nr_irqs, &parent_fwspec);
+>> +	if (ret)
+>> +		meson_free_irq_slot(md, virq);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static void meson_irq_free(struct irq_domain *d, unsigned int virq,
+>> +			   unsigned int nr_irqs)
+>> +{
+>> +	struct meson_data *md = d->host_data;
+>> +
+>> +	irq_domain_free_irqs_common(d, virq, nr_irqs);
+>> +	meson_free_irq_slot(md, virq);
+>> +}
+>> +
+>> +static const struct irq_domain_ops meson_irq_ops = {
+>> +	.alloc = meson_irq_alloc,
+>> +	.free = meson_irq_free,
+>> +	.xlate = irq_domain_xlate_twocell,
+> 
+> This is a hierarchic domain, shouldn't it implement translate rather than xlate
+> ?
+> 
+If translate isn't defined there's a fallback to xlate. irq_domain_xlate_twocell
+comes for free so I didn't see any benefit in re-implementing it as a translate
+callback.
+
+>> +};
+>> +
+>> +static int meson_get_irqs(struct meson_data *md, struct device_node *node)
+>> +{
+>> +	int ret, i;
+>> +	u32 irq;
+>> +
+>> +	for (i = 0; i < MAX_PARENT_IRQ_NUM; i++) {
+>> +		ret = of_property_read_u32_index(node, "interrupts", i,
+>> &irq);
+>> +		if (ret)
+>> +			break;
+>> +		md->slots[i].irq = irq;
 >> +	}
 >> +
->>  	return 0;
->>  }
->>  
+>> +	md->num_slots = i;
+>> +
+>> +	return i ? 0 : -EINVAL;
+>> +}
+>> +
+>> +static const struct regmap_config meson_regmap_config = {
+>> +	.reg_bits       = 32,
+>> +	.reg_stride     = 4,
+>> +	.val_bits       = 32,
+>> +	.max_register	= REG_FILTER_SEL,
+>> +};
+>> +
+>> +static int __init meson_gpio_irq_init(struct device_node *node,
+>> +				      struct device_node *parent)
+>> +{
+>> +	struct irq_domain *meson_irq_domain, *parent_domain;
+>> +	struct meson_data *md;
+>> +	void __iomem *io_base;
+>> +	int ret;
+>> +
+>> +	md = kzalloc(sizeof(*md), GFP_KERNEL);
+>> +	if (!md)
+>> +		return -ENOMEM;
+>> +
+>> +	mutex_init(&md->lock);
+>> +
+>> +	io_base = of_iomap(node, 0);
+>> +	if (!io_base)
+>> +		return -EINVAL;
+>> +
+>> +	md->regmap = regmap_init_mmio(NULL, io_base, &meson_regmap_config);
+>> +	if (IS_ERR(md->regmap))
+>> +		return PTR_ERR(md->regmap);
+>> +
+>> +	/* initialize to IRQ_TYPE_LEVEL_HIGH */
+>> +	regmap_write(md->regmap, REG_EDGE_POL, 0);
+>> +	/* disable all GPIO interrupt sources */
+>> +	regmap_write(md->regmap, REG_PIN_03_SEL, 0xffffffff);
+>> +	regmap_write(md->regmap, REG_PIN_47_SEL, 0xffffffff);
+>> +	/* disable filtering */
+>> +	regmap_write(md->regmap, REG_FILTER_SEL, 0);
+>> +
+>> +	ret = meson_get_irqs(md, node);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	parent_domain = irq_find_host(parent);
+>> +	if (!parent_domain)
+>> +		return -ENXIO;
+>> +
+>> +	meson_irq_domain = irq_domain_add_hierarchy(parent_domain, 0,
+>> +						    NUM_GPIO_HWIRQ, node,
+>> +						    &meson_irq_ops, md);
+>> +	return meson_irq_domain ? 0 : -EINVAL;
+>> +}
+>> +
+>> +IRQCHIP_DECLARE(meson_gpio_irq, "amlogic,meson-gpio-intc",
+>> meson_gpio_irq_init);
 > 
 > 
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
