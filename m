@@ -1,75 +1,60 @@
-From: Wesley Terpstra <wesley@sifive.com>
-Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V interrupt controllers
-Date: Fri, 9 Jun 2017 14:58:14 -0700
-Message-ID: <CAMgXwTi+H5n9f_kcbvTJE1yA-yeNSuwuR+QO4kYXtyZbQ2ga2w@mail.gmail.com>
-References: <20170523004107.536-1-palmer@dabbelt.com> <20170606230007.19101-1-palmer@dabbelt.com>
- <20170606230007.19101-9-palmer@dabbelt.com> <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
- <20170607101343.GC29370@leverpostej> <CAMgXwTiz0jXgSw=veJ3O7xzVgm==YisZZLWpZFH7aJMXV4j7qA@mail.gmail.com>
- <20170608105230.GC5765@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20170608105230.GC5765@leverpostej>
-Sender: linux-arch-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Palmer Dabbelt <palmer@dabbelt.com>, Linux-Arch <linux-arch@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Albert Ou <albert@sifive.com>, patches@groups.riscv.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <Marc.Zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: [PATCH] ARM: dts: meson8: fix the IR receiver pins
+Date: Sat, 10 Jun 2017 00:20:39 +0200
+Message-ID: <20170609222039.25191-1-martin.blumenstingl@googlemail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ugh. Clicked reply without being done writing the reply!
+The IR receiver pins are currently defined in the CBUS pin-controller.
+However the pins are in the AO region, which is controlled by the AOBUS
+pin-controller. Move the pins to pinctrl_aobus so they can actually be
+used.
 
-On Thu, Jun 8, 2017 at 3:52 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> Edge vs level, active high vs active low. Typically some of these are
-> programmable, and are described as flags in the interrupt-specifier.
->
-> See the examples in:
->
-> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+Fixes: b60e1157d8fa ("ARM: dts: amlogic: Split pinctrl device for Meson8 / Meson8b")
+Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+---
+ arch/arm/boot/dts/meson8.dtsi | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Ok. Those are not really relevant to the PLIC. It has a flat interrupt
-namespace and the way you handle all four kinds of interrupts in the
-driver is uniform. I don't think we want to architecturally expose
-this to the operating system.
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 9b0b3ddbb17e..e4f7357b4b31 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -116,6 +116,13 @@
+ 				function = "i2c_mst_ao";
+ 			};
+ 		};
++
++		ir_recv_pins: remote {
++			mux {
++				groups = "remote_input";
++				function = "remote";
++			};
++		};
+ 	};
+ };
+ 
+@@ -151,13 +158,6 @@
+ 			};
+ 		};
+ 
+-		ir_recv_pins: remote {
+-			mux {
+-				groups = "remote_input";
+-				function = "remote";
+-			};
+-		};
+-
+ 		eth_pins: ethernet {
+ 			mux {
+ 				groups = "eth_tx_clk_50m", "eth_tx_en",
+-- 
+2.13.1
 
-> So do any CSRs affect the state of the PLIC? If it's just MMIO, the
-> mention of CSRs above is just a little confusing.
-
-HLIC = CSR only. PLIC = MMIO only.
-
-> It might be best to just say "The PLIC is connect to the HLIC embedded
-> in each RISC-V core".
-
-Fair enough.
-
-> It sounds like we'd need these to distinguish edge/level interrupts,
-> unless that's fixed at integration time and you can determine it from
-> the PLIC itself?
-
-They are fixed at integration time and the PLIC driver does not need to care.
-
-> It's not too much of a problem, but if we end up having to change
-> anything else from the proposed bindings, those trees are going to
-> require updates anyway.
-
-I'll talk to the other stakeholders.
-
-> Please update the binding to explicitly define the ordering requirement.
-
-The ordering requirement is that the first interrupts-extended entry
-corresponds to the first context, second to second, etc. If a context
-is unused for some reason, that's when you need a -1. The contexts are
-linear and contiguous in the MMIO address map.
-
-> Does this mean that you expect Linux logical CPU IDs to be equal to
-> physical CPU IDs in all cases?
-
-No. There is no 'physical CPU ID' anyway, except the mhartid CSR which
-is unavailable to linux. The SBI conveys your CPU ID by passing it as
-the first argument to the linux kernel.
-
-The interrupts-extended in the PLIC uses a phandle to reference the
-matching CPU in DTS. The num in cpu@<num> only need correspond to the
-first register argument to the kernel.
-
-If for some reason there end up too many -1 holes in the PLIC (b/c you
-virtualized a 128-core machine down to say 2), you can always
-virtualize the PLIC device and provide a matching simplified DTB.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
