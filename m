@@ -1,38 +1,35 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 1/2] dt-bindings: mfd: update STM32 timers clock names
-Date: Fri, 9 Jun 2017 09:37:53 +0200
-Message-ID: <1496993874-9870-2-git-send-email-fabrice.gasnier@st.com>
-References: <1496993874-9870-1-git-send-email-fabrice.gasnier@st.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: mvebu: change compatible string for PWM support
+Date: Fri, 9 Jun 2017 09:42:26 +0200
+Message-ID: <CACRpkdY7yy=U1DgFHXGd06UXg0hh5eC7mBKHLr7hq01hR__q8g@mail.gmail.com>
+References: <20170601200820.22396-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496993874-9870-1-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <20170601200820.22396-1-ralph.sennhauser@gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, Richard Genoud <richard.genoud@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Clock name has been updated during driver/DT binding review:
-https://lkml.org/lkml/2016/12/13/718
-Update DT binding doc to reflect this.
+On Thu, Jun 1, 2017 at 10:08 PM, Ralph Sennhauser
+<ralph.sennhauser@gmail.com> wrote:
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- Documentation/devicetree/bindings/mfd/stm32-timers.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> As it turns out more than just Armada 370 and XP support using GPIO
+> lines as PWM lines. For example the Armada 38x family has the same
+> hardware support. As such "marvell,armada-370-xp-gpio" for the
+> compatible string is a misnomer.
+>
+> Change the compatible string to "marvell,armada-370-gpio" before the
+> driver makes it out of the -rc stage. This also follows the practice of
+> using only the first device family supported as part of the name.
+>
+> Also update the documentation and comments in the code accordingly.
+>
+> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/mfd/stm32-timers.txt b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-index bbd083f..1db6e00 100644
---- a/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-+++ b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
-@@ -31,7 +31,7 @@ Example:
- 		compatible = "st,stm32-timers";
- 		reg = <0x40010000 0x400>;
- 		clocks = <&rcc 0 160>;
--		clock-names = "clk_int";
-+		clock-names = "int";
- 
- 		pwm {
- 			compatible = "st,stm32-pwm";
--- 
-1.9.1
+Patch applied for next with the tags.
+
+Yours,
+Linus Walleij
