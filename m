@@ -1,125 +1,35 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v8 0/3] Support for USB DRD PHY driver for NS2
-Date: Fri, 9 Jun 2017 14:36:06 +0530
-Message-ID: <2f492d5a-9016-f965-8dc2-f669d785ba4d@ti.com>
-References: <1496918103-14948-1-git-send-email-raviteja.garimella@broadcom.com>
- <a5344bd7-f7b1-90b5-cce1-d513370103e5@ti.com>
- <CAEHZuqNwPBgWM9mAeWTTQLQVJYjX8uNuUDRqsD_ZidgaSV9pcA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAEHZuqNwPBgWM9mAeWTTQLQVJYjX8uNuUDRqsD_ZidgaSV9pcA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Ray Jui <rjui@broadcom.com>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Subject: [PATCH] ARM: dts: rk322x: fix i2s1 pinctrl error
+Date: Fri,  9 Jun 2017 17:02:47 +0800
+Message-ID: <1496998967-31520-1-git-send-email-sugar.zhang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: heiko@sntech.de, broonie@kernel.org
+Cc: linux-rockchip@lists.infradead.org, Sugar Zhang <sugar.zhang@rock-chips.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+---
 
-On Friday 09 June 2017 02:30 PM, Raviteja Garimella wrote:
-> Hi,
-> 
-> On Fri, Jun 9, 2017 at 2:25 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> Hi,
->>
->> On Thursday 08 June 2017 04:05 PM, Raviteja Garimella wrote:
->>> Changes in v8:
->>> =============
->>> -Renamed phy shutdown routine
->>> -Used devm_request_irq in stead of threaded irq
->>
->> That's not what I intended. Continue to use threaded irq but remove delayed work.
->>
-> 
-> Yes I get that. We see intermittent connection issues without delayed
-> work. Debounce delay matters there.
+ arch/arm/boot/dts/rk322x.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-All right!
-
-I'm unable to apply the series. Please rebase to linux-phy next (directory
-structure has changed)
-
-Thanks
-Kishon
-> 
-> Thanks,
-> Ravi
-> 
->> Thanks
->> Kishon
->>> -Removed devm_unregister calls in probe routine
->>>
->>> Changes in v7:
->>> =============
->>> Cleaned up unused variables in phy private data structure that's
->>> missed out in v6.
->>> Setting of phy mode to device/host is removed from phy power on.
->>> routine.
->>>
->>> Changes in v6:
->>> =============
->>> Removed spin locks which are not required as the references
->>> to phy_ops in the same driver were removed in v5.
->>>
->>> Removed host/device 'notify' routines which are registered
->>> using 'extcon_register_notifier'. The irq handler is sufficient
->>> to deal with the change in extcon events within the same driver.
->>>
->>> Changes in v5:
->>> =============
->>> Removed references to phy_ops in the same driver by connect_work
->>> event handler to change the phy modes.
->>>
->>> To support dynamically changing the mode of the phy, it does
->>> not require doing a phy reset/programming of PHY PLL. Changes
->>> are made to the connect_work routine to just program the required
->>> register bits to achieve this purpose.
->>>
->>> Changes in v4:
->>> =============
->>> Remove references to edev->name in debug prints.
->>>
->>> Changes in v3:
->>> =============
->>> Remove unnecessary checks for poweron as suggested in review.
->>>
->>> Changes in v2:
->>> =============
->>> 1. Initialize file operations .owner field with THIS_MODULE.
->>> 2. Remove unnecessary gpio example in DT bindings documentation.
->>>    This is previously acked by Rob Herring <robh@kernel.org>
->>>
->>> Introduction for PATCH v1:
->>>
->>> This patch adds support for USB Dual Role Device Phy for Broadcom
->>> Northstar2 SoC. Apart from the new phy driver, this patchset contains
->>> changes to Kconfig, Makefile, and Device tree files.
->>>
->>> This patchset is tested on Broadcom NS2 BCM958712K reference board.
->>>
->>> Repo: https://github.com/Broadcom/arm64-linux.git
->>> Branch: ns2_drdphy_v8
->>>
->>> Raviteja Garimella (3):
->>>   dt-bindings: phy: Add DT bindings documentation for NS2 USB DRD PHY
->>>   phy: phy-bcm-ns2-usbdrd: Broadcom USB DRD PHY driver for Northstar2
->>>   arm64: dts: NS2: Add USB DRD PHY device tree node
->>>
->>>  .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   |  30 ++
->>>  arch/arm64/boot/dts/broadcom/ns2.dtsi              |  14 +
->>>  drivers/phy/Kconfig                                |  13 +
->>>  drivers/phy/Makefile                               |   1 +
->>>  drivers/phy/phy-bcm-ns2-usbdrd.c                   | 437 +++++++++++++++++++++
->>>  5 files changed, 495 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
->>>  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
->>>
+diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+index 48a0c1c..cc6a27d 100644
+--- a/arch/arm/boot/dts/rk322x.dtsi
++++ b/arch/arm/boot/dts/rk322x.dtsi
+@@ -621,9 +621,9 @@
+ 						<0 12 RK_FUNC_1 &pcfg_pull_none>,
+ 						<0 13 RK_FUNC_1 &pcfg_pull_none>,
+ 						<0 14 RK_FUNC_1 &pcfg_pull_none>,
+-						<1 2 RK_FUNC_1 &pcfg_pull_none>,
+-						<1 4 RK_FUNC_1 &pcfg_pull_none>,
+-						<1 5 RK_FUNC_1 &pcfg_pull_none>;
++						<1 2 RK_FUNC_2 &pcfg_pull_none>,
++						<1 4 RK_FUNC_2 &pcfg_pull_none>,
++						<1 5 RK_FUNC_2 &pcfg_pull_none>;
+ 			};
+ 		};
+ 
+-- 
+1.9.1
