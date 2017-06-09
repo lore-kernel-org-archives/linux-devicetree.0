@@ -1,122 +1,129 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] omap*: Fixes/Cleanups for MMC devicetree node
-Date: Fri, 9 Jun 2017 12:41:03 +0200
-Message-ID: <CAPDyKFpBXbuzb0AELP74UFH2LmWZHXHkr5AAzcCCWMwJ8YUaGw@mail.gmail.com>
-References: <20170607093749.15656-1-kishon@ti.com> <CAPDyKFrJh9qAz6q2-TH8rMshuMjDTkT5pHP==FUUH9KZEOehOQ@mail.gmail.com>
- <4a4c4eb2-d865-25e6-cd53-a74d4f7b1f62@ti.com>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v8 0/3] Support for USB DRD PHY driver for NS2
+Date: Fri, 9 Jun 2017 16:23:40 +0530
+Message-ID: <CAEHZuqO3zquZokENqBLmcn1ZnSCYSYitCXmKrQ-v9HMB0gJrvg@mail.gmail.com>
+References: <1496918103-14948-1-git-send-email-raviteja.garimella@broadcom.com>
+ <a5344bd7-f7b1-90b5-cce1-d513370103e5@ti.com> <CAEHZuqNwPBgWM9mAeWTTQLQVJYjX8uNuUDRqsD_ZidgaSV9pcA@mail.gmail.com>
+ <2f492d5a-9016-f965-8dc2-f669d785ba4d@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4a4c4eb2-d865-25e6-cd53-a74d4f7b1f62-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <2f492d5a-9016-f965-8dc2-f669d785ba4d-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, BCM Kernel Feedback <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 June 2017 at 10:05, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+Hi Kishon,
+
+On Fri, Jun 9, 2017 at 2:36 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
 > Hi,
 >
-> On Thursday 08 June 2017 12:50 PM, Ulf Hansson wrote:
->> On 7 June 2017 at 11:37, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->>> There are the set of fixes that were sent initially as part
->>> of [1].
+> On Friday 09 June 2017 02:30 PM, Raviteja Garimella wrote:
+>> Hi,
+>>
+>> On Fri, Jun 9, 2017 at 2:25 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+>>> Hi,
 >>>
->>> These are mostly fixes w.r.t populating regulators in
->>> mmc dt node. It was working before because the regulators
->>> connecting to the IO lines are always on regulators. This will
->>> break once we add UHS support where voltage has to be changed
->>> dynamically.
+>>> On Thursday 08 June 2017 04:05 PM, Raviteja Garimella wrote:
+>>>> Changes in v8:
+>>>> =============
+>>>> -Renamed phy shutdown routine
+>>>> -Used devm_request_irq in stead of threaded irq
 >>>
->>> It also includes a patch to replace all vmmc_aux-supply
->>> with vqmmc-supply (In omap3-overo-base.dtsi remove the existing
->>> vqmmc-supply and then replace vmmc_aux-supply with vqmmc-supply).
->>> This will break old dt compatibility but not sure how better
->>> to handle this.
->>>
->>> Performed enumeration testing on dra72-evm-revc, dra72-evm,
->>> dra7-evm, am572x-evm, am571x-idk, am572x-idk, omap5-evm,
->>> pandaboard-es, am43xx-evm, am335x-evm, beagleboard etc.,
->>>
->>> This is a preparation series for adding UHS mode support in
->>> the above mentioned platforms.
->>>
->>> Changes from v1:
->>> *) Included a patch to replace deprecated "vmmc_aux" with
->>>    "vqmmc"
->>>
->>> [1] -> https://lkml.org/lkml/2017/5/19/196
->>>
->>> Kishon Vijay Abraham I (6):
->>>   ARM: dts: dra72-evm-common: Correct vmmc-supply for mmc2
->>>   ARM: dts: dra72-evm: Add vqmmc supply to mmc1
->>>   ARM: dts: dra72-evm-revc: Add vqmmc supply to mmc1
->>>   ARM: dts: am57xx-beagle-x15-revb1: Fix supply name used for MMC1 IO
->>>     lines
->>>   ARM: dts: dra7: Add "max-frequency" property to MMC dt nodes
->>>   ARM: dts: omap*: Replace deprecated "vmmc_aux" with "vqmmc"
->>>
->>> Ravikumar Kattekola (1):
->>>   ARM: dts: dra7-evm: Correct the vmmc-supply for mmc2
->>>
->>> Sekhar Nori (1):
->>>   ARM: OMAP2+: Add pdata-quirks for MMC/SD on DRA74x EVM
->>>
->>>  arch/arm/boot/dts/am572x-idk.dts               |  2 +-
->>>  arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts  |  2 +-
->>>  arch/arm/boot/dts/dra7-evm.dts                 | 12 ++++++++--
->>>  arch/arm/boot/dts/dra7.dtsi                    |  5 +++++
->>>  arch/arm/boot/dts/dra71-evm.dts                | 16 ++++++++++++-
->>>  arch/arm/boot/dts/dra72-evm-common.dtsi        |  2 --
->>>  arch/arm/boot/dts/dra72-evm-revc.dts           | 18 +++++++++++++++
->>>  arch/arm/boot/dts/dra72-evm-tps65917.dtsi      |  2 +-
->>>  arch/arm/boot/dts/dra72-evm.dts                | 18 +++++++++++++++
->>>  arch/arm/boot/dts/omap3-beagle-xm.dts          |  2 +-
->>>  arch/arm/boot/dts/omap3-beagle.dts             |  2 +-
->>>  arch/arm/boot/dts/omap3-cm-t3517.dts           |  2 +-
->>>  arch/arm/boot/dts/omap3-cm-t3730.dts           |  2 +-
->>>  arch/arm/boot/dts/omap3-devkit8000-common.dtsi |  2 +-
->>>  arch/arm/boot/dts/omap3-evm-common.dtsi        |  2 +-
->>>  arch/arm/boot/dts/omap3-n900.dts               |  2 +-
->>>  arch/arm/boot/dts/omap3-overo-base.dtsi        |  3 +--
->>>  arch/arm/boot/dts/omap3-tao3530.dtsi           |  2 +-
->>>  arch/arm/boot/dts/omap3-zoom3.dts              |  2 +-
->>>  arch/arm/boot/dts/omap3430-sdp.dts             |  2 +-
->>>  arch/arm/mach-omap2/pdata-quirks.c             | 31 ++++++++++++++++++++++++++
->>>  include/linux/platform_data/hsmmc-omap.h       |  3 +++
->>>  22 files changed, 114 insertions(+), 20 deletions(-)
->>>
->>> --
->>> 2.11.0
+>>> That's not what I intended. Continue to use threaded irq but remove delayed work.
 >>>
 >>
->> If it helps, I can host a branch with the updates on the omap_hsmmc
->> driver, such it can be pulled in from arm soc?
->>
->> I guess you need that as, the DT changes relies on the new vqmmc
->> binding. Or you thing it doesn't matter, because for the current
->> changes that regulator is always an always on regulator?
+>> Yes I get that. We see intermittent connection issues without delayed
+>> work. Debounce delay matters there.
 >
-> Since there is fallback mechanism in omap_hsmmc driver (falls back to
-> vmmc_aux), dt changes shouldn't rely on the omap_hsmmc driver.
-
-Ahh, I get it.
-
-So no immutable branch needed, although only the DTS changes is need
-for me below.
-
+> All right!
 >
-> However I'll send a fix for omap3-overo-base which used vqmmc incorrectly (that
-> should be merged before omap_hsmmc driver changes) so that git bisect does not
-> break.
-
-Great! Thanks for sorting this out!
-
+> I'm unable to apply the series. Please rebase to linux-phy next (directory
+> structure has changed)
 >
+
+Ok. They got applied to linux-phy next for me without issues.
+I will resend the patchset anyways after rebasing to linux-phy next.
+
+Thanks,
+Ravi
+
 > Thanks
 > Kishon
-
-Kind regards
-Uffe
+>>
+>> Thanks,
+>> Ravi
+>>
+>>> Thanks
+>>> Kishon
+>>>> -Removed devm_unregister calls in probe routine
+>>>>
+>>>> Changes in v7:
+>>>> =============
+>>>> Cleaned up unused variables in phy private data structure that's
+>>>> missed out in v6.
+>>>> Setting of phy mode to device/host is removed from phy power on.
+>>>> routine.
+>>>>
+>>>> Changes in v6:
+>>>> =============
+>>>> Removed spin locks which are not required as the references
+>>>> to phy_ops in the same driver were removed in v5.
+>>>>
+>>>> Removed host/device 'notify' routines which are registered
+>>>> using 'extcon_register_notifier'. The irq handler is sufficient
+>>>> to deal with the change in extcon events within the same driver.
+>>>>
+>>>> Changes in v5:
+>>>> =============
+>>>> Removed references to phy_ops in the same driver by connect_work
+>>>> event handler to change the phy modes.
+>>>>
+>>>> To support dynamically changing the mode of the phy, it does
+>>>> not require doing a phy reset/programming of PHY PLL. Changes
+>>>> are made to the connect_work routine to just program the required
+>>>> register bits to achieve this purpose.
+>>>>
+>>>> Changes in v4:
+>>>> =============
+>>>> Remove references to edev->name in debug prints.
+>>>>
+>>>> Changes in v3:
+>>>> =============
+>>>> Remove unnecessary checks for poweron as suggested in review.
+>>>>
+>>>> Changes in v2:
+>>>> =============
+>>>> 1. Initialize file operations .owner field with THIS_MODULE.
+>>>> 2. Remove unnecessary gpio example in DT bindings documentation.
+>>>>    This is previously acked by Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>>
+>>>> Introduction for PATCH v1:
+>>>>
+>>>> This patch adds support for USB Dual Role Device Phy for Broadcom
+>>>> Northstar2 SoC. Apart from the new phy driver, this patchset contains
+>>>> changes to Kconfig, Makefile, and Device tree files.
+>>>>
+>>>> This patchset is tested on Broadcom NS2 BCM958712K reference board.
+>>>>
+>>>> Repo: https://github.com/Broadcom/arm64-linux.git
+>>>> Branch: ns2_drdphy_v8
+>>>>
+>>>> Raviteja Garimella (3):
+>>>>   dt-bindings: phy: Add DT bindings documentation for NS2 USB DRD PHY
+>>>>   phy: phy-bcm-ns2-usbdrd: Broadcom USB DRD PHY driver for Northstar2
+>>>>   arm64: dts: NS2: Add USB DRD PHY device tree node
+>>>>
+>>>>  .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   |  30 ++
+>>>>  arch/arm64/boot/dts/broadcom/ns2.dtsi              |  14 +
+>>>>  drivers/phy/Kconfig                                |  13 +
+>>>>  drivers/phy/Makefile                               |   1 +
+>>>>  drivers/phy/phy-bcm-ns2-usbdrd.c                   | 437 +++++++++++++++++++++
+>>>>  5 files changed, 495 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+>>>>  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
+>>>>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
