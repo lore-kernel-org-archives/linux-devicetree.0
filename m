@@ -1,56 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 7/9] dt-bindings: media/s5p-cec.txt: document needs-hpd
- property
-Date: Fri, 9 Jun 2017 09:07:19 -0500
-Message-ID: <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
-References: <20170607144616.15247-1-hverkuil@xs4all.nl>
- <20170607144616.15247-8-hverkuil@xs4all.nl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20170607144616.15247-8-hverkuil@xs4all.nl>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel@lists.freedesktop.org, Krzysztof Kozlowski <krzk@kernel.org>, linux-media@vger.kernel.org
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v4 0/6] provide power off support for iMX6 with external PMIC
+Date: Fri,  9 Jun 2017 16:07:33 +0200
+Message-ID: <20170609140739.15726-1-o.rempel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMDcsIDIwMTcgYXQgMDQ6NDY6MTRQTSArMDIwMCwgSGFucyBWZXJrdWlsIHdy
-b3RlOgo+IEZyb206IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2NvLmNvbT4KPiAKPiBO
-ZWVkZWQgZm9yIGJvYXJkcyB0aGF0IHdpcmUgdGhlIENFQyBwaW4gaW4gc3VjaCBhIHdheSB0aGF0
-IGl0Cj4gaXMgdW5hdmFpbGFibGUgd2hlbiB0aGUgSFBEIGlzIGxvdy4KPiAKPiBTaWduZWQtb2Zm
-LWJ5OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+Cj4gQ2M6IEtyenlzenRv
-ZiBLb3psb3dza2kgPGtyemtAa2VybmVsLm9yZz4KPiBDYzogQW5kcnplaiBIYWpkYSA8YS5oYWpk
-YUBzYW1zdW5nLmNvbT4KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKPiAtLS0KPiAg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3M1cC1jZWMudHh0IHwgNiAr
-KysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQg
-YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50eHQgYi9E
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50eHQKPiBpbmRl
-eCA0YmIwOGQ5ZDk0MGIuLjI2MWFmNGQxYTc5MSAxMDA2NDQKPiAtLS0gYS9Eb2N1bWVudGF0aW9u
-L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50eHQKPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvczVwLWNlYy50eHQKPiBAQCAtMTcsNiArMTcs
-MTIgQEAgUmVxdWlyZWQgcHJvcGVydGllczoKPiAgICAtIHNhbXN1bmcsc3lzY29uLXBoYW5kbGUg
-LSBwaGFuZGxlIHRvIHRoZSBQTVUgc3lzdGVtIGNvbnRyb2xsZXIKPiAgICAtIGhkbWktcGhhbmRs
-ZSAtIHBoYW5kbGUgdG8gdGhlIEhETUkgY29udHJvbGxlcgo+ICAKPiArT3B0aW9uYWw6Cj4gKyAg
-LSBuZWVkcy1ocGQgOiBpZiBwcmVzZW50IHRoZSBDRUMgc3VwcG9ydCBpcyBvbmx5IGF2YWlsYWJs
-ZSB3aGVuIHRoZSBIUEQKPiArICAgIGlzIGhpZ2guIFNvbWUgYm9hcmRzIG9ubHkgbGV0IHRoZSBD
-RUMgcGluIHRocm91Z2ggaWYgdGhlIEhQRCBpcyBoaWdoLCBmb3IKPiArICAgIGV4YW1wbGUgaWYg
-dGhlcmUgaXMgYSBsZXZlbCBjb252ZXJ0ZXIgdGhhdCB1c2VzIHRoZSBIUEQgdG8gcG93ZXIgdXAK
-PiArICAgIG9yIGRvd24uCgpTZWVtcyBsaWtlIHNvbWV0aGluZyBjb21tb24uIENhbiB5b3UgZG9j
-dW1lbnQgaW4gYSBjb21tb24gbG9jYXRpb24/Cgo+ICsKPiAgRXhhbXBsZToKPiAgCj4gIGhkbWlj
-ZWM6IGNlY0AxMDBCMDAwMCB7Cj4gLS0gCj4gMi4xMS4wCj4gCj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+This patch series is providing power off support for Freescale/NXP iMX6 based
+boards with external power management integrated circuit (PMIC).
+
+changes:
+v4:
+ - update comment in "regulator: pfuze100: add fsl,pmic-stby-poweroff ..."
+   patch
+ - add Acked-by to "ARM: imx6q: provide documentation for new ..."
+   patch
+
+v3:
+ - set pm_power_off_prepare = NULL on .remove.
+ - documentation and spelling fixes.
+ - use %pf instead of lookup_symbol_name.
+
+Oleksij Rempel (6):
+  ARM: imx6q: provide documentation for new fsl,pmic-stby-poweroff
+    property
+  ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff"
+    is set
+  kernel/reboot.c: export pm_power_off_prepare
+  regulator: pfuze100: add fsl,pmic-stby-poweroff property
+  regulator: pfuze100-regulator: provide pm_power_off_prepare handler
+  ARM: dts: imx6: RIoTboard provide standby on power off option
+
+ .../devicetree/bindings/clock/imx6q-clock.txt      |  8 ++
+ .../devicetree/bindings/regulator/pfuze100.txt     |  7 ++
+ arch/arm/boot/dts/imx6dl-riotboard.dts             |  5 ++
+ arch/arm/mach-imx/pm-imx6.c                        | 27 +++++++
+ drivers/regulator/pfuze100-regulator.c             | 92 ++++++++++++++++++++++
+ kernel/reboot.c                                    |  1 +
+ 6 files changed, 140 insertions(+)
+
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
