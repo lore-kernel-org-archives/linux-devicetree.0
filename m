@@ -1,103 +1,58 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 2/3] arm: dts: mt2701: Add display bls related nodes for
- MT2701
-Date: Fri, 9 Jun 2017 10:12:50 +0200
-Message-ID: <82c8b877-ec34-bd37-7428-8af86191a66e@gmail.com>
+Subject: Re: [PATCH 3/3] arm: dts: mt2701: Add display subsystem related nodes
+ for MT2701
+Date: Fri, 9 Jun 2017 10:14:38 +0200
+Message-ID: <eafa6c79-4d12-abf5-f8ec-e91c6cc22cd4@gmail.com>
 References: <1496297324-21091-1-git-send-email-erin.lo@mediatek.com>
- <1496297324-21091-3-git-send-email-erin.lo@mediatek.com>
+ <1496297324-21091-4-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496297324-21091-3-git-send-email-erin.lo@mediatek.com>
+In-Reply-To: <1496297324-21091-4-git-send-email-erin.lo@mediatek.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Erin Lo <erin.lo@mediatek.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, YT Shen <yt.shen@mediatek.com>, Weiqing Kong <weiqing.kong@mediatek.com>
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, YT Shen <yt.shen@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
 
 
 On 01/06/17 08:08, Erin Lo wrote:
 > From: YT Shen <yt.shen@mediatek.com>
-
-I miss the Singed-off-by from YT Shen.
-
 > 
-> This patch adds the device node of display backlight for MT2701
+> This patch adds the device nodes for the DISP function blocks for MT2701
 > 
-> Signed-off-by: Weiqing Kong <weiqing.kong@mediatek.com>
+> Signed-off-by: YT Shen <yt.shen@mediatek.com>
 > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > ---
->   arch/arm/boot/dts/mt2701-evb.dts | 29 +++++++++++++++++++++++++++++
->   arch/arm/boot/dts/mt2701.dtsi    |  9 +++++++++
->   2 files changed, 38 insertions(+)
+>   arch/arm/boot/dts/mt2701.dtsi | 84 +++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 84 insertions(+)
 > 
-> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-> index a483798..e49c2b7 100644
-> --- a/arch/arm/boot/dts/mt2701-evb.dts
-> +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> @@ -22,6 +22,35 @@
->   	memory {
->   		reg = <0 0x80000000 0 0x40000000>;
->   	};
-> +
-> +	backlight_lcd: backlight_lcd {
-> +		compatible = "pwm-backlight";
-> +		pwms = <&bls 0 100000>;
-> +		brightness-levels = <
-> +			  0  16  32  48  64  80  96 112
-> +			128 144 160 176 192 208 224 240
-> +			255
-> +		>;
-> +		default-brightness-level = <9>;
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pwm_bls_gpio>;
-> +	};
-> +};
-> +
-> +&bls {
-> +	status = "okay";
-> +};
-> +
-> +&mmsys {
-> +	status = "okay";
-> +};
-> +
-> +&pio {
-> +	pwm_bls_gpio: pwm_bls_gpio {
-> +		pins_cmd_dat {
-> +			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
-> +		};
-> +	};
->   };
->   
->   &auxadc {
 > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index de88bd7..4f110d5 100644
+> index 4f110d5..e20b65c 100644
 > --- a/arch/arm/boot/dts/mt2701.dtsi
 > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -366,6 +366,15 @@
->   		#clock-cells = <1>;
->   	};
+> @@ -17,6 +17,7 @@
+>   #include <dt-bindings/interrupt-controller/irq.h>
+>   #include <dt-bindings/interrupt-controller/arm-gic.h>
+>   #include <dt-bindings/reset/mt2701-resets.h>
+> +#include <dt-bindings/memory/mt2701-larb-port.h>
+>   #include "skeleton64.dtsi"
+>   #include "mt2701-pinfunc.h"
 >   
-> +	bls: bls@1400a000 {
-> +		compatible = "mediatek,mt2701-disp-pwm";
-> +		reg = <0 0x1400a000 0 0x1000>;
-> +		#pwm-cells = <2>;
-> +		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
-> +		clock-names = "main", "mm";
-> +		status = "disabled";
+> @@ -24,6 +25,11 @@
+>   	compatible = "mediatek,mt2701";
+>   	interrupt-parent = <&sysirq>;
+>   
+> +	aliases {
+> +		rdma0 = &rdma0;
+> +		rdma1 = &rdma1;
 > +	};
 > +
 
-Can you make this a new patch please. It's preferred to have one patch 
-for the dtsi and another one for the actual board.
+I know we have this alias in mt8173.dtsi, but I don't understand what 
+they are for. Do you know?
 
-Thanks,
+Regards,
 Matthias
-
->   	larb0: larb@14010000 {
->   		compatible = "mediatek,mt2701-smi-larb";
->   		reg = <0 0x14010000 0 0x1000>;
-> 
