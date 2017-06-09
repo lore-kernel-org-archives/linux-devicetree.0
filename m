@@ -1,718 +1,518 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 2/4] arm64: dts: renesas: Extract common Salvator-X/XS board support
-Date: Fri,  9 Jun 2017 13:43:47 +0200
-Message-ID: <1497008629-3974-3-git-send-email-geert+renesas@glider.be>
-References: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Subject: [PATCH v9 2/3] phy: phy-bcm-ns2-usbdrd: Broadcom USB DRD PHY driver
+ for Northstar2
+Date: Fri,  9 Jun 2017 17:13:01 +0530
+Message-ID: <1497008582-17974-3-git-send-email-raviteja.garimella@broadcom.com>
+References: <1497008582-17974-1-git-send-email-raviteja.garimella@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1497008582-17974-1-git-send-email-raviteja.garimella@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Renesas Salvator-X and Salvator-XS (Salvator-X 2nd version) boards
-are very similar.  To avoid duplication, prepare for the advent of the
-latter by extracting the common board parts into its own .dtsi file.
+This is driver for USB DRD PHY used in Broadcom's Northstar2
+SoC. The phy can be configured to be in Device mode or Host
+mode based on the type of cable connected to the port. The
+driver registers to  extcon framework to get appropriate
+connect events for Host/Device cables connect/disconnect
+states based on VBUS and ID interrupts.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
 ---
- .../{salvator-x.dtsi => salvator-common.dtsi}      |  17 +-
- arch/arm64/boot/dts/renesas/salvator-x.dtsi        | 616 +--------------------
- 2 files changed, 2 insertions(+), 631 deletions(-)
- copy arch/arm64/boot/dts/renesas/{salvator-x.dtsi => salvator-common.dtsi} (97%)
+ drivers/phy/broadcom/Kconfig              |  13 +
+ drivers/phy/broadcom/Makefile             |   1 +
+ drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c | 437 ++++++++++++++++++++++++++++++
+ 3 files changed, 451 insertions(+)
+ create mode 100644 drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c
 
-diff --git a/arch/arm64/boot/dts/renesas/salvator-x.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-similarity index 97%
-copy from arch/arm64/boot/dts/renesas/salvator-x.dtsi
-copy to arch/arm64/boot/dts/renesas/salvator-common.dtsi
-index 2f5386252aed55e8..aef35e0b685a3a85 100644
---- a/arch/arm64/boot/dts/renesas/salvator-x.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-@@ -1,5 +1,5 @@
- /*
-- * Device Tree Source for the Salvator-X board
-+ * Device Tree Source for common parts of Salvator-X board variants
-  *
-  * Copyright (C) 2015-2016 Renesas Electronics Corp.
-  *
-@@ -34,9 +34,6 @@
- #include <dt-bindings/gpio/gpio.h>
+diff --git a/drivers/phy/broadcom/Kconfig b/drivers/phy/broadcom/Kconfig
+index d2d9902..c4b632e 100644
+--- a/drivers/phy/broadcom/Kconfig
++++ b/drivers/phy/broadcom/Kconfig
+@@ -44,6 +44,19 @@ config PHY_NS2_PCIE
+ 	  Enable this to support the Broadcom Northstar2 PCIe PHY.
+ 	  If unsure, say N.
  
- / {
--	model = "Renesas Salvator-X board";
--	compatible = "renesas,salvator-x";
--
- 	aliases {
- 		serial0 = &scif2;
- 		serial1 = &scif1;
-@@ -286,10 +283,6 @@
- 	status = "okay";
- };
- 
--&extal_clk {
--	clock-frequency = <16666666>;
--};
--
- &extalr_clk {
- 	clock-frequency = <32768>;
- };
-@@ -337,14 +330,6 @@
- &i2c4 {
- 	status = "okay";
- 
--	versaclock5: clock-generator@6a {
--		compatible = "idt,5p49v5923";
--		reg = <0x6a>;
--		#clock-cells = <1>;
--		clocks = <&x23_clk>;
--		clock-names = "xin";
--	};
--
- 	csa_vdd: adc@7c {
- 		compatible = "maxim,max9611";
- 		reg = <0x7c>;
-diff --git a/arch/arm64/boot/dts/renesas/salvator-x.dtsi b/arch/arm64/boot/dts/renesas/salvator-x.dtsi
-index 2f5386252aed55e8..468868c8ed9fae67 100644
---- a/arch/arm64/boot/dts/renesas/salvator-x.dtsi
-+++ b/arch/arm64/boot/dts/renesas/salvator-x.dtsi
-@@ -8,335 +8,18 @@
-  * kind, whether express or implied.
-  */
- 
--/*
-- * SSI-AK4613
-- *
-- * This command is required when Playback/Capture
-- *
-- *	amixer set "DVC Out" 100%
-- *	amixer set "DVC In" 100%
-- *
-- * You can use Mute
-- *
-- *	amixer set "DVC Out Mute" on
-- *	amixer set "DVC In Mute" on
-- *
-- * You can use Volume Ramp
-- *
-- *	amixer set "DVC Out Ramp Up Rate"   "0.125 dB/64 steps"
-- *	amixer set "DVC Out Ramp Down Rate" "0.125 dB/512 steps"
-- *	amixer set "DVC Out Ramp" on
-- *	aplay xxx.wav &
-- *	amixer set "DVC Out"  80%  // Volume Down
-- *	amixer set "DVC Out" 100%  // Volume Up
-- */
--
--#include <dt-bindings/gpio/gpio.h>
-+#include "salvator-common.dtsi"
- 
- / {
- 	model = "Renesas Salvator-X board";
- 	compatible = "renesas,salvator-x";
--
--	aliases {
--		serial0 = &scif2;
--		serial1 = &scif1;
--		ethernet0 = &avb;
--	};
--
--	chosen {
--		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
--		stdout-path = "serial0:115200n8";
--	};
--
--	audio_clkout: audio_clkout {
--		/*
--		 * This is same as <&rcar_sound 0>
--		 * but needed to avoid cs2000/rcar_sound probe dead-lock
--		 */
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <11289600>;
--	};
--
--	backlight: backlight {
--		compatible = "pwm-backlight";
--		pwms = <&pwm1 0 50000>;
--
--		brightness-levels = <256 128 64 16 8 4 0>;
--		default-brightness-level = <6>;
--
--		enable-gpios = <&gpio6 7 GPIO_ACTIVE_HIGH>;
--	};
--
--	reg_1p8v: regulator0 {
--		compatible = "regulator-fixed";
--		regulator-name = "fixed-1.8V";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <1800000>;
--		regulator-boot-on;
--		regulator-always-on;
--	};
--
--	reg_3p3v: regulator1 {
--		compatible = "regulator-fixed";
--		regulator-name = "fixed-3.3V";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--		regulator-boot-on;
--		regulator-always-on;
--	};
--
--	rsnd_ak4613: sound {
--		compatible = "simple-audio-card";
--
--		simple-audio-card,format = "left_j";
--		simple-audio-card,bitclock-master = <&sndcpu>;
--		simple-audio-card,frame-master = <&sndcpu>;
--
--		sndcpu: simple-audio-card,cpu {
--			sound-dai = <&rcar_sound>;
--		};
--
--		sndcodec: simple-audio-card,codec {
--			sound-dai = <&ak4613>;
--		};
--	};
--
--	vbus0_usb2: regulator-vbus0-usb2 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "USB20_VBUS0";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--
--		gpio = <&gpio6 16 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--	};
--
--	vcc_sdhi0: regulator-vcc-sdhi0 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "SDHI0 Vcc";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--	};
--
--	vccq_sdhi0: regulator-vccq-sdhi0 {
--		compatible = "regulator-gpio";
--
--		regulator-name = "SDHI0 VccQ";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
--		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
--	};
--
--	vcc_sdhi3: regulator-vcc-sdhi3 {
--		compatible = "regulator-fixed";
--
--		regulator-name = "SDHI3 Vcc";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpio = <&gpio3 15 GPIO_ACTIVE_HIGH>;
--		enable-active-high;
--	};
--
--	vccq_sdhi3: regulator-vccq-sdhi3 {
--		compatible = "regulator-gpio";
--
--		regulator-name = "SDHI3 VccQ";
--		regulator-min-microvolt = <1800000>;
--		regulator-max-microvolt = <3300000>;
--
--		gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
--		gpios-states = <1>;
--		states = <3300000 1
--			  1800000 0>;
--	};
--
--	hdmi0-out {
--		compatible = "hdmi-connector";
--		label = "HDMI0 OUT";
--		type = "a";
--
--		port {
--			hdmi0_con: endpoint {
--			};
--		};
--	};
--
--	hdmi1-out {
--		compatible = "hdmi-connector";
--		label = "HDMI1 OUT";
--		type = "a";
--
--		port {
--			hdmi1_con: endpoint {
--			};
--		};
--	};
--
--	vga {
--		compatible = "vga-connector";
--
--		port {
--			vga_in: endpoint {
--				remote-endpoint = <&adv7123_out>;
--			};
--		};
--	};
--
--	vga-encoder {
--		compatible = "adi,adv7123";
--
--		ports {
--			#address-cells = <1>;
--			#size-cells = <0>;
--
--			port@0 {
--				reg = <0>;
--				adv7123_in: endpoint {
--					remote-endpoint = <&du_out_rgb>;
--				};
--			};
--			port@1 {
--				reg = <1>;
--				adv7123_out: endpoint {
--					remote-endpoint = <&vga_in>;
--				};
--			};
--		};
--	};
--
--	x12_clk: x12 {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <24576000>;
--	};
--
--	/* External DU dot clocks */
--	x21_clk: x21-clock {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <33000000>;
--	};
--
--	x22_clk: x22-clock {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <33000000>;
--	};
--
--	x23_clk: x23-clock {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <25000000>;
--	};
--};
--
--&audio_clk_a {
--	clock-frequency = <22579200>;
--};
--
--&avb {
--	pinctrl-0 = <&avb_pins>;
--	pinctrl-names = "default";
--	renesas,no-ether-link;
--	phy-handle = <&phy0>;
--	status = "okay";
--
--	phy0: ethernet-phy@0 {
--		rxc-skew-ps = <1500>;
--		reg = <0>;
--		interrupt-parent = <&gpio2>;
--		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
--	};
--};
--
--&du {
--	pinctrl-0 = <&du_pins>;
--	pinctrl-names = "default";
--	status = "okay";
--
--	ports {
--		port@0 {
--			endpoint {
--				remote-endpoint = <&adv7123_in>;
--			};
--		};
--		port@3 {
--			lvds_connector: endpoint {
--			};
--		};
--	};
--};
--
--&ehci0 {
--	status = "okay";
--};
--
--&ehci1 {
--	status = "okay";
- };
- 
- &extal_clk {
- 	clock-frequency = <16666666>;
- };
- 
--&extalr_clk {
--	clock-frequency = <32768>;
--};
--
--&hsusb {
--	status = "okay";
--};
--
--&i2c2 {
--	pinctrl-0 = <&i2c2_pins>;
--	pinctrl-names = "default";
--
--	status = "okay";
--
--	clock-frequency = <100000>;
--
--	ak4613: codec@10 {
--		compatible = "asahi-kasei,ak4613";
--		#sound-dai-cells = <0>;
--		reg = <0x10>;
--		clocks = <&rcar_sound 3>;
--
--		asahi-kasei,in1-single-end;
--		asahi-kasei,in2-single-end;
--		asahi-kasei,out1-single-end;
--		asahi-kasei,out2-single-end;
--		asahi-kasei,out3-single-end;
--		asahi-kasei,out4-single-end;
--		asahi-kasei,out5-single-end;
--		asahi-kasei,out6-single-end;
--	};
--
--	cs2000: clk_multiplier@4f {
--		#clock-cells = <0>;
--		compatible = "cirrus,cs2000-cp";
--		reg = <0x4f>;
--		clocks = <&audio_clkout>, <&x12_clk>;
--		clock-names = "clk_in", "ref_clk";
--
--		assigned-clocks = <&cs2000>;
--		assigned-clock-rates = <24576000>; /* 1/1 divide */
--	};
--};
--
- &i2c4 {
--	status = "okay";
--
- 	versaclock5: clock-generator@6a {
- 		compatible = "idt,5p49v5923";
- 		reg = <0x6a>;
-@@ -344,301 +27,4 @@
- 		clocks = <&x23_clk>;
- 		clock-names = "xin";
- 	};
--
--	csa_vdd: adc@7c {
--		compatible = "maxim,max9611";
--		reg = <0x7c>;
--
--		shunt-resistor-micro-ohms = <5000>;
--	};
--
--	csa_dvfs: adc@7f {
--		compatible = "maxim,max9611";
--		reg = <0x7f>;
--
--		shunt-resistor-micro-ohms = <5000>;
--	};
--};
--
--&i2c_dvfs {
--	status = "okay";
--};
--
--&ohci0 {
--	status = "okay";
--};
--
--&ohci1 {
--	status = "okay";
--};
--
--&pcie_bus_clk {
--	clock-frequency = <100000000>;
--};
--
--&pciec0 {
--	status = "okay";
--};
--
--&pciec1 {
--	status = "okay";
--};
--
--&pfc {
--	pinctrl-0 = <&scif_clk_pins>;
--	pinctrl-names = "default";
--
--	avb_pins: avb {
--		mux {
--			groups = "avb_link", "avb_phy_int", "avb_mdc",
--				 "avb_mii";
--			function = "avb";
--		};
--
--		pins_mdc {
--			groups = "avb_mdc";
--			drive-strength = <24>;
--		};
--
--		pins_mii_tx {
--			pins = "PIN_AVB_TX_CTL", "PIN_AVB_TXC", "PIN_AVB_TD0",
--			       "PIN_AVB_TD1", "PIN_AVB_TD2", "PIN_AVB_TD3";
--			drive-strength = <12>;
--		};
--	};
--
--	du_pins: du {
--		groups = "du_rgb888", "du_sync", "du_oddf", "du_clk_out_0";
--		function = "du";
--	};
--
--	i2c2_pins: i2c2 {
--		groups = "i2c2_a";
--		function = "i2c2";
--	};
--
--	pwm1_pins: pwm1 {
--		groups = "pwm1_a";
--		function = "pwm1";
--	};
--
--	scif1_pins: scif1 {
--		groups = "scif1_data_a", "scif1_ctrl";
--		function = "scif1";
--	};
--
--	scif2_pins: scif2 {
--		groups = "scif2_data_a";
--		function = "scif2";
--	};
--
--	scif_clk_pins: scif_clk {
--		groups = "scif_clk_a";
--		function = "scif_clk";
--	};
--
--	sdhi0_pins: sd0 {
--		groups = "sdhi0_data4", "sdhi0_ctrl";
--		function = "sdhi0";
--		power-source = <3300>;
--	};
--
--	sdhi0_pins_uhs: sd0_uhs {
--		groups = "sdhi0_data4", "sdhi0_ctrl";
--		function = "sdhi0";
--		power-source = <1800>;
--	};
--
--	sdhi2_pins: sd2 {
--		groups = "sdhi2_data8", "sdhi2_ctrl";
--		function = "sdhi2";
--		power-source = <3300>;
--	};
--
--	sdhi2_pins_uhs: sd2_uhs {
--		groups = "sdhi2_data8", "sdhi2_ctrl";
--		function = "sdhi2";
--		power-source = <1800>;
--	};
--
--	sdhi3_pins: sd3 {
--		groups = "sdhi3_data4", "sdhi3_ctrl";
--		function = "sdhi3";
--		power-source = <3300>;
--	};
--
--	sdhi3_pins_uhs: sd3_uhs {
--		groups = "sdhi3_data4", "sdhi3_ctrl";
--		function = "sdhi3";
--		power-source = <1800>;
--	};
--
--	sound_pins: sound {
--		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
--		function = "ssi";
--	};
--
--	sound_clk_pins: sound_clk {
--		groups = "audio_clk_a_a", "audio_clk_b_a", "audio_clk_c_a",
--			 "audio_clkout_a", "audio_clkout3_a";
--		function = "audio_clk";
--	};
--
--	usb0_pins: usb0 {
--		groups = "usb0";
--		function = "usb0";
--	};
--
--	usb1_pins: usb1 {
--		mux {
--			groups = "usb1";
--			function = "usb1";
--		};
--
--		ovc {
--			pins = "GP_6_27";
--			bias-pull-up;
--		};
--
--		pwen {
--			pins = "GP_6_26";
--			bias-pull-down;
--		};
--	};
--};
--
--&pwm1 {
--	pinctrl-0 = <&pwm1_pins>;
--	pinctrl-names = "default";
--
--	status = "okay";
--};
--
--&rcar_sound {
--	pinctrl-0 = <&sound_pins &sound_clk_pins>;
--	pinctrl-names = "default";
--
--	/* Single DAI */
--	#sound-dai-cells = <0>;
--
--	/* audio_clkout0/1/2/3 */
--	#clock-cells = <1>;
--	clock-frequency = <11289600 12288000>;
--
--	status = "okay";
--
--	/* update <audio_clk_b> to <cs2000> */
--	clocks = <&cpg CPG_MOD 1005>,
--		 <&cpg CPG_MOD 1006>, <&cpg CPG_MOD 1007>,
--		 <&cpg CPG_MOD 1008>, <&cpg CPG_MOD 1009>,
--		 <&cpg CPG_MOD 1010>, <&cpg CPG_MOD 1011>,
--		 <&cpg CPG_MOD 1012>, <&cpg CPG_MOD 1013>,
--		 <&cpg CPG_MOD 1014>, <&cpg CPG_MOD 1015>,
--		 <&cpg CPG_MOD 1022>, <&cpg CPG_MOD 1023>,
--		 <&cpg CPG_MOD 1024>, <&cpg CPG_MOD 1025>,
--		 <&cpg CPG_MOD 1026>, <&cpg CPG_MOD 1027>,
--		 <&cpg CPG_MOD 1028>, <&cpg CPG_MOD 1029>,
--		 <&cpg CPG_MOD 1030>, <&cpg CPG_MOD 1031>,
--		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
--		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
--		 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
--		 <&audio_clk_a>, <&cs2000>,
--		 <&audio_clk_c>,
--		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
--
--	rcar_sound,dai {
--		dai0 {
--			playback = <&ssi0 &src0 &dvc0>;
--			capture  = <&ssi1 &src1 &dvc1>;
--		};
--	};
--};
--
--&scif1 {
--	pinctrl-0 = <&scif1_pins>;
--	pinctrl-names = "default";
--
--	uart-has-rtscts;
--	status = "okay";
--};
--
--&scif2 {
--	pinctrl-0 = <&scif2_pins>;
--	pinctrl-names = "default";
--
--	status = "okay";
--};
--
--&scif_clk {
--	clock-frequency = <14745600>;
--};
--
--&sdhi0 {
--	pinctrl-0 = <&sdhi0_pins>;
--	pinctrl-1 = <&sdhi0_pins_uhs>;
--	pinctrl-names = "default", "state_uhs";
--
--	vmmc-supply = <&vcc_sdhi0>;
--	vqmmc-supply = <&vccq_sdhi0>;
--	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
--	bus-width = <4>;
--	sd-uhs-sdr50;
--	status = "okay";
--};
--
--&sdhi2 {
--	/* used for on-board 8bit eMMC */
--	pinctrl-0 = <&sdhi2_pins>;
--	pinctrl-1 = <&sdhi2_pins_uhs>;
--	pinctrl-names = "default", "state_uhs";
--
--	vmmc-supply = <&reg_3p3v>;
--	vqmmc-supply = <&reg_1p8v>;
--	bus-width = <8>;
--	mmc-hs200-1_8v;
--	non-removable;
--	status = "okay";
--};
--
--&sdhi3 {
--	pinctrl-0 = <&sdhi3_pins>;
--	pinctrl-1 = <&sdhi3_pins_uhs>;
--	pinctrl-names = "default", "state_uhs";
--
--	vmmc-supply = <&vcc_sdhi3>;
--	vqmmc-supply = <&vccq_sdhi3>;
--	cd-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
--	wp-gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
--	bus-width = <4>;
--	sd-uhs-sdr50;
--	status = "okay";
--};
--
--&ssi1 {
--	shared-pin;
--};
--
--&usb2_phy0 {
--	pinctrl-0 = <&usb0_pins>;
--	pinctrl-names = "default";
--
--	vbus-supply = <&vbus0_usb2>;
--	status = "okay";
--};
--
--&usb2_phy1 {
--	pinctrl-0 = <&usb1_pins>;
--	pinctrl-names = "default";
--
--	status = "okay";
--};
--
--&wdt0 {
--	timeout-sec = <60>;
--	status = "okay";
--};
--
--&xhci0 {
--	status = "okay";
- };
++config PHY_NS2_USB_DRD
++	tristate "Broadcom Northstar2 USB DRD PHY support"
++	depends on OF && (ARCH_BCM_IPROC || COMPILE_TEST)
++	select GENERIC_PHY
++	select EXTCON
++	default ARCH_BCM_IPROC
++	help
++	  Enable this to support the Broadcom Northstar2 USB DRD PHY.
++	  This driver initializes the PHY in either HOST or DEVICE mode.
++	  The host or device configuration is read from device tree.
++
++	  If unsure, say N.
++
+ config PHY_BRCM_SATA
+ 	tristate "Broadcom SATA PHY driver"
+ 	depends on ARCH_BRCMSTB || ARCH_BCM_IPROC || BMIPS_GENERIC || COMPILE_TEST
+diff --git a/drivers/phy/broadcom/Makefile b/drivers/phy/broadcom/Makefile
+index 357a7d1..4eb82ec 100644
+--- a/drivers/phy/broadcom/Makefile
++++ b/drivers/phy/broadcom/Makefile
+@@ -3,4 +3,5 @@ obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+ obj-$(CONFIG_PHY_BCM_NS_USB2)		+= phy-bcm-ns-usb2.o
+ obj-$(CONFIG_PHY_BCM_NS_USB3)		+= phy-bcm-ns-usb3.o
+ obj-$(CONFIG_PHY_NS2_PCIE)		+= phy-bcm-ns2-pcie.o
++obj-$(CONFIG_PHY_NS2_USB_DRD)		+= phy-bcm-ns2-usbdrd.o
+ obj-$(CONFIG_PHY_BRCM_SATA)		+= phy-brcm-sata.o
+diff --git a/drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c b/drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c
+new file mode 100644
+index 0000000..9ae59e2
+--- /dev/null
++++ b/drivers/phy/broadcom/phy-bcm-ns2-usbdrd.c
+@@ -0,0 +1,437 @@
++/*
++ * Copyright (C) 2017 Broadcom
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/delay.h>
++#include <linux/extcon.h>
++#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irq.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regmap.h>
++#include <linux/slab.h>
++#include <linux/workqueue.h>
++
++#define ICFG_DRD_AFE		0x0
++#define ICFG_MISC_STAT		0x18
++#define ICFG_DRD_P0CTL		0x1C
++#define ICFG_STRAP_CTRL		0x20
++#define ICFG_FSM_CTRL		0x24
++
++#define ICFG_DEV_BIT		BIT(2)
++#define IDM_RST_BIT		BIT(0)
++#define AFE_CORERDY_VDDC	BIT(18)
++#define PHY_PLL_RESETB		BIT(15)
++#define PHY_RESETB		BIT(14)
++#define PHY_PLL_LOCK		BIT(0)
++
++#define DRD_DEV_MODE		BIT(20)
++#define OHCI_OVRCUR_POL		BIT(11)
++#define ICFG_OFF_MODE		BIT(6)
++#define PLL_LOCK_RETRY		1000
++
++#define EVT_DEVICE		0
++#define EVT_HOST		1
++
++#define DRD_HOST_MODE		(BIT(2) | BIT(3))
++#define DRD_DEVICE_MODE		(BIT(4) | BIT(5))
++#define DRD_HOST_VAL		0x803
++#define DRD_DEV_VAL		0x807
++#define GPIO_DELAY		20
++
++struct ns2_phy_data;
++struct ns2_phy_driver {
++	void __iomem *icfgdrd_regs;
++	void __iomem *idmdrd_rst_ctrl;
++	void __iomem *crmu_usb2_ctrl;
++	void __iomem *usb2h_strap_reg;
++	struct ns2_phy_data *data;
++	struct extcon_dev *edev;
++	struct gpio_desc *vbus_gpiod;
++	struct gpio_desc *id_gpiod;
++	int id_irq;
++	int vbus_irq;
++	unsigned long debounce_jiffies;
++	struct delayed_work wq_extcon;
++};
++
++struct ns2_phy_data {
++	struct ns2_phy_driver *driver;
++	struct phy *phy;
++	int new_state;
++};
++
++static const unsigned int usb_extcon_cable[] = {
++	EXTCON_USB,
++	EXTCON_USB_HOST,
++	EXTCON_NONE,
++};
++
++static inline int pll_lock_stat(u32 usb_reg, int reg_mask,
++				struct ns2_phy_driver *driver)
++{
++	int retry = PLL_LOCK_RETRY;
++	u32 val;
++
++	do {
++		udelay(1);
++		val = readl(driver->icfgdrd_regs + usb_reg);
++		if (val & reg_mask)
++			return 0;
++	} while (--retry > 0);
++
++	return -EBUSY;
++}
++
++static int ns2_drd_phy_init(struct phy *phy)
++{
++	struct ns2_phy_data *data = phy_get_drvdata(phy);
++	struct ns2_phy_driver *driver = data->driver;
++	u32 val;
++
++	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++	if (data->new_state == EVT_HOST) {
++		val &= ~DRD_DEVICE_MODE;
++		val |= DRD_HOST_MODE;
++	} else {
++		val &= ~DRD_HOST_MODE;
++		val |= DRD_DEVICE_MODE;
++	}
++	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++	return 0;
++}
++
++static int ns2_drd_phy_poweroff(struct phy *phy)
++{
++	struct ns2_phy_data *data = phy_get_drvdata(phy);
++	struct ns2_phy_driver *driver = data->driver;
++	u32 val;
++
++	val = readl(driver->crmu_usb2_ctrl);
++	val &= ~AFE_CORERDY_VDDC;
++	writel(val, driver->crmu_usb2_ctrl);
++
++	val = readl(driver->crmu_usb2_ctrl);
++	val &= ~DRD_DEV_MODE;
++	writel(val, driver->crmu_usb2_ctrl);
++
++	/* Disable Host and Device Mode */
++	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
++	val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE | ICFG_OFF_MODE);
++	writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++	return 0;
++}
++
++static int ns2_drd_phy_poweron(struct phy *phy)
++{
++	struct ns2_phy_data *data = phy_get_drvdata(phy);
++	struct ns2_phy_driver *driver = data->driver;
++	u32 extcon_event = data->new_state;
++	int ret;
++	u32 val;
++
++	if (extcon_event == EVT_DEVICE) {
++		writel(DRD_DEV_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
++
++		val = readl(driver->idmdrd_rst_ctrl);
++		val &= ~IDM_RST_BIT;
++		writel(val, driver->idmdrd_rst_ctrl);
++
++		val = readl(driver->crmu_usb2_ctrl);
++		val |= (AFE_CORERDY_VDDC | DRD_DEV_MODE);
++		writel(val, driver->crmu_usb2_ctrl);
++
++		/* Bring PHY and PHY_PLL out of Reset */
++		val = readl(driver->crmu_usb2_ctrl);
++		val |= (PHY_PLL_RESETB | PHY_RESETB);
++		writel(val, driver->crmu_usb2_ctrl);
++
++		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
++		if (ret < 0) {
++			dev_err(&phy->dev, "Phy PLL lock failed\n");
++			return ret;
++		}
++	} else {
++		writel(DRD_HOST_VAL, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
++
++		val = readl(driver->crmu_usb2_ctrl);
++		val |= AFE_CORERDY_VDDC;
++		writel(val, driver->crmu_usb2_ctrl);
++
++		ret = pll_lock_stat(ICFG_MISC_STAT, PHY_PLL_LOCK, driver);
++		if (ret < 0) {
++			dev_err(&phy->dev, "Phy PLL lock failed\n");
++			return ret;
++		}
++
++		val = readl(driver->idmdrd_rst_ctrl);
++		val &= ~IDM_RST_BIT;
++		writel(val, driver->idmdrd_rst_ctrl);
++
++		/* port over current Polarity */
++		val = readl(driver->usb2h_strap_reg);
++		val |= OHCI_OVRCUR_POL;
++		writel(val, driver->usb2h_strap_reg);
++	}
++
++	return 0;
++}
++
++static void connect_change(struct ns2_phy_driver *driver)
++{
++	u32 extcon_event;
++	u32 val;
++
++	extcon_event = driver->data->new_state;
++	val = readl(driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++	switch (extcon_event) {
++	case EVT_DEVICE:
++		val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE);
++		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++		val = (val & ~DRD_HOST_MODE) | DRD_DEVICE_MODE;
++		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
++		val |= ICFG_DEV_BIT;
++		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
++		break;
++
++	case EVT_HOST:
++		val &= ~(DRD_HOST_MODE | DRD_DEVICE_MODE);
++		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++		val = (val & ~DRD_DEVICE_MODE) | DRD_HOST_MODE;
++		writel(val, driver->icfgdrd_regs + ICFG_FSM_CTRL);
++
++		val = readl(driver->usb2h_strap_reg);
++		val |= OHCI_OVRCUR_POL;
++		writel(val, driver->usb2h_strap_reg);
++
++		val = readl(driver->icfgdrd_regs + ICFG_DRD_P0CTL);
++		val &= ~ICFG_DEV_BIT;
++		writel(val, driver->icfgdrd_regs + ICFG_DRD_P0CTL);
++		break;
++
++	default:
++		pr_err("Invalid extcon event\n");
++		break;
++	}
++}
++
++static void extcon_work(struct work_struct *work)
++{
++	struct ns2_phy_driver *driver;
++	int vbus;
++	int id;
++
++	driver  = container_of(to_delayed_work(work),
++			       struct ns2_phy_driver, wq_extcon);
++
++	id = gpiod_get_value_cansleep(driver->id_gpiod);
++	vbus = gpiod_get_value_cansleep(driver->vbus_gpiod);
++
++	if (!id && vbus) { /* Host connected */
++		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, true);
++		pr_debug("Host cable connected\n");
++		driver->data->new_state = EVT_HOST;
++		connect_change(driver);
++	} else if (id && !vbus) { /* Disconnected */
++		extcon_set_cable_state_(driver->edev, EXTCON_USB_HOST, false);
++		extcon_set_cable_state_(driver->edev, EXTCON_USB, false);
++		pr_debug("Cable disconnected\n");
++	} else if (id && vbus) { /* Device connected */
++		extcon_set_cable_state_(driver->edev, EXTCON_USB, true);
++		pr_debug("Device cable connected\n");
++		driver->data->new_state = EVT_DEVICE;
++		connect_change(driver);
++	}
++}
++
++static irqreturn_t gpio_irq_handler(int irq, void *dev_id)
++{
++	struct ns2_phy_driver *driver = dev_id;
++
++	queue_delayed_work(system_power_efficient_wq, &driver->wq_extcon,
++			   driver->debounce_jiffies);
++
++	return IRQ_HANDLED;
++}
++
++static struct phy_ops ops = {
++	.init		= ns2_drd_phy_init,
++	.power_on	= ns2_drd_phy_poweron,
++	.power_off	= ns2_drd_phy_poweroff,
++	.owner		= THIS_MODULE,
++};
++
++static const struct of_device_id ns2_drd_phy_dt_ids[] = {
++	{ .compatible = "brcm,ns2-drd-phy", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ns2_drd_phy_dt_ids);
++
++static int ns2_drd_phy_probe(struct platform_device *pdev)
++{
++	struct phy_provider *phy_provider;
++	struct device *dev = &pdev->dev;
++	struct ns2_phy_driver *driver;
++	struct ns2_phy_data *data;
++	struct resource *res;
++	int ret;
++	u32 val;
++
++	driver = devm_kzalloc(dev, sizeof(struct ns2_phy_driver),
++			      GFP_KERNEL);
++	if (!driver)
++		return -ENOMEM;
++
++	driver->data = devm_kzalloc(dev, sizeof(struct ns2_phy_data),
++				  GFP_KERNEL);
++	if (!driver->data)
++		return -ENOMEM;
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "icfg");
++	driver->icfgdrd_regs = devm_ioremap_resource(dev, res);
++	if (IS_ERR(driver->icfgdrd_regs))
++		return PTR_ERR(driver->icfgdrd_regs);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "rst-ctrl");
++	driver->idmdrd_rst_ctrl = devm_ioremap_resource(dev, res);
++	if (IS_ERR(driver->idmdrd_rst_ctrl))
++		return PTR_ERR(driver->idmdrd_rst_ctrl);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "crmu-ctrl");
++	driver->crmu_usb2_ctrl = devm_ioremap_resource(dev, res);
++	if (IS_ERR(driver->crmu_usb2_ctrl))
++		return PTR_ERR(driver->crmu_usb2_ctrl);
++
++	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "usb2-strap");
++	driver->usb2h_strap_reg = devm_ioremap_resource(dev, res);
++	if (IS_ERR(driver->usb2h_strap_reg))
++		return PTR_ERR(driver->usb2h_strap_reg);
++
++	 /* create extcon */
++	driver->id_gpiod = devm_gpiod_get(&pdev->dev, "id", GPIOD_IN);
++	if (IS_ERR(driver->id_gpiod)) {
++		dev_err(dev, "failed to get ID GPIO\n");
++		return PTR_ERR(driver->id_gpiod);
++	}
++	driver->vbus_gpiod = devm_gpiod_get(&pdev->dev, "vbus", GPIOD_IN);
++	if (IS_ERR(driver->vbus_gpiod)) {
++		dev_err(dev, "failed to get VBUS GPIO\n");
++		return PTR_ERR(driver->vbus_gpiod);
++	}
++
++	driver->edev = devm_extcon_dev_allocate(dev, usb_extcon_cable);
++	if (IS_ERR(driver->edev)) {
++		dev_err(dev, "failed to allocate extcon device\n");
++		return -ENOMEM;
++	}
++
++	ret = devm_extcon_dev_register(dev, driver->edev);
++	if (ret < 0) {
++		dev_err(dev, "failed to register extcon device\n");
++		return ret;
++	}
++
++	ret = gpiod_set_debounce(driver->id_gpiod, GPIO_DELAY * 1000);
++	if (ret < 0)
++		driver->debounce_jiffies = msecs_to_jiffies(GPIO_DELAY);
++
++	INIT_DELAYED_WORK(&driver->wq_extcon, extcon_work);
++
++	driver->id_irq = gpiod_to_irq(driver->id_gpiod);
++	if (driver->id_irq < 0) {
++		dev_err(dev, "failed to get ID IRQ\n");
++		return driver->id_irq;
++	}
++
++	driver->vbus_irq = gpiod_to_irq(driver->vbus_gpiod);
++	if (driver->vbus_irq < 0) {
++		dev_err(dev, "failed to get ID IRQ\n");
++		return driver->vbus_irq;
++	}
++
++	ret = devm_request_irq(dev, driver->id_irq, gpio_irq_handler,
++			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
++			       "usb_id", driver);
++	if (ret < 0) {
++		dev_err(dev, "failed to request handler for ID IRQ\n");
++		return ret;
++	}
++
++	ret = devm_request_irq(dev, driver->vbus_irq, gpio_irq_handler,
++			       IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
++			       "usb_vbus", driver);
++	if (ret < 0) {
++		dev_err(dev, "failed to request handler for VBUS IRQ\n");
++		return ret;
++	}
++
++	dev_set_drvdata(dev, driver);
++
++	/* Shutdown all ports. They can be powered up as required */
++	val = readl(driver->crmu_usb2_ctrl);
++	val &= ~(AFE_CORERDY_VDDC | PHY_RESETB);
++	writel(val, driver->crmu_usb2_ctrl);
++
++	data = driver->data;
++	data->phy = devm_phy_create(dev, dev->of_node, &ops);
++	if (IS_ERR(data->phy)) {
++		dev_err(dev, "Failed to create usb drd phy\n");
++		return PTR_ERR(data->phy);
++	}
++
++	data->driver = driver;
++	phy_set_drvdata(data->phy, data);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (IS_ERR(phy_provider)) {
++		dev_err(dev, "Failed to register as phy provider\n");
++		return PTR_ERR(phy_provider);
++	}
++
++	platform_set_drvdata(pdev, driver);
++
++	dev_info(dev, "Registered NS2 DRD Phy device\n");
++	queue_delayed_work(system_power_efficient_wq, &driver->wq_extcon,
++			   driver->debounce_jiffies);
++
++	return 0;
++}
++
++static struct platform_driver ns2_drd_phy_driver = {
++	.probe = ns2_drd_phy_probe,
++	.driver = {
++		.name = "bcm-ns2-usbphy",
++		.of_match_table = of_match_ptr(ns2_drd_phy_dt_ids),
++	},
++};
++module_platform_driver(ns2_drd_phy_driver);
++
++MODULE_ALIAS("platform:bcm-ns2-drd-phy");
++MODULE_AUTHOR("Broadcom");
++MODULE_DESCRIPTION("Broadcom NS2 USB2 PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
-2.7.4
+2.1.0
