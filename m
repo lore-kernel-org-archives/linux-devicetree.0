@@ -1,63 +1,95 @@
-From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: media/s5p-cec.txt, media/stih-cec.txt: refer to cec.txt
-Date: Fri,  9 Jun 2017 19:54:01 +0200
-Message-ID: <20170609175401.40204-3-hverkuil@xs4all.nl>
-References: <20170609175401.40204-1-hverkuil@xs4all.nl>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Applied "ASoC: samsung: Odroid DT binding documentation corrections" to the asoc tree
+Date: Fri, 09 Jun 2017 18:54:13 +0100
+Message-ID: <E1dJO6v-0008La-Pa@debutante>
+References: <1497028184-5244-1-git-send-email-s.nawrocki@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170609175401.40204-1-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <1497028184-5244-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+The patch
 
-Now that there is a cec.txt with common CEC bindings, update the two
-driver-specific bindings to refer to cec.txt.
+   ASoC: samsung: Odroid DT binding documentation corrections
 
-Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 63ddf5dc9cc77963a993921995d9e390095dc3d4 Mon Sep 17 00:00:00 2001
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Date: Fri, 9 Jun 2017 19:09:44 +0200
+Subject: [PATCH] ASoC: samsung: Odroid DT binding documentation corrections
+
+This patch removes unused and undocumented samsung,cpu-dai,
+samsung,codec-dai properties from the dts example and moves
+sub-nodes' description to a separate section.
+
+Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/media/s5p-cec.txt  | 6 ++----
- Documentation/devicetree/bindings/media/stih-cec.txt | 2 +-
- 2 files changed, 3 insertions(+), 5 deletions(-)
+ .../devicetree/bindings/sound/samsung,odroid.txt          | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/s5p-cec.txt b/Documentation/devicetree/bindings/media/s5p-cec.txt
-index 261af4d1a791..1b1a10ba48ce 100644
---- a/Documentation/devicetree/bindings/media/s5p-cec.txt
-+++ b/Documentation/devicetree/bindings/media/s5p-cec.txt
-@@ -15,13 +15,11 @@ Required properties:
-   - clock-names : from common clock binding: must contain "hdmicec",
- 		  corresponding to entry in the clocks property.
-   - samsung,syscon-phandle - phandle to the PMU system controller
--  - hdmi-phandle - phandle to the HDMI controller
-+  - hdmi-phandle - phandle to the HDMI controller, see also cec.txt.
+diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+index c1ac70cb0afb..c30934dd975b 100644
+--- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
++++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
+@@ -5,11 +5,6 @@ Required properties:
+  - compatible - "samsung,odroidxu3-audio" - for Odroid XU3 board,
+ 		"samsung,odroidxu4-audio" - for Odroid XU4 board
+  - model - the user-visible name of this sound complex
+- - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
+-    controller
+- - 'codec' subnode with a 'sound-dai' property containing list of phandles
+-    to the CODEC nodes, first entry must be corresponding to the MAX98090
+-    CODEC and the second entry must be the phandle of the HDMI IP block node
+  - clocks - should contain entries matching clock names in the clock-names
+     property
+  - clock-names - should contain following entries:
+@@ -32,12 +27,18 @@ Required properties:
+    For Odroid XU4:
+      no entries
  
- Optional:
-   - needs-hpd : if present the CEC support is only available when the HPD
--    is high. Some boards only let the CEC pin through if the HPD is high, for
--    example if there is a level converter that uses the HPD to power up
--    or down.
-+		is high. See cec.txt for more details.
- 
++Required sub-nodes:
++
++ - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
++    controller
++ - 'codec' subnode with a 'sound-dai' property containing list of phandles
++    to the CODEC nodes, first entry must be corresponding to the MAX98090
++    CODEC and the second entry must be the phandle of the HDMI IP block node
++
  Example:
  
-diff --git a/Documentation/devicetree/bindings/media/stih-cec.txt b/Documentation/devicetree/bindings/media/stih-cec.txt
-index 289a08b33651..8be2a040c6c6 100644
---- a/Documentation/devicetree/bindings/media/stih-cec.txt
-+++ b/Documentation/devicetree/bindings/media/stih-cec.txt
-@@ -9,7 +9,7 @@ Required properties:
-  - pinctrl-names: Contains only one value - "default"
-  - pinctrl-0: Specifies the pin control groups used for CEC hardware.
-  - resets: Reference to a reset controller
-- - hdmi-phandle: Phandle to the HDMI controller
-+ - hdmi-phandle: Phandle to the HDMI controller, see also cec.txt.
- 
- Example for STIH407:
- 
+ sound {
+ 	compatible = "samsung,odroidxu3-audio";
+-	samsung,cpu-dai = <&i2s0>;
+-	samsung,codec-dai = <&max98090>;
+ 	model = "Odroid-XU3";
+ 	samsung,audio-routing =
+ 		"Headphone Jack", "HPL",
 -- 
 2.11.0
 
