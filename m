@@ -1,98 +1,79 @@
-From: Hans Verkuil <hansverk@cisco.com>
-Subject: Re: [PATCH 7/9] dt-bindings: media/s5p-cec.txt: document needs-hpd
- property
-Date: Fri, 9 Jun 2017 17:55:33 +0200
-Message-ID: <8e6ed9b6-5b4b-8650-2c92-47a593e73d94@cisco.com>
-References: <20170607144616.15247-1-hverkuil@xs4all.nl>
- <20170607144616.15247-8-hverkuil@xs4all.nl>
- <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
- <2fa55431-bef2-9340-4ce8-e06f9648e109@xs4all.nl>
- <CAL_JsqLzxMSdQGCiCBa2-VKpe==djCsqP9GxywJ-X-defiRXMQ@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] ARM: sun6i: a31s: primo81: Change USB OTG to
+ OTG mode
+Date: Sat, 10 Jun 2017 00:05:48 +0800
+Message-ID: <20170609160549.3566-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLzxMSdQGCiCBa2-VKpe==djCsqP9GxywJ-X-defiRXMQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBZMO5PEQKGQEE2K4S6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2017 05:31 PM, Rob Herring wrote:
-> On Fri, Jun 9, 2017 at 9:11 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
->> On 09/06/17 16:07, Rob Herring wrote:
->>> On Wed, Jun 07, 2017 at 04:46:14PM +0200, Hans Verkuil wrote:
->>>> From: Hans Verkuil <hans.verkuil@cisco.com>
->>>>
->>>> Needed for boards that wire the CEC pin in such a way that it
->>>> is unavailable when the HPD is low.
->>>>
->>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
->>>> Cc: Krzysztof Kozlowski <krzk@kernel.org>
->>>> Cc: Andrzej Hajda <a.hajda@samsung.com>
->>>> Cc: devicetree@vger.kernel.org
->>>> ---
->>>>  Documentation/devicetree/bindings/media/s5p-cec.txt | 6 ++++++
->>>>  1 file changed, 6 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/media/s5p-cec.txt b/Documentation/devicetree/bindings/media/s5p-cec.txt
->>>> index 4bb08d9d940b..261af4d1a791 100644
->>>> --- a/Documentation/devicetree/bindings/media/s5p-cec.txt
->>>> +++ b/Documentation/devicetree/bindings/media/s5p-cec.txt
->>>> @@ -17,6 +17,12 @@ Required properties:
->>>>    - samsung,syscon-phandle - phandle to the PMU system controller
->>>>    - hdmi-phandle - phandle to the HDMI controller
->>>>
->>>> +Optional:
->>>> +  - needs-hpd : if present the CEC support is only available when the HPD
->>>> +    is high. Some boards only let the CEC pin through if the HPD is high, for
->>>> +    example if there is a level converter that uses the HPD to power up
->>>> +    or down.
->>>
->>> Seems like something common. Can you document in a common location?
->>
->> Should we do the same with hdmi-phandle? It is also used by CEC drivers to find
->> the HDMI driver.
-> 
-> Yes.
-> 
->> Currently only used by s5p-cec and stih-cec, but there will be more.
->>
->> I guess this would be a sensible place to document this:
->>
->> Documentation/devicetree/bindings/media/cec.txt
-> 
-> Sounds good. You can do this as a follow-up to this patch if you want.
-> For this one:
-> 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
+Now that we have support for the AXP221 PMIC's USB VBUS detection and
+DRIVEVBUS vbus control, we can use the USB OTG port in proper OTG mode.
 
-Sorry, I have what might be a stupid question: should I update the s5p-cec.txt
-to refer to the cec.txt bindings file for the hdmi-phandle and needs-hpd instead
-of describing it here? It seems pointless to do that for the hdmi-phandle, but
-it might make more sense for the needs-hpd property.
+This patch enables the aforementioned PMIC functions, adds the OTG ID
+detection pin to the USB PHY node, and changes the mode of USB OTG to
+"otg".
 
-E.g.:
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun6i-a31s-primo81.dts | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-  - needs-hpd: CEC support is only present if HPD is high. See cec.txt for more
-    details.
-
-
-Proposed text for cec.txt:
-
--------------------------------------------------
-Common bindings for HDMI CEC adapters
-
-- hdmi-phandle: phandle to the HDMI controller.
-
-- needs-hpd: if present the CEC support is only available when the HPD
-  is high. Some boards only let the CEC pin through if the HPD is high, for
-  example if there is a level converter that uses the HPD to power up
-  or down.
--------------------------------------------------
-
-Regards,
-
-	Hans
+diff --git a/arch/arm/boot/dts/sun6i-a31s-primo81.dts b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+index f3712753fa42..73b163a7d9dd 100644
+--- a/arch/arm/boot/dts/sun6i-a31s-primo81.dts
++++ b/arch/arm/boot/dts/sun6i-a31s-primo81.dts
+@@ -158,6 +158,7 @@
+ 		reg = <0x68>;
+ 		interrupt-parent = <&nmi_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++		x-powers,drive-vbus-en;
+ 	};
+ };
+ 
+@@ -226,6 +227,11 @@
+ 	regulator-name = "vddio-csi";
+ };
+ 
++&reg_drivevbus {
++	regulator-name = "usb0-vbus";
++	status = "okay";
++};
++
+ &reg_eldo3 {
+ 	regulator-min-microvolt = <1080000>;
+ 	regulator-max-microvolt = <1320000>;
+@@ -238,12 +244,18 @@
+ };
+ 
+ &usb_otg {
+-	/* otg support requires support for AXP221 usb-power-supply and GPIO */
+-	dr_mode = "host";
++	dr_mode = "otg";
++	status = "okay";
++};
++
++&usb_power_supply {
+ 	status = "okay";
+ };
+ 
+ &usbphy {
++	usb0_id_det-gpio = <&pio 0 15 GPIO_ACTIVE_HIGH>; /* PA15 */
++	usb0_vbus_power-supply = <&usb_power_supply>;
++	usb0_vbus-supply = <&reg_drivevbus>;
+ 	usb1_vbus-supply = <&reg_dldo1>;
+ 	status = "okay";
+ };
+-- 
+2.11.0
