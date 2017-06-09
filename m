@@ -1,61 +1,30 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: rv1108: change to "max-frequency" from
- "clock-freq-min-max"
-Date: Fri, 09 Jun 2017 20:17:47 +0900
-Message-ID: <20170609111747.24591-1-jh80.chung@samsung.com>
-References: <CGME20170609111748epcas5p163d65c6bd94776383381d80b632414a5@epcas5p1.samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, andyshrk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 12/12] gpio: dt-bindings: add bindings for Rockchip
+ RK805 PMIC
+Date: Fri, 9 Jun 2017 13:30:22 +0200
+Message-ID: <CACRpkdY1-yX0sA0ZQJnRRpZKqq-WAr0MySEN9PYMpMJyLeRfzA@mail.gmail.com>
+References: <1496905959-29202-1-git-send-email-chenjh@rock-chips.com> <1496907193-29294-1-git-send-email-chenjh@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1496907193-29294-1-git-send-email-chenjh@rock-chips.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Jianhong Chen <chenjh@rock-chips.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tao Huang <huangtao@rock-chips.com>, tony.xie@rock-chips.com, zhangqing@rock-chips.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, w.egorov@phytec.de, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-"clock-freq-min-max" was deprecated. There is only using in rv1108.dtsi.
-Use the "max-frequency" for removiing "clock-freq-min-max" in future.
+On Thu, Jun 8, 2017 at 9:33 AM, Jianhong Chen <chenjh@rock-chips.com> wrote:
 
-Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
-Changelog on V2:
-- Rebased on Heiko's git repository (v4.13-armsoc/dts32 branch)
+> From: chenjh <chenjh@rock-chips.com>
+>
+> Add device tree bindings documentation for Rockchip's RK805 PMIC
+>
+> Signed-off-by: chenjh <chenjh@rock-chips.com>
 
- arch/arm/boot/dts/rv1108.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+This looks good.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/arch/arm/boot/dts/rv1108.dtsi b/arch/arm/boot/dts/rv1108.dtsi
-index 437098b..6a3da2d 100644
---- a/arch/arm/boot/dts/rv1108.dtsi
-+++ b/arch/arm/boot/dts/rv1108.dtsi
-@@ -174,7 +174,7 @@
- 
- 	emmc: dwmmc@30110000 {
- 		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
--		clock-freq-min-max = <400000 150000000>;
-+		max-frequency = <150000000>;
- 		clocks = <&cru HCLK_EMMC>, <&cru SCLK_EMMC>,
- 			 <&cru SCLK_EMMC_DRV>, <&cru SCLK_EMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-@@ -186,7 +186,7 @@
- 
- 	sdio: dwmmc@30120000 {
- 		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
--		clock-freq-min-max = <400000 150000000>;
-+		max-frequency = <150000000>;
- 		clocks = <&cru HCLK_SDIO>, <&cru SCLK_SDIO>,
- 			 <&cru SCLK_SDIO_DRV>, <&cru SCLK_SDIO_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
-@@ -198,7 +198,7 @@
- 
- 	sdmmc: dwmmc@30130000 {
- 		compatible = "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc";
--		clock-freq-min-max = <400000 100000000>;
-+		max-frequency = <100000000>;
- 		clocks = <&cru HCLK_SDMMC>, <&cru SCLK_SDMMC>,
- 			 <&cru SCLK_SDMMC_DRV>, <&cru SCLK_SDMMC_SAMPLE>;
- 		clock-names = "biu", "ciu", "ciu-drive", "ciu-sample";
--- 
-2.10.2
+Just waiting for the DT maintainer to look at this.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
