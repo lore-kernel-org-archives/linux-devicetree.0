@@ -1,26 +1,45 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 14/15] devicetree/bindings: Add GCW vendor prefix
-Date: Fri, 9 Jun 2017 09:24:04 -0500
-Message-ID: <20170609142404.xmr5jcuq5vh2mwpp@rob-hp-laptop>
-References: <20170607200439.24450-1-paul@crapouillou.net>
- <20170607200439.24450-15-paul@crapouillou.net>
+Subject: Re: [PATCH v8 02/34] [media] dt-bindings: Add bindings for i.MX
+ media driver
+Date: Fri, 9 Jun 2017 09:21:23 -0500
+Message-ID: <20170609142123.qo2fcxipwg2vdkts@rob-hp-laptop>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <1496860453-6282-3-git-send-email-steve_longerbeam@mentor.com>
+ <18997640-8cbd-734d-160e-a930f887d14f@gmail.com>
+ <c7edc53b-bdfc-4a82-1c6c-70bf1c4db84a@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170607200439.24450-15-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+In-Reply-To: <c7edc53b-bdfc-4a82-1c6c-70bf1c4db84a@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: mark.rutland@arm.com, kernel@pengutronix.de, mchehab@kernel.org, hverkuil@xs4all.nl, p.zabel@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 10:04:38PM +0200, Paul Cercueil wrote:
-> Games Consoles Worldwide, mostly known under the acronym GCW, is the
-> creator of the GCW Zero open-source video game system.
+On Thu, Jun 08, 2017 at 10:08:35AM -0700, Steve Longerbeam wrote:
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> 
+> On 06/08/2017 09:45 AM, Steve Longerbeam wrote:
+> > Hi Rob, Mark,
+> > 
+> > Are there any remaining technical issues with this
+> > binding doc? At this point an Ack from you is the only
+> > thing holding up merge of the imx-media driver.
+> > 
+> > 
+> 
+> Note that the Synopsys core in the i.MX6 is a differently configured
+> Synopsys core from the core as described in the bindings at [1].
+> 
+> Russell King provided more information on the differences between these
+> cores at [2]. They are essentially different devices.
+> 
+> So perhaps the "snps,dw-mipi-csi2" compatibility needs to be removed
+> from this binding, for now, until this driver is moved to drivers/media/
+> and is made compatible with other MIPI CSI-2 Synopsys cores with
+> different configurations.
+
+Yes, it probably should be dropped. With that,
 
 Acked-by: Rob Herring <robh@kernel.org>
