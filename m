@@ -1,56 +1,73 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] regulator: pfuze100: add fsl,pmic-stby-poweroff
- property
-Date: Fri, 9 Jun 2017 08:32:05 -0500
-Message-ID: <20170609133205.v5tw2vn6ai74bjvr@rob-hp-laptop>
-References: <20170606073146.26882-1-o.rempel@pengutronix.de>
- <20170606073146.26882-5-o.rempel@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] dt-bindings: arm: amlogic: Add SoC information
+ bindings
+Date: Fri, 9 Jun 2017 08:37:17 -0500
+Message-ID: <20170609133717.gkqnyatqezkrcaeg@rob-hp-laptop>
+References: <1496742340-10307-1-git-send-email-narmstrong@baylibre.com>
+ <1496742340-10307-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170606073146.26882-5-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1496742340-10307-2-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 06, 2017 at 09:31:44AM +0200, Oleksij Rempel wrote:
-> Document the new optional "fsl,pmic_stby_poweroff" property.
-
-Needs updating...
-
+On Tue, Jun 06, 2017 at 11:45:38AM +0200, Neil Armstrong wrote:
+> Add bindings for the SoC information register of the Amlogic SoCs.
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/regulator/pfuze100.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 32 +++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-> index 444c47831a40..197f1a52e960 100644
-> --- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
-> +++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
-> @@ -4,6 +4,13 @@ Required properties:
->  - compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000"
->  - reg: I2C slave address
->  
-> +Optional properties:
-> +- fsl,pmic-stby-poweroff: if present, configure the PMIC to shutdown all
-> +  power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
-> +  Use this option if the SoC should be powered off by external power
-> +  management IC (PMIC) on PMIC_STBY_REQ signal.
-> +  As opposite to PMIC_STBY_REQ boards can implement PMIC_ON_REQ signal.
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index 5c01e65..ae3e8ed 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -60,3 +60,35 @@ Board compatible values (alphabetically, grouped by SoC):
+>    - "amlogic,q201" (Meson gxm s912)
+>    - "kingnovel,r-box-pro" (Meson gxm S912)
+>    - "nexbox,a1" (Meson gxm s912)
 > +
->  Required child node:
->  - regulators: This is the list of child nodes that specify the regulator
->    initialization data for defined regulators. Please refer to below doc
-> -- 
-> 2.11.0
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Amlogic Meson Firmware registers Interface
+> +------------------------------------------
+> +
+> +The Meson SoCs have a register bank with status and data shared with the
+> +secure firmware.
+> +
+> +Required properties:
+> + - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon", "simple-mfd"
+> +
+> +Sub-nodes should indentify components of this register interface :
+> +
+> +Meson GX SoC Information
+> +------------------------
+> +A firmware register encodes the SoC type, package and revision information on
+> +the Meson GX SoCs.
+> +If present, a device node for this register should be added.
+> +
+> +Required properties:
+> +  - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-chipid".
+> +
+> +Example
+> +-------
+> +
+> +ao-secure@140 {
+> +	compatible = "amlogic,meson-gx-ao-secure", "syscon", "simple-mfd";
+> +	reg = <0x0 0x140 0x0 0x140>;
+> +
+> +	chipid {
+> +		compatible = "amlogic,meson-gx-chipid";
+
+No registers for this block? If not, this node is pointless. 
+"amlogic,meson-gx-ao-secure" should be specific enough to determine if 
+you have this block or not and the driver for it can create a device if 
+the OS needs it.
+
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
