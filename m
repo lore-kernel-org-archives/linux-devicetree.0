@@ -1,88 +1,62 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add Synopsys DW MIPI DSI DRM
- bridge driver
-Date: Fri, 9 Jun 2017 09:41:00 +0530
-Message-ID: <7502cbc2-9feb-4dd3-3d95-b5f33b8a8872@codeaurora.org>
-References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
- <1496414235-20098-3-git-send-email-philippe.cornu@st.com>
- <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
+Date: Fri, 9 Jun 2017 12:35:08 +0800
+Message-ID: <CAGb2v650dPV+WgP_8L1dNEuav3jRSQkk_sQL0bi=PcjOXoQgVg@mail.gmail.com>
+References: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
+ <20170607173345.22462-3-clabbe.montjoie@gmail.com> <20170608083428.csv54tryvgwdb552@flea.home>
+ <20170608084222.GA10830@Red> <20170608124841.b6i5qphsyubksbvb@flea.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Chris Zhong <zyw@rock-chips.com>, Mickael Reulier <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, Vincent Abriou <vincent.abriou@st.com>, Ludovic Barre <ludovic.barre@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, zourongrong@gmail.com, Gabriel Fernandez <gabriel.fernandez@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170608124841.b6i5qphsyubksbvb-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGhpbGlwcGUsIFJvYiwKCk9uIDA2LzA4LzIwMTcgMDk6MTAgUE0sIFJvYiBIZXJyaW5nIHdy
-b3RlOgo+IE9uIEZyaSwgSnVuIDAyLCAyMDE3IGF0IDA0OjM3OjExUE0gKzAyMDAsIFBoaWxpcHBl
-IENPUk5VIHdyb3RlOgo+PiBUaGlzIHBhdGNoIGFkZHMgZG9jdW1lbnRhdGlvbiBvZiBkZXZpY2Ug
-dHJlZSBiaW5kaW5ncyBmb3IgdGhlCj4+IFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kgaG9z
-dCBEUk0gYnJpZGdlIGRyaXZlci4KPj4KCkNvdWxkIHlvdSBkcm9wICJEUk0gYnJpZGdlIGRyaXZl
-ciIgZnJvbSB0aGUgc3ViamVjdCBhbmQgY29tbWl0IG1lc3NhZ2UgYW5kCnJlcGxhY2UgaXQgd2l0
-aCBqdXN0ICJicmlkZ2UiIG9yICJjb250cm9sbGVyIi4gRFQgYmluZGluZ3Mgc2hvdWxkbid0IG1l
-bnRpb24KZHJpdmVycy4KCj4+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENPUk5VIDxwaGlsaXBw
-ZS5jb3JudUBzdC5jb20+Cj4+IC0tLQo+PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9k
-d19taXBpX2RzaS50eHQgICAgICAgIHwgMzAgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDEg
-ZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2Rz
-aS50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0Cj4+IG5ldyBmaWxlIG1v
-ZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjFkN2M0MzgKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
-KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdf
-bWlwaV9kc2kudHh0Cj4+IEBAIC0wLDAgKzEsMzAgQEAKPj4gK1N5bm9wc3lzIERlc2lnbldhcmUg
-TUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT09PQo+PiArCj4+ICtUaGlzIGRvY3VtZW50IGRlZmluZXMgZGV2aWNlIHRy
-ZWUgcHJvcGVydGllcyBmb3IgdGhlIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSQo+PiArRFNJIGhv
-c3QgY29udHJvbGxlci4gSXQgZG9lc24ndCBjb25zdGl0dWUgYSBkZXZpY2UgdHJlZSBiaW5kaW5n
-IHNwZWNpZmljYXRpb24KCnMvY29uc3RpdHVlL2NvbnN0aXR1dGUKCj4+ICtieSBpdHNlbGYgYnV0
-IGlzIG1lYW50IHRvIGJlIHJlZmVyZW5jZWQgYnkgcGxhdGZvcm0tc3BlY2lmaWMgZGV2aWNlIHRy
-ZWUKPj4gK2JpbmRpbmdzLgo+PiArCj4+ICtXaGVuIHJlZmVyZW5jZWQgZnJvbSBwbGF0Zm9ybSBk
-ZXZpY2UgdHJlZSBiaW5kaW5ncyB0aGUgcHJvcGVydGllcyBkZWZpbmVkIGluCj4+ICt0aGlzIGRv
-Y3VtZW50IGFyZSBkZWZpbmVkIGFzIGZvbGxvd3MuIFRoZSBwbGF0Zm9ybSBkZXZpY2UgdHJlZSBi
-aW5kaW5ncyBhcmUKPj4gK3Jlc3BvbnNpYmxlIGZvciBkZWZpbmluZyB3aGV0aGVyIGVhY2ggcHJv
-cGVydHkgaXMgcmVxdWlyZWQgb3Igb3B0aW9uYWwuCj4+ICsKPj4gKy0gcmVnOiBNZW1vcnkgbWFw
-cGVkIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBEV0MgTUlQSSBEU0kKPj4gKyAgcmVn
-aXN0ZXJzLiAobWFuZGF0b3J5KQo+PiArCj4+ICstIGNsb2NrczogUmVmZXJlbmNlcyB0byBhbGwg
-dGhlIGNsb2NrcyBzcGVjaWZpZWQgaW4gdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5Cj4+ICsgIGFz
-IHNwZWNpZmllZCBpbiBbMV0uIChtYW5kYXRvcnkpCj4+ICsKPj4gKy0gY2xvY2stbmFtZXM6ICJw
-Y2xrIiBpcyBwZXJpcGhlcmFsIGNsb2NrIGZvciBlaXRoZXIgQUhCIGFuZCBBUEIuIChtYW5kYXRv
-cnkpCj4gCj4gU2VlbXMgc3RyYW5nZSB0aGVyZSdzIG5vdCBhbHNvIGEgcGl4ZWwgb3IgYml0IGNs
-b2NrPyBPciB0aGlzIGdldHMgZHJpdmVuCj4gZnJvbSB0aGUgcGh5PwoKU2luY2UgeW91IG1lbnRp
-b24gcGh5IGhlcmUsIEkgd2FudGVkIHRvIHNoYXJlIGEgY29uY2VybiB3aXRoIHRoZSBiaW5kaW5n
-cy4KVGhlc2UgYmluZGluZ3MgZG9uJ3QgaGF2ZSBhIHNlcGFyYXRlIFBIWSBEVCBub2RlLiBUaGUg
-UEhZIGlzIGFzc3VtZWQgYXMgYQpwYXJ0IG9mIHRoZSBJUCB3aGVuIGludGVncmF0ZWQgYnkgYSBT
-b0MuIFRoZXJlIGFyZSBhbHJlYWR5IHJvY2tjaGlwIGFuZApoaXNpbCBEU0kgYmluZGluZ3MgdGhh
-dCB1c2UgdGhpcyBJUCBidXQgZG9uJ3QgZGVmaW5lIGEgUEhZIG5vZGUuCgpJdCdzIGEgc2ltaWxh
-ciBzaXR1YXRpb24gd2l0aCB0aGUgRFctSERNSSBiaW5kaW5ncy4KCkZvciBleGFtcGxlLCB3aGVu
-IHRoZSBEVyBIRE1JIGlzIGludGVncmF0ZWQgaW4gcm9ja2NoaXAgb3IgcmVuZXNhcyBTb0MsIHRo
-ZQpiaW5kaW5ncyAicm9ja2NoaXAscmszMjg4LWR3LWhkbWkiIG9yICJyZW5lc2FzLHI4YTc3OTUt
-ZHctaGRtaSIgYXJlIHVzZWQsCmFuZCB0aGV5IGRvbid0IGhhdmUgYSBzZXBhcmF0ZSBQSFkgRFQg
-bm9kZS4KCkkgd2Fzbid0IHN1cmUgd2hldGhlciB0aGlzIGlzIHRoZSByaWdodCB3YXkgdG8gcHJv
-Y2VlZCBvciBub3QgZm9yIHN1Y2ggSVBzLgpTb21lIGFkdmljZSB3b3VsZCBoZWxwIHVzIGhlcmUu
-CgpUaGFua3MsCkFyY2hpdAoKPiAKPj4gKwo+PiArLSByZXNldHM6IFJlZmVyZW5jZXMgdG8gYWxs
-IHRoZSByZXNldHMgc3BlY2lmaWVkIGluIHRoZSByZXNldC1uYW1lcyBwcm9wZXJ0eQo+PiArICBh
-cyBzcGVjaWZpZWQgaW4gWzJdLiAob3B0aW9uYWwpCj4+ICsKPj4gKy0gcmVzZXQtbmFtZXM6IHN0
-cmluZyByZXNldCBuYW1lLCBtdXN0IGJlICJhcGIiIGlmIHVzZWQuIChvcHRpb25hbCkKPj4gKwo+
-PiArLSBwYW5lbCBvciBicmlkZ2Ugbm9kZTogc2VlIFszXS4gKG1hbmRhdG9yeSkKPj4gKwo+PiAr
-WzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5n
-cy50eHQKPj4gK1syXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvcmVz
-ZXQudHh0Cj4+ICtbM10gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-bWlwaS1kc2ktYnVzLnR4dAo+PiAtLSAKPj4gMS45LjEKPj4KCi0tIApRdWFsY29tbSBJbm5vdmF0
-aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51
-eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Jun 8, 2017 at 8:48 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Thu, Jun 08, 2017 at 10:42:22AM +0200, Corentin Labbe wrote:
+>> On Thu, Jun 08, 2017 at 10:34:28AM +0200, Maxime Ripard wrote:
+>> > On Wed, Jun 07, 2017 at 07:33:45PM +0200, Corentin Labbe wrote:
+>> > > The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
+>> > > This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
+>> > >
+>> > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> > > ---
+>> > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 28 ++++++++++++++++++++++++++++
+>> > >  1 file changed, 28 insertions(+)
+>> > >
+>> > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+>> > > index 01a83406f9ae..7d719b4aeaa9 100644
+>> > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
+>> > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+>> > > @@ -200,6 +200,14 @@
+>> > >                   #interrupt-cells = <3>;
+>> > >                   #gpio-cells = <3>;
+>> > >
+>> > > +                 emac_rgmii_pins: emac-rgmii-pins {
+>> > > +                         pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
+>> > > +                                "PD11", "PD12", "PD13", "PD14", "PD18",
+>> > > +                                "PD19", "PD21", "PD22", "PD23";
+>> > > +                         function = "gmac";
+>> > > +                         drive-strength = <40>;
+>> > > +                 };
+>> > > +
+>> >
+>> > This is not used anywhere.
+>> >
+>> But will be used by bpim3 board
+>
+> Then will add it when we'll add support for that board, until then,
+> it's dead code.
+
+I'll include this in my A83T work branch and resend it when I get around to it.
+
+Thanks
+ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
