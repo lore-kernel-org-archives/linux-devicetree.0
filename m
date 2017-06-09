@@ -1,7 +1,7 @@
 From: Eugen Hristev <eugen.hristev@microchip.com>
-Subject: [PATCH v4 2/4] Documentation: dt: iio: at91-sama5d2_adc: add hw trigger edge binding
-Date: Fri, 9 Jun 2017 10:07:17 +0300
-Message-ID: <1496992039-17964-3-git-send-email-eugen.hristev@microchip.com>
+Subject: [PATCH v4 3/4] ARM: dts: at91: sama5d2: add ADC hw trigger edge type
+Date: Fri, 9 Jun 2017 10:07:18 +0300
+Message-ID: <1496992039-17964-4-git-send-email-eugen.hristev@microchip.com>
 References: <1496992039-17964-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,37 +12,27 @@ To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux-iio
 Cc: eugen.hristev@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-Add property for the edge type of the hardware trigger pin ADTRG
+Added ADTRG edge type property as interrupt edge type value
 
 Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 ---
   Changes in v4:
  - Modified bindings to be similar with interrupts
 
- Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/arm/boot/dts/sama5d2.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-index 3223684..552e7a8 100644
---- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-+++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
-@@ -11,6 +11,11 @@ Required properties:
-   - atmel,min-sample-rate-hz: Minimum sampling rate, it depends on SoC.
-   - atmel,max-sample-rate-hz: Maximum sampling rate, it depends on SoC.
-   - atmel,startup-time-ms: Startup time expressed in ms, it depends on SoC.
-+  - atmel,trigger-edge-type: One of possible edge types for the ADTRG hardware
-+  trigger pin. When the specific edge type is detected, the conversion will
-+  start. Possible values are rising, falling, or both.
-+  This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
-+  IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
+diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
+index 8067c71..483a387 100644
+--- a/arch/arm/boot/dts/sama5d2.dtsi
++++ b/arch/arm/boot/dts/sama5d2.dtsi
+@@ -1267,6 +1267,7 @@
+ 				atmel,min-sample-rate-hz = <200000>;
+ 				atmel,max-sample-rate-hz = <20000000>;
+ 				atmel,startup-time-ms = <4>;
++				atmel,trigger-edge-type = <IRQ_TYPE_EDGE_RISING>;
+ 				status = "disabled";
+ 			};
  
- Example:
- 
-@@ -25,4 +30,5 @@ adc: adc@fc030000 {
- 	atmel,startup-time-ms = <4>;
- 	vddana-supply = <&vdd_3v3_lp_reg>;
- 	vref-supply = <&vdd_3v3_lp_reg>;
-+	atmel,trigger-edge-type = <IRQ_TYPE_EDGE_BOTH>;
- }
 -- 
 2.7.4
