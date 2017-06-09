@@ -1,78 +1,316 @@
-From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [linux-sunxi] [PATCH] arm64: allwinner: sun50i-a64: Remove
- duplicate ethernet@1c30000
-Date: Fri, 9 Jun 2017 14:38:39 +0100
-Message-ID: <6d21516d-7412-5f16-f6f8-b7d46106b4f5@arm.com>
-References: <1497012052-14027-1-git-send-email-jteki@openedev.com>
+From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm64: dts: Add Mediatek SoC MT2712 and
+ evaluation board dts and Makefile
+Date: Fri, 9 Jun 2017 21:41:08 +0800
+Message-ID: <1497015668.29586.26.camel@mtksdaap41>
+References: <1496230773-22633-1-git-send-email-yt.shen@mediatek.com>
+         <1496230773-22633-3-git-send-email-yt.shen@mediatek.com>
+         <d1be42ad-0b79-8487-1590-711b0e86d2ca@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497012052-14027-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-Content-Language: en-GB
+In-Reply-To: <d1be42ad-0b79-8487-1590-711b0e86d2ca-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, hongkun.cao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 2017-05-31 at 13:38 +0100, Marc Zyngier wrote:
+> On 31/05/17 12:39, YT Shen wrote:
+> > This adds basic chip support for Mediatek 2712
+> > 
+> > Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+> >  arch/arm64/boot/dts/mediatek/mt2712-evb.dts |  39 +++++++
+> >  arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 166 ++++++++++++++++++++++++++++
+> >  3 files changed, 206 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+> >  create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> > index 9fbfd32..fcc0604 100644
+> > --- a/arch/arm64/boot/dts/mediatek/Makefile
+> > +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> > @@ -1,3 +1,4 @@
+> > +dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+> >  dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+> > new file mode 100644
+> > index 0000000..e526c0f
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+> > @@ -0,0 +1,39 @@
+> > +/*
+> > + * Copyright (c) 2017 MediaTek Inc.
+> > + * Author: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "mt2712e.dtsi"
+> > +
+> > +/ {
+> > +	model = "MediaTek MT2712 evaluation board";
+> > +	compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
+> > +
+> > +	aliases {
+> > +		serial0 = &uart0;
+> > +		serial1 = &uart1;
+> > +		serial2 = &uart2;
+> > +		serial3 = &uart3;
+> > +		serial4 = &uart4;
+> > +		serial5 = &uart5;
+> > +	};
+> > +
+> > +	memory@40000000 {
+> > +		device_type = "memory";
+> > +		reg = <0 0x40000000 0 0x80000000>;
+> > +	};
+> > +
+> > +	chosen {
+> > +		stdout-path = "serial0:921600n8";
+> > +		linux,initrd-start = <0x45000000>;
+> > +		linux,initrd-end   = <0x4a000000>;
+> > +	};
+> > +};
+> > +
+> > +&uart0 {
+> > +	status = "okay";
+> > +};
+> > +
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> > new file mode 100644
+> > index 0000000..6df0da9
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> > @@ -0,0 +1,166 @@
+> > +/*
+> > + * Copyright (c) 2017 MediaTek Inc.
+> > + * Author: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +/ {
+> > +	compatible = "mediatek,mt2712";
+> > +	interrupt-parent = <&sysirq>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <2>;
+> > +
+> > +	cpus {
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		cpu-map {
+> > +			cluster0 {
+> > +				core0 {
+> > +					cpu = <&cpu0>;
+> > +				};
+> > +				core1 {
+> > +					cpu = <&cpu1>;
+> > +				};
+> > +			};
+> > +
+> > +			cluster1 {
+> > +				core0 {
+> > +					cpu = <&cpu2>;
+> > +				};
+> > +			};
+> > +		};
+> > +
+> > +		cpu0: cpu@0 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a35";
+> > +			reg = <0x000>;
+> > +		};
+> > +
+> > +		cpu1: cpu@1 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a35";
+> > +			reg = <0x001>;
+> > +			enable-method = "psci";
+> > +		};
+> > +
+> > +		cpu2: cpu@200 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a72";
+> > +			reg = <0x200>;
+> > +			enable-method = "psci";
+> > +		};
+> > +	};
+> > +
+> > +	psci {
+> > +		compatible = "arm,psci-0.2";
+> > +		method = "smc";
+> > +	};
+> > +
+> > +	uart_clk: dummy26m {
+> > +		compatible = "fixed-clock";
+> > +		clock-frequency = <26000000>;
+> > +		#clock-cells = <0>;
+> > +	};
+> > +
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 13
+> > +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+> 
+> Why 6? I only count 3 cores...
+OK, will change to GIC_CPU_MASK_RAW(0x13)
 
-On 09/06/17 13:40, Jagan Teki wrote:
-> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Sorry for the late reply.
 > 
-> Remove duplicate ethernet@1c30000 from allwinner/sun50i-a64.dtsi
+> > +			     <GIC_PPI 14
+> > +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 11
+> > +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>,
+> > +			     <GIC_PPI 10
+> > +			      (GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_LOW)>;
+> > +	};
+> > +
+> > +	soc {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		compatible = "simple-bus";
+> > +		ranges;
+> > +
+> > +		uart5: serial@1000f000 {
+> > +			compatible = "mediatek,mt2712-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x1000f000 0 0x400>;
+> > +			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&uart_clk>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		sysirq: interrupt-controller@10220a80 {
+> > +			compatible = "mediatek,mt2712-sysirq",
+> > +				     "mediatek,mt6577-sysirq";
+> > +			interrupt-controller;
+> > +			#interrupt-cells = <3>;
+> > +			interrupt-parent = <&gic>;
+> > +			reg = <0 0x10220a80 0 0x40>;
+> > +		};
+> > +
+> > +		gic: interrupt-controller@10510000 {
+> > +			compatible = "arm,gic-400";
+> > +			#interrupt-cells = <3>;
+> > +			interrupt-parent = <&gic>;
+> > +			interrupt-controller;
+> > +			reg = <0 0x10510000 0 0x1000>,
+> > +			      <0 0x10520000 0 0x1000>,
+> 
+> If that's truly a GIC400, then the above is wrong (the CPU interface is
+> spread over 8kB).
+> 
+> I also suspect that the first 4kB are aliased over
+> 0x10520000:0x1052f000, and the second over 0x10530000:0x1053f000 (in the
+> true SBSA tradition). If that's the case, then the size is actually 128kB.
+The chip information at hand is not enough for me to answer this
+question, if I have further document will check this part.
 
-I think this is an artefact of the sun8i-dwmac merging, where both David
-and Maxime merged the DT patches in their trees (compare e53f67e9 and
-103aefa0). I think both of them are in the process of sorting this out
-(as this effects more than this hunk, I believe).
+> 
+> > +			      <0 0x10540000 0 0x2000>,
+> > +			      <0 0x10560000 0 0x2000>;
+> 
+> Please check GICV as well, which probably behaves the same way.
+The reg entry I changed to 
+  reg = <0 0x10510000 0 0x1000>,
+        <0 0x10520000 0 0x20000>,
+        <0 0x10540000 0 0x20000>,
+        <0 0x10560000 0 0x20000>;
+  is that correct?
 
-Cheers,
-Andre.
+The platform boot to shell successfully.  The boot message shows
+additional different two lines:
+...
+[    0.000000] GIC: Adjusting CPU interface base to 0x000000001052f000
+[    0.000000] GIC: Using split EOI/Deactivate mode
+...
 
 > 
-> Build error:
-> arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dtb:
-> ERROR (duplicate_node_names): Duplicate node name /soc/ethernet@1c30000
-> ERROR: Input tree has errors, aborting (use -f to force output)
+> > +			interrupts = <GIC_PPI 9
+> > +				(GIC_CPU_MASK_SIMPLE(6) | IRQ_TYPE_LEVEL_HIGH)>;
 > 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 --------------------
->  1 file changed, 20 deletions(-)
+> Same thing here with 6 CPUs.
+Will change to GIC_CPU_MASK_RAW(0x13)
+
 > 
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> index 1b36aab..9d00622 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-> @@ -469,26 +469,6 @@
->  			};
->  		};
->  
-> -		emac: ethernet@1c30000 {
-> -			compatible = "allwinner,sun50i-a64-emac";
-> -			syscon = <&syscon>;
-> -			reg = <0x01c30000 0x100>;
-> -			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupt-names = "macirq";
-> -			resets = <&ccu RST_BUS_EMAC>;
-> -			reset-names = "stmmaceth";
-> -			clocks = <&ccu CLK_BUS_EMAC>;
-> -			clock-names = "stmmaceth";
-> -			status = "disabled";
-> -			#address-cells = <1>;
-> -			#size-cells = <0>;
-> -
-> -			mdio: mdio {
-> -				#address-cells = <1>;
-> -				#size-cells = <0>;
-> -			};
-> -		};
-> -
->  		gic: interrupt-controller@1c81000 {
->  			compatible = "arm,gic-400";
->  			reg = <0x01c81000 0x1000>,
+> > +		};
+> > +
+> > +		uart0: serial@11002000 {
+> > +			compatible = "mediatek,mt2712-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11002000 0 0x400>;
+> > +			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&uart_clk>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		uart1: serial@11003000 {
+> > +			compatible = "mediatek,mt2712-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11003000 0 0x400>;
+> > +			interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&uart_clk>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		uart2: serial@11004000 {
+> > +			compatible = "mediatek,mt2712-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11004000 0 0x400>;
+> > +			interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&uart_clk>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		uart3: serial@11005000 {
+> > +			compatible = "mediatek,mt2712-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11005000 0 0x400>;
+> > +			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&uart_clk>;
+> > +			status = "disabled";
+> > +		};
+> > +
+> > +		uart4: serial@11019000 {
+> > +			compatible = "mediatek,mt2712-uart",
+> > +				     "mediatek,mt6577-uart";
+> > +			reg = <0 0x11019000 0 0x400>;
+> > +			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
+> > +			clocks = <&uart_clk>;
+> > +			status = "disabled";
+> > +		};
+> > +	};
+> > +};
+> > +
+> > 
 > 
+> No PMU wired on this system?
+After checking, there is a PMU on the system, but not verified yet.
+And the plan for this patch series does not include PMU, is it
+necessary?
+
+Thanks for the review.
+
+yt.shen
+
+> 
+> Thanks,
+> 
+> 	M.
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
