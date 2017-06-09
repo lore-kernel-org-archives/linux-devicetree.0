@@ -1,52 +1,71 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: Re: [PATCH v3 1/5] pinctrl: qcom: Add ipq8074 pinctrl driver
-Date: Fri, 9 Jun 2017 15:17:52 +0530
-Message-ID: <fe5f588c-6cc1-6fcb-f7fe-c9e452f89916@codeaurora.org>
-References: <1496316482-25468-1-git-send-email-varada@codeaurora.org>
- <1496316482-25468-2-git-send-email-varada@codeaurora.org>
- <CACRpkdaLhD+ONwDTebT7q+M-CHDVPKUE4eKfusmyWkitQC1ZPQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaLhD+ONwDTebT7q+M-CHDVPKUE4eKfusmyWkitQC1ZPQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Turquette <mturquette@baylibre.com>, sjaganat@codeaurora.org, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, David Brown <david.brown@linaro.org>, absahu@codeaurora.org, Rob Herring <robh+dt@kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, Andy Gross <andy.gross@linaro.org>, Sricharan R <sricharan@codeaurora.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, linux-clk <linux-clk@v>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/7] tty/serial: meson_uart: add support for core clock handling
+Date: Fri,  9 Jun 2017 11:49:09 +0200
+Message-ID: <1497001756-942-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+This patchset is a re-spin of Helmut Klein's v3 patchset at [0].
 
-On 6/9/2017 2:26 PM, Linus Walleij wrote:
-> On Thu, Jun 1, 2017 at 1:27 PM, Varadarajan Narayanan
-> <varada@codeaurora.org> wrote:
-> 
->> Add initial pinctrl driver to support pin configuration with
->> pinctrl framework for ipq8074.
->>
->> Signed-off-by: Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
->> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
-> 
-> It's a good idea that you include the maintainer, Bjorn Andersson
-> <bjorn.andersson@linaro.org>
-> on these pin control patches. I'll wait for his review.
+Initially, the original patchset was made to enable usage on the non-AO UARTS
+not enabled by the Bootloader (uart_B and uart_C), but the patchset needed
+an overall change to have clean and stable DT bindings.
 
-Sorry for missing him. Have sent v6 patches with Bjorn included.
+The Amlogic Meson UART Driver did not have stable DT bindings and mismatched
+clock handling on non-AO UARTs since these "EE" UARTs needs a clock gate to
+be ungated to works correctly.
+In the same way, the AO UARTs does not need gating and can be used as
+Early Consoles.
 
-Thanks
-Varada
+In the same time, the UART Interfaces can take clock input for the baudrate
+generate from either the external Xtal or the internal Bus Clock (clk81).
 
-> 
-> Yours,
-> Linus Walleij
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+So new bindings was necessary to meet these requirements and the DT
+maintainers requirements.
+
+The "legacy" binding actually used in the driver is left until all the DT
+files are switched to the new bindings.
+
+The GX DT has been tested, but the last 4 Meson6/Meson8/b are only
+compile-tested, and testing is welcome.
+Thus only the first 3 patches can be merged until the Meson6/Meson8/b are
+formally tested.
+
+It must be noted that the meson6 cannot work today except using an early
+console since the UART driver could not probe without a clocks property.
+
+[0] 20170331165437.26227-1-hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+
+Helmut Klein (3):
+  dt-bindings: serial: Add bindings for the Amlogic Meson UARTs
+  tty/serial: meson_uart: update to stable bindings
+  ARM64: dts: meson-gx: use stable UART bindings with correct gate clock
+
+Neil Armstrong (4):
+  ARM: dts: meson: use meson6 UART compatible like other nodes
+  ARM: dts: meson6: switch to new bindings for UART nodes
+  ARM: dts: meson8: switch to new bindings for UART nodes
+  ARM: dts: meson8b: switch to new bindings for UART nodes
+
+ .../bindings/serial/amlogic,meson-uart.txt         |  38 +++++++
+ arch/arm/boot/dts/meson.dtsi                       |   8 +-
+ arch/arm/boot/dts/meson6.dtsi                      |  28 ++++++
+ arch/arm/boot/dts/meson8.dtsi                      |  23 ++++-
+ arch/arm/boot/dts/meson8b.dtsi                     |  23 ++++-
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |  12 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |  25 +++++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |  25 +++++
+ drivers/tty/serial/meson_uart.c                    | 109 +++++++++++++++++++--
+ 9 files changed, 266 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
-Forum, a Linux Foundation Collaborative Project
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
