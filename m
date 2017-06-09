@@ -1,54 +1,89 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v8 14/34] ARM: dts: imx6-sabreauto: add the ADV7180 video
- decoder
-Date: Fri, 9 Jun 2017 15:35:26 -0700
-Message-ID: <cb9d79e9-fa36-d0ad-3df6-27f1b8790f78@gmail.com>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
- <CAJ+vNU0C0=4hUq+g1P7yTzLzFPidfauQROPOVr4WQWKNZz_xmQ@mail.gmail.com>
- <dd5b29b7-bf92-5f03-caef-1843a9f32cd3@gmail.com> <20170609213843.GB28596@amd>
+From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Subject: Re: [PATCH v4 6/7] ARM: dts: meson8: switch to new bindings for UART nodes
+Date: Sat, 10 Jun 2017 00:37:09 +0200
+Message-ID: <CAFBinCD6_nGdqBSOJwyj0XQe8H05nw-r52pctY7ADJu0EqMb2A@mail.gmail.com>
+References: <1497001756-942-1-git-send-email-narmstrong@baylibre.com> <1497001756-942-7-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170609213843.GB28596@amd>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Tim Harvey <tharvey@gateworks.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, mchehab@kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Nick Dyer <nick@shmanahar.org>, markus.heiser@darmarit.de, Philipp Zabel <p.zabel@pengutronix.de>, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, Arnd Bergmann <arnd@arndb.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, minghsiu.tsai@mediatek.com, Tiffany Lin <tiffany.lin@mediatek.com>, Jean-Christophe TROTIN <jean-christophe.trotin@st.com>, Simon Horman <horms+renesas@verge.net.au>, =?UTF-8?Q?Niklas_S=c3=
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497001756-942-7-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Neil,
 
+On Fri, Jun 9, 2017 at 11:49 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
+> Switch to the stable UART bindings by adding a XTAL node and using the
+> proper compatible strings.
+unfortunately this won't apply now that Kevin has merged my "ARM: dts:
+meson8: add and use the real clock controller"
+on the other hand this will make the patch easier as you can now do
+the same changes as in meson8b.dtsi
 
-On 06/09/2017 02:38 PM, Pavel Machek wrote:
-> On Thu 2017-06-08 13:36:12, Steve Longerbeam wrote:
->>
->>
->> On 06/08/2017 01:25 PM, Tim Harvey wrote:
->>>
->>>
->>> Steve,
->>>
->>> You need to remove the fim node now that you've moved this to V4L2 controls.
->>>
->>
->> Yep, I caught this just after sending the v8 patchset. I'll send
->> a v9 of this patch.
-> 
-> This needs ack from devicetree people, then it can be merged. Can you
-> be a bit more forceful getting the ack?
-
-OK, I need an Ack please, he said, in a forceful way. :)
-
-In fact Ack's are needed for all the changes to dts sources,
-patches 4-14.
-
-
-> 
-> I don't think it makes sense to resubmit v9 before that. This is not a
-> rocket science.
-
-I guess that makes sense, I'll wait for Ack's from all these patches
-before submitting the entire patchset as v9.
-
-Steve
+> Signed-off-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/meson8.dtsi | 23 +++++++++++++++++++----
+>  1 file changed, 19 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+> index 6993077..a2ea112 100644
+> --- a/arch/arm/boot/dts/meson8.dtsi
+> +++ b/arch/arm/boot/dts/meson8.dtsi
+> @@ -83,6 +83,13 @@
+>                 };
+>         };
+>
+> +       xtal: xtal-clk {
+> +               compatible = "fixed-clock";
+> +               clock-frequency = <24000000>;
+> +               clock-output-names = "xtal";
+> +               #clock-cells = <0>;
+> +       };
+> +
+>         clk81: clk@0 {
+>                 #clock-cells = <0>;
+>                 compatible = "fixed-clock";
+> @@ -199,17 +206,25 @@
+>  };
+>
+>  &uart_AO {
+> -       clocks = <&clk81>;
+> +       compatible = "amlogic,meson8-uart", "amlogic,meson-ao-uart";
+> +       clocks = <&xtal>, <&clk81>, <&clk81>;
+> +       clock-names = "xtal", "pclk", "baud";
+>  };
+>
+>  &uart_A {
+> -       clocks = <&clk81>;
+> +       compatible = "amlogic,meson8-uart";
+> +       clocks = <&xtal>, <&clk81>, <&clk81>;
+> +       clock-names = "xtal", "pclk", "baud";
+>  };
+>
+>  &uart_B {
+> -       clocks = <&clk81>;
+> +       compatible = "amlogic,meson8-uart";
+> +       clocks = <&xtal>, <&clk81>, <&clk81>;
+> +       clock-names = "xtal", "pclk", "baud";
+>  };
+>
+>  &uart_C {
+> -       clocks = <&clk81>;
+> +       compatible = "amlogic,meson8-uart";
+> +       clocks = <&xtal>, <&clk81>, <&clk81>;
+> +       clock-names = "xtal", "pclk", "baud";
+>  };
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
