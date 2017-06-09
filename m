@@ -1,98 +1,82 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "ASoC: samsung: Odroid DT binding documentation corrections" to the asoc tree
-Date: Fri, 09 Jun 2017 18:54:13 +0100
-Message-ID: <E1dJO6v-0008La-Pa@debutante>
-References: <1497028184-5244-1-git-send-email-s.nawrocki@samsung.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] clk: meson: meson8b: add compatibles for Meson8 and Meson8m2
+Date: Fri, 09 Jun 2017 11:13:17 -0700
+Message-ID: <m2lgp19ghu.fsf@baylibre.com>
+References: <20170604183341.21417-1-martin.blumenstingl@googlemail.com>
+        <20170604183341.21417-2-martin.blumenstingl@googlemail.com>
+        <1496606325.3552.16.camel@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497028184-5244-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1496606325.3552.16.camel-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Jerome Brunet's message
+        of "Sun, 04 Jun 2017 21:58:45 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.orgalsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-   ASoC: samsung: Odroid DT binding documentation corrections
+> On Sun, 2017-06-04 at 20:33 +0200, Martin Blumenstingl wrote:
+>> The clock controller on Meson8, Meson8b and Meson8m2 is very similar
+>> based on the code from the Amlogic GPL kernel sources. Add separate
+>> compatibles for each SoC to make sure that we can easily implement
+>> all the small differences for each SoC later on.
+>>=20
+>> In general the Meson8 and Meson8m2 seem to be almost identical as they
+>> even share the same mach-meson8 directory in Amlogic's GPL kernel
+>> sources.
+>> The main clocks on Meson8, Meson8b and Meson8m2 are very similar,
+>> because they are all using the same PLL values, 90% of the clock gates
+>> are the same (the actual diffstat of the mach-meson8/clock.c and
+>> mach-meson8b/clock.c files is around 30 to 40 lines, when excluding
+>> all commented out code).
+>> The difference between the Meson8 and Meson8b clock gates seem to be:
+>> - Meson8 has AIU_PCLK, HDMI_RX, VCLK2_ENCT, VCLK2_ENCL, UART3,
+>> =C2=A0 CSI_DIG_CLKIN gates which don't seem to be available on Meson8b
+>> - the gate on Meson8 for bit 7 seems to be named "_1200XXX" instead
+>> =C2=A0 of "PERIPHS_TOP" (on Meson8b)
+>> - Meson8b has a SANA gate which doesn't seem to exist on Meson8 (or
+>> =C2=A0 on Meson8 the same bit is used by the UART3 gate in Amlogic's GPL
+>> =C2=A0 kernel sources)
+>> None of these gates is added for now, since it's unclear whether these
+>> definitions are actually correct (the VCLK2_ENCT gate for example is
+>> defined, but only used in some commented block).
+>>=20
+>> The main difference between all three SoCs seem to be the video (VPU)
+>> clocks. Apart from different supported clock rates (according to vpu.c
+>> in mach-meson8 and mach-meson8b from Amlogic's GPL kernel sources) the
+>> most notable difference is that Meson8m2 has a GP_PLL clock and a mux
+>> (probably the same as on the Meson GX SoCs) to support glitch-free
+>> (clock rate) switching.
+>> None of these VPU clocks are not supported by our mainline meson8b
+>> clock driver yet though.
+>>=20
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>> ---
+>> =C2=A0.../devicetree/bindings/clock/amlogic,meson8b-clkc.txt=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0| 11 +++++++---
+>
+> I think you should split the binding documentation and clk changes into s=
+eparate
+> patches.
+>
+>> -
+>> =C2=A0drivers/clk/meson/Kconfig=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A06 +++---
+>> =C2=A0drivers/clk/meson/meson8b.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0|=C2=A0=C2=A05 ++++-
+>
+> The change being more platform than clock related, I'd prefer if Kevin or=
+ Carlo
+> ack it before we apply it.
 
-has been applied to the asoc tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 63ddf5dc9cc77963a993921995d9e390095dc3d4 Mon Sep 17 00:00:00 2001
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Date: Fri, 9 Jun 2017 19:09:44 +0200
-Subject: [PATCH] ASoC: samsung: Odroid DT binding documentation corrections
-
-This patch removes unused and undocumented samsung,cpu-dai,
-samsung,codec-dai properties from the dts example and moves
-sub-nodes' description to a separate section.
-
-Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/sound/samsung,odroid.txt          | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/samsung,odroid.txt b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-index c1ac70cb0afb..c30934dd975b 100644
---- a/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-+++ b/Documentation/devicetree/bindings/sound/samsung,odroid.txt
-@@ -5,11 +5,6 @@ Required properties:
-  - compatible - "samsung,odroidxu3-audio" - for Odroid XU3 board,
- 		"samsung,odroidxu4-audio" - for Odroid XU4 board
-  - model - the user-visible name of this sound complex
-- - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
--    controller
-- - 'codec' subnode with a 'sound-dai' property containing list of phandles
--    to the CODEC nodes, first entry must be corresponding to the MAX98090
--    CODEC and the second entry must be the phandle of the HDMI IP block node
-  - clocks - should contain entries matching clock names in the clock-names
-     property
-  - clock-names - should contain following entries:
-@@ -32,12 +27,18 @@ Required properties:
-    For Odroid XU4:
-      no entries
- 
-+Required sub-nodes:
-+
-+ - 'cpu' subnode with a 'sound-dai' property containing the phandle of the I2S
-+    controller
-+ - 'codec' subnode with a 'sound-dai' property containing list of phandles
-+    to the CODEC nodes, first entry must be corresponding to the MAX98090
-+    CODEC and the second entry must be the phandle of the HDMI IP block node
-+
- Example:
- 
- sound {
- 	compatible = "samsung,odroidxu3-audio";
--	samsung,cpu-dai = <&i2s0>;
--	samsung,codec-dai = <&max98090>;
- 	model = "Odroid-XU3";
- 	samsung,audio-routing =
- 		"Headphone Jack", "HPL",
--- 
-2.11.0
-
+Acked-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
