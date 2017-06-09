@@ -1,73 +1,194 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add Synopsys DW MIPI DSI
- DRM bridge driver
-Date: Fri, 9 Jun 2017 08:01:17 -0500
-Message-ID: <20170609130117.m5eyqrmv3gsokmuj@rob-hp-laptop>
-References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
- <1496414235-20098-3-git-send-email-philippe.cornu@st.com>
- <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
- <7502cbc2-9feb-4dd3-3d95-b5f33b8a8872@codeaurora.org>
- <7dd31d6d-1d5d-2432-07aa-96349f50c924@synopsys.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] arm64: allwinner: a64: Add initial NanoPi A64 support
+Date: Fri,  9 Jun 2017 13:03:56 +0000
+Message-ID: <1497013436-14107-1-git-send-email-jteki@openedev.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <7dd31d6d-1d5d-2432-07aa-96349f50c924-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mco>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 10:43:07AM +0100, Jose Abreu wrote:
-> Hello,
-> 
-> 
-> On 09-06-2017 05:11, Archit Taneja wrote:
-> > Hi Philippe, Rob,
-> >
-> > On 06/08/2017 09:10 PM, Rob Herring wrote:
-> >> Seems strange there's not also a pixel or bit clock? Or this
-> >> gets driven
-> >> from the phy?
-> >
-> > Since you mention phy here, I wanted to share a concern with
-> > the bindings.
-> > These bindings don't have a separate PHY DT node. The PHY is
-> > assumed as a
-> > part of the IP when integrated by a SoC. There are already
-> > rockchip and
-> > hisil DSI bindings that use this IP but don't define a PHY node.
-> >
-> > It's a similar situation with the DW-HDMI bindings.
-> >
-> > For example, when the DW HDMI is integrated in rockchip or
-> > renesas SoC, the
-> > bindings "rockchip,rk3288-dw-hdmi" or "renesas,r8a7795-dw-hdmi"
-> > are used,
-> > and they don't have a separate PHY DT node.
-> >
-> > I wasn't sure whether this is the right way to proceed or not
-> > for such IPs.
-> > Some advice would help us here.
-> >
-> > Thanks,
-> > Archit
-> >
-> 
-> I just want to add that read/writes from/to phy are done using
-> the controller (in HDMI and in MIPI DSI Host), so the only way to
-> have a phy driver is that if some custom callbacks are provided
-> or if the memory region is shared.
-> 
-> Anyway, I agree with Archit in the sense that phy + controller
-> are highly tied. Also, these two "pieces" are SoC specific and
-> sometimes very different between SoC's because they can be
-> customized so I think a different compatible string suits well here.
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-When the phy is integrated like this, I agree that it doesn't make sense 
-to have a separate phy node.
+NanoPi A64 is a new board of high performance with low cost
+designed by FriendlyElec., using the Allwinner A64 SOC.
 
-Rob
+Nanopi A64 features
+- Allwinner A64, 64-bit Quad-core Cortex-A53@648MHz to 1.152GHz, DVFS
+- 1GB DDR3 RAM
+- MicroSD
+- Gigabit Ethernet (RTL8211E)
+- Wi-Fi 802.11b/g/n
+- IR receiver
+- Audio In/Out
+- Video In/Out
+- Serial Debug Port
+- microUSB 5V 2A DC power-supply
+
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v3:
+- Fix to use mmc1 for SDIO instead of mmc2
+- Replace buswidth by 4 instead of 8 mmc1
+- Drop cap-mmc-hw-reset for mmc1
+Changes for v2:
+- Added ohci0, ehci0, ohic1, ehci1, usbphy.
+- Tested on A64
+
+ arch/arm64/boot/dts/allwinner/Makefile             |   1 +
+ .../boot/dts/allwinner/sun50i-a64-nanopi-a64.dts   | 130 +++++++++++++++++++++
+ 2 files changed, 131 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+
+diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
+index e7d5490..1ea7709 100644
+--- a/arch/arm64/boot/dts/allwinner/Makefile
++++ b/arch/arm64/boot/dts/allwinner/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
++dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+new file mode 100644
+index 0000000..d56736d
+--- /dev/null
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
+@@ -0,0 +1,130 @@
++/*
++ * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
++ *
++ * This file is dual-licensed: you can use it either under the terms
++ * of the GPL or the X11 license, at your option. Note that this dual
++ * licensing only applies to this file, and not this project as a
++ * whole.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ * Or, alternatively,
++ *
++ *  b) Permission is hereby granted, free of charge, to any person
++ *     obtaining a copy of this software and associated documentation
++ *     files (the "Software"), to deal in the Software without
++ *     restriction, including without limitation the rights to use,
++ *     copy, modify, merge, publish, distribute, sublicense, and/or
++ *     sell copies of the Software, and to permit persons to whom the
++ *     Software is furnished to do so, subject to the following
++ *     conditions:
++ *
++ *     The above copyright notice and this permission notice shall be
++ *     included in all copies or substantial portions of the Software.
++ *
++ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
++ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
++ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
++ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
++ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
++ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
++ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
++ *     OTHER DEALINGS IN THE SOFTWARE.
++ */
++
++/dts-v1/;
++
++#include "sun50i-a64.dtsi"
++
++#include <dt-bindings/gpio/gpio.h>
++
++/ {
++	model = "FriendlyARM NanoPi A64";
++	compatible = "friendlyarm,nanopi-a64", "allwinner,sun50i-a64";
++
++	aliases {
++		serial0 = &uart0;
++		serial1 = &uart1;
++	};
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	reg_vcc3v3: vcc3v3 {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++};
++
++&ehci0 {
++	status = "okay";
++};
++
++&ehci1 {
++	status = "okay";
++};
++
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++	status = "okay";
++};
++
++&i2c1_pins {
++	bias-pull-up;
++};
++
++&mmc0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc0_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
++	cd-inverted;
++	disable-wp;
++	bus-width = <4>;
++	status = "okay";
++};
++
++&mmc1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&mmc1_pins>;
++	vmmc-supply = <&reg_vcc3v3>;
++	bus-width = <4>;
++	non-removable;
++	status = "okay";
++};
++
++&ohci0 {
++	status = "okay";
++};
++
++&ohci1 {
++	status = "okay";
++};
++
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_pins_a>;
++	status = "okay";
++};
++
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
++	status = "okay";
++};
++
++&usbphy {
++	status = "okay";
++};
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
