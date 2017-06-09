@@ -1,70 +1,140 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCH v8 14/34] ARM: dts: imx6-sabreauto: add the ADV7180 video
- decoder
-Date: Fri, 9 Jun 2017 23:38:43 +0200
-Message-ID: <20170609213843.GB28596@amd>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
- <CAJ+vNU0C0=4hUq+g1P7yTzLzFPidfauQROPOVr4WQWKNZz_xmQ@mail.gmail.com>
- <dd5b29b7-bf92-5f03-caef-1843a9f32cd3@gmail.com>
+From: Wesley Terpstra <wesley-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 08/17] dts: include documentation for the RISC-V interrupt controllers
+Date: Fri, 9 Jun 2017 14:46:28 -0700
+Message-ID: <CAMgXwTgk0yY2WzqKGnriy+KR0+YqZJYLEBz_HStYq03d5C3QKQ@mail.gmail.com>
+References: <20170523004107.536-1-palmer@dabbelt.com> <20170606230007.19101-1-palmer@dabbelt.com>
+ <20170606230007.19101-9-palmer@dabbelt.com> <CAMuHMdWYNVvh4hqDrqYNe2oyVHkCbH15VfWTWHaBCeRAaf6O4g@mail.gmail.com>
+ <20170607101343.GC29370@leverpostej> <CAMgXwTiz0jXgSw=veJ3O7xzVgm==YisZZLWpZFH7aJMXV4j7qA@mail.gmail.com>
+ <20170608105230.GC5765@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <dd5b29b7-bf92-5f03-caef-1843a9f32cd3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170608105230.GC5765@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean-Christophe TROTIN <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Niklas
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>, Linux-Arch <linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Albert Ou <albert-SpMDHPYPyPbQT0dZR+AlfA@public.gmane.org>, patches-q3qR2WxjNRFS9aJRtSZj7A@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 8, 2017 at 3:52 AM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+>> What flags?
+>
+> Edge vs level, active high vs active low. Typically some of these are
+> programmable, and are described as flags in the interrupt-specifier.
+>
+> See the examples in:
+>
+> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
 
---V0207lvV8h4k8FAm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok. Those are not applicable to the PLIC.
 
-On Thu 2017-06-08 13:36:12, Steve Longerbeam wrote:
->=20
->=20
-> On 06/08/2017 01:25 PM, Tim Harvey wrote:
-> >
-> >
-> >Steve,
-> >
-> >You need to remove the fim node now that you've moved this to V4L2 contr=
-ols.
-> >
->=20
-> Yep, I caught this just after sending the v8 patchset. I'll send
-> a v9 of this patch.
-
-This needs ack from devicetree people, then it can be merged. Can you
-be a bit more forceful getting the ack?
-
-I don't think it makes sense to resubmit v9 before that. This is not a
-rocket science.
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---V0207lvV8h4k8FAm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlk7FWMACgkQMOfwapXb+vLpugCfZjSfwyFRi6w6oDbH6OQOEF1Q
-1mwAoJl9EjiZJjjl+CWmoZxc1Hr/VThw
-=NRlt
------END PGP SIGNATURE-----
-
---V0207lvV8h4k8FAm--
+>
+>> > Are all HLIC interrupts edge triggered (or level triggered)?
+>>
+>> HLIC = level. PLIC = both.
+>
+> Ok. Given that, flags aren't necessary for the HLIC, and the
+> interrupt-specifier is fine as-is.
+>
+>> >> > +RISC-V cores typically include a PLIC, which route interrupts from multiple
+>> >> > +devices to multiple hart contexts.  The PLIC is connected to the interrupt
+>> >> > +controller embedded in a RISC-V core via the interrupt-related CSRs.
+>> >
+>> > Do you mean that the PLIC is connected to the HLIC, or that the HLIC is
+>> > also managed in part through CSRs?
+>>
+>> Both. The HLIC is entirely manager through CSRs. The PLIC is managed
+>> through a memory mapped interface. The PLIC is attached to the HLIC.
+>
+> So do any CSRs affect the state of the PLIC? If it's just MMIO, the
+> mention of CSRs above is just a little confusing.
+>
+> It might be best to just say "The PLIC is connect to the HLIC embedded
+> in each RISC-V core".
+>
+>> >> > +Required properties:
+>> >> > +- compatible : "riscv,plic0"
+>> >> > +- #address-cells : should be <0>
+>> >> > +- #interrupt-cells : should be <1>
+>> >
+>> > As with the HLIC, what about the flags?
+>>
+>> Still unsure what flags we're talking about.
+>
+> As covered above for the HLIC.
+>
+> It sounds like we'd need these to distinguish edge/level interrupts,
+> unless that's fixed at integration time and you can determine it from
+> the PLIC itself?
+>
+>> >> > +- riscv,ndev : Specifies the number of interrupts attached to the PLIC
+>> >
+>> > Why do we need to know this?
+>> >
+>> > I suspect this ia actually the number of interrupts implemented in the
+>> > PLIC, rather than the number of interrupts attached. i.e. the PLIC can
+>> > be implemented with a subset of the potential registers/bits. Is that
+>> > correct?
+>>
+>> You're in principle correct, although these are probably always the same.
+>
+> For now, perhaps. Let's not embed an assumption we cannot guarantee.
+>
+>> > If so, something like "riscv,num-interrupts" would be better, along with
+>> > a clearer description.
+>>
+>> Uhm. I suppose we can change this. However, it would requires changes
+>> to quite a number of riscv repositories. I believe this is also
+>> included in the riscv platform specification. A better description is
+>> easy, do we really need to change the key?
+>
+> It's not too much of a problem, but if we end up having to change
+> anything else from the proposed bindings, those trees are going to
+> require updates anyway.
+>
+> If we can, I would like to change this to keep things as clear as
+> possible from the outset.
+>
+> [...]
+>
+>> > You will need to be explicit about the order of interrupts in this
+>> > property. i.e. which interrupt is routed to which context?
+>>
+>> Yes. Order and position matter.
+>
+> Ok.
+>
+> Please update the binding to explicitly define the ordering requirement.
+>
+> [...]
+>
+>> > Also, please consider how you will handle the case when the Linux
+>> > logical CPU ID is not the same as the physical ID, and how you will
+>> > handle physical IDs being sparse.
+>>
+>> We already deal with this. If the interrupt is '-1', we skip it.
+>> That's done in plic.c:
+>>                 if (parent.args[0] == -1) continue; // skip context holes
+>
+> If this is what we expect people to do, it needs to be documented in the
+> binding.
+>
+> Does this mean that you expect Linux logical CPU IDs to be equal to
+> physical CPU IDs in all cases?
+>
+> That's going to be painful for very sparse ID ranges, and won't work for
+> cases like kexec/kdump where you cannot guarantee which physical CPU
+> will end up being CPU0 in the new kernel.
+>
+> I would strongly advise that you explicitly describe the relationship
+> using phandles to CPU nodes.
+>
+> I would also advise that you try to decouple the physical CPU IDs and
+> Linux logical IDs. While assuming they're the same might simplify things
+> today, it will create longer term maintenance problems and get in the
+> way of a number of features.
+>
+> Thanks,
+> Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
