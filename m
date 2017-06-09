@@ -1,148 +1,106 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 03/11] drm: sun4i: ignore swapped
- mixer<->tcon connection for DE2
-Date: Fri, 9 Jun 2017 16:46:49 +0200
-Message-ID: <20170609144649.67i3zscq26jt5hhe@flea.home>
-References: <20170604160149.30230-1-icenowy@aosc.io>
- <20170604160149.30230-4-icenowy@aosc.io>
- <20170607093512.rfvpefmyskgjw3ik@flea.lan>
- <01A7F22E-C4FF-4B4B-A9BC-FF0C96B996B9@aosc.io>
- <20170607143827.4ng5gedvzn3f5pyx@flea.lan>
- <66881eac1dd06d918692482bdb1ea9e6@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC PATCH 1/8] Documentation: add DT binding for ARM System
+ Control and Management Interface(SCMI) protocol
+Date: Fri, 9 Jun 2017 15:47:59 +0100
+Message-ID: <8d17f317-510c-b98e-4c42-c4ad2a8f0c63@arm.com>
+References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
+ <1496851812-19623-2-git-send-email-sudeep.holla@arm.com>
+ <20170609141632.eni4k3c4aiyvbkfk@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="35hmrjg7ko7l5c5v"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWXJ5LEQKGQEMWEEC4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <66881eac1dd06d918692482bdb1ea9e6-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170609141632.eni4k3c4aiyvbkfk@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---35hmrjg7ko7l5c5v
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 08, 2017 at 01:01:53PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> =E5=9C=A8 2017-06-07 22:38=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> > On Wed, Jun 07, 2017 at 06:01:02PM +0800, Icenowy Zheng wrote:
-> > > >I have no idea what this is supposed to be doing either.
-> > > >
-> > > >I might be wrong, but I really feel like there's a big mismatch
-> > > >between your commit log, and what you actually implement.
-> > > >
-> > > >In your commit log, you should state:
-> > > >
-> > > >A) What is the current behaviour
-> > > >B) Why that is a problem
-> > > >C) How do you address it
-> > > >
-> > > >And you don't.
-> > > >
-> > > >However, after discussing it with Chen-Yu, it seems like you're tryi=
-ng
-> > > >to have all the mixers probed before the TCONs. If that is so, there=
-'s
-> > > >nothing specific to the H3 here, and we also have the same issue on
-> > > >dual-pipeline DE1 (A10, A20, A31). Chen-Yu worked on that a bit, but
-> > > >the easiest solution would be to move from a DFS algorithm to walk
-> > > >down the graph to a BFS one.
-> > > >
-> > > >That way, we would add all mixers first, then the TCONs, then the
-> > > >encoders, and the component framework will probe them in order.
-> > >=20
-> > > No. I said that they're swappable, however, I don't want to
-> > > implement the swap now, but hardcode 0-0 1-1 connection.
-> >=20
-> > We're on the same page, it's definitely not what I was mentionning
-> > here. This would require a significant rework, and the usecase is
-> > still unclear for now.
-> >=20
-> > > However, as you and Chen-Yu said, device tree should reflect the
-> > > real hardware, there will be bonus endpoints for the swapped
-> > > connection.
-> >=20
-> > If by bonus you mean connections from mixer 0 to tcon 1 and mixer 1 to
-> > tcon 0, then yes, we're going to need it.
-> >=20
-> > > What I want to do is to ignore the bonus connection, in order to
-> > > prevent them from confusing the code.
-> > >=20
-> > > If you just change the bind sequence, I think it cannot be
-> > > prevented that wrong connections will be bound.
-> >=20
-> > This is where I don't follow you anymore. The component framework
-> > doesn't list connections but devices. The swapped connections do not
-> > matter here, we have the same set of devices: mixer0, mixer1, tcon0
-> > and tcon1.
-> >=20
-> > The thing that does change with your patch is that before, the binding
-> > sequence would have been mixer0, tcon0, tcon1, mixer1. With your
-> > patch, it's mixer0, tcon0, mixer1, tcon1.
-> >=20
-> > So, again, stating what issue you were seeing before making this patch
-> > would be very helpful to see what you're trying to do / fix.
->=20
-> So maybe I can drop the forward search (searching output) code, and keep
-> only the backward search (search input) code in TCON?
->=20
-> Forward search code is only used when binding, but backward search is use=
-d
-> for TCON to find connected mixer.
+On 09/06/17 15:16, Rob Herring wrote:
+> On Wed, Jun 07, 2017 at 05:10:05PM +0100, Sudeep Holla wrote:
+>> This patch adds devicetree binding for System Control and Management
+>> Interface (SCMI) Message Protocol used between the Application Cores(AP)
+>> and the System Control Processor(SCP). The MHU peripheral provides a
+>> mechanism for inter-processor communication between SCP's M3 processor
+>> and AP.
+>>
+>> SCP offers control and management of the core/cluster power states,
+>> various power domain DVFS including the core/cluster, certain system
+>> clocks configuration, thermal sensors and many others.
+>>
+>> SCMI protocol is developed as better replacement to the existing SCPI
+>> which is not flexible and easily extensible.
+>>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/arm/arm,scmi.txt | 193 +++++++++++++++++++++
+>>  1 file changed, 193 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+>> new file mode 100644
+>> index 000000000000..d6e4b7eff199
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+>> @@ -0,0 +1,193 @@
+>> +System Control and Management Interface (SCMI) Message Protocol
+>> +----------------------------------------------------------
+>> +
+>> +The SCMI is intended to allow agents such as OSPM to manage various functions
+>> +that are provided by the hardware platform it is running on, including power
+>> +and performance functions.
+>> +
+>> +This binding is intended to define the interface the firmware implementing
+>> +the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
+>> +and Management Interface Platform Design Document")[0] provide for OSPM in
+>> +the device tree.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : shall be "arm,scmi"
+> 
+> Convince me that this genericish string is specific enough.
+>
 
-It is hard to talk about a solution, when it's not clear what the
-issue is.
+Now that you raised this point, I think we generate so many 4 letter
+acronyms that it can collide. How about "arm,sys-ctl-mgmt-if"
 
-So please state=20
-> > > >A) What is the current behaviour
-> > > >B) Why that is a problem
-> > > >C) How do you address it
+>> +- method : The method of calling the SCMI firmware. Only permitted value
+>> +	   currently is:
+>> +	   "mailbox-doorbell" : When mailbox doorbell is used as a mechanism
+>> +				to alert the presence of a messages and/or
+>> +				notification
+>> +- mboxes: List of phandle and mailbox channel specifiers. It should contain
+>> +	  exactly one or two mailboxes, one for transmitting messages("tx")
+>> +	  and another optional for receiving the notifications("rx") if
+>> +	  supported.
+>> +- mbox-names: shall be "tx" or "rx"
+> 
+> ...and optionally "rx"
+> 
 
-We'll talk about a solution once this is done.
+OK
 
-Maxime
+>> +- shmem : List of phandle pointing to the shared memory(SHM) area between the
+>> +	  processors using these mailboxes for IPC, one for each mailbox
+>> +	  SHM can be any memory reserved for the purpose of this communication
+>> +	  between the processors.
+> 
+> Maybe the mailbox binding should have a standard property for this?
+> 
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Do you mean as part of it's client binding ? If so, agreed. I can come
+up with that proposal.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---35hmrjg7ko7l5c5v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZOrTZAAoJEBx+YmzsjxAge1kP/ir/KB6PzJXupxsu/zx2crOT
-ovELSJVD/peATXWCpGDLvawT4CsH4d+dIIXbcP7Z4fyc6L04eMk3G34CKY5ZQf3J
-0/L6KdujncFO0U/CUUbw5ZxKwlVgeoqZKm1aaWbc+bjDBrknqyc/z72xEaNYv4ma
-q05r7SLjHdxDEYODjkaYKAT9HJ8AYELZYm4tJbxL8fjZijnQj+iwcxX7aiSmBYr7
-lAST6HAXR9hHtzsMZGtfQzgdoeMyM8YaSwdLi2uFc8SB9397MSTcCmEk8KfaXE1L
-7w6NThfPC9XT311jwUc+G9HdDIUmG2niNYTgKEFLuPVuzwlMarmLVi529ee8Ol5H
-PWlnPhW5b0Vs6oHI7dtW6Ek1qhJY4kBNhnSvbwsnLGKlxUdOTI5cBkwSKJ4hPcTG
-DurO4PpGKNvYsgRLAnkKufwq8mTC01kXlLdHyxpkxCyDE84TKgXLty8aBJNwqo9w
-y/C0ZnPL6rKYJhdjgzy6LvuPaSNwjQ6fYmVaBGEkNJvDgO5T0Z2wOBrb9i88wrOL
-x2nvfj6stytT4WAMIw2qiwovfg8vw3xcLWEgJTWzPm7RZkgh1SuKERr84anU0NWw
-fh9DdGpLvqW9fotwvC9N3xxXMwKe1eF/DeQ9TNMo/uGZqLhpPv2n3i1B3lNYmIre
-l6KjKpALxgUSMrNmXeix
-=o/oI
------END PGP SIGNATURE-----
-
---35hmrjg7ko7l5c5v--
+-- 
+Regards,
+Sudeep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
