@@ -1,39 +1,59 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/4] ARM: shmobile: Document Renesas H3-based Salvator-XS board DT bindings
-Date: Fri,  9 Jun 2017 13:43:46 +0200
-Message-ID: <1497008629-3974-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 3/4] arm64: dts: renesas: Add common Salvator-XS board support
+Date: Fri,  9 Jun 2017 13:43:48 +0200
+Message-ID: <1497008629-3974-4-git-send-email-geert+renesas@glider.be>
 References: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 The Renesas Salvator-XS (Salvator-X 2nd version) development board can
 be equipped with either an R-Car H3 ES2.0 or M3-W ES1.x SiP, which are
 pin-compatible.
 
-Document board part number and compatible values for the version with
-R-Car H3.
+Add initial support for the common parts of the Salvator-XS board into
+its own .dtsi file, to be included by the DTSes for the H3/M3-W
+versions.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/renesas/salvator-xs.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/renesas/salvator-xs.dtsi
 
-diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
-index 63dcae4f72ce8e4e..1a671e3298643d9e 100644
---- a/Documentation/devicetree/bindings/arm/shmobile.txt
-+++ b/Documentation/devicetree/bindings/arm/shmobile.txt
-@@ -88,6 +88,8 @@ Boards:
-     compatible = "renesas,salvator-x", "renesas,r8a7795";
-   - Salvator-X (RTP0RC7796SIPB0011S)
-     compatible = "renesas,salvator-x", "renesas,r8a7796";
-+  - Salvator-XS (Salvator-X 2nd version, RTP0RC7795SIPB0012S)
-+    compatible = "renesas,salvator-xs", "renesas,r8a7795";
-   - SILK (RTP0RC7794LCB00011S)
-     compatible = "renesas,silk", "renesas,r8a7794"
-   - SK-RZG1E (YR8A77450S000BE)
+diff --git a/arch/arm64/boot/dts/renesas/salvator-xs.dtsi b/arch/arm64/boot/dts/renesas/salvator-xs.dtsi
+new file mode 100644
+index 0000000000000000..81227e3c2c6f1e2d
+--- /dev/null
++++ b/arch/arm64/boot/dts/renesas/salvator-xs.dtsi
+@@ -0,0 +1,20 @@
++/*
++ * Device Tree Source for the Salvator-X 2nd version board
++ *
++ * Copyright (C) 2015-2017 Renesas Electronics Corp.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++#include "salvator-common.dtsi"
++
++/ {
++	model = "Renesas Salvator-X 2nd version board";
++	compatible = "renesas,salvator-xs";
++};
++
++&extal_clk {
++	clock-frequency = <16640000>;
++};
 -- 
 2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
