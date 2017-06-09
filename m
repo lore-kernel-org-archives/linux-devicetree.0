@@ -1,51 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v7 2/6] device property: Move FW type specific
- functionality to FW specific files
-Date: Fri, 9 Jun 2017 15:21:59 -0500
-Message-ID: <CAL_JsqKqW42pTOsw=1iTrCyHgF5E0WZqBC0k9QwVQ2uW5RFutA@mail.gmail.com>
-References: <1496741861-8240-1-git-send-email-sakari.ailus@linux.intel.com> <1496741861-8240-3-git-send-email-sakari.ailus@linux.intel.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add bindings for nvidia,tegra186-ccplex-cluster
+Date: Fri, 9 Jun 2017 15:54:43 -0500
+Message-ID: <CAL_JsqJO2XbYjN2Hon_MJm_KO8HoZkx15ZYyhLRjWnhL9opTZg@mail.gmail.com>
+References: <1496304245-24024-1-git-send-email-mperttunen@nvidia.com>
+ <1496304245-24024-2-git-send-email-mperttunen@nvidia.com> <20170607221102.2bctvsdciv7y26lk@rob-hp-laptop>
+ <782ec765-f949-3023-93e3-a731f8bb524a@kapsi.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <1496741861-8240-3-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mark Brown <broonie@kernel.org>, Al Stone <ahs3@redhat.com>, Frank Rowand <frowand.list@gmail.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <782ec765-f949-3023-93e3-a731f8bb524a-/1wQRMveznE@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>
+Cc: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 6, 2017 at 4:37 AM, Sakari Ailus
-<sakari.ailus@linux.intel.com> wrote:
-> The device and fwnode property API supports Devicetree, ACPI and pset
-> properties. The implementation of this functionality for each firmware
-> type was embedded in the fwnode property core. Move it out to firmware
-> type specific locations, making it easier to maintain.
+On Thu, Jun 8, 2017 at 2:32 AM, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org> wrote:
+> On 08.06.2017 01:11, Rob Herring wrote:
+>>
+>> On Thu, Jun 01, 2017 at 11:04:04AM +0300, Mikko Perttunen wrote:
+>>>
+>>> The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
+>>> registers that initiate CPU frequency/voltage transitions.
+>>
+>>
+>> What the block is should also go in the binding doc. With that,
 >
-> Depends-on: ("of: Move OF property and graph API from base.c to property.c")
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> ---
->  drivers/acpi/property.c |  68 ++++++++++++++++
->  drivers/acpi/scan.c     |   1 +
->  drivers/base/property.c | 208 +++++++++++++++++++-----------------------------
->  drivers/of/property.c   |  90 +++++++++++++++++++++
->  include/linux/acpi.h    |   4 +
->  include/linux/fwnode.h  |  54 +++++++++++++
->  include/linux/of.h      |   2 +
->  7 files changed, 302 insertions(+), 125 deletions(-)
 >
-> diff --git a/drivers/acpi/property.c b/drivers/acpi/property.c
-> index 9364398..14013f6 100644
-> --- a/drivers/acpi/property.c
-> +++ b/drivers/acpi/property.c
-> @@ -57,6 +57,7 @@ static bool acpi_nondev_subnode_extract(const union acpi_object *desc,
->
->         dn->name = link->package.elements[0].string.pointer;
->         dn->fwnode.type = FWNODE_ACPI_DATA;
-> +       dn->fwnode.ops = &acpi_fwnode_ops;
+> I don't know how to explain it in more detail; this thing is literally just
+> a few magic registers that route into some CPU control logic to trigger
+> frequency/voltage transitions :)
 
-Mainly in interest of not growing fwnode_handle, we could remove .type
-and just have checks like "ops == &acpi_fwnode_ops".
+Copy the commit msg text to the binding doc. That's all I'm asking for.
 
-Otherwise, for patches 2,3,4:
-
-Acked-by: Rob Herring <robh@kernel.org>
+Rob
