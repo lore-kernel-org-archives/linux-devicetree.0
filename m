@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 4/4] arm64: dts: renesas: Add support for Salvator-XS with R-Car H3 ES2.0
-Date: Fri,  9 Jun 2017 13:43:49 +0200
-Message-ID: <1497008629-3974-5-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/4] arm64: dts: renesas: Extract common Salvator-X/XS board support
+Date: Fri,  9 Jun 2017 13:43:47 +0200
+Message-ID: <1497008629-3974-3-git-send-email-geert+renesas@glider.be>
 References: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
@@ -10,140 +10,709 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add initial support for the Renesas Salvator-XS (Salvator-X 2nd version)
-development board equipped with an R-Car H3 ES2.0 SiP.
+The Renesas Salvator-X and Salvator-XS (Salvator-X 2nd version) boards
+are very similar.  To avoid duplication, prepare for the advent of the
+latter by extracting the common board parts into its own .dtsi file.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/renesas/Makefile               |   1 +
- .../arm64/boot/dts/renesas/r8a7795-salvator-xs.dts | 109 +++++++++++++++++++++
- 2 files changed, 110 insertions(+)
- create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
+ .../{salvator-x.dtsi => salvator-common.dtsi}      |  17 +-
+ arch/arm64/boot/dts/renesas/salvator-x.dtsi        | 616 +--------------------
+ 2 files changed, 2 insertions(+), 631 deletions(-)
+ copy arch/arm64/boot/dts/renesas/{salvator-x.dtsi => salvator-common.dtsi} (97%)
 
-diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index d5451015950e3dfc..acc4bb30d485b6bc 100644
---- a/arch/arm64/boot/dts/renesas/Makefile
-+++ b/arch/arm64/boot/dts/renesas/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-x.dtb r8a7795-h3ulcb.dtb
-+dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-salvator-xs.dtb
- dtb-$(CONFIG_ARCH_R8A7795) += r8a7795-es1-salvator-x.dtb r8a7795-es1-h3ulcb.dtb
- dtb-$(CONFIG_ARCH_R8A7796) += r8a7796-salvator-x.dtb r8a7796-m3ulcb.dtb
+diff --git a/arch/arm64/boot/dts/renesas/salvator-x.dtsi b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+similarity index 97%
+copy from arch/arm64/boot/dts/renesas/salvator-x.dtsi
+copy to arch/arm64/boot/dts/renesas/salvator-common.dtsi
+index 2f5386252aed55e8..aef35e0b685a3a85 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-x.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+@@ -1,5 +1,5 @@
+ /*
+- * Device Tree Source for the Salvator-X board
++ * Device Tree Source for common parts of Salvator-X board variants
+  *
+  * Copyright (C) 2015-2016 Renesas Electronics Corp.
+  *
+@@ -34,9 +34,6 @@
+ #include <dt-bindings/gpio/gpio.h>
  
-diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-new file mode 100644
-index 0000000000000000..de354957144b4822
---- /dev/null
-+++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-xs.dts
-@@ -0,0 +1,109 @@
-+/*
-+ * Device Tree Source for the Salvator-X 2nd version board
-+ *
-+ * Copyright (C) 2015-2017 Renesas Electronics Corp.
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+#define CPG_AUDIO_CLK_I		R8A7795_CLK_S0D4
-+
-+/dts-v1/;
-+#include "r8a7795.dtsi"
-+#include "salvator-xs.dtsi"
-+
-+/ {
-+	model = "Renesas Salvator-X 2nd version board based on r8a7795 ES2.0+";
-+	compatible = "renesas,salvator-xs", "renesas,r8a7795";
-+
-+	memory@48000000 {
-+		device_type = "memory";
-+		/* first 128MB is reserved for secure area. */
-+		reg = <0x0 0x48000000 0x0 0x38000000>;
-+	};
-+
-+	memory@500000000 {
-+		device_type = "memory";
-+		reg = <0x5 0x00000000 0x0 0x40000000>;
-+	};
-+
-+	memory@600000000 {
-+		device_type = "memory";
-+		reg = <0x6 0x00000000 0x0 0x40000000>;
-+	};
-+
-+	memory@700000000 {
-+		device_type = "memory";
-+		reg = <0x7 0x00000000 0x0 0x40000000>;
-+	};
-+};
-+
-+&du {
-+	clocks = <&cpg CPG_MOD 724>,
-+		 <&cpg CPG_MOD 723>,
-+		 <&cpg CPG_MOD 722>,
-+		 <&cpg CPG_MOD 721>,
-+		 <&cpg CPG_MOD 727>,
-+		 <&x21_clk>,
-+		 <&x22_clk>;
-+	clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0",
-+		      "dclkin.1", "dclkin.2";
-+};
-+
-+&ehci2 {
-+	status = "okay";
-+};
-+
-+&hdmi0 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			reg = <1>;
-+			rcar_dw_hdmi0_out: endpoint {
-+				remote-endpoint = <&hdmi0_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi0_con {
-+	remote-endpoint = <&rcar_dw_hdmi0_out>;
-+};
-+
-+&hdmi1 {
-+	status = "okay";
-+
-+	ports {
-+		port@1 {
-+			reg = <1>;
-+			rcar_dw_hdmi1_out: endpoint {
-+				remote-endpoint = <&hdmi1_con>;
-+			};
-+		};
-+	};
-+};
-+
-+&hdmi1_con {
-+	remote-endpoint = <&rcar_dw_hdmi1_out>;
-+};
-+
-+&ohci2 {
-+	status = "okay";
-+};
-+
-+&pfc {
-+	usb2_pins: usb2 {
-+		groups = "usb2";
-+		function = "usb2";
-+	};
-+};
-+
-+&usb2_phy2 {
-+	pinctrl-0 = <&usb2_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+};
+ / {
+-	model = "Renesas Salvator-X board";
+-	compatible = "renesas,salvator-x";
+-
+ 	aliases {
+ 		serial0 = &scif2;
+ 		serial1 = &scif1;
+@@ -286,10 +283,6 @@
+ 	status = "okay";
+ };
+ 
+-&extal_clk {
+-	clock-frequency = <16666666>;
+-};
+-
+ &extalr_clk {
+ 	clock-frequency = <32768>;
+ };
+@@ -337,14 +330,6 @@
+ &i2c4 {
+ 	status = "okay";
+ 
+-	versaclock5: clock-generator@6a {
+-		compatible = "idt,5p49v5923";
+-		reg = <0x6a>;
+-		#clock-cells = <1>;
+-		clocks = <&x23_clk>;
+-		clock-names = "xin";
+-	};
+-
+ 	csa_vdd: adc@7c {
+ 		compatible = "maxim,max9611";
+ 		reg = <0x7c>;
+diff --git a/arch/arm64/boot/dts/renesas/salvator-x.dtsi b/arch/arm64/boot/dts/renesas/salvator-x.dtsi
+index 2f5386252aed55e8..468868c8ed9fae67 100644
+--- a/arch/arm64/boot/dts/renesas/salvator-x.dtsi
++++ b/arch/arm64/boot/dts/renesas/salvator-x.dtsi
+@@ -8,335 +8,18 @@
+  * kind, whether express or implied.
+  */
+ 
+-/*
+- * SSI-AK4613
+- *
+- * This command is required when Playback/Capture
+- *
+- *	amixer set "DVC Out" 100%
+- *	amixer set "DVC In" 100%
+- *
+- * You can use Mute
+- *
+- *	amixer set "DVC Out Mute" on
+- *	amixer set "DVC In Mute" on
+- *
+- * You can use Volume Ramp
+- *
+- *	amixer set "DVC Out Ramp Up Rate"   "0.125 dB/64 steps"
+- *	amixer set "DVC Out Ramp Down Rate" "0.125 dB/512 steps"
+- *	amixer set "DVC Out Ramp" on
+- *	aplay xxx.wav &
+- *	amixer set "DVC Out"  80%  // Volume Down
+- *	amixer set "DVC Out" 100%  // Volume Up
+- */
+-
+-#include <dt-bindings/gpio/gpio.h>
++#include "salvator-common.dtsi"
+ 
+ / {
+ 	model = "Renesas Salvator-X board";
+ 	compatible = "renesas,salvator-x";
+-
+-	aliases {
+-		serial0 = &scif2;
+-		serial1 = &scif1;
+-		ethernet0 = &avb;
+-	};
+-
+-	chosen {
+-		bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
+-		stdout-path = "serial0:115200n8";
+-	};
+-
+-	audio_clkout: audio_clkout {
+-		/*
+-		 * This is same as <&rcar_sound 0>
+-		 * but needed to avoid cs2000/rcar_sound probe dead-lock
+-		 */
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <11289600>;
+-	};
+-
+-	backlight: backlight {
+-		compatible = "pwm-backlight";
+-		pwms = <&pwm1 0 50000>;
+-
+-		brightness-levels = <256 128 64 16 8 4 0>;
+-		default-brightness-level = <6>;
+-
+-		enable-gpios = <&gpio6 7 GPIO_ACTIVE_HIGH>;
+-	};
+-
+-	reg_1p8v: regulator0 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "fixed-1.8V";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-	};
+-
+-	reg_3p3v: regulator1 {
+-		compatible = "regulator-fixed";
+-		regulator-name = "fixed-3.3V";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-		regulator-boot-on;
+-		regulator-always-on;
+-	};
+-
+-	rsnd_ak4613: sound {
+-		compatible = "simple-audio-card";
+-
+-		simple-audio-card,format = "left_j";
+-		simple-audio-card,bitclock-master = <&sndcpu>;
+-		simple-audio-card,frame-master = <&sndcpu>;
+-
+-		sndcpu: simple-audio-card,cpu {
+-			sound-dai = <&rcar_sound>;
+-		};
+-
+-		sndcodec: simple-audio-card,codec {
+-			sound-dai = <&ak4613>;
+-		};
+-	};
+-
+-	vbus0_usb2: regulator-vbus0-usb2 {
+-		compatible = "regulator-fixed";
+-
+-		regulator-name = "USB20_VBUS0";
+-		regulator-min-microvolt = <5000000>;
+-		regulator-max-microvolt = <5000000>;
+-
+-		gpio = <&gpio6 16 GPIO_ACTIVE_HIGH>;
+-		enable-active-high;
+-	};
+-
+-	vcc_sdhi0: regulator-vcc-sdhi0 {
+-		compatible = "regulator-fixed";
+-
+-		regulator-name = "SDHI0 Vcc";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-
+-		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+-		enable-active-high;
+-	};
+-
+-	vccq_sdhi0: regulator-vccq-sdhi0 {
+-		compatible = "regulator-gpio";
+-
+-		regulator-name = "SDHI0 VccQ";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-
+-		gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
+-		gpios-states = <1>;
+-		states = <3300000 1
+-			  1800000 0>;
+-	};
+-
+-	vcc_sdhi3: regulator-vcc-sdhi3 {
+-		compatible = "regulator-fixed";
+-
+-		regulator-name = "SDHI3 Vcc";
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-
+-		gpio = <&gpio3 15 GPIO_ACTIVE_HIGH>;
+-		enable-active-high;
+-	};
+-
+-	vccq_sdhi3: regulator-vccq-sdhi3 {
+-		compatible = "regulator-gpio";
+-
+-		regulator-name = "SDHI3 VccQ";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <3300000>;
+-
+-		gpios = <&gpio3 14 GPIO_ACTIVE_HIGH>;
+-		gpios-states = <1>;
+-		states = <3300000 1
+-			  1800000 0>;
+-	};
+-
+-	hdmi0-out {
+-		compatible = "hdmi-connector";
+-		label = "HDMI0 OUT";
+-		type = "a";
+-
+-		port {
+-			hdmi0_con: endpoint {
+-			};
+-		};
+-	};
+-
+-	hdmi1-out {
+-		compatible = "hdmi-connector";
+-		label = "HDMI1 OUT";
+-		type = "a";
+-
+-		port {
+-			hdmi1_con: endpoint {
+-			};
+-		};
+-	};
+-
+-	vga {
+-		compatible = "vga-connector";
+-
+-		port {
+-			vga_in: endpoint {
+-				remote-endpoint = <&adv7123_out>;
+-			};
+-		};
+-	};
+-
+-	vga-encoder {
+-		compatible = "adi,adv7123";
+-
+-		ports {
+-			#address-cells = <1>;
+-			#size-cells = <0>;
+-
+-			port@0 {
+-				reg = <0>;
+-				adv7123_in: endpoint {
+-					remote-endpoint = <&du_out_rgb>;
+-				};
+-			};
+-			port@1 {
+-				reg = <1>;
+-				adv7123_out: endpoint {
+-					remote-endpoint = <&vga_in>;
+-				};
+-			};
+-		};
+-	};
+-
+-	x12_clk: x12 {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <24576000>;
+-	};
+-
+-	/* External DU dot clocks */
+-	x21_clk: x21-clock {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <33000000>;
+-	};
+-
+-	x22_clk: x22-clock {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <33000000>;
+-	};
+-
+-	x23_clk: x23-clock {
+-		compatible = "fixed-clock";
+-		#clock-cells = <0>;
+-		clock-frequency = <25000000>;
+-	};
+-};
+-
+-&audio_clk_a {
+-	clock-frequency = <22579200>;
+-};
+-
+-&avb {
+-	pinctrl-0 = <&avb_pins>;
+-	pinctrl-names = "default";
+-	renesas,no-ether-link;
+-	phy-handle = <&phy0>;
+-	status = "okay";
+-
+-	phy0: ethernet-phy@0 {
+-		rxc-skew-ps = <1500>;
+-		reg = <0>;
+-		interrupt-parent = <&gpio2>;
+-		interrupts = <11 IRQ_TYPE_LEVEL_LOW>;
+-	};
+-};
+-
+-&du {
+-	pinctrl-0 = <&du_pins>;
+-	pinctrl-names = "default";
+-	status = "okay";
+-
+-	ports {
+-		port@0 {
+-			endpoint {
+-				remote-endpoint = <&adv7123_in>;
+-			};
+-		};
+-		port@3 {
+-			lvds_connector: endpoint {
+-			};
+-		};
+-	};
+-};
+-
+-&ehci0 {
+-	status = "okay";
+-};
+-
+-&ehci1 {
+-	status = "okay";
+ };
+ 
+ &extal_clk {
+ 	clock-frequency = <16666666>;
+ };
+ 
+-&extalr_clk {
+-	clock-frequency = <32768>;
+-};
+-
+-&hsusb {
+-	status = "okay";
+-};
+-
+-&i2c2 {
+-	pinctrl-0 = <&i2c2_pins>;
+-	pinctrl-names = "default";
+-
+-	status = "okay";
+-
+-	clock-frequency = <100000>;
+-
+-	ak4613: codec@10 {
+-		compatible = "asahi-kasei,ak4613";
+-		#sound-dai-cells = <0>;
+-		reg = <0x10>;
+-		clocks = <&rcar_sound 3>;
+-
+-		asahi-kasei,in1-single-end;
+-		asahi-kasei,in2-single-end;
+-		asahi-kasei,out1-single-end;
+-		asahi-kasei,out2-single-end;
+-		asahi-kasei,out3-single-end;
+-		asahi-kasei,out4-single-end;
+-		asahi-kasei,out5-single-end;
+-		asahi-kasei,out6-single-end;
+-	};
+-
+-	cs2000: clk_multiplier@4f {
+-		#clock-cells = <0>;
+-		compatible = "cirrus,cs2000-cp";
+-		reg = <0x4f>;
+-		clocks = <&audio_clkout>, <&x12_clk>;
+-		clock-names = "clk_in", "ref_clk";
+-
+-		assigned-clocks = <&cs2000>;
+-		assigned-clock-rates = <24576000>; /* 1/1 divide */
+-	};
+-};
+-
+ &i2c4 {
+-	status = "okay";
+-
+ 	versaclock5: clock-generator@6a {
+ 		compatible = "idt,5p49v5923";
+ 		reg = <0x6a>;
+@@ -344,301 +27,4 @@
+ 		clocks = <&x23_clk>;
+ 		clock-names = "xin";
+ 	};
+-
+-	csa_vdd: adc@7c {
+-		compatible = "maxim,max9611";
+-		reg = <0x7c>;
+-
+-		shunt-resistor-micro-ohms = <5000>;
+-	};
+-
+-	csa_dvfs: adc@7f {
+-		compatible = "maxim,max9611";
+-		reg = <0x7f>;
+-
+-		shunt-resistor-micro-ohms = <5000>;
+-	};
+-};
+-
+-&i2c_dvfs {
+-	status = "okay";
+-};
+-
+-&ohci0 {
+-	status = "okay";
+-};
+-
+-&ohci1 {
+-	status = "okay";
+-};
+-
+-&pcie_bus_clk {
+-	clock-frequency = <100000000>;
+-};
+-
+-&pciec0 {
+-	status = "okay";
+-};
+-
+-&pciec1 {
+-	status = "okay";
+-};
+-
+-&pfc {
+-	pinctrl-0 = <&scif_clk_pins>;
+-	pinctrl-names = "default";
+-
+-	avb_pins: avb {
+-		mux {
+-			groups = "avb_link", "avb_phy_int", "avb_mdc",
+-				 "avb_mii";
+-			function = "avb";
+-		};
+-
+-		pins_mdc {
+-			groups = "avb_mdc";
+-			drive-strength = <24>;
+-		};
+-
+-		pins_mii_tx {
+-			pins = "PIN_AVB_TX_CTL", "PIN_AVB_TXC", "PIN_AVB_TD0",
+-			       "PIN_AVB_TD1", "PIN_AVB_TD2", "PIN_AVB_TD3";
+-			drive-strength = <12>;
+-		};
+-	};
+-
+-	du_pins: du {
+-		groups = "du_rgb888", "du_sync", "du_oddf", "du_clk_out_0";
+-		function = "du";
+-	};
+-
+-	i2c2_pins: i2c2 {
+-		groups = "i2c2_a";
+-		function = "i2c2";
+-	};
+-
+-	pwm1_pins: pwm1 {
+-		groups = "pwm1_a";
+-		function = "pwm1";
+-	};
+-
+-	scif1_pins: scif1 {
+-		groups = "scif1_data_a", "scif1_ctrl";
+-		function = "scif1";
+-	};
+-
+-	scif2_pins: scif2 {
+-		groups = "scif2_data_a";
+-		function = "scif2";
+-	};
+-
+-	scif_clk_pins: scif_clk {
+-		groups = "scif_clk_a";
+-		function = "scif_clk";
+-	};
+-
+-	sdhi0_pins: sd0 {
+-		groups = "sdhi0_data4", "sdhi0_ctrl";
+-		function = "sdhi0";
+-		power-source = <3300>;
+-	};
+-
+-	sdhi0_pins_uhs: sd0_uhs {
+-		groups = "sdhi0_data4", "sdhi0_ctrl";
+-		function = "sdhi0";
+-		power-source = <1800>;
+-	};
+-
+-	sdhi2_pins: sd2 {
+-		groups = "sdhi2_data8", "sdhi2_ctrl";
+-		function = "sdhi2";
+-		power-source = <3300>;
+-	};
+-
+-	sdhi2_pins_uhs: sd2_uhs {
+-		groups = "sdhi2_data8", "sdhi2_ctrl";
+-		function = "sdhi2";
+-		power-source = <1800>;
+-	};
+-
+-	sdhi3_pins: sd3 {
+-		groups = "sdhi3_data4", "sdhi3_ctrl";
+-		function = "sdhi3";
+-		power-source = <3300>;
+-	};
+-
+-	sdhi3_pins_uhs: sd3_uhs {
+-		groups = "sdhi3_data4", "sdhi3_ctrl";
+-		function = "sdhi3";
+-		power-source = <1800>;
+-	};
+-
+-	sound_pins: sound {
+-		groups = "ssi01239_ctrl", "ssi0_data", "ssi1_data_a";
+-		function = "ssi";
+-	};
+-
+-	sound_clk_pins: sound_clk {
+-		groups = "audio_clk_a_a", "audio_clk_b_a", "audio_clk_c_a",
+-			 "audio_clkout_a", "audio_clkout3_a";
+-		function = "audio_clk";
+-	};
+-
+-	usb0_pins: usb0 {
+-		groups = "usb0";
+-		function = "usb0";
+-	};
+-
+-	usb1_pins: usb1 {
+-		mux {
+-			groups = "usb1";
+-			function = "usb1";
+-		};
+-
+-		ovc {
+-			pins = "GP_6_27";
+-			bias-pull-up;
+-		};
+-
+-		pwen {
+-			pins = "GP_6_26";
+-			bias-pull-down;
+-		};
+-	};
+-};
+-
+-&pwm1 {
+-	pinctrl-0 = <&pwm1_pins>;
+-	pinctrl-names = "default";
+-
+-	status = "okay";
+-};
+-
+-&rcar_sound {
+-	pinctrl-0 = <&sound_pins &sound_clk_pins>;
+-	pinctrl-names = "default";
+-
+-	/* Single DAI */
+-	#sound-dai-cells = <0>;
+-
+-	/* audio_clkout0/1/2/3 */
+-	#clock-cells = <1>;
+-	clock-frequency = <11289600 12288000>;
+-
+-	status = "okay";
+-
+-	/* update <audio_clk_b> to <cs2000> */
+-	clocks = <&cpg CPG_MOD 1005>,
+-		 <&cpg CPG_MOD 1006>, <&cpg CPG_MOD 1007>,
+-		 <&cpg CPG_MOD 1008>, <&cpg CPG_MOD 1009>,
+-		 <&cpg CPG_MOD 1010>, <&cpg CPG_MOD 1011>,
+-		 <&cpg CPG_MOD 1012>, <&cpg CPG_MOD 1013>,
+-		 <&cpg CPG_MOD 1014>, <&cpg CPG_MOD 1015>,
+-		 <&cpg CPG_MOD 1022>, <&cpg CPG_MOD 1023>,
+-		 <&cpg CPG_MOD 1024>, <&cpg CPG_MOD 1025>,
+-		 <&cpg CPG_MOD 1026>, <&cpg CPG_MOD 1027>,
+-		 <&cpg CPG_MOD 1028>, <&cpg CPG_MOD 1029>,
+-		 <&cpg CPG_MOD 1030>, <&cpg CPG_MOD 1031>,
+-		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+-		 <&cpg CPG_MOD 1020>, <&cpg CPG_MOD 1021>,
+-		 <&cpg CPG_MOD 1019>, <&cpg CPG_MOD 1018>,
+-		 <&audio_clk_a>, <&cs2000>,
+-		 <&audio_clk_c>,
+-		 <&cpg CPG_CORE CPG_AUDIO_CLK_I>;
+-
+-	rcar_sound,dai {
+-		dai0 {
+-			playback = <&ssi0 &src0 &dvc0>;
+-			capture  = <&ssi1 &src1 &dvc1>;
+-		};
+-	};
+-};
+-
+-&scif1 {
+-	pinctrl-0 = <&scif1_pins>;
+-	pinctrl-names = "default";
+-
+-	uart-has-rtscts;
+-	status = "okay";
+-};
+-
+-&scif2 {
+-	pinctrl-0 = <&scif2_pins>;
+-	pinctrl-names = "default";
+-
+-	status = "okay";
+-};
+-
+-&scif_clk {
+-	clock-frequency = <14745600>;
+-};
+-
+-&sdhi0 {
+-	pinctrl-0 = <&sdhi0_pins>;
+-	pinctrl-1 = <&sdhi0_pins_uhs>;
+-	pinctrl-names = "default", "state_uhs";
+-
+-	vmmc-supply = <&vcc_sdhi0>;
+-	vqmmc-supply = <&vccq_sdhi0>;
+-	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
+-	bus-width = <4>;
+-	sd-uhs-sdr50;
+-	status = "okay";
+-};
+-
+-&sdhi2 {
+-	/* used for on-board 8bit eMMC */
+-	pinctrl-0 = <&sdhi2_pins>;
+-	pinctrl-1 = <&sdhi2_pins_uhs>;
+-	pinctrl-names = "default", "state_uhs";
+-
+-	vmmc-supply = <&reg_3p3v>;
+-	vqmmc-supply = <&reg_1p8v>;
+-	bus-width = <8>;
+-	mmc-hs200-1_8v;
+-	non-removable;
+-	status = "okay";
+-};
+-
+-&sdhi3 {
+-	pinctrl-0 = <&sdhi3_pins>;
+-	pinctrl-1 = <&sdhi3_pins_uhs>;
+-	pinctrl-names = "default", "state_uhs";
+-
+-	vmmc-supply = <&vcc_sdhi3>;
+-	vqmmc-supply = <&vccq_sdhi3>;
+-	cd-gpios = <&gpio4 15 GPIO_ACTIVE_LOW>;
+-	wp-gpios = <&gpio4 16 GPIO_ACTIVE_HIGH>;
+-	bus-width = <4>;
+-	sd-uhs-sdr50;
+-	status = "okay";
+-};
+-
+-&ssi1 {
+-	shared-pin;
+-};
+-
+-&usb2_phy0 {
+-	pinctrl-0 = <&usb0_pins>;
+-	pinctrl-names = "default";
+-
+-	vbus-supply = <&vbus0_usb2>;
+-	status = "okay";
+-};
+-
+-&usb2_phy1 {
+-	pinctrl-0 = <&usb1_pins>;
+-	pinctrl-names = "default";
+-
+-	status = "okay";
+-};
+-
+-&wdt0 {
+-	timeout-sec = <60>;
+-	status = "okay";
+-};
+-
+-&xhci0 {
+-	status = "okay";
+ };
 -- 
 2.7.4
