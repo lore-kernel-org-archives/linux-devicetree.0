@@ -1,76 +1,79 @@
-From: Mark Yao <mark.yao@rock-chips.com>
-Subject: [PATCH v2 4/4] drm/rockchip: dw_hdmi: introduce the pclk for grf
-Date: Fri,  9 Jun 2017 11:18:52 +0800
-Message-ID: <1496978332-327-1-git-send-email-mark.yao@rock-chips.com>
-References: <1496976070-29573-1-git-send-email-mark.yao@rock-chips.com>
+From: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] Add support for the S6E3HF2 panel on TM2e board
+Date: Fri, 09 Jun 2017 12:52:36 +0900
+Message-ID: <50d5707c-378c-e338-3358-08ff1657cf8f@samsung.com>
+References: <CGME20170418084047epcas5p493261a4cb9204e682f60cde8d659565c@epcas5p4.samsung.com>
+        <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
+        <4b974579-eb2f-1258-86e3-21ffeb22589a@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1496976070-29573-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <4b974579-eb2f-1258-86e3-21ffeb22589a-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rm9yIFJLMzM5OSdzIEdSRiBtb2R1bGUsIGlmIHdlIHdhbnQgdG8gb3BlcmF0ZSB0aGUgZ3JhcGhp
-YyByZWxhdGVkIGdyZgpyZWdpc3RlcnMsIHdlIG5lZWQgdG8gZW5hYmxlIHRoZSBwY2xrX3Zpb19n
-cmYgd2hpY2ggc3VwcGx5IHBvd2VyIGZvciBWSU8KR1JGIElPcywgc28gaXQncyBiZXR0ZXIgdG8g
-aW50cm9kdWNlIGFuIG9wdGlvbmFsIGdyZiBjbG9jayBpbiBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5
-OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1vZmYtYnk6IE1hcmsgWWFv
-IDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KCkNoYW5nZXMgaW4gdjI6IGRlc2NyaWJlIGdyZiBv
-biBEb2N1bWVudGF0aW9uLgotLS0KCiAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19o
-ZG1pLXJvY2tjaGlwLnR4dCAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdf
-aGRtaS1yb2NrY2hpcC5jICAgICAgICAgICAgfCAxOCArKysrKysrKysrKysrKysrKysKIDIgZmls
-ZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdf
-aGRtaS1yb2NrY2hpcC50eHQKaW5kZXggYjc2YjdlZS4uYjRlZjYxYSAxMDA2NDQKLS0tIGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1y
-b2NrY2hpcC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQKQEAgLTMwLDYgKzMwLDcgQEAgT3B0aW9u
-YWwgcHJvcGVydGllcwogICBJMkMgbWFzdGVyIGNvbnRyb2xsZXIuCiAtIGNsb2NrLW5hbWVzOiBT
-ZWUgZHdfaGRtaS50eHQuIFRoZSAiY2VjIiBjbG9jayBpcyBvcHRpb25hbC4KIC0gY2xvY2stbmFt
-ZXM6IE1heSBjb250YWluICJjZWMiIGFzIGRlZmluZWQgaW4gZHdfaGRtaS50eHQuCistIGNsb2Nr
-LW5hbWVzOiBNYXkgY29udGFpbiAiZ3JmIiwgcG93ZXIgZm9yIGdyZiBpby4KIC0gY2xvY2stbmFt
-ZXM6IE1heSBjb250YWluICJ2cGxsIiwgZXh0ZXJuYWwgY2xvY2sgZm9yIHNvbWUgaGRtaSBwaHku
-CiAKIEV4YW1wbGU6CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRt
-aS1yb2NrY2hpcC5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAu
-YwppbmRleCA2OTI1NmNmLi5hMDkwZmM2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9j
-a2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9k
-d19oZG1pLXJvY2tjaGlwLmMKQEAgLTQ3LDYgKzQ3LDcgQEAgc3RydWN0IHJvY2tjaGlwX2hkbWkg
-ewogCXN0cnVjdCBkcm1fZW5jb2RlciBlbmNvZGVyOwogCWNvbnN0IHN0cnVjdCByb2NrY2hpcF9o
-ZG1pX2NoaXBfZGF0YSAqY2hpcF9kYXRhOwogCXN0cnVjdCBjbGsgKnZwbGxfY2xrOworCXN0cnVj
-dCBjbGsgKmdyZl9jbGs7CiB9OwogCiAjZGVmaW5lIHRvX3JvY2tjaGlwX2hkbWkoeCkJY29udGFp
-bmVyX29mKHgsIHN0cnVjdCByb2NrY2hpcF9oZG1pLCB4KQpAQCAtMTgxLDYgKzE4MiwxNiBAQCBz
-dGF0aWMgaW50IHJvY2tjaGlwX2hkbWlfcGFyc2VfZHQoc3RydWN0IHJvY2tjaGlwX2hkbWkgKmhk
-bWkpCiAJCXJldHVybiBQVFJfRVJSKGhkbWktPnZwbGxfY2xrKTsKIAl9CiAKKwloZG1pLT5ncmZf
-Y2xrID0gZGV2bV9jbGtfZ2V0KGhkbWktPmRldiwgImdyZiIpOworCWlmIChQVFJfRVJSKGhkbWkt
-PmdyZl9jbGspID09IC1FTk9FTlQpIHsKKwkJaGRtaS0+Z3JmX2NsayA9IE5VTEw7CisJfSBlbHNl
-IGlmIChQVFJfRVJSKGhkbWktPmdyZl9jbGspID09IC1FUFJPQkVfREVGRVIpIHsKKwkJcmV0dXJu
-IC1FUFJPQkVfREVGRVI7CisJfSBlbHNlIGlmIChJU19FUlIoaGRtaS0+Z3JmX2NsaykpIHsKKwkJ
-ZGV2X2VycihoZG1pLT5kZXYsICJmYWlsZWQgdG8gZ2V0IGdyZiBjbG9ja1xuIik7CisJCXJldHVy
-biBQVFJfRVJSKGhkbWktPmdyZl9jbGspOworCX0KKwogCXJldCA9IGNsa19wcmVwYXJlX2VuYWJs
-ZShoZG1pLT52cGxsX2Nsayk7CiAJaWYgKHJldCkgewogCQlkZXZfZXJyKGhkbWktPmRldiwgIkZh
-aWxlZCB0byBlbmFibGUgSERNSSB2cGxsOiAlZFxuIiwgcmV0KTsKQEAgLTI0NiwxMCArMjU3LDE3
-IEBAIHN0YXRpYyB2b2lkIGR3X2hkbWlfcm9ja2NoaXBfZW5jb2Rlcl9lbmFibGUoc3RydWN0IGRy
-bV9lbmNvZGVyICplbmNvZGVyKQogCWVsc2UKIAkJdmFsID0gaGRtaS0+Y2hpcF9kYXRhLT5sY2Rz
-ZWxfYmlnOwogCisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGhkbWktPmdyZl9jbGspOworCWlm
-IChyZXQgPCAwKSB7CisJCWRldl9lcnIoaGRtaS0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBncmZj
-bGsgJWRcbiIsIHJldCk7CisJCXJldHVybjsKKwl9CisKIAlyZXQgPSByZWdtYXBfd3JpdGUoaGRt
-aS0+cmVnbWFwLCBoZG1pLT5jaGlwX2RhdGEtPmxjZHNlbF9ncmZfcmVnLCB2YWwpOwogCWlmIChy
-ZXQgIT0gMCkKIAkJZGV2X2VycihoZG1pLT5kZXYsICJDb3VsZCBub3Qgd3JpdGUgdG8gR1JGOiAl
-ZFxuIiwgcmV0KTsKIAorCWNsa19kaXNhYmxlX3VucHJlcGFyZShoZG1pLT5ncmZfY2xrKTsKIAlk
-ZXZfZGJnKGhkbWktPmRldiwgInZvcCAlcyBvdXRwdXQgdG8gaGRtaVxuIiwKIAkJcmV0ID8gIkxJ
-VCIgOiAiQklHIik7CiB9Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
-LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2RyaS1kZXZlbAo=
+Dear Thierry,
+
+Could you check these patches.
+
+Regards,
+Hoegeun
+
+On 05/19/2017 03:56 PM, Hoegeun Kwon wrote:
+> Dear Thierry,
+>
+> Could you check these patches?
+> I think this patches have accumulated enough dust.
+> If you have a another opinion, please tell me.
+>
+> Best regards,
+> Hoegeun
+>
+> On 04/18/2017 05:40 PM, Hoegeun Kwon wrote:
+>> Hi all,
+>>
+>> The purpose of this patch is add support for s6e3hf2 AMOLED panel on
+>> the TM2e board. The panel has 1600x2560 resolution in 5.65" physical
+>> panel in the TM2e device.
+>>
+>> The s6e3hf2 panel(5.65") is simliar to the previous s6e3ha2 panel(5.7"),
+>> but resolution and some command message are different. So it can be
+>> distinguished as a compatiblitiy string.
+>>
+>> Best regards,
+>> Hoegeun
+>>
+>> Changes for V3:
+>> - Remove te-gpios property in dts.
+>> - Added Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> on all patches.
+>> - Added Reviewed-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> on patch (2/3).
+>>
+>> Changes for V2:
+>> - Add new compatible string to "samsung,s6e3ha2.txt binding with 
+>> comments.
+>> - Fix the panel name from s6e3ha2-e to s6e3hf2
+>>
+>> Hoegeun Kwon (3):
+>>    dt-bindings: Add support for samsung s6e3hf2 panel
+>>    drm/panel: s6e3ha2: Add support for s6e3hf2 panel on TM2e board
+>>    arm64: dts: exynos: Add support for s6e3hf2 panel device on TM2e 
+>> board
+>>
+>>   .../bindings/display/panel/samsung,s6e3ha2.txt     |  5 +-
+>>   arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     | 11 ++++
+>>   drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 64 
+>> +++++++++++++++++++---
+>>   3 files changed, 72 insertions(+), 8 deletions(-)
+>>
+>
+>
+>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
