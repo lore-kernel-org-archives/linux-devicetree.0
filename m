@@ -1,76 +1,131 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 19/34] media: Add i.MX media core driver
-Date: Fri, 9 Jun 2017 16:02:54 -0700
-Message-ID: <0df57159-78de-52a7-4fc2-d53e4682c8bb@gmail.com>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <1496860453-6282-20-git-send-email-steve_longerbeam@mentor.com>
- <1497014135.20356.12.camel@pengutronix.de>
+From: Markus Mayer <code@mmayer.net>
+Subject: Re: [PATCH 2/2] thermal: add brcmstb AVS TMON driver
+Date: Fri, 9 Jun 2017 16:07:15 -0700
+Message-ID: <CANEuBv69B+dWruiAFtS3kmBNyqcHJaHH=KjbTztqJ49cqj+cxw@mail.gmail.com>
+References: <20170605210930.65432-1-code@mmayer.net> <20170605210930.65432-3-code@mmayer.net>
+ <fdccd1ebb4ec0eb4f675168bdcb15fe4@milecki.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497014135.20356.12.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <fdccd1ebb4ec0eb4f675168bdcb15fe4@milecki.pl>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Eduardo Valentin <edubezval@gmail.com>, Zhang Rui <rui.zhang@intel.com>
+Cc: Markus Mayer <code@mmayer.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Doug Berger <opendmb@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Broadcom Kernel List <bcm-kernel-feedback-list@broadcom.com>, Power Management List <linux-pm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Markus Mayer <mmayer@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/09/2017 06:15 AM, Philipp Zabel wrote:
-> On Wed, 2017-06-07 at 11:33 -0700, Steve Longerbeam wrote:
->> Add the core media driver for i.MX SOC.
+On 6 June 2017 at 05:27, Rafa=C5=82 Mi=C5=82ecki <rafal@milecki.pl> wrote:
+> On 2017-06-05 23:09, Markus Mayer wrote:
 >>
->> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
->>
->> Switch from the v4l2_of_ APIs to the v4l2_fwnode_ APIs.
->>
->> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>
->> Add the bayer formats to imx-media's list of supported pixel and bus
->> formats.
->>
->> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
->> ---
-> [...]
->> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
->> new file mode 100644
->> index 0000000..da694f6
 >> --- /dev/null
->> +++ b/drivers/staging/media/imx/imx-media-dev.c
->> @@ -0,0 +1,666 @@
-> [...]
+>> +++ b/drivers/thermal/broadcom/brcmstb_thermal.c
+>> @@ -0,0 +1,361 @@
 >> +/*
->> + * adds given video device to given imx-media source pad vdev list.
->> + * Continues upstream from the pad entity's sink pads.
+>> + * Broadcom STB AVS TMON thermal sensor driver
+>> + *
+>> + * Copyright (c) 2015-2017 Broadcom
+>> + *
+>> + * This software is licensed under the terms of the GNU General Public
+>> + * License version 2, as published by the Free Software Foundation, and
+>> + * may be copied, distributed, and modified under those terms.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+>> + * GNU General Public License for more details.
+>> + *
 >> + */
->> +static int imx_media_add_vdev_to_pad(struct imx_media_dev *imxmd,
->> +				     struct imx_media_video_dev *vdev,
->> +				     struct media_pad *srcpad)
+>
+> The headers says GPL v2 but it doesn't match MODULE_LICENSE. Please be
+> consistent.
+
+Fixed.
+
+>> +/* Convert a HW code to a temperature reading (millidegree celsius) */
+>> +static inline int avs_tmon_code_to_temp(u32 code)
 >> +{
->> +	struct media_entity *entity = srcpad->entity;
->> +	struct imx_media_subdev *imxsd;
->> +	struct imx_media_pad *imxpad;
->> +	struct media_link *link;
->> +	struct v4l2_subdev *sd;
->> +	int i, vdev_idx, ret;
->> +
->> +	if (!is_media_entity_v4l2_subdev(entity))
->> +		return -EINVAL;
-> 
-> Could we make this return 0, to just skip non-v4l2_subdev entities?
-> Currently, imx_media_probe_complete silently fails with this -EINVAL if
-> there is a tvp5150 connected due to the separate media entities that the
-> tvp5150 driver creates for the input connectors (Composite0, for
-> example).
-> 
+>> +       return (410040 - (int)((code & 0x3FF) * 487));
+>> +}
+>
+> I got similar hardcoded values and Eduardo told me to move them to the DT=
+.
+> See discussion in: https://patchwork.kernel.org/patch/9642119/
+>
+> Hint: thermal_zone_get_offset + thermal_zone_get_slope
 
-Right, I've made that change.
+I implemented this and played around a little bit, and I believe I
+found a problem with how the framework is initializing the thermal
+zone. Please bear with my while I try to describe the issue I ran
+into:
 
-Steve
+In brcmstb_thermal_probe(), we call
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    struct thermal_zone_device *thermal;
+    [...]
+    thermal =3D thermal_zone_of_sensor_register(&pdev->dev, 0, priv, &of_op=
+s);
+
+to get the thermal zone for the driver. This is necessary for
+thermal_zone_get_offset() and thermal_zone_get_slope() to be able to
+return the proper coefficients, as the thermal zone pointer needs to
+be passed to both functions.
+
+Now, calling thermal_zone_of_sensor_register() has some side effects
+that call thermal_zone_get_slope () and thermal_zone_get_offset() via
+callback function before the "thermal" pointer is assigned, because
+thermal_zone_of_sensor_register() hasn't returned to the caller yet.
+Specifically, this call sequence happens:
+
+thermal_zone_of_sensor_register() -> tzd->ops->set_mode [which is
+of_thermal_set_mode()] -> thermal_zone_device_update() ->
+update_temperature() -> thermal_zone_get_temp() -> tz->ops->get_temp()
+[which is brcmstb_get_temp()] -> avs_tmon_code_to_temp() ->
+avs_tmon_get_coeffs() -> thermal_zone_get_slope() -> *UNDESIRED
+RESULT*
+
+This is problematic, because thermal_zone_get_slope() is now being
+called while our thermal pointer inside the driver is still NULL, so
+it returns its default value of 1 and *NOT* the value that is stored
+in device tree. The same happens for thermal_zone_get_offset(). This
+returns the default value of 0.
+
+thermal_zone_get_temp() also calls thermal_zone_set_trips() right
+after thermal_zone_get_temp(). That call path runs into the exact same
+issue.
+
+It is only after the call to thermal_zone_of_sensor_register()
+completes that the "thermal" variable in the driver has the proper
+value and, thus, thermal_zone_get_temp() and thermal_zone_set_trips()
+return the device tree values from then on out.
+
+At run time, it looks like this (with some debug output enabled):
+
+[    1.251126] brcmstb_thermal: avs_tmon_code_to_temp, 170: val=3D773/0x305
+[    1.257676] brcmstb_thermal: avs_tmon_get_coeffs, 135: slope=3D1,
+offset=3D0, tz=3D  (null)
+[    1.265534] brcmstb_thermal: set trips -2147483647 <--> 95000
+[    1.271297] brcmstb_thermal: set temp 0 to -2147483647
+[    1.276452] brcmstb_thermal: avs_tmon_temp_to_code, 191: temp=3D-2147483=
+647
+[    1.283257] brcmstb_thermal: avs_tmon_set_trip_temp, 276: val=3D1023
+[    1.289457] brcmstb_thermal: enable trip, type 0
+[    1.294089] brcmstb_thermal: set temp 1 to 95000
+[    1.298721] brcmstb_thermal: avs_tmon_temp_to_code, 191: temp=3D95000
+[    1.305006] brcmstb_thermal: avs_tmon_get_coeffs, 135: slope=3D1,
+offset=3D0, tz=3D  (null)
+[    1.312859] brcmstb_thermal: avs_tmon_set_trip_temp, 276: val=3D0
+[    1.318797] brcmstb_thermal: enable trip, type 1
+
+Finally inititialization has progressed far enough that our tz pointer
+is not NULL anymore, and now it returns the proper values:
+
+[    1.323470] brcmstb_thermal: avs_tmon_get_coeffs, 135: slope=3D-487,
+offset=3D410040, tz=3Deeb55800
+
+It doesn't seem right to me that the framework calls back into the
+driver before the driver has had a chance to initialize all data
+structures it needs. Am I missing anything obvious here that would
+avoid this issue?
+
+Thanks,
+-Markus
