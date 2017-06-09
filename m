@@ -1,60 +1,76 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v4 1/3] nvmem: dt: document SNVS LPGPR binding
-Date: Fri, 9 Jun 2017 10:36:38 +0100
-Message-ID: <82860099-f4d3-400f-1c6b-45837d91fd54@linaro.org>
-References: <20170608165134.14971-1-o.rempel@pengutronix.de>
- <20170608165134.14971-2-o.rempel@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170608165134.14971-2-o.rempel@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v6 0/6] Add minimal boot support for IPQ8074
+Date: Fri,  9 Jun 2017 15:11:53 +0530
+Message-ID: <1497001319-30353-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+v6:
+  * Include Rob's Ack to the first patch.
 
+v5:
+  * Removed the 'NA' binding from documentation
 
-On 08/06/17 17:51, Oleksij Rempel wrote:
-> Documentation bindings for the Low Power General Purpose Register
-> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->   .../devicetree/bindings/nvmem/snvs-lpgpr.txt          | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+v4:
+  * Split the clock patch and addressed a minor comment
+    in the clock driver as per stephen's feedback.
 
-These look okay, but bindings needs ack from DT maintainers for me to 
-pick it up.
+v3:
+  * Addressed review feedback from Bjorn for pinctrl
+     - Unified the names for qpic pads.
+     - Corrected the names for pwm pins.
+  * Updated pinctrl documentation.
+  * Updated the default bootargs in ipq8074-hk01.dts.
+  * Updated the gcc clocks driver for removing the
+    unused halt_bit in few places.
 
---srini
+v2:
+  * Addressed review feedback from Stephen
+    - Removed cpu-map entries
+    - Added mmio-timer nodes
+  * Fix sparse warnings in the gcc-ipq8074.c
+  * Updated pinctrl documentation
 
-> new file mode 100644
-> index 000000000000..21910fb3159f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> @@ -0,0 +1,19 @@
-> +Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
-> +Secure Non-Volatile Storage.
-> +
-> +This DT node should be represented as a sub-node of a "syscon",
-> +"simple-mfd" node.
-> +
-> +Required properties:
-> +- compatible: should be:
-> +	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
-> +
-> +Example:
-> +snvs: snvs@020cc000 {
-> +	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
-> +	reg = <0x020cc000 0x4000>;
-> +
-> +	snvs_lpgpr: snvs-lpgpr {
-> +		compatible = "fsl,imx6q-snvs-lpgpr";
-> +	};
-> +};
-> 
+v1:
+  https://www.spinics.net/lists/kernel/msg2498734.html
+  This series adds minimal board boot support for ipq8074-hk01
+  board.
+
+Abhishek Sahu (3):
+  clk: qcom: Add DT bindings for ipq8074 gcc clock controller
+  clk: qcom: Add ipq8074 Global Clock Controller support
+  arm64: defconfig: Enable qcom ipq8074 clock and pinctrl
+
+Varadarajan Narayanan (3):
+  pinctrl: qcom: Add ipq8074 pinctrl driver
+  dt-bindings: qcom: Add ipq8074 bindings
+  arm64: dts: Add ipq8074 SoC and HK01 board support
+
+ Documentation/devicetree/bindings/arm/qcom.txt     |    2 +
+ .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+ .../bindings/pinctrl/qcom,ipq8074-pinctrl.txt      |  172 ++++
+ arch/arm64/boot/dts/qcom/Makefile                  |    1 +
+ arch/arm64/boot/dts/qcom/ipq8074-hk01.dts          |   53 +
+ arch/arm64/boot/dts/qcom/ipq8074.dtsi              |  194 ++++
+ arch/arm64/configs/defconfig                       |    2 +
+ drivers/clk/qcom/Kconfig                           |    9 +
+ drivers/clk/qcom/Makefile                          |    1 +
+ drivers/clk/qcom/gcc-ipq8074.c                     | 1007 ++++++++++++++++++
+ drivers/pinctrl/qcom/Kconfig                       |   10 +
+ drivers/pinctrl/qcom/Makefile                      |    1 +
+ drivers/pinctrl/qcom/pinctrl-ipq8074.c             | 1076 ++++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-ipq8074.h       |  152 +++
+ 14 files changed, 2681 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8074-pinctrl.txt
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074-hk01.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/ipq8074.dtsi
+ create mode 100644 drivers/clk/qcom/gcc-ipq8074.c
+ create mode 100644 drivers/pinctrl/qcom/pinctrl-ipq8074.c
+ create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq8074.h
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
