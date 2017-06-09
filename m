@@ -1,62 +1,52 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ARM: sun8i: a83t: add dwmac-sun8i ethernet driver
-Date: Fri, 9 Jun 2017 12:35:08 +0800
-Message-ID: <CAGb2v650dPV+WgP_8L1dNEuav3jRSQkk_sQL0bi=PcjOXoQgVg@mail.gmail.com>
-References: <20170607173345.22462-1-clabbe.montjoie@gmail.com>
- <20170607173345.22462-3-clabbe.montjoie@gmail.com> <20170608083428.csv54tryvgwdb552@flea.home>
- <20170608084222.GA10830@Red> <20170608124841.b6i5qphsyubksbvb@flea.home>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH 1/3] dt-bindings: Add support for samsung s6e63j0x03 panel
+ binding
+Date: Fri, 09 Jun 2017 13:59:12 +0900
+Message-ID: <1496984354-5271-2-git-send-email-hoegeun.kwon@samsung.com>
+References: <1496984354-5271-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170609045938epcas5p2025914487ca22a0a2d419824402e89e9@epcas5p2.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170608124841.b6i5qphsyubksbvb-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1496984354-5271-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 8:48 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Thu, Jun 08, 2017 at 10:42:22AM +0200, Corentin Labbe wrote:
->> On Thu, Jun 08, 2017 at 10:34:28AM +0200, Maxime Ripard wrote:
->> > On Wed, Jun 07, 2017 at 07:33:45PM +0200, Corentin Labbe wrote:
->> > > The dwmac-sun8i is an ethernet MAC hardware that support 10/100/1000 speed.
->> > > This patch enable the dwmac-sun8i on the Allwinner a83t SoC Device-tree.
->> > >
->> > > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > > Reviewed-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> > > ---
->> > >  arch/arm/boot/dts/sun8i-a83t.dtsi | 28 ++++++++++++++++++++++++++++
->> > >  1 file changed, 28 insertions(+)
->> > >
->> > > diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> > > index 01a83406f9ae..7d719b4aeaa9 100644
->> > > --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
->> > > +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
->> > > @@ -200,6 +200,14 @@
->> > >                   #interrupt-cells = <3>;
->> > >                   #gpio-cells = <3>;
->> > >
->> > > +                 emac_rgmii_pins: emac-rgmii-pins {
->> > > +                         pins = "PD2", "PD3", "PD4", "PD5", "PD6", "PD7",
->> > > +                                "PD11", "PD12", "PD13", "PD14", "PD18",
->> > > +                                "PD19", "PD21", "PD22", "PD23";
->> > > +                         function = "gmac";
->> > > +                         drive-strength = <40>;
->> > > +                 };
->> > > +
->> >
->> > This is not used anywhere.
->> >
->> But will be used by bpim3 board
->
-> Then will add it when we'll add support for that board, until then,
-> it's dead code.
-
-I'll include this in my A83T work branch and resend it when I get around to it.
-
-Thanks
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIFNhbXN1bmcgczZlNjNqMHgwMyBpcyBhIDEuNjMiIDMyMHgzMjAgQU1PTEVEIHBhbmVsIGNv
+bm5lY3RlZCB1c2luZwpNSVBJLURTSSBpbnRlcmZhY2VzLgoKU2lnbmVkLW9mZi1ieTogSG9lZ2V1
+biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+Ci0tLQogLi4uL2JpbmRpbmdzL2Rpc3Bs
+YXkvcGFuZWwvc2Ftc3VuZyxzNmU2M2oweDAzLnR4dCAgfCAyNCArKysrKysrKysrKysrKysrKysr
+KysrCiAxIGZpbGUgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1bmcs
+czZlNjNqMHgwMy50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4MDMudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M2oweDAzLnR4
+dApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAwMDAwMDAwLi4zNGI2ZTJhCi0tLSAvZGV2L251
+bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+c2Ftc3VuZyxzNmU2M2oweDAzLnR4dApAQCAtMCwwICsxLDI0IEBACitTYW1zdW5nIFM2RTYzSjBY
+MDMgMS42MyIgMzIweDMyMCBBTU9MRUQgcGFuZWwKKworUmVxdWlyZWQgcHJvcGVydGllczoKKyAg
+LSBjb21wYXRpYmxlOiAic2Ftc3VuZyxzNmU2M2oweDAzIgorICAtIHJlZzogdGhlIHZpcnR1YWwg
+Y2hhbm5lbCBudW1iZXIgb2YgYSBEU0kgcGVyaXBoZXJhbAorICAtIHZkZDMtc3VwcGx5OiBJL08g
+dm9sdGFnZSBzdXBwbHkKKyAgLSB2Y2ktc3VwcGx5OiB2b2x0YWdlIHN1cHBseSBmb3IgYW5hbG9n
+IGNpcmN1aXRzCisgIC0gcmVzZXQtZ3Bpb3M6IGEgR1BJTyBzcGVjIGZvciB0aGUgcmVzZXQgcGlu
+IChhY3RpdmUgaGlnaCkKKyAgLSB0ZS1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRoZSB0ZWFyaW5n
+IGVmZmVjdCBzeW5jaHJvbml6YXRpb24gc2lnbmFsCisgICAgZ3BpbyBwaW4gKGFjdGl2ZSBoaWdo
+KQorCitFeGFtcGxlOgorJmRzaSB7CisJLi4uCisKKwlwYW5lbEAwIHsKKwkJY29tcGF0aWJsZSA9
+ICJzYW1zdW5nLHM2ZTYzajB4MDMiOworCQlyZWcgPSA8MD47CisJCXZkZDMtc3VwcGx5ID0gPCZs
+ZG8xNl9yZWc+OworCQl2Y2ktc3VwcGx5ID0gPCZsZG8yMF9yZWc+OworCQlyZXNldC1ncGlvcyA9
+IDwmZ3BlMCAxIEdQSU9fQUNUSVZFX0hJR0g+OworCQl0ZS1ncGlvcyA9IDwmZ3B4MCA2IEdQSU9f
+QUNUSVZFX0hJR0g+OworCX07Cit9OwotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
