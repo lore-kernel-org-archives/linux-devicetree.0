@@ -1,41 +1,33 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: update STM32 timers clock names
-Date: Fri, 9 Jun 2017 09:43:42 +0200
-Message-ID: <CA+M3ks4z46rPmjBt=pfJQBBjr5Hr7Oj4P=tv5wjo9WB_Ca_vsA@mail.gmail.com>
-References: <1496993874-9870-1-git-send-email-fabrice.gasnier@st.com> <1496993874-9870-3-git-send-email-fabrice.gasnier@st.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 3/3] ARM: dts: exynos: Remove the display-timing and
+ delay from rinato dts
+Date: Fri, 9 Jun 2017 09:45:09 +0200
+Message-ID: <20170609074509.GD4018@kozik-book>
+References: <1496984354-5271-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170609045939epcas1p2e4b50c78978b8f14630ca29550c1cb34@epcas1p2.samsung.com>
+ <1496984354-5271-4-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496993874-9870-3-git-send-email-fabrice.gasnier@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1496984354-5271-4-git-send-email-hoegeun.kwon@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Cc: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, a.hajda@samsung.com, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-2017-06-09 9:37 GMT+02:00 Fabrice Gasnier <fabrice.gasnier@st.com>:
-> Clock name has been updated during driver/DT binding review:
-> https://lkml.org/lkml/2016/12/13/718
-> Update DT binding doc to reflect this.
->
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+On Fri, Jun 09, 2017 at 01:59:14PM +0900, Hoegeun Kwon wrote:
+> The display-timing and delay are included in the panel driver. So it
+> should be removed in dts.
+> 
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
 > ---
->  Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> index 55a653d..6abc755 100644
-> --- a/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> +++ b/Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
-> @@ -14,7 +14,7 @@ Example:
->                 compatible = "st,stm32-timers";
->                 reg = <0x40010000 0x400>;
->                 clocks = <&rcc 0 160>;
-> -               clock-names = "clk_int";
-> +               clock-names = "int";
->
->                 timer@0 {
->                         compatible = "st,stm32-timer-trigger";
-> --
-> 1.9.1
->
-Acked-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+>  arch/arm/boot/dts/exynos3250-rinato.dts | 22 ----------------------
+>  1 file changed, 22 deletions(-)
+
+I understand this depends on merging in the panel driver so this will
+have to wait till then. I'll take it when panel hits mainline (arm-soc
+folks discourage recently cross-tree merges for DT).
+
+Best regards,
+Krzysztof
