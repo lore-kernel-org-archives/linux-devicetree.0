@@ -1,49 +1,80 @@
-From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: dts: bcm2835-rpi-zero: Enable OTG mode
-Date: Fri, 9 Jun 2017 09:05:37 +0200
-Message-ID: <6a45fcd8-0d88-bc17-6432-d38fe771dc80@i2se.com>
-References: <1495385079-3697-1-git-send-email-stefan.wahren@i2se.com>
- <542130487.90500.1496306283902@email.1und1.de>
+From: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [PATCH v4 0/4] iio: adc: sama5d2_adc hw triggers and buffers
+Date: Fri, 9 Jun 2017 10:07:15 +0300
+Message-ID: <1496992039-17964-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <542130487.90500.1496306283902-7tX72C7vayboQLBSYMtkGA@public.gmane.org>
-Content-Language: de-DE
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 01.06.2017 um 10:38 schrieb Stefan Wahren:
->> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> hat am 21. Mai 2017 um 18:44 geschrieben:
->>
->>
->> This patch series enable OTG mode for Raspberry Pi Zero because dwc2 driver
->> has been fixed now.
->>
->> Patch 1 adds a new dtsi file to setup OTG mode (could also be used for boards
->> like RPi Zero W or the Compute Module). The second patch adds the USB PHY and
->> was part of Raspberry Pi Zero support patch series before split up [1].
->> The enabling of OTG mode of RPi Zero is done by patch number 3. The last patch
->> updates the BCM2835 defconfig.
->>
->> [1] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-July/004153.html
->>
->> Stefan Wahren (4):
->>   ARM: dts: bcm283x: Add dtsi for OTG mode
->>   ARM: dts: bcm283x: Add generic USB PHY
->>   ARM: dts: bcm2835-rpi-zero: Enable OTG mode
->>   ARM: bcm2835_defconfig: Enable serial & ethernet USB gadget support
->>
-> No comments to this patch series?
->
-> Regards
-> Stefan
+This patch implements the hardware triggers support and buffer management
+for sama5d2.
+The DT modifications ( [PATCH v4 1/4] ARM: dts: at91: sama5d2_xplained:
+enable ADTRG pin) are for demonstration purposes of the feature,
+setting the pinctrl for the ADC hw trigger pin,should go through
+at91 maintainers.
+As discussed on the mailing list, since we have a single external trigger
+namely the ADTRG, but three different possible edges that can trigger it,
+will have a single trigger in the IIO subsystem and three possible edges
+which can be selected from the device tree.
+Thus I created new bindings in the device tree for having the possible
+edge types for the ADTRG pin.
+The documentation for the bindings is in the patch
+[PATCH v4 2/4] Documentation: dt: iio: at91-sama5d2_adc: add adtrg
+ trigger binding
+The modifications in the DT are in the patch
+[PATCH v4 3/4] ARM: dts: at91: sama5d2: add ADC hw trigger
+The new property must be set with the values from interrupt edge types, as this
+pin is effectively an internal interrupt.
 
-@Eric
+  Changes in v4:
+ - Modified bindings to be similar with interrupts
+ - Used iio claim direct to make sure buffer is not enabled when someone might
+   try to use a software triggered conversion
 
-Should i merge them?
+  Changes in v3:
+ - No longer have all three possible triggers registered in the subsystem and
+   available in the sysfs. Only registering one trigger, and the possible edge
+   is being read from the device tree. In the device tree, any possible edge
+   can be set. There are three already made nodes for each possible edge which
+   can be selected.
+ - Fixed a bug where software triggered conversion could be started even if
+   the hardware trigger was enabled.
+ - Preallocate enough space for the buffer, considering all the channels
+   and timestamp
+
+
+
+  Changes in v2:
+ - Moved buffer allocation and freeing into the preenable and postdisable
+   callbacks.
+   We have a total of scan bytes that can vary a lot depending on each channel
+   enabled at a certain point.
+ - made the at91 trigger list part of state structure
+ - made the iio trigger list preallocated in state structure
+ - moved irq enabling/disabling into the try_reenable callback
+ - on trigger disable must write disable registries as well
+ - Modified trigger name length to 64
+
+
+Eugen Hristev (4):
+  ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
+  Documentation: dt: iio: at91-sama5d2_adc: add hw trigger edge binding
+  ARM: dts: at91: sama5d2: add ADC hw trigger edge type
+  iio: adc: at91-sama5d2_adc: add hw trigger and buffer support
+
+ .../bindings/iio/adc/at91-sama5d2_adc.txt          |   6 +
+ arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  16 +-
+ arch/arm/boot/dts/sama5d2.dtsi                     |   1 +
+ drivers/iio/adc/at91-sama5d2_adc.c                 | 236 ++++++++++++++++++++-
+ 4 files changed, 253 insertions(+), 6 deletions(-)
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
