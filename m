@@ -1,14 +1,15 @@
 From: Steve Longerbeam <slongerbeam@gmail.com>
 Subject: Re: [PATCH v8 00/34] i.MX Media Driver
-Date: Fri, 9 Jun 2017 16:16:34 -0700
-Message-ID: <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
+Date: Fri, 9 Jun 2017 16:17:59 -0700
+Message-ID: <f0dceb6e-fe1a-9c21-5abd-7a9472f76951@gmail.com>
 References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
  <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
+ <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
+In-Reply-To: <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Hans Verkuil <hverkuil@xs4all.nl>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
@@ -17,18 +18,16 @@ List-Id: devicetree@vger.kernel.org
 
 
 
-On 06/07/2017 12:02 PM, Hans Verkuil wrote:
-> We're still waiting for an Ack for patch 02/34, right?
+On 06/09/2017 04:16 PM, Steve Longerbeam wrote:
 > 
-
-Hi Hans, Rub has provided an Ack for patch 2.
-
-> Other than that everything is ready AFAICT.
 > 
+> On 06/07/2017 12:02 PM, Hans Verkuil wrote:
+>> We're still waiting for an Ack for patch 02/34, right?
+>>
+> 
+> Hi Hans, Rub 
 
-But as Pavel pointed out, in fact we are missing many
-Acks still, for all of the dts source changes (patches
-4-14), as well as really everything else (imx-media staging
-driver patches).
+damn, I really need to proof-read before hitting send.
+"Rob" (sorry Rob!).
 
 Steve
