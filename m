@@ -1,35 +1,27 @@
-From: Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: [PATCH v1 0/2] Patches to add support spdif for rk322x
-Date: Fri,  9 Jun 2017 15:59:31 +0800
-Message-ID: <1496995173-63532-1-git-send-email-sugar.zhang@rock-chips.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] pinctrl: stm32: remove useless check
+Date: Fri, 9 Jun 2017 10:03:43 +0200
+Message-ID: <CACRpkdbp8MKdH5UzTZN5UExZupj5Bo7JVqfPAqgg3QYi4hjFqA@mail.gmail.com>
+References: <1496221843-10697-1-git-send-email-alexandre.torgue@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: heiko@sntech.de, broonie@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496221843-10697-1-git-send-email-alexandre.torgue@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre TORGUE <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-These patches to add support spdif for rk322x socs.
+On Wed, May 31, 2017 at 11:10 AM, Alexandre TORGUE
+<alexandre.torgue@st.com> wrote:
 
+> There is no link between the number of elements of tab which contains all
+> pin desc (located in each pinctrl-stm32xxxx.c files) and the pin number
+> (defined in the tab).
+>
+> Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
 
-Sugar Zhang (2):
-  ASoC: rockchip: add bindings for spdif controller
-  ARM: dts: rk322x: add spdif node
+Patch applied.
 
- .../devicetree/bindings/sound/rockchip-spdif.txt     |  2 ++
- arch/arm/boot/dts/rk322x.dtsi                        | 20 ++++++++++++++++++++
- sound/soc/rockchip/rockchip_spdif.c                  |  4 ++++
- 3 files changed, 26 insertions(+)
-
--- 
-1.9.1
+Yours,
+Linus Walleij
