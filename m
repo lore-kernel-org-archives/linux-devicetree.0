@@ -1,116 +1,76 @@
-From: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 3/4] drm/rockchip: dw_hdmi: introduce the VPLL clock setting
-Date: Fri,  9 Jun 2017 11:18:22 +0800
-Message-ID: <1496978302-32741-1-git-send-email-mark.yao@rock-chips.com>
+From: Mark Yao <mark.yao@rock-chips.com>
+Subject: [PATCH v2 4/4] drm/rockchip: dw_hdmi: introduce the pclk for grf
+Date: Fri,  9 Jun 2017 11:18:52 +0800
+Message-ID: <1496978332-327-1-git-send-email-mark.yao@rock-chips.com>
 References: <1496976070-29573-1-git-send-email-mark.yao@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496976070-29573-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1496976070-29573-1-git-send-email-mark.yao@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-For RK3399 HDMI, there is an external clock need for HDMI PHY,
-and it should keep the same clock rate with VOP DCLK.
-
-VPLL have supported the clock for HDMI PHY, but there is no
-clock divider bewteen VPLL and HDMI PHY. So we need to set the
-VPLL rate manually in HDMI driver.
-
-Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
-Changes in v2: describe vpll on Documentation.
----
- .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  2 +-
- drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 25 +++++++++++++++++++++-
- 2 files changed, 25 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-index 046076c..b76b7ee 100644
---- a/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-+++ b/Documentation/devicetree/bindings/display/rockchip/dw_hdmi-rockchip.txt
-@@ -30,7 +30,7 @@ Optional properties
-   I2C master controller.
- - clock-names: See dw_hdmi.txt. The "cec" clock is optional.
- - clock-names: May contain "cec" as defined in dw_hdmi.txt.
--
-+- clock-names: May contain "vpll", external clock for some hdmi phy.
- 
- Example:
- 
-diff --git a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-index 15a8989..69256cf 100644
---- a/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-+++ b/drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c
-@@ -7,10 +7,12 @@
-  * (at your option) any later version.
-  */
- 
-+#include <linux/clk.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
--#include <linux/mfd/syscon.h>
- #include <linux/regmap.h>
-+
- #include <drm/drm_of.h>
- #include <drm/drmP.h>
- #include <drm/drm_crtc_helper.h>
-@@ -44,6 +46,7 @@ struct rockchip_hdmi {
- 	struct regmap *regmap;
- 	struct drm_encoder encoder;
- 	const struct rockchip_hdmi_chip_data *chip_data;
-+	struct clk *vpll_clk;
- };
- 
- #define to_rockchip_hdmi(x)	container_of(x, struct rockchip_hdmi, x)
-@@ -160,6 +163,7 @@ struct rockchip_hdmi {
- static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
- {
- 	struct device_node *np = hdmi->dev->of_node;
-+	int ret;
- 
- 	hdmi->regmap = syscon_regmap_lookup_by_phandle(np, "rockchip,grf");
- 	if (IS_ERR(hdmi->regmap)) {
-@@ -167,6 +171,22 @@ static int rockchip_hdmi_parse_dt(struct rockchip_hdmi *hdmi)
- 		return PTR_ERR(hdmi->regmap);
- 	}
- 
-+	hdmi->vpll_clk = devm_clk_get(hdmi->dev, "vpll");
-+	if (PTR_ERR(hdmi->vpll_clk) == -ENOENT) {
-+		hdmi->vpll_clk = NULL;
-+	} else if (PTR_ERR(hdmi->vpll_clk) == -EPROBE_DEFER) {
-+		return -EPROBE_DEFER;
-+	} else if (IS_ERR(hdmi->vpll_clk)) {
-+		dev_err(hdmi->dev, "failed to get grf clock\n");
-+		return PTR_ERR(hdmi->vpll_clk);
-+	}
-+
-+	ret = clk_prepare_enable(hdmi->vpll_clk);
-+	if (ret) {
-+		dev_err(hdmi->dev, "Failed to enable HDMI vpll: %d\n", ret);
-+		return ret;
-+	}
-+
- 	return 0;
- }
- 
-@@ -209,6 +229,9 @@ static void dw_hdmi_rockchip_encoder_mode_set(struct drm_encoder *encoder,
- 					      struct drm_display_mode *mode,
- 					      struct drm_display_mode *adj_mode)
- {
-+	struct rockchip_hdmi *hdmi = to_rockchip_hdmi(encoder);
-+
-+	clk_set_rate(hdmi->vpll_clk, adj_mode->clock * 1000);
- }
- 
- static void dw_hdmi_rockchip_encoder_enable(struct drm_encoder *encoder)
--- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rm9yIFJLMzM5OSdzIEdSRiBtb2R1bGUsIGlmIHdlIHdhbnQgdG8gb3BlcmF0ZSB0aGUgZ3JhcGhp
+YyByZWxhdGVkIGdyZgpyZWdpc3RlcnMsIHdlIG5lZWQgdG8gZW5hYmxlIHRoZSBwY2xrX3Zpb19n
+cmYgd2hpY2ggc3VwcGx5IHBvd2VyIGZvciBWSU8KR1JGIElPcywgc28gaXQncyBiZXR0ZXIgdG8g
+aW50cm9kdWNlIGFuIG9wdGlvbmFsIGdyZiBjbG9jayBpbiBkcml2ZXIuCgpTaWduZWQtb2ZmLWJ5
+OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+ClNpZ25lZC1vZmYtYnk6IE1hcmsgWWFv
+IDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KCkNoYW5nZXMgaW4gdjI6IGRlc2NyaWJlIGdyZiBv
+biBEb2N1bWVudGF0aW9uLgotLS0KCiAuLi4vYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19o
+ZG1pLXJvY2tjaGlwLnR4dCAgICAgfCAgMSArCiBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdf
+aGRtaS1yb2NrY2hpcC5jICAgICAgICAgICAgfCAxOCArKysrKysrKysrKysrKysrKysKIDIgZmls
+ZXMgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdf
+aGRtaS1yb2NrY2hpcC50eHQKaW5kZXggYjc2YjdlZS4uYjRlZjYxYSAxMDA2NDQKLS0tIGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1y
+b2NrY2hpcC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQKQEAgLTMwLDYgKzMwLDcgQEAgT3B0aW9u
+YWwgcHJvcGVydGllcwogICBJMkMgbWFzdGVyIGNvbnRyb2xsZXIuCiAtIGNsb2NrLW5hbWVzOiBT
+ZWUgZHdfaGRtaS50eHQuIFRoZSAiY2VjIiBjbG9jayBpcyBvcHRpb25hbC4KIC0gY2xvY2stbmFt
+ZXM6IE1heSBjb250YWluICJjZWMiIGFzIGRlZmluZWQgaW4gZHdfaGRtaS50eHQuCistIGNsb2Nr
+LW5hbWVzOiBNYXkgY29udGFpbiAiZ3JmIiwgcG93ZXIgZm9yIGdyZiBpby4KIC0gY2xvY2stbmFt
+ZXM6IE1heSBjb250YWluICJ2cGxsIiwgZXh0ZXJuYWwgY2xvY2sgZm9yIHNvbWUgaGRtaSBwaHku
+CiAKIEV4YW1wbGU6CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRt
+aS1yb2NrY2hpcC5jIGIvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAu
+YwppbmRleCA2OTI1NmNmLi5hMDkwZmM2IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vcm9j
+a2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9k
+d19oZG1pLXJvY2tjaGlwLmMKQEAgLTQ3LDYgKzQ3LDcgQEAgc3RydWN0IHJvY2tjaGlwX2hkbWkg
+ewogCXN0cnVjdCBkcm1fZW5jb2RlciBlbmNvZGVyOwogCWNvbnN0IHN0cnVjdCByb2NrY2hpcF9o
+ZG1pX2NoaXBfZGF0YSAqY2hpcF9kYXRhOwogCXN0cnVjdCBjbGsgKnZwbGxfY2xrOworCXN0cnVj
+dCBjbGsgKmdyZl9jbGs7CiB9OwogCiAjZGVmaW5lIHRvX3JvY2tjaGlwX2hkbWkoeCkJY29udGFp
+bmVyX29mKHgsIHN0cnVjdCByb2NrY2hpcF9oZG1pLCB4KQpAQCAtMTgxLDYgKzE4MiwxNiBAQCBz
+dGF0aWMgaW50IHJvY2tjaGlwX2hkbWlfcGFyc2VfZHQoc3RydWN0IHJvY2tjaGlwX2hkbWkgKmhk
+bWkpCiAJCXJldHVybiBQVFJfRVJSKGhkbWktPnZwbGxfY2xrKTsKIAl9CiAKKwloZG1pLT5ncmZf
+Y2xrID0gZGV2bV9jbGtfZ2V0KGhkbWktPmRldiwgImdyZiIpOworCWlmIChQVFJfRVJSKGhkbWkt
+PmdyZl9jbGspID09IC1FTk9FTlQpIHsKKwkJaGRtaS0+Z3JmX2NsayA9IE5VTEw7CisJfSBlbHNl
+IGlmIChQVFJfRVJSKGhkbWktPmdyZl9jbGspID09IC1FUFJPQkVfREVGRVIpIHsKKwkJcmV0dXJu
+IC1FUFJPQkVfREVGRVI7CisJfSBlbHNlIGlmIChJU19FUlIoaGRtaS0+Z3JmX2NsaykpIHsKKwkJ
+ZGV2X2VycihoZG1pLT5kZXYsICJmYWlsZWQgdG8gZ2V0IGdyZiBjbG9ja1xuIik7CisJCXJldHVy
+biBQVFJfRVJSKGhkbWktPmdyZl9jbGspOworCX0KKwogCXJldCA9IGNsa19wcmVwYXJlX2VuYWJs
+ZShoZG1pLT52cGxsX2Nsayk7CiAJaWYgKHJldCkgewogCQlkZXZfZXJyKGhkbWktPmRldiwgIkZh
+aWxlZCB0byBlbmFibGUgSERNSSB2cGxsOiAlZFxuIiwgcmV0KTsKQEAgLTI0NiwxMCArMjU3LDE3
+IEBAIHN0YXRpYyB2b2lkIGR3X2hkbWlfcm9ja2NoaXBfZW5jb2Rlcl9lbmFibGUoc3RydWN0IGRy
+bV9lbmNvZGVyICplbmNvZGVyKQogCWVsc2UKIAkJdmFsID0gaGRtaS0+Y2hpcF9kYXRhLT5sY2Rz
+ZWxfYmlnOwogCisJcmV0ID0gY2xrX3ByZXBhcmVfZW5hYmxlKGhkbWktPmdyZl9jbGspOworCWlm
+IChyZXQgPCAwKSB7CisJCWRldl9lcnIoaGRtaS0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBncmZj
+bGsgJWRcbiIsIHJldCk7CisJCXJldHVybjsKKwl9CisKIAlyZXQgPSByZWdtYXBfd3JpdGUoaGRt
+aS0+cmVnbWFwLCBoZG1pLT5jaGlwX2RhdGEtPmxjZHNlbF9ncmZfcmVnLCB2YWwpOwogCWlmIChy
+ZXQgIT0gMCkKIAkJZGV2X2VycihoZG1pLT5kZXYsICJDb3VsZCBub3Qgd3JpdGUgdG8gR1JGOiAl
+ZFxuIiwgcmV0KTsKIAorCWNsa19kaXNhYmxlX3VucHJlcGFyZShoZG1pLT5ncmZfY2xrKTsKIAlk
+ZXZfZGJnKGhkbWktPmRldiwgInZvcCAlcyBvdXRwdXQgdG8gaGRtaVxuIiwKIAkJcmV0ID8gIkxJ
+VCIgOiAiQklHIik7CiB9Ci0tIAoxLjkuMQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
