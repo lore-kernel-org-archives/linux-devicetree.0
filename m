@@ -1,167 +1,98 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] ARM: dts: r8a779x: Fix PCI bus dtc warnings
-Date: Fri,  9 Jun 2017 17:50:40 +0200
-Message-ID: <1497023440-23845-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Hans Verkuil <hansverk@cisco.com>
+Subject: Re: [PATCH 7/9] dt-bindings: media/s5p-cec.txt: document needs-hpd
+ property
+Date: Fri, 9 Jun 2017 17:55:33 +0200
+Message-ID: <8e6ed9b6-5b4b-8650-2c92-47a593e73d94@cisco.com>
+References: <20170607144616.15247-1-hverkuil@xs4all.nl>
+ <20170607144616.15247-8-hverkuil@xs4all.nl>
+ <20170609140719.o2qzty6eyez66oxy@rob-hp-laptop>
+ <2fa55431-bef2-9340-4ce8-e06f9648e109@xs4all.nl>
+ <CAL_JsqLzxMSdQGCiCBa2-VKpe==djCsqP9GxywJ-X-defiRXMQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLzxMSdQGCiCBa2-VKpe==djCsqP9GxywJ-X-defiRXMQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, Krzysztof Kozlowski <krzk@kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
+On 06/09/2017 05:31 PM, Rob Herring wrote:
+> On Fri, Jun 9, 2017 at 9:11 AM, Hans Verkuil <hverkuil@xs4all.nl> wrote:
+>> On 09/06/17 16:07, Rob Herring wrote:
+>>> On Wed, Jun 07, 2017 at 04:46:14PM +0200, Hans Verkuil wrote:
+>>>> From: Hans Verkuil <hans.verkuil@cisco.com>
+>>>>
+>>>> Needed for boards that wire the CEC pin in such a way that it
+>>>> is unavailable when the HPD is low.
+>>>>
+>>>> Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+>>>> Cc: Krzysztof Kozlowski <krzk@kernel.org>
+>>>> Cc: Andrzej Hajda <a.hajda@samsung.com>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> ---
+>>>>  Documentation/devicetree/bindings/media/s5p-cec.txt | 6 ++++++
+>>>>  1 file changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/media/s5p-cec.txt b/Documentation/devicetree/bindings/media/s5p-cec.txt
+>>>> index 4bb08d9d940b..261af4d1a791 100644
+>>>> --- a/Documentation/devicetree/bindings/media/s5p-cec.txt
+>>>> +++ b/Documentation/devicetree/bindings/media/s5p-cec.txt
+>>>> @@ -17,6 +17,12 @@ Required properties:
+>>>>    - samsung,syscon-phandle - phandle to the PMU system controller
+>>>>    - hdmi-phandle - phandle to the HDMI controller
+>>>>
+>>>> +Optional:
+>>>> +  - needs-hpd : if present the CEC support is only available when the HPD
+>>>> +    is high. Some boards only let the CEC pin through if the HPD is high, for
+>>>> +    example if there is a level converter that uses the HPD to power up
+>>>> +    or down.
+>>>
+>>> Seems like something common. Can you document in a common location?
+>>
+>> Should we do the same with hdmi-phandle? It is also used by CEC drivers to find
+>> the HDMI driver.
+> 
+> Yes.
+> 
+>> Currently only used by s5p-cec and stih-cec, but there will be more.
+>>
+>> I guess this would be a sensible place to document this:
+>>
+>> Documentation/devicetree/bindings/media/cec.txt
+> 
+> Sounds good. You can do this as a follow-up to this patch if you want.
+> For this one:
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
 
-The bogus 'device_type = "pci"' confuses dtc, causing lots of totally
-unrelated warnings.  After fixing that, real warnings like
+Sorry, I have what might be a stupid question: should I update the s5p-cec.txt
+to refer to the cec.txt bindings file for the hdmi-phandle and needs-hpd instead
+of describing it here? It seems pointless to do that for the hdmi-phandle, but
+it might make more sense for the needs-hpd property.
 
-    arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Node /pci@ee090000/usb@0,1 PCI unit address format error, expected "1,0"
+E.g.:
 
-are left.  Correct the unit-addresses and reg properties of the subnodes
-to fix these.
+  - needs-hpd: CEC support is only present if HPD is high. See cec.txt for more
+    details.
 
-Signed-off-by: Rob Herring <robh@kernel.org>
-[geert: Improve description]
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v2:
-  - Take over from Rob,
-  - Improve patch description.
 
- arch/arm/boot/dts/r8a7790.dtsi | 16 ++++++----------
- arch/arm/boot/dts/r8a7791.dtsi | 16 ++++++----------
- arch/arm/boot/dts/r8a7794.dtsi | 16 ++++++----------
- 3 files changed, 18 insertions(+), 30 deletions(-)
+Proposed text for cec.txt:
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index 043c599011798042..2ed727f81a66981b 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -1233,16 +1233,14 @@
- 				 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
- 
--		usb@0,1 {
-+		usb@1,0 {
- 			reg = <0x800 0 0 0 0>;
--			device_type = "pci";
- 			phys = <&usb0 0>;
- 			phy-names = "usb";
- 		};
- 
--		usb@0,2 {
-+		usb@2,0 {
- 			reg = <0x1000 0 0 0 0>;
--			device_type = "pci";
- 			phys = <&usb0 0>;
- 			phy-names = "usb";
- 		};
-@@ -1289,16 +1287,14 @@
- 				 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
- 
--		usb@0,1 {
--			reg = <0x800 0 0 0 0>;
--			device_type = "pci";
-+		usb@1,0 {
-+			reg = <0x20800 0 0 0 0>;
- 			phys = <&usb2 0>;
- 			phy-names = "usb";
- 		};
- 
--		usb@0,2 {
--			reg = <0x1000 0 0 0 0>;
--			device_type = "pci";
-+		usb@2,0 {
-+			reg = <0x21000 0 0 0 0>;
- 			phys = <&usb2 0>;
- 			phy-names = "usb";
- 		};
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index a56be0f9dcfc907d..111027383e6cdd8a 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -1254,16 +1254,14 @@
- 				 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
- 
--		usb@0,1 {
-+		usb@1,0 {
- 			reg = <0x800 0 0 0 0>;
--			device_type = "pci";
- 			phys = <&usb0 0>;
- 			phy-names = "usb";
- 		};
- 
--		usb@0,2 {
-+		usb@2,0 {
- 			reg = <0x1000 0 0 0 0>;
--			device_type = "pci";
- 			phys = <&usb0 0>;
- 			phy-names = "usb";
- 		};
-@@ -1289,16 +1287,14 @@
- 				 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
- 
--		usb@0,1 {
--			reg = <0x800 0 0 0 0>;
--			device_type = "pci";
-+		usb@1,0 {
-+			reg = <0x10800 0 0 0 0>;
- 			phys = <&usb2 0>;
- 			phy-names = "usb";
- 		};
- 
--		usb@0,2 {
--			reg = <0x1000 0 0 0 0>;
--			device_type = "pci";
-+		usb@2,0 {
-+			reg = <0x11000 0 0 0 0>;
- 			phys = <&usb2 0>;
- 			phy-names = "usb";
- 		};
-diff --git a/arch/arm/boot/dts/r8a7794.dtsi b/arch/arm/boot/dts/r8a7794.dtsi
-index c2bc6ba9200ecc40..33fc723f0c2ec42e 100644
---- a/arch/arm/boot/dts/r8a7794.dtsi
-+++ b/arch/arm/boot/dts/r8a7794.dtsi
-@@ -820,16 +820,14 @@
- 				 0x0800 0 0 1 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
- 
--		usb@0,1 {
-+		usb@1,0 {
- 			reg = <0x800 0 0 0 0>;
--			device_type = "pci";
- 			phys = <&usb0 0>;
- 			phy-names = "usb";
- 		};
- 
--		usb@0,2 {
-+		usb@2,0 {
- 			reg = <0x1000 0 0 0 0>;
--			device_type = "pci";
- 			phys = <&usb0 0>;
- 			phy-names = "usb";
- 		};
-@@ -855,16 +853,14 @@
- 				 0x0800 0 0 1 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH
- 				 0x1000 0 0 2 &gic GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
- 
--		usb@0,1 {
--			reg = <0x800 0 0 0 0>;
--			device_type = "pci";
-+		usb@1,0 {
-+			reg = <0x10800 0 0 0 0>;
- 			phys = <&usb2 0>;
- 			phy-names = "usb";
- 		};
- 
--		usb@0,2 {
--			reg = <0x1000 0 0 0 0>;
--			device_type = "pci";
-+		usb@2,0 {
-+			reg = <0x11000 0 0 0 0>;
- 			phys = <&usb2 0>;
- 			phy-names = "usb";
- 		};
--- 
-2.7.4
+-------------------------------------------------
+Common bindings for HDMI CEC adapters
+
+- hdmi-phandle: phandle to the HDMI controller.
+
+- needs-hpd: if present the CEC support is only available when the HPD
+  is high. Some boards only let the CEC pin through if the HPD is high, for
+  example if there is a level converter that uses the HPD to power up
+  or down.
+-------------------------------------------------
+
+Regards,
+
+	Hans
