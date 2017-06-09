@@ -1,44 +1,90 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v8 00/34] i.MX Media Driver
-Date: Sat, 10 Jun 2017 01:26:36 +0200
-Message-ID: <e4f152de-6e75-7654-178e-e6dcf9ad12f3@xs4all.nl>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
- <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v6 2/9] irqchip: add Amlogic Meson GPIO irqchip driver
+Date: Fri, 09 Jun 2017 16:30:07 -0700
+Message-ID: <m2tw3o4u4g.fsf@baylibre.com>
+References: <04378047-4194-bb0f-3da3-e1d62345a86b@gmail.com>
+        <89d02a38-7386-fcdc-4dce-ea7e531c90b4@gmail.com>
+        <1496999266.3552.61.camel@baylibre.com> <m2vao46ewu.fsf@baylibre.com>
+        <702e4608-8592-41fe-b79c-fef985c49be7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steve Longerbeam <slongerbeam@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, devel@driverdev.osuosl.org, Steve Longerbeam <steve_longerbeam@mentor.com>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <702e4608-8592-41fe-b79c-fef985c49be7@gmail.com> (Heiner
+        Kallweit's message of "Sat, 10 Jun 2017 00:30:14 +0200")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10/06/17 01:16, Steve Longerbeam wrote:
-> 
-> 
-> On 06/07/2017 12:02 PM, Hans Verkuil wrote:
->> We're still waiting for an Ack for patch 02/34, right?
->>
-> 
-> Hi Hans, Rub has provided an Ack for patch 2.
-> 
->> Other than that everything is ready AFAICT.
->>
-> 
-> But as Pavel pointed out, in fact we are missing many
-> Acks still, for all of the dts source changes (patches
-> 4-14), as well as really everything else (imx-media staging
-> driver patches).
+Heiner Kallweit <hkallweit1@gmail.com> writes:
 
-No Acks needed for the staging part. It's staging, so not held
-to the same standards as non-staging parts. That doesn't mean
-Acks aren't welcome, of course.
+> Am 09.06.2017 um 23:15 schrieb Kevin Hilman:
+>> Jerome Brunet <jbrunet@baylibre.com> writes:
+>> 
+>>> On Thu, 2017-06-08 at 21:38 +0200, Heiner Kallweit wrote:
+>>>> Add a driver supporting the GPIO interrupt controller on certain
+>>>> Amlogic meson SoC's.
+>>>>
+>>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>> 
+>> [...]
+>> 
+>>>> +static unsigned int meson_irq_startup(struct irq_data *data)
+>>>> +{
+>>>> +	irq_chip_unmask_parent(data);
+>>>> +	/*
+>>>> +	 * An extra bit was added to allow having the same gpio hwirq twice
+>>>> +	 * for handling IRQ_TYPE_EDGE_BOTH. Remove this bit to get the
+>>>> +	 * gpio hwirq.
+>>>> +	 */
+>>>> +	meson_irq_set_hwirq(data, data->hwirq >> 1);
+>>>
+>>> Please keep in mind that any device can use this controller as irq parent.
+>>> It has to make sense, even when not serving the gpio driver.
+>>>
+>>> This hack means that, in DT, we'd have to multiply by 2 the values given under
+>>> section "22.3 GPIO interrupts" of the datasheet. This is an example Linux
+>>> specific stuff in DT.
+>>> It also means that the controller declares a lot more lines that it really has
+>>> ... 
+>>>
+>>> This is all to accommodate your hack around IRQ_TYPE_BOTH and creating the
+>>> mapping from the irq_set_type callback of the GPIO driver, which is still think
+>>> should be dropped at this point.
+>> 
+>> +1
+>> 
+>> Please drop the hack for IRQ_TYPE_BOTH so we can reach agreement on the
+>> basic design and functionality.  The gymnastics required to support this
+>> hack (due to broken hardware) are getting in the way of getting basic
+>> functionality merged.
+>> 
+> I haven't heard any feedback on the other proposal yet:
+> Always reserve two parent irq's in the request_resources callback,
+> then set_type is easy. How about this one?
 
-You don't need Greg's Ack for staging/media either, patches there
-go in via us (generally at least) and we handle those, not Greg.
+The feedback is the same: let's consider that after getting the basics
+reviewed, accepted and merged.
 
-Regards,
+> Having max. 4 gpio irq's should be a fair price for a cleaner design.
 
-	Hans
+Yuck, but better than no support for both _BOTH I guess.
+
+But again, discussion of hacks for the hardware limitation is getting in
+the way discussing and merging the basics.  Let's get the basics right
+first, then add functionality.  
+
+I understand it can be rather frustrating to give up features and/or
+functionality for having something "clean", but unfortunately, that's
+how the upstream linux kernel community has always worked.
+
+Most maintainers prefer clean, well-designed and maintainable code that
+comes in small, easily reviewable chunks over something that's difficult
+to understand with hacks and workarounds.  Even if that means a limited
+feature set initially.
+
+Additional functionality (even if hacky) is much easier to review,
+discuss and maintain *later* when it's on top of a starting point that
+is clean.
+
+Kevin
