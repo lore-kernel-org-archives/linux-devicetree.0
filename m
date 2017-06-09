@@ -1,458 +1,272 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] drm/stm: Add STM32 DSI host driver
-Date: Fri, 9 Jun 2017 11:01:48 +0530
-Message-ID: <ee037c0e-27db-e664-ebf8-586a818eb675@codeaurora.org>
-References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
- <1496414235-20098-7-git-send-email-philippe.cornu@st.com>
- <e1872ac0-c0e0-b615-4b5e-d45d9ae96f85@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: Re: [PATCH v5 3/3] drivers:power:twl4030-charger: add deferred probing for phy and iio
+Date: Fri, 9 Jun 2017 08:05:15 +0200
+Message-ID: <01A3D2F5-9E09-4E93-A363-93130DCEB7DF@goldelico.com>
+References: <cover.1495363097.git.hns@goldelico.com> <6ed105f6c9c21c24184913a7be9e665453549d79.1495363097.git.hns@goldelico.com> <20170607204444.zumcreuqdnv7euv2@earth>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: multipart/signed; boundary="Apple-Mail=_93D39F66-F3B5-4E52-8843-97214023E820"; protocol="application/pgp-signature"; micalg=pgp-sha256
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e1872ac0-c0e0-b615-4b5e-d45d9ae96f85-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170607204444.zumcreuqdnv7euv2@earth>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Yao <mark.yao@rock-chip>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--Apple-Mail=_93D39F66-F3B5-4E52-8843-97214023E820
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-On 06/06/2017 01:41 PM, Neil Armstrong wrote:
-> Hi Philippe,
-> 
-> On 06/02/2017 04:37 PM, Philippe CORNU wrote:
->> Add the STM32 DSI host driver that uses the Synopsys DesignWare
->> MIPI DSI DRM bridge.
->>
->> Signed-off-by: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+Hi,
+
+> Am 07.06.2017 um 22:44 schrieb Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>=20
+> Hi,
+>=20
+> On Sun, May 21, 2017 at 12:38:18PM +0200, H. Nikolaus Schaller wrote:
+>> This fixes an issue if both this twl4030_charger driver and
+>> phy-twl4030-usb are compiled as modules and loaded in random order.
+>> It has been observed on GTA04 and OpenPandora devices that in worst
+>> case the boot process hangs and in best case the AC detection fails
+>> with a warning.
+>>=20
+>> Therefore we add deferred probing checks for the usb_phy and the
+>> iio channel for AC detection.
+>>=20
+>> For implementing this we must reorder code because we can't safely
+>> return -EPROBE_DEFER after allocating any devm managed interrupt
+>> (it might already/still be enabled without working interrupt =
+handler).
+>>=20
+>> So the check for required resources that may abort probing by
+>> returning -EPROBE_DEFER, must come first.
+>=20
+> This sounds fishy. EPROBE_DEFER should not be different from
+> other error codes in this regard and devm_ requested resources
+> should be free'd on any error. Why is irq handler not working?
+
+1. there is no other error code involved, before we try to convert the =
+driver to handle EPROBE_DEFER.
+So it is not that EPROBE_DEFER is special but that we add an error =
+return path for it.
+
+2. I don't know why it is not working - I just know that the handler =
+seems to be triggered before
+all resources are available (if probe() is aborted with EPROBE_DEFER =
+error paths) which ends up in kernel panics.
+
+Therefore just to be safe, I have reordered things a little (without =
+changing the function):
+
+1. check for resources (with some EPROBE_DEFER)
+2. allocate non-devm (with optional EPROBE_DEFER)
+3. allocate devm
+
+So this should be safe in any case.
+
+Please also compare a discussion
+
+https://lkml.org/lkml/2013/2/22/65
+
+>=20
+>> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 >> ---
->>   drivers/gpu/drm/stm/Kconfig           |   8 +
->>   drivers/gpu/drm/stm/Makefile          |   2 +
->>   drivers/gpu/drm/stm/dw_mipi_dsi-stm.c | 353 ++++++++++++++++++++++++++++++++++
->>   3 files changed, 363 insertions(+)
->>   create mode 100644 drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->>
->> diff --git a/drivers/gpu/drm/stm/Kconfig b/drivers/gpu/drm/stm/Kconfig
->> index 4b88223..4c0d670 100644
->> --- a/drivers/gpu/drm/stm/Kconfig
->> +++ b/drivers/gpu/drm/stm/Kconfig
->> @@ -14,3 +14,11 @@ config DRM_STM
->>   	  STMicroelectronics STM32 MCUs.
->>   	  To compile this driver as a module, choose M here: the module
->>   	  will be called stm-drm.
+>> drivers/power/supply/twl4030_charger.c | 37 =
+++++++++++++++++++++--------------
+>> 1 file changed, 22 insertions(+), 15 deletions(-)
+>>=20
+>> diff --git a/drivers/power/supply/twl4030_charger.c =
+b/drivers/power/supply/twl4030_charger.c
+>> index 785a07bc4f39..945eabdbbc89 100644
+>> --- a/drivers/power/supply/twl4030_charger.c
+>> +++ b/drivers/power/supply/twl4030_charger.c
+>> @@ -984,6 +984,28 @@ static int twl4030_bci_probe(struct =
+platform_device *pdev)
+>>=20
+>> 	platform_set_drvdata(pdev, bci);
+>>=20
+>> +	if (bci->dev->of_node) {
+>> +		struct device_node *phynode;
 >> +
->> +config DRM_STM_DSI
->> +	tristate "STMicroelectronics specific extensions for Synopsys MIPI DSI"
->> +	depends on DRM_STM
->> +	select DRM_MIPI_DSI
->> +	select DRM_DW_MIPI_DSI
->> +	help
->> +	  Choose this option for MIPI DSI support on STMicroelectronics SoC.
->> diff --git a/drivers/gpu/drm/stm/Makefile b/drivers/gpu/drm/stm/Makefile
->> index a09ecf4..d883adc 100644
->> --- a/drivers/gpu/drm/stm/Makefile
->> +++ b/drivers/gpu/drm/stm/Makefile
->> @@ -2,4 +2,6 @@ stm-drm-y := \
->>   	drv.o \
->>   	ltdc.o
->>   
->> +obj-$(CONFIG_DRM_STM_DSI) += dw_mipi_dsi-stm.o
->> +
->>   obj-$(CONFIG_DRM_STM) += stm-drm.o
->> diff --git a/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> new file mode 100644
->> index 0000000..8dedc5c
->> --- /dev/null
->> +++ b/drivers/gpu/drm/stm/dw_mipi_dsi-stm.c
->> @@ -0,0 +1,353 @@
->> +/*
->> + * Copyright (C) STMicroelectronics SA 2017
->> + *
->> + * Authors: Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
->> + *          Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
->> + *
->> + * License terms:  GNU General Public License (GPL), version 2
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/iopoll.h>
->> +#include <linux/math64.h>
-
-We don't seem to use any math64 funcs.
-
->> +#include <linux/module.h>
->> +#include <drm/drmP.h>
->> +#include <drm/drm_mipi_dsi.h>
->> +#include <drm/bridge/dw_mipi_dsi.h>
->> +#include <video/mipi_display.h>
->> +
->> +/* DSI wrapper register & bit definitions */
->> +/* Note: registers are named as in the Reference Manual */
->> +#define DSI_WCFGR	0x0400		/* Wrapper ConFiGuration Reg */
->> +#define WCFGR_DSIM	BIT(0)		/* DSI Mode */
->> +#define WCFGR_COLMUX	GENMASK(3, 1)	/* COLor MUltipleXing */
->> +
->> +#define DSI_WCR		0x0404		/* Wrapper Control Reg */
->> +#define WCR_DSIEN	BIT(3)		/* DSI ENable */
->> +
->> +#define DSI_WISR	0x040C		/* Wrapper Interrupt and Status Reg */
->> +#define WISR_PLLLS	BIT(8)		/* PLL Lock Status */
->> +#define WISR_RRS	BIT(12)		/* Regulator Ready Status */
->> +
->> +#define DSI_WPCR0	0x0418		/* Wrapper Phy Conf Reg 0 */
->> +#define WPCR0_UIX4	GENMASK(5, 0)	/* Unit Interval X 4 */
->> +#define WPCR0_TDDL	BIT(16)		/* Turn Disable Data Lanes */
->> +
->> +#define DSI_WRPCR	0x0430		/* Wrapper Regulator & Pll Ctrl Reg */
->> +#define WRPCR_PLLEN	BIT(0)		/* PLL ENable */
->> +#define WRPCR_NDIV	GENMASK(8, 2)	/* pll loop DIVision Factor */
->> +#define WRPCR_IDF	GENMASK(14, 11)	/* pll Input Division Factor */
->> +#define WRPCR_ODF	GENMASK(17, 16)	/* pll Output Division Factor */
->> +#define WRPCR_REGEN	BIT(24)		/* REGulator ENable */
->> +#define WRPCR_BGREN	BIT(28)		/* BandGap Reference ENable */
->> +#define IDF_MIN		1
->> +#define IDF_MAX		7
->> +#define NDIV_MIN	10
->> +#define NDIV_MAX	125
->> +#define ODF_MIN		1
->> +#define ODF_MAX		8
->> +
->> +/* dsi color format coding according to the datasheet */
->> +enum dsi_color {
->> +	DSI_RGB565_CONF1,
->> +	DSI_RGB565_CONF2,
->> +	DSI_RGB565_CONF3,
->> +	DSI_RGB666_CONF1,
->> +	DSI_RGB666_CONF2,
->> +	DSI_RGB888,
->> +};
->> +
->> +#define LANE_MIN_KBPS	31250
->> +#define LANE_MAX_KBPS	500000
->> +
->> +/* Sleep & timeout for regulator on/off, pll lock/unlock & fifo empty */
->> +#define SLEEP_US	1000
->> +#define TIMEOUT_US	200000
->> +
->> +struct dw_mipi_dsi_stm {
->> +	void __iomem *base;
->> +	struct clk *pllref_clk;
->> +};
->> +
->> +static inline void dsi_write(struct dw_mipi_dsi_stm *dsi, u32 reg, u32 val)
->> +{
->> +	writel_relaxed(val, dsi->base + reg);
->> +}
->> +
->> +static inline u32 dsi_read(struct dw_mipi_dsi_stm *dsi, u32 reg)
->> +{
->> +	return readl_relaxed(dsi->base + reg);
->> +}
->> +
->> +static inline void dsi_set(struct dw_mipi_dsi_stm *dsi, u32 reg, u32 mask)
->> +{
->> +	dsi_write(dsi, reg, dsi_read(dsi, reg) | mask);
->> +}
->> +
->> +static inline void dsi_clear(struct dw_mipi_dsi_stm *dsi, u32 reg, u32 mask)
->> +{
->> +	dsi_write(dsi, reg, dsi_read(dsi, reg) & ~mask);
->> +}
->> +
->> +static inline void dsi_update_bits(struct dw_mipi_dsi_stm *dsi, u32 reg,
->> +				   u32 mask, u32 val)
->> +{
->> +	dsi_write(dsi, reg, (dsi_read(dsi, reg) & ~mask) | val);
->> +}
->> +
->> +static enum dsi_color dsi_color_from_mipi(enum mipi_dsi_pixel_format fmt)
->> +{
->> +	switch (fmt) {
->> +	case MIPI_DSI_FMT_RGB888:
->> +		return DSI_RGB888;
->> +	case MIPI_DSI_FMT_RGB666:
->> +		return DSI_RGB666_CONF2;
->> +	case MIPI_DSI_FMT_RGB666_PACKED:
->> +		return DSI_RGB666_CONF1;
->> +	case MIPI_DSI_FMT_RGB565:
->> +		return DSI_RGB565_CONF1;
->> +	default:
->> +		DRM_DEBUG_DRIVER("MIPI color invalid, so we use rgb888\n");
->> +	}
->> +	return DSI_RGB888;
->> +}
->> +
->> +static int dsi_pll_get_clkout_khz(int clkin_khz, int idf, int ndiv, int odf)
->> +{
->> +	/* prevent from division by 0 */
->> +	if (idf * odf)
->> +		return DIV_ROUND_CLOSEST(clkin_khz * ndiv, idf * odf);
->> +
->> +	return 0;
->> +}
->> +
->> +static int dsi_pll_get_params(int clkin_khz, int clkout_khz,
->> +			      int *idf, int *ndiv, int *odf)
->> +{
->> +	int i, o, n, n_min, n_max;
->> +	int fvco_min, fvco_max, delta, best_delta; /* all in khz */
->> +
->> +	/* Early checks preventing division by 0 & odd results */
->> +	if ((clkin_khz <= 0) || (clkout_khz <= 0))
->> +		return -EINVAL;
->> +
->> +	fvco_min = LANE_MIN_KBPS * 2 * ODF_MAX;
->> +	fvco_max = LANE_MAX_KBPS * 2 * ODF_MIN;
->> +
->> +	best_delta = 1000000; /* big started value (1000000khz) */
->> +
->> +	for (i = IDF_MIN; i <= IDF_MAX; i++) {
->> +		/* Compute ndiv range according to Fvco */
->> +		n_min = ((fvco_min * i) / (2 * clkin_khz)) + 1;
->> +		n_max = (fvco_max * i) / (2 * clkin_khz);
->> +
->> +		/* No need to continue idf loop if we reach ndiv max */
->> +		if (n_min >= NDIV_MAX)
->> +			break;
->> +
->> +		/* Clamp ndiv to valid values */
->> +		if (n_min < NDIV_MIN)
->> +			n_min = NDIV_MIN;
->> +		if (n_max > NDIV_MAX)
->> +			n_max = NDIV_MAX;
->> +
->> +		for (o = ODF_MIN; o <= ODF_MAX; o *= 2) {
->> +			n = DIV_ROUND_CLOSEST(i * o * clkout_khz, clkin_khz);
->> +			/* Check ndiv according to vco range */
->> +			if ((n < n_min) || (n > n_max))
->> +				continue;
->> +			/* Check if new delta is better & saves parameters */
->> +			delta = dsi_pll_get_clkout_khz(clkin_khz, i, n, o) -
->> +				clkout_khz;
->> +			if (delta < 0)
->> +				delta = -delta;
->> +			if (delta < best_delta) {
->> +				*idf = i;
->> +				*ndiv = n;
->> +				*odf = o;
->> +				best_delta = delta;
->> +			}
->> +			/* fast return in case of "perfect result" */
->> +			if (!delta)
->> +				return 0;
+>> +		phynode =3D =
+of_find_compatible_node(bci->dev->of_node->parent,
+>> +						  NULL, =
+"ti,twl4030-usb");
+>> +		if (phynode) {
+>> +			bci->transceiver =3D devm_usb_get_phy_by_node(
+>> +				bci->dev, phynode, &bci->usb_nb);
+>> +			if (IS_ERR(bci->transceiver) &&
+>> +			    PTR_ERR(bci->transceiver) =3D=3D =
+-EPROBE_DEFER)
+>> +				return -EPROBE_DEFER;	/* PHY not ready =
+*/
 >> +		}
 >> +	}
 >> +
->> +	return 0;
->> +}
->> +
->> +static int dw_mipi_dsi_phy_init(void *priv_data)
->> +{
->> +	struct dw_mipi_dsi_stm *dsi = priv_data;
->> +	u32 val;
->> +	int ret;
->> +
->> +	/* Enable the regulator */
->> +	dsi_set(dsi, DSI_WRPCR, WRPCR_REGEN | WRPCR_BGREN);
->> +	ret = readl_poll_timeout(dsi->base + DSI_WISR, val, val & WISR_RRS,
->> +				 SLEEP_US, TIMEOUT_US);
->> +	if (ret)
->> +		DRM_DEBUG_DRIVER("!TIMEOUT! waiting REGU, let's continue\n");
->> +
->> +	/* Enable the DSI PLL & wait for its lock */
->> +	dsi_set(dsi, DSI_WRPCR, WRPCR_PLLEN);
->> +	ret = readl_poll_timeout(dsi->base + DSI_WISR, val, val & WISR_PLLLS,
->> +				 SLEEP_US, TIMEOUT_US);
->> +	if (ret)
->> +		DRM_DEBUG_DRIVER("!TIMEOUT! waiting PLL, let's continue\n");
->> +
->> +	/* Enable the DSI wrapper */
->> +	dsi_set(dsi, DSI_WCR, WCR_DSIEN);
->> +
->> +	return 0;
->> +}
->> +
->> +static int
->> +dw_mipi_dsi_get_lane_mbps(void *priv_data, struct drm_display_mode *mode,
->> +			  unsigned long mode_flags, u32 lanes, u32 format,
->> +			  unsigned int *lane_mbps)
->> +{
->> +	struct dw_mipi_dsi_stm *dsi = priv_data;
->> +	unsigned int idf, ndiv, odf, pll_in_khz, pll_out_khz;
->> +	int ret, bpp;
->> +	u32 val;
-
-I see some warnings about ndiv, odf and idf possibly being unused, could
-you fix those?
-
->> +
->> +	pll_in_khz = (unsigned int)(clk_get_rate(dsi->pllref_clk) / 1000);
->> +
->> +	/* Compute requested pll out */
->> +	bpp = mipi_dsi_pixel_format_to_bpp(format);
->> +	pll_out_khz = mode->clock * bpp / lanes;
->> +	/* Add 20% to pll out to be higher than pixel bw (burst mode only) */
->> +	pll_out_khz = (pll_out_khz * 12) / 10;
->> +	if (pll_out_khz > LANE_MAX_KBPS) {
->> +		pll_out_khz = LANE_MAX_KBPS;
->> +		DRM_DEBUG_DRIVER("Warning max phy mbps is used\n");
-
-We have a DRM_WARN macro if this is really a warning.
-
-Patch looks good to me otherwise.
-
-Thanks,
-Archit
-
->> +	}
->> +	if (pll_out_khz < LANE_MIN_KBPS) {
->> +		pll_out_khz = LANE_MIN_KBPS;
->> +		DRM_DEBUG_DRIVER("Warning min phy mbps is used\n");
+>> +	bci->channel_vac =3D iio_channel_get(&pdev->dev, "vac");
+>> +	if (IS_ERR(bci->channel_vac)) {
+>> +		if (PTR_ERR(bci->channel_vac) =3D=3D -EPROBE_DEFER)
+>> +			return -EPROBE_DEFER;	/* iio not ready */
+>> +		dev_warn(&pdev->dev, "could not request vac iio =
+channel");
+>> +		bci->channel_vac =3D NULL;
 >> +	}
 >> +
->> +	/* Compute best pll parameters */
->> +	ret = dsi_pll_get_params(pll_in_khz, pll_out_khz, &idf, &ndiv, &odf);
->> +	if (ret)
->> +		DRM_DEBUG_DRIVER("Warning dsi_pll_get_params(): bad params\n");
->> +
->> +	/* Get the adjusted pll out value */
->> +	pll_out_khz = dsi_pll_get_clkout_khz(pll_in_khz, idf, ndiv, odf);
->> +
->> +	/* Set the PLL division factors */
->> +	dsi_update_bits(dsi, DSI_WRPCR,	WRPCR_NDIV | WRPCR_IDF | WRPCR_ODF,
->> +			(ndiv << 2) | (idf << 11) | ((ffs(odf) - 1) << 16));
->> +
->> +	/* Compute uix4 & set the bit period in high-speed mode */
->> +	val = 4000000 / pll_out_khz;
->> +	dsi_update_bits(dsi, DSI_WPCR0, WPCR0_UIX4, val);
->> +
->> +	/* Select video mode by resetting DSIM bit */
->> +	dsi_clear(dsi, DSI_WCFGR, WCFGR_DSIM);
->> +
->> +	/* Select the color coding */
->> +	dsi_update_bits(dsi, DSI_WCFGR, WCFGR_COLMUX,
->> +			dsi_color_from_mipi(format) << 1);
->> +
->> +	*lane_mbps = pll_out_khz / 1000;
->> +
->> +	DRM_DEBUG_DRIVER("pll_in %ukHz pll_out %ukHz lane_mbps %uMHz\n",
->> +			 pll_in_khz, pll_out_khz, *lane_mbps);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct dw_mipi_dsi_phy_ops dw_mipi_dsi_stm_phy_ops = {
->> +	.init = dw_mipi_dsi_phy_init,
->> +	.get_lane_mbps = dw_mipi_dsi_get_lane_mbps,
->> +};
->> +
->> +static struct dw_mipi_dsi_plat_data dw_mipi_dsi_stm_plat_data = {
->> +	.max_data_lanes = 2,
->> +	.phy_ops = &dw_mipi_dsi_stm_phy_ops,
->> +};
->> +
->> +static const struct of_device_id dw_mipi_dsi_stm_dt_ids[] = {
->> +	{
->> +	 .compatible = "st,stm32-dsi",
->> +	 .data = &dw_mipi_dsi_stm_plat_data,
-> 
-> Alignement is weird here !
-> 
-> 
->> +	},
->> +	{ /* sentinel */ }
->> +};
->> +MODULE_DEVICE_TABLE(of, dw_mipi_dsi_stm_dt_ids);
->> +
->> +static int dw_mipi_dsi_stm_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct dw_mipi_dsi_stm *dsi;
->> +	struct resource *res;
->> +	int ret;
->> +
->> +	dsi = devm_kzalloc(dev, sizeof(*dsi), GFP_KERNEL);
->> +	if (!dsi)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	if (!res) {
->> +		DRM_ERROR("Unable to get resource\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	dsi->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(dsi->base)) {
->> +		DRM_ERROR("Unable to get dsi registers\n");
->> +		return PTR_ERR(dsi->base);
->> +	}
->> +
->> +	dsi->pllref_clk = devm_clk_get(dev, "ref");
->> +	if (IS_ERR(dsi->pllref_clk)) {
->> +		ret = PTR_ERR(dsi->pllref_clk);
->> +		dev_err(dev, "Unable to get pll reference clock: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(dsi->pllref_clk);
->> +	if (ret) {
->> +		dev_err(dev, "%s: Failed to enable pllref_clk\n", __func__);
->> +		return ret;
->> +	}
->> +
->> +	dw_mipi_dsi_stm_plat_data.base = dsi->base;
->> +	dw_mipi_dsi_stm_plat_data.priv_data = dsi;
->> +
->> +	ret = dw_mipi_dsi_probe(pdev, &dw_mipi_dsi_stm_plat_data);
->> +	if (ret) {
->> +		DRM_ERROR("Failed to initialize mipi dsi host\n");
->> +		clk_disable_unprepare(dsi->pllref_clk);
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->> +static int dw_mipi_dsi_stm_remove(struct platform_device *pdev)
->> +{
->> +	struct dw_mipi_dsi_stm *dsi = dw_mipi_dsi_stm_plat_data.priv_data;
->> +
->> +	clk_disable_unprepare(dsi->pllref_clk);
->> +	dw_mipi_dsi_remove(pdev);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct platform_driver dw_mipi_dsi_stm_driver = {
->> +	.probe		= dw_mipi_dsi_stm_probe,
->> +	.remove		= dw_mipi_dsi_stm_remove,
->> +	.driver		= {
->> +		.of_match_table = dw_mipi_dsi_stm_dt_ids,
->> +		.name	= "dw_mipi_dsi-stm",
->> +	},
->> +};
->> +
->> +module_platform_driver(dw_mipi_dsi_stm_driver);
->> +
->> +MODULE_AUTHOR("Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>");
->> +MODULE_AUTHOR("Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>");
->> +MODULE_DESCRIPTION("STMicroelectronics DW MIPI DSI host controller driver");
->> +MODULE_LICENSE("GPL v2");
->>
-> 
-> A part from this small nit,
-> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+>=20
+> You should not request non-devm managed iio_channel before
+> devm-managed power-supply.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Well, it is not *me* doing that.
+
+It is the unpatched driver which already does. See:
+
+	=
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/dr=
+ivers/power/supply/twl4030_charger.c?h=3Dv4.12-rc4#n1069
+
+I have just moved this line to a different location to be able to add a =
+proper EPROBE_DEFER return path.
+
+> This could be fixed by switching to
+> devm_iio_channel_get(), which also cleans up some code.
+
+Yes, this could be an alternative solution.
+We still need EPROBE_DEFER handling.
+
+>=20
+> I suspect, that this is also your IRQ problem, since iio_channel
+> is currently free'd before irqs are free'd, but its used in irq
+> code.
+
+Hm. No.
+
+In upstream code it is never freed on probe failure because there is =
+only
+an error return (goto fail) after allocating irqs in case the
+twl_i2c_write_u8 fails. Which usually doesn't.
+
+The EPROBE_DEFER returned by iio_channel_get not being ready simply =
+prints
+a warning and turns off AC detection (bci->channel_vac =3D NULL) =
+forever.
+
+>=20
+>> 	bci->ac =3D devm_power_supply_register(&pdev->dev, =
+&twl4030_bci_ac_desc,
+>> 					     NULL);
+>> 	if (IS_ERR(bci->ac)) {
+>> @@ -1017,25 +1039,10 @@ static int twl4030_bci_probe(struct =
+platform_device *pdev)
+>> 		return ret;
+>> 	}
+>>=20
+>> -	bci->channel_vac =3D iio_channel_get(&pdev->dev, "vac");
+>> -	if (IS_ERR(bci->channel_vac)) {
+
+My first attempt to fix EPROBE_DEFER was to add this
+
++		if (PTR_ERR(bci->channel_vac) =3D=3D -EPROBE_DEFER)
++			return -EPROBE_DEFER;	/* iio not ready */
+
+>> -		bci->channel_vac =3D NULL;
+>> -		dev_warn(&pdev->dev, "could not request vac iio =
+channel");
+>> -	}
+>> -
+>> 	INIT_WORK(&bci->work, twl4030_bci_usb_work);
+>> 	INIT_DELAYED_WORK(&bci->current_worker, twl4030_current_worker);
+>>=20
+>> 	bci->usb_nb.notifier_call =3D twl4030_bci_usb_ncb;
+>> -	if (bci->dev->of_node) {
+>> -		struct device_node *phynode;
+>> -
+>> -		phynode =3D =
+of_find_compatible_node(bci->dev->of_node->parent,
+>> -						  NULL, =
+"ti,twl4030-usb");
+>> -		if (phynode)
+>> -			bci->transceiver =3D devm_usb_get_phy_by_node(
+>> -				bci->dev, phynode, &bci->usb_nb);
+
+and this
+
++			if (IS_ERR(bci->transceiver) &&
++			    PTR_ERR(bci->transceiver) =3D=3D =
+-EPROBE_DEFER) {
++				ret =3D -EPROBE_DEFER;	/* PHY not ready =
+*/
++				goto fail;
+
+This did run (and potentially return) after installing =
+devm_request_threaded_irq leading
+to observation of severe kernel panics by interrupts.
+
+Moving the iio channel allocation before devm_request_threaded_irq made =
+them go away.
+
+>> -	}
+>>=20
+>> 	/* Enable interrupts now. */
+>> 	reg =3D ~(u32)(TWL4030_ICHGLOW | TWL4030_ICHGEOC | =
+TWL4030_TBATOR2 |
+>=20
+> -- Sebastian
+
+How important is it to keep the current sequence of =
+devm_request_threaded_irq() + (devm_)iio_channel_get() untouched?
+
+The reason I ask is that it is more likely for (devm_)iio_channel_get() =
+to fail than devm_request_threaded_irq().
+
+Hence the iio channel should imho be always allocated first, so that we =
+skip allocating+freeing unused irq handlers in case
+of iio not being ready.
+
+Therefore, I suggest to keep the proposed reordering even if we think =
+devm-conversion of iio_channel_get() alone
+would solve it equally well.
+
+Next: should there be two separate patches? One for converting the =
+non-devm iio_channel_get() and cleaning up error path.
+And one for adding EPROBE_DEFER error path.
+
+Or keep it in a single patch because they only make sense if done =
+together (you can't add/remove deferred probing
+without converting and/or moving iio_channel_get())?
+
+So please advise how to proceed.
+
+BR and thanks,
+Nikolaus
+
+
+--Apple-Mail=_93D39F66-F3B5-4E52-8843-97214023E820
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+	filename=signature.asc
+Content-Type: application/pgp-signature;
+	name=signature.asc
+Content-Description: Message signed with OpenPGP using GPGMail
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBCAAGBQJZOjqcAAoJEIl79TGLgAm61PYP/R68/iPVLbcMvyPEPr0y5dxq
+gwMR/1eP/tci/0U2W7I/kNiWo+vUX6/Q17BxwGrZO+dmPd4fqEdmi4Xep6lvnbP3
+pyUe97IOODCZ9CjxmYI0z1BCu7w1PcXfSAOw3M/qyHhQOj2iId9k2yMFQTsWd1lq
+L8SQSTLrrXnP9nNRCeJLe0fXOHwXmPjk69XhBxlt5IFFsujHi6rIgFG57iilKYIU
+32zsVImo9bvRKoJGVvJU2UKxnJMmthMJ6D67Kl0/8cuSs8iJ/ZfJHGr6wBFoIogt
+LrtXep5IWZPK0ccxVqytlMQ55Rg1IZw+vu4IcbTU/fAxdNwCcDOjVlVBGdsAiiq6
+1aGF39f+h4T8GrEzk21R7X+QU3h/uUvZBbJFxDJcAJM3jwm0/IAwzIYz0fzPJq4v
+gniAvZCIBp5SfHBJk1dR81jWbOWM3dO5mJGkrhC6a03HFAn+XdETnnX+ddPpRZk7
+lOLyCvx7U9LT002YbsBd5pyd33jQcBsZK+Sor6VXHS9sjeMygha8eu+sOMV3zo76
+PES/lomgQ/UfHnbkYRF9AgJC1Z7rfQU8Vtnl+HtTINbcGR6sEz9PSOEERgHDGxW9
+b70fLtw5PeoVr8D8K3ZErRus3WutrOXearVzFAv2zK+STeKiauV36LelOnKxt4Ma
+r3zyBXg4rRhA5+4289/S
+=BIvV
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_93D39F66-F3B5-4E52-8843-97214023E820--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
