@@ -1,193 +1,67 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] arm64: allwinner: a64: Add initial NanoPi A64 support
-Date: Fri,  9 Jun 2017 13:03:56 +0000
-Message-ID: <1497013436-14107-1-git-send-email-jteki@openedev.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v8 19/34] media: Add i.MX media core driver
+Date: Fri, 09 Jun 2017 15:15:35 +0200
+Message-ID: <1497014135.20356.12.camel@pengutronix.de>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+         <1496860453-6282-20-git-send-email-steve_longerbeam@mentor.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496860453-6282-20-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Wed, 2017-06-07 at 11:33 -0700, Steve Longerbeam wrote:
+> Add the core media driver for i.MX SOC.
+> 
+> Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> 
+> Switch from the v4l2_of_ APIs to the v4l2_fwnode_ APIs.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> Add the bayer formats to imx-media's list of supported pixel and bus
+> formats.
+> 
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+> ---
+[...]
+> diff --git a/drivers/staging/media/imx/imx-media-dev.c b/drivers/staging/media/imx/imx-media-dev.c
+> new file mode 100644
+> index 0000000..da694f6
+> --- /dev/null
+> +++ b/drivers/staging/media/imx/imx-media-dev.c
+> @@ -0,0 +1,666 @@
+[...]
+> +/*
+> + * adds given video device to given imx-media source pad vdev list.
+> + * Continues upstream from the pad entity's sink pads.
+> + */
+> +static int imx_media_add_vdev_to_pad(struct imx_media_dev *imxmd,
+> +				     struct imx_media_video_dev *vdev,
+> +				     struct media_pad *srcpad)
+> +{
+> +	struct media_entity *entity = srcpad->entity;
+> +	struct imx_media_subdev *imxsd;
+> +	struct imx_media_pad *imxpad;
+> +	struct media_link *link;
+> +	struct v4l2_subdev *sd;
+> +	int i, vdev_idx, ret;
+> +
+> +	if (!is_media_entity_v4l2_subdev(entity))
+> +		return -EINVAL;
 
-NanoPi A64 is a new board of high performance with low cost
-designed by FriendlyElec., using the Allwinner A64 SOC.
+Could we make this return 0, to just skip non-v4l2_subdev entities?
+Currently, imx_media_probe_complete silently fails with this -EINVAL if
+there is a tvp5150 connected due to the separate media entities that the
+tvp5150 driver creates for the input connectors (Composite0, for
+example).
 
-Nanopi A64 features
-- Allwinner A64, 64-bit Quad-core Cortex-A53@648MHz to 1.152GHz, DVFS
-- 1GB DDR3 RAM
-- MicroSD
-- Gigabit Ethernet (RTL8211E)
-- Wi-Fi 802.11b/g/n
-- IR receiver
-- Audio In/Out
-- Video In/Out
-- Serial Debug Port
-- microUSB 5V 2A DC power-supply
-
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v3:
-- Fix to use mmc1 for SDIO instead of mmc2
-- Replace buswidth by 4 instead of 8 mmc1
-- Drop cap-mmc-hw-reset for mmc1
-Changes for v2:
-- Added ohci0, ehci0, ohic1, ehci1, usbphy.
-- Tested on A64
-
- arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- .../boot/dts/allwinner/sun50i-a64-nanopi-a64.dts   | 130 +++++++++++++++++++++
- 2 files changed, 131 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index e7d5490..1ea7709 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-new file mode 100644
-index 0000000..d56736d
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -0,0 +1,130 @@
-+/*
-+ * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a64.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "FriendlyARM NanoPi A64";
-+	compatible = "friendlyarm,nanopi-a64", "allwinner,sun50i-a64";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+};
-+
-+&i2c1_pins {
-+	bias-pull-up;
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+	disable-wp;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&mmc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc1_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
--- 
-1.9.1
+regards
+Philipp
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
