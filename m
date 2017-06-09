@@ -1,46 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5 v2] clk: qcom: Update DT bindings for the
- MSM8660/APQ8060 RPMCC
-Date: Fri, 9 Jun 2017 10:48:57 +0200
-Message-ID: <CACRpkdbW24L2kLL9buPRAawXOuQ1ypCLf58gCq5=BWP5ex4zuA@mail.gmail.com>
-References: <20170419091326.11226-1-linus.walleij@linaro.org>
- <CACRpkdbXEFeVkD8rETyrnuoAxUvnFt2BL07UsXuXfSnq3Qdyfw@mail.gmail.com>
- <CACRpkdYvwwJcxKPtKUyZBLWsmjXji7pHDKNz9NRTETqj2P3drQ@mail.gmail.com> <20170601073858.GU20170@codeaurora.org>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v10 5/6] i2c: designware: add SLAVE mode functions
+Date: Fri, 09 Jun 2017 11:52:49 +0300
+Message-ID: <1496998369.22624.68.camel@linux.intel.com>
+References: <cover.1496942505.git.lolivei@synopsys.com>
+         <434489944ec5de13e1ac4e8ad4ab161e22cb718c.1496942505.git.lolivei@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170601073858.GU20170@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <434489944ec5de13e1ac4e8ad4ab161e22cb718c.1496942505.git.lolivei@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Luis Oliveira <Luis.Oliveira@synopsys.com>, wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 1, 2017 at 9:38 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 05/24, Linus Walleij wrote:
+On Thu, 2017-06-08 at 18:36 +0100, Luis Oliveira wrote:
+> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
+> - Slave functions added to core library file
+> - Slave abort sources added to common source file
+> - New driver: i2c-designware-slave added
+> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
+>   when supported by the architecture.
+> 
+> All the SLAVE flow is added but it is not enabled via platform
+> driver.
 
->> I am sorry if you guys are swamped, I just don't know what to do,
->> clock drivers are starting to become the bottleneck for everything
->> I do. I bet the ARM SoC maintainers must be noticing it too.
-(...)
-> Meh. Life happens and msm8660 is about a decade old now and not
-> something that I can easily review without digging through old
-> websites to find documentation on the code I worked on 7 years
-> ago. So sorry, but these sorts of patches are basically
-> approaching priority none for me and I have to steal time to
-> review them.
+> +	} else {
+> +		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
+> +		stat = i2c_dw_read_clear_intrbits_slave(dev);
+> +	}
+> +
 
-Sorry the reference above was mainly to the Gemini SoC clock driver
-which was blocking ARM consolidation, the fact that this MSM8660
-thing was stalled too just got me to think it was related.
+> +	//~ if (stat & DW_IC_INTR_TX_OVER)
+> +		//~ dw_readl(dev, DW_IC_CLR_TX_OVER);
 
-I understand the MSM8660 is low prio, but the first DragonBoard
-was pushed to developers en masse in 2012 (yours truly included),
-which was just half a decade ago, and started
-the community boards effort from Qualcomm, and yeah, community
-moves slower than markets usually, the board is still supported by
-the BSquare company that managed the board release for Qualcomm,
-I can still login and check schematics and support forums,
-cool isn't it :D
+What is this?
 
-Yours,
-Linus Walleij
+> +
+> +	return 1;
+> +}
+
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
