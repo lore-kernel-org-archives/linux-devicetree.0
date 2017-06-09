@@ -1,73 +1,129 @@
-From: Enric Balletbo Serra <eballetbo@gmail.com>
-Subject: Re: [PATCH 4/4] mfd: tps65217: Instantiate sub-devices from device tree
-Date: Fri, 9 Jun 2017 11:55:05 +0200
-Message-ID: <CAFqH_50MDAAMcj0RW8Vzu71n=vAHAukpGw--mn3+PZBfj+m88w@mail.gmail.com>
-References: <20170607103242.16008-1-enric.balletbo@collabora.com>
- <20170607103242.16008-4-enric.balletbo@collabora.com> <6359abe2-9a21-78a2-f5ea-87e2e3335af3@ti.com>
- <CAFqH_53v32iODN4xhoh4ho4s6grxknEDS3Ak6CHBcTAQo6fDNw@mail.gmail.com>
- <578f348c-509f-79d3-9770-73c9fcffe19c@ti.com> <CAFqH_52rU7ZBG_Muy2JHoqJGdXOdsNfmtJxsZoPRyx3V1aWmFw@mail.gmail.com>
- <CABxcv=mN6=hbDSqrVkwSL8zccCntN7m_3DP6ZCbkOT6CLw+skQ@mail.gmail.com>
- <fba09819-7d7e-57bb-c147-46c39098cff8@ti.com> <CABxcv=nzCreCSm9wkY+Kv_-vmoQN12Ct=_VegsfTrbe6H-1hTw@mail.gmail.com>
+From: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] nvmem: add snvs_lpgpr driver
+Date: Fri, 9 Jun 2017 12:11:15 +0200
+Message-ID: <20170609101115.umiaec2qdspkfag3@pengutronix.de>
+References: <20170608165134.14971-1-o.rempel@pengutronix.de>
+ <20170608165134.14971-3-o.rempel@pengutronix.de>
+ <6babaffa-d782-309b-67e4-14dacb72383d@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=nzCreCSm9wkY+Kv_-vmoQN12Ct=_VegsfTrbe6H-1hTw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>, Mark Brown <broonie@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-leds@vger.kernel.org, linux-input@vger.kernel.org, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>Pavel Machek <p>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6babaffa-d782-309b-67e4-14dacb72383d-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Grygorii, Javier,
+On Fri, Jun 09, 2017 at 10:35:15AM +0100, Srinivas Kandagatla wrote:
+> 
+> Few more nit picks!!
+> 
+> On 08/06/17 17:51, Oleksij Rempel wrote:
+> > This is a driver for Low Power General Purpose Register (LPGPR)
+> > available on i.MX6 SoCs in Secure Non-Volatile Storage (SNVS)
+> > of this chip.
+> > 
+> > It is a 32-bit read/write register located in the low power domain.
+> > Since LPGPR is located in the battery-backed power domain, LPGPR can
+> > be used by any application for retaining data during an SoC power-down
 
-2017-06-09 2:00 GMT+02:00 Javier Martinez Canillas <javier@dowhile0.org>:
-> Hello Grygorii,
->
-> [snip]
->
->>>
->>> For tps65218 couldn't instead of using mfd_add_devices() for all the
->>> sub-devs, had used of_platform_populate() for the ones that have
->>> device nodes and mfd_add_devices() only for the "tps65218-regulator"?
->>>
->>> The commit talks about nodes without compatibles but's actually about
->>> sub-devices without an associated device node. For me it makes sense
->>> to use of_platform_populate() when the MFD has device nodes for their
->>> sub-devices and mfd_add_devices() when DT knows nothing about the
->>> sub-devices.
->>
->> FYI. Below is link discussion I'm referring to between Mark Brown and Andrew F. Davis
->> https://lkml.org/lkml/2015/10/22/823
->> the same - https://groups.google.com/forum/#!topic/linux.kernel/wQsdSpPMroQ
->>
->
-> Thanks a lot for the pointer. There's a subtle difference between the
-> argument you made and the one that Mark is making in this thread
-> though.
->
-> Because you said (sorry if I misunderstood) that mfd_add_devices()
-> should be used instead of of_device_populate() even when sub-devices
-> are described as DT nodes (as is the case in the commit you shared)
-> while Mark is saying that if the sub-devs IP blocks are part of the
-> MFD, then it shouldn't be exposed in the DT and be instantiated via
-> mfd_add_devices() and I absolutely agree with that.
->
-> So I was arguing for using of_device_populate() if the sub-devices are
-> described in the DT. If that makes sense or not to expose the
-> sub-devices in the DT for this particular driver is a different
-> discussion and I can't comment on that since I'm not familiar with the
-> HW.
->
+.....
 
-I'm agree with Grygorii here that has no sense describe the static
-interrupts resources in the DT here unless DT maintainers prefer have
-them (dunno their preferences). OTOH, for the charger we need a way to
-disable (or having a mfd propriety or having a DT subnode with the
-status). I have a new idea that might be acceptable by Grygorii and
-also solve my use case. Let me prepare a second patchset and lets
-continue the discussion there?
+> > --- a/drivers/nvmem/Kconfig
+> > +++ b/drivers/nvmem/Kconfig
+> > @@ -144,4 +144,14 @@ config MESON_EFUSE
+> >   	  This driver can also be built as a module. If so, the module
+> >   	  will be called nvmem_meson_efuse.
+> > +config NVMEM_SNVS_LPGPR
+> > +	tristate "Support for Low Power General Purpose Register"
+> > +	depends on SOC_IMX6 || COMPILE_TEST
+> 
+> shouldn't you either "select MFD_SYSCON" or "depends on MFD_SYSCON"
+> here.
 
-Best regards,
- Enric
+according to Documentation/kbuild/kconfig-language.txt
+"In general use select only for non-visible symbols
+ (no prompts anywhere) and for symbols with no dependencies."
 
-> Best regards,
-> Javier
+this is why I removed select.
+
+And SOC_IMX6 is already doing "select MFD_SYSCON", so I assume it should
+be enough to depend on it.
+
+Or do I miss some thing?
+
+> > +	help
+> > +	  This is a driver for Low Power General Purpose Register (LPGPR) available on
+> > +	  i.MX6 SoCs in Secure Non-Volatile Storage (SNVS) of this chip.
+> > +
+> > +	  This driver can also be built as a module. If so, the module
+> > +	  will be called nvmem-snvs-lpgpr.
+> > +
+> >   endif
+
+....
+
+> > diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
+> > index 173140658693..4c589184acee 100644
+> > --- a/drivers/nvmem/Makefile
+> > +++ b/drivers/nvmem/Makefile
+> > +
+> > +struct snvs_lpgpr_priv {
+> > +	struct device_d		*dev;
+> > +	struct regmap		*regmap;
+> > +	int			offset;
+> 
+> why do you need offset here, you already have access to cfg which has the
+> offset member.
+
+yes, you right. I'll update it.
+
+> 
+> > +	struct nvmem_config	cfg;
+> > +};
+> > +
+> > +struct snvs_lpgpr_cfg {
+> > +	int offset;
+> > +};
+> > +
+> > +static const struct snvs_lpgpr_cfg snvs_lpgpr_cfg_imx6q = {
+> > +	.offset = 0x68,
+> > +};
+> > +
+
+....
+
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int snvs_lpgpr_read(void *context, unsigned int offset, void *_val,
+> > +			   size_t bytes)
+> > +{
+> > +
+> > +static struct platform_driver snvs_lpgpr_driver = {
+> > +	.probe	= snvs_lpgpr_probe,
+> > +	.remove	= snvs_lpgpr_remove,
+> > +	.driver = {
+> > +		.name	= "snvs_lpgpr",
+> > +		.of_match_table = snvs_lpgpr_dt_ids,
+> > +	},
+> > +};
+> > +module_platform_driver(snvs_lpgpr_driver);
+> > +
+> > +MODULE_AUTHOR("Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
+> > +MODULE_DESCRIPTION("Low Power General Purpose Register in i.MX6 Secure Non-Volatile Storage");
+> > +MODULE_LICENSE("GPL v2");
+> > 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
