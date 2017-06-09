@@ -1,199 +1,75 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] arm64: allwinner: a64: Add initial NanoPi
- A64 support
-Date: Fri,  9 Jun 2017 12:40:52 +0000
-Message-ID: <1497012052-14027-2-git-send-email-jteki@openedev.com>
-References: <1497012052-14027-1-git-send-email-jteki@openedev.com>
-Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 00/21] net-next: stmmac: add dwmac-sun8i
+ ethernet driver
+Date: Fri, 9 Jun 2017 14:50:57 +0200
+Message-ID: <20170609125057.ja6ftva7fji66wo2@flea.home>
+References: <20170601.145819.789604139072328057.davem@davemloft.net>
+ <20170602063752.aqyvwcykvepiyt4y@flea.lan>
+ <20170602091320.lyfxsanxrypfpozb@flea.lan>
+ <20170602.102205.701672574727845689.davem@davemloft.net>
+ <20170602222422.2elv6snjp3ahrhbi@flea.lan>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRB2NO5LEQKGQEYXPO2GQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l4udedxtr3pi3jfp"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPFT5LEQKGQE4MJEDSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1497012052-14027-1-git-send-email-jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170602222422.2elv6snjp3ahrhbi-ZC1Zs529Oq4@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-NanoPi A64 is a new board of high performance with low cost
-designed by FriendlyElec., using the Allwinner A64 SOC.
+--l4udedxtr3pi3jfp
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Nanopi A64 features
-- Allwinner A64, 64-bit Quad-core Cortex-A53@648MHz to 1.152GHz, DVFS
-- 1GB DDR3 RAM
-- MicroSD
-- Gigabit Ethernet (RTL8211E)
-- Wi-Fi 802.11b/g/n
-- IR receiver
-- Audio In/Out
-- Video In/Out
-- Serial Debug Port
-- microUSB 5V 2A DC power-supply
+On Sat, Jun 03, 2017 at 12:24:22AM +0200, Maxime Ripard wrote:
+> Hi,
+> 
+> On Fri, Jun 02, 2017 at 10:22:05AM -0400, David Miller wrote:
+> > From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Date: Fri, 2 Jun 2017 11:13:20 +0200
+> > 
+> > > On Fri, Jun 02, 2017 at 08:37:52AM +0200, Maxime Ripard wrote:
+> > >> On Thu, Jun 01, 2017 at 02:58:19PM -0400, David Miller wrote:
+> > >> > From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > >> > Date: Wed, 31 May 2017 09:18:31 +0200
+> > >> > 
+> > >> > > This patch series add the driver for dwmac-sun8i which handle the Ethernet MAC
+> > >> > > present on Allwinner H3/H5/A83T/A64 SoCs.
+> > >> > 
+> > >> > Series applied, but wow that's a lot of DT file changes :-(
+> > >> 
+> > >> The DT patches should not go through your tree, but arm-soc, so I
+> > >> guess this is not an issue for you?
+> > > 
+> > > Ok, so I saw that you actually merged them. Can you revert or drop
+> > > that merge for the DT part?
+> > > 
+> > > This will generate a lot of conflicts with our tree, and I'm not sure
+> > > this would be efficient to make you take all the entirely unrelated to
+> > > next patches.
+> > 
+> > Please tell me which specific changes to revert.
+> > 
+> > Thank you.
+> 
+> Ideally everything from 2c0cba482e79 ("arm: sun8i: sunxi-h3-h5: Add dt
+> node for the syscon control module") to 2428fd0fe550 ("arm64:
+> defconfig: Enable dwmac-sun8i driver on defconfig")
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v2:
-- Added ohci0, ehci0, ohic1, ehci1, usbphy.
-- Tested on A64
+Ping?
 
- arch/arm64/boot/dts/allwinner/Makefile             |   1 +
- .../boot/dts/allwinner/sun50i-a64-nanopi-a64.dts   | 131 +++++++++++++++++++++
- 2 files changed, 132 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index e7d5490..1ea7709 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -1,4 +1,5 @@
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-bananapi-m64.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-nanopi-a64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-new file mode 100644
-index 0000000..aa0b17c
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-nanopi-a64.dts
-@@ -0,0 +1,131 @@
-+/*
-+ * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-a64.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "FriendlyARM NanoPi A64";
-+	compatible = "friendlyarm,nanopi-a64", "allwinner,sun50i-a64";
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&ehci0 {
-+	status = "okay";
-+};
-+
-+&ehci1 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+	status = "okay";
-+};
-+
-+&i2c1_pins {
-+	bias-pull-up;
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	cd-inverted;
-+	disable-wp;
-+	bus-width = <4>;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&ohci0 {
-+	status = "okay";
-+};
-+
-+&ohci1 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+};
-+
-+&usbphy {
-+	status = "okay";
-+};
 -- 
-1.9.1
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--l4udedxtr3pi3jfp--
