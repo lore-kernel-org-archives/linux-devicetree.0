@@ -1,40 +1,27 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH] gpio: use "output-active" and "output-inactive" for gpio-hogs
-Date: Fri, 9 Jun 2017 15:53:10 +0200
-Message-ID: <CACRpkdY2ECd6e=kE3HWOP3xJFUm6VbrF+0Ds10ax7XsybRkQLA@mail.gmail.com>
-References: <20170604101049.4592-1-uwe@kleine-koenig.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] Documentation: dt-bindings: Document deprecation of
+ "vmmc_aux" and using "vqmmc"
+Date: Fri, 9 Jun 2017 08:53:28 -0500
+Message-ID: <20170609135328.frpf36hk242b3dxh@rob-hp-laptop>
+References: <20170607083612.14224-1-kishon@ti.com>
+ <20170607083612.14224-4-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170604101049.4592-1-uwe@kleine-koenig.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <uwe@kleine-koenig.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Andrey Smirnov <andrew.smirnov@gmail.com>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170607083612.14224-4-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Tony Lindgren <tony@atomide.com>, nsekhar@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 4, 2017 at 12:10 PM, Uwe Kleine-K=C3=B6nig <uwe@kleine-koenig.o=
-rg> wrote:
+On Wed, Jun 07, 2017 at 02:06:12PM +0530, Kishon Vijay Abraham I wrote:
+> Document deprecation of "vmmc_aux" for io regulator and use of generic
+> mmc binding "vqmmc" in omap-hsmmc.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
->  - input:      A property specifying to set the GPIO direction as input.
-> -- output-low  A property specifying to set the GPIO direction as output =
-with
-> -             the value low.
-> -- output-high A property specifying to set the GPIO direction as output =
-with
-> -             the value high.
-> +- output-inactive: A property specifying to set the GPIO direction as ou=
-tput
-> +             using the inactive level as value.
-> +- output-active: A property specifying to set the GPIO direction as outp=
-ut
-> +             using the active level as value.
-> +- output-low  A deprecated alias for "output-inactive".
-> +- output-high A deprecated alias for "output-active".
-
-Wouldn't "output-asserted" / "output-deasserted" be more to the point?
-
-If the majority prefers "active" I can live with that too.
-
-Yours,
-Linus Walleij
+Acked-by: Rob Herring <robh@kernel.org>
