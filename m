@@ -1,70 +1,80 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: dts: mt2701: Add display subsystem related
- nodes for MT2701
-Date: Fri, 09 Jun 2017 10:22:42 +0200
-Message-ID: <1496996562.2343.3.camel@pengutronix.de>
-References: <1496297324-21091-1-git-send-email-erin.lo@mediatek.com>
-         <1496297324-21091-4-git-send-email-erin.lo@mediatek.com>
-         <eafa6c79-4d12-abf5-f8ec-e91c6cc22cd4@gmail.com>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos: Add the OF graph between fimd and dsi
+Date: Fri, 09 Jun 2017 17:26:32 +0900
+Message-ID: <a98fe97c-6196-c7a1-d458-8a7204531e80@samsung.com>
+References: <CGME20170609025951epcas1p19f5ca8c241b8b79068a84eb239ed46ed@epcas1p1.samsung.com>
+ <1496977173-20550-1-git-send-email-hoegeun.kwon@samsung.com>
+ <20170609072754.GB4018@kozik-book>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <eafa6c79-4d12-abf5-f8ec-e91c6cc22cd4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20170609072754.GB4018@kozik-book>
+Content-language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, catalin.marinas@arm.com, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, javier@osg.samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, will.deacon@arm.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
-
-On Fri, 2017-06-09 at 10:14 +0200, Matthias Brugger wrote:
-> 
-> On 01/06/17 08:08, Erin Lo wrote:
-> > From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > This patch adds the device nodes for the DISP function blocks for MT2701
-> > 
-> > Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   arch/arm/boot/dts/mt2701.dtsi | 84 +++++++++++++++++++++++++++++++++++++++++++
-> >   1 file changed, 84 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> > index 4f110d5..e20b65c 100644
-> > --- a/arch/arm/boot/dts/mt2701.dtsi
-> > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> > @@ -17,6 +17,7 @@
-> >   #include <dt-bindings/interrupt-controller/irq.h>
-> >   #include <dt-bindings/interrupt-controller/arm-gic.h>
-> >   #include <dt-bindings/reset/mt2701-resets.h>
-> > +#include <dt-bindings/memory/mt2701-larb-port.h>
-> >   #include "skeleton64.dtsi"
-> >   #include "mt2701-pinfunc.h"
-> >   
-> > @@ -24,6 +25,11 @@
-> >   	compatible = "mediatek,mt2701";
-> >   	interrupt-parent = <&sysirq>;
-> >   
-> > +	aliases {
-> > +		rdma0 = &rdma0;
-> > +		rdma1 = &rdma1;
-> > +	};
-> > +
-> 
-> I know we have this alias in mt8173.dtsi, but I don't understand what 
-> they are for. Do you know?
-
-The mtk_disp_rdma platform driver uses mtk_ddp_comp_get_id() to identify
-the specific RDMA instance, which calls of_alias_get_id(). The core code
-needs to know which RDMA is which to correctly set up the display data
-paths.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMDYvMDkvMjAxNyAwNDoyNyBQTSwgS3J6eXN6dG9mIEtvemxvd3NraSB3cm90ZToKPiBPbiBG
+cmksIEp1biAwOSwgMjAxNyBhdCAxMTo1OTozM0FNICswOTAwLCBIb2VnZXVuIEt3b24gd3JvdGU6
+Cj4+IEl0IHNob3VsZCBiZSBjb25uZWN0ZWQgdG8gT0YgZ3JhcGggYmV0d2VlbiBmaW1kIGFuZCBk
+c2kuCj4+IEFkZCB0aGUgT0YgZ3JhcGggYmV0d2VlbiBmaW1kIGFuZCBkc2kuCj4gSSBuZWVkIG1v
+cmUgZXhwbGFuYXRpb24gd2h5IHRoaXMgaXMgbmVlZGVkLiBXaGF0IGhhcHBlbnMgd2l0aG91dCB0
+aGlzPwo+IFdoYXQgaXNzdWUgaXMgZml4ZWQgaGVyZT8KPgo+IFdoYXQgYWJvdXQgRXh5bm9zNTI1
+MCBhbmQgRXh5bm9zNTQyMD8gSSB0aGluayB3ZSBkbyBub3QgaGF2ZSBhIGJvYXJkIGluCj4gbWFp
+bmxpbmUgdXNpbmcgRklNRCBidXQgbWF5YmUgdGhpcyBzaG91bGQgYmUgYWRkZWQganVzdCBmb3Ig
+Y29ycmVjdAo+IGhhcmR3YXJlIGRlc2NyaXB0aW9uPwoKVGhhbmsgeW91IGZvciB5b3VyIHJldmll
+dy4KCkknbSBzb3JyeSwgdGhpcyBwYXRjaCBpcyB3cm9uZy4KUGxlYXNlIGlnbm9yZSB0aGlzIHBh
+dGNoLiA6KQoKQmVzdCByZWdhcmRzLApIb2VnZXVuCgo+Cj4KPiBCZXN0IHJlZ2FyZHMsCj4gS3J6
+eXN6dG9mCj4KPj4gU2lnbmVkLW9mZi1ieTogSG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ft
+c3VuZy5jb20+Cj4+IC0tLQo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRzaSB8
+IDI2ICsrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICAgYXJjaC9hcm0vYm9vdC9kdHMvZXh5
+bm9zNC5kdHNpICAgIHwgMjYgKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4gICAyIGZpbGVz
+IGNoYW5nZWQsIDUyIGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2V4eW5vczMyNTAuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAuZHRz
+aQo+PiBpbmRleCA1OTBlZTQ0Li4yMmQ1MjNmIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybS9ib290
+L2R0cy9leHlub3MzMjUwLmR0c2kKPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zMzI1
+MC5kdHNpCj4+IEBAIC0zMTEsNiArMzExLDE5IEBACj4+ICAgCQkJaW9tbXVzID0gPCZzeXNtbXVf
+ZmltZDA+Owo+PiAgIAkJCXNhbXN1bmcsc3lzcmVnID0gPCZzeXNfcmVnPjsKPj4gICAJCQlzdGF0
+dXMgPSAiZGlzYWJsZWQiOwo+PiArCj4+ICsJCQlwb3J0cyB7Cj4+ICsJCQkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47Cj4+ICsJCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4+ICsKPj4gKwkJCQlwb3J0QDAg
+ewo+PiArCQkJCQlyZWcgPSA8MD47Cj4+ICsJCQkJCWZpbWRfdG9fZHNpOiBlbmRwb2ludCB7Cj4+
+ICsJCQkJCQlyZW1vdGUtZW5kcG9pbnQgPQo+PiArCQkJCQkJCTwmZHNpX3RvX2ZpbWQ+Owo+PiAr
+CQkJCQl9Owo+PiArCQkJCX07Cj4+ICsJCQl9Owo+PiAgIAkJfTsKPj4gICAKPj4gICAJCWRzaV8w
+OiBkc2lAMTFDODAwMDAgewo+PiBAQCAtMzI2LDYgKzMzOSwxOSBAQAo+PiAgIAkJCSNhZGRyZXNz
+LWNlbGxzID0gPDE+Owo+PiAgIAkJCSNzaXplLWNlbGxzID0gPDA+Owo+PiAgIAkJCXN0YXR1cyA9
+ICJkaXNhYmxlZCI7Cj4+ICsKPj4gKwkJCXBvcnRzIHsKPj4gKwkJCQkjYWRkcmVzcy1jZWxscyA9
+IDwxPjsKPj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwo+PiArCQkJCXBvcnRAMCB7Cj4+
+ICsJCQkJCXJlZyA9IDwwPjsKPj4gKwkJCQkJZHNpX3RvX2ZpbWQ6IGVuZHBvaW50IHsKPj4gKwkJ
+CQkJCXJlbW90ZS1lbmRwb2ludCA9Cj4+ICsJCQkJCQkJPCZmaW1kX3RvX2RzaT47Cj4+ICsJCQkJ
+CX07Cj4+ICsJCQkJfTsKPj4gKwkJCX07Cj4+ICAgCQl9Owo+PiAgIAo+PiAgIAkJc3lzbW11X2Zp
+bWQwOiBzeXNtbXVAMTFFMjAwMDAgewo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMv
+ZXh5bm9zNC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvZXh5bm9zNC5kdHNpCj4+IGluZGV4IDQ5
+N2E5NDcuLjc3M2QzOTIgMTAwNjQ0Cj4+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczQu
+ZHRzaQo+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9leHlub3M0LmR0c2kKPj4gQEAgLTE5Myw2
+ICsxOTMsMTkgQEAKPj4gICAJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICAgCQkjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsKPj4gICAJCSNzaXplLWNlbGxzID0gPDA+Owo+PiArCj4+ICsJCXBvcnRzIHsK
+Pj4gKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+PiArCQkJI3NpemUtY2VsbHMgPSA8MD47Cj4+
+ICsKPj4gKwkJCXBvcnRAMCB7Cj4+ICsJCQkJcmVnID0gPDA+Owo+PiArCQkJCWRzaV90b19maW1k
+OiBlbmRwb2ludCB7Cj4+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9Cj4+ICsJCQkJCQk8JmZpbWRf
+dG9fZHNpPjsKPj4gKwkJCQl9Owo+PiArCQkJfTsKPj4gKwkJfTsKPj4gICAJfTsKPj4gICAKPj4g
+ICAJY2FtZXJhIHsKPj4gQEAgLTcxNSw2ICs3MjgsMTkgQEAKPj4gICAJCWlvbW11cyA9IDwmc3lz
+bW11X2ZpbWQwPjsKPj4gICAJCXNhbXN1bmcsc3lzcmVnID0gPCZzeXNfcmVnPjsKPj4gICAJCXN0
+YXR1cyA9ICJkaXNhYmxlZCI7Cj4+ICsKPj4gKwkJcG9ydHMgewo+PiArCQkJI2FkZHJlc3MtY2Vs
+bHMgPSA8MT47Cj4+ICsJCQkjc2l6ZS1jZWxscyA9IDwwPjsKPj4gKwo+PiArCQkJcG9ydEAwIHsK
+Pj4gKwkJCQlyZWcgPSA8MD47Cj4+ICsJCQkJZmltZF90b19kc2k6IGVuZHBvaW50IHsKPj4gKwkJ
+CQkJcmVtb3RlLWVuZHBvaW50ID0KPj4gKwkJCQkJCTwmZHNpX3RvX2ZpbWQ+Owo+PiArCQkJCX07
+Cj4+ICsJCQl9Owo+PiArCQl9Owo+PiAgIAl9Owo+PiAgIAo+PiAgIAl0bXU6IHRtdUAxMDBDMDAw
+MCB7Cj4+IC0tIAo+PiAxLjkuMQo+Pgo+Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3Rz
+LmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2RyaS1kZXZlbAo=
