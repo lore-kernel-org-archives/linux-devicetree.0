@@ -1,42 +1,41 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v2 03/11] drm: sun4i: ignore swapped
  mixer<->tcon connection for DE2
-Date: Fri, 9 Jun 2017 16:45:40 +0200
-Message-ID: <20170609144540.ijly4b4bp5kphubo@flea.home>
+Date: Fri, 9 Jun 2017 16:46:49 +0200
+Message-ID: <20170609144649.67i3zscq26jt5hhe@flea.home>
 References: <20170604160149.30230-1-icenowy@aosc.io>
+ <20170604160149.30230-4-icenowy@aosc.io>
+ <20170607093512.rfvpefmyskgjw3ik@flea.lan>
  <01A7F22E-C4FF-4B4B-A9BC-FF0C96B996B9@aosc.io>
  <20170607143827.4ng5gedvzn3f5pyx@flea.lan>
- <74846068.xK7nHVXuC6@jernej-laptop>
+ <66881eac1dd06d918692482bdb1ea9e6@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gsmuqn7akc7lefqc"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFPJ5LEQKGQE55J5C7I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="35hmrjg7ko7l5c5v"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBWXJ5LEQKGQEMWEEC4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <74846068.xK7nHVXuC6@jernej-laptop>
+In-Reply-To: <66881eac1dd06d918692482bdb1ea9e6-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---gsmuqn7akc7lefqc
+--35hmrjg7ko7l5c5v
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Jernej,
-
-On Wed, Jun 07, 2017 at 08:15:12PM +0200, Jernej =C5=A0krabec wrote:
-> Hi!
->=20
-> Dne sreda, 07. junij 2017 ob 16:38:27 CEST je Maxime Ripard napisal(a):
+On Thu, Jun 08, 2017 at 01:01:53PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> =E5=9C=A8 2017-06-07 22:38=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
 > > On Wed, Jun 07, 2017 at 06:01:02PM +0800, Icenowy Zheng wrote:
 > > > >I have no idea what this is supposed to be doing either.
 > > > >
@@ -95,29 +94,22 @@ ng
 > > So, again, stating what issue you were seeing before making this patch
 > > would be very helpful to see what you're trying to do / fix.
 >=20
-> If I understand correctly, she wants to make sure that DT has mixer0 - tc=
-on0=20
-> and mixer1 - tcon1 relationship and discard mixed relationship. I also be=
-lieve=20
-> that this is just temporary measure until mixed relationship is supported=
- by=20
-> the driver.
+> So maybe I can drop the forward search (searching output) code, and keep
+> only the backward search (search input) code in TCON?
+>=20
+> Forward search code is only used when binding, but backward search is use=
+d
+> for TCON to find connected mixer.
 
-yeah, but all the component stuff doesn't care about the relationships
-themselves, it just cares about the set of devices, and we use those
-relationships to build that set. In this case, even with the swapped
-connections, the set of devices remains the same, which is what
-puzzles me.
+It is hard to talk about a solution, when it's not clear what the
+issue is.
 
-> Maybe we could just leave this out for now and define only one endpoint i=
-n DT=20
-> for TVE instead of two? Vast majority of users will have 0-0 and 1-1=20
-> relationship, since there is not much point connecting HDMI with less cap=
-able=20
-> mixer than TVE.
+So please state=20
+> > > >A) What is the current behaviour
+> > > >B) Why that is a problem
+> > > >C) How do you address it
 
-Yeah, but unfortunately, we have to have a perfect representation from
-day one now...
+We'll talk about a solution once this is done.
 
 Maxime
 
@@ -133,24 +125,24 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---gsmuqn7akc7lefqc
+--35hmrjg7ko7l5c5v
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZOrSUAAoJEBx+YmzsjxAgFPoQAKgrSl1gbGCb4cOGjzG89Pyk
-7dfn2a9bHwzSKA89yNpG6LkWMavDaKcE7Fe88Qeu5vhEWECYAJkTG2zUysGbbo9R
-TPV9rd8uDHYeBRg70RzEYaG09jlqzOAzH5TKTg5atwx02aQzYKoECyC9BwrMt+dQ
-g2pU9E3AkKucVY+LE1DdRKRHlUfSPz7cHjevIAcHwv4ZZ43mR9MhqLASSZWn3bOL
-/84uOQd2Rs60bXZFbd6aAnH1DyZPKK0NOKaNNKBd3ShKSLTY249TfwGbTvy6VcwH
-kCTztpgi9wWriERXJtLhrvpvM0W1ssA59NQ5X2GOR+mRkjSOJjp9uCRiX1x3aqH6
-FWdtRS3IAh+mFsw2aWQ+ZJg1MQUeD2/MRlxFfrL3e41ki9wO3oz67c1oI/ZskMkN
-KHeC0bGBAES2SlAftgRSg4DH08L29nf3RxPB1Q0UK6yh9RPw1bgyyhowWIFLZy3g
-pbMTNlc2dQSCQZIAt7vQohf+fT8VfXyzFmnzEMbXB6nhD4gqMUH8uuTmAiR20sFM
-u3nRRBOpscIzCM8DoQQbeB5OZAQpR41yGZ42xZ1qbGGcFIjlInwNvzeZfSzG8rvy
-EQhWn/4dAwNC+466cv9/Y6iE/wGcM5cobrZbu+Tu7UB6I92wcL4goV2/TPuC/n+/
-fovEsdE7geDI9xLPpyWt
-=/lXg
+iQIcBAEBAgAGBQJZOrTZAAoJEBx+YmzsjxAge1kP/ir/KB6PzJXupxsu/zx2crOT
+ovELSJVD/peATXWCpGDLvawT4CsH4d+dIIXbcP7Z4fyc6L04eMk3G34CKY5ZQf3J
+0/L6KdujncFO0U/CUUbw5ZxKwlVgeoqZKm1aaWbc+bjDBrknqyc/z72xEaNYv4ma
+q05r7SLjHdxDEYODjkaYKAT9HJ8AYELZYm4tJbxL8fjZijnQj+iwcxX7aiSmBYr7
+lAST6HAXR9hHtzsMZGtfQzgdoeMyM8YaSwdLi2uFc8SB9397MSTcCmEk8KfaXE1L
+7w6NThfPC9XT311jwUc+G9HdDIUmG2niNYTgKEFLuPVuzwlMarmLVi529ee8Ol5H
+PWlnPhW5b0Vs6oHI7dtW6Ek1qhJY4kBNhnSvbwsnLGKlxUdOTI5cBkwSKJ4hPcTG
+DurO4PpGKNvYsgRLAnkKufwq8mTC01kXlLdHyxpkxCyDE84TKgXLty8aBJNwqo9w
+y/C0ZnPL6rKYJhdjgzy6LvuPaSNwjQ6fYmVaBGEkNJvDgO5T0Z2wOBrb9i88wrOL
+x2nvfj6stytT4WAMIw2qiwovfg8vw3xcLWEgJTWzPm7RZkgh1SuKERr84anU0NWw
+fh9DdGpLvqW9fotwvC9N3xxXMwKe1eF/DeQ9TNMo/uGZqLhpPv2n3i1B3lNYmIre
+l6KjKpALxgUSMrNmXeix
+=o/oI
 -----END PGP SIGNATURE-----
 
---gsmuqn7akc7lefqc--
+--35hmrjg7ko7l5c5v--
