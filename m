@@ -1,102 +1,40 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v8 0/3] Support for USB DRD PHY driver for NS2
-Date: Fri, 9 Jun 2017 14:25:21 +0530
-Message-ID: <a5344bd7-f7b1-90b5-cce1-d513370103e5@ti.com>
-References: <1496918103-14948-1-git-send-email-raviteja.garimella@broadcom.com>
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Subject: [PATCH v1 0/4] Patches to fix some problem for
+	rockchip i2s
+Date: Fri,  9 Jun 2017 16:52:45 +0800
+Message-ID: <1496998369-30556-1-git-send-email-sugar.zhang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496918103-14948-1-git-send-email-raviteja.garimella@broadcom.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Raviteja Garimella <raviteja.garimella@broadcom.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: heiko@sntech.de, broonie@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>, linux-kernel@vger.kernel.org, Sugar Zhang <sugar.zhang@rock-chips.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+These patches to fix some problem for rockchip i2s.
 
-On Thursday 08 June 2017 04:05 PM, Raviteja Garimella wrote:
-> Changes in v8:
-> =============
-> -Renamed phy shutdown routine
-> -Used devm_request_irq in stead of threaded irq
 
-That's not what I intended. Continue to use threaded irq but remove delayed work.
+Sugar Zhang (3):
+  ASoC: rockchip: i2s: add a delay before i2s clear
+  ASoC: rockchip: i2s: add support for i2s bclk fs configuration
+  ASoC: rockchip: i2s: fixup clk div
 
-Thanks
-Kishon
-> -Removed devm_unregister calls in probe routine
-> 
-> Changes in v7:
-> =============
-> Cleaned up unused variables in phy private data structure that's
-> missed out in v6.
-> Setting of phy mode to device/host is removed from phy power on.
-> routine.
-> 
-> Changes in v6:
-> =============
-> Removed spin locks which are not required as the references
-> to phy_ops in the same driver were removed in v5.
-> 
-> Removed host/device 'notify' routines which are registered
-> using 'extcon_register_notifier'. The irq handler is sufficient
-> to deal with the change in extcon events within the same driver.
-> 
-> Changes in v5:
-> =============
-> Removed references to phy_ops in the same driver by connect_work
-> event handler to change the phy modes.
-> 
-> To support dynamically changing the mode of the phy, it does
-> not require doing a phy reset/programming of PHY PLL. Changes
-> are made to the connect_work routine to just program the required
-> register bits to achieve this purpose.
-> 
-> Changes in v4:
-> =============
-> Remove references to edev->name in debug prints.
-> 
-> Changes in v3:
-> =============
-> Remove unnecessary checks for poweron as suggested in review.
-> 
-> Changes in v2:
-> =============
-> 1. Initialize file operations .owner field with THIS_MODULE.
-> 2. Remove unnecessary gpio example in DT bindings documentation.
->    This is previously acked by Rob Herring <robh@kernel.org>
-> 
-> Introduction for PATCH v1:
-> 
-> This patch adds support for USB Dual Role Device Phy for Broadcom
-> Northstar2 SoC. Apart from the new phy driver, this patchset contains
-> changes to Kconfig, Makefile, and Device tree files.
-> 
-> This patchset is tested on Broadcom NS2 BCM958712K reference board.
-> 
-> Repo: https://github.com/Broadcom/arm64-linux.git
-> Branch: ns2_drdphy_v8
-> 
-> Raviteja Garimella (3):
->   dt-bindings: phy: Add DT bindings documentation for NS2 USB DRD PHY
->   phy: phy-bcm-ns2-usbdrd: Broadcom USB DRD PHY driver for Northstar2
->   arm64: dts: NS2: Add USB DRD PHY device tree node
-> 
->  .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   |  30 ++
->  arch/arm64/boot/dts/broadcom/ns2.dtsi              |  14 +
->  drivers/phy/Kconfig                                |  13 +
->  drivers/phy/Makefile                               |   1 +
->  drivers/phy/phy-bcm-ns2-usbdrd.c                   | 437 +++++++++++++++++++++
->  5 files changed, 495 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
->  create mode 100644 drivers/phy/phy-bcm-ns2-usbdrd.c
-> 
+zhangjun (1):
+  ASoC: rockchip: i2s: add other configurable formats
+
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |  2 +
+ sound/soc/rockchip/rockchip_i2s.c                  | 45 +++++++++++++++++++---
+ sound/soc/rockchip/rockchip_i2s.h                  |  3 ++
+ 3 files changed, 45 insertions(+), 5 deletions(-)
+
+-- 
+1.9.1
