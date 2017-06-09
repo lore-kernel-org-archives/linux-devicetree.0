@@ -1,47 +1,39 @@
-From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: [PATCH v9 3/3] arm64: dts: NS2: Add USB DRD PHY device tree node
-Date: Fri,  9 Jun 2017 17:13:02 +0530
-Message-ID: <1497008582-17974-4-git-send-email-raviteja.garimella@broadcom.com>
-References: <1497008582-17974-1-git-send-email-raviteja.garimella@broadcom.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/4] ARM: shmobile: Document Renesas H3-based Salvator-XS board DT bindings
+Date: Fri,  9 Jun 2017 13:43:46 +0200
+Message-ID: <1497008629-3974-2-git-send-email-geert+renesas@glider.be>
+References: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497008582-17974-1-git-send-email-raviteja.garimella@broadcom.com>
+In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree node for USB Dual Role Device PHY for
-Broadcom's Northstar2 SoC.
+The Renesas Salvator-XS (Salvator-X 2nd version) development board can
+be equipped with either an R-Car H3 ES2.0 or M3-W ES1.x SiP, which are
+pin-compatible.
 
-Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
+Document board part number and compatible values for the version with
+R-Car H3.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- arch/arm64/boot/dts/broadcom/ns2.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/arm/shmobile.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-index 35a309a..35c8457 100644
---- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
-@@ -460,6 +460,20 @@
- 			};
- 		};
- 
-+		usbdrd_phy: phy@66000960 {
-+			#phy-cells = <0>;
-+			compatible = "brcm,ns2-drd-phy";
-+			reg = <0x66000960 0x24>,
-+			      <0x67012800 0x4>,
-+			      <0x6501d148 0x4>,
-+			      <0x664d0700 0x4>;
-+			reg-names = "icfg", "rst-ctrl",
-+				    "crmu-ctrl", "usb2-strap";
-+			id-gpios = <&gpio_g 30 0>;
-+			vbus-gpios = <&gpio_g 31 0>;
-+			status = "disabled";
-+		};
-+
- 		pwm: pwm@66010000 {
- 			compatible = "brcm,iproc-pwm";
- 			reg = <0x66010000 0x28>;
+diff --git a/Documentation/devicetree/bindings/arm/shmobile.txt b/Documentation/devicetree/bindings/arm/shmobile.txt
+index 63dcae4f72ce8e4e..1a671e3298643d9e 100644
+--- a/Documentation/devicetree/bindings/arm/shmobile.txt
++++ b/Documentation/devicetree/bindings/arm/shmobile.txt
+@@ -88,6 +88,8 @@ Boards:
+     compatible = "renesas,salvator-x", "renesas,r8a7795";
+   - Salvator-X (RTP0RC7796SIPB0011S)
+     compatible = "renesas,salvator-x", "renesas,r8a7796";
++  - Salvator-XS (Salvator-X 2nd version, RTP0RC7795SIPB0012S)
++    compatible = "renesas,salvator-xs", "renesas,r8a7795";
+   - SILK (RTP0RC7794LCB00011S)
+     compatible = "renesas,silk", "renesas,r8a7794"
+   - SK-RZG1E (YR8A77450S000BE)
 -- 
-2.1.0
+2.7.4
