@@ -1,129 +1,26 @@
-From: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 Subject: Re: [PATCH v4 2/3] nvmem: add snvs_lpgpr driver
-Date: Fri, 9 Jun 2017 12:11:15 +0200
-Message-ID: <20170609101115.umiaec2qdspkfag3@pengutronix.de>
+Date: Fri, 9 Jun 2017 11:20:01 +0100
+Message-ID: <8b275308-d379-d78c-dec4-a9e9c6d94332@linaro.org>
 References: <20170608165134.14971-1-o.rempel@pengutronix.de>
  <20170608165134.14971-3-o.rempel@pengutronix.de>
  <6babaffa-d782-309b-67e4-14dacb72383d@linaro.org>
+ <20170609101115.umiaec2qdspkfag3@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6babaffa-d782-309b-67e4-14dacb72383d-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170609101115.umiaec2qdspkfag3@pengutronix.de>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <ore@pengutronix.de>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 10:35:15AM +0100, Srinivas Kandagatla wrote:
-> 
-> Few more nit picks!!
-> 
-> On 08/06/17 17:51, Oleksij Rempel wrote:
-> > This is a driver for Low Power General Purpose Register (LPGPR)
-> > available on i.MX6 SoCs in Secure Non-Volatile Storage (SNVS)
-> > of this chip.
-> > 
-> > It is a 32-bit read/write register located in the low power domain.
-> > Since LPGPR is located in the battery-backed power domain, LPGPR can
-> > be used by any application for retaining data during an SoC power-down
 
-.....
 
-> > --- a/drivers/nvmem/Kconfig
-> > +++ b/drivers/nvmem/Kconfig
-> > @@ -144,4 +144,14 @@ config MESON_EFUSE
-> >   	  This driver can also be built as a module. If so, the module
-> >   	  will be called nvmem_meson_efuse.
-> > +config NVMEM_SNVS_LPGPR
-> > +	tristate "Support for Low Power General Purpose Register"
-> > +	depends on SOC_IMX6 || COMPILE_TEST
-> 
-> shouldn't you either "select MFD_SYSCON" or "depends on MFD_SYSCON"
-> here.
+On 09/06/17 11:11, Oleksij Rempel wrote:
+> And SOC_IMX6 is already doing "select MFD_SYSCON", so I assume it should
+> be enough to depend on it.
 
-according to Documentation/kbuild/kconfig-language.txt
-"In general use select only for non-visible symbols
- (no prompts anywhere) and for symbols with no dependencies."
-
-this is why I removed select.
-
-And SOC_IMX6 is already doing "select MFD_SYSCON", so I assume it should
-be enough to depend on it.
-
-Or do I miss some thing?
-
-> > +	help
-> > +	  This is a driver for Low Power General Purpose Register (LPGPR) available on
-> > +	  i.MX6 SoCs in Secure Non-Volatile Storage (SNVS) of this chip.
-> > +
-> > +	  This driver can also be built as a module. If so, the module
-> > +	  will be called nvmem-snvs-lpgpr.
-> > +
-> >   endif
-
-....
-
-> > diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> > index 173140658693..4c589184acee 100644
-> > --- a/drivers/nvmem/Makefile
-> > +++ b/drivers/nvmem/Makefile
-> > +
-> > +struct snvs_lpgpr_priv {
-> > +	struct device_d		*dev;
-> > +	struct regmap		*regmap;
-> > +	int			offset;
-> 
-> why do you need offset here, you already have access to cfg which has the
-> offset member.
-
-yes, you right. I'll update it.
-
-> 
-> > +	struct nvmem_config	cfg;
-> > +};
-> > +
-> > +struct snvs_lpgpr_cfg {
-> > +	int offset;
-> > +};
-> > +
-> > +static const struct snvs_lpgpr_cfg snvs_lpgpr_cfg_imx6q = {
-> > +	.offset = 0x68,
-> > +};
-> > +
-
-....
-
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int snvs_lpgpr_read(void *context, unsigned int offset, void *_val,
-> > +			   size_t bytes)
-> > +{
-> > +
-> > +static struct platform_driver snvs_lpgpr_driver = {
-> > +	.probe	= snvs_lpgpr_probe,
-> > +	.remove	= snvs_lpgpr_remove,
-> > +	.driver = {
-> > +		.name	= "snvs_lpgpr",
-> > +		.of_match_table = snvs_lpgpr_dt_ids,
-> > +	},
-> > +};
-> > +module_platform_driver(snvs_lpgpr_driver);
-> > +
-> > +MODULE_AUTHOR("Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
-> > +MODULE_DESCRIPTION("Low Power General Purpose Register in i.MX6 Secure Non-Volatile Storage");
-> > +MODULE_LICENSE("GPL v2");
-> > 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That should be good enough!!
