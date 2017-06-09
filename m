@@ -1,79 +1,66 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v5 3/9] dt-bindings: add Amlogic Meson GPIO
- interrupt-controller DT binding documentation
-Date: Fri, 9 Jun 2017 09:50:49 +0200
-Message-ID: <5bfb15b0-8625-85cc-53d6-90171c9e098d@baylibre.com>
-References: <66c57893-0a9e-4f8c-a017-ab346abbdfd0@gmail.com>
- <c190f764-b3af-8982-00e3-87e28eabecca@gmail.com>
- <20170607211312.av5osk5xxa5k5pr2@rob-hp-laptop>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 0/3] omap_hsmmc: use mmc_regulator_get_supply() to get
+ regulators
+Date: Fri, 9 Jun 2017 13:21:17 +0530
+Message-ID: <19f289a5-cc1d-a14a-130a-ae45710d969e@ti.com>
+References: <20170607083612.14224-1-kishon@ti.com>
+ <CAPDyKFrMnZ0EGjdm4J0mTuaq+dp8eTEr3W-pOCowuwNEV2zwYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170607211312.av5osk5xxa5k5pr2@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFrMnZ0EGjdm4J0mTuaq+dp8eTEr3W-pOCowuwNEV2zwYw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/07/2017 11:13 PM, Rob Herring wrote:
-> On Tue, May 30, 2017 at 10:26:33PM +0200, Heiner Kallweit wrote:
->> Add dt binding documentation for Amlogic meson GPIO interrupt controller.
+Hi Uffe,
+
+On Thursday 08 June 2017 12:45 PM, Ulf Hansson wrote:
+> On 7 June 2017 at 10:36, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>> This series deprecates "vmmc_aux" supply property and uses the generic
+>> "vqmmc" property.
 >>
->> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->> v5:
->> - added Reviewed-by
->> ---
->>  .../amlogic,meson-gpio-intc.txt                    | 26 ++++++++++++++++++++++
->>  1 file changed, 26 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+>> Not sure how exactly to handle omap3-overo-base.dtsi which already has
+>> both vqmmc-supply and vmmc_aux-supply without breaking old dt
+>> compatibility. (vqmmc-supply seems to have been added there by mistake
+>> from 3.15).
 >>
->> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
->> new file mode 100644
->> index 00000000..2f20d212
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
->> @@ -0,0 +1,26 @@
->> +Amlogic meson GPIO interrupt controller
->> +
->> +Meson SoCs contains an interrupt controller which is able watch the SoC pads
->> +and generate an interrupt on edges or level. The controller is essentially a
->> +256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
->> +or level and polarity. The actual number of interrupt exposed depends on the
->> +SoC.
->> +
->> +Required properties:
->> +
->> +- compatible : should be "amlogic,meson-gpio-intc".
->> +- reg : Specifies base physical address and size of the registers.
->> +- interrupt-controller : Identifies the node as an interrupt controller.
->> +- #interrupt-cells : should be 2.
->> +- parent-interrupts : list of GIC interrupts which can be used with the
->> +		      GPIO IRQ multiplexer
+>> In the dt series that will follow, will replace all vmmc_aux-supply
+>> with vqmmc-supply (In omap3-overo-base.dtsi remove the existing
+>> vqmmc-supply and then replace vmmc_aux-supply with vqmmc-supply).
+>>
+>> Kishon Vijay Abraham I (3):
+>>   mmc: host: omap_hsmmc: Do not initialize MMC regulators to NULL on
+>>     error
+>>   mmc: host: omap_hsmmc: use mmc_regulator_get_supply() to get
+>>     regulators
+>>   Documentation: dt-bindings: Document deprecation of "vmmc_aux" and
+>>     using "vqmmc"
+>>
+>>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |  2 +-
+>>  drivers/mmc/host/omap_hsmmc.c                      | 55 +++++++++-------------
+>>  2 files changed, 24 insertions(+), 33 deletions(-)
+>>
+>> --
+>> 2.11.0
+>>
 > 
-> Just use "interrupts" here.
-
-Hi Rob,
-
-If the "interrupts" property is used here like this, it breaks the interrupts binding !
-
-Neil
-
+> Besides the minor comment for patch2 this looks good to me.
 > 
->> +
->> +Example:
->> +
->> +gpio_intc: interrupt-controller@9880 {
->> +	compatible = "amlogic,meson-gpio-intc";
->> +	reg = <0x0 0x09880 0x0 0x10>;
->> +	interrupt-controller;
->> +	#interrupt-cells = <2>;
->> +	parent-interrupts = <64 65 66 67 68 69 70 71>;
->> +};
->> -- 
->> 2.13.0
->>
->>
+> In case there are no other comments, and that you agree with my
+> suggested change, you don't need to re-spin.
 
+Your suggested change looks good.
+
+Thanks
+Kishon
