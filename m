@@ -1,129 +1,54 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Add the OF graph between fimd and dsi
-Date: Fri, 9 Jun 2017 09:27:54 +0200
-Message-ID: <20170609072754.GB4018@kozik-book>
-References: <CGME20170609025951epcas1p19f5ca8c241b8b79068a84eb239ed46ed@epcas1p1.samsung.com>
- <1496977173-20550-1-git-send-email-hoegeun.kwon@samsung.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] of: Introduce of_node_get_match_data() helper
+Date: Fri, 9 Jun 2017 10:30:00 +0300
+Message-ID: <7ff6bd21-19f0-7e0c-18bf-e835e7d4319e@mentor.com>
+References: <1493142007-29347-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1496977173-20550-1-git-send-email-hoegeun.kwon@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Cc: inki.dae@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, airlied@linux.ie, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, javier@osg.samsung.com, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, a.hajda@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1493142007-29347-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 11:59:33AM +0900, Hoegeun Kwon wrote:
-> It should be connected to OF graph between fimd and dsi.
-> Add the OF graph between fimd and dsi.
+Hello Geert,
 
-I need more explanation why this is needed. What happens without this?
-What issue is fixed here?
-
-What about Exynos5250 and Exynos5420? I think we do not have a board in
-mainline using FIMD but maybe this should be added just for correct
-hardware description?
-
-
-Best regards,
-Krzysztof
-
+On 04/25/2017 08:40 PM, Geert Uytterhoeven wrote:
+> If CONFIG_OF=n, code using
 > 
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos3250.dtsi | 26 ++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos4.dtsi    | 26 ++++++++++++++++++++++++++
->  2 files changed, 52 insertions(+)
+>     info = of_match_node(matchs, np)->data;
 > 
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 590ee44..22d523f 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -311,6 +311,19 @@
->  			iommus = <&sysmmu_fimd0>;
->  			samsung,sysreg = <&sys_reg>;
->  			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					fimd_to_dsi: endpoint {
-> +						remote-endpoint =
-> +							<&dsi_to_fimd>;
-> +					};
-> +				};
-> +			};
->  		};
->  
->  		dsi_0: dsi@11C80000 {
-> @@ -326,6 +339,19 @@
->  			#address-cells = <1>;
->  			#size-cells = <0>;
->  			status = "disabled";
-> +
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
-> +
-> +				port@0 {
-> +					reg = <0>;
-> +					dsi_to_fimd: endpoint {
-> +						remote-endpoint =
-> +							<&fimd_to_dsi>;
-> +					};
-> +				};
-> +			};
->  		};
->  
->  		sysmmu_fimd0: sysmmu@11E20000 {
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index 497a947..773d392 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -193,6 +193,19 @@
->  		status = "disabled";
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				dsi_to_fimd: endpoint {
-> +					remote-endpoint =
-> +						<&fimd_to_dsi>;
-> +				};
-> +			};
-> +		};
->  	};
->  
->  	camera {
-> @@ -715,6 +728,19 @@
->  		iommus = <&sysmmu_fimd0>;
->  		samsung,sysreg = <&sys_reg>;
->  		status = "disabled";
-> +
-> +		ports {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			port@0 {
-> +				reg = <0>;
-> +				fimd_to_dsi: endpoint {
-> +					remote-endpoint =
-> +						<&dsi_to_fimd>;
-> +				};
-> +			};
-> +		};
->  	};
->  
->  	tmu: tmu@100C0000 {
-> -- 
-> 1.9.1
+> fails to compile:
 > 
+>     warning: dereferencing ‘void *’ pointer
+>     error: request for member ‘data’ in something not a structure or union
+
+IMHO firstly all the cases like one above must be fixed in place, in
+parallel do an overall conversion of subcases:
+
+-	of_id = of_match_node(some_dt_ids, dev->of_node);
++	of_id = of_match_device(some_dt_ids, dev);
+
+> Follow the example set by of_device_get_match_data(), and introduce a
+> new helper of_node_get_match_data().  This will allow to increase
+> compile-testing coverage later.
+
+Unfortunately the proposed of_node_get_match_data() is not so similar
+to the of_device_get_match_data(), the latter one has only one input
+argument in opposite to of_match_device(), which is truly convenient.
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+
+The change itself is good.
+
+Reviewed-by: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+
+--
+With best wishes,
+Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
