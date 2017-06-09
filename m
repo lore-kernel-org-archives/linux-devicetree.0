@@ -1,106 +1,116 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC PATCH 1/8] Documentation: add DT binding for ARM System
- Control and Management Interface(SCMI) protocol
-Date: Fri, 9 Jun 2017 15:47:59 +0100
-Message-ID: <8d17f317-510c-b98e-4c42-c4ad2a8f0c63@arm.com>
-References: <1496851812-19623-1-git-send-email-sudeep.holla@arm.com>
- <1496851812-19623-2-git-send-email-sudeep.holla@arm.com>
- <20170609141632.eni4k3c4aiyvbkfk@rob-hp-laptop>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v2 04/11] drm: sun4i: add support for H3's TCON0/1
+Date: Fri, 9 Jun 2017 16:48:25 +0200
+Message-ID: <20170609144825.jdalt2xakhcenhk5@flea.home>
+References: <20170604160149.30230-1-icenowy@aosc.io>
+ <20170604160149.30230-5-icenowy@aosc.io>
+ <3642057.oKT9kIlu8M@jernej-laptop>
+ <493AC6F2-3CB3-48F5-9568-A34AA927238F@aosc.io>
+ <20170607094343.qqiwnu2mhmoi6jn7@flea.lan>
+ <52F9F9C7-9A9C-435D-A0AF-FDD4317DAD69@aosc.io>
+ <20170607141957.akonr7hmuwpt7hlt@flea.lan>
+ <4CD8A3BB-965C-4C74-884C-ACE8AAF9989B@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170609141632.eni4k3c4aiyvbkfk@rob-hp-laptop>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1667399333=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <4CD8A3BB-965C-4C74-884C-ACE8AAF9989B@aosc.io>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Icenowy Zheng <icenowy@aosc.io>
+Cc: devicetree@vger.kernel.org, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Icenowy Zheng <icenowy@aosc.xyz>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
+--===============1667399333==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zgw3qpblkivtsmek"
+Content-Disposition: inline
 
-On 09/06/17 15:16, Rob Herring wrote:
-> On Wed, Jun 07, 2017 at 05:10:05PM +0100, Sudeep Holla wrote:
->> This patch adds devicetree binding for System Control and Management
->> Interface (SCMI) Message Protocol used between the Application Cores(AP)
->> and the System Control Processor(SCP). The MHU peripheral provides a
->> mechanism for inter-processor communication between SCP's M3 processor
->> and AP.
->>
->> SCP offers control and management of the core/cluster power states,
->> various power domain DVFS including the core/cluster, certain system
->> clocks configuration, thermal sensors and many others.
->>
->> SCMI protocol is developed as better replacement to the existing SCPI
->> which is not flexible and easily extensible.
->>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/arm,scmi.txt | 193 +++++++++++++++++++++
->>  1 file changed, 193 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> new file mode 100644
->> index 000000000000..d6e4b7eff199
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> @@ -0,0 +1,193 @@
->> +System Control and Management Interface (SCMI) Message Protocol
->> +----------------------------------------------------------
->> +
->> +The SCMI is intended to allow agents such as OSPM to manage various functions
->> +that are provided by the hardware platform it is running on, including power
->> +and performance functions.
->> +
->> +This binding is intended to define the interface the firmware implementing
->> +the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
->> +and Management Interface Platform Design Document")[0] provide for OSPM in
->> +the device tree.
->> +
->> +Required properties:
->> +
->> +- compatible : shall be "arm,scmi"
-> 
-> Convince me that this genericish string is specific enough.
->
 
-Now that you raised this point, I think we generate so many 4 letter
-acronyms that it can collide. How about "arm,sys-ctl-mgmt-if"
+--zgw3qpblkivtsmek
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> +- method : The method of calling the SCMI firmware. Only permitted value
->> +	   currently is:
->> +	   "mailbox-doorbell" : When mailbox doorbell is used as a mechanism
->> +				to alert the presence of a messages and/or
->> +				notification
->> +- mboxes: List of phandle and mailbox channel specifiers. It should contain
->> +	  exactly one or two mailboxes, one for transmitting messages("tx")
->> +	  and another optional for receiving the notifications("rx") if
->> +	  supported.
->> +- mbox-names: shall be "tx" or "rx"
-> 
-> ...and optionally "rx"
-> 
+On Wed, Jun 07, 2017 at 10:21:02PM +0800, Icenowy Zheng wrote:
+>=20
+>=20
+> =E4=BA=8E 2017=E5=B9=B46=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=881=
+0:19:57, Maxime Ripard <maxime.ripard@free-electrons.com> =E5=86=99=E5=88=
+=B0:
+> >On Wed, Jun 07, 2017 at 05:44:56PM +0800, Icenowy Zheng wrote:
+> >> =E4=BA=8E 2017=E5=B9=B46=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=
+=885:43:43, Maxime Ripard
+> ><maxime.ripard@free-electrons.com> =E5=86=99=E5=88=B0:
+> >> >On Mon, Jun 05, 2017 at 03:03:47AM +0800, Icenowy Zheng wrote:
+> >> >> >You should also expand function sun4i_drv_node_is_tcon() at
+> >> >sun4i_drv.c
+> >> >> >with=20
+> >> >> >new entries, but I'm not sure if this fits in this patch.
+> >> >>=20
+> >> >> Instead I think it should be renamed to something like
+> >> >> "sun4i_drv_node_is_tcon_with_ch0".
+> >> >
+> >> >I'm not sure, or at least, it shouldn't make any difference, since
+> >> >TCON without a channel 0 will not have an endpoint 0, so this will
+> >be
+> >> >dealt with already.
+> >>=20
+> >> But that will prevent new coders from add CH1-less TCON
+> >> compatibles to this function.
+> >
+> >Why? We already have such TCONs (like the A33's, or V3S') in that
+> >function.
+>=20
+> Sorry, CH0-less.
 
-OK
+That's not really an issue I think, since the endpoint 0 will not be
+there on those TCONs, the code will bail out.
 
->> +- shmem : List of phandle pointing to the shared memory(SHM) area between the
->> +	  processors using these mailboxes for IPC, one for each mailbox
->> +	  SHM can be any memory reserved for the purpose of this communication
->> +	  between the processors.
-> 
-> Maybe the mailbox binding should have a standard property for this?
-> 
+Maxime
 
-Do you mean as part of it's client binding ? If so, agreed. I can come
-up with that proposal.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
--- 
-Regards,
-Sudeep
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--zgw3qpblkivtsmek
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZOrU5AAoJEBx+YmzsjxAg39cQALEd+/Hwu2uw7R025Kjt2MxO
+RqedJCkG4kwcAfig4DatB9k/7f9b3XRN3oY35UHKPeCw41dwAx2z2feiLNHqkIEz
+yBzW647C6UXaxWb7S+4oAPG5th+vtw9cWShN7eiSPMyMCC0IyvMiKuUARAgiIulK
+UgMvCRYkp/YJ4NDMmWeUF1bGEgatblKCYhtIbLUekyZoMw9VYSlTw3FMyTg4NZiF
+TnrBc29ZRrK7KAK/FpQRacvS3C6Np1vYSPInFi4fHYJfrMxwEJgC9ytlw0gwy20R
+debt8hOch4+iAYhvbA7pKpkfddq6jTa0AoeCKnTmSmYLsE/in1ntwj1xDPlpvWhL
+nacweUSn55+1O5vUUYfqXbK1EHl1NJ1a6aBJbK0/h3iJJ13Ani0VTHouq3yNdVLN
+DZecANHbRKmCe2mz60wdnm9O1X9baipIXn7ulnrf3rUx844EA+IrXhr5V1S4UoQ/
+RTyN3u/gIH4H0HZ7j0LlN2J1Wu6CvHcAGMGygyRy7YT/GMAw5XuZk5sSWYyovzsc
+GDEZ8Snmt5LvM34YKjdsqu1/6iSqw9VXjuiQ4RLVPexQa6TVehT1a4qSttLrel/5
+HwDQy6zGeK5OzqI/mpIj8+ocC9nPt0M7oNnAVnHfy3zRaHZ10kuSfipzxJKKyvhb
+qqrWbHlL9TsPBmjhTPW/
+=sfxH
+-----END PGP SIGNATURE-----
+
+--zgw3qpblkivtsmek--
+
+--===============1667399333==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1667399333==--
