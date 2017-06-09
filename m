@@ -1,61 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 19/19] ARM: sun6i: a31s: Enable HDMI display output on the
- MSI Primo81 tablet
-Date: Fri, 9 Jun 2017 11:49:44 -0500
-Message-ID: <CAL_JsqKv_ko6NUL35kmDCyhiP_b7SMnMe-M2--X_GjJpLO1ECg@mail.gmail.com>
-References: <20170602101024.18940-1-wens@csie.org>
- <20170602101024.18940-20-wens@csie.org>
- <20170602194219.hiajr7dt2oikm52q@flea.lan>
- <20170607223625.aofk3cba3w4cvlys@rob-hp-laptop>
- <CAKb7UvgKhgCpeNzUX1ecFPuF6j+KvAWW3vprZ9nnVMBBJFi_zQ@mail.gmail.com>
- <CAGb2v64uxmxptf9VgHO8tT=AbPc+VtDhtG+rVd3Nwf9bEGr8pg@mail.gmail.com>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: Re: [PATCH v2 01/11] dt-bindings: update the
+ binding for Allwinner H3 TVE support
+Date: Sat, 10 Jun 2017 00:51:02 +0800
+Message-ID: <53E8FC74-8AC0-461A-B875-812EE4A3267E@aosc.io>
+References: <20170604160149.30230-1-icenowy@aosc.io> <20170604160149.30230-2-icenowy@aosc.io> <20170607084544.kgclybyxxttfk3ko@flea.lan> <092D4797-0034-4C39-A30A-92CFAB23AAF8@aosc.io> <20170609164915.enap3epreg5vr2gy@flea.home>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAGb2v64uxmxptf9VgHO8tT=AbPc+VtDhtG+rVd3Nwf9bEGr8pg@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree <devicetree@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-clk <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBAFE5PEQKGQECOWSFZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170609164915.enap3epreg5vr2gy-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.orgMaxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKdW4gOSwgMjAxNyBhdCAxMTowOCBBTSwgQ2hlbi1ZdSBUc2FpIDx3ZW5zQGNzaWUu
-b3JnPiB3cm90ZToKPiBPbiBUaHUsIEp1biA4LCAyMDE3IGF0IDY6NDcgQU0sIElsaWEgTWlya2lu
-IDxpbWlya2luQGFsdW0ubWl0LmVkdT4gd3JvdGU6Cj4+IE9uIFdlZCwgSnVuIDcsIDIwMTcgYXQg
-NjozNiBQTSwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4+PiBPbiBGcmks
-IEp1biAwMiwgMjAxNyBhdCAwOTo0MjoxOVBNICswMjAwLCBNYXhpbWUgUmlwYXJkIHdyb3RlOgo+
-Pj4+IE9uIEZyaSwgSnVuIDAyLCAyMDE3IGF0IDA2OjEwOjI0UE0gKzA4MDAsIENoZW4tWXUgVHNh
-aSB3cm90ZToKPj4+PiA+IFRoZSBNU0kgUHJpbW84MSB0YWJsZXQgaGFzIGEgbWljcm8gSERNSSBj
-b25uZWN0b3IgYXQgdGhlIGJvdHRvbS4KPj4+PiA+IFRoaXMgaXMgY29ubmVjdGVkIHRvIHRoZSBT
-b0NzIEhETUkgb3V0cHV0Lgo+Pj4+ID4KPj4+PiA+IEVuYWJsZSB0aGUgZGlzcGxheSBwaXBlbGlu
-ZSBhbmQgdGhlIEhETUkgb3V0cHV0Lgo+Pj4+ID4KPj4+PiA+IFNpZ25lZC1vZmYtYnk6IENoZW4t
-WXUgVHNhaSA8d2Vuc0Bjc2llLm9yZz4KPj4+PiA+IC0tLQo+Pj4+ID4gIGFyY2gvYXJtL2Jvb3Qv
-ZHRzL3N1bjZpLWEzMXMtcHJpbW84MS5kdHMgfCAyNSArKysrKysrKysrKysrKysrKysrKysrKysr
-Cj4+Pj4gPiAgMSBmaWxlIGNoYW5nZWQsIDI1IGluc2VydGlvbnMoKykKPj4+PiA+Cj4+Pj4gPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvc3VuNmktYTMxcy1wcmltbzgxLmR0cyBiL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL3N1bjZpLWEzMXMtcHJpbW84MS5kdHMKPj4+PiA+IGluZGV4IGYzNzEy
-NzUzZmE0Mi4uMjYxNTRiMmY4N2EzIDEwMDY0NAo+Pj4+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9k
-dHMvc3VuNmktYTMxcy1wcmltbzgxLmR0cwo+Pj4+ID4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-c3VuNmktYTMxcy1wcmltbzgxLmR0cwo+Pj4+ID4gQEAgLTUyLDE3ICs1Miw0MiBAQAo+Pj4+ID4g
-IC8gewo+Pj4+ID4gICAgIG1vZGVsID0gIk1TSSBQcmltbzgxIHRhYmxldCI7Cj4+Pj4gPiAgICAg
-Y29tcGF0aWJsZSA9ICJtc2kscHJpbW84MSIsICJhbGx3aW5uZXIsc3VuNmktYTMxcyI7Cj4+Pj4g
-PiArCj4+Pj4gPiArICAgaGRtaS1jb25uZWN0b3Igewo+Pj4+ID4gKyAgICAgICAgICAgY29tcGF0
-aWJsZSA9ICJoZG1pLWNvbm5lY3RvciI7Cj4+Pj4gPiArICAgICAgICAgICB0eXBlID0gImMiOwo+
-Pj4+Cj4+Pj4gU2hvdWxkIHdlIGFkZCBhIGNvbm5lY3RvciB0eXBlIGZvciB0aGlzIG9uZT8KPj4+
-Cj4+PiBjIGFzIGluIFVTQiBUeXBlIEM/IEknZCBwcmVmZXIgdG8gc2VlIGEgbmV3IGNvbXBhdGli
-bGUgc3RyaW5nLiBJcyB0eXBlCj4+PiBldmVuIGRvY3VtZW50ZWQ/Cj4KPiBJbmRlZWQgaXQgaXM6
-Cj4KPiBodHRwOi8vZWxpeGlyLmZyZWUtZWxlY3Ryb25zLmNvbS9saW51eC9sYXRlc3Qvc291cmNl
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2Nvbm5lY3Rvci9oZG1p
-LWNvbm5lY3Rvci50eHQjTDYKCi1FVE9PTUFOWUJJTkRJTkdTCgpJIGd1ZXNzIEkgZG9uJ3QgdW5k
-ZXJzdGFuZCB0aGUgb3JpZ2luYWwgcXVlc3Rpb24gdGhlbi4gVGhpcyBsb29rcyBmaW5lIHRvIG1l
-LgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
-aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
-czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+
+
+=E4=BA=8E 2017=E5=B9=B46=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=8812=
+:49:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0=
+:
+>On Wed, Jun 07, 2017 at 04:48:50PM +0800, Icenowy Zheng wrote:
+>> >> @@ -189,6 +211,8 @@ supported.
+>> >>  Required properties:
+>> >>    - compatible: value must be one of:
+>> >>      * allwinner,sun8i-v3s-de2-mixer
+>> >> +    * allwinner,sun8i-h3-de2-mixer0
+>> >> +    * allwinner,sun8i-h3-de2-mixer1
+>> >
+>> >Again, please explain why we need to have different compatibles
+>> >here. If it's only about the number of planes, this should be dealt
+>> >with a property, not a compatible.
+>>=20
+>> Only mixer0 has "VEP" and write-back support, at least on H3.
+>
+>What is that VEP? writeback support can also be expressed by a
+>property.
+
+I don't know what VEP is...
+
+But we are really facing different cores, like sun50i-a64-mmc
+and sun50i-a64-emmc.
+
+>
+>Maxime
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
