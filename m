@@ -1,49 +1,32 @@
-From: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Subject: [RESEND PATCH v8 1/3] dt-bindings: phy: Add DT bindings documentation for NS2 USB DRD PHY
-Date: Fri,  9 Jun 2017 16:23:49 +0530
-Message-ID: <1497005631-2836-2-git-send-email-raviteja.garimella@broadcom.com>
+From: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: [RESEND PATCH v8 3/3] arm64: dts: NS2: Add USB DRD PHY device tree node
+Date: Fri,  9 Jun 2017 16:23:51 +0530
+Message-ID: <1497005631-2836-4-git-send-email-raviteja.garimella@broadcom.com>
 References: <1497005631-2836-1-git-send-email-raviteja.garimella@broadcom.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497005631-2836-1-git-send-email-raviteja.garimella@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kishon Vijay Abraham I <kishon@ti.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497005631-2836-1-git-send-email-raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT bindings documentation for NS2 DRD PHY driver.
+This patch adds device tree node for USB Dual Role Device PHY for
+Broadcom's Northstar2 SoC.
 
-Signed-off-by: Raviteja Garimella <raviteja.garimella@broadcom.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Raviteja Garimella <raviteja.garimella-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 ---
- .../devicetree/bindings/phy/brcm,ns2-drd-phy.txt   | 30 ++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
+ arch/arm64/boot/dts/broadcom/ns2.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt b/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
-new file mode 100644
-index 0000000..04f063a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/brcm,ns2-drd-phy.txt
-@@ -0,0 +1,30 @@
-+BROADCOM NORTHSTAR2 USB2 (DUAL ROLE DEVICE) PHY
-+
-+Required properties:
-+ - compatible: brcm,ns2-drd-phy
-+ - reg: offset and length of the NS2 PHY related registers.
-+ - reg-names
-+   The below registers must be provided.
-+   icfg - for DRD ICFG configurations
-+   rst-ctrl - for DRD IDM reset
-+   crmu-ctrl - for CRMU core vdd, PHY and PHY PLL reset
-+   usb2-strap - for port over current polarity reversal
-+ - #phy-cells: Must be 0. No args required.
-+ - vbus-gpios: vbus gpio binding
-+ - id-gpios: id gpio binding
-+
-+Refer to phy/phy-bindings.txt for the generic PHY binding properties
-+
-+Example:
-+	usbdrd_phy: phy@66000960 {
+diff --git a/arch/arm64/boot/dts/broadcom/ns2.dtsi b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+index 35a309a..35c8457 100644
+--- a/arch/arm64/boot/dts/broadcom/ns2.dtsi
++++ b/arch/arm64/boot/dts/broadcom/ns2.dtsi
+@@ -460,6 +460,20 @@
+ 			};
+ 		};
+ 
++		usbdrd_phy: phy@66000960 {
 +			#phy-cells = <0>;
 +			compatible = "brcm,ns2-drd-phy";
 +			reg = <0x66000960 0x24>,
@@ -54,6 +37,16 @@ index 0000000..04f063a
 +				    "crmu-ctrl", "usb2-strap";
 +			id-gpios = <&gpio_g 30 0>;
 +			vbus-gpios = <&gpio_g 31 0>;
-+	};
++			status = "disabled";
++		};
++
+ 		pwm: pwm@66010000 {
+ 			compatible = "brcm,iproc-pwm";
+ 			reg = <0x66010000 0x28>;
 -- 
 2.1.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
