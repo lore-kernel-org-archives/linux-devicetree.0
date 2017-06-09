@@ -1,79 +1,88 @@
-From: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/3] Add support for the S6E3HF2 panel on TM2e board
-Date: Fri, 09 Jun 2017 12:52:36 +0900
-Message-ID: <50d5707c-378c-e338-3358-08ff1657cf8f@samsung.com>
-References: <CGME20170418084047epcas5p493261a4cb9204e682f60cde8d659565c@epcas5p4.samsung.com>
-        <1492504836-19225-1-git-send-email-hoegeun.kwon@samsung.com>
-        <4b974579-eb2f-1258-86e3-21ffeb22589a@samsung.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add Synopsys DW MIPI DSI DRM
+ bridge driver
+Date: Fri, 9 Jun 2017 09:41:00 +0530
+Message-ID: <7502cbc2-9feb-4dd3-3d95-b5f33b8a8872@codeaurora.org>
+References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
+ <1496414235-20098-3-git-send-email-philippe.cornu@st.com>
+ <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <4b974579-eb2f-1258-86e3-21ffeb22589a-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, Philippe CORNU <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Chris Zhong <zyw@rock-chips.com>, Mickael Reulier <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, Vincent Abriou <vincent.abriou@st.com>, Ludovic Barre <ludovic.barre@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, zourongrong@gmail.com, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Thierry,
-
-Could you check these patches.
-
-Regards,
-Hoegeun
-
-On 05/19/2017 03:56 PM, Hoegeun Kwon wrote:
-> Dear Thierry,
->
-> Could you check these patches?
-> I think this patches have accumulated enough dust.
-> If you have a another opinion, please tell me.
->
-> Best regards,
-> Hoegeun
->
-> On 04/18/2017 05:40 PM, Hoegeun Kwon wrote:
->> Hi all,
->>
->> The purpose of this patch is add support for s6e3hf2 AMOLED panel on
->> the TM2e board. The panel has 1600x2560 resolution in 5.65" physical
->> panel in the TM2e device.
->>
->> The s6e3hf2 panel(5.65") is simliar to the previous s6e3ha2 panel(5.7"),
->> but resolution and some command message are different. So it can be
->> distinguished as a compatiblitiy string.
->>
->> Best regards,
->> Hoegeun
->>
->> Changes for V3:
->> - Remove te-gpios property in dts.
->> - Added Reviewed-by: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> on all patches.
->> - Added Reviewed-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> on patch (2/3).
->>
->> Changes for V2:
->> - Add new compatible string to "samsung,s6e3ha2.txt binding with 
->> comments.
->> - Fix the panel name from s6e3ha2-e to s6e3hf2
->>
->> Hoegeun Kwon (3):
->>    dt-bindings: Add support for samsung s6e3hf2 panel
->>    drm/panel: s6e3ha2: Add support for s6e3hf2 panel on TM2e board
->>    arm64: dts: exynos: Add support for s6e3hf2 panel device on TM2e 
->> board
->>
->>   .../bindings/display/panel/samsung,s6e3ha2.txt     |  5 +-
->>   arch/arm64/boot/dts/exynos/exynos5433-tm2e.dts     | 11 ++++
->>   drivers/gpu/drm/panel/panel-samsung-s6e3ha2.c      | 64 
->> +++++++++++++++++++---
->>   3 files changed, 72 insertions(+), 8 deletions(-)
->>
->
->
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgUGhpbGlwcGUsIFJvYiwKCk9uIDA2LzA4LzIwMTcgMDk6MTAgUE0sIFJvYiBIZXJyaW5nIHdy
+b3RlOgo+IE9uIEZyaSwgSnVuIDAyLCAyMDE3IGF0IDA0OjM3OjExUE0gKzAyMDAsIFBoaWxpcHBl
+IENPUk5VIHdyb3RlOgo+PiBUaGlzIHBhdGNoIGFkZHMgZG9jdW1lbnRhdGlvbiBvZiBkZXZpY2Ug
+dHJlZSBiaW5kaW5ncyBmb3IgdGhlCj4+IFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSSBEU0kgaG9z
+dCBEUk0gYnJpZGdlIGRyaXZlci4KPj4KCkNvdWxkIHlvdSBkcm9wICJEUk0gYnJpZGdlIGRyaXZl
+ciIgZnJvbSB0aGUgc3ViamVjdCBhbmQgY29tbWl0IG1lc3NhZ2UgYW5kCnJlcGxhY2UgaXQgd2l0
+aCBqdXN0ICJicmlkZ2UiIG9yICJjb250cm9sbGVyIi4gRFQgYmluZGluZ3Mgc2hvdWxkbid0IG1l
+bnRpb24KZHJpdmVycy4KCj4+IFNpZ25lZC1vZmYtYnk6IFBoaWxpcHBlIENPUk5VIDxwaGlsaXBw
+ZS5jb3JudUBzdC5jb20+Cj4+IC0tLQo+PiAgIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9k
+d19taXBpX2RzaS50eHQgICAgICAgIHwgMzAgKysrKysrKysrKysrKysrKysrKysrKwo+PiAgIDEg
+ZmlsZSBjaGFuZ2VkLCAzMCBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2Rz
+aS50eHQKPj4KPj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0Cj4+IG5ldyBmaWxlIG1v
+ZGUgMTAwNjQ0Cj4+IGluZGV4IDAwMDAwMDAuLjFkN2M0MzgKPj4gLS0tIC9kZXYvbnVsbAo+PiAr
+KysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdf
+bWlwaV9kc2kudHh0Cj4+IEBAIC0wLDAgKzEsMzAgQEAKPj4gK1N5bm9wc3lzIERlc2lnbldhcmUg
+TUlQSSBEU0kgaG9zdCBjb250cm9sbGVyCj4+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PQo+PiArCj4+ICtUaGlzIGRvY3VtZW50IGRlZmluZXMgZGV2aWNlIHRy
+ZWUgcHJvcGVydGllcyBmb3IgdGhlIFN5bm9wc3lzIERlc2lnbldhcmUgTUlQSQo+PiArRFNJIGhv
+c3QgY29udHJvbGxlci4gSXQgZG9lc24ndCBjb25zdGl0dWUgYSBkZXZpY2UgdHJlZSBiaW5kaW5n
+IHNwZWNpZmljYXRpb24KCnMvY29uc3RpdHVlL2NvbnN0aXR1dGUKCj4+ICtieSBpdHNlbGYgYnV0
+IGlzIG1lYW50IHRvIGJlIHJlZmVyZW5jZWQgYnkgcGxhdGZvcm0tc3BlY2lmaWMgZGV2aWNlIHRy
+ZWUKPj4gK2JpbmRpbmdzLgo+PiArCj4+ICtXaGVuIHJlZmVyZW5jZWQgZnJvbSBwbGF0Zm9ybSBk
+ZXZpY2UgdHJlZSBiaW5kaW5ncyB0aGUgcHJvcGVydGllcyBkZWZpbmVkIGluCj4+ICt0aGlzIGRv
+Y3VtZW50IGFyZSBkZWZpbmVkIGFzIGZvbGxvd3MuIFRoZSBwbGF0Zm9ybSBkZXZpY2UgdHJlZSBi
+aW5kaW5ncyBhcmUKPj4gK3Jlc3BvbnNpYmxlIGZvciBkZWZpbmluZyB3aGV0aGVyIGVhY2ggcHJv
+cGVydHkgaXMgcmVxdWlyZWQgb3Igb3B0aW9uYWwuCj4+ICsKPj4gKy0gcmVnOiBNZW1vcnkgbWFw
+cGVkIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBEV0MgTUlQSSBEU0kKPj4gKyAgcmVn
+aXN0ZXJzLiAobWFuZGF0b3J5KQo+PiArCj4+ICstIGNsb2NrczogUmVmZXJlbmNlcyB0byBhbGwg
+dGhlIGNsb2NrcyBzcGVjaWZpZWQgaW4gdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5Cj4+ICsgIGFz
+IHNwZWNpZmllZCBpbiBbMV0uIChtYW5kYXRvcnkpCj4+ICsKPj4gKy0gY2xvY2stbmFtZXM6ICJw
+Y2xrIiBpcyBwZXJpcGhlcmFsIGNsb2NrIGZvciBlaXRoZXIgQUhCIGFuZCBBUEIuIChtYW5kYXRv
+cnkpCj4gCj4gU2VlbXMgc3RyYW5nZSB0aGVyZSdzIG5vdCBhbHNvIGEgcGl4ZWwgb3IgYml0IGNs
+b2NrPyBPciB0aGlzIGdldHMgZHJpdmVuCj4gZnJvbSB0aGUgcGh5PwoKU2luY2UgeW91IG1lbnRp
+b24gcGh5IGhlcmUsIEkgd2FudGVkIHRvIHNoYXJlIGEgY29uY2VybiB3aXRoIHRoZSBiaW5kaW5n
+cy4KVGhlc2UgYmluZGluZ3MgZG9uJ3QgaGF2ZSBhIHNlcGFyYXRlIFBIWSBEVCBub2RlLiBUaGUg
+UEhZIGlzIGFzc3VtZWQgYXMgYQpwYXJ0IG9mIHRoZSBJUCB3aGVuIGludGVncmF0ZWQgYnkgYSBT
+b0MuIFRoZXJlIGFyZSBhbHJlYWR5IHJvY2tjaGlwIGFuZApoaXNpbCBEU0kgYmluZGluZ3MgdGhh
+dCB1c2UgdGhpcyBJUCBidXQgZG9uJ3QgZGVmaW5lIGEgUEhZIG5vZGUuCgpJdCdzIGEgc2ltaWxh
+ciBzaXR1YXRpb24gd2l0aCB0aGUgRFctSERNSSBiaW5kaW5ncy4KCkZvciBleGFtcGxlLCB3aGVu
+IHRoZSBEVyBIRE1JIGlzIGludGVncmF0ZWQgaW4gcm9ja2NoaXAgb3IgcmVuZXNhcyBTb0MsIHRo
+ZQpiaW5kaW5ncyAicm9ja2NoaXAscmszMjg4LWR3LWhkbWkiIG9yICJyZW5lc2FzLHI4YTc3OTUt
+ZHctaGRtaSIgYXJlIHVzZWQsCmFuZCB0aGV5IGRvbid0IGhhdmUgYSBzZXBhcmF0ZSBQSFkgRFQg
+bm9kZS4KCkkgd2Fzbid0IHN1cmUgd2hldGhlciB0aGlzIGlzIHRoZSByaWdodCB3YXkgdG8gcHJv
+Y2VlZCBvciBub3QgZm9yIHN1Y2ggSVBzLgpTb21lIGFkdmljZSB3b3VsZCBoZWxwIHVzIGhlcmUu
+CgpUaGFua3MsCkFyY2hpdAoKPiAKPj4gKwo+PiArLSByZXNldHM6IFJlZmVyZW5jZXMgdG8gYWxs
+IHRoZSByZXNldHMgc3BlY2lmaWVkIGluIHRoZSByZXNldC1uYW1lcyBwcm9wZXJ0eQo+PiArICBh
+cyBzcGVjaWZpZWQgaW4gWzJdLiAob3B0aW9uYWwpCj4+ICsKPj4gKy0gcmVzZXQtbmFtZXM6IHN0
+cmluZyByZXNldCBuYW1lLCBtdXN0IGJlICJhcGIiIGlmIHVzZWQuIChvcHRpb25hbCkKPj4gKwo+
+PiArLSBwYW5lbCBvciBicmlkZ2Ugbm9kZTogc2VlIFszXS4gKG1hbmRhdG9yeSkKPj4gKwo+PiAr
+WzFdIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iaW5kaW5n
+cy50eHQKPj4gK1syXSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcmVzZXQvcmVz
+ZXQudHh0Cj4+ICtbM10gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
+bWlwaS1kc2ktYnVzLnR4dAo+PiAtLSAKPj4gMS45LjEKPj4KCi0tIApRdWFsY29tbSBJbm5vdmF0
+aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51
+eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdApfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
+bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
