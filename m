@@ -1,66 +1,70 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 0/3] omap_hsmmc: use mmc_regulator_get_supply() to get
- regulators
-Date: Fri, 9 Jun 2017 13:21:17 +0530
-Message-ID: <19f289a5-cc1d-a14a-130a-ae45710d969e@ti.com>
-References: <20170607083612.14224-1-kishon@ti.com>
- <CAPDyKFrMnZ0EGjdm4J0mTuaq+dp8eTEr3W-pOCowuwNEV2zwYw@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] of: Introduce of_node_get_match_data() helper
+Date: Fri, 9 Jun 2017 09:56:05 +0200
+Message-ID: <CAMuHMdXxYF5_B7CX71dv9COThH3KnJdujqnCqrmSiPv_N0gM=Q@mail.gmail.com>
+References: <1493142007-29347-1-git-send-email-geert+renesas@glider.be> <7ff6bd21-19f0-7e0c-18bf-e835e7d4319e@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFrMnZ0EGjdm4J0mTuaq+dp8eTEr3W-pOCowuwNEV2zwYw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7ff6bd21-19f0-7e0c-18bf-e835e7d4319e-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uffe,
+Hi Vladimir,
 
-On Thursday 08 June 2017 12:45 PM, Ulf Hansson wrote:
-> On 7 June 2017 at 10:36, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->> This series deprecates "vmmc_aux" supply property and uses the generic
->> "vqmmc" property.
+On Fri, Jun 9, 2017 at 9:30 AM, Vladimir Zapolskiy
+<vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+> On 04/25/2017 08:40 PM, Geert Uytterhoeven wrote:
+>> If CONFIG_OF=3Dn, code using
 >>
->> Not sure how exactly to handle omap3-overo-base.dtsi which already has
->> both vqmmc-supply and vmmc_aux-supply without breaking old dt
->> compatibility. (vqmmc-supply seems to have been added there by mistake
->> from 3.15).
+>>     info =3D of_match_node(matchs, np)->data;
 >>
->> In the dt series that will follow, will replace all vmmc_aux-supply
->> with vqmmc-supply (In omap3-overo-base.dtsi remove the existing
->> vqmmc-supply and then replace vmmc_aux-supply with vqmmc-supply).
+>> fails to compile:
 >>
->> Kishon Vijay Abraham I (3):
->>   mmc: host: omap_hsmmc: Do not initialize MMC regulators to NULL on
->>     error
->>   mmc: host: omap_hsmmc: use mmc_regulator_get_supply() to get
->>     regulators
->>   Documentation: dt-bindings: Document deprecation of "vmmc_aux" and
->>     using "vqmmc"
->>
->>  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |  2 +-
->>  drivers/mmc/host/omap_hsmmc.c                      | 55 +++++++++-------------
->>  2 files changed, 24 insertions(+), 33 deletions(-)
->>
->> --
->> 2.11.0
->>
-> 
-> Besides the minor comment for patch2 this looks good to me.
-> 
-> In case there are no other comments, and that you agree with my
-> suggested change, you don't need to re-spin.
+>>     warning: dereferencing =E2=80=98void *=E2=80=99 pointer
+>>     error: request for member =E2=80=98data=E2=80=99 in something not a =
+structure or union
+>
+> IMHO firstly all the cases like one above must be fixed in place, in
+> parallel do an overall conversion of subcases:
+>
+> -       of_id =3D of_match_node(some_dt_ids, dev->of_node);
+> +       of_id =3D of_match_device(some_dt_ids, dev);
+>
+>> Follow the example set by of_device_get_match_data(), and introduce a
+>> new helper of_node_get_match_data().  This will allow to increase
+>> compile-testing coverage later.
+>
+> Unfortunately the proposed of_node_get_match_data() is not so similar
+> to the of_device_get_match_data(), the latter one has only one input
+> argument in opposite to of_match_device(), which is truly convenient.
 
-Your suggested change looks good.
+Thanks to your comment, I realized I can just use of_device_get_match_data(=
+).
+Hence I'd like to withdraw my patch.
 
-Thanks
-Kishon
+Background: I encountered this in a clock driver, which started life as
+a CLK_OF_DECLARE() driver, but ended up as a platform driver anyway.
+CLK_OF_DECLARE() drivers don't have a struct device to use, so the
+driver still used of_match_node() instead of of_match_device().
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
