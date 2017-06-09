@@ -1,78 +1,71 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: Re: [PATCH v2 01/11] dt-bindings: update the
- binding for Allwinner H3 TVE support
-Date: Fri, 09 Jun 2017 23:24:47 +0200
-Message-ID: <7305754.diZEu7DK25@jernej-laptop>
-References: <20170604160149.30230-1-icenowy@aosc.io> <20170609164915.enap3epreg5vr2gy@flea.home> <53E8FC74-8AC0-461A-B875-812EE4A3267E@aosc.io>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v8 14/34] ARM: dts: imx6-sabreauto: add the ADV7180 video
+ decoder
+Date: Fri, 9 Jun 2017 23:38:43 +0200
+Message-ID: <20170609213843.GB28596@amd>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
+ <CAJ+vNU0C0=4hUq+g1P7yTzLzFPidfauQROPOVr4WQWKNZz_xmQ@mail.gmail.com>
+ <dd5b29b7-bf92-5f03-caef-1843a9f32cd3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBI5E5TEQKGQEJKWM3RY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <53E8FC74-8AC0-461A-B875-812EE4A3267E-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, icenowy-h8G6r0blFSE@public.gmane.org
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <dd5b29b7-bf92-5f03-caef-1843a9f32cd3-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Sudip Mukherjee <sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Tiffany Lin <tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jean-Christophe TROTIN <jean-christophe.trotin-qxv4g6HH51o@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Niklas
 List-Id: devicetree@vger.kernel.org
 
-Hi!
 
-Dne petek, 09. junij 2017 ob 18:51:02 CEST je Icenowy Zheng napisal(a):
-> =E4=BA=8E 2017=E5=B9=B46=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-12:49:15, Maxime Ripard <maxime.ripard@free-
-electrons.com> =E5=86=99=E5=88=B0:
-> >On Wed, Jun 07, 2017 at 04:48:50PM +0800, Icenowy Zheng wrote:
-> >> >> @@ -189,6 +211,8 @@ supported.
-> >> >>=20
-> >> >>  Required properties:
-> >> >>    - compatible: value must be one of:
-> >> >>      * allwinner,sun8i-v3s-de2-mixer
-> >> >>=20
-> >> >> +    * allwinner,sun8i-h3-de2-mixer0
-> >> >> +    * allwinner,sun8i-h3-de2-mixer1
-> >> >
-> >> >Again, please explain why we need to have different compatibles
-> >> >here. If it's only about the number of planes, this should be dealt
-> >> >with a property, not a compatible.
-> >>=20
-> >> Only mixer0 has "VEP" and write-back support, at least on H3.
+--V0207lvV8h4k8FAm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu 2017-06-08 13:36:12, Steve Longerbeam wrote:
+>=20
+>=20
+> On 06/08/2017 01:25 PM, Tim Harvey wrote:
 > >
-> >What is that VEP? writeback support can also be expressed by a
-> >property.
+> >
+> >Steve,
+> >
+> >You need to remove the fim node now that you've moved this to V4L2 contr=
+ols.
+> >
 >=20
-> I don't know what VEP is...
+> Yep, I caught this just after sending the v8 patchset. I'll send
+> a v9 of this patch.
 
-VEP is probably Video Enhancement Processor (?). Although I'm not sure if t=
-hat=20
-is really mixer specific. Icenowy, can you explain where did you get this i=
-nfo?=20
+This needs ack from devicetree people, then it can be merged. Can you
+be a bit more forceful getting the ack?
 
-Best regards,
-Jernej
+I don't think it makes sense to resubmit v9 before that. This is not a
+rocket science.
 
->=20
-> But we are really facing different cores, like sun50i-a64-mmc
-> and sun50i-a64-emmc.
->=20
-> >Maxime
->=20
-> --
-> You received this message because you are subscribed to the Google Groups
-> "linux-sunxi" group. To unsubscribe from this group and stop receiving
-> emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org=
-.
-> For more options, visit https://groups.google.com/d/optout.
-
-
+Thanks,
+									Pavel
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--V0207lvV8h4k8FAm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlk7FWMACgkQMOfwapXb+vLpugCfZjSfwyFRi6w6oDbH6OQOEF1Q
+1mwAoJl9EjiZJjjl+CWmoZxc1Hr/VThw
+=NRlt
+-----END PGP SIGNATURE-----
+
+--V0207lvV8h4k8FAm--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
