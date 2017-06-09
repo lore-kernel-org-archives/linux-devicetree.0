@@ -1,152 +1,74 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] leds: pca955x: add GPIO support
-Date: Fri, 9 Jun 2017 22:56:14 +0200
-Message-ID: <0c738e3d-4c13-9ba2-d1ef-50e471019756@gmail.com>
-References: <1494311772-21872-1-git-send-email-clg@kaod.org>
- <20b94199-a154-53cd-96d1-910ae3de1085@gmail.com>
- <7d30134c-c8c6-3475-1a7a-534199167b5c@kaod.org>
- <e03da89b-b5b3-0a32-bca8-621bfa0bc305@gmail.com>
- <24ff150b-0c12-3b5c-fbcd-5b8bedce3139@kaod.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 3/9] dt-bindings: add Amlogic Meson GPIO
+ interrupt-controller DT binding documentation
+Date: Fri, 9 Jun 2017 15:58:20 -0500
+Message-ID: <CAL_JsqLnBqVDPq6DGaFvxv1emXBZy4o+hWH0+8146EoeJ2BRKA@mail.gmail.com>
+References: <66c57893-0a9e-4f8c-a017-ab346abbdfd0@gmail.com>
+ <c190f764-b3af-8982-00e3-87e28eabecca@gmail.com> <20170607211312.av5osk5xxa5k5pr2@rob-hp-laptop>
+ <5bfb15b0-8625-85cc-53d6-90171c9e098d@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <24ff150b-0c12-3b5c-fbcd-5b8bedce3139-Bxea+6Xhats@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <5bfb15b0-8625-85cc-53d6-90171c9e098d@baylibre.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-amlogic@lists.infradead.org, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 06/09/2017 01:13 PM, Cédric Le Goater wrote:
-> Hello,
-> 
->>>> Thanks for the patch.
->>>>
->>>> Generally I'd split it into two patches:
->>>> 1/2: addition of  LED class specific DT support
->>>> 2/2: addition of GPIO support (for this one please cc also
->>>>      GPIO subsystem maintainer)
+On Fri, Jun 9, 2017 at 2:50 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
+> On 06/07/2017 11:13 PM, Rob Herring wrote:
+>> On Tue, May 30, 2017 at 10:26:33PM +0200, Heiner Kallweit wrote:
+>>> Add dt binding documentation for Amlogic meson GPIO interrupt controller.
 >>>
->>> OK. I will in next version.
->>>  
->>>> Please also see my comments below.
->>>>
->>>> On 05/09/2017 08:36 AM, Cédric Le Goater wrote:
->>>>> The PCA955x family of chips are I2C LED blinkers whose pins not used
->>>>> to control LEDs can be used as general purpose I/Os (GPIOs).
->>>>>
->>>>> The following adds support for device tree and Open Firmware to be
->>>>> able do define different operation modes for each pin. See bindings
->>>>> documentation for more details. The pca955x driver is then extended
->>>>> with a gpio_chip when pins are operating in GPIO mode.
->>>>>
->>>>> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
->>>>> ---
->>>>>  .../devicetree/bindings/leds/leds-pca955x.txt      | 103 ++++++++
->>>>>  drivers/leds/Kconfig                               |  11 +
->>>>>  drivers/leds/leds-pca955x.c                        | 290 ++++++++++++++++++---
->>>>>  3 files changed, 374 insertions(+), 30 deletions(-)
->>>>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pca955x.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
->>>>> new file mode 100644
->>>>> index 000000000000..98d1053dd1b0
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
->>>>> @@ -0,0 +1,103 @@
->>>>> +LEDs connected to pca9550, pca9551, pca9552, pca9553,
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible : should be one of :
->>>>> +	"nxp,pca9550"
->>>>> +	"nxp,pca9551"
->>>>> +	"nxp,pca9552"
->>>>> +	"nxp,pca9553"
->>>>> +- #address-cells: must be 1
->>>>> +- #size-cells: must be 0
->>>>> +- reg: I2C slave address. depends on the model.
->>>>> +
->>>>> +Optional properties:
->>>>> +- gpio-controller: allows pins to be used as GPIOs.
->>>>> +- #gpio-cells: if present, must not be 0.
->>>>> +- gpio-base : base number of the pins used as GPIOs. If there are more
->>>>> +              than one, they should be contiguous. See 'type' property
->>>>> +              below.
->>>>> +
->>>>> +LED sub-node properties:
->>>>> +- reg   : number of LED line.
->>>>> +		from 0 to  1 in pca9550
->>>>> +		from 0 to  7 in pca9551
->>>>> +		from 0 to 15 in pca9552
->>>>> +		from 0 to  3 in pca9553
->>>>> +- compatible: either "none", "led" (default) or "gpio".
->>>>> +- label : (optional)
->>>>> +          see Documentation/devicetree/bindings/leds/common.txt
->>>>> +- linux,default-trigger : (optional)
->>>>> +          see Documentation/devicetree/bindings/leds/common.txt
->>>>> +
->>>>> +Examples:
->>>>> +
->>>>> +pca9552: pca9552@60 {
->>>>> +	compatible = "nxp,pca9552";
->>>>> +	#address-cells = <1>;
->>>>> +        #size-cells = <0>;
->>>>> +	reg = <0x60>;
->>>>> +
->>>>> +	gpio-controller;
->>>>> +	#gpio-cells = <2>;
->>>>> +	gpio-base = <12>;
->>>>> +
->>>>> +	gpio@12 {
->>>>> +		label = "GPIO12";
->>>>> +		reg = <12>;
->>>>> +		compatible = "gpio";
->>>>> +	};
->>>>> +	gpio@13 {
->>>>> +		label = "GPIO13";
->>>>> +		reg = <13>;
->>>>> +		compatible = "gpio";
->>>>> +	};
->>>>> +	gpio@14 {
->>>>> +		label = "GPIO14";
->>>>> +		reg = <14>;
->>>>> +		compatible = "gpio";
->>>>> +	};
->>>>> +	gpio@15 {
->>>>> +		label = "GPIO15";
->>>>> +		reg = <15>;
->>>>> +		compatible = "gpio";
->>>>> +	};
->>>>
->>>> I think that for GPIO pins we should have GPIO specific bindings,
->>>> but DT maintainer would have to give his opinion here.
+>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+>>> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+>>> ---
+>>> v5:
+>>> - added Reviewed-by
+>>> ---
+>>>  .../amlogic,meson-gpio-intc.txt                    | 26 ++++++++++++++++++++++
+>>>  1 file changed, 26 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
 >>>
->>> I have got my inspiration from the tca6507 bindings.
+>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+>>> new file mode 100644
+>>> index 00000000..2f20d212
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+>>> @@ -0,0 +1,26 @@
+>>> +Amlogic meson GPIO interrupt controller
+>>> +
+>>> +Meson SoCs contains an interrupt controller which is able watch the SoC pads
+>>> +and generate an interrupt on edges or level. The controller is essentially a
+>>> +256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
+>>> +or level and polarity. The actual number of interrupt exposed depends on the
+>>> +SoC.
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible : should be "amlogic,meson-gpio-intc".
+>>> +- reg : Specifies base physical address and size of the registers.
+>>> +- interrupt-controller : Identifies the node as an interrupt controller.
+>>> +- #interrupt-cells : should be 2.
+>>> +- parent-interrupts : list of GIC interrupts which can be used with the
+>>> +                  GPIO IRQ multiplexer
 >>
->> Right, but AFAIK there was no DT maintainer position at that time
->> and those bindings don't have relevant ack. I'd rather wait for
->> DT maintainer opinion so as to avoid spawning wrong practices.
->>
->>>> Also I'm not sure if using compatible property this way is correct.
->>>
->>> yes.
-> 
-> So, is the usage of the 'compatible' property correct ? 
-> 
-> If not, we could use a 'type' property with an include file defining 
-> the possible values. This is a common pattern.
+>> Just use "interrupts" here.
+>
+> Hi Rob,
+>
+> If the "interrupts" property is used here like this, it breaks the interrupts binding !
 
-Could you please confirm if using compatible property this way
-is acceptable?
+Really!? Looking closer at the series, in fact the dts files are
+already correct:
 
-It follows Documentation/devicetree/bindings/leds/tca6507.txt.
++       gpio_intc: interrupt-controller@9880 {
++               compatible = "amlogic,meson-gpio-intc";
++               reg = <0x9880 0x10>;
++               interrupt-controller;
++               #interrupt-cells = <2>;
++               interrupts = <64 65 66 67 68 79 70 71>;
++       };
++
 
--- 
-Best regards,
-Jacek Anaszewski
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
