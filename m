@@ -1,39 +1,35 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 0/8] omap*: Fixes/Cleanups for MMC devicetree node
-Date: Fri, 9 Jun 2017 17:51:30 +0530
-Message-ID: <a6ed36ef-9552-3bfb-c863-0819add51850@ti.com>
-References: <20170607093749.15656-1-kishon@ti.com>
- <CAPDyKFrJh9qAz6q2-TH8rMshuMjDTkT5pHP==FUUH9KZEOehOQ@mail.gmail.com>
- <20170608084619.GH3730@atomide.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 0/3] pinctrl: sun8i: Add support for A83T R_PIO
+Date: Fri, 9 Jun 2017 20:24:07 +0800
+Message-ID: <CAGb2v67Fs0_npNvaCFrr4bK1U5VcO-YZ9DY-Vyfk=esdQMVZuw@mail.gmail.com>
+References: <20170603144427.22855-1-wens@csie.org> <20170605135128.cjease7t25kjc6lp@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20170608084619.GH3730@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Sekhar Nori <nsekhar@ti.com>, Russell King <linux@armlinux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170605135128.cjease7t25kjc6lp@flea.lan>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On Mon, Jun 5, 2017 at 9:51 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Sat, Jun 03, 2017 at 10:44:24PM +0800, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> This series adds support for the R_PIO pin controller on the A83T.
+>> The pins managed this controller are mainly used for communicating
+>> with the PMIC and codec, and various GPIOs for enabling power switches
+>> for USB ports and WiFi.
+>>
+>> Patch 1 updates the sunxi pinctrl bindings.
+>>
+>> Patch 2 adds the pinctrl driver.
+>>
+>> Patch 3 adds a device node for the pin controller.
+>
+> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-On Thursday 08 June 2017 02:16 PM, Tony Lindgren wrote:
-> * Ulf Hansson <ulf.hansson@linaro.org> [170608 00:24]:
->> If it helps, I can host a branch with the updates on the omap_hsmmc
->> driver, such it can be pulled in from arm soc?
-> 
-> Great that works for me. Let's just make sure git bisect
-> keeps working.
-> 
->> I guess you need that as, the DT changes relies on the new vqmmc
->> binding. Or you thing it doesn't matter, because for the current
->> changes that regulator is always an always on regulator?
-> 
-> Or maybe we can just add the new regulator, then do a
-> follow-up series to remove the old ones?
+Applied the device tree changes.
 
-Since the driver has a fallback mechanism wherein if it's not able to find
-vqmmc, it'll fallback to vmmc_aux, I don't think that's required.
-
-Thanks
-Kishon
+ChenYu
