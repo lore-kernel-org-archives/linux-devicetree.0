@@ -1,63 +1,46 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap3-overo: Remove "vqmmc-supply" property from MMC dt node
-Date: Fri, 9 Jun 2017 14:11:41 +0530
-Message-ID: <20170609084141.15582-1-kishon@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5 v2] clk: qcom: Update DT bindings for the
+ MSM8660/APQ8060 RPMCC
+Date: Fri, 9 Jun 2017 10:48:57 +0200
+Message-ID: <CACRpkdbW24L2kLL9buPRAawXOuQ1ypCLf58gCq5=BWP5ex4zuA@mail.gmail.com>
+References: <20170419091326.11226-1-linus.walleij@linaro.org>
+ <CACRpkdbXEFeVkD8rETyrnuoAxUvnFt2BL07UsXuXfSnq3Qdyfw@mail.gmail.com>
+ <CACRpkdYvwwJcxKPtKUyZBLWsmjXji7pHDKNz9NRTETqj2P3drQ@mail.gmail.com> <20170601073858.GU20170@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170601073858.GU20170@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-commit 94647a30124e2c7 ("ARM: dts: omap3-overo: Enable WiFi/BT combo")
-while enabling WiFi/BT combo added regulator to trigger the nReset
-signal of the Bluetooth module in vqmmc-supply. However BT should be
-handled by UART. Moreover "vqmmc" is not a defined binding for
-omap_hsmmc. While "vqmmc" in mmc2 hasn't caused any issues so far,
-mmc2 will start to mis-behave once omap_hsmmc defines "vqmmc"
-binding.
+On Thu, Jun 1, 2017 at 9:38 AM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 05/24, Linus Walleij wrote:
 
-Remove "vqmmc-supply" property in mmc2 here.
+>> I am sorry if you guys are swamped, I just don't know what to do,
+>> clock drivers are starting to become the bottleneck for everything
+>> I do. I bet the ARM SoC maintainers must be noticing it too.
+(...)
+> Meh. Life happens and msm8660 is about a decade old now and not
+> something that I can easily review without digging through old
+> websites to find documentation on the code I worked on 7 years
+> ago. So sorry, but these sorts of patches are basically
+> approaching priority none for me and I have to steal time to
+> review them.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/omap3-overo-base.dtsi | 11 -----------
- 1 file changed, 11 deletions(-)
+Sorry the reference above was mainly to the Gemini SoC clock driver
+which was blocking ARM consolidation, the fact that this MSM8660
+thing was stalled too just got me to think it was related.
 
-diff --git a/arch/arm/boot/dts/omap3-overo-base.dtsi b/arch/arm/boot/dts/omap3-overo-base.dtsi
-index 401fae838fe9..cd220342a805 100644
---- a/arch/arm/boot/dts/omap3-overo-base.dtsi
-+++ b/arch/arm/boot/dts/omap3-overo-base.dtsi
-@@ -74,16 +74,6 @@
- 		gpio = <&gpio1 16 GPIO_ACTIVE_HIGH>;		/* gpio_16: WiFi nReset */
- 		startup-delay-us = <10000>;
- 	};
--
--	/* Regulator to trigger the nReset signal of the Bluetooth module */
--	w3cbw003c_bt_nreset: regulator-w3cbw003c-bt-nreset {
--		compatible = "regulator-fixed";
--		regulator-name = "regulator-w3cbw003c-bt-nreset";
--		regulator-min-microvolt = <3300000>;
--		regulator-max-microvolt = <3300000>;
--		gpio = <&gpio6 4 GPIO_ACTIVE_HIGH>;		/* gpio_164: BT nReset */
--		startup-delay-us = <10000>;
--	};
- };
- 
- &omap3_pmx_core {
-@@ -191,7 +181,6 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc2_pins>;
- 	vmmc-supply = <&w3cbw003c_npoweron>;
--	vqmmc-supply = <&w3cbw003c_bt_nreset>;
- 	vmmc_aux-supply = <&w3cbw003c_wifi_nreset>;
- 	bus-width = <4>;
- 	cap-sdio-irq;
--- 
-2.11.0
+I understand the MSM8660 is low prio, but the first DragonBoard
+was pushed to developers en masse in 2012 (yours truly included),
+which was just half a decade ago, and started
+the community boards effort from Qualcomm, and yeah, community
+moves slower than markets usually, the board is still supported by
+the BSquare company that managed the board release for Qualcomm,
+I can still login and check schematics and support forums,
+cool isn't it :D
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
