@@ -1,101 +1,80 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v2] arm64: allwinner: a64: Add initial
- NanoPi A64 support
-Date: Sat, 10 Jun 2017 22:28:31 +0200
-Message-ID: <20170610202831.usdhtuqc4uqxojmr@flea.home>
-References: <1497012052-14027-1-git-send-email-jteki@openedev.com>
- <1497012052-14027-2-git-send-email-jteki@openedev.com>
- <20170609145141.aknbsis25vmy3rj6@flea.home>
- <3049841d-36f0-a761-fbed-57971462697c@openedev.com>
- <3b4dda48-c403-88c4-5c89-63753f508d76@arm.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: [PATCH v7 0/9] pinctrl: meson: add support for GPIO IRQs
+Date: Sat, 10 Jun 2017 23:37:18 +0200
+Message-ID: <5b352c8d-a426-fa73-58b7-0c935979492b@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="brhuhlay5acsabzp"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB6VM6HEQKGQEDFRYI4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <3b4dda48-c403-88c4-5c89-63753f508d76-5wv7dgnIgG8@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Cc: jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org, Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch series is partially based on a series Jerome Brunet
+submitted about half a year ago. Due to open questions this series never
+made it to mainline, see https://patchwork.kernel.org/patch/9384431/
 
---brhuhlay5acsabzp
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
 
-On Fri, Jun 09, 2017 at 04:36:09PM +0100, Andre Przywara wrote:
-> Hi,
-> 
-> On 09/06/17 16:26, Jagan Teki wrote:
-> > On Friday 09 June 2017 08:21 PM, Maxime Ripard wrote:
-> >> Hi Jagan,
-> >>
-> >> On Fri, Jun 09, 2017 at 12:40:52PM +0000, Jagan Teki wrote:
-> >>> +&i2c1 {
-> >>> +    pinctrl-names = "default";
-> >>> +    pinctrl-0 = <&i2c1_pins>;
-> >>> +    status = "okay";
-> >>> +};
-> >>> +
-> >>> +&i2c1_pins {
-> >>> +    bias-pull-up;
-> >>> +};
-> >>
-> >> What is connected on that bus?
-> > 
-> > i2c1 connected with gpio/i2s
-> 
-> Those are the I2C pins connected to the headers. We have them in the
-> other A64 DTs as well (Pine64, BananaPi).
+The series was successfully tested on a Odroid-C2.
 
-We've always had the policy of not enabling anything outside of the
-board has been there from the very start, arm64 or not.
+Changes in v2:
+- separate the GPIO IRQ controller from the pinctrl driver
+- minor improvements to the GPIO IRQ controller
 
-> If that is not the right approach, we should discuss this and keep it
-> consistent at least across the A64 boards.
+Changes in v3:
+- replace the request_irq based allocation of parent irq's with
+  chained irq handling, this also fixes the spurious interrupts issue
+  and allows to remove the workaround code.
+  Last but not least the parent irq's are no longer visible in
+  /proc/interrupts.
+- minor improvements to the GPIO IRQ controller
 
-If some boards slipped through, then that would be on me I guess,
-but it's (unfortunate) exceptions.
+Changes in v4:
+- separate the gpio-independent interrupt controller part and make
+  it a driver under drivers/irqchip
 
-If you want to ease that for the users, you can have that node with
-the pinctrl nodes pre-set, but leave it disabled. We have that on a
-number of boards already.
+Changes in v5:
+- smaller changes based on review comments
+- split DT patches per ARM / ARM64
 
-> >>> +&uart1 {
-> >>> +    pinctrl-names = "default";
-> >>> +    pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-> >>> +    status = "okay";
-> >>> +};
-> >>
-> >> And on that UART?
-> > 
-> > uart1 for SDIO (Wifi connector, with RTS/CTS), this along with mmc1
-> 
-> To be precise, UART1 (with h/w handshake) is connected to the Bluetooth
-> part of the WiFi/BT chip, which is soldered on that board. Regardless of
-> the actual *WiFi* support state BT should work already - at least it did
-> when I tried this a few months ago on the Pine64 (although this involved
-> some userland heavy lifting).
-> Not sure what the approach here is in regard to the power supply and
-> wake-up GPIOs, shall they be described in this node as well or is that
-> up for userspace to control?
+Changes in v6:
+- based on suggestion by Rob Herring: rename DT property parent-interrupts to interrupts
 
-There's probably more to it though. Most BT chips require regulators
-and clocks to be enabled. Ideally, this would even be a full DT node
-for the bluetooth chip.
+Changes in v7:
+- remove patch 1 as it was applied to the pinctrl tree already
+- add patch 5 as prerequisite for reworked patch 6
+- remove IRQ_TYPE_EDGE_BOTH support from patch 6
 
-Maxime
+Heiner Kallweit (7):
+  irqchip: add Amlogic Meson GPIO irqchip driver
+  dt-bindings: add Amlogic Meson GPIO interrupt-controller DT binding documentation
+  ARM: dts: meson: add GPIO interrupt-controller support
+  ARM64: dts: meson: add GPIO interrupt-controller support
+  gpiolib: export gpiochip_irq_reqres and gpiochip_irq_relres
+  pinctrl: meson: add support for GPIO interrupts
+  pinctrl: meson: update DT binding documentation
+  ARM: dts: meson: mark gpio controllers as interrupt controllers
+  ARM64: dts: meson: mark gpio controllers as interrupt controllers
+
+.../amlogic,meson-gpio-intc.txt                    |  26 ++
+ .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   4 +
+ arch/arm/boot/dts/meson8.dtsi                      |  12 +
+ arch/arm/boot/dts/meson8b.dtsi                     |  12 +
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   4 +
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |   4 +
+ drivers/gpio/gpiolib.c                             |   6 +-
+ drivers/irqchip/Kconfig                            |   5 +
+ drivers/irqchip/Makefile                           |   1 +
+ drivers/irqchip/irq-meson-gpio.c                   | 295 +++++++++++++++++++++
+ drivers/pinctrl/Kconfig                            |   1 +
+ drivers/pinctrl/meson/pinctrl-meson.c              | 176 +++++++++++-
+ include/linux/gpio/driver.h                        |   3 +
+ 14 files changed, 554 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+ create mode 100644 drivers/irqchip/irq-meson-gpio.c
 
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---brhuhlay5acsabzp--
+2.13.1
