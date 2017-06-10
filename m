@@ -1,8 +1,8 @@
 From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v7 4/9] ARM64: dts: meson: add GPIO interrupt-controller
- support
-Date: Sat, 10 Jun 2017 23:57:26 +0200
-Message-ID: <8591ca75-61f4-69ca-229f-5ca3bcc53905@gmail.com>
+Subject: [PATCH v7 5/9] gpiolib: export gpiochip_irq_reqres and
+ gpiochip_irq_relres
+Date: Sat, 10 Jun 2017 23:57:37 +0200
+Message-ID: <e6618077-a362-86cf-7cd3-f46de39396e4@gmail.com>
 References: <5b352c8d-a426-fa73-58b7-0c935979492b@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -14,42 +14,62 @@ To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, M
 Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the GPIO interupt controller of certain Amlogic Meson
-Soc's.
+Customized versions of the request_resources and release_resources
+callbacks usually just extend what is available in gpiochip_irq_reqres
+and gpiochip_irq_relres. Therefore export them to make them available
+to gpio drivers.
 
 Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
-v5:
-- split ARM and ARM64 into separate patches
-- added Reviewed-by
-v6:
-- change parent-interrupts to interrupts
-v7:
-- no changes
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpio/gpiolib.c      | 6 ++++--
+ include/linux/gpio/driver.h | 3 +++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 436b8750..87c7403e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -312,6 +312,14 @@
- 				status = "disabled";
- 			};
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 62ffb4e2..4d666abb 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1643,7 +1643,7 @@ static const struct irq_domain_ops gpiochip_domain_ops = {
+ 	.xlate	= irq_domain_xlate_twocell,
+ };
  
-+			gpio_intc: interrupt-controller@9880 {
-+				compatible = "amlogic,meson-gpio-intc";
-+				reg = <0x0 0x09880 0x0 0x10>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				interrupts = <64 65 66 67 68 79 70 71>;
-+			};
+-static int gpiochip_irq_reqres(struct irq_data *d)
++int gpiochip_irq_reqres(struct irq_data *d)
+ {
+ 	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+ 
+@@ -1659,14 +1659,16 @@ static int gpiochip_irq_reqres(struct irq_data *d)
+ 	}
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(gpiochip_irq_reqres);
+ 
+-static void gpiochip_irq_relres(struct irq_data *d)
++void gpiochip_irq_relres(struct irq_data *d)
+ {
+ 	struct gpio_chip *chip = irq_data_get_irq_chip_data(d);
+ 
+ 	gpiochip_unlock_as_irq(chip, d->hwirq);
+ 	module_put(chip->gpiodev->owner);
+ }
++EXPORT_SYMBOL_GPL(gpiochip_irq_relres);
+ 
+ static int gpiochip_to_irq(struct gpio_chip *chip, unsigned offset)
+ {
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index af20369e..82bc27de 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -262,6 +262,9 @@ int gpiochip_irqchip_add_key(struct gpio_chip *gpiochip,
+ 			     bool nested,
+ 			     struct lock_class_key *lock_key);
+ 
++int gpiochip_irq_reqres(struct irq_data *d);
++void gpiochip_irq_relres(struct irq_data *d);
 +
- 			watchdog@98d0 {
- 				compatible = "amlogic,meson-gx-wdt", "amlogic,meson-gxbb-wdt";
- 				reg = <0x0 0x098d0 0x0 0x10>;
+ #ifdef CONFIG_LOCKDEP
+ 
+ /*
 -- 
 2.13.1
 
