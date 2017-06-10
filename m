@@ -1,43 +1,49 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: omap3-overo: Remove "vqmmc-supply" property
- from MMC dt node
-Date: Sat, 10 Jun 2017 01:44:27 -0700
-Message-ID: <20170610084426.GM3730@atomide.com>
-References: <20170609084141.15582-1-kishon@ti.com>
- <CAPDyKFrZvnCPWUxDeewB=BTQPvuMnJ5tUg7CN=VK5=v+e+du4Q@mail.gmail.com>
- <275a0313-2cda-2328-e9e1-32bc91aca701@ti.com>
+From: Youichi Kanno <srichards-5uAIYLXOZT3uGFXjmJZ4Gqkm5W21vHkk@public.gmane.org>
+Subject: (unknown)
+Date: Sat, 10 Jun 2017 04:07:11 -0300
+Message-ID: <20170610040711.497042htjmgcr15r__30218.9837712378$1497084408$gmane$org@webmail.buenosaires.gob.ar>
+Reply-To: youichi_kann0-Mj/0Miq2reM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain;
+ charset=ISO-8859-1;
+ DelSp="Yes";
+ format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: 
 Content-Disposition: inline
-In-Reply-To: <275a0313-2cda-2328-e9e1-32bc91aca701@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon@ti.com> [170609 04:05]:
-> Hi,
-> 
-> On Friday 09 June 2017 04:07 PM, Ulf Hansson wrote:
-> > On 9 June 2017 at 10:41, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >> commit 94647a30124e2c7 ("ARM: dts: omap3-overo: Enable WiFi/BT combo")
-> >> while enabling WiFi/BT combo added regulator to trigger the nReset
-> >> signal of the Bluetooth module in vqmmc-supply. However BT should be
-> >> handled by UART. Moreover "vqmmc" is not a defined binding for
-> >> omap_hsmmc. While "vqmmc" in mmc2 hasn't caused any issues so far,
-> >> mmc2 will start to mis-behave once omap_hsmmc defines "vqmmc"
-> >> binding.
-> >>
-> >> Remove "vqmmc-supply" property in mmc2 here.
-> >>
-> >> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > 
-> > Okay, so I assume I also need to carry this in my immutable branch for
-> > the omap driver changes. More precisely before the driver changes?
-> 
-> yeah, that's right!
 
-As far as I can tell this regulator won't do anything right now so:
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+
+Sir/Madam
+
+I am sorry to encroach into your privacy in this manner, I found you  
+listed in the Trade Center Chambers of Commerce directory here in  
+Japan, My name is Youichi Kanno and I work in Audit & credit  
+Supervisory role at The Norinchukin Bank, I need your assistance to  
+process the fund claims oF $18,100,000.00 (Eighteen Million, One  
+Hundred Thousand, USD) of a deceased client Mr. Grigor Kassan, And i  
+need your assistance to process the fund claims, I only pray at this  
+time that your address is still valid. I want to solicit your  
+attention to receive this money on my behalf. The purpose of my  
+contacting you is because my status would not permit me to do this  
+alone.
+
+I hope to hear from you soon so we can discuss the logistic of moving  
+the funds to a safe offshore bank.
+
+Yours sincerely,
+Youichi Kanno
+Phone Number: +81345400962
+
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
