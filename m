@@ -1,173 +1,73 @@
-From: =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>
-Subject: Re: [PATCH] leds: pca955x: add GPIO support
-Date: Sat, 10 Jun 2017 08:00:11 +0200
-Message-ID: <0c67f60f-8815-5f44-2b96-ffde5c7289e7@kaod.org>
-References: <1494311772-21872-1-git-send-email-clg@kaod.org>
- <20b94199-a154-53cd-96d1-910ae3de1085@gmail.com>
- <7d30134c-c8c6-3475-1a7a-534199167b5c@kaod.org>
- <e03da89b-b5b3-0a32-bca8-621bfa0bc305@gmail.com>
- <24ff150b-0c12-3b5c-fbcd-5b8bedce3139@kaod.org>
- <0c738e3d-4c13-9ba2-d1ef-50e471019756@gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCH v8 00/34] i.MX Media Driver
+Date: Sat, 10 Jun 2017 09:35:12 +0200
+Message-ID: <20170610073512.GA15980@amd>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
+ <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
+ <e4f152de-6e75-7654-178e-e6dcf9ad12f3@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <0c738e3d-4c13-9ba2-d1ef-50e471019756-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <e4f152de-6e75-7654-178e-e6dcf9ad12f3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2017 10:56 PM, Jacek Anaszewski wrote:
-> Hi Rob,
-> 
-> On 06/09/2017 01:13 PM, Cédric Le Goater wrote:
->> Hello,
->>
->>>>> Thanks for the patch.
->>>>>
->>>>> Generally I'd split it into two patches:
->>>>> 1/2: addition of  LED class specific DT support
->>>>> 2/2: addition of GPIO support (for this one please cc also
->>>>>      GPIO subsystem maintainer)
->>>>
->>>> OK. I will in next version.
->>>>  
->>>>> Please also see my comments below.
->>>>>
->>>>> On 05/09/2017 08:36 AM, Cédric Le Goater wrote:
->>>>>> The PCA955x family of chips are I2C LED blinkers whose pins not used
->>>>>> to control LEDs can be used as general purpose I/Os (GPIOs).
->>>>>>
->>>>>> The following adds support for device tree and Open Firmware to be
->>>>>> able do define different operation modes for each pin. See bindings
->>>>>> documentation for more details. The pca955x driver is then extended
->>>>>> with a gpio_chip when pins are operating in GPIO mode.
->>>>>>
->>>>>> Signed-off-by: Cédric Le Goater <clg-Bxea+6Xhats@public.gmane.org>
->>>>>> ---
->>>>>>  .../devicetree/bindings/leds/leds-pca955x.txt      | 103 ++++++++
->>>>>>  drivers/leds/Kconfig                               |  11 +
->>>>>>  drivers/leds/leds-pca955x.c                        | 290 ++++++++++++++++++---
->>>>>>  3 files changed, 374 insertions(+), 30 deletions(-)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pca955x.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-pca955x.txt b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..98d1053dd1b0
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-pca955x.txt
->>>>>> @@ -0,0 +1,103 @@
->>>>>> +LEDs connected to pca9550, pca9551, pca9552, pca9553,
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible : should be one of :
->>>>>> +	"nxp,pca9550"
->>>>>> +	"nxp,pca9551"
->>>>>> +	"nxp,pca9552"
->>>>>> +	"nxp,pca9553"
->>>>>> +- #address-cells: must be 1
->>>>>> +- #size-cells: must be 0
->>>>>> +- reg: I2C slave address. depends on the model.
->>>>>> +
->>>>>> +Optional properties:
->>>>>> +- gpio-controller: allows pins to be used as GPIOs.
->>>>>> +- #gpio-cells: if present, must not be 0.
->>>>>> +- gpio-base : base number of the pins used as GPIOs. If there are more
->>>>>> +              than one, they should be contiguous. See 'type' property
->>>>>> +              below.
->>>>>> +
->>>>>> +LED sub-node properties:
->>>>>> +- reg   : number of LED line.
->>>>>> +		from 0 to  1 in pca9550
->>>>>> +		from 0 to  7 in pca9551
->>>>>> +		from 0 to 15 in pca9552
->>>>>> +		from 0 to  3 in pca9553
->>>>>> +- compatible: either "none", "led" (default) or "gpio".
->>>>>> +- label : (optional)
->>>>>> +          see Documentation/devicetree/bindings/leds/common.txt
->>>>>> +- linux,default-trigger : (optional)
->>>>>> +          see Documentation/devicetree/bindings/leds/common.txt
->>>>>> +
->>>>>> +Examples:
->>>>>> +
->>>>>> +pca9552: pca9552@60 {
->>>>>> +	compatible = "nxp,pca9552";
->>>>>> +	#address-cells = <1>;
->>>>>> +        #size-cells = <0>;
->>>>>> +	reg = <0x60>;
->>>>>> +
->>>>>> +	gpio-controller;
->>>>>> +	#gpio-cells = <2>;
->>>>>> +	gpio-base = <12>;
->>>>>> +
->>>>>> +	gpio@12 {
->>>>>> +		label = "GPIO12";
->>>>>> +		reg = <12>;
->>>>>> +		compatible = "gpio";
->>>>>> +	};
->>>>>> +	gpio@13 {
->>>>>> +		label = "GPIO13";
->>>>>> +		reg = <13>;
->>>>>> +		compatible = "gpio";
->>>>>> +	};
->>>>>> +	gpio@14 {
->>>>>> +		label = "GPIO14";
->>>>>> +		reg = <14>;
->>>>>> +		compatible = "gpio";
->>>>>> +	};
->>>>>> +	gpio@15 {
->>>>>> +		label = "GPIO15";
->>>>>> +		reg = <15>;
->>>>>> +		compatible = "gpio";
->>>>>> +	};
->>>>>
->>>>> I think that for GPIO pins we should have GPIO specific bindings,
->>>>> but DT maintainer would have to give his opinion here.
->>>>
->>>> I have got my inspiration from the tca6507 bindings.
->>>
->>> Right, but AFAIK there was no DT maintainer position at that time
->>> and those bindings don't have relevant ack. I'd rather wait for
->>> DT maintainer opinion so as to avoid spawning wrong practices.
->>>
->>>>> Also I'm not sure if using compatible property this way is correct.
->>>>
->>>> yes.
->>
->> So, is the usage of the 'compatible' property correct ? 
->>
->> If not, we could use a 'type' property with an include file defining 
->> the possible values. This is a common pattern.
-> 
-> Could you please confirm if using compatible property this way
-> is acceptable?
-> 
-> It follows Documentation/devicetree/bindings/leds/tca6507.txt.
 
-No big deal if not. The alternative would be something like : 
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-	gpio@15 {
-		reg = <15>;
-		type = <PCA955X_TYPE_GPIO>;
-	};
+Hi!
 
-	led@0 {
-		label = "red:power";
-		linux,default-trigger = "default-on";
-		reg = <0>;
-		type = <PCA955X_TYPE_LED>;
-	};
-	led@1 {
-		label = "green:power";
-		reg = <1>;
-		type = <PCA955X_TYPE_LED>;
-	};
+> >> Other than that everything is ready AFAICT.
+> >>
+> >=20
+> > But as Pavel pointed out, in fact we are missing many
+> > Acks still, for all of the dts source changes (patches
+> > 4-14), as well as really everything else (imx-media staging
+> > driver patches).
+>=20
+> No Acks needed for the staging part. It's staging, so not held
+> to the same standards as non-staging parts. That doesn't mean
+> Acks aren't welcome, of course.
+>=20
+> You don't need Greg's Ack for staging/media either, patches there
+> go in via us (generally at least) and we handle those, not Greg.
+
+Ok, good.
+
+Can you just apply the patches? This is staging, they can be
+reviewed/fixed there -- as expected for staging. They are already way
+beyond staging quality, we don't want to get to "series v17"
+here, and repeatedly sending them over the email does not really do
+them any good.
 
 Thanks,
+								Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-C.
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlk7oTAACgkQMOfwapXb+vImTQCfQfqcjsZm/fd/uQuMKvk3x7js
+LGYAn0rpCrS/+9RhDB+RhR2HHtrx3dUy
+=5HU1
+-----END PGP SIGNATURE-----
+
+--lrZ03NoBR/3+SXJZ--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
