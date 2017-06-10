@@ -1,94 +1,50 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v9 02/34] [media] dt-bindings: Add bindings for i.MX media driver
-Date: Sat, 10 Jun 2017 11:56:24 -0700
-Message-ID: <1497120984-9739-1-git-send-email-steve_longerbeam@mentor.com>
-References: <1496860453-6282-3-git-send-email-steve_longerbeam@mentor.com>
+From: Santosh Shilimkar <santosh.shilimkar-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] remoteproc/keystone: Add a remoteproc driver for
+ Keystone 2 DSPs
+Date: Sat, 10 Jun 2017 12:32:18 -0700
+Message-ID: <a8bc0ae1-5583-8622-fe01-406e77f25bc4@oracle.com>
+References: <20170608002447.47580-1-s-anna@ti.com>
+ <20170608002447.47580-3-s-anna@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496860453-6282-3-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20170608002447.47580-3-s-anna-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
+Cc: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for the i.MX media driver.
+6/7/2017 5:24 PM, Suman Anna wrote:
+> The Texas Instrument's Keystone 2 family of SoCs has 1 or more
+> TMS320C66x DSP Core Subsystems (C66x CorePacs). Each subsystem has
+> a C66x Fixed/Floating-Point DSP Core, with 32KB of L1P and L1D SRAMs,
+> that can be configured and partitioned as either RAM and/or Cache,
+> and 1 MB of L2 SRAM. The CorePac also includes an Internal DMA (IDMA),
+> External Memory Controller (EMC), Extended Memory Controller (XMC)
+> with a Memory Protection and Address Extension (MPAX) unit, a Bandwidth
+> Management (BWM) unit, an Interrupt Controller (INTC) and a Powerdown
+> Controller (PDC).
+> 
+> A new remoteproc module is added to perform the device management of
+> these DSP devices. The driver expects the firmware names to be of the
+> form "keystone-dsp<X>-fw", where X is the corresponding DSP number, and
+> uses the standard remoteproc core ELF loader. The support is limited
+> to images only using the DSP internal memories at the moment. This
+> remoteproc driver is also designed to work with virtio, and uses the
+> IPC Generation registers for performing the virtio signalling and
+> getting notified of exceptions.
+> 
+> The driver currently supports the 66AK2H/66AK2K, 66AK2L and 66AK2E
+> SoCs.
+> 
+> Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Andrew F. Davis <afd-l0cyMroinI0@public.gmane.org>
+> ---
 
-Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
----
-Changes since v8 [1]:
-
-- expand on description of the MIPI CSI-2 IP core in i.MX6, and
-  drop "snps,dw-mipi-csi2" compatibility for now.
-
-[1] https://patchwork.linuxtv.org/patch/41717/
----
- Documentation/devicetree/bindings/media/imx.txt | 53 +++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/imx.txt
-
-diff --git a/Documentation/devicetree/bindings/media/imx.txt b/Documentation/devicetree/bindings/media/imx.txt
-new file mode 100644
-index 0000000..77f4b0a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/imx.txt
-@@ -0,0 +1,53 @@
-+Freescale i.MX Media Video Device
-+=================================
-+
-+Video Media Controller node
-+---------------------------
-+
-+This is the media controller node for video capture support. It is a
-+virtual device that lists the camera serial interface nodes that the
-+media device will control.
-+
-+Required properties:
-+- compatible : "fsl,imx-capture-subsystem";
-+- ports      : Should contain a list of phandles pointing to camera
-+		sensor interface ports of IPU devices
-+
-+example:
-+
-+capture-subsystem {
-+	compatible = "fsl,imx-capture-subsystem";
-+	ports = <&ipu1_csi0>, <&ipu1_csi1>;
-+};
-+
-+
-+mipi_csi2 node
-+--------------
-+
-+This is the device node for the MIPI CSI-2 Receiver core in the i.MX
-+SoC. This is a Synopsys Designware MIPI CSI-2 host controller core
-+combined with a D-PHY core mixed into the same register block. In
-+addition this device consists of an i.MX-specific "CSI2IPU gasket"
-+glue logic, also controlled from the same register block. The CSI2IPU
-+gasket demultiplexes the four virtual channel streams from the host
-+controller's 32-bit output image bus onto four 16-bit parallel busses
-+to the i.MX IPU CSIs.
-+
-+Required properties:
-+- compatible	: "fsl,imx6-mipi-csi2";
-+- reg           : physical base address and length of the register set;
-+- clocks	: the MIPI CSI-2 receiver requires three clocks: hsi_tx
-+		  (the D-PHY clock), video_27m (D-PHY PLL reference
-+		  clock), and eim_podf;
-+- clock-names	: must contain "dphy", "ref", "pix";
-+- port@*        : five port nodes must exist, containing endpoints
-+		  connecting to the source and sink devices according to
-+		  of_graph bindings. The first port is an input port,
-+		  connecting with a MIPI CSI-2 source, and ports 1
-+		  through 4 are output ports connecting with parallel
-+		  bus sink endpoint nodes and correspond to the four
-+		  MIPI CSI-2 virtual channel outputs.
-+
-+Optional properties:
-+- interrupts	: must contain two level-triggered interrupts,
-+		  in order: 100 and 101;
--- 
-2.7.4
-
+Acked-by: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
