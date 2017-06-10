@@ -1,93 +1,418 @@
-From: Steve Longerbeam <slongerbeam@gmail.com>
-Subject: Re: [PATCH v8 14/34] ARM: dts: imx6-sabreauto: add the ADV7180 video
- decoder
-Date: Fri, 9 Jun 2017 17:19:31 -0700
-Message-ID: <f5cad571-9147-1c72-47d9-4e6f68116f97@gmail.com>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
- <CAJ+vNU0C0=4hUq+g1P7yTzLzFPidfauQROPOVr4WQWKNZz_xmQ@mail.gmail.com>
- <dd5b29b7-bf92-5f03-caef-1843a9f32cd3@gmail.com> <20170609213843.GB28596@amd>
- <cb9d79e9-fa36-d0ad-3df6-27f1b8790f78@gmail.com> <20170609232358.GA14181@amd>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] of: remove *phandle properties from expanded
+ device tree
+Date: Fri, 9 Jun 2017 19:35:03 -0700
+Message-ID: <593B5AD7.3010201@gmail.com>
+References: <1493693164-22826-1-git-send-email-frowand.list@gmail.com>
+ <1493693164-22826-2-git-send-email-frowand.list@gmail.com>
+ <CAL_Jsq+Dw6UM_3keH3E=x4b-QAZwzfopv3-ufJhcBWBT87Qxfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170609232358.GA14181@amd>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Tim Harvey <tharvey@gateworks.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, mchehab@kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Nick Dyer <nick@shmanahar.org>, markus.heiser@darmarit.de, Philipp Zabel <p.zabel@pengutronix.de>, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, Arnd Bergmann <arnd@arndb.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, minghsiu.tsai@mediatek.com, Tiffany Lin <tiffany.lin@mediatek.com>, Jean-Christophe TROTIN <jean-christophe.trotin@st.com>, Simon Horman <horms+renesas@verge.net.au>, =?UTF-8?Q?Niklas_S=c3=
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_Jsq+Dw6UM_3keH3E=x4b-QAZwzfopv3-ufJhcBWBT87Qxfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/09/2017 04:23 PM, Pavel Machek wrote:
-> Hi!
-> 
->>>>> Steve,
->>>>>
->>>>> You need to remove the fim node now that you've moved this to V4L2 controls.
->>>>>
->>>>
->>>> Yep, I caught this just after sending the v8 patchset. I'll send
->>>> a v9 of this patch.
->>>
->>> This needs ack from devicetree people, then it can be merged. Can you
->>> be a bit more forceful getting the ack?
+On 05/15/17 15:23, Rob Herring wrote:
+> On Mon, May 1, 2017 at 9:46 PM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 >>
->> OK, I need an Ack please, he said, in a forceful way. :)
-> 
-> I'd tune the force up a tiny bit more. This is not FreeBSD ;-). You
-> can read some emails from Linus for inspiration. Or drink few beers
-> and look at Al Viro's emails.
-> 
->> In fact Ack's are needed for all the changes to dts sources,
->> patches 4-14.
-> 
-> Actually, are they? Those should not need acks from device tree
-> people, just acks from ARM people, and those are easier to get... in
-> fact they should not need any acks, you should just send them to arm
-> people and get them merged.
-
-
-Hans said he prefers to have the dts patches as part of the whole set
-rather than submitted separately. But I did add --to's for the ARM
-people for 4-14.
-
-
-> 
-> 1-4 is just a documentation, and you have acks there. (Except 2?)
-> That's ready to be merged, probably via the media tree? Just make it
-> clear you want it merged.
-
-Yes, 1-3 now have Acks (binding docs).
-
-> 
-> 15,16 should be ready to. Media tree, too, I guess.
-
-Yes, those have Acks (video-mux entity functions and subdev driver).
-
-> 
-> drivers/staging is greg. Advantage is these do _not_ need to go after
-> the dts changes. It is a driver. Actually I'd normally add dts support
-> after the driver. So you can push it now.
-
-Right, Hans agrees, except that for staging drivers we don't really need
-an Ack from Greg.
-
-
-> 
->>> I don't think it makes sense to resubmit v9 before that. This is not a
->>> rocket science.
+>> Remove "phandle", "linux,phandle", and "ibm,phandle" properties from
+>> the internal device tree.  The phandle will still be in the struct
+>> device_node phandle field.
 >>
->> I guess that makes sense, I'll wait for Ack's from all these patches
->> before submitting the entire patchset as v9.
+>> This is to resolve the issue found by Stephen Boyd [1] when he changed
+>> the type of struct property.value from void * to const void *.  As
+>> a result of the type change, the overlay code had compile errors
+>> where the resolver updates phandle values.
+>>
+>>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+>>
+>> - Add sysfs infrastructure to report np->phandle, as if it was a property.
+>> - Do not create "phandle" "ibm,phandle", and "linux,phandle" properties
+>>   in the expanded device tree.
+>> - Remove phandle properties in of_attach_node(), for nodes dynamically
+>>   attached to the live tree.  Add the phandle sysfs entry for these nodes.
+>> - When creating an overlay changeset, duplicate the node phandle in
+>>   __of_node_dup().
+>> - Remove no longer needed checks to exclude "phandle" and "linux,phandle"
+>>   properties in several locations.
+>> - A side effect of these changes is that the obsolete "linux,phandle" and
+>>   "ibm,phandle" properties will no longer appear in /proc/device-tree (they
+>>   will appear as "phandle").
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>> ---
+>>  drivers/of/base.c       | 48 ++++++++++++++++++++++++++++++++++++++++---
+>>  drivers/of/dynamic.c    | 54 +++++++++++++++++++++++++++++++++++++------------
+>>  drivers/of/fdt.c        | 40 +++++++++++++++++++++---------------
+>>  drivers/of/of_private.h |  1 +
+>>  drivers/of/overlay.c    |  4 +---
+>>  drivers/of/resolver.c   | 23 +--------------------
+>>  include/linux/of.h      |  1 +
+>>  7 files changed, 114 insertions(+), 57 deletions(-)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index d7c4629a3a2d..8a0cf9003cf8 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -116,6 +116,19 @@ static ssize_t of_node_property_read(struct file *filp, struct kobject *kobj,
+>>         return memory_read_from_buffer(buf, count, &offset, pp->value, pp->length);
+>>  }
+>>
+>> +static ssize_t of_node_phandle_read(struct file *filp, struct kobject *kobj,
+>> +                               struct bin_attribute *bin_attr, char *buf,
+>> +                               loff_t offset, size_t count)
+>> +{
+>> +       phandle phandle;
+>> +       struct device_node *np;
+>> +
+>> +       np = container_of(bin_attr, struct device_node, attr_phandle);
+>> +       phandle = cpu_to_be32(np->phandle);
+>> +       return memory_read_from_buffer(buf, count, &offset, &phandle,
+>> +                                      sizeof(phandle));
+>> +}
+>> +
+>>  /* always return newly allocated name, caller must free after use */
+>>  static const char *safe_name(struct kobject *kobj, const char *orig_name)
+>>  {
+>> @@ -164,6 +177,35 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+>>         return rc;
+>>  }
+>>
+>> +/*
+>> + * In the imported device tree (fdt), phandle is a property.  In the
+>> + * internal data structure it is instead stored in the struct device_node.
+>> + * Make phandle visible in sysfs as if it was a property.
+>> + */
+>> +int __of_add_phandle_sysfs(struct device_node *np)
+>> +{
+>> +       int rc;
+>> +
+>> +       if (!IS_ENABLED(CONFIG_SYSFS))
+>> +               return 0;
+>> +
+>> +       if (!of_kset || !of_node_is_attached(np))
+>> +               return 0;
+>> +
+>> +       if (!np->phandle || np->phandle == 0xffffffff)
+>> +               return 0;
+>> +
+>> +       sysfs_bin_attr_init(&np->attr_phandle);
+>> +       np->attr_phandle.attr.name = "phandle";
+>> +       np->attr_phandle.attr.mode = 0444;
+>> +       np->attr_phandle.size = sizeof(np->phandle);
+>> +       np->attr_phandle.read = of_node_phandle_read;
+>> +
+>> +       rc = sysfs_create_bin_file(&np->kobj, &np->attr_phandle);
+>> +       WARN(rc, "error adding attribute phandle to node %s\n", np->full_name);
+>> +       return rc;
+>> +}
+>> +
+>>  int __of_attach_node_sysfs(struct device_node *np)
+>>  {
+>>         const char *name;
+>> @@ -193,6 +235,8 @@ int __of_attach_node_sysfs(struct device_node *np)
+>>         if (rc)
+>>                 return rc;
+>>
+>> +       __of_add_phandle_sysfs(np);
+>> +
+>>         for_each_property_of_node(np, pp)
+>>                 __of_add_property_sysfs(np, pp);
+>>
+>> @@ -2097,9 +2141,7 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+>>                 int id, len;
+>>
+>>                 /* Skip those we do not want to proceed */
+>> -               if (!strcmp(pp->name, "name") ||
+>> -                   !strcmp(pp->name, "phandle") ||
+>> -                   !strcmp(pp->name, "linux,phandle"))
+>> +               if (!strcmp(pp->name, "name"))
+>>                         continue;
+>>
+>>                 np = of_find_node_by_path(pp->value);
+>> diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+>> index 888fdbc09992..59545b8fbf46 100644
+>> --- a/drivers/of/dynamic.c
+>> +++ b/drivers/of/dynamic.c
+>> @@ -218,19 +218,6 @@ int of_property_notify(int action, struct device_node *np,
+>>
+>>  void __of_attach_node(struct device_node *np)
+>>  {
+>> -       const __be32 *phandle;
+>> -       int sz;
+>> -
+>> -       np->name = __of_get_property(np, "name", NULL) ? : "<NULL>";
+>> -       np->type = __of_get_property(np, "device_type", NULL) ? : "<NULL>";
+>> -
+>> -       phandle = __of_get_property(np, "phandle", &sz);
+>> -       if (!phandle)
+>> -               phandle = __of_get_property(np, "linux,phandle", &sz);
+>> -       if (IS_ENABLED(CONFIG_PPC_PSERIES) && !phandle)
+>> -               phandle = __of_get_property(np, "ibm,phandle", &sz);
+>> -       np->phandle = (phandle && (sz >= 4)) ? be32_to_cpup(phandle) : 0;
+>> -
+>>         np->child = NULL;
+>>         np->sibling = np->parent->child;
+>>         np->parent->child = np;
+>> @@ -243,11 +230,47 @@ void __of_attach_node(struct device_node *np)
+>>  int of_attach_node(struct device_node *np)
+>>  {
+>>         struct of_reconfig_data rd;
+>> +       struct property *prev;
+>> +       struct property *prop;
+>> +       struct property *save_next;
+>>         unsigned long flags;
+>> +       const __be32 *phandle;
+>> +       int sz;
+>>
+>>         memset(&rd, 0, sizeof(rd));
+>>         rd.dn = np;
+>>
+>> +       np->name = __of_get_property(np, "name", NULL) ? : "<NULL>";
+>> +       np->type = __of_get_property(np, "device_type", NULL) ? : "<NULL>";
 > 
-> You may want to split the series, according to mainainters, or just
-> ask the maintainers to merge the relevant parts. I believe most of it
-> can be pushed now.
-> 
-> Good luck,
+> Why can't we just store NULL here? I know you're just moving this
+> existing code, but now we have it twice. I assume there was some
+> reason, so at least a comment why would be good. (I'm guessing it's
+> because strcmp won't take a NULL).
 
-Thanks!
-Steve
+Comment added.
+
+(Yes, the users of the string pointer are not expecting NULL.)
+
+
+>> +
+>> +       phandle = __of_get_property(np, "phandle", &sz);
+>> +       if (!phandle)
+>> +               phandle = __of_get_property(np, "linux,phandle", &sz);
+>> +       if (IS_ENABLED(CONFIG_PPC_PSERIES) && !phandle)
+>> +               phandle = __of_get_property(np, "ibm,phandle", &sz);
+>> +       np->phandle = (phandle && (sz >= 4)) ? be32_to_cpup(phandle) : 0;
+>> +
+>> +       /* remove phandle properties from node */
+>> +       prev = NULL;
+>> +       for (prop = np->properties; prop != NULL; ) {
+>> +               save_next = prop->next;
+>> +               if (!strcmp(prop->name, "phandle") ||
+>> +                   !strcmp(prop->name, "ibm,phandle") ||
+>> +                   !strcmp(prop->name, "linux,phandle")) {
+>> +                       if (prev)
+>> +                               prev->next = prop->next;
+>> +                       else
+>> +                               np->properties = prop->next;
+>> +                       prop->next = np->deadprops;
+>> +                       np->deadprops = prop;
+>> +               } else {
+>> +                       prev = prop;
+>> +               }
+>> +               prop = save_next;
+>> +       }
+>> +
+>> +       __of_add_phandle_sysfs(np);
+>> +
+>>         mutex_lock(&of_mutex);
+>>         raw_spin_lock_irqsave(&devtree_lock, flags);
+>>         __of_attach_node(np);
+>> @@ -429,6 +452,7 @@ struct device_node *__of_node_dup(const struct device_node *np, const char *fmt,
+>>         /* Iterate over and duplicate all properties */
+>>         if (np) {
+>>                 struct property *pp, *new_pp;
+>> +               node->phandle = np->phandle;
+>>                 for_each_property_of_node(np, pp) {
+>>                         new_pp = __of_prop_dup(pp, GFP_KERNEL);
+>>                         if (!new_pp)
+>> @@ -441,6 +465,10 @@ struct device_node *__of_node_dup(const struct device_node *np, const char *fmt,
+>>                         }
+>>                 }
+>>         }
+>> +
+>> +       node->name = __of_get_property(node, "name", NULL) ? : "<NULL>";
+>> +       node->type = __of_get_property(node, "device_type", NULL) ? : "<NULL>";
+>> +
+>>         return node;
+>>
+>>   err_prop:
+>> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+>> index e5ce4b59e162..270f31b0c259 100644
+>> --- a/drivers/of/fdt.c
+>> +++ b/drivers/of/fdt.c
+>> @@ -181,6 +181,8 @@ static void populate_properties(const void *blob,
+>>                 const __be32 *val;
+>>                 const char *pname;
+>>                 u32 sz;
+>> +               int prop_is_phandle = 0;
+>> +               int prop_is_ibm_phandle = 0;
+> 
+> Can be bool.
+
+These two variables eliminated while addressing the next comment.
+
+
+>>
+>>                 val = fdt_getprop_by_offset(blob, cur, &pname, &sz);
+>>                 if (!val) {
+>> @@ -196,11 +198,6 @@ static void populate_properties(const void *blob,
+>>                 if (!strcmp(pname, "name"))
+>>                         has_name = true;
+>>
+>> -               pp = unflatten_dt_alloc(mem, sizeof(struct property),
+>> -                                       __alignof__(struct property));
+>> -               if (dryrun)
+>> -                       continue;
+>> -
+>>                 /* We accept flattened tree phandles either in
+>>                  * ePAPR-style "phandle" properties, or the
+>>                  * legacy "linux,phandle" properties.  If both
+>> @@ -208,23 +205,34 @@ static void populate_properties(const void *blob,
+>>                  * will get weird. Don't do that.
+>>                  */
+>>                 if (!strcmp(pname, "phandle") ||
+>> -                   !strcmp(pname, "linux,phandle")) {
+>> -                       if (!np->phandle)
+>> -                               np->phandle = be32_to_cpup(val);
+>> -               }
+>> +                   !strcmp(pname, "linux,phandle"))
+>> +                       prop_is_phandle = 1;
+>>
+>>                 /* And we process the "ibm,phandle" property
+>>                  * used in pSeries dynamic device tree
+>>                  * stuff
+>>                  */
+>> -               if (!strcmp(pname, "ibm,phandle"))
+>> -                       np->phandle = be32_to_cpup(val);
+>> +               if (!strcmp(pname, "ibm,phandle")) {
+>> +                       prop_is_phandle = 1;
+>> +                       prop_is_ibm_phandle = 1;
+>> +               }
+>> +
+>> +               if (!prop_is_phandle)
+>> +                       pp = unflatten_dt_alloc(mem, sizeof(struct property),
+>> +                                               __alignof__(struct property));
+>>
+>> -               pp->name   = (char *)pname;
+>> -               pp->length = sz;
+>> -               pp->value  = (__be32 *)val;
+>> -               *pprev     = pp;
+>> -               pprev      = &pp->next;
+>> +               if (dryrun)
+>> +                       continue;
+>> +
+>> +               if (!prop_is_phandle) {
+>> +                       pp->name   = (char *)pname;
+>> +                       pp->length = sz;
+>> +                       pp->value  = (__be32 *)val;
+>> +                       *pprev     = pp;
+>> +                       pprev      = &pp->next;
+>> +               } else if (prop_is_ibm_phandle || !np->phandle) {
+> 
+> This logic is a bit strange. I think it would be a bit better if we
+> can keep all the phandle code together and end with a continue, then
+> have the property handling code at the end of the loop.
+
+I will do this.  One side effect will be that the value of property
+"ibm,phandle" will no longer override the value of properties "phandle"
+and "linux,phandle".
+
+
+>> +                       np->phandle = be32_to_cpup(val);
+>> +               }
+>>         }
+>>
+>>         /* With version 0x10 we may not have the name property,
+>> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+>> index 18bbb4517e25..33f11a5384f3 100644
+>> --- a/drivers/of/of_private.h
+>> +++ b/drivers/of/of_private.h
+>> @@ -47,6 +47,7 @@ extern int of_property_notify(int action, struct device_node *np,
+>>  extern void of_node_release(struct kobject *kobj);
+>>  extern int __of_changeset_apply(struct of_changeset *ocs);
+>>  extern int __of_changeset_revert(struct of_changeset *ocs);
+>> +extern int __of_add_phandle_sysfs(struct device_node *np);
+>>  #else /* CONFIG_OF_DYNAMIC */
+>>  static inline int of_property_notify(int action, struct device_node *np,
+>>                                      struct property *prop, struct property *old_prop)
+>> diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+>> index 7827786718d8..ca0b85f5deb1 100644
+>> --- a/drivers/of/overlay.c
+>> +++ b/drivers/of/overlay.c
+>> @@ -101,9 +101,7 @@ static int of_overlay_apply_single_property(struct of_overlay *ov,
+>>         tprop = of_find_property(target, prop->name, NULL);
+>>
+>>         /* special properties are not meant to be updated (silent NOP) */
+>> -       if (of_prop_cmp(prop->name, "name") == 0 ||
+>> -           of_prop_cmp(prop->name, "phandle") == 0 ||
+>> -           of_prop_cmp(prop->name, "linux,phandle") == 0)
+>> +       if (!of_prop_cmp(prop->name, "name"))
+>>                 return 0;
+>>
+>>         propn = __of_prop_dup(prop, GFP_KERNEL);
+>> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+>> index 7ae9863cb0a4..624cbaeae0a4 100644
+>> --- a/drivers/of/resolver.c
+>> +++ b/drivers/of/resolver.c
+>> @@ -71,30 +71,11 @@ static void adjust_overlay_phandles(struct device_node *overlay,
+>>                 int phandle_delta)
+>>  {
+>>         struct device_node *child;
+>> -       struct property *prop;
+>> -       phandle phandle;
+>>
+>>         /* adjust node's phandle in node */
+>>         if (overlay->phandle != 0 && overlay->phandle != OF_PHANDLE_ILLEGAL)
+>>                 overlay->phandle += phandle_delta;
+>>
+>> -       /* copy adjusted phandle into *phandle properties */
+>> -       for_each_property_of_node(overlay, prop) {
+>> -
+>> -               if (of_prop_cmp(prop->name, "phandle") &&
+>> -                   of_prop_cmp(prop->name, "linux,phandle"))
+>> -                       continue;
+>> -
+>> -               if (prop->length < 4)
+>> -                       continue;
+>> -
+>> -               phandle = be32_to_cpup(prop->value);
+>> -               if (phandle == OF_PHANDLE_ILLEGAL)
+>> -                       continue;
+>> -
+>> -               *(uint32_t *)prop->value = cpu_to_be32(overlay->phandle);
+>> -       }
+>> -
+>>         for_each_child_of_node(overlay, child)
+>>                 adjust_overlay_phandles(child, phandle_delta);
+>>  }
+>> @@ -197,9 +178,7 @@ static int adjust_local_phandle_references(struct device_node *local_fixups,
+>>         for_each_property_of_node(local_fixups, prop_fix) {
+>>
+>>                 /* skip properties added automatically */
+>> -               if (!of_prop_cmp(prop_fix->name, "name") ||
+>> -                   !of_prop_cmp(prop_fix->name, "phandle") ||
+>> -                   !of_prop_cmp(prop_fix->name, "linux,phandle"))
+>> +               if (!of_prop_cmp(prop_fix->name, "name"))
+>>                         continue;
+>>
+>>                 if ((prop_fix->length % 4) != 0 || prop_fix->length == 0)
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 21e6323de0f3..4e86e05853f3 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -61,6 +61,7 @@ struct device_node {
+>>         struct  kobject kobj;
+>>         unsigned long _flags;
+>>         void    *data;
+>> +       struct bin_attribute attr_phandle;
+>>  #if defined(CONFIG_SPARC)
+>>         const char *path_component_name;
+>>         unsigned int unique_id;
+>> --
+>> Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
