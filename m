@@ -1,80 +1,41 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: [PATCH v7 0/9] pinctrl: meson: add support for GPIO IRQs
-Date: Sat, 10 Jun 2017 23:37:18 +0200
-Message-ID: <5b352c8d-a426-fa73-58b7-0c935979492b@gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v8 17/34] [media] add Omnivision OV5640 sensor driver
+Date: Sun, 11 Jun 2017 00:55:33 +0300
+Message-ID: <20170610215532.GU1019@valkosipuli.retiisi.org.uk>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <1496860453-6282-18-git-send-email-steve_longerbeam@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1496860453-6282-18-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Steve Longerbeam <slongerbeam@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, kernel@pengutronix.de, fabio.estevam@nxp.com, linux@armlinux.org.uk, mchehab@kernel.org, hverkuil@xs4all.nl, nick@shmanahar.org, markus.heiser@darmarIT.de, p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, arnd@arndb.de, sudipm.mukherjee@gmail.com, minghsiu.tsai@mediatek.com, tiffany.lin@mediatek.com, jean-christophe.trotin@st.com, horms+renesas@verge.net.au, niklas.soderlund+renesas@ragnatech.se, robert.jarzmik@free.fr, songjun.wu@microchip.com, andrew-ct.chen@mediatek.com, gregkh@linuxfoundation.org, shuah@kernel.org, sakari.ailus@linux.intel.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-me
 List-Id: devicetree@vger.kernel.org
 
-This patch series is partially based on a series Jerome Brunet
-submitted about half a year ago. Due to open questions this series never
-made it to mainline, see https://patchwork.kernel.org/patch/9384431/
+Hi Steve,
 
-This new attempt uses GPIOLIB_IRQCHIP resulting in less needed code.
+On Wed, Jun 07, 2017 at 11:33:56AM -0700, Steve Longerbeam wrote:
+...
+> +/*
+> + * FIXME: remove this when a subdev API becomes available
+> + * to set the MIPI CSI-2 virtual channel.
+> + */
+> +static unsigned int virtual_channel;
+> +module_param(virtual_channel, int, 0);
+> +MODULE_PARM_DESC(virtual_channel,
+> +		 "MIPI CSI-2 virtual channel (0..3), default 0");
 
-The series was successfully tested on a Odroid-C2.
+If this works for you it's a good workaround. I hope we can address the
+matter properly soon --- it's related to data types, embedded data etc.
 
-Changes in v2:
-- separate the GPIO IRQ controller from the pinctrl driver
-- minor improvements to the GPIO IRQ controller
+For the patch:
 
-Changes in v3:
-- replace the request_irq based allocation of parent irq's with
-  chained irq handling, this also fixes the spurious interrupts issue
-  and allows to remove the workaround code.
-  Last but not least the parent irq's are no longer visible in
-  /proc/interrupts.
-- minor improvements to the GPIO IRQ controller
-
-Changes in v4:
-- separate the gpio-independent interrupt controller part and make
-  it a driver under drivers/irqchip
-
-Changes in v5:
-- smaller changes based on review comments
-- split DT patches per ARM / ARM64
-
-Changes in v6:
-- based on suggestion by Rob Herring: rename DT property parent-interrupts to interrupts
-
-Changes in v7:
-- remove patch 1 as it was applied to the pinctrl tree already
-- add patch 5 as prerequisite for reworked patch 6
-- remove IRQ_TYPE_EDGE_BOTH support from patch 6
-
-Heiner Kallweit (7):
-  irqchip: add Amlogic Meson GPIO irqchip driver
-  dt-bindings: add Amlogic Meson GPIO interrupt-controller DT binding documentation
-  ARM: dts: meson: add GPIO interrupt-controller support
-  ARM64: dts: meson: add GPIO interrupt-controller support
-  gpiolib: export gpiochip_irq_reqres and gpiochip_irq_relres
-  pinctrl: meson: add support for GPIO interrupts
-  pinctrl: meson: update DT binding documentation
-  ARM: dts: meson: mark gpio controllers as interrupt controllers
-  ARM64: dts: meson: mark gpio controllers as interrupt controllers
-
-.../amlogic,meson-gpio-intc.txt                    |  26 ++
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt  |   4 +
- arch/arm/boot/dts/meson8.dtsi                      |  12 +
- arch/arm/boot/dts/meson8b.dtsi                     |  12 +
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi          |   8 +
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi        |   4 +
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi         |   4 +
- drivers/gpio/gpiolib.c                             |   6 +-
- drivers/irqchip/Kconfig                            |   5 +
- drivers/irqchip/Makefile                           |   1 +
- drivers/irqchip/irq-meson-gpio.c                   | 295 +++++++++++++++++++++
- drivers/pinctrl/Kconfig                            |   1 +
- drivers/pinctrl/meson/pinctrl-meson.c              | 176 +++++++++++-
- include/linux/gpio/driver.h                        |   3 +
- 14 files changed, 554 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
- create mode 100644 drivers/irqchip/irq-meson-gpio.c
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
 -- 
-2.13.1
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
