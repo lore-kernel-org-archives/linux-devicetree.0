@@ -1,90 +1,93 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v6 2/9] irqchip: add Amlogic Meson GPIO irqchip driver
-Date: Fri, 09 Jun 2017 16:30:07 -0700
-Message-ID: <m2tw3o4u4g.fsf@baylibre.com>
-References: <04378047-4194-bb0f-3da3-e1d62345a86b@gmail.com>
-        <89d02a38-7386-fcdc-4dce-ea7e531c90b4@gmail.com>
-        <1496999266.3552.61.camel@baylibre.com> <m2vao46ewu.fsf@baylibre.com>
-        <702e4608-8592-41fe-b79c-fef985c49be7@gmail.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: Re: [PATCH v8 14/34] ARM: dts: imx6-sabreauto: add the ADV7180 video
+ decoder
+Date: Fri, 9 Jun 2017 17:19:31 -0700
+Message-ID: <f5cad571-9147-1c72-47d9-4e6f68116f97@gmail.com>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <1496860453-6282-15-git-send-email-steve_longerbeam@mentor.com>
+ <CAJ+vNU0C0=4hUq+g1P7yTzLzFPidfauQROPOVr4WQWKNZz_xmQ@mail.gmail.com>
+ <dd5b29b7-bf92-5f03-caef-1843a9f32cd3@gmail.com> <20170609213843.GB28596@amd>
+ <cb9d79e9-fa36-d0ad-3df6-27f1b8790f78@gmail.com> <20170609232358.GA14181@amd>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <702e4608-8592-41fe-b79c-fef985c49be7@gmail.com> (Heiner
-        Kallweit's message of "Sat, 10 Jun 2017 00:30:14 +0200")
-Sender: linux-gpio-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20170609232358.GA14181@amd>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Tim Harvey <tharvey@gateworks.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, mchehab@kernel.org, Hans Verkuil <hverkuil@xs4all.nl>, Nick Dyer <nick@shmanahar.org>, markus.heiser@darmarit.de, Philipp Zabel <p.zabel@pengutronix.de>, laurent.pinchart+renesas@ideasonboard.com, bparrot@ti.com, geert@linux-m68k.org, Arnd Bergmann <arnd@arndb.de>, Sudip Mukherjee <sudipm.mukherjee@gmail.com>, minghsiu.tsai@mediatek.com, Tiffany Lin <tiffany.lin@mediatek.com>, Jean-Christophe TROTIN <jean-christophe.trotin@st.com>, Simon Horman <horms+renesas@verge.net.au>, =?UTF-8?Q?Niklas_S=c3=
 List-Id: devicetree@vger.kernel.org
 
-Heiner Kallweit <hkallweit1@gmail.com> writes:
 
-> Am 09.06.2017 um 23:15 schrieb Kevin Hilman:
->> Jerome Brunet <jbrunet@baylibre.com> writes:
->> 
->>> On Thu, 2017-06-08 at 21:38 +0200, Heiner Kallweit wrote:
->>>> Add a driver supporting the GPIO interrupt controller on certain
->>>> Amlogic meson SoC's.
+
+On 06/09/2017 04:23 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>>>> Steve,
+>>>>>
+>>>>> You need to remove the fim node now that you've moved this to V4L2 controls.
+>>>>>
 >>>>
->>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->> 
->> [...]
->> 
->>>> +static unsigned int meson_irq_startup(struct irq_data *data)
->>>> +{
->>>> +	irq_chip_unmask_parent(data);
->>>> +	/*
->>>> +	 * An extra bit was added to allow having the same gpio hwirq twice
->>>> +	 * for handling IRQ_TYPE_EDGE_BOTH. Remove this bit to get the
->>>> +	 * gpio hwirq.
->>>> +	 */
->>>> +	meson_irq_set_hwirq(data, data->hwirq >> 1);
+>>>> Yep, I caught this just after sending the v8 patchset. I'll send
+>>>> a v9 of this patch.
 >>>
->>> Please keep in mind that any device can use this controller as irq parent.
->>> It has to make sense, even when not serving the gpio driver.
->>>
->>> This hack means that, in DT, we'd have to multiply by 2 the values given under
->>> section "22.3 GPIO interrupts" of the datasheet. This is an example Linux
->>> specific stuff in DT.
->>> It also means that the controller declares a lot more lines that it really has
->>> ... 
->>>
->>> This is all to accommodate your hack around IRQ_TYPE_BOTH and creating the
->>> mapping from the irq_set_type callback of the GPIO driver, which is still think
->>> should be dropped at this point.
->> 
->> +1
->> 
->> Please drop the hack for IRQ_TYPE_BOTH so we can reach agreement on the
->> basic design and functionality.  The gymnastics required to support this
->> hack (due to broken hardware) are getting in the way of getting basic
->> functionality merged.
->> 
-> I haven't heard any feedback on the other proposal yet:
-> Always reserve two parent irq's in the request_resources callback,
-> then set_type is easy. How about this one?
+>>> This needs ack from devicetree people, then it can be merged. Can you
+>>> be a bit more forceful getting the ack?
+>>
+>> OK, I need an Ack please, he said, in a forceful way. :)
+> 
+> I'd tune the force up a tiny bit more. This is not FreeBSD ;-). You
+> can read some emails from Linus for inspiration. Or drink few beers
+> and look at Al Viro's emails.
+> 
+>> In fact Ack's are needed for all the changes to dts sources,
+>> patches 4-14.
+> 
+> Actually, are they? Those should not need acks from device tree
+> people, just acks from ARM people, and those are easier to get... in
+> fact they should not need any acks, you should just send them to arm
+> people and get them merged.
 
-The feedback is the same: let's consider that after getting the basics
-reviewed, accepted and merged.
 
-> Having max. 4 gpio irq's should be a fair price for a cleaner design.
+Hans said he prefers to have the dts patches as part of the whole set
+rather than submitted separately. But I did add --to's for the ARM
+people for 4-14.
 
-Yuck, but better than no support for both _BOTH I guess.
 
-But again, discussion of hacks for the hardware limitation is getting in
-the way discussing and merging the basics.  Let's get the basics right
-first, then add functionality.  
+> 
+> 1-4 is just a documentation, and you have acks there. (Except 2?)
+> That's ready to be merged, probably via the media tree? Just make it
+> clear you want it merged.
 
-I understand it can be rather frustrating to give up features and/or
-functionality for having something "clean", but unfortunately, that's
-how the upstream linux kernel community has always worked.
+Yes, 1-3 now have Acks (binding docs).
 
-Most maintainers prefer clean, well-designed and maintainable code that
-comes in small, easily reviewable chunks over something that's difficult
-to understand with hacks and workarounds.  Even if that means a limited
-feature set initially.
+> 
+> 15,16 should be ready to. Media tree, too, I guess.
 
-Additional functionality (even if hacky) is much easier to review,
-discuss and maintain *later* when it's on top of a starting point that
-is clean.
+Yes, those have Acks (video-mux entity functions and subdev driver).
 
-Kevin
+> 
+> drivers/staging is greg. Advantage is these do _not_ need to go after
+> the dts changes. It is a driver. Actually I'd normally add dts support
+> after the driver. So you can push it now.
+
+Right, Hans agrees, except that for staging drivers we don't really need
+an Ack from Greg.
+
+
+> 
+>>> I don't think it makes sense to resubmit v9 before that. This is not a
+>>> rocket science.
+>>
+>> I guess that makes sense, I'll wait for Ack's from all these patches
+>> before submitting the entire patchset as v9.
+> 
+> You may want to split the series, according to mainainters, or just
+> ask the maintainers to merge the relevant parts. I believe most of it
+> can be pushed now.
+> 
+> Good luck,
+
+Thanks!
+Steve
