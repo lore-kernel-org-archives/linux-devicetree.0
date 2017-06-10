@@ -1,162 +1,149 @@
-From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] arm64: allwinner: h5: Add initial Orangepi
- Zero Plus 2 support
-Date: Sat, 10 Jun 2017 18:27:54 +0530
-Message-ID: <1497099474-5435-1-git-send-email-jteki@openedev.com>
-Reply-To: jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: [PATCH v2 03/11] drm: sun4i: ignore swapped mixer<->tcon
+ connection for DE2
+Date: Sat, 10 Jun 2017 22:57:28 +0800
+Message-ID: <03e5cb4ada3e19ed3476e1d562450f6f@aosc.io>
+References: <20170604160149.30230-1-icenowy@aosc.io>
+ <20170604160149.30230-4-icenowy@aosc.io>
+ <20170607093512.rfvpefmyskgjw3ik@flea.lan>
+ <01A7F22E-C4FF-4B4B-A9BC-FF0C96B996B9@aosc.io>
+ <20170607143827.4ng5gedvzn3f5pyx@flea.lan>
+ <66881eac1dd06d918692482bdb1ea9e6@aosc.io>
+ <20170609144649.67i3zscq26jt5hhe@flea.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCV4FV5N34IRB5OZ57EQKGQEZQGV6GI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170609144649.67i3zscq26jt5hhe-YififvaboMKzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+在 2017-06-09 22:46，Maxime Ripard 写道：
+> On Thu, Jun 08, 2017 at 01:01:53PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+>> 在 2017-06-07 22:38，Maxime Ripard 写道：
+>> > On Wed, Jun 07, 2017 at 06:01:02PM +0800, Icenowy Zheng wrote:
+>> > > >I have no idea what this is supposed to be doing either.
+>> > > >
+>> > > >I might be wrong, but I really feel like there's a big mismatch
+>> > > >between your commit log, and what you actually implement.
+>> > > >
+>> > > >In your commit log, you should state:
+>> > > >
+>> > > >A) What is the current behaviour
+>> > > >B) Why that is a problem
+>> > > >C) How do you address it
+>> > > >
+>> > > >And you don't.
+>> > > >
+>> > > >However, after discussing it with Chen-Yu, it seems like you're trying
+>> > > >to have all the mixers probed before the TCONs. If that is so, there's
+>> > > >nothing specific to the H3 here, and we also have the same issue on
+>> > > >dual-pipeline DE1 (A10, A20, A31). Chen-Yu worked on that a bit, but
+>> > > >the easiest solution would be to move from a DFS algorithm to walk
+>> > > >down the graph to a BFS one.
+>> > > >
+>> > > >That way, we would add all mixers first, then the TCONs, then the
+>> > > >encoders, and the component framework will probe them in order.
+>> > >
+>> > > No. I said that they're swappable, however, I don't want to
+>> > > implement the swap now, but hardcode 0-0 1-1 connection.
+>> >
+>> > We're on the same page, it's definitely not what I was mentionning
+>> > here. This would require a significant rework, and the usecase is
+>> > still unclear for now.
+>> >
+>> > > However, as you and Chen-Yu said, device tree should reflect the
+>> > > real hardware, there will be bonus endpoints for the swapped
+>> > > connection.
+>> >
+>> > If by bonus you mean connections from mixer 0 to tcon 1 and mixer 1 to
+>> > tcon 0, then yes, we're going to need it.
+>> >
+>> > > What I want to do is to ignore the bonus connection, in order to
+>> > > prevent them from confusing the code.
+>> > >
+>> > > If you just change the bind sequence, I think it cannot be
+>> > > prevented that wrong connections will be bound.
+>> >
+>> > This is where I don't follow you anymore. The component framework
+>> > doesn't list connections but devices. The swapped connections do not
+>> > matter here, we have the same set of devices: mixer0, mixer1, tcon0
+>> > and tcon1.
+>> >
+>> > The thing that does change with your patch is that before, the binding
+>> > sequence would have been mixer0, tcon0, tcon1, mixer1. With your
+>> > patch, it's mixer0, tcon0, mixer1, tcon1.
+>> >
+>> > So, again, stating what issue you were seeing before making this patch
+>> > would be very helpful to see what you're trying to do / fix.
+>> 
+>> So maybe I can drop the forward search (searching output) code, and 
+>> keep
+>> only the backward search (search input) code in TCON?
+>> 
+>> Forward search code is only used when binding, but backward search is 
+>> used
+>> for TCON to find connected mixer.
+> 
+> It is hard to talk about a solution, when it's not clear what the
+> issue is.
+> 
+> So please state
+>> > > >A) What is the current behaviour
+>> > > >B) Why that is a problem
+>> > > >C) How do you address it
+> 
+> We'll talk about a solution once this is done.
 
-Orangepi Zero Plus 2 is an open-source single-board computer
-using the Allwinner h5 SOC.
+(All those things are based on the assumption that mixer0, mixer1, tcon0
+and tcon1 are all enabled in DT. If one group of mixer-tcon pair is 
+fully
+disabled in DT it will behave properly.)
 
-H5 Orangepi Zero Plus 2 has
-- Quad-core Cortex-A53
-- 512MB DDR3
-- micrSD slot and 8GB eMMC
-- Debug TTL UART
-- HDMI
-- Wifi + BT
-- OTG+power supply
+For the backward search:
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
-Changes for v2:
-- Add emmc node
+A) The current behaviour is to take the first engine found, which will 
+be
+wrong in the situation of tcon1 if mixer0 and mixer1 are both enabled:
+mixer0 is taken for tcon1 instead of mixer1.
 
- arch/arm64/boot/dts/allwinner/Makefile             |  1 +
- .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 98 ++++++++++++++++++++++
- 2 files changed, 99 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+B) It takes mixer0 as it matches the first endpoint of tcon0's input.
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 1ea7709..8adba9c 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-new file mode 100644
-index 0000000..6136a3f
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -0,0 +1,98 @@
-+/*
-+ * Copyright (C) 2017 Jagan Teki <jteki-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-h5.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "OrangePi Zero Plus2";
-+	compatible = "xunlong,orangepi-zero-plus2", "allwinner,sun50i-h5";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory {
-+		reg = <0x40000000 0x20000000>;
-+	};
-+
-+	soc {
-+		reg_vcc3v3: vcc3v3 {
-+			compatible = "regulator-fixed";
-+			regulator-name = "vcc3v3";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+		};
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
--- 
-2.7.4
+C) It's a logic failure in the backward search, as it only considered
+the DE1 situation, in which TCONs will only have one engine as input.
+
+For the bind process:
+
+A) The current behaviour is to try to bind all output endpoints of the
+engine, during binding all outputs of mixer0, these will happen:
+   1. tcon1 is bound with mixer0 as its engine if backward searching
+   is not fixed.
+   2. tcon1 fails to be bound as its engine is not yet bound when
+   backward searching works properly, then sun4i_drv will refuse
+   to continue as a component is not properly bound.
+B) The binding process in sun4i_drv will bind a component that is not
+really an working output of the forward component, but only exists in
+the endpoint list as a theortically possible output (in fact not an
+real output).
+C) I tested with this patch's sun4i_drv_node_is_swappable_de2_mixer
+function masked (always return false), and then the multiple
+mixer+tcon situations don't work properly.
+
+P.S. I think the BFS solution is really a dirty hack -- although we
+bind components, not connections, we should decide the next component
+to bind according to the connections -- not really connected
+components shouldn't be bound.
+
+For example, if we enabled mixer0, tcon0 and tcon1, tcon1 shouldn't
+be bound at all. However in BFS situation tcon1 will also be bound
+and then fail to be bound if the backward engine searching is fixed.
+
+> 
+> Maxime
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
