@@ -1,7 +1,7 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v5 3/4] of: be consistent in form of file mode
-Date: Fri,  9 Jun 2017 22:47:11 -0700
-Message-ID: <1497073632-22402-4-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v5 2/4] of: make __of_attach_node() static
+Date: Fri,  9 Jun 2017 22:47:10 -0700
+Message-ID: <1497073632-22402-3-git-send-email-frowand.list@gmail.com>
 References: <1497073632-22402-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1497073632-22402-1-git-send-email-frowand.list@gmail.com>
@@ -12,28 +12,39 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-checkpatch whined about using S_IRUGO instead of octal equivalent
-when adding phandle sysfs code, so used octal in that patch.
-Change other instances of the S_* constants in the same file to
-the octal form.
+__of_attach_node() is not used outside of drivers/of/dynamic.c.  Make
+it static and remove it from drivers/of/of_private.h.
 
 Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/of/dynamic.c    | 2 +-
+ drivers/of/of_private.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 941c9a03471d..a4e2159c8671 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -168,7 +168,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index be320082178f..3367ed2da9ad 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -216,7 +216,7 @@ int of_property_notify(int action, struct device_node *np,
+ 	return of_reconfig_notify(action, &pr);
+ }
  
- 	sysfs_bin_attr_init(&pp->attr);
- 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
--	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-+	pp->attr.attr.mode = secure ? 0400 : 0444;
- 	pp->attr.size = secure ? 0 : pp->length;
- 	pp->attr.read = of_node_property_read;
+-void __of_attach_node(struct device_node *np)
++static void __of_attach_node(struct device_node *np)
+ {
+ 	np->child = NULL;
+ 	np->sibling = np->parent->child;
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 1a041411b219..73da291a51cd 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -91,7 +91,6 @@ extern int __of_update_property(struct device_node *np,
+ extern void __of_update_property_sysfs(struct device_node *np,
+ 		struct property *newprop, struct property *oldprop);
  
+-extern void __of_attach_node(struct device_node *np);
+ extern int __of_attach_node_sysfs(struct device_node *np);
+ extern void __of_detach_node(struct device_node *np);
+ extern void __of_detach_node_sysfs(struct device_node *np);
 -- 
 Frank Rowand <frank.rowand@sony.com>
