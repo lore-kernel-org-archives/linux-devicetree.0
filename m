@@ -1,57 +1,57 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 13/13] ARM: dts: meson: use the real ethernet clock on Meson8 and Meson8b
-Date: Sun, 11 Jun 2017 12:16:44 +0200
-Message-ID: <20170611101644.28581-14-martin.blumenstingl@googlemail.com>
-References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: update STM32 timers clock names
+Date: Sun, 11 Jun 2017 12:15:38 +0100
+Message-ID: <20170611121538.0e7e757d@kernel.org>
+References: <1496993874-9870-1-git-send-email-fabrice.gasnier@st.com>
+        <1496993874-9870-2-git-send-email-fabrice.gasnier@st.com>
+        <CA+M3ks7sQ_1kF_ZgQ1+mLwDVo2=CVmACFBvSuY+FyZ9WXY=5tw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170611101644.28581-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CA+M3ks7sQ_1kF_ZgQ1+mLwDVo2=CVmACFBvSuY+FyZ9WXY=5tw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+To: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benjamin GAIGNARD <benjamin.gaignard-qxv4g6HH51o@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Until now clk81 was used as gate clock for the ethernet controller on
-Meson8 whereas Meson8b did not configure a gate clock at all. Use
-CLKID_ETH for both SoCs, which is the real gate clock for the ethernet
-controller.
+On Fri, 9 Jun 2017 09:43:21 +0200
+Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
----
- arch/arm/boot/dts/meson8.dtsi  | 2 +-
- arch/arm/boot/dts/meson8b.dtsi | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+> 2017-06-09 9:37 GMT+02:00 Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>:
+> > Clock name has been updated during driver/DT binding review:
+> > https://lkml.org/lkml/2016/12/13/718
+> > Update DT binding doc to reflect this.
+> >
+> > Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Should have a fixes tag as we should probably be pushing this
+to stable...  Rob / Mark - up to you guys on both of these for
+the path they take (assuming Lee is happy with patch!)
 
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index f6816ea09aeb..d997185896b7 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -242,7 +242,7 @@
- };
- 
- &ethmac {
--	clocks = <&clkc CLKID_CLK81>;
-+	clocks = <&clkc CLKID_ETH>;
- 	clock-names = "stmmaceth";
- };
- 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 2b13570b0e60..e57934f82098 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -176,6 +176,11 @@
- 	};
- };
- 
-+&ethmac {
-+	clocks = <&clkc CLKID_ETH>;
-+	clock-names = "stmmaceth";
-+};
-+
- &hwrng {
- 	clocks = <&clkc CLKID_RNG0>;
- 	clock-names = "core";
--- 
-2.13.1
+Fixes: d0f949e220fd ("mfd: Add STM32 Timers driver")
+I think...
+> > ---
+> >  Documentation/devicetree/bindings/mfd/stm32-timers.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/stm32-timers.txt b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
+> > index bbd083f..1db6e00 100644
+> > --- a/Documentation/devicetree/bindings/mfd/stm32-timers.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
+> > @@ -31,7 +31,7 @@ Example:
+> >                 compatible = "st,stm32-timers";
+> >                 reg = <0x40010000 0x400>;
+> >                 clocks = <&rcc 0 160>;
+> > -               clock-names = "clk_int";
+> > +               clock-names = "int";
+> >
+> >                 pwm {
+> >                         compatible = "st,stm32-pwm";
+> > --
+> > 1.9.1
+> >  
+> 
+> Acked-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
