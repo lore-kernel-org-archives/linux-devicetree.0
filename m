@@ -1,70 +1,57 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Subject: Re: [PATCH v1 1/1] gpio: of: provide option generic property for
- initial line states
-Date: Sun, 11 Jun 2017 22:57:18 +0300
-Message-ID: <2432df7e-5d20-42c9-ddc0-044c2ca5ce2b@mentor.com>
-References: <20170609141622.21502-1-o.rempel@pengutronix.de>
- <CAL_JsqJeSCN88JnVnofb2Ncy4bDyXiKQbLniHmvbE4j854ZePA@mail.gmail.com>
- <20170611061919.jsbc7x67ut4segj5@pengutronix.de>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v8 00/34] i.MX Media Driver
+Date: Sun, 11 Jun 2017 23:05:02 +0300
+Message-ID: <43887f25-bb73-9020-0909-d275c319aaad@mentor.com>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
+ <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
+ <e4f152de-6e75-7654-178e-e6dcf9ad12f3@xs4all.nl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170611061919.jsbc7x67ut4segj5@pengutronix.de>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Oleksij Rempel <ore@pengutronix.de>, Rob Herring <robh+dt@kernel.org>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, barebox@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e4f152de-6e75-7654-178e-e6dcf9ad12f3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1560/9W2qTSuDoA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Oleksij,
-
-On 06/11/2017 09:19 AM, Oleksij Rempel wrote:
-> Hi Rob,
-> 
-> On Fri, Jun 09, 2017 at 10:41:30AM -0500, Rob Herring wrote:
->> On Fri, Jun 9, 2017 at 9:16 AM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->>> This property is needed for barebox or may be other bootloaders
->>> to set proper gpio configuration as early as possible.
->>>
->>> This example is mainly based on "lines-initial-states" property
->>> from this binding documentation:
->>> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+On 06/10/2017 02:26 AM, Hans Verkuil wrote:
+> On 10/06/17 01:16, Steve Longerbeam wrote:
 >>
->> Don't we have a binding for this already based on gpio-hogs.
+>>
+>> On 06/07/2017 12:02 PM, Hans Verkuil wrote:
+>>> We're still waiting for an Ack for patch 02/34, right?
+>>>
+>>
+>> Hi Hans, Rub has provided an Ack for patch 2.
+>>
+>>> Other than that everything is ready AFAICT.
+>>>
+>>
+>> But as Pavel pointed out, in fact we are missing many
+>> Acks still, for all of the dts source changes (patches
+>> 4-14), as well as really everything else (imx-media staging
+>> driver patches).
 > 
-> Markus Pargmann was working on this topic before and suddenly was not
-> able to finish it.
+> No Acks needed for the staging part. It's staging, so not held
+> to the same standards as non-staging parts. That doesn't mean
+> Acks aren't welcome, of course.
 
-that's fine, but the proposed extension is supposedly not wanted.
+Acks are wanted for particular i.MX DTS changes including device
+tree binding descriptions.
 
-> I found only some not finished discussions and no code or documentation
-> in linux kernel upstream.
-> 
-> So far, I was able to find fallowing patches and discussions:
-> patch 23.08.2015, last comment 11.05.2017:
-> https://patchwork.kernel.org/patch/7096721/
-> 
-> patch 23.02.2016, last comment 09.03.2016:
-> https://patchwork.ozlabs.org/patch/586743/
-> 
-> Since there was objections about node-like design for gpio-initval, I
-> provided an array property, which is similar to initval properties already used
-> for different other device nodes. For example:
-> 
-> Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> qcom,ath10k-calibration-data
-> 
-> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> lines-initial-states
-
-It'd rather be better to fix the drivers and remove the properties
-from these found device tree binding descriptions.
+Shawn, please bless the series.
 
 > 
-> Please fixme if I miss something.
-
-Why is GPIO hogging mechanism not good enough for your purpose?
+> You don't need Greg's Ack for staging/media either, patches there
+> go in via us (generally at least) and we handle those, not Greg.
+> 
 
 --
 With best wishes,
 Vladimir
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
