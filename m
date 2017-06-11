@@ -1,84 +1,72 @@
-From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v7 8/9] ARM: dts: meson: mark gpio controllers as interrupt
- controllers
-Date: Sat, 10 Jun 2017 23:58:44 +0200
-Message-ID: <fe6fb55b-ed7a-db0d-a57e-71d076262866@gmail.com>
-References: <5b352c8d-a426-fa73-58b7-0c935979492b@gmail.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
+Date: Sun, 11 Jun 2017 10:36:51 +0530
+Message-ID: <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
+References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
+ <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5b352c8d-a426-fa73-58b7-0c935979492b-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Make the GPIO controllers act as interrupt controllers.
-
-Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
-v5:
-- separate ARM / ARM64 DT changes
-- add Reviewed-by
-v6:
-- no changes
-v7:
-- no changes
----
- arch/arm/boot/dts/meson8.dtsi  | 4 ++++
- arch/arm/boot/dts/meson8b.dtsi | 4 ++++
- 2 files changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index 6c3a68af..952dad3d 100644
---- a/arch/arm/boot/dts/meson8.dtsi
-+++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -106,6 +106,8 @@
- 			reg-names = "mux", "pull", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			gpio-ranges = <&pinctrl_aobus 0 120 16>;
- 		};
- 
-@@ -149,6 +151,8 @@
- 			reg-names = "mux", "pull", "pull-enable", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			gpio-ranges = <&pinctrl_cbus 0 0 120>;
- 		};
- 
-diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-index 64d02932..570a347e 100644
---- a/arch/arm/boot/dts/meson8b.dtsi
-+++ b/arch/arm/boot/dts/meson8b.dtsi
-@@ -99,6 +99,8 @@
- 			reg-names = "mux", "pull", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			gpio-ranges = <&pinctrl_aobus 0 130 16>;
- 		};
- 
-@@ -174,6 +176,8 @@
- 			reg-names = "mux", "pull", "pull-enable", "gpio";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 			gpio-ranges = <&pinctrl_cbus 0 0 130>;
- 		};
- 	};
--- 
-2.13.1
 
 
+On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
+> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
+>> The LP87565 chip is a power management IC for Portable Navigation Systems
+>> and Tablet Computing devices. It contains the following components:
+>>
+>>         - Configurable Bucks(Single and multi-phase).
+>>         - Configurable General Purpose Output Signals (GPO).
+>>
+>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+>> output.
+>>
+>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>> ---
+>>
+>> The other patches are already pulled by Mark. Hence posting
+>> the remaining patch.
+>>
+>> Changes in v4:
+>>
+>>   * Fixed device tree comments from Rob on the pmic node name.
+>>   * removed regulators from properties list as it is a node.
+>>  
+>> Changes in v3:
+>>
+>>   * Fixed License to GPL v2.
+>>   * Fixed an indentation issue.
+>>
+>> Changes in v2:
+>>
+>>   * Fixed a bunch of whitespace errors.
+>>   * Changed the License to short form.
+>>   * Added the generic compatible lp87565
+>>   * Removed i2c_device_id table.
+>>   * Introduced probe_new function in place of probe.
+>>
+>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  43 ++++
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Thanks Rob.
+
+> 
+>>  drivers/mfd/Kconfig                               |  14 ++
+>>  drivers/mfd/Makefile                              |   1 +
+>>  drivers/mfd/lp87565.c                             |  92 ++++++++
+>>  include/linux/mfd/lp87565.h                       | 270 ++++++++++++++++++++++
+>>  5 files changed, 420 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+>>  create mode 100644 drivers/mfd/lp87565.c
+>>  create mode 100644 include/linux/mfd/lp87565.h
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
