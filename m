@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 05/13] clk: meson8b: export the ethernet gate clock
-Date: Sun, 11 Jun 2017 12:16:36 +0200
-Message-ID: <20170611101644.28581-6-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 07/13] ARM: dts: meson8: add the pins for the SDIO controller
+Date: Sun, 11 Jun 2017 12:16:38 +0200
+Message-ID: <20170611101644.28581-8-martin.blumenstingl@googlemail.com>
 References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170611101644.28581-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -10,39 +10,46 @@ To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdv
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Export the ethernet gate clock to the dt-bindings.
-
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- drivers/clk/meson/meson8b.h              | 2 +-
- include/dt-bindings/clock/meson8b-clkc.h | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/meson8.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-index 17479c60864d..a687e02547dc 100644
---- a/drivers/clk/meson/meson8b.h
-+++ b/drivers/clk/meson/meson8b.h
-@@ -100,7 +100,7 @@
- #define CLKID_ASSIST_MISC	33
- #define CLKID_SPI		34
- #define CLKID_I2S_SPDIF		35
--#define CLKID_ETH		36
-+/* #define CLKID_ETH */
- #define CLKID_DEMUX		37
- #define CLKID_AIU_GLUE		38
- #define CLKID_IEC958		39
-diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
-index 04f0d1fcd308..e29227fb52a1 100644
---- a/include/dt-bindings/clock/meson8b-clkc.h
-+++ b/include/dt-bindings/clock/meson8b-clkc.h
-@@ -24,6 +24,7 @@
- #define CLKID_SAR_ADC		23
- #define CLKID_RNG0		25
- #define CLKID_SDIO		30
-+#define CLKID_ETH		36
- #define CLKID_USB0		50
- #define CLKID_USB1		51
- #define CLKID_USB		55
+diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+index 93e437c91c61..1bbfc04c3f10 100644
+--- a/arch/arm/boot/dts/meson8.dtsi
++++ b/arch/arm/boot/dts/meson8.dtsi
+@@ -158,6 +158,30 @@
+ 			gpio-ranges = <&pinctrl_cbus 0 0 120>;
+ 		};
+ 
++		sd_a_pins: sd-a {
++			mux {
++				groups = "sd_d0_a", "sd_d1_a", "sd_d2_a",
++					"sd_d3_a", "sd_clk_a", "sd_cmd_a";
++				function = "sd_a";
++			};
++		};
++
++		sd_b_pins: sd-b {
++			mux {
++				groups = "sd_d0_b", "sd_d1_b", "sd_d2_b",
++					"sd_d3_b", "sd_clk_b", "sd_cmd_b";
++				function = "sd_b";
++			};
++		};
++
++		sd_c_pins: sd-c {
++			mux {
++				groups = "sd_d0_c", "sd_d1_c", "sd_d2_c",
++					"sd_d3_c", "sd_clk_c", "sd_cmd_c";
++				function = "sd_c";
++			};
++		};
++
+ 		spi_nor_pins: nor {
+ 			mux {
+ 				groups = "nor_d", "nor_q", "nor_c", "nor_cs";
 -- 
 2.13.1
 
