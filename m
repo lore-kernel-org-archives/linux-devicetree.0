@@ -1,7 +1,7 @@
 From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: [PATCH 06/13] ARM: dts: meson8: add the PWM_E and PWM_F pins
-Date: Sun, 11 Jun 2017 12:16:37 +0200
-Message-ID: <20170611101644.28581-7-martin.blumenstingl@googlemail.com>
+Subject: [PATCH 09/13] ARM: dts: meson8: add reserved memory zones
+Date: Sun, 11 Jun 2017 12:16:40 +0200
+Message-ID: <20170611101644.28581-10-martin.blumenstingl@googlemail.com>
 References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170611101644.28581-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
@@ -10,48 +10,67 @@ To: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdv
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds the definition of the PWM_E (CBUS) and PWM_F (AOBUS) to
-meson8.dtsi, allowing devices to use them. PWM_E can be used on some
-devices to generate the 32.768kHz clock for the SDIO wifi module, while
-PWM_F can be used to control the power LED.
+There seem to be two memory regions that need to be reserved, otherwise
+the system just hangs when running:
+$ stress --vm-bytes $(awk '/MemFree/{printf "%d\n", $2 * 0.9;}' < /proc/meminfo)k \
+  --vm-keep -m 1
+
+The first memory region is really crucial and without it the system
+hangs. I could not find any references to this in Amlogic's GPL kernel
+sources.
+The second region is used by the "suspend firmware". The u-boot sources
+(/arch/arm/cpu/aml_meson/m8/firmwareld.c) state that the suspend
+firmware is located at "64M + 15M" which matches CONFIG_MESON_SUSPEND in
+the Amlogic GPL kernel sources. The "suspend firmware" is responsible
+for waking up the system from suspend state.
+
+This also fixes reading the full SD card as without this the system
+would simply hang (probably related to the first memory region, if some
+buffer is allocated there).
 
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 ---
- arch/arm/boot/dts/meson8.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ arch/arm/boot/dts/meson8.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
 diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-index e4f7357b4b31..93e437c91c61 100644
+index 8582490fcb52..cf011dfe050e 100644
 --- a/arch/arm/boot/dts/meson8.dtsi
 +++ b/arch/arm/boot/dts/meson8.dtsi
-@@ -123,6 +123,13 @@
- 				function = "remote";
- 			};
+@@ -83,6 +83,33 @@
+ 			reg = <0x203>;
  		};
-+
-+		pwm_f_ao_pins: pwm-f-ao {
-+			mux {
-+				groups = "pwm_f_ao";
-+				function = "pwm_f_ao";
-+			};
-+		};
  	};
- };
- 
-@@ -168,6 +175,13 @@
- 				function = "ethernet";
- 			};
- 		};
 +
-+		pwm_e_pins: pwm-e {
-+			mux {
-+				groups = "pwm_e";
-+				function = "pwm_e";
-+			};
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		/* 2 MiB reserved for Hardware ROM Firmware? */
++		hwrom_reserved: hwrom@0 {
++			reg = <0x0 0x200000>;
++			no-map;
 +		};
- 	};
- };
++
++		/*
++		 * 1 MiB reserved for the "ARM Power Firmware": this is ARM
++		 * code which is responsible for system suspend. It loads a
++		 * piece of ARC code ("arc_power" in the vendor u-boot tree)
++		 * into SRAM, executes that and shuts down the (last) ARM core.
++		 * The arc_power firmware then checks various wakeup sources
++		 * (IR remote receiver, HDMI CEC, WIFI and Bluetooth wakeup or
++		 * simply the power key) and re-starts the ARM core once it
++		 * detects a wakeup request.
++		 */
++		suspend_firmware: secmon@4f00000 {
++			reg = <0x4f00000 0x100000>;
++			no-map;
++		};
++	};
+ }; /* end of / */
  
+ &aobus {
 -- 
 2.13.1
 
