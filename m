@@ -1,56 +1,76 @@
-From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v8 00/34] i.MX Media Driver
-Date: Sun, 11 Jun 2017 23:05:02 +0300
-Message-ID: <43887f25-bb73-9020-0909-d275c319aaad@mentor.com>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
- <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
- <e4f152de-6e75-7654-178e-e6dcf9ad12f3@xs4all.nl>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 00/23] mtd: nand: denali: Denali NAND IP patch bomb
+Date: Sun, 11 Jun 2017 22:14:44 +0200
+Message-ID: <20170611221444.396bb746@bbrezillon>
+References: <1496836352-8016-1-git-send-email-yamada.masahiro@socionext.com>
+        <CAK7LNAQMCCxZAJc=7EwEPmpxD+-VsgOvMxwk5ySLfxLVsarqhw@mail.gmail.com>
+        <CAK7LNASu=cmQo+gCmfY=MFLoGtm0oeZQ036Nst63bZOEwFxR4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <e4f152de-6e75-7654-178e-e6dcf9ad12f3-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+In-Reply-To: <CAK7LNASu=cmQo+gCmfY=MFLoGtm0oeZQ036Nst63bZOEwFxR4g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org, markus.heiser-O6JHGLzbNUwb1SvskN2V4Q@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, bparrot-l0cyMroinI0@public.gmane.org, geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sudipm.mukherjee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, niklas.soderlund+renesas-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, robert.jarzmik-GANU6spQydw@public.gmane.org, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sakari.ailus-VuQAYsv1560/9W2qTSuDoA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+To: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Enrico Jorns <ejo-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Masami Hiramatsu <mhiramat-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chuanxiao Dong <chuanxiao.dong-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/2017 02:26 AM, Hans Verkuil wrote:
-> On 10/06/17 01:16, Steve Longerbeam wrote:
->>
->>
->> On 06/07/2017 12:02 PM, Hans Verkuil wrote:
->>> We're still waiting for an Ack for patch 02/34, right?
->>>
->>
->> Hi Hans, Rub has provided an Ack for patch 2.
->>
->>> Other than that everything is ready AFAICT.
->>>
->>
->> But as Pavel pointed out, in fact we are missing many
->> Acks still, for all of the dts source changes (patches
->> 4-14), as well as really everything else (imx-media staging
->> driver patches).
+On Thu, 8 Jun 2017 16:12:49 +0900
+Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> wrote:
+
+> 2017-06-08 15:16 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> > Hi Boris,
+> >
+> > 2017-06-07 20:52 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:  
+> >> This patch series intends to solve various problems.
+> >>
+> >> [1] The driver just retrieves the OOB area as-is
+> >>     whereas the controller uses syndrome page layout.
+> >> [2] Many NAND chip specific parameters are hard-coded in the driver.
+> >> [3] ONFi devices are not working
+> >> [4] It can not read Bad Block Marker
+> >>
+> >> Outstanding changes are:
+> >> - Fix raw/oob callbacks for syndrome page layout
+> >> - Implement setup_data_interface() callback
+> >> - Fix/implement more commands for ONFi devices
+> >> - Allow to skip the driver internal bounce buffer
+> >> - Support PIO in case DMA is not supported
+> >> - Switch from ->cmdfunc over to ->cmd_ctrl  
+> >
+> >
+> > I am planning v6, but
+> > how many can you pick-up from this series?
+> >
+> > I did not see your comments for 01-05, so are they applicable?
+> >
+> > Could you add
+> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > for 05  (http://patchwork.ozlabs.org/patch/772388/)
+
+Applied patches 1 to 5 (with Rob's ack on patch 5).
+
+> >
+> > He had already acked it, but I just missed it.
+> >  
 > 
-> No Acks needed for the staging part. It's staging, so not held
-> to the same standards as non-staging parts. That doesn't mean
-> Acks aren't welcome, of course.
-
-Acks are wanted for particular i.MX DTS changes including device
-tree binding descriptions.
-
-Shawn, please bless the series.
-
+> BTW, this series can not apply to Boris's tree
+> because of the following commit.
 > 
-> You don't need Greg's Ack for staging/media either, patches there
-> go in via us (generally at least) and we handle those, not Greg.
+> commit 4a78cc644eed3cf2dae00c3a959910a86c140fd6
+> Author: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Date:   Fri May 26 17:10:15 2017 +0200
 > 
+>     mtd: nand: Make sure drivers not supporting SET/GET_FEATURES
+> return -ENOTSUPP
+>
 
---
-With best wishes,
-Vladimir
+Note that ->setup_data_interface() prototype changed, so you'll have to
+adjust patch 9 too.
+
+Regards,
+
+Boris
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
