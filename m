@@ -1,92 +1,66 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
-Date: Sun, 11 Jun 2017 10:52:17 +0530
-Message-ID: <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
-References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
- <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
- <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add Synopsys DW MIPI DSI DRM
+ bridge driver
+Date: Sun, 11 Jun 2017 11:28:47 +0530
+Message-ID: <68968927-13a7-2e93-113d-2c0a166c6422@codeaurora.org>
+References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
+ <1496414235-20098-3-git-send-email-philippe.cornu@st.com>
+ <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
+ <7502cbc2-9feb-4dd3-3d95-b5f33b8a8872@codeaurora.org>
+ <7dd31d6d-1d5d-2432-07aa-96349f50c924@synopsys.com>
+ <20170609130117.m5eyqrmv3gsokmuj@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7596b39a-3135-7cca-e3dc-18c05cf54a8b-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170609130117.m5eyqrmv3gsokmuj@rob-hp-laptop>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Ludovic Barre <ludovic.barre@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Neil Armstrong <narmstrong@baylibre.com>, Chen Feng <puck.chen@hisilicon.com>, Philippe CORNU <philippe.cornu@st.com>, dri-devel@lists.freedesktop.org, Russell King <linux@armlinux.org.uk>, Yannick Fertre <yannick.fertre@st.com>, zourongrong@gmail.com, Xinwei Kong <kong.kongxinwei@hisilicon.com>, Thierry Reding <thierry.reding@gmail.com>, Fabien Dessenne <fabien.dessenne@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Chris Zhong <zyw@rock-chips.com>, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
-> 
-> 
-> On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
->> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
->>> The LP87565 chip is a power management IC for Portable Navigation Systems
->>> and Tablet Computing devices. It contains the following components:
->>>
->>>         - Configurable Bucks(Single and multi-phase).
->>>         - Configurable General Purpose Output Signals (GPO).
->>>
->>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
->>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
->>> output.
->>>
-
-Lee Jones,
-
-Shall i add back i2c_device_id as pointed here:
-http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1417316.html
-
-Best Regards,
-Keerthy
-
-
->>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
->>> ---
->>>
->>> The other patches are already pulled by Mark. Hence posting
->>> the remaining patch.
->>>
->>> Changes in v4:
->>>
->>>   * Fixed device tree comments from Rob on the pmic node name.
->>>   * removed regulators from properties list as it is a node.
->>>  
->>> Changes in v3:
->>>
->>>   * Fixed License to GPL v2.
->>>   * Fixed an indentation issue.
->>>
->>> Changes in v2:
->>>
->>>   * Fixed a bunch of whitespace errors.
->>>   * Changed the License to short form.
->>>   * Added the generic compatible lp87565
->>>   * Removed i2c_device_id table.
->>>   * Introduced probe_new function in place of probe.
->>>
->>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  43 ++++
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Thanks Rob.
-> 
->>
->>>  drivers/mfd/Kconfig                               |  14 ++
->>>  drivers/mfd/Makefile                              |   1 +
->>>  drivers/mfd/lp87565.c                             |  92 ++++++++
->>>  include/linux/mfd/lp87565.h                       | 270 ++++++++++++++++++++++
->>>  5 files changed, 420 insertions(+)
->>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
->>>  create mode 100644 drivers/mfd/lp87565.c
->>>  create mode 100644 include/linux/mfd/lp87565.h
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgpPbiA2LzkvMjAxNyA2OjMxIFBNLCBSb2IgSGVycmluZyB3cm90ZToKPiBPbiBGcmksIEp1biAw
+OSwgMjAxNyBhdCAxMDo0MzowN0FNICswMTAwLCBKb3NlIEFicmV1IHdyb3RlOgo+PiBIZWxsbywK
+Pj4KPj4KPj4gT24gMDktMDYtMjAxNyAwNToxMSwgQXJjaGl0IFRhbmVqYSB3cm90ZToKPj4+IEhp
+IFBoaWxpcHBlLCBSb2IsCj4+Pgo+Pj4gT24gMDYvMDgvMjAxNyAwOToxMCBQTSwgUm9iIEhlcnJp
+bmcgd3JvdGU6Cj4+Pj4gU2VlbXMgc3RyYW5nZSB0aGVyZSdzIG5vdCBhbHNvIGEgcGl4ZWwgb3Ig
+Yml0IGNsb2NrPyBPciB0aGlzCj4+Pj4gZ2V0cyBkcml2ZW4KPj4+PiBmcm9tIHRoZSBwaHk/Cj4+
+Pgo+Pj4gU2luY2UgeW91IG1lbnRpb24gcGh5IGhlcmUsIEkgd2FudGVkIHRvIHNoYXJlIGEgY29u
+Y2VybiB3aXRoCj4+PiB0aGUgYmluZGluZ3MuCj4+PiBUaGVzZSBiaW5kaW5ncyBkb24ndCBoYXZl
+IGEgc2VwYXJhdGUgUEhZIERUIG5vZGUuIFRoZSBQSFkgaXMKPj4+IGFzc3VtZWQgYXMgYQo+Pj4g
+cGFydCBvZiB0aGUgSVAgd2hlbiBpbnRlZ3JhdGVkIGJ5IGEgU29DLiBUaGVyZSBhcmUgYWxyZWFk
+eQo+Pj4gcm9ja2NoaXAgYW5kCj4+PiBoaXNpbCBEU0kgYmluZGluZ3MgdGhhdCB1c2UgdGhpcyBJ
+UCBidXQgZG9uJ3QgZGVmaW5lIGEgUEhZIG5vZGUuCj4+Pgo+Pj4gSXQncyBhIHNpbWlsYXIgc2l0
+dWF0aW9uIHdpdGggdGhlIERXLUhETUkgYmluZGluZ3MuCj4+Pgo+Pj4gRm9yIGV4YW1wbGUsIHdo
+ZW4gdGhlIERXIEhETUkgaXMgaW50ZWdyYXRlZCBpbiByb2NrY2hpcCBvcgo+Pj4gcmVuZXNhcyBT
+b0MsIHRoZQo+Pj4gYmluZGluZ3MgInJvY2tjaGlwLHJrMzI4OC1kdy1oZG1pIiBvciAicmVuZXNh
+cyxyOGE3Nzk1LWR3LWhkbWkiCj4+PiBhcmUgdXNlZCwKPj4+IGFuZCB0aGV5IGRvbid0IGhhdmUg
+YSBzZXBhcmF0ZSBQSFkgRFQgbm9kZS4KPj4+Cj4+PiBJIHdhc24ndCBzdXJlIHdoZXRoZXIgdGhp
+cyBpcyB0aGUgcmlnaHQgd2F5IHRvIHByb2NlZWQgb3Igbm90Cj4+PiBmb3Igc3VjaCBJUHMuCj4+
+PiBTb21lIGFkdmljZSB3b3VsZCBoZWxwIHVzIGhlcmUuCj4+Pgo+Pj4gVGhhbmtzLAo+Pj4gQXJj
+aGl0Cj4+Pgo+Pgo+PiBJIGp1c3Qgd2FudCB0byBhZGQgdGhhdCByZWFkL3dyaXRlcyBmcm9tL3Rv
+IHBoeSBhcmUgZG9uZSB1c2luZwo+PiB0aGUgY29udHJvbGxlciAoaW4gSERNSSBhbmQgaW4gTUlQ
+SSBEU0kgSG9zdCksIHNvIHRoZSBvbmx5IHdheSB0bwo+PiBoYXZlIGEgcGh5IGRyaXZlciBpcyB0
+aGF0IGlmIHNvbWUgY3VzdG9tIGNhbGxiYWNrcyBhcmUgcHJvdmlkZWQKPj4gb3IgaWYgdGhlIG1l
+bW9yeSByZWdpb24gaXMgc2hhcmVkLgo+Pgo+PiBBbnl3YXksIEkgYWdyZWUgd2l0aCBBcmNoaXQg
+aW4gdGhlIHNlbnNlIHRoYXQgcGh5ICsgY29udHJvbGxlcgo+PiBhcmUgaGlnaGx5IHRpZWQuIEFs
+c28sIHRoZXNlIHR3byAicGllY2VzIiBhcmUgU29DIHNwZWNpZmljIGFuZAo+PiBzb21ldGltZXMg
+dmVyeSBkaWZmZXJlbnQgYmV0d2VlbiBTb0MncyBiZWNhdXNlIHRoZXkgY2FuIGJlCj4+IGN1c3Rv
+bWl6ZWQgc28gSSB0aGluayBhIGRpZmZlcmVudCBjb21wYXRpYmxlIHN0cmluZyBzdWl0cyB3ZWxs
+IGhlcmUuCj4gCj4gV2hlbiB0aGUgcGh5IGlzIGludGVncmF0ZWQgbGlrZSB0aGlzLCBJIGFncmVl
+IHRoYXQgaXQgZG9lc24ndCBtYWtlIHNlbnNlCj4gdG8gaGF2ZSBhIHNlcGFyYXRlIHBoeSBub2Rl
+Lgo+CgpHcmVhdC4gVGhhbmtzIGZvciB0aGUgY2xhcmlmaWNhdGlvbiBKb3NlIGFuZCBSb2IuCgpB
+cmNoaXQKCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1i
+ZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLApob3N0ZWQgYnkgVGhlIExpbnV4IEZvdW5kYXRp
+b24KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
