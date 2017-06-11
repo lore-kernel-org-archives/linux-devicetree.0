@@ -1,58 +1,154 @@
-From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Subject: Re: [RFC PATCH 3/4] ARM: l2x0: add arm,ecc-enable property for aurora
-Date: Sun, 11 Jun 2017 22:55:37 +0000
-Message-ID: <220533aeb8f64e829f483e38e209cdc8@svr-chch-ex1.atlnz.lc>
-References: <20170608041124.4624-1-chris.packham@alliedtelesis.co.nz>
- <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
- <1496998692.3536.24.camel@pengutronix.de>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] external references for device tree overlays
+Date: Sun, 11 Jun 2017 16:04:47 -0700
+Message-ID: <593DCC8F.8010601@gmail.com>
+References: <1496667567-13266-1-git-send-email-stefani.seibold.ext@huawei.com>
+ <1496688186.12947.10.camel@hp800z> <1496776664.3821.3.camel@seibold.net>
+ <1496823091.28265.3.camel@hp800z> <1496904510.7999.1.camel@seibold.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1496904510.7999.1.camel-mkwtCZVSLSnR7s880joybQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?iso-8859-1?Q?Jan_L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Stefani Seibold <stefani-mkwtCZVSLSnR7s880joybQ@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Stefani Seibold <stefani.seibold.ext-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Holm Rauchfuss <holm.rauchfuss-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09/06/17 20:58, Jan L=FCbbe wrote:=0A=
-> On Do, 2017-06-08 at 16:11 +1200, Chris Packham wrote:=0A=
->> +       if (of_property_read_bool(np, "arm,ecc-enable")) {=0A=
->> +               mask |=3D L2C_AUX_CTRL_EVTMON_ENABLE;=0A=
->> +               val |=3D L2C_AUX_CTRL_EVTMON_ENABLE;=0A=
->> +       } else if (of_property_read_bool(np, "arm,ecc-disable")) {=0A=
->> +               mask |=3D L2C_AUX_CTRL_EVTMON_ENABLE;=0A=
->> +       }=0A=
-> =0A=
-> Unless I misunderstand the code in __l2c_init(), the mask is used to=0A=
-> specify the bits to preserve:=0A=
->          old_aux =3D aux =3D readl_relaxed(l2x0_base + L2X0_AUX_CTRL);=0A=
->          aux &=3D aux_mask;=0A=
->          aux |=3D aux_val;=0A=
-> =0A=
->          if (old_aux !=3D aux)=0A=
->                  pr_warn("L2C: DT/platform modifies aux control register:=
- 0x%08x -> 0x%08x\n",=0A=
->                          old_aux, aux);=0A=
-> =0A=
-> So the arm,ecc-disable property will have no effect. This probably also=
-=0A=
-> applies to patch 2/4. The existing property *-disable code removes the=0A=
-> corresponding bit from the mask.=0A=
-=0A=
-Indeed the disable version should be mask &=3D ~L2C_AUX_CTRL_EVTMON_ENABLE =
-=0A=
-and I was probably a little lazy to have used the L2C EVTMON instead of =0A=
-adding AURORA specific ones like you have in your series.=0A=
-=0A=
-I'll rebase my series on top of yours and send it direct to you so you =0A=
-can include it in the overall submission.=0A=
-=0A=
-> =0A=
-> Regards,=0A=
-> Jan=0A=
-> =0A=
-=0A=
+On 06/07/17 23:48, Stefani Seibold wrote:
+> Hi Pantelis,
+> 
+> On Wed, 2017-06-07 at 11:11 +0300, Pantelis Antoniou wrote:
+>> Hi Stefani,
+>>
+>> On Tue, 2017-06-06 at 21:17 +0200, Stefani Seibold wrote:
+>>> Hi Pantelis,
+>>>
+>>> thanks for the suggestion. This feature is not very well
+>>> documented. I
+>>> tried this on my rasp1 running 4.12.0-rc3 and it doesn't work. My
+>>> source is:
+>>>
+>>> // rapsi example
+>>> /dts-v1/;
+>>> /plugin/;
+>>>
+>>> / {
+>>>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+>>>
+>>>     fragment@0 {
+>>>         target-path = "/soc/i2s@7e203000";
+>>>         __overlay__ {
+>>>             #address-cells = <0x00000001>;
+>>>             #size-cells = <0x00000001>;
+>>>             test = "test";
+>>>             timer = <&{/soc/timer@7e0030000}>;
+>>>         };
+>>>     };
+>>> };
+>>>
+>>>
+>>> The resulting overlay is (decompiled with fdtdump):
+>>>
+>>> /dts-v1/;
+>>> // magic:		0xd00dfeed
+>>> // totalsize:		0x19a (410)
+>>> // off_dt_struct:	0x38
+>>> // off_dt_strings:	0x148
+>>> // off_mem_rsvmap:	0x28
+>>> // version:		17
+>>> // last_comp_version:	16
+>>> // boot_cpuid_phys:	0x0
+>>> // size_dt_strings:	0x52
+>>> // size_dt_struct:	0x110
+>>>
+>>> / {
+>>>     compatible = "brcm,bcm2835", "brcm,bcm2708", "brcm,bcm2709";
+>>>     fragment@0 {
+>>>         target-path = "/soc/i2s@7e203000";
+>>>         __overlay__ {
+>>>             #address-cells = <0x00000001>;
+>>>             #size-cells = <0x00000001>;
+>>>             test = "test";
+>>>             timer = <0xdeadbeef>;
+>>>         };
+>>>     };
+>>>     __fixups__ {
+>>>         /soc/timer@7e0030000 = "/fragment@0/__overlay__:timer:0";
+>>>     };
+>>> };
+>>>
+>>> But this will not apply:
+>>>
+>>> OF: resolver: overlay phandle fixup failed: -22
+>>> create_overlay: Failed to resolve tree
+>>>
+>>>
+>>
+>> Yes, it will not work as it is; my point is that you don't need the
+>> magic __*__ node.
+>>
+> 
+> The magic __fixups__ node was inserted by the device tree compiler. I
+> use the dtc from https://github.com/pantoniou/dtc at commit
+> d990b8013889b816ec054c7e07a77db59c56c400.
+> 
+>> You will need to modify the overlay application code to live insert a
+>> phandle (if it doesn't exist) when it encounters a /path fixup.
+>>
+> 
+> That is part of my patch!
+> 
+>>> Anyway, the reason for my patch is that i can reference to nodes
+>>> which
+>>> lacks a phandle. The phandle will be created on the fly and also
+>>> destroyed when the overlay is unloaded.
+>>>
+>>> I have a real use case for this patch:
+>>>
+>>> I have a BIOS on some ARM64 servers which provides broken device
+>>> tree.
+>>> It also lacks some devices in this tree which needs references to
+>>> other
+>>> devices which lacks a phandle.
+>>>
+>>> Since the BIOSes are closed source i need a way to work arround
+>>> this
+>>> problem without patching all the drivers involved to this devices.
+>>>
+>>> Hope this helps to understand the reason for this patch.
+>>>
+>>
+>> FWIW your problem seems like something that would happen on the
+>> field.
+>> We can berate the vendor of not providing the correct device tree,
+>> but
+>> in the end workarounds for broken vendor things are common in the
+>> kernel.
+>>
+> 
+> Yes, that is the way how linux do the things. Linux has a long history
+> to bypassing bugs of BIOSes, ACPI or broken devices.
+
+ARM device tree in Linux is not like BIOSes or ACPI.
+
+ARM device tree in Linux is GPL v2 licensed (yes, it may also be dual
+licensed for other uses) and thus "free software".
+
+One of the key points of "free software" is that you have access to the
+source and the ability to modify it.
+
+Instead of bypassing device tree bugs, you have the ability to fix
+device tree bugs.  This is a fundamental difference.
+
+-Frank
+
+> 
+> Greetings,
+> Stefani
+> 
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
