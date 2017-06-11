@@ -1,68 +1,59 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 01/11] pinctrl: dt-bindings: add documentation for
- AP806 pin controllers
-Date: Sun, 11 Jun 2017 23:52:28 +0200
-Message-ID: <CACRpkdauBvun9COkL2Qox2k0vyOyWbRti=QmZPNE2DnwWCiJoQ@mail.gmail.com>
-References: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
- <2d89fbc10d07c890336eabbd362e55cb2e5055b5.1496413293.git-series.gregory.clement@free-electrons.com>
- <CACRpkdYw3AgKBa+y-U9=1d9HqYyPGYK1y_5eBYoobV6s=4T0Wg@mail.gmail.com> <878tl1pot6.fsf@free-electrons.com>
+From: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Subject: Re: [RFC PATCH 3/4] ARM: l2x0: add arm,ecc-enable property for aurora
+Date: Sun, 11 Jun 2017 22:55:37 +0000
+Message-ID: <220533aeb8f64e829f483e38e209cdc8@svr-chch-ex1.atlnz.lc>
+References: <20170608041124.4624-1-chris.packham@alliedtelesis.co.nz>
+ <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
+ <1496998692.3536.24.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <878tl1pot6.fsf@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?iso-8859-1?Q?Jan_L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 9, 2017 at 10:07 AM, Gregory CLEMENT
-<gregory.clement@free-electrons.com> wrote:
-
-> As I wrote in the cover letter :
-> "The patch modifying the documentation still depend on the ones of the
-> clk series. For the ap806 a first stable branch is already available:
-> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-ap806"
-
-Sorry I may miss things like that... usually it is better if patches
-that depend on each other for merging are in the same series.
-
-> In the previous version of the series the clk maintainer said they will
-> provide stable branch for the documentation. For ap806 it is already
-> done, but not yet for cp110. But if you still have problem with it Rob
-> offer to take care of the devie tree documentation.
->
-> Just let us know what you prefer.
-
-I don't understand. Tell me what I need to do or we can just wait
-a kernel cycle before merging this I guess.
-
-Either I need an immutable branch or I merge the clock patches
-I guess. Neither is very good but I'm open to compromises.
-
->> I hope for the love of god that this does not also clash with the
->> PWM stuff that is patching around in the GPIO tree, if it does
->> I might very well throw up my hands and defer merging all of
->> this until the next kernel cycle past v4.13-rc1.
->
-> To avoid this kind of issues the series are based on next-20170531 in
-> order to have in the same time the devel branch of the linux-gpio tree
-> and the devel branch of the linux-pinctrl tree.
-
-I see. Well if nothing else works, we just defer.
-
-> I use the linux-next tree because you already picked up some patches of
-> my first series and applied it on your devel branches. If I rebased on
-> v4;12-rc2, obviously it won't work. So really basing the series on your
-> devel branch is the best thing to do.
-
-Indeed, sorry, the left hand doesn't know what the right hand is
-doing sometimes.
-
-> I saw that you already applied the PWM patch so as soon as they were
-> visible on the devel branches I will rebased the series on it and submit
-> it a new version.
-
-OK
-
-Yours,
-Linus Walleij
+On 09/06/17 20:58, Jan L=FCbbe wrote:=0A=
+> On Do, 2017-06-08 at 16:11 +1200, Chris Packham wrote:=0A=
+>> +       if (of_property_read_bool(np, "arm,ecc-enable")) {=0A=
+>> +               mask |=3D L2C_AUX_CTRL_EVTMON_ENABLE;=0A=
+>> +               val |=3D L2C_AUX_CTRL_EVTMON_ENABLE;=0A=
+>> +       } else if (of_property_read_bool(np, "arm,ecc-disable")) {=0A=
+>> +               mask |=3D L2C_AUX_CTRL_EVTMON_ENABLE;=0A=
+>> +       }=0A=
+> =0A=
+> Unless I misunderstand the code in __l2c_init(), the mask is used to=0A=
+> specify the bits to preserve:=0A=
+>          old_aux =3D aux =3D readl_relaxed(l2x0_base + L2X0_AUX_CTRL);=0A=
+>          aux &=3D aux_mask;=0A=
+>          aux |=3D aux_val;=0A=
+> =0A=
+>          if (old_aux !=3D aux)=0A=
+>                  pr_warn("L2C: DT/platform modifies aux control register:=
+ 0x%08x -> 0x%08x\n",=0A=
+>                          old_aux, aux);=0A=
+> =0A=
+> So the arm,ecc-disable property will have no effect. This probably also=
+=0A=
+> applies to patch 2/4. The existing property *-disable code removes the=0A=
+> corresponding bit from the mask.=0A=
+=0A=
+Indeed the disable version should be mask &=3D ~L2C_AUX_CTRL_EVTMON_ENABLE =
+=0A=
+and I was probably a little lazy to have used the L2C EVTMON instead of =0A=
+adding AURORA specific ones like you have in your series.=0A=
+=0A=
+I'll rebase my series on top of yours and send it direct to you so you =0A=
+can include it in the overall submission.=0A=
+=0A=
+> =0A=
+> Regards,=0A=
+> Jan=0A=
+> =0A=
+=0A=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
