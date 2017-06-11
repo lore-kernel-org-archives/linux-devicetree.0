@@ -1,88 +1,68 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
-Date: Sun, 11 Jun 2017 23:45:49 +0200
-Message-ID: <CACRpkdZ=hNJLyV94FyRBSR3Dk8NLe-jEo3qbUKDya6ruqG3KNQ@mail.gmail.com>
-References: <CACRpkdZkNGSUvTrEdjbGKO1hr799QpJBGSHPVbsBibph7Jx61A@mail.gmail.com>
- <20170508160120.GB25206@w540> <CAHp75VfOMKOhpkec+htA6DRQhivpSmNXy1=Ayig1W+ZC84gTLw@mail.gmail.com>
- <20170508172516.GC25206@w540> <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
- <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ@mail.gmail.com>
- <20170523183735.GC13664@w540> <CACRpkdYcaGzSvAN2Trqwer+8GbqXyfpE=VqiYcQvCOqhDO9MMw@mail.gmail.com>
- <20170529104229.GB21347@w540> <CAA+hA=T56WHugmA+5V5ZC6TTxeSUVt1hr0v53YuDsUYgBcvKTw@mail.gmail.com>
- <20170609075028.GE15739@w540>
+Subject: Re: [PATCH v2 01/11] pinctrl: dt-bindings: add documentation for
+ AP806 pin controllers
+Date: Sun, 11 Jun 2017 23:52:28 +0200
+Message-ID: <CACRpkdauBvun9COkL2Qox2k0vyOyWbRti=QmZPNE2DnwWCiJoQ@mail.gmail.com>
+References: <cover.8fe5f7c62a787452878ca071fa00b953e96988ef.1496413293.git-series.gregory.clement@free-electrons.com>
+ <2d89fbc10d07c890336eabbd362e55cb2e5055b5.1496413293.git-series.gregory.clement@free-electrons.com>
+ <CACRpkdYw3AgKBa+y-U9=1d9HqYyPGYK1y_5eBYoobV6s=4T0Wg@mail.gmail.com> <878tl1pot6.fsf@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170609075028.GE15739@w540>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: jmondi <jacopo@jmondi.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Dong Aisheng <dongas86@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Chris Brandt <Chris.Brandt@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <878tl1pot6.fsf@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 9, 2017 at 9:50 AM, jmondi <jacopo@jmondi.org> wrote:
-> On Fri, Jun 09, 2017 at 03:26:57PM +0800, Dong Aisheng wrote:
+On Fri, Jun 9, 2017 at 10:07 AM, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
 
->> > I see three options here:
->> >
->> > 1) Add "output-buffer-enable" and "input-buffer-enable"
->> > we end up with
->> > "output-high"
->> > "output-low"
->> > "input-enable"
->> > "output-buffer-enable"
->> > "input-buffer-enable"
->> >
->> > 2) Add "output-buffer-enable" only
->> > we end up with
->> > "output-high"
->> > "output-low"
->> > "input-enable"
->> > "output-buffer-enable"
->> >
->> > Binding may be confusing as in one case we use "output-buffer-enable"
->> > while in the other "input-enable"
->> >
->> > 3) Add "output-enable" only
->> > "output-high"
->> > "output-low"
->> > "input-enable"
->> > "output-enable"
->> >
->> > As you, I don't like "output-enable" that much but it pairs better with
->> > "input-enable".
->> >
->> > I'll let you and DT people decide on this, as it's really an ABI definition
->> > problem and you have better judgment there.
->> >
->>
->> What's the final decision of this?
+> As I wrote in the cover letter :
+> "The patch modifying the documentation still depend on the ones of the
+> clk series. For the ap806 a first stable branch is already available:
+> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-ap806"
+
+Sorry I may miss things like that... usually it is better if patches
+that depend on each other for merging are in the same series.
+
+> In the previous version of the series the clk maintainer said they will
+> provide stable branch for the documentation. For ap806 it is already
+> done, but not yet for cp110. But if you still have problem with it Rob
+> offer to take care of the devie tree documentation.
 >
-> I admit a was buying a bit of time and post-poned the gentle ping for
-> any final word on this. But since you're asking I'll second your
-> question :)
+> Just let us know what you prefer.
 
-I suspect it is time to quote
-Documentation/process/management-style.rst
-(Torvalds):
+I don't understand. Tell me what I need to do or we can just wait
+a kernel cycle before merging this I guess.
 
-1) Decisions
+Either I need an immutable branch or I merge the clock patches
+I guess. Neither is very good but I'm open to compromises.
 
-Everybody thinks managers make decisions, and that decision-making is
-important.  The bigger and more painful the decision, the bigger the
-manager must be to make it.  That's very deep and obvious, but it's not
-actually true.
+>> I hope for the love of god that this does not also clash with the
+>> PWM stuff that is patching around in the GPIO tree, if it does
+>> I might very well throw up my hands and defer merging all of
+>> this until the next kernel cycle past v4.13-rc1.
+>
+> To avoid this kind of issues the series are based on next-20170531 in
+> order to have in the same time the devel branch of the linux-gpio tree
+> and the devel branch of the linux-pinctrl tree.
 
-The name of the game is to **avoid** having to make a decision.  In
-particular, if somebody tells you "choose (a) or (b), we really need you
-to decide on this", you're in trouble as a manager.  The people you
-manage had better know the details better than you, so if they come to
-you for a technical decision, you're screwed.  You're clearly not
-competent to make that decision for them.
+I see. Well if nothing else works, we just defer.
 
-(It goes on, it's the best part of the entire Documentation/* dir in my
-opinion, please take the time to read it in full.)
+> I use the linux-next tree because you already picked up some patches of
+> my first series and applied it on your devel branches. If I rebased on
+> v4;12-rc2, obviously it won't work. So really basing the series on your
+> devel branch is the best thing to do.
 
-So: what do you guys, using this feature, and Andy, who raised serious
-concerns, think is the right binding? That is what *I* need to know.
+Indeed, sorry, the left hand doesn't know what the right hand is
+doing sometimes.
+
+> I saw that you already applied the PWM patch so as soon as they were
+> visible on the devel branches I will rebased the series on it and submit
+> it a new version.
+
+OK
 
 Yours,
 Linus Walleij
