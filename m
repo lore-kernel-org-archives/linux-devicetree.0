@@ -1,96 +1,77 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 3/4] mfd: tps65217: remove duplicated interrupt resources.
-Date: Mon, 12 Jun 2017 17:41:22 -0500
-Message-ID: <bddc09a1-53d7-e7ed-5c04-a9ecf5310dde@ti.com>
-References: <20170612212412.22719-1-enric.balletbo@collabora.com>
- <20170612212412.22719-3-enric.balletbo@collabora.com>
+From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: dts: bcm2835-rpi-zero: Enable OTG mode
+Date: Mon, 12 Jun 2017 16:10:26 -0700
+Message-ID: <87lgowajkt.fsf@eliezer.anholt.net>
+References: <1495385079-3697-1-git-send-email-stefan.wahren@i2se.com> <542130487.90500.1496306283902@email.1und1.de> <6a45fcd8-0d88-bc17-6432-d38fe771dc80@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170612212412.22719-3-enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <6a45fcd8-0d88-bc17-6432-d38fe771dc80-eS4NqCHxEME@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org
+To: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--=-=-=
+Content-Type: text/plain
 
+Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> writes:
 
-On 06/12/2017 04:24 PM, Enric Balletbo i Serra wrote:
-> I don't think it makes sense to have the interrupt resources for charger
-> and power button in two different places, the driver and the DT binding.
-> That's confusing so remove the ones from the mfd driver in favour of
-> having the interrupt resources only described in the DT. Having the
-> resources in DT may help if there is or will be a similar pmic with
-> different resource allocation.
+> Am 01.06.2017 um 10:38 schrieb Stefan Wahren:
+>>> Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org> hat am 21. Mai 2017 um 18:44 geschrieben:
+>>>
+>>>
+>>> This patch series enable OTG mode for Raspberry Pi Zero because dwc2 driver
+>>> has been fixed now.
+>>>
+>>> Patch 1 adds a new dtsi file to setup OTG mode (could also be used for boards
+>>> like RPi Zero W or the Compute Module). The second patch adds the USB PHY and
+>>> was part of Raspberry Pi Zero support patch series before split up [1].
+>>> The enabling of OTG mode of RPi Zero is done by patch number 3. The last patch
+>>> updates the BCM2835 defconfig.
+>>>
+>>> [1] - http://lists.infradead.org/pipermail/linux-rpi-kernel/2016-July/004153.html
+>>>
+>>> Stefan Wahren (4):
+>>>   ARM: dts: bcm283x: Add dtsi for OTG mode
+>>>   ARM: dts: bcm283x: Add generic USB PHY
+>>>   ARM: dts: bcm2835-rpi-zero: Enable OTG mode
+>>>   ARM: bcm2835_defconfig: Enable serial & ethernet USB gadget support
+>>>
+>> No comments to this patch series?
+>>
+>> Regards
+>> Stefan
+>
+> @Eric
+>
+> Should i merge them?
 
-Wouldn't this break DT compatibility? Old DTs do not contain IRQ resources
-and so they work only because of IRQ definitions in code.
+I would have rebased my local branch on them, but I've merged them now.
+Waiting for -next testing to come back, then I've got PR text ready to
+send out.
 
-> 
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-> ---
->   drivers/mfd/tps65217.c | 22 +---------------------
->   1 file changed, 1 insertion(+), 21 deletions(-)
-> 
-> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
-> index f769c7d..fd83bae 100644
-> --- a/drivers/mfd/tps65217.c
-> +++ b/drivers/mfd/tps65217.c
-> @@ -33,15 +33,6 @@
->   #include <linux/mfd/core.h>
->   #include <linux/mfd/tps65217.h>
->   
-> -static struct resource charger_resources[] = {
-> -	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_AC, "AC"),
-> -	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
-> -};
-> -
-> -static struct resource pb_resources[] = {
-> -	DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
-> -};
-> -
->   static void tps65217_irq_lock(struct irq_data *data)
->   {
->   	struct tps65217 *tps = irq_data_get_irq_chip_data(data);
-> @@ -97,14 +88,10 @@ static struct mfd_cell tps65217s[] = {
->   	},
->   	{
->   		.name = "tps65217-charger",
-> -		.num_resources = ARRAY_SIZE(charger_resources),
-> -		.resources = charger_resources,
->   		.of_compatible = "ti,tps65217-charger",
->   	},
->   	{
->   		.name = "tps65217-pwrbutton",
-> -		.num_resources = ARRAY_SIZE(pb_resources),
-> -		.resources = pb_resources,
->   		.of_compatible = "ti,tps65217-pwrbutton",
->   	},
->   };
-> @@ -359,15 +346,8 @@ static int tps65217_probe(struct i2c_client *client,
->   		return ret;
->   	}
->   
-> -	if (client->irq) {
-> +	if (client->irq)
->   		tps65217_irq_init(tps, client->irq);
-> -	} else {
-> -		int i;
-> -
-> -		/* Don't tell children about IRQ resources which won't fire */
-> -		for (i = 0; i < ARRAY_SIZE(tps65217s); i++)
-> -			tps65217s[i].num_resources = 0;
-> -	}
->   
->   	ret = devm_mfd_add_devices(tps->dev, -1, tps65217s,
->   				   ARRAY_SIZE(tps65217s), NULL, 0,
-> 
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-regards,
--grygorii
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlk/H2IACgkQtdYpNtH8
+nui+Rg//RZ45WRNOxNVDpjUwUW49GAW/+jMeP65mp/UVlvOCcmaqFdGsaPx+CRAJ
+iD60E2DNbQZ4zSiJk1rcaBxEW2Q9R3n3y0STEN6g/CtbNK+yCzQ+RhIuVKBfbdEv
+8Uo61dxAJeQeo6klUsi5Jku9+Lu8apnH7OwmX7dVagZiKB6qqEZkULiFZI4wc6YZ
+mWf4/sUtEjIRXJnSZr3MT6gN0jb33vdx32ijG9mAmi6Ogh4wDvmZt0n9iLb3oBDh
+TpwkIzsEPpzQ/BDSD7FCfD/IxbT5FmYiQ6dOayMh4RVfLzstge7Lx94TuQzayNK/
+/eY5dXtdiSxr1IZClo8hONZmKUOX3GMvzmezotXaZXCsdCC5y1pKeEi38DPiCDEh
+fLJS/69hryeBAOFJj9wLSwOOe2lhO71xtCZfiXQATSLBJaI9bx55JWlVl09lmggi
+ZpHrcBWAvAZop13RyiaVYJIF5wb5c2ygU0m/KeR79UiYq6H7ma/hz3dt6boduJgI
++ksQUglwBrrz1yzjUnQ33UsaBR1kZXdtzG1b6xcP/z3w7K9AP5IDXJrBPQUwKgks
+yswm8KNZF5RBx6UmXVj4ETvus3cOoDdMkxhOQb92QrRtwPDVSyGC5fLS92DbA6Mp
+N4ToJlX5TOeLLfSPRBwFGBqu0u2zcpCQlGeY+Uk9FiTTek4f0Mg=
+=alcu
+-----END PGP SIGNATURE-----
+--=-=-=--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
