@@ -1,93 +1,90 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
-Date: Mon, 12 Jun 2017 10:11:33 +0100
-Message-ID: <20170612091133.kt2doom32bun6ujp@dell>
-References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
- <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
- <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
- <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
+From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 1/2] spi: rockchip: add support for "cs-gpios" dts property
+Date: Mon, 12 Jun 2017 17:12:24 +0800
+Message-ID: <593E5AF8.1080404@rock-chips.com>
+References: <1497248057-16550-1-git-send-email-jeffy.chen@rock-chips.com> <dfe87919-b2cc-37e8-1598-6b3c730ff356@rock-chips.com> <593E501F.5060906@rock-chips.com> <4418523.E0t9k04HOG@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: Rob Herring <robh@kernel.org>, broonie@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4418523.E0t9k04HOG@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 11 Jun 2017, Keerthy wrote:
+Hi Heiko,
 
-> 
-> 
-> On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
-> > 
-> > 
-> > On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
-> >> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
-> >>> The LP87565 chip is a power management IC for Portable Navigation Systems
-> >>> and Tablet Computing devices. It contains the following components:
-> >>>
-> >>>         - Configurable Bucks(Single and multi-phase).
-> >>>         - Configurable General Purpose Output Signals (GPO).
-> >>>
-> >>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
-> >>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
-> >>> output.
-> >>>
-> 
-> Lee Jones,
-> 
-> Shall i add back i2c_device_id as pointed here:
-> http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1417316.html
+thanx for your comments.
 
-Hasn't that been fixed yet?
+On 06/12/2017 04:36 PM, Heiko Stübner wrote:
+> Am Montag, 12. Juni 2017, 16:26:07 CEST schrieb jeffy:
+>> Hi Shawn,
+>>
+>> On 06/12/2017 03:15 PM, Shawn Lin wrote:
+>>> Hi Jeffy,
+>>>
+>>> On 2017/6/12 14:14, Jeffy Chen wrote:
+>>>> Support using "cs-gpios" property to specify cs gpios.
+>>>>
+>>>> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+>>>> ---
+>>>>
+>>>>    .../devicetree/bindings/spi/spi-rockchip.txt       |  2 +
+>>>>    drivers/spi/spi-rockchip.c                         | 52
+>>>>
+>>>> ++++++++++++++++++++++
+>>>>
+>>>>    2 files changed, 54 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+>>>> b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+>>>> index 83da493..02171b2 100644
+>>>> --- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+>>>> +++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+>>>
+>>> The changes for doc should be another patch, and...
+>>
+>> but i saw others didn't separate them:
+>> cf9e478 spi: sh-msiof: Add slave mode support
+>> 23e291c spi: rockchip: support "sleep" pin configuration
+>
+> it sometimes falls through the cracks, but having dt-binding patches
+> separate is meant to make it easier on DT-Maintainers to find
+> patches they need to look at.
+ok, will do.
+>
+>
+>>>> +    if (!data->cs_gpio_requested) {
+>>>> +        ret = gpio_request_one(spi->cs_gpio, flags,
+>>>> +                       dev_name(&spi->dev));
+>>>> +        if (!ret)
+>>>> +            data->cs_gpio_requested = 1;
+>>>> +    } else
+>>>> +        ret = gpio_direction_output(spi->cs_gpio, flags);
+>>>
+>>> need brace around 'else' statement. Also I don't see data used
+>>> elsewhere, so you need these code above.
+>>
+>> ok.
+>> and the cs_gpio_requested is to mark cs_gpio requested, because the
+>> setup func might be called multiple times, we only need to request gpio
+>> at the first time.
+>
+> Aren't the gpiod* functions meant to be used for new things?
+> Also you might actually do a bit of error handling there, especially
+> EPROBE_DEFER.
+so you are suggesting to use gpiod* functions here to replace gpio_* 
+functions right?
+>
+>
+> Heiko
+>
+>
+>
 
-I guess so then. :(
 
-> >>> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> >>> ---
-> >>>
-> >>> The other patches are already pulled by Mark. Hence posting
-> >>> the remaining patch.
-> >>>
-> >>> Changes in v4:
-> >>>
-> >>>   * Fixed device tree comments from Rob on the pmic node name.
-> >>>   * removed regulators from properties list as it is a node.
-> >>>  
-> >>> Changes in v3:
-> >>>
-> >>>   * Fixed License to GPL v2.
-> >>>   * Fixed an indentation issue.
-> >>>
-> >>> Changes in v2:
-> >>>
-> >>>   * Fixed a bunch of whitespace errors.
-> >>>   * Changed the License to short form.
-> >>>   * Added the generic compatible lp87565
-> >>>   * Removed i2c_device_id table.
-> >>>   * Introduced probe_new function in place of probe.
-> >>>
-> >>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  43 ++++
-> >>
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> > 
-> > Thanks Rob.
-> > 
-> >>
-> >>>  drivers/mfd/Kconfig                               |  14 ++
-> >>>  drivers/mfd/Makefile                              |   1 +
-> >>>  drivers/mfd/lp87565.c                             |  92 ++++++++
-> >>>  include/linux/mfd/lp87565.h                       | 270 ++++++++++++++++++++++
-> >>>  5 files changed, 420 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
-> >>>  create mode 100644 drivers/mfd/lp87565.c
-> >>>  create mode 100644 include/linux/mfd/lp87565.h
-
--- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
