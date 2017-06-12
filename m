@@ -1,30 +1,42 @@
-From: Al Cooper <al.cooper@broadcom.com>
-Subject: Re: [PATCH 2/3] dt-bindings: Add Broadcom STB USB PHY binding document
-Date: Mon, 12 Jun 2017 16:19:07 -0400
-Message-ID: <CAGh=XAAzbrNUopwsxQeXfRXi9gd=J4mdG-6UqTJ+-ikd=xqGig@mail.gmail.com>
-References: <1496426512-10590-1-git-send-email-alcooperx@gmail.com>
- <1496426512-10590-3-git-send-email-alcooperx@gmail.com> <20170608221104.7nsinggo4vngbmus@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Subject: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte based ptp clock
+Date: Mon, 12 Jun 2017 13:26:00 -0700
+Message-ID: <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
+References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170608221104.7nsinggo4vngbmus@rob-hp-laptop>
+In-Reply-To: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, Arun Parameswaran <arun.parameswaran@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 8, 2017 at 6:11 PM, Rob Herring <robh@kernel.org> wrote:
->> +- brcm,device: String, PHY Device mode.
->> +  Possible values are: off (Host), on (Device), dual (DRD)
->> +  or typec-pd (Type-C PD control)
->
-> I believe we have standard property for this though maybe not type C.
->
-> off/on seem strange for meaning host/device as well.
+Add device tree binding documentation for the Broadcom DTE
+PTP clock driver.
 
-I'll change this to:
+Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+---
+ Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
 
-mode: String, PHY Device mode.
-Possible values are: "host", "device", "drd" or "typec-pd"
-
-Al
+diff --git a/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+new file mode 100644
+index 0000000..07590bc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+@@ -0,0 +1,13 @@
++* Broadcom Digital Timing Engine(DTE) based PTP clock driver
++
++Required properties:
++- compatible: should be "brcm,ptp-dte"
++- reg: address and length of the DTE block's NCO registers
++
++Example:
++
++ptp_dte: ptp_dte@180af650 {
++	compatible = "brcm,ptp-dte";
++	reg = <0x180af650 0x10>;
++	status = "okay";
++};
+-- 
+1.9.1
