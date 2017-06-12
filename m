@@ -1,80 +1,117 @@
-From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the Atmel
- ARM TC blocks
-Date: Mon, 12 Jun 2017 17:26:27 +0200
-Message-ID: <cd8c34e1-de72-c5e4-ec80-67628b037aa4@microchip.com>
-References: <20170530215139.9983-47-alexandre.belloni@free-electrons.com>
- <20170606152104.GC2345@mai> <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
- <20170607141735.GH2345@mai> <20170607152750.tksmyf5p3oajbsac@piout.net>
- <20170607210848.GJ2345@mai> <20170607231715.ns2vcxza2eexnzjs@piout.net>
- <20170608074236.62924f01@bbrezillon> <20170608074446.GM2345@mai>
- <20170608101334.4e60aa4c@bbrezillon> <20170608084026.GB2244@mai>
- <eada48f9-55b5-859d-d37e-4c9e938bc29d@microchip.com>
- <4c2a5425-acb4-c639-7f54-1dd933c44d03@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4c2a5425-acb4-c639-7f54-1dd933c44d03-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 0/9] Add support for the pin and gpio controllers on the Marvell Armada 7K/8K
+Date: Mon, 12 Jun 2017 17:34:51 +0200
+Message-ID: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Le 12/06/2017 à 15:25, Daniel Lezcano a écrit :
-> On 12/06/2017 14:54, Nicolas Ferre wrote:
-> 
-> [ ... ]
-> 
->>> I like the 'chosen' approach with the nodes you are proposing below. Thanks for
->>> the constructive suggestion. The binding description matches perfectly what we
->>> are trying to achieve.
->>>
->>> Rob? what do you think?
->>
->> I'm following this work from a distance but as we've just celebrated the
->> 1st anniversary for this patch series (11 June 2016), I propose that we
->> now make up our mind quickly. Everybody seem to be on the same page and
->> willing to make this rework move forward.
->>
->> In Microchip/Atmel we would like to actually use this TCB rework both
->> internally and in our mainline work to avoid having to rely on our own
->> out-of-tree implementation.
->>
->> The newly-added samv7 cortex-M can't boot without this series and a use
->> of our current cortex-A SoCs with TrustZone in Secure World (SWd) is not
->> possible with current mainline code only. On these two examples, the
->> current timer on which we rely, the PIT, is not present.
->>
->> So you probably understand that more than one year without real progress
->> begins to be a little bit frustrating for the AT91 users...
-> 
-> Nicolas,
-> 
-> who are you exactly blaming?
-> 
-> Are you surprised a 58 patches series, with a gazillion of Cc'ed people
-> posted awhile ago, is ignored?
+Hi,
 
-Daniel,
+This third version would allow to apply the series without any
+conflict:
 
-Well, I'm talking about the only patch about DT bindings here, not the
-other (large number) of soc/board dts changes.
-Note that Alexandre tried to extract this discussion from the other
-patches without coming to a conclusion either ("[PATCH v3] ARM: at91:
-Document new TCB bindings", for instance).
+- This time the series is rebased on gpio/for-next to avoid conflict
+  with already applied patches.
 
-I had the feeling that this email thread was about to be fading out on a
-DT binding discussion, as it had done a couple of times during the last
-months... Both you and me produced "ping" messages to make this
-discussion progress with no real success so far... This is why I was a
-little worried.
+- The documentation part has been removed from this series and I will
+  asked to Rob Herring to apply through the device tree subsystem.
 
-Regards,
+Thanks to this there is no external dependencies except the dts part
+that have to be merged through the mvebu tree.
+
+The first patch is a fix that was already posted.
+
+Then the first part of the series is adding the support for the pin
+controllers found on the Marvell Armada 7K/8K.
+
+These controllers are compatible with the ones found on the ARM32
+mvebu SoCs. However, the pinctrl node in the device tree of theses
+SoCs are child of a syscon. So for them we will reuse the regmap
+support introduced by Russell King.
+
+Each component of the Armada 7K and 8K comes with their own pin
+controller, that's why we have 2 new drivers: one for the CP110 and
+one for the AP806.
+
+The second part of the series extends the mvebu gpio driver to support
+the gpio controllers found on the Marvell Armada 7K/8K SoCs.
+
+The gpio controllers used on the Marvell Armada 7K/8K SoCs are the
+same that the ones used on the ARM32 mvebu SoCs. However, the pinctrl
+node in the device tree of theses SoCs are child of a syscon.
+
+Thanks,
+
+Gregory
+
+Changelog:
+v2 -> v3
+
+- Rebased on gpio/for-next.
+
+- Added the fix "gpio: mvebu: fix regmap_update_bits usage" with the
+  tested-by and reviewed-by flag
+
+- Removed the binding documentation patch that will be applied through
+  an other path.
+
+v1 -> v2:
+
+- Merged of the pinctrl and gpio series.
+
+- Rebased on next-20170531 (which contains gpio and pinctrl commit
+  already applied).
+
+- Removed already applied patches.
+
+- Remove the modular support of the drivers, suggested by Paul
+  Gortmaker.
+
+- Added tested-by from Thomas Petazzoni.
+
+- Added acked-by from Rob Herring.
+
+Gregory CLEMENT (6):
+  gpio: mvebu: fix regmap_update_bits usage
+  pinctrl: mvebu: remove the offset property for regmap
+  arm64: marvell: enable the Armada 7K/8K pinctrl driver
+  arm64: dts: marvell: add pinctrl support for Armada 7K/8K
+  gpio: mvebu: Add support for the Armada 7K/8K SoCs
+  arm64: dts: marvell: add gpio support for Armada 7K/8K
+
+Hanna Hawa (2):
+  pinctrl: mvebu: add driver for Armada AP806 pinctrl
+  pinctrl: mvebu: add driver for Armada CP110 pinctrl
+
+Russell King (1):
+  pinctrl: avoid PLAT_ORION dependency
+
+ arch/arm64/Kconfig.platforms                         |   2 +-
+ arch/arm64/boot/dts/marvell/armada-7020.dtsi         |   2 +-
+ arch/arm64/boot/dts/marvell/armada-7040.dtsi         |   2 +-
+ arch/arm64/boot/dts/marvell/armada-70x0.dtsi         |  68 +-
+ arch/arm64/boot/dts/marvell/armada-8020.dtsi         |   3 +-
+ arch/arm64/boot/dts/marvell/armada-8040.dtsi         |   3 +-
+ arch/arm64/boot/dts/marvell/armada-80x0.dtsi         |  76 +-
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi        |  14 +-
+ arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi |  21 +-
+ arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  |  22 +-
+ drivers/gpio/gpio-mvebu.c                            | 216 ++--
+ drivers/pinctrl/mvebu/Kconfig                        |  12 +-
+ drivers/pinctrl/mvebu/Makefile                       |   2 +-
+ drivers/pinctrl/mvebu/pinctrl-armada-ap806.c         | 140 ++-
+ drivers/pinctrl/mvebu/pinctrl-armada-cp110.c         | 687 ++++++++++++-
+ drivers/pinctrl/mvebu/pinctrl-mvebu.c                |   6 +-
+ drivers/pinctrl/mvebu/pinctrl-mvebu.h                |   2 +-
+ 17 files changed, 1189 insertions(+), 89 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-70x0.dtsi
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+ create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-ap806.c
+ create mode 100644 drivers/pinctrl/mvebu/pinctrl-armada-cp110.c
+
+base-commit: 77fd50d14eb4a48d00cee84a7beae174f8011157
 -- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+git-series 0.9.1
