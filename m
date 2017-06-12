@@ -1,185 +1,49 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 9/9] arm64: dts: marvell: add gpio support for Armada 7K/8K
-Date: Mon, 12 Jun 2017 17:35:00 +0200
-Message-ID: <dfe7cb1d616169bdf96e88aef7bfc46e668dba5a.1497281623.git-series.gregory.clement@free-electrons.com>
+Subject: [PATCH v3 4/9] arm64: marvell: enable the Armada 7K/8K pinctrl driver
+Date: Mon, 12 Jun 2017 17:34:55 +0200
+Message-ID: <30ebac2a9f20c05d354eb3f41ad21cdda8a45ae9.1497281623.git-series.gregory.clement@free-electrons.com>
 References: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
 In-Reply-To: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
 References: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable gpio support for CP and AP on the Marvell Armada 7K/8K SoCs.
+This commit makes sure the drivers for the Armada 7K/8K pin controllers
+are enabled.
 
-The Armada 8K has two CP110 blocks, each having two GPIO controllers.
-However, in each CP110 block, one of the GPIO controller cannot be
-used: in the master CP110, only the second GPIO controller can be used,
-while on the slave CP110, only the first GPIO controller can be used.
-
-On the other side, the Armada 7K has only one CP110, but both its GPIO
-controllers can be used.
-
-For this reason, the GPIO controllers are marked as "disabled" in the
-armada-cp110-master.dtsi and armada-cp110-slave.dtsi files, and only
-enabled in the per-SoC dtsi files.
-
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm64/boot/dts/marvell/armada-70x0.dtsi         | 15 +++++++++-
- arch/arm64/boot/dts/marvell/armada-80x0.dtsi         | 16 +++++++++-
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi        | 10 ++++++-
- arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 21 ++++++++++++-
- arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 22 +++++++++++++-
- 5 files changed, 84 insertions(+)
+ arch/arm64/Kconfig.platforms | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-70x0.dtsi b/arch/arm64/boot/dts/marvell/armada-70x0.dtsi
-index f6c22665d091..860b6ae9dcc5 100644
---- a/arch/arm64/boot/dts/marvell/armada-70x0.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-70x0.dtsi
-@@ -46,6 +46,21 @@
- 
- #include "armada-cp110-master.dtsi"
- 
-+/ {
-+	aliases {
-+		gpio1 = &cpm_gpio1;
-+		gpio2 = &cpm_gpio2;
-+	};
-+};
-+
-+&cpm_gpio1 {
-+	status = "okay";
-+};
-+
-+&cpm_gpio2 {
-+	status = "okay";
-+};
-+
- &cpm_syscon0 {
- 	cpm_pinctrl: pinctrl {
- 		compatible = "marvell,armada-7k-pinctrl";
-diff --git a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
-index 93d1de03b39a..666ebe96ba0d 100644
---- a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
-@@ -47,6 +47,22 @@
- #include "armada-cp110-master.dtsi"
- #include "armada-cp110-slave.dtsi"
- 
-+/ {
-+	aliases {
-+		gpio1 = &cps_gpio1;
-+		gpio2 = &cpm_gpio2;
-+	};
-+};
-+
-+/* The 80x0 has two CP blocks, but uses only one block from each. */
-+&cps_gpio1 {
-+	status = "okay";
-+};
-+
-+&cpm_gpio2 {
-+	status = "okay";
-+};
-+
- &cpm_syscon0 {
- 	cpm_pinctrl: pinctrl {
- 		compatible = "marvell,armada-8k-cpm-pinctrl";
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 4a1b6e0a604a..64608658de5a 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -57,6 +57,7 @@
- 	aliases {
- 		serial0 = &uart0;
- 		serial1 = &uart1;
-+		gpio0 = &ap_gpio;
- 	};
- 
- 	psci {
-@@ -252,6 +253,15 @@
- 				ap_pinctrl: pinctrl {
- 					compatible = "marvell,ap806-pinctrl";
- 				};
-+
-+				ap_gpio: gpio {
-+					compatible = "marvell,armada-8k-gpio";
-+					offset = <0x1040>;
-+					ngpios = <19>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&ap_pinctrl 0 0 19>;
-+				};
- 			};
- 		};
- 	};
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-index 96a4ff75b3b0..f88618185d58 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-@@ -104,6 +104,27 @@
- 					compatible = "marvell,cp110-clock";
- 					#clock-cells = <2>;
- 				};
-+
-+				cpm_gpio1: gpio@100 {
-+					compatible = "marvell,armada-8k-gpio";
-+					offset = <0x100>;
-+					ngpios = <32>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&cpm_pinctrl 0 0 32>;
-+					status = "disabled";
-+
-+				};
-+
-+				cpm_gpio2: gpio@140 {
-+					compatible = "marvell,armada-8k-gpio";
-+					offset = <0x140>;
-+					ngpios = <31>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&cpm_pinctrl 0 32 31>;
-+					status = "disabled";
-+				};
- 			};
- 
- 			cpm_rtc: rtc@284000 {
-diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-index 48a658aa5b32..f3a6e6742442 100644
---- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-@@ -111,6 +111,28 @@
- 					compatible = "marvell,cp110-clock";
- 					#clock-cells = <2>;
- 				};
-+
-+				cps_gpio1: gpio@100 {
-+					compatible = "marvell,armada-8k-gpio";
-+					offset = <0x100>;
-+					ngpios = <32>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&cps_pinctrl 0 0 32>;
-+					status = "disabled";
-+
-+				};
-+
-+				cps_gpio2: gpio@140 {
-+					compatible = "marvell,armada-8k-gpio";
-+					offset = <0x140>;
-+					ngpios = <31>;
-+					gpio-controller;
-+					#gpio-cells = <2>;
-+					gpio-ranges = <&cps_pinctrl 0 32 31>;
-+					status = "disabled";
-+				};
-+
- 			};
- 
- 			cps_sata0: sata@540000 {
+diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+index 73272f43ca01..bb064c42e74c 100644
+--- a/arch/arm64/Kconfig.platforms
++++ b/arch/arm64/Kconfig.platforms
+@@ -113,6 +113,8 @@ config ARCH_MVEBU
+ 	select OF_GPIO
+ 	select PINCTRL
+ 	select PINCTRL_ARMADA_37XX
++	select PINCTRL_ARMADA_AP806
++	select PINCTRL_ARMADA_CP110
+ 	help
+ 	  This enables support for Marvell EBU familly, including:
+ 	   - Armada 3700 SoC Family
 -- 
 git-series 0.9.1
