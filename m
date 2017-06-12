@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Subject: Re: [PATCH v2 2/4] dt: bindings: Add bindings for bcm2835-aux-intc
-Date: Mon, 12 Jun 2017 11:21:19 -0700
-Message-ID: <5093ed34-a930-dea5-6642-03e1e4910362@gmail.com>
+Date: Mon, 12 Jun 2017 11:22:37 -0700
+Message-ID: <35172597-5b6f-852a-c598-f25eb1a46aec@gmail.com>
 References: <d097e5d9-0ee6-9ea4-184f-1dd997849892@raspberrypi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
@@ -19,44 +19,32 @@ On 06/12/2017 07:25 AM, Phil Elwell wrote:
 > 
 > Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
 > ---
->  .../interrupt-controller/brcm,bcm2835-aux-intc.txt | 28 ++++++++++++++++++++++
->  .../interrupt-controller/bcm2835-aux-intc.h        | 20 ++++++++++++++++
->  2 files changed, 48 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
->  create mode 100644 include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
+};
+> diff --git a/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
 > new file mode 100644
-> index 0000000..f3f895c
+> index 0000000..8b9fc12
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
-> @@ -0,0 +1,28 @@
-> +BCM2835 Auxiliary ("AUXIRQ") Interrupt Controller
-> +
-> +The BCM2835 family of SoCs multiplexes the interrupts for peripherals in
-> +the AUX block into a single IRQ. The AUXIRQ register shows the IRQ status
-> +of each of the peripherals. Note that there are no masking or clearing
-> +facilities - interrupts must be enabled and acknowledged in the
-> +individual peripherals.
-> +
-> +Required properties:
-> +- compatible :	     Should be "brcm,bcm2835-aux-intc".
-> +- reg :		     Specifies base physical address and size of the registers.
-> +- interrupts :	     The interrupt number - see
-> +		     bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-> +- interrupt-controller : Identifies the node as an interrupt controller
-> +- #interrupt-cells : Specifies the number of cells needed to encode an
-> +		     interrupt source. The value shall be 1.
-> +
-> +  The cell contains the interrupt specifier, as found in
-> +  include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h. Valid values
-> +  are 0..2.
+> +++ b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
+> @@ -0,0 +1,20 @@
+> +/*
+> + * Copyright (C) 2017 Raspberry Pi (Trading) Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-This last sentence is sort of doomed for failure in case there are
-additional interrupts being added in the future, referring to
-bcm2835-aux-intc.h seems to be good enough IMHO.
+Can we consider another license for this file? Most Device Tree files
+seems to be under the ISC license.
 
-Reviewed-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Thanks!
 -- 
 Florian
 --
