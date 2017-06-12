@@ -1,50 +1,82 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH 0/3] Add stm32h743i-disco board
-Date: Mon, 12 Jun 2017 11:45:19 +0200
-Message-ID: <00f0b99b-5915-69a8-a278-336b605ff78f@st.com>
-References: <1496819783-5113-1-git-send-email-patrice.chotard@st.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH v4 7/7] ARM: dts: meson8b: switch to new bindings for
+ UART nodes
+Date: Mon, 12 Jun 2017 11:47:59 +0200
+Message-ID: <1497260879.3086.13.camel@baylibre.com>
+References: <1497001756-942-1-git-send-email-narmstrong@baylibre.com>
+         <1497001756-942-8-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1496819783-5113-1-git-send-email-patrice.chotard@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: patrice.chotard@st.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mcoquelin.stm32@gmail.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497001756-942-8-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>, gregkh@linuxfoundation.org, khilman@baylibre.com
+Cc: hgkr.klein@gmail.com, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Patrice,
+On Fri, 2017-06-09 at 11:49 +0200, Neil Armstrong wrote:
+> Switch to the stable UART bindings by adding a XTAL node and using the
+> proper compatible strings.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  arch/arm/boot/dts/meson8b.dtsi | 23 +++++++++++++++++++----
+>  1 file changed, 19 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> index d9f116a..651ad4a 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -82,6 +82,13 @@
+>  			reg = <0x203>;
+>  		};
+>  	};
+> +
+> +	xtal: xtal-clk {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <24000000>;
+> +		clock-output-names = "xtal";
+> +		#clock-cells = <0>;
+> +	};
 
-On 06/07/2017 09:16 AM, patrice.chotard@st.com wrote:
-> From: Patrice Chotard <patrice.chotard@st.com>
-> 
-> This series adds basic support for the stm32h743i discovery board
-> based on stm32h7 MCU.
-> 
-> v2:	_ update commit messages header with format "ARM: dts: stm32: ...."
-> 
-> Patrice Chotard (3):
->    ARM: dts: stm32: Add usart2_pins on stm32h743.
->    ARM: dts: stm32: Add usart2 support on stm32h743.
->    ARM: dts: stm32: Add stm32h743i-disco board
-> 
->   arch/arm/boot/dts/Makefile               |  3 +-
->   arch/arm/boot/dts/stm32h743-pinctrl.dtsi | 13 ++++++
->   arch/arm/boot/dts/stm32h743.dtsi         |  8 ++++
->   arch/arm/boot/dts/stm32h743i-disco.dts   | 73 ++++++++++++++++++++++++++++++++
->   4 files changed, 96 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm/boot/dts/stm32h743i-disco.dts
-> 
+On meson8b, I think xtal is already provided by <&clkc CLKID_XTAL>.
+We have to choose which one we want.
 
-Series applied on stm32-dt-for-v4.13
+With this handled:
 
-Regards
-Alex
+Acked-by: Jerome Brunet <jbrunet@baylibre.com>
+
+>  }; /* end of / */
+>  
+>  &aobus {
+> @@ -178,17 +185,25 @@
+>  };
+>  
+>  &uart_AO {
+> -	clocks = <&clkc CLKID_CLK81>;
+> +	compatible = "amlogic,meson8b-uart", "amlogic,meson-ao-uart";
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
+> +	clock-names = "xtal", "pclk", "baud";
+>  };
+>  
+>  &uart_A {
+> -	clocks = <&clkc CLKID_CLK81>;
+> +	compatible = "amlogic,meson8b-uart";
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
+> +	clock-names = "xtal", "pclk", "baud";
+>  };
+>  
+>  &uart_B {
+> -	clocks = <&clkc CLKID_CLK81>;
+> +	compatible = "amlogic,meson8b-uart";
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
+> +	clock-names = "xtal", "pclk", "baud";
+>  };
+>  
+>  &uart_C {
+> -	clocks = <&clkc CLKID_CLK81>;
+> +	compatible = "amlogic,meson8b-uart";
+> +	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&clkc CLKID_CLK81>;
+> +	clock-names = "xtal", "pclk", "baud";
+>  };
