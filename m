@@ -1,76 +1,45 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi: rockchip: add support for "cs-gpios" dts property
-Date: Mon, 12 Jun 2017 10:18:06 +0200
-Message-ID: <CAMuHMdUDjtSNRiBxcBnAMdUEaCZbioPoRE1h=p9=BqHMGmQaEQ@mail.gmail.com>
-References: <1497248057-16550-1-git-send-email-jeffy.chen@rock-chips.com>
- <dfe87919-b2cc-37e8-1598-6b3c730ff356@rock-chips.com>
+From: Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: Add bindings for
+ nvidia,tegra186-ccplex-cluster
+Date: Mon, 12 Jun 2017 11:25:08 +0300
+Message-ID: <2f5be984-eceb-0113-dd3c-4dbd22337062@kapsi.fi>
+References: <1496304245-24024-1-git-send-email-mperttunen@nvidia.com>
+ <1496304245-24024-2-git-send-email-mperttunen@nvidia.com>
+ <20170607221102.2bctvsdciv7y26lk@rob-hp-laptop>
+ <782ec765-f949-3023-93e3-a731f8bb524a@kapsi.fi>
+ <CAL_JsqJO2XbYjN2Hon_MJm_KO8HoZkx15ZYyhLRjWnhL9opTZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <dfe87919-b2cc-37e8-1598-6b3c730ff356-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJO2XbYjN2Hon_MJm_KO8HoZkx15ZYyhLRjWnhL9opTZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 9:15 AM, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
-> On 2017/6/12 14:14, Jeffy Chen wrote:
+On 09.06.2017 23:54, Rob Herring wrote:
+> On Thu, Jun 8, 2017 at 2:32 AM, Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org> wrote:
+>> On 08.06.2017 01:11, Rob Herring wrote:
+>>>
+>>> On Thu, Jun 01, 2017 at 11:04:04AM +0300, Mikko Perttunen wrote:
+>>>>
+>>>> The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
+>>>> registers that initiate CPU frequency/voltage transitions.
+>>>
+>>>
+>>> What the block is should also go in the binding doc. With that,
 >>
->> Support using "cs-gpios" property to specify cs gpios.
 >>
->> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
->> index 83da493..02171b2 100644
->> --- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
->> +++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
->> @@ -17,6 +17,7 @@ Required Properties:
->>          region.
->>   - interrupts: The interrupt number to the cpu. The interrupt specifier
->> format
->>                 depends on the interrupt controller.
->> +- cs-gpios : Specifies the gpio pins to be used for chipselects.
+>> I don't know how to explain it in more detail; this thing is literally just
+>> a few magic registers that route into some CPU control logic to trigger
+>> frequency/voltage transitions :)
 >
-> It's not a required property, otherwise how other boards work as your
-> patch 2 only add this for rk3399-gru.
+> Copy the commit msg text to the binding doc. That's all I'm asking for.
+>
+> Rob
+>
 
->> --- a/drivers/spi/spi-rockchip.c
->> +++ b/drivers/spi/spi-rockchip.c
+I see. Will do, thanks.
 
->> @@ -297,6 +302,50 @@ static void rockchip_spi_set_cs(struct spi_device
->> *spi, bool enable)
->>         pm_runtime_put_sync(rs->dev);
->>   }
->>   +static int rockchip_spi_setup(struct spi_device *spi)
->> +{
->> +       int ret = 0;
->> +       unsigned long flags = (spi->mode & SPI_CS_HIGH) ?
->> +                             GPIOF_OUT_INIT_LOW : GPIOF_OUT_INIT_HIGH;
->> +       struct rockchip_spi_data *data = spi_get_ctldata(spi);
->> +
->> +       if (!gpio_is_valid(spi->cs_gpio))
->> +               return 0;
-
-> return -EINVAL?
-
-Isn't this check meant to fall back to hardware CS if no cs-gpios property
-is present?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Mikko
