@@ -1,95 +1,40 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH v2 4/4] ARM: dts: bcm283x: Add and use bcm2835-aux-intc
-Date: Mon, 12 Jun 2017 15:25:33 +0100
-Message-ID: <248bb555-6dff-daf5-ca63-7d55c2992fce@raspberrypi.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: add media/cec.txt
+Date: Mon, 12 Jun 2017 09:36:24 -0500
+Message-ID: <CAL_JsqKcabSk5knCwdiHx3QS56_tSTNpJi8tr6=5EzDoGKN1yA@mail.gmail.com>
+References: <20170609175401.40204-1-hverkuil@xs4all.nl>
+ <20170609175401.40204-2-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-GB
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170609175401.40204-2-hverkuil@xs4all.nl>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>, dri-devel <dri-devel@lists.freedesktop.org>, Krzysztof Kozlowski <krzk@kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a DT node for the AUX interrupt controller, updating the AUX
-peripheral nodes to make use of it.
-
-Note that the IO region overlaps that of the AUX clock driver, but by
-the time the intc driver appears in the tree the clock driver should
-have been updated to ioremap the region without reserving it, along
-with preparing for a point in the future where the clock node MEM
-resource may be shrunk to the single word it actually needs.
-
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
----
- arch/arm/boot/dts/bcm283x.dtsi | 27 +++++++++++++++++++++++----
- 1 file changed, 23 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
-index cc721a4..1febb6e 100644
---- a/arch/arm/boot/dts/bcm283x.dtsi
-+++ b/arch/arm/boot/dts/bcm283x.dtsi
-@@ -1,6 +1,7 @@
- #include <dt-bindings/pinctrl/bcm2835.h>
- #include <dt-bindings/clock/bcm2835.h>
- #include <dt-bindings/clock/bcm2835-aux.h>
-+#include <dt-bindings/interrupt-controller/bcm2835-aux-intc.h>
- #include <dt-bindings/gpio/gpio.h>
- 
- /* firmware-provided startup stubs live here, where the secondary CPUs are
-@@ -459,7 +460,22 @@
- 			status = "disabled";
- 		};
- 
--		aux: aux@0x7e215000 {
-+		auxintc: interrupt-controller@7e215000 {
-+			compatible = "brcm,bcm2835-aux-intc";
-+			reg = <0x7e215000 0x4>;
-+			interrupts = <1 29>;
-+			interrupt-controller;
-+			#interrupt-cells = <1>;
-+		};
-+
-+		/*
-+		 * N.B. This node overlaps with the previous node,
-+		 * but the updated driver remaps the region without
-+		 * reserving it. After a suitable period this
-+		 * node can be reduced to cover only the single word
-+		 * at 7e215004.
-+		 */
-+		aux: aux@7e215000 {
- 			compatible = "brcm,bcm2835-aux";
- 			#clock-cells = <1>;
- 			reg = <0x7e215000 0x8>;
-@@ -469,7 +485,8 @@
- 		uart1: serial@7e215040 {
- 			compatible = "brcm,bcm2835-aux-uart";
- 			reg = <0x7e215040 0x40>;
--			interrupts = <1 29>;
-+			interrupt-parent = <&auxintc>;
-+			interrupts = <BCM2835_AUX_IRQ_UART>;
- 			clocks = <&aux BCM2835_AUX_CLOCK_UART>;
- 			status = "disabled";
- 		};
-@@ -477,7 +494,8 @@
- 		spi1: spi@7e215080 {
- 			compatible = "brcm,bcm2835-aux-spi";
- 			reg = <0x7e215080 0x40>;
--			interrupts = <1 29>;
-+			interrupt-parent = <&auxintc>;
-+			interrupts = <BCM2835_AUX_IRQ_SPI1>;
- 			clocks = <&aux BCM2835_AUX_CLOCK_SPI1>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-@@ -487,7 +505,8 @@
- 		spi2: spi@7e2150c0 {
- 			compatible = "brcm,bcm2835-aux-spi";
- 			reg = <0x7e2150c0 0x40>;
--			interrupts = <1 29>;
-+			interrupt-parent = <&auxintc>;
-+			interrupts = <BCM2835_AUX_IRQ_SPI2>;
- 			clocks = <&aux BCM2835_AUX_CLOCK_SPI2>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
--- 
-1.9.1
+T24gRnJpLCBKdW4gOSwgMjAxNyBhdCAxMjo1NCBQTSwgSGFucyBWZXJrdWlsIDxodmVya3VpbEB4
+czRhbGwubmw+IHdyb3RlOgo+IEZyb206IEhhbnMgVmVya3VpbCA8aGFucy52ZXJrdWlsQGNpc2Nv
+LmNvbT4KPgo+IERvY3VtZW50IGNvbW1vbiBIRE1JIENFQyBiaW5kaW5ncy4gQWRkIHRoaXMgdG8g
+dGhlIE1BSU5UQUlORVJTIGZpbGUKPiBhcyB3ZWxsLgo+Cj4gU2lnbmVkLW9mZi1ieTogSGFucyBW
+ZXJrdWlsIDxoYW5zLnZlcmt1aWxAY2lzY28uY29tPgo+IENjOiBLcnp5c3p0b2YgS296bG93c2tp
+IDxrcnprQGtlcm5lbC5vcmc+Cj4gQ2M6IEFuZHJ6ZWogSGFqZGEgPGEuaGFqZGFAc2Ftc3VuZy5j
+b20+Cj4gQ2M6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBsaW5hcm8ub3Jn
+Pgo+IENjOiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZwo+IC0tLQo+ICBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvY2VjLnR4dCB8IDggKysrKysrKysKPiAgTUFJTlRB
+SU5FUlMgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxICsKPiAgMiBmaWxl
+cyBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9jZWMudHh0CgpSZXZpZXdlZC1ieTogUm9i
+IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KClRoYW5rcyBmb3IgZG9pbmcgdGhpcy4KClJvYgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
