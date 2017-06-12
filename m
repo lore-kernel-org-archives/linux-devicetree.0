@@ -1,57 +1,87 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 05/13] clk: meson8b: export the ethernet gate clock
-Date: Mon, 12 Jun 2017 09:28:40 +0200
-Message-ID: <b09cd563-a485-d52f-916e-ad87082cefff@baylibre.com>
+Subject: Re: [PATCH 09/13] ARM: dts: meson8: add reserved memory zones
+Date: Mon, 12 Jun 2017 09:32:01 +0200
+Message-ID: <2f93816d-4276-2ccb-fd3e-e6ec8a6c9f70@baylibre.com>
 References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
- <20170611101644.28581-6-martin.blumenstingl@googlemail.com>
+ <20170611101644.28581-10-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170611101644.28581-6-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170611101644.28581-10-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 06/11/2017 12:16 PM, Martin Blumenstingl wrote:
-> Export the ethernet gate clock to the dt-bindings.
+> There seem to be two memory regions that need to be reserved, otherwise
+> the system just hangs when running:
+> $ stress --vm-bytes $(awk '/MemFree/{printf "%d\n", $2 * 0.9;}' < /proc/meminfo)k \
+>   --vm-keep -m 1
+> 
+> The first memory region is really crucial and without it the system
+> hangs. I could not find any references to this in Amlogic's GPL kernel
+> sources.
+> The second region is used by the "suspend firmware". The u-boot sources
+> (/arch/arm/cpu/aml_meson/m8/firmwareld.c) state that the suspend
+> firmware is located at "64M + 15M" which matches CONFIG_MESON_SUSPEND in
+> the Amlogic GPL kernel sources. The "suspend firmware" is responsible
+> for waking up the system from suspend state.
+> 
+> This also fixes reading the full SD card as without this the system
+> would simply hang (probably related to the first memory region, if some
+> buffer is allocated there).
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  drivers/clk/meson/meson8b.h              | 2 +-
->  include/dt-bindings/clock/meson8b-clkc.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/meson8.dtsi | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
 > 
-> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
-> index 17479c60864d..a687e02547dc 100644
-> --- a/drivers/clk/meson/meson8b.h
-> +++ b/drivers/clk/meson/meson8b.h
-> @@ -100,7 +100,7 @@
->  #define CLKID_ASSIST_MISC	33
->  #define CLKID_SPI		34
->  #define CLKID_I2S_SPDIF		35
-> -#define CLKID_ETH		36
-> +/* #define CLKID_ETH */
->  #define CLKID_DEMUX		37
->  #define CLKID_AIU_GLUE		38
->  #define CLKID_IEC958		39
-> diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
-> index 04f0d1fcd308..e29227fb52a1 100644
-> --- a/include/dt-bindings/clock/meson8b-clkc.h
-> +++ b/include/dt-bindings/clock/meson8b-clkc.h
-> @@ -24,6 +24,7 @@
->  #define CLKID_SAR_ADC		23
->  #define CLKID_RNG0		25
->  #define CLKID_SDIO		30
-> +#define CLKID_ETH		36
->  #define CLKID_USB0		50
->  #define CLKID_USB1		51
->  #define CLKID_USB		55
+> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
+> index 8582490fcb52..cf011dfe050e 100644
+> --- a/arch/arm/boot/dts/meson8.dtsi
+> +++ b/arch/arm/boot/dts/meson8.dtsi
+> @@ -83,6 +83,33 @@
+>  			reg = <0x203>;
+>  		};
+>  	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		/* 2 MiB reserved for Hardware ROM Firmware? */
+> +		hwrom_reserved: hwrom@0 {
+> +			reg = <0x0 0x200000>;
+> +			no-map;
+> +		};
+> +
+> +		/*
+> +		 * 1 MiB reserved for the "ARM Power Firmware": this is ARM
+> +		 * code which is responsible for system suspend. It loads a
+> +		 * piece of ARC code ("arc_power" in the vendor u-boot tree)
+> +		 * into SRAM, executes that and shuts down the (last) ARM core.
+> +		 * The arc_power firmware then checks various wakeup sources
+> +		 * (IR remote receiver, HDMI CEC, WIFI and Bluetooth wakeup or
+> +		 * simply the power key) and re-starts the ARM core once it
+> +		 * detects a wakeup request.
+> +		 */
+> +		suspend_firmware: secmon@4f00000 {
+> +			reg = <0x4f00000 0x100000>;
+> +			no-map;
+> +		};
+> +	};
+>  }; /* end of / */
+>  
+>  &aobus {
 > 
 
+Good, but maybe you could add _reserved to the secmon alias.
 
-Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Apart of that :
+Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
