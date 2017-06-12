@@ -1,247 +1,244 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 3/4] irqchip: Add BCM2835 AUX interrupt controller
-Date: Mon, 12 Jun 2017 17:19:03 +0100
-Message-ID: <9cbf68ce-6041-3e04-8f82-8d948ab4a716@arm.com>
-References: <c5ceca4d-81d1-9faf-bc4a-3ea3113abf36@raspberrypi.org>
- <56e314db-49a9-48fa-d7d9-877bd68aadfc@arm.com>
- <fb54ef5b-3bbb-4c39-e993-48bf45982412@raspberrypi.org>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
+Subject: Re: [PATCH v5 3/3] drivers:power:twl4030-charger: add deferred
+ probing for phy and iio
+Date: Mon, 12 Jun 2017 11:24:28 -0500
+Message-ID: <754fbc28-f5ff-4736-1d46-f467667b130d@ti.com>
+References: <cover.1495363097.git.hns@goldelico.com>
+ <6ed105f6c9c21c24184913a7be9e665453549d79.1495363097.git.hns@goldelico.com>
+ <20170607204444.zumcreuqdnv7euv2@earth>
+ <01A3D2F5-9E09-4E93-A363-93130DCEB7DF@goldelico.com>
+ <1b9f3e92-36ac-2a73-7b2d-037b19fafaad@ti.com>
+ <DC2DA07F-72A1-45B9-A4F5-BD83D930974D@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <fb54ef5b-3bbb-4c39-e993-48bf45982412@raspberrypi.org>
+In-Reply-To: <DC2DA07F-72A1-45B9-A4F5-BD83D930974D@goldelico.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Phil Elwell <phil@raspberrypi.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Sebastian Reichel <sre@kernel.org>, NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Marek Belisko <marek@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/17 16:21, Phil Elwell wrote:
-> On 12/06/2017 15:59, Marc Zyngier wrote:> On 12/06/17 15:25, Phil Elwell wrote:
->>> Devices in the BCM2835 AUX block share a common interrupt line, with a
->>> register indicating which devices have active IRQs. Expose this as a
->>> nested interrupt controller to avoid IRQ sharing problems (easily
->>> observed if UART1 and SPI1/2 are enabled simultaneously).
+
+
+On 06/09/2017 11:59 PM, H. Nikolaus Schaller wrote:
+> Hi Grygorii,
+> 
+>> Am 09.06.2017 um 18:25 schrieb Grygorii Strashko <grygorii.strashko@ti.com>:
+>>
+>>
+>>
+>> On 06/09/2017 01:05 AM, H. Nikolaus Schaller wrote:
+>>> Hi,
 >>>
->>> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
->>> ---
->>>  drivers/irqchip/Makefile          |   2 +-
->>>  drivers/irqchip/irq-bcm2835-aux.c | 155 ++++++++++++++++++++++++++++++++++++++
->>>  2 files changed, 156 insertions(+), 1 deletion(-)
->>>  create mode 100644 drivers/irqchip/irq-bcm2835-aux.c
+>>>> Am 07.06.2017 um 22:44 schrieb Sebastian Reichel <sre@kernel.org>:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On Sun, May 21, 2017 at 12:38:18PM +0200, H. Nikolaus Schaller wrote:
+>>>>> This fixes an issue if both this twl4030_charger driver and
+>>>>> phy-twl4030-usb are compiled as modules and loaded in random order.
+>>>>> It has been observed on GTA04 and OpenPandora devices that in worst
+>>>>> case the boot process hangs and in best case the AC detection fails
+>>>>> with a warning.
+>>>>>
+>>>>> Therefore we add deferred probing checks for the usb_phy and the
+>>>>> iio channel for AC detection.
+>>>>>
+>>>>> For implementing this we must reorder code because we can't safely
+>>>>> return -EPROBE_DEFER after allocating any devm managed interrupt
+>>>>> (it might already/still be enabled without working interrupt handler).
+>>>>>
+>>>>> So the check for required resources that may abort probing by
+>>>>> returning -EPROBE_DEFER, must come first.
+>>>>
+>>>> This sounds fishy. EPROBE_DEFER should not be different from
+>>>> other error codes in this regard and devm_ requested resources
+>>>> should be free'd on any error. Why is irq handler not working?
 >>>
->>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->>> index b64c59b..cf01920 100644
->>> --- a/drivers/irqchip/Makefile
->>> +++ b/drivers/irqchip/Makefile
->>> @@ -3,7 +3,7 @@ obj-$(CONFIG_IRQCHIP)			+= irqchip.o
->>>  obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
->>>  obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
->>>  obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
->>> -obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
->>> +obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o irq-bcm2835-aux.o
->>>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
->>>  obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
->>>  obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
->>> diff --git a/drivers/irqchip/irq-bcm2835-aux.c b/drivers/irqchip/irq-bcm2835-aux.c
->>> new file mode 100644
->>> index 0000000..545f12e
->>> --- /dev/null
->>> +++ b/drivers/irqchip/irq-bcm2835-aux.c
->>> @@ -0,0 +1,155 @@
->>> +/*
->>> + * Copyright (C) 2017 Raspberry Pi (Trading) Ltd.
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify it
->>> + * under the terms and conditions of the GNU General Public License,
->>> + * version 2, as published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed in the hope it will be useful, but WITHOUT
->>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->>> + * more details.
->>> + *
->>> + * You should have received a copy of the GNU General Public License
->>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->>> + */
->>> +
->>> +#include <linux/interrupt.h>
->>> +#include <linux/irqdomain.h>
->>> +#include <linux/module.h>
->>> +#include <linux/of_irq.h>
->>> +#include <linux/platform_device.h>
->>> +#include <dt-bindings/interrupt-controller/bcm2835-aux-intc.h>
->>> +
->>> +#define BCM2835_AUXIRQ		0x00
->>> +
->>> +#define BCM2835_AUX_IRQ_UART_MASK BIT(BCM2835_AUX_IRQ_UART)
->>> +#define BCM2835_AUX_IRQ_SPI1_MASK BIT(BCM2835_AUX_IRQ_SPI1)
->>> +#define BCM2835_AUX_IRQ_SPI2_MASK BIT(BCM2835_AUX_IRQ_SPI2)
->>> +
->>> +#define BCM2835_AUX_IRQ_ALL_MASK \
->>> +	(BCM2835_AUX_IRQ_UART_MASK | \
->>> +	 BCM2835_AUX_IRQ_SPI1_MASK | \
->>> +	 BCM2835_AUX_IRQ_SPI2_MASK)
->>> +
->>> +struct aux_irq_state {
->>> +	void __iomem      *status;
->>> +	struct irq_domain *domain;
->>> +};
->>> +
->>> +static struct aux_irq_state aux_irq __read_mostly;
->>> +
->>> +static irqreturn_t bcm2835_aux_irq_handler(int irq, void *dev_id)
->>> +{
->>> +	u32 stat = readl_relaxed(aux_irq.status);
->>> +
->>> +	if (stat & BCM2835_AUX_IRQ_UART_MASK)
->>> +		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
->>> +						     BCM2835_AUX_IRQ_UART));
->>> +
->>> +	if (stat & BCM2835_AUX_IRQ_SPI1_MASK)
->>> +		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
->>> +						     BCM2835_AUX_IRQ_SPI1));
->>> +
->>> +	if (stat & BCM2835_AUX_IRQ_SPI2_MASK)
->>> +		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
->>> +						     BCM2835_AUX_IRQ_SPI2));
->>> +
->>> +	return (stat & BCM2835_AUX_IRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
+>>> 1. there is no other error code involved, before we try to convert the driver to handle EPROBE_DEFER.
+>>> So it is not that EPROBE_DEFER is special but that we add an error return path for it.
+>>>
+>>> 2. I don't know why it is not working - I just know that the handler seems to be triggered before
+>>> all resources are available (if probe() is aborted with EPROBE_DEFER error paths) which ends up in kernel panics.
+>>>
+>>> Therefore just to be safe, I have reordered things a little (without changing the function):
+>>>
+>>> 1. check for resources (with some EPROBE_DEFER)
+>>> 2. allocate non-devm (with optional EPROBE_DEFER)
+>>> 3. allocate devm
+>>>
+>>> So this should be safe in any case.
+>>>
+>>> Please also compare a discussion
+>>>
+>>> https://lkml.org/lkml/2013/2/22/65
+>>>
+>>>>
+>>>>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>>>>> ---
+>>>>> drivers/power/supply/twl4030_charger.c | 37 ++++++++++++++++++++--------------
+>>>>> 1 file changed, 22 insertions(+), 15 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
+>>>>> index 785a07bc4f39..945eabdbbc89 100644
+>>>>> --- a/drivers/power/supply/twl4030_charger.c
+>>>>> +++ b/drivers/power/supply/twl4030_charger.c
+>>>>> @@ -984,6 +984,28 @@ static int twl4030_bci_probe(struct platform_device *pdev)
+>>>>>
+>>>>> 	platform_set_drvdata(pdev, bci);
+>>>>>
+>>>>> +	if (bci->dev->of_node) {
+>>>>> +		struct device_node *phynode;
+>>>>> +
+>>>>> +		phynode = of_find_compatible_node(bci->dev->of_node->parent,
+>>>>> +						  NULL, "ti,twl4030-usb");
+>>>>> +		if (phynode) {
+>>>>> +			bci->transceiver = devm_usb_get_phy_by_node(
+>>>>> +				bci->dev, phynode, &bci->usb_nb);
+>>>>> +			if (IS_ERR(bci->transceiver) &&
+>>>>> +			    PTR_ERR(bci->transceiver) == -EPROBE_DEFER)
+>>>>> +				return -EPROBE_DEFER;	/* PHY not ready */
+>>>>> +		}
+>>>>> +	}
+>>>>> +
+>>>>> +	bci->channel_vac = iio_channel_get(&pdev->dev, "vac");
+>>>>> +	if (IS_ERR(bci->channel_vac)) {
+>>>>> +		if (PTR_ERR(bci->channel_vac) == -EPROBE_DEFER)
+>>>>> +			return -EPROBE_DEFER;	/* iio not ready */
+>>>>> +		dev_warn(&pdev->dev, "could not request vac iio channel");
+>>>>> +		bci->channel_vac = NULL;
+>>>>> +	}
+>>>>> +
+>>>>
+>>>> You should not request non-devm managed iio_channel before
+>>>> devm-managed power-supply.
+>>>
+>>> Well, it is not *me* doing that.
+>>>
+>>> It is the unpatched driver which already does. See:
+>>>
+>>> 	https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/power/supply/twl4030_charger.c?h=v4.12-rc4#n1069
+>>>
+>>> I have just moved this line to a different location to be able to add a proper EPROBE_DEFER return path.
+>>>
+>>>> This could be fixed by switching to
+>>>> devm_iio_channel_get(), which also cleans up some code.
+>>>
+>>> Yes, this could be an alternative solution.
+>>> We still need EPROBE_DEFER handling.
+>>>
+>>>>
+>>>> I suspect, that this is also your IRQ problem, since iio_channel
+>>>> is currently free'd before irqs are free'd, but its used in irq
+>>>> code.
+>>>
+>>> Hm. No.
+>>>
+>>> In upstream code it is never freed on probe failure because there is only
+>>> an error return (goto fail) after allocating irqs in case the
+>>> twl_i2c_write_u8 fails. Which usually doesn't.
+>>>
+>>> The EPROBE_DEFER returned by iio_channel_get not being ready simply prints
+>>> a warning and turns off AC detection (bci->channel_vac = NULL) forever.
+>>>
+>>>>
+>>>>> 	bci->ac = devm_power_supply_register(&pdev->dev, &twl4030_bci_ac_desc,
+>>>>> 					     NULL);
+>>>>> 	if (IS_ERR(bci->ac)) {
+>>>>> @@ -1017,25 +1039,10 @@ static int twl4030_bci_probe(struct platform_device *pdev)
+>>>>> 		return ret;
+>>>>> 	}
+>>>>>
+>>>>> -	bci->channel_vac = iio_channel_get(&pdev->dev, "vac");
+>>>>> -	if (IS_ERR(bci->channel_vac)) {
+>>>
+>>> My first attempt to fix EPROBE_DEFER was to add this
+>>>
+>>> +		if (PTR_ERR(bci->channel_vac) == -EPROBE_DEFER)
+>>> +			return -EPROBE_DEFER;	/* iio not ready */
+>>>
+>>>>> -		bci->channel_vac = NULL;
+>>>>> -		dev_warn(&pdev->dev, "could not request vac iio channel");
+>>>>> -	}
+>>>>> -
+>>>>> 	INIT_WORK(&bci->work, twl4030_bci_usb_work);
+>>>>> 	INIT_DELAYED_WORK(&bci->current_worker, twl4030_current_worker);
+>>>>>
+>>>>> 	bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
+>>>>> -	if (bci->dev->of_node) {
+>>>>> -		struct device_node *phynode;
+>>>>> -
+>>>>> -		phynode = of_find_compatible_node(bci->dev->of_node->parent,
+>>>>> -						  NULL, "ti,twl4030-usb");
+>>>>> -		if (phynode)
+>>>>> -			bci->transceiver = devm_usb_get_phy_by_node(
+>>>>> -				bci->dev, phynode, &bci->usb_nb);
+>>>
+>>> and this
+>>>
+>>> +			if (IS_ERR(bci->transceiver) &&
+>>> +			    PTR_ERR(bci->transceiver) == -EPROBE_DEFER) {
+>>> +				ret = -EPROBE_DEFER;	/* PHY not ready */
+>>> +				goto fail;
+>>>
+>>> This did run (and potentially return) after installing devm_request_threaded_irq leading
+>>> to observation of severe kernel panics by interrupts.
+>>>
+>>> Moving the iio channel allocation before devm_request_threaded_irq made them go away.
+>>>
+>>>>> -	}
+>>>>>
+>>>>> 	/* Enable interrupts now. */
+>>>>> 	reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_ICHGEOC | TWL4030_TBATOR2 |
+>>>>
+>>>> -- Sebastian
+>>>
+>>> How important is it to keep the current sequence of devm_request_threaded_irq() + (devm_)iio_channel_get() untouched?
+>>>
+>>> The reason I ask is that it is more likely for (devm_)iio_channel_get() to fail than devm_request_threaded_irq().
+>>>
+>>> Hence the iio channel should imho be always allocated first, so that we skip allocating+freeing unused irq handlers in case
+>>> of iio not being ready.
+>>>
+>>> Therefore, I suggest to keep the proposed reordering even if we think devm-conversion of iio_channel_get() alone
+>>> would solve it equally well.
+>>>
+>>> Next: should there be two separate patches? One for converting the non-devm iio_channel_get() and cleaning up error path.
+>>> And one for adding EPROBE_DEFER error path.
+>>>
+>>> Or keep it in a single patch because they only make sense if done together (you can't add/remove deferred probing
+>>> without converting and/or moving iio_channel_get())?
+>>>
+>>> So please advise how to proceed.
+>>>
 >>
->> I could understand the use of a normal interrupt handler instead of a
->> chained handler, as the HW doesn't have any way of masking interrupts
->> (whoever designed this should be forced to fix each and every SoC with a
->> magnifier and a tiny drill) if it wasn't for this last line.
+>> You should request irq as late as possible in probe - it's safest way to go always.
+>> You see crushes simply because request_irq enables IRQ and IRQ can trigger immediately, so
+>> IRQ handler will run and all required resources should be ready and initialized.
 >>
->> Here, you're making sure that you always return IRQ_HANDLED if something
->> was pending, irrespective of whether it has been handled or not. How do
->> you recover when you have a screaming interrupt and no handler?
-> 
-> Does Linux not notice when one calls generic_handle_irq with the number of an
-> interrupt without a handler?
-
-It is not so much that the interrupt doesn't have a handler, but that
-the device (or one of the devices) is in some sort of interrupt frenzy,
-and the driver is not able to handle this interrupt.
-
-In such a case, Linux tries to mask this interrupt, which in your case
-does exactly nothing. At this point, the system is dead.
-
-> 
->> Why don't you simply request the interrupt as a shared one, and check
->> for the state in the handlers themselves? This way, the kernel will be
->> able to recover from a screaming interrupt by disabling it.
-> 
-> I'm not sure quite how the problem arises - the AUX SPI driver uses IRQF_SHARED,
-> and the AUX UART (8250 clone) driver sets UPF_SHARE_IRQ, but the end result
-> is a lockup. Putting checking of the parent status bits into the drivers (one of
-> which is a fairly generic 8250 driver) seems wrong.
-
-Well, all the 8250 variants have some glue of some sort... And you
-definitely should investigate what the issue is with this lock-up. You
-don't even have to read this status register, BTH. The kernel will
-happily iterate over the handlers for you.
-
-> Adding this simple driver fixed the problem, and I think it better reflects the
-> hardware modularity.
-
-It'd certainly be better to investigate the actual source of the problem.
-
+>> In this case:
+>> twl4030_bci_interrupt() -> twl4030_charger_update_current() -> ac_available() -> iio_read_channel_processed()
+>> OOOPS.
 >>
->>> +}
->>> +
->>> +static int bcm2835_aux_irq_xlate(struct irq_domain *d,
->>> +				 struct device_node *ctrlr,
->>> +				 const u32 *intspec, unsigned int intsize,
->>> +				 unsigned long *out_hwirq,
->>> +				 unsigned int *out_type)
->>> +{
->>> +	if (WARN_ON(intsize != 1))
->>> +		return -EINVAL;
->>> +
->>> +	if (WARN_ON(intspec[0] >= BCM2835_AUX_IRQ_COUNT))
->>> +		return -EINVAL;
->>> +
->>> +	*out_hwirq = intspec[0];
->>> +	*out_type = IRQ_TYPE_NONE;
-
-By the way, what is this IRQ_TYPE_NONE here? From what I can read, it
-can only be IRQ_TYPE_LEVEL...
-
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +/*
->>> + * The irq_mask and irq_unmask function pointers are used without
->>> + * validity checks, so they must not be NULL. Create a dummy function
->>> + * with the expected type for use as a no-op.
->>> + */
->>> +static void bcm2835_aux_irq_dummy(struct irq_data *data)
->>> +{
->>> +}
->>> +
->>> +static struct irq_chip bcm2835_aux_irq_chip = {
->>> +	.name = "bcm2835-aux_irq",
->>> +	.irq_mask = bcm2835_aux_irq_dummy,
->>> +	.irq_unmask = bcm2835_aux_irq_dummy,
->>> +};
->>> +
->>> +static const struct irq_domain_ops bcm2835_aux_irq_ops = {
->>> +	.xlate = bcm2835_aux_irq_xlate
->>> +};
->>> +
->>> +static int bcm2835_aux_irq_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device *dev = &pdev->dev;
->>> +	struct device_node *node = dev->of_node;
->>> +	int parent_irq;
->>> +	struct resource *res;
->>> +	void __iomem *reg;
->>> +	int i;
->>> +
->>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	reg = devm_ioremap_resource(dev, res);
->>> +	if (IS_ERR(reg))
->>> +		return PTR_ERR(reg);
->>> +
->>> +	parent_irq = irq_of_parse_and_map(node, 0);
->>> +	if (!parent_irq)
->>> +		return -ENXIO;
->>> +
->>> +	aux_irq.status = reg + BCM2835_AUXIRQ;
->>> +	aux_irq.domain = irq_domain_add_linear(node,
->>> +					       BCM2835_AUX_IRQ_COUNT,
->>> +					       &bcm2835_aux_irq_ops,
->>> +					       NULL);
->>> +	if (!aux_irq.domain)
->>> +		return -ENXIO;
->>> +
->>> +	for (i = 0; i < BCM2835_AUX_IRQ_COUNT; i++) {
->>> +		unsigned int irq = irq_create_mapping(aux_irq.domain, i);
->>> +
->>> +		if (irq == 0)
->>> +			return -ENXIO;
->>> +
->>> +		irq_set_chip_and_handler(irq, &bcm2835_aux_irq_chip,
->>> +					 handle_level_irq);
->>> +	}
->>
->> My initial question notwithstanding, why do you need any of this? This
->> should be done at map time, and the irq_create_mapping() call should
->> entirely be driven from DT.
+>> So, first thing to do is to reorder probe to ensure that sequence is safe.
 > 
-> Can you explain this in more detail? I'm open to a better solution.
+> That is exactly what I guessed when proposing the reordering patch.
+> 
+>> Then other stuff - devm, EPROBE_DEFER ...
+> 
+> IMHO, reordering alone doesn't make much sense as a single patch. Or does it?
+> 
 
-irq_create mapping is (indirectly) called by the core code when parsing
-the DT (of_platform_populate), so it is fairly pointless here. As for
-the irq_set_*() call, it should be in a .map callback on the irqdomain
-ops, so that it is configured on a per-irq basis (there is plenty of
-existing code in the drivers/irqchip for you to have a look).
+The question is - is there bug in driver or not? As per current code seems yes.
+You can easily test it by directly calling twl4030_charger_interrupt() right after
+IRQ is requested. there is a bug if it will crush.
+As for me it more reasonable to move forward using smaller steps.
 
-In general, we don't instantiate interrupts in the irqchip itself. It is
-the core code duty to do so.
 
-Thanks,
+Thanks for you work and patches.
 
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+regards,
+-grygorii
