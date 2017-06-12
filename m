@@ -1,63 +1,94 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 07/13] ARM: dts: meson8: add the pins for the SDIO
- controller
-Date: Mon, 12 Jun 2017 09:32:46 +0200
-Message-ID: <5a961576-03ca-34c1-a7a1-a951d9517fe6@baylibre.com>
+Subject: Re: [PATCH 08/13] ARM: dts: meson: add the SAR ADC
+Date: Mon, 12 Jun 2017 09:33:56 +0200
+Message-ID: <55f901c9-a433-c729-c097-4c1747316b2d@baylibre.com>
 References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
- <20170611101644.28581-8-martin.blumenstingl@googlemail.com>
+ <20170611101644.28581-9-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170611101644.28581-8-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170611101644.28581-9-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 06/11/2017 12:16 PM, Martin Blumenstingl wrote:
+> This adds the SAR ADC to meson.dtsi and configures the clocks on Meson8
+> and Meson8b to allow boards to use it. Some boards use it to connect a
+> button to it.
+> 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  arch/arm/boot/dts/meson8.dtsi | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  arch/arm/boot/dts/meson.dtsi   | 8 ++++++++
+>  arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
+>  arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
+>  3 files changed, 24 insertions(+)
 > 
+> diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+> index 8d9c36970dfd..b05796bee088 100644
+> --- a/arch/arm/boot/dts/meson.dtsi
+> +++ b/arch/arm/boot/dts/meson.dtsi
+> @@ -101,6 +101,14 @@
+>  				status = "disabled";
+>  			};
+>  
+> +			saradc: adc@8680 {
+> +				compatible = "amlogic,meson-saradc";
+> +				reg = <0x8680 0x34>;
+> +				#io-channel-cells = <1>;
+> +				interrupts = <0 73 1>;
+
+Can you use the correct GIC_ and IRQ_TYPE_ ... defines for the IRQ property ?
+
+> +				status = "disabled";
+> +			};
+> +
+>  			uart_C: serial@8700 {
+>  				compatible = "amlogic,meson-uart";
+>  				reg = <0x8700 0x18>;
 > diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-> index 93e437c91c61..1bbfc04c3f10 100644
+> index 1bbfc04c3f10..8582490fcb52 100644
 > --- a/arch/arm/boot/dts/meson8.dtsi
 > +++ b/arch/arm/boot/dts/meson8.dtsi
-> @@ -158,6 +158,30 @@
->  			gpio-ranges = <&pinctrl_cbus 0 0 120>;
->  		};
+> @@ -232,6 +232,14 @@
+>  	arm,filter-ranges = <0x100000 0xc0000000>;
+>  };
 >  
-> +		sd_a_pins: sd-a {
-> +			mux {
-> +				groups = "sd_d0_a", "sd_d1_a", "sd_d2_a",
-> +					"sd_d3_a", "sd_clk_a", "sd_cmd_a";
-> +				function = "sd_a";
-> +			};
-> +		};
+> +&saradc {
+> +	compatible = "amlogic,meson8-saradc", "amlogic,meson-saradc";
+> +	clocks = <&clkc CLKID_XTAL>,
+> +		<&clkc CLKID_SAR_ADC>,
+> +		<&clkc CLKID_SANA>;
+> +	clock-names = "clkin", "core", "sana";
+> +};
 > +
-> +		sd_b_pins: sd-b {
-> +			mux {
-> +				groups = "sd_d0_b", "sd_d1_b", "sd_d2_b",
-> +					"sd_d3_b", "sd_clk_b", "sd_cmd_b";
-> +				function = "sd_b";
-> +			};
-> +		};
+>  &spifc {
+>  	clocks = <&clkc CLKID_CLK81>;
+>  };
+> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+> index d9f116a418b2..1c09090ff4a5 100644
+> --- a/arch/arm/boot/dts/meson8b.dtsi
+> +++ b/arch/arm/boot/dts/meson8b.dtsi
+> @@ -177,6 +177,14 @@
+>  	arm,filter-ranges = <0x100000 0xc0000000>;
+>  };
+>  
+> +&saradc {
+> +	compatible = "amlogic,meson8b-saradc", "amlogic,meson-saradc";
+> +	clocks = <&clkc CLKID_XTAL>,
+> +		<&clkc CLKID_SAR_ADC>,
+> +		<&clkc CLKID_SANA>;
+> +	clock-names = "clkin", "core", "sana";
+> +};
 > +
-> +		sd_c_pins: sd-c {
-> +			mux {
-> +				groups = "sd_d0_c", "sd_d1_c", "sd_d2_c",
-> +					"sd_d3_c", "sd_clk_c", "sd_cmd_c";
-> +				function = "sd_c";
-> +			};
-> +		};
-> +
->  		spi_nor_pins: nor {
->  			mux {
->  				groups = "nor_d", "nor_q", "nor_c", "nor_cs";
+>  &uart_AO {
+>  	clocks = <&clkc CLKID_CLK81>;
+>  };
 > 
 
+Apart from that :
 Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
