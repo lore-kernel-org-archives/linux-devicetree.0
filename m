@@ -1,52 +1,147 @@
-From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v3 1/2] dt-bindings: Add bindings for nvidia,tegra186-ccplex-cluster
-Date: Mon, 12 Jun 2017 13:23:04 +0300
-Message-ID: <1497262984-2346-1-git-send-email-mperttunen@nvidia.com>
-References: <1496304245-24024-2-git-send-email-mperttunen@nvidia.com>
+From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
+Date: Mon, 12 Jun 2017 19:54:28 +0800
+Message-ID: <1497268468.930.26.camel@mhfsdcap03>
+References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
+         <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496304245-24024-2-git-send-email-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1495784107-6711-3-git-send-email-jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
-registers that initiate CPU frequency/voltage transitions.
+On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
+> From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> Add MT2701 i2c device node.
+> 
+> Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 84 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+> index a483798..3f5a96c 100644
+> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+> @@ -28,7 +28,49 @@
+>  	status = "okay";
+>  };
+>  
+> +&i2c0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c0_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins_a>;
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins_a>;
+> +	status = "okay";
+> +};
+> +
+>  &pio {
+> +	i2c0_pins_a: i2c0@0 {
+> +		pins1 {
+> +			pinmux = <MT2701_PIN_75_SDA0__FUNC_SDA0>,
+> +				 <MT2701_PIN_76_SCL0__FUNC_SCL0>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	i2c1_pins_a: i2c1@0 {
+> +		pins1 {
+> +			pinmux = <MT2701_PIN_57_SDA1__FUNC_SDA1>,
+> +				 <MT2701_PIN_58_SCL1__FUNC_SCL1>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+> +	i2c2_pins_a: i2c2@0 {
+> +		pins1 {
+> +			pinmux = <MT2701_PIN_77_SDA2__FUNC_SDA2>,
+> +				 <MT2701_PIN_78_SCL2__FUNC_SCL2>;
+> +			bias-disable;
+> +		};
+> +	};
+> +
+>  	spi_pins_a: spi0@0 {
+>  		pins_spi {
+>  			pinmux = <MT2701_PIN_53_SPI0_CSN__FUNC_SPI0_CS>,
+> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> index 8037210..1b6157e 100644
+> --- a/arch/arm/boot/dts/mt2701.dtsi
+> +++ b/arch/arm/boot/dts/mt2701.dtsi
+> @@ -286,6 +286,48 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	i2c0: i2c@11007000 {
+> +		compatible = "mediatek,mt2701-i2c",
+> +			     "mediatek,mt6577-i2c";
+> +		reg = <0 0x11007000 0 0x70>,
+> +		      <0 0x11000200 0 0x80>;
+> +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_LOW>;
+> +		clock-div = <16>;
+> +		clocks = <&pericfg CLK_PERI_I2C0>, <&pericfg CLK_PERI_AP_DMA>;
+> +		clock-names = "main", "dma";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	i2c1: i2c@11008000 {
+> +		compatible = "mediatek,mt2701-i2c",
+> +			     "mediatek,mt6577-i2c";
+> +		reg = <0 0x11008000 0 0x70>,
+> +		      <0 0x11000280 0 0x80>;
+> +		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_LOW>;
+> +		clock-div = <16>;
+> +		clocks = <&pericfg CLK_PERI_I2C1>, <&pericfg CLK_PERI_AP_DMA>;
+> +		clock-names = "main", "dma";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+> +	i2c2: i2c@11009000 {
+> +		compatible = "mediatek,mt2701-i2c",
+> +			     "mediatek,mt6577-i2c";
+> +		reg = <0 0x11009000 0 0x70>,
+> +		      <0 0x11000300 0 0x80>;
+> +		interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_LOW>;
+> +		clock-div = <16>;
+> +		clocks = <&pericfg CLK_PERI_I2C2>, <&pericfg CLK_PERI_AP_DMA>;
+> +		clock-names = "main", "dma";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+>  	spi0: spi@1100a000 {
+>  		compatible = "mediatek,mt2701-spi";
+>  		#address-cells = <1>;
 
-Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- .../arm/tegra/nvidia,tegra186-ccplex-cluster.txt     | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
+Dear Matthias,
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
-new file mode 100644
-index 000000000000..0c80cd8ee839
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
-@@ -0,0 +1,20 @@
-+NVIDIA Tegra CCPLEX_CLUSTER area
-+
-+The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
-+registers that initiate CPU frequency/voltage transitions.
-+
-+Required properties:
-+- compatible: Should contain one of the following:
-+  - "nvidia,tegra186-ccplex-cluster": for Tegra186
-+- reg: Must contain an (offset, length) pair of the device's MMIO
-+  register area
-+- nvidia,bpmp: phandle to BPMP device that can be queried for OPP tables
-+
-+Example:
-+
-+	ccplex@e000000 {
-+		compatible = "nvidia,tegra186-ccplex-cluster";
-+		reg = <0x0 0x0e000000 0x0 0x3fffff>,
-+
-+		nvidia,bpmp = <&bpmp>;
-+	};
--- 
-2.1.4
+Could you take this patch together with 
+[PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
+
+Thanks!
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
