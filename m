@@ -1,203 +1,95 @@
 From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH v2 3/4] irqchip: Add BCM2835 AUX interrupt controller
-Date: Mon, 12 Jun 2017 15:25:22 +0100
-Message-ID: <c5ceca4d-81d1-9faf-bc4a-3ea3113abf36@raspberrypi.org>
+Subject: [PATCH v2 4/4] ARM: dts: bcm283x: Add and use bcm2835-aux-intc
+Date: Mon, 12 Jun 2017 15:25:33 +0100
+Message-ID: <248bb555-6dff-daf5-ca63-7d55c2992fce@raspberrypi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Language: en-GB
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Devices in the BCM2835 AUX block share a common interrupt line, with a
-register indicating which devices have active IRQs. Expose this as a
-nested interrupt controller to avoid IRQ sharing problems (easily
-observed if UART1 and SPI1/2 are enabled simultaneously).
+Add a DT node for the AUX interrupt controller, updating the AUX
+peripheral nodes to make use of it.
+
+Note that the IO region overlaps that of the AUX clock driver, but by
+the time the intc driver appears in the tree the clock driver should
+have been updated to ioremap the region without reserving it, along
+with preparing for a point in the future where the clock node MEM
+resource may be shrunk to the single word it actually needs.
 
 Signed-off-by: Phil Elwell <phil@raspberrypi.org>
 ---
- drivers/irqchip/Makefile          |   2 +-
- drivers/irqchip/irq-bcm2835-aux.c | 155 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 156 insertions(+), 1 deletion(-)
- create mode 100644 drivers/irqchip/irq-bcm2835-aux.c
+ arch/arm/boot/dts/bcm283x.dtsi | 27 +++++++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b64c59b..cf01920 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -3,7 +3,7 @@ obj-$(CONFIG_IRQCHIP)			+= irqchip.o
- obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
- obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
--obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
-+obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o irq-bcm2835-aux.o
- obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
- obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
- obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
-diff --git a/drivers/irqchip/irq-bcm2835-aux.c b/drivers/irqchip/irq-bcm2835-aux.c
-new file mode 100644
-index 0000000..545f12e
---- /dev/null
-+++ b/drivers/irqchip/irq-bcm2835-aux.c
-@@ -0,0 +1,155 @@
-+/*
-+ * Copyright (C) 2017 Raspberry Pi (Trading) Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/irqdomain.h>
-+#include <linux/module.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
+diff --git a/arch/arm/boot/dts/bcm283x.dtsi b/arch/arm/boot/dts/bcm283x.dtsi
+index cc721a4..1febb6e 100644
+--- a/arch/arm/boot/dts/bcm283x.dtsi
++++ b/arch/arm/boot/dts/bcm283x.dtsi
+@@ -1,6 +1,7 @@
+ #include <dt-bindings/pinctrl/bcm2835.h>
+ #include <dt-bindings/clock/bcm2835.h>
+ #include <dt-bindings/clock/bcm2835-aux.h>
 +#include <dt-bindings/interrupt-controller/bcm2835-aux-intc.h>
+ #include <dt-bindings/gpio/gpio.h>
+ 
+ /* firmware-provided startup stubs live here, where the secondary CPUs are
+@@ -459,7 +460,22 @@
+ 			status = "disabled";
+ 		};
+ 
+-		aux: aux@0x7e215000 {
++		auxintc: interrupt-controller@7e215000 {
++			compatible = "brcm,bcm2835-aux-intc";
++			reg = <0x7e215000 0x4>;
++			interrupts = <1 29>;
++			interrupt-controller;
++			#interrupt-cells = <1>;
++		};
 +
-+#define BCM2835_AUXIRQ		0x00
-+
-+#define BCM2835_AUX_IRQ_UART_MASK BIT(BCM2835_AUX_IRQ_UART)
-+#define BCM2835_AUX_IRQ_SPI1_MASK BIT(BCM2835_AUX_IRQ_SPI1)
-+#define BCM2835_AUX_IRQ_SPI2_MASK BIT(BCM2835_AUX_IRQ_SPI2)
-+
-+#define BCM2835_AUX_IRQ_ALL_MASK \
-+	(BCM2835_AUX_IRQ_UART_MASK | \
-+	 BCM2835_AUX_IRQ_SPI1_MASK | \
-+	 BCM2835_AUX_IRQ_SPI2_MASK)
-+
-+struct aux_irq_state {
-+	void __iomem      *status;
-+	struct irq_domain *domain;
-+};
-+
-+static struct aux_irq_state aux_irq __read_mostly;
-+
-+static irqreturn_t bcm2835_aux_irq_handler(int irq, void *dev_id)
-+{
-+	u32 stat = readl_relaxed(aux_irq.status);
-+
-+	if (stat & BCM2835_AUX_IRQ_UART_MASK)
-+		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
-+						     BCM2835_AUX_IRQ_UART));
-+
-+	if (stat & BCM2835_AUX_IRQ_SPI1_MASK)
-+		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
-+						     BCM2835_AUX_IRQ_SPI1));
-+
-+	if (stat & BCM2835_AUX_IRQ_SPI2_MASK)
-+		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
-+						     BCM2835_AUX_IRQ_SPI2));
-+
-+	return (stat & BCM2835_AUX_IRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
-+}
-+
-+static int bcm2835_aux_irq_xlate(struct irq_domain *d,
-+				 struct device_node *ctrlr,
-+				 const u32 *intspec, unsigned int intsize,
-+				 unsigned long *out_hwirq,
-+				 unsigned int *out_type)
-+{
-+	if (WARN_ON(intsize != 1))
-+		return -EINVAL;
-+
-+	if (WARN_ON(intspec[0] >= BCM2835_AUX_IRQ_COUNT))
-+		return -EINVAL;
-+
-+	*out_hwirq = intspec[0];
-+	*out_type = IRQ_TYPE_NONE;
-+
-+	return 0;
-+}
-+
-+/*
-+ * The irq_mask and irq_unmask function pointers are used without
-+ * validity checks, so they must not be NULL. Create a dummy function
-+ * with the expected type for use as a no-op.
-+ */
-+static void bcm2835_aux_irq_dummy(struct irq_data *data)
-+{
-+}
-+
-+static struct irq_chip bcm2835_aux_irq_chip = {
-+	.name = "bcm2835-aux_irq",
-+	.irq_mask = bcm2835_aux_irq_dummy,
-+	.irq_unmask = bcm2835_aux_irq_dummy,
-+};
-+
-+static const struct irq_domain_ops bcm2835_aux_irq_ops = {
-+	.xlate = bcm2835_aux_irq_xlate
-+};
-+
-+static int bcm2835_aux_irq_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	int parent_irq;
-+	struct resource *res;
-+	void __iomem *reg;
-+	int i;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	reg = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(reg))
-+		return PTR_ERR(reg);
-+
-+	parent_irq = irq_of_parse_and_map(node, 0);
-+	if (!parent_irq)
-+		return -ENXIO;
-+
-+	aux_irq.status = reg + BCM2835_AUXIRQ;
-+	aux_irq.domain = irq_domain_add_linear(node,
-+					       BCM2835_AUX_IRQ_COUNT,
-+					       &bcm2835_aux_irq_ops,
-+					       NULL);
-+	if (!aux_irq.domain)
-+		return -ENXIO;
-+
-+	for (i = 0; i < BCM2835_AUX_IRQ_COUNT; i++) {
-+		unsigned int irq = irq_create_mapping(aux_irq.domain, i);
-+
-+		if (irq == 0)
-+			return -ENXIO;
-+
-+		irq_set_chip_and_handler(irq, &bcm2835_aux_irq_chip,
-+					 handle_level_irq);
-+	}
-+
-+	return  devm_request_irq(dev, parent_irq, bcm2835_aux_irq_handler,
-+				 0, "bcm2835-aux-intc", NULL);
-+}
-+
-+static const struct of_device_id bcm2835_aux_irq_of_match[] = {
-+	{ .compatible = "brcm,bcm2835-aux-intc", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, bcm2835_aux_irq_of_match);
-+
-+static struct platform_driver bcm2835_aux_irq_driver = {
-+	.driver = {
-+		.name = "bcm2835-aux-intc",
-+		.of_match_table = bcm2835_aux_irq_of_match,
-+	},
-+	.probe          = bcm2835_aux_irq_probe,
-+};
-+builtin_platform_driver(bcm2835_aux_irq_driver);
-+
-+MODULE_AUTHOR("Phil Elwell <phil@raspberrypi.org>");
-+MODULE_DESCRIPTION("BCM2835 auxiliary peripheral interrupt driver");
-+MODULE_LICENSE("GPL v2");
++		/*
++		 * N.B. This node overlaps with the previous node,
++		 * but the updated driver remaps the region without
++		 * reserving it. After a suitable period this
++		 * node can be reduced to cover only the single word
++		 * at 7e215004.
++		 */
++		aux: aux@7e215000 {
+ 			compatible = "brcm,bcm2835-aux";
+ 			#clock-cells = <1>;
+ 			reg = <0x7e215000 0x8>;
+@@ -469,7 +485,8 @@
+ 		uart1: serial@7e215040 {
+ 			compatible = "brcm,bcm2835-aux-uart";
+ 			reg = <0x7e215040 0x40>;
+-			interrupts = <1 29>;
++			interrupt-parent = <&auxintc>;
++			interrupts = <BCM2835_AUX_IRQ_UART>;
+ 			clocks = <&aux BCM2835_AUX_CLOCK_UART>;
+ 			status = "disabled";
+ 		};
+@@ -477,7 +494,8 @@
+ 		spi1: spi@7e215080 {
+ 			compatible = "brcm,bcm2835-aux-spi";
+ 			reg = <0x7e215080 0x40>;
+-			interrupts = <1 29>;
++			interrupt-parent = <&auxintc>;
++			interrupts = <BCM2835_AUX_IRQ_SPI1>;
+ 			clocks = <&aux BCM2835_AUX_CLOCK_SPI1>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+@@ -487,7 +505,8 @@
+ 		spi2: spi@7e2150c0 {
+ 			compatible = "brcm,bcm2835-aux-spi";
+ 			reg = <0x7e2150c0 0x40>;
+-			interrupts = <1 29>;
++			interrupt-parent = <&auxintc>;
++			interrupts = <BCM2835_AUX_IRQ_SPI2>;
+ 			clocks = <&aux BCM2835_AUX_CLOCK_SPI2>;
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
 -- 
 1.9.1
-
-
