@@ -1,232 +1,71 @@
-From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the Atmel
- ARM TC blocks
-Date: Mon, 12 Jun 2017 14:54:16 +0200
-Message-ID: <eada48f9-55b5-859d-d37e-4c9e938bc29d@microchip.com>
-References: <20170530215139.9983-47-alexandre.belloni@free-electrons.com>
- <20170606152104.GC2345@mai> <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
- <20170607141735.GH2345@mai> <20170607152750.tksmyf5p3oajbsac@piout.net>
- <20170607210848.GJ2345@mai> <20170607231715.ns2vcxza2eexnzjs@piout.net>
- <20170608074236.62924f01@bbrezillon> <20170608074446.GM2345@mai>
- <20170608101334.4e60aa4c@bbrezillon> <20170608084026.GB2244@mai>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: add media/cec.txt
+Date: Mon, 12 Jun 2017 14:59:08 +0200
+Message-ID: <a76d4eca-c9fa-a61c-dddf-435ff49af365@samsung.com>
+References: <20170609175401.40204-1-hverkuil@xs4all.nl>
+        <20170609175401.40204-2-hverkuil@xs4all.nl>
+        <CGME20170612125919epcas1p312a7ecbffd99e025a26ba8d4444f1a5b@epcas1p3.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170608084026.GB2244@mai>
-Content-Language: en-US
+In-reply-to: <20170609175401.40204-2-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 08/06/2017 à 10:40, Daniel Lezcano a écrit :
-> On Thu, Jun 08, 2017 at 10:13:34AM +0200, Boris Brezillon wrote:
->> On Thu, 8 Jun 2017 09:44:46 +0200
->> Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>
->>> +Mark Rutland, +Rob Herring
->>
->> Mark doesn't seem to be CCed.
+On 06/09/2017 07:54 PM, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 > 
-> Ah, yes. Thanks for fixing this.
+> Document common HDMI CEC bindings. Add this to the MAINTAINERS file
+> as well.
 > 
->>>
->>>
->>> Alexandre, Boris, have a look at https://www.spinics.net/lists/arm-kernel/msg572652.html
->>>
->>> That will tell you the story.
->>
->> Then we're in a deadlock situation here. I'm tired of hearing this kind
->> of argument "DT is only supposed to describe HW, not configuration, bla
->> bla". The truth is, we already have plenty of bindings that do not
->> strictly describe HW.
->>
->> A simple example: ECC configuration on NAND devices. This is clearly a
->> configuration thing, the NAND controller is usually able to support
->> several kind of strength+ECC-block-size config, but we are able to
->> overload this with the nand-ecc-xxx properties. Another example, still
->> MTD related: MTD partitions, this is purely a software configuration,
->> still we allow users to pass this information in the DT. You want
->> another one? What about the linux,code and linux,input-type properties
->> described here [1]?
->>
->> So please, let's not use these "this is not decribing HW" or "this is
->> linux specific" arguments every time someone tries to encode something
->> that can be considered a configuration detail.
->>
->> Let's be pragmatic. How you want to use your timer counter blocks (I'm
->> talking about atmel TCBs) is clearly board specific. Whether you want
->> to use the PIT for your clocksource or use one or 2 channels of a TCB
->> at a specific resolution is again board specific. We need a solution to
->> assign timer channels to a linux function, and I'm not convinced
->> passing this information through the command line makes much more sense
->> than specifying it in the DT (and it's definitely less intuitive, since
->> you have to reference something defined in the DT from the cmdline).
->>
->> Now, in his review, Mark says:
->>
->> "
->> To me it sounds like what we need is Linux infrastructure that allows
->> one to register a device as having both clockevent/clocksource
->> functionality.
->>
->> That way, we can choose to do something sane at boot time, and if the
->> user really wants specific devices used in specific ways, they can
->> request that.
->> "
->>
->> Does that mean that, after adding this "HW timer" infrastructure, we
->> would have a standard way to assign a function to a specific timer
->> block from the DT? How is this different from what I suggest below
->> (note the linux, prefix on my linux,timer-function property, which
->> clearly shows that this is Linux specific)?
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
+> ---
+>   Documentation/devicetree/bindings/media/cec.txt | 8 ++++++++
+>   MAINTAINERS                                     | 1 +
+>   2 files changed, 9 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/media/cec.txt
 > 
-> I like the 'chosen' approach with the nodes you are proposing below. Thanks for
-> the constructive suggestion. The binding description matches perfectly what we
-> are trying to achieve.
-> 
-> Rob? what do you think?
+> diff --git a/Documentation/devicetree/bindings/media/cec.txt b/Documentation/devicetree/bindings/media/cec.txt
+> new file mode 100644
+> index 000000000000..22d7aae3d3d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cec.txt
+> @@ -0,0 +1,8 @@
+> +Common bindings for HDMI CEC adapters
+> +
+> +- hdmi-phandle: phandle to the HDMI controller.
 
-I'm following this work from a distance but as we've just celebrated the
-1st anniversary for this patch series (11 June 2016), I propose that we
-now make up our mind quickly. Everybody seem to be on the same page and
-willing to make this rework move forward.
+For a common property I would rather make it "hdmi-controller", this
+"-phandle" part feels like appending "_pointer" to variable names in C code.
+But since you are just rearranging existing documentation and Rob agrees with
+that I have no objections.
 
-In Microchip/Atmel we would like to actually use this TCB rework both
-internally and in our mainline work to avoid having to rely on our own
-out-of-tree implementation.
-
-The newly-added samv7 cortex-M can't boot without this series and a use
-of our current cortex-A SoCs with TrustZone in Secure World (SWd) is not
-possible with current mainline code only. On these two examples, the
-current timer on which we rely, the PIT, is not present.
-
-So you probably understand that more than one year without real progress
-begins to be a little bit frustrating for the AT91 users...
-
+> +- needs-hpd: if present the CEC support is only available when the HPD
+> +  is high. Some boards only let the CEC pin through if the HPD is high,
+> +  for example if there is a level converter that uses the HPD to power
+> +  up or down.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 053c3bdd1fe5..4ac340d189a3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3137,6 +3137,7 @@ F:	include/media/cec.h
+>   F:	include/media/cec-notifier.h
+>   F:	include/uapi/linux/cec.h
+>   F:	include/uapi/linux/cec-funcs.h
+> +F:	Documentation/devicetree/bindings/media/cec.txt
+>   
+>   CELL BROADBAND ENGINE ARCHITECTURE
+>   M:	Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org
+--
 Regards,
-
-
->>> On Thu, Jun 08, 2017 at 07:42:36AM +0200, Boris Brezillon wrote:
->>>> Le Thu, 8 Jun 2017 01:17:15 +0200,
->>>> Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> a écrit :
->>>>   
->>>>> On 07/06/2017 at 23:08:48 +0200, Daniel Lezcano wrote:  
->>>>>>> I was going to agree but this is not flexible enough because the
->>>>>>> quadrature decoder always uses the first two channels. So on some
->>>>>>> products, we may have:
->>>>>>>  - TCB0:
->>>>>>>    o channels 0,1: qdec
->>>>>>>    o channel 2: clocksource
->>>>>>>
->>>>>>>  - TCB1:
->>>>>>>    o channels 0,1: qdec
->>>>>>>    o channel 2: clockevent
->>>>>>>
->>>>>>> This avoids wasting TCB channels.    
->>>>>>
->>>>>> Ok. In this case you can check if the interrupt is specified for the node, if
->>>>>> yes, then it is a clockevent.
->>>>>>     
->>>>>
->>>>> But currently it is always specified in the SoC's dtsi. I don't find
->>>>> that too practical to push that to the board's dts. Also, lying by
->>>>> omission (the IRQ is always wired) in the DT is not different from
->>>>> having a property selecting which timer is the clocksource and which is
->>>>> the clockevent.
->>>>>   
->>>>
->>>> I agree with Alexandre here. Really, there's not much we can do to
->>>> detect which timer should be used as a clockevent and which one should
->>>> be used as a clocksource except explicitly specifying it in the DT.
->>>> Having an interrupt defined in one case (clockevent) and undefined in
->>>> the other case (clocksource), is just as hack-ish as the detection logic
->>>> Alexandre developed to avoid explicitly specifying the function
->>>> assigned to a specific timer.
->>>>
->>>> Can we please find a solution that makes everyone happy (DT,
->>>> clocksoure/clockevent and at91 maintainers)?
->>>>
->>>> How about adding a linux,timer-function property to specify which
->>>> function this timer is providing?
->>>>
->>>> Something like that for example:
->>>>
->>>> 	tcb0: timer@fff7c000 {
->>>> 		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
->>>> 		#address-cells = <1>;
->>>> 		#size-cells = <0>;
->>>> 		reg = <0xfff7c000 0x100>;
->>>> 		interrupts = <18 4>;
->>>> 		clocks = <&tcb0_clk>, <&clk32k>;
->>>> 		clock-names = "t0_clk", "slow_clk";
->>>>
->>>> 		timer@0 {
->>>> 			compatible = "atmel,tcb-timer";
->>>> 			reg = <0>, <1>;
->>>> 			linux,timer-function = "clocksource";
->>>> 		};
->>>>
->>>> 		timer@2 {
->>>> 			compatible = "atmel,tcb-timer";
->>>> 			reg = <2>;
->>>> 			linux,timer-function = "clockevent";
->>>> 		};
->>>> 	};
->>>>
->>>> Alternatively, we could have a property or a node in chosen describing which
->>>> timer should be used:
->>>>
->>>> 	chosen {
->>>> 		clockevent {
->>>> 			timer = <&timer2>;
->>>> 		};
->>>>
->>>> 		clocksource {
->>>> 			timer = <&timer0>;
->>>> 		};
->>>>
->>>> 		/*
->>>> 		 * or
->>>> 		 *
->>>> 		 * clockevent = <&timer2>;
->>>> 		 * clocksource = <&timer0>;
->>>> 		 *
->>>> 		 * but I think the clocksource/clockevent node approach
->>>> 		 * is more future proof in case we need to add extra
->>>> 		 * information like the expected resolution/precision or
->>>> 		 * anything that could be tweakable.
->>>> 		 */
->>>> 	};
->>>>
->>>> 	tcb0: timer@fff7c000 {
->>>> 		compatible = "atmel,at91rm9200-tcb", "simple-mfd", "syscon";
->>>> 		#address-cells = <1>;
->>>> 		#size-cells = <0>;
->>>> 		reg = <0xfff7c000 0x100>;
->>>> 		interrupts = <18 4>;
->>>> 		clocks = <&tcb0_clk>, <&clk32k>;
->>>> 		clock-names = "t0_clk", "slow_clk";
->>>>
->>>> 		timer0: timer@0 {
->>>> 			compatible = "atmel,tcb-timer";
->>>> 			reg = <0>, <1>;
->>>> 		};
->>>>
->>>> 		timer2: timer@2 {
->>>> 			compatible = "atmel,tcb-timer";
->>>> 			reg = <2>;
->>>> 		};
->>>> 	};  
->>>
->>
->> [1]http://elixir.free-electrons.com/linux/latest/source/Documentation/devicetree/bindings/input/gpio-keys.txt
-> 
-
-
--- 
-Nicolas Ferre
+Sylwester
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
