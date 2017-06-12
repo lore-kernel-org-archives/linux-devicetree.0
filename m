@@ -1,51 +1,40 @@
-From: Abylay Ospan <aospan@netup.ru>
-Subject: Re: [PATCH v2 0/15] [dt-bindings] [media] Add document file and
- driver for Sony CXD2880 DVB-T2/T tuner + demodulator
-Date: Mon, 12 Jun 2017 09:33:12 -0400
-Message-ID: <CAK3bHNXgbZ0oXbUAYCznpW-iLwQeStFcYRERfRPQcVrk18Pm6g@mail.gmail.com>
-References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
- <5188b958-9a34-4519-5845-a318273592e0@sony.com> <d7c70c53-3fb0-a045-5e1a-1a736bdeda1f@sony.com>
- <0e192530-9b56-e8fb-6210-ab619ddde1de@sony.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v8 1/8] media: v4l2-ctrls: Reserve controls for MAX217X
+Date: Mon, 12 Jun 2017 14:26:13 +0100
+Message-ID: <20170612132620.1024-2-ramesh.shanmugasundaram@bp.renesas.com>
+References: <20170612132620.1024-1-ramesh.shanmugasundaram@bp.renesas.com>
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <0e192530-9b56-e8fb-6210-ab619ddde1de@sony.com>
+In-Reply-To: <20170612132620.1024-1-ramesh.shanmugasundaram@bp.renesas.com>
 Sender: linux-media-owner@vger.kernel.org
-To: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
-Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>
+To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
+Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Takiguchi,
+Reserve controls for MAX217X RF to Bits tuner family. These hybrid
+radio receiver chips are highly programmable and hence reserving 32
+controls.
 
-I'm working on 'drivers/media/dvb-frontends/cxd2841er.c' (universal
-demod) and 'linux/drivers/media/dvb-frontends/helene.c' (universal
-TERR/CABLE/SAT tuner).
+Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ include/uapi/linux/v4l2-controls.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-How do you think - is your cxd2880 proposed driver have possibilities
-to cover cxd2841er demod functionality too ?
-
-I have quickly checked your cxd2880_top.c and looks like cxd2880 works
-over SPI (not I2C) ?Also, looks like registers map, sequences
-is different. Am I right ?
-
-How do you think ?
-
-Thanks a lot !
-
-2017-05-31 21:41 GMT-04:00 Takiguchi, Yasunari <Yasunari.Takiguchi@sony.com>:
-> Hi, all
->
-> I sent the patch series of Sony CXD2880 DVB-T2/T tuner + demodulator driver on Apr/14.
-> Are there any comments, advices and review results for them?
->
-> I'd like to get better understanding of current review status for our codes.
->
-> Regards,
-> Takiguchi
-
-
-
+diff --git a/include/uapi/linux/v4l2-controls.h b/include/uapi/linux/v4l2-controls.h
+index 0d2e1e01fbd5..83b28b41123f 100644
+--- a/include/uapi/linux/v4l2-controls.h
++++ b/include/uapi/linux/v4l2-controls.h
+@@ -180,6 +180,11 @@ enum v4l2_colorfx {
+  * We reserve 16 controls for this driver. */
+ #define V4L2_CID_USER_TC358743_BASE		(V4L2_CID_USER_BASE + 0x1080)
+ 
++/* The base for the max217x driver controls.
++ * We reserve 32 controls for this driver
++ */
++#define V4L2_CID_USER_MAX217X_BASE		(V4L2_CID_USER_BASE + 0x1090)
++
+ /* MPEG-class control IDs */
+ /* The MPEG controls are applicable to all codec controls
+  * and the 'MPEG' part of the define is historical */
 -- 
-Abylay Ospan,
-NetUP Inc.
-http://www.netup.tv
+2.12.2
