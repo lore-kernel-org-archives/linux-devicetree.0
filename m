@@ -1,48 +1,19 @@
-From: Michael Stecklein <m-stecklein@ti.com>
-Subject: [PATCH 3/3] iio: humidity: hdc100x: add match table and device id's
-Date: Mon, 12 Jun 2017 09:49:10 -0500
-Message-ID: <1497278950-12973-3-git-send-email-m-stecklein@ti.com>
-References: <1497278950-12973-1-git-send-email-m-stecklein@ti.com>
+From: "Dave Dawes" <dmoore32-oe7qfRrRQff1ikKbInQQOjcbuqLmMDG7h13vi7wywA4@public.gmane.org>
+Subject: I Would love to discuse something with you.
+Date: Mon, 12 Jun 2017 07:52:10 -0700
+Message-ID: <CY1PR0101MB1227E704B0E3F969353C2A1283CD0@CY1PR0101MB1227.prod.exchangelabs.com>
+Reply-To: ddawes231-9uewiaClKEY@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497278950-12973-1-git-send-email-m-stecklein@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Michael Stecklein <m-stecklein@ti.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Description: Mail message body
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Recipients <dmoore32-oe7qfRrRQff1ikKbInQQOjcbuqLmMDG7h13vi7wywA4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add of_match_table and point it to a list of compatible device tree
-device id's.
-
-Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
----
- drivers/iio/humidity/hdc100x.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/drivers/iio/humidity/hdc100x.c b/drivers/iio/humidity/hdc100x.c
-index 0e5962f..659d7da 100644
---- a/drivers/iio/humidity/hdc100x.c
-+++ b/drivers/iio/humidity/hdc100x.c
-@@ -427,9 +427,19 @@ static const struct i2c_device_id hdc100x_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, hdc100x_id);
- 
-+static const struct of_device_id hdc100x_dt_ids[] = {
-+	{ .compatible = "ti,hdc100x" },
-+	{ .compatible = "ti,hdc1010" },
-+	{ .compatible = "ti,hdc1050" },
-+	{ .compatible = "ti,hdc1080" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, hdc100x_dt_ids);
-+
- static struct i2c_driver hdc100x_driver = {
- 	.driver = {
- 		.name	= "hdc100x",
-+		.of_match_table = of_match_ptr(hdc100x_dt_ids),
- 	},
- 	.probe = hdc100x_probe,
- 	.remove = hdc100x_remove,
--- 
-2.7.4
+=20
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
