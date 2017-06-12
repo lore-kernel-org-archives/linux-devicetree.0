@@ -1,36 +1,109 @@
-From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v2 0/2] add support for LD20/11 Global boards
-Date: Mon, 12 Jun 2017 15:07:37 +0900
-Message-ID: <1497247659-1610-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 1/2] arm64: dts: uniphier: add support for LD11 Global board
+Date: Mon, 12 Jun 2017 15:07:38 +0900
+Message-ID: <1497247659-1610-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1497247659-1610-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497247659-1610-1-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: yamada.masahiro@socionext.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Initial version of device tree for LD20/11 Global boards.
+Add initial device tree support for LD11 Global board.
 
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
-
-Changes in v2:
-- use SPDX-License-Identifier for the license description
-- add the atmel manufacturer to the compatible string for I2C EEPROM
-
-Kunihiko Hayashi (2):
-  arm64: dts: uniphier: add support for LD11 Global board
-  arm64: dts: uniphier: add support for LD20 Global board
-
- arch/arm64/boot/dts/socionext/Makefile             |  2 +
+ arch/arm64/boot/dts/socionext/Makefile             |  1 +
  .../boot/dts/socionext/uniphier-ld11-global.dts    | 70 ++++++++++++++++++++++
- .../boot/dts/socionext/uniphier-ld20-global.dts    | 52 ++++++++++++++++
- 3 files changed, 124 insertions(+)
+ 2 files changed, 71 insertions(+)
  create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
 
+diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
+index 5538598..8d07ee3 100644
+--- a/arch/arm64/boot/dts/socionext/Makefile
++++ b/arch/arm64/boot/dts/socionext/Makefile
+@@ -1,4 +1,5 @@
+ dtb-$(CONFIG_ARCH_UNIPHIER) += \
++	uniphier-ld11-global.dtb \
+ 	uniphier-ld11-ref.dtb \
+ 	uniphier-ld20-ref.dtb
+ 
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
+new file mode 100644
+index 0000000..1153570
+--- /dev/null
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
+@@ -0,0 +1,70 @@
++/*
++ * Device Tree Source for UniPhier LD11 Global Board
++ *
++ * Copyright (C) 2016-2017 Socionext Inc.
++ *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
++ *           Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++/include/ "uniphier-ld11.dtsi"
++
++/ {
++	model = "UniPhier LD11 Global Board (REF_LD11_GP)";
++	compatible = "socionext,uniphier-ld11-global",
++		     "socionext,uniphier-ld11";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++
++	aliases {
++		serial0 = &serial0;
++		serial1 = &serial1;
++		serial2 = &serial2;
++		serial3 = &serial3;
++		i2c0 = &i2c0;
++		i2c1 = &i2c1;
++		i2c2 = &i2c2;
++		i2c3 = &i2c3;
++		i2c4 = &i2c4;
++		i2c5 = &i2c5;
++	};
++
++	memory@80000000 {
++		device_type = "memory";
++		reg = <0 0x80000000 0 0x40000000>;
++	};
++};
++
++&serial0 {
++	status = "okay";
++};
++
++&serial1 {
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++
++	eeprom@50 {
++		compatible = "st,24c64", "atmel,24c64";
++		reg = <0x50>;
++		pagesize = <32>;
++	};
++};
++
++&usb0 {
++	status = "okay";
++};
++
++&usb1 {
++	status = "okay";
++};
++
++&usb2 {
++	status = "okay";
++};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
