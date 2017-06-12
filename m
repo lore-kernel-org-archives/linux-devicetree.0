@@ -1,65 +1,65 @@
-From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 06/13] ARM: dts: meson8: add the PWM_E and PWM_F pins
-Date: Mon, 12 Jun 2017 09:32:29 +0200
-Message-ID: <3de48b20-b2d2-e6bc-6cf1-04cc93cbe917@baylibre.com>
-References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
- <20170611101644.28581-7-martin.blumenstingl@googlemail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC 2/5] ARM: dts: am335x-baltos: use IRQ_TYPE_* to
+ specify irq flags
+Date: Mon, 12 Jun 2017 00:32:27 -0700
+Message-ID: <20170612073227.GS3730@atomide.com>
+References: <20170526180609.2699-1-uwe@kleine-koenig.org>
+ <20170526180609.2699-2-uwe@kleine-koenig.org>
+ <20170531171932.GH3730@atomide.com>
+ <CAGm1_ktJp+3t9ExuFJhKTmbM63yt-82PGP26KkEHGqK-tnfWRg@mail.gmail.com>
+ <CAGm1_kuKxVOetzMLdnVO+xQ7egX+paqOHLS+ckz6nFwKD5QBuQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170611101644.28581-7-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAGm1_kuKxVOetzMLdnVO+xQ7egX+paqOHLS+ckz6nFwKD5QBuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+To: Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2017 12:16 PM, Martin Blumenstingl wrote:
-> This adds the definition of the PWM_E (CBUS) and PWM_F (AOBUS) to
-> meson8.dtsi, allowing devices to use them. PWM_E can be used on some
-> devices to generate the 32.768kHz clock for the SDIO wifi module, while
-> PWM_F can be used to control the power LED.
+* Yegor Yefremov <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> [170606 07:37]:
+> On Wed, May 31, 2017 at 7:22 PM, Yegor Yefremov
+> <yegorslists-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
+> > Hi Uwe, Tony,
+> >
+> > On Wed, May 31, 2017 at 7:19 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> * Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org> [170526 11:09]:
+> >>> According to the binding documentation and the source code the omap-gpio
+> >>> controller takes IRQ_TYPE_* as its flags values, not GPIO_ACTIVE_*.
+> >>>
+> >>> This patch uses the right variable type which yields the same result
+> >>> when compiled. Note that this might be wrong and actually
+> >>> IRQ_TYPE_LEVEL_LOW is intended by the dt author.
+> >>>
+> >>> Signed-off-by: Uwe Kleine-König <uwe-rXY34ruvC2xidJT2blvkqNi2O/JbrIOy@public.gmane.org>
+> >>> ---
+> >>> Hello,
+> >>>
+> >>> can somebody with the hardware or it's documentation please check which
+> >>> flag is the right one?
+> >>
+> >> I'll wait on this one until we have somebody test it.
+> >
+> > I'll look at it this week.
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/meson8.dtsi | 14 ++++++++++++++
->  1 file changed, 14 insertions(+)
+> This is what works for me (at least it doesn't produce "irq 88: nobody
+> cared (try booting with the "irqpoll" option)").
 > 
-> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-> index e4f7357b4b31..93e437c91c61 100644
-> --- a/arch/arm/boot/dts/meson8.dtsi
-> +++ b/arch/arm/boot/dts/meson8.dtsi
-> @@ -123,6 +123,13 @@
->  				function = "remote";
->  			};
->  		};
-> +
-> +		pwm_f_ao_pins: pwm-f-ao {
-> +			mux {
-> +				groups = "pwm_f_ao";
-> +				function = "pwm_f_ao";
-> +			};
-> +		};
->  	};
->  };
->  
-> @@ -168,6 +175,13 @@
->  				function = "ethernet";
->  			};
->  		};
-> +
-> +		pwm_e_pins: pwm-e {
-> +			mux {
-> +				groups = "pwm_e";
-> +				function = "pwm_e";
-> +			};
-> +		};
->  	};
->  };
->  
+> As for tca6416 it is working with all possible settings (from
+> IRQ_TYPE_EDGE_RISING till IRQ_TYPE_LEVEL_LOW). "cat /proc/interrupts"
+> always shows Level type:
 > 
+> 47:          5  44e07000.gpio  20 Level     1-0020
 
-Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+OK, can you please send a proper patch with description
+and Signed-off-by? That is unless Uwe cares to update his
+patch. Otherwise add Reported-by for Uwe :)
+
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
