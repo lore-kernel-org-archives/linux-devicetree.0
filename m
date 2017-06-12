@@ -1,137 +1,66 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/2] mdio_bus: handle only single PHY reset GPIO
-Date: Mon, 12 Jun 2017 23:55:38 +0300
-Message-ID: <20170612210547.823996341@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+From: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH 1/4] ARM: dts: tps65217: Add charger interrupts to the common tps65217.dtsi file
+Date: Mon, 12 Jun 2017 23:24:09 +0200
+Message-ID: <20170612212412.22719-1-enric.balletbo@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=mdio_bus-handle-only-single-PHY-reset-GPIO.patch
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, grygorii.strashko-l0cyMroinI0@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 4c5e7a2c0501 ("dt-bindings: mdio: Clarify binding document")
-declared that a MDIO reset GPIO property should have only a single GPIO
-reference/specifier, however the supporting code was left intact, still
-burdening the kernel with now apparently useless loops -- get rid of them.
+The interrupt specifiers for USB and AC charger input are static data that
+comes from the datasheet, there is no reason to need to define these values
+on every board so seem reasonable put this information into the common
+tps65217 file.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 ---
- drivers/net/phy/mdio_bus.c |   53 ++++++++++++++++-----------------------------
- drivers/of/of_mdio.c       |    1 
- include/linux/phy.h        |    6 +----
- 3 files changed, 21 insertions(+), 39 deletions(-)
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 2 --
+ arch/arm/boot/dts/am335x-chiliboard.dts   | 2 --
+ arch/arm/boot/dts/tps65217.dtsi           | 2 ++
+ 3 files changed, 2 insertions(+), 4 deletions(-)
 
-Index: net-next/drivers/net/phy/mdio_bus.c
-===================================================================
---- net-next.orig/drivers/net/phy/mdio_bus.c
-+++ net-next/drivers/net/phy/mdio_bus.c
-@@ -353,33 +353,22 @@ int __mdiobus_register(struct mii_bus *b
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index bf6b26a..bfa4258 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -319,8 +319,6 @@
+ 	ti,pmic-shutdown-controller;
  
- 	mutex_init(&bus->mdio_lock);
+ 	charger {
+-		interrupts = <0>, <1>;
+-		interrupt-names = "USB", "AC";
+ 		status = "okay";
+ 	};
  
--	/* de-assert bus level PHY GPIO resets */
--	if (bus->num_reset_gpios > 0) {
--		bus->reset_gpiod = devm_kcalloc(&bus->dev,
--						 bus->num_reset_gpios,
--						 sizeof(struct gpio_desc *),
--						 GFP_KERNEL);
--		if (!bus->reset_gpiod)
--			return -ENOMEM;
--	}
--
--	for (i = 0; i < bus->num_reset_gpios; i++) {
--		gpiod = devm_gpiod_get_index(&bus->dev, "reset", i,
--					     GPIOD_OUT_LOW);
--		if (IS_ERR(gpiod)) {
--			err = PTR_ERR(gpiod);
--			if (err != -ENOENT) {
--				dev_err(&bus->dev,
--					"mii_bus %s couldn't get reset GPIO\n",
--					bus->id);
--				return err;
--			}
--		} else {
--			bus->reset_gpiod[i] = gpiod;
--			gpiod_set_value_cansleep(gpiod, 1);
--			udelay(bus->reset_delay_us);
--			gpiod_set_value_cansleep(gpiod, 0);
-+	/* de-assert bus level PHY GPIO reset */
-+	gpiod = devm_gpiod_get(&bus->dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(gpiod)) {
-+		err = PTR_ERR(gpiod);
-+		if (err != -ENOENT) {
-+			dev_err(&bus->dev,
-+				"mii_bus %s couldn't get reset GPIO\n",
-+				bus->id);
-+			return err;
- 		}
-+	} else	{
-+		bus->reset_gpiod = gpiod;
-+
-+		gpiod_set_value_cansleep(gpiod, 1);
-+		udelay(bus->reset_delay_us);
-+		gpiod_set_value_cansleep(gpiod, 0);
- 	}
+diff --git a/arch/arm/boot/dts/am335x-chiliboard.dts b/arch/arm/boot/dts/am335x-chiliboard.dts
+index d876979..5c25f3a 100644
+--- a/arch/arm/boot/dts/am335x-chiliboard.dts
++++ b/arch/arm/boot/dts/am335x-chiliboard.dts
+@@ -191,8 +191,6 @@
+ 	interrupts = <7>; /* NNMI */
  
- 	if (bus->reset)
-@@ -414,10 +403,8 @@ error:
- 	}
+ 	charger {
+-		interrupts = <0>, <1>;
+-		interrupt-names = "USB", "AC";
+ 		status = "okay";
+ 	};
  
- 	/* Put PHYs in RESET to save power */
--	for (i = 0; i < bus->num_reset_gpios; i++) {
--		if (bus->reset_gpiod[i])
--			gpiod_set_value_cansleep(bus->reset_gpiod[i], 1);
--	}
-+	if (bus->reset_gpiod)
-+		gpiod_set_value_cansleep(bus->reset_gpiod, 1);
+diff --git a/arch/arm/boot/dts/tps65217.dtsi b/arch/arm/boot/dts/tps65217.dtsi
+index 02de56b..1973159 100644
+--- a/arch/arm/boot/dts/tps65217.dtsi
++++ b/arch/arm/boot/dts/tps65217.dtsi
+@@ -18,6 +18,8 @@
  
- 	device_del(&bus->dev);
- 	return err;
-@@ -442,10 +429,8 @@ void mdiobus_unregister(struct mii_bus *
- 	}
+ 	charger {
+ 		compatible = "ti,tps65217-charger";
++		interrupts = <0>, <1>;
++		interrupt-names = "USB", "AC";
+ 		status = "disabled";
+ 	};
  
- 	/* Put PHYs in RESET to save power */
--	for (i = 0; i < bus->num_reset_gpios; i++) {
--		if (bus->reset_gpiod[i])
--			gpiod_set_value_cansleep(bus->reset_gpiod[i], 1);
--	}
-+	if (bus->reset_gpiod)
-+		gpiod_set_value_cansleep(bus->reset_gpiod, 1);
- 
- 	device_del(&bus->dev);
- }
-Index: net-next/drivers/of/of_mdio.c
-===================================================================
---- net-next.orig/drivers/of/of_mdio.c
-+++ net-next/drivers/of/of_mdio.c
-@@ -226,7 +226,6 @@ int of_mdiobus_register(struct mii_bus *
- 	/* Get bus level PHY reset GPIO details */
- 	mdio->reset_delay_us = DEFAULT_GPIO_RESET_DELAY;
- 	of_property_read_u32(np, "reset-delay-us", &mdio->reset_delay_us);
--	mdio->num_reset_gpios = of_gpio_named_count(np, "reset-gpios");
- 
- 	/* Register the MDIO bus */
- 	rc = mdiobus_register(mdio);
-Index: net-next/include/linux/phy.h
-===================================================================
---- net-next.orig/include/linux/phy.h
-+++ net-next/include/linux/phy.h
-@@ -226,10 +226,8 @@ struct mii_bus {
- 
- 	/* GPIO reset pulse width in microseconds */
- 	int reset_delay_us;
--	/* Number of reset GPIOs */
--	int num_reset_gpios;
--	/* Array of RESET GPIO descriptors */
--	struct gpio_desc **reset_gpiod;
-+	/* RESET GPIO descriptor pointer */
-+	struct gpio_desc *reset_gpiod;
- };
- #define to_mii_bus(d) container_of(d, struct mii_bus, dev)
- 
+-- 
+2.9.3
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
