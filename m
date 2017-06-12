@@ -1,169 +1,98 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH 3/3] arm: dts: mt2701: Add display subsystem related nodes
- for MT2701
-Date: Mon, 12 Jun 2017 11:13:43 +0200
-Message-ID: <dc75371a-b9f4-9393-4c09-0a07d20ee169@gmail.com>
-References: <1496297324-21091-1-git-send-email-erin.lo@mediatek.com>
- <1496297324-21091-4-git-send-email-erin.lo@mediatek.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
+Date: Mon, 12 Jun 2017 14:47:03 +0530
+Message-ID: <373e82d1-39fb-9cbb-300a-aa8a99544cdc@ti.com>
+References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
+ <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
+ <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
+ <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
+ <20170612091133.kt2doom32bun6ujp@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1496297324-21091-4-git-send-email-erin.lo@mediatek.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Erin Lo <erin.lo@mediatek.com>
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, YT Shen <yt.shen@mediatek.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170612091133.kt2doom32bun6ujp@dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 01/06/17 08:08, Erin Lo wrote:
-> From: YT Shen <yt.shen@mediatek.com>
+On Monday 12 June 2017 02:41 PM, Lee Jones wrote:
+> On Sun, 11 Jun 2017, Keerthy wrote:
 > 
-> This patch adds the device nodes for the DISP function blocks for MT2701
+>>
+>>
+>> On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
+>>>
+>>>
+>>> On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
+>>>> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
+>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
+>>>>> and Tablet Computing devices. It contains the following components:
+>>>>>
+>>>>>         - Configurable Bucks(Single and multi-phase).
+>>>>>         - Configurable General Purpose Output Signals (GPO).
+>>>>>
+>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+>>>>> output.
+>>>>>
+>>
+>> Lee Jones,
+>>
+>> Shall i add back i2c_device_id as pointed here:
+>> http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1417316.html
 > 
-> Signed-off-by: YT Shen <yt.shen@mediatek.com>
-> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> ---
->   arch/arm/boot/dts/mt2701.dtsi | 84 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 84 insertions(+)
+> Hasn't that been fixed yet?
 > 
-> diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> index 4f110d5..e20b65c 100644
-> --- a/arch/arm/boot/dts/mt2701.dtsi
-> +++ b/arch/arm/boot/dts/mt2701.dtsi
-> @@ -17,6 +17,7 @@
->   #include <dt-bindings/interrupt-controller/irq.h>
->   #include <dt-bindings/interrupt-controller/arm-gic.h>
->   #include <dt-bindings/reset/mt2701-resets.h>
-> +#include <dt-bindings/memory/mt2701-larb-port.h>
->   #include "skeleton64.dtsi"
->   #include "mt2701-pinfunc.h"
->   
-> @@ -24,6 +25,11 @@
->   	compatible = "mediatek,mt2701";
->   	interrupt-parent = <&sysirq>;
->   
-> +	aliases {
-> +		rdma0 = &rdma0;
-> +		rdma1 = &rdma1;
-> +	};
-> +
->   	cpus {
->   		#address-cells = <1>;
->   		#size-cells = <0>;
-> @@ -201,6 +207,16 @@
->   		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
->   	};
->   
-> +	mipi_tx0: mipi-dphy@10010000 {
-> +		compatible = "mediatek,mt2701-mipi-tx";
-> +		reg = <0 0x10010000 0 0x90>;
-> +		clocks = <&clk26m>;
-> +		clock-output-names = "mipi_tx0_pll";
-> +		#clock-cells = <0>;
-> +		#phy-cells = <0>;
-> +		status = "disabled";
-> +	};
-> +
->   	sysirq: interrupt-controller@10200100 {
->   		compatible = "mediatek,mt2701-sysirq",
->   			     "mediatek,mt6577-sysirq";
-> @@ -366,6 +382,39 @@
->   		#clock-cells = <1>;
->   	};
->   
-> +	display_components: dispsys@14000000 {
-> +		compatible = "mediatek,mt2701-mmsys";
-> +		reg = <0 0x14000000 0 0x1000>;
-> +		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
-> +	};
+> I guess so then. :(
 
-Can you please rebase on a recent kernel version. mt2701-mmsys node is 
-already present.
+Okay. So with that i assume i should reintroduce probe instead of probe_new.
 
-Thanks,
-Matthias
-
-> +
-> +	ovl@14007000 {
-> +		compatible = "mediatek,mt2701-disp-ovl";
-> +		reg = <0 0x14007000 0 0x1000>;
-> +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_OVL>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	rdma0: rdma@14008000 {
-> +		compatible = "mediatek,mt2701-disp-rdma";
-> +		reg = <0 0x14008000 0 0x1000>;
-> +		interrupts = <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_RDMA>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
-> +	wdma@14009000 {
-> +		compatible = "mediatek,mt2701-disp-wdma";
-> +		reg = <0 0x14009000 0 0x1000>;
-> +		interrupts = <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_WDMA>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_WDMA>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
->   	bls: bls@1400a000 {
->   		compatible = "mediatek,mt2701-disp-pwm";
->   		reg = <0 0x1400a000 0 0x1000>;
-> @@ -375,6 +424,32 @@
->   		status = "disabled";
->   	};
->   
-> +	color@1400b000 {
-> +		compatible = "mediatek,mt2701-disp-color";
-> +		reg = <0 0x1400b000 0 0x1000>;
-> +		interrupts = <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_COLOR>;
-> +	};
-> +
-> +	dsi: dsi@1400c000 {
-> +		compatible = "mediatek,mt2701-dsi";
-> +		reg = <0 0x1400c000 0 0x1000>;
-> +		interrupts = <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DSI_ENGINE>, <&mmsys CLK_MM_DSI_DIG>,
-> +			 <&mipi_tx0>;
-> +		clock-names = "engine", "digital", "hs";
-> +		phys = <&mipi_tx0>;
-> +		phy-names = "dphy";
-> +		status = "disabled";
-> +	};
-> +
-> +	mutex: mutex@1400e000 {
-> +		compatible = "mediatek,mt2701-disp-mutex";
-> +		reg = <0 0x1400e000 0 0x1000>;
-> +		interrupts = <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_MUTEX_32K>;
-> +	};
-> +
->   	larb0: larb@14010000 {
->   		compatible = "mediatek,mt2701-smi-larb";
->   		reg = <0 0x14010000 0 0x1000>;
-> @@ -385,6 +460,15 @@
->   		power-domains = <&scpsys MT2701_POWER_DOMAIN_DISP>;
->   	};
->   
-> +	rdma1: rdma@14012000 {
-> +		compatible = "mediatek,mt2701-disp-rdma";
-> +		reg = <0 0x14012000 0 0x1000>;
-> +		interrupts = <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&mmsys CLK_MM_DISP_RDMA1>;
-> +		iommus = <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
-> +		mediatek,larb = <&larb0>;
-> +	};
-> +
->   	imgsys: syscon@15000000 {
->   		compatible = "mediatek,mt2701-imgsys", "syscon";
->   		reg = <0 0x15000000 0 0x1000>;
 > 
+>>>>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+>>>>> ---
+>>>>>
+>>>>> The other patches are already pulled by Mark. Hence posting
+>>>>> the remaining patch.
+>>>>>
+>>>>> Changes in v4:
+>>>>>
+>>>>>   * Fixed device tree comments from Rob on the pmic node name.
+>>>>>   * removed regulators from properties list as it is a node.
+>>>>>  
+>>>>> Changes in v3:
+>>>>>
+>>>>>   * Fixed License to GPL v2.
+>>>>>   * Fixed an indentation issue.
+>>>>>
+>>>>> Changes in v2:
+>>>>>
+>>>>>   * Fixed a bunch of whitespace errors.
+>>>>>   * Changed the License to short form.
+>>>>>   * Added the generic compatible lp87565
+>>>>>   * Removed i2c_device_id table.
+>>>>>   * Introduced probe_new function in place of probe.
+>>>>>
+>>>>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  43 ++++
+>>>>
+>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>
+>>> Thanks Rob.
+>>>
+>>>>
+>>>>>  drivers/mfd/Kconfig                               |  14 ++
+>>>>>  drivers/mfd/Makefile                              |   1 +
+>>>>>  drivers/mfd/lp87565.c                             |  92 ++++++++
+>>>>>  include/linux/mfd/lp87565.h                       | 270 ++++++++++++++++++++++
+>>>>>  5 files changed, 420 insertions(+)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+>>>>>  create mode 100644 drivers/mfd/lp87565.c
+>>>>>  create mode 100644 include/linux/mfd/lp87565.h
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
