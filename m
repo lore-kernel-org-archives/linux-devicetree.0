@@ -1,73 +1,43 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
-Date: Mon, 12 Jun 2017 11:27:09 +0200
-Message-ID: <CABxcv=nHOtGtwpt+fAMtHf6DpAzerxoho45yCJiJoS8cP-0c4Q@mail.gmail.com>
-References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
- <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop> <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
- <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com> <20170612091133.kt2doom32bun6ujp@dell>
- <373e82d1-39fb-9cbb-300a-aa8a99544cdc@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/2] arm64: dts: renesas: Add reset control properties for audio
+Date: Mon, 12 Jun 2017 11:32:15 +0200
+Message-ID: <1497259937-9387-1-git-send-email-geert+renesas@glider.be>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <373e82d1-39fb-9cbb-300a-aa8a99544cdc-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee and Keerthy,
+	Hi Simon, Magnus, Morimoto-san,
 
-On Mon, Jun 12, 2017 at 11:17 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
->
->
-> On Monday 12 June 2017 02:41 PM, Lee Jones wrote:
->> On Sun, 11 Jun 2017, Keerthy wrote:
->>
->>>
->>>
->>> On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
->>>>
->>>>
->>>> On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
->>>>> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
->>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
->>>>>> and Tablet Computing devices. It contains the following components:
->>>>>>
->>>>>>         - Configurable Bucks(Single and multi-phase).
->>>>>>         - Configurable General Purpose Output Signals (GPO).
->>>>>>
->>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
->>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
->>>>>> output.
->>>>>>
->>>
->>> Lee Jones,
->>>
->>> Shall i add back i2c_device_id as pointed here:
->>> http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1417316.html
->>
->> Hasn't that been fixed yet?
->>
+This patch series describes all resets wired to the audio modules on
+R-Car Gen3 SoCs, following the DT binding update in commit
+5f440c48c5d5a11f ("ASoC: rsnd: Document optional reset properties") in
+sound-asoc/for-next.
 
-There are only 2 patch series remaining to be merged so we can finally
-fix this in the I2C core, making sure that no drivers will be
-regressed. One of the series is for MFD and have been around for a
-while (it already contains all the relevant acks AFAICT), it would be
-very helpful if you can look at it and merge if you think is correct:
+Thanks!
 
-https://lkml.org/lkml/2017/5/4/11
+Geert Uytterhoeven (2):
+  arm64: dts: r8a7795: Add reset control properties for audio
+  arm64: dts: r8a7796: Add reset control properties for audio
 
->> I guess so then. :(
->
-> Okay. So with that i assume i should reintroduce probe instead of probe_new.
->
+ arch/arm64/boot/dts/renesas/r8a7795.dtsi | 10 ++++++++++
+ arch/arm64/boot/dts/renesas/r8a7796.dtsi | 10 ++++++++++
+ 2 files changed, 20 insertions(+)
 
-It's orthogonal, you can have probe_new and also the I2C device ID
-table (the OF table will be used for matching, you just need the I2C
-table to export the aliases with MODULE_DEVICE_TABLE(i2c,.. ).
+-- 
+2.7.4
 
-Best regards,
-Javier
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
