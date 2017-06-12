@@ -1,53 +1,68 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] dt: bindings: Add bindings for bcm2835-aux-intc
-Date: Mon, 12 Jun 2017 11:22:37 -0700
-Message-ID: <35172597-5b6f-852a-c598-f25eb1a46aec@gmail.com>
-References: <d097e5d9-0ee6-9ea4-184f-1dd997849892@raspberrypi.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v2 0/4] Add bcm2835aux interrupt controller
+Date: Mon, 12 Jun 2017 11:23:05 -0700
+Message-ID: <687bd44a-8b6c-edf9-7dff-c9a5356b20ed@gmail.com>
+References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d097e5d9-0ee6-9ea4-184f-1dd997849892-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-clk-owner@vger.kernel.org
+To: Phil Elwell <phil@raspberrypi.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 06/12/2017 07:25 AM, Phil Elwell wrote:
-> Add bindings documentation for brcm,bcm2835-aux-intc and human-readable
-> declarations for the BCM2835 AUX IRQs.
+> Devices in the BCM2835 AUX block share a common interrupt line, with a
+> register indicating which devices have active IRQs. Expose this as a
+> nested interrupt controller to avoid IRQ sharing problems (easily
+> observed if UART1 and SPI1/2 are enabled simultaneously).
 > 
-> Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
-> ---
-};
-> diff --git a/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
-> new file mode 100644
-> index 0000000..8b9fc12
-> --- /dev/null
-> +++ b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
-> @@ -0,0 +1,20 @@
-> +/*
-> + * Copyright (C) 2017 Raspberry Pi (Trading) Ltd.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms and conditions of the GNU General Public License,
-> + * version 2, as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope it will be useful, but WITHOUT
-> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-> + * more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> This patch set is complicated by the fact that the DT node for the AUX
+> clock controller includes the AUXIRQ register needed by this driver.
+> Patch 1 lays the groundwork by allowing this overlap and preparing for
+> a future DT change that removes it.
 
-Can we consider another license for this file? Most Device Tree files
-seems to be under the ISC license.
+Nit: there seems to be something wrong with your git send-email options,
+the threading should be:
 
-Thanks!
+[PATCH 0]
+   [PATCH 1]
+
+instead, patches 1-4 don't appear as replies to patch 0 anyhow, with the
+minor nits here and there, this looks good, thanks!
+
+> 
+> Changes in v2:
+> * Add DT bindings and header file for bcm2835-aux-intc.
+> * Split the interrupt-controller functionality into a dedicated irqchip
+>   driver with a dedicated DT node.
+> * Remove mask tracking from the intc driver, so that all interrupts
+>   (including spurious ones) are submitted to the IRQ framework.
+> * Replace hard-coded masks with BIT macro in the intc driver.
+> * Prepare the AUX clock driver for a time when its DT node may only be
+>   a single word register, but until then ioremap its region without
+>   reserving it to permit sharing.
+> 
+> Phil Elwell (4):
+>   clk: bcm2835: More flexible IO register remapping
+>   dt: bindings: Add bindings for bcm2835-aux-intc
+>   irqchip: Add BCM2835 AUX interrupt controller
+>   ARM: dts: bcm283x: Add and use bcm2835-aux-intc
+> 
+>  .../interrupt-controller/brcm,bcm2835-aux-intc.txt |  28 ++++
+>  arch/arm/boot/dts/bcm283x.dtsi                     |  27 +++-
+>  drivers/clk/bcm/clk-bcm2835-aux.c                  |  20 ++-
+>  drivers/irqchip/Makefile                           |   2 +-
+>  drivers/irqchip/irq-bcm2835-aux.c                  | 155 +++++++++++++++++++++
+>  .../interrupt-controller/bcm2835-aux-intc.h        |  20 +++
+>  6 files changed, 243 insertions(+), 9 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
+>  create mode 100644 drivers/irqchip/irq-bcm2835-aux.c
+>  create mode 100644 include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
+> 
+
+
 -- 
 Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
