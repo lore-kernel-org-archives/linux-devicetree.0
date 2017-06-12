@@ -1,69 +1,94 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH v2 1/4] clk: bcm2835: More flexible IO register remapping
-Date: Mon, 12 Jun 2017 15:25:09 +0100
-Message-ID: <28279803-78d2-4231-939b-89a8c895aba9@raspberrypi.org>
+From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Subject: [PATCH v2 2/4] dt: bindings: Add bindings for bcm2835-aux-intc
+Date: Mon, 12 Jun 2017 15:25:16 +0100
+Message-ID: <d097e5d9-0ee6-9ea4-184f-1dd997849892@raspberrypi.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Language: en-GB
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The BCM2835 AUX block contains two registers - AUXIRQ and AUXENB.
-The addition of an irqchip driver using AUXIRQ is hampered by
-the current DT node reserving both registers with a compatible string
-claimed by this bcm2835-aux-clk driver.
+Add bindings documentation for brcm,bcm2835-aux-intc and human-readable
+declarations for the BCM2835 AUX IRQs.
 
-Ease the transition to separate DT nodes by detecting and handling
-the case where this driver's MEM resource has been reduced to include
-only the AUXENB register. Otherwise, use devm_ioremap to remap the
-region without reserving it.
-
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
 ---
- drivers/clk/bcm/clk-bcm2835-aux.c | 20 ++++++++++++++++----
- 1 file changed, 16 insertions(+), 4 deletions(-)
+ .../interrupt-controller/brcm,bcm2835-aux-intc.txt | 28 ++++++++++++++++++++++
+ .../interrupt-controller/bcm2835-aux-intc.h        | 20 ++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
 
-diff --git a/drivers/clk/bcm/clk-bcm2835-aux.c b/drivers/clk/bcm/clk-bcm2835-aux.c
-index bd750cf..70d389e 100644
---- a/drivers/clk/bcm/clk-bcm2835-aux.c
-+++ b/drivers/clk/bcm/clk-bcm2835-aux.c
-@@ -37,9 +37,22 @@ static int bcm2835_aux_clk_probe(struct platform_device *pdev)
- 	parent = __clk_get_name(parent_clk);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	reg = devm_ioremap_resource(dev, res);
--	if (IS_ERR(reg))
--		return PTR_ERR(reg);
-+	/*
-+	 * If the MEM resource is only 4 bytes long it covers just the
-+	 * AUXENB register, otherwise it is the entire AUX block.
-+	 */
-+	if (resource_size(res) == 4) {
-+		reg = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(reg))
-+			return PTR_ERR(reg);
-+		gate = reg;
-+	} else {
-+		reg = devm_ioremap(dev, res->start, resource_size(res));
-+		if (IS_ERR(reg))
-+			return PTR_ERR(reg);
-+		gate = reg + BCM2835_AUXENB;
-+	}
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
+new file mode 100644
+index 0000000..f3f895c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
+@@ -0,0 +1,28 @@
++BCM2835 Auxiliary ("AUXIRQ") Interrupt Controller
 +
- 
- 	onecell = devm_kmalloc(dev, sizeof(*onecell) + sizeof(*onecell->hws) *
- 			       BCM2835_AUX_CLOCK_COUNT, GFP_KERNEL);
-@@ -47,7 +60,6 @@ static int bcm2835_aux_clk_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	onecell->num = BCM2835_AUX_CLOCK_COUNT;
- 
--	gate = reg + BCM2835_AUXENB;
- 	onecell->hws[BCM2835_AUX_CLOCK_UART] =
- 		clk_hw_register_gate(dev, "aux_uart", parent, 0, gate, 0, 0, NULL);
- 
++The BCM2835 family of SoCs multiplexes the interrupts for peripherals in
++the AUX block into a single IRQ. The AUXIRQ register shows the IRQ status
++of each of the peripherals. Note that there are no masking or clearing
++facilities - interrupts must be enabled and acknowledged in the
++individual peripherals.
++
++Required properties:
++- compatible :	     Should be "brcm,bcm2835-aux-intc".
++- reg :		     Specifies base physical address and size of the registers.
++- interrupts :	     The interrupt number - see
++		     bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++		     interrupt source. The value shall be 1.
++
++  The cell contains the interrupt specifier, as found in
++  include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h. Valid values
++  are 0..2.
++
++Example:
++
++	auxintc: interrupt-controller@7e215000 {
++		compatible = "brcm,bcm2835-aux-intc";
++		reg = <0x7e215000 0x4>;
++		interrupts = <1 29>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++	};
+diff --git a/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
+new file mode 100644
+index 0000000..8b9fc12
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
+@@ -0,0 +1,20 @@
++/*
++ * Copyright (C) 2017 Raspberry Pi (Trading) Ltd.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope it will be useful, but WITHOUT
++ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
++ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
++ * more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
++ */
++
++#define BCM2835_AUX_IRQ_UART	0
++#define BCM2835_AUX_IRQ_SPI1	1
++#define BCM2835_AUX_IRQ_SPI2	2
++#define BCM2835_AUX_IRQ_COUNT	3
 -- 
 1.9.1
 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
