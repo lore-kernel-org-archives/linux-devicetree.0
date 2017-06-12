@@ -1,67 +1,88 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: [PATCH] MAINTAINERS: Add entry for R-Car DRIF & MAX2175 drivers
-Date: Mon, 12 Jun 2017 10:54:56 +0100
-Message-ID: <20170612095456.4239-1-ramesh.shanmugasundaram@bp.renesas.com>
-References: <20170609150738.56294-1-ramesh.shanmugasundaram@bp.renesas.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170609150738.56294-1-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, sakari.ailus@linux.intel.com, crope@iki.fi
-Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
+Date: Mon, 12 Jun 2017 15:39:45 +0530
+Message-ID: <4cafbf6b-4fb6-d8f1-2b29-cfd11ea60942@ti.com>
+References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
+ <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
+ <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
+ <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
+ <20170612091133.kt2doom32bun6ujp@dell>
+ <373e82d1-39fb-9cbb-300a-aa8a99544cdc@ti.com>
+ <CABxcv=nHOtGtwpt+fAMtHf6DpAzerxoho45yCJiJoS8cP-0c4Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABxcv=nHOtGtwpt+fAMtHf6DpAzerxoho45yCJiJoS8cP-0c4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add maintainter entry for the R-Car DRIF and MAX2175 drivers.
 
-Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
----
-Hi Hans,
 
-   Added the missing MAINTAINTERS entry on top of this
-   (https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg15081.html)
-   series as requested.
+On Monday 12 June 2017 02:57 PM, Javier Martinez Canillas wrote:
+> Hello Lee and Keerthy,
+> 
+> On Mon, Jun 12, 2017 at 11:17 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
+>>
+>>
+>> On Monday 12 June 2017 02:41 PM, Lee Jones wrote:
+>>> On Sun, 11 Jun 2017, Keerthy wrote:
+>>>
+>>>>
+>>>>
+>>>> On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
+>>>>>
+>>>>>
+>>>>> On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
+>>>>>> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
+>>>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
+>>>>>>> and Tablet Computing devices. It contains the following components:
+>>>>>>>
+>>>>>>>         - Configurable Bucks(Single and multi-phase).
+>>>>>>>         - Configurable General Purpose Output Signals (GPO).
+>>>>>>>
+>>>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+>>>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+>>>>>>> output.
+>>>>>>>
+>>>>
+>>>> Lee Jones,
+>>>>
+>>>> Shall i add back i2c_device_id as pointed here:
+>>>> http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1417316.html
+>>>
+>>> Hasn't that been fixed yet?
+>>>
+> 
+> There are only 2 patch series remaining to be merged so we can finally
+> fix this in the I2C core, making sure that no drivers will be
+> regressed. One of the series is for MFD and have been around for a
+> while (it already contains all the relevant acks AFAICT), it would be
+> very helpful if you can look at it and merge if you think is correct:
+> 
+> https://lkml.org/lkml/2017/5/4/11
+> 
+>>> I guess so then. :(
+>>
+>> Okay. So with that i assume i should reintroduce probe instead of probe_new.
+>>
+> 
+> It's orthogonal, you can have probe_new and also the I2C device ID
+> table (the OF table will be used for matching, you just need the I2C
+> table to export the aliases with MODULE_DEVICE_TABLE(i2c,.. ).
 
-Thanks,
-Ramesh.
----
- MAINTAINERS | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+I believe the whole purpose of comments on probe_new was to remove the
+i2c device ID. With that needed i will stick to probe for now and once
+the above series mentioned by you gets in and all the dependencies for
+probe_new are cleared i will send out a separate patch.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 053c3bdd1fe5..cfa78fe5142a 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8031,6 +8031,16 @@ S:	Maintained
- F:	Documentation/hwmon/max20751
- F:	drivers/hwmon/max20751.c
- 
-+MAX2175 SDR TUNER DRIVER
-+M:	Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-+L:	linux-media@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/media/i2c/max2175.txt
-+F:	Documentation/media/v4l-drivers/max2175.rst
-+F:	drivers/media/i2c/max2175*
-+F:	include/uapi/linux/max2175.h
-+
- MAX6650 HARDWARE MONITOR AND FAN CONTROLLER DRIVER
- L:	linux-hwmon@vger.kernel.org
- S:	Orphan
-@@ -8111,6 +8121,15 @@ L:	linux-iio@vger.kernel.org
- S:	Maintained
- F:	drivers/iio/dac/cio-dac.c
- 
-+MEDIA DRIVERS FOR RENESAS - DRIF
-+M:	Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-+L:	linux-media@vger.kernel.org
-+L:	linux-renesas-soc@vger.kernel.org
-+T:	git git://linuxtv.org/media_tree.git
-+S:	Supported
-+F:	Documentation/devicetree/bindings/media/renesas,drif.txt
-+F:	drivers/media/platform/rcar_drif.c
-+
- MEDIA DRIVERS FOR RENESAS - FCP
- M:	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
- L:	linux-media@vger.kernel.org
--- 
-2.12.2
+> 
+> Best regards,
+> Javier
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
