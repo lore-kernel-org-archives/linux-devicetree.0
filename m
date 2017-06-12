@@ -1,7 +1,7 @@
 From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: [PATCH v8 4/8] media: Add new SDR formats PC16, PC18 & PC20
-Date: Mon, 12 Jun 2017 14:26:16 +0100
-Message-ID: <20170612132620.1024-5-ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v8 5/8] doc_rst: media: New SDR formats PC16, PC18 & PC20
+Date: Mon, 12 Jun 2017 14:26:17 +0100
+Message-ID: <20170612132620.1024-6-ramesh.shanmugasundaram@bp.renesas.com>
 References: <20170612132620.1024-1-ramesh.shanmugasundaram@bp.renesas.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <20170612132620.1024-1-ramesh.shanmugasundaram@bp.renesas.com>
@@ -10,53 +10,215 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4al
 Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the three new SDR formats. These formats
-were prefixed with "planar" indicating I & Q data are not interleaved
-as in other formats. Here, I & Q data constitutes the top half and bottom
-half of the received buffer respectively.
+This patch adds documentation for the three new SDR formats
 
-V4L2_SDR_FMT_PCU16BE - 14-bit complex (I & Q) unsigned big-endian sample
-inside 16-bit. V4L2 FourCC: PC16
-
-V4L2_SDR_FMT_PCU18BE - 16-bit complex (I & Q) unsigned big-endian sample
-inside 18-bit. V4L2 FourCC: PC18
-
-V4L2_SDR_FMT_PCU20BE - 18-bit complex (I & Q) unsigned big-endian sample
-inside 20-bit. V4L2 FourCC: PC20
+V4L2_SDR_FMT_PCU16BE
+V4L2_SDR_FMT_PCU18BE
+V4L2_SDR_FMT_PCU20BE
 
 Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
- include/uapi/linux/videodev2.h       | 3 +++
- 2 files changed, 6 insertions(+)
+ .../media/uapi/v4l/pixfmt-sdr-pcu16be.rst          | 55 ++++++++++++++++++++++
+ .../media/uapi/v4l/pixfmt-sdr-pcu18be.rst          | 55 ++++++++++++++++++++++
+ .../media/uapi/v4l/pixfmt-sdr-pcu20be.rst          | 54 +++++++++++++++++++++
+ Documentation/media/uapi/v4l/sdr-formats.rst       |  3 ++
+ 4 files changed, 167 insertions(+)
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
+ create mode 100644 Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
 
-diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
-index 4f27cfa134a1..ce40183d9daa 100644
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1229,6 +1229,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
- 	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
- 	case V4L2_SDR_FMT_CS14LE:	descr = "Complex S14LE"; break;
- 	case V4L2_SDR_FMT_RU12LE:	descr = "Real U12LE"; break;
-+	case V4L2_SDR_FMT_PCU16BE:	descr = "Planar Complex U16BE"; break;
-+	case V4L2_SDR_FMT_PCU18BE:	descr = "Planar Complex U18BE"; break;
-+	case V4L2_SDR_FMT_PCU20BE:	descr = "Planar Complex U20BE"; break;
- 	case V4L2_TCH_FMT_DELTA_TD16:	descr = "16-bit signed deltas"; break;
- 	case V4L2_TCH_FMT_DELTA_TD08:	descr = "8-bit signed deltas"; break;
- 	case V4L2_TCH_FMT_TU16:		descr = "16-bit unsigned touch data"; break;
-diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
-index 2b8feb86d09e..45cf7359822c 100644
---- a/include/uapi/linux/videodev2.h
-+++ b/include/uapi/linux/videodev2.h
-@@ -669,6 +669,9 @@ struct v4l2_pix_format {
- #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /* complex s8 */
- #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S', '1', '4') /* complex s14le */
- #define V4L2_SDR_FMT_RU12LE       v4l2_fourcc('R', 'U', '1', '2') /* real u12le */
-+#define V4L2_SDR_FMT_PCU16BE	  v4l2_fourcc('P', 'C', '1', '6') /* planar complex u16be */
-+#define V4L2_SDR_FMT_PCU18BE	  v4l2_fourcc('P', 'C', '1', '8') /* planar complex u18be */
-+#define V4L2_SDR_FMT_PCU20BE	  v4l2_fourcc('P', 'C', '2', '0') /* planar complex u20be */
- 
- /* Touch formats - used for Touch devices */
- #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-bit signed deltas */
+diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
+new file mode 100644
+index 000000000000..2de1b1a0f517
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu16be.rst
+@@ -0,0 +1,55 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _V4L2-SDR-FMT-PCU16BE:
++
++******************************
++V4L2_SDR_FMT_PCU16BE ('PC16')
++******************************
++
++Planar complex unsigned 16-bit big endian IQ sample
++
++Description
++===========
++
++This format contains a sequence of complex number samples. Each complex
++number consist of two parts called In-phase and Quadrature (IQ). Both I
++and Q are represented as a 16 bit unsigned big endian number stored in
++32 bit space. The remaining unused bits within the 32 bit space will be
++padded with 0. I value starts first and Q value starts at an offset
++equalling half of the buffer size (i.e.) offset = buffersize/2. Out of
++the 16 bits, bit 15:2 (14 bit) is data and bit 1:0 (2 bit) can be any
++value.
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  1
++    :stub-columns: 0
++
++    * -  Offset:
++      -  Byte B0
++      -  Byte B1
++      -  Byte B2
++      -  Byte B3
++    * -  start + 0:
++      -  I'\ :sub:`0[13:6]`
++      -  I'\ :sub:`0[5:0]; B1[1:0]=pad`
++      -  pad
++      -  pad
++    * -  start + 4:
++      -  I'\ :sub:`1[13:6]`
++      -  I'\ :sub:`1[5:0]; B1[1:0]=pad`
++      -  pad
++      -  pad
++    * -  ...
++    * - start + offset:
++      -  Q'\ :sub:`0[13:6]`
++      -  Q'\ :sub:`0[5:0]; B1[1:0]=pad`
++      -  pad
++      -  pad
++    * - start + offset + 4:
++      -  Q'\ :sub:`1[13:6]`
++      -  Q'\ :sub:`1[5:0]; B1[1:0]=pad`
++      -  pad
++      -  pad
+diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
+new file mode 100644
+index 000000000000..da8b26bf6b95
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu18be.rst
+@@ -0,0 +1,55 @@
++.. -*- coding: utf-8; mode: rst -*-
++
++.. _V4L2-SDR-FMT-PCU18BE:
++
++******************************
++V4L2_SDR_FMT_PCU18BE ('PC18')
++******************************
++
++Planar complex unsigned 18-bit big endian IQ sample
++
++Description
++===========
++
++This format contains a sequence of complex number samples. Each complex
++number consist of two parts called In-phase and Quadrature (IQ). Both I
++and Q are represented as a 18 bit unsigned big endian number stored in
++32 bit space. The remaining unused bits within the 32 bit space will be
++padded with 0. I value starts first and Q value starts at an offset
++equalling half of the buffer size (i.e.) offset = buffersize/2. Out of
++the 18 bits, bit 17:2 (16 bit) is data and bit 1:0 (2 bit) can be any
++value.
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  1
++    :stub-columns: 0
++
++    * -  Offset:
++      -  Byte B0
++      -  Byte B1
++      -  Byte B2
++      -  Byte B3
++    * -  start + 0:
++      -  I'\ :sub:`0[17:10]`
++      -  I'\ :sub:`0[9:2]`
++      -  I'\ :sub:`0[1:0]; B2[5:0]=pad`
++      -  pad
++    * -  start + 4:
++      -  I'\ :sub:`1[17:10]`
++      -  I'\ :sub:`1[9:2]`
++      -  I'\ :sub:`1[1:0]; B2[5:0]=pad`
++      -  pad
++    * -  ...
++    * - start + offset:
++      -  Q'\ :sub:`0[17:10]`
++      -  Q'\ :sub:`0[9:2]`
++      -  Q'\ :sub:`0[1:0]; B2[5:0]=pad`
++      -  pad
++    * - start + offset + 4:
++      -  Q'\ :sub:`1[17:10]`
++      -  Q'\ :sub:`1[9:2]`
++      -  Q'\ :sub:`1[1:0]; B2[5:0]=pad`
++      -  pad
+diff --git a/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
+new file mode 100644
+index 000000000000..5499eed39477
+--- /dev/null
++++ b/Documentation/media/uapi/v4l/pixfmt-sdr-pcu20be.rst
+@@ -0,0 +1,54 @@
++.. -*- coding: utf-8; mode: rst -*-
++.. _V4L2-SDR-FMT-PCU20BE:
++
++******************************
++V4L2_SDR_FMT_PCU20BE ('PC20')
++******************************
++
++Planar complex unsigned 20-bit big endian IQ sample
++
++Description
++===========
++
++This format contains a sequence of complex number samples. Each complex
++number consist of two parts called In-phase and Quadrature (IQ). Both I
++and Q are represented as a 20 bit unsigned big endian number stored in
++32 bit space. The remaining unused bits within the 32 bit space will be
++padded with 0. I value starts first and Q value starts at an offset
++equalling half of the buffer size (i.e.) offset = buffersize/2. Out of
++the 20 bits, bit 19:2 (18 bit) is data and bit 1:0 (2 bit) can be any
++value.
++
++**Byte Order.**
++Each cell is one byte.
++
++.. flat-table::
++    :header-rows:  1
++    :stub-columns: 0
++
++    * -  Offset:
++      -  Byte B0
++      -  Byte B1
++      -  Byte B2
++      -  Byte B3
++    * -  start + 0:
++      -  I'\ :sub:`0[19:12]`
++      -  I'\ :sub:`0[11:4]`
++      -  I'\ :sub:`0[3:0]; B2[3:0]=pad`
++      -  pad
++    * -  start + 4:
++      -  I'\ :sub:`1[19:12]`
++      -  I'\ :sub:`1[11:4]`
++      -  I'\ :sub:`1[3:0]; B2[3:0]=pad`
++      -  pad
++    * -  ...
++    * - start + offset:
++      -  Q'\ :sub:`0[19:12]`
++      -  Q'\ :sub:`0[11:4]`
++      -  Q'\ :sub:`0[3:0]; B2[3:0]=pad`
++      -  pad
++    * - start + offset + 4:
++      -  Q'\ :sub:`1[19:12]`
++      -  Q'\ :sub:`1[11:4]`
++      -  Q'\ :sub:`1[3:0]; B2[3:0]=pad`
++      -  pad
+diff --git a/Documentation/media/uapi/v4l/sdr-formats.rst b/Documentation/media/uapi/v4l/sdr-formats.rst
+index f863c08f1add..2037f5bad727 100644
+--- a/Documentation/media/uapi/v4l/sdr-formats.rst
++++ b/Documentation/media/uapi/v4l/sdr-formats.rst
+@@ -17,3 +17,6 @@ These formats are used for :ref:`SDR <sdr>` interface only.
+     pixfmt-sdr-cs08
+     pixfmt-sdr-cs14le
+     pixfmt-sdr-ru12le
++    pixfmt-sdr-pcu16be
++    pixfmt-sdr-pcu18be
++    pixfmt-sdr-pcu20be
 -- 
 2.12.2
