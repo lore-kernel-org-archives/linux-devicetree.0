@@ -1,68 +1,58 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v2 0/4] Add bcm2835aux interrupt controller
-Date: Mon, 12 Jun 2017 11:23:05 -0700
-Message-ID: <687bd44a-8b6c-edf9-7dff-c9a5356b20ed@gmail.com>
-References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
-Content-Language: en-US
-Sender: linux-clk-owner@vger.kernel.org
-To: Phil Elwell <phil@raspberrypi.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/11] ARM: dts: imx6qdl: video capture support
+Date: Mon, 12 Jun 2017 11:23:53 -0700
+Message-ID: <1497291844-14632-1-git-send-email-steve_longerbeam@mentor.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2017 07:25 AM, Phil Elwell wrote:
-> Devices in the BCM2835 AUX block share a common interrupt line, with a
-> register indicating which devices have active IRQs. Expose this as a
-> nested interrupt controller to avoid IRQ sharing problems (easily
-> observed if UART1 and SPI1/2 are enabled simultaneously).
-> 
-> This patch set is complicated by the fact that the DT node for the AUX
-> clock controller includes the AUXIRQ register needed by this driver.
-> Patch 1 lays the groundwork by allowing this overlap and preparing for
-> a future DT change that removes it.
+This series defines the i.MX6 internal video multiplexers and MIPI CSI-2
+receiver device nodes, and their connections to eachother and the i.MX6
+IPU CSI ports.
 
-Nit: there seems to be something wrong with your git send-email options,
-the threading should be:
+It also implements video capture support on the SabreLite, SabreSD, and
+SabreAuto reference platforms, by defining the video sensor nodes on those
+platforms, and their connections to the video muxes and MIPI CSI-2 receiver.
 
-[PATCH 0]
-   [PATCH 1]
+There should not be much of anything controversial in this series. The
+imx-media driver is set to be merged in time for 4.13, so please accept
+this series soon.
 
-instead, patches 1-4 don't appear as replies to patch 0 anyhow, with the
-minor nits here and there, this looks good, thanks!
 
-> 
-> Changes in v2:
-> * Add DT bindings and header file for bcm2835-aux-intc.
-> * Split the interrupt-controller functionality into a dedicated irqchip
->   driver with a dedicated DT node.
-> * Remove mask tracking from the intc driver, so that all interrupts
->   (including spurious ones) are submitted to the IRQ framework.
-> * Replace hard-coded masks with BIT macro in the intc driver.
-> * Prepare the AUX clock driver for a time when its DT node may only be
->   a single word register, but until then ioremap its region without
->   reserving it to permit sharing.
-> 
-> Phil Elwell (4):
->   clk: bcm2835: More flexible IO register remapping
->   dt: bindings: Add bindings for bcm2835-aux-intc
->   irqchip: Add BCM2835 AUX interrupt controller
->   ARM: dts: bcm283x: Add and use bcm2835-aux-intc
-> 
->  .../interrupt-controller/brcm,bcm2835-aux-intc.txt |  28 ++++
->  arch/arm/boot/dts/bcm283x.dtsi                     |  27 +++-
->  drivers/clk/bcm/clk-bcm2835-aux.c                  |  20 ++-
->  drivers/irqchip/Makefile                           |   2 +-
->  drivers/irqchip/irq-bcm2835-aux.c                  | 155 +++++++++++++++++++++
->  .../interrupt-controller/bcm2835-aux-intc.h        |  20 +++
->  6 files changed, 243 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
->  create mode 100644 drivers/irqchip/irq-bcm2835-aux.c
->  create mode 100644 include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
-> 
+Philipp Zabel (2):
+  ARM: dts: imx6qdl: add multiplexer controls
+  ARM: dts: imx6qdl: Add video multiplexers, mipi_csi, and their
+    connections
 
+Steve Longerbeam (9):
+  ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
+  ARM: dts: imx6qdl: add capture-subsystem device
+  ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687 workaround
+  ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
+  ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
+  ARM: dts: imx6-sabreauto: create i2cmux for i2c3
+  ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
+  ARM: dts: imx6-sabreauto: add pinctrl for gpt input capture
+  ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+
+ arch/arm/boot/dts/imx6dl-sabrelite.dts   |   5 +
+ arch/arm/boot/dts/imx6dl-sabresd.dts     |   5 +
+ arch/arm/boot/dts/imx6dl.dtsi            | 189 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-sabrelite.dts    |   5 +
+ arch/arm/boot/dts/imx6q-sabresd.dts      |   5 +
+ arch/arm/boot/dts/imx6q.dtsi             | 125 ++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 131 +++++++++++++++++----
+ arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 152 ++++++++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl-sabresd.dtsi   | 114 ++++++++++++++++++-
+ arch/arm/boot/dts/imx6qdl.dtsi           |  20 +++-
+ 10 files changed, 724 insertions(+), 27 deletions(-)
 
 -- 
-Florian
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
