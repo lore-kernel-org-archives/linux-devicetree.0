@@ -1,76 +1,65 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 1/3] dt-bindings: Add support for samsung s6e63j0x03 panel
- binding
-Date: Mon, 12 Jun 2017 14:29:26 +0200
-Message-ID: <70e32f55-431b-fcf2-0d98-8c12ac01794b@samsung.com>
-References: <1496984354-5271-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170609045938epcas5p2025914487ca22a0a2d419824402e89e9@epcas5p2.samsung.com>
- <1496984354-5271-2-git-send-email-hoegeun.kwon@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 8/9] s5p_cec: set the CEC_CAP_NEEDS_HPD flag if needed
+Date: Mon, 12 Jun 2017 14:41:16 +0200
+Message-ID: <1bf6c49a-97e2-4a1c-9a05-41c55b56439e@samsung.com>
+References: <20170607144616.15247-1-hverkuil@xs4all.nl>
+        <20170607144616.15247-9-hverkuil@xs4all.nl>
+        <CGME20170612124120epcas1p3ef17f5a1f6f71c00757d4f3ee283ffc8@epcas1p3.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="utf-8"; format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1496984354-5271-2-git-send-email-hoegeun.kwon@samsung.com>
-Content-language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, inki.dae@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20170607144616.15247-9-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hoegeun,
+On 06/07/2017 04:46 PM, Hans Verkuil wrote:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> 
+> Use the needs-hpd DT property to determine if the CEC_CAP_NEEDS_HPD
+> should be set.
+> 
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 
-On 09.06.2017 06:59, Hoegeun Kwon wrote:
-> The Samsung s6e63j0x03 is a 1.63" 320x320 AMOLED panel connected using
-> MIPI-DSI interfaces.
->
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Acked-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+
 > ---
->  .../bindings/display/panel/samsung,s6e63j0x03.txt  | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
->
-> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
-> new file mode 100644
-> index 0000000..34b6e2a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
-> @@ -0,0 +1,24 @@
-> +Samsung S6E63J0X03 1.63" 320x320 AMOLED panel
+>   drivers/media/platform/s5p-cec/s5p_cec.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/media/platform/s5p-cec/s5p_cec.c b/drivers/media/platform/s5p-cec/s5p_cec.c
+> index 65a223e578ed..8e06071a7977 100644
+> --- a/drivers/media/platform/s5p-cec/s5p_cec.c
+> +++ b/drivers/media/platform/s5p-cec/s5p_cec.c
+> @@ -173,6 +173,7 @@ static int s5p_cec_probe(struct platform_device *pdev)
+>   	struct platform_device *hdmi_dev;
+>   	struct resource *res;
+>   	struct s5p_cec_dev *cec;
+> +	bool needs_hpd = of_property_read_bool(pdev->dev.of_node, "needs-hpd");
 
-Maybe it would be good to add info about interface, "MIPI DSI command
-mode" I suppose.
+dev->of_node could also be used instead of pdev->dev.of_node.
 
-> +
-> +Required properties:
-> +  - compatible: "samsung,s6e63j0x03"
-> +  - reg: the virtual channel number of a DSI peripheral
-> +  - vdd3-supply: I/O voltage supply
-> +  - vci-supply: voltage supply for analog circuits
-> +  - reset-gpios: a GPIO spec for the reset pin (active high)
+>   	int ret;
+>   
+>   	np = of_parse_phandle(pdev->dev.of_node, "hdmi-phandle", 0);
+> @@ -221,7 +222,8 @@ static int s5p_cec_probe(struct platform_device *pdev)
+>   	cec->adap = cec_allocate_adapter(&s5p_cec_adap_ops, cec,
+>   		CEC_NAME,
+>   		CEC_CAP_LOG_ADDRS | CEC_CAP_TRANSMIT |
+> -		CEC_CAP_PASSTHROUGH | CEC_CAP_RC, 1);
+> +		CEC_CAP_PASSTHROUGH | CEC_CAP_RC |
+> +		(needs_hpd ? CEC_CAP_NEEDS_HPD : 0), 1);
+>   	ret = PTR_ERR_OR_ZERO(cec->adap);
+>   	if (ret)
+>   		return ret; 
 
-Usually reset gpios is active low, also driver code suggests it, if it
-is true please fix example also.
-
-With above comments addressed:
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-
- --
-Regards
-Andrzej
-
-> +  - te-gpios: a GPIO spec for the tearing effect synchronization signal
-> +    gpio pin (active high)
-> +
-> +Example:
-> +&dsi {
-> +	...
-> +
-> +	panel@0 {
-> +		compatible = "samsung,s6e63j0x03";
-> +		reg = <0>;
-> +		vdd3-supply = <&ldo16_reg>;
-> +		vci-supply = <&ldo20_reg>;
-> +		reset-gpios = <&gpe0 1 GPIO_ACTIVE_HIGH>;
-> +		te-gpios = <&gpx0 6 GPIO_ACTIVE_HIGH>;
-> +	};
-> +};
+-- 
+Regards,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
