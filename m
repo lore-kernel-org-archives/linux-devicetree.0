@@ -1,87 +1,62 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 0/9] Improve cp110 clk support on Marvell Armada 7K/8K
-Date: Mon, 12 Jun 2017 17:43:59 +0200
-Message-ID: <87k24h9pog.fsf@free-electrons.com>
-References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH linux-next v4 2/4] spi: imx: add selection for iMX53 and
+ iMX6 controller
+Date: Mon, 12 Jun 2017 10:53:45 -0500
+Message-ID: <20170612155345.qtgaq4wjj2vidohd@rob-hp-laptop>
+References: <20170608051603.16070-1-jiada_wang@mentor.com>
+ <20170608051603.16070-3-jiada_wang@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-        (Gregory CLEMENT's message of "Thu, 1 Jun 2017 16:55:33 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170608051603.16070-3-jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen and Mike,
- 
- On jeu., juin 01 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+On Thu, Jun 08, 2017 at 02:16:01PM +0900, Jiada Wang wrote:
+> ECSPI contorller for iMX53 and iMX6 has few hardware issues
+> comparing to iMX51.
+> The change add possibility to detect which controller is used
+> to apply possible workaround and limitations.
+> 
+> Signed-off-by: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+>  drivers/spi/spi-imx.c                              | 26 ++++++++++++++++++++--
+>  2 files changed, 25 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> index 31b5b21..5bf1396 100644
+> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>    - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
+>    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+>    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+> +  - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
+>  - reg : Offset and length of the register set for the device
+>  - interrupts : Should contain CSPI/eCSPI interrupt
+>  - cs-gpios : Specifies the gpio pins to be used for chipselects.
+> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+> index 4469121..8e6f339 100644
+> --- a/drivers/spi/spi-imx.c
+> +++ b/drivers/spi/spi-imx.c
+> @@ -63,7 +63,8 @@ enum spi_imx_devtype {
+>  	IMX27_CSPI,
+>  	IMX31_CSPI,
+>  	IMX35_CSPI,	/* CSPI on all i.mx except above */
+> -	IMX51_ECSPI,	/* ECSPI on i.mx51 and later */
+> +	IMX51_ECSPI,	/* ECSPI on i.mx51 */
+> +	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
 
-> Hi,
->
-> We got more information about the clock controllers and the clock tree
-> of the CP110 part that we find in the Marvell Armada 7K/8K SoCs.
->
-> In this 3rd version I removed the GOP changes because the clock is
-> actually shared between GOP and SD/eMMC.
->
-> The last two patches modifying the device tree _must_ be merged
-> through the mvebu tree to avoid future conflict (especially with the
-> recent ICU series sent by Thomas Petazzoni).
->
+Looks like i.MX51 and i.MX53 are the same. While the DT should have 
+different compatibles (with fallbacks), the driver should map them to 
+the same type until there's some difference found.
 
-I would like to know the status of this series.
-
-I am about to send a binding documentation series to ease the merging of
-the pinctrl part and I also plan adding the patch 2, 4 and 6 from this
-series. So if you have not yet applied them you can skip them else I
-will need the reference to your stable branch.
-
-Thanks,
-
-Gregory
-
-> Changelog:
-> v2 -> v3
->  - removed the GOP changed
-> cover letter for v2:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/509816.html
->
-> v1 -> v2
->  - split the patch to have separate patch for the binding documentation
->  - added the acked-by from Rob Herring
-> cover letter for v2:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-May/507381.html
->
-> Thanks,
->
-> Gregory
->
-> Gregory CLEMENT (8):
->   clk: mvebu: cp110: make failure labels more meaningful
->   dt-bindings: cp110: do not depend anymore of the *-clock-output-names
->   clk: mvebu: cp110: do not depend anymore of the *-clock-output-names
->   dt-bindings: cp110: introduce a new binding
->   clk: mvebu: cp110: introduce a new binding
->   dt-bindings: cp110: add sdio clock to cp-110 system controller
->   arm64: dts: marvell: remove *-clock-output-names on cp110
->   arm64: dts: marvell: use new binding for the system controller on cp110
->
-> Konstantin Porotchkin (1):
->   clk: mvebu: cp110: add sdio clock to cp-110 system controller
->
->  Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt |  33 +++++-------
->  arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi                       |  54 +++++++------------
->  arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi                        |  48 ++++++-----------
->  drivers/clk/mvebu/cp110-system-controller.c                                | 200 +++++++++++++++++++++++++++++++++++++++++++++++++-----------------------
->  4 files changed, 194 insertions(+), 141 deletions(-)
->
-> base-commit: 2ea659a9ef488125eb46da6eb571de5eae5c43f6
-> -- 
-> git-series 0.9.1
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
