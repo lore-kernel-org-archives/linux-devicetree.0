@@ -1,100 +1,91 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: omap4-droid4: Configure CPCAP battery driver
-Date: Mon, 12 Jun 2017 16:15:39 +0200
-Message-ID: <20170612141539.yskljy4qqewiqc5u@earth>
-References: <20170612072138.30203-1-tony@atomide.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH] dt-bindings: power: supply: cpcap-battery: Add
+ power-supplies property
+Date: Mon, 12 Jun 2017 16:22:17 +0200
+Message-ID: <20170612142217.tg7gidqg63uagwm4@earth>
+References: <20170612072025.30033-1-tony@atomide.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="lgv5vmkaaendqmtm"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+        protocol="application/pgp-signature"; boundary="oltktef4nxtw3wip"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170612072138.30203-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170612072025.30033-1-tony@atomide.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 
---lgv5vmkaaendqmtm
+--oltktef4nxtw3wip
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Jun 12, 2017 at 12:21:38AM -0700, Tony Lindgren wrote:
-> Configure CPCAP battery driver.
+On Mon, Jun 12, 2017 at 12:20:25AM -0700, Tony Lindgren wrote:
+> The binding for cpcap-battery is missing the standard power-supplies
+> property as noted by Sebastian Reichel <sebastian.reichel@collabora.co.uk=
+>.
 >=20
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
-> Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Marcel Partap <mpartap@gmx.net>
+> Cc: Michael Scott <michael.scott@linaro.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  Documentation/devicetree/bindings/power/supply/cpcap-battery.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/power/supply/cpcap-battery=
+=2Etxt b/Documentation/devicetree/bindings/power/supply/cpcap-battery.txt
+> --- a/Documentation/devicetree/bindings/power/supply/cpcap-battery.txt
+> +++ b/Documentation/devicetree/bindings/power/supply/cpcap-battery.txt
+> @@ -8,6 +8,7 @@ Required properties:
+>  - io-channels: IIO ADC channel specifier for each name in io-channel-nam=
+es
+>  - io-channel-names: Should contain the following entries:
+>  		    "battdetb", "battp", "chg_isense", "batti"
+> +- power-supplies: List of devices that supply power, typically cpcap_cha=
+rger
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+This is missing the info, that its about phandles. Maybe:
+
+- power-supplies: List of phandles for power-supplying devices, as
+                  described in power_supply.txt. Typically a reference
+                  to cpcap_charger.
 
 -- Sebastian
 
-> ---
->  arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi b/arch/arm/bo=
-ot/dts/motorola-cpcap-mapphone.dtsi
-> --- a/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-> +++ b/arch/arm/boot/dts/motorola-cpcap-mapphone.dtsi
-> @@ -26,6 +26,22 @@
->  			#io-channel-cells =3D <1>;
->  		};
 > =20
-> +		cpcap_battery: battery {
-> +			compatible =3D "motorola,cpcap-battery";
-> +			interrupts-extended =3D <
-> +				&cpcap 6 0 &cpcap 5 0 &cpcap 3 0
-> +				&cpcap 20 0 &cpcap 54 0
-> +			>;
-> +			interrupt-names =3D
-> +				"eol", "lowbph", "lowbpl",
-> +				"chrgcurr1", "battdetb";
-> +			io-channels =3D <&cpcap_adc 0 &cpcap_adc 1
-> +				       &cpcap_adc 5 &cpcap_adc 6>;
-> +			io-channel-names =3D "battdetb", "battp",
-> +					   "chg_isense", "batti";
-> +			power-supplies =3D <&cpcap_charger>;
-> +		};
-> +
->  		cpcap_charger: charger {
->  			compatible =3D "motorola,mapphone-cpcap-charger";
->  			interrupts-extended =3D <
+>  Example:
+> =20
+> @@ -24,4 +25,5 @@ cpcap_battery: battery {
+>  		       &cpcap_adc 5 &cpcap_adc 6>;
+>  	io-channel-names =3D "battdetb", "battp",
+>  			   "chg_isense", "batti";
+> +	power-supplies =3D <&cpcap_charger>;
+>  };
 > --=20
 > 2.13.0
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
---lgv5vmkaaendqmtm
+--oltktef4nxtw3wip
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlk+ogYACgkQ2O7X88g7
-+pruiw//bIFkDjlba4aMryBkWBnmKTvQWkA0bqD3dK6fAko8/4k2tuBP9UvU1TnK
-NGUEj7hJGVdSr4HfE5jYghEki9/wXkjOPjB8PSGIMsO/u2e7lr9Mv/mcwybYg4YD
-+WMo92mzoGEZkxIsezIDx32OFOoSDjfDFagBoaDbRyR47Eim2NoTmDZSAWuCCwuF
-HGD7qmDIBQg0Zbd8qAPQQhr5UOQv6sGzl8e4qjc9DtBeJ9hEsPWqjQijqnPcl9Wv
-74aNS82gDZkshkXV68hosJrKogU1bq+AvfNplt3VXxwrKZZ45CyZxQ5Dj+fD+hvq
-0voOHer6nwxrwsvm7E6TaxYIlwRPX1khiJuGpFm1fTyKL03h2hUTbHRcdM97N+D3
-pnglLH8IlFxn27fE33p6d5rvLDVCl3L0lhlrBukFn+zsv6ThNvoXWoFWEnYk63gN
-u8t9aMeldMYU1nfEc4lQH5o8Cld1Cl5gq1fu6AMeMvYqXsM/FS69L9e9ElO0R2c/
-4Cu6YefStKUbN/E4gsuYv8ApkfrLDaQQqc7Tm5kwCXfkyAPRw1ACfrfmLj1rYha9
-Fm5GBQWopBs2F8Ntmm2eRH7l9UmPvp+r0IAXOZH6CXKje5DstN7KbejUroH1QCV1
-JWai8PKMt1Buz0J8zSxljIpEdNzr6+ZVqp+q36ism0wQmXH8KIc=
-=1Mfv
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlk+o5kACgkQ2O7X88g7
++prqWA/+Lh/fb1Ivoj3suhrc5PAvjq4BKXrie0bkDLcEAhuvA18wOW1YrfAzex5i
+aI5rHQ87kQaEwygK9ANrha9C9V93l8UJA6uFKwH3FX0kZ19tUvHXbfVW9Vat8NnJ
+wo4ntXjX5pfyXeB1ypy8eR1wLpJH2Y2l08s3mq/cz6NrjK9Rb3PGSSR+apoC2AQa
+efsAxjN9SXeX2snQsYENm+Stjhj5D0bbrrnGAXI0xQe7Tz+uCZYAFfxtcmi3GUXY
+K3RNheYjBdQjiLp5SFsd1Lh7oA2ysPHS9oLxzVBt9y9yRi9kh2AWuyY9xyy44mfl
+JH2WHRrhuBQ27Ja3b0Of8zJgjHFVc6QFSIRj7caOqcsUgehEQ6ukxjm/LSgDxBjK
+X/NJV1++wARtaeqVNXfx3usl1ImOdc6hnazS8P1hYNz/Nu5wRHJemObofjBa0P42
+s+vjeEfanWiKyx3YkIxxDSwhC5DL4IsoH0yzBTpJsHGhCKEgKDCl8rq78Oj8KF+W
+Ul/tdhMj7OhLHOPPKQ87LWQqvzP+i+QhG/5gpc/T8HUqQ9HMfRWMRuST8WQ+B8ca
+jOK7VjMc8B52QhumggwweZSDzLEut8Tud5kxvrPeeQB8bgcl9HFmdcIHu8VhzcMz
+ox272EKEh6HLpulHTbKInYC69bRnIXy8YmduJHn821EGVfJ+sDo=
+=xQHx
 -----END PGP SIGNATURE-----
 
---lgv5vmkaaendqmtm--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--oltktef4nxtw3wip--
