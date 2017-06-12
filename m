@@ -1,64 +1,76 @@
-From: Alexandre Torgue <alexandre.torgue@st.com>
-Subject: Re: [PATCH v7 0/9] STM32 LCD-TFT display controller
-Date: Mon, 12 Jun 2017 14:00:27 +0200
-Message-ID: <2abef21d-5ce8-3bd2-7918-4fefcf2a5858@st.com>
-References: <1492164819-10513-1-git-send-email-yannick.fertre@st.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 1/3] dt-bindings: Add support for samsung s6e63j0x03 panel
+ binding
+Date: Mon, 12 Jun 2017 14:29:26 +0200
+Message-ID: <70e32f55-431b-fcf2-0d98-8c12ac01794b@samsung.com>
+References: <1496984354-5271-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170609045938epcas5p2025914487ca22a0a2d419824402e89e9@epcas5p2.samsung.com>
+ <1496984354-5271-2-git-send-email-hoegeun.kwon@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1492164819-10513-1-git-send-email-yannick.fertre@st.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yannick Fertre <yannick.fertre@st.com>, Thierry Reding <thierry.reding@gmail.com>, David Airlie <airlied@linux.ie>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, Philippe Cornu <philippe.cornu@st.com>, Fabien Dessenne <fabien.dessenne@st.com>, dri-devel@lists.freedesktop.org, Mickael Reulier <mickael.reulier@st.com>, Vincent Abriou <vincent.abriou@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1496984354-5271-2-git-send-email-hoegeun.kwon@samsung.com>
+Content-language: en-US
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Hoegeun Kwon <hoegeun.kwon@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, javier@osg.samsung.com, inki.dae@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Yannick
+Hi Hoegeun,
 
-On 04/14/2017 12:13 PM, Yannick Fertre wrote:
-...
-> 
-> The purpose of this set of patches is to add a new driver for stm32f429.
-> This driver was developed and tested on evaluation board stm32429i.
-> 
-> Stm32f4 is a MCU platform which don't have MMU so the last patches developed
-> by Benjamin Gaignard regarding "DRM: allow to use mmuless devices"
-> are necessary.
-> 
-> The board stm429i embeds a Ampire AM-480272H3TMQW-T01H screen.
-> A new simple panel am-480272h3tmqw-t01h have been added to support it.
-> 
-> 
-> Yannick Fertre (9):
->    drm/cma: Update DEFINE_DRM_GEM_CMA_FOPS to add get_unmapped_area
->    drm/fb-cma-helper: Add drm_fb_cma_get_gem_addr()
->    dt-bindings: display: Add STM32 LTDC driver
->    drm/stm: Add STM32 LTDC driver
->    MAINTAINERS: add maintainers for DRM STM driver
->    ARM: dts: stm32: Add ltdc support on stm32f429 MCU
->    ARM: dts: stm32: Enable ltdc & simple panel on stm32f429-Eval board
->    ARM: configs: stm32: Add DRM support in STM32 defconfig
->    ARM: configs: stm32: Add simple panel support in STM32 defconfig
-> 
-For STM32 machine part:
+On 09.06.2017 06:59, Hoegeun Kwon wrote:
+> The Samsung s6e63j0x03 is a 1.63" 320x320 AMOLED panel connected using
+> MIPI-DSI interfaces.
+>
+> Signed-off-by: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+> ---
+>  .../bindings/display/panel/samsung,s6e63j0x03.txt  | 24 ++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
+>
+> diff --git a/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt b/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
+> new file mode 100644
+> index 0000000..34b6e2a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/panel/samsung,s6e63j0x03.txt
+> @@ -0,0 +1,24 @@
+> +Samsung S6E63J0X03 1.63" 320x320 AMOLED panel
 
-Patches 6 & 7 applied on stm32-dt-for-v4.13
+Maybe it would be good to add info about interface, "MIPI DSI command
+mode" I suppose.
 
-Patches 8 & 9 will not be applied:
-As SDRAM used on STM32 MCUs is small, I don't want to penalize other users:
-  - by increasing static kernel size
-  - by enabling devices which consume dynamically lot of memory
+> +
+> +Required properties:
+> +  - compatible: "samsung,s6e63j0x03"
+> +  - reg: the virtual channel number of a DSI peripheral
+> +  - vdd3-supply: I/O voltage supply
+> +  - vci-supply: voltage supply for analog circuits
+> +  - reset-gpios: a GPIO spec for the reset pin (active high)
 
-User will be free to enable it through menuconfig.
+Usually reset gpios is active low, also driver code suggests it, if it
+is true please fix example also.
 
+With above comments addressed:
+Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+
+ --
 Regards
-Alex
+Andrzej
+
+> +  - te-gpios: a GPIO spec for the tearing effect synchronization signal
+> +    gpio pin (active high)
+> +
+> +Example:
+> +&dsi {
+> +	...
+> +
+> +	panel@0 {
+> +		compatible = "samsung,s6e63j0x03";
+> +		reg = <0>;
+> +		vdd3-supply = <&ldo16_reg>;
+> +		vci-supply = <&ldo20_reg>;
+> +		reset-gpios = <&gpe0 1 GPIO_ACTIVE_HIGH>;
+> +		te-gpios = <&gpx0 6 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
