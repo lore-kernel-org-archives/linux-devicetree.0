@@ -1,50 +1,46 @@
-From: Leilk Liu <leilk.liu@mediatek.com>
-Subject: [PATCH v3 2/2] spi: mediatek: add spi support for mt7622 IC
-Date: Mon, 12 Jun 2017 09:24:40 +0800
-Message-ID: <1497230680-20448-3-git-send-email-leilk.liu@mediatek.com>
-References: <1497230680-20448-1-git-send-email-leilk.liu@mediatek.com>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] clk: hi6220: add acpu clock
+Date: Mon, 12 Jun 2017 09:29:07 +0800
+Message-ID: <85a39ff8-5d69-ac21-ec9e-6d0bb224f023@linaro.org>
+References: <1492478242-16146-1-git-send-email-zhangfei.gao@linaro.org>
+ <20170420155717.mohnrg6lxpwkoytb@rob-hp-laptop>
+ <0e1a391e-cec5-1e94-c491-1c816eca85c3@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497230680-20448-1-git-send-email-leilk.liu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org, sean.wang@mediatek.com, Leilk Liu <leilk.liu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <0e1a391e-cec5-1e94-c491-1c816eca85c3-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-this patch add support for mt7622 IC.
+Hi, Stephen
 
-Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
----
- drivers/spi/spi-mt65xx.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
-index eae73b5..ec7755b 100644
---- a/drivers/spi/spi-mt65xx.c
-+++ b/drivers/spi/spi-mt65xx.c
-@@ -104,6 +104,12 @@ struct mtk_spi {
- };
- 
- static const struct mtk_spi_compatible mtk_common_compat;
-+
-+static const struct mtk_spi_compatible mt7622_compat = {
-+	.must_tx = true,
-+	.enhance_timing = true,
-+};
-+
- static const struct mtk_spi_compatible mt8173_compat = {
- 	.need_pad_sel = true,
- 	.must_tx = true,
-@@ -127,6 +133,9 @@ struct mtk_spi {
- 	{ .compatible = "mediatek,mt6589-spi",
- 		.data = (void *)&mtk_common_compat,
- 	},
-+	{ .compatible = "mediatek,mt7622-spi",
-+		.data = (void *)&mt7622_compat,
-+	},
- 	{ .compatible = "mediatek,mt8135-spi",
- 		.data = (void *)&mtk_common_compat,
- 	},
--- 
-1.7.9.5
+Would you mind taking this patch, it's better go through 4.12.
+
+
+On 2017年05月17日 09:31, zhangfei wrote:
+>
+>
+> On 2017年04月20日 23:57, Rob Herring wrote:
+>> On Tue, Apr 18, 2017 at 09:17:21AM +0800, Zhangfei Gao wrote:
+>>> Add acpu clock, including sft clock controlling hi6220 coresight module
+>>>
+>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/clock/hi6220-clock.txt     |  1 +
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Thanks Rob
+>
+> Btw, have tested on 4.12-rc1, the patches can be applied directly.
+
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
