@@ -1,151 +1,69 @@
-From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH v3] arm64: allwinner: h5: Add initial Orangepi Zero Plus 2 support
-Date: Mon, 12 Jun 2017 15:23:14 +0530
-Message-ID: <1497261194-28815-2-git-send-email-jteki@openedev.com>
-References: <1497261194-28815-1-git-send-email-jteki@openedev.com>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v5 0/8] Add support for DCMI camera interface of
+ STMicroelectronics STM32 SoC series
+Date: Mon, 12 Jun 2017 12:03:31 +0200
+Message-ID: <f50a3320-a0ef-bdef-d236-f57fd477bccc@st.com>
+References: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497261194-28815-1-git-send-email-jteki@openedev.com>
+In-Reply-To: <1493998287-5828-1-git-send-email-hugues.fruchet@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: zhaoyifan <zhao_steven@263.net>, Chen-Yu Tsai <wens@csie.org>, Icenowy Zheng <icenowy@aosc.io>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jagan Teki <jagan@amarulasolutions.com>
+To: Hugues Fruchet <hugues.fruchet@st.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jagan Teki <jagan@amarulasolutions.com>
+Hi Hugues
 
-Orangepi Zero Plus 2 is an open-source single-board computer
-using the Allwinner h5 SOC.
+On 05/05/2017 05:31 PM, Hugues Fruchet wrote:
+> This patchset introduces a basic support for Digital Camera Memory Interface
+> (DCMI) of STMicroelectronics STM32 SoC series.
+> 
+> This first basic support implements RGB565 & YUV frame grabbing.
+> Cropping and JPEG support will be added later on.
+> 
+> This has been tested on STM324x9I-EVAL evaluation board embedding
+> an OV2640 camera sensor.
+> 
+.....
+> 
+> Hugues Fruchet (8):
+>    dt-bindings: Document STM32 DCMI bindings
+>    [media] stm32-dcmi: STM32 DCMI camera interface driver
+>    ARM: dts: stm32: Enable DCMI support on STM32F429 MCU
+>    ARM: dts: stm32: Enable DCMI camera interface on STM32F429-EVAL board
+>    ARM: dts: stm32: Enable STMPE1600 gpio expander of STM32F429-EVAL
+>      board
+>    ARM: dts: stm32: Enable OV2640 camera support of STM32F429-EVAL board
+>    ARM: configs: stm32: STMPE1600 GPIO expander
+>    ARM: configs: stm32: DCMI + OV2640 camera support
+> 
+>   .../devicetree/bindings/media/st,stm32-dcmi.txt    |   46 +
+>   arch/arm/boot/dts/stm32429i-eval.dts               |   56 +
+>   arch/arm/boot/dts/stm32f429.dtsi                   |   37 +
+>   arch/arm/configs/stm32_defconfig                   |    9 +
+>   drivers/media/platform/Kconfig                     |   12 +
+>   drivers/media/platform/Makefile                    |    2 +
+>   drivers/media/platform/stm32/Makefile              |    1 +
+>   drivers/media/platform/stm32/stm32-dcmi.c          | 1403 ++++++++++++++++++++
+>   8 files changed, 1566 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/media/st,stm32-dcmi.txt
+>   create mode 100644 drivers/media/platform/stm32/Makefile
+>   create mode 100644 drivers/media/platform/stm32/stm32-dcmi.c
+> 
 
-H5 Orangepi Zero Plus 2 has
-- Quad-core Cortex-A53
-- 512MB DDR3
-- micrSD slot and 8GB eMMC
-- Debug TTL UART
-- HDMI
-- Wifi + BT
-- OTG+power supply
+Patches 3, 4, 5, 6 applied on stm32-dt-for-v4.13
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
----
-Changes for v2:
-- Add emmc node
-Changes for v3:
-- Drop memory node
-- Remove /soc for regulator node
+Patch 7 applied on stm32-defconfig-for-v4.13
 
- arch/arm64/boot/dts/allwinner/Makefile             |  1 +
- .../allwinner/sun50i-h5-orangepi-zero-plus2.dts    | 92 ++++++++++++++++++++++
- 2 files changed, 93 insertions(+)
- create mode 100644 arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
+Patch 8 will not be applied: As SDRAM used on STM32 MCUs is small,
+I don't want to penalize other users:
+  - by increasing static kernel size
+  - by enabling devices which consume dynamically lot of memory
 
-diff --git a/arch/arm64/boot/dts/allwinner/Makefile b/arch/arm64/boot/dts/allwinner/Makefile
-index 1ea7709..8adba9c 100644
---- a/arch/arm64/boot/dts/allwinner/Makefile
-+++ b/arch/arm64/boot/dts/allwinner/Makefile
-@@ -4,6 +4,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-pine64-plus.dtb sun50i-a64-pine64.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-a64-sopine-baseboard.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-pc2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-prime.dtb
-+dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-orangepi-zero-plus2.dtb
- dtb-$(CONFIG_ARCH_SUNXI) += sun50i-h5-nanopi-neo2.dtb
- 
- always		:= $(dtb-y)
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-new file mode 100644
-index 0000000..b6b7a56
---- /dev/null
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h5-orangepi-zero-plus2.dts
-@@ -0,0 +1,92 @@
-+/*
-+ * Copyright (C) 2017 Jagan Teki <jteki@openedev.com>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun50i-h5.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+
-+/ {
-+	model = "OrangePi Zero Plus2";
-+	compatible = "xunlong,orangepi-zero-plus2", "allwinner,sun50i-h5";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	reg_vcc3v3: vcc3v3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <8>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pins_a>;
-+	status = "okay";
-+};
--- 
-2.7.4
+User will be free to enable it through menuconfig.
+
+Regards
+Alex
