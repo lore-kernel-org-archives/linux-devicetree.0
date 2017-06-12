@@ -1,30 +1,22 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] PCI: imx6: add regulator support
-Date: Mon, 12 Jun 2017 11:00:03 -0500
-Message-ID: <20170612160003.jrt4emvti3hmqiiw@rob-hp-laptop>
-References: <20170608080742.3910-1-quentin.schulz@free-electrons.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH 1/4 v4] ata: Add DT bindings for Faraday Technology
+ FTIDE010
+Date: Mon, 12 Jun 2017 12:03:46 -0400
+Message-ID: <20170612160346.GA19206@htj.duckdns.org>
+References: <20170604085009.11902-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170608080742.3910-1-quentin.schulz@free-electrons.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Quentin Schulz <quentin.schulz@free-electrons.com>
-Cc: hongxing.zhu@nxp.com, l.stach@pengutronix.de, bhelgaas@google.com, mark.rutland@arm.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, thomas.petazzoni@free-electrons.com
+In-Reply-To: <20170604085009.11902-1-linus.walleij@linaro.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-ide@vger.kernel.org, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, linux-arm-kernel@lists.infradead.org, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, John Feng-Hsin Chiang <john453@faraday-tech.com>, Greentime Hu <green.hu@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 08, 2017 at 10:07:42AM +0200, Quentin Schulz wrote:
-> Some boards might require to control a regulator to power the PCIe port.
-> 
-> This adds support for an optional regulator defined in Device Tree
-> linked in the PCIe controller under `vpcie-supply`. If present, the
-> regulator will be disabled and then enabled as part of the PCIe host
-> initialization process and will be disabled when shutting down.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  4 +++
->  drivers/pci/dwc/pci-imx6.c                         | 34 +++++++++++++++++++++-
->  2 files changed, 37 insertions(+), 1 deletion(-)
+Applied 1-3 to libata/for-4.13.
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks.
+
+-- 
+tejun
