@@ -1,110 +1,68 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4 6/7] ARM: dts: meson8: switch to new bindings for UART
- nodes
-Date: Mon, 12 Jun 2017 09:27:23 +0200
-Message-ID: <4a53855c-3e72-243d-6d74-2ccc5cbdc706@baylibre.com>
-References: <1497001756-942-1-git-send-email-narmstrong@baylibre.com>
- <1497001756-942-7-git-send-email-narmstrong@baylibre.com>
- <CAFBinCD6_nGdqBSOJwyj0XQe8H05nw-r52pctY7ADJu0EqMb2A@mail.gmail.com>
- <CAFBinCBNhRtt8jiY+19_B-9_mNmB800rvD+rwBzYNfB5pXM53Q@mail.gmail.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 01/13] clk: meson8b: export the SAR ADC clocks
+Date: Mon, 12 Jun 2017 09:28:05 +0200
+Message-ID: <869e279b-7b71-4946-b7ae-e507d6114956@baylibre.com>
+References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
+ <20170611101644.28581-2-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCBNhRtt8jiY+19_B-9_mNmB800rvD+rwBzYNfB5pXM53Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: gregkh@linuxfoundation.org, khilman@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, hgkr.klein@gmail.com, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170611101644.28581-2-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2017 10:18 PM, Martin Blumenstingl wrote:
-> On Sat, Jun 10, 2017 at 12:37 AM, Martin Blumenstingl
-> <martin.blumenstingl@googlemail.com> wrote:
->> Hi Neil,
->>
->> On Fri, Jun 9, 2017 at 11:49 AM, Neil Armstrong <narmstrong@baylibre.com> wrote:
->>> Switch to the stable UART bindings by adding a XTAL node and using the
->>> proper compatible strings.
->> unfortunately this won't apply now that Kevin has merged my "ARM: dts:
->> meson8: add and use the real clock controller"
->> on the other hand this will make the patch easier as you can now do
->> the same changes as in meson8b.dtsi
-> Neil, if you want you could also drop this from your series and let me
-> handle this (just let me know). I would even go one step further and
-> export the CLKID_UART0, CLKID_UART1 and CLKID_UART2 gates and pass
-> them as "pclk" for uart_{A,B,C}
-> I'll even *try* to test if this works on real hardware (my Meson8m2
-> board has a RTL8723BS SDIO wifi + bluetooth chip - wifi driver support
-> has been pretty bad so far - but I'll try to see if I can get and
-> messages out of the bluetooth part)
-> just let me know if you want me to handle this patch for you
-
-
-No in fact it was just a "PoC" to show how to handle it on non-gx DTS.
-
-I'm ok to leave it to you when the UART code is merged.
-
-Neil
-
+On 06/11/2017 12:16 PM, Martin Blumenstingl wrote:
+> Export the clocks for the SAR ADC so they can be used in the
+> dt-bindings.
 > 
->>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->>> ---
->>>  arch/arm/boot/dts/meson8.dtsi | 23 +++++++++++++++++++----
->>>  1 file changed, 19 insertions(+), 4 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
->>> index 6993077..a2ea112 100644
->>> --- a/arch/arm/boot/dts/meson8.dtsi
->>> +++ b/arch/arm/boot/dts/meson8.dtsi
->>> @@ -83,6 +83,13 @@
->>>                 };
->>>         };
->>>
->>> +       xtal: xtal-clk {
->>> +               compatible = "fixed-clock";
->>> +               clock-frequency = <24000000>;
->>> +               clock-output-names = "xtal";
->>> +               #clock-cells = <0>;
->>> +       };
->>> +
->>>         clk81: clk@0 {
->>>                 #clock-cells = <0>;
->>>                 compatible = "fixed-clock";
->>> @@ -199,17 +206,25 @@
->>>  };
->>>
->>>  &uart_AO {
->>> -       clocks = <&clk81>;
->>> +       compatible = "amlogic,meson8-uart", "amlogic,meson-ao-uart";
->>> +       clocks = <&xtal>, <&clk81>, <&clk81>;
->>> +       clock-names = "xtal", "pclk", "baud";
->>>  };
->>>
->>>  &uart_A {
->>> -       clocks = <&clk81>;
->>> +       compatible = "amlogic,meson8-uart";
->>> +       clocks = <&xtal>, <&clk81>, <&clk81>;
->>> +       clock-names = "xtal", "pclk", "baud";
->>>  };
->>>
->>>  &uart_B {
->>> -       clocks = <&clk81>;
->>> +       compatible = "amlogic,meson8-uart";
->>> +       clocks = <&xtal>, <&clk81>, <&clk81>;
->>> +       clock-names = "xtal", "pclk", "baud";
->>>  };
->>>
->>>  &uart_C {
->>> -       clocks = <&clk81>;
->>> +       compatible = "amlogic,meson8-uart";
->>> +       clocks = <&xtal>, <&clk81>, <&clk81>;
->>> +       clock-names = "xtal", "pclk", "baud";
->>>  };
->>> --
->>> 1.9.1
->>>
->>>
->>> _______________________________________________
->>> linux-amlogic mailing list
->>> linux-amlogic@lists.infradead.org
->>> http://lists.infradead.org/mailman/listinfo/linux-amlogic
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> ---
+>  drivers/clk/meson/meson8b.h              | 4 ++--
+>  include/dt-bindings/clock/meson8b-clkc.h | 2 ++
+>  2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/meson/meson8b.h b/drivers/clk/meson/meson8b.h
+> index 3881defc8644..5447d4a5c9ba 100644
+> --- a/drivers/clk/meson/meson8b.h
+> +++ b/drivers/clk/meson/meson8b.h
+> @@ -87,7 +87,7 @@
+>  #define CLKID_PERIPHS		20
+>  #define CLKID_SPICC		21
+>  #define CLKID_I2C		22
+> -#define CLKID_SAR_ADC		23
+> +/* #define CLKID_SAR_ADC */
+>  #define CLKID_SMART_CARD	24
+>  #define CLKID_RNG0		25
+>  #define CLKID_UART0		26
+> @@ -133,7 +133,7 @@
+>  #define CLKID_MMC_PCLK		66
+>  #define CLKID_DVIN		67
+>  #define CLKID_UART2		68
+> -#define CLKID_SANA		69
+> +/* #define CLKID_SANA */
+>  #define CLKID_VPU_INTR		70
+>  #define CLKID_SEC_AHB_AHB3_BRIDGE	71
+>  #define CLKID_CLK81_A9		72
+> diff --git a/include/dt-bindings/clock/meson8b-clkc.h b/include/dt-bindings/clock/meson8b-clkc.h
+> index a55ff8c9b30f..1c7f090da440 100644
+> --- a/include/dt-bindings/clock/meson8b-clkc.h
+> +++ b/include/dt-bindings/clock/meson8b-clkc.h
+> @@ -21,5 +21,7 @@
+>  #define CLKID_ZERO		13
+>  #define CLKID_MPEG_SEL		14
+>  #define CLKID_MPEG_DIV		15
+> +#define CLKID_SAR_ADC		23
+> +#define CLKID_SANA		69
+>  
+>  #endif /* __MESON8B_CLKC_H */
+> 
+
+
+Acked-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
