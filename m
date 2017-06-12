@@ -1,215 +1,100 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 07/11] ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
-Date: Mon, 12 Jun 2017 11:24:00 -0700
-Message-ID: <1497291844-14632-8-git-send-email-steve_longerbeam@mentor.com>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH 01/11] ARM: dts: imx6qdl: add multiplexer controls
+Date: Mon, 12 Jun 2017 11:23:54 -0700
+Message-ID: <1497291844-14632-2-git-send-email-steve_longerbeam@mentor.com>
 References: <1497291844-14632-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497291844-14632-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1497291844-14632-1-git-send-email-steve_longerbeam@mentor.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Enables the OV5642 parallel-bus sensor, and the OV5640 MIPI CSI-2 sensor.
+From: Philipp Zabel <p.zabel@pengutronix.de>
 
-The OV5642 connects to the parallel-bus mux input port on ipu1_csi0_mux.
+The IOMUXC General Purpose Register space contains various bitfields
+that control video bus multiplexers. Describe them using a mmio-mux
+node. The placement of the IPU CSI video mux controls differs between
+i.MX6D/Q and i.MX6S/DL.
 
-The OV5640 connects to the input port on the MIPI CSI-2 receiver on
-mipi_csi.
-
-Until the OV5652 sensor module compatible with the SabreSD becomes
-available for testing, the ov5642 node is currently disabled.
-
-Signed-off-by: Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- arch/arm/boot/dts/imx6dl-sabresd.dts   |   5 ++
- arch/arm/boot/dts/imx6q-sabresd.dts    |   5 ++
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi | 114 ++++++++++++++++++++++++++++++++-
- 3 files changed, 123 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6dl.dtsi  | 10 ++++++++++
+ arch/arm/boot/dts/imx6q.dtsi   | 10 ++++++++++
+ arch/arm/boot/dts/imx6qdl.dtsi |  7 ++++++-
+ 3 files changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/imx6dl-sabresd.dts b/arch/arm/boot/dts/imx6dl-sabresd.dts
-index 1e45f2f..9607afe 100644
---- a/arch/arm/boot/dts/imx6dl-sabresd.dts
-+++ b/arch/arm/boot/dts/imx6dl-sabresd.dts
-@@ -15,3 +15,8 @@
- 	model = "Freescale i.MX6 DualLite SABRE Smart Device Board";
- 	compatible = "fsl,imx6dl-sabresd", "fsl,imx6dl";
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 7aa120f..10bc9d1 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -181,6 +181,16 @@
+ 		      "di0", "di1";
  };
-+
-+&ipu1_csi1_from_ipu1_csi1_mux {
-+	clock-lanes = <0>;
-+	data-lanes = <1 2>;
+ 
++&mux {
++	mux-reg-masks = <0x34 0x00000007>, /* IPU_CSI0_MUX */
++			<0x34 0x00000038>, /* IPU_CSI1_MUX */
++			<0x0c 0x0000000c>, /* HDMI_MUX_CTL */
++			<0x0c 0x000000c0>, /* LVDS0_MUX_CTL */
++			<0x0c 0x00000300>, /* LVDS1_MUX_CTL */
++			<0x28 0x00000003>, /* DCIC1_MUX_CTL */
++			<0x28 0x0000000c>; /* DCIC2_MUX_CTL */
 +};
-diff --git a/arch/arm/boot/dts/imx6q-sabresd.dts b/arch/arm/boot/dts/imx6q-sabresd.dts
-index 9cbdfe7..527772b 100644
---- a/arch/arm/boot/dts/imx6q-sabresd.dts
-+++ b/arch/arm/boot/dts/imx6q-sabresd.dts
-@@ -23,3 +23,8 @@
- &sata {
- 	status = "okay";
++
+ &vpu {
+ 	compatible = "fsl,imx6dl-vpu", "cnm,coda960";
  };
-+
-+&ipu1_csi1_from_mipi_vc1 {
-+	clock-lanes = <0>;
-+	data-lanes = <1 2>;
-+};
-diff --git a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-index 58055ce..342550d 100644
---- a/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-sabresd.dtsi
-@@ -10,6 +10,7 @@
-  * http://www.gnu.org/copyleft/gpl.html
-  */
- 
-+#include <dt-bindings/clock/imx6qdl-clock.h>
- #include <dt-bindings/gpio/gpio.h>
- #include <dt-bindings/input/input.h>
- 
-@@ -146,6 +147,36 @@
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index e9a5d0b..a6962be 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -332,6 +332,16 @@
  	};
  };
  
-+&ipu1_csi0_from_ipu1_csi0_mux {
-+	bus-width = <8>;
-+	data-shift = <12>; /* Lines 19:12 used */
-+	hsync-active = <1>;
-+	vsync-active = <1>;
++&mux {
++	mux-reg-masks = <0x04 0x00080000>, /* MIPI_IPU1_MUX */
++			<0x04 0x00100000>, /* MIPI_IPU2_MUX */
++			<0x0c 0x0000000c>, /* HDMI_MUX_CTL */
++			<0x0c 0x000000c0>, /* LVDS0_MUX_CTL */
++			<0x0c 0x00000300>, /* LVDS1_MUX_CTL */
++			<0x28 0x00000003>, /* DCIC1_MUX_CTL */
++			<0x28 0x0000000c>; /* DCIC2_MUX_CTL */
 +};
 +
-+&ipu1_csi0_mux_from_parallel_sensor {
-+	remote-endpoint = <&ov5642_to_ipu1_csi0_mux>;
-+};
-+
-+&ipu1_csi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ipu1_csi0>;
-+};
-+
-+&mipi_csi {
-+	status = "okay";
-+
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_csi2_in: endpoint {
-+			remote-endpoint = <&ov5640_to_mipi_csi2>;
-+			clock-lanes = <0>;
-+			data-lanes = <1 2>;
-+		};
-+	};
-+};
-+
- &audmux {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_audmux>;
-@@ -213,7 +244,32 @@
- 			0x8014 /* 4:FN_DMICCDAT */
- 			0x0000 /* 5:Default */
- 		>;
--       };
-+	};
-+
-+	ov5642: camera@3c {
-+		compatible = "ovti,ov5642";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov5642>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		clock-names = "xclk";
-+		reg = <0x3c>;
-+		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
-+		AVDD-supply = <&vgen3_reg>;  /* 2.8v, rev C board is VGEN3
-+						rev B board is VGEN5 */
-+		DVDD-supply = <&vgen2_reg>;  /* 1.5v*/
-+		powerdown-gpios = <&gpio1 16 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
-+		status = "disabled";
-+
-+		port {
-+			ov5642_to_ipu1_csi0_mux: endpoint {
-+				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
-+				bus-width = <8>;
-+				hsync-active = <1>;
-+				vsync-active = <1>;
-+			};
-+		};
-+	};
+ &vpu {
+ 	compatible = "fsl,imx6q-vpu", "cnm,coda960";
  };
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index e426faa..50534dd 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -808,8 +808,13 @@
+ 			};
  
- &i2c2 {
-@@ -222,6 +278,32 @@
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
+ 			gpr: iomuxc-gpr@020e0000 {
+-				compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
++				compatible = "fsl,imx6q-iomuxc-gpr", "syscon", "simple-mfd";
+ 				reg = <0x020e0000 0x38>;
++
++				mux: mux-controller {
++					compatible = "mmio-mux";
++					#mux-control-cells = <1>;
++				};
+ 			};
  
-+	ov5640: camera@3c {
-+		compatible = "ovti,ov5640";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov5640>;
-+		reg = <0x3c>;
-+		clocks = <&clks IMX6QDL_CLK_CKO>;
-+		clock-names = "xclk";
-+		DOVDD-supply = <&vgen4_reg>; /* 1.8v */
-+		AVDD-supply = <&vgen3_reg>;  /* 2.8v, rev C board is VGEN3
-+						rev B board is VGEN5 */
-+		DVDD-supply = <&vgen2_reg>;  /* 1.5v*/
-+		powerdown-gpios = <&gpio1 19 GPIO_ACTIVE_HIGH>;
-+		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ov5640_to_mipi_csi2: endpoint {
-+				remote-endpoint = <&mipi_csi2_in>;
-+				clock-lanes = <0>;
-+				data-lanes = <1 2>;
-+			};
-+		};
-+	};
-+
- 	pmic: pfuze100@08 {
- 		compatible = "fsl,pfuze100";
- 		reg = <0x08>;
-@@ -425,6 +507,36 @@
- 			>;
- 		};
- 
-+		pinctrl_ipu1_csi0: ipu1csi0grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13    0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14    0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15    0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16    0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17    0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18    0x1b0b0
-+				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19    0x1b0b0
-+				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x1b0b0
-+				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x1b0b0
-+				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_ov5640: ov5640grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD1_DAT2__GPIO1_IO19 0x1b0b0
-+				MX6QDL_PAD_SD1_CLK__GPIO1_IO20  0x1b0b0
-+			>;
-+		};
-+
-+		pinctrl_ov5642: ov5642grp {
-+			fsl,pins = <
-+				MX6QDL_PAD_SD1_DAT0__GPIO1_IO16 0x1b0b0
-+				MX6QDL_PAD_SD1_DAT1__GPIO1_IO17 0x1b0b0
-+			>;
-+		};
-+
- 		pinctrl_pcie: pciegrp {
- 			fsl,pins = <
- 				MX6QDL_PAD_GPIO_17__GPIO7_IO12	0x1b0b0
+ 			iomuxc: iomuxc@020e0000 {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
