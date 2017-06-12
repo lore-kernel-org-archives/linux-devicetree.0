@@ -1,91 +1,58 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH] dt-bindings: power: supply: cpcap-battery: Add
- power-supplies property
-Date: Mon, 12 Jun 2017 16:22:17 +0200
-Message-ID: <20170612142217.tg7gidqg63uagwm4@earth>
-References: <20170612072025.30033-1-tony@atomide.com>
+From: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Subject: [PATCH v2 0/4] Add bcm2835aux interrupt controller
+Date: Mon, 12 Jun 2017 15:25:02 +0100
+Message-ID: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oltktef4nxtw3wip"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170612072025.30033-1-tony@atomide.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-pm@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Marcel Partap <mpartap@gmx.net>, Michael Scott <michael.scott@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Language: en-GB
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Devices in the BCM2835 AUX block share a common interrupt line, with a
+register indicating which devices have active IRQs. Expose this as a
+nested interrupt controller to avoid IRQ sharing problems (easily
+observed if UART1 and SPI1/2 are enabled simultaneously).
 
---oltktef4nxtw3wip
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch set is complicated by the fact that the DT node for the AUX
+clock controller includes the AUXIRQ register needed by this driver.
+Patch 1 lays the groundwork by allowing this overlap and preparing for
+a future DT change that removes it.
 
-Hi,
+Changes in v2:
+* Add DT bindings and header file for bcm2835-aux-intc.
+* Split the interrupt-controller functionality into a dedicated irqchip
+  driver with a dedicated DT node.
+* Remove mask tracking from the intc driver, so that all interrupts
+  (including spurious ones) are submitted to the IRQ framework.
+* Replace hard-coded masks with BIT macro in the intc driver.
+* Prepare the AUX clock driver for a time when its DT node may only be
+  a single word register, but until then ioremap its region without
+  reserving it to permit sharing.
 
-On Mon, Jun 12, 2017 at 12:20:25AM -0700, Tony Lindgren wrote:
-> The binding for cpcap-battery is missing the standard power-supplies
-> property as noted by Sebastian Reichel <sebastian.reichel@collabora.co.uk=
->.
->=20
-> Cc: devicetree@vger.kernel.org
-> Cc: Marcel Partap <mpartap@gmx.net>
-> Cc: Michael Scott <michael.scott@linaro.org>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  Documentation/devicetree/bindings/power/supply/cpcap-battery.txt | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/power/supply/cpcap-battery=
-=2Etxt b/Documentation/devicetree/bindings/power/supply/cpcap-battery.txt
-> --- a/Documentation/devicetree/bindings/power/supply/cpcap-battery.txt
-> +++ b/Documentation/devicetree/bindings/power/supply/cpcap-battery.txt
-> @@ -8,6 +8,7 @@ Required properties:
->  - io-channels: IIO ADC channel specifier for each name in io-channel-nam=
-es
->  - io-channel-names: Should contain the following entries:
->  		    "battdetb", "battp", "chg_isense", "batti"
-> +- power-supplies: List of devices that supply power, typically cpcap_cha=
-rger
+Phil Elwell (4):
+  clk: bcm2835: More flexible IO register remapping
+  dt: bindings: Add bindings for bcm2835-aux-intc
+  irqchip: Add BCM2835 AUX interrupt controller
+  ARM: dts: bcm283x: Add and use bcm2835-aux-intc
 
-This is missing the info, that its about phandles. Maybe:
+ .../interrupt-controller/brcm,bcm2835-aux-intc.txt |  28 ++++
+ arch/arm/boot/dts/bcm283x.dtsi                     |  27 +++-
+ drivers/clk/bcm/clk-bcm2835-aux.c                  |  20 ++-
+ drivers/irqchip/Makefile                           |   2 +-
+ drivers/irqchip/irq-bcm2835-aux.c                  | 155 +++++++++++++++++++++
+ .../interrupt-controller/bcm2835-aux-intc.h        |  20 +++
+ 6 files changed, 243 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
+ create mode 100644 drivers/irqchip/irq-bcm2835-aux.c
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
 
-- power-supplies: List of phandles for power-supplying devices, as
-                  described in power_supply.txt. Typically a reference
-                  to cpcap_charger.
+-- 
+1.9.1
 
--- Sebastian
-
-> =20
->  Example:
-> =20
-> @@ -24,4 +25,5 @@ cpcap_battery: battery {
->  		       &cpcap_adc 5 &cpcap_adc 6>;
->  	io-channel-names =3D "battdetb", "battp",
->  			   "chg_isense", "batti";
-> +	power-supplies =3D <&cpcap_charger>;
->  };
-> --=20
-> 2.13.0
-
---oltktef4nxtw3wip
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAlk+o5kACgkQ2O7X88g7
-+prqWA/+Lh/fb1Ivoj3suhrc5PAvjq4BKXrie0bkDLcEAhuvA18wOW1YrfAzex5i
-aI5rHQ87kQaEwygK9ANrha9C9V93l8UJA6uFKwH3FX0kZ19tUvHXbfVW9Vat8NnJ
-wo4ntXjX5pfyXeB1ypy8eR1wLpJH2Y2l08s3mq/cz6NrjK9Rb3PGSSR+apoC2AQa
-efsAxjN9SXeX2snQsYENm+Stjhj5D0bbrrnGAXI0xQe7Tz+uCZYAFfxtcmi3GUXY
-K3RNheYjBdQjiLp5SFsd1Lh7oA2ysPHS9oLxzVBt9y9yRi9kh2AWuyY9xyy44mfl
-JH2WHRrhuBQ27Ja3b0Of8zJgjHFVc6QFSIRj7caOqcsUgehEQ6ukxjm/LSgDxBjK
-X/NJV1++wARtaeqVNXfx3usl1ImOdc6hnazS8P1hYNz/Nu5wRHJemObofjBa0P42
-s+vjeEfanWiKyx3YkIxxDSwhC5DL4IsoH0yzBTpJsHGhCKEgKDCl8rq78Oj8KF+W
-Ul/tdhMj7OhLHOPPKQ87LWQqvzP+i+QhG/5gpc/T8HUqQ9HMfRWMRuST8WQ+B8ca
-jOK7VjMc8B52QhumggwweZSDzLEut8Tud5kxvrPeeQB8bgcl9HFmdcIHu8VhzcMz
-ox272EKEh6HLpulHTbKInYC69bRnIXy8YmduJHn821EGVfJ+sDo=
-=xQHx
------END PGP SIGNATURE-----
-
---oltktef4nxtw3wip--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
