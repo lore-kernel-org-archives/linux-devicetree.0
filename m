@@ -1,88 +1,52 @@
-From: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
-Date: Mon, 12 Jun 2017 15:39:45 +0530
-Message-ID: <4cafbf6b-4fb6-d8f1-2b29-cfd11ea60942@ti.com>
-References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
- <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
- <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
- <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
- <20170612091133.kt2doom32bun6ujp@dell>
- <373e82d1-39fb-9cbb-300a-aa8a99544cdc@ti.com>
- <CABxcv=nHOtGtwpt+fAMtHf6DpAzerxoho45yCJiJoS8cP-0c4Q@mail.gmail.com>
+From: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 1/2] dt-bindings: Add bindings for nvidia,tegra186-ccplex-cluster
+Date: Mon, 12 Jun 2017 13:23:04 +0300
+Message-ID: <1497262984-2346-1-git-send-email-mperttunen@nvidia.com>
+References: <1496304245-24024-2-git-send-email-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=nHOtGtwpt+fAMtHf6DpAzerxoho45yCJiJoS8cP-0c4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496304245-24024-2-git-send-email-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
+registers that initiate CPU frequency/voltage transitions.
 
+Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ .../arm/tegra/nvidia,tegra186-ccplex-cluster.txt     | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
 
-On Monday 12 June 2017 02:57 PM, Javier Martinez Canillas wrote:
-> Hello Lee and Keerthy,
-> 
-> On Mon, Jun 12, 2017 at 11:17 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
->>
->>
->> On Monday 12 June 2017 02:41 PM, Lee Jones wrote:
->>> On Sun, 11 Jun 2017, Keerthy wrote:
->>>
->>>>
->>>>
->>>> On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
->>>>>
->>>>>
->>>>> On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
->>>>>> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
->>>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
->>>>>>> and Tablet Computing devices. It contains the following components:
->>>>>>>
->>>>>>>         - Configurable Bucks(Single and multi-phase).
->>>>>>>         - Configurable General Purpose Output Signals (GPO).
->>>>>>>
->>>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
->>>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
->>>>>>> output.
->>>>>>>
->>>>
->>>> Lee Jones,
->>>>
->>>> Shall i add back i2c_device_id as pointed here:
->>>> http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1417316.html
->>>
->>> Hasn't that been fixed yet?
->>>
-> 
-> There are only 2 patch series remaining to be merged so we can finally
-> fix this in the I2C core, making sure that no drivers will be
-> regressed. One of the series is for MFD and have been around for a
-> while (it already contains all the relevant acks AFAICT), it would be
-> very helpful if you can look at it and merge if you think is correct:
-> 
-> https://lkml.org/lkml/2017/5/4/11
-> 
->>> I guess so then. :(
->>
->> Okay. So with that i assume i should reintroduce probe instead of probe_new.
->>
-> 
-> It's orthogonal, you can have probe_new and also the I2C device ID
-> table (the OF table will be used for matching, you just need the I2C
-> table to export the aliases with MODULE_DEVICE_TABLE(i2c,.. ).
-
-I believe the whole purpose of comments on probe_new was to remove the
-i2c device ID. With that needed i will stick to probe for now and once
-the above series mentioned by you gets in and all the dependencies for
-probe_new are cleared i will send out a separate patch.
-
-> 
-> Best regards,
-> Javier
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
+new file mode 100644
+index 000000000000..0c80cd8ee839
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
+@@ -0,0 +1,20 @@
++NVIDIA Tegra CCPLEX_CLUSTER area
++
++The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
++registers that initiate CPU frequency/voltage transitions.
++
++Required properties:
++- compatible: Should contain one of the following:
++  - "nvidia,tegra186-ccplex-cluster": for Tegra186
++- reg: Must contain an (offset, length) pair of the device's MMIO
++  register area
++- nvidia,bpmp: phandle to BPMP device that can be queried for OPP tables
++
++Example:
++
++	ccplex@e000000 {
++		compatible = "nvidia,tegra186-ccplex-cluster";
++		reg = <0x0 0x0e000000 0x0 0x3fffff>,
++
++		nvidia,bpmp = <&bpmp>;
++	};
+-- 
+2.1.4
