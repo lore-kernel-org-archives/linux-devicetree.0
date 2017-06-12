@@ -1,89 +1,68 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v4 6/7] ARM: dts: meson8: switch to new bindings for UART
- nodes
-Date: Mon, 12 Jun 2017 14:49:45 +0200
-Message-ID: <bec2573f-ff71-8c69-9581-e74cdd80a551@baylibre.com>
-References: <1497001756-942-1-git-send-email-narmstrong@baylibre.com>
- <1497001756-942-7-git-send-email-narmstrong@baylibre.com>
- <1497258823.3086.6.camel@baylibre.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: add media/cec.txt
+Date: Mon, 12 Jun 2017 14:50:51 +0200
+Message-ID: <CA+M3ks7SbgyvWCKbkJD2T9gdyhbKQ9PGyp9jY1M0sbuuNDtXLQ@mail.gmail.com>
+References: <20170609175401.40204-1-hverkuil@xs4all.nl> <20170609175401.40204-2-hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497258823.3086.6.camel@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, gregkh@linuxfoundation.org, khilman@baylibre.com
-Cc: hgkr.klein@gmail.com, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170609175401.40204-2-hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2017 11:13 AM, Jerome Brunet wrote:
-> On Fri, 2017-06-09 at 11:49 +0200, Neil Armstrong wrote:
->> Switch to the stable UART bindings by adding a XTAL node and using the
->> proper compatible strings.
->>
->> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
->> ---
->>  arch/arm/boot/dts/meson8.dtsi | 23 +++++++++++++++++++----
->>  1 file changed, 19 insertions(+), 4 deletions(-)
-> 
-> I think this is clashing with the recent change from Martin on meson8 clock
-> driver. Kevin just applied it : 
-> 
-> https://lkml.kernel.org/r/m2d1ad9g38.fsf@baylibre.com
-> 
-> <&clk81> no longer exists ...
-> 
->>
->> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
->> index 6993077..a2ea112 100644
->> --- a/arch/arm/boot/dts/meson8.dtsi
->> +++ b/arch/arm/boot/dts/meson8.dtsi
->> @@ -83,6 +83,13 @@
->>  		};
->>  	};
->>  
->> +	xtal: xtal-clk {
->> +		compatible = "fixed-clock";
->> +		clock-frequency = <24000000>;
->> +		clock-output-names = "xtal";
->> +		#clock-cells = <0>;
->> +	};
->> +
->>  	clk81: clk@0 {
->>  		#clock-cells = <0>;
->>  		compatible = "fixed-clock";
->> @@ -199,17 +206,25 @@
->>  };
->>  
->>  &uart_AO {
->> -	clocks = <&clk81>;
->> +	compatible = "amlogic,meson8-uart", "amlogic,meson-ao-uart";
->> +	clocks = <&xtal>, <&clk81>, <&clk81>;
->> +	clock-names = "xtal", "pclk", "baud";
->>  };
->>  
->>  &uart_A {
->> -	clocks = <&clk81>;
->> +	compatible = "amlogic,meson8-uart";
->> +	clocks = <&xtal>, <&clk81>, <&clk81>;
->> +	clock-names = "xtal", "pclk", "baud";
->>  };
->>  
->>  &uart_B {
->> -	clocks = <&clk81>;
->> +	compatible = "amlogic,meson8-uart";
->> +	clocks = <&xtal>, <&clk81>, <&clk81>;
->> +	clock-names = "xtal", "pclk", "baud";
->>  };
->>  
->>  &uart_C {
->> -	clocks = <&clk81>;
->> +	compatible = "amlogic,meson8-uart";
->> +	clocks = <&xtal>, <&clk81>, <&clk81>;
->> +	clock-names = "xtal", "pclk", "baud";
->>  };
-> 
+2017-06-09 19:54 GMT+02:00 Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>:
+> From: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+>
+> Document common HDMI CEC bindings. Add this to the MAINTAINERS file
+> as well.
+>
+> Signed-off-by: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Cc: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  Documentation/devicetree/bindings/media/cec.txt | 8 ++++++++
+>  MAINTAINERS                                     | 1 +
+>  2 files changed, 9 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/cec.txt
+>
+> diff --git a/Documentation/devicetree/bindings/media/cec.txt b/Documentation/devicetree/bindings/media/cec.txt
+> new file mode 100644
+> index 000000000000..22d7aae3d3d7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/cec.txt
+> @@ -0,0 +1,8 @@
+> +Common bindings for HDMI CEC adapters
+> +
+> +- hdmi-phandle: phandle to the HDMI controller.
+> +
+> +- needs-hpd: if present the CEC support is only available when the HPD
+> +  is high. Some boards only let the CEC pin through if the HPD is high,
+> +  for example if there is a level converter that uses the HPD to power
+> +  up or down.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 053c3bdd1fe5..4ac340d189a3 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3137,6 +3137,7 @@ F:        include/media/cec.h
+>  F:     include/media/cec-notifier.h
+>  F:     include/uapi/linux/cec.h
+>  F:     include/uapi/linux/cec-funcs.h
+> +F:     Documentation/devicetree/bindings/media/cec.txt
+>
+>  CELL BROADBAND ENGINE ARCHITECTURE
+>  M:     Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> --
+> 2.11.0
+>
 
-I will drop this until martin has a better version, and tested !
+Looks good for me
 
-Neil
+Acked-by: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
