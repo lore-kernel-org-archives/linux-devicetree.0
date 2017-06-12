@@ -1,65 +1,69 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 13/13] ARM: dts: meson: use the real ethernet clock on
- Meson8 and Meson8b
-Date: Mon, 12 Jun 2017 09:37:16 +0200
-Message-ID: <f26c205e-9956-3315-27bf-b520cbaff1ad@baylibre.com>
-References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
- <20170611101644.28581-14-martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH] watchdog: meson-wdt: add support for the watchdog on
+ Meson8 and Meson8m2
+Date: Mon, 12 Jun 2017 09:38:42 +0200
+Message-ID: <af787a82-e798-411a-3402-b9332deda672@baylibre.com>
+References: <20170611095219.22095-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170611101644.28581-14-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170611095219.22095-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2017 12:16 PM, Martin Blumenstingl wrote:
-> Until now clk81 was used as gate clock for the ethernet controller on
-> Meson8 whereas Meson8b did not configure a gate clock at all. Use
-> CLKID_ETH for both SoCs, which is the real gate clock for the ethernet
-> controller.
+On 06/11/2017 11:52 AM, Martin Blumenstingl wrote:
+> The watchdog IP block on Meson8 and Meson8m2 is already supported by the
+> existing meson-wdt driver. Meson8 uses the same register bits as Meson6,
+> while the newer Meson8m2 SoC uses the same register bits as Meson8b.
+> 
+> Currently watchdog support on Meson8 SoC already works because
+> meson8.dtsi simply uses the "amlogic,meson6-wdt" compatible. Adding a
+> separate compatible for Meson8 makes this more explicit though.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  arch/arm/boot/dts/meson8.dtsi  | 2 +-
->  arch/arm/boot/dts/meson8b.dtsi | 5 +++++
->  2 files changed, 6 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/watchdog/meson-wdt.txt | 6 +++++-
+>  drivers/watchdog/meson_wdt.c                             | 2 ++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-> index f6816ea09aeb..d997185896b7 100644
-> --- a/arch/arm/boot/dts/meson8.dtsi
-> +++ b/arch/arm/boot/dts/meson8.dtsi
-> @@ -242,7 +242,7 @@
->  };
+> diff --git a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
+> index ae70185d96e6..f2fbe1a39d31 100644
+> --- a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
+> @@ -2,7 +2,11 @@ Meson SoCs Watchdog timer
 >  
->  &ethmac {
-> -	clocks = <&clkc CLKID_CLK81>;
-> +	clocks = <&clkc CLKID_ETH>;
->  	clock-names = "stmmaceth";
->  };
+>  Required properties:
 >  
-> diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-> index 2b13570b0e60..e57934f82098 100644
-> --- a/arch/arm/boot/dts/meson8b.dtsi
-> +++ b/arch/arm/boot/dts/meson8b.dtsi
-> @@ -176,6 +176,11 @@
->  	};
->  };
+> -- compatible : should be "amlogic,meson6-wdt" or "amlogic,meson8b-wdt"
+> +- compatible : depending on the SoC this should be one of:
+> +	"amlogic,meson6-wdt"
+> +	"amlogic,meson8-wdt"
+> +	"amlogic,meson8b-wdt"
+> +	"amlogic,meson8m2-wdt"
+>  - reg : Specifies base physical address and size of the registers.
 >  
-> +&ethmac {
-> +	clocks = <&clkc CLKID_ETH>;
-> +	clock-names = "stmmaceth";
-> +};
-> +
->  &hwrng {
->  	clocks = <&clkc CLKID_RNG0>;
->  	clock-names = "core";
+>  Example:
+> diff --git a/drivers/watchdog/meson_wdt.c b/drivers/watchdog/meson_wdt.c
+> index 491b9bf13d84..304274c67735 100644
+> --- a/drivers/watchdog/meson_wdt.c
+> +++ b/drivers/watchdog/meson_wdt.c
+> @@ -155,7 +155,9 @@ static const struct watchdog_ops meson_wdt_ops = {
+>  
+>  static const struct of_device_id meson_wdt_dt_ids[] = {
+>  	{ .compatible = "amlogic,meson6-wdt", .data = &meson6_wdt_data },
+> +	{ .compatible = "amlogic,meson8-wdt", .data = &meson6_wdt_data },
+>  	{ .compatible = "amlogic,meson8b-wdt", .data = &meson8b_wdt_data },
+> +	{ .compatible = "amlogic,meson8m2-wdt", .data = &meson8b_wdt_data },
+>  	{ /* sentinel */ }
+>  };
+>  MODULE_DEVICE_TABLE(of, meson_wdt_dt_ids);
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
