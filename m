@@ -1,71 +1,51 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 46/58] clocksource/drivers: Add a new driver for the Atmel
- ARM TC blocks
-Date: Mon, 12 Jun 2017 15:25:25 +0200
-Message-ID: <4c2a5425-acb4-c639-7f54-1dd933c44d03@linaro.org>
-References: <20170530215139.9983-47-alexandre.belloni@free-electrons.com>
- <20170606152104.GC2345@mai> <20170606180559.pkrr7ux2qqnmsd6y@piout.net>
- <20170607141735.GH2345@mai> <20170607152750.tksmyf5p3oajbsac@piout.net>
- <20170607210848.GJ2345@mai> <20170607231715.ns2vcxza2eexnzjs@piout.net>
- <20170608074236.62924f01@bbrezillon> <20170608074446.GM2345@mai>
- <20170608101334.4e60aa4c@bbrezillon> <20170608084026.GB2244@mai>
- <eada48f9-55b5-859d-d37e-4c9e938bc29d@microchip.com>
+From: Abylay Ospan <aospan@netup.ru>
+Subject: Re: [PATCH v2 0/15] [dt-bindings] [media] Add document file and
+ driver for Sony CXD2880 DVB-T2/T tuner + demodulator
+Date: Mon, 12 Jun 2017 09:33:12 -0400
+Message-ID: <CAK3bHNXgbZ0oXbUAYCznpW-iLwQeStFcYRERfRPQcVrk18Pm6g@mail.gmail.com>
+References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
+ <5188b958-9a34-4519-5845-a318273592e0@sony.com> <d7c70c53-3fb0-a045-5e1a-1a736bdeda1f@sony.com>
+ <0e192530-9b56-e8fb-6210-ab619ddde1de@sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <eada48f9-55b5-859d-d37e-4c9e938bc29d-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <0e192530-9b56-e8fb-6210-ab619ddde1de@sony.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Takiguchi, Yasunari" <Yasunari.Takiguchi@sony.com>
+Cc: "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@s-opensource.com>, "tbird20d@gmail.com" <tbird20d@gmail.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "Yamamoto, Masayuki" <Masayuki.Yamamoto@sony.com>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa@sony.com>, "Yonezawa, Kota" <Kota.Yonezawa@sony.com>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto@sony.com>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe@sony.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2017 14:54, Nicolas Ferre wrote:
+Dear Takiguchi,
 
-[ ... ]
+I'm working on 'drivers/media/dvb-frontends/cxd2841er.c' (universal
+demod) and 'linux/drivers/media/dvb-frontends/helene.c' (universal
+TERR/CABLE/SAT tuner).
 
->> I like the 'chosen' approach with the nodes you are proposing below. Thanks for
->> the constructive suggestion. The binding description matches perfectly what we
->> are trying to achieve.
->>
->> Rob? what do you think?
-> 
-> I'm following this work from a distance but as we've just celebrated the
-> 1st anniversary for this patch series (11 June 2016), I propose that we
-> now make up our mind quickly. Everybody seem to be on the same page and
-> willing to make this rework move forward.
-> 
-> In Microchip/Atmel we would like to actually use this TCB rework both
-> internally and in our mainline work to avoid having to rely on our own
-> out-of-tree implementation.
-> 
-> The newly-added samv7 cortex-M can't boot without this series and a use
-> of our current cortex-A SoCs with TrustZone in Secure World (SWd) is not
-> possible with current mainline code only. On these two examples, the
-> current timer on which we rely, the PIT, is not present.
-> 
-> So you probably understand that more than one year without real progress
-> begins to be a little bit frustrating for the AT91 users...
+How do you think - is your cxd2880 proposed driver have possibilities
+to cover cxd2841er demod functionality too ?
 
-Nicolas,
+I have quickly checked your cxd2880_top.c and looks like cxd2880 works
+over SPI (not I2C) ?Also, looks like registers map, sequences
+is different. Am I right ?
 
-who are you exactly blaming?
+How do you think ?
 
-Are you surprised a 58 patches series, with a gazillion of Cc'ed people
-posted awhile ago, is ignored?
+Thanks a lot !
 
+2017-05-31 21:41 GMT-04:00 Takiguchi, Yasunari <Yasunari.Takiguchi@sony.com>:
+> Hi, all
+>
+> I sent the patch series of Sony CXD2880 DVB-T2/T tuner + demodulator driver on Apr/14.
+> Are there any comments, advices and review results for them?
+>
+> I'd like to get better understanding of current review status for our codes.
+>
+> Regards,
+> Takiguchi
 
 
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Abylay Ospan,
+NetUP Inc.
+http://www.netup.tv
