@@ -1,7 +1,7 @@
 From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 1/2] arm64: dts: uniphier: add support for LD11 Global board
-Date: Mon, 12 Jun 2017 15:07:38 +0900
-Message-ID: <1497247659-1610-2-git-send-email-hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 2/2] arm64: dts: uniphier: add support for LD20 Global board
+Date: Mon, 12 Jun 2017 15:07:39 +0900
+Message-ID: <1497247659-1610-3-git-send-email-hayashi.kunihiko@socionext.com>
 References: <1497247659-1610-1-git-send-email-hayashi.kunihiko@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1497247659-1610-1-git-send-email-hayashi.kunihiko@socionext.com>
@@ -10,35 +10,37 @@ To: linux-arm-kernel@lists.infradead.org
 Cc: yamada.masahiro@socionext.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-Add initial device tree support for LD11 Global board.
+Add initial device tree support for LD20 Global board.
 
 Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
  arch/arm64/boot/dts/socionext/Makefile             |  1 +
- .../boot/dts/socionext/uniphier-ld11-global.dts    | 70 ++++++++++++++++++++++
- 2 files changed, 71 insertions(+)
- create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
+ .../boot/dts/socionext/uniphier-ld20-global.dts    | 52 ++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
 
 diff --git a/arch/arm64/boot/dts/socionext/Makefile b/arch/arm64/boot/dts/socionext/Makefile
-index 5538598..8d07ee3 100644
+index 8d07ee3..4a13a3a 100644
 --- a/arch/arm64/boot/dts/socionext/Makefile
 +++ b/arch/arm64/boot/dts/socionext/Makefile
-@@ -1,4 +1,5 @@
+@@ -1,6 +1,7 @@
  dtb-$(CONFIG_ARCH_UNIPHIER) += \
-+	uniphier-ld11-global.dtb \
+ 	uniphier-ld11-global.dtb \
  	uniphier-ld11-ref.dtb \
++	uniphier-ld20-global.dtb \
  	uniphier-ld20-ref.dtb
  
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
 new file mode 100644
-index 0000000..1153570
+index 0000000..9f620d4
 --- /dev/null
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld11-global.dts
-@@ -0,0 +1,70 @@
++++ b/arch/arm64/boot/dts/socionext/uniphier-ld20-global.dts
+@@ -0,0 +1,52 @@
 +/*
-+ * Device Tree Source for UniPhier LD11 Global Board
++ * Device Tree Source for UniPhier LD20 Global Board
 + *
-+ * Copyright (C) 2016-2017 Socionext Inc.
++ * Copyright (C) 2015-2017 Socionext Inc.
 + *   Author: Masahiro Yamada <yamada.masahiro@socionext.com>
 + *           Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 + *
@@ -46,12 +48,12 @@ index 0000000..1153570
 + */
 +
 +/dts-v1/;
-+/include/ "uniphier-ld11.dtsi"
++/include/ "uniphier-ld20.dtsi"
 +
 +/ {
-+	model = "UniPhier LD11 Global Board (REF_LD11_GP)";
-+	compatible = "socionext,uniphier-ld11-global",
-+		     "socionext,uniphier-ld11";
++	model = "UniPhier LD20 Global Board (REF_LD20_GP)";
++	compatible = "socionext,uniphier-ld20-global",
++		     "socionext,uniphier-ld20";
 +
 +	chosen {
 +		stdout-path = "serial0:115200n8";
@@ -72,7 +74,7 @@ index 0000000..1153570
 +
 +	memory@80000000 {
 +		device_type = "memory";
-+		reg = <0 0x80000000 0 0x40000000>;
++		reg = <0 0x80000000 0 0xc0000000>;
 +	};
 +};
 +
@@ -85,24 +87,6 @@ index 0000000..1153570
 +};
 +
 +&i2c0 {
-+	status = "okay";
-+
-+	eeprom@50 {
-+		compatible = "st,24c64", "atmel,24c64";
-+		reg = <0x50>;
-+		pagesize = <32>;
-+	};
-+};
-+
-+&usb0 {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&usb2 {
 +	status = "okay";
 +};
 -- 
