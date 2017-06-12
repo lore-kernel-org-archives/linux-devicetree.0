@@ -1,50 +1,131 @@
 From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 2/2] arm64: dts: rockchip: use cs-gpios for cros_ec_spi
-Date: Mon, 12 Jun 2017 14:14:16 +0800
-Message-ID: <1497248057-16550-2-git-send-email-jeffy.chen@rock-chips.com>
-References: <1497248057-16550-1-git-send-email-jeffy.chen@rock-chips.com>
+Subject: [PATCH 1/2] spi: rockchip: add support for "cs-gpios" dts property
+Date: Mon, 12 Jun 2017 14:14:15 +0800
+Message-ID: <1497248057-16550-1-git-send-email-jeffy.chen@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497248057-16550-1-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The cros_ec requires CS line to be active after last message. But the CS
-would be toggled when powering off/on rockchip spi, which breaks ec xfer.
-Use GPIO CS to prevent that.
+Support using "cs-gpios" property to specify cs gpios.
 
 Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-
 ---
 
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../devicetree/bindings/spi/spi-rockchip.txt       |  2 +
+ drivers/spi/spi-rockchip.c                         | 52 ++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index eb50593..329a634 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -790,6 +790,8 @@ ap_i2c_audio: &i2c8 {
- &spi5 {
- 	status = "okay";
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+index 83da493..02171b2 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+@@ -17,6 +17,7 @@ Required Properties:
+        region.
+ - interrupts: The interrupt number to the cpu. The interrupt specifier format
+               depends on the interrupt controller.
++- cs-gpios : Specifies the gpio pins to be used for chipselects.
+ - clocks: Must contain an entry for each entry in clock-names.
+ - clock-names: Shall be "spiclk" for the transfer-clock, and "apb_pclk" for
+ 			   the peripheral clock.
+@@ -48,6 +49,7 @@ Example:
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		cs-gpios = <&gpio2 23 GPIO_ACTIVE_HIGH>;
+ 		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
+ 		clock-names = "spiclk", "apb_pclk";
+ 		pinctrl-0 = <&spi1_pins>;
+diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
+index acf31f3..04694e1 100644
+--- a/drivers/spi/spi-rockchip.c
++++ b/drivers/spi/spi-rockchip.c
+@@ -15,6 +15,7 @@
  
-+	cs-gpios = <&gpio2 23 GPIO_ACTIVE_HIGH>;
-+
- 	cros_ec: ec@0 {
- 		compatible = "google,cros-ec-spi";
- 		reg = <0>;
-@@ -813,6 +815,10 @@ ap_i2c_audio: &i2c8 {
- 	};
+ #include <linux/clk.h>
+ #include <linux/dmaengine.h>
++#include <linux/gpio.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/pinctrl/consumer.h>
+@@ -201,6 +202,10 @@ struct rockchip_spi {
+ 	struct dma_slave_caps dma_caps;
  };
  
-+&spi5_cs0 {
-+	rockchip,pins = <2 23 RK_FUNC_GPIO &pcfg_pull_up>;
++struct rockchip_spi_data {
++	bool cs_gpio_requested;
 +};
 +
- &tsadc {
- 	status = "okay";
+ static inline void spi_enable_chip(struct rockchip_spi *rs, int enable)
+ {
+ 	writel_relaxed((enable ? 1 : 0), rs->regs + ROCKCHIP_SPI_SSIENR);
+@@ -297,6 +302,50 @@ static void rockchip_spi_set_cs(struct spi_device *spi, bool enable)
+ 	pm_runtime_put_sync(rs->dev);
+ }
  
++static int rockchip_spi_setup(struct spi_device *spi)
++{
++	int ret = 0;
++	unsigned long flags = (spi->mode & SPI_CS_HIGH) ?
++			      GPIOF_OUT_INIT_LOW : GPIOF_OUT_INIT_HIGH;
++	struct rockchip_spi_data *data = spi_get_ctldata(spi);
++
++	if (!gpio_is_valid(spi->cs_gpio))
++		return 0;
++
++	if (!data) {
++		data = kzalloc(sizeof(*data), GFP_KERNEL);
++		if (!data)
++			return -ENOMEM;
++		spi_set_ctldata(spi, data);
++	}
++
++	if (!data->cs_gpio_requested) {
++		ret = gpio_request_one(spi->cs_gpio, flags,
++				       dev_name(&spi->dev));
++		if (!ret)
++			data->cs_gpio_requested = 1;
++	} else
++		ret = gpio_direction_output(spi->cs_gpio, flags);
++
++	if (ret < 0)
++		dev_err(&spi->dev, "Failed to setup cs gpio(%d): %d\n",
++			spi->cs_gpio, ret);
++
++	return ret;
++}
++
++static void rockchip_spi_cleanup(struct spi_device *spi)
++{
++	struct rockchip_spi_data *data = spi_get_ctldata(spi);
++
++	if (data) {
++		if (data->cs_gpio_requested)
++			gpio_free(spi->cs_gpio);
++		kfree(data);
++		spi_set_ctldata(spi, NULL);
++	}
++}
++
+ static int rockchip_spi_prepare_message(struct spi_master *master,
+ 					struct spi_message *msg)
+ {
+@@ -744,11 +793,14 @@ static int rockchip_spi_probe(struct platform_device *pdev)
+ 	master->bits_per_word_mask = SPI_BPW_MASK(16) | SPI_BPW_MASK(8);
+ 
+ 	master->set_cs = rockchip_spi_set_cs;
++	master->setup = rockchip_spi_setup;
++	master->cleanup = rockchip_spi_cleanup;
+ 	master->prepare_message = rockchip_spi_prepare_message;
+ 	master->unprepare_message = rockchip_spi_unprepare_message;
+ 	master->transfer_one = rockchip_spi_transfer_one;
+ 	master->max_transfer_size = rockchip_spi_max_transfer_size;
+ 	master->handle_err = rockchip_spi_handle_err;
++	master->flags = SPI_MASTER_GPIO_SS;
+ 
+ 	rs->dma_tx.ch = dma_request_chan(rs->dev, "tx");
+ 	if (IS_ERR(rs->dma_tx.ch)) {
 -- 
 2.1.4
 
