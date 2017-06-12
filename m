@@ -1,62 +1,93 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] arm64: renesas: Add support for Salvator-XS
-Date: Mon, 12 Jun 2017 11:10:20 +0200
-Message-ID: <20170612091019.GC15434@verge.net.au>
-References: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
+Date: Mon, 12 Jun 2017 10:11:33 +0100
+Message-ID: <20170612091133.kt2doom32bun6ujp@dell>
+References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
+ <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
+ <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
+ <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: Rob Herring <robh@kernel.org>, broonie@kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 01:43:45PM +0200, Geert Uytterhoeven wrote:
-> 	Hi Simon, Magnus,
-> 
-> The Renesas Salvator-XS (Salvator-X 2nd version) development board can
-> be equipped with either an R-Car H3 ES2.0 or M3-W ES1.x SiP, which are
-> pin-compatible.
-> 
-> This patch series adds initial support for the Renesas Salvator-XS
-> development board equipped with an R-Car H3 ES2.0 SiP.  The support
-> level is similar to the existing support for Salvator-X with the same
-> SiP.  See below for exceptions.
-> 
-> The Salvator-XS board is similar but not identical to the already
-> supported Salvator-X board.  To avoid duplication, the common parts are
-> extracted first into its own .dtsi file.
-> Noteworthy differences are:
->   - The main clock crystal ticks at a slightly different rate.
->   - On R-Car H3 ES2.0, SATA no longer uses dedicated pins, but shares
->     them with the second PCIe channel.  To cater for this, a MAX4888B
->     multiplexer has been added to Salvator-XS.  As the default hardware
->     configuration enables PCIe, I disabled SATA.
->   - The Versaclock5 clock generator has been replaced by a similar
->     member of the Versaclock6 family.  As the latter is not supported by
->     Linux yet, I left it out.
->   - The USB3.0 micro-B connector is replaced by a USB2.0 micro-AB
->     connector (both are not yet supported, so no change is needed now).
-> 
-> Dependencies:
->   - renesas-devel-20170608-v4.12-rc4,
->   - "arm64: dts: salvator-x: Add missing index to PWM pinctrl subnode
->     name".
-> 
-> For your convenience, I've pushed this series, its dependencies, and a
-> few related driver changes to the topic/r8a7795-salvator-xs branch of
-> the git repository at
-> https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git
-> 
-> This has been tested on Salvator-XS with R-Car H3 ES2.0, and Salvator-X
-> with R-Car H3 ES1.0.
-> 
-> Thanks!
+On Sun, 11 Jun 2017, Keerthy wrote:
 
-Thanks, I have queued this up for v4.13.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
+> On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
+> > 
+> > 
+> > On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
+> >> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
+> >>> The LP87565 chip is a power management IC for Portable Navigation Systems
+> >>> and Tablet Computing devices. It contains the following components:
+> >>>
+> >>>         - Configurable Bucks(Single and multi-phase).
+> >>>         - Configurable General Purpose Output Signals (GPO).
+> >>>
+> >>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+> >>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+> >>> output.
+> >>>
+> 
+> Lee Jones,
+> 
+> Shall i add back i2c_device_id as pointed here:
+> http://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1417316.html
+
+Hasn't that been fixed yet?
+
+I guess so then. :(
+
+> >>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> >>> ---
+> >>>
+> >>> The other patches are already pulled by Mark. Hence posting
+> >>> the remaining patch.
+> >>>
+> >>> Changes in v4:
+> >>>
+> >>>   * Fixed device tree comments from Rob on the pmic node name.
+> >>>   * removed regulators from properties list as it is a node.
+> >>>  
+> >>> Changes in v3:
+> >>>
+> >>>   * Fixed License to GPL v2.
+> >>>   * Fixed an indentation issue.
+> >>>
+> >>> Changes in v2:
+> >>>
+> >>>   * Fixed a bunch of whitespace errors.
+> >>>   * Changed the License to short form.
+> >>>   * Added the generic compatible lp87565
+> >>>   * Removed i2c_device_id table.
+> >>>   * Introduced probe_new function in place of probe.
+> >>>
+> >>>  Documentation/devicetree/bindings/mfd/lp87565.txt |  43 ++++
+> >>
+> >> Acked-by: Rob Herring <robh@kernel.org>
+> > 
+> > Thanks Rob.
+> > 
+> >>
+> >>>  drivers/mfd/Kconfig                               |  14 ++
+> >>>  drivers/mfd/Makefile                              |   1 +
+> >>>  drivers/mfd/lp87565.c                             |  92 ++++++++
+> >>>  include/linux/mfd/lp87565.h                       | 270 ++++++++++++++++++++++
+> >>>  5 files changed, 420 insertions(+)
+> >>>  create mode 100644 Documentation/devicetree/bindings/mfd/lp87565.txt
+> >>>  create mode 100644 drivers/mfd/lp87565.c
+> >>>  create mode 100644 include/linux/mfd/lp87565.h
+
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
