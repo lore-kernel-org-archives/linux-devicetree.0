@@ -1,65 +1,101 @@
-From: Rogier Wolff <R.E.Wolff@BitWizard.nl>
-Subject: Re: [PATCH v2 3/4] irqchip: Add BCM2835 AUX interrupt controller
-Date: Mon, 12 Jun 2017 18:33:37 +0200
-Message-ID: <20170612163337.GG18236@BitWizard.nl>
-References: <c5ceca4d-81d1-9faf-bc4a-3ea3113abf36@raspberrypi.org>
- <56e314db-49a9-48fa-d7d9-877bd68aadfc@arm.com>
- <fb54ef5b-3bbb-4c39-e993-48bf45982412@raspberrypi.org>
- <9cbf68ce-6041-3e04-8f82-8d948ab4a716@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v5 3/3] drivers:power:twl4030-charger: add deferred probing for phy and iio
+Date: Mon, 12 Jun 2017 19:02:09 +0200
+Message-ID: <D12A5BD7-65A1-49E6-A25C-B2A2162FCA05@goldelico.com>
+References: <cover.1495363097.git.hns@goldelico.com> <6ed105f6c9c21c24184913a7be9e665453549d79.1495363097.git.hns@goldelico.com> <20170607204444.zumcreuqdnv7euv2@earth> <01A3D2F5-9E09-4E93-A363-93130DCEB7DF@goldelico.com> <1b9f3e92-36ac-2a73-7b2d-037b19fafaad@ti.com> <DC2DA07F-72A1-45B9-A4F5-BD83D930974D@goldelico.com> <754fbc28-f5ff-4736-1d46-f467667b130d@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9cbf68ce-6041-3e04-8f82-8d948ab4a716@arm.com>
+In-Reply-To: <754fbc28-f5ff-4736-1d46-f467667b130d@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Phil Elwell <phil@raspberrypi.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Sebastian Reichel <sre@kernel.org>, NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Marek Belisko <marek@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 05:19:03PM +0100, Marc Zyngier wrote:
+Hi Grygorii,
 
-> > Does Linux not notice when one calls generic_handle_irq with the number of an
-> > interrupt without a handler?
-> 
-> It is not so much that the interrupt doesn't have a handler, but that
-> the device (or one of the devices) is in some sort of interrupt frenzy,
-> and the driver is not able to handle this interrupt.
-> 
-> In such a case, Linux tries to mask this interrupt, which in your case
-> does exactly nothing. At this point, the system is dead.
+> Am 12.06.2017 um 18:24 schrieb Grygorii Strashko =
+<grygorii.strashko@ti.com>:
+>=20
+>=20
+>=20
+> On 06/09/2017 11:59 PM, H. Nikolaus Schaller wrote:
+>> Hi Grygorii,
+>>=20
+>>> Am 09.06.2017 um 18:25 schrieb Grygorii Strashko =
+<grygorii.strashko@ti.com>:
+>>>=20
+>>>=20
+>>>>=20
+>>>> So please advise how to proceed.
+>>>>=20
+>>>=20
+>>> You should request irq as late as possible in probe - it's safest =
+way to go always.
+>>> You see crushes simply because request_irq enables IRQ and IRQ can =
+trigger immediately, so
+>>> IRQ handler will run and all required resources should be ready and =
+initialized.
+>>>=20
+>>> In this case:
+>>> twl4030_bci_interrupt() -> twl4030_charger_update_current() -> =
+ac_available() -> iio_read_channel_processed()
+>>> OOOPS.
+>>>=20
+>>> So, first thing to do is to reorder probe to ensure that sequence is =
+safe.
+>>=20
+>> That is exactly what I guessed when proposing the reordering patch.
+>>=20
+>>> Then other stuff - devm, EPROBE_DEFER ...
+>>=20
+>> IMHO, reordering alone doesn't make much sense as a single patch. Or =
+does it?
+>>=20
+>=20
+> The question is - is there bug in driver or not? As per current code =
+seems yes.
 
-In the old days, you had edge-triggered interrupts. That always led to
-race conditions: If you handled the interrupt, the hardware might fire
-an interrupt again AFTER you've checked: "nothing more to do?" and
-before you have told the hardware "I've seen that interrupt". So then
-you end up with hardware thinking the interrupt has been handled while
-it has in fact not been handled. You can be very careful in what order
-you do things, and get it almost right.... 
+If we all agree, do we need another confirmation?
 
-So nowadays interrupts are level triggered. That means that a device
-that wants attention, but for SOME reason, thinks that it was not
-properly handled will keep the interrupt line asserted, and interrupts
-will keep firing.
+> You can easily test it by directly calling twl4030_charger_interrupt() =
+right after
+> IRQ is requested. there is a bug if it will crush.
 
-When this happens (it's common when you're writing the device driver,
-but it sometimes happens in the field when something unexpected
-occurs), an interrupt storm starts. As soon as the generic handler
-returns from interrupt, the hardware reenters the interrupt handler.
+In the variant without EPROBE_DEFER you won't see it since ac_available =
+either
+has a valid iio channel or NULL.
 
-Without any countermeasures, the system would lock up without much
-debugging options. Nowadays (since two decades or so), the Linux
-kernel can disable the interrupt, print an error message and try to
-continue. It won't work if other important interrupts for the system
-were on the same IRQ line, but often enough, you just get a message
-that an interrupt was disabled and that one peripheral will stop
-working. Good opportunities for debugging the situation.
+The problem is only if we add an EPROBE_DEFER return if getting the iio =
+channel
+fails. This seems to make trouble if we don't take care of it. There are =
+certainly
+several options to work around but IMHO reordering is the best one (and =
+even works
+w/o devm for iio - which should be added in a separate step).
 
-	Roger. 
+And there is a strong argument for reordering to have the most likely =
+failure
+first (iio fails more likely due to DEFER than allocating an irq). But =
+only if
+we process the iio failure at all.
 
+So there are one a little doubtful argument for reordering (driver bug) =
+and
+a strong one.
 
--- 
-** R.E.Wolff@BitWizard.nl ** http://www.BitWizard.nl/ ** +31-15-2600998 **
-**    Delftechpark 26 2628 XH  Delft, The Netherlands. KVK: 27239233    **
-*-- BitWizard writes Linux device drivers for any device you may have! --*
-The plan was simple, like my brother-in-law Phil. But unlike
-Phil, this plan just might work.
+> As for me it more reasonable to move forward using smaller steps.
+
+Well, I wonder what it does help to fix a bug which does not even become =
+visible
+if we don't add EPROBE_DEFER?
+
+So I would count two steps:
+a) add EPROBE_DEFER and reorder code to make it work
+b) convert to devm for iio
+
+Ok?
+
+BR and thanks,
+Nikolaus
