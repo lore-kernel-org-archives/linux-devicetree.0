@@ -1,58 +1,41 @@
-From: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 00/11] ARM: dts: imx6qdl: video capture support
-Date: Mon, 12 Jun 2017 11:23:53 -0700
-Message-ID: <1497291844-14632-1-git-send-email-steve_longerbeam@mentor.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+From: Steve Longerbeam <slongerbeam@gmail.com>
+Subject: [PATCH 02/11] ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
+Date: Mon, 12 Jun 2017 11:23:55 -0700
+Message-ID: <1497291844-14632-3-git-send-email-steve_longerbeam@mentor.com>
+References: <1497291844-14632-1-git-send-email-steve_longerbeam@mentor.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497291844-14632-1-git-send-email-steve_longerbeam@mentor.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Steve Longerbeam <steve_longerbeam@mentor.com>
 List-Id: devicetree@vger.kernel.org
 
-This series defines the i.MX6 internal video multiplexers and MIPI CSI-2
-receiver device nodes, and their connections to eachother and the i.MX6
-IPU CSI ports.
+Add to the MIPI CSI2 receiver node: compatible strings,
+interrupt sources, and clocks.
 
-It also implements video capture support on the SabreLite, SabreSD, and
-SabreAuto reference platforms, by defining the video sensor nodes on those
-platforms, and their connections to the video muxes and MIPI CSI-2 receiver.
+Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+---
+ arch/arm/boot/dts/imx6qdl.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-There should not be much of anything controversial in this series. The
-imx-media driver is set to be merged in time for 4.13, so please accept
-this series soon.
-
-
-Philipp Zabel (2):
-  ARM: dts: imx6qdl: add multiplexer controls
-  ARM: dts: imx6qdl: Add video multiplexers, mipi_csi, and their
-    connections
-
-Steve Longerbeam (9):
-  ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
-  ARM: dts: imx6qdl: add capture-subsystem device
-  ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687 workaround
-  ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
-  ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
-  ARM: dts: imx6-sabreauto: create i2cmux for i2c3
-  ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
-  ARM: dts: imx6-sabreauto: add pinctrl for gpt input capture
-  ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
-
- arch/arm/boot/dts/imx6dl-sabrelite.dts   |   5 +
- arch/arm/boot/dts/imx6dl-sabresd.dts     |   5 +
- arch/arm/boot/dts/imx6dl.dtsi            | 189 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx6q-sabrelite.dts    |   5 +
- arch/arm/boot/dts/imx6q-sabresd.dts      |   5 +
- arch/arm/boot/dts/imx6q.dtsi             | 125 ++++++++++++++++++++
- arch/arm/boot/dts/imx6qdl-sabreauto.dtsi | 131 +++++++++++++++++----
- arch/arm/boot/dts/imx6qdl-sabrelite.dtsi | 152 ++++++++++++++++++++++++-
- arch/arm/boot/dts/imx6qdl-sabresd.dtsi   | 114 ++++++++++++++++++-
- arch/arm/boot/dts/imx6qdl.dtsi           |  20 +++-
- 10 files changed, 724 insertions(+), 27 deletions(-)
-
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 50534dd..381b482 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -1140,7 +1140,14 @@
+ 			};
+ 
+ 			mipi_csi: mipi@021dc000 {
++				compatible = "fsl,imx6-mipi-csi2";
+ 				reg = <0x021dc000 0x4000>;
++				interrupts = <0 100 0x04>, <0 101 0x04>;
++				clocks = <&clks IMX6QDL_CLK_HSI_TX>,
++					 <&clks IMX6QDL_CLK_VIDEO_27M>,
++					 <&clks IMX6QDL_CLK_EIM_PODF>;
++				clock-names = "dphy", "ref", "pix";
++				status = "disabled";
+ 			};
+ 
+ 			mipi_dsi: mipi@021e0000 {
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
