@@ -1,136 +1,211 @@
-From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/2] spi: rockchip: add support for "cs-gpios" dts property
-Date: Mon, 12 Jun 2017 14:14:15 +0800
-Message-ID: <1497248057-16550-1-git-send-email-jeffy.chen@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Baolin Wang <baolin.wang@spreadtrum.com>
+Subject: Re: [PATCH v3 1/2] DT: pinctrl: Add binding documentation for
+ Spreadtrum pin controller
+Date: Mon, 12 Jun 2017 14:20:29 +0800
+Message-ID: <20170612062029.GC8566@spreadtrum.com>
+References: <359d62c1f2f7ef61c6160df9b60c1af4bfcea89a.1496753918.git.baolin.wang@spreadtrum.com>
+ <20170609134420.kc4cxn7b6uap5j3d@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170609134420.kc4cxn7b6uap5j3d@rob-hp-laptop>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linus.walleij@linaro.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Support using "cs-gpios" property to specify cs gpios.
+Hi Rob,
 
-Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+On 五,  6月 09, 2017 at 08:44:20上午 -0500, Rob Herring wrote:
+> On Tue, Jun 06, 2017 at 09:03:13PM +0800, Baolin Wang wrote:
+> > This patch adds the binding documentation for Spreadtrum SC9860 pin
+> > controller device.
+> 
+> For the subject:  "dt-bindings: pinctrl: Add Spreadtrum SC9860 pin 
+> controller"
 
- .../devicetree/bindings/spi/spi-rockchip.txt       |  2 +
- drivers/spi/spi-rockchip.c                         | 52 ++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+Ok. Will fix in next version.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-index 83da493..02171b2 100644
---- a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
-@@ -17,6 +17,7 @@ Required Properties:
-        region.
- - interrupts: The interrupt number to the cpu. The interrupt specifier format
-               depends on the interrupt controller.
-+- cs-gpios : Specifies the gpio pins to be used for chipselects.
- - clocks: Must contain an entry for each entry in clock-names.
- - clock-names: Shall be "spiclk" for the transfer-clock, and "apb_pclk" for
- 			   the peripheral clock.
-@@ -48,6 +49,7 @@ Example:
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+		cs-gpios = <&gpio2 23 GPIO_ACTIVE_HIGH>;
- 		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
- 		clock-names = "spiclk", "apb_pclk";
- 		pinctrl-0 = <&spi1_pins>;
-diff --git a/drivers/spi/spi-rockchip.c b/drivers/spi/spi-rockchip.c
-index acf31f3..04694e1 100644
---- a/drivers/spi/spi-rockchip.c
-+++ b/drivers/spi/spi-rockchip.c
-@@ -15,6 +15,7 @@
- 
- #include <linux/clk.h>
- #include <linux/dmaengine.h>
-+#include <linux/gpio.h>
- #include <linux/module.h>
- #include <linux/of.h>
- #include <linux/pinctrl/consumer.h>
-@@ -201,6 +202,10 @@ struct rockchip_spi {
- 	struct dma_slave_caps dma_caps;
- };
- 
-+struct rockchip_spi_data {
-+	bool cs_gpio_requested;
-+};
-+
- static inline void spi_enable_chip(struct rockchip_spi *rs, int enable)
- {
- 	writel_relaxed((enable ? 1 : 0), rs->regs + ROCKCHIP_SPI_SSIENR);
-@@ -297,6 +302,50 @@ static void rockchip_spi_set_cs(struct spi_device *spi, bool enable)
- 	pm_runtime_put_sync(rs->dev);
- }
- 
-+static int rockchip_spi_setup(struct spi_device *spi)
-+{
-+	int ret = 0;
-+	unsigned long flags = (spi->mode & SPI_CS_HIGH) ?
-+			      GPIOF_OUT_INIT_LOW : GPIOF_OUT_INIT_HIGH;
-+	struct rockchip_spi_data *data = spi_get_ctldata(spi);
-+
-+	if (!gpio_is_valid(spi->cs_gpio))
-+		return 0;
-+
-+	if (!data) {
-+		data = kzalloc(sizeof(*data), GFP_KERNEL);
-+		if (!data)
-+			return -ENOMEM;
-+		spi_set_ctldata(spi, data);
-+	}
-+
-+	if (!data->cs_gpio_requested) {
-+		ret = gpio_request_one(spi->cs_gpio, flags,
-+				       dev_name(&spi->dev));
-+		if (!ret)
-+			data->cs_gpio_requested = 1;
-+	} else
-+		ret = gpio_direction_output(spi->cs_gpio, flags);
-+
-+	if (ret < 0)
-+		dev_err(&spi->dev, "Failed to setup cs gpio(%d): %d\n",
-+			spi->cs_gpio, ret);
-+
-+	return ret;
-+}
-+
-+static void rockchip_spi_cleanup(struct spi_device *spi)
-+{
-+	struct rockchip_spi_data *data = spi_get_ctldata(spi);
-+
-+	if (data) {
-+		if (data->cs_gpio_requested)
-+			gpio_free(spi->cs_gpio);
-+		kfree(data);
-+		spi_set_ctldata(spi, NULL);
-+	}
-+}
-+
- static int rockchip_spi_prepare_message(struct spi_master *master,
- 					struct spi_message *msg)
- {
-@@ -744,11 +793,14 @@ static int rockchip_spi_probe(struct platform_device *pdev)
- 	master->bits_per_word_mask = SPI_BPW_MASK(16) | SPI_BPW_MASK(8);
- 
- 	master->set_cs = rockchip_spi_set_cs;
-+	master->setup = rockchip_spi_setup;
-+	master->cleanup = rockchip_spi_cleanup;
- 	master->prepare_message = rockchip_spi_prepare_message;
- 	master->unprepare_message = rockchip_spi_unprepare_message;
- 	master->transfer_one = rockchip_spi_transfer_one;
- 	master->max_transfer_size = rockchip_spi_max_transfer_size;
- 	master->handle_err = rockchip_spi_handle_err;
-+	master->flags = SPI_MASTER_GPIO_SS;
- 
- 	rs->dma_tx.ch = dma_request_chan(rs->dev, "tx");
- 	if (IS_ERR(rs->dma_tx.ch)) {
--- 
-2.1.4
+> 
+> > 
+> > Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+> > ---
+> > Changes since v2:
+> >  - No updates.
+> > 
+> > Changes since v1:
+> >  - Remove magic numbers and get to use the standard bindings.
+> >  - Fix some typos.
+> > ---
+> >  .../devicetree/bindings/pinctrl/sprd,pinctrl.txt   |   56 +++++++++++++++++
+> >  .../bindings/pinctrl/sprd,sc9860-pinctrl.txt       |   66 ++++++++++++++++++++
+> >  2 files changed, 122 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
+> > new file mode 100644
+> > index 0000000..2f544cd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
+> > @@ -0,0 +1,56 @@
+> > +* Spreadtrum Pin Controller
+> > +
+> > +The Spreadtrum pin controller are organized in 3 blocks (types).
+> > +
+> > +The first block comprises some global control registers, and each
+> > +register contains several bit fields with one bit or several bits
+> > +to configure for some global common configuration, such as domain
+> > +pad driving level, system control select and so on. We recognise
+> > +every fields comprising one bit or several bits in one global control
+> > +register as one pin, thus we should record every pin's bit offset,
+> > +bit width and register offset to configure this field (pin). Since
+> > +this type pins' configuration are very tricky and different for each
+> > +register, we introduce "sprd,ctrl" property to set the various global
+> > +control configuration.
+> > +
+> > +The second block comprises some common registers which have unified
+> > +register definition, and each register described one pin is used
+> > +to configure the pin sleep mode and function select. Now we have 4
+> > +systems on SC9860 SoC: AP system, PUBCP system, TGLDSP system and
+> > +AGDSP system. In some situation we have some pin-sleep related
+> > +configuration need to set when one of system goes into deep sleep
+> > +mode. For example, if we set the pin sleep mode as AP_SLEEP, which
+> > +means when AP system goes into deep sleep mode, this pin's sleep
+> > +related properties (input/output or pullup/down) will be set
+> > +automatically. Thus we intoduce "sprd,sleep_mode" to set pin sleep
+> > +mode.
+> > +
+> > +The last block comprises some misc registers which also have unified
+> > +register definition, and each register described one pin is used to
+> > +configure drive strength, pull up/down and so on. Especially for pull
+> > +up, we introduce "sprd,pullup" property for two kind configuration:
+> > +PULLUP_20K or PULLUP_4_7K, which means the pullup resistor is 20K or
+> > +4.7K.
+> > +
+> > +Required properties for Spreadtrum pin controller:
+> > +- compatible: "sprd,<soc>-pinctrl"
+> > +  Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported SoCs.
+> > +- reg: The register address of pin controller device.
+> > +- pins : An array of pin names.
+> > +
+> > +Optional properties:
+> > +- function: Specified the function name.
+> > +- drive-strength: Drive strength in mA.
+> > +- input-schmitt-disable: Enable schmitt-trigger mode.
+> > +- input-schmitt-enable: Disable schmitt-trigger mode.
+> > +- bias-disable: Disable pin bias.
+> > +- bias-pull-down: Pull down on pin.
+> > +- sprd,ctrl: Control values referring to databook for global control pins.
+> > +- sprd,sleep_mode: Sleep mode selection.
+> > +- sprd,pullup: Pull up on pin.
+> > +- sprd,input-sleep: Input enable when system goes into deep sleep mode.
+> > +- sprd,output-sleep: Output enable when system goes into deep sleep mode.
+> > +- sprd,pullup_sleep: Pull up enable when system goes into deep sleep mode.
+> > +- sprd,pulldown_sleep: Pull down enable when system goes into deep sleep mode.
+> > +
+> > +Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported values.
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
+> > new file mode 100644
+> > index 0000000..10b77e1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
+> > @@ -0,0 +1,66 @@
+> > +* Spreadtrum SC9860 Pin Controller
+> > +
+> > +Please refer to sprd,pinctrl.txt in this directory for common binding part
+> > +and usage.
+> > +
+> > +Required properties:
+> > +- compatible: Must be "sprd,sc9860-pinctrl".
+> > +- reg: The register address of pin controller device.
+> > +- pins : An array of strings, each string containing the name of a pin.
+> > +
+> > +Optional properties:
+> > +- function: A string containing the name of the function, values must be
+> > +  one of: "func1", "func2", "func3" and "func4".
+> > +- drive-strength: Drive strength in mA. Supported values: 2, 4, 6, 8, 10,
+> > +  12, 14, 16, 20, 21, 24, 25, 27, 29, 31 and 33.
+> > +- input-schmitt-disable: Enable schmitt-trigger mode.
+> > +- input-schmitt-enable: Disable schmitt-trigger mode.
+> > +- bias-disable: Disable pin bias.
+> > +- bias-pull-down: Pull down on pin.
+> > +- sprd,ctrl: Control values referring to databook for global control pins.
+> > +- sprd,sleep_mode: Choose the pin sleep mode, and supported values are:
+> 
+> sprd,sleep-mode
 
+OK.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > +  AP_SLEEP, PUBCP_SLEEP, TGLDSP_SLEEP and AGDSP_SLEEP.
+> > +- sprd,pullup: Pull up on pin, the value should be PULLUP_20K or PULLUP_4_7K.
+> 
+> Different pull strengths is pretty commom. Seems like this should be a 
+> common property.
+
+Yes, will fix it.
+
+> 
+> > +- sprd,input-sleep: Input enable when system goes into deep sleep mode.
+> > +- sprd,output-sleep: Output enable when system goes into deep sleep mode.
+> 
+> Seems like you would also need to define the state for output mode.
+
+You mean "output-high" and "output-low"? For SC9860 platform we do not need to set
+output high or low, since it will be automatic accoding to the pin's pull up or
+pull down setting.
+
+> 
+> > +- sprd,pullup_sleep: Pull up enable when system goes into deep sleep mode.
+> > +- sprd,pulldown_sleep: Pull down enable when system goes into deep sleep mode.
+> 
+> s/_/-/
+
+OK.
+
+> 
+> > +
+> > +Pin sleep mode definition:
+> > +enum pin_sleep_mode {
+> > +	AP_SLEEP = BIT(0),
+> > +	PUBCP_SLEEP = BIT(1),
+> > +	TGLDSP_SLEEP = BIT(2),
+> > +	AGDSP_SLEEP = BIT(3),
+> > +};
+> > +
+> > +Pin pullup mode definition:
+> > +enum pin_pullup_sel {
+> > +	PULLUP_20K,
+> > +	PULLUP_4_7K,
+> > +};
+> > +
+> > +Example:
+> > +pin_controller: pinctrl@402a0000 {
+> > +	compatible = "sprd,sc9860-pinctrl";
+> > +	reg = <0x402a0000 0x10000>;
+> > +
+> > +	grp1: sd0 {
+> > +		pins = "SC9860_VIO_SD2_IRTE", "SC9860_VIO_SD0_IRTE";
+> > +		sprd,ctrl = <0x1>;
+> > +	};
+> > +
+> > +	grp2: rfctl_33 {
+> > +		pins = "SC9860_RFCTL33";
+> > +		function = "func2";
+> > +		sprd,sleep_mode = <AP_SLEEP | PUBCP_SLEEP>;
+> > +		sprd,output-sleep;
+> > +	};
+> > +
+> > +	grp3: rfctl_misc_20 {
+> > +		pins = "SC9860_RFCTL20_MISC";
+> > +		drive-strength = <10>;
+> > +		sprd,pullup = <PULLUP_4_7K>;
+> > +		sprd,pullup-sleep;
+> > +	};
+> > +};
+> > -- 
+> > 1.7.9.5
+> > 
