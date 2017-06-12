@@ -1,7 +1,7 @@
 From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Subject: [PATCH v8 6/8] dt-bindings: media: Add Renesas R-Car DRIF binding
-Date: Mon, 12 Jun 2017 14:26:18 +0100
-Message-ID: <20170612132620.1024-7-ramesh.shanmugasundaram@bp.renesas.com>
+Subject: [PATCH v8 4/8] media: Add new SDR formats PC16, PC18 & PC20
+Date: Mon, 12 Jun 2017 14:26:16 +0100
+Message-ID: <20170612132620.1024-5-ramesh.shanmugasundaram@bp.renesas.com>
 References: <20170612132620.1024-1-ramesh.shanmugasundaram@bp.renesas.com>
 Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 In-Reply-To: <20170612132620.1024-1-ramesh.shanmugasundaram@bp.renesas.com>
@@ -10,197 +10,53 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4al
 Cc: chris.paterson2@renesas.com, laurent.pinchart@ideasonboard.com, geert+renesas@glider.be, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for Renesas R-Car Digital Radio Interface
-(DRIF) controller.
+This patch adds support for the three new SDR formats. These formats
+were prefixed with "planar" indicating I & Q data are not interleaved
+as in other formats. Here, I & Q data constitutes the top half and bottom
+half of the received buffer respectively.
+
+V4L2_SDR_FMT_PCU16BE - 14-bit complex (I & Q) unsigned big-endian sample
+inside 16-bit. V4L2 FourCC: PC16
+
+V4L2_SDR_FMT_PCU18BE - 16-bit complex (I & Q) unsigned big-endian sample
+inside 18-bit. V4L2 FourCC: PC18
+
+V4L2_SDR_FMT_PCU20BE - 18-bit complex (I & Q) unsigned big-endian sample
+inside 20-bit. V4L2 FourCC: PC20
 
 Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/media/renesas,drif.txt     | 176 +++++++++++++++++++++
- 1 file changed, 176 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/renesas,drif.txt
+ drivers/media/v4l2-core/v4l2-ioctl.c | 3 +++
+ include/uapi/linux/videodev2.h       | 3 +++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/media/renesas,drif.txt b/Documentation/devicetree/bindings/media/renesas,drif.txt
-new file mode 100644
-index 000000000000..39516b94c28f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/renesas,drif.txt
-@@ -0,0 +1,176 @@
-+Renesas R-Car Gen3 Digital Radio Interface controller (DRIF)
-+------------------------------------------------------------
-+
-+R-Car Gen3 DRIF is a SPI like receive only slave device. A general
-+representation of DRIF interfacing with a master device is shown below.
-+
-++---------------------+                +---------------------+
-+|                     |-----SCK------->|CLK                  |
-+|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-+|                     |-----SD0------->|D0                   |
-+|                     |-----SD1------->|D1                   |
-++---------------------+                +---------------------+
-+
-+As per datasheet, each DRIF channel (drifn) is made up of two internal
-+channels (drifn0 & drifn1). These two internal channels share the common
-+CLK & SYNC. Each internal channel has its own dedicated resources like
-+irq, dma channels, address space & clock. This internal split is not
-+visible to the external master device.
-+
-+The device tree model represents each internal channel as a separate node.
-+The internal channels sharing the CLK & SYNC are tied together by their
-+phandles using a property called "renesas,bonding". For the rest of
-+the documentation, unless explicitly stated, the word channel implies an
-+internal channel.
-+
-+When both internal channels are enabled they need to be managed together
-+as one (i.e.) they cannot operate alone as independent devices. Out of the
-+two, one of them needs to act as a primary device that accepts common
-+properties of both the internal channels. This channel is identified by a
-+property called "renesas,primary-bond".
-+
-+To summarize,
-+   - When both the internal channels that are bonded together are enabled,
-+     the zeroth channel is selected as primary-bond. This channels accepts
-+     properties common to all the members of the bond.
-+   - When only one of the bonded channels need to be enabled, the property
-+     "renesas,bonding" or "renesas,primary-bond" will have no effect. That
-+     enabled channel can act alone as any other independent device.
-+
-+Required properties of an internal channel:
-+-------------------------------------------
-+- compatible:	"renesas,r8a7795-drif" if DRIF controller is a part of R8A7795 SoC.
-+		"renesas,rcar-gen3-drif" for a generic R-Car Gen3 compatible device.
-+
-+		When compatible with the generic version, nodes must list the
-+		SoC-specific version corresponding to the platform first
-+		followed by the generic version.
-+
-+- reg: offset and length of that channel.
-+- interrupts: associated with that channel.
-+- clocks: phandle and clock specifier of that channel.
-+- clock-names: clock input name string: "fck".
-+- dmas: phandles to the DMA channels.
-+- dma-names: names of the DMA channel: "rx".
-+- renesas,bonding: phandle to the other channel.
-+
-+Optional properties of an internal channel:
-+-------------------------------------------
-+- power-domains: phandle to the respective power domain.
-+
-+Required properties of an internal channel when:
-+	- It is the only enabled channel of the bond (or)
-+	- If it acts as primary among enabled bonds
-+--------------------------------------------------------
-+- pinctrl-0: pin control group to be used for this channel.
-+- pinctrl-names: must be "default".
-+- renesas,primary-bond: empty property indicating the channel acts as primary
-+			among the bonded channels.
-+- port: child port node corresponding to the data input, in accordance with
-+	the video interface bindings defined in
-+	Documentation/devicetree/bindings/media/video-interfaces.txt. The port
-+	node must contain at least one endpoint.
-+
-+Optional endpoint property:
-+---------------------------
-+- sync-active: Indicates sync signal polarity, 0/1 for low/high respectively.
-+	       This property maps to SYNCAC bit in the hardware manual. The
-+	       default is 1 (active high).
-+
-+Example:
-+--------
-+
-+(1) Both internal channels enabled:
-+-----------------------------------
-+
-+When interfacing with a third party tuner device with two data pins as shown
-+below.
-+
-++---------------------+                +---------------------+
-+|                     |-----SCK------->|CLK                  |
-+|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-+|                     |-----SD0------->|D0                   |
-+|                     |-----SD1------->|D1                   |
-++---------------------+                +---------------------+
-+
-+	drif00: rif@e6f40000 {
-+		compatible = "renesas,r8a7795-drif",
-+			     "renesas,rcar-gen3-drif";
-+		reg = <0 0xe6f40000 0 0x64>;
-+		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 515>;
-+		clock-names = "fck";
-+		dmas = <&dmac1 0x20>, <&dmac2 0x20>;
-+		dma-names = "rx", "rx";
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+		renesas,bonding = <&drif01>;
-+		renesas,primary-bond;
-+		pinctrl-0 = <&drif0_pins>;
-+		pinctrl-names = "default";
-+		port {
-+			drif0_ep: endpoint {
-+			     remote-endpoint = <&tuner_ep>;
-+			};
-+		};
-+	};
-+
-+	drif01: rif@e6f50000 {
-+		compatible = "renesas,r8a7795-drif",
-+			     "renesas,rcar-gen3-drif";
-+		reg = <0 0xe6f50000 0 0x64>;
-+		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 514>;
-+		clock-names = "fck";
-+		dmas = <&dmac1 0x22>, <&dmac2 0x22>;
-+		dma-names = "rx", "rx";
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+		renesas,bonding = <&drif00>;
-+	};
-+
-+
-+(2) Internal channel 1 alone is enabled:
-+----------------------------------------
-+
-+When interfacing with a third party tuner device with one data pin as shown
-+below.
-+
-++---------------------+                +---------------------+
-+|                     |-----SCK------->|CLK                  |
-+|       Master        |-----SS-------->|SYNC  DRIFn (slave)  |
-+|                     |                |D0 (unused)          |
-+|                     |-----SD-------->|D1                   |
-++---------------------+                +---------------------+
-+
-+	drif00: rif@e6f40000 {
-+		compatible = "renesas,r8a7795-drif",
-+			     "renesas,rcar-gen3-drif";
-+		reg = <0 0xe6f40000 0 0x64>;
-+		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 515>;
-+		clock-names = "fck";
-+		dmas = <&dmac1 0x20>, <&dmac2 0x20>;
-+		dma-names = "rx", "rx";
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+		renesas,bonding = <&drif01>;
-+	};
-+
-+	drif01: rif@e6f50000 {
-+		compatible = "renesas,r8a7795-drif",
-+			     "renesas,rcar-gen3-drif";
-+		reg = <0 0xe6f50000 0 0x64>;
-+		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg CPG_MOD 514>;
-+		clock-names = "fck";
-+		dmas = <&dmac1 0x22>, <&dmac2 0x22>;
-+		dma-names = "rx", "rx";
-+		power-domains = <&sysc R8A7795_PD_ALWAYS_ON>;
-+		renesas,bonding = <&drif00>;
-+		pinctrl-0 = <&drif0_pins>;
-+		pinctrl-names = "default";
-+		port {
-+			drif0_ep: endpoint {
-+			     remote-endpoint = <&tuner_ep>;
-+			     sync-active = <0>;
-+			};
-+		};
-+	};
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 4f27cfa134a1..ce40183d9daa 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1229,6 +1229,9 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_SDR_FMT_CS8:		descr = "Complex S8"; break;
+ 	case V4L2_SDR_FMT_CS14LE:	descr = "Complex S14LE"; break;
+ 	case V4L2_SDR_FMT_RU12LE:	descr = "Real U12LE"; break;
++	case V4L2_SDR_FMT_PCU16BE:	descr = "Planar Complex U16BE"; break;
++	case V4L2_SDR_FMT_PCU18BE:	descr = "Planar Complex U18BE"; break;
++	case V4L2_SDR_FMT_PCU20BE:	descr = "Planar Complex U20BE"; break;
+ 	case V4L2_TCH_FMT_DELTA_TD16:	descr = "16-bit signed deltas"; break;
+ 	case V4L2_TCH_FMT_DELTA_TD08:	descr = "8-bit signed deltas"; break;
+ 	case V4L2_TCH_FMT_TU16:		descr = "16-bit unsigned touch data"; break;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index 2b8feb86d09e..45cf7359822c 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -669,6 +669,9 @@ struct v4l2_pix_format {
+ #define V4L2_SDR_FMT_CS8          v4l2_fourcc('C', 'S', '0', '8') /* complex s8 */
+ #define V4L2_SDR_FMT_CS14LE       v4l2_fourcc('C', 'S', '1', '4') /* complex s14le */
+ #define V4L2_SDR_FMT_RU12LE       v4l2_fourcc('R', 'U', '1', '2') /* real u12le */
++#define V4L2_SDR_FMT_PCU16BE	  v4l2_fourcc('P', 'C', '1', '6') /* planar complex u16be */
++#define V4L2_SDR_FMT_PCU18BE	  v4l2_fourcc('P', 'C', '1', '8') /* planar complex u18be */
++#define V4L2_SDR_FMT_PCU20BE	  v4l2_fourcc('P', 'C', '2', '0') /* planar complex u20be */
+ 
+ /* Touch formats - used for Touch devices */
+ #define V4L2_TCH_FMT_DELTA_TD16	v4l2_fourcc('T', 'D', '1', '6') /* 16-bit signed deltas */
 -- 
 2.12.2
