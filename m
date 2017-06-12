@@ -1,32 +1,59 @@
 From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: dts: r8a779x: Fix PCI bus dtc warnings
-Date: Mon, 12 Jun 2017 11:06:56 +0200
-Message-ID: <20170612090655.GB15434@verge.net.au>
-References: <1497023440-23845-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH 0/4] arm64: renesas: Add support for Salvator-XS
+Date: Mon, 12 Jun 2017 11:10:20 +0200
+Message-ID: <20170612091019.GC15434@verge.net.au>
+References: <1497008629-3974-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1497023440-23845-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1497008629-3974-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 05:50:40PM +0200, Geert Uytterhoeven wrote:
-> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Fri, Jun 09, 2017 at 01:43:45PM +0200, Geert Uytterhoeven wrote:
+> 	Hi Simon, Magnus,
 > 
-> The bogus 'device_type = "pci"' confuses dtc, causing lots of totally
-> unrelated warnings.  After fixing that, real warnings like
+> The Renesas Salvator-XS (Salvator-X 2nd version) development board can
+> be equipped with either an R-Car H3 ES2.0 or M3-W ES1.x SiP, which are
+> pin-compatible.
 > 
->     arch/arm/boot/dts/r8a7790-lager.dtb: Warning (pci_device_reg): Node /pci@ee090000/usb@0,1 PCI unit address format error, expected "1,0"
+> This patch series adds initial support for the Renesas Salvator-XS
+> development board equipped with an R-Car H3 ES2.0 SiP.  The support
+> level is similar to the existing support for Salvator-X with the same
+> SiP.  See below for exceptions.
 > 
-> are left.  Correct the unit-addresses and reg properties of the subnodes
-> to fix these.
+> The Salvator-XS board is similar but not identical to the already
+> supported Salvator-X board.  To avoid duplication, the common parts are
+> extracted first into its own .dtsi file.
+> Noteworthy differences are:
+>   - The main clock crystal ticks at a slightly different rate.
+>   - On R-Car H3 ES2.0, SATA no longer uses dedicated pins, but shares
+>     them with the second PCIe channel.  To cater for this, a MAX4888B
+>     multiplexer has been added to Salvator-XS.  As the default hardware
+>     configuration enables PCIe, I disabled SATA.
+>   - The Versaclock5 clock generator has been replaced by a similar
+>     member of the Versaclock6 family.  As the latter is not supported by
+>     Linux yet, I left it out.
+>   - The USB3.0 micro-B connector is replaced by a USB2.0 micro-AB
+>     connector (both are not yet supported, so no change is needed now).
 > 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> [geert: Improve description]
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Dependencies:
+>   - renesas-devel-20170608-v4.12-rc4,
+>   - "arm64: dts: salvator-x: Add missing index to PWM pinctrl subnode
+>     name".
+> 
+> For your convenience, I've pushed this series, its dependencies, and a
+> few related driver changes to the topic/r8a7795-salvator-xs branch of
+> the git repository at
+> https://git.kernel.org/cgit/linux/kernel/git/geert/renesas-drivers.git
+> 
+> This has been tested on Salvator-XS with R-Car H3 ES2.0, and Salvator-X
+> with R-Car H3 ES1.0.
+> 
+> Thanks!
 
 Thanks, I have queued this up for v4.13.
 --
