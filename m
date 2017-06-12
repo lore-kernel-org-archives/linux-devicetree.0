@@ -1,62 +1,61 @@
 From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 12/13] ARM: dts: meson8b: add the SCU device node
-Date: Mon, 12 Jun 2017 09:37:05 +0200
-Message-ID: <9a556b03-3565-8b0f-ed99-67baa4002270@baylibre.com>
+Subject: Re: [PATCH 13/13] ARM: dts: meson: use the real ethernet clock on
+ Meson8 and Meson8b
+Date: Mon, 12 Jun 2017 09:37:16 +0200
+Message-ID: <f26c205e-9956-3315-27bf-b520cbaff1ad@baylibre.com>
 References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
- <20170611101644.28581-13-martin.blumenstingl@googlemail.com>
+ <20170611101644.28581-14-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170611101644.28581-13-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170611101644.28581-14-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 06/11/2017 12:16 PM, Martin Blumenstingl wrote:
-> Amlogic's Meson8b SoC has a Snoop Control Unit (SCU), just like many
-> other Cortex-A5 SoCs. Add the corresponding devicetree node so it can be
-> used during SMP boot.
+> Until now clk81 was used as gate clock for the ethernet controller on
+> Meson8 whereas Meson8b did not configure a gate clock at all. Use
+> CLKID_ETH for both SoCs, which is the real gate clock for the ethernet
+> controller.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 > ---
->  arch/arm/boot/dts/meson8.dtsi  | 5 +++++
+>  arch/arm/boot/dts/meson8.dtsi  | 2 +-
 >  arch/arm/boot/dts/meson8b.dtsi | 5 +++++
->  2 files changed, 10 insertions(+)
+>  2 files changed, 6 insertions(+), 1 deletion(-)
 > 
 > diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
-> index 7bfce6d8d0af..f6816ea09aeb 100644
+> index f6816ea09aeb..d997185896b7 100644
 > --- a/arch/arm/boot/dts/meson8.dtsi
 > +++ b/arch/arm/boot/dts/meson8.dtsi
-> @@ -110,6 +110,11 @@
->  			no-map;
->  		};
->  	};
-> +
-> +	scu@c4300000 {
-> +		compatible = "arm,cortex-a9-scu";
-> +		reg = <0xc4300000 0x100>;
-> +	};
->  }; /* end of / */
+> @@ -242,7 +242,7 @@
+>  };
 >  
->  &aobus {
+>  &ethmac {
+> -	clocks = <&clkc CLKID_CLK81>;
+> +	clocks = <&clkc CLKID_ETH>;
+>  	clock-names = "stmmaceth";
+>  };
+>  
 > diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
-> index aa4664713b66..2b13570b0e60 100644
+> index 2b13570b0e60..e57934f82098 100644
 > --- a/arch/arm/boot/dts/meson8b.dtsi
 > +++ b/arch/arm/boot/dts/meson8b.dtsi
-> @@ -82,6 +82,11 @@
->  			reg = <0x203>;
->  		};
+> @@ -176,6 +176,11 @@
 >  	};
-> +
-> +	scu@c4300000 {
-> +		compatible = "arm,cortex-a5-scu";
-> +		reg = <0xc4300000 0x100>;
-> +	};
->  }; /* end of / */
+>  };
 >  
->  &aobus {
+> +&ethmac {
+> +	clocks = <&clkc CLKID_ETH>;
+> +	clock-names = "stmmaceth";
+> +};
+> +
+>  &hwrng {
+>  	clocks = <&clkc CLKID_RNG0>;
+>  	clock-names = "core";
 > 
 
 Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
