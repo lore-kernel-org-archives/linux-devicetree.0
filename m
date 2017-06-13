@@ -1,45 +1,32 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable
- to handle kernel NULL pointer dereference at 00000000000000a8
-Date: Tue, 13 Jun 2017 18:35:08 +0200
-Message-ID: <20170613163508.GA31961@kroah.com>
-References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
- <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
- <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
- <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
- <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
- <20170613041842.GA13308@kroah.com>
- <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
- <20170613043416.GB14217@kroah.com>
- <20170613043518.GA14621@kroah.com>
- <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH net-next] of_mdio: move of_mdio_parse_addr to header file
+Date: Tue, 13 Jun 2017 09:49:01 -0700
+Message-ID: <23f97bac-8fdd-77e5-364d-0ea3a395d0c6@gmail.com>
+References: <1497365768-17627-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497365768-17627-1-git-send-email-jon.mason@broadcom.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 10:25:40AM -0600, Logan Gunthorpe wrote:
+On 06/13/2017 07:56 AM, Jon Mason wrote:
+> The of_mdio_parse_addr() helper function is useful to other code, but
+> the module dependency chain causes issues.  To work around this, we can
+> move of_mdio_parse_addr() to be an inline function in the header file.
+> This gets rid of the dependencies and still allows for the reuse of
+> code.
 > 
-> 
-> On 12/06/17 10:35 PM, Greg Kroah-Hartman wrote:
-> > Or better yet, just turn all char major allocations into dynamic, which
-> > would be really good for test systems.  I thought someone proposed
-> > patches for that a long time ago, but I can't find them anymore.  That
-> > would be the simplest solution here.
-> 
-> Would people not complain about that? I would not be surprised if some
-> crazy application is using hard coded major numbers in userspace. So
-> such a change could potentially break userspace...
+> Reported-by: Liviu Dudau <liviu@dudau.co.uk>
+> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+> Fixes: 342fa1964439 ("mdio: mux: make child bus walking more permissive and errors more verbose")
 
-For char devices, I doubt it, but we can't take the chance, which is why
-you make it an option.  Then, it's enabled for 'allmodconfig' builds,
-which helps testers out.
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-thanks,
-
-greg k-h
+Thanks!
+-- 
+Florian
