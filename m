@@ -1,529 +1,68 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: Re: [PATCH v2 05/15] [media] cxd2880: Add spi device IO routines
-Date: Tue, 13 Jun 2017 09:25:15 -0300
-Message-ID: <20170613092515.5f61781e@vento.lan>
-References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
-        <20170414022523.17417-1-Yasunari.Takiguchi@sony.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: Add bindings for
+ nvidia,tegra186-ccplex-cluster
+Date: Tue, 13 Jun 2017 14:42:39 +0200
+Message-ID: <20170613124239.GC16758@ulmo.fritz.box>
+References: <1496304245-24024-2-git-send-email-mperttunen@nvidia.com>
+ <1497262984-2346-1-git-send-email-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170414022523.17417-1-Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="OBd5C1Lgu00Gd/Tn"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1497262984-2346-1-git-send-email-mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 14 Apr 2017 11:25:23 +0900
-<Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org> escreveu:
 
-> From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-> 
-> Add functions for initializing, reading and writing to the SPI
-> device for the Sony CXD2880 DVB-T2/T tuner + demodulator.
-> 
-> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+--OBd5C1Lgu00Gd/Tn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 12, 2017 at 01:23:04PM +0300, Mikko Perttunen wrote:
+> The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
+> registers that initiate CPU frequency/voltage transitions.
+>=20
+> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
->  .../dvb-frontends/cxd2880/cxd2880_devio_spi.c      | 147 +++++++++++++++++++++
->  .../dvb-frontends/cxd2880/cxd2880_devio_spi.h      |  40 ++++++
->  drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h  |  51 +++++++
->  .../dvb-frontends/cxd2880/cxd2880_spi_device.c     | 130 ++++++++++++++++++
->  .../dvb-frontends/cxd2880/cxd2880_spi_device.h     |  45 +++++++
->  5 files changed, 413 insertions(+)
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
-> 
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
-> new file mode 100644
-> index 000000000000..516efade6bf5
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
-> @@ -0,0 +1,147 @@
-> +/*
-> + * cxd2880_devio_spi.c
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * I/O interface via SPI
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include "cxd2880_devio_spi.h"
-> +#include "cxd2880_stdlib.h"
-> +
-> +#define BURST_WRITE_MAX 128
-> +
-> +static enum cxd2880_ret cxd2880_io_spi_read_reg(struct cxd2880_io *io,
-> +						enum cxd2880_io_tgt tgt,
-> +						u8 sub_address, u8 *data,
-> +						u32 size)
+>  .../arm/tegra/nvidia,tegra186-ccplex-cluster.txt     | 20 ++++++++++++++=
+++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,te=
+gra186-ccplex-cluster.txt
 
-Return argument should be integer, as it is an error code or zero.
-
-> +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct cxd2880_spi *spi = NULL;
-> +	u8 send_data[6];
-> +	u8 *read_data_top = data;
-> +
-> +	if ((!io) || (!io->if_object) || (!data))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (sub_address + size > 0x100)
-> +		return CXD2880_RESULT_ERROR_RANGE;
-
-Please use standard return error codes. In this specific case, likely
--EINVAL and -ERANGE.
-
-Same apply to other functions below.
-
-> +
-> +	spi = (struct cxd2880_spi *)(io->if_object);
-> +
-> +	if (tgt == CXD2880_IO_TGT_SYS)
-> +		send_data[0] = 0x0B;
-> +	else
-> +		send_data[0] = 0x0A;
-> +
-> +	send_data[3] = 0;
-> +	send_data[4] = 0;
-> +	send_data[5] = 0;
-> +
-> +	while (size > 0) {
-> +		send_data[1] = sub_address;
-> +		if (size > 255)
-> +			send_data[2] = 255;
-> +		else
-> +			send_data[2] = (u8)size;
-
-No need to cast.
-
-> +
-> +		ret =
-> +		    spi->write_read(spi, send_data, sizeof(send_data),
-> +				    read_data_top, send_data[2]);
-> +		if (ret != CXD2880_RESULT_OK)
-> +			return ret;
-
-Please keep it simple, e. g.:
-
-	if (ret)
-		return ret;
-
-> +
-> +		sub_address += send_data[2];
-> +		read_data_top += send_data[2];
-> +		size -= send_data[2];
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static enum cxd2880_ret cxd2880_io_spi_write_reg(struct cxd2880_io *io,
-> +						 enum cxd2880_io_tgt tgt,
-> +						 u8 sub_address,
-> +						 const u8 *data, u32 size)
-> +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct cxd2880_spi *spi = NULL;
-> +	u8 send_data[BURST_WRITE_MAX + 4];
-> +	const u8 *write_data_top = data;
-> +
-> +	if ((!io) || (!io->if_object) || (!data))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (size > BURST_WRITE_MAX)
-> +		return CXD2880_RESULT_ERROR_OVERFLOW;
-> +
-> +	if (sub_address + size > 0x100)
-> +		return CXD2880_RESULT_ERROR_RANGE;
-> +
-> +	spi = (struct cxd2880_spi *)(io->if_object);
-
-Is cast really needed here?
-
-> +
-> +	if (tgt == CXD2880_IO_TGT_SYS)
-> +		send_data[0] = 0x0F;
-> +	else
-> +		send_data[0] = 0x0E;
-> +
-> +	while (size > 0) {
-> +		send_data[1] = sub_address;
-> +		if (size > 255)
-> +			send_data[2] = 255;
-> +		else
-> +			send_data[2] = (u8)size;
-
-cast not needed.
-
-> +
-> +		cxd2880_memcpy(&send_data[3], write_data_top, send_data[2]);
-
-just memcpy().
-
-> +
-> +		if (tgt == CXD2880_IO_TGT_SYS) {
-> +			send_data[3 + send_data[2]] = 0x00;
-> +			ret = spi->write(spi, send_data, send_data[2] + 4);
-> +		} else {
-> +			ret = spi->write(spi, send_data, send_data[2] + 3);
-> +		}
-> +		if (ret != CXD2880_RESULT_OK)
-> +			return ret;
-> +
-> +		sub_address += send_data[2];
-> +		write_data_top += send_data[2];
-> +		size -= send_data[2];
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +enum cxd2880_ret cxd2880_io_spi_create(struct cxd2880_io *io,
-> +				       struct cxd2880_spi *spi, u8 slave_select)
-> +{
-> +	if ((!io) || (!spi))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	io->read_regs = cxd2880_io_spi_read_reg;
-> +	io->write_regs = cxd2880_io_spi_write_reg;
-> +	io->write_reg = cxd2880_io_common_write_one_reg;
-> +	io->if_object = spi;
-> +	io->i2c_address_sys = 0;
-> +	io->i2c_address_demod = 0;
-> +	io->slave_select = slave_select;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
-> new file mode 100644
-> index 000000000000..15934bf11935
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
-> @@ -0,0 +1,40 @@
-> +/*
-> + * cxd2880_devio_spi.h
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * I/O interface via SPI
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef CXD2880_DEVIO_SPI_H
-> +#define CXD2880_DEVIO_SPI_H
-> +
-> +#include "cxd2880_common.h"
-> +#include "cxd2880_io.h"
-> +#include "cxd2880_spi.h"
-> +
-> +#include "cxd2880_tnrdmd.h"
-> +
-> +enum cxd2880_ret cxd2880_io_spi_create(struct cxd2880_io *io,
-> +				       struct cxd2880_spi *spi,
-> +				       u8 slave_select);
-> +
-> +#endif
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
-> new file mode 100644
-> index 000000000000..81e5be747962
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
-> @@ -0,0 +1,51 @@
-> +/*
-> + * cxd2880_spi.h
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * SPI access definitions
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef CXD2880_SPI_H
-> +#define CXD2880_SPI_H
-> +
-> +#include "cxd2880_common.h"
-> +
-> +enum cxd2880_spi_mode {
-> +	CXD2880_SPI_MODE_0,
-> +	CXD2880_SPI_MODE_1,
-> +	CXD2880_SPI_MODE_2,
-> +	CXD2880_SPI_MODE_3
-> +};
-> +
-> +struct cxd2880_spi {
-> +	enum cxd2880_ret (*read)(struct cxd2880_spi *spi, u8 *data,
-> +				  u32 size);
-> +	enum cxd2880_ret (*write)(struct cxd2880_spi *spi, const u8 *data,
-> +				   u32 size);
-> +	enum cxd2880_ret (*write_read)(struct cxd2880_spi *spi,
-> +					const u8 *tx_data, u32 tx_size,
-> +					u8 *rx_data, u32 rx_size);
-
-please use int for returned values, and convert to the linux
-error codes.
-
-> +	u32 flags;
-> +	void *user;
-> +};
-> +
-> +#endif
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
-> new file mode 100644
-> index 000000000000..af9ed40c900b
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
-> @@ -0,0 +1,130 @@
-> +/*
-> + * cxd2880_spi_device.c
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * SPI access functions
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#include <linux/spi/spi.h>
-> +
-> +#include "cxd2880_spi_device.h"
-> +
-> +static enum cxd2880_ret cxd2880_spi_device_write(struct cxd2880_spi *spi,
-> +						const u8 *data, u32 size)
-> +{
-> +	struct cxd2880_spi_device *spi_device = NULL;
-> +	struct spi_message msg;
-> +	struct spi_transfer tx;
-> +	int result = 0;
-> +
-> +	if ((!spi) || (!spi->user) || (!data) || (size == 0))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	spi_device = (struct cxd2880_spi_device *)(spi->user);
-
-Is cast needed?
-
-> +
-> +	memset(&tx, 0, sizeof(tx));
-> +	tx.tx_buf = data;
-> +	tx.len = size;
-> +
-> +	spi_message_init(&msg);
-> +	spi_message_add_tail(&tx, &msg);
-> +	result = spi_sync(spi_device->spi, &msg);
-> +
-> +	if (result < 0)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +static enum cxd2880_ret cxd2880_spi_device_write_read(struct cxd2880_spi *spi,
-> +							const u8 *tx_data,
-> +							u32 tx_size,
-> +							u8 *rx_data,
-> +							u32 rx_size)
-> +{
-> +	struct cxd2880_spi_device *spi_device = NULL;
-> +	int result = 0;
-> +
-> +	if ((!spi) || (!spi->user) || (!tx_data) ||
-> +		 (tx_size == 0) || (!rx_data) || (rx_size == 0))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	spi_device = (struct cxd2880_spi_device *)(spi->user);
-> +
-> +	result = spi_write_then_read(spi_device->spi, tx_data,
-> +					tx_size, rx_data, rx_size);
-> +	if (result < 0)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +enum cxd2880_ret
-> +cxd2880_spi_device_initialize(struct cxd2880_spi_device *spi_device,
-> +				enum cxd2880_spi_mode mode,
-> +				u32 speed_hz)
-> +{
-> +	int result = 0;
-> +	struct spi_device *spi = spi_device->spi;
-> +
-> +	switch (mode) {
-> +	case CXD2880_SPI_MODE_0:
-> +		spi->mode = SPI_MODE_0;
-> +		break;
-> +	case CXD2880_SPI_MODE_1:
-> +		spi->mode = SPI_MODE_1;
-> +		break;
-> +	case CXD2880_SPI_MODE_2:
-> +		spi->mode = SPI_MODE_2;
-> +		break;
-> +	case CXD2880_SPI_MODE_3:
-> +		spi->mode = SPI_MODE_3;
-> +		break;
-> +	default:
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +	}
-> +
-> +	spi->max_speed_hz = speed_hz;
-> +	spi->bits_per_word = 8;
-> +	result = spi_setup(spi);
-> +	if (result != 0) {
-> +		pr_err("spi_setup failed %d\n", result);
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +	}
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +enum cxd2880_ret cxd2880_spi_device_create_spi(struct cxd2880_spi *spi,
-> +					struct cxd2880_spi_device *spi_device)
-> +{
-> +	if ((!spi) || (!spi_device))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	spi->read = NULL;
-> +	spi->write = cxd2880_spi_device_write;
-> +	spi->write_read = cxd2880_spi_device_write_read;
-> +	spi->flags = 0;
-> +	spi->user = spi_device;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
-> new file mode 100644
-> index 000000000000..343d9161d537
-> --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
-> @@ -0,0 +1,45 @@
-> +/*
-> + * cxd2880_spi_device.h
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
-> + * SPI access interface
-> + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
-> + */
-> +
-> +#ifndef CXD2880_SPI_DEVICE_H
-> +#define CXD2880_SPI_DEVICE_H
-> +
-> +#include "cxd2880_spi.h"
-> +
-> +struct cxd2880_spi_device {
-> +	struct spi_device *spi;
-> +};
-> +
-> +enum cxd2880_ret
-> +cxd2880_spi_device_initialize(struct cxd2880_spi_device *spi_device,
-> +				enum cxd2880_spi_mode mode,
-> +				u32 speedHz);
-> +
-> +enum cxd2880_ret
-> +cxd2880_spi_device_create_spi(struct cxd2880_spi *spi,
-> +				struct cxd2880_spi_device *spi_device);
-> +
-> +#endif /* CXD2880_SPI_DEVICE_H */
-
-
+The ARM SoC maintainers don't like to pick up device tree bindings, so
+I'd prefer this to go through the cpufreq tree that also contains the
+driver patches. Presumably this wasn't merged through that tree because
+of the missing Acked-by by a device tree maintainer? Given that Rob's
+acked it now, maybe you can resend this to Viresh, who I think had
+picked up the driver?
 
 Thanks,
-Mauro
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--OBd5C1Lgu00Gd/Tn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlk/3b4ACgkQ3SOs138+
+s6FzchAAtPe9ZwHD7gAlKtNf4L3qwNB8e2gG9jXfRfIN+o0PQ8e9DqVa0tlFyyI4
+d98vxRyCOsmhx1z1Bvi/M1YfGsI1qOgYMRw54V7R0TRQZFldLPkxsPoI3wmDOVIu
+rLpk4o1ABudfkdZnB1c8s1MmOXjSWIkCwvy9W27v3BQDZCyfeZPve19R4UpeFvQ6
+rzRPUwEa7B//hhCTaxXyM2OleA4YPO23eZIVhRMM4itHO5zrNMQEzLTosMHbfIh+
+BtBI4x0eJ2WkGXGG9k2cN3xVW/7rUBPHT3lHAtSYFQBfh7peWK+M/QyYfrgAPp7Y
+7HGwPnQp17x9lJih3jZYDIbrfTow8FdP/N7jT8YtzPwYABIt+B7/IDBdJRxexM+C
+sFH2YeW7+y3mooYoc7q8qXrhI5r1m47oN3ij6jmMTIq5b5X16BDZI06/YG4PLUD4
+lfIgH84slaj/xkS11Tfn4Scm3hU57qVTXsRP3yuN1Vu+GMes3Hu01p+d0qB6QWzw
+g3TAv7lAqLMMXxMFUgisYuR0f/NDcjSx4WluO+pg0afIVc3BHQ97u1hZ7ZxsfVVd
+scMGlq8RLBTZ141j6+MsIT+v38WzLiWRNTq8qJciLhiSaHY497eOV0Ilww5amk4S
+ururDgLlNx+hL1bakbJxVsJNUF4g6WBHUjGnVEKP+iumcfMCHkg=
+=gmBs
+-----END PGP SIGNATURE-----
+
+--OBd5C1Lgu00Gd/Tn--
