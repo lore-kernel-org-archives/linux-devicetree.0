@@ -1,87 +1,150 @@
-From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
-Date: Tue, 13 Jun 2017 21:23:09 +0800
-Message-ID: <1497360189.930.42.camel@mhfsdcap03>
-References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
-         <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
-         <1497268468.930.26.camel@mhfsdcap03>
-         <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
-         <1497349452.930.36.camel@mhfsdcap03>
-         <ba658a59-7ef9-2340-57fa-3bcefa3f47ed@gmail.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: mfd: Add DT bindings documentation for
+ the max7360 mfd driver
+Date: Tue, 13 Jun 2017 16:28:52 +0300
+Message-ID: <a476aafe-a75f-35bb-bfff-fc73a7f862cc@mentor.com>
+References: <20170613122051.6061-1-valentin_sitdikov@mentor.com>
+ <20170613122051.6061-2-valentin_sitdikov@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <ba658a59-7ef9-2340-57fa-3bcefa3f47ed-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170613122051.6061-2-valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-06-13 at 14:52 +0200, Matthias Brugger wrote:
+Hi Valentin,
+
+On 06/13/2017 03:20 PM, Valentin Sitdikov wrote:
+> This patch adds documentation for the max7360 bindings.
+> The max7360 is Multi-functional Device containing gpio,
+> keypad, pwm and rotary encoder submodules.
 > 
-> On 13/06/17 12:24, Jun Gao wrote:
-> > On Tue, 2017-06-13 at 11:36 +0200, Matthias Brugger wrote:
-> >>
-> >> On 12/06/17 13:54, Jun Gao wrote:
-> >>> On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
-> >>>> From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>>
-> >>>> Add MT2701 i2c device node.
-> >>>>
-> >>>> Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> >>>> ---
-> >>>>    arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
-> >>>>    arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
-> >>>>    2 files changed, 84 insertions(+)
-> >> [...]
-> >>>
-> >>> Dear Matthias,
-> >>>
-> >>> Could you take this patch together with
-> >>> [PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
-> >>>
-> >>> Thanks!
-> >>>
-> >>
-> >> They are both included in the pull request I send [1] [2], or do I miss
-> >> something?
-> >>
-> >> Regards,
-> >> Matthias
-> >>
-> >> [1]
-> >> https://github.com/mbgg/linux-mediatek/commit/729b7f8dbdaff270c53052897ea06486221a49a2
-> >> [2]
-> >> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
-> > 
-> > Dear Matthias,
-> > 
-> > Would you mind to use the same style as follows in i2c-mtk.txt of [2]?
-> > 
-> > "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-> > "mediatek,mt6577-i2c": for Mediatek MT6577
-> > "mediatek,mt6589-i2c": for Mediatek MT6589
-> > "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-> > "mediatek,mt8173-i2c": for Mediatek MT8173
-> > 
-> > 
-> > Thanks!
-> > 
+> Signed-off-by: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/max7360.txt | 74 +++++++++++++++++++++++
+>  1 file changed, 74 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max7360.txt
 > 
-> You mean I should fix-up the patch to fit to the new binding 
-> description? Or do you mean it should be MTxxxx instead of mtxxxx?
+> diff --git a/Documentation/devicetree/bindings/mfd/max7360.txt b/Documentation/devicetree/bindings/mfd/max7360.txt
+> new file mode 100644
+> index 0000000..c2ceaf9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max7360.txt
+> @@ -0,0 +1,74 @@
+> +* Maxim MAX7360 Multi-function Device
+> +
+> +The Maxim MAX7360 is a Multi-function Device which includes
+> +64 key switches, 8 LED drivers/GPIOs, PWM intensity control,
+> +and rotary switch control.
+> +
+> +Required properties:
+> +- compatible:	Should be the following: "maxim,max7360".
+> +- reg:		Specifies the I2C slave address of the max7360 block.
+> +		  It can be 0x38, 0x3a, 0x3c or 0x3e IIUC.
+
+"IIUC" note is highly undesirable ;)
+
+> +
+> +Optional properties:
+> +- interrupt-parent:	Specifies the phandle of the interrupt controller to
+> +			  which the interrupts from MAX7360 are routed to.
+> +- interrupts:		List of IRQ lines specifiers.
+> +- interrupt-names:	List of "inti" and "intk".
+> +- interrupt-controller:	Identifies the device as an interrupt controller.
+> +- #interrupt-cells :	Number of cells to encode an interrupt source,
+> +			  shall be 1.
+> +
+> +Examples:
+> +
+> +Without subnodes:
+> +	max7360@38 {
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "inti", "intk";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+> +	};
+
+Can you drop the example above? It does not bring any new information.
+
+> +
+> +With subnodes:
+> +	max7360@38 {
+
+Commonly for device node names generic/device class names are utilized,
+however I can not suggest what name is better.
+
+> +		compatible = "maxim,max7360";
+> +		reg = <0x38>;
+> +		interrupt-parent = <&gpio1>;
+> +		interrupts = <23 IRQ_TYPE_LEVEL_LOW>, <23 IRQ_TYPE_LEVEL_LOW>;
+> +		interrupt-names = "inti", "intk";
+> +		interrupt-controller;
+> +		#interrupt-cells = <0x1>;
+
+For #*-cells properties plese specify plain integers, #interrupt-cells = <1>;
+
+> +
+> +		gpio {
+> +			compatible = "maxim,max7360-gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <0x2>;
+
+Please use a plain integer.
+
+> +			interrupt-controller;
+> +			#interrupt-cells = <0x2>;
+
+Please use a plain integer.
+
+> +			interrupts = <0>;
+> +		};
+> +
+> +		keypad {
+> +			compatible = "maxim,max7360-keypad";
+> +			maxim,debounce_reg = /bits/ 8 <0xef>;
+> +			maxim,ports_reg = /bits/ 8 <0xae>;
+
+Here I'd rather suggest
+
+1) use 32-bit values,
+2) rename properties by replacing underscore by a hyphen.
+
+> +			linux,keymap = < MATRIX_KEY(0, 0, KEY_F5)
+> +					 MATRIX_KEY(1, 0, KEY_F4) >;
+> +			keypad,num-rows = <2>;
+> +			keypad,num-columns = <1>;
+> +			interrupts = <1>;
+> +		};
+> +
+> +		pwm {
+> +			compatible = "maxim,max7360-pwm";
+> +			#pwm-cells = <0x2>;
+
+Please use a plain integer.
+
+> +		};
+> +
+> +		rotary-encoder {
+> +			compatible = "maxim,max7360-rotary";
+> +			interrupts = <2>;
+> +		};
+> +
+
+Please drop an empty line above.
+
+> +	};
 > 
-> Regards,
-> Matthias
 
-Dear Matthias,
-
-I mean fix-up the patch to fit to the new binding description. Is it OK?
-
-Thanks!
-
-
+--
+With best wishes,
+Vladimir
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
