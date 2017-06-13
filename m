@@ -1,129 +1,27 @@
-From: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/12] coresight replicator: Cleanup programmable
- replicator naming
-Date: Tue, 13 Jun 2017 10:55:28 -0600
-Message-ID: <20170613165528.GA6392@xps15>
-References: <1497278211-5001-1-git-send-email-suzuki.poulose@arm.com>
- <1497278211-5001-2-git-send-email-suzuki.poulose@arm.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/2] MDIO bus reset GPIO cleanups
+Date: Tue, 13 Jun 2017 13:00:59 -0400 (EDT)
+Message-ID: <20170613.130059.891454430682161684.davem@davemloft.net>
+References: <20170612205537.977289294@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1497278211-5001-2-git-send-email-suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ivan T . Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170612205537.977289294@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 03:36:40PM +0100, Suzuki K Poulose wrote:
-> The Linux coresight drivers define the programmable ATB replicator as
-> Qualcom replicator, while this is designed by ARM. This can cause confusion
-> to a user selecting the driver. Cleanup all references to make it
->  explicitly clear. This patch :
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Date: Mon, 12 Jun 2017 23:55:37 +0300
+
+> Commit 4c5e7a2c0501 ("dt-bindings: mdio: Clarify binding document")
+> declared that a MDIO reset GPIO property should have only a single GPIO
+> reference/specifier, however the supporting code was left intact...
+> Here's a couple of the obvious cleanups to that code:
 > 
->  1) Adds a new compatible string for the same, retaining the old one for
->     compatibility.
->  2) Changes the Kconfig symbol (since this is not part of any defconfigs)
-> 	 CORESIGHT_QCOM_REPLICATOR => CORESIGHT_DYNAMIC_REPLICATOR
->  3) Improves the help message in the Kconfig.
->  4) Changes the name of the driver :
-> 	coresight-replicator-qcom => coresight-dynamic-replicator
-> 
-> Cc: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
+> [1/2] mdio_bus: handle only single PHY reset GPIO
+> [2/2] mdio_bus: use devm_gpiod_get_optional()
 
-Hi Suzuki,
-
-> ---
->  Documentation/devicetree/bindings/arm/coresight.txt     |  4 +++-
->  drivers/hwtracing/coresight/Kconfig                     | 10 +++++-----
->  drivers/hwtracing/coresight/Makefile                    |  2 +-
->  drivers/hwtracing/coresight/coresight-replicator-qcom.c |  2 +-
->  4 files changed, 10 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> index fcbae6a..f77329f 100644
-> --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> @@ -34,7 +34,9 @@ its hardware characteristcs.
->  		- Embedded Trace Macrocell (version 4.x):
->  			"arm,coresight-etm4x", "arm,primecell";
->  
-> -		- Qualcomm Configurable Replicator (version 1.x):
-> +		- Coresight programmable Replicator (version 1.x):
-> +			"arm,coresight-dynamic-replicator", "arm,primecell";
-> +				OR
->  			"qcom,coresight-replicator1x", "arm,primecell";
-
-Rob, what's your view on keeping the old binding around?  We could simply change
-the two occurences we find in the DTs (Juno and 410c) to the new name and be
-done with the old one.
-
->  
->  		- System Trace Macrocell:
-> diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-> index 8d55d6d..e50ea56 100644
-> --- a/drivers/hwtracing/coresight/Kconfig
-> +++ b/drivers/hwtracing/coresight/Kconfig
-> @@ -70,13 +70,13 @@ config CORESIGHT_SOURCE_ETM4X
->  	  for instruction level tracing. Depending on the implemented version
->  	  data tracing may also be available.
->  
-> -config CORESIGHT_QCOM_REPLICATOR
-> -	bool "Qualcomm CoreSight Replicator driver"
-> +config CORESIGHT_DYNAMIC_REPLICATOR
-> +	bool "Programmable CoreSight Replicator driver"
->  	depends on CORESIGHT_LINKS_AND_SINKS
->  	help
-> -	  This enables support for Qualcomm CoreSight link driver. The
-> -	  programmable ATB replicator sends the ATB trace stream from the
-> -	  ETB/ETF to the TPIUi and ETR.
-> +	  This enables support for dynamic CoreSight replicator link driver.
-> +	  The programmable ATB replicator allows independent filtering of the
-> +	  trace data based on the traceid.
->  
->  config CORESIGHT_STM
->  	bool "CoreSight System Trace Macrocell driver"
-> diff --git a/drivers/hwtracing/coresight/Makefile b/drivers/hwtracing/coresight/Makefile
-> index 433d590..c7638d4 100644
-> --- a/drivers/hwtracing/coresight/Makefile
-> +++ b/drivers/hwtracing/coresight/Makefile
-> @@ -14,6 +14,6 @@ obj-$(CONFIG_CORESIGHT_SOURCE_ETM3X) += coresight-etm3x.o coresight-etm-cp14.o \
->  					coresight-etm3x-sysfs.o
->  obj-$(CONFIG_CORESIGHT_SOURCE_ETM4X) += coresight-etm4x.o \
->  					coresight-etm4x-sysfs.o
-> -obj-$(CONFIG_CORESIGHT_QCOM_REPLICATOR) += coresight-replicator-qcom.o
-> +obj-$(CONFIG_CORESIGHT_DYNAMIC_REPLICATOR) += coresight-replicator-qcom.o
->  obj-$(CONFIG_CORESIGHT_STM) += coresight-stm.o
->  obj-$(CONFIG_CORESIGHT_CPU_DEBUG) += coresight-cpu-debug.o
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator-qcom.c b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
-> index 0a3d15f..b7e44d1 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator-qcom.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
-
-While at it, I would also change the name of the file.
-
-Thanks,
-Mathieu
-
-> @@ -186,7 +186,7 @@ static struct amba_id replicator_ids[] = {
->  
->  static struct amba_driver replicator_driver = {
->  	.drv = {
-> -		.name	= "coresight-replicator-qcom",
-> +		.name	= "coresight-dynamic-replicator",
->  		.pm	= &replicator_dev_pm_ops,
->  		.suppress_bind_attrs = true,
->  	},
-> -- 
-> 2.7.4
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Series applied.
