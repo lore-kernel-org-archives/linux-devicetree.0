@@ -1,75 +1,57 @@
-From: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH linux-next v4 2/4] spi: imx: add selection for iMX53 and
- iMX6 controller
-Date: Tue, 13 Jun 2017 14:28:03 +0900
-Message-ID: <a4d5d8e2-c50d-4856-e14f-34ead774824e@mentor.com>
-References: <20170608051603.16070-1-jiada_wang@mentor.com>
- <20170608051603.16070-3-jiada_wang@mentor.com>
- <20170612155345.qtgaq4wjj2vidohd@rob-hp-laptop>
+From: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+Subject: Re: [PATCH v2 0/15] [dt-bindings] [media] Add document file and
+ driver for Sony CXD2880 DVB-T2/T tuner + demodulator
+Date: Tue, 13 Jun 2017 14:35:18 +0900
+Message-ID: <6586e809-417f-bb4b-5ca5-e38b9641894b@sony.com>
+References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
+ <5188b958-9a34-4519-5845-a318273592e0@sony.com>
+ <d7c70c53-3fb0-a045-5e1a-1a736bdeda1f@sony.com>
+ <0e192530-9b56-e8fb-6210-ab619ddde1de@sony.com>
+ <CAK3bHNXgbZ0oXbUAYCznpW-iLwQeStFcYRERfRPQcVrk18Pm6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170612155345.qtgaq4wjj2vidohd@rob-hp-laptop>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK3bHNXgbZ0oXbUAYCznpW-iLwQeStFcYRERfRPQcVrk18Pm6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abylay Ospan <aospan-SoTE/FI7wRI@public.gmane.org>
+Cc: "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>, yasunari.takiguchi-7U/KSKJipcs@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob
+Dear Abylay Ospan
 
-On 06/13/2017 12:53 AM, Rob Herring wrote:
-> On Thu, Jun 08, 2017 at 02:16:01PM +0900, Jiada Wang wrote:
->> ECSPI contorller for iMX53 and iMX6 has few hardware issues
->> comparing to iMX51.
->> The change add possibility to detect which controller is used
->> to apply possible workaround and limitations.
->>
->> Signed-off-by: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
->>  drivers/spi/spi-imx.c                              | 26 ++++++++++++++++++++--
->>  2 files changed, 25 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
->> index 31b5b21..5bf1396 100644
->> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
->> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
->> @@ -9,6 +9,7 @@ Required properties:
->>    - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
->>    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
->>    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
->> +  - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
->>  - reg : Offset and length of the register set for the device
->>  - interrupts : Should contain CSPI/eCSPI interrupt
->>  - cs-gpios : Specifies the gpio pins to be used for chipselects.
->> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
->> index 4469121..8e6f339 100644
->> --- a/drivers/spi/spi-imx.c
->> +++ b/drivers/spi/spi-imx.c
->> @@ -63,7 +63,8 @@ enum spi_imx_devtype {
->>  	IMX27_CSPI,
->>  	IMX31_CSPI,
->>  	IMX35_CSPI,	/* CSPI on all i.mx except above */
->> -	IMX51_ECSPI,	/* ECSPI on i.mx51 and later */
->> +	IMX51_ECSPI,	/* ECSPI on i.mx51 */
->> +	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
->
-> Looks like i.MX51 and i.MX53 are the same. While the DT should have
-> different compatibles (with fallbacks), the driver should map them to
-> the same type until there's some difference found.
->
-the difference between i.MX51 and i.MX53 is introduced in the
-4th patch "spi: imx: Add support for SPI Slave mode" in this patch set
+Thank you for your review and proposal.
 
-do you think, I need to merge the two patches into one?
+Unfortunately, we supposed it's difficult to cover CXD2841 functionality by CXD2880 driver.
+CXD2880 is for mobile IC, tuner (RF) and demodulator convined IC.
+On the other hand, CXD2841 is demodulator only IC for stationary use.
+CXD2841 supports terrestrial, cable and satellite broadcasting systems.
+But CXD2880 supports terrestrial broadcasting systems only.
+And as you suggested, the driver supports SPI interface only.
 
-Thanks,
-Jiada
+Regards & Thanks a lot
+Takiguchi
 
-> Rob
->
+
+On 2017/06/12 22:33, Abylay Ospan wrote:
+> Dear Takiguchi,
+> 
+> I'm working on 'drivers/media/dvb-frontends/cxd2841er.c' (universal
+> demod) and 'linux/drivers/media/dvb-frontends/helene.c' (universal
+> TERR/CABLE/SAT tuner).
+> 
+> How do you think - is your cxd2880 proposed driver have possibilities
+> to cover cxd2841er demod functionality too ?
+> 
+> I have quickly checked your cxd2880_top.c and looks like cxd2880 works
+> over SPI (not I2C) ?Also, looks like registers map, sequences
+> is different. Am I right ?
+> 
+> How do you think ?
+> 
+> Thanks a lot !
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
