@@ -1,57 +1,75 @@
-From: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH v2 4/4] arm64: dts: rockchip: use cs-gpios for cros_ec_spi
-Date: Tue, 13 Jun 2017 13:25:43 +0800
-Message-ID: <1497331543-8565-4-git-send-email-jeffy.chen@rock-chips.com>
-References: <1497331543-8565-1-git-send-email-jeffy.chen@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497331543-8565-1-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+From: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH linux-next v4 2/4] spi: imx: add selection for iMX53 and
+ iMX6 controller
+Date: Tue, 13 Jun 2017 14:28:03 +0900
+Message-ID: <a4d5d8e2-c50d-4856-e14f-34ead774824e@mentor.com>
+References: <20170608051603.16070-1-jiada_wang@mentor.com>
+ <20170608051603.16070-3-jiada_wang@mentor.com>
+ <20170612155345.qtgaq4wjj2vidohd@rob-hp-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170612155345.qtgaq4wjj2vidohd@rob-hp-laptop>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The cros_ec requires CS line to be active after last message. But the CS
-would be toggled when powering off/on rockchip spi, which breaks ec xfer.
-Use GPIO CS to prevent that.
+Hello Rob
 
-Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+On 06/13/2017 12:53 AM, Rob Herring wrote:
+> On Thu, Jun 08, 2017 at 02:16:01PM +0900, Jiada Wang wrote:
+>> ECSPI contorller for iMX53 and iMX6 has few hardware issues
+>> comparing to iMX51.
+>> The change add possibility to detect which controller is used
+>> to apply possible workaround and limitations.
+>>
+>> Signed-off-by: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+>>  drivers/spi/spi-imx.c                              | 26 ++++++++++++++++++++--
+>>  2 files changed, 25 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>> index 31b5b21..5bf1396 100644
+>> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>> @@ -9,6 +9,7 @@ Required properties:
+>>    - "fsl,imx31-cspi" for SPI compatible with the one integrated on i.MX31
+>>    - "fsl,imx35-cspi" for SPI compatible with the one integrated on i.MX35
+>>    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on i.MX51
+>> +  - "fsl,imx53-ecspi" for SPI compatible with the one integrated on i.MX53 and later Soc
+>>  - reg : Offset and length of the register set for the device
+>>  - interrupts : Should contain CSPI/eCSPI interrupt
+>>  - cs-gpios : Specifies the gpio pins to be used for chipselects.
+>> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+>> index 4469121..8e6f339 100644
+>> --- a/drivers/spi/spi-imx.c
+>> +++ b/drivers/spi/spi-imx.c
+>> @@ -63,7 +63,8 @@ enum spi_imx_devtype {
+>>  	IMX27_CSPI,
+>>  	IMX31_CSPI,
+>>  	IMX35_CSPI,	/* CSPI on all i.mx except above */
+>> -	IMX51_ECSPI,	/* ECSPI on i.mx51 and later */
+>> +	IMX51_ECSPI,	/* ECSPI on i.mx51 */
+>> +	IMX53_ECSPI,	/* ECSPI on i.mx53 and later */
+>
+> Looks like i.MX51 and i.MX53 are the same. While the DT should have
+> different compatibles (with fallbacks), the driver should map them to
+> the same type until there's some difference found.
+>
+the difference between i.MX51 and i.MX53 is introduced in the
+4th patch "spi: imx: Add support for SPI Slave mode" in this patch set
 
-Changes in v2:
-Fix wrong pinconf for spi5_cs0.
+do you think, I need to merge the two patches into one?
 
- arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+Thanks,
+Jiada
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-index eb50593..b34a51d 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-@@ -790,6 +790,8 @@ ap_i2c_audio: &i2c8 {
- &spi5 {
- 	status = "okay";
- 
-+	cs-gpios = <&gpio2 23 GPIO_ACTIVE_HIGH>;
-+
- 	cros_ec: ec@0 {
- 		compatible = "google,cros-ec-spi";
- 		reg = <0>;
-@@ -813,6 +815,10 @@ ap_i2c_audio: &i2c8 {
- 	};
- };
- 
-+&spi5_cs0 {
-+	rockchip,pins = <RK_GPIO2 23 RK_FUNC_GPIO &pcfg_output_high>;
-+};
-+
- &tsadc {
- 	status = "okay";
- 
--- 
-2.1.4
-
-
+> Rob
+>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
