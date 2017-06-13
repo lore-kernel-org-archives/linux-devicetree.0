@@ -1,187 +1,142 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v2 03/11] drm: sun4i: ignore swapped mixer<->tcon
- connection for DE2
-Date: Tue, 13 Jun 2017 11:46:18 +0200
-Message-ID: <20170613094618.hxjuc5yx7udypbxh@flea.lan>
-References: <20170604160149.30230-1-icenowy@aosc.io>
- <20170604160149.30230-4-icenowy@aosc.io>
- <20170607093512.rfvpefmyskgjw3ik@flea.lan>
- <01A7F22E-C4FF-4B4B-A9BC-FF0C96B996B9@aosc.io>
- <20170607143827.4ng5gedvzn3f5pyx@flea.lan>
- <66881eac1dd06d918692482bdb1ea9e6@aosc.io>
- <20170609144649.67i3zscq26jt5hhe@flea.home>
- <03e5cb4ada3e19ed3476e1d562450f6f@aosc.io>
- <0b7d3cc334929ab2464477bbccc37e31@aosc.io>
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Subject: Re: [PATCH v2 07/11] drm: sun4i: add support for the TV
+ encoder in H3 SoC
+Date: Tue, 13 Jun 2017 17:51:42 +0800
+Message-ID: <5A2149A9-CC7B-4946-9219-A4FE3228B402@aosc.io>
+References: <20170604160149.30230-1-icenowy@aosc.io> <20170604160149.30230-8-icenowy@aosc.io> <20170607093845.cu5kk55nj72roysf@flea.lan> <362bb72d74cd7181ae02dbf73b0e724e@aosc.io> <20170613074432.btwgc4e7pndtsvbf@flea.lan>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0636143716=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <0b7d3cc334929ab2464477bbccc37e31@aosc.io>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: icenowy@aosc.io
-Cc: devicetree@vger.kernel.org, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>, linux-sunxi@googlegroups.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6XL73EQKGQEDI2Y2EQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170613074432.btwgc4e7pndtsvbf-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============0636143716==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="42uig743fx76vuiw"
-Content-Disposition: inline
 
-
---42uig743fx76vuiw
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Sat, Jun 10, 2017 at 11:16:35PM +0800, icenowy@aosc.io wrote:
-> =E5=9C=A8 2017-06-10 22:57=EF=BC=8Cicenowy@aosc.io =E5=86=99=E9=81=93=EF=
+=E4=BA=8E 2017=E5=B9=B46=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883:=
+44:32, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
+>On Sun, Jun 11, 2017 at 02:43:42PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+>> =E5=9C=A8 2017-06-07 17:38=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
 =BC=9A
-> > =E5=9C=A8 2017-06-09 22:46=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
-=BC=9A
-> > > On Thu, Jun 08, 2017 at 01:01:53PM +0800, icenowy@aosc.io wrote:
-> > > > =E5=9C=A8 2017-06-07 22:38=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=
-=EF=BC=9A
-> > > > > On Wed, Jun 07, 2017 at 06:01:02PM +0800, Icenowy Zheng wrote:
-> > > > > > >I have no idea what this is supposed to be doing either.
-> > > > > > >
-> > > > > > >I might be wrong, but I really feel like there's a big mismatch
-> > > > > > >between your commit log, and what you actually implement.
-> > > > > > >
-> > > > > > >In your commit log, you should state:
-> > > > > > >
-> > > > > > >A) What is the current behaviour
-> > > > > > >B) Why that is a problem
-> > > > > > >C) How do you address it
-> > > > > > >
-> > > > > > >And you don't.
-> > > > > > >
-> > > > > > >However, after discussing it with Chen-Yu, it seems like you'r=
-e trying
-> > > > > > >to have all the mixers probed before the TCONs. If that is so,=
- there's
-> > > > > > >nothing specific to the H3 here, and we also have the same iss=
-ue on
-> > > > > > >dual-pipeline DE1 (A10, A20, A31). Chen-Yu worked on that a bi=
-t, but
-> > > > > > >the easiest solution would be to move from a DFS algorithm to =
-walk
-> > > > > > >down the graph to a BFS one.
-> > > > > > >
-> > > > > > >That way, we would add all mixers first, then the TCONs, then =
-the
-> > > > > > >encoders, and the component framework will probe them in order.
-> > > > > >
-> > > > > > No. I said that they're swappable, however, I don't want to
-> > > > > > implement the swap now, but hardcode 0-0 1-1 connection.
-> > > > >
-> > > > > We're on the same page, it's definitely not what I was mentionning
-> > > > > here. This would require a significant rework, and the usecase is
-> > > > > still unclear for now.
-> > > > >
-> > > > > > However, as you and Chen-Yu said, device tree should reflect the
-> > > > > > real hardware, there will be bonus endpoints for the swapped
-> > > > > > connection.
-> > > > >
-> > > > > If by bonus you mean connections from mixer 0 to tcon 1 and mixer=
- 1 to
-> > > > > tcon 0, then yes, we're going to need it.
-> > > > >
-> > > > > > What I want to do is to ignore the bonus connection, in order to
-> > > > > > prevent them from confusing the code.
-> > > > > >
-> > > > > > If you just change the bind sequence, I think it cannot be
-> > > > > > prevented that wrong connections will be bound.
-> > > > >
-> > > > > This is where I don't follow you anymore. The component framework
-> > > > > doesn't list connections but devices. The swapped connections do =
-not
-> > > > > matter here, we have the same set of devices: mixer0, mixer1, tco=
-n0
-> > > > > and tcon1.
-> > > > >
-> > > > > The thing that does change with your patch is that before, the bi=
-nding
-> > > > > sequence would have been mixer0, tcon0, tcon1, mixer1. With your
-> > > > > patch, it's mixer0, tcon0, mixer1, tcon1.
-> > > > >
-> > > > > So, again, stating what issue you were seeing before making this =
-patch
-> > > > > would be very helpful to see what you're trying to do / fix.
-> > > >=20
-> > > > So maybe I can drop the forward search (searching output) code,
-> > > > and keep
-> > > > only the backward search (search input) code in TCON?
-> > > >=20
-> > > > Forward search code is only used when binding, but backward
-> > > > search is used
-> > > > for TCON to find connected mixer.
-> > >=20
-> > > It is hard to talk about a solution, when it's not clear what the
-> > > issue is.
-> > >=20
-> > > So please state
-> > > > > > >A) What is the current behaviour
-> > > > > > >B) Why that is a problem
-> > > > > > >C) How do you address it
-> > >=20
-> > > We'll talk about a solution once this is done.
-> >=20
-> > (All those things are based on the assumption that mixer0, mixer1, tcon0
-> > and tcon1 are all enabled in DT. If one group of mixer-tcon pair is
-> > fully
-> > disabled in DT it will behave properly.)
->=20
-> So there's a temporary workaround -- only enable one pipeline and disable
-> the unused mixer and tcon totally.
+>> > On Mon, Jun 05, 2017 at 12:01:45AM +0800, Icenowy Zheng wrote:
+>> > > Allwinner H3 features a TV encoder similar to the one in earlier
+>SoCs,
+>> > > but has a internal fixed clock divider that divides the TCON1
+>clock
+>> > > (called TVE clock in datasheet) by 11.
+>> > >=20
+>> > > Add support for it.
+>> > >=20
+>> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+>> > > ---
+>> > > Changes in v2:
+>> > > - Quirk part rewritten.
+>> > >=20
+>> > >  drivers/gpu/drm/sun4i/sun4i_tv.c | 35
+>> > > ++++++++++++++++++++++++++++++++++-
+>> > >  1 file changed, 34 insertions(+), 1 deletion(-)
+>> > >=20
+>> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c
+>> > > b/drivers/gpu/drm/sun4i/sun4i_tv.c
+>> > > index 338b9e5bb2a3..b9ff6d5ea67a 100644
+>> > > --- a/drivers/gpu/drm/sun4i/sun4i_tv.c
+>> > > +++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+>> > > @@ -13,6 +13,7 @@
+>> > >  #include <linux/clk.h>
+>> > >  #include <linux/component.h>
+>> > >  #include <linux/of_address.h>
+>> > > +#include <linux/of_device.h>
+>> > >  #include <linux/regmap.h>
+>> > >  #include <linux/reset.h>
+>> > >=20
+>> > > @@ -169,14 +170,21 @@ struct tv_mode {
+>> > >  	const struct resync_parameters	*resync_params;
+>> > >  };
+>> > >=20
+>> > > +struct sun4i_tv_quirks {
+>> > > +	int fixed_divider;
+>> > > +};
+>> > > +
+>> > >  struct sun4i_tv {
+>> > >  	struct drm_connector	connector;
+>> > >  	struct drm_encoder	encoder;
+>> > >=20
+>> > >  	struct clk		*clk;
+>> > > +	struct clk		*mod_clk;
+>> > >  	struct regmap		*regs;
+>> > >  	struct reset_control	*reset;
+>> > >=20
+>> > > +	const struct sun4i_tv_quirks *quirks;
+>> > > +
+>> > >  	struct sun4i_drv	*drv;
+>> > >  };
+>> > >=20
+>> > > @@ -391,6 +399,12 @@ static void sun4i_tv_mode_set(struct
+>> > > drm_encoder *encoder,
+>> > >  	struct sun4i_tcon *tcon =3D crtc->tcon;
+>> > >  	const struct tv_mode *tv_mode =3D sun4i_tv_find_tv_by_mode(mode);
+>> > >=20
+>> > > +	if (tv->quirks->fixed_divider) {
+>> > > +		DRM_DEBUG_DRIVER("Applying fixed divider %d on TVE clock\n",
+>> > > +				 tv->quirks->fixed_divider);
+>> > > +		mode->crtc_clock *=3D tv->quirks->fixed_divider;
+>> > > +	}
+>> > > +
+>> >=20
+>> > You're not allowed to change the mode in mode_set, and you
+>shouldn't
+>> > even change it. The output pixel clock is still 27MHz.
+>> >=20
+>> > You should implement that using the states, as we discussed
+>already.
+>>=20
+>> After reading the comments at
+>include/drm/drm_modeset_helper_vtables.h,
+>> I think the atomic_check function is allowed to directly change
+>> the adjust_mode of crtc_state.
+>>=20
+>> And according to other comments at include/drm/drm_modes.h, the
+>> crtc_clock in adjust_mode should be the clock to be really feed
+>> to the hardware.
+>>=20
+>> So I think I can just change this in atomic_check.
+>>=20
+>> However, the mode_set function of sun4i_tv seems to be not
+>> regarding adjusted_mode and still use original mode.
+>>=20
+>> So my current design is:
+>> - Multiply adjusted_mode in atomic_check.
+>> - Feed adjust_mode to TCON code in mode_set function.
+>>=20
+>> Is this proper?
+>>=20
+>> (From my own understanding to the comments I think so.)
+>
+>No, it's not. The pixel clock in the mode is the pixel clock output
+>physically by the connector. You want to use it for an intermediate
+>clock in your pipeline.
+>
+>This is not the same clock, and not the same frequency.
 
-As a short-term workaround, while we rework the code to enable both
-pipelines, it definitely works for me.
+So should a multiplier parameter be passed via
+tcon1_mode_set function?
 
-Maxim
+>
+>Maxime
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---42uig743fx76vuiw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZP7RqAAoJEBx+YmzsjxAgc1gP+QEur+Yq1XfbJxcXnAPP0k5H
-YOU7F95LCoBi/rnEp5upfNlvJ9h3gf9FCQXzmpJlDeyoaLnj6vfg8hxPiC9lQNXL
-7n+gtnjmx1a1C/PcCmaMr+G8UUJUfGxe4xgKiKYvgOozyFBBdm0IGGzs1FCUdNwf
-ABtZ4bIVTNx65S8KT8nNDL5I34EMP5u0xXjyrsMnFXv0jMvqy6Tk5kLNx54IErI6
-abMZGNohc0O6pRczVpvRE+w1115RJZ4o12x3kNJuvVo2edY0mkfCroRDvuksAhKk
-bK8UzMGUWWuGp9YWJYEyXQnfzq+A5KTKDp1b4TXCSx7VMFWCnxCD+mivEkZtGR/N
-IFmCImun5KYLuStB/6cch3jTmQcLgfkgky/pjRqzkY9edLln8iDjB6ec8BIbhDqE
-VhWVrdLFMCNWAjv8n6GpFFGFCfNAPj7pemvhsDYhXQgXDdN997FXvy09RrBQqjxn
-42JYYnGbi7rVCgJB7xfnKhIUscQd4Qx6vmvMK5Lper5k90t8ZfLz9vEyF59Lf3rV
-TGARbSvuXH03hrjCl2c78g3eDrw526yQehCBnmPu3/v/zbapqsUnV0p7ObtZSJzP
-vlJDocjDnKagK1YWgt70JMQx5PCPaTGPh7h3tpjHEUW2uPQQ6FntwPmwdSvhozRL
-0Z+KSUSfmm7WPFmNJTIY
-=pYPE
------END PGP SIGNATURE-----
-
---42uig743fx76vuiw--
-
---===============0636143716==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0636143716==--
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
