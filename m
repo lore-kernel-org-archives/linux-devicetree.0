@@ -1,113 +1,116 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v2 10/11] ARM: sun8i: h3: add display
- engine pipeline for TVE
-Date: Tue, 13 Jun 2017 10:02:01 +0200
-Message-ID: <20170613080201.pezlmcggfnfziiat@flea.lan>
-References: <20170604160149.30230-1-icenowy@aosc.io>
- <20170604160149.30230-11-icenowy@aosc.io>
- <20170607094241.65dcm42aacrn4eev@flea.lan>
- <87bf6e8c54286fd0630bd876ec0c6c56@aosc.io>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/4] mfd: tps65217: remove duplicated interrupt resources.
+Date: Tue, 13 Jun 2017 10:18:41 +0200
+Message-ID: <CAFqH_51wYc-xXU9fAF=1KNJ4wC69oZToMXjVP==yCgrMVfwn+g@mail.gmail.com>
+References: <20170612212412.22719-1-enric.balletbo@collabora.com>
+ <20170612212412.22719-3-enric.balletbo@collabora.com> <bddc09a1-53d7-e7ed-5c04-a9ecf5310dde@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2ogm3vqxmzj5xyg7"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBBFY73EQKGQED2PYO4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <87bf6e8c54286fd0630bd876ec0c6c56-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <bddc09a1-53d7-e7ed-5c04-a9ecf5310dde-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Grygorii,
 
---2ogm3vqxmzj5xyg7
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+2017-06-13 0:41 GMT+02:00 Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>:
+>
+>
+> On 06/12/2017 04:24 PM, Enric Balletbo i Serra wrote:
+>> I don't think it makes sense to have the interrupt resources for charger
+>> and power button in two different places, the driver and the DT binding.
+>> That's confusing so remove the ones from the mfd driver in favour of
+>> having the interrupt resources only described in the DT. Having the
+>> resources in DT may help if there is or will be a similar pmic with
+>> different resource allocation.
+>
+> Wouldn't this break DT compatibility? Old DTs do not contain IRQ resources
+> and so they work only because of IRQ definitions in code.
+>
 
-On Sun, Jun 11, 2017 at 02:58:47PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> =E5=9C=A8 2017-06-07 17:42=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
-=9A
-> > On Mon, Jun 05, 2017 at 12:01:48AM +0800, Icenowy Zheng wrote:
-> > > +	soc {
-> > > +		display_clocks: clock@1000000 {
-> > > +			compatible =3D "allwinner,sun8i-a83t-de2-clk";
-> > > +			reg =3D <0x01000000 0x100000>;
-> > > +			clocks =3D <&ccu CLK_BUS_DE>,
-> > > +				 <&ccu CLK_DE>;
-> > > +			clock-names =3D "bus",
-> > > +				      "mod";
-> > > +			resets =3D <&ccu RST_BUS_DE>;
-> > > +			#clock-cells =3D <1>;
-> > > +			#reset-cells =3D <1>;
-> > > +			assigned-clocks =3D <&ccu CLK_DE>;
-> > > +			assigned-clock-parents =3D <&ccu CLK_PLL_DE>;
-> > > +			assigned-clock-rates =3D <432000000>;
-> > > +		};
-> >=20
-> > We discussed that already a few times, but there's no reason to do
-> > so. If you need a downstream clock at a particular rate, call
-> > clk_set_rate on it, period.
-> >=20
-> > Whether its parent will be coming from PLL_DE or some other more
-> > appriopriate clock is not relevant and doesn't make any difference.
->=20
-> The clock framework is not so smart to deal with these infomations:
-> - CLK_PLL_PERIPH should always be 600MHz
-> - CLK_TVE should always be 216MHz
-> - CLK_DE (in fact CLK_MIXER{0,1}) should be larger than 300MHz (for 4K)
+I don't think so, the DT binding [1] and [2] says that the interrupts
+proprieties are required, so the bindings that that doesn't have these
+proprieties are wrong. Also I suspect that the binding that doesn't
+define the interrupts expect the hw block disabled as the status =
+"disabled" was defined, so I don't think was his intention have i.e
+the charger active.
 
-None of what you're doing guarantees what you state above, so I'm not
-really sure what your point is.
+[1] https://www.kernel.org/doc/Documentation/devicetree/bindings/power/supply/tps65217_charger.txt
+[2] https://www.kernel.org/doc/Documentation/devicetree/bindings/input/tps65218-pwrbutton.txt
 
-> So we have to specify CLK_DE to be 432MHz, and then it will set
-> CLK_PLL_DE to this value, then the CLK_TVE can be set to 216MHz with
-> divider 2.
+>>
+>> Signed-off-by: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+>> ---
+>>   drivers/mfd/tps65217.c | 22 +---------------------
+>>   1 file changed, 1 insertion(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/mfd/tps65217.c b/drivers/mfd/tps65217.c
+>> index f769c7d..fd83bae 100644
+>> --- a/drivers/mfd/tps65217.c
+>> +++ b/drivers/mfd/tps65217.c
+>> @@ -33,15 +33,6 @@
+>>   #include <linux/mfd/core.h>
+>>   #include <linux/mfd/tps65217.h>
+>>
+>> -static struct resource charger_resources[] = {
+>> -     DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_AC, "AC"),
+>> -     DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_USB, "USB"),
+>> -};
+>> -
+>> -static struct resource pb_resources[] = {
+>> -     DEFINE_RES_IRQ_NAMED(TPS65217_IRQ_PB, "PB"),
+>> -};
+>> -
+>>   static void tps65217_irq_lock(struct irq_data *data)
+>>   {
+>>       struct tps65217 *tps = irq_data_get_irq_chip_data(data);
+>> @@ -97,14 +88,10 @@ static struct mfd_cell tps65217s[] = {
+>>       },
+>>       {
+>>               .name = "tps65217-charger",
+>> -             .num_resources = ARRAY_SIZE(charger_resources),
+>> -             .resources = charger_resources,
+>>               .of_compatible = "ti,tps65217-charger",
+>>       },
+>>       {
+>>               .name = "tps65217-pwrbutton",
+>> -             .num_resources = ARRAY_SIZE(pb_resources),
+>> -             .resources = pb_resources,
+>>               .of_compatible = "ti,tps65217-pwrbutton",
+>>       },
+>>   };
+>> @@ -359,15 +346,8 @@ static int tps65217_probe(struct i2c_client *client,
+>>               return ret;
+>>       }
+>>
+>> -     if (client->irq) {
+>> +     if (client->irq)
+>>               tps65217_irq_init(tps, client->irq);
+>> -     } else {
+>> -             int i;
+>> -
+>> -             /* Don't tell children about IRQ resources which won't fire */
+>> -             for (i = 0; i < ARRAY_SIZE(tps65217s); i++)
+>> -                     tps65217s[i].num_resources = 0;
+>> -     }
+>>
+>>       ret = devm_mfd_add_devices(tps->dev, -1, tps65217s,
+>>                                  ARRAY_SIZE(tps65217s), NULL, 0,
+>>
+>
+> --
+> regards,
+> -grygorii
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Yes, but it works by accident. Any clock change somewhere in the same
-clock-tree might break whatever you have set in the DT.
-
-Hence why you want to do it within the clock framework and your
-driver, not here.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---2ogm3vqxmzj5xyg7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZP5v5AAoJEBx+YmzsjxAg75QP/RKLgPYijMm70E3Fs+UJA7dM
-fGzWPQSAKGbdWm4xcNm7wrNej2hqN4vYqSKYuLAZsG4n7qEsBCIsoJ0mNNGVt0LI
-PXQ8XhCSgKdETQR5J83c7l7xrleLSDRZpWLrgoP1RZais49ZupOGFMWKLnYmh8sI
-2OAL4dOnhrNOzZI32q+M8XU9Nv6k3at1zBUtoJpvTsfl6T2zs55i5911X9ZiptS+
-9Mt/jZD22K7wpABLBt14vus3VL9DVyfQMBaPzMzYhYbbG2qNZRw0KEO16aIJM3MW
-dCNvmpMCIIJws1hIr2Vgo3gemeM9ollFFFHni5qxxM/jvceM7RE4V54P1wLas57e
-N5woOnG9r2fmSl1ga6/T1mS6PlswIuS5oWpFw2Z1qu8mP2PO+vybSRAOe9ypdB8V
-CcwvDqeLsXXd6lzUNK0vc2NCWqhmuLCb3Bi+D6TT6rTU0uAF9L6wCLdTGmAkNMak
-3WtlGZZejG6GHeM9GFg7Fm3nvug9KmMVT4tFUI+VYEwXW8ZUFkQoIiv81J5UdGbQ
-QmoagK22eCIfPJDEKWipTp6o31l3rLcMEVe0gYF7uhvRHz127WggPrcu5Ae7Q0+I
-nEtloWX2hfSdUqtlsR1eAZXxKr7xBkyOzI1a5CgcDhKb5Fqii7xWbr2SdlDNbzNy
-QYfTMnfSSLWmkGiFRGO3
-=aKgJ
------END PGP SIGNATURE-----
-
---2ogm3vqxmzj5xyg7--
+Best regards,
+ Enric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
