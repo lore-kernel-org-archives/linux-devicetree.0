@@ -1,142 +1,63 @@
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Subject: Re: [PATCH v2 07/11] drm: sun4i: add support for the TV
- encoder in H3 SoC
-Date: Tue, 13 Jun 2017 17:51:42 +0800
-Message-ID: <5A2149A9-CC7B-4946-9219-A4FE3228B402@aosc.io>
-References: <20170604160149.30230-1-icenowy@aosc.io> <20170604160149.30230-8-icenowy@aosc.io> <20170607093845.cu5kk55nj72roysf@flea.lan> <362bb72d74cd7181ae02dbf73b0e724e@aosc.io> <20170613074432.btwgc4e7pndtsvbf@flea.lan>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRB6XL73EQKGQEDI2Y2EQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170613074432.btwgc4e7pndtsvbf-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH 0/4] Synopsys Designware HDMI Video Capture Controller + PHY
+Date: Tue, 13 Jun 2017 11:01:14 +0100
+Message-ID: <cover.1497347657.git.joabreu@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The Synopsys Designware HDMI RX controller is an HDMI receiver controller that
+is responsible to process digital data that comes from a phy. The final result
+is a stream of raw video data that can then be connected to a video DMA, for
+example, and transfered into RAM so that it can be displayed.
+
+The controller + phy available in this series natively support all HDMI 1.4 and
+HDMI 2.0 modes, including deep color. Although, the driver is quite in its
+initial stage and unfortunatelly only non deep color modes are supported. Also,
+audio is not yet supported in the driver (the controller has several audio
+output interfaces).
+
+Jose Abreu (4):
+  [media] platform: Add Synopsys Designware HDMI RX PHY e405 Driver
+  [media] platform: Add Synopsys Designware HDMI RX Controller Driver
+  MAINTAINERS: Add entry for Synopsys Designware HDMI drivers
+  dt-bindings: media: Document Synopsys Designware HDMI RX
+
+Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+ .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  |   41 +
+ MAINTAINERS                                        |    7 +
+ drivers/media/platform/Kconfig                     |    2 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/dwc/Kconfig                 |   17 +
+ drivers/media/platform/dwc/Makefile                |    2 +
+ drivers/media/platform/dwc/dw-hdmi-phy-e405.c      |  783 ++++++++++
+ drivers/media/platform/dwc/dw-hdmi-phy-e405.h      |   63 +
+ drivers/media/platform/dwc/dw-hdmi-rx.c            | 1496 ++++++++++++++++++++
+ drivers/media/platform/dwc/dw-hdmi-rx.h            |  376 +++++
+ include/media/dwc/dw-hdmi-phy-pdata.h              |  131 ++
+ include/media/dwc/dw-hdmi-rx-pdata.h               |   63 +
+ 12 files changed, 2983 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+ create mode 100644 drivers/media/platform/dwc/Kconfig
+ create mode 100644 drivers/media/platform/dwc/Makefile
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-phy-e405.c
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-phy-e405.h
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-rx.c
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-rx.h
+ create mode 100644 include/media/dwc/dw-hdmi-phy-pdata.h
+ create mode 100644 include/media/dwc/dw-hdmi-rx-pdata.h
+
+-- 
+1.9.1
 
 
-=E4=BA=8E 2017=E5=B9=B46=E6=9C=8813=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=8D=883:=
-44:32, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=B0:
->On Sun, Jun 11, 2017 at 02:43:42PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->> =E5=9C=A8 2017-06-07 17:38=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=
-=BC=9A
->> > On Mon, Jun 05, 2017 at 12:01:45AM +0800, Icenowy Zheng wrote:
->> > > Allwinner H3 features a TV encoder similar to the one in earlier
->SoCs,
->> > > but has a internal fixed clock divider that divides the TCON1
->clock
->> > > (called TVE clock in datasheet) by 11.
->> > >=20
->> > > Add support for it.
->> > >=20
->> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
->> > > ---
->> > > Changes in v2:
->> > > - Quirk part rewritten.
->> > >=20
->> > >  drivers/gpu/drm/sun4i/sun4i_tv.c | 35
->> > > ++++++++++++++++++++++++++++++++++-
->> > >  1 file changed, 34 insertions(+), 1 deletion(-)
->> > >=20
->> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c
->> > > b/drivers/gpu/drm/sun4i/sun4i_tv.c
->> > > index 338b9e5bb2a3..b9ff6d5ea67a 100644
->> > > --- a/drivers/gpu/drm/sun4i/sun4i_tv.c
->> > > +++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
->> > > @@ -13,6 +13,7 @@
->> > >  #include <linux/clk.h>
->> > >  #include <linux/component.h>
->> > >  #include <linux/of_address.h>
->> > > +#include <linux/of_device.h>
->> > >  #include <linux/regmap.h>
->> > >  #include <linux/reset.h>
->> > >=20
->> > > @@ -169,14 +170,21 @@ struct tv_mode {
->> > >  	const struct resync_parameters	*resync_params;
->> > >  };
->> > >=20
->> > > +struct sun4i_tv_quirks {
->> > > +	int fixed_divider;
->> > > +};
->> > > +
->> > >  struct sun4i_tv {
->> > >  	struct drm_connector	connector;
->> > >  	struct drm_encoder	encoder;
->> > >=20
->> > >  	struct clk		*clk;
->> > > +	struct clk		*mod_clk;
->> > >  	struct regmap		*regs;
->> > >  	struct reset_control	*reset;
->> > >=20
->> > > +	const struct sun4i_tv_quirks *quirks;
->> > > +
->> > >  	struct sun4i_drv	*drv;
->> > >  };
->> > >=20
->> > > @@ -391,6 +399,12 @@ static void sun4i_tv_mode_set(struct
->> > > drm_encoder *encoder,
->> > >  	struct sun4i_tcon *tcon =3D crtc->tcon;
->> > >  	const struct tv_mode *tv_mode =3D sun4i_tv_find_tv_by_mode(mode);
->> > >=20
->> > > +	if (tv->quirks->fixed_divider) {
->> > > +		DRM_DEBUG_DRIVER("Applying fixed divider %d on TVE clock\n",
->> > > +				 tv->quirks->fixed_divider);
->> > > +		mode->crtc_clock *=3D tv->quirks->fixed_divider;
->> > > +	}
->> > > +
->> >=20
->> > You're not allowed to change the mode in mode_set, and you
->shouldn't
->> > even change it. The output pixel clock is still 27MHz.
->> >=20
->> > You should implement that using the states, as we discussed
->already.
->>=20
->> After reading the comments at
->include/drm/drm_modeset_helper_vtables.h,
->> I think the atomic_check function is allowed to directly change
->> the adjust_mode of crtc_state.
->>=20
->> And according to other comments at include/drm/drm_modes.h, the
->> crtc_clock in adjust_mode should be the clock to be really feed
->> to the hardware.
->>=20
->> So I think I can just change this in atomic_check.
->>=20
->> However, the mode_set function of sun4i_tv seems to be not
->> regarding adjusted_mode and still use original mode.
->>=20
->> So my current design is:
->> - Multiply adjusted_mode in atomic_check.
->> - Feed adjust_mode to TCON code in mode_set function.
->>=20
->> Is this proper?
->>=20
->> (From my own understanding to the comments I think so.)
->
->No, it's not. The pixel clock in the mode is the pixel clock output
->physically by the connector. You want to use it for an intermediate
->clock in your pipeline.
->
->This is not the same clock, and not the same frequency.
-
-So should a multiplier parameter be passed via
-tcon1_mode_set function?
-
->
->Maxime
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
