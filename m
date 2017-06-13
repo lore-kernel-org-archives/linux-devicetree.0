@@ -1,1654 +1,501 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: Re: [PATCH v2 08/15] [media] cxd2880: Add top level of the driver
-Date: Tue, 13 Jun 2017 10:30:14 -0300
-Message-ID: <20170613103014.3443406b@vento.lan>
-References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
-        <20170414023150.17685-1-Yasunari.Takiguchi@sony.com>
+From: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] mfd: max7360: Add mfd core device driver
+Date: Tue, 13 Jun 2017 16:41:37 +0300
+Message-ID: <be03e994-a914-21fc-fc92-ed40d9e26942@mentor.com>
+References: <20170613122051.6061-1-valentin_sitdikov@mentor.com>
+ <20170613122051.6061-3-valentin_sitdikov@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170414023150.17685-1-Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+In-Reply-To: <20170613122051.6061-3-valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+To: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Fri, 14 Apr 2017 11:31:50 +0900
-<Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org> escreveu:
+Hi Valentin,
 
-> From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+On 06/13/2017 03:20 PM, Valentin Sitdikov wrote:
+> From: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 > 
-> This provides the main dvb frontend operation functions
-> for the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
-
-For now, I'll do only a quick review on patches 6-15, as there are several
-things to be ajusted on the code, from my past comments.
-
-I'll do a better review on the next version. So, I'll focus only on
-a few random issues I see on the code below.
-
+> This patch adds core/irq driver to support MAX7360 i2c chip
+> which contains keypad, gpio, pwm, gpo and rotary encoder submodules.
 > 
-> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
-> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Valentin Sitdikov <valentin_sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/media/dvb-frontends/cxd2880/cxd2880_top.c | 1550 +++++++++++++++++++++
->  1 file changed, 1550 insertions(+)
->  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_top.c
+>  drivers/mfd/Kconfig         |  16 +++
+>  drivers/mfd/Makefile        |   1 +
+>  drivers/mfd/max7360.c       | 291 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mfd/max7360.h |  90 ++++++++++++++
+>  4 files changed, 398 insertions(+)
+>  create mode 100644 drivers/mfd/max7360.c
+>  create mode 100644 include/linux/mfd/max7360.h
 > 
-> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_top.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_top.c
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3eb5c93..894c2e9 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -721,6 +721,22 @@ config MFD_MAX8998
+>  	  additional drivers must be enabled in order to use the functionality
+>  	  of the device.
+>  
+> +config MFD_MAX7360
+
+Can you consider to move the new section upwards to preserve
+alphanumerical order at least locally?
+
+> +	tristate "Maxim Semiconductor MAX7360 support"
+> +	depends on I2C && OF
+> +	select MFD_CORE
+> +	select REGMAP_I2C
+> +	select IRQ_DOMAIN
+> +	help
+> +	  Say yes here to add support for Maxim Semiconductor MAX7360.
+> +	  This provides microprocessors with management of up to 64 key switches,
+> +	  with an additional eight LED drivers/GPIOs that feature constant-current,
+> +	  PWM intensity control, and rotary switch control options.
+> +
+> +	  This driver provides common support for accessing the device,
+> +	  additional drivers must be enabled in order to use the functionality
+> +	  of the device.
+> +
+>  config MFD_MT6397
+>  	tristate "MediaTek MT6397 PMIC Support"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index c16bf1e..9e721c0 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -137,6 +137,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
+>  obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
+>  
+>  obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
+> +obj-$(CONFIG_MFD_MAX7360)	+= max7360.o
+>  obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
+>  obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
+>  obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
+> diff --git a/drivers/mfd/max7360.c b/drivers/mfd/max7360.c
 > new file mode 100644
-> index 000000000000..66d78fb93a13
+> index 0000000..d18ea96
 > --- /dev/null
-> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_top.c
-> @@ -0,0 +1,1550 @@
+> +++ b/drivers/mfd/max7360.c
+> @@ -0,0 +1,291 @@
 > +/*
-> + * cxd2880_top.c
-> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * Copyright (C) 2017 Mentor Graphics
 > + *
-> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + * Author: Andrei Dranitca <Andrei_Dranitca-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+> + * Author: Valentin Sitdikov <Valentin.Sitdikov-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 > + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; version 2 of the License.
-> + *
-> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
-> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
-> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
-> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + *
-> + * You should have received a copy of the GNU General Public License along
-> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
 > + */
 > +
-> +#include <linux/spi/spi.h>
-> +
-> +#include "dvb_frontend.h"
-> +
-> +#include "cxd2880.h"
-> +#include "cxd2880_tnrdmd_mon.h"
-> +#include "cxd2880_tnrdmd_dvbt2_mon.h"
-> +#include "cxd2880_tnrdmd_dvbt_mon.h"
-> +#include "cxd2880_integ_dvbt2.h"
-> +#include "cxd2880_integ_dvbt.h"
-> +#include "cxd2880_devio_spi.h"
-> +#include "cxd2880_spi_device.h"
-> +#include "cxd2880_tnrdmd_driver_version.h"
-> +
-> +struct cxd2880_priv {
-> +	struct cxd2880_tnrdmd tnrdmd;
-> +	struct spi_device *spi;
-> +	struct cxd2880_io regio;
-> +	struct cxd2880_spi_device spi_device;
-> +	struct cxd2880_spi cxd2880_spi;
-> +	struct cxd2880_dvbt_tune_param dvbt_tune_param;
-> +	struct cxd2880_dvbt2_tune_param dvbt2_tune_param;
-> +	struct mutex *spi_mutex; /* For SPI access exclusive control */
-> +};
-> +
-> +/*
-> + * return value conversion table
-> + */
-> +static int return_tbl[] = {
-> +	0,             /* CXD2880_RESULT_OK */
-> +	-EINVAL,       /* CXD2880_RESULT_ERROR_ARG*/
-> +	-EIO,          /* CXD2880_RESULT_ERROR_IO */
-> +	-EPERM,        /* CXD2880_RESULT_ERROR_SW_STATE */
-> +	-EBUSY,        /* CXD2880_RESULT_ERROR_HW_STATE */
-> +	-ETIME,        /* CXD2880_RESULT_ERROR_TIMEOUT */
-> +	-EAGAIN,       /* CXD2880_RESULT_ERROR_UNLOCK */
-> +	-ERANGE,       /* CXD2880_RESULT_ERROR_RANGE */
-> +	-EOPNOTSUPP,   /* CXD2880_RESULT_ERROR_NOSUPPORT */
-> +	-ECANCELED,    /* CXD2880_RESULT_ERROR_CANCEL */
-> +	-EPERM,        /* CXD2880_RESULT_ERROR_OTHER */
-> +	-EOVERFLOW,    /* CXD2880_RESULT_ERROR_OVERFLOW */
-> +	0,             /* CXD2880_RESULT_OK_CONFIRM */
-> +};
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/mfd/max7360.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/slab.h>
 
-Please, don't use a conversion table. That makes the driver more
-complex to be understood without any good reason. Instead, just 
-replace the values at the original enum.
+Add <linux/regmap.h> into the list.
 
 > +
-> +static enum cxd2880_ret cxd2880_pre_bit_err_t(
-> +		struct cxd2880_tnrdmd *tnrdmd, u32 *pre_bit_err,
-> +		u32 *pre_bit_count)
-> +{
-> +	u8 rdata[2];
 > +
-> +	if ((!tnrdmd) || (!pre_bit_err) || (!pre_bit_count))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (tnrdmd->sys != CXD2880_DTV_SYS_DVBT)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (slvt_freeze_reg(tnrdmd) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x00, 0x10) != CXD2880_RESULT_OK) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_IO;
-> +	}
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x39, rdata, 1) != CXD2880_RESULT_OK) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_IO;
-> +	}
-> +
-> +	if ((rdata[0] & 0x01) == 0) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +	}
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x22, rdata, 2) != CXD2880_RESULT_OK) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_IO;
-> +	}
-> +
-> +	*pre_bit_err = (rdata[0] << 8) | rdata[1];
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x6F, rdata, 1) != CXD2880_RESULT_OK) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_IO;
-> +	}
-> +
-> +	slvt_unfreeze_reg(tnrdmd);
-> +
-> +	*pre_bit_count = ((rdata[0] & 0x07) == 0) ?
-> +			256 : (0x1000 << (rdata[0] & 0x07));
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +static enum cxd2880_ret cxd2880_pre_bit_err_t2(
-> +		struct cxd2880_tnrdmd *tnrdmd, u32 *pre_bit_err,
-> +		u32 *pre_bit_count)
-> +{
-> +	u32 period_exp = 0;
-> +	u32 n_ldpc = 0;
-> +	u8 data[5];
-> +
-> +	if ((!tnrdmd) || (!pre_bit_err) || (!pre_bit_count))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (tnrdmd->sys != CXD2880_DTV_SYS_DVBT2)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (slvt_freeze_reg(tnrdmd) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x00, 0x0B) != CXD2880_RESULT_OK) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_IO;
-> +	}
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x3C, data, sizeof(data))
-> +				 != CXD2880_RESULT_OK) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_IO;
-> +	}
-> +
-> +	if (!(data[0] & 0x01)) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +	}
-> +	*pre_bit_err =
-> +	((data[1] & 0x0F) << 24) | (data[2] << 16) | (data[3] << 8) | data[4];
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0xA0, data, 1) != CXD2880_RESULT_OK) {
-> +		slvt_unfreeze_reg(tnrdmd);
-> +		return CXD2880_RESULT_ERROR_IO;
-> +	}
-> +
-> +	if (((enum cxd2880_dvbt2_plp_fec)(data[0] & 0x03)) ==
-> +	    CXD2880_DVBT2_FEC_LDPC_16K)
-> +		n_ldpc = 16200;
-> +	else
-> +		n_ldpc = 64800;
-> +	slvt_unfreeze_reg(tnrdmd);
-> +
-> +	if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x00, 0x20) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x6F, data, 1) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	period_exp = data[0] & 0x0F;
-> +
-> +	*pre_bit_count = (1U << period_exp) * n_ldpc;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +static enum cxd2880_ret cxd2880_post_bit_err_t(struct cxd2880_tnrdmd *tnrdmd,
-> +						u32 *post_bit_err,
-> +						u32 *post_bit_count)
-> +{
-> +	u8 rdata[3];
-> +	u32 bit_error = 0;
-> +	u32 period_exp = 0;
-> +
-> +	if ((!tnrdmd) || (!post_bit_err) || (!post_bit_count))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (tnrdmd->sys != CXD2880_DTV_SYS_DVBT)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x00, 0x0D) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x15, rdata, 3) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if ((rdata[0] & 0x40) == 0)
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +	*post_bit_err = ((rdata[0] & 0x3F) << 16) | (rdata[1] << 8) | rdata[2];
-> +
-> +	if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x00, 0x10) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x60, rdata, 1) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	period_exp = (rdata[0] & 0x1F);
-> +
-> +	if ((period_exp <= 11) && (bit_error > (1U << period_exp) * 204 * 8))
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +	if (period_exp == 11)
-> +		*post_bit_count = 3342336;
-> +	else
-> +		*post_bit_count = (1U << period_exp) * 204 * 81;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +static enum cxd2880_ret cxd2880_post_bit_err_t2(struct cxd2880_tnrdmd *tnrdmd,
-> +						u32 *post_bit_err,
-> +						u32 *post_bit_count)
-> +{
-> +	u32 period_exp = 0;
-> +	u32 n_bch = 0;
-> +
-> +	if ((!tnrdmd) || (!post_bit_err) || (!post_bit_count))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (tnrdmd->sys != CXD2880_DTV_SYS_DVBT2)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
+> +static const struct mfd_cell max7360_devices[] = {
 > +	{
-> +		u8 data[3];
-> +		enum cxd2880_dvbt2_plp_fec plp_fec_type =
-> +			CXD2880_DVBT2_FEC_LDPC_16K;
-> +		enum cxd2880_dvbt2_plp_code_rate plp_code_rate =
-> +			CXD2880_DVBT2_R1_2;
-> +
-> +		static const u16 n_bch_bits_lookup[2][8] = {
-> +			{7200, 9720, 10800, 11880, 12600, 13320, 5400, 6480},
-> +			{32400, 38880, 43200, 48600, 51840, 54000, 21600, 25920}
-> +		};
-> +
-> +		if (slvt_freeze_reg(tnrdmd) != CXD2880_RESULT_OK)
-> +			return CXD2880_RESULT_ERROR_IO;
-> +
-> +		if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0x00, 0x0B) != CXD2880_RESULT_OK) {
-> +			slvt_unfreeze_reg(tnrdmd);
-> +			return CXD2880_RESULT_ERROR_IO;
-> +		}
-> +
-> +		if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					 0x15, data, 3) != CXD2880_RESULT_OK) {
-> +			slvt_unfreeze_reg(tnrdmd);
-> +			return CXD2880_RESULT_ERROR_IO;
-> +		}
-> +
-> +		if (!(data[0] & 0x40)) {
-> +			slvt_unfreeze_reg(tnrdmd);
-> +			return CXD2880_RESULT_ERROR_HW_STATE;
-> +		}
-> +
-> +		*post_bit_err =
-> +			((data[0] & 0x3F) << 16) | (data[1] << 8) | data[2];
-> +
-> +		if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0x9D, data, 1) != CXD2880_RESULT_OK) {
-> +			slvt_unfreeze_reg(tnrdmd);
-> +			return CXD2880_RESULT_ERROR_IO;
-> +		}
-> +
-> +		plp_code_rate =
-> +		(enum cxd2880_dvbt2_plp_code_rate)(data[0] & 0x07);
-> +
-> +		if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0xA0, data, 1) != CXD2880_RESULT_OK) {
-> +			slvt_unfreeze_reg(tnrdmd);
-> +			return CXD2880_RESULT_ERROR_IO;
-> +		}
-> +
-> +		plp_fec_type = (enum cxd2880_dvbt2_plp_fec)(data[0] & 0x03);
-> +
-> +		slvt_unfreeze_reg(tnrdmd);
-> +
-> +		if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0x00, 0x20) != CXD2880_RESULT_OK)
-> +			return CXD2880_RESULT_ERROR_IO;
-> +
-> +		if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0x72, data, 1) != CXD2880_RESULT_OK)
-> +			return CXD2880_RESULT_ERROR_IO;
-> +
-> +		period_exp = data[0] & 0x0F;
-> +
-> +		if ((plp_fec_type > CXD2880_DVBT2_FEC_LDPC_64K) ||
-> +			(plp_code_rate > CXD2880_DVBT2_R2_5))
-> +			return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +		n_bch = n_bch_bits_lookup[plp_fec_type][plp_code_rate];
-> +	}
-> +
-> +	if (*post_bit_err > ((1U << period_exp) * n_bch))
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +	*post_bit_count = (1U << period_exp) * n_bch;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +static enum cxd2880_ret cxd2880_read_block_err_t(
-> +					struct cxd2880_tnrdmd *tnrdmd,
-> +					u32 *block_err,
-> +					u32 *block_count)
-> +{
-> +	u8 rdata[3];
-> +
-> +	if ((!tnrdmd) || (!block_err) || (!block_count))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (tnrdmd->sys != CXD2880_DTV_SYS_DVBT)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
-> +	if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x00, 0x0D) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x18, rdata, 3) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if ((rdata[0] & 0x01) == 0)
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +	*block_err = (rdata[1] << 8) | rdata[2];
-> +
-> +	if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x00, 0x10) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +				0x5C, rdata, 1) != CXD2880_RESULT_OK)
-> +		return CXD2880_RESULT_ERROR_IO;
-> +
-> +	*block_count = 1U << (rdata[0] & 0x0F);
-> +
-> +	if ((*block_count == 0) || (*block_err > *block_count))
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +	return CXD2880_RESULT_OK;
-> +}
-> +
-> +static enum cxd2880_ret cxd2880_read_block_err_t2(
-> +					struct cxd2880_tnrdmd *tnrdmd,
-> +					u32 *block_err,
-> +					u32 *block_count)
-> +{
-> +	if ((!tnrdmd) || (!block_err) || (!block_count))
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
-> +		return CXD2880_RESULT_ERROR_ARG;
-> +
-> +	if (tnrdmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +	if (tnrdmd->sys != CXD2880_DTV_SYS_DVBT2)
-> +		return CXD2880_RESULT_ERROR_SW_STATE;
-> +
+> +		.name           = "max7360-gpio",
+> +		.of_compatible	= "maxim,max7360-gpio",
+> +	},
 > +	{
-> +		u8 rdata[3];
+> +		.name           = "max7360-keypad",
+> +		.of_compatible	= "maxim,max7360-keypad",
+> +	},
+> +	{
+> +		.name           = "max7360-pwm",
+> +		.of_compatible	= "maxim,max7360-pwm",
+> +	},
+> +	{
+> +		.name           = "max7360-rotary",
+> +		.of_compatible	= "maxim,max7360-rotary",
+> +	},
+> +};
+
+Since the driver depends on OF, you don't need to list the cells.
+
+Consider to replace devm_mfd_add_devices() with devm_of_platform_populate().
+
 > +
-> +		if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0x00, 0x0B) != CXD2880_RESULT_OK)
-> +			return CXD2880_RESULT_ERROR_IO;
+> +static irqreturn_t max7360_irq(int irq, void *data)
+> +{
+> +	struct max7360 *max7360 = data;
+> +	int virq;
 > +
-> +		if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0x18, rdata, 3) != CXD2880_RESULT_OK)
-> +			return CXD2880_RESULT_ERROR_IO;
+> +	virq = irq_find_mapping(max7360->domain, MAX7360_INT_GPIO);
+> +	handle_nested_irq(virq);
+> +	virq = irq_find_mapping(max7360->domain, MAX7360_INT_KEYPAD);
+> +	handle_nested_irq(virq);
+> +	virq = irq_find_mapping(max7360->domain, MAX7360_INT_ROTARY);
+> +	handle_nested_irq(virq);
 > +
-> +		if ((rdata[0] & 0x01) == 0)
-> +			return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +		*block_err = (rdata[1] << 8) | rdata[2];
-> +
-> +		if (tnrdmd->io->write_reg(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0x00, 0x24) != CXD2880_RESULT_OK)
-> +			return CXD2880_RESULT_ERROR_IO;
-> +
-> +		if (tnrdmd->io->read_regs(tnrdmd->io, CXD2880_IO_TGT_DMD,
-> +					0xDC, rdata, 1) != CXD2880_RESULT_OK)
-> +			return CXD2880_RESULT_ERROR_IO;
-> +
-> +		*block_count = 1U << (rdata[0] & 0x0F);
-> +	}
-> +
-> +	if ((*block_count == 0) || (*block_err > *block_count))
-> +		return CXD2880_RESULT_ERROR_HW_STATE;
-> +
-> +	return CXD2880_RESULT_OK;
+> +	return IRQ_HANDLED;
 > +}
 > +
-> +static void cxd2880_release(struct dvb_frontend *fe)
+> +static irqreturn_t max7360_irqi(int irq, void *data)
 > +{
-> +	struct cxd2880_priv *priv = NULL;
+> +	struct max7360 *max7360 = data;
+> +	int virq;
 > +
-> +	if (!fe) {
-> +		pr_err("%s: invalid arg.\n", __func__);
-> +		return;
-> +	}
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +	kfree(priv);
+> +	virq = irq_find_mapping(max7360->domain, MAX7360_INT_GPIO);
+> +	handle_nested_irq(virq);
+> +	virq = irq_find_mapping(max7360->domain, MAX7360_INT_ROTARY);
+> +	handle_nested_irq(virq);
+> +
+> +	return IRQ_HANDLED;
 > +}
 > +
-> +static int cxd2880_init(struct dvb_frontend *fe)
+> +static irqreturn_t max7360_irqk(int irq, void *data)
 > +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct cxd2880_priv *priv = NULL;
-> +	struct cxd2880_tnrdmd_create_param create_param;
+> +	struct max7360 *max7360 = data;
+> +	int virq;
 > +
-> +	if (!fe) {
-> +		pr_err("%s: invalid arg.\n", __func__);
-> +		return -EINVAL;
-> +	}
+> +	virq = irq_find_mapping(max7360->domain, MAX7360_INT_KEYPAD);
+> +	handle_nested_irq(virq);
 > +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +
-> +	create_param.ts_output_if = CXD2880_TNRDMD_TSOUT_IF_SPI;
-> +	create_param.xtal_share_type = CXD2880_TNRDMD_XTAL_SHARE_NONE;
-> +	create_param.en_internal_ldo = 1;
-> +	create_param.xosc_cap = 18;
-> +	create_param.xosc_i = 8;
-> +	create_param.stationary_use = 1;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	if (priv->tnrdmd.io != &priv->regio) {
-> +		ret = cxd2880_tnrdmd_create(&priv->tnrdmd,
-> +				&priv->regio, &create_param);
-> +		if (ret != CXD2880_RESULT_OK) {
-> +			mutex_unlock(priv->spi_mutex);
-> +			dev_info(&priv->spi->dev,
-> +				"%s: cxd2880 tnrdmd create failed %d\n",
-> +				__func__, ret);
-> +			return return_tbl[ret];
-> +		}
-> +	}
-> +	ret = cxd2880_integ_init(&priv->tnrdmd);
-> +	if (ret != CXD2880_RESULT_OK) {
-> +		mutex_unlock(priv->spi_mutex);
-> +		dev_err(&priv->spi->dev, "%s: cxd2880 integ init failed %d\n",
-> +				__func__, ret);
-> +		return return_tbl[ret];
-> +	}
-> +	mutex_unlock(priv->spi_mutex);
-> +
-> +	dev_dbg(&priv->spi->dev, "%s: OK.\n", __func__);
-> +
-> +	return return_tbl[ret];
+> +	return IRQ_HANDLED;
 > +}
 > +
-> +static int cxd2880_sleep(struct dvb_frontend *fe)
+> +static int max7360_irq_map(struct irq_domain *d, unsigned int virq,
+> +			  irq_hw_number_t hwirq)
 > +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct cxd2880_priv *priv = NULL;
+> +	struct max7360 *max7360 = d->host_data;
 > +
-> +	if (!fe) {
-> +		pr_err("%s: inavlid arg\n", __func__);
-> +		return -EINVAL;
-> +	}
+> +	irq_set_chip_data(virq, max7360);
+> +	irq_set_chip_and_handler(virq, &dummy_irq_chip,
+> +				handle_edge_irq);
+> +	irq_set_nested_thread(virq, 1);
+> +	irq_set_noprobe(virq);
 > +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_sleep(&priv->tnrdmd);
-> +	mutex_unlock(priv->spi_mutex);
-> +
-> +	dev_dbg(&priv->spi->dev, "%s: tnrdmd_sleep ret %d\n",
-> +		__func__, ret);
-> +
-> +	return return_tbl[ret];
+> +	return 0;
 > +}
 > +
-> +static int cxd2880_read_signal_strength(struct dvb_frontend *fe,
-> +				u16 *strength)
+> +static void max7360_irq_unmap(struct irq_domain *d, unsigned int virq)
 > +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct cxd2880_priv *priv = NULL;
-> +	struct dtv_frontend_properties *c = NULL;
-> +	int level = 0;
-> +
-> +	if ((!fe) || (!strength)) {
-> +		pr_err("%s: inavlid arg\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +	c = &fe->dtv_property_cache;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	if ((c->delivery_system == SYS_DVBT) ||
-> +		(c->delivery_system == SYS_DVBT2)) {
-> +		ret = cxd2880_tnrdmd_mon_rf_lvl(&priv->tnrdmd, &level);
-> +	} else {
-> +		dev_dbg(&priv->spi->dev, "%s: invalid system\n", __func__);
-> +		mutex_unlock(priv->spi_mutex);
-> +		return -EINVAL;
-> +	}
-> +	mutex_unlock(priv->spi_mutex);
-> +
-> +	level /= 125;
-> +	/* -105dBm - -30dBm (-105000/125 = -840, -30000/125 = -240 */
-> +	level = clamp(level, -840, -240);
-> +	/* scale value to 0x0000-0xFFFF */
-> +	*strength = (u16)(((level + 840) * 0xFFFF) / (-240 + 840));
-> +
-> +	if (ret != CXD2880_RESULT_OK)
-> +		dev_dbg(&priv->spi->dev, "%s: ret = %d\n", __func__, ret);
-> +
-> +	return return_tbl[ret];
+> +	irq_set_chip_and_handler(virq, NULL, NULL);
+> +	irq_set_chip_data(virq, NULL);
 > +}
 > +
-> +static int cxd2880_read_snr(struct dvb_frontend *fe, u16 *snr)
+> +static const struct irq_domain_ops max7360_irq_ops = {
+> +	.map    = max7360_irq_map,
+> +	.unmap  = max7360_irq_unmap,
+> +	.xlate  = irq_domain_xlate_onecell,
+> +};
+> +
+> +static void max7360_free_irqs(struct max7360 *max7360)
 > +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	int snrvalue = 0;
-> +	struct cxd2880_priv *priv = NULL;
-> +	struct dtv_frontend_properties *c = NULL;
-> +
-> +	if ((!fe) || (!snr)) {
-> +		pr_err("%s: inavlid arg\n", __func__);
-> +		return -EINVAL;
+> +	if (max7360->shared_irq)
+> +		free_irq(max7360->shared_irq, max7360);
+> +	else {
+> +		free_irq(max7360->irq_inti, max7360);
+> +		free_irq(max7360->irq_intk, max7360);
 > +	}
-> +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +	c = &fe->dtv_property_cache;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	if (c->delivery_system == SYS_DVBT) {
-> +		ret = cxd2880_tnrdmd_dvbt_mon_snr(&priv->tnrdmd,
-> +						&snrvalue);
-> +	} else if (c->delivery_system == SYS_DVBT2) {
-> +		ret = cxd2880_tnrdmd_dvbt2_mon_snr(&priv->tnrdmd,
-> +						&snrvalue);
-> +	} else {
-> +		dev_err(&priv->spi->dev, "%s: invalid system\n", __func__);
-> +		mutex_unlock(priv->spi_mutex);
-> +		return -EINVAL;
-> +	}
-> +	mutex_unlock(priv->spi_mutex);
-> +
-> +	if (snrvalue < 0)
-> +		snrvalue = 0;
-> +	*snr = (u16)snrvalue;
-> +
-> +	if (ret != CXD2880_RESULT_OK)
-> +		dev_dbg(&priv->spi->dev, "%s: ret = %d\n", __func__, ret);
-> +
-> +	return return_tbl[ret];
 > +}
 > +
-> +static int cxd2880_read_ucblocks(struct dvb_frontend *fe, u32 *ucblocks)
+> +static int max7360_irq_init(struct max7360 *max7360, struct device_node *np)
 > +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct cxd2880_priv *priv = NULL;
-> +	struct dtv_frontend_properties *c = NULL;
+> +	int ret;
 > +
-> +	if ((!fe) || (!ucblocks)) {
-> +		pr_err("%s: inavlid arg\n", __func__);
-> +		return -EINVAL;
+> +	max7360->irq_inti = of_irq_get_byname(np, "inti");
+> +	if (max7360->irq_inti < 0) {
+> +		dev_err(max7360->dev, "no inti provided");
+> +		return -ENODEV;
 > +	}
 > +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +	c = &fe->dtv_property_cache;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	if (c->delivery_system == SYS_DVBT) {
-> +		ret = cxd2880_tnrdmd_dvbt_mon_packet_error_number(
-> +								&priv->tnrdmd,
-> +								ucblocks);
-> +	} else if (c->delivery_system == SYS_DVBT2) {
-> +		ret = cxd2880_tnrdmd_dvbt2_mon_packet_error_number(
-> +								&priv->tnrdmd,
-> +								ucblocks);
-> +	} else {
-> +		dev_err(&priv->spi->dev, "%s: invlaid system\n", __func__);
-> +		mutex_unlock(priv->spi_mutex);
-> +		return -EINVAL;
-> +	}
-> +	mutex_unlock(priv->spi_mutex);
-> +
-> +	if (ret != CXD2880_RESULT_OK)
-> +		dev_dbg(&priv->spi->dev, "%s: ret = %d\n", __func__, ret);
-> +
-> +	return return_tbl[ret];
-> +}
-> +
-> +static int cxd2880_read_ber(struct dvb_frontend *fe, u32 *ber)
-> +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct cxd2880_priv *priv = NULL;
-> +	struct dtv_frontend_properties *c = NULL;
-> +
-> +	if ((!fe) || (!ber)) {
-> +		pr_err("%s: inavlid arg\n", __func__);
-> +		return -EINVAL;
+> +	max7360->irq_intk = of_irq_get_byname(np, "intk");
+> +	if (max7360->irq_intk < 0) {
+> +		dev_err(max7360->dev, "no intk provided");
+> +		return -ENODEV;
 > +	}
 > +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +	c = &fe->dtv_property_cache;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	if (c->delivery_system == SYS_DVBT) {
-> +		ret = cxd2880_tnrdmd_dvbt_mon_pre_rsber(&priv->tnrdmd,
-> +						ber);
-> +		/* x100 to change unit.(10^7 -> 10^9 */
-> +		*ber *= 100;
-> +	} else if (c->delivery_system == SYS_DVBT2) {
-> +		ret = cxd2880_tnrdmd_dvbt2_mon_pre_bchber(&priv->tnrdmd,
-> +						ber);
-> +	} else {
-> +		dev_err(&priv->spi->dev, "%s: invlaid system\n", __func__);
-> +		mutex_unlock(priv->spi_mutex);
-> +		return -EINVAL;
-> +	}
-> +	mutex_unlock(priv->spi_mutex);
-> +
-> +	if (ret != CXD2880_RESULT_OK)
-> +		dev_dbg(&priv->spi->dev, "%s: ret = %d\n", __func__, ret);
-> +
-> +	return return_tbl[ret];
-> +}
-> +
-> +static int cxd2880_set_frontend(struct dvb_frontend *fe)
-> +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	struct dtv_frontend_properties *c;
-> +	struct cxd2880_priv *priv;
-> +	enum cxd2880_dtv_bandwidth bw = CXD2880_DTV_BW_1_7_MHZ;
-> +
-> +	if (!fe) {
-> +		pr_err("%s: inavlid arg\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +	c = &fe->dtv_property_cache;
-> +
-> +	switch (c->bandwidth_hz) {
-> +	case 1712000:
-> +		bw = CXD2880_DTV_BW_1_7_MHZ;
-> +		break;
-> +	case 5000000:
-> +		bw = CXD2880_DTV_BW_5_MHZ;
-> +		break;
-> +	case 6000000:
-> +		bw = CXD2880_DTV_BW_6_MHZ;
-> +		break;
-> +	case 7000000:
-> +		bw = CXD2880_DTV_BW_7_MHZ;
-> +		break;
-> +	case 8000000:
-> +		bw = CXD2880_DTV_BW_8_MHZ;
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	dev_info(&priv->spi->dev, "%s: sys:%d freq:%d bw:%d\n", __func__,
-> +			c->delivery_system, c->frequency, bw);
-> +	mutex_lock(priv->spi_mutex);
-> +	if (c->delivery_system == SYS_DVBT) {
-> +		priv->tnrdmd.sys = CXD2880_DTV_SYS_DVBT;
-> +		priv->dvbt_tune_param.center_freq_khz = c->frequency / 1000;
-> +		priv->dvbt_tune_param.bandwidth = bw;
-> +		priv->dvbt_tune_param.profile = CXD2880_DVBT_PROFILE_HP;
-> +		ret = cxd2880_integ_dvbt_tune(&priv->tnrdmd,
-> +						&priv->dvbt_tune_param);
-> +	} else if (c->delivery_system == SYS_DVBT2) {
-> +		priv->tnrdmd.sys = CXD2880_DTV_SYS_DVBT2;
-> +		priv->dvbt2_tune_param.center_freq_khz = c->frequency / 1000;
-> +		priv->dvbt2_tune_param.bandwidth = bw;
-> +		priv->dvbt2_tune_param.data_plp_id = (u16)c->stream_id;
-> +		ret = cxd2880_integ_dvbt2_tune(&priv->tnrdmd,
-> +						&priv->dvbt2_tune_param);
-> +	} else {
-> +		dev_err(&priv->spi->dev, "%s: invalid system\n", __func__);
-> +		mutex_unlock(priv->spi_mutex);
-> +		return -EINVAL;
-> +	}
-> +	mutex_unlock(priv->spi_mutex);
-> +	dev_info(&priv->spi->dev, "%s: tune result %d\n", __func__, ret);
-> +
-> +	return return_tbl[ret];
-> +}
-> +
-> +static int cxd2880_read_status(struct dvb_frontend *fe,
-> +				enum fe_status *status)
-> +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	u8 sync = 0;
-> +	u8 lock = 0;
-> +	u8 unlock = 0;
-> +	struct cxd2880_priv *priv = NULL;
-> +	struct dtv_frontend_properties *c = NULL;
-> +
-> +	if ((!fe) || (!status)) {
-> +		pr_err("%s: invalid arg\n", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +	c = &fe->dtv_property_cache;
-> +	*status = 0;
-> +
-> +	if (priv->tnrdmd.state == CXD2880_TNRDMD_STATE_ACTIVE) {
-> +		mutex_lock(priv->spi_mutex);
-> +		if (c->delivery_system == SYS_DVBT) {
-> +			ret = cxd2880_tnrdmd_dvbt_mon_sync_stat(
-> +							&priv->tnrdmd,
-> +							&sync,
-> +							&lock,
-> +							&unlock);
-> +		} else if (c->delivery_system == SYS_DVBT2) {
-> +			ret = cxd2880_tnrdmd_dvbt2_mon_sync_stat(
-> +							&priv->tnrdmd,
-> +							&sync,
-> +							&lock,
-> +							&unlock);
-> +		} else {
-> +			dev_err(&priv->spi->dev,
-> +				"%s: invlaid system", __func__);
-> +			mutex_unlock(priv->spi_mutex);
-> +			return -EINVAL;
-> +		}
-> +
-> +		mutex_unlock(priv->spi_mutex);
-> +		if (ret != CXD2880_RESULT_OK) {
-> +			dev_err(&priv->spi->dev, "%s: failed. sys = %d\n",
-> +				__func__, priv->tnrdmd.sys);
-> +			return  return_tbl[ret];
-> +		}
-> +
-> +		if (sync == 6) {
-> +			*status = FE_HAS_SIGNAL |
-> +					FE_HAS_CARRIER;
-> +		}
-> +		if (lock)
-> +			*status |= FE_HAS_VITERBI |
-> +					FE_HAS_SYNC |
-> +					FE_HAS_LOCK;
-> +	}
-> +
-> +	dev_dbg(&priv->spi->dev, "%s: status %d result %d\n", __func__,
-> +		*status, ret);
-> +
-> +	return  return_tbl[CXD2880_RESULT_OK];
-> +}
-> +
-> +static int cxd2880_tune(struct dvb_frontend *fe,
-> +			bool retune,
-> +			unsigned int mode_flags,
-> +			unsigned int *delay,
-> +			enum fe_status *status)
-> +{
-> +	int ret = 0;
-> +
-> +	if ((!fe) || (!delay) || (!status)) {
-> +		pr_err("%s: invalid arg.", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (retune) {
-> +		ret = cxd2880_set_frontend(fe);
+> +	if (max7360->irq_inti == max7360->irq_intk) {
+> +		/*
+> +		 * In case of pin inti and pin intk are the connected
+> +		 * to the same soc`s irq pin.
+> +		 */
+> +		max7360->shared_irq = max7360->irq_inti;
+> +		ret = request_threaded_irq(max7360->shared_irq, NULL,
+> +					  max7360_irq,
+> +					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +					  "max7360", max7360);
 > +		if (ret) {
-> +			pr_err("%s: cxd2880_set_frontend failed %d\n",
-> +				__func__, ret);
+> +			dev_err(max7360->dev, "failed to request IRQ: %d\n",
+> +				ret);
+> +			return ret;
+> +		}
+> +	} else {
+> +		max7360->shared_irq = 0;
+> +		ret = request_threaded_irq(max7360->irq_inti, NULL,
+> +					  max7360_irqi,
+> +					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +					  "max7360", max7360);
+> +		if (ret) {
+> +			dev_err(max7360->dev, "failed to request inti IRQ: %d\n",
+> +			       ret);
+> +			return ret;
+> +		}
+> +
+> +		ret = request_threaded_irq(max7360->irq_intk, NULL,
+> +					  max7360_irqk,
+> +					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +					  "max7360", max7360);
+> +		if (ret) {
+> +			free_irq(max7360->irq_inti, max7360);
+> +			dev_err(max7360->dev, "failed to request intk IRQ: %d\n",
+> +				ret);
 > +			return ret;
 > +		}
 > +	}
 > +
-> +	*delay = HZ / 5;
+> +	max7360->domain = irq_domain_add_simple(np, MAX7360_NR_INTERNAL_IRQS,
+> +					       0, &max7360_irq_ops, max7360);
 > +
-> +	return cxd2880_read_status(fe, status);
-> +}
+> +	if (!max7360->domain) {
+> +		max7360_free_irqs(max7360);
+> +		dev_err(max7360->dev, "Failed to create irqdomain\n");
+> +		return -ENODEV;
+> +	}
 > +
-> +static int cxd2880_get_frontend_t(struct dvb_frontend *fe,
-> +				struct dtv_frontend_properties *c)
-> +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	int result = 0;
-> +	struct cxd2880_priv *priv = NULL;
-> +	enum cxd2880_dvbt_mode mode = CXD2880_DVBT_MODE_2K;
-> +	enum cxd2880_dvbt_guard guard = CXD2880_DVBT_GUARD_1_32;
-> +	struct cxd2880_dvbt_tpsinfo tps;
-> +	enum cxd2880_tnrdmd_spectrum_sense sense;
-> +	u16 snr = 0;
-> +	int strength = 0;
-> +	u32 pre_bit_err = 0, pre_bit_count = 0;
-> +	u32 post_bit_err = 0, post_bit_count = 0;
-> +	u32 block_err = 0, block_count = 0;
-> +
-> +	if ((!fe) || (!c)) {
-> +		pr_err("%s: invalid arg\n", __func__);
+> +	ret = irq_create_mapping(max7360->domain, MAX7360_INT_GPIO);
+> +	if (!ret) {
+> +		max7360_free_irqs(max7360);
+> +		dev_err(max7360->dev, "Failed to map GPIO IRQ\n");
 > +		return -EINVAL;
 > +	}
 > +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_dvbt_mon_mode_guard(&priv->tnrdmd,
-> +						 &mode, &guard);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		switch (mode) {
-> +		case CXD2880_DVBT_MODE_2K:
-> +			c->transmission_mode = TRANSMISSION_MODE_2K;
-> +			break;
-> +		case CXD2880_DVBT_MODE_8K:
-> +			c->transmission_mode = TRANSMISSION_MODE_8K;
-> +			break;
-> +		default:
-> +			c->transmission_mode = TRANSMISSION_MODE_2K;
-> +			dev_err(&priv->spi->dev, "%s: get invalid mode %d\n",
-> +					__func__, mode);
-> +			break;
-> +		}
-> +		switch (guard) {
-> +		case CXD2880_DVBT_GUARD_1_32:
-> +			c->guard_interval = GUARD_INTERVAL_1_32;
-> +			break;
-> +		case CXD2880_DVBT_GUARD_1_16:
-> +			c->guard_interval = GUARD_INTERVAL_1_16;
-> +			break;
-> +		case CXD2880_DVBT_GUARD_1_8:
-> +			c->guard_interval = GUARD_INTERVAL_1_8;
-> +			break;
-> +		case CXD2880_DVBT_GUARD_1_4:
-> +			c->guard_interval = GUARD_INTERVAL_1_4;
-> +			break;
-> +		default:
-> +			c->guard_interval = GUARD_INTERVAL_1_32;
-> +			dev_err(&priv->spi->dev, "%s: get invalid guard %d\n",
-> +					__func__, guard);
-> +			break;
-> +		}
-> +	} else {
-> +		c->transmission_mode = TRANSMISSION_MODE_2K;
-> +		c->guard_interval = GUARD_INTERVAL_1_32;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: ModeGuard err %d\n", __func__, ret);
+> +	ret = irq_create_mapping(max7360->domain, MAX7360_INT_KEYPAD);
+> +	if (!ret) {
+> +		max7360_free_irqs(max7360);
+> +		dev_err(max7360->dev, "Failed to map KEYPAD IRQ\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_dvbt_mon_tps_info(&priv->tnrdmd, &tps);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		switch (tps.hierarchy) {
-> +		case CXD2880_DVBT_HIERARCHY_NON:
-> +			c->hierarchy = HIERARCHY_NONE;
-> +			break;
-> +		case CXD2880_DVBT_HIERARCHY_1:
-> +			c->hierarchy = HIERARCHY_1;
-> +			break;
-> +		case CXD2880_DVBT_HIERARCHY_2:
-> +			c->hierarchy = HIERARCHY_2;
-> +			break;
-> +		case CXD2880_DVBT_HIERARCHY_4:
-> +			c->hierarchy = HIERARCHY_4;
-> +			break;
-> +		default:
-> +			c->hierarchy = HIERARCHY_NONE;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: TPSInfo hierarchy invalid %d\n",
-> +				__func__, tps.hierarchy);
-> +			break;
-> +		}
-> +
-> +		switch (tps.rate_hp) {
-> +		case CXD2880_DVBT_CODERATE_1_2:
-> +			c->code_rate_HP = FEC_1_2;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_2_3:
-> +			c->code_rate_HP = FEC_2_3;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_3_4:
-> +			c->code_rate_HP = FEC_3_4;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_5_6:
-> +			c->code_rate_HP = FEC_5_6;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_7_8:
-> +			c->code_rate_HP = FEC_7_8;
-> +			break;
-> +		default:
-> +			c->code_rate_HP = FEC_NONE;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: TPSInfo rateHP invalid %d\n",
-> +				__func__, tps.rate_hp);
-> +			break;
-> +		}
-> +		switch (tps.rate_lp) {
-> +		case CXD2880_DVBT_CODERATE_1_2:
-> +			c->code_rate_LP = FEC_1_2;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_2_3:
-> +			c->code_rate_LP = FEC_2_3;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_3_4:
-> +			c->code_rate_LP = FEC_3_4;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_5_6:
-> +			c->code_rate_LP = FEC_5_6;
-> +			break;
-> +		case CXD2880_DVBT_CODERATE_7_8:
-> +			c->code_rate_LP = FEC_7_8;
-> +			break;
-> +		default:
-> +			c->code_rate_LP = FEC_NONE;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: TPSInfo rateLP invalid %d\n",
-> +				__func__, tps.rate_lp);
-> +			break;
-> +		}
-> +		switch (tps.constellation) {
-> +		case CXD2880_DVBT_CONSTELLATION_QPSK:
-> +			c->modulation = QPSK;
-> +			break;
-> +		case CXD2880_DVBT_CONSTELLATION_16QAM:
-> +			c->modulation = QAM_16;
-> +			break;
-> +		case CXD2880_DVBT_CONSTELLATION_64QAM:
-> +			c->modulation = QAM_64;
-> +			break;
-> +		default:
-> +			c->modulation = QPSK;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: TPSInfo constellation invalid %d\n",
-> +				__func__, tps.constellation);
-> +			break;
-> +		}
-> +	} else {
-> +		c->hierarchy = HIERARCHY_NONE;
-> +		c->code_rate_HP = FEC_NONE;
-> +		c->code_rate_LP = FEC_NONE;
-> +		c->modulation = QPSK;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: TPS info err %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_dvbt_mon_spectrum_sense(&priv->tnrdmd, &sense);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		switch (sense) {
-> +		case CXD2880_TNRDMD_SPECTRUM_NORMAL:
-> +			c->inversion = INVERSION_OFF;
-> +			break;
-> +		case CXD2880_TNRDMD_SPECTRUM_INV:
-> +			c->inversion = INVERSION_ON;
-> +			break;
-> +		default:
-> +			c->inversion = INVERSION_OFF;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: spectrum sense invalid %d\n",
-> +				__func__, sense);
-> +			break;
-> +		}
-> +	} else {
-> +		c->inversion = INVERSION_OFF;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: spectrum_sense %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_mon_rf_lvl(&priv->tnrdmd, &strength);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->strength.len = 1;
-> +		c->strength.stat[0].scale = FE_SCALE_DECIBEL;
-> +		c->strength.stat[0].svalue = strength;
-> +	} else {
-> +		c->strength.len = 1;
-> +		c->strength.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev, "%s: mon_rf_lvl %d\n",
-> +			__func__, result);
-> +	}
-> +
-> +	result = cxd2880_read_snr(fe, &snr);
-> +	if (!result) {
-> +		c->cnr.len = 1;
-> +		c->cnr.stat[0].scale = FE_SCALE_DECIBEL;
-> +		c->cnr.stat[0].svalue = snr;
-> +	} else {
-> +		c->cnr.len = 1;
-> +		c->cnr.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev, "%s: read_snr %d\n", __func__, result);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_pre_bit_err_t(&priv->tnrdmd, &pre_bit_err,
-> +					&pre_bit_count);
-
-Hmm... reading BER-based measures at get_frontend() may not be
-the best idea, depending on how the hardware works.
-
-I mean, you need to be sure that, if userspace is calling it too
-often, it won't affect the hardware or the measurement.
-
-On other drivers, where each call generates an I2C access,
-we do that by moving the code that actually call the hardware
-at get status, and we use jiffies to be sure that it won't be
-called too often.
-
-I dunno if, on your SPI design, this would be an issue or not.
-
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->pre_bit_error.len = 1;
-> +		c->pre_bit_error.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->pre_bit_error.stat[0].uvalue = pre_bit_err;
-> +		c->pre_bit_count.len = 1;
-> +		c->pre_bit_count.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->pre_bit_count.stat[0].uvalue = pre_bit_count;
-> +	} else {
-> +		c->pre_bit_error.len = 1;
-> +		c->pre_bit_error.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		c->pre_bit_count.len = 1;
-> +		c->pre_bit_count.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: pre_bit_error_t failed %d\n",
-> +			__func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_post_bit_err_t(&priv->tnrdmd,
-> +				&post_bit_err, &post_bit_count);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->post_bit_error.len = 1;
-> +		c->post_bit_error.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->post_bit_error.stat[0].uvalue = post_bit_err;
-> +		c->post_bit_count.len = 1;
-> +		c->post_bit_count.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->post_bit_count.stat[0].uvalue = post_bit_count;
-> +	} else {
-> +		c->post_bit_error.len = 1;
-> +		c->post_bit_error.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		c->post_bit_count.len = 1;
-> +		c->post_bit_count.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: post_bit_err_t %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_read_block_err_t(&priv->tnrdmd,
-> +					&block_err, &block_count);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->block_error.len = 1;
-> +		c->block_error.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->block_error.stat[0].uvalue = block_err;
-> +		c->block_count.len = 1;
-> +		c->block_count.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->block_count.stat[0].uvalue = block_count;
-> +	} else {
-> +		c->block_error.len = 1;
-> +		c->block_error.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		c->block_count.len = 1;
-> +		c->block_count.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: read_block_err_t  %d\n", __func__, ret);
+> +	ret = irq_create_mapping(max7360->domain, MAX7360_INT_ROTARY);
+> +	if (!ret) {
+> +		max7360_free_irqs(max7360);
+> +		dev_err(max7360->dev, "Failed to map ROTARY IRQ\n");
+> +		return -EINVAL;
 > +	}
 > +
 > +	return 0;
 > +}
-> +
-> +static int cxd2880_get_frontend_t2(struct dvb_frontend *fe,
-> +				struct dtv_frontend_properties *c)
+> +static int max7360_device_init(struct max7360 *max7360)
 > +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	int result = 0;
-> +	struct cxd2880_priv *priv = NULL;
-> +	struct cxd2880_dvbt2_l1pre l1pre;
-> +	enum cxd2880_dvbt2_plp_code_rate coderate;
-> +	enum cxd2880_dvbt2_plp_constell qam;
-> +	enum cxd2880_tnrdmd_spectrum_sense sense;
-> +	u16 snr = 0;
-> +	int strength = 0;
-> +	u32 pre_bit_err = 0, pre_bit_count = 0;
-> +	u32 post_bit_err = 0, post_bit_count = 0;
-> +	u32 block_err = 0, block_count = 0;
+> +	int ret;
 > +
-> +	if ((!fe) || (!c)) {
-> +		pr_err("%s: invalid arg.\n", __func__);
-> +		return -EINVAL;
-> +	}
+> +	ret = devm_mfd_add_devices(max7360->dev, PLATFORM_DEVID_NONE,
+> +			     max7360_devices,
+> +			     ARRAY_SIZE(max7360_devices), NULL,
+> +			     0, max7360->domain);
+> +	if (ret)
+> +		dev_err(max7360->dev, "failed to add child devices\n");
 > +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_dvbt2_mon_l1_pre(&priv->tnrdmd, &l1pre);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		switch (l1pre.fft_mode) {
-> +		case CXD2880_DVBT2_M2K:
-> +			c->transmission_mode = TRANSMISSION_MODE_2K;
-> +			break;
-> +		case CXD2880_DVBT2_M8K:
-> +			c->transmission_mode = TRANSMISSION_MODE_8K;
-> +			break;
-> +		case CXD2880_DVBT2_M4K:
-> +			c->transmission_mode = TRANSMISSION_MODE_4K;
-> +			break;
-> +		case CXD2880_DVBT2_M1K:
-> +			c->transmission_mode = TRANSMISSION_MODE_1K;
-> +			break;
-> +		case CXD2880_DVBT2_M16K:
-> +			c->transmission_mode = TRANSMISSION_MODE_16K;
-> +			break;
-> +		case CXD2880_DVBT2_M32K:
-> +			c->transmission_mode = TRANSMISSION_MODE_32K;
-> +			break;
-> +		default:
-> +			c->transmission_mode = TRANSMISSION_MODE_2K;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: L1Pre fft_mode invalid %d\n",
-> +				__func__, l1pre.fft_mode);
-> +			break;
-> +		}
-> +		switch (l1pre.gi) {
-> +		case CXD2880_DVBT2_G1_32:
-> +			c->guard_interval = GUARD_INTERVAL_1_32;
-> +			break;
-> +		case CXD2880_DVBT2_G1_16:
-> +			c->guard_interval = GUARD_INTERVAL_1_16;
-> +			break;
-> +		case CXD2880_DVBT2_G1_8:
-> +			c->guard_interval = GUARD_INTERVAL_1_8;
-> +			break;
-> +		case CXD2880_DVBT2_G1_4:
-> +			c->guard_interval = GUARD_INTERVAL_1_4;
-> +			break;
-> +		case CXD2880_DVBT2_G1_128:
-> +			c->guard_interval = GUARD_INTERVAL_1_128;
-> +			break;
-> +		case CXD2880_DVBT2_G19_128:
-> +			c->guard_interval = GUARD_INTERVAL_19_128;
-> +			break;
-> +		case CXD2880_DVBT2_G19_256:
-> +			c->guard_interval = GUARD_INTERVAL_19_256;
-> +			break;
-> +		default:
-> +			c->guard_interval = GUARD_INTERVAL_1_32;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: L1Pre gi invalid %d\n",
-> +				__func__, l1pre.gi);
-> +			break;
-> +		}
-> +	} else {
-> +		c->transmission_mode = TRANSMISSION_MODE_2K;
-> +		c->guard_interval = GUARD_INTERVAL_1_32;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: L1Pre err %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_dvbt2_mon_code_rate(&priv->tnrdmd,
-> +						CXD2880_DVBT2_PLP_DATA,
-> +						&coderate);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		switch (coderate) {
-> +		case CXD2880_DVBT2_R1_2:
-> +			c->fec_inner = FEC_1_2;
-> +			break;
-> +		case CXD2880_DVBT2_R3_5:
-> +			c->fec_inner = FEC_3_5;
-> +			break;
-> +		case CXD2880_DVBT2_R2_3:
-> +			c->fec_inner = FEC_2_3;
-> +			break;
-> +		case CXD2880_DVBT2_R3_4:
-> +			c->fec_inner = FEC_3_4;
-> +			break;
-> +		case CXD2880_DVBT2_R4_5:
-> +			c->fec_inner = FEC_4_5;
-> +			break;
-> +		case CXD2880_DVBT2_R5_6:
-> +			c->fec_inner = FEC_5_6;
-> +			break;
-> +		default:
-> +			c->fec_inner = FEC_NONE;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: CodeRate invalid %d\n",
-> +				__func__, coderate);
-> +			break;
-> +		}
-> +	} else {
-> +		c->fec_inner = FEC_NONE;
-> +		dev_dbg(&priv->spi->dev, "%s: CodeRate %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_dvbt2_mon_qam(&priv->tnrdmd,
-> +					CXD2880_DVBT2_PLP_DATA,
-> +					&qam);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		switch (qam) {
-> +		case CXD2880_DVBT2_QPSK:
-> +			c->modulation = QPSK;
-> +			break;
-> +		case CXD2880_DVBT2_QAM16:
-> +			c->modulation = QAM_16;
-> +			break;
-> +		case CXD2880_DVBT2_QAM64:
-> +			c->modulation = QAM_64;
-> +			break;
-> +		case CXD2880_DVBT2_QAM256:
-> +			c->modulation = QAM_256;
-> +			break;
-> +		default:
-> +			c->modulation = QPSK;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: QAM invalid %d\n",
-> +				__func__, qam);
-> +			break;
-> +		}
-> +	} else {
-> +		c->modulation = QPSK;
-> +		dev_dbg(&priv->spi->dev, "%s: QAM %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_dvbt2_mon_spectrum_sense(&priv->tnrdmd, &sense);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		switch (sense) {
-> +		case CXD2880_TNRDMD_SPECTRUM_NORMAL:
-> +			c->inversion = INVERSION_OFF;
-> +			break;
-> +		case CXD2880_TNRDMD_SPECTRUM_INV:
-> +			c->inversion = INVERSION_ON;
-> +			break;
-> +		default:
-> +			c->inversion = INVERSION_OFF;
-> +			dev_err(&priv->spi->dev,
-> +				"%s: spectrum sense invalid %d\n",
-> +				__func__, sense);
-> +			break;
-> +		}
-> +	} else {
-> +		c->inversion = INVERSION_OFF;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: SpectrumSense %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_tnrdmd_mon_rf_lvl(&priv->tnrdmd, &strength);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->strength.len = 1;
-> +		c->strength.stat[0].scale = FE_SCALE_DECIBEL;
-> +		c->strength.stat[0].svalue = strength;
-> +	} else {
-> +		c->strength.len = 1;
-> +		c->strength.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: mon_rf_lvl %d\n", __func__, ret);
-> +	}
-> +
-> +	result = cxd2880_read_snr(fe, &snr);
-> +	if (!result) {
-> +		c->cnr.len = 1;
-> +		c->cnr.stat[0].scale = FE_SCALE_DECIBEL;
-> +		c->cnr.stat[0].svalue = snr;
-> +	} else {
-> +		c->cnr.len = 1;
-> +		c->cnr.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev, "%s: read_snr %d\n", __func__, result);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_pre_bit_err_t2(&priv->tnrdmd,
-> +				&pre_bit_err,
-> +				&pre_bit_count);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->pre_bit_error.len = 1;
-> +		c->pre_bit_error.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->pre_bit_error.stat[0].uvalue = pre_bit_err;
-> +		c->pre_bit_count.len = 1;
-> +		c->pre_bit_count.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->pre_bit_count.stat[0].uvalue = pre_bit_count;
-> +	} else {
-> +		c->pre_bit_error.len = 1;
-> +		c->pre_bit_error.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		c->pre_bit_count.len = 1;
-> +		c->pre_bit_count.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: read_bit_err_t2 %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_post_bit_err_t2(&priv->tnrdmd,
-> +				&post_bit_err, &post_bit_count);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->post_bit_error.len = 1;
-> +		c->post_bit_error.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->post_bit_error.stat[0].uvalue = post_bit_err;
-> +		c->post_bit_count.len = 1;
-> +		c->post_bit_count.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->post_bit_count.stat[0].uvalue = post_bit_count;
-> +	} else {
-> +		c->post_bit_error.len = 1;
-> +		c->post_bit_error.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		c->post_bit_count.len = 1;
-> +		c->post_bit_count.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: post_bit_err_t2 %d\n", __func__, ret);
-> +	}
-> +
-> +	mutex_lock(priv->spi_mutex);
-> +	ret = cxd2880_read_block_err_t2(&priv->tnrdmd,
-> +					&block_err, &block_count);
-> +	mutex_unlock(priv->spi_mutex);
-> +	if (ret == CXD2880_RESULT_OK) {
-> +		c->block_error.len = 1;
-> +		c->block_error.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->block_error.stat[0].uvalue = block_err;
-> +		c->block_count.len = 1;
-> +		c->block_count.stat[0].scale = FE_SCALE_COUNTER;
-> +		c->block_count.stat[0].uvalue = block_count;
-> +	} else {
-> +		c->block_error.len = 1;
-> +		c->block_error.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		c->block_count.len = 1;
-> +		c->block_count.stat[0].scale = FE_SCALE_NOT_AVAILABLE;
-> +		dev_dbg(&priv->spi->dev,
-> +			"%s: read_block_err_t2 %d\n", __func__, ret);
-> +	}
-> +
-> +	return 0;
+> +	return ret;
 > +}
 > +
-> +static int cxd2880_get_frontend(struct dvb_frontend *fe,
-> +				struct dtv_frontend_properties *props)
-> +{
-> +	struct cxd2880_priv *priv = NULL;
-> +	int result = 0;
-> +
-> +	if ((!fe) || (!props)) {
-> +		pr_err("%s: invalid arg.", __func__);
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv = (struct cxd2880_priv *)fe->demodulator_priv;
-> +
-> +	dev_dbg(&priv->spi->dev, "%s: system=%d\n", __func__,
-> +		fe->dtv_property_cache.delivery_system);
-> +	switch (fe->dtv_property_cache.delivery_system) {
-> +	case SYS_DVBT:
-> +		result = cxd2880_get_frontend_t(fe, props);
-> +		break;
-> +	case SYS_DVBT2:
-> +		result = cxd2880_get_frontend_t2(fe, props);
-> +		break;
-
-Hmm... I noticed that already when reviewing other parts of the driver...
-
-At patch 6, you defined:
-
-
-enum cxd2880_dtv_sys {
-+	CXD2880_DTV_SYS_UNKNOWN,
-+	CXD2880_DTV_SYS_DVBT,
-+	CXD2880_DTV_SYS_DVBT2,
-+	CXD2880_DTV_SYS_ISDBT,
-+	CXD2880_DTV_SYS_ISDBTSB,
-+	CXD2880_DTV_SYS_ISDBTMM_A,
-+	CXD2880_DTV_SYS_ISDBTMM_B,
-+	CXD2880_DTV_SYS_ANY
-+};
-
-So, I was expecting to see not only DVB T/T2 here (and at the tuner
-driver) but also ISDB, in order to match the defined standards,
-but you're setting only DVB T/T2 here, and some parts of the tuner
-driver also seem to be focused only on those two standards.
-
-So, the question is: does the hardware support ISDB? If so,
-please add a /* FIXME */ note where pertinent, saying that
-ISDB support should be added in the future. If, on the other 
-hand, the hardware doesn't support it at all, please cleanup the
-code by removing references for it.
-
-
-> +	default:
-> +		result = -EINVAL;
-> +		break;
-> +	}
-> +
-> +	return result;
-> +}
-> +
-> +static enum dvbfe_algo cxd2880_get_frontend_algo(struct dvb_frontend *fe)
-> +{
-> +	return DVBFE_ALGO_HW;
-> +}
-> +
-> +static struct dvb_frontend_ops cxd2880_dvbt_t2_ops;
-> +
-> +struct dvb_frontend *cxd2880_attach(struct dvb_frontend *fe,
-> +				struct cxd2880_config *cfg)
-> +{
-> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
-> +	enum cxd2880_tnrdmd_chip_id chipid =
-> +					CXD2880_TNRDMD_CHIP_ID_UNKNOWN;
-> +	static struct cxd2880_priv *priv;
-> +	u8 data = 0;
-> +
-> +	if (!fe) {
-> +		pr_err("%s: invalid arg.\n", __func__);
-> +		return NULL;
-> +	}
-> +
-> +	priv = kzalloc(sizeof(struct cxd2880_priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return NULL;
-> +
-> +	priv->spi = cfg->spi;
-> +	priv->spi_mutex = cfg->spi_mutex;
-> +	priv->spi_device.spi = cfg->spi;
-> +
-> +	memcpy(&fe->ops, &cxd2880_dvbt_t2_ops,
-> +			sizeof(struct dvb_frontend_ops));
-> +
-> +	ret = cxd2880_spi_device_initialize(&priv->spi_device,
-> +						CXD2880_SPI_MODE_0,
-> +						55000000);
-> +	if (ret != CXD2880_RESULT_OK) {
-> +		dev_err(&priv->spi->dev,
-> +			"%s: spi_device_initialize failed. %d\n",
-> +			__func__, ret);
-> +		kfree(priv);
-> +		return NULL;
-> +	}
-> +
-> +	ret = cxd2880_spi_device_create_spi(&priv->cxd2880_spi,
-> +					&priv->spi_device);
-> +	if (ret != CXD2880_RESULT_OK) {
-> +		dev_err(&priv->spi->dev,
-> +			"%s: spi_device_create_spi failed. %d\n",
-> +			__func__, ret);
-> +		kfree(priv);
-> +		return NULL;
-> +	}
-> +
-> +	ret = cxd2880_io_spi_create(&priv->regio, &priv->cxd2880_spi, 0);
-> +	if (ret != CXD2880_RESULT_OK) {
-> +		dev_err(&priv->spi->dev,
-> +			"%s: io_spi_create failed. %d\n", __func__, ret);
-> +		kfree(priv);
-> +		return NULL;
-> +	}
-> +	if (priv->regio.write_reg(&priv->regio, CXD2880_IO_TGT_SYS, 0x00, 0x00)
-> +		!= CXD2880_RESULT_OK) {
-> +		dev_err(&priv->spi->dev,
-> +			"%s: set bank to 0x00 failed.\n", __func__);
-> +		kfree(priv);
-> +		return NULL;
-> +	}
-> +	if (priv->regio.read_regs(&priv->regio,
-> +					CXD2880_IO_TGT_SYS, 0xFD, &data, 1)
-> +					!= CXD2880_RESULT_OK) {
-> +		dev_err(&priv->spi->dev,
-> +			"%s: read chip id failed.\n", __func__);
-> +		kfree(priv);
-> +		return NULL;
-> +	}
-> +
-> +	chipid = (enum cxd2880_tnrdmd_chip_id)data;
-> +	if ((chipid != CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_0X) &&
-> +		(chipid != CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_11)) {
-> +		dev_err(&priv->spi->dev,
-> +			"%s: chip id invalid.\n", __func__);
-> +		kfree(priv);
-> +		return NULL;
-> +	}
-> +
-> +	fe->demodulator_priv = priv;
-> +	dev_info(&priv->spi->dev,
-> +		"CXD2880 driver version: Ver %s\n",
-> +		CXD2880_TNRDMD_DRIVER_VERSION);
-> +
-> +	return fe;
-> +}
-> +EXPORT_SYMBOL(cxd2880_attach);
-> +
-> +static struct dvb_frontend_ops cxd2880_dvbt_t2_ops = {
-> +	.info = {
-> +		.name = "Sony CXD2880",
-> +		.frequency_min =  174000000,
-> +		.frequency_max = 862000000,
-> +		.frequency_stepsize = 1000,
-> +		.caps = FE_CAN_INVERSION_AUTO |
-> +				FE_CAN_FEC_1_2 |
-> +				FE_CAN_FEC_2_3 |
-> +				FE_CAN_FEC_3_4 |
-> +				FE_CAN_FEC_4_5 |
-> +				FE_CAN_FEC_5_6	|
-> +				FE_CAN_FEC_7_8	|
-> +				FE_CAN_FEC_AUTO |
-> +				FE_CAN_QPSK |
-> +				FE_CAN_QAM_16 |
-> +				FE_CAN_QAM_32 |
-> +				FE_CAN_QAM_64 |
-> +				FE_CAN_QAM_128 |
-> +				FE_CAN_QAM_256 |
-> +				FE_CAN_QAM_AUTO |
-> +				FE_CAN_TRANSMISSION_MODE_AUTO |
-> +				FE_CAN_GUARD_INTERVAL_AUTO |
-> +				FE_CAN_2G_MODULATION |
-> +				FE_CAN_RECOVER |
-> +				FE_CAN_MUTE_TS,
+> +static const struct regmap_range max7360_volatile_ranges[] = {
+> +	{
+> +		.range_min = MAX7360_REG_KEYFIFO,
+> +		.range_max = MAX7360_REG_KEYFIFO,
+> +	}, {
+> +		.range_min = MAX7360_REG_GPIOIN,
+> +		.range_max = MAX7360_REG_GPIOIN,
 > +	},
-> +	.delsys = { SYS_DVBT, SYS_DVBT2 },
-> +
-> +	.release = cxd2880_release,
-> +	.init = cxd2880_init,
-> +	.sleep = cxd2880_sleep,
-> +	.tune = cxd2880_tune,
-> +	.set_frontend = cxd2880_set_frontend,
-> +	.get_frontend = cxd2880_get_frontend,
-> +	.read_status = cxd2880_read_status,
-> +	.read_ber = cxd2880_read_ber,
-> +	.read_signal_strength = cxd2880_read_signal_strength,
-> +	.read_snr = cxd2880_read_snr,
-> +	.read_ucblocks = cxd2880_read_ucblocks,
-> +	.get_frontend_algo = cxd2880_get_frontend_algo,
 > +};
 > +
-> +MODULE_DESCRIPTION(
-> +"Sony CXD2880 DVB-T2/T tuner + demodulator drvier");
-> +MODULE_AUTHOR("Sony Semiconductor Solutions Corporation");
+> +static const struct regmap_access_table max7360_volatile_table = {
+> +	.yes_ranges = max7360_volatile_ranges,
+> +	.n_yes_ranges = ARRAY_SIZE(max7360_volatile_ranges),
+> +};
+> +
+> +static const struct regmap_config max7360_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = 0xff,
+> +	.volatile_table = &max7360_volatile_table,
+> +	.cache_type = REGCACHE_RBTREE,
+> +};
+> +
+> +static int max7360_probe(struct i2c_client *i2c,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct device_node *np = i2c->dev.of_node;
+> +	struct max7360 *max7360;
+> +	int ret;
+> +
+> +	max7360 = devm_kzalloc(&i2c->dev, sizeof(struct max7360),
+> +			      GFP_KERNEL);
+> +	if (!max7360)
+> +		return -ENOMEM;
+> +
+> +	max7360->dev = &i2c->dev;
+> +	max7360->i2c = i2c;
+> +
+> +	i2c_set_clientdata(i2c, max7360);
+> +
+> +	max7360->regmap = devm_regmap_init_i2c(i2c, &max7360_regmap_config);
+
+Missing error check.
+
+> +
+> +	ret = max7360_irq_init(max7360, np);
+> +	if (ret)
+> +		return ret;
+
+On driver unload, device removal and error path below a plenty of requested
+IRQ resources are leaked.
+
+Also can you evaluate if regmap-irq interface is suitable to be used
+within the driver?
+
+> +
+> +	ret = max7360_device_init(max7360);
+> +	if (ret) {
+> +		dev_err(max7360->dev, "failed to add child devices\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id max7360_match[] = {
+> +	{ .compatible = "maxim,max7360" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, max7360_match);
+> +
+> +static struct i2c_driver max7360_driver = {
+> +	.driver = {
+> +		.name = "max7360",
+> +		.of_match_table = max7360_match,
+> +	},
+> +	.probe = max7360_probe,
+> +};
+> +builtin_i2c_driver(max7360_driver);
+> +
 > +MODULE_LICENSE("GPL v2");
+> +MODULE_DESCRIPTION("MAX7360 MFD core driver");
+> diff --git a/include/linux/mfd/max7360.h b/include/linux/mfd/max7360.h
+> new file mode 100644
+> index 0000000..c59941c
+> --- /dev/null
+> +++ b/include/linux/mfd/max7360.h
+> @@ -0,0 +1,90 @@
+> +#ifndef __LINUX_MFD_MAX7360_H
+> +#define __LINUX_MFD_MAX7360_H
+> +#include <linux/regmap.h>
+> +
+> +#define MAX7360_MAX_KEY_ROWS	8
+> +#define MAX7360_MAX_KEY_COLS	8
+> +#define MAX7360_MAX_KEY_NUM	(MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS)
+> +#define MAX7360_ROW_SHIFT	3
+> +
+> +#define MAX7360_MAX_GPIO 8
+> +#define MAX7360_MAX_GPO 6
+> +#define MAX7360_COL_GPO_PINS 8
+> +/*
+> + * MAX7360 registers
+> + */
+> +#define MAX7360_REG_KEYFIFO	0x00
+> +#define MAX7360_REG_CONFIG	0x01
+> +#define MAX7360_REG_DEBOUNCE	0x02
+> +#define MAX7360_REG_INTERRUPT	0x03
+> +#define MAX7360_REG_PORTS	0x04
+> +#define MAX7360_REG_KEYREP	0x05
+> +#define MAX7360_REG_SLEEP	0x06
+> +
+> +/*
+> + * MAX7360 registers
+> + */
+> +#define MAX7360_REG_GPIOCFG	0x40
+> +#define MAX7360_REG_GPIOCTRL	0x41
+> +#define MAX7360_REG_GPIODEB	0x42
+> +#define MAX7360_REG_GPIOCURR	0x43
+> +#define MAX7360_REG_GPIOOUTM	0x44
+> +#define MAX7360_REG_PWMCOM	0x45
+> +#define MAX7360_REG_RTRCFG	0x46
+> +#define MAX7360_REG_GPIOIN	0x49
+> +#define MAX7360_REG_RTR_CNT	0x4A
+> +#define MAX7360_REG_PWMBASE	0x50
+> +#define MAX7360_REG_PWMCFG	0x58
+> +
+> +
+> +#define MAX7360_REG_PORTCFGBASE 0x58
+> +
+> +/*
+> + * Configuration register bits
+> + */
+> +#define MAX7360_CFG_SLEEP	BIT(7)
+> +#define MAX7360_CFG_INTERRUPT	BIT(5)
+> +#define MAX7360_CFG_KEY_RELEASE	BIT(3)
+> +#define MAX7360_CFG_WAKEUP	BIT(1)
+> +#define MAX7360_CFG_TIMEOUT	BIT(0)
+> +
+> +/*
+> + * Autosleep register values (ms)
+> + */
+> +#define MAX7360_AUTOSLEEP_8192	0x01
+> +#define MAX7360_AUTOSLEEP_4096	0x02
+> +#define MAX7360_AUTOSLEEP_2048	0x03
+> +#define MAX7360_AUTOSLEEP_1024	0x04
+> +#define MAX7360_AUTOSLEEP_512	0x05
+> +#define MAX7360_AUTOSLEEP_256	0x06
+> +
+> +#define MAX7360_INT_INTI	0
+> +#define MAX7360_INT_INTK	1
+> +
+> +#define MAX7360_INT_GPIO   0
+> +#define MAX7360_INT_KEYPAD 1
+> +#define MAX7360_INT_ROTARY 2
+> +
+> +#define MAX7360_NR_INTERNAL_IRQS	3
+> +
+> +/**
+> + * struct max7360
+> + * @dev:	Parent device pointer
+> + * @i2c:	I2c client pointer
+> + * @domain:	Irq domain pointer
+> + * @regmap:	Used for I2C communication on accessing registers
+> + * @shared_irq:	Irq number if inti and intk pins are connected together
+> + * @irq_inti:	Irq number for inti pin
+> + * @irq_intk:	Irq number for inik pin
+> + */
+> +struct max7360 {
+> +	struct device		*dev;
+> +	struct i2c_client	*i2c;
+> +	struct irq_domain	*domain;
+> +	struct regmap		*regmap;
+> +
+> +	int			shared_irq;
+> +	int			irq_inti;
+> +	int			irq_intk;
+> +};
 
+I'd recommend to hide this structure inside the MFD driver, it should
+be possible.
 
+> +#endif
+> 
 
-Thanks,
-Mauro
+--
+With best wishes,
+Vladimir
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
