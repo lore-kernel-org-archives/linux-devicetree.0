@@ -1,65 +1,98 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 11/15] arm64: dts: nvidia: fix PCI bus dtc warnings
-Date: Tue, 13 Jun 2017 16:52:07 +0200
-Message-ID: <20170613145207.GC20577@ulmo.fritz.box>
-References: <20170322020313.24338-1-robh@kernel.org>
- <20170322020313.24338-11-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170322020313.24338-11-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Jon Mason <jon.mason@broadcom.com>
+Subject: [PATCH net-next] of_mdio: move of_mdio_parse_addr to header file
+Date: Tue, 13 Jun 2017 10:56:08 -0400
+Message-ID: <1497365768-17627-1-git-send-email-jon.mason@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liviu Dudau <liviu@dudau.co.uk>, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
+The of_mdio_parse_addr() helper function is useful to other code, but
+the module dependency chain causes issues.  To work around this, we can
+move of_mdio_parse_addr() to be an inline function in the header file.
+This gets rid of the dependencies and still allows for the reuse of
+code.
 
---xesSdrSSBC0PokLI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Reported-by: Liviu Dudau <liviu@dudau.co.uk>
+Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+Fixes: 342fa1964439 ("mdio: mux: make child bus walking more permissive and errors more verbose")
+---
+ drivers/of/of_mdio.c    | 22 ----------------------
+ include/linux/of_mdio.h | 24 +++++++++++++++++++++++-
+ 2 files changed, 23 insertions(+), 23 deletions(-)
 
-On Tue, Mar 21, 2017 at 09:03:09PM -0500, Rob Herring wrote:
-> dtc recently added PCI bus checks. Fix these warnings.
->=20
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
-> Sub-arch maintainers, please apply to your trees unless arm-soc wants=20
-> to take the whole lot.
->=20
->  arch/arm64/boot/dts/nvidia/tegra132.dtsi           | 4 +++-
->  arch/arm64/boot/dts/nvidia/tegra210-p2371-2180.dts | 2 +-
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           | 4 +++-
->  3 files changed, 7 insertions(+), 3 deletions(-)
-
-Applied, thanks.
-
-Thierry
-
---xesSdrSSBC0PokLI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlk//BcACgkQ3SOs138+
-s6Fg3w/9HH09aP+l/1UlDe7fSfhZZNdWv2ZtqGI+k/XNzGbQ6qRqF70xY5bGy27H
-AV4O/S1jZ9p/3A3/xnyKBdTReObslH665K2OinmNieeT67EnDVEBrPWQLzFgAlbL
-4ewNQlzphhsO2SmuUTr05YcmehI8egi6MS28UQL4FLPLYq9xASjGZCtY6znP/VEW
-wqRQ2PeC1jTsqEwjXdn5k8LtdiuzIVZEkVTGK7qS2N2QxTjhcm71+622SwODaGU8
-zjyLCwjAwfEvbW6+AFDAxBXSpVNCtID7n5MQtMt/Teha55ubW3bnGxMYCghdYFjH
-TwbLGxiEmCL+YEj56aRQuxjHzrnnkN7GsaLU5HYHPswfLdYxgPveYziwzgc1Bf70
-JBst3vSuEGwOejGN2IhvUkEemh6CAyc7va4TRnVFojPrZYa9CNKeo0ACTev03qGA
-pShAawj+UzwABIRRAnR38k/OMG1Li2QrFltDm7TpdjGzxCpJ0DLqtKFW2BKmRSsz
-n8LolSIb4GdCLaqy9SiKPyn5rNqY3WZuZSJeP/vaEqy34nNqg4wodxkQXe1s/gNy
-AuiXj5AVLuLXBPzecitr8V93uLVbrEnw0Uo6OLG6VRXBFfbGqfgPQrsidKE/NExb
-YgjUcBLMeO5e7G4SQ0jQTqd7VCXdQho4N21IVDCFk7Y25OYHDWU=
-=2dQW
------END PGP SIGNATURE-----
-
---xesSdrSSBC0PokLI--
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 7e4c80f9b6cd..057963f2b74f 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -119,28 +119,6 @@ static void of_mdiobus_register_device(struct mii_bus *mdio,
+ 		child->name, addr);
+ }
+ 
+-int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+-{
+-	u32 addr;
+-	int ret;
+-
+-	ret = of_property_read_u32(np, "reg", &addr);
+-	if (ret < 0) {
+-		dev_err(dev, "%s has invalid PHY address\n", np->full_name);
+-		return ret;
+-	}
+-
+-	/* A PHY must have a reg property in the range [0-31] */
+-	if (addr >= PHY_MAX_ADDR) {
+-		dev_err(dev, "%s PHY address %i is too large\n",
+-			np->full_name, addr);
+-		return -EINVAL;
+-	}
+-
+-	return addr;
+-}
+-EXPORT_SYMBOL(of_mdio_parse_addr);
+-
+ /* The following is a list of PHY compatible strings which appear in
+  * some DTBs. The compatible string is never matched against a PHY
+  * driver, so is pointless. We only expect devices which are not PHYs
+diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+index ba35ba520487..f5db93bcd069 100644
+--- a/include/linux/of_mdio.h
++++ b/include/linux/of_mdio.h
+@@ -27,11 +27,33 @@ struct phy_device *of_phy_attach(struct net_device *dev,
+ 				 phy_interface_t iface);
+ 
+ extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+-extern int of_mdio_parse_addr(struct device *dev, const struct device_node *np);
+ extern int of_phy_register_fixed_link(struct device_node *np);
+ extern void of_phy_deregister_fixed_link(struct device_node *np);
+ extern bool of_phy_is_fixed_link(struct device_node *np);
+ 
++
++static inline int of_mdio_parse_addr(struct device *dev,
++				     const struct device_node *np)
++{
++	u32 addr;
++	int ret;
++
++	ret = of_property_read_u32(np, "reg", &addr);
++	if (ret < 0) {
++		dev_err(dev, "%s has invalid PHY address\n", np->full_name);
++		return ret;
++	}
++
++	/* A PHY must have a reg property in the range [0-31] */
++	if (addr >= PHY_MAX_ADDR) {
++		dev_err(dev, "%s PHY address %i is too large\n",
++			np->full_name, addr);
++		return -EINVAL;
++	}
++
++	return addr;
++}
++
+ #else /* CONFIG_OF_MDIO */
+ static inline int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+ {
+-- 
+2.7.4
