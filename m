@@ -1,54 +1,51 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCHv4 2/2] clk: keystone: Add sci-clk driver support
-Date: Mon, 12 Jun 2017 19:04:55 -0700
-Message-ID: <20170613020455.GQ20170@codeaurora.org>
-References: <1495458113-7366-1-git-send-email-t-kristo@ti.com>
- <1495458113-7366-3-git-send-email-t-kristo@ti.com>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V4 4/7] dt-bindings: serial: fsl-lpuart: add i.MX7ULP support
+Date: Tue, 13 Jun 2017 10:55:51 +0800
+Message-ID: <1497322554-24463-5-git-send-email-aisheng.dong@nxp.com>
+References: <1497322554-24463-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1495458113-7366-3-git-send-email-t-kristo@ti.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: linux-clk@vger.kernel.org, ssantosh@kernel.org, mturquette@baylibre.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497322554-24463-1-git-send-email-aisheng.dong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, jslaby@suse.com, fugang.duan@nxp.com, stefan@agner.ch, Mingkai.Hu@nxp.com, yangbo.lu@nxp.com, nikita.yoush@cogentembedded.com, andy.shevchenko@gmail.com, dongas86@gmail.com, Dong Aisheng <aisheng.dong@nxp.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22, Tero Kristo wrote:
-> +
-> +/**
-> + * ti_sci_clk_probe - Probe function for the TI SCI clock driver
-> + * @pdev: platform device pointer to be probed
-> + *
-> + * Probes the TI SCI clock device. Allocates a new clock provider
-> + * and registers this to the common clock framework. Also applies
-> + * any required flags to the identified clocks via clock lists
-> + * supplied from DT. Returns 0 for success, negative error value
-> + * for failure.
-> + */
-> +static int ti_sci_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	struct sci_clk_provider *provider;
-> +	const struct ti_sci_handle *handle;
-> +	struct sci_clk_data *data;
-> +	int ret;
-> +
-> +	data = (struct sci_clk_data *)of_device_get_match_data(dev);
+The lpuart of imx7ulp is basically the same as ls1021a. It's also
+32 bit width register, but unlike ls1021a, it's little endian.
+Besides that, imx7ulp lpuart has a minor different register layout
+from ls1021a.
 
-It would be nice to avoid this cast, and also check for NULL
-here. I tried to do it in a few minutes but then that caused a
-problem with throwing away const on sci_clk_data. Can this be
-resolved? We probably shouldn't be assigning the
-sci_clk_data::clocks member anyway if the structure is const
-assuming it goes into the read-only section. It may cause some
-restructuring of the code though.
+Cc: devicetree@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Jiri Slaby <jslaby@suse.com>
+Cc: Stefan Agner <stefan@agner.ch>
+Cc: Mingkai Hu <Mingkai.Hu@nxp.com>
+Cc: Yangbo Lu <yangbo.lu@nxp.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Fugang Duan <fugang.duan@nxp.com>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-> +
-> +	handle = devm_ti_sci_get_handle(dev);
-> +	if (IS_ERR(handle))
-> +		return PTR_ERR(handle);
+---
+ChangeLog:
+ * No changes
+---
+ Documentation/devicetree/bindings/serial/fsl-lpuart.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+index c95005e..a1252a0 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+@@ -6,6 +6,8 @@ Required properties:
+     on Vybrid vf610 SoC with 8-bit register organization
+   - "fsl,ls1021a-lpuart" for lpuart compatible with the one integrated
+     on LS1021A SoC with 32-bit big-endian register organization
++  - "fsl,imx7ulp-lpuart" for lpuart compatible with the one integrated
++    on i.MX7ULP SoC with 32-bit little-endian register organization
+ - reg : Address and length of the register set for the device
+ - interrupts : Should contain uart interrupt
+ - clocks : phandle + clock specifier pairs, one for each entry in clock-names
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
