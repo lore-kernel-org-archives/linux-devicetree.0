@@ -1,75 +1,101 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC v2 1/3] interconnect: Add generic interconnect controller
- API
-Date: Tue, 13 Jun 2017 17:12:48 +0300
-Message-ID: <b827c5f0-9e28-e14d-a531-83a3559a06c3@linaro.org>
-References: <20170612141359.26117-1-georgi.djakov@linaro.org>
- <20170612141359.26117-2-georgi.djakov@linaro.org>
- <20170613134200.GA4769@kroah.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 1/3] PCI: Add DT binding for tango PCIe controller
+Date: Tue, 13 Jun 2017 09:23:55 -0500
+Message-ID: <CAL_Jsq+n=sUg1MyDW7qY1a0kwSJJD00h7VztyTXK0eh_Uh2wmA@mail.gmail.com>
+References: <741766e5-cff2-db5f-d40b-6866e08fd966@sigmadesigns.com>
+ <69f3ffe7-3c39-fa94-71f8-91744a869cc9@sigmadesigns.com> <20170607212907.2wr3hqbokjb74kj3@rob-hp-laptop>
+ <e8cd62fb-f48e-c72a-f960-4794badfce70@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170613134200.GA4769@kroah.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-pm@vger.kernel.org, rjw@rjwysocki.net, robh+dt@kernel.org, khilman@baylibre.com, mturquette@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, sboyd@codeaurora.org, andy.gross@linaro.org, seansw@qti.qualcomm.com, davidai@quicinc.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <e8cd62fb-f48e-c72a-f960-4794badfce70@free.fr>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mason <slash.tmp@free.fr>
+Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2017 04:42 PM, Greg KH wrote:
-> On Mon, Jun 12, 2017 at 05:13:57PM +0300, Georgi Djakov wrote:
->> This patch introduce a new API to get the requirement and configure the
->> interconnect buses across the entire chipset to fit with the current demand.
+On Wed, Jun 7, 2017 at 5:34 PM, Mason <slash.tmp@free.fr> wrote:
+> Hello Rob,
+>
+> On 07/06/2017 23:29, Rob Herring wrote:
+>> On Wed, May 31, 2017 at 03:30:26PM +0200, Marc Gonzalez wrote:
+>>> Binding for the Sigma Designs SMP8759 SoC.
+>>>
+>>> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/pci/tango-pcie.txt | 30 ++++++++++++++++++++++++++++++
+>>>  1 file changed, 30 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/tango-pcie.txt b/Documentation/devicetree/bindings/pci/tango-pcie.txt
+>>> new file mode 100644
+>>> index 000000000000..35ef2c811a27
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/pci/tango-pcie.txt
+>>> @@ -0,0 +1,30 @@
+>>> +Sigma Designs Tango PCIe controller
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible: "sigma,smp8759-pcie"
+>>> +- reg: address/size of PCI configuration space, address/size of register area
+>>> +- device_type: "pci"
+>>> +- #size-cells: <2>
+>>> +- #address-cells: <3>
+>>> +- msi-controller
+>>> +- ranges: translation from system to bus addresses
+>>> +- interrupts: spec for misc interrupts, spec for MSI
+>>> +
+>>> +http://elinux.org/Device_Tree_Usage#PCI_Address_Translation
+>>> +http://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
 >>
->> The API is using a consumer/provider-based model, where the providers are
->> the interconnect controllers and the consumers could be various drivers.
->> The consumers request interconnect resources (path) to an endpoint and set
->> the desired constraints on this data flow path. The provider(s) receive
->> requests from consumers and aggregate these requests for all master-slave
->> pairs on that path. Then the providers configure each participating in the
->> topology node according to the requested data flow path, physical links and
->> constraints. The topology could be complicated and multi-tiered and is SoC
->> specific.
+>> Why are these here?
+>
+> I found these references very helpful when writing the node.
+
+Yes, I refer to them regularly.
+
+> Where would you put them? In the example?
+
+They are useful to every PCI binding. That doesn't mean we should link
+to them in for every single PCI host binding doc. They belong in a DT
+howto or something if not there already.
+
+Rob
+
+>
+>> There's several standard properties you are missing like bus-range.
+>
+> My reasoning for omitting "bus-range" was that the PCI core computes
+> it by itself (1M per "bus" so SZ_4M => 4 devices). I thought redundant
+> information was bad form?
+>
+>> Build your dts with "W=2". dtc recently gained some checks for PCI
+>> bindings.
+>
+> I'll give it a try. Did v4.9 already support it?
+
+No, v4.12.
+
+>
+>>> +Example:
+>>> +
+>>> +    pcie@2e000 {
+>>> +            compatible = "sigma,smp8759-pcie";
+>>> +            reg = <0x50000000 SZ_4M>, <0x2e000 0x100>;
+>>> +            device_type = "pci";
+>>> +            #size-cells = <2>;
+>>> +            #address-cells = <3>;
+>>> +            msi-controller;
+>>> +            ranges = <0x02000000 0x0 0x00400000  0x50400000  0x0 SZ_60M>;
 >>
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
->>  Documentation/interconnect/interconnect.txt |  65 +++++
->>  drivers/Kconfig                             |   2 +
->>  drivers/Makefile                            |   1 +
->>  drivers/interconnect/Kconfig                |  10 +
->>  drivers/interconnect/Makefile               |   1 +
->>  drivers/interconnect/interconnect.c         | 376 ++++++++++++++++++++++++++++
->>  include/linux/interconnect-consumer.h       |  72 ++++++
->>  include/linux/interconnect-provider.h       | 120 +++++++++
->>  8 files changed, 647 insertions(+)
->>  create mode 100644 Documentation/interconnect/interconnect.txt
->>  create mode 100644 drivers/interconnect/Kconfig
->>  create mode 100644 drivers/interconnect/Makefile
->>  create mode 100644 drivers/interconnect/interconnect.c
->>  create mode 100644 include/linux/interconnect-consumer.h
->>  create mode 100644 include/linux/interconnect-provider.h
->>
->> diff --git a/Documentation/interconnect/interconnect.txt b/Documentation/interconnect/interconnect.txt
->> new file mode 100644
->> index 000000000000..f761a2fb553c
->> --- /dev/null
->> +++ b/Documentation/interconnect/interconnect.txt
-> 
-> .rst for new Documenation files please, and hook it up to the larger
-> documentation build process at the same time.
+>> I don't think SZ_60M exists or is available to dts files. Just put the
+>> number in.
+>
+> I #defined it at the top of my DTS.
+> Using symbolic constants in DTS is not acceptable?
 
-Ah right, will convert it to rst!
+We generally don't use them here (i.e. for reg). The main use is for
+things also used by drivers like GPIO flags or IDs such as clock IDs.
+So please drop these.
 
-> 
-> And why are these RFC patches?  Don't you feel they are ready to be
-> reviewed?  I know I ignore RFC patches for the most part as obviously
-> the author does not think they are ready :)
-
-I'm trying to raise a discussion around this topic and get more comments
-whether this is moving into the right direction and are there any big
-concerns left. Its RFC because its not ready to be applied yet, but sure
-i will make it a "patch" next time. Reviewing is very welcome!
-
-Thanks,
-Georgi
+Rob
