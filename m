@@ -1,34 +1,86 @@
-From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Provide dummy of_device_compatible_match() for compile-testing
-Date: Tue, 13 Jun 2017 15:52:26 -0500
-Message-ID: <CAL_JsqL0=G1A6k2nJjoYCuXHrng3KLOQn8-A65uuWB+EFc6bYA@mail.gmail.com>
-References: <1493141928-29251-1-git-send-email-geert+renesas@glider.be> <CAMuHMdUwXXioxt8_nhDM0x1h=KBb6HnNgkzwdM-qGVy7cSNH9Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUwXXioxt8_nhDM0x1h=KBb6HnNgkzwdM-qGVy7cSNH9Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: rockchip: add bindings for spdif controller" to the asoc tree
+Date: Tue, 13 Jun 2017 22:07:57 +0100
+Message-ID: <E1dKt2b-0000KH-0Q@debutante>
+References: <1496995173-63532-2-git-send-email-sugar.zhang@rock-chips.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496995173-63532-2-git-send-email-sugar.zhang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc: Mark Brown <broonie@kernel.org>, heiko@sntech.debroonie@kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 5:32 AM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> On Tue, Apr 25, 2017 at 7:38 PM, Geert Uytterhoeven
-> <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
->> Most of_device_*() functions have dummy versions for CONFIG_OF=n,
->> but of_device_compatible_match() hasn't.  Fix that to improve the
->> ability to do compile-testing.
->>
->> Fixes: b9c13fe32faaa71c ("dt: Add of_device_compatible_match()")
->> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
->
-> Any reason not to apply this patch?
+The patch
 
-No, sorry I missed it. I've queued it up for 4.13.
+   ASoC: rockchip: add bindings for spdif controller
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 55f42d2e28a42b06907c916c3c71ceb6dfb5afc4 Mon Sep 17 00:00:00 2001
+From: Sugar Zhang <sugar.zhang@rock-chips.com>
+Date: Fri, 9 Jun 2017 15:59:32 +0800
+Subject: [PATCH] ASoC: rockchip: add bindings for spdif controller
+
+this patch add compatible for rk3228/rk3328 spdif,
+
+Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ Documentation/devicetree/bindings/sound/rockchip-spdif.txt | 2 ++
+ sound/soc/rockchip/rockchip_spdif.c                        | 4 ++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+index 11046429a118..4706b96d450b 100644
+--- a/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
++++ b/Documentation/devicetree/bindings/sound/rockchip-spdif.txt
+@@ -9,7 +9,9 @@ Required properties:
+ - compatible: should be one of the following:
+    - "rockchip,rk3066-spdif"
+    - "rockchip,rk3188-spdif"
++   - "rockchip,rk3228-spdif"
+    - "rockchip,rk3288-spdif"
++   - "rockchip,rk3328-spdif"
+    - "rockchip,rk3366-spdif"
+    - "rockchip,rk3368-spdif"
+    - "rockchip,rk3399-spdif"
+diff --git a/sound/soc/rockchip/rockchip_spdif.c b/sound/soc/rockchip/rockchip_spdif.c
+index fa8101d1e16f..ee5055d47d13 100644
+--- a/sound/soc/rockchip/rockchip_spdif.c
++++ b/sound/soc/rockchip/rockchip_spdif.c
+@@ -49,8 +49,12 @@ static const struct of_device_id rk_spdif_match[] = {
+ 	  .data = (void *)RK_SPDIF_RK3066 },
+ 	{ .compatible = "rockchip,rk3188-spdif",
+ 	  .data = (void *)RK_SPDIF_RK3188 },
++	{ .compatible = "rockchip,rk3228-spdif",
++	  .data = (void *)RK_SPDIF_RK3366 },
+ 	{ .compatible = "rockchip,rk3288-spdif",
+ 	  .data = (void *)RK_SPDIF_RK3288 },
++	{ .compatible = "rockchip,rk3328-spdif",
++	  .data = (void *)RK_SPDIF_RK3366 },
+ 	{ .compatible = "rockchip,rk3366-spdif",
+ 	  .data = (void *)RK_SPDIF_RK3366 },
+ 	{ .compatible = "rockchip,rk3368-spdif",
+-- 
+2.11.0
