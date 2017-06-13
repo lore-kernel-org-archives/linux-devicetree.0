@@ -1,32 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/5] of: Add vendor prefix for iWave Systems
- Technologies Pvt. Ltd
-Date: Tue, 13 Jun 2017 17:18:31 -0500
-Message-ID: <20170613221831.f3oakmgowl7x262b@rob-hp-laptop>
-References: <1496420523-23506-4-git-send-email-biju.das@bp.renesas.com>
- <1496761818-62126-1-git-send-email-biju.das@bp.renesas.com>
- <1496761818-62126-2-git-send-email-biju.das@bp.renesas.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: pwm: meson: add comptabible for gxbb
+ ao pwms
+Date: Tue, 13 Jun 2017 17:18:59 -0500
+Message-ID: <20170613221859.5e6wldvyybcav2y4@rob-hp-laptop>
+References: <20170608122416.1993-1-jbrunet@baylibre.com>
+ <20170608122416.1993-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1496761818-62126-2-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20170608122416.1993-2-jbrunet@baylibre.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 06, 2017 at 04:10:14PM +0100, Biju Das wrote:
-> This patch adds vendor prefix for iWave Systems Technologies Pvt. Ltd.
-> Website: http://www.iwavesystems.com/
+On Thu, Jun 08, 2017 at 02:24:14PM +0200, Jerome Brunet wrote:
+> Add compatible string to properly handle the PWMs found in the AO domain
+> of the gxbb (and gxl) family
 > 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/pwm/pwm-meson.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 
-Now applied to DT tree to avoid conflicts.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
