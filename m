@@ -1,49 +1,131 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable
- to handle kernel NULL pointer dereference at 00000000000000a8
-Date: Tue, 13 Jun 2017 06:35:18 +0200
-Message-ID: <20170613043518.GA14621@kroah.com>
-References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
- <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
- <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
- <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
- <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
- <20170613041842.GA13308@kroah.com>
- <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
- <20170613043416.GB14217@kroah.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH 1/4] i2c: pca-platform: add devicetree awareness
+Date: Tue, 13 Jun 2017 04:38:19 +0000
+Message-ID: <beffb088e82c40ae86cb05eebda33a66@svr-chch-ex1.atlnz.lc>
+References: <20170613015641.29373-1-chris.packham@alliedtelesis.co.nz>
+ <20170613015641.29373-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170613043416.GB14217@kroah.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Logan Gunthorpe <logang@deltatee.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: "wsa@the-dreams.de" <wsa@the-dreams.de>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 06:34:16AM +0200, Greg Kroah-Hartman wrote:
-> On Mon, Jun 12, 2017 at 10:29:20PM -0600, Logan Gunthorpe wrote:
-> > 
-> > 
-> > On 12/06/17 10:18 PM, Greg Kroah-Hartman wrote:
-> > > What test causes so many major numbers to be allocated?  Is this
-> > > in-kernel test code?  Do you really have a system that requires so many
-> > > different drivers that all want a dynamic char major?
-> > 
-> > This is a 0day kernel robot test. I'm not sure the motivations of its
-> > design but it seems to be similar to an allyesconfig. So all/most
-> > modules are compiled in and allocating their char device regions on boot
-> > of a qemu instance.
-> 
-> Ah, that makes sense.  Well, someone can always work on expanding the
-> range of dynamic char major numbers if they are running out of them on a
-> real system, I'll gladly take patches for that :)
-
-Or better yet, just turn all char major allocations into dynamic, which
-would be really good for test systems.  I thought someone proposed
-patches for that a long time ago, but I can't find them anymore.  That
-would be the simplest solution here.
-
-thnaks,
-
-greg k-h
+On 13/06/17 13:56, Chris Packham wrote:=0A=
+> Allow devices that use this driver to be registered via a=0A=
+> devicetree.=0A=
+> =0A=
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+> ---=0A=
+>   .../devicetree/bindings/i2c/i2c-pca-platform.txt    | 18 ++++++++++++++=
+++++=0A=
+>   drivers/i2c/busses/i2c-pca-platform.c               | 21 ++++++++++++++=
++++++++=0A=
+>   2 files changed, 39 insertions(+)=0A=
+>   create mode 100644 Documentation/devicetree/bindings/i2c/i2c-pca-platfo=
+rm.txt=0A=
+> =0A=
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt b=
+/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt=0A=
+> new file mode 100644=0A=
+> index 000000000000..47410bda3f37=0A=
+> --- /dev/null=0A=
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt=0A=
+> @@ -0,0 +1,18 @@=0A=
+> +* NXP PCA PCA9564/PCA9665 I2C controller=0A=
+> +=0A=
+> +The PCA9564/PCA9665 serves as an interface between most standard=0A=
+> +parallel-bus microcontrollers/microprocessors and the serial I2C-bus=0A=
+> +and allows the parallel bus system to communicate bi-directionally=0A=
+> +with the I2C-bus.=0A=
+> +=0A=
+> +Required properties :=0A=
+> +=0A=
+> + - reg : Offset and length of the register set for the device=0A=
+> + - compatible : one of "nxp,pca9564" or "nxp,pca9665"=0A=
+> +=0A=
+> +Optional properties=0A=
+> + - interrupts : the interrupt number=0A=
+> + - interrupt-parent : the phandle for the interrupt controller.=0A=
+> +   If an interrupt is not specified polling will be used.=0A=
+> + - gpios : gpio phandle to control device reset.=0A=
+> + - clock-frequency : I2C bus frequency.=0A=
+> \ No newline at end of file=0A=
+> diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i=
+2c-pca-platform.c=0A=
+> index 3bd2e7d06e4b..ca63fee400cb 100644=0A=
+> --- a/drivers/i2c/busses/i2c-pca-platform.c=0A=
+> +++ b/drivers/i2c/busses/i2c-pca-platform.c=0A=
+> @@ -23,6 +23,9 @@=0A=
+>   #include <linux/i2c-pca-platform.h>=0A=
+>   #include <linux/gpio.h>=0A=
+>   #include <linux/io.h>=0A=
+> +#include <linux/of.h>=0A=
+> +#include <linux/of_device.h>=0A=
+> +#include <linux/of_gpio.h>=0A=
+>   =0A=
+>   #include <asm/irq.h>=0A=
+>   =0A=
+> @@ -136,12 +139,15 @@ static int i2c_pca_pf_probe(struct platform_device =
+*pdev)=0A=
+>   	struct resource *res;=0A=
+>   	struct i2c_pca9564_pf_platform_data *platform_data =3D=0A=
+>   				dev_get_platdata(&pdev->dev);=0A=
+> +	struct device_node *np =3D pdev->dev.of_node;=0A=
+>   	int ret =3D 0;=0A=
+>   	int irq;=0A=
+>   =0A=
+>   	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);=0A=
+>   	irq =3D platform_get_irq(pdev, 0);=0A=
+>   	/* If irq is 0, we do polling. */=0A=
+> +	if (irq < 0)=0A=
+> +		irq =3D 0;=0A=
+>   =0A=
+>   	if (res =3D=3D NULL) {=0A=
+>   		ret =3D -ENODEV;=0A=
+> @@ -182,6 +188,11 @@ static int i2c_pca_pf_probe(struct platform_device *=
+pdev)=0A=
+=0A=
+=0A=
+I should be setting i2c->adap.dev.of_node somewhere around here so that =0A=
+the child nodes get automatically probed.=0A=
+=0A=
+>   		i2c->adap.timeout =3D platform_data->timeout;=0A=
+>   		i2c->algo_data.i2c_clock =3D platform_data->i2c_clock_speed;=0A=
+>   		i2c->gpio =3D platform_data->gpio;=0A=
+> +	} else if (np) {=0A=
+> +		i2c->adap.timeout =3D HZ;=0A=
+> +		i2c->gpio =3D of_get_gpio(np, 0);=0A=
+> +		of_property_read_u32_index(np, "clock-frequency", 0,=0A=
+> +					   &i2c->algo_data.i2c_clock);=0A=
+>   	} else {=0A=
+>   		i2c->adap.timeout =3D HZ;=0A=
+>   		i2c->algo_data.i2c_clock =3D 59000;=0A=
+> @@ -275,11 +286,21 @@ static int i2c_pca_pf_remove(struct platform_device=
+ *pdev)=0A=
+>   	return 0;=0A=
+>   }=0A=
+>   =0A=
+> +#ifdef CONFIG_OF=0A=
+> +static const struct of_device_id i2c_pca_of_match_table[] =3D {=0A=
+> +	{ .compatible =3D "nxp,pca9564" },=0A=
+> +	{ .compatible =3D "nxp,pca9665" },=0A=
+> +	{},=0A=
+> +};=0A=
+> +MODULE_DEVICE_TABLE(of, i2c_pca_of_match_table);=0A=
+> +#endif=0A=
+> +=0A=
+>   static struct platform_driver i2c_pca_pf_driver =3D {=0A=
+>   	.probe =3D i2c_pca_pf_probe,=0A=
+>   	.remove =3D i2c_pca_pf_remove,=0A=
+>   	.driver =3D {=0A=
+>   		.name =3D "i2c-pca-platform",=0A=
+> +		.of_match_table =3D of_match_ptr(i2c_pca_of_match_table),=0A=
+>   	},=0A=
+>   };=0A=
+>   =0A=
+> =0A=
+=0A=
