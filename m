@@ -1,69 +1,64 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: rockchip: use cs-gpios for cros_ec_spi
-Date: Tue, 13 Jun 2017 19:22:25 +0100
-Message-ID: <20170613182225.smahsf3jzvbc7w7z@sirena.org.uk>
-References: <1497331543-8565-1-git-send-email-jeffy.chen@rock-chips.com>
- <1497331543-8565-4-git-send-email-jeffy.chen@rock-chips.com>
- <20170613175043.GC9026@google.com>
+From: Sven-Haegar Koch <haegar@sdinet.de>
+Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable
+ to handle kernel NULL pointer dereference at 00000000000000a8
+Date: Tue, 13 Jun 2017 21:13:32 +0200 (CEST)
+Message-ID: <alpine.DEB.2.20.1706132106410.11042@aurora.sdinet.de>
+References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
+ <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
+ <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
+ <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
+ <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
+ <20170613041842.GA13308@kroah.com>
+ <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
+ <20170613043416.GB14217@kroah.com> <20170613043518.GA14621@kroah.com>
+ <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
+ <20170613163508.GA31961@kroah.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="qjfl6r4m36ew2l7k"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170613175043.GC9026-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170613163508.GA31961@kroah.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, David Airlie <airlied@linux.ie>, LKP <lkp@01.org>, Linus Walleij <linus.walleij@linaro.org>, David Herrmann <dh.herrmann@gmail.com>, linux-kernel@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Linus Torvalds <torvalds@linux-foundation.org>, Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, kernel test robot <fengguang.wu@intel.com>, Logan Gunthorpe <logang@deltatee.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 13 Jun 2017, Greg Kroah-Hartman wrote:
 
---qjfl6r4m36ew2l7k
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> On Tue, Jun 13, 2017 at 10:25:40AM -0600, Logan Gunthorpe wrote:
+> > 
+> > On 12/06/17 10:35 PM, Greg Kroah-Hartman wrote:
+> > > Or better yet, just turn all char major allocations into dynamic, which
+> > > would be really good for test systems.  I thought someone proposed
+> > > patches for that a long time ago, but I can't find them anymore.  That
+> > > would be the simplest solution here.
+> > 
+> > Would people not complain about that? I would not be surprised if some
+> > crazy application is using hard coded major numbers in userspace. So
+> > such a change could potentially break userspace...
+> 
+> For char devices, I doubt it, but we can't take the chance, which is why
+> you make it an option.  Then, it's enabled for 'allmodconfig' builds,
+> which helps testers out.
 
-On Tue, Jun 13, 2017 at 10:50:44AM -0700, Brian Norris wrote:
-> On Tue, Jun 13, 2017 at 01:25:43PM +0800, Jeffy Chen wrote:
-> > The cros_ec requires CS line to be active after last message. But the CS
-> > would be toggled when powering off/on rockchip spi, which breaks ec xfer.
-> > Use GPIO CS to prevent that.
+At least for /dev/null, /dev/zero, and perhaps /dev/tty it would 
+definitely break things if the major+minor number is not static. I have 
+multiple chroot environments having only some minimal needed static 
+/dev subdir, with naturally no daemons or filesystem creating those 
+on-demand. For the main /dev I use whatever the system sets up, so 
+devtmpfs with udev.
 
-> I suppose this change is fine. (At least, I don't have a good reason not
-> to do this.)
+c'ya
+sven-haegar
 
-> But I still wonder whether this is something that the SPI core can be
-> expected to handle. drivers/mfd/cros_ec_spi.c already sets the
-> appropriate trans->cs_change bits, to ensure CS remains active in
-> between certain messages (all under spi_bus_lock()). But you're
-> suggesting that your bus controller may deassert CS if you runtime
-> suspend the device (e.g., in between messages).
-
-> So, is your controller just peculiar? Or should the SPI core avoid
-> autosuspending the bus controller when it's been instructed to keep CS
-> active? Any thoughts Mark?
-
-This sounds like the controller being unusual - though frankly the
-ChromeOS chip select usage is also odd so it's fairly rare for something
-like this to come up.  I'd not expect a runtime suspend to loose the pin
-state, though possibly through use of pinctrl rather than the
-controller.
-
---qjfl6r4m36ew2l7k
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllALWAACgkQJNaLcl1U
-h9Dqmwf9HaNrRklDm4miRUa0QtYMw0s/qZU13AQX4bgUcYBuF/c9RvDfPT2/0UYJ
-nTRutT7n600AduZHzNIYskTiIXmo3r4pOP4n7zXzKmz3lJJv1xxDmAZNq0hGsFYA
-4G/UfQZdyHRhT9UF4QRE1No1E/LVo0GCVePuMc3qK3t9VzUAFsP6Yn49x5iErdMt
-JpONzslvoP2uitfA4g6nw1l02+FNZoyOhGo4bme7QJ7/bbLE9QV7JHf6gxEIR5DM
-AsuADLgrTz7hLC6KJNoT8Lxe8Po7J40whtfW6pnWyX1V0GjdokjKZ75YUoiFfInN
-o+/BzRt8ebcITMqedJ3Dx2W+MCuGLA==
-=1m4/
------END PGP SIGNATURE-----
-
---qjfl6r4m36ew2l7k--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Three may keep a secret, if two of them are dead.
+- Ben F.
