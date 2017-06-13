@@ -1,68 +1,55 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v9] media: i2c: max2175: Add MAX2175 support
-Date: Tue, 13 Jun 2017 11:36:10 +0200
-Message-ID: <CAMuHMdXbuzQqC4bgTfZ_HJ5wMduvrv4XPdTw_y-VjfrUDj38WA@mail.gmail.com>
-References: <20170612132620.1024-4-ramesh.shanmugasundaram@bp.renesas.com> <20170613091056.20796-1-ramesh.shanmugasundaram@bp.renesas.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
+Date: Tue, 13 Jun 2017 11:36:52 +0200
+Message-ID: <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
+References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
+ <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
+ <1497268468.930.26.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170613091056.20796-1-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Sakari Ailus <sakari.ailus@linux.intel.com>, Antti Palosaari <crope@iki.fi>, Chris Paterson <chris.paterson2@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Linux Media Mailing List <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497268468.930.26.camel@mhfsdcap03>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ramesh,
 
-On Tue, Jun 13, 2017 at 11:10 AM, Ramesh Shanmugasundaram
-<ramesh.shanmugasundaram@bp.renesas.com> wrote:
-> This patch adds driver support for the MAX2175 chip. This is Maxim
-> Integrated's RF to Bits tuner front end chip designed for software-defined
-> radio solutions. This driver exposes the tuner as a sub-device instance
-> with standard and custom controls to configure the device.
->
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-> ---
-> Hi Hans,
->
->    As requested, here is the v9 of this patch alone implementing the work
->    around to avoid the sparse warning.
->
->    https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg15138.html
->
->    For some reason, I could not reproduce this warning in my setup :-(
->
-> Thanks,
-> Ramesh.
->
-> v9:
->  - Work around to avoid a sparse warning generated because of
->    regmap_read_poll_timeout macro implementation.
 
-> +/* Checks expected pattern every msec until timeout */
-> +static int max2175_poll_timeout(struct max2175 *ctx, u8 idx, u8 msb, u8 lsb,
-> +                               u8 exp_bitval, u32 timeout_ms)
-> +{
-> +       unsigned int val;
-> +
-> +       /*
-> +        * The brackets around the last parameter is a work around to avoid
-> +        * the sparse tool warning. The ideal fix is to use brackets for the
-> +        * last parameter of regmap_read_poll_timeout macro.
-> +        */
-> +       return regmap_read_poll_timeout(ctx->regmap, idx, val,
-> +                       (max2175_get_bitval(val, msb, lsb) == exp_bitval),
-> +                       1000, (timeout_ms * 1000));
+On 12/06/17 13:54, Jun Gao wrote:
+> On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
+>> From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>
+>> Add MT2701 i2c device node.
+>>
+>> Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>> ---
+>>   arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
+>>   arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 84 insertions(+)
+[...]
+> 
+> Dear Matthias,
+> 
+> Could you take this patch together with
+> [PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
+> 
+> Thanks!
+> 
 
-I don't think that issue should be fixed here, so I prefer v8.
+They are both included in the pull request I send [1] [2], or do I miss 
+something?
 
-Gr{oetje,eeting}s,
+Regards,
+Matthias
 
-                        Geert
-
+[1] 
+https://github.com/mbgg/linux-mediatek/commit/729b7f8dbdaff270c53052897ea06486221a49a2
+[2] 
+https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
