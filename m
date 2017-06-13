@@ -1,23 +1,19 @@
-From: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 Subject: Re: [PATCH] mfd: Add driver for RAVE Supervisory Processor
-Date: Mon, 12 Jun 2017 17:28:09 -0700
-Message-ID: <CAHQ1cqH9LLZrVwzDh0Mwv45Mv2BdcMW+kFtELQ-VNrk-1F0ngA@mail.gmail.com>
-References: <20170606180643.14258-1-andrew.smirnov@gmail.com> <1496824875.30073.123.camel@pengutronix.de>
+Date: Mon, 12 Jun 2017 17:28:54 -0700
+Message-ID: <CAHQ1cqE7hWxtxJQ5OEOyPrAR1af0aXQ128=AADQr7jq1QhxPjg@mail.gmail.com>
+References: <20170606180643.14258-1-andrew.smirnov@gmail.com> <20170609134952.hocd6dpzixldzf72@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496824875.30073.123.camel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170609134952.hocd6dpzixldzf72@rob-hp-laptop>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 7, 2017 at 1:41 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Hi Andrey,
->
-> no code review, just 2 drive-by comments.
->
-> Am Dienstag, den 06.06.2017, 11:06 -0700 schrieb Andrey Smirnov:
+On Fri, Jun 9, 2017 at 6:49 AM, Rob Herring <robh@kernel.org> wrote:
+> On Tue, Jun 06, 2017 at 11:06:43AM -0700, Andrey Smirnov wrote:
 >> Add a driver for RAVE Supervisory Processor, an MCU implementing
 >> varoius bits of housekeeping functionality (watchdoging, backlight
 >> control, LED control, etc) on RAVE family of products by Zodiac
@@ -26,70 +22,73 @@ On Wed, Jun 7, 2017 at 1:41 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@publ
 >> This driver implementes core MFD/serdev device as well as
 >> communication subroutines necessary for commanding the device.
 >>
->> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
->> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Cc: cphealy@gmail.com
+>> Cc: Lucas Stach <l.stach@pengutronix.de>
+>> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: devicetree@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 >> ---
-> [...]
+>>
+>> Note that the driver for "zii,rave-sp-watchdog" exists, but I haven't
+>> submitted it yet, becuase I wanted to make sure that API exposed by
+>> this MFD is acceptable and doesn't need drastic changes
+>>
+>>  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   33 +
+>>  drivers/mfd/Kconfig                                |    9 +
+>>  drivers/mfd/Makefile                               |    1 +
+>>  drivers/mfd/rave-sp.c                              | 1009 ++++++++++++++++++++
+>>  include/linux/rave-sp.h                            |   54 ++
+>>  5 files changed, 1106 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+>>  create mode 100644 drivers/mfd/rave-sp.c
+>>  create mode 100644 include/linux/rave-sp.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+>> new file mode 100644
+>> index 0000000..46a904c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+>> @@ -0,0 +1,33 @@
+>> +Zodiac Inflight Innovations RAVE Supervisory Processor
+>> +
+>> +Required parent device properties:
+>> +
+>> + - compatible: Should be one of:
+>> +     - "zii,rave-sp-niu"
+>> +     - "zii,rave-sp-mezz"
+>> +     - "zii,rave-sp-esb"
+>> +     - "zii,rave-sp-rdu1"
+>> +     - "zii,rave-sp-rdu2"
+>> +
+>> + - current-speed: Should be set to baud rate SP device is using
+>> +
 >
->> +++ b/drivers/mfd/rave-sp.c
->> @@ -0,0 +1,1009 @@
->> +/*
->> + * rave-sp.c - Multifunction core driver for Zodiac Inflight Innovations
->> + * SP MCU that is connected via dedicated UART port
->> + *
->> + * Copyright (C) 2017 Zodiac Inflight Innovations
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation; either version 2 of
->> + * the License, or (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program; if not, see <http://www.gnu.org/licenses/>.
->> + */
+> Please clarify that this must be a child of a serial device node.
+
+OK, will fix in v2.
+
 >
-> [...]
+>> +RAVE SP consists of the following sub-devices:
+>> +
+>> +Device                                Description
+>> +------                                -----------
+>> +rave-sp-wdt                  : Watchdog
+>> +
+>> +
+>> +Example of usage:
+>> +
+>> +     rdu {
+>> +             compatible = "zii,rave-sp-rdu2";
+>> +             current-speed = <1000000>;
+>> +             status = "okay";
 >
->> +MODULE_DEVICE_TABLE(of, rave_sp_dt_ids);
->> +MODULE_LICENSE("GPL");
->
-> Header says GPL v2, so this should be changed to match.
+> Don't show status in examples.
 >
 
 OK, will fix in v2.
 
-> [...]
->> +
->> +#define COMPATIBLE_RAVE_SP_NIU               "zii,rave-sp-niu"
->> +#define COMPATIBLE_RAVE_SP_MEZZ              "zii,rave-sp-mezz"
->> +#define COMPATIBLE_RAVE_SP_ESB               "zii,rave-sp-esb"
->> +#define COMPATIBLE_RAVE_SP_RDU1              "zii,rave-sp-rdu1"
->> +#define COMPATIBLE_RAVE_SP_RDU2              "zii,rave-sp-rdu2"
->
-> Can we get rid of those defines? They are only used in the of_device_id
-> table.
-
-Those defines are used by drivers for MFD cells, because,
-unfortunately, communication protocols differ for between hardware
-versions. So instead of having, say, "zii,rave-sp-watchdog-rdu2",
-"zii,rave-sp-watchdog-rdu1", etc. I use "zii,rave-sp-watchdog" and
-"compatible" from MFD parent to determine what protocol to use. I am
-happy to change that if that doesn't seem like a good idea.
-
 Thanks,
 Andrey Smirnov
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
