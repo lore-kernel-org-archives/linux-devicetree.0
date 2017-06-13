@@ -1,56 +1,88 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: Re: [PATCH v2 0/15] [dt-bindings] [media] Add document file and
- driver for Sony CXD2880 DVB-T2/T tuner + demodulator
-Date: Tue, 13 Jun 2017 11:38:14 -0300
-Message-ID: <20170613113814.0094536f@vento.lan>
-References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
-        <5188b958-9a34-4519-5845-a318273592e0@sony.com>
-        <d7c70c53-3fb0-a045-5e1a-1a736bdeda1f@sony.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: tps65217: Update binding documentation.
+Date: Tue, 13 Jun 2017 09:43:20 -0500
+Message-ID: <CAL_JsqJ8--8Wj9L3LFDrUpeQ33MUu3RwZfxM2x5tAr0Dp4uVqg@mail.gmail.com>
+References: <20170607103242.16008-1-enric.balletbo@collabora.com>
+ <20170609140309.zhagc5g662d4la3z@rob-hp-laptop> <CAFqH_53+diszv4QtKU0CgVPb3TO-MeDWjbPpFQuVzLXZsQ=Zog@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d7c70c53-3fb0-a045-5e1a-1a736bdeda1f-7U/KSKJipcs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
-Cc: "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Yamamoto, Masayuki" <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, "Nozawa, Hideki (STWN)" <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, "Yonezawa, Kota" <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, "Matsumoto, Toshihiko" <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, "Watanabe, Satoshi (SSS)" <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <CAFqH_53+diszv4QtKU0CgVPb3TO-MeDWjbPpFQuVzLXZsQ=Zog@mail.gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lee Jones <lee.jones@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Jingoo Han <jingoohan1@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Tony
 List-Id: devicetree@vger.kernel.org
 
-Hi Takiguchi-san,
+On Fri, Jun 9, 2017 at 5:30 PM, Enric Balletbo Serra
+<eballetbo@gmail.com> wrote:
+> Hello Rob,
+>
+> 2017-06-09 16:03 GMT+02:00 Rob Herring <robh@kernel.org>:
+>> On Wed, Jun 07, 2017 at 12:32:39PM +0200, Enric Balletbo i Serra wrote:
+>>> This patch adds a new binding documentation for the TPS65217 MFD and
+>>> updates the documentation for all the sub-devices in accordance to get
+>>> each individual sub-driver functioning correctly.
+>>
+>> Explain why breaking compatibility is okay.
+>>
+>
+> We had some discussion in patch 4 that make me rethink a bit all this,
+> please let me send a new version and continue the discussion there
+> (now I'm not sure if I'll break the compatibility or not)
+>
+> But let me ask a question. The TPS65217 MFD has different sub-nodes
+> (charger, backlight, pwrbutton, regulators) in DT, I suspect the
+> answer is no, but is it ok that some of them were not described in the
+> DT because there is nothing to configure?
 
-Em Thu, 25 May 2017 15:15:39 +0900
-"Takiguchi, Yasunari" <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org> escreveu:
+But you are configuring the interrupts. I'm all for not creating nodes
+just for the purpose instantiating a driver (DT is not the only way to
+create platform devices) when the parent node is sufficient. We see
+both models, but we don't really want a mixture of both ways so I'd
+stick with the latter here.
 
-> Hi, all
-> 
-> I sent the patch series of Sony CXD2880 DVB-T2/T tuner + demodulator driver on Apr/14.
-> Are there any comments, advices and review results for them?
-
-Usually, reviewing drivers takes more time, as one needs to reserve a
-long period of time for reviewing. Sorry for the delay.
-
-> I'd like to get better understanding of current review status for our codes.
-
-Just sent today a review. There are some things that need to be
-changed in order to get it into a better shape and make it easier
-to review. In particular, it should be using some Kernel internal APIs,
-instead of coming with re-implementation of existing core code. That's fine. 
-It is very unusual that the first contributions from a new Kernel
-developer to gets everything the way as it is expected mainstream ;-)
-
-One thing that come into my mind, besides what was already commented,
-is that it seems you added an abstraction layer. We don't like such
-layers very much, as it makes harder to understand the driver, usually
-for very little benefit.
-
-On this first review, I didn't actually try to understand what's
-going on there. As the driver doesn't contain any comments inside,
-it makes harder to understand why some things were coded using
-such approach.
-
-Thanks,
-Mauro
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> i.e: Have this because the resources of charger and pwrbutton are
+> static so can be hard-coded in the driver
+>
+> &tps {
+>         compatible = "ti,tps65217";
+>         interrupt-controller;
+>         #interrupt-cells = <1>;
+>
+>         regulators {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+>                 dcdc1_reg: regulator@0 {
+>                         reg = <0>;
+>                 ...
+>        };
+> };
+>
+> instead of :
+>
+> &tps {
+>         compatible = "ti,tps65217";
+>         interrupt-controller;
+>         #interrupt-cells = <1>;
+>
+>         charger {
+>                 compatible = "ti,tps65217-charger";
+>                 interrupts = <0>, <1>;
+>                 interrupt-names = "USB", "AC";
+>         };
+>
+>         pwrbutton {
+>                 compatible = "ti,tps65217-pwrbutton";
+>                 interrupts = <2>;
+>         };
+>
+>         regulators {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+>                 dcdc1_reg: regulator@0 {
+>                         reg = <0>;
+>                 ...
+>        };
+> };
