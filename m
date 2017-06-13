@@ -1,48 +1,208 @@
-From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Tue, 13 Jun 2017 10:46:36 -0700
-Message-ID: <cb008f0f-1585-653e-0b89-47478f9f4734@broadcom.com>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
- <20170613050947.GA1684@localhost.localdomain>
+From: Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable to
+ handle kernel NULL pointer dereference at 00000000000000a8
+Date: Tue, 13 Jun 2017 11:47:30 -0600
+Message-ID: <f848a5fb-096c-a025-cc3b-314cc3899f9e@deltatee.com>
+References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
+ <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
+ <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
+ <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
+ <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
+ <20170613041842.GA13308@kroah.com>
+ <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
+ <20170613043416.GB14217@kroah.com> <20170613043518.GA14621@kroah.com>
+ <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
+ <20170613163508.GA31961@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170613050947.GA1684-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170613163508.GA31961@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
 
-Hi Richard,
 
-On 17-06-12 10:09 PM, Richard Cochran wrote:
-> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
->> +Example:
->> +
->> +ptp_dte: ptp_dte@180af650 {
->> +	compatible = "brcm,ptp-dte";
->> +	reg = <0x180af650 0x10>;
->> +	status = "okay";
->> +};
-> This patch set looks okay, as far as it goes, but how does one
-> actually use the clock?
->
-> How does one connect this node to an Ethernet MAC, for example?
-In some of the SoC's, the DTE's NCO is synced in hardware with the Ethernet's
-1588 Shim NCO (used for time-stamping the packets). We are working on getting
-all the future SoC's synced this way (for Ethernet).
+On 13/06/17 10:35 AM, Greg Kroah-Hartman wrote:
+> For char devices, I doubt it, but we can't take the chance, which is why
+> you make it an option.  Then, it's enabled for 'allmodconfig' builds,
+> which helps testers out.
 
-In other scenarios, we use an user-space app to perform the sync based on
-time-stamps from external hardware sources like the Wi-Fi.
-> Thanks,
-> Richard
+Well I took a look at this and it looks like a lot of work to modify all
+the drivers to support a possible dynamic allocation and I'm not really
+able to do all that right now.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However, correct me if I'm missing something, but it looks fairly
+straightforward to extend the dynamic region above 256 in cases like
+this. There are already fixed major numbers above 255 and the
+infrastructure appears to support it. So what are your thoughts on the
+change below? I'd be happy to clean it up into a proper patch if you
+agree it's a workable option.
+
+Thanks,
+
+Logan
+
+
+
+diff --git a/fs/char_dev.c b/fs/char_dev.c
+index fb8507f521b2..539352425d95 100644
+--- a/fs/char_dev.c
++++ b/fs/char_dev.c
+@@ -59,6 +59,29 @@ void chrdev_show(struct seq_file *f, off_t offset)
+
+ #endif /* CONFIG_PROC_FS */
+
++static int find_dynamic_major(void)
++{
++	int i;
++	struct char_device_struct **cp;
++
++	for (i = ARRAY_SIZE(chrdevs)-1; i > CHRDEV_MAJOR_DYN_END; i--) {
++		if (chrdevs[i] == NULL)
++			return i;
++	}
++
++	for (i = CHRDEV_MAJOR_DYN_EXT_START;
++	     i > CHRDEV_MAJOR_DYN_EXT_END; i--) {
++		for (cp = &chrdevs[major_to_index(i)]; *cp; cp = &(*cp)->next)
++			if ((*cp)->major == i)
++				break;
++
++		if (*cp == NULL || (*cp)->major != i)
++			return i;
++	}
++
++	return -EBUSY;
++}
++
+ /*
+  * Register a single major with a specified minor range.
+  *
+@@ -84,22 +107,11 @@ __register_chrdev_region(unsigned int major,
+unsigned int baseminor,
+
+ 	mutex_lock(&chrdevs_lock);
+
+-	/* temporary */
+ 	if (major == 0) {
+-		for (i = ARRAY_SIZE(chrdevs)-1; i > 0; i--) {
+-			if (chrdevs[i] == NULL)
+-				break;
+-		}
+-
+-		if (i < CHRDEV_MAJOR_DYN_END)
+-			pr_warn("CHRDEV \"%s\" major number %d goes below the dynamic
+allocation range\n",
+-				name, i);
+-
+-		if (i == 0) {
+-			ret = -EBUSY;
++		ret = find_dynamic_major();
++		if (ret < 0)
+ 			goto out;
+-		}
+-		major = i;
++		major = ret;
+ 	}
+
+ 	cd->major = major;
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 249dad4e8d26..5780d69034ca 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -2448,6 +2448,9 @@ static inline void bd_unlink_disk_holder(struct
+block_device *bdev,
+ #define CHRDEV_MAJOR_HASH_SIZE	255
+ /* Marks the bottom of the first segment of free char majors */
+ #define CHRDEV_MAJOR_DYN_END 234
++#define CHRDEV_MAJOR_DYN_EXT_START 511
++#define CHRDEV_MAJOR_DYN_EXT_END 384
++
+ extern int alloc_chrdev_region(dev_t *, unsigned, unsigned, const char *);
+ extern int register_chrdev_region(dev_t, unsigned, const char *);
+ extern int __register_chrdev(unsigned int major, unsigned int baseminor,
+
+
+
+----
+
+This results in char devices like this (another patch might be prudent
+to fix the ordering):
+
+Character devices:
+510 ttySLM
+  1 mem
+511 noz
+  4 /dev/vc/0
+  4 tty
+  4 ttyS
+  5 /dev/tty
+  5 /dev/console
+  5 /dev/ptmx
+  7 vcs
+  9 st
+ 10 misc
+ 13 input
+ 21 sg
+ 29 fb
+ 43 ttyI
+ 45 isdn
+ 68 capi20
+ 86 ch
+ 90 mtd
+ 99 ppdev
+108 ppp
+128 ptm
+136 pts
+152 aoechr
+153 spi
+161 ircomm
+172 ttyMX
+174 ttyMI
+202 cpu/msr
+203 cpu/cpuid
+204 ttyJ
+204 ttyMAX
+206 osst
+226 drm
+235 ttyS
+236 ttyRP
+237 ttyARC
+238 ttyPS
+239 ttyIFX
+494 rio_cm
+240 ttySC
+495 cros_ec
+241 ipmidev
+496 hidraw
+242 rio_mport
+497 ttySDIO
+243 xz_dec_test
+498 uio
+244 bsg
+499 firewire
+245 pvfs2-req
+500 nvme
+246 watchdog
+501 aac
+247 iio
+502 mei
+248 ptp
+503 phantom
+249 pps
+504 aux
+250 dax
+505 cmx
+251 dimmctl
+506 cmm
+252 ndctl
+507 ttySLP
+253 tpm
+508 ttyIPWp
+254 gpiochip
+509 ttySL
+
+
