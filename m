@@ -1,42 +1,45 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] dt-bindings: usb: exynos-usb: Add missing required VDD properties
-Date: Tue, 13 Jun 2017 18:29:25 +0200
-Message-ID: <20170613162925.21847-1-krzk@kernel.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@kernel.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable
+ to handle kernel NULL pointer dereference at 00000000000000a8
+Date: Tue, 13 Jun 2017 18:35:08 +0200
+Message-ID: <20170613163508.GA31961@kroah.com>
+References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
+ <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
+ <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
+ <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
+ <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
+ <20170613041842.GA13308@kroah.com>
+ <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
+ <20170613043416.GB14217@kroah.com>
+ <20170613043518.GA14621@kroah.com>
+ <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-Since commit bd8ce544ec35 ("usb: dwc3: exynos: Make provision for vdd
-regulators") vdd33-supply and vdd10-supply are required so document them
-in bindings.
+On Tue, Jun 13, 2017 at 10:25:40AM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 12/06/17 10:35 PM, Greg Kroah-Hartman wrote:
+> > Or better yet, just turn all char major allocations into dynamic, which
+> > would be really good for test systems.  I thought someone proposed
+> > patches for that a long time ago, but I can't find them anymore.  That
+> > would be the simplest solution here.
+> 
+> Would people not complain about that? I would not be surprised if some
+> crazy application is using hard coded major numbers in userspace. So
+> such a change could potentially break userspace...
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- Documentation/devicetree/bindings/usb/exynos-usb.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+For char devices, I doubt it, but we can't take the chance, which is why
+you make it an option.  Then, it's enabled for 'allmodconfig' builds,
+which helps testers out.
 
-diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-index 9b4dbe3b2acc..78ebebb66dad 100644
---- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-+++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-@@ -92,6 +92,8 @@ Required properties:
- 	   parent's address space
-  - clocks: Clock IDs array as required by the controller.
-  - clock-names: names of clocks correseponding to IDs in the clock property
-+ - vdd10-supply: 1.0V powr supply
-+ - vdd33-supply: 3.0V/3.3V power supply
- 
- Sub-nodes:
- The dwc3 core should be added as subnode to Exynos dwc3 glue.
-@@ -107,6 +109,8 @@ Example:
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges;
-+		vdd10-supply = <&ldo11_reg>;
-+		vdd33-supply = <&ldo9_reg>;
- 
- 		dwc3 {
- 			compatible = "synopsys,dwc3";
--- 
-2.9.3
+thanks,
+
+greg k-h
