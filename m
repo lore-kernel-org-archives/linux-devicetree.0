@@ -1,23 +1,14 @@
-From: Sven-Haegar Koch <haegar@sdinet.de>
-Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable
- to handle kernel NULL pointer dereference at 00000000000000a8
-Date: Tue, 13 Jun 2017 21:13:32 +0200 (CEST)
-Message-ID: <alpine.DEB.2.20.1706132106410.11042@aurora.sdinet.de>
-References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
- <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
- <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
- <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
- <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
- <20170613041842.GA13308@kroah.com>
- <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
- <20170613043416.GB14217@kroah.com> <20170613043518.GA14621@kroah.com>
- <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
- <20170613163508.GA31961@kroah.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH] dt-bindings: Drop k2g genpd device ID macros
+Date: Tue, 13 Jun 2017 15:16:01 -0500
+Message-ID: <ca91000a-627b-a655-4304-b64b78bbcf9a@ti.com>
+References: <20170522183737.24946-1-d-gerlach@ti.com>
+ <20170531162850.mf6giowmxj5vetxq@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170613163508.GA31961@kroah.com>
+In-Reply-To: <20170531162850.mf6giowmxj5vetxq@rob-hp-laptop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -27,38 +18,36 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, David Airlie <airlied@linux.ie>, LKP <lkp@01.org>, Linus Walleij <linus.walleij@linaro.org>, David Herrmann <dh.herrmann@gmail.com>, linux-kernel@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>, Linus Torvalds <torvalds@linux-foundation.org>, Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, kernel test robot <fengguang.wu@intel.com>, Logan Gunthorpe <logang@deltatee.com>, linux-arm-kernel@lists.infradead.org, Alan Cox <alan@linux.intel.com>
+To: Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Tero Kristo <t-kristo@ti.com>, Kevin Hilman <khilman@kernel.org>, Franklin Cooper <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Jun 2017, Greg Kroah-Hartman wrote:
-
-> On Tue, Jun 13, 2017 at 10:25:40AM -0600, Logan Gunthorpe wrote:
-> > 
-> > On 12/06/17 10:35 PM, Greg Kroah-Hartman wrote:
-> > > Or better yet, just turn all char major allocations into dynamic, which
-> > > would be really good for test systems.  I thought someone proposed
-> > > patches for that a long time ago, but I can't find them anymore.  That
-> > > would be the simplest solution here.
-> > 
-> > Would people not complain about that? I would not be surprised if some
-> > crazy application is using hard coded major numbers in userspace. So
-> > such a change could potentially break userspace...
+Santosh,
+On 05/31/2017 11:28 AM, Rob Herring wrote:
+> On Mon, May 22, 2017 at 01:37:37PM -0500, Dave Gerlach wrote:
+>> Commit 7cc119f29b19 ("dt-bindings: Add TI SCI PM Domains") introduced a
+>> number of K2G_DEV_x macros to represent each device ID available on the
+>> K2G platform for use by the genpd, clock, and reset drivers. Rather than
+>> use these macros, which are only used in the device tree for property
+>> values and not actually used by the drivers, let's just use the device
+>> ID number directly in the device tree to avoid macro bloat.
+>>
+>> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+>> ---
+>> Based on discussion here [1] it was agreed that these macros are not needed
+>> and it is better to just use the device IDs directly in dt.
+>>
+>> [1] https://www.spinics.net/lists/arm-kernel/msg577079.html
+>>
+>>  .../devicetree/bindings/soc/ti/sci-pm-domain.txt   |  5 +-
+>>  include/dt-bindings/genpd/k2g.h                    | 90 ----------------------
+>>  2 files changed, 3 insertions(+), 92 deletions(-)
+>>  delete mode 100644 include/dt-bindings/genpd/k2g.h
 > 
-> For char devices, I doubt it, but we can't take the chance, which is why
-> you make it an option.  Then, it's enabled for 'allmodconfig' builds,
-> which helps testers out.
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
 
-At least for /dev/null, /dev/zero, and perhaps /dev/tty it would 
-definitely break things if the major+minor number is not static. I have 
-multiple chroot environments having only some minimal needed static 
-/dev subdir, with naturally no daemons or filesystem creating those 
-on-demand. For the main /dev I use whatever the system sets up, so 
-devtmpfs with udev.
+Gentle ping on this. If you're OK with the patch any chance you can pick it up?
 
-c'ya
-sven-haegar
-
--- 
-Three may keep a secret, if two of them are dead.
-- Ben F.
+Regards,
+Dave
