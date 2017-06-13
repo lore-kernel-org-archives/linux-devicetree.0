@@ -1,53 +1,48 @@
 From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Subject: [PATCH V3 0/3] add UniPhier watchdog support
-Date: Tue, 13 Jun 2017 10:14:56 +0900
-Message-ID: <1497316499-22254-1-git-send-email-hayashibara.keiji@socionext.com>
+Subject: [PATCH V3 1/3] dt-bindings: watchdog: add description for UniPhier WDT controller
+Date: Tue, 13 Jun 2017 10:14:57 +0900
+Message-ID: <1497316499-22254-2-git-send-email-hayashibara.keiji@socionext.com>
+References: <1497316499-22254-1-git-send-email-hayashibara.keiji@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497316499-22254-1-git-send-email-hayashibara.keiji@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: wim@iguana.be, linux@roeck-us.net
 Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, yamada.masahiro@socionext.com, hayashi.kunihiko@socionext.com, owada.kiyoshi@socionext.com, Keiji Hayashibara <hayashibara.keiji@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds support for watchdog timer implemented on UniPhier LD11 and
-LD20 SoCs. This driver supports watchdog and system reset for SoCs.
+Add uniphier-wdt dt-bindings documentation.
 
-patch V2
-http://www.spinics.net/lists/linux-watchdog/msg11852.html
-
-patch V1
-http://www.spinics.net/lists/linux-watchdog/msg11782.html
-
-Changes between V3 and V2
-=========================
-1. Fix issues according to review comments.
-
- * Make it possible to take a timeout from devicetree.
- * Sort #include headlers alphabetically.
- * Correct the description of dt-bindings document and this patch comment.
- * Correct the description of license as GPLv2.
- * Correct MODULE_AUTHOR()
- * Remove unnecessary code.
-
-Changes between V2 and V1
-=========================
-1. Add barrier code in uniphier_watchdog_ping() and __uniphier_watchdog_start().
-2. Fix issues according to review comments.
-
-Keiji Hayashibara (3):
-  dt-bindings: watchdog: add description for UniPhier WDT controller
-  watchdog: uniphier: add UniPhier watchdog driver
-  arm64: dts: uniphier: add watchdog node for LD11 and LD20
-
- .../devicetree/bindings/watchdog/uniphier-wdt.txt  |  20 ++
- Documentation/watchdog/watchdog-parameters.txt     |   6 +
- arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   |   4 +
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |   4 +
- drivers/watchdog/Kconfig                           |  11 +
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/uniphier_wdt.c                    | 268 +++++++++++++++++++++
- 7 files changed, 314 insertions(+)
+Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+---
+ .../devicetree/bindings/watchdog/uniphier-wdt.txt    | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
- create mode 100644 drivers/watchdog/uniphier_wdt.c
 
+diff --git a/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt b/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
+new file mode 100644
+index 0000000..bf63375
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
+@@ -0,0 +1,20 @@
++UniPhier watchdog timer controller
++
++This UniPhier watchdog timer controller must be under sysctrl node.
++
++Required properties:
++- compatible: should be "socionext,uniphier-wdt"
++
++Example:
++
++	sysctrl@61840000 {
++		compatible = "socionext,uniphier-ld11-sysctrl",
++			     "simple-mfd", "syscon";
++		reg = <0x61840000 0x4000>;
++
++		watchdog {
++			compatible = "socionext,uniphier-wdt";
++		}
++
++		other nodes ...
++	};
 -- 
 2.7.4
