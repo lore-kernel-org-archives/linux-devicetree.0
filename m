@@ -1,101 +1,86 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/3] PCI: Add DT binding for tango PCIe controller
-Date: Tue, 13 Jun 2017 09:23:55 -0500
-Message-ID: <CAL_Jsq+n=sUg1MyDW7qY1a0kwSJJD00h7VztyTXK0eh_Uh2wmA@mail.gmail.com>
-References: <741766e5-cff2-db5f-d40b-6866e08fd966@sigmadesigns.com>
- <69f3ffe7-3c39-fa94-71f8-91744a869cc9@sigmadesigns.com> <20170607212907.2wr3hqbokjb74kj3@rob-hp-laptop>
- <e8cd62fb-f48e-c72a-f960-4794badfce70@free.fr>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH linux-next v4 2/4] spi: imx: add selection for iMX53 and
+ iMX6 controller
+Date: Tue, 13 Jun 2017 09:29:58 -0500
+Message-ID: <CAL_JsqJeh=M0qB2m6DPLo1_WJsUKowvS0FpUgsmEuF5KuKPTRw@mail.gmail.com>
+References: <20170608051603.16070-1-jiada_wang@mentor.com> <20170608051603.16070-3-jiada_wang@mentor.com>
+ <20170612155345.qtgaq4wjj2vidohd@rob-hp-laptop> <a4d5d8e2-c50d-4856-e14f-34ead774824e@mentor.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <e8cd62fb-f48e-c72a-f960-4794badfce70@free.fr>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mason <slash.tmp@free.fr>
-Cc: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>, Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>, Phuong Nguyen <phuong_nguyen@sigmadesigns.com>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <a4d5d8e2-c50d-4856-e14f-34ead774824e-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 7, 2017 at 5:34 PM, Mason <slash.tmp@free.fr> wrote:
-> Hello Rob,
+On Tue, Jun 13, 2017 at 12:28 AM, Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org> wrote:
+> Hello Rob
 >
-> On 07/06/2017 23:29, Rob Herring wrote:
->> On Wed, May 31, 2017 at 03:30:26PM +0200, Marc Gonzalez wrote:
->>> Binding for the Sigma Designs SMP8759 SoC.
+>
+> On 06/13/2017 12:53 AM, Rob Herring wrote:
+>>
+>> On Thu, Jun 08, 2017 at 02:16:01PM +0900, Jiada Wang wrote:
 >>>
->>> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+>>> ECSPI contorller for iMX53 and iMX6 has few hardware issues
+>>> comparing to iMX51.
+>>> The change add possibility to detect which controller is used
+>>> to apply possible workaround and limitations.
+>>>
+>>> Signed-off-by: Jiada Wang <jiada_wang-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 >>> ---
->>>  Documentation/devicetree/bindings/pci/tango-pcie.txt | 30 ++++++++++++++++++++++++++++++
->>>  1 file changed, 30 insertions(+)
+>>>  .../devicetree/bindings/spi/fsl-imx-cspi.txt       |  1 +
+>>>  drivers/spi/spi-imx.c                              | 26
+>>> ++++++++++++++++++++--
+>>>  2 files changed, 25 insertions(+), 2 deletions(-)
 >>>
->>> diff --git a/Documentation/devicetree/bindings/pci/tango-pcie.txt b/Documentation/devicetree/bindings/pci/tango-pcie.txt
->>> new file mode 100644
->>> index 000000000000..35ef2c811a27
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pci/tango-pcie.txt
->>> @@ -0,0 +1,30 @@
->>> +Sigma Designs Tango PCIe controller
->>> +
->>> +Required properties:
->>> +
->>> +- compatible: "sigma,smp8759-pcie"
->>> +- reg: address/size of PCI configuration space, address/size of register area
->>> +- device_type: "pci"
->>> +- #size-cells: <2>
->>> +- #address-cells: <3>
->>> +- msi-controller
->>> +- ranges: translation from system to bus addresses
->>> +- interrupts: spec for misc interrupts, spec for MSI
->>> +
->>> +http://elinux.org/Device_Tree_Usage#PCI_Address_Translation
->>> +http://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+>>> diff --git a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>>> b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>>> index 31b5b21..5bf1396 100644
+>>> --- a/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>>> +++ b/Documentation/devicetree/bindings/spi/fsl-imx-cspi.txt
+>>> @@ -9,6 +9,7 @@ Required properties:
+>>>    - "fsl,imx31-cspi" for SPI compatible with the one integrated on
+>>> i.MX31
+>>>    - "fsl,imx35-cspi" for SPI compatible with the one integrated on
+>>> i.MX35
+>>>    - "fsl,imx51-ecspi" for SPI compatible with the one integrated on
+>>> i.MX51
+>>> +  - "fsl,imx53-ecspi" for SPI compatible with the one integrated on
+>>> i.MX53 and later Soc
+>>>  - reg : Offset and length of the register set for the device
+>>>  - interrupts : Should contain CSPI/eCSPI interrupt
+>>>  - cs-gpios : Specifies the gpio pins to be used for chipselects.
+>>> diff --git a/drivers/spi/spi-imx.c b/drivers/spi/spi-imx.c
+>>> index 4469121..8e6f339 100644
+>>> --- a/drivers/spi/spi-imx.c
+>>> +++ b/drivers/spi/spi-imx.c
+>>> @@ -63,7 +63,8 @@ enum spi_imx_devtype {
+>>>         IMX27_CSPI,
+>>>         IMX31_CSPI,
+>>>         IMX35_CSPI,     /* CSPI on all i.mx except above */
+>>> -       IMX51_ECSPI,    /* ECSPI on i.mx51 and later */
+>>> +       IMX51_ECSPI,    /* ECSPI on i.mx51 */
+>>> +       IMX53_ECSPI,    /* ECSPI on i.mx53 and later */
 >>
->> Why are these here?
->
-> I found these references very helpful when writing the node.
+>>
+>> Looks like i.MX51 and i.MX53 are the same. While the DT should have
+>> different compatibles (with fallbacks), the driver should map them to
+>> the same type until there's some difference found.
+>>
+> the difference between i.MX51 and i.MX53 is introduced in the
+> 4th patch "spi: imx: Add support for SPI Slave mode" in this patch set
 
-Yes, I refer to them regularly.
+Okay, I missed that.
 
-> Where would you put them? In the example?
+> do you think, I need to merge the two patches into one?
 
-They are useful to every PCI binding. That doesn't mean we should link
-to them in for every single PCI host binding doc. They belong in a DT
-howto or something if not there already.
+No, not necessary.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 Rob
-
->
->> There's several standard properties you are missing like bus-range.
->
-> My reasoning for omitting "bus-range" was that the PCI core computes
-> it by itself (1M per "bus" so SZ_4M => 4 devices). I thought redundant
-> information was bad form?
->
->> Build your dts with "W=2". dtc recently gained some checks for PCI
->> bindings.
->
-> I'll give it a try. Did v4.9 already support it?
-
-No, v4.12.
-
->
->>> +Example:
->>> +
->>> +    pcie@2e000 {
->>> +            compatible = "sigma,smp8759-pcie";
->>> +            reg = <0x50000000 SZ_4M>, <0x2e000 0x100>;
->>> +            device_type = "pci";
->>> +            #size-cells = <2>;
->>> +            #address-cells = <3>;
->>> +            msi-controller;
->>> +            ranges = <0x02000000 0x0 0x00400000  0x50400000  0x0 SZ_60M>;
->>
->> I don't think SZ_60M exists or is available to dts files. Just put the
->> number in.
->
-> I #defined it at the top of my DTS.
-> Using symbolic constants in DTS is not acceptable?
-
-We generally don't use them here (i.e. for reg). The main use is for
-things also used by drivers like GPIO flags or IDs such as clock IDs.
-So please drop these.
-
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
