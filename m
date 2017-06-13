@@ -1,78 +1,134 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH v2 01/11] dt-bindings: update the
- binding for Allwinner H3 TVE support
-Date: Tue, 13 Jun 2017 09:41:28 +0200
-Message-ID: <20170613074128.q4mhf46gogn6jhvl@flea.lan>
+Subject: Re: [PATCH v2 07/11] drm: sun4i: add support for the TV
+ encoder in H3 SoC
+Date: Tue, 13 Jun 2017 09:44:32 +0200
+Message-ID: <20170613074432.btwgc4e7pndtsvbf@flea.lan>
 References: <20170604160149.30230-1-icenowy@aosc.io>
- <20170604160149.30230-2-icenowy@aosc.io>
- <20170607084544.kgclybyxxttfk3ko@flea.lan>
- <092D4797-0034-4C39-A30A-92CFAB23AAF8@aosc.io>
- <20170609164915.enap3epreg5vr2gy@flea.home>
- <53E8FC74-8AC0-461A-B875-812EE4A3267E@aosc.io>
+ <20170604160149.30230-8-icenowy@aosc.io>
+ <20170607093845.cu5kk55nj72roysf@flea.lan>
+ <362bb72d74cd7181ae02dbf73b0e724e@aosc.io>
 Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="w5ohdwsyzrw47olh"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBM5O73EQKGQEBKFIRIQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="jujgstq4zz4ccqii"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB25P73EQKGQENM2CQOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <53E8FC74-8AC0-461A-B875-812EE4A3267E-h8G6r0blFSE@public.gmane.org>
+In-Reply-To: <362bb72d74cd7181ae02dbf73b0e724e-h8G6r0blFSE@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
 List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
  <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---w5ohdwsyzrw47olh
+--jujgstq4zz4ccqii
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 10, 2017 at 12:51:02AM +0800, Icenowy Zheng wrote:
+On Sun, Jun 11, 2017 at 02:43:42PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> =E5=9C=A8 2017-06-07 17:38=EF=BC=8CMaxime Ripard =E5=86=99=E9=81=93=EF=BC=
+=9A
+> > On Mon, Jun 05, 2017 at 12:01:45AM +0800, Icenowy Zheng wrote:
+> > > Allwinner H3 features a TV encoder similar to the one in earlier SoCs=
+,
+> > > but has a internal fixed clock divider that divides the TCON1 clock
+> > > (called TVE clock in datasheet) by 11.
+> > >=20
+> > > Add support for it.
+> > >=20
+> > > Signed-off-by: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+> > > ---
+> > > Changes in v2:
+> > > - Quirk part rewritten.
+> > >=20
+> > >  drivers/gpu/drm/sun4i/sun4i_tv.c | 35
+> > > ++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 34 insertions(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/gpu/drm/sun4i/sun4i_tv.c
+> > > b/drivers/gpu/drm/sun4i/sun4i_tv.c
+> > > index 338b9e5bb2a3..b9ff6d5ea67a 100644
+> > > --- a/drivers/gpu/drm/sun4i/sun4i_tv.c
+> > > +++ b/drivers/gpu/drm/sun4i/sun4i_tv.c
+> > > @@ -13,6 +13,7 @@
+> > >  #include <linux/clk.h>
+> > >  #include <linux/component.h>
+> > >  #include <linux/of_address.h>
+> > > +#include <linux/of_device.h>
+> > >  #include <linux/regmap.h>
+> > >  #include <linux/reset.h>
+> > >=20
+> > > @@ -169,14 +170,21 @@ struct tv_mode {
+> > >  	const struct resync_parameters	*resync_params;
+> > >  };
+> > >=20
+> > > +struct sun4i_tv_quirks {
+> > > +	int fixed_divider;
+> > > +};
+> > > +
+> > >  struct sun4i_tv {
+> > >  	struct drm_connector	connector;
+> > >  	struct drm_encoder	encoder;
+> > >=20
+> > >  	struct clk		*clk;
+> > > +	struct clk		*mod_clk;
+> > >  	struct regmap		*regs;
+> > >  	struct reset_control	*reset;
+> > >=20
+> > > +	const struct sun4i_tv_quirks *quirks;
+> > > +
+> > >  	struct sun4i_drv	*drv;
+> > >  };
+> > >=20
+> > > @@ -391,6 +399,12 @@ static void sun4i_tv_mode_set(struct
+> > > drm_encoder *encoder,
+> > >  	struct sun4i_tcon *tcon =3D crtc->tcon;
+> > >  	const struct tv_mode *tv_mode =3D sun4i_tv_find_tv_by_mode(mode);
+> > >=20
+> > > +	if (tv->quirks->fixed_divider) {
+> > > +		DRM_DEBUG_DRIVER("Applying fixed divider %d on TVE clock\n",
+> > > +				 tv->quirks->fixed_divider);
+> > > +		mode->crtc_clock *=3D tv->quirks->fixed_divider;
+> > > +	}
+> > > +
+> >=20
+> > You're not allowed to change the mode in mode_set, and you shouldn't
+> > even change it. The output pixel clock is still 27MHz.
+> >=20
+> > You should implement that using the states, as we discussed already.
 >=20
+> After reading the comments at include/drm/drm_modeset_helper_vtables.h,
+> I think the atomic_check function is allowed to directly change
+> the adjust_mode of crtc_state.
 >=20
-> =E4=BA=8E 2017=E5=B9=B46=E6=9C=8810=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=88=
-12:49:15, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> =E5=86=99=E5=88=
-=B0:
-> >On Wed, Jun 07, 2017 at 04:48:50PM +0800, Icenowy Zheng wrote:
-> >> >> @@ -189,6 +211,8 @@ supported.
-> >> >>  Required properties:
-> >> >>    - compatible: value must be one of:
-> >> >>      * allwinner,sun8i-v3s-de2-mixer
-> >> >> +    * allwinner,sun8i-h3-de2-mixer0
-> >> >> +    * allwinner,sun8i-h3-de2-mixer1
-> >> >
-> >> >Again, please explain why we need to have different compatibles
-> >> >here. If it's only about the number of planes, this should be dealt
-> >> >with a property, not a compatible.
-> >>=20
-> >> Only mixer0 has "VEP" and write-back support, at least on H3.
-> >
-> >What is that VEP? writeback support can also be expressed by a
-> >property.
+> And according to other comments at include/drm/drm_modes.h, the
+> crtc_clock in adjust_mode should be the clock to be really feed
+> to the hardware.
 >=20
-> I don't know what VEP is...
+> So I think I can just change this in atomic_check.
+>=20
+> However, the mode_set function of sun4i_tv seems to be not
+> regarding adjusted_mode and still use original mode.
+>=20
+> So my current design is:
+> - Multiply adjusted_mode in atomic_check.
+> - Feed adjust_mode to TCON code in mode_set function.
+>=20
+> Is this proper?
+>=20
+> (From my own understanding to the comments I think so.)
 
-Ok. Let's forget about it at the moment then, especially if it's
-optional, we can add support for it later.
+No, it's not. The pixel clock in the mode is the pixel clock output
+physically by the connector. You want to use it for an intermediate
+clock in your pipeline.
 
-> But we are really facing different cores, like sun50i-a64-mmc
-> and sun50i-a64-emmc.
-
-Not really. The eMMC and MMC controllers are *very* different. They
-behave (slightly) differently, the eMMC controller has more signals
-(8-bit bus, data strobe), can run at a higher frequency. You cannot
-have exactly the same driver (or rather code path) to handle
-both. Therefore the need for some other compatible.
-
-This is not the case for the mixer here. The thing that differs
-between instances is not behaviour but data. And we provide most of
-the data through DT.
+This is not the same clock, and not the same frequency.
 
 Maxime
 
@@ -88,24 +144,24 @@ To unsubscribe from this group and stop receiving emails from it, send an e=
 mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
 For more options, visit https://groups.google.com/d/optout.
 
---w5ohdwsyzrw47olh
+--jujgstq4zz4ccqii
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZP5coAAoJEBx+YmzsjxAg/PUQAIq24iosJhBWfqs/Wpe0q/cS
-+Fvx2UK4lPd3NzfbM0JWBS+lhkz8W7aNmVIhIBh0Cf2/gAnDnIRYzHB0p3GeVfLQ
-JLwyfmdXRysr3mZ6p2N6MtAuUpHDA6CIaByxFVGGO5plzjk73ZoORlJtMfawqyyU
-Iu6vfQ6gXoThDrVoFJyYcRXk7HnYB2X4oZzaBn3MgYL8+pk9mGPyqboKoHgBCTag
-pl4QetGGDm025Xh3iP1ojCwI0dQrIY91qUh/pFYwZrhCzS0zYRlVRhSKy/BQKG9/
-hPt0ARnB0O8nV39OQyPvLu7QLSiBMqtPXtBD7q9w9/QrWXs4EVAberpxopcg1VCH
-kPZiP22oOVIMYhVgG+MJv2IyHdOZ2LyjF+xezLDSgOZk/sOiY+0sA8b7E06ph7xQ
-zo/RTXCBLyah9QKoxdhMhHCcBapx341HrLD8U/6JMZcdaWhwCUXVnElVKgpmwhNF
-Kx4Ais9lPCiWxURRNrPItkPaerEZzEa9Pn8BeyWefXDIAno3k1yFykc9VmM79j0f
-6XaibWk30p3n6J/nXQJnYyUgi8r/KrLecVEfAWXJatGwzX0a3YJp5Q7H79YFvSlI
-V6mC+iCLVkjHTgD3qwvlYySVi7tXdIcoqN68VBpGmIvuX9L8AB8Hv3qXeX0MJ4sx
-CXIPFBBqPGN7LwcUeGE+
-=8PjL
+iQIcBAEBAgAGBQJZP5fgAAoJEBx+YmzsjxAgYdEQAIGDtjVeVkMnmq+T0Tu8e+JP
+do/cLThLwGEljNqGMX1mYGsXBoiQOtO/AlTcH34I4+tCcUNuUksqGmmabvBEPJuw
+PrBA1lkxQJtviT3f2bYsLjM5euu5/PD9dbad4TcwOT8MkyHplodN2sBa4EmzNpNo
+K1TOGVJgqfPFfQXcEkvtrlTXuZRChA88n4Y53ZCPYKKywE5G2F/5L/MMrYUKKHcM
+1UJhhQuMUtg7KWyrNTJOvnEbhd+jw0uEfe/ib5NqjNIoBKI8qP7ZB0dGen72ltR1
+a/vQa7Iq2hvFUKQcprhqDo1JlDYWGXMxBMMRAZBe2IF+taYvOWHFSDA7KtAPbVMG
++BMHqOQlXXEQb7DbJx/DYZaXNBhmOEHauoAIPOw5vth6P1+2iEal5O4sW1JArlaQ
+sKUr+zRqHdhl+ed+Pgx+tY7/aRnkyuBm0SXeZ4I+gyXF1YXlOcmyKbb5QXGMlhAK
+357qj9F+FcpCMTXfKhUwn2Qi8v78aJakassUEVgdCe1BicidVestIvwO6V7XIzyB
+u0pWWxoXqKF2ooX6c70LVwGFzT/D9M+7K8IZnmmCJDHLkgwajvCujVPM55IH045+
+DvY2E0+FkBxaABggqH5/8O7ZHNMsKtdaPEVqy0iXp0dmJuFPNwMdvmI5DI5D7K+n
+agOVd2Ntreiv5XjaQwhp
+=yZSm
 -----END PGP SIGNATURE-----
 
---w5ohdwsyzrw47olh--
+--jujgstq4zz4ccqii--
