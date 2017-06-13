@@ -1,61 +1,80 @@
-From: Mikko Perttunen <cyndis-/1wQRMveznE@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dt-bindings: Add bindings for
- nvidia,tegra186-ccplex-cluster
-Date: Tue, 13 Jun 2017 15:47:39 +0300
-Message-ID: <a7417c4f-d7d4-e11e-a23c-cd0f2fc4adee@kapsi.fi>
-References: <1496304245-24024-2-git-send-email-mperttunen@nvidia.com>
- <1497262984-2346-1-git-send-email-mperttunen@nvidia.com>
- <20170613124239.GC16758@ulmo.fritz.box>
- <9ecb973e-ee57-8c89-df21-4ed0bff4bb38@kapsi.fi>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
+Date: Tue, 13 Jun 2017 14:52:38 +0200
+Message-ID: <ba658a59-7ef9-2340-57fa-3bcefa3f47ed@gmail.com>
+References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
+ <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
+ <1497268468.930.26.camel@mhfsdcap03>
+ <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
+ <1497349452.930.36.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9ecb973e-ee57-8c89-df21-4ed0bff4bb38-/1wQRMveznE@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497349452.930.36.camel@mhfsdcap03>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 13.06.2017 15:46, Mikko Perttunen wrote:
-> On 13.06.2017 15:42, Thierry Reding wrote:
->> On Mon, Jun 12, 2017 at 01:23:04PM +0300, Mikko Perttunen wrote:
->>> The Tegra186 CCPLEX_CLUSTER area contains memory-mapped
->>> registers that initiate CPU frequency/voltage transitions.
+On 13/06/17 12:24, Jun Gao wrote:
+> On Tue, 2017-06-13 at 11:36 +0200, Matthias Brugger wrote:
+>>
+>> On 12/06/17 13:54, Jun Gao wrote:
+>>> On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
+>>>> From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>>
+>>>> Add MT2701 i2c device node.
+>>>>
+>>>> Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+>>>> ---
+>>>>    arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
+>>>>    arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
+>>>>    2 files changed, 84 insertions(+)
+>> [...]
 >>>
->>> Signed-off-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>>  .../arm/tegra/nvidia,tegra186-ccplex-cluster.txt     | 20
->>> ++++++++++++++++++++
->>>  1 file changed, 20 insertions(+)
->>>  create mode 100644
->>> Documentation/devicetree/bindings/arm/tegra/nvidia,tegra186-ccplex-cluster.txt
+>>> Dear Matthias,
+>>>
+>>> Could you take this patch together with
+>>> [PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
+>>>
+>>> Thanks!
 >>>
 >>
->> The ARM SoC maintainers don't like to pick up device tree bindings, so
->> I'd prefer this to go through the cpufreq tree that also contains the
->> driver patches. Presumably this wasn't merged through that tree because
->> of the missing Acked-by by a device tree maintainer? Given that Rob's
->> acked it now, maybe you can resend this to Viresh, who I think had
->> picked up the driver?
->
-> Sure, I'll do that.
-
-> I guess the .dts change should then also go in that
-> way?
-
-Or I guess not, since you applied it :)
-
-Cheers,
-Mikko
-
->
-> Mikko
->
+>> They are both included in the pull request I send [1] [2], or do I miss
+>> something?
 >>
->> Thanks,
->> Thierry
+>> Regards,
+>> Matthias
 >>
+>> [1]
+>> https://github.com/mbgg/linux-mediatek/commit/729b7f8dbdaff270c53052897ea06486221a49a2
+>> [2]
+>> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
+> 
+> Dear Matthias,
+> 
+> Would you mind to use the same style as follows in i2c-mtk.txt of [2]?
+> 
+> "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
+> "mediatek,mt6577-i2c": for Mediatek MT6577
+> "mediatek,mt6589-i2c": for Mediatek MT6589
+> "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
+> "mediatek,mt8173-i2c": for Mediatek MT8173
+> 
+> 
+> Thanks!
+> 
+
+You mean I should fix-up the patch to fit to the new binding 
+description? Or do you mean it should be MTxxxx instead of mtxxxx?
+
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
