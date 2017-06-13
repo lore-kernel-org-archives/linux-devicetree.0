@@ -1,79 +1,30 @@
-From: Suzuki K Poulose <Suzuki.Poulose@arm.com>
-Subject: Re: [PATCH 01/12] coresight replicator: Cleanup programmable
- replicator naming
-Date: Tue, 13 Jun 2017 18:56:31 +0100
-Message-ID: <92dd4d1f-171c-905c-13a3-80cd9663bbbf@arm.com>
-References: <1497278211-5001-1-git-send-email-suzuki.poulose@arm.com>
- <1497278211-5001-2-git-send-email-suzuki.poulose@arm.com>
- <20170613165528.GA6392@xps15>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next] of_mdio: move of_mdio_parse_addr to header
+ file
+Date: Tue, 13 Jun 2017 14:00:34 -0400 (EDT)
+Message-ID: <20170613.140034.1178710287073869026.davem@davemloft.net>
+References: <1497365768-17627-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170613165528.GA6392@xps15>
+In-Reply-To: <1497365768-17627-1-git-send-email-jon.mason@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pratik Patel <pratikp@codeaurora.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: jon.mason@broadcom.com
+Cc: andrew@lunn.ch, f.fainelli@gmail.com, robh+dt@kernel.org, frowand.list@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, liviu@dudau.co.uk, mpe@ellerman.id.au
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/17 17:55, Mathieu Poirier wrote:
-> On Mon, Jun 12, 2017 at 03:36:40PM +0100, Suzuki K Poulose wrote:
->> The Linux coresight drivers define the programmable ATB replicator as
->> Qualcom replicator, while this is designed by ARM. This can cause confusion
->> to a user selecting the driver. Cleanup all references to make it
->>  explicitly clear. This patch :
->>
->>  1) Adds a new compatible string for the same, retaining the old one for
->>     compatibility.
->>  2) Changes the Kconfig symbol (since this is not part of any defconfigs)
->> 	 CORESIGHT_QCOM_REPLICATOR => CORESIGHT_DYNAMIC_REPLICATOR
->>  3) Improves the help message in the Kconfig.
->>  4) Changes the name of the driver :
->> 	coresight-replicator-qcom => coresight-dynamic-replicator
->>
->> Cc: Pratik Patel <pratikp@codeaurora.org>
->> Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: devicetree@vger.kernel.org
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
->
-> Hi Suzuki,
->
->> ---
->>  Documentation/devicetree/bindings/arm/coresight.txt     |  4 +++-
->>  drivers/hwtracing/coresight/Kconfig                     | 10 +++++-----
->>  drivers/hwtracing/coresight/Makefile                    |  2 +-
->>  drivers/hwtracing/coresight/coresight-replicator-qcom.c |  2 +-
->>  4 files changed, 10 insertions(+), 8 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
->> index fcbae6a..f77329f 100644
->> --- a/Documentation/devicetree/bindings/arm/coresight.txt
->> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
->> @@ -34,7 +34,9 @@ its hardware characteristcs.
->>  		- Embedded Trace Macrocell (version 4.x):
->>  			"arm,coresight-etm4x", "arm,primecell";
->>
->> -		- Qualcomm Configurable Replicator (version 1.x):
->> +		- Coresight programmable Replicator (version 1.x):
->> +			"arm,coresight-dynamic-replicator", "arm,primecell";
->> +				OR
->>  			"qcom,coresight-replicator1x", "arm,primecell";
->
-> Rob, what's your view on keeping the old binding around?  We could simply change
-> the two occurences we find in the DTs (Juno and 410c) to the new name and be
-> done with the old one.
+From: Jon Mason <jon.mason@broadcom.com>
+Date: Tue, 13 Jun 2017 10:56:08 -0400
 
-...
+> The of_mdio_parse_addr() helper function is useful to other code, but
+> the module dependency chain causes issues.  To work around this, we can
+> move of_mdio_parse_addr() to be an inline function in the header file.
+> This gets rid of the dependencies and still allows for the reuse of
+> code.
+> 
+> Reported-by: Liviu Dudau <liviu@dudau.co.uk>
+> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+> Fixes: 342fa1964439 ("mdio: mux: make child bus walking more permissive and errors more verbose")
 
->> --- a/drivers/hwtracing/coresight/coresight-replicator-qcom.c
->> +++ b/drivers/hwtracing/coresight/coresight-replicator-qcom.c
->
-> While at it, I would also change the name of the file.
-
-Sure, will do.
-
-Thanks
-Suzuki
+Applied, thank you.
