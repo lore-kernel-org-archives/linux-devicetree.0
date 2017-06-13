@@ -1,1793 +1,4800 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH v10] media: i2c: max2175: Add MAX2175 support
-Date: Tue, 13 Jun 2017 13:54:47 +0100
-Message-ID: <20170613125447.29107-1-ramesh.shanmugasundaram@bp.renesas.com>
-References: <20170612132620.1024-4-ramesh.shanmugasundaram@bp.renesas.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: [PATCH v2 06/15] [media] cxd2880: Add tuner part of the driver
+Date: Tue, 13 Jun 2017 10:09:26 -0300
+Message-ID: <20170613100926.0dfecf30@vento.lan>
+References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
+        <20170414022656.17505-1-Yasunari.Takiguchi@sony.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170612132620.1024-4-ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+In-Reply-To: <20170414022656.17505-1-Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, crope-X3B1VOXEql0@public.gmane.org
-Cc: chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+To: Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds driver support for the MAX2175 chip. This is Maxim
-Integrated's RF to Bits tuner front end chip designed for software-defined
-radio solutions. This driver exposes the tuner as a sub-device instance
-with standard and custom controls to configure the device.
+Em Fri, 14 Apr 2017 11:26:56 +0900
+<Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org> escreveu:
 
-Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
-Hi Hans,
+> From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+> 
+> This part of the driver has the main routines to handle
+> the tuner and demodulator functionality.  The tnrdmd_mon.* files
+> have monitor functions for the driver.
+> This is part of the Sony CXD2880 DVB-T2/T tuner + demodulator driver.
+> 
+> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+> ---
+>  drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h  |   50 +
+>  .../media/dvb-frontends/cxd2880/cxd2880_tnrdmd.c   | 3925 ++++++++++++++++++++
+>  .../media/dvb-frontends/cxd2880/cxd2880_tnrdmd.h   |  395 ++
+>  .../cxd2880/cxd2880_tnrdmd_driver_version.h        |   29 +
+>  .../dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.c     |  207 ++
+>  .../dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.h     |   52 +
+>  6 files changed, 4658 insertions(+)
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.c
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.h
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_driver_version.h
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.c
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.h
+> 
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h
+> new file mode 100644
+> index 000000000000..7de098d556fe
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_dtv.h
+> @@ -0,0 +1,50 @@
+> +/*
+> + * cxd2880_dtv.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * DTV related definitions
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef CXD2880_DTV_H
+> +#define CXD2880_DTV_H
+> +
+> +enum cxd2880_dtv_sys {
+> +	CXD2880_DTV_SYS_UNKNOWN,
+> +	CXD2880_DTV_SYS_DVBT,
+> +	CXD2880_DTV_SYS_DVBT2,
+> +	CXD2880_DTV_SYS_ISDBT,
+> +	CXD2880_DTV_SYS_ISDBTSB,
+> +	CXD2880_DTV_SYS_ISDBTMM_A,
+> +	CXD2880_DTV_SYS_ISDBTMM_B,
+> +	CXD2880_DTV_SYS_ANY
+> +};
+> +
+> +enum cxd2880_dtv_bandwidth {
+> +	CXD2880_DTV_BW_UNKNOWN = 0,
+> +	CXD2880_DTV_BW_1_7_MHZ = 1,
+> +	CXD2880_DTV_BW_5_MHZ = 5,
+> +	CXD2880_DTV_BW_6_MHZ = 6,
+> +	CXD2880_DTV_BW_7_MHZ = 7,
+> +	CXD2880_DTV_BW_8_MHZ = 8
+> +};
+> +
+> +#endif
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.c
+> new file mode 100644
+> index 000000000000..286384ae0124
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.c
+> @@ -0,0 +1,3925 @@
+> +/*
+> + * cxd2880_tnrdmd.c
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * common control functions
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include "cxd2880_common.h"
+> +#include "cxd2880_stdlib.h"
+> +#include "cxd2880_tnrdmd.h"
+> +#include "cxd2880_tnrdmd_mon.h"
+> +#include "cxd2880_tnrdmd_dvbt.h"
+> +#include "cxd2880_tnrdmd_dvbt2.h"
+> +
+> +static enum cxd2880_ret p_init1(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data = 0;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
 
-   As discussed in #v4l, here is the v10 of this patch alone.
+I won't repeat it anymore: please use standard linux error codes
+and return integers.
 
-Hi Geert,
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if ((tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE) ||
+> +	    (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN)) {
+> +		switch (tnr_dmd->create_param.ts_output_if) {
+> +		case CXD2880_TNRDMD_TSOUT_IF_TS:
+> +			data = 0x00;
+> +			break;
+> +		case CXD2880_TNRDMD_TSOUT_IF_SPI:
+> +			data = 0x01;
+> +			break;
+> +		case CXD2880_TNRDMD_TSOUT_IF_SDIO:
+> +			data = 0x02;
+> +			break;
+> +		default:
+> +			return CXD2880_RESULT_ERROR_ARG;
+> +		}
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x10,
+> +					   data) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x11,
+> +				   0x16) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	switch (tnr_dmd->chip_id) {
+> +	case CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_0X:
+> +		data = 0x1A;
+> +		break;
+> +	case CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_11:
+> +		data = 0x16;
+> +		break;
+> +	default:
+> +		return CXD2880_RESULT_ERROR_NOSUPPORT;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x10,
+> +				   data) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
 
-   I changed the timeout interval to usecs and removed the work
-   around comment. I will also be posting a patch fixing the
-   regmap header.
+Just return the error code from the routine, e. g.:
+
+	int ret;
+
+	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
+				     CXD2880_IO_TGT_SYS, 0x10,
+				     data);
+	if (ret)
+		return ret;
+
+Same applies to the code below.
+
+> +
+> +	if (tnr_dmd->create_param.en_internal_ldo)
+> +		data = 0x01;
+> +	else
+> +		data = 0x00;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x11,
+> +				   data) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x13,
+> +				   data) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x12,
+> +				   data) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	switch (tnr_dmd->chip_id) {
+> +	case CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_0X:
+> +		data = 0x01;
+> +		break;
+> +	case CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_11:
+> +		data = 0x00;
+> +		break;
+> +	default:
+> +		return CXD2880_RESULT_ERROR_NOSUPPORT;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x69,
+> +				   data) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret p_init2(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data[6] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = tnr_dmd->create_param.xosc_cap;
+> +	data[1] = tnr_dmd->create_param.xosc_i;
+> +	switch (tnr_dmd->create_param.xtal_share_type) {
+> +	case CXD2880_TNRDMD_XTAL_SHARE_NONE:
+> +		data[2] = 0x01;
+> +		data[3] = 0x00;
+> +		break;
+> +	case CXD2880_TNRDMD_XTAL_SHARE_EXTREF:
+> +		data[2] = 0x00;
+> +		data[3] = 0x00;
+> +		break;
+> +	case CXD2880_TNRDMD_XTAL_SHARE_MASTER:
+> +		data[2] = 0x01;
+> +		data[3] = 0x01;
+> +		break;
+> +	case CXD2880_TNRDMD_XTAL_SHARE_SLAVE:
+> +		data[2] = 0x00;
+> +		data[3] = 0x01;
+> +		break;
+> +	default:
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +	data[4] = 0x06;
+> +	data[5] = 0x00;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x13, data,
+> +				    6) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret p_init3(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data[2] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	switch (tnr_dmd->diver_mode) {
+> +	case CXD2880_TNRDMD_DIVERMODE_SINGLE:
+> +		data[0] = 0x00;
+> +		break;
+> +	case CXD2880_TNRDMD_DIVERMODE_MAIN:
+> +		data[0] = 0x03;
+> +		break;
+> +	case CXD2880_TNRDMD_DIVERMODE_SUB:
+> +		data[0] = 0x02;
+> +		break;
+> +	default:
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +
+> +	data[1] = 0x01;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x1F, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret rf_init1(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data[80] = { 0 };
+> +	u8 addr = 0;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x01;
+> +	data[1] = 0x00;
+> +	data[2] = 0x01;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x21, data,
+> +				    3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x01;
+> +	data[1] = 0x01;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x17, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->create_param.stationary_use) {
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x1A,
+> +					   0x06) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x4F,
+> +				   0x18) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x61,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x71,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x9D,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x7D,
+> +				   0x02) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x8F,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x8B,
+> +				   0xC6) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x9A,
+> +				   0x03) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x1C,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	if ((tnr_dmd->create_param.is_cxd2881gg) &&
+> +	    (tnr_dmd->create_param.xtal_share_type ==
+> +		CXD2880_TNRDMD_XTAL_SHARE_SLAVE))
+> +		data[1] = 0x00;
+> +	else
+> +		data[1] = 0x1F;
+> +	data[2] = 0x0A;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xB5, data,
+> +				    3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xB9,
+> +				   0x07) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x33,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xC1,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xC4,
+> +				   0x1E) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->chip_id == CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_0X) {
+> +		data[0] = 0x34;
+> +		data[1] = 0x2C;
+> +	} else {
+> +		data[0] = 0x2F;
+> +		data[1] = 0x25;
+> +	}
+> +	data[2] = 0x15;
+> +	data[3] = 0x19;
+> +	data[4] = 0x1B;
+> +	data[5] = 0x15;
+> +	data[6] = 0x19;
+> +	data[7] = 0x1B;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xD9, data,
+> +				    8) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x11) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x6C;
+> +	data[1] = 0x10;
+> +	data[2] = 0xA6;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x44, data,
+> +				    3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x16;
+> +	data[1] = 0xA8;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x50, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	data[1] = 0x22;
+> +	data[2] = 0x00;
+> +	data[3] = 0x88;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x62, data,
+> +				    4) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x74,
+> +				   0x75) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x05;
+> +	data[1] = 0x05;
+> +	data[2] = 0x05;
+> +	data[3] = 0x05;
+> +	data[4] = 0x05;
+> +	data[5] = 0x05;
+> +	data[6] = 0x05;
+> +	data[7] = 0x05;
+> +	data[8] = 0x05;
+> +	data[9] = 0x04;
+> +	data[10] = 0x04;
+> +	data[11] = 0x04;
+> +	data[12] = 0x03;
+> +	data[13] = 0x03;
+> +	data[14] = 0x03;
+> +	data[15] = 0x04;
+> +	data[16] = 0x04;
+> +	data[17] = 0x05;
+> +	data[18] = 0x05;
+> +	data[19] = 0x05;
+> +	data[20] = 0x02;
+> +	data[21] = 0x02;
+> +	data[22] = 0x02;
+> +	data[23] = 0x02;
+> +	data[24] = 0x02;
+> +	data[25] = 0x02;
+> +	data[26] = 0x02;
+> +	data[27] = 0x02;
+> +	data[28] = 0x02;
+> +	data[29] = 0x03;
+> +	data[30] = 0x02;
+> +	data[31] = 0x01;
+> +	data[32] = 0x01;
+> +	data[33] = 0x01;
+> +	data[34] = 0x02;
+> +	data[35] = 0x02;
+> +	data[36] = 0x03;
+> +	data[37] = 0x04;
+> +	data[38] = 0x04;
+> +	data[39] = 0x04;
+
+Better to put the above inside a const and pass it through the
+write_regs code. Same applies to other similar const data within
+this function. That will likely reduce code size of this module.
+
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x7F, data,
+> +				    40) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x16) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	data[1] = 0x71;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x10, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x23,
+> +				   0x89) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0xFF;
+> +	data[1] = 0x00;
+> +	data[2] = 0x00;
+> +	data[3] = 0x00;
+> +	data[4] = 0x00;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x27, data,
+> +				    5) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	data[1] = 0x00;
+> +	data[2] = 0x00;
+> +	data[3] = 0x00;
+> +	data[4] = 0x00;
+> +	data[5] = 0x01;
+> +	data[6] = 0x00;
+> +	data[7] = 0x01;
+> +	data[8] = 0x00;
+> +	data[9] = 0x02;
+> +	data[10] = 0x00;
+> +	data[11] = 0x63;
+> +	data[12] = 0x00;
+> +	data[13] = 0x00;
+> +	data[14] = 0x00;
+> +	data[15] = 0x03;
+> +	data[16] = 0x00;
+> +	data[17] = 0x04;
+> +	data[18] = 0x00;
+> +	data[19] = 0x04;
+> +	data[20] = 0x00;
+> +	data[21] = 0x06;
+> +	data[22] = 0x00;
+> +	data[23] = 0x06;
+> +	data[24] = 0x00;
+> +	data[25] = 0x08;
+> +	data[26] = 0x00;
+> +	data[27] = 0x09;
+> +	data[28] = 0x00;
+> +	data[29] = 0x0B;
+> +	data[30] = 0x00;
+> +	data[31] = 0x0B;
+> +	data[32] = 0x00;
+> +	data[33] = 0x0D;
+> +	data[34] = 0x00;
+> +	data[35] = 0x0D;
+> +	data[36] = 0x00;
+> +	data[37] = 0x0F;
+> +	data[38] = 0x00;
+> +	data[39] = 0x0F;
+> +	data[40] = 0x00;
+> +	data[41] = 0x0F;
+> +	data[42] = 0x00;
+> +	data[43] = 0x10;
+> +	data[44] = 0x00;
+> +	data[45] = 0x79;
+> +	data[46] = 0x00;
+> +	data[47] = 0x00;
+> +	data[48] = 0x00;
+> +	data[49] = 0x02;
+> +	data[50] = 0x00;
+> +	data[51] = 0x00;
+> +	data[52] = 0x00;
+> +	data[53] = 0x03;
+> +	data[54] = 0x00;
+> +	data[55] = 0x01;
+> +	data[56] = 0x00;
+> +	data[57] = 0x03;
+> +	data[58] = 0x00;
+> +	data[59] = 0x03;
+> +	data[60] = 0x00;
+> +	data[61] = 0x03;
+> +	data[62] = 0x00;
+> +	data[63] = 0x04;
+> +	data[64] = 0x00;
+> +	data[65] = 0x04;
+> +	data[66] = 0x00;
+> +	data[67] = 0x06;
+> +	data[68] = 0x00;
+> +	data[69] = 0x05;
+> +	data[70] = 0x00;
+> +	data[71] = 0x07;
+> +	data[72] = 0x00;
+> +	data[73] = 0x07;
+> +	data[74] = 0x00;
+> +	data[75] = 0x08;
+> +	data[76] = 0x00;
+> +	data[77] = 0x0A;
+> +	data[78] = 0x03;
+> +	data[79] = 0xE0;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x3A, data,
+> +				    80) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	data[0] = 0x03;
+> +	data[1] = 0xE0;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xBC, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x51,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xC5,
+> +				   0x07) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x11) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x70,
+> +				   0xE9) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x76,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x78,
+> +				   0x32) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x7A,
+> +				   0x46) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x7C,
+> +				   0x86) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x7E,
+> +				   0xA4) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xE1,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->create_param.stationary_use) {
+> +		data[0] = 0x06;
+> +		data[1] = 0x07;
+> +		data[2] = 0x1A;
+> +	} else {
+> +		data[0] = 0x00;
+> +		data[1] = 0x08;
+> +		data[2] = 0x19;
+> +	}
+> +	data[3] = 0x0E;
+> +	data[4] = 0x09;
+> +	data[5] = 0x0E;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x12) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	for (addr = 0x10; addr < 0x9F; addr += 6) {
+> +		if (tnr_dmd->lna_thrs_tbl_air) {
+> +			u8 idx = 0;
+> +
+> +			idx = (addr - 0x10) / 6;
+> +			data[0] =
+> +			    tnr_dmd->lna_thrs_tbl_air->thrs[idx].off_on;
+> +			data[1] =
+> +			    tnr_dmd->lna_thrs_tbl_air->thrs[idx].on_off;
+> +		}
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, addr,
+> +					    data,
+> +					    6) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	data[0] = 0x00;
+> +	data[1] = 0x08;
+> +	if (tnr_dmd->create_param.stationary_use)
+> +		data[2] = 0x1A;
+> +	else
+> +		data[2] = 0x19;
+> +	data[3] = 0x0E;
+> +	data[4] = 0x09;
+> +	data[5] = 0x0E;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x13) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	for (addr = 0x10; addr < 0xCF; addr += 6) {
+> +		if (tnr_dmd->lna_thrs_tbl_cable) {
+> +			u8 idx = 0;
+> +
+> +			idx = (addr - 0x10) / 6;
+> +			data[0] =
+> +			    tnr_dmd->lna_thrs_tbl_cable->thrs[idx].off_on;
+> +			data[1] =
+> +			    tnr_dmd->lna_thrs_tbl_cable->thrs[idx].on_off;
+> +		}
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, addr,
+> +					    data,
+> +					    6) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x11) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x08;
+> +	data[1] = 0x09;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xBD, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x08;
+> +	data[1] = 0x09;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xC4, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x20;
+> +	data[1] = 0x20;
+> +	data[2] = 0x30;
+> +	data[3] = 0x41;
+> +	data[4] = 0x50;
+> +	data[5] = 0x5F;
+> +	data[6] = 0x6F;
+> +	data[7] = 0x80;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xC9, data,
+> +				    8) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x14) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x15;
+> +	data[1] = 0x18;
+> +	data[2] = 0x00;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x10, data,
+> +				    3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x15,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x16) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	data[1] = 0x09;
+> +	data[2] = 0x00;
+> +	data[3] = 0x08;
+> +	data[4] = 0x00;
+> +	data[5] = 0x07;
+> +	data[6] = 0x00;
+> +	data[7] = 0x06;
+> +	data[8] = 0x00;
+> +	data[9] = 0x05;
+> +	data[10] = 0x00;
+> +	data[11] = 0x03;
+> +	data[12] = 0x00;
+> +	data[13] = 0x02;
+> +	data[14] = 0x00;
+> +	data[15] = 0x00;
+> +	data[16] = 0x00;
+> +	data[17] = 0x78;
+> +	data[18] = 0x00;
+> +	data[19] = 0x00;
+> +	data[20] = 0x00;
+> +	data[21] = 0x06;
+> +	data[22] = 0x00;
+> +	data[23] = 0x08;
+> +	data[24] = 0x00;
+> +	data[25] = 0x08;
+> +	data[26] = 0x00;
+> +	data[27] = 0x0C;
+> +	data[28] = 0x00;
+> +	data[29] = 0x0C;
+> +	data[30] = 0x00;
+> +	data[31] = 0x0D;
+> +	data[32] = 0x00;
+> +	data[33] = 0x0F;
+> +	data[34] = 0x00;
+> +	data[35] = 0x0E;
+> +	data[36] = 0x00;
+> +	data[37] = 0x0E;
+> +	data[38] = 0x00;
+> +	data[39] = 0x10;
+> +	data[40] = 0x00;
+> +	data[41] = 0x0F;
+> +	data[42] = 0x00;
+> +	data[43] = 0x0E;
+> +	data[44] = 0x00;
+> +	data[45] = 0x10;
+> +	data[46] = 0x00;
+> +	data[47] = 0x0F;
+> +	data[48] = 0x00;
+> +	data[49] = 0x0E;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x12, data,
+> +				    50) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x10, data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((data[0] & 0x01) == 0x00)
+> +		return CXD2880_RESULT_ERROR_HW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x25,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+
+just use msleep(). Actually, msleep(1) ensures that it will slip for
+at least 1 ms, but, it can take up to 10 ms. So, if you want to
+be more precise, you could, instead use usleeprange().
+
+Same applies to other places where you're using this macro.
+
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x11, data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((data[0] & 0x01) == 0x00)
+> +		return CXD2880_RESULT_ERROR_HW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x02,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0xE1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x8F,
+> +				   0x16) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x67,
+> +				   0x60) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x6A,
+> +				   0x0F) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x6C,
+> +				   0x17) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	data[1] = 0xFE;
+> +	data[2] = 0xEE;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_DMD, 0x6E, data,
+> +				    3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0xA1;
+> +	data[1] = 0x8B;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_DMD, 0x8D, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x08;
+> +	data[1] = 0x09;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_DMD, 0x77, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->create_param.stationary_use) {
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x80,
+> +					   0xAA) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0xE2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x41,
+> +				   0xA0) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x4B,
+> +				   0x68) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x25,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x1A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x10, data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((data[0] & 0x01) == 0x00)
+> +		return CXD2880_RESULT_ERROR_HW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x14,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x26,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret rf_init2(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data[5] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x40;
+> +	data[1] = 0x40;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xEA, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	data[0] = 0x00;
+> +	if (tnr_dmd->chip_id == CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_0X)
+> +		data[1] = 0x00;
+> +	else
+> +		data[1] = 0x01;
+> +	data[2] = 0x01;
+> +	data[3] = 0x03;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x30, data,
+> +				    4) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x14) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x1B,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0xE1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0xD3,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_tune1(struct cxd2880_tnrdmd *tnr_dmd,
+> +				enum cxd2880_dtv_sys sys, u32 freq_khz,
+> +				enum cxd2880_dtv_bandwidth bandwidth,
+> +				u8 is_cable, int shift_frequency_khz)
+> +{
+> +	u8 data[11] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	data[0] = 0x00;
+> +	data[1] = 0x00;
+> +	data[2] = 0x0E;
+> +	data[3] = 0x00;
+> +	data[4] = 0x03;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xE7, data,
+> +				    5) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	data[0] = 0x1F;
+> +	data[1] = 0x80;
+> +	data[2] = 0x18;
+> +	data[3] = 0x00;
+> +	data[4] = 0x07;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xE7, data,
+> +				    5) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	data[0] = 0x72;
+> +	data[1] = 0x81;
+> +	data[3] = 0x1D;
+> +	data[4] = 0x6F;
+> +	data[5] = 0x7E;
+> +	data[7] = 0x1C;
+> +	switch (sys) {
+> +	case CXD2880_DTV_SYS_DVBT:
+> +	case CXD2880_DTV_SYS_ISDBT:
+> +	case CXD2880_DTV_SYS_ISDBTSB:
+> +	case CXD2880_DTV_SYS_ISDBTMM_A:
+> +	case CXD2880_DTV_SYS_ISDBTMM_B:
+> +		data[2] = 0x94;
+> +		data[6] = 0x91;
+> +		break;
+> +	case CXD2880_DTV_SYS_DVBT2:
+> +		data[2] = 0x96;
+> +		data[6] = 0x93;
+> +		break;
+> +	default:
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x44, data,
+> +				    8) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x62,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x15) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x03;
+> +	data[1] = 0xE2;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x1E, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	data[0] = (u8)(is_cable ? 0x01 : 0x00);
+> +	data[1] = 0x00;
+> +	data[2] = 0x6B;
+> +	data[3] = 0x4D;
+> +
+> +	switch (bandwidth) {
+> +	case CXD2880_DTV_BW_1_7_MHZ:
+> +		data[4] = 0x03;
+> +		break;
+> +	case CXD2880_DTV_BW_5_MHZ:
+> +	case CXD2880_DTV_BW_6_MHZ:
+> +		data[4] = 0x00;
+> +		break;
+> +	case CXD2880_DTV_BW_7_MHZ:
+> +		data[4] = 0x01;
+> +		break;
+> +	case CXD2880_DTV_BW_8_MHZ:
+> +		data[4] = 0x02;
+> +		break;
+> +	default:
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +
+> +	data[5] = 0x00;
+> +
+> +	freq_khz += shift_frequency_khz;
+> +
+> +	data[6] = (u8)((freq_khz >> 16) & 0x0F);
+> +	data[7] = (u8)((freq_khz >> 8) & 0xFF);
+> +	data[8] = (u8)(freq_khz & 0xFF);
+
+No need to cast.
+
+> +	data[9] = 0xFF;
+> +	data[10] = 0xFE;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x52, data,
+> +				    11) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_tune2(struct cxd2880_tnrdmd *tnr_dmd,
+> +				enum cxd2880_dtv_bandwidth bandwidth,
+> +				enum cxd2880_tnrdmd_clockmode clk_mode,
+> +				int shift_frequency_khz)
+> +{
+> +	u8 data[3] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x11) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	data[0] = 0x01;
+> +	data[1] = 0x0E;
+> +	data[2] = 0x01;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x2D, data,
+> +				    3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x1A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x29,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x2C, data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x60,
+> +				   data[0]) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x62,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x11) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x2D,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x2F,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (shift_frequency_khz != 0) {
+> +		int shift_freq = 0;
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x00,
+> +					   0xE1) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x60, data,
+> +					   2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		shift_freq = shift_frequency_khz * 1000;
+> +
+> +		switch (clk_mode) {
+> +		case CXD2880_TNRDMD_CLOCKMODE_A:
+> +		case CXD2880_TNRDMD_CLOCKMODE_C:
+> +		default:
+> +			if (shift_freq >= 0)
+> +				shift_freq = (shift_freq + 183 / 2) / 183;
+> +			else
+> +				shift_freq = (shift_freq - 183 / 2) / 183;
+> +			break;
+> +		case CXD2880_TNRDMD_CLOCKMODE_B:
+> +			if (shift_freq >= 0)
+> +				shift_freq = (shift_freq + 178 / 2) / 178;
+> +			else
+> +				shift_freq = (shift_freq - 178 / 2) / 178;
+> +			break;
+> +		}
+> +
+> +		shift_freq +=
+> +		    cxd2880_convert2s_complement((data[0] << 8) | data[1], 16);
+> +
+> +		if (shift_freq > 32767)
+> +			shift_freq = 32767;
+> +		else if (shift_freq < -32768)
+> +			shift_freq = -32768;
+> +
+> +		data[0] = (u8)(((u32)shift_freq >> 8) & 0xFF);
+> +		data[1] = (u8)((u32)shift_freq & 0xFF);
+> +
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_DMD, 0x60, data,
+> +					    2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x69, data,
+> +					   1) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		shift_freq = -shift_frequency_khz;
+> +
+> +		if (bandwidth == CXD2880_DTV_BW_1_7_MHZ) {
+> +			switch (clk_mode) {
+> +			case CXD2880_TNRDMD_CLOCKMODE_A:
+> +			case CXD2880_TNRDMD_CLOCKMODE_C:
+> +			default:
+> +				if (shift_freq >= 0)
+> +					shift_freq =
+> +					    (shift_freq * 1000 +
+> +					     17578 / 2) / 17578;
+> +				else
+> +					shift_freq =
+> +					    (shift_freq * 1000 -
+> +					     17578 / 2) / 17578;
+> +				break;
+> +			case CXD2880_TNRDMD_CLOCKMODE_B:
+> +				if (shift_freq >= 0)
+> +					shift_freq =
+> +					    (shift_freq * 1000 +
+> +					     17090 / 2) / 17090;
+> +				else
+> +					shift_freq =
+> +					    (shift_freq * 1000 -
+> +					     17090 / 2) / 17090;
+> +				break;
+> +			}
+> +		} else {
+> +			switch (clk_mode) {
+> +			case CXD2880_TNRDMD_CLOCKMODE_A:
+> +			case CXD2880_TNRDMD_CLOCKMODE_C:
+> +			default:
+> +				if (shift_freq >= 0)
+> +					shift_freq =
+> +					    (shift_freq * 1000 +
+> +					     35156 / 2) / 35156;
+> +				else
+> +					shift_freq =
+> +					    (shift_freq * 1000 -
+> +					     35156 / 2) / 35156;
+> +				break;
+> +			case CXD2880_TNRDMD_CLOCKMODE_B:
+> +				if (shift_freq >= 0)
+> +					shift_freq =
+> +					    (shift_freq * 1000 +
+> +					     34180 / 2) / 34180;
+> +				else
+> +					shift_freq =
+> +					    (shift_freq * 1000 -
+> +					     34180 / 2) / 34180;
+> +				break;
+> +			}
+> +		}
+> +
+> +		shift_freq += cxd2880_convert2s_complement(data[0], 8);
+> +
+> +		if (shift_freq > 127)
+> +			shift_freq = 127;
+> +		else if (shift_freq < -128)
+> +			shift_freq = -128;
+> +
+> +		data[0] = (u8)((u32)shift_freq & 0xFF);
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x69,
+> +					   data[0]) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	if (tnr_dmd->create_param.stationary_use) {
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x00,
+> +					   0xE1) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x8A,
+> +					   0x87) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_tune3(struct cxd2880_tnrdmd *tnr_dmd,
+> +				enum cxd2880_dtv_sys sys,
+> +				u8 en_fef_intmtnt_ctrl)
+> +{
+> +	u8 data[6] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0xE2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x41,
+> +				   0xA0) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0xFE,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl) {
+> +		data[0] = 0x01;
+> +		data[1] = 0x01;
+> +		data[2] = 0x01;
+> +		data[3] = 0x01;
+> +		data[4] = 0x01;
+> +		data[5] = 0x01;
+> +	} else {
+> +		data[0] = 0x00;
+> +		data[1] = 0x00;
+> +		data[2] = 0x00;
+> +		data[3] = 0x00;
+> +		data[4] = 0x00;
+> +		data[5] = 0x00;
+> +	}
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0xEF, data,
+> +				    6) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x2D) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((sys == CXD2880_DTV_SYS_DVBT2) && en_fef_intmtnt_ctrl)
+> +		data[0] = 0x00;
+> +	else
+> +		data[0] = 0x01;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0xB1,
+> +				   data[0]) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_tune4(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data[2] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	{
+> +		if (tnr_dmd->diver_sub->io->write_reg(tnr_dmd->diver_sub->io,
+> +						      CXD2880_IO_TGT_SYS, 0x00,
+> +						      0x00) !=
+> +		    CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x14;
+> +		data[1] = 0x00;
+> +		if (tnr_dmd->diver_sub->io->write_regs(tnr_dmd->diver_sub->io,
+> +						       CXD2880_IO_TGT_SYS, 0x55,
+> +						       data,
+> +						       2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	{
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x00,
+> +					   0x00) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x0B;
+> +		data[1] = 0xFF;
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, 0x53, data,
+> +					    2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x57,
+> +					   0x01) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x0B;
+> +		data[1] = 0xFF;
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, 0x55, data,
+> +					    2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	{
+> +		if (tnr_dmd->diver_sub->io->write_reg(tnr_dmd->diver_sub->io,
+> +						      CXD2880_IO_TGT_SYS, 0x00,
+> +						      0x00) !=
+> +		    CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x14;
+> +		data[1] = 0x00;
+> +		if (tnr_dmd->diver_sub->io->write_regs(tnr_dmd->diver_sub->io,
+> +						       CXD2880_IO_TGT_SYS, 0x53,
+> +						       data,
+> +						       2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if (tnr_dmd->diver_sub->io->write_reg(tnr_dmd->diver_sub->io,
+> +						      CXD2880_IO_TGT_SYS, 0x57,
+> +						      0x02) !=
+> +		    CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0xFE,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->diver_sub->io->write_reg(tnr_dmd->diver_sub->io,
+> +					      CXD2880_IO_TGT_DMD, 0x00,
+> +					      0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->diver_sub->io->write_reg(tnr_dmd->diver_sub->io,
+> +					      CXD2880_IO_TGT_DMD, 0xFE,
+> +					      0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_sleep1(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data[3] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	{
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x00,
+> +					   0x00) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x57,
+> +					   0x03) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x00;
+> +		data[1] = 0x00;
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, 0x53, data,
+> +					    2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	{
+> +		if (tnr_dmd->diver_sub->io->write_reg(tnr_dmd->diver_sub->io,
+> +						      CXD2880_IO_TGT_SYS, 0x00,
+> +						      0x00) !=
+> +		    CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x1F;
+> +		data[1] = 0xFF;
+> +		data[2] = 0x03;
+> +		if (tnr_dmd->diver_sub->io->write_regs(tnr_dmd->diver_sub->io,
+> +						       CXD2880_IO_TGT_SYS, 0x55,
+> +						       data,
+> +						       3) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x00;
+> +		data[1] = 0x00;
+> +		if (tnr_dmd->diver_sub->io->write_regs(tnr_dmd->diver_sub->io,
+> +						       CXD2880_IO_TGT_SYS, 0x53,
+> +						       data,
+> +						       2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	{
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x00,
+> +					   0x00) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		data[0] = 0x1F;
+> +		data[1] = 0xFF;
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, 0x55, data,
+> +					    2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_sleep2(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	u8 data = 0;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x2D) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0xB1,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0xB2, &data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((data & 0x01) == 0x00)
+> +		return CXD2880_RESULT_ERROR_HW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xF4,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xF3,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xF2,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xF1,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xF0,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xEF,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_sleep3(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0xFD,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret x_sleep4(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0xE2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x41,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x21,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret spll_reset(struct cxd2880_tnrdmd *tnr_dmd,
+> +				   enum cxd2880_tnrdmd_clockmode clockmode)
+> +{
+> +	u8 data[4] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x29,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x28,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x27,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x26,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x27,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x22,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	switch (clockmode) {
+> +	case CXD2880_TNRDMD_CLOCKMODE_A:
+> +		data[0] = 0x00;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CLOCKMODE_B:
+> +		data[0] = 0x01;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CLOCKMODE_C:
+> +		data[0] = 0x02;
+> +		break;
+> +
+> +	default:
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x30,
+> +				   data[0]) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x22,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(2);
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x10, data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((data[0] & 0x01) == 0x00)
+> +		return CXD2880_RESULT_ERROR_HW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x27,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	data[1] = 0x00;
+> +	data[2] = 0x00;
+> +	data[3] = 0x00;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x26, data,
+> +				    4) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret t_power_x(struct cxd2880_tnrdmd *tnr_dmd, u8 on)
+> +{
+> +	u8 data[3] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x29,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x28,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x27,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x27,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x25,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (on) {
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x2B,
+> +					   0x01) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		CXD2880_SLEEP(1);
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x00,
+> +					   0x0A) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x12, data,
+> +					   1) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if ((data[0] & 0x01) == 0)
+> +			return CXD2880_RESULT_ERROR_HW_STATE;
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x00,
+> +					   0x00) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x2A,
+> +					   0x00) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	} else {
+> +		data[0] = 0x03;
+> +		data[1] = 0x00;
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, 0x2A, data,
+> +					    2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		CXD2880_SLEEP(1);
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x00,
+> +					   0x0A) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x13, data,
+> +					   1) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +		if ((data[0] & 0x01) == 0)
+> +			return CXD2880_RESULT_ERROR_HW_STATE;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x25,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x11, data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if ((data[0] & 0x01) == 0)
+> +		return CXD2880_RESULT_ERROR_HW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x27,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	data[0] = 0x00;
+> +	data[1] = 0x00;
+> +	data[2] = 0x00;
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x27, data,
+> +				    3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +struct cxd2880_tnrdmd_ts_clk_cfg {
+> +	u8 srl_clk_mode;
+> +	u8 srl_duty_mode;
+> +	u8 ts_clk_period;
+> +};
+> +
+> +static enum cxd2880_ret set_ts_clk_mode_and_freq(struct cxd2880_tnrdmd *tnr_dmd,
+> +						 enum cxd2880_dtv_sys sys)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +	u8 backwards_compatible = 0;
+> +	struct cxd2880_tnrdmd_ts_clk_cfg ts_clk_cfg;
+> +
+> +	const struct cxd2880_tnrdmd_ts_clk_cfg srl_ts_clk_stgs[2][2] = {
+> +	{
+> +		{3, 1, 8,},
+> +		{0, 2, 16,}
+> +	},
+> +	{
+> +		{1, 1, 8,},
+> +		{2, 2, 16,}
+> +	}
+> +	};
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	{
+> +		u8 ts_rate_ctrl_off = 0;
+> +		u8 ts_in_off = 0;
+> +		u8 ts_clk_manaul_on = 0;
+> +
+> +		if ((sys == CXD2880_DTV_SYS_ISDBT) ||
+> +		    (sys == CXD2880_DTV_SYS_ISDBTSB) ||
+> +		    (sys == CXD2880_DTV_SYS_ISDBTMM_A) ||
+> +		    (sys == CXD2880_DTV_SYS_ISDBTMM_B)) {
+> +			backwards_compatible = 0;
+> +			ts_rate_ctrl_off = 1;
+> +			ts_in_off = 0;
+> +		} else if (tnr_dmd->is_ts_backwards_compatible_mode) {
+> +			backwards_compatible = 1;
+> +			ts_rate_ctrl_off = 1;
+> +			ts_in_off = 1;
+> +		} else {
+> +			backwards_compatible = 0;
+> +			ts_rate_ctrl_off = 0;
+> +			ts_in_off = 0;
+> +		}
+> +
+> +		if (tnr_dmd->ts_byte_clk_manual_setting) {
+> +			ts_clk_manaul_on = 1;
+> +			ts_rate_ctrl_off = 0;
+> +		}
+> +
+> +		ret =
+> +		    cxd2880_io_set_reg_bits(tnr_dmd->io, CXD2880_IO_TGT_DMD,
+> +					    0xD3, ts_rate_ctrl_off, 0x01);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		ret =
+> +		    cxd2880_io_set_reg_bits(tnr_dmd->io, CXD2880_IO_TGT_DMD,
+> +					    0xDE, ts_in_off, 0x01);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		ret =
+> +		    cxd2880_io_set_reg_bits(tnr_dmd->io, CXD2880_IO_TGT_DMD,
+> +					    0xDA, ts_clk_manaul_on, 0x01);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	ts_clk_cfg =
+> +	    srl_ts_clk_stgs[tnr_dmd->srl_ts_clk_mod_cnts]
+> +			[(u8)tnr_dmd->srl_ts_clk_frq];
+> +
+> +	if (tnr_dmd->ts_byte_clk_manual_setting)
+> +		ts_clk_cfg.ts_clk_period = tnr_dmd->ts_byte_clk_manual_setting;
+> +
+> +	ret =
+> +	    cxd2880_io_set_reg_bits(tnr_dmd->io, CXD2880_IO_TGT_DMD, 0xC4,
+> +				    ts_clk_cfg.srl_clk_mode, 0x03);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	ret =
+> +	    cxd2880_io_set_reg_bits(tnr_dmd->io, CXD2880_IO_TGT_DMD, 0xD1,
+> +				    ts_clk_cfg.srl_duty_mode, 0x03);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	ret = tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				     CXD2880_IO_TGT_DMD, 0xD9,
+> +				     ts_clk_cfg.ts_clk_period);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	{
+> +		u8 data = (u8)(backwards_compatible ? 0x00 : 0x01);
+> +
+> +		if (sys == CXD2880_DTV_SYS_DVBT) {
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_DMD, 0x00,
+> +						   0x10) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +
+> +			ret =
+> +			    cxd2880_io_set_reg_bits(tnr_dmd->io,
+> +						    CXD2880_IO_TGT_DMD, 0x66,
+> +						    data, 0x01);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static enum cxd2880_ret pid_ftr_setting(struct cxd2880_tnrdmd *tnr_dmd,
+> +					struct cxd2880_tnrdmd_pid_ftr_cfg
+> +					*pid_ftr_cfg)
+> +{
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (!pid_ftr_cfg) {
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_DMD, 0x50,
+> +					   0x02) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	} else {
+> +		u8 data[65];
+> +
+> +		data[0] = (u8)(pid_ftr_cfg->is_negative ? 0x01 : 0x00);
+> +		{
+> +			int i = 0;
+> +
+> +			for (i = 0; i < 32; i++) {
+> +				if (pid_ftr_cfg->pid_cfg[i].is_en) {
+> +					data[1 + (i * 2)] =
+> +					    (u8)((u8)
+> +					    (pid_ftr_cfg->pid_cfg[i].pid
+> +					     >> 8) | 0x20);
+> +					data[2 + (i * 2)] =
+> +					    (u8)(pid_ftr_cfg->pid_cfg[i].pid
+> +					     & 0xFF);
+> +				} else {
+> +					data[1 + (i * 2)] = 0x00;
+> +					data[2 + (i * 2)] = 0x00;
+> +				}
+> +			}
+> +		}
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_DMD, 0x50, data,
+> +					    65) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret load_cfg_mem(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +	u8 i;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	for (i = 0; i < tnr_dmd->cfg_mem_last_entry; i++) {
+> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					     tnr_dmd->cfg_mem[i].tgt,
+> +					     0x00, tnr_dmd->cfg_mem[i].bank);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		ret = cxd2880_io_set_reg_bits(tnr_dmd->io,
+> +					      tnr_dmd->cfg_mem[i].tgt,
+> +					      tnr_dmd->cfg_mem[i].address,
+> +					      tnr_dmd->cfg_mem[i].value,
+> +					      tnr_dmd->cfg_mem[i].bit_mask);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static enum cxd2880_ret set_cfg_mem(struct cxd2880_tnrdmd *tnr_dmd,
+> +				    enum cxd2880_io_tgt tgt,
+> +				    u8 bank, u8 address, u8 value, u8 bit_mask)
+> +{
+> +	u8 i;
+> +	u8 value_stored = 0;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	for (i = 0; i < tnr_dmd->cfg_mem_last_entry; i++) {
+> +		if ((value_stored == 0) &&
+> +		    (tnr_dmd->cfg_mem[i].tgt == tgt) &&
+> +		    (tnr_dmd->cfg_mem[i].bank == bank) &&
+> +		    (tnr_dmd->cfg_mem[i].address == address)) {
+> +			tnr_dmd->cfg_mem[i].value &= ~bit_mask;
+> +			tnr_dmd->cfg_mem[i].value |= (value & bit_mask);
+> +
+> +			tnr_dmd->cfg_mem[i].bit_mask |= bit_mask;
+> +
+> +			value_stored = 1;
+> +		}
+> +	}
+> +
+> +	if (value_stored == 0) {
+> +		if (tnr_dmd->cfg_mem_last_entry <
+> +		    CXD2880_TNRDMD_MAX_CFG_MEM_COUNT) {
+> +			tnr_dmd->cfg_mem[tnr_dmd->cfg_mem_last_entry].tgt = tgt;
+> +			tnr_dmd->cfg_mem[tnr_dmd->cfg_mem_last_entry].bank =
+> +			    bank;
+> +			tnr_dmd->cfg_mem[tnr_dmd->cfg_mem_last_entry].address =
+> +			    address;
+> +			tnr_dmd->cfg_mem[tnr_dmd->cfg_mem_last_entry].value =
+> +			    (value & bit_mask);
+> +			tnr_dmd->cfg_mem[tnr_dmd->cfg_mem_last_entry].bit_mask =
+> +			    bit_mask;
+> +			tnr_dmd->cfg_mem_last_entry++;
+> +		} else {
+> +			return CXD2880_RESULT_ERROR_OVERFLOW;
+> +		}
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_create(struct cxd2880_tnrdmd *tnr_dmd,
+> +				       struct cxd2880_io *io,
+> +				       struct cxd2880_tnrdmd_create_param
+> +				       *create_param)
+> +{
+> +	if ((!tnr_dmd) || (!io) || (!create_param))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	cxd2880_memset(tnr_dmd, 0, sizeof(struct cxd2880_tnrdmd));
+> +
+> +	tnr_dmd->io = io;
+> +	tnr_dmd->create_param = *create_param;
+> +
+> +	tnr_dmd->diver_mode = CXD2880_TNRDMD_DIVERMODE_SINGLE;
+> +	tnr_dmd->diver_sub = NULL;
+> +
+> +	tnr_dmd->srl_ts_clk_mod_cnts = 1;
+> +	tnr_dmd->en_fef_intmtnt_base = 1;
+> +	tnr_dmd->en_fef_intmtnt_lite = 1;
+> +	tnr_dmd->rf_lvl_cmpstn = NULL;
+> +	tnr_dmd->lna_thrs_tbl_air = NULL;
+> +	tnr_dmd->lna_thrs_tbl_cable = NULL;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_diver_create(struct cxd2880_tnrdmd
+> +					     *tnr_dmd_main,
+> +					     struct cxd2880_io *io_main,
+> +					     struct cxd2880_tnrdmd *tnr_dmd_sub,
+> +					     struct cxd2880_io *io_sub,
+> +					     struct
+> +					     cxd2880_tnrdmd_diver_create_param
+> +					     *create_param)
+> +{
+> +	if ((!tnr_dmd_main) || (!io_main) || (!tnr_dmd_sub) || (!io_sub) ||
+> +	    (!create_param))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	cxd2880_memset(tnr_dmd_main, 0, sizeof(struct cxd2880_tnrdmd));
+> +	cxd2880_memset(tnr_dmd_sub, 0, sizeof(struct cxd2880_tnrdmd));
+
+use memset().
+
+> +
+> +	tnr_dmd_main->io = io_main;
+> +	tnr_dmd_main->diver_mode = CXD2880_TNRDMD_DIVERMODE_MAIN;
+> +	tnr_dmd_main->diver_sub = tnr_dmd_sub;
+> +	tnr_dmd_main->create_param.en_internal_ldo =
+> +	    create_param->en_internal_ldo;
+> +	tnr_dmd_main->create_param.ts_output_if = create_param->ts_output_if;
+> +	tnr_dmd_main->create_param.xtal_share_type =
+> +	    CXD2880_TNRDMD_XTAL_SHARE_MASTER;
+> +	tnr_dmd_main->create_param.xosc_cap = create_param->xosc_cap_main;
+> +	tnr_dmd_main->create_param.xosc_i = create_param->xosc_i_main;
+> +	tnr_dmd_main->create_param.is_cxd2881gg = create_param->is_cxd2881gg;
+> +	tnr_dmd_main->create_param.stationary_use =
+> +	    create_param->stationary_use;
+> +
+> +	tnr_dmd_sub->io = io_sub;
+> +	tnr_dmd_sub->diver_mode = CXD2880_TNRDMD_DIVERMODE_SUB;
+> +	tnr_dmd_sub->diver_sub = NULL;
+> +	tnr_dmd_sub->create_param.en_internal_ldo =
+> +	    create_param->en_internal_ldo;
+> +	tnr_dmd_sub->create_param.ts_output_if = create_param->ts_output_if;
+> +	tnr_dmd_sub->create_param.xtal_share_type =
+> +	    CXD2880_TNRDMD_XTAL_SHARE_SLAVE;
+> +	tnr_dmd_sub->create_param.xosc_cap = 0;
+> +	tnr_dmd_sub->create_param.xosc_i = create_param->xosc_i_sub;
+> +	tnr_dmd_sub->create_param.is_cxd2881gg = create_param->is_cxd2881gg;
+> +	tnr_dmd_sub->create_param.stationary_use = create_param->stationary_use;
+> +
+> +	tnr_dmd_main->srl_ts_clk_mod_cnts = 1;
+> +	tnr_dmd_main->en_fef_intmtnt_base = 1;
+> +	tnr_dmd_main->en_fef_intmtnt_lite = 1;
+> +	tnr_dmd_main->rf_lvl_cmpstn = NULL;
+> +	tnr_dmd_main->lna_thrs_tbl_air = NULL;
+> +	tnr_dmd_main->lna_thrs_tbl_cable = NULL;
+> +
+> +	tnr_dmd_sub->srl_ts_clk_mod_cnts = 1;
+> +	tnr_dmd_sub->en_fef_intmtnt_base = 1;
+> +	tnr_dmd_sub->en_fef_intmtnt_lite = 1;
+> +	tnr_dmd_sub->rf_lvl_cmpstn = NULL;
+> +	tnr_dmd_sub->lna_thrs_tbl_air = NULL;
+> +	tnr_dmd_sub->lna_thrs_tbl_cable = NULL;
+
+Instead of this, it would likely be better if you create a const with the
+default values above use, instead, memcpy().
+
+
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_init1(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if ((!tnr_dmd) || (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	tnr_dmd->chip_id = CXD2880_TNRDMD_CHIP_ID_UNKNOWN;
+> +	tnr_dmd->state = CXD2880_TNRDMD_STATE_UNKNOWN;
+> +	tnr_dmd->clk_mode = CXD2880_TNRDMD_CLOCKMODE_UNKNOWN;
+> +	tnr_dmd->frequency_khz = 0;
+> +	tnr_dmd->sys = CXD2880_DTV_SYS_UNKNOWN;
+> +	tnr_dmd->bandwidth = CXD2880_DTV_BW_UNKNOWN;
+> +	tnr_dmd->scan_mode = 0;
+> +	cxd2880_atomic_set(&tnr_dmd->cancel, 0);
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		tnr_dmd->diver_sub->chip_id = CXD2880_TNRDMD_CHIP_ID_UNKNOWN;
+> +		tnr_dmd->diver_sub->state = CXD2880_TNRDMD_STATE_UNKNOWN;
+> +		tnr_dmd->diver_sub->clk_mode = CXD2880_TNRDMD_CLOCKMODE_UNKNOWN;
+> +		tnr_dmd->diver_sub->frequency_khz = 0;
+> +		tnr_dmd->diver_sub->sys = CXD2880_DTV_SYS_UNKNOWN;
+> +		tnr_dmd->diver_sub->bandwidth = CXD2880_DTV_BW_UNKNOWN;
+> +		tnr_dmd->diver_sub->scan_mode = 0;
+> +		cxd2880_atomic_set(&tnr_dmd->diver_sub->cancel, 0);
+> +	}
+> +
+> +	ret = cxd2880_tnrdmd_chip_id(tnr_dmd, &tnr_dmd->chip_id);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (!CXD2880_TNRDMD_CHIP_ID_VALID(tnr_dmd->chip_id))
+> +		return CXD2880_RESULT_ERROR_NOSUPPORT;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret =
+> +		    cxd2880_tnrdmd_chip_id(tnr_dmd->diver_sub,
+> +					   &tnr_dmd->diver_sub->chip_id);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (!CXD2880_TNRDMD_CHIP_ID_VALID(tnr_dmd->diver_sub->chip_id))
+> +			return CXD2880_RESULT_ERROR_NOSUPPORT;
+> +	}
+> +
+> +	ret = p_init1(tnr_dmd);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = p_init1(tnr_dmd->diver_sub);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	CXD2880_SLEEP(1);
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = p_init2(tnr_dmd->diver_sub);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	ret = p_init2(tnr_dmd);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	CXD2880_SLEEP(5);
+> +
+> +	ret = p_init3(tnr_dmd);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = p_init3(tnr_dmd->diver_sub);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	ret = rf_init1(tnr_dmd);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = rf_init1(tnr_dmd->diver_sub);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_init2(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	{
+> +		u8 cpu_task_completed = 0;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_check_internal_cpu_status(tnr_dmd,
+> +						     &cpu_task_completed);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (!cpu_task_completed)
+> +			return CXD2880_RESULT_ERROR_HW_STATE;
+> +	}
+> +
+> +	ret = rf_init2(tnr_dmd);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = rf_init2(tnr_dmd->diver_sub);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	ret = load_cfg_mem(tnr_dmd);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = load_cfg_mem(tnr_dmd->diver_sub);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	tnr_dmd->state = CXD2880_TNRDMD_STATE_SLEEP;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		tnr_dmd->diver_sub->state = CXD2880_TNRDMD_STATE_SLEEP;
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_check_internal_cpu_status(struct cxd2880_tnrdmd
+> +							  *tnr_dmd,
+> +							  u8 *task_completed)
+> +{
+> +	u16 cpu_status = 0;
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if ((!tnr_dmd) || (!task_completed))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret = cxd2880_tnrdmd_mon_internal_cpu_status(tnr_dmd, &cpu_status);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SINGLE) {
+> +		if (cpu_status == 0)
+> +			*task_completed = 1;
+> +		else
+> +			*task_completed = 0;
+> +
+> +		return ret;
+> +	}
+> +	if (cpu_status != 0) {
+> +		*task_completed = 0;
+> +		return ret;
+> +	}
+> +
+> +	ret = cxd2880_tnrdmd_mon_internal_cpu_status_sub(tnr_dmd, &cpu_status);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (cpu_status == 0)
+> +		*task_completed = 1;
+> +	else
+> +		*task_completed = 0;
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_common_tune_setting1(struct cxd2880_tnrdmd
+> +						     *tnr_dmd,
+> +						     enum cxd2880_dtv_sys sys,
+> +						     u32 frequency_khz,
+> +						     enum cxd2880_dtv_bandwidth
+> +						     bandwidth, u8 one_seg_opt,
+> +						     u8 one_seg_opt_shft_dir)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (frequency_khz < 4000)
+> +		return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +	ret = cxd2880_tnrdmd_sleep(tnr_dmd);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	{
+> +		u8 data = 0;
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x00,
+> +					   0x00) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x2B, &data,
+> +					   1) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		switch (sys) {
+> +		case CXD2880_DTV_SYS_DVBT:
+> +		case CXD2880_DTV_SYS_ISDBT:
+> +		case CXD2880_DTV_SYS_ISDBTSB:
+> +		case CXD2880_DTV_SYS_ISDBTMM_A:
+> +		case CXD2880_DTV_SYS_ISDBTMM_B:
+> +			if (data == 0x00) {
+> +				ret = t_power_x(tnr_dmd, 1);
+> +				if (ret != CXD2880_RESULT_OK)
+> +					return ret;
+> +
+> +				if (tnr_dmd->diver_mode ==
+> +				    CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +					ret = t_power_x(tnr_dmd->diver_sub, 1);
+> +					if (ret != CXD2880_RESULT_OK)
+> +						return ret;
+> +				}
+> +			}
+> +			break;
+> +
+> +		case CXD2880_DTV_SYS_DVBT2:
+> +			if (data == 0x01) {
+> +				ret = t_power_x(tnr_dmd, 0);
+> +				if (ret != CXD2880_RESULT_OK)
+> +					return ret;
+> +
+> +				if (tnr_dmd->diver_mode ==
+> +				    CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +					ret = t_power_x(tnr_dmd->diver_sub, 0);
+> +					if (ret != CXD2880_RESULT_OK)
+> +						return ret;
+> +				}
+> +			}
+> +			break;
+> +
+> +		default:
+> +			return CXD2880_RESULT_ERROR_ARG;
+> +		}
+> +	}
+> +
+> +	{
+> +		enum cxd2880_tnrdmd_clockmode new_clk_mode =
+> +		    CXD2880_TNRDMD_CLOCKMODE_A;
+> +
+> +		ret = spll_reset(tnr_dmd, new_clk_mode);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		tnr_dmd->clk_mode = new_clk_mode;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret = spll_reset(tnr_dmd->diver_sub, new_clk_mode);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +
+> +			tnr_dmd->diver_sub->clk_mode = new_clk_mode;
+> +		}
+> +
+> +		ret = load_cfg_mem(tnr_dmd);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret = load_cfg_mem(tnr_dmd->diver_sub);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	{
+> +		int shift_frequency_khz = 0;
+> +
+> +		if (one_seg_opt) {
+> +			if (tnr_dmd->diver_mode ==
+> +			    CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +				shift_frequency_khz = 350;
+> +			} else {
+> +				if (one_seg_opt_shft_dir)
+> +					shift_frequency_khz = 350;
+> +				else
+> +					shift_frequency_khz = -350;
+> +
+> +				if (tnr_dmd->create_param.xtal_share_type ==
+> +				    CXD2880_TNRDMD_XTAL_SHARE_SLAVE)
+> +					shift_frequency_khz *= -1;
+> +			}
+> +		} else {
+> +			if (tnr_dmd->diver_mode ==
+> +			    CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +				shift_frequency_khz = 150;
+> +			} else {
+> +				switch (tnr_dmd->create_param.xtal_share_type) {
+> +				case CXD2880_TNRDMD_XTAL_SHARE_NONE:
+> +				case CXD2880_TNRDMD_XTAL_SHARE_EXTREF:
+> +				default:
+> +					shift_frequency_khz = 0;
+> +					break;
+> +				case CXD2880_TNRDMD_XTAL_SHARE_MASTER:
+> +					shift_frequency_khz = 150;
+> +					break;
+> +				case CXD2880_TNRDMD_XTAL_SHARE_SLAVE:
+> +					shift_frequency_khz = -150;
+> +					break;
+> +				}
+> +			}
+> +		}
+> +
+> +		ret =
+> +		    x_tune1(tnr_dmd, sys, frequency_khz, bandwidth,
+> +			    tnr_dmd->is_cable_input, shift_frequency_khz);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret =
+> +			    x_tune1(tnr_dmd->diver_sub, sys, frequency_khz,
+> +				    bandwidth, tnr_dmd->is_cable_input,
+> +				    -shift_frequency_khz);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +
+> +		CXD2880_SLEEP(10);
+> +
+> +		{
+> +			u8 cpu_task_completed = 0;
+> +
+> +			ret =
+> +			    cxd2880_tnrdmd_check_internal_cpu_status(tnr_dmd,
+> +						     &cpu_task_completed);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +
+> +			if (!cpu_task_completed)
+> +				return CXD2880_RESULT_ERROR_HW_STATE;
+> +		}
+> +
+> +		ret =
+> +		    x_tune2(tnr_dmd, bandwidth, tnr_dmd->clk_mode,
+> +			    shift_frequency_khz);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret =
+> +			    x_tune2(tnr_dmd->diver_sub, bandwidth,
+> +				    tnr_dmd->diver_sub->clk_mode,
+> +				    -shift_frequency_khz);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +	}
+> +
+> +	if (tnr_dmd->create_param.ts_output_if == CXD2880_TNRDMD_TSOUT_IF_TS) {
+> +		ret = set_ts_clk_mode_and_freq(tnr_dmd, sys);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	} else {
+> +		struct cxd2880_tnrdmd_pid_ftr_cfg *pid_ftr_cfg;
+> +
+> +		if (tnr_dmd->pid_ftr_cfg_en)
+> +			pid_ftr_cfg = &tnr_dmd->pid_ftr_cfg;
+> +		else
+> +			pid_ftr_cfg = NULL;
+> +
+> +		ret = pid_ftr_setting(tnr_dmd, pid_ftr_cfg);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_common_tune_setting2(struct cxd2880_tnrdmd
+> +						     *tnr_dmd,
+> +						     enum cxd2880_dtv_sys sys,
+> +						     u8 en_fef_intmtnt_ctrl)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	ret = x_tune3(tnr_dmd, sys, en_fef_intmtnt_ctrl);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = x_tune3(tnr_dmd->diver_sub, sys, en_fef_intmtnt_ctrl);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		ret = x_tune4(tnr_dmd);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	ret = cxd2880_tnrdmd_set_ts_output(tnr_dmd, 1);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_sleep(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->state == CXD2880_TNRDMD_STATE_SLEEP) {
+> +	} else if (tnr_dmd->state == CXD2880_TNRDMD_STATE_ACTIVE) {
+> +		ret = cxd2880_tnrdmd_set_ts_output(tnr_dmd, 0);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret = x_sleep1(tnr_dmd);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +
+> +		ret = x_sleep2(tnr_dmd);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret = x_sleep2(tnr_dmd->diver_sub);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +
+> +		switch (tnr_dmd->sys) {
+> +		case CXD2880_DTV_SYS_DVBT:
+> +			ret = cxd2880_tnrdmd_dvbt_sleep_setting(tnr_dmd);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +			break;
+> +
+> +		case CXD2880_DTV_SYS_DVBT2:
+> +			ret = cxd2880_tnrdmd_dvbt2_sleep_setting(tnr_dmd);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +			break;
+> +
+> +		default:
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +		}
+> +
+> +		ret = x_sleep3(tnr_dmd);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret = x_sleep3(tnr_dmd->diver_sub);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +
+> +		ret = x_sleep4(tnr_dmd);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			ret = x_sleep4(tnr_dmd->diver_sub);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +
+> +		tnr_dmd->state = CXD2880_TNRDMD_STATE_SLEEP;
+> +		tnr_dmd->frequency_khz = 0;
+> +		tnr_dmd->sys = CXD2880_DTV_SYS_UNKNOWN;
+> +		tnr_dmd->bandwidth = CXD2880_DTV_BW_UNKNOWN;
+> +
+> +		if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +			tnr_dmd->diver_sub->state = CXD2880_TNRDMD_STATE_SLEEP;
+> +			tnr_dmd->diver_sub->frequency_khz = 0;
+> +			tnr_dmd->diver_sub->sys = CXD2880_DTV_SYS_UNKNOWN;
+> +			tnr_dmd->diver_sub->bandwidth = CXD2880_DTV_BW_UNKNOWN;
+> +		}
+> +	} else {
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_cfg(struct cxd2880_tnrdmd *tnr_dmd,
+> +					enum cxd2880_tnrdmd_cfg_id id,
+> +					int value)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +	u8 data[2] = { 0 };
+> +	u8 need_sub_setting = 0;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	switch (id) {
+> +	case CXD2880_TNRDMD_CFG_OUTPUT_SEL_MSB:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xC4,
+> +							 (u8)(value ? 0x00 :
+> +							       0x10), 0x10);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSVALID_ACTIVE_HI:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xC5,
+> +							 (u8)(value ? 0x00 :
+> +							       0x02), 0x02);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSSYNC_ACTIVE_HI:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xC5,
+> +							 (u8)(value ? 0x00 :
+> +							       0x04), 0x04);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSERR_ACTIVE_HI:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xCB,
+> +							 (u8)(value ? 0x00 :
+> +							       0x01), 0x01);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_LATCH_ON_POSEDGE:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xC5,
+> +							 (u8)(value ? 0x01 :
+> +							       0x00), 0x01);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSCLK_CONT:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		tnr_dmd->srl_ts_clk_mod_cnts = (u8)(value ? 0x01 : 0x00);
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSCLK_MASK:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		if ((value < 0) || (value > 0x1F))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xC6, (u8)value,
+> +							 0x1F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSVALID_MASK:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		if ((value < 0) || (value > 0x1F))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xC8, (u8)value,
+> +							 0x1F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSERR_MASK:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		if ((value < 0) || (value > 0x1F))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xC9, (u8)value,
+> +							 0x1F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSERR_VALID_DIS:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x91,
+> +							 (u8)(value ? 0x01 :
+> +							       0x00), 0x01);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSPIN_CURRENT:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_SYS,
+> +							 0x00, 0x51, (u8)value,
+> +							 0x3F);
+
+no need for the cast. Same on similar calls.
+
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSPIN_PULLUP_MANUAL:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_SYS,
+> +							 0x00, 0x50,
+> +							 (u8)(value ? 0x80 :
+> +							       0x00), 0x80);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSPIN_PULLUP:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_SYS,
+> +							 0x00, 0x50, (u8)value,
+> +							 0x3F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSCLK_FREQ:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		if ((value < 0) || (value > 1))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		tnr_dmd->srl_ts_clk_frq =
+> +		    (enum cxd2880_tnrdmd_serial_ts_clk)value;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TSBYTECLK_MANUAL:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		if ((value < 0) || (value > 0xFF))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		tnr_dmd->ts_byte_clk_manual_setting = (u8)value;
+> +
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TS_PACKET_GAP:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		if ((value < 0) || (value > 7))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0xD6, (u8)value,
+> +							 0x07);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TS_BACKWARDS_COMPATIBLE:
+> +		if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +			return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +		tnr_dmd->is_ts_backwards_compatible_mode = (u8)(value ? 1 : 0);
+> +
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_PWM_VALUE:
+> +		if ((value < 0) || (value > 0x1000))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x22,
+> +							 (u8)(value ? 0x01 :
+> +							       0x00), 0x01);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		{
+> +			u8 data[2];
+> +
+> +			data[0] = (u8)(((u16)value >> 8) & 0x1F);
+> +			data[1] = (u8)((u16)value & 0xFF);
+
+I don't think we need all those casts.
+> +
+> +			ret =
+> +			    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x23,
+> +							 data[0], 0x1F);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +
+> +			ret =
+> +			    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x24,
+> +							 data[1], 0xFF);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_INTERRUPT:
+> +		data[0] = (u8)((value >> 8) & 0xFF);
+> +		data[1] = (u8)(value & 0xFF);
+
+no uneeded casts, please.
+
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_SYS,
+> +							 0x00, 0x48, data[0],
+> +							 0xFF);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_SYS,
+> +							 0x00, 0x49, data[1],
+> +							 0xFF);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_INTERRUPT_LOCK_SEL:
+> +		data[0] = (u8)(value & 0x07);
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_SYS,
+> +							 0x00, 0x4A, data[0],
+> +							 0x07);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_INTERRUPT_INV_LOCK_SEL:
+> +		data[0] = (u8)((value & 0x07) << 3);
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_SYS,
+> +							 0x00, 0x4A, data[0],
+> +							 0x38);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_FIXED_CLOCKMODE:
+> +		if ((value < (int)CXD2880_TNRDMD_CLOCKMODE_UNKNOWN) ||
+> +		    (value > (int)CXD2880_TNRDMD_CLOCKMODE_C))
+
+no unneeded casts (same for all other casts you might be doing).
+
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +		tnr_dmd->fixed_clk_mode = (enum cxd2880_tnrdmd_clockmode)value;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_CABLE_INPUT:
+> +		tnr_dmd->is_cable_input = (u8)(value ? 1 : 0);
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT2_FEF_INTERMITTENT_BASE:
+> +		tnr_dmd->en_fef_intmtnt_base = (u8)(value ? 1 : 0);
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT2_FEF_INTERMITTENT_LITE:
+> +		tnr_dmd->en_fef_intmtnt_lite = (u8)(value ? 1 : 0);
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TS_BUF_ALMOST_EMPTY_THRS:
+> +		data[0] = (u8)((value >> 8) & 0x07);
+> +		data[1] = (u8)(value & 0xFF);
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x99, data[0],
+> +							 0x07);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x9A, data[1],
+> +							 0xFF);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TS_BUF_ALMOST_FULL_THRS:
+> +		data[0] = (u8)((value >> 8) & 0x07);
+> +		data[1] = (u8)(value & 0xFF);
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x9B, data[0],
+> +							 0x07);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x9C, data[1],
+> +							 0xFF);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_TS_BUF_RRDY_THRS:
+> +		data[0] = (u8)((value >> 8) & 0x07);
+> +		data[1] = (u8)(value & 0xFF);
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x9D, data[0],
+> +							 0x07);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x00, 0x9E, data[1],
+> +							 0xFF);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_BLINDTUNE_DVBT2_FIRST:
+> +		tnr_dmd->blind_tune_dvbt2_first = (u8)(value ? 1 : 0);
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT_BERN_PERIOD:
+> +		if ((value < 0) || (value > 31))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x10, 0x60,
+> +							 (u8)(value & 0x1F),
+> +							 0x1F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT_VBER_PERIOD:
+> +		if ((value < 0) || (value > 7))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x10, 0x6F,
+> +							 (u8)(value & 0x07),
+> +							 0x07);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT2_BBER_MES:
+> +		if ((value < 0) || (value > 15))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x20, 0x72,
+> +							 (u8)(value & 0x0F),
+> +							 0x0F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT2_LBER_MES:
+> +		if ((value < 0) || (value > 15))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x20, 0x6F,
+> +							 (u8)(value & 0x0F),
+> +							 0x0F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT_PER_MES:
+> +		if ((value < 0) || (value > 15))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x10, 0x5C,
+> +							 (u8)(value & 0x0F),
+> +							 0x0F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_DVBT2_PER_MES:
+> +		if ((value < 0) || (value > 15))
+> +			return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x24, 0xDC,
+> +							 (u8)(value & 0x0F),
+> +							 0x0F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_CFG_ISDBT_BERPER_PERIOD:
+> +		{
+> +			u8 data[2];
+> +
+> +			data[0] = (u8)((value & 0x00007F00) >> 8);
+> +			data[1] = (u8)(value & 0x000000FF);
+> +
+> +			ret =
+> +			    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x60, 0x5B,
+> +							 data[0], 0x7F);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +			ret =
+> +			    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd,
+> +							 CXD2880_IO_TGT_DMD,
+> +							 0x60, 0x5C,
+> +							 data[1], 0xFF);
+> +			if (ret != CXD2880_RESULT_OK)
+> +				return ret;
+> +		}
+> +		break;
+> +
+> +	default:
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +
+> +	if (need_sub_setting &&
+> +	    (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN)) {
+> +		ret = cxd2880_tnrdmd_set_cfg(tnr_dmd->diver_sub, id, value);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_set_cfg(struct cxd2880_tnrdmd *tnr_dmd,
+> +					     u8 id,
+> +					     u8 en,
+> +					     enum cxd2880_tnrdmd_gpio_mode mode,
+> +					     u8 open_drain, u8 invert)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (id > 2)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (mode > CXD2880_TNRDMD_GPIO_MODE_EEW)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd, CXD2880_IO_TGT_SYS,
+> +						 0x00, 0x40 + id, (u8)mode,
+> +						 0x0F);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd, CXD2880_IO_TGT_SYS,
+> +						 0x00, 0x43,
+> +						 (u8)(open_drain ? (1 << id) :
+> +						       0), (u8)(1 << id));
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd, CXD2880_IO_TGT_SYS,
+> +						 0x00, 0x44,
+> +						 (u8)(invert ? (1 << id) : 0),
+> +						 (u8)(1 << id));
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd, CXD2880_IO_TGT_SYS,
+> +						 0x00, 0x45,
+> +						 (u8)(en ? 0 : (1 << id)),
+> +						 (u8)(1 << id));
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_set_cfg_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +						 u8 id,
+> +						 u8 en,
+> +						 enum cxd2880_tnrdmd_gpio_mode
+> +						 mode, u8 open_drain, u8 invert)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_gpio_set_cfg(tnr_dmd->diver_sub, id, en, mode,
+> +					open_drain, invert);
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_read(struct cxd2880_tnrdmd *tnr_dmd,
+> +					  u8 id, u8 *value)
+> +{
+> +	u8 data = 0;
+> +
+> +	if ((!tnr_dmd) || (!value))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (id > 2)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x20, &data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	*value = (u8)((data >> id) & 0x01);
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_read_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					      u8 id, u8 *value)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret = cxd2880_tnrdmd_gpio_read(tnr_dmd->diver_sub, id, value);
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_write(struct cxd2880_tnrdmd *tnr_dmd,
+> +					   u8 id, u8 value)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (id > 2)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_set_and_save_reg_bits(tnr_dmd, CXD2880_IO_TGT_SYS,
+> +						 0x00, 0x46,
+> +						 (u8)(value ? (1 << id) : 0),
+> +						 (u8)(1 << id));
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_write_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					       u8 id, u8 value)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret = cxd2880_tnrdmd_gpio_write(tnr_dmd->diver_sub, id, value);
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_interrupt_read(struct cxd2880_tnrdmd *tnr_dmd,
+> +					       u16 *value)
+> +{
+> +	u8 data[2] = { 0 };
+> +
+> +	if ((!tnr_dmd) || (!value))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x15, data,
+> +				   2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	*value = (u16)(((u16)data[0] << 8) | (data[1]));
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_interrupt_clear(struct cxd2880_tnrdmd *tnr_dmd,
+> +						u16 value)
+> +{
+> +	u8 data[2] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	data[0] = (u8)((value >> 8) & 0xFF);
+> +	data[1] = (u8)(value & 0xFF);
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_SYS, 0x3C, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_ts_buf_clear(struct cxd2880_tnrdmd *tnr_dmd,
+> +					     u8 clear_overflow_flag,
+> +					     u8 clear_underflow_flag,
+> +					     u8 clear_buf)
+> +{
+> +	u8 data[2] = { 0 };
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	data[0] = (u8)(clear_overflow_flag ? 0x02 : 0x00);
+> +	data[0] |= (u8)(clear_underflow_flag ? 0x01 : 0x00);
+> +	data[1] = (u8)(clear_buf ? 0x01 : 0x00);
+> +	if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +				    CXD2880_IO_TGT_DMD, 0x9F, data,
+> +				    2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_chip_id(struct cxd2880_tnrdmd *tnr_dmd,
+> +					enum cxd2880_tnrdmd_chip_id *chip_id)
+> +{
+> +	u8 data = 0;
+> +
+> +	if ((!tnr_dmd) || (!chip_id))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0xFD, &data,
+> +				   1) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	*chip_id = (enum cxd2880_tnrdmd_chip_id)data;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_and_save_reg_bits(struct cxd2880_tnrdmd
+> +						      *tnr_dmd,
+> +						      enum cxd2880_io_tgt tgt,
+> +						      u8 bank, u8 address,
+> +						      u8 value, u8 bit_mask)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   tgt, 0x00, bank) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (cxd2880_io_set_reg_bits(tnr_dmd->io, tgt, address, value, bit_mask)
+> +	    != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	ret = set_cfg_mem(tnr_dmd, tgt, bank, address, value, bit_mask);
+> +	if (ret != CXD2880_RESULT_OK)
+> +		return ret;
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_scan_mode(struct cxd2880_tnrdmd *tnr_dmd,
+> +					      enum cxd2880_dtv_sys sys,
+> +					      u8 scan_mode_end)
+> +{
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	CXD2880_ARG_UNUSED(sys);
+> +
+> +	tnr_dmd->scan_mode = scan_mode_end;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_MAIN) {
+> +		enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +		ret =
+> +		    cxd2880_tnrdmd_set_scan_mode(tnr_dmd->diver_sub, sys,
+> +						 scan_mode_end);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_pid_ftr(struct cxd2880_tnrdmd *tnr_dmd,
+> +					    struct cxd2880_tnrdmd_pid_ftr_cfg
+> +					    *pid_ftr_cfg)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->create_param.ts_output_if == CXD2880_TNRDMD_TSOUT_IF_TS)
+> +		return CXD2880_RESULT_ERROR_NOSUPPORT;
+> +
+> +	if (pid_ftr_cfg) {
+> +		tnr_dmd->pid_ftr_cfg = *pid_ftr_cfg;
+> +		tnr_dmd->pid_ftr_cfg_en = 1;
+> +	} else {
+> +		tnr_dmd->pid_ftr_cfg_en = 0;
+> +	}
+> +
+> +	if (tnr_dmd->state == CXD2880_TNRDMD_STATE_ACTIVE) {
+> +		ret = pid_ftr_setting(tnr_dmd, pid_ftr_cfg);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_rf_lvl_cmpstn(struct cxd2880_tnrdmd
+> +					  *tnr_dmd,
+> +					  enum
+> +					  cxd2880_ret(*rf_lvl_cmpstn)
+> +					  (struct cxd2880_tnrdmd *,
+> +					   int *))
+> +{
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	tnr_dmd->rf_lvl_cmpstn = rf_lvl_cmpstn;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_rf_lvl_cmpstn_sub(struct cxd2880_tnrdmd
+> +						      *tnr_dmd,
+> +						      enum
+> +						      cxd2880_ret
+> +						      (*rf_lvl_cmpstn)(struct
+> +								cxd2880_tnrdmd
+> +								*,
+> +								int *))
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_set_rf_lvl_cmpstn(tnr_dmd->diver_sub, rf_lvl_cmpstn);
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_lna_thrs(struct cxd2880_tnrdmd *tnr_dmd,
+> +					     struct
+> +					     cxd2880_tnrdmd_lna_thrs_tbl_air
+> +					     *tbl_air,
+> +					     struct
+> +					     cxd2880_tnrdmd_lna_thrs_tbl_cable
+> +					     *tbl_cable)
+> +{
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	tnr_dmd->lna_thrs_tbl_air = tbl_air;
+> +	tnr_dmd->lna_thrs_tbl_cable = tbl_cable;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_lna_thrs_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					 struct
+> +					 cxd2880_tnrdmd_lna_thrs_tbl_air
+> +					 *tbl_air,
+> +					 struct
+> +					 cxd2880_tnrdmd_lna_thrs_tbl_cable
+> +					 *tbl_cable)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_set_lna_thrs(tnr_dmd->diver_sub, tbl_air, tbl_cable);
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_ts_pin_high_low(struct cxd2880_tnrdmd
+> +						    *tnr_dmd, u8 en, u8 value)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP)
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->create_param.ts_output_if != CXD2880_TNRDMD_TSOUT_IF_TS)
+> +		return CXD2880_RESULT_ERROR_NOSUPPORT;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (en) {
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x50,
+> +					   ((value & 0x1F) | 0x80)) !=
+> +		    CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x52,
+> +					   (value & 0x1F)) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	} else {
+> +		ret = tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					     CXD2880_IO_TGT_SYS, 0x50, 0x3F);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x52,
+> +					   0x1F) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		ret = load_cfg_mem(tnr_dmd);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_ts_output(struct cxd2880_tnrdmd *tnr_dmd,
+> +					      u8 en)
+> +{
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	switch (tnr_dmd->create_param.ts_output_if) {
+> +	case CXD2880_TNRDMD_TSOUT_IF_TS:
+> +		if (en) {
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_SYS, 0x00,
+> +						   0x00) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_SYS, 0x52,
+> +						   0x00) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_DMD, 0x00,
+> +						   0x00) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_DMD, 0xC3,
+> +						   0x00) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +		} else {
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_DMD, 0x00,
+> +						   0x00) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_DMD, 0xC3,
+> +						   0x01) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_SYS, 0x00,
+> +						   0x00) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +			if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_SYS, 0x52,
+> +						   0x1F) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +		}
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_TSOUT_IF_SPI:
+> +		break;
+> +
+> +	case CXD2880_TNRDMD_TSOUT_IF_SDIO:
+> +		break;
+> +
+> +	default:
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret slvt_freeze_reg(struct cxd2880_tnrdmd *tnr_dmd)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if (!tnr_dmd)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	switch (tnr_dmd->create_param.ts_output_if) {
+> +	case CXD2880_TNRDMD_TSOUT_IF_SPI:
+> +	case CXD2880_TNRDMD_TSOUT_IF_SDIO:
+> +		{
+> +			u8 data = 0;
+> +
+> +			if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +						   CXD2880_IO_TGT_DMD, 0x00,
+> +						   &data,
+> +						   1) != CXD2880_RESULT_OK)
+> +				return CXD2880_RESULT_ERROR_IO;
+> +		}
+> +		break;
+> +	case CXD2880_TNRDMD_TSOUT_IF_TS:
+> +	default:
+> +		break;
+> +	}
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x01,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return ret;
+> +}
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.h
+> new file mode 100644
+> index 000000000000..26e29b3b9f6b
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd.h
+> @@ -0,0 +1,395 @@
+> +/*
+> + * cxd2880_tnrdmd.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * common control interface
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef CXD2880_TNRDMD_H
+> +#define CXD2880_TNRDMD_H
+> +
+> +#include "cxd2880_common.h"
+> +#include "cxd2880_io.h"
+> +#include "cxd2880_dtv.h"
+> +#include "cxd2880_dvbt.h"
+> +#include "cxd2880_dvbt2.h"
+> +
+> +#define CXD2880_TNRDMD_MAX_CFG_MEM_COUNT 100
+> +
+> +#define slvt_unfreeze_reg(tnr_dmd) ((void)((tnr_dmd)->io->write_reg\
+> +((tnr_dmd)->io, CXD2880_IO_TGT_DMD, 0x01, 0x00)))
+> +
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_BUF_UNDERFLOW     0x0001
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_BUF_OVERFLOW      0x0002
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_BUF_ALMOST_EMPTY  0x0004
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_BUF_ALMOST_FULL   0x0008
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_BUF_RRDY	  0x0010
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_ILLEGAL_COMMAND      0x0020
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_ILLEGAL_ACCESS       0x0040
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_CPU_ERROR	    0x0100
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_LOCK		 0x0200
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_INV_LOCK	     0x0400
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_NOOFDM	       0x0800
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_EWS		  0x1000
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_EEW		  0x2000
+> +#define CXD2880_TNRDMD_INTERRUPT_TYPE_FEC_FAIL	     0x4000
+> +
+> +#define CXD2880_TNRDMD_INTERRUPT_LOCK_SEL_L1POST_OK	0x01
+> +#define CXD2880_TNRDMD_INTERRUPT_LOCK_SEL_DMD_LOCK	 0x02
+> +#define CXD2880_TNRDMD_INTERRUPT_LOCK_SEL_TS_LOCK	  0x04
+> +
+> +enum cxd2880_tnrdmd_chip_id {
+> +	CXD2880_TNRDMD_CHIP_ID_UNKNOWN = 0x00,
+> +	CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_0X = 0x62,
+> +	CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_11 = 0x6A
+> +};
+> +
+> +#define CXD2880_TNRDMD_CHIP_ID_VALID(chip_id) (((chip_id) == \
+> +CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_0X) || \
+> +((chip_id) == CXD2880_TNRDMD_CHIP_ID_CXD2880_ES1_11))
+> +
+> +enum cxd2880_tnrdmd_state {
+> +	CXD2880_TNRDMD_STATE_UNKNOWN,
+> +	CXD2880_TNRDMD_STATE_SLEEP,
+> +	CXD2880_TNRDMD_STATE_ACTIVE,
+> +	CXD2880_TNRDMD_STATE_INVALID
+> +};
+> +
+> +enum cxd2880_tnrdmd_divermode {
+> +	CXD2880_TNRDMD_DIVERMODE_SINGLE,
+> +	CXD2880_TNRDMD_DIVERMODE_MAIN,
+> +	CXD2880_TNRDMD_DIVERMODE_SUB
+> +};
+> +
+> +enum cxd2880_tnrdmd_clockmode {
+> +	CXD2880_TNRDMD_CLOCKMODE_UNKNOWN,
+> +	CXD2880_TNRDMD_CLOCKMODE_A,
+> +	CXD2880_TNRDMD_CLOCKMODE_B,
+> +	CXD2880_TNRDMD_CLOCKMODE_C
+> +};
+> +
+> +enum cxd2880_tnrdmd_tsout_if {
+> +	CXD2880_TNRDMD_TSOUT_IF_TS,
+> +	CXD2880_TNRDMD_TSOUT_IF_SPI,
+> +	CXD2880_TNRDMD_TSOUT_IF_SDIO
+> +};
+> +
+> +enum cxd2880_tnrdmd_xtal_share {
+> +	CXD2880_TNRDMD_XTAL_SHARE_NONE,
+> +	CXD2880_TNRDMD_XTAL_SHARE_EXTREF,
+> +	CXD2880_TNRDMD_XTAL_SHARE_MASTER,
+> +	CXD2880_TNRDMD_XTAL_SHARE_SLAVE
+> +};
+> +
+> +enum cxd2880_tnrdmd_spectrum_sense {
+> +	CXD2880_TNRDMD_SPECTRUM_NORMAL,
+> +	CXD2880_TNRDMD_SPECTRUM_INV
+> +};
+> +
+> +enum cxd2880_tnrdmd_cfg_id {
+> +	CXD2880_TNRDMD_CFG_OUTPUT_SEL_MSB,
+> +	CXD2880_TNRDMD_CFG_TSVALID_ACTIVE_HI,
+> +	CXD2880_TNRDMD_CFG_TSSYNC_ACTIVE_HI,
+> +	CXD2880_TNRDMD_CFG_TSERR_ACTIVE_HI,
+> +	CXD2880_TNRDMD_CFG_LATCH_ON_POSEDGE,
+> +	CXD2880_TNRDMD_CFG_TSCLK_CONT,
+> +	CXD2880_TNRDMD_CFG_TSCLK_MASK,
+> +	CXD2880_TNRDMD_CFG_TSVALID_MASK,
+> +	CXD2880_TNRDMD_CFG_TSERR_MASK,
+> +	CXD2880_TNRDMD_CFG_TSERR_VALID_DIS,
+> +	CXD2880_TNRDMD_CFG_TSPIN_CURRENT,
+> +	CXD2880_TNRDMD_CFG_TSPIN_PULLUP_MANUAL,
+> +	CXD2880_TNRDMD_CFG_TSPIN_PULLUP,
+> +	CXD2880_TNRDMD_CFG_TSCLK_FREQ,
+> +	CXD2880_TNRDMD_CFG_TSBYTECLK_MANUAL,
+> +	CXD2880_TNRDMD_CFG_TS_PACKET_GAP,
+> +	CXD2880_TNRDMD_CFG_TS_BACKWARDS_COMPATIBLE,
+> +	CXD2880_TNRDMD_CFG_PWM_VALUE,
+> +	CXD2880_TNRDMD_CFG_INTERRUPT,
+> +	CXD2880_TNRDMD_CFG_INTERRUPT_LOCK_SEL,
+> +	CXD2880_TNRDMD_CFG_INTERRUPT_INV_LOCK_SEL,
+> +	CXD2880_TNRDMD_CFG_TS_BUF_ALMOST_EMPTY_THRS,
+> +	CXD2880_TNRDMD_CFG_TS_BUF_ALMOST_FULL_THRS,
+> +	CXD2880_TNRDMD_CFG_TS_BUF_RRDY_THRS,
+> +	CXD2880_TNRDMD_CFG_FIXED_CLOCKMODE,
+> +	CXD2880_TNRDMD_CFG_CABLE_INPUT,
+> +	CXD2880_TNRDMD_CFG_DVBT2_FEF_INTERMITTENT_BASE,
+> +	CXD2880_TNRDMD_CFG_DVBT2_FEF_INTERMITTENT_LITE,
+> +	CXD2880_TNRDMD_CFG_BLINDTUNE_DVBT2_FIRST,
+> +	CXD2880_TNRDMD_CFG_DVBT_BERN_PERIOD,
+> +	CXD2880_TNRDMD_CFG_DVBT_VBER_PERIOD,
+> +	CXD2880_TNRDMD_CFG_DVBT_PER_MES,
+> +	CXD2880_TNRDMD_CFG_DVBT2_BBER_MES,
+> +	CXD2880_TNRDMD_CFG_DVBT2_LBER_MES,
+> +	CXD2880_TNRDMD_CFG_DVBT2_PER_MES,
+> +	CXD2880_TNRDMD_CFG_ISDBT_BERPER_PERIOD
+> +};
+> +
+> +enum cxd2880_tnrdmd_lock_result {
+> +	CXD2880_TNRDMD_LOCK_RESULT_NOTDETECT,
+> +	CXD2880_TNRDMD_LOCK_RESULT_LOCKED,
+> +	CXD2880_TNRDMD_LOCK_RESULT_UNLOCKED
+> +};
+> +
+> +enum cxd2880_tnrdmd_gpio_mode {
+> +	CXD2880_TNRDMD_GPIO_MODE_OUTPUT = 0x00,
+> +	CXD2880_TNRDMD_GPIO_MODE_INPUT = 0x01,
+> +	CXD2880_TNRDMD_GPIO_MODE_INT = 0x02,
+> +	CXD2880_TNRDMD_GPIO_MODE_FEC_FAIL = 0x03,
+> +	CXD2880_TNRDMD_GPIO_MODE_PWM = 0x04,
+> +	CXD2880_TNRDMD_GPIO_MODE_EWS = 0x05,
+> +	CXD2880_TNRDMD_GPIO_MODE_EEW = 0x06
+> +};
+> +
+> +enum cxd2880_tnrdmd_serial_ts_clk {
+> +	CXD2880_TNRDMD_SERIAL_TS_CLK_FULL,
+> +	CXD2880_TNRDMD_SERIAL_TS_CLK_HALF
+> +};
+> +
+> +struct cxd2880_tnrdmd_cfg_mem {
+> +	enum cxd2880_io_tgt tgt;
+> +	u8 bank;
+> +	u8 address;
+> +	u8 value;
+> +	u8 bit_mask;
+> +};
+> +
+> +struct cxd2880_tnrdmd_pid_cfg {
+> +	u8 is_en;
+> +	u16 pid;
+> +};
+> +
+> +struct cxd2880_tnrdmd_pid_ftr_cfg {
+> +	u8 is_negative;
+> +	struct cxd2880_tnrdmd_pid_cfg pid_cfg[32];
+> +};
+> +
+> +struct cxd2880_tnrdmd_ts_buf_info {
+> +	u8 read_ready;
+> +	u8 almost_full;
+> +	u8 almost_empty;
+> +	u8 overflow;
+> +	u8 underflow;
+> +	u16 packet_num;
+> +};
+> +
+> +struct cxd2880_tnrdmd_lna_thrs {
+> +	u8 off_on;
+> +	u8 on_off;
+> +};
+> +
+> +struct cxd2880_tnrdmd_lna_thrs_tbl_air {
+> +	struct cxd2880_tnrdmd_lna_thrs thrs[24];
+> +};
+> +
+> +struct cxd2880_tnrdmd_lna_thrs_tbl_cable {
+> +	struct cxd2880_tnrdmd_lna_thrs thrs[32];
+> +};
+> +
+> +struct cxd2880_tnrdmd_create_param {
+> +	enum cxd2880_tnrdmd_tsout_if ts_output_if;
+> +	u8 en_internal_ldo;
+> +	enum cxd2880_tnrdmd_xtal_share xtal_share_type;
+> +	u8 xosc_cap;
+> +	u8 xosc_i;
+> +	u8 is_cxd2881gg;
+> +	u8 stationary_use;
+> +};
+> +
+> +struct cxd2880_tnrdmd_diver_create_param {
+> +	enum cxd2880_tnrdmd_tsout_if ts_output_if;
+> +	u8 en_internal_ldo;
+> +	u8 xosc_cap_main;
+> +	u8 xosc_i_main;
+> +	u8 xosc_i_sub;
+> +	u8 is_cxd2881gg;
+> +	u8 stationary_use;
+> +};
+> +
+> +struct cxd2880_tnrdmd {
+> +	struct cxd2880_tnrdmd *diver_sub;
+> +	struct cxd2880_io *io;
+> +	struct cxd2880_tnrdmd_create_param create_param;
+> +	enum cxd2880_tnrdmd_divermode diver_mode;
+> +	enum cxd2880_tnrdmd_clockmode fixed_clk_mode;
+> +	u8 is_cable_input;
+> +	u8 en_fef_intmtnt_base;
+> +	u8 en_fef_intmtnt_lite;
+> +	u8 blind_tune_dvbt2_first;
+> +	enum cxd2880_ret (*rf_lvl_cmpstn)(struct cxd2880_tnrdmd *tnr_dmd,
+> +					   int *rf_lvl_db);
+> +	struct cxd2880_tnrdmd_lna_thrs_tbl_air *lna_thrs_tbl_air;
+> +	struct cxd2880_tnrdmd_lna_thrs_tbl_cable *lna_thrs_tbl_cable;
+> +	u8 srl_ts_clk_mod_cnts;
+> +	enum cxd2880_tnrdmd_serial_ts_clk srl_ts_clk_frq;
+> +	u8 ts_byte_clk_manual_setting;
+> +	u8 is_ts_backwards_compatible_mode;
+> +	struct cxd2880_tnrdmd_cfg_mem cfg_mem[CXD2880_TNRDMD_MAX_CFG_MEM_COUNT];
+> +	u8 cfg_mem_last_entry;
+> +	struct cxd2880_tnrdmd_pid_ftr_cfg pid_ftr_cfg;
+> +	u8 pid_ftr_cfg_en;
+> +	void *user;
+> +	enum cxd2880_tnrdmd_chip_id chip_id;
+> +	enum cxd2880_tnrdmd_state state;
+> +	enum cxd2880_tnrdmd_clockmode clk_mode;
+> +	u32 frequency_khz;
+> +	enum cxd2880_dtv_sys sys;
+> +	enum cxd2880_dtv_bandwidth bandwidth;
+> +	u8 scan_mode;
+> +	struct cxd2880_atomic cancel;
+> +};
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_create(struct cxd2880_tnrdmd *tnr_dmd,
+> +				       struct cxd2880_io *io,
+> +				       struct cxd2880_tnrdmd_create_param
+> +				       *create_param);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_diver_create(struct cxd2880_tnrdmd
+> +					     *tnr_dmd_main,
+> +					     struct cxd2880_io *io_main,
+> +					     struct cxd2880_tnrdmd *tnr_dmd_sub,
+> +					     struct cxd2880_io *io_sub,
+> +					     struct
+> +					     cxd2880_tnrdmd_diver_create_param
+> +					     *create_param);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_init1(struct cxd2880_tnrdmd *tnr_dmd);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_init2(struct cxd2880_tnrdmd *tnr_dmd);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_check_internal_cpu_status(struct cxd2880_tnrdmd
+> +							  *tnr_dmd,
+> +							  u8 *task_completed);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_common_tune_setting1(struct cxd2880_tnrdmd
+> +						     *tnr_dmd,
+> +						     enum cxd2880_dtv_sys sys,
+> +						     u32 frequency_khz,
+> +						     enum cxd2880_dtv_bandwidth
+> +						     bandwidth, u8 one_seg_opt,
+> +						     u8 one_seg_opt_shft_dir);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_common_tune_setting2(struct cxd2880_tnrdmd
+> +						     *tnr_dmd,
+> +						     enum cxd2880_dtv_sys sys,
+> +						     u8 en_fef_intmtnt_ctrl);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_sleep(struct cxd2880_tnrdmd *tnr_dmd);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_cfg(struct cxd2880_tnrdmd *tnr_dmd,
+> +					enum cxd2880_tnrdmd_cfg_id id,
+> +					int value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_set_cfg(struct cxd2880_tnrdmd *tnr_dmd,
+> +					     u8 id,
+> +					     u8 en,
+> +					     enum cxd2880_tnrdmd_gpio_mode mode,
+> +					     u8 open_drain, u8 invert);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_set_cfg_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +						 u8 id,
+> +						 u8 en,
+> +						 enum cxd2880_tnrdmd_gpio_mode
+> +						 mode, u8 open_drain,
+> +						 u8 invert);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_read(struct cxd2880_tnrdmd *tnr_dmd,
+> +					  u8 id, u8 *value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_read_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					      u8 id, u8 *value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_write(struct cxd2880_tnrdmd *tnr_dmd,
+> +					   u8 id, u8 value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_gpio_write_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					       u8 id, u8 value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_interrupt_read(struct cxd2880_tnrdmd *tnr_dmd,
+> +					       u16 *value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_interrupt_clear(struct cxd2880_tnrdmd *tnr_dmd,
+> +						u16 value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_ts_buf_clear(struct cxd2880_tnrdmd *tnr_dmd,
+> +					     u8 clear_overflow_flag,
+> +					     u8 clear_underflow_flag,
+> +					     u8 clear_buf);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_chip_id(struct cxd2880_tnrdmd *tnr_dmd,
+> +					enum cxd2880_tnrdmd_chip_id *chip_id);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_and_save_reg_bits(struct cxd2880_tnrdmd
+> +						      *tnr_dmd,
+> +						      enum cxd2880_io_tgt tgt,
+> +						      u8 bank, u8 address,
+> +						      u8 value, u8 bit_mask);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_scan_mode(struct cxd2880_tnrdmd *tnr_dmd,
+> +					      enum cxd2880_dtv_sys sys,
+> +					      u8 scan_mode_end);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_pid_ftr(struct cxd2880_tnrdmd *tnr_dmd,
+> +					    struct cxd2880_tnrdmd_pid_ftr_cfg
+> +					    *pid_ftr_cfg);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_rf_lvl_cmpstn(struct cxd2880_tnrdmd
+> +						  *tnr_dmd,
+> +						  enum
+> +						  cxd2880_ret(*rf_lvl_cmpstn)
+> +						  (struct cxd2880_tnrdmd *,
+> +						   int *));
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_rf_lvl_cmpstn_sub(struct cxd2880_tnrdmd
+> +						      *tnr_dmd,
+> +						      enum
+> +						      cxd2880_ret
+> +						      (*rf_lvl_cmpstn)(struct
+> +								cxd2880_tnrdmd
+> +								*,
+> +								int *));
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_lna_thrs(struct cxd2880_tnrdmd *tnr_dmd,
+> +					     struct
+> +					     cxd2880_tnrdmd_lna_thrs_tbl_air
+> +					     *tbl_air,
+> +					     struct
+> +					     cxd2880_tnrdmd_lna_thrs_tbl_cable
+> +					     *tbl_cable);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_lna_thrs_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					 struct
+> +					 cxd2880_tnrdmd_lna_thrs_tbl_air
+> +					 *tbl_air,
+> +					 struct
+> +					 cxd2880_tnrdmd_lna_thrs_tbl_cable
+> +					 *tbl_cable);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_ts_pin_high_low(struct cxd2880_tnrdmd
+> +						    *tnr_dmd, u8 en, u8 value);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_set_ts_output(struct cxd2880_tnrdmd *tnr_dmd,
+> +					      u8 en);
+> +
+> +enum cxd2880_ret slvt_freeze_reg(struct cxd2880_tnrdmd *tnr_dmd);
+> +
+> +#endif
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_driver_version.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_driver_version.h
+> new file mode 100644
+> index 000000000000..68fb3af04bd4
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_driver_version.h
+> @@ -0,0 +1,29 @@
+> +/*
+> + * cxd2880_tnrdmd_driver_version.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * version information
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#define CXD2880_TNRDMD_DRIVER_VERSION "1.4.1 - 1.0.1"
+> +
+> +#define CXD2880_TNRDMD_DRIVER_RELEASE_DATE "2017-04-13"
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.c
+> new file mode 100644
+> index 000000000000..0ac5b9bf3be8
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.c
+> @@ -0,0 +1,207 @@
+> +/*
+> + * cxd2880_tnrdmd_mon.c
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * common monitor functions
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include "cxd2880_common.h"
+> +#include "cxd2880_tnrdmd_mon.h"
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_rf_lvl(struct cxd2880_tnrdmd *tnr_dmd,
+> +					   int *rf_lvl_db)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if ((!tnr_dmd) || (!rf_lvl_db))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE)
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x01) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x10) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	{
+> +		u8 data[2] = { 0x80, 0x00 };
+> +
+> +		if (tnr_dmd->io->write_regs(tnr_dmd->io,
+> +					    CXD2880_IO_TGT_SYS, 0x5B, data,
+> +					    2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +	}
+> +
+> +	CXD2880_SLEEP_IN_MON(2, tnr_dmd);
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x1A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	{
+> +		u8 data[2];
+> +
+> +		if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x15, data,
+> +					   2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		if ((data[0] != 0) || (data[1] != 0))
+> +			return CXD2880_RESULT_ERROR_OTHER;
+> +
+> +		if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +					   CXD2880_IO_TGT_SYS, 0x11, data,
+> +					   2) != CXD2880_RESULT_OK)
+> +			return CXD2880_RESULT_ERROR_IO;
+> +
+> +		*rf_lvl_db =
+> +		    cxd2880_convert2s_complement((data[0] << 3) |
+> +						 ((data[1] & 0xE0) >> 5), 11);
+> +	}
+> +
+> +	*rf_lvl_db *= 125;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x10,
+> +				   0x00) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	if (tnr_dmd->rf_lvl_cmpstn) {
+> +		ret = tnr_dmd->rf_lvl_cmpstn(tnr_dmd, rf_lvl_db);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_rf_lvl_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					       int *rf_lvl_db)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if ((!tnr_dmd) || (!rf_lvl_db))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret = cxd2880_tnrdmd_mon_rf_lvl(tnr_dmd->diver_sub, rf_lvl_db);
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_internal_cpu_status(struct cxd2880_tnrdmd
+> +							*tnr_dmd, u16 *status)
+> +{
+> +	u8 data[2] = { 0 };
+> +
+> +	if ((!tnr_dmd) || (!status))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x00,
+> +				   0x1A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_SYS, 0x15, data,
+> +				   2) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	*status = (u16)(((u16)data[0] << 8) | data[1]);
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_internal_cpu_status_sub(struct
+> +							    cxd2880_tnrdmd
+> +							    *tnr_dmd,
+> +							    u16 *status)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if ((!tnr_dmd) || (!status))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode != CXD2880_TNRDMD_DIVERMODE_MAIN)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	ret =
+> +	    cxd2880_tnrdmd_mon_internal_cpu_status(tnr_dmd->diver_sub, status);
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_ts_buf_info(struct cxd2880_tnrdmd *tnr_dmd,
+> +						struct
+> +						cxd2880_tnrdmd_ts_buf_info
+> +						*info)
+> +{
+> +	u8 data[3] = { 0 };
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +
+> +	if ((!tnr_dmd) || (!info))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (tnr_dmd->diver_mode == CXD2880_TNRDMD_DIVERMODE_SUB)
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if ((tnr_dmd->state != CXD2880_TNRDMD_STATE_SLEEP) &&
+> +	    (tnr_dmd->state != CXD2880_TNRDMD_STATE_ACTIVE))
+> +		return CXD2880_RESULT_ERROR_SW_STATE;
+> +
+> +	if (tnr_dmd->io->write_reg(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x00,
+> +				   0x0A) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +	if (tnr_dmd->io->read_regs(tnr_dmd->io,
+> +				   CXD2880_IO_TGT_DMD, 0x50, data,
+> +				   3) != CXD2880_RESULT_OK)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	info->read_ready = (u8)((data[0] & 0x10) ? 0x01 : 0x00);
+> +	info->almost_full = (u8)((data[0] & 0x08) ? 0x01 : 0x00);
+> +	info->almost_empty = (u8)((data[0] & 0x04) ? 0x01 : 0x00);
+> +	info->overflow = (u8)((data[0] & 0x02) ? 0x01 : 0x00);
+> +	info->underflow = (u8)((data[0] & 0x01) ? 0x01 : 0x00);
+> +
+> +	info->packet_num = (u16)(((u32)(data[1] & 0x07) << 8) | data[2]);
+> +
+> +	return ret;
+> +}
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.h
+> new file mode 100644
+> index 000000000000..506bd559668f
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_tnrdmd_mon.h
+> @@ -0,0 +1,52 @@
+> +/*
+> + * cxd2880_tnrdmd_mon.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * common monitor interface
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef CXD2880_TNRDMD_MON_H
+> +#define CXD2880_TNRDMD_MON_H
+> +
+> +#include "cxd2880_common.h"
+> +#include "cxd2880_tnrdmd.h"
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_rf_lvl(struct cxd2880_tnrdmd *tnr_dmd,
+> +					   int *rf_lvl_db);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_rf_lvl_sub(struct cxd2880_tnrdmd *tnr_dmd,
+> +					       int *rf_lvl_db);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_internal_cpu_status(struct cxd2880_tnrdmd
+> +							*tnr_dmd, u16 *status);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_internal_cpu_status_sub(struct
+> +							    cxd2880_tnrdmd
+> +							    *tnr_dmd,
+> +							    u16 *status);
+> +
+> +enum cxd2880_ret cxd2880_tnrdmd_mon_ts_buf_info(struct cxd2880_tnrdmd *tnr_dmd,
+> +						struct
+> +						cxd2880_tnrdmd_ts_buf_info
+> +						*info);
+> +
+> +#endif
+
+
 
 Thanks,
-Ramesh.
-
-v10:
- - On second thought, converted the msec timeout interval to usecs
-   to avoid the comment & macro limitations. Refer #v4l (Hans)
-v9:
- - Work around to avoid a sparse warning generated because of
-   regmap_read_poll_timeout macro implementation.
-v8:
- - Fixed smatch warnings in max2175_load_from_rom().
-v7:
- - Made I2S enable/disable control as private (Mauro).
-v6:
- - Addressed Sakari's comments. They are:
-	- Added uapi header file.
-	- Added newline at the end of the function before return.
-	- Cleaned up header file inclusion.
-	- Used fwnode_ apis whereever applicable.
-	- Cleaned up debug statements.
-	- Removed separate dir for max2175.
-v5:
- - sck -> Sample clock is clarified in driver documentation (Hans)
- - "refout-load-pF" is renamed to "refout-load" as per updated bindings.
----
- Documentation/media/v4l-drivers/index.rst   |    1 +
- Documentation/media/v4l-drivers/max2175.rst |   62 ++
- drivers/media/i2c/Kconfig                   |   12 +
- drivers/media/i2c/Makefile                  |    2 +
- drivers/media/i2c/max2175.c                 | 1453 +++++++++++++++++++++++++++
- drivers/media/i2c/max2175.h                 |  109 ++
- include/uapi/linux/max2175.h                |   28 +
- 7 files changed, 1667 insertions(+)
- create mode 100644 Documentation/media/v4l-drivers/max2175.rst
- create mode 100644 drivers/media/i2c/max2175.c
- create mode 100644 drivers/media/i2c/max2175.h
- create mode 100644 include/uapi/linux/max2175.h
-
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 90fe22a6414a..2e24d6806052 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -42,6 +42,7 @@ For more details see the file COPYING in the source distribution of Linux.
- 	davinci-vpbe
- 	fimc
- 	ivtv
-+	max2175
- 	meye
- 	omap3isp
- 	omap4_camera
-diff --git a/Documentation/media/v4l-drivers/max2175.rst b/Documentation/media/v4l-drivers/max2175.rst
-new file mode 100644
-index 000000000000..04478c25d57a
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/max2175.rst
-@@ -0,0 +1,62 @@
-+Maxim Integrated MAX2175 RF to bits tuner driver
-+================================================
-+
-+The MAX2175 driver implements the following driver-specific controls:
-+
-+``V4L2_CID_MAX2175_I2S_ENABLE``
-+-------------------------------
-+    Enable/Disable I2S output of the tuner. This is a private control
-+    that can be accessed only using the subdev interface.
-+    Refer to Documentation/media/kapi/v4l2-controls for more details.
-+
-+.. flat-table::
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       1 4
-+
-+    * - ``(0)``
-+      - I2S output is disabled.
-+    * - ``(1)``
-+      - I2S output is enabled.
-+
-+``V4L2_CID_MAX2175_HSLS``
-+-------------------------
-+    The high-side/low-side (HSLS) control of the tuner for a given band.
-+
-+.. flat-table::
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       1 4
-+
-+    * - ``(0)``
-+      - The LO frequency position is below the desired frequency.
-+    * - ``(1)``
-+      - The LO frequency position is above the desired frequency.
-+
-+``V4L2_CID_MAX2175_RX_MODE (menu)``
-+-----------------------------------
-+    The Rx mode controls a number of preset parameters of the tuner like
-+    sample clock (sck), sampling rate etc. These multiple settings are
-+    provided under one single label called Rx mode in the datasheet. The
-+    list below shows the supported modes with a brief description.
-+
-+.. flat-table::
-+    :header-rows:  0
-+    :stub-columns: 0
-+    :widths:       1 4
-+
-+    * - ``"Europe modes"``
-+    * - ``"FM 1.2" (0)``
-+      - This configures FM band with a sample rate of 0.512 million
-+        samples/sec with a 10.24 MHz sck.
-+    * - ``"DAB 1.2" (1)``
-+      - This configures VHF band with a sample rate of 2.048 million
-+        samples/sec with a 32.768 MHz sck.
-+
-+    * - ``"North America modes"``
-+    * - ``"FM 1.0" (0)``
-+      - This configures FM band with a sample rate of 0.7441875 million
-+        samples/sec with a 14.88375 MHz sck.
-+    * - ``"DAB 1.2" (1)``
-+      - This configures FM band with a sample rate of 0.372 million
-+        samples/sec with a 7.441875 MHz sck.
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index c380e2475c82..c0e6e78883b0 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -796,6 +796,18 @@ config VIDEO_SAA6752HS
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called saa6752hs.
- 
-+comment "SDR tuner chips"
-+
-+config SDR_MAX2175
-+	tristate "Maxim 2175 RF to Bits tuner"
-+	depends on VIDEO_V4L2 && MEDIA_SDR_SUPPORT && I2C
-+	---help---
-+	  Support for Maxim 2175 tuner. It is an advanced analog/digital
-+	  radio receiver with RF-to-Bits front-end designed for SDR solutions.
-+
-+	  To compile this driver as a module, choose M here; the
-+	  module will be called max2175.
-+
- comment "Miscellaneous helper chips"
- 
- config VIDEO_THS7303
-diff --git a/drivers/media/i2c/Makefile b/drivers/media/i2c/Makefile
-index 62323ec66be8..5a4a761f7383 100644
---- a/drivers/media/i2c/Makefile
-+++ b/drivers/media/i2c/Makefile
-@@ -86,3 +86,5 @@ obj-$(CONFIG_VIDEO_IR_I2C)  += ir-kbd-i2c.o
- obj-$(CONFIG_VIDEO_ML86V7667)	+= ml86v7667.o
- obj-$(CONFIG_VIDEO_OV2659)	+= ov2659.o
- obj-$(CONFIG_VIDEO_TC358743)	+= tc358743.o
-+
-+obj-$(CONFIG_SDR_MAX2175) += max2175.o
-diff --git a/drivers/media/i2c/max2175.c b/drivers/media/i2c/max2175.c
-new file mode 100644
-index 000000000000..0d28a80f8ed2
---- /dev/null
-+++ b/drivers/media/i2c/max2175.c
-@@ -0,0 +1,1453 @@
-+/*
-+ * Maxim Integrated MAX2175 RF to Bits tuner driver
-+ *
-+ * This driver & most of the hard coded values are based on the reference
-+ * application delivered by Maxim for this device.
-+ *
-+ * Copyright (C) 2016 Maxim Integrated Products
-+ * Copyright (C) 2017 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/kernel.h>
-+#include <linux/math64.h>
-+#include <linux/max2175.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+#include <media/v4l2-ctrls.h>
-+#include <media/v4l2-device.h>
-+
-+#include "max2175.h"
-+
-+#define DRIVER_NAME "max2175"
-+
-+#define mxm_dbg(ctx, fmt, arg...) dev_dbg(&ctx->client->dev, fmt, ## arg)
-+#define mxm_err(ctx, fmt, arg...) dev_err(&ctx->client->dev, fmt, ## arg)
-+
-+/* Rx mode */
-+struct max2175_rxmode {
-+	enum max2175_band band;		/* Associated band */
-+	u32 freq;			/* Default freq in Hz */
-+	u8 i2s_word_size;		/* Bit value */
-+};
-+
-+/* Register map to define preset values */
-+struct max2175_reg_map {
-+	u8 idx;				/* Register index */
-+	u8 val;				/* Register value */
-+};
-+
-+static const struct max2175_rxmode eu_rx_modes[] = {
-+	/* EU modes */
-+	[MAX2175_EU_FM_1_2] = { MAX2175_BAND_FM, 98256000, 1 },
-+	[MAX2175_DAB_1_2]   = { MAX2175_BAND_VHF, 182640000, 0 },
-+};
-+
-+static const struct max2175_rxmode na_rx_modes[] = {
-+	/* NA modes */
-+	[MAX2175_NA_FM_1_0] = { MAX2175_BAND_FM, 98255520, 1 },
-+	[MAX2175_NA_FM_2_0] = { MAX2175_BAND_FM, 98255520, 6 },
-+};
-+
-+/*
-+ * Preset values:
-+ * Based on Maxim MAX2175 Register Table revision: 130p10
-+ */
-+static const u8 full_fm_eu_1p0[] = {
-+	0x15, 0x04, 0xb8, 0xe3, 0x35, 0x18, 0x7c, 0x00,
-+	0x00, 0x7d, 0x40, 0x08, 0x70, 0x7a, 0x88, 0x91,
-+	0x61, 0x61, 0x61, 0x61, 0x5a, 0x0f, 0x34, 0x1c,
-+	0x14, 0x88, 0x33, 0x02, 0x00, 0x09, 0x00, 0x65,
-+	0x9f, 0x2b, 0x80, 0x00, 0x95, 0x05, 0x2c, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
-+	0x4a, 0x08, 0xa8, 0x0e, 0x0e, 0x2f, 0x7e, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xab, 0x5e, 0xa9,
-+	0xae, 0xbb, 0x57, 0x18, 0x3b, 0x03, 0x3b, 0x64,
-+	0x40, 0x60, 0x00, 0x2a, 0xbf, 0x3f, 0xff, 0x9f,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x00,
-+	0xff, 0xfc, 0xef, 0x1c, 0x40, 0x00, 0x00, 0x02,
-+	0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xac, 0x40, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x75, 0x00, 0x00,
-+	0x00, 0x47, 0x00, 0x00, 0x11, 0x3f, 0x22, 0x00,
-+	0xf1, 0x00, 0x41, 0x03, 0xb0, 0x00, 0x00, 0x00,
-+	0x1b,
-+};
-+
-+static const u8 full_fm_na_1p0[] = {
-+	0x13, 0x08, 0x8d, 0xc0, 0x35, 0x18, 0x7d, 0x3f,
-+	0x7d, 0x75, 0x40, 0x08, 0x70, 0x7a, 0x88, 0x91,
-+	0x61, 0x61, 0x61, 0x61, 0x5c, 0x0f, 0x34, 0x1c,
-+	0x14, 0x88, 0x33, 0x02, 0x00, 0x01, 0x00, 0x65,
-+	0x9f, 0x2b, 0x80, 0x00, 0x95, 0x05, 0x2c, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40,
-+	0x4a, 0x08, 0xa8, 0x0e, 0x0e, 0xaf, 0x7e, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xab, 0x5e, 0xa9,
-+	0xae, 0xbb, 0x57, 0x18, 0x3b, 0x03, 0x3b, 0x64,
-+	0x40, 0x60, 0x00, 0x2a, 0xbf, 0x3f, 0xff, 0x9f,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0a, 0x00,
-+	0xff, 0xfc, 0xef, 0x1c, 0x40, 0x00, 0x00, 0x02,
-+	0x00, 0x00, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0xa6, 0x40, 0x00,
-+	0x00, 0x00, 0x00, 0x00, 0x00, 0x75, 0x00, 0x00,
-+	0x00, 0x35, 0x00, 0x00, 0x11, 0x3f, 0x22, 0x00,
-+	0xf1, 0x00, 0x41, 0x03, 0xb0, 0x00, 0x00, 0x00,
-+	0x1b,
-+};
-+
-+/* DAB1.2 settings */
-+static const struct max2175_reg_map dab12_map[] = {
-+	{ 0x01, 0x13 }, { 0x02, 0x0d }, { 0x03, 0x15 }, { 0x04, 0x55 },
-+	{ 0x05, 0x0a }, { 0x06, 0xa0 }, { 0x07, 0x40 }, { 0x08, 0x00 },
-+	{ 0x09, 0x00 }, { 0x0a, 0x7d }, { 0x0b, 0x4a }, { 0x0c, 0x28 },
-+	{ 0x0e, 0x43 }, { 0x0f, 0xb5 }, { 0x10, 0x31 }, { 0x11, 0x9e },
-+	{ 0x12, 0x68 }, { 0x13, 0x9e }, { 0x14, 0x68 }, { 0x15, 0x58 },
-+	{ 0x16, 0x2f }, { 0x17, 0x3f }, { 0x18, 0x40 }, { 0x1a, 0x88 },
-+	{ 0x1b, 0xaa }, { 0x1c, 0x9a }, { 0x1d, 0x00 }, { 0x1e, 0x00 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x00 }, { 0x26, 0x00 },
-+	{ 0x27, 0x00 }, { 0x32, 0x08 }, { 0x33, 0xf8 }, { 0x36, 0x2d },
-+	{ 0x37, 0x7e }, { 0x55, 0xaf }, { 0x56, 0x3f }, { 0x57, 0xf8 },
-+	{ 0x58, 0x99 }, { 0x76, 0x00 }, { 0x77, 0x00 }, { 0x78, 0x02 },
-+	{ 0x79, 0x40 }, { 0x82, 0x00 }, { 0x83, 0x00 }, { 0x85, 0x00 },
-+	{ 0x86, 0x20 },
-+};
-+
-+/* EU FM 1.2 settings */
-+static const struct max2175_reg_map fmeu1p2_map[] = {
-+	{ 0x01, 0x15 }, { 0x02, 0x04 }, { 0x03, 0xb8 }, { 0x04, 0xe3 },
-+	{ 0x05, 0x35 }, { 0x06, 0x18 }, { 0x07, 0x7c }, { 0x08, 0x00 },
-+	{ 0x09, 0x00 }, { 0x0a, 0x73 }, { 0x0b, 0x40 }, { 0x0c, 0x08 },
-+	{ 0x0e, 0x7a }, { 0x0f, 0x88 }, { 0x10, 0x91 }, { 0x11, 0x61 },
-+	{ 0x12, 0x61 }, { 0x13, 0x61 }, { 0x14, 0x61 }, { 0x15, 0x5a },
-+	{ 0x16, 0x0f }, { 0x17, 0x34 }, { 0x18, 0x1c }, { 0x1a, 0x88 },
-+	{ 0x1b, 0x33 }, { 0x1c, 0x02 }, { 0x1d, 0x00 }, { 0x1e, 0x01 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x95 }, { 0x26, 0x05 },
-+	{ 0x27, 0x2c }, { 0x32, 0x08 }, { 0x33, 0xa8 }, { 0x36, 0x2f },
-+	{ 0x37, 0x7e }, { 0x55, 0xbf }, { 0x56, 0x3f }, { 0x57, 0xff },
-+	{ 0x58, 0x9f }, { 0x76, 0xac }, { 0x77, 0x40 }, { 0x78, 0x00 },
-+	{ 0x79, 0x00 }, { 0x82, 0x47 }, { 0x83, 0x00 }, { 0x85, 0x11 },
-+	{ 0x86, 0x3f },
-+};
-+
-+/* FM NA 1.0 settings */
-+static const struct max2175_reg_map fmna1p0_map[] = {
-+	{ 0x01, 0x13 }, { 0x02, 0x08 }, { 0x03, 0x8d }, { 0x04, 0xc0 },
-+	{ 0x05, 0x35 }, { 0x06, 0x18 }, { 0x07, 0x7d }, { 0x08, 0x3f },
-+	{ 0x09, 0x7d }, { 0x0a, 0x75 }, { 0x0b, 0x40 }, { 0x0c, 0x08 },
-+	{ 0x0e, 0x7a }, { 0x0f, 0x88 }, { 0x10, 0x91 }, { 0x11, 0x61 },
-+	{ 0x12, 0x61 }, { 0x13, 0x61 }, { 0x14, 0x61 }, { 0x15, 0x5c },
-+	{ 0x16, 0x0f }, { 0x17, 0x34 }, { 0x18, 0x1c }, { 0x1a, 0x88 },
-+	{ 0x1b, 0x33 }, { 0x1c, 0x02 }, { 0x1d, 0x00 }, { 0x1e, 0x01 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x95 }, { 0x26, 0x05 },
-+	{ 0x27, 0x2c }, { 0x32, 0x08 }, { 0x33, 0xa8 }, { 0x36, 0xaf },
-+	{ 0x37, 0x7e }, { 0x55, 0xbf }, { 0x56, 0x3f }, { 0x57, 0xff },
-+	{ 0x58, 0x9f }, { 0x76, 0xa6 }, { 0x77, 0x40 }, { 0x78, 0x00 },
-+	{ 0x79, 0x00 }, { 0x82, 0x35 }, { 0x83, 0x00 }, { 0x85, 0x11 },
-+	{ 0x86, 0x3f },
-+};
-+
-+/* FM NA 2.0 settings */
-+static const struct max2175_reg_map fmna2p0_map[] = {
-+	{ 0x01, 0x13 }, { 0x02, 0x08 }, { 0x03, 0x8d }, { 0x04, 0xc0 },
-+	{ 0x05, 0x35 }, { 0x06, 0x18 }, { 0x07, 0x7c }, { 0x08, 0x54 },
-+	{ 0x09, 0xa7 }, { 0x0a, 0x55 }, { 0x0b, 0x42 }, { 0x0c, 0x48 },
-+	{ 0x0e, 0x7a }, { 0x0f, 0x88 }, { 0x10, 0x91 }, { 0x11, 0x61 },
-+	{ 0x12, 0x61 }, { 0x13, 0x61 }, { 0x14, 0x61 }, { 0x15, 0x5c },
-+	{ 0x16, 0x0f }, { 0x17, 0x34 }, { 0x18, 0x1c }, { 0x1a, 0x88 },
-+	{ 0x1b, 0x33 }, { 0x1c, 0x02 }, { 0x1d, 0x00 }, { 0x1e, 0x01 },
-+	{ 0x23, 0x80 }, { 0x24, 0x00 }, { 0x25, 0x95 }, { 0x26, 0x05 },
-+	{ 0x27, 0x2c }, { 0x32, 0x08 }, { 0x33, 0xa8 }, { 0x36, 0xaf },
-+	{ 0x37, 0x7e }, { 0x55, 0xbf }, { 0x56, 0x3f }, { 0x57, 0xff },
-+	{ 0x58, 0x9f }, { 0x76, 0xac }, { 0x77, 0xc0 }, { 0x78, 0x00 },
-+	{ 0x79, 0x00 }, { 0x82, 0x6b }, { 0x83, 0x00 }, { 0x85, 0x11 },
-+	{ 0x86, 0x3f },
-+};
-+
-+static const u16 ch_coeff_dab1[] = {
-+	0x001c, 0x0007, 0xffcd, 0x0056, 0xffa4, 0x0033, 0x0027, 0xff61,
-+	0x010e, 0xfec0, 0x0106, 0xffb8, 0xff1c, 0x023c, 0xfcb2, 0x039b,
-+	0xfd4e, 0x0055, 0x036a, 0xf7de, 0x0d21, 0xee72, 0x1499, 0x6a51,
-+};
-+
-+static const u16 ch_coeff_fmeu[] = {
-+	0x0000, 0xffff, 0x0001, 0x0002, 0xfffa, 0xffff, 0x0015, 0xffec,
-+	0xffde, 0x0054, 0xfff9, 0xff52, 0x00b8, 0x00a2, 0xfe0a, 0x00af,
-+	0x02e3, 0xfc14, 0xfe89, 0x089d, 0xfa2e, 0xf30f, 0x25be, 0x4eb6,
-+};
-+
-+static const u16 eq_coeff_fmeu1_ra02_m6db[] = {
-+	0x0040, 0xffc6, 0xfffa, 0x002c, 0x000d, 0xff90, 0x0037, 0x006e,
-+	0xffc0, 0xff5b, 0x006a, 0x00f0, 0xff57, 0xfe94, 0x0112, 0x0252,
-+	0xfe0c, 0xfc6a, 0x0385, 0x0553, 0xfa49, 0xf789, 0x0b91, 0x1a10,
-+};
-+
-+static const u16 ch_coeff_fmna[] = {
-+	0x0001, 0x0003, 0xfffe, 0xfff4, 0x0000, 0x001f, 0x000c, 0xffbc,
-+	0xffd3, 0x007d, 0x0075, 0xff33, 0xff01, 0x0131, 0x01ef, 0xfe60,
-+	0xfc7a, 0x020e, 0x0656, 0xfd94, 0xf395, 0x02ab, 0x2857, 0x3d3f,
-+};
-+
-+static const u16 eq_coeff_fmna1_ra02_m6db[] = {
-+	0xfff1, 0xffe1, 0xffef, 0x000e, 0x0030, 0x002f, 0xfff6, 0xffa7,
-+	0xff9d, 0x000a, 0x00a2, 0x00b5, 0xffea, 0xfed9, 0xfec5, 0x003d,
-+	0x0217, 0x021b, 0xff5a, 0xfc2b, 0xfcbd, 0x02c4, 0x0ac3, 0x0e85,
-+};
-+
-+static const u8 adc_presets[2][23] = {
-+	{
-+		0x83, 0x00, 0xcf, 0xb4, 0x0f, 0x2c, 0x0c, 0x49,
-+		0x00, 0x00, 0x00, 0x8c,	0x02, 0x02, 0x00, 0x04,
-+		0xec, 0x82, 0x4b, 0xcc, 0x01, 0x88, 0x0c,
-+	},
-+	{
-+		0x83, 0x00, 0xcf, 0xb4,	0x0f, 0x2c, 0x0c, 0x49,
-+		0x00, 0x00, 0x00, 0x8c,	0x02, 0x20, 0x33, 0x8c,
-+		0x57, 0xd7, 0x59, 0xb7,	0x65, 0x0e, 0x0c,
-+	},
-+};
-+
-+/* Tuner bands */
-+static const struct v4l2_frequency_band eu_bands_rf = {
-+	.tuner = 0,
-+	.type = V4L2_TUNER_RF,
-+	.index = 0,
-+	.capability = V4L2_TUNER_CAP_1HZ | V4L2_TUNER_CAP_FREQ_BANDS,
-+	.rangelow   = 65000000,
-+	.rangehigh  = 240000000,
-+};
-+
-+static const struct v4l2_frequency_band na_bands_rf = {
-+	.tuner = 0,
-+	.type = V4L2_TUNER_RF,
-+	.index = 0,
-+	.capability = V4L2_TUNER_CAP_1HZ | V4L2_TUNER_CAP_FREQ_BANDS,
-+	.rangelow   = 65000000,
-+	.rangehigh  = 108000000,
-+};
-+
-+/* Regmap settings */
-+static const struct regmap_range max2175_regmap_volatile_range[] = {
-+	regmap_reg_range(0x30, 0x35),
-+	regmap_reg_range(0x3a, 0x45),
-+	regmap_reg_range(0x59, 0x5e),
-+	regmap_reg_range(0x73, 0x75),
-+};
-+
-+static const struct regmap_access_table max2175_volatile_regs = {
-+	.yes_ranges = max2175_regmap_volatile_range,
-+	.n_yes_ranges = ARRAY_SIZE(max2175_regmap_volatile_range),
-+};
-+
-+static const struct reg_default max2175_reg_defaults[] = {
-+	{ 0x00, 0x07},
-+};
-+
-+static const struct regmap_config max2175_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0xff,
-+	.reg_defaults = max2175_reg_defaults,
-+	.num_reg_defaults = ARRAY_SIZE(max2175_reg_defaults),
-+	.volatile_table = &max2175_volatile_regs,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+struct max2175 {
-+	struct v4l2_subdev sd;		/* Sub-device */
-+	struct i2c_client *client;	/* I2C client */
-+
-+	/* Controls */
-+	struct v4l2_ctrl_handler ctrl_hdl;
-+	struct v4l2_ctrl *lna_gain;	/* LNA gain value */
-+	struct v4l2_ctrl *if_gain;	/* I/F gain value */
-+	struct v4l2_ctrl *pll_lock;	/* PLL lock */
-+	struct v4l2_ctrl *i2s_en;	/* I2S output enable */
-+	struct v4l2_ctrl *hsls;		/* High-side/Low-side polarity */
-+	struct v4l2_ctrl *rx_mode;	/* Receive mode */
-+
-+	/* Regmap */
-+	struct regmap *regmap;
-+
-+	/* Cached configuration */
-+	u32 freq;			/* Tuned freq In Hz */
-+	const struct max2175_rxmode *rx_modes;		/* EU or NA modes */
-+	const struct v4l2_frequency_band *bands_rf;	/* EU or NA bands */
-+
-+	/* Device settings */
-+	unsigned long xtal_freq;	/* Ref Oscillator freq in Hz */
-+	u32 decim_ratio;
-+	bool master;			/* Master/Slave */
-+	bool am_hiz;			/* AM Hi-Z filter */
-+
-+	/* ROM values */
-+	u8 rom_bbf_bw_am;
-+	u8 rom_bbf_bw_fm;
-+	u8 rom_bbf_bw_dab;
-+
-+	/* Driver private variables */
-+	bool mode_resolved;		/* Flag to sanity check settings */
-+};
-+
-+static inline struct max2175 *max2175_from_sd(struct v4l2_subdev *sd)
-+{
-+	return container_of(sd, struct max2175, sd);
-+}
-+
-+static inline struct max2175 *max2175_from_ctrl_hdl(struct v4l2_ctrl_handler *h)
-+{
-+	return container_of(h, struct max2175, ctrl_hdl);
-+}
-+
-+/* Get bitval of a given val */
-+static inline u8 max2175_get_bitval(u8 val, u8 msb, u8 lsb)
-+{
-+	return (val & GENMASK(msb, lsb)) >> lsb;
-+}
-+
-+/* Read/Write bit(s) on top of regmap */
-+static int max2175_read(struct max2175 *ctx, u8 idx, u8 *val)
-+{
-+	u32 regval;
-+	int ret;
-+
-+	ret = regmap_read(ctx->regmap, idx, &regval);
-+	if (ret)
-+		mxm_err(ctx, "read ret(%d): idx 0x%02x\n", ret, idx);
-+	else
-+		*val = regval;
-+
-+	return ret;
-+}
-+
-+static int max2175_write(struct max2175 *ctx, u8 idx, u8 val)
-+{
-+	int ret;
-+
-+	ret = regmap_write(ctx->regmap, idx, val);
-+	if (ret)
-+		mxm_err(ctx, "write ret(%d): idx 0x%02x val 0x%02x\n",
-+			ret, idx, val);
-+
-+	return ret;
-+}
-+
-+static u8 max2175_read_bits(struct max2175 *ctx, u8 idx, u8 msb, u8 lsb)
-+{
-+	u8 val;
-+
-+	if (max2175_read(ctx, idx, &val))
-+		return 0;
-+
-+	return max2175_get_bitval(val, msb, lsb);
-+}
-+
-+static int max2175_write_bits(struct max2175 *ctx, u8 idx,
-+			     u8 msb, u8 lsb, u8 newval)
-+{
-+	int ret = regmap_update_bits(ctx->regmap, idx, GENMASK(msb, lsb),
-+				     newval << lsb);
-+
-+	if (ret)
-+		mxm_err(ctx, "wbits ret(%d): idx 0x%02x\n", ret, idx);
-+
-+	return ret;
-+}
-+
-+static int max2175_write_bit(struct max2175 *ctx, u8 idx, u8 bit, u8 newval)
-+{
-+	return max2175_write_bits(ctx, idx, bit, bit, newval);
-+}
-+
-+/* Checks expected pattern every msec until timeout */
-+static int max2175_poll_timeout(struct max2175 *ctx, u8 idx, u8 msb, u8 lsb,
-+				u8 exp_bitval, u32 timeout_us)
-+{
-+	unsigned int val;
-+
-+	return regmap_read_poll_timeout(ctx->regmap, idx, val,
-+			(max2175_get_bitval(val, msb, lsb) == exp_bitval),
-+			1000, timeout_us);
-+}
-+
-+static int max2175_poll_csm_ready(struct max2175 *ctx)
-+{
-+	int ret;
-+
-+	ret = max2175_poll_timeout(ctx, 69, 1, 1, 0, 50000);
-+	if (ret)
-+		mxm_err(ctx, "csm not ready\n");
-+
-+	return ret;
-+}
-+
-+#define MAX2175_IS_BAND_AM(ctx)		\
-+	(max2175_read_bits(ctx, 5, 1, 0) == MAX2175_BAND_AM)
-+
-+#define MAX2175_IS_BAND_VHF(ctx)	\
-+	(max2175_read_bits(ctx, 5, 1, 0) == MAX2175_BAND_VHF)
-+
-+#define MAX2175_IS_FM_MODE(ctx)		\
-+	(max2175_read_bits(ctx, 12, 5, 4) == 0)
-+
-+#define MAX2175_IS_FMHD_MODE(ctx)	\
-+	(max2175_read_bits(ctx, 12, 5, 4) == 1)
-+
-+#define MAX2175_IS_DAB_MODE(ctx)	\
-+	(max2175_read_bits(ctx, 12, 5, 4) == 2)
-+
-+static int max2175_band_from_freq(u32 freq)
-+{
-+	if (freq >= 144000 && freq <= 26100000)
-+		return MAX2175_BAND_AM;
-+	else if (freq >= 65000000 && freq <= 108000000)
-+		return MAX2175_BAND_FM;
-+
-+	return MAX2175_BAND_VHF;
-+}
-+
-+static void max2175_i2s_enable(struct max2175 *ctx, bool enable)
-+{
-+	if (enable)
-+		/* Stuff bits are zeroed */
-+		max2175_write_bits(ctx, 104, 3, 0, 2);
-+	else
-+		/* Keep SCK alive */
-+		max2175_write_bits(ctx, 104, 3, 0, 9);
-+	mxm_dbg(ctx, "i2s %sabled\n", enable ? "en" : "dis");
-+}
-+
-+static void max2175_set_filter_coeffs(struct max2175 *ctx, u8 m_sel,
-+				      u8 bank, const u16 *coeffs)
-+{
-+	unsigned int i;
-+	u8 coeff_addr, upper_address = 24;
-+
-+	mxm_dbg(ctx, "set_filter_coeffs: m_sel %d bank %d\n", m_sel, bank);
-+	max2175_write_bits(ctx, 114, 5, 4, m_sel);
-+
-+	if (m_sel == 2)
-+		upper_address = 12;
-+
-+	for (i = 0; i < upper_address; i++) {
-+		coeff_addr = i + bank * 24;
-+		max2175_write(ctx, 115, coeffs[i] >> 8);
-+		max2175_write(ctx, 116, coeffs[i]);
-+		max2175_write(ctx, 117, coeff_addr | 1 << 7);
-+	}
-+	max2175_write_bit(ctx, 117, 7, 0);
-+}
-+
-+static void max2175_load_fmeu_1p2(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fmeu1p2_map); i++)
-+		max2175_write(ctx, fmeu1p2_map[i].idx, fmeu1p2_map[i].val);
-+
-+	ctx->decim_ratio = 36;
-+
-+	/* Load the Channel Filter Coefficients into channel filter bank #2 */
-+	max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0, ch_coeff_fmeu);
-+	max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+				  eq_coeff_fmeu1_ra02_m6db);
-+}
-+
-+static void max2175_load_dab_1p2(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(dab12_map); i++)
-+		max2175_write(ctx, dab12_map[i].idx, dab12_map[i].val);
-+
-+	ctx->decim_ratio = 1;
-+
-+	/* Load the Channel Filter Coefficients into channel filter bank #2 */
-+	max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 2, ch_coeff_dab1);
-+}
-+
-+static void max2175_load_fmna_1p0(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fmna1p0_map); i++)
-+		max2175_write(ctx, fmna1p0_map[i].idx, fmna1p0_map[i].val);
-+}
-+
-+static void max2175_load_fmna_2p0(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(fmna2p0_map); i++)
-+		max2175_write(ctx, fmna2p0_map[i].idx, fmna2p0_map[i].val);
-+}
-+
-+static void max2175_set_bbfilter(struct max2175 *ctx)
-+{
-+	if (MAX2175_IS_BAND_AM(ctx)) {
-+		max2175_write_bits(ctx, 12, 3, 0, ctx->rom_bbf_bw_am);
-+		mxm_dbg(ctx, "set_bbfilter AM: rom %d\n", ctx->rom_bbf_bw_am);
-+	} else if (MAX2175_IS_DAB_MODE(ctx)) {
-+		max2175_write_bits(ctx, 12, 3, 0, ctx->rom_bbf_bw_dab);
-+		mxm_dbg(ctx, "set_bbfilter DAB: rom %d\n", ctx->rom_bbf_bw_dab);
-+	} else {
-+		max2175_write_bits(ctx, 12, 3, 0, ctx->rom_bbf_bw_fm);
-+		mxm_dbg(ctx, "set_bbfilter FM: rom %d\n", ctx->rom_bbf_bw_fm);
-+	}
-+}
-+
-+static bool max2175_set_csm_mode(struct max2175 *ctx,
-+			  enum max2175_csm_mode new_mode)
-+{
-+	int ret = max2175_poll_csm_ready(ctx);
-+
-+	if (ret)
-+		return ret;
-+
-+	max2175_write_bits(ctx, 0, 2, 0, new_mode);
-+	mxm_dbg(ctx, "set csm new mode %d\n", new_mode);
-+
-+	/* Wait for a fixed settle down time depending on new mode */
-+	switch (new_mode) {
-+	case MAX2175_PRESET_TUNE:
-+		usleep_range(51100, 51500);	/* 51.1ms */
-+		break;
-+	/*
-+	 * Other mode switches need different sleep values depending on band &
-+	 * mode
-+	 */
-+	default:
-+		break;
-+	}
-+
-+	return max2175_poll_csm_ready(ctx);
-+}
-+
-+static int max2175_csm_action(struct max2175 *ctx,
-+			      enum max2175_csm_mode action)
-+{
-+	int ret;
-+
-+	mxm_dbg(ctx, "csm_action: %d\n", action);
-+
-+	/* Other actions can be added in future when needed */
-+	ret = max2175_set_csm_mode(ctx, MAX2175_LOAD_TO_BUFFER);
-+	if (ret)
-+		return ret;
-+
-+	return max2175_set_csm_mode(ctx, MAX2175_PRESET_TUNE);
-+}
-+
-+static int max2175_set_lo_freq(struct max2175 *ctx, u32 lo_freq)
-+{
-+	u8 lo_mult, loband_bits = 0, vcodiv_bits = 0;
-+	u32 int_desired, frac_desired;
-+	enum max2175_band band;
-+	int ret;
-+
-+	band = max2175_read_bits(ctx, 5, 1, 0);
-+	switch (band) {
-+	case MAX2175_BAND_AM:
-+		lo_mult = 16;
-+		break;
-+	case MAX2175_BAND_FM:
-+		if (lo_freq <= 74700000) {
-+			lo_mult = 16;
-+		} else if (lo_freq > 74700000 && lo_freq <= 110000000) {
-+			loband_bits = 1;
-+			lo_mult = 8;
-+		} else {
-+			loband_bits = 1;
-+			vcodiv_bits = 3;
-+			lo_mult = 8;
-+		}
-+		break;
-+	case MAX2175_BAND_VHF:
-+		if (lo_freq <= 210000000)
-+			vcodiv_bits = 2;
-+		else
-+			vcodiv_bits = 1;
-+
-+		loband_bits = 2;
-+		lo_mult = 4;
-+		break;
-+	default:
-+		loband_bits = 3;
-+		vcodiv_bits = 2;
-+		lo_mult = 2;
-+		break;
-+	}
-+
-+	if (band == MAX2175_BAND_L)
-+		lo_freq /= lo_mult;
-+	else
-+		lo_freq *= lo_mult;
-+
-+	int_desired = lo_freq / ctx->xtal_freq;
-+	frac_desired = div_u64((u64)(lo_freq % ctx->xtal_freq) << 20,
-+			       ctx->xtal_freq);
-+
-+	/* Check CSM is not busy */
-+	ret = max2175_poll_csm_ready(ctx);
-+	if (ret)
-+		return ret;
-+
-+	mxm_dbg(ctx, "lo_mult %u int %u  frac %u\n",
-+		lo_mult, int_desired, frac_desired);
-+
-+	/* Write the calculated values to the appropriate registers */
-+	max2175_write(ctx, 1, int_desired);
-+	max2175_write_bits(ctx, 2, 3, 0, (frac_desired >> 16) & 0xf);
-+	max2175_write(ctx, 3, frac_desired >> 8);
-+	max2175_write(ctx, 4, frac_desired);
-+	max2175_write_bits(ctx, 5, 3, 2, loband_bits);
-+	max2175_write_bits(ctx, 6, 7, 6, vcodiv_bits);
-+
-+	return ret;
-+}
-+
-+/*
-+ * Helper similar to DIV_ROUND_CLOSEST but an inline function that accepts s64
-+ * dividend and s32 divisor
-+ */
-+static inline s64 max2175_round_closest(s64 dividend, s32 divisor)
-+{
-+	if ((dividend > 0 && divisor > 0) || (dividend < 0 && divisor < 0))
-+		return div_s64(dividend + divisor / 2, divisor);
-+
-+	return div_s64(dividend - divisor / 2, divisor);
-+}
-+
-+static int max2175_set_nco_freq(struct max2175 *ctx, s32 nco_freq)
-+{
-+	s32 clock_rate = ctx->xtal_freq / ctx->decim_ratio;
-+	u32 nco_reg, abs_nco_freq = abs(nco_freq);
-+	s64 nco_val_desired;
-+	int ret;
-+
-+	if (abs_nco_freq < clock_rate / 2) {
-+		nco_val_desired = 2 * nco_freq;
-+	} else {
-+		nco_val_desired = 2 * (clock_rate - abs_nco_freq);
-+		if (nco_freq < 0)
-+			nco_val_desired = -nco_val_desired;
-+	}
-+
-+	nco_reg = max2175_round_closest(nco_val_desired << 20, clock_rate);
-+
-+	if (nco_freq < 0)
-+		nco_reg += 0x200000;
-+
-+	/* Check CSM is not busy */
-+	ret = max2175_poll_csm_ready(ctx);
-+	if (ret)
-+		return ret;
-+
-+	mxm_dbg(ctx, "freq %d desired %lld reg %u\n",
-+		nco_freq, nco_val_desired, nco_reg);
-+
-+	/* Write the calculated values to the appropriate registers */
-+	max2175_write_bits(ctx, 7, 4, 0, (nco_reg >> 16) & 0x1f);
-+	max2175_write(ctx, 8, nco_reg >> 8);
-+	max2175_write(ctx, 9, nco_reg);
-+
-+	return ret;
-+}
-+
-+static int max2175_set_rf_freq_non_am_bands(struct max2175 *ctx, u64 freq,
-+					    u32 lo_pos)
-+{
-+	s64 adj_freq, low_if_freq;
-+	int ret;
-+
-+	mxm_dbg(ctx, "rf_freq: non AM bands\n");
-+
-+	if (MAX2175_IS_FM_MODE(ctx))
-+		low_if_freq = 128000;
-+	else if (MAX2175_IS_FMHD_MODE(ctx))
-+		low_if_freq = 228000;
-+	else
-+		return max2175_set_lo_freq(ctx, freq);
-+
-+	if (MAX2175_IS_BAND_VHF(ctx) == (lo_pos == MAX2175_LO_ABOVE_DESIRED))
-+		adj_freq = freq + low_if_freq;
-+	else
-+		adj_freq = freq - low_if_freq;
-+
-+	ret = max2175_set_lo_freq(ctx, adj_freq);
-+	if (ret)
-+		return ret;
-+
-+	return max2175_set_nco_freq(ctx, -low_if_freq);
-+}
-+
-+static int max2175_set_rf_freq(struct max2175 *ctx, u64 freq, u32 lo_pos)
-+{
-+	int ret;
-+
-+	if (MAX2175_IS_BAND_AM(ctx))
-+		ret = max2175_set_nco_freq(ctx, freq);
-+	else
-+		ret = max2175_set_rf_freq_non_am_bands(ctx, freq, lo_pos);
-+
-+	mxm_dbg(ctx, "set_rf_freq: ret %d freq %llu\n", ret, freq);
-+
-+	return ret;
-+}
-+
-+static int max2175_tune_rf_freq(struct max2175 *ctx, u64 freq, u32 hsls)
-+{
-+	int ret;
-+
-+	ret = max2175_set_rf_freq(ctx, freq, hsls);
-+	if (ret)
-+		return ret;
-+
-+	ret = max2175_csm_action(ctx, MAX2175_BUFFER_PLUS_PRESET_TUNE);
-+	if (ret)
-+		return ret;
-+
-+	mxm_dbg(ctx, "tune_rf_freq: old %u new %llu\n", ctx->freq, freq);
-+	ctx->freq = freq;
-+
-+	return ret;
-+}
-+
-+static void max2175_set_hsls(struct max2175 *ctx, u32 lo_pos)
-+{
-+	mxm_dbg(ctx, "set_hsls: lo_pos %u\n", lo_pos);
-+
-+	if ((lo_pos == MAX2175_LO_BELOW_DESIRED) == MAX2175_IS_BAND_VHF(ctx))
-+		max2175_write_bit(ctx, 5, 4, 1);
-+	else
-+		max2175_write_bit(ctx, 5, 4, 0);
-+}
-+
-+static void max2175_set_eu_rx_mode(struct max2175 *ctx, u32 rx_mode)
-+{
-+	switch (rx_mode) {
-+	case MAX2175_EU_FM_1_2:
-+		max2175_load_fmeu_1p2(ctx);
-+		break;
-+
-+	case MAX2175_DAB_1_2:
-+		max2175_load_dab_1p2(ctx);
-+		break;
-+	}
-+	/* Master is the default setting */
-+	if (!ctx->master)
-+		max2175_write_bit(ctx, 30, 7, 1);
-+}
-+
-+static void max2175_set_na_rx_mode(struct max2175 *ctx, u32 rx_mode)
-+{
-+	switch (rx_mode) {
-+	case MAX2175_NA_FM_1_0:
-+		max2175_load_fmna_1p0(ctx);
-+		break;
-+	case MAX2175_NA_FM_2_0:
-+		max2175_load_fmna_2p0(ctx);
-+		break;
-+	}
-+	/* Master is the default setting */
-+	if (!ctx->master)
-+		max2175_write_bit(ctx, 30, 7, 1);
-+
-+	ctx->decim_ratio = 27;
-+
-+	/* Load the Channel Filter Coefficients into channel filter bank #2 */
-+	max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0, ch_coeff_fmna);
-+	max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+				  eq_coeff_fmna1_ra02_m6db);
-+}
-+
-+static int max2175_set_rx_mode(struct max2175 *ctx, u32 rx_mode)
-+{
-+	mxm_dbg(ctx, "set_rx_mode: %u am_hiz %u\n", rx_mode, ctx->am_hiz);
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ)
-+		max2175_set_eu_rx_mode(ctx, rx_mode);
-+	else
-+		max2175_set_na_rx_mode(ctx, rx_mode);
-+
-+	if (ctx->am_hiz) {
-+		mxm_dbg(ctx, "setting AM HiZ related config\n");
-+		max2175_write_bit(ctx, 50, 5, 1);
-+		max2175_write_bit(ctx, 90, 7, 1);
-+		max2175_write_bits(ctx, 73, 1, 0, 2);
-+		max2175_write_bits(ctx, 80, 5, 0, 33);
-+	}
-+
-+	/* Load BB filter trim values saved in ROM */
-+	max2175_set_bbfilter(ctx);
-+
-+	/* Set HSLS */
-+	max2175_set_hsls(ctx, ctx->hsls->cur.val);
-+
-+	/* Use i2s enable settings */
-+	max2175_i2s_enable(ctx, ctx->i2s_en->cur.val);
-+
-+	ctx->mode_resolved = true;
-+
-+	return 0;
-+}
-+
-+static int max2175_rx_mode_from_freq(struct max2175 *ctx, u32 freq, u32 *mode)
-+{
-+	unsigned int i;
-+	int band = max2175_band_from_freq(freq);
-+
-+	/* Pick the first match always */
-+	for (i = 0; i <= ctx->rx_mode->maximum; i++) {
-+		if (ctx->rx_modes[i].band == band) {
-+			*mode = i;
-+			mxm_dbg(ctx, "rx_mode_from_freq: freq %u mode %d\n",
-+				freq, *mode);
-+			return 0;
-+		}
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static bool max2175_freq_rx_mode_valid(struct max2175 *ctx,
-+					 u32 mode, u32 freq)
-+{
-+	int band = max2175_band_from_freq(freq);
-+
-+	return (ctx->rx_modes[mode].band == band);
-+}
-+
-+static void max2175_load_adc_presets(struct max2175 *ctx)
-+{
-+	unsigned int i, j;
-+
-+	for (i = 0; i < ARRAY_SIZE(adc_presets); i++)
-+		for (j = 0; j < ARRAY_SIZE(adc_presets[0]); j++)
-+			max2175_write(ctx, 146 + j + i * 55, adc_presets[i][j]);
-+}
-+
-+static int max2175_init_power_manager(struct max2175 *ctx)
-+{
-+	int ret;
-+
-+	/* Execute on-chip power-up/calibration */
-+	max2175_write_bit(ctx, 99, 2, 0);
-+	usleep_range(1000, 1500);
-+	max2175_write_bit(ctx, 99, 2, 1);
-+
-+	/* Wait for the power manager to finish. */
-+	ret = max2175_poll_timeout(ctx, 69, 7, 7, 1, 50000);
-+	if (ret)
-+		mxm_err(ctx, "init pm failed\n");
-+
-+	return ret;
-+}
-+
-+static int max2175_recalibrate_adc(struct max2175 *ctx)
-+{
-+	int ret;
-+
-+	/* ADC Re-calibration */
-+	max2175_write(ctx, 150, 0xff);
-+	max2175_write(ctx, 205, 0xff);
-+	max2175_write(ctx, 147, 0x20);
-+	max2175_write(ctx, 147, 0x00);
-+	max2175_write(ctx, 202, 0x20);
-+	max2175_write(ctx, 202, 0x00);
-+
-+	ret = max2175_poll_timeout(ctx, 69, 4, 3, 3, 50000);
-+	if (ret)
-+		mxm_err(ctx, "adc recalibration failed\n");
-+
-+	return ret;
-+}
-+
-+static u8 max2175_read_rom(struct max2175 *ctx, u8 row)
-+{
-+	u8 data = 0;
-+
-+	max2175_write_bit(ctx, 56, 4, 0);
-+	max2175_write_bits(ctx, 56, 3, 0, row);
-+
-+	usleep_range(2000, 2500);
-+	max2175_read(ctx, 58, &data);
-+
-+	max2175_write_bits(ctx, 56, 3, 0, 0);
-+
-+	mxm_dbg(ctx, "read_rom: row %d data 0x%02x\n", row, data);
-+
-+	return data;
-+}
-+
-+static void max2175_load_from_rom(struct max2175 *ctx)
-+{
-+	u8 data = 0;
-+
-+	data = max2175_read_rom(ctx, 0);
-+	ctx->rom_bbf_bw_am = data & 0x0f;
-+	max2175_write_bits(ctx, 81, 3, 0, data >> 4);
-+
-+	data = max2175_read_rom(ctx, 1);
-+	ctx->rom_bbf_bw_fm = data & 0x0f;
-+	ctx->rom_bbf_bw_dab = data >> 4;
-+
-+	data = max2175_read_rom(ctx, 2);
-+	max2175_write_bits(ctx, 82, 4, 0, data & 0x1f);
-+	max2175_write_bits(ctx, 82, 7, 5, data >> 5);
-+
-+	data = max2175_read_rom(ctx, 3);
-+	if (ctx->am_hiz) {
-+		data &= 0x0f;
-+		data |= (max2175_read_rom(ctx, 7) & 0x40) >> 2;
-+		if (!data)
-+			data |= 2;
-+	} else {
-+		data = (data & 0xf0) >> 4;
-+		data |= (max2175_read_rom(ctx, 7) & 0x80) >> 3;
-+		if (!data)
-+			data |= 30;
-+	}
-+	max2175_write_bits(ctx, 80, 5, 0, data + 31);
-+
-+	data = max2175_read_rom(ctx, 6);
-+	max2175_write_bits(ctx, 81, 7, 6, data >> 6);
-+}
-+
-+static void max2175_load_full_fm_eu_1p0(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(full_fm_eu_1p0); i++)
-+		max2175_write(ctx, i + 1, full_fm_eu_1p0[i]);
-+
-+	usleep_range(5000, 5500);
-+	ctx->decim_ratio = 36;
-+}
-+
-+static void max2175_load_full_fm_na_1p0(struct max2175 *ctx)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(full_fm_na_1p0); i++)
-+		max2175_write(ctx, i + 1, full_fm_na_1p0[i]);
-+
-+	usleep_range(5000, 5500);
-+	ctx->decim_ratio = 27;
-+}
-+
-+static int max2175_core_init(struct max2175 *ctx, u32 refout_bits)
-+{
-+	int ret;
-+
-+	/* MAX2175 uses 36.864MHz clock for EU & 40.154MHz for NA region */
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ)
-+		max2175_load_full_fm_eu_1p0(ctx);
-+	else
-+		max2175_load_full_fm_na_1p0(ctx);
-+
-+	/* The default settings assume master */
-+	if (!ctx->master)
-+		max2175_write_bit(ctx, 30, 7, 1);
-+
-+	mxm_dbg(ctx, "refout_bits %u\n", refout_bits);
-+
-+	/* Set REFOUT */
-+	max2175_write_bits(ctx, 56, 7, 5, refout_bits);
-+
-+	/* ADC Reset */
-+	max2175_write_bit(ctx, 99, 1, 0);
-+	usleep_range(1000, 1500);
-+	max2175_write_bit(ctx, 99, 1, 1);
-+
-+	/* Load ADC preset values */
-+	max2175_load_adc_presets(ctx);
-+
-+	/* Initialize the power management state machine */
-+	ret = max2175_init_power_manager(ctx);
-+	if (ret)
-+		return ret;
-+
-+	/* Recalibrate ADC */
-+	ret = max2175_recalibrate_adc(ctx);
-+	if (ret)
-+		return ret;
-+
-+	/* Load ROM values to appropriate registers */
-+	max2175_load_from_rom(ctx);
-+
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ) {
-+		/* Load FIR coefficients into bank 0 */
-+		max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0,
-+					  ch_coeff_fmeu);
-+		max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+					  eq_coeff_fmeu1_ra02_m6db);
-+	} else {
-+		/* Load FIR coefficients into bank 0 */
-+		max2175_set_filter_coeffs(ctx, MAX2175_CH_MSEL, 0,
-+					  ch_coeff_fmna);
-+		max2175_set_filter_coeffs(ctx, MAX2175_EQ_MSEL, 0,
-+					  eq_coeff_fmna1_ra02_m6db);
-+	}
-+	mxm_dbg(ctx, "core initialized\n");
-+
-+	return 0;
-+}
-+
-+static void max2175_s_ctrl_rx_mode(struct max2175 *ctx, u32 rx_mode)
-+{
-+	/* Load mode. Range check already done */
-+	max2175_set_rx_mode(ctx, rx_mode);
-+
-+	mxm_dbg(ctx, "s_ctrl_rx_mode: %u curr freq %u\n", rx_mode, ctx->freq);
-+
-+	/* Check if current freq valid for mode & update */
-+	if (max2175_freq_rx_mode_valid(ctx, rx_mode, ctx->freq))
-+		max2175_tune_rf_freq(ctx, ctx->freq, ctx->hsls->cur.val);
-+	else
-+		/* Use default freq of mode if current freq is not valid */
-+		max2175_tune_rf_freq(ctx, ctx->rx_modes[rx_mode].freq,
-+				     ctx->hsls->cur.val);
-+}
-+
-+static int max2175_s_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct max2175 *ctx = max2175_from_ctrl_hdl(ctrl->handler);
-+
-+	mxm_dbg(ctx, "s_ctrl: id 0x%x, val %u\n", ctrl->id, ctrl->val);
-+	switch (ctrl->id) {
-+	case V4L2_CID_MAX2175_I2S_ENABLE:
-+		max2175_i2s_enable(ctx, ctrl->val);
-+		break;
-+	case V4L2_CID_MAX2175_HSLS:
-+		max2175_set_hsls(ctx, ctrl->val);
-+		break;
-+	case V4L2_CID_MAX2175_RX_MODE:
-+		max2175_s_ctrl_rx_mode(ctx, ctrl->val);
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static u32 max2175_get_lna_gain(struct max2175 *ctx)
-+{
-+	enum max2175_band band = max2175_read_bits(ctx, 5, 1, 0);
-+
-+	switch (band) {
-+	case MAX2175_BAND_AM:
-+		return max2175_read_bits(ctx, 51, 3, 0);
-+	case MAX2175_BAND_FM:
-+		return max2175_read_bits(ctx, 50, 3, 0);
-+	case MAX2175_BAND_VHF:
-+		return max2175_read_bits(ctx, 52, 5, 0);
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int max2175_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
-+{
-+	struct max2175 *ctx = max2175_from_ctrl_hdl(ctrl->handler);
-+
-+	switch (ctrl->id) {
-+	case V4L2_CID_RF_TUNER_LNA_GAIN:
-+		ctrl->val = max2175_get_lna_gain(ctx);
-+		break;
-+	case V4L2_CID_RF_TUNER_IF_GAIN:
-+		ctrl->val = max2175_read_bits(ctx, 49, 4, 0);
-+		break;
-+	case V4L2_CID_RF_TUNER_PLL_LOCK:
-+		ctrl->val = (max2175_read_bits(ctx, 60, 7, 6) == 3);
-+		break;
-+	}
-+
-+	return 0;
-+};
-+
-+static int max2175_set_freq_and_mode(struct max2175 *ctx, u32 freq)
-+{
-+	u32 rx_mode;
-+	int ret;
-+
-+	/* Get band from frequency */
-+	ret = max2175_rx_mode_from_freq(ctx, freq, &rx_mode);
-+	if (ret)
-+		return ret;
-+
-+	mxm_dbg(ctx, "set_freq_and_mode: freq %u rx_mode %d\n", freq, rx_mode);
-+
-+	/* Load mode */
-+	max2175_set_rx_mode(ctx, rx_mode);
-+	ctx->rx_mode->cur.val = rx_mode;
-+
-+	/* Tune to the new freq given */
-+	return max2175_tune_rf_freq(ctx, freq, ctx->hsls->cur.val);
-+}
-+
-+static int max2175_s_frequency(struct v4l2_subdev *sd,
-+			       const struct v4l2_frequency *vf)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+	u32 freq;
-+	int ret = 0;
-+
-+	mxm_dbg(ctx, "s_freq: new %u curr %u, mode_resolved %d\n",
-+		vf->frequency, ctx->freq, ctx->mode_resolved);
-+
-+	if (vf->tuner != 0)
-+		return -EINVAL;
-+
-+	freq = clamp(vf->frequency, ctx->bands_rf->rangelow,
-+		     ctx->bands_rf->rangehigh);
-+
-+	/* Check new freq valid for rx_mode if already resolved */
-+	if (ctx->mode_resolved &&
-+	    max2175_freq_rx_mode_valid(ctx, ctx->rx_mode->cur.val, freq))
-+		ret = max2175_tune_rf_freq(ctx, freq, ctx->hsls->cur.val);
-+	else
-+		/* Find default rx_mode for freq and tune to it */
-+		ret = max2175_set_freq_and_mode(ctx, freq);
-+
-+	mxm_dbg(ctx, "s_freq: ret %d curr %u mode_resolved %d mode %u\n",
-+		ret, ctx->freq, ctx->mode_resolved, ctx->rx_mode->cur.val);
-+
-+	return ret;
-+}
-+
-+static int max2175_g_frequency(struct v4l2_subdev *sd,
-+			       struct v4l2_frequency *vf)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+	int ret = 0;
-+
-+	if (vf->tuner != 0)
-+		return -EINVAL;
-+
-+	/* RF freq */
-+	vf->type = V4L2_TUNER_RF;
-+	vf->frequency = ctx->freq;
-+
-+	return ret;
-+}
-+
-+static int max2175_enum_freq_bands(struct v4l2_subdev *sd,
-+			    struct v4l2_frequency_band *band)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+
-+	if (band->tuner != 0 || band->index != 0)
-+		return -EINVAL;
-+
-+	*band = *ctx->bands_rf;
-+
-+	return 0;
-+}
-+
-+static int max2175_g_tuner(struct v4l2_subdev *sd, struct v4l2_tuner *vt)
-+{
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+
-+	if (vt->index > 0)
-+		return -EINVAL;
-+
-+	strlcpy(vt->name, "RF", sizeof(vt->name));
-+	vt->type = V4L2_TUNER_RF;
-+	vt->capability = V4L2_TUNER_CAP_1HZ | V4L2_TUNER_CAP_FREQ_BANDS;
-+	vt->rangelow = ctx->bands_rf->rangelow;
-+	vt->rangehigh = ctx->bands_rf->rangehigh;
-+
-+	return 0;
-+}
-+
-+static int max2175_s_tuner(struct v4l2_subdev *sd, const struct v4l2_tuner *vt)
-+{
-+	/* Check tuner index is valid */
-+	if (vt->index > 0)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static const struct v4l2_subdev_tuner_ops max2175_tuner_ops = {
-+	.s_frequency = max2175_s_frequency,
-+	.g_frequency = max2175_g_frequency,
-+	.enum_freq_bands = max2175_enum_freq_bands,
-+	.g_tuner = max2175_g_tuner,
-+	.s_tuner = max2175_s_tuner,
-+};
-+
-+static const struct v4l2_subdev_ops max2175_ops = {
-+	.tuner = &max2175_tuner_ops,
-+};
-+
-+static const struct v4l2_ctrl_ops max2175_ctrl_ops = {
-+	.s_ctrl = max2175_s_ctrl,
-+	.g_volatile_ctrl = max2175_g_volatile_ctrl,
-+};
-+
-+/*
-+ * I2S output enable/disable configuration. This is a private control.
-+ * Refer to Documentation/media/v4l-drivers/max2175 for more details.
-+ */
-+static const struct v4l2_ctrl_config max2175_i2s_en = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_I2S_ENABLE,
-+	.name = "I2S Enable",
-+	.type = V4L2_CTRL_TYPE_BOOLEAN,
-+	.min = 0,
-+	.max = 1,
-+	.step = 1,
-+	.def = 1,
-+	.is_private = 1,
-+};
-+
-+/*
-+ * HSLS value control LO freq adjacent location configuration.
-+ * Refer to Documentation/media/v4l-drivers/max2175 for more details.
-+ */
-+static const struct v4l2_ctrl_config max2175_hsls = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_HSLS,
-+	.name = "HSLS Above/Below Desired",
-+	.type = V4L2_CTRL_TYPE_BOOLEAN,
-+	.min = 0,
-+	.max = 1,
-+	.step = 1,
-+	.def = 1,
-+};
-+
-+/*
-+ * Rx modes below are a set of preset configurations that decides the tuner's
-+ * sck and sample rate of transmission. They are separate for EU & NA regions.
-+ * Refer to Documentation/media/v4l-drivers/max2175 for more details.
-+ */
-+static const char * const max2175_ctrl_eu_rx_modes[] = {
-+	[MAX2175_EU_FM_1_2]	= "EU FM 1.2",
-+	[MAX2175_DAB_1_2]	= "DAB 1.2",
-+};
-+
-+static const char * const max2175_ctrl_na_rx_modes[] = {
-+	[MAX2175_NA_FM_1_0]	= "NA FM 1.0",
-+	[MAX2175_NA_FM_2_0]	= "NA FM 2.0",
-+};
-+
-+static const struct v4l2_ctrl_config max2175_eu_rx_mode = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_RX_MODE,
-+	.name = "RX Mode",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(max2175_ctrl_eu_rx_modes) - 1,
-+	.def = 0,
-+	.qmenu = max2175_ctrl_eu_rx_modes,
-+};
-+
-+static const struct v4l2_ctrl_config max2175_na_rx_mode = {
-+	.ops = &max2175_ctrl_ops,
-+	.id = V4L2_CID_MAX2175_RX_MODE,
-+	.name = "RX Mode",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(max2175_ctrl_na_rx_modes) - 1,
-+	.def = 0,
-+	.qmenu = max2175_ctrl_na_rx_modes,
-+};
-+
-+static int max2175_refout_load_to_bits(struct i2c_client *client, u32 load,
-+				       u32 *bits)
-+{
-+	if (load >= 0 && load <= 40)
-+		*bits = load / 10;
-+	else if (load >= 60 && load <= 70)
-+		*bits = load / 10 - 1;
-+	else
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int max2175_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	bool master = true, am_hiz = false;
-+	u32 refout_load, refout_bits = 0;	/* REFOUT disabled */
-+	struct v4l2_ctrl_handler *hdl;
-+	struct fwnode_handle *fwnode;
-+	struct device_node *np;
-+	struct v4l2_subdev *sd;
-+	struct regmap *regmap;
-+	struct max2175 *ctx;
-+	struct clk *clk;
-+	int ret;
-+
-+	/* Parse DT properties */
-+	np = of_parse_phandle(client->dev.of_node, "maxim,master", 0);
-+	if (np) {
-+		master = false;			/* Slave tuner */
-+		of_node_put(np);
-+	}
-+
-+	fwnode = of_fwnode_handle(client->dev.of_node);
-+	if (fwnode_property_present(fwnode, "maxim,am-hiz-filter"))
-+		am_hiz = true;
-+
-+	if (!fwnode_property_read_u32(fwnode, "maxim,refout-load",
-+				      &refout_load)) {
-+		ret = max2175_refout_load_to_bits(client, refout_load,
-+						  &refout_bits);
-+		if (ret) {
-+			dev_err(&client->dev, "invalid refout_load %u\n",
-+				refout_load);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	clk = devm_clk_get(&client->dev, NULL);
-+	if (IS_ERR(clk)) {
-+		ret = PTR_ERR(clk);
-+		dev_err(&client->dev, "cannot get clock %d\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	regmap = devm_regmap_init_i2c(client, &max2175_regmap_config);
-+	if (IS_ERR(regmap)) {
-+		ret = PTR_ERR(regmap);
-+		dev_err(&client->dev, "regmap init failed %d\n", ret);
-+		return -ENODEV;
-+	}
-+
-+	/* Alloc tuner context */
-+	ctx = devm_kzalloc(&client->dev, sizeof(*ctx), GFP_KERNEL);
-+	if (ctx == NULL)
-+		return -ENOMEM;
-+
-+	sd = &ctx->sd;
-+	ctx->master = master;
-+	ctx->am_hiz = am_hiz;
-+	ctx->mode_resolved = false;
-+	ctx->regmap = regmap;
-+	ctx->xtal_freq = clk_get_rate(clk);
-+	dev_info(&client->dev, "xtal freq %luHz\n", ctx->xtal_freq);
-+
-+	v4l2_i2c_subdev_init(sd, client, &max2175_ops);
-+	ctx->client = client;
-+
-+	sd->flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-+
-+	/* Controls */
-+	hdl = &ctx->ctrl_hdl;
-+	ret = v4l2_ctrl_handler_init(hdl, 7);
-+	if (ret)
-+		return ret;
-+
-+	ctx->lna_gain = v4l2_ctrl_new_std(hdl, &max2175_ctrl_ops,
-+					  V4L2_CID_RF_TUNER_LNA_GAIN,
-+					  0, 63, 1, 0);
-+	ctx->lna_gain->flags |= (V4L2_CTRL_FLAG_VOLATILE |
-+				 V4L2_CTRL_FLAG_READ_ONLY);
-+	ctx->if_gain = v4l2_ctrl_new_std(hdl, &max2175_ctrl_ops,
-+					 V4L2_CID_RF_TUNER_IF_GAIN,
-+					 0, 31, 1, 0);
-+	ctx->if_gain->flags |= (V4L2_CTRL_FLAG_VOLATILE |
-+				V4L2_CTRL_FLAG_READ_ONLY);
-+	ctx->pll_lock = v4l2_ctrl_new_std(hdl, &max2175_ctrl_ops,
-+					  V4L2_CID_RF_TUNER_PLL_LOCK,
-+					  0, 1, 1, 0);
-+	ctx->pll_lock->flags |= (V4L2_CTRL_FLAG_VOLATILE |
-+				 V4L2_CTRL_FLAG_READ_ONLY);
-+	ctx->i2s_en = v4l2_ctrl_new_custom(hdl, &max2175_i2s_en, NULL);
-+	ctx->hsls = v4l2_ctrl_new_custom(hdl, &max2175_hsls, NULL);
-+
-+	if (ctx->xtal_freq == MAX2175_EU_XTAL_FREQ) {
-+		ctx->rx_mode = v4l2_ctrl_new_custom(hdl,
-+						    &max2175_eu_rx_mode, NULL);
-+		ctx->rx_modes = eu_rx_modes;
-+		ctx->bands_rf = &eu_bands_rf;
-+	} else {
-+		ctx->rx_mode = v4l2_ctrl_new_custom(hdl,
-+						    &max2175_na_rx_mode, NULL);
-+		ctx->rx_modes = na_rx_modes;
-+		ctx->bands_rf = &na_bands_rf;
-+	}
-+	ctx->sd.ctrl_handler = &ctx->ctrl_hdl;
-+
-+	/* Set the defaults */
-+	ctx->freq = ctx->bands_rf->rangelow;
-+
-+	/* Register subdev */
-+	ret = v4l2_async_register_subdev(sd);
-+	if (ret) {
-+		dev_err(&client->dev, "register subdev failed\n");
-+		goto err_reg;
-+	}
-+
-+	/* Initialize device */
-+	ret = max2175_core_init(ctx, refout_bits);
-+	if (ret)
-+		goto err_init;
-+
-+	ret = v4l2_ctrl_handler_setup(hdl);
-+	if (ret)
-+		goto err_init;
-+
-+	return 0;
-+
-+err_init:
-+	v4l2_async_unregister_subdev(sd);
-+err_reg:
-+	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
-+
-+	return ret;
-+}
-+
-+static int max2175_remove(struct i2c_client *client)
-+{
-+	struct v4l2_subdev *sd = i2c_get_clientdata(client);
-+	struct max2175 *ctx = max2175_from_sd(sd);
-+
-+	v4l2_ctrl_handler_free(&ctx->ctrl_hdl);
-+	v4l2_async_unregister_subdev(sd);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id max2175_id[] = {
-+	{ DRIVER_NAME, 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, max2175_id);
-+
-+static const struct of_device_id max2175_of_ids[] = {
-+	{ .compatible = "maxim,max2175", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max2175_of_ids);
-+
-+static struct i2c_driver max2175_driver = {
-+	.driver = {
-+		.name	= DRIVER_NAME,
-+		.of_match_table = max2175_of_ids,
-+	},
-+	.probe		= max2175_probe,
-+	.remove		= max2175_remove,
-+	.id_table	= max2175_id,
-+};
-+
-+module_i2c_driver(max2175_driver);
-+
-+MODULE_DESCRIPTION("Maxim MAX2175 RF to Bits tuner driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>");
-diff --git a/drivers/media/i2c/max2175.h b/drivers/media/i2c/max2175.h
-new file mode 100644
-index 000000000000..eb43373ce7e2
---- /dev/null
-+++ b/drivers/media/i2c/max2175.h
-@@ -0,0 +1,109 @@
-+/*
-+ * Maxim Integrated MAX2175 RF to Bits tuner driver
-+ *
-+ * This driver & most of the hard coded values are based on the reference
-+ * application delivered by Maxim for this device.
-+ *
-+ * Copyright (C) 2016 Maxim Integrated Products
-+ * Copyright (C) 2017 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __MAX2175_H__
-+#define __MAX2175_H__
-+
-+#define MAX2175_EU_XTAL_FREQ	36864000	/* In Hz */
-+#define MAX2175_NA_XTAL_FREQ	40186125	/* In Hz */
-+
-+enum max2175_region {
-+	MAX2175_REGION_EU = 0,	/* Europe */
-+	MAX2175_REGION_NA,	/* North America */
-+};
-+
-+enum max2175_band {
-+	MAX2175_BAND_AM = 0,
-+	MAX2175_BAND_FM,
-+	MAX2175_BAND_VHF,
-+	MAX2175_BAND_L,
-+};
-+
-+enum max2175_eu_mode {
-+	/* EU modes */
-+	MAX2175_EU_FM_1_2 = 0,
-+	MAX2175_DAB_1_2,
-+
-+	/*
-+	 * Other possible modes to add in future
-+	 * MAX2175_DAB_1_0,
-+	 * MAX2175_DAB_1_3,
-+	 * MAX2175_EU_FM_2_2,
-+	 * MAX2175_EU_FMHD_4_0,
-+	 * MAX2175_EU_AM_1_0,
-+	 * MAX2175_EU_AM_2_2,
-+	 */
-+};
-+
-+enum max2175_na_mode {
-+	/* NA modes */
-+	MAX2175_NA_FM_1_0 = 0,
-+	MAX2175_NA_FM_2_0,
-+
-+	/*
-+	 * Other possible modes to add in future
-+	 * MAX2175_NA_FMHD_1_0,
-+	 * MAX2175_NA_FMHD_1_2,
-+	 * MAX2175_NA_AM_1_0,
-+	 * MAX2175_NA_AM_1_2,
-+	 */
-+};
-+
-+/* Supported I2S modes */
-+enum {
-+	MAX2175_I2S_MODE0 = 0,
-+	MAX2175_I2S_MODE1,
-+	MAX2175_I2S_MODE2,
-+	MAX2175_I2S_MODE3,
-+	MAX2175_I2S_MODE4,
-+};
-+
-+/* Coefficient table groups */
-+enum {
-+	MAX2175_CH_MSEL = 0,
-+	MAX2175_EQ_MSEL,
-+	MAX2175_AA_MSEL,
-+};
-+
-+/* HSLS LO injection polarity */
-+enum {
-+	MAX2175_LO_BELOW_DESIRED = 0,
-+	MAX2175_LO_ABOVE_DESIRED,
-+};
-+
-+/* Channel FSM modes */
-+enum max2175_csm_mode {
-+	MAX2175_LOAD_TO_BUFFER = 0,
-+	MAX2175_PRESET_TUNE,
-+	MAX2175_SEARCH,
-+	MAX2175_AF_UPDATE,
-+	MAX2175_JUMP_FAST_TUNE,
-+	MAX2175_CHECK,
-+	MAX2175_LOAD_AND_SWAP,
-+	MAX2175_END,
-+	MAX2175_BUFFER_PLUS_PRESET_TUNE,
-+	MAX2175_BUFFER_PLUS_SEARCH,
-+	MAX2175_BUFFER_PLUS_AF_UPDATE,
-+	MAX2175_BUFFER_PLUS_JUMP_FAST_TUNE,
-+	MAX2175_BUFFER_PLUS_CHECK,
-+	MAX2175_BUFFER_PLUS_LOAD_AND_SWAP,
-+	MAX2175_NO_ACTION
-+};
-+
-+#endif /* __MAX2175_H__ */
-diff --git a/include/uapi/linux/max2175.h b/include/uapi/linux/max2175.h
-new file mode 100644
-index 000000000000..3ef5d264440f
---- /dev/null
-+++ b/include/uapi/linux/max2175.h
-@@ -0,0 +1,28 @@
-+/*
-+ * max2175.h
-+ *
-+ * Maxim Integrated MAX2175 RF to Bits tuner driver - user space header file.
-+ *
-+ * Copyright (C) 2016 Maxim Integrated Products
-+ * Copyright (C) 2017 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2
-+ * as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __UAPI_MAX2175_H_
-+#define __UAPI_MAX2175_H_
-+
-+#include <linux/v4l2-controls.h>
-+
-+#define V4L2_CID_MAX2175_I2S_ENABLE	(V4L2_CID_USER_MAX217X_BASE + 0x01)
-+#define V4L2_CID_MAX2175_HSLS		(V4L2_CID_USER_MAX217X_BASE + 0x02)
-+#define V4L2_CID_MAX2175_RX_MODE	(V4L2_CID_USER_MAX217X_BASE + 0x03)
-+
-+#endif /* __UAPI_MAX2175_H_ */
--- 
-2.12.2
+Mauro
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
