@@ -1,94 +1,53 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH] mfd: Add driver for RAVE Supervisory Processor
-Date: Mon, 12 Jun 2017 17:28:54 -0700
-Message-ID: <CAHQ1cqE7hWxtxJQ5OEOyPrAR1af0aXQ128=AADQr7jq1QhxPjg@mail.gmail.com>
-References: <20170606180643.14258-1-andrew.smirnov@gmail.com> <20170609134952.hocd6dpzixldzf72@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Subject: [PATCH V3 0/3] add UniPhier watchdog support
+Date: Tue, 13 Jun 2017 10:14:56 +0900
+Message-ID: <1497316499-22254-1-git-send-email-hayashibara.keiji@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170609134952.hocd6dpzixldzf72@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>
+To: wim@iguana.be, linux@roeck-us.net
+Cc: linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, yamada.masahiro@socionext.com, hayashi.kunihiko@socionext.com, owada.kiyoshi@socionext.com, Keiji Hayashibara <hayashibara.keiji@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 9, 2017 at 6:49 AM, Rob Herring <robh@kernel.org> wrote:
-> On Tue, Jun 06, 2017 at 11:06:43AM -0700, Andrey Smirnov wrote:
->> Add a driver for RAVE Supervisory Processor, an MCU implementing
->> varoius bits of housekeeping functionality (watchdoging, backlight
->> control, LED control, etc) on RAVE family of products by Zodiac
->> Inflight Innovations.
->>
->> This driver implementes core MFD/serdev device as well as
->> communication subroutines necessary for commanding the device.
->>
->> Cc: cphealy@gmail.com
->> Cc: Lucas Stach <l.stach@pengutronix.de>
->> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
->> ---
->>
->> Note that the driver for "zii,rave-sp-watchdog" exists, but I haven't
->> submitted it yet, becuase I wanted to make sure that API exposed by
->> this MFD is acceptable and doesn't need drastic changes
->>
->>  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   33 +
->>  drivers/mfd/Kconfig                                |    9 +
->>  drivers/mfd/Makefile                               |    1 +
->>  drivers/mfd/rave-sp.c                              | 1009 ++++++++++++++++++++
->>  include/linux/rave-sp.h                            |   54 ++
->>  5 files changed, 1106 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->>  create mode 100644 drivers/mfd/rave-sp.c
->>  create mode 100644 include/linux/rave-sp.h
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->> new file mode 100644
->> index 0000000..46a904c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->> @@ -0,0 +1,33 @@
->> +Zodiac Inflight Innovations RAVE Supervisory Processor
->> +
->> +Required parent device properties:
->> +
->> + - compatible: Should be one of:
->> +     - "zii,rave-sp-niu"
->> +     - "zii,rave-sp-mezz"
->> +     - "zii,rave-sp-esb"
->> +     - "zii,rave-sp-rdu1"
->> +     - "zii,rave-sp-rdu2"
->> +
->> + - current-speed: Should be set to baud rate SP device is using
->> +
->
-> Please clarify that this must be a child of a serial device node.
+This series adds support for watchdog timer implemented on UniPhier LD11 and
+LD20 SoCs. This driver supports watchdog and system reset for SoCs.
 
-OK, will fix in v2.
+patch V2
+http://www.spinics.net/lists/linux-watchdog/msg11852.html
 
->
->> +RAVE SP consists of the following sub-devices:
->> +
->> +Device                                Description
->> +------                                -----------
->> +rave-sp-wdt                  : Watchdog
->> +
->> +
->> +Example of usage:
->> +
->> +     rdu {
->> +             compatible = "zii,rave-sp-rdu2";
->> +             current-speed = <1000000>;
->> +             status = "okay";
->
-> Don't show status in examples.
->
+patch V1
+http://www.spinics.net/lists/linux-watchdog/msg11782.html
 
-OK, will fix in v2.
+Changes between V3 and V2
+=========================
+1. Fix issues according to review comments.
 
-Thanks,
-Andrey Smirnov
+ * Make it possible to take a timeout from devicetree.
+ * Sort #include headlers alphabetically.
+ * Correct the description of dt-bindings document and this patch comment.
+ * Correct the description of license as GPLv2.
+ * Correct MODULE_AUTHOR()
+ * Remove unnecessary code.
+
+Changes between V2 and V1
+=========================
+1. Add barrier code in uniphier_watchdog_ping() and __uniphier_watchdog_start().
+2. Fix issues according to review comments.
+
+Keiji Hayashibara (3):
+  dt-bindings: watchdog: add description for UniPhier WDT controller
+  watchdog: uniphier: add UniPhier watchdog driver
+  arm64: dts: uniphier: add watchdog node for LD11 and LD20
+
+ .../devicetree/bindings/watchdog/uniphier-wdt.txt  |  20 ++
+ Documentation/watchdog/watchdog-parameters.txt     |   6 +
+ arch/arm64/boot/dts/socionext/uniphier-ld11.dtsi   |   4 +
+ arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   |   4 +
+ drivers/watchdog/Kconfig                           |  11 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/uniphier_wdt.c                    | 268 +++++++++++++++++++++
+ 7 files changed, 314 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
+ create mode 100644 drivers/watchdog/uniphier_wdt.c
+
+-- 
+2.7.4
