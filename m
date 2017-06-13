@@ -1,64 +1,54 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
-Date: Tue, 13 Jun 2017 18:24:12 +0800
-Message-ID: <1497349452.930.36.camel@mhfsdcap03>
-References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
-         <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
-         <1497268468.930.26.camel@mhfsdcap03>
-         <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v15 2/7] power: add power sequence library
+Date: Tue, 13 Jun 2017 12:24:42 +0200
+Message-ID: <CAPDyKFpOQWTPpdd__OBP1DcW58CbqnygGAOxiEFq5kqqvCm0QA@mail.gmail.com>
+References: <1497319166-17287-1-git-send-email-peter.chen@nxp.com> <1497319166-17287-3-git-send-email-peter.chen@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1497319166-17287-3-git-send-email-peter.chen@nxp.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Peter Chen <peter.chen@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linux USB List <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, "Maciej S. Szmigiero" <mail@maciej.szmigi>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-06-13 at 11:36 +0200, Matthias Brugger wrote:
-> 
-> On 12/06/17 13:54, Jun Gao wrote:
-> > On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
-> >> From: Jun Gao <jun.gao@mediatek.com>
-> >>
-> >> Add MT2701 i2c device node.
-> >>
-> >> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-> >> ---
-> >>   arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
-> >>   arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
-> >>   2 files changed, 84 insertions(+)
-> [...]
-> > 
-> > Dear Matthias,
-> > 
-> > Could you take this patch together with
-> > [PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
-> > 
-> > Thanks!
-> > 
-> 
-> They are both included in the pull request I send [1] [2], or do I miss 
-> something?
-> 
-> Regards,
-> Matthias
-> 
-> [1] 
-> https://github.com/mbgg/linux-mediatek/commit/729b7f8dbdaff270c53052897ea06486221a49a2
-> [2] 
-> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
+[...]
 
-Dear Matthias,
+> +
+> +/**
+> + * of_pwrseq_on - Carry out power sequence on for device node
+> + *
+> + * @np: the device node would like to power on
+> + *
+> + * Carry out a single device power on.  If multiple devices
+> + * need to be handled, use of_pwrseq_on_list() instead.
+> + *
+> + * Return a pointer to the power sequence instance on success,
+> + * or an error code otherwise.
+> + */
+> +struct pwrseq *of_pwrseq_on(struct device_node *np)
+> +{
+> +       struct pwrseq *pwrseq;
+> +       int ret;
+> +
+> +       pwrseq = pwrseq_find_available_instance(np);
+> +       if (!pwrseq)
+> +               return ERR_PTR(-ENOENT);
 
-Would you mind to use the same style as follows in i2c-mtk.txt of [2]?
+In case the pwrseq instance hasn't been registered yet, then there is
+no way to deal with -EPROBE_DEFER properly here.
 
-"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-"mediatek,mt6577-i2c": for Mediatek MT6577
-"mediatek,mt6589-i2c": for Mediatek MT6589
-"mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-"mediatek,mt8173-i2c": for Mediatek MT8173
+I haven't been following the discussions in-depth during all
+iterations, so perhaps you have already discussed why doing it like
+this.
 
+Anyway, that means all pwrseq instances needs to be registered an
+early boot level, to be safe. To me, that seems like poor design
+choice.
 
-Thanks!
+[...]
+
+Otherwise I think this looks okay to me.
+
+Kind regards
+Uffe
