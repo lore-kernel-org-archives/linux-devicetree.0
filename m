@@ -1,104 +1,88 @@
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: Re: [v2 1/1] usb:host:xhci support option to disable xHCI 1.0 USB2 HW
- LPM
-Date: Tue, 13 Jun 2017 16:12:28 +0300
-Message-ID: <593FE4BC.4020709@linux.intel.com>
-References: <1495265096-14851-1-git-send-email-tqnguyen@apm.com>
- <59353D0B.1070005@linux.intel.com>
- <CAKrQpSvWLE6Qb_o7XOvtUGOST8TT=vDyV=fUATNa0B3Cx_46-A@mail.gmail.com>
- <59356BCA.6@intel.com>
- <CAKrQpSuqFNt5wHMbTOR4nDXXPiHdXv3So7bovos=Hrk_WccmAA@mail.gmail.com>
+From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
+Date: Tue, 13 Jun 2017 21:23:09 +0800
+Message-ID: <1497360189.930.42.camel@mhfsdcap03>
+References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
+         <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
+         <1497268468.930.26.camel@mhfsdcap03>
+         <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
+         <1497349452.930.36.camel@mhfsdcap03>
+         <ba658a59-7ef9-2340-57fa-3bcefa3f47ed@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKrQpSuqFNt5wHMbTOR4nDXXPiHdXv3So7bovos=Hrk_WccmAA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Thang Q. Nguyen" <tqnguyen@apm.com>, Mathias Nyman <mathias.nyman@intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <felipe.balbi@linux.intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Phong Vo <pvo@apm.com>, Loc Ho <lho@apm.com>, Duc Tran <dxtran@apm.com>, Quang Han <qhan@apm.com>, Tung Nguyen <tunguyen@apm.com>, patches <patches@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ba658a59-7ef9-2340-57fa-3bcefa3f47ed-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06.06.2017 09:33, Thang Q. Nguyen wrote:
-> On Mon, Jun 5, 2017 at 9:33 PM, Mathias Nyman <mathias.nyman@intel.com> wrote:
->> On 05.06.2017 15:57, Thang Q. Nguyen wrote:
->>>
->>> On Mon, Jun 5, 2017 at 6:14 PM, Mathias Nyman
->>> <mathias.nyman@linux.intel.com> wrote:
->>>>
->>>> On 20.05.2017 10:24, Thang Q. Nguyen wrote:
->>>>>
->>>>>
->>>>> XHCI specification 1.1 does not require xHCI 1.0 compliant controllers
->>>>> to always enable hardware USB2 LPM.
->>>>> However, the current xHCI driver always enable it by setting HLE=1 when
->>>>> seeing HLC=1. This makes certain xHCI controllers that have broken USB2
->>>>> HW LPM fail to work as there is no way to disable this feature.
->>>>> This patch adds support to control disabling USB2 Hardware LPM via
->>>>> DT/ACPI attribute.
->>>>>
->>>>
->>>>    Wouldn't it be better to just keep  xhci->hw_lpm_support = 0 if the
->>>> host
->>>> doesn't support Hardware LPM Capability, (HLC)?
->>>>
->>>> This should prevent all those extra steps getting here just to do
->>>> nothing.
->>>
->>> No, HLC = 0 means the host doesn't support Hardware LPM.
->>> The problem here is the host support Hardware LPM but there is a bug
->>> in host controller that make the LPM fail to work.
->>>
->>
->> So the host support hw LPM, and has its HLC capability bit set,
->> but in the end it just doesn't work at all, and should be prevented.
->>
->>> When debugging the host controller, we detect there are some holes in
->>> the current usb specifications which can can result in inter-operating
->>> problems between USB Host Controller and USB PHY. To be more specific,
->>> the specs have not clarified the resume recovery timing after the port
->>> has just waken up from L1. This can lead to different interpretations
->>> of the specs by Host Controller and PHY. What happened in our case is
->>> that a Host controller cannot work with a PHY right after resuming
->>> from L1 because these two Vendors have different views of the specs
->>> regarding LPM timing after L1. These views are contradictory and
->>> cannot work together.
->>>
->>> If Host Controller and PHY are from the same vendor, they might have
->>> some "internal handshake mechanisms" to avoid these holes of the USB
->>> specs. However, these mechanisms are not standardized in USB specs;
->>> and not all vendors follow these mechanisms. In fact, we have observed
->>> this kind of "internal handshake mechanism" in HOST Controller and PHY
->>> from SYNOPSYS DWC. So, we can say that if users use Host Controller
->>> and PHY from different Vendors, the inteopering problems after waking
->>> up from L1 are more likely to occur.
->>
->>
->> Can you explain the reason why you prefer preventing hw lpm inside the
->> xhci_set_usb2_hardware_lpm() function instead of preventing hw lpm usage
->> all together for this platform -i.e. by not setting xhci->hw_lpm_support
-> The reason I don't change in the xhci_add_in_port() function inside
-> xhci-mem.c is because of the description for xhci->hw_lpm_support in
-> the drivers/usb/host/xhci.h header file: support xHCI 1.0 spec USB2
-> hardware LPM. Per my understanding, this attribute is used to indicate
-> if the host supports HW LPM and this can be checked via HLC.
-> My intension is to support an option for user to disable the HW LPM
-> because of some reasons (in my case because HW LPM is broken).
+On Tue, 2017-06-13 at 14:52 +0200, Matthias Brugger wrote:
+> 
+> On 13/06/17 12:24, Jun Gao wrote:
+> > On Tue, 2017-06-13 at 11:36 +0200, Matthias Brugger wrote:
+> >>
+> >> On 12/06/17 13:54, Jun Gao wrote:
+> >>> On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
+> >>>> From: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>>
+> >>>> Add MT2701 i2c device node.
+> >>>>
+> >>>> Signed-off-by: Jun Gao <jun.gao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> >>>> ---
+> >>>>    arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
+> >>>>    arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
+> >>>>    2 files changed, 84 insertions(+)
+> >> [...]
+> >>>
+> >>> Dear Matthias,
+> >>>
+> >>> Could you take this patch together with
+> >>> [PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
+> >>>
+> >>> Thanks!
+> >>>
+> >>
+> >> They are both included in the pull request I send [1] [2], or do I miss
+> >> something?
+> >>
+> >> Regards,
+> >> Matthias
+> >>
+> >> [1]
+> >> https://github.com/mbgg/linux-mediatek/commit/729b7f8dbdaff270c53052897ea06486221a49a2
+> >> [2]
+> >> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
+> > 
+> > Dear Matthias,
+> > 
+> > Would you mind to use the same style as follows in i2c-mtk.txt of [2]?
+> > 
+> > "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
+> > "mediatek,mt6577-i2c": for Mediatek MT6577
+> > "mediatek,mt6589-i2c": for Mediatek MT6589
+> > "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
+> > "mediatek,mt8173-i2c": for Mediatek MT8173
+> > 
+> > 
+> > Thanks!
+> > 
+> 
+> You mean I should fix-up the patch to fit to the new binding 
+> description? Or do you mean it should be MTxxxx instead of mtxxxx?
+> 
+> Regards,
+> Matthias
 
-I think we should keep supporting new options separate from workarounds
-for broken HW.
+Dear Matthias,
 
->>
->>
->> Again, something like:
->> if (temp & XHCI_HLC && !(xhci->quirks & XHCI_HW_LPM_BROKEN))
->>          xhci->hw_lpm_support = 1;
-> This should work too. But the DT/ACPI attribute should change to
-> "usb2-lpm-broken".
+I mean fix-up the patch to fit to the new binding description. Is it OK?
 
-This would be more clear for future developers and prevent them from
-enabling hw lpm for this host to gain some powersaving.
+Thanks!
 
-A new feature allowing optional host hw lpm disabling can then be written separately,
-preferable without using the quirk bits.
 
--Mathias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
