@@ -1,464 +1,529 @@
-From: Valentin Sitdikov <valentin_sitdikov@mentor.com>
-Subject: [PATCH 2/2] mfd: max7360: Add mfd core device driver
-Date: Tue, 13 Jun 2017 15:20:51 +0300
-Message-ID: <20170613122051.6061-3-valentin_sitdikov@mentor.com>
-References: <20170613122051.6061-1-valentin_sitdikov@mentor.com>
+From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
+Subject: Re: [PATCH v2 05/15] [media] cxd2880: Add spi device IO routines
+Date: Tue, 13 Jun 2017 09:25:15 -0300
+Message-ID: <20170613092515.5f61781e@vento.lan>
+References: <20170414015043.16731-1-Yasunari.Takiguchi@sony.com>
+        <20170414022523.17417-1-Yasunari.Takiguchi@sony.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170613122051.6061-1-valentin_sitdikov@mentor.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andrei Dranitca <Andrei_Dranitca@mentor.com>, Valentin Sitdikov <valentin_sitdikov@mentor.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170414022523.17417-1-Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tbird20d-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>, Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>, Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>, Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>, Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Andrei Dranitca <Andrei_Dranitca@mentor.com>
+Em Fri, 14 Apr 2017 11:25:23 +0900
+<Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org> escreveu:
 
-This patch adds core/irq driver to support MAX7360 i2c chip
-which contains keypad, gpio, pwm, gpo and rotary encoder submodules.
+> From: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+> 
+> Add functions for initializing, reading and writing to the SPI
+> device for the Sony CXD2880 DVB-T2/T tuner + demodulator.
+> 
+> Signed-off-by: Yasunari Takiguchi <Yasunari.Takiguchi-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Masayuki Yamamoto <Masayuki.Yamamoto-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Hideki Nozawa <Hideki.Nozawa-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Kota Yonezawa <Kota.Yonezawa-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Toshihiko Matsumoto <Toshihiko.Matsumoto-7U/KSKJipcs@public.gmane.org>
+> Signed-off-by: Satoshi Watanabe <Satoshi.C.Watanabe-7U/KSKJipcs@public.gmane.org>
+> ---
+>  .../dvb-frontends/cxd2880/cxd2880_devio_spi.c      | 147 +++++++++++++++++++++
+>  .../dvb-frontends/cxd2880/cxd2880_devio_spi.h      |  40 ++++++
+>  drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h  |  51 +++++++
+>  .../dvb-frontends/cxd2880/cxd2880_spi_device.c     | 130 ++++++++++++++++++
+>  .../dvb-frontends/cxd2880/cxd2880_spi_device.h     |  45 +++++++
+>  5 files changed, 413 insertions(+)
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
+>  create mode 100644 drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
+> 
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
+> new file mode 100644
+> index 000000000000..516efade6bf5
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.c
+> @@ -0,0 +1,147 @@
+> +/*
+> + * cxd2880_devio_spi.c
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * I/O interface via SPI
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include "cxd2880_devio_spi.h"
+> +#include "cxd2880_stdlib.h"
+> +
+> +#define BURST_WRITE_MAX 128
+> +
+> +static enum cxd2880_ret cxd2880_io_spi_read_reg(struct cxd2880_io *io,
+> +						enum cxd2880_io_tgt tgt,
+> +						u8 sub_address, u8 *data,
+> +						u32 size)
 
-Signed-off-by: Andrei Dranitca <Andrei_Dranitca@mentor.com>
-Signed-off-by: Valentin Sitdikov <valentin_sitdikov@mentor.com>
----
- drivers/mfd/Kconfig         |  16 +++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/max7360.c       | 291 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/max7360.h |  90 ++++++++++++++
- 4 files changed, 398 insertions(+)
- create mode 100644 drivers/mfd/max7360.c
- create mode 100644 include/linux/mfd/max7360.h
+Return argument should be integer, as it is an error code or zero.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 3eb5c93..894c2e9 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -721,6 +721,22 @@ config MFD_MAX8998
- 	  additional drivers must be enabled in order to use the functionality
- 	  of the device.
- 
-+config MFD_MAX7360
-+	tristate "Maxim Semiconductor MAX7360 support"
-+	depends on I2C && OF
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select IRQ_DOMAIN
-+	help
-+	  Say yes here to add support for Maxim Semiconductor MAX7360.
-+	  This provides microprocessors with management of up to 64 key switches,
-+	  with an additional eight LED drivers/GPIOs that feature constant-current,
-+	  PWM intensity control, and rotary switch control options.
-+
-+	  This driver provides common support for accessing the device,
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
-+
- config MFD_MT6397
- 	tristate "MediaTek MT6397 PMIC Support"
- 	select MFD_CORE
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index c16bf1e..9e721c0 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -137,6 +137,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
- obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
- 
- obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
-+obj-$(CONFIG_MFD_MAX7360)	+= max7360.o
- obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
- obj-$(CONFIG_MFD_MAX77686)	+= max77686.o
- obj-$(CONFIG_MFD_MAX77693)	+= max77693.o
-diff --git a/drivers/mfd/max7360.c b/drivers/mfd/max7360.c
-new file mode 100644
-index 0000000..d18ea96
---- /dev/null
-+++ b/drivers/mfd/max7360.c
-@@ -0,0 +1,291 @@
-+/*
-+ * Copyright (C) 2017 Mentor Graphics
-+ *
-+ * Author: Andrei Dranitca <Andrei_Dranitca@mentor.com>
-+ * Author: Valentin Sitdikov <Valentin.Sitdikov@mentor.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_irq.h>
-+#include <linux/slab.h>
-+
-+
-+static const struct mfd_cell max7360_devices[] = {
-+	{
-+		.name           = "max7360-gpio",
-+		.of_compatible	= "maxim,max7360-gpio",
-+	},
-+	{
-+		.name           = "max7360-keypad",
-+		.of_compatible	= "maxim,max7360-keypad",
-+	},
-+	{
-+		.name           = "max7360-pwm",
-+		.of_compatible	= "maxim,max7360-pwm",
-+	},
-+	{
-+		.name           = "max7360-rotary",
-+		.of_compatible	= "maxim,max7360-rotary",
-+	},
-+};
-+
-+static irqreturn_t max7360_irq(int irq, void *data)
-+{
-+	struct max7360 *max7360 = data;
-+	int virq;
-+
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_GPIO);
-+	handle_nested_irq(virq);
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_KEYPAD);
-+	handle_nested_irq(virq);
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_ROTARY);
-+	handle_nested_irq(virq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t max7360_irqi(int irq, void *data)
-+{
-+	struct max7360 *max7360 = data;
-+	int virq;
-+
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_GPIO);
-+	handle_nested_irq(virq);
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_ROTARY);
-+	handle_nested_irq(virq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t max7360_irqk(int irq, void *data)
-+{
-+	struct max7360 *max7360 = data;
-+	int virq;
-+
-+	virq = irq_find_mapping(max7360->domain, MAX7360_INT_KEYPAD);
-+	handle_nested_irq(virq);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max7360_irq_map(struct irq_domain *d, unsigned int virq,
-+			  irq_hw_number_t hwirq)
-+{
-+	struct max7360 *max7360 = d->host_data;
-+
-+	irq_set_chip_data(virq, max7360);
-+	irq_set_chip_and_handler(virq, &dummy_irq_chip,
-+				handle_edge_irq);
-+	irq_set_nested_thread(virq, 1);
-+	irq_set_noprobe(virq);
-+
-+	return 0;
-+}
-+
-+static void max7360_irq_unmap(struct irq_domain *d, unsigned int virq)
-+{
-+	irq_set_chip_and_handler(virq, NULL, NULL);
-+	irq_set_chip_data(virq, NULL);
-+}
-+
-+static const struct irq_domain_ops max7360_irq_ops = {
-+	.map    = max7360_irq_map,
-+	.unmap  = max7360_irq_unmap,
-+	.xlate  = irq_domain_xlate_onecell,
-+};
-+
-+static void max7360_free_irqs(struct max7360 *max7360)
-+{
-+	if (max7360->shared_irq)
-+		free_irq(max7360->shared_irq, max7360);
-+	else {
-+		free_irq(max7360->irq_inti, max7360);
-+		free_irq(max7360->irq_intk, max7360);
-+	}
-+}
-+
-+static int max7360_irq_init(struct max7360 *max7360, struct device_node *np)
-+{
-+	int ret;
-+
-+	max7360->irq_inti = of_irq_get_byname(np, "inti");
-+	if (max7360->irq_inti < 0) {
-+		dev_err(max7360->dev, "no inti provided");
-+		return -ENODEV;
-+	}
-+
-+	max7360->irq_intk = of_irq_get_byname(np, "intk");
-+	if (max7360->irq_intk < 0) {
-+		dev_err(max7360->dev, "no intk provided");
-+		return -ENODEV;
-+	}
-+
-+	if (max7360->irq_inti == max7360->irq_intk) {
-+		/*
-+		 * In case of pin inti and pin intk are the connected
-+		 * to the same soc`s irq pin.
-+		 */
-+		max7360->shared_irq = max7360->irq_inti;
-+		ret = request_threaded_irq(max7360->shared_irq, NULL,
-+					  max7360_irq,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  "max7360", max7360);
-+		if (ret) {
-+			dev_err(max7360->dev, "failed to request IRQ: %d\n",
-+				ret);
-+			return ret;
-+		}
-+	} else {
-+		max7360->shared_irq = 0;
-+		ret = request_threaded_irq(max7360->irq_inti, NULL,
-+					  max7360_irqi,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  "max7360", max7360);
-+		if (ret) {
-+			dev_err(max7360->dev, "failed to request inti IRQ: %d\n",
-+			       ret);
-+			return ret;
-+		}
-+
-+		ret = request_threaded_irq(max7360->irq_intk, NULL,
-+					  max7360_irqk,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  "max7360", max7360);
-+		if (ret) {
-+			free_irq(max7360->irq_inti, max7360);
-+			dev_err(max7360->dev, "failed to request intk IRQ: %d\n",
-+				ret);
-+			return ret;
-+		}
-+	}
-+
-+	max7360->domain = irq_domain_add_simple(np, MAX7360_NR_INTERNAL_IRQS,
-+					       0, &max7360_irq_ops, max7360);
-+
-+	if (!max7360->domain) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to create irqdomain\n");
-+		return -ENODEV;
-+	}
-+
-+	ret = irq_create_mapping(max7360->domain, MAX7360_INT_GPIO);
-+	if (!ret) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to map GPIO IRQ\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = irq_create_mapping(max7360->domain, MAX7360_INT_KEYPAD);
-+	if (!ret) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to map KEYPAD IRQ\n");
-+		return -EINVAL;
-+	}
-+
-+	ret = irq_create_mapping(max7360->domain, MAX7360_INT_ROTARY);
-+	if (!ret) {
-+		max7360_free_irqs(max7360);
-+		dev_err(max7360->dev, "Failed to map ROTARY IRQ\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+static int max7360_device_init(struct max7360 *max7360)
-+{
-+	int ret;
-+
-+	ret = devm_mfd_add_devices(max7360->dev, PLATFORM_DEVID_NONE,
-+			     max7360_devices,
-+			     ARRAY_SIZE(max7360_devices), NULL,
-+			     0, max7360->domain);
-+	if (ret)
-+		dev_err(max7360->dev, "failed to add child devices\n");
-+
-+	return ret;
-+}
-+
-+static const struct regmap_range max7360_volatile_ranges[] = {
-+	{
-+		.range_min = MAX7360_REG_KEYFIFO,
-+		.range_max = MAX7360_REG_KEYFIFO,
-+	}, {
-+		.range_min = MAX7360_REG_GPIOIN,
-+		.range_max = MAX7360_REG_GPIOIN,
-+	},
-+};
-+
-+static const struct regmap_access_table max7360_volatile_table = {
-+	.yes_ranges = max7360_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max7360_volatile_ranges),
-+};
-+
-+static const struct regmap_config max7360_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0xff,
-+	.volatile_table = &max7360_volatile_table,
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static int max7360_probe(struct i2c_client *i2c,
-+			const struct i2c_device_id *id)
-+{
-+	struct device_node *np = i2c->dev.of_node;
-+	struct max7360 *max7360;
-+	int ret;
-+
-+	max7360 = devm_kzalloc(&i2c->dev, sizeof(struct max7360),
-+			      GFP_KERNEL);
-+	if (!max7360)
-+		return -ENOMEM;
-+
-+	max7360->dev = &i2c->dev;
-+	max7360->i2c = i2c;
-+
-+	i2c_set_clientdata(i2c, max7360);
-+
-+	max7360->regmap = devm_regmap_init_i2c(i2c, &max7360_regmap_config);
-+
-+	ret = max7360_irq_init(max7360, np);
-+	if (ret)
-+		return ret;
-+
-+	ret = max7360_device_init(max7360);
-+	if (ret) {
-+		dev_err(max7360->dev, "failed to add child devices\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id max7360_match[] = {
-+	{ .compatible = "maxim,max7360" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, max7360_match);
-+
-+static struct i2c_driver max7360_driver = {
-+	.driver = {
-+		.name = "max7360",
-+		.of_match_table = max7360_match,
-+	},
-+	.probe = max7360_probe,
-+};
-+builtin_i2c_driver(max7360_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("MAX7360 MFD core driver");
-diff --git a/include/linux/mfd/max7360.h b/include/linux/mfd/max7360.h
-new file mode 100644
-index 0000000..c59941c
---- /dev/null
-+++ b/include/linux/mfd/max7360.h
-@@ -0,0 +1,90 @@
-+#ifndef __LINUX_MFD_MAX7360_H
-+#define __LINUX_MFD_MAX7360_H
-+#include <linux/regmap.h>
-+
-+#define MAX7360_MAX_KEY_ROWS	8
-+#define MAX7360_MAX_KEY_COLS	8
-+#define MAX7360_MAX_KEY_NUM	(MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS)
-+#define MAX7360_ROW_SHIFT	3
-+
-+#define MAX7360_MAX_GPIO 8
-+#define MAX7360_MAX_GPO 6
-+#define MAX7360_COL_GPO_PINS 8
-+/*
-+ * MAX7360 registers
-+ */
-+#define MAX7360_REG_KEYFIFO	0x00
-+#define MAX7360_REG_CONFIG	0x01
-+#define MAX7360_REG_DEBOUNCE	0x02
-+#define MAX7360_REG_INTERRUPT	0x03
-+#define MAX7360_REG_PORTS	0x04
-+#define MAX7360_REG_KEYREP	0x05
-+#define MAX7360_REG_SLEEP	0x06
-+
-+/*
-+ * MAX7360 registers
-+ */
-+#define MAX7360_REG_GPIOCFG	0x40
-+#define MAX7360_REG_GPIOCTRL	0x41
-+#define MAX7360_REG_GPIODEB	0x42
-+#define MAX7360_REG_GPIOCURR	0x43
-+#define MAX7360_REG_GPIOOUTM	0x44
-+#define MAX7360_REG_PWMCOM	0x45
-+#define MAX7360_REG_RTRCFG	0x46
-+#define MAX7360_REG_GPIOIN	0x49
-+#define MAX7360_REG_RTR_CNT	0x4A
-+#define MAX7360_REG_PWMBASE	0x50
-+#define MAX7360_REG_PWMCFG	0x58
-+
-+
-+#define MAX7360_REG_PORTCFGBASE 0x58
-+
-+/*
-+ * Configuration register bits
-+ */
-+#define MAX7360_CFG_SLEEP	BIT(7)
-+#define MAX7360_CFG_INTERRUPT	BIT(5)
-+#define MAX7360_CFG_KEY_RELEASE	BIT(3)
-+#define MAX7360_CFG_WAKEUP	BIT(1)
-+#define MAX7360_CFG_TIMEOUT	BIT(0)
-+
-+/*
-+ * Autosleep register values (ms)
-+ */
-+#define MAX7360_AUTOSLEEP_8192	0x01
-+#define MAX7360_AUTOSLEEP_4096	0x02
-+#define MAX7360_AUTOSLEEP_2048	0x03
-+#define MAX7360_AUTOSLEEP_1024	0x04
-+#define MAX7360_AUTOSLEEP_512	0x05
-+#define MAX7360_AUTOSLEEP_256	0x06
-+
-+#define MAX7360_INT_INTI	0
-+#define MAX7360_INT_INTK	1
-+
-+#define MAX7360_INT_GPIO   0
-+#define MAX7360_INT_KEYPAD 1
-+#define MAX7360_INT_ROTARY 2
-+
-+#define MAX7360_NR_INTERNAL_IRQS	3
-+
-+/**
-+ * struct max7360
-+ * @dev:	Parent device pointer
-+ * @i2c:	I2c client pointer
-+ * @domain:	Irq domain pointer
-+ * @regmap:	Used for I2C communication on accessing registers
-+ * @shared_irq:	Irq number if inti and intk pins are connected together
-+ * @irq_inti:	Irq number for inti pin
-+ * @irq_intk:	Irq number for inik pin
-+ */
-+struct max7360 {
-+	struct device		*dev;
-+	struct i2c_client	*i2c;
-+	struct irq_domain	*domain;
-+	struct regmap		*regmap;
-+
-+	int			shared_irq;
-+	int			irq_inti;
-+	int			irq_intk;
-+};
-+#endif
--- 
-2.9.3
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +	struct cxd2880_spi *spi = NULL;
+> +	u8 send_data[6];
+> +	u8 *read_data_top = data;
+> +
+> +	if ((!io) || (!io->if_object) || (!data))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (sub_address + size > 0x100)
+> +		return CXD2880_RESULT_ERROR_RANGE;
+
+Please use standard return error codes. In this specific case, likely
+-EINVAL and -ERANGE.
+
+Same apply to other functions below.
+
+> +
+> +	spi = (struct cxd2880_spi *)(io->if_object);
+> +
+> +	if (tgt == CXD2880_IO_TGT_SYS)
+> +		send_data[0] = 0x0B;
+> +	else
+> +		send_data[0] = 0x0A;
+> +
+> +	send_data[3] = 0;
+> +	send_data[4] = 0;
+> +	send_data[5] = 0;
+> +
+> +	while (size > 0) {
+> +		send_data[1] = sub_address;
+> +		if (size > 255)
+> +			send_data[2] = 255;
+> +		else
+> +			send_data[2] = (u8)size;
+
+No need to cast.
+
+> +
+> +		ret =
+> +		    spi->write_read(spi, send_data, sizeof(send_data),
+> +				    read_data_top, send_data[2]);
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+
+Please keep it simple, e. g.:
+
+	if (ret)
+		return ret;
+
+> +
+> +		sub_address += send_data[2];
+> +		read_data_top += send_data[2];
+> +		size -= send_data[2];
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static enum cxd2880_ret cxd2880_io_spi_write_reg(struct cxd2880_io *io,
+> +						 enum cxd2880_io_tgt tgt,
+> +						 u8 sub_address,
+> +						 const u8 *data, u32 size)
+> +{
+> +	enum cxd2880_ret ret = CXD2880_RESULT_OK;
+> +	struct cxd2880_spi *spi = NULL;
+> +	u8 send_data[BURST_WRITE_MAX + 4];
+> +	const u8 *write_data_top = data;
+> +
+> +	if ((!io) || (!io->if_object) || (!data))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	if (size > BURST_WRITE_MAX)
+> +		return CXD2880_RESULT_ERROR_OVERFLOW;
+> +
+> +	if (sub_address + size > 0x100)
+> +		return CXD2880_RESULT_ERROR_RANGE;
+> +
+> +	spi = (struct cxd2880_spi *)(io->if_object);
+
+Is cast really needed here?
+
+> +
+> +	if (tgt == CXD2880_IO_TGT_SYS)
+> +		send_data[0] = 0x0F;
+> +	else
+> +		send_data[0] = 0x0E;
+> +
+> +	while (size > 0) {
+> +		send_data[1] = sub_address;
+> +		if (size > 255)
+> +			send_data[2] = 255;
+> +		else
+> +			send_data[2] = (u8)size;
+
+cast not needed.
+
+> +
+> +		cxd2880_memcpy(&send_data[3], write_data_top, send_data[2]);
+
+just memcpy().
+
+> +
+> +		if (tgt == CXD2880_IO_TGT_SYS) {
+> +			send_data[3 + send_data[2]] = 0x00;
+> +			ret = spi->write(spi, send_data, send_data[2] + 4);
+> +		} else {
+> +			ret = spi->write(spi, send_data, send_data[2] + 3);
+> +		}
+> +		if (ret != CXD2880_RESULT_OK)
+> +			return ret;
+> +
+> +		sub_address += send_data[2];
+> +		write_data_top += send_data[2];
+> +		size -= send_data[2];
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_io_spi_create(struct cxd2880_io *io,
+> +				       struct cxd2880_spi *spi, u8 slave_select)
+> +{
+> +	if ((!io) || (!spi))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	io->read_regs = cxd2880_io_spi_read_reg;
+> +	io->write_regs = cxd2880_io_spi_write_reg;
+> +	io->write_reg = cxd2880_io_common_write_one_reg;
+> +	io->if_object = spi;
+> +	io->i2c_address_sys = 0;
+> +	io->i2c_address_demod = 0;
+> +	io->slave_select = slave_select;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
+> new file mode 100644
+> index 000000000000..15934bf11935
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_devio_spi.h
+> @@ -0,0 +1,40 @@
+> +/*
+> + * cxd2880_devio_spi.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * I/O interface via SPI
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef CXD2880_DEVIO_SPI_H
+> +#define CXD2880_DEVIO_SPI_H
+> +
+> +#include "cxd2880_common.h"
+> +#include "cxd2880_io.h"
+> +#include "cxd2880_spi.h"
+> +
+> +#include "cxd2880_tnrdmd.h"
+> +
+> +enum cxd2880_ret cxd2880_io_spi_create(struct cxd2880_io *io,
+> +				       struct cxd2880_spi *spi,
+> +				       u8 slave_select);
+> +
+> +#endif
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
+> new file mode 100644
+> index 000000000000..81e5be747962
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi.h
+> @@ -0,0 +1,51 @@
+> +/*
+> + * cxd2880_spi.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * SPI access definitions
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef CXD2880_SPI_H
+> +#define CXD2880_SPI_H
+> +
+> +#include "cxd2880_common.h"
+> +
+> +enum cxd2880_spi_mode {
+> +	CXD2880_SPI_MODE_0,
+> +	CXD2880_SPI_MODE_1,
+> +	CXD2880_SPI_MODE_2,
+> +	CXD2880_SPI_MODE_3
+> +};
+> +
+> +struct cxd2880_spi {
+> +	enum cxd2880_ret (*read)(struct cxd2880_spi *spi, u8 *data,
+> +				  u32 size);
+> +	enum cxd2880_ret (*write)(struct cxd2880_spi *spi, const u8 *data,
+> +				   u32 size);
+> +	enum cxd2880_ret (*write_read)(struct cxd2880_spi *spi,
+> +					const u8 *tx_data, u32 tx_size,
+> +					u8 *rx_data, u32 rx_size);
+
+please use int for returned values, and convert to the linux
+error codes.
+
+> +	u32 flags;
+> +	void *user;
+> +};
+> +
+> +#endif
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
+> new file mode 100644
+> index 000000000000..af9ed40c900b
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.c
+> @@ -0,0 +1,130 @@
+> +/*
+> + * cxd2880_spi_device.c
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * SPI access functions
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/spi/spi.h>
+> +
+> +#include "cxd2880_spi_device.h"
+> +
+> +static enum cxd2880_ret cxd2880_spi_device_write(struct cxd2880_spi *spi,
+> +						const u8 *data, u32 size)
+> +{
+> +	struct cxd2880_spi_device *spi_device = NULL;
+> +	struct spi_message msg;
+> +	struct spi_transfer tx;
+> +	int result = 0;
+> +
+> +	if ((!spi) || (!spi->user) || (!data) || (size == 0))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	spi_device = (struct cxd2880_spi_device *)(spi->user);
+
+Is cast needed?
+
+> +
+> +	memset(&tx, 0, sizeof(tx));
+> +	tx.tx_buf = data;
+> +	tx.len = size;
+> +
+> +	spi_message_init(&msg);
+> +	spi_message_add_tail(&tx, &msg);
+> +	result = spi_sync(spi_device->spi, &msg);
+> +
+> +	if (result < 0)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +static enum cxd2880_ret cxd2880_spi_device_write_read(struct cxd2880_spi *spi,
+> +							const u8 *tx_data,
+> +							u32 tx_size,
+> +							u8 *rx_data,
+> +							u32 rx_size)
+> +{
+> +	struct cxd2880_spi_device *spi_device = NULL;
+> +	int result = 0;
+> +
+> +	if ((!spi) || (!spi->user) || (!tx_data) ||
+> +		 (tx_size == 0) || (!rx_data) || (rx_size == 0))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	spi_device = (struct cxd2880_spi_device *)(spi->user);
+> +
+> +	result = spi_write_then_read(spi_device->spi, tx_data,
+> +					tx_size, rx_data, rx_size);
+> +	if (result < 0)
+> +		return CXD2880_RESULT_ERROR_IO;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret
+> +cxd2880_spi_device_initialize(struct cxd2880_spi_device *spi_device,
+> +				enum cxd2880_spi_mode mode,
+> +				u32 speed_hz)
+> +{
+> +	int result = 0;
+> +	struct spi_device *spi = spi_device->spi;
+> +
+> +	switch (mode) {
+> +	case CXD2880_SPI_MODE_0:
+> +		spi->mode = SPI_MODE_0;
+> +		break;
+> +	case CXD2880_SPI_MODE_1:
+> +		spi->mode = SPI_MODE_1;
+> +		break;
+> +	case CXD2880_SPI_MODE_2:
+> +		spi->mode = SPI_MODE_2;
+> +		break;
+> +	case CXD2880_SPI_MODE_3:
+> +		spi->mode = SPI_MODE_3;
+> +		break;
+> +	default:
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +
+> +	spi->max_speed_hz = speed_hz;
+> +	spi->bits_per_word = 8;
+> +	result = spi_setup(spi);
+> +	if (result != 0) {
+> +		pr_err("spi_setup failed %d\n", result);
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +	}
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> +
+> +enum cxd2880_ret cxd2880_spi_device_create_spi(struct cxd2880_spi *spi,
+> +					struct cxd2880_spi_device *spi_device)
+> +{
+> +	if ((!spi) || (!spi_device))
+> +		return CXD2880_RESULT_ERROR_ARG;
+> +
+> +	spi->read = NULL;
+> +	spi->write = cxd2880_spi_device_write;
+> +	spi->write_read = cxd2880_spi_device_write_read;
+> +	spi->flags = 0;
+> +	spi->user = spi_device;
+> +
+> +	return CXD2880_RESULT_OK;
+> +}
+> diff --git a/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
+> new file mode 100644
+> index 000000000000..343d9161d537
+> --- /dev/null
+> +++ b/drivers/media/dvb-frontends/cxd2880/cxd2880_spi_device.h
+> @@ -0,0 +1,45 @@
+> +/*
+> + * cxd2880_spi_device.h
+> + * Sony CXD2880 DVB-T2/T tuner + demodulator driver
+> + * SPI access interface
+> + *
+> + * Copyright (C) 2016, 2017 Sony Semiconductor Solutions Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License as published by the
+> + * Free Software Foundation; version 2 of the License.
+> + *
+> + * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESS OR IMPLIED
+> + * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN
+> + * NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+> + * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+> + * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+> + * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+> + * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+> + * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + *
+> + * You should have received a copy of the GNU General Public License along
+> + * with this program; if not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef CXD2880_SPI_DEVICE_H
+> +#define CXD2880_SPI_DEVICE_H
+> +
+> +#include "cxd2880_spi.h"
+> +
+> +struct cxd2880_spi_device {
+> +	struct spi_device *spi;
+> +};
+> +
+> +enum cxd2880_ret
+> +cxd2880_spi_device_initialize(struct cxd2880_spi_device *spi_device,
+> +				enum cxd2880_spi_mode mode,
+> +				u32 speedHz);
+> +
+> +enum cxd2880_ret
+> +cxd2880_spi_device_create_spi(struct cxd2880_spi *spi,
+> +				struct cxd2880_spi_device *spi_device);
+> +
+> +#endif /* CXD2880_SPI_DEVICE_H */
+
+
+
+Thanks,
+Mauro
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
