@@ -1,171 +1,48 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 5/7] drm/vc4: Add support for the TXP (transposer) block
-Date: Tue, 13 Jun 2017 10:32:23 -0700
-Message-ID: <87efunaj4o.fsf@eliezer.anholt.net>
-References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
- <1496392332-8722-6-git-send-email-boris.brezillon@free-electrons.com>
- <20170605112549.GA32480@e106950-lin.cambridge.arm.com>
- <20170606211300.61e93ec1@bbrezillon>
- <20170613103403.GA3989@e106950-lin.cambridge.arm.com>
+From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
+ based ptp clock
+Date: Tue, 13 Jun 2017 10:46:36 -0700
+Message-ID: <cb008f0f-1585-653e-0b89-47478f9f4734@broadcom.com>
+References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
+ <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
+ <20170613050947.GA1684@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0277020233=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170613103403.GA3989@e106950-lin.cambridge.arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Brian Starkey <brian.starkey@arm.com>, Boris Brezillon <boris.brezillon@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee@kernel.org>, Liviu Dudau <Liviu.Dudau@arm.com>, dri-devel@lists.freedesktop.org, Gerd Hoffmann <kraxel@redhat.com>, Florian Fainelli <f.fainelli@gmail.com>, Eben Upton <eben@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ray Jui <rjui@broadcom.com>, Rob Herring <robh+dt@kernel.org>, linux-rpi-kernel@lists.infradead.org, "Hollingworth, Gordon" <gordon@raspberrypi.org>, "Cobley,
- Dom" <dom@raspberrypi.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Scott Branden <sbranden@broadcom.com>, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170613050947.GA1684-bi+AKbBUZKY6gyzm1THtWbp2dZbC/Bob@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============0277020233==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
 
---=-=-=
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Hi Richard,
 
-Brian Starkey <brian.starkey@arm.com> writes:
-
-> Hi Boris,
+On 17-06-12 10:09 PM, Richard Cochran wrote:
+> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
+>> +Example:
+>> +
+>> +ptp_dte: ptp_dte@180af650 {
+>> +	compatible = "brcm,ptp-dte";
+>> +	reg = <0x180af650 0x10>;
+>> +	status = "okay";
+>> +};
+> This patch set looks okay, as far as it goes, but how does one
+> actually use the clock?
 >
-> Sorry lost track of this thread.
->
->
-> On Tue, Jun 06, 2017 at 09:13:00PM +0200, Boris Brezillon wrote:
->>Hi Brian,
->>
->>Le Mon, 5 Jun 2017 12:25:50 +0100,
->>Brian Starkey <brian.starkey@arm.com> a =C3=A9crit :
->>
->>> Hi Boris,
->>>
->>> I can't speak for the HW-specific details, but the writeback part
->>> looks pretty good (and familiar ;-) to me. There certainly seems to be
->>> some scope for code-sharing there, but I think it's fine not to do it
->>> yet.
->>
->>Agreed.
->>
->>>
->>> I've a further query below about the handling of CRTC events.
->>>
->>
->>[...]
->>
->>> >+
->>> >+void vc4_txp_atomic_commit(struct drm_device *dev,
->>> >+			   struct drm_atomic_state *old_state)
->>> >+{
->>> >+	struct vc4_dev *vc4 =3D to_vc4_dev(dev);
->>> >+	struct vc4_txp *txp =3D vc4->txp;
->>> >+	struct drm_connector_state *conn_state =3D txp->connector.base.state;
->>> >+	struct drm_display_mode *mode;
->>> >+	struct drm_gem_cma_object *gem;
->>> >+	struct drm_framebuffer *fb;
->>> >+	u32 ctrl =3D TXP_GO | TXP_EI;
->>> >+
->>> >+	/* Writeback connector is disabled, nothing to do. */
->>> >+	if (!conn_state->crtc)
->>> >+		return;
->>> >+
->>> >+	/* Writeback connector is enabled, but has no FB assigned to it. Fak=
-e a
->>> >+	 * vblank event to complete ->flip_done.
->>> >+	 */
->>> >+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb) {
->>> >+		vc4_crtc_eof_event(conn_state->crtc);
->>>
->>> I'm not sure about hiding away the one-shot thing like this. If the
->>> CRTC remains "active" from the API point of view, I'd expect it to be
->>> able to keep generating VBLANK events.
->>>
->>> I don't know how to do if, but if there were some notion of
->>> "auto-disabling" CRTCs then this quirk would go away, and you'd also
->>> be able to enforce that the CRTC can't be enabled without a writeback
->>> framebuffer.
->>
->>I don't have a strong opinion on "auto-disabling CRTC" vs "fake VBLANK
->>events". Note that I'm already faking a VBLANK event when activating
->>writeback, because there's no such concept at the HVS/TXP level. We
->>do have EOF (End Of Frame) and writeback done events, but these are
->>quite independent from the VBLANK events generated by the pixelvalve
->>block (the block responsible for generating the HSYNC/VSYNC signals).
->>
->>>
->>> I'm also not sure how (if?) this works today with a CRTC driving a DSI
->>> command-mode panel. Does the CRTC keep generating VBLANKs even when
->>> there are no updates?
->>
->>I don't know. Is this mandatory to have VBLANK events? I mean, the
->>core is using VBLANK events to detect when page flips have been done,
->>that is, when old framebuffers are unused and new ones started to be
->>fetched by the CRTC, but on some HW, VBLANK is not the only way to
->>detect such situations. The question is, are there other situations
->>where VBLANK events are required, or is there an implicit rule stating
->>that a CRTC has to generate VBLANK events at a vrefresh rate even when
->>the display is actually not updated when nothing changes?
->
-> I'm not sure how widely relied upon it is, but I'd expect that there's
-> a requirement to make sure DRM_IOCTL_WAIT_VBLANK works. I _think_ that
-> means the CRTC should generate events at vrefresh rate if there's a
-> wait request outstanding that depends on that.
+> How does one connect this node to an Ethernet MAC, for example?
+In some of the SoC's, the DTE's NCO is synced in hardware with the Ethernet's
+1588 Shim NCO (used for time-stamping the packets). We are working on getting
+all the future SoC's synced this way (for Ethernet).
 
-In our case, there's no vrefresh rate, though.  Just completion.
+In other scenarios, we use an user-space app to perform the sync based on
+time-stamps from external hardware sources like the Wi-Fi.
+> Thanks,
+> Richard
 
-I've been trying to come up with a usecase for vblank events on
-writeack, and the best I have is: to enable VNC-style capture of a
-complete hardware rendering stack, we could run modesetting against the
-writeback connector and do one-shot writebacks when damage comes in.
-You would want GL apps to be throttled to the frame capture rate, so X
-needs to implement waits for at least a swapinterval of 1 (I don't see
-how greater than 1 would make any sense)
-
-However, given that you'd be triggering writebacks on damage, and using
-the fence to trigger the next wait for damage and writeback already, I
-think you'd use that set of code for Present/DRI2 swapinterval support,
-not the current vblank path.
-
-My current inclination would be to throw -EINVAL for userspace vblank
-requests on writeback conncetor pipes.
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAllAIacACgkQtdYpNtH8
-nuiMthAAiLc9PWf/PIImroZA3Ie4Xn7lH7vSpe/iIbPe/+qAGvg8BfMohlXH+TXu
-7R+hA084X4uOWcbPav8ynGW4EmZ2WyhGwcB9RaesCF0DLRxBMgXNmSZkXXa57I5X
-JEnxwJrnAl2FSEIuBelVzGqKoZLYKRD9tTrkcOAfnSzpfwdy0+vCCMnMc8H6+w0P
-zrwimgBO1W9AqNvRtutDLH+/zsCBc4hUkHzu7icu2JVOZIX6l7cgKEZK0CxXtuCT
-48njAWoeJvqj6ZAQ1cX6Iud7fIobyfFbtJI0Y34hAt+SokCC9xX3TqsGEr3vKJL/
-6fp5jnBf3fapQvU8FaGbHNVZ77KNycWsEMvSra+0QR8uyYGTxDsp8rwdmctDa7gv
-iFULGEqFHoTIHyBLr4cRb+zMvxhZx6Cf/BMv30ZocTPdAChik3Nq9edkLkX0I5OW
-2q74yDRSFdqhx4lOWjkqAl9AZCkUhFODuPxdsY3UVXHpiP36Zg70DGMcD3Av5quy
-eu8yQJM+9qtFs2hWecIIuQpCOrZC2/opMh+vOFqzWzJ/jsrSz0UYOn/4yqU27gHu
-e5cHJo0eyQMOwjUimksU8qCBz8/+UcmorW5aampzm4qxPljqB+vcZUVixARmicQN
-9jD40PIKjF8YEVsgsur/JamKR2Pj6R+J/aPJJnY3hA5YWm9NTQI=
-=UuwF
------END PGP SIGNATURE-----
---=-=-=--
-
---===============0277020233==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0277020233==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
