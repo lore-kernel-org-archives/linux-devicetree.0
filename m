@@ -1,54 +1,25 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v15 2/7] power: add power sequence library
-Date: Tue, 13 Jun 2017 12:24:42 +0200
-Message-ID: <CAPDyKFpOQWTPpdd__OBP1DcW58CbqnygGAOxiEFq5kqqvCm0QA@mail.gmail.com>
-References: <1497319166-17287-1-git-send-email-peter.chen@nxp.com> <1497319166-17287-3-git-send-email-peter.chen@nxp.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 0/2] MDIO bus reset GPIO cleanups
+Date: Tue, 13 Jun 2017 13:28:37 +0300
+Message-ID: <eedb8398-58b7-b73e-636a-1cccc10afd98@cogentembedded.com>
+References: <20170612205537.977289294@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1497319166-17287-3-git-send-email-peter.chen@nxp.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alan Stern <stern@rowland.harvard.edu>, Mark Brown <broonie@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Heiko Stuebner <heiko@sntech.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Philipp Zabel <p.zabel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Linux USB List <linux-usb@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Sascha Hauer <s.hauer@pengutronix.de>, "Maciej S. Szmigiero" <mail@maciej.szmigi>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170612205537.977289294@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[...]
+On 6/12/2017 11:55 PM, Sergei Shtylyov wrote:
 
-> +
-> +/**
-> + * of_pwrseq_on - Carry out power sequence on for device node
-> + *
-> + * @np: the device node would like to power on
-> + *
-> + * Carry out a single device power on.  If multiple devices
-> + * need to be handled, use of_pwrseq_on_list() instead.
-> + *
-> + * Return a pointer to the power sequence instance on success,
-> + * or an error code otherwise.
-> + */
-> +struct pwrseq *of_pwrseq_on(struct device_node *np)
-> +{
-> +       struct pwrseq *pwrseq;
-> +       int ret;
-> +
-> +       pwrseq = pwrseq_find_available_instance(np);
-> +       if (!pwrseq)
-> +               return ERR_PTR(-ENOENT);
+> Commit 4c5e7a2c0501 ("dt-bindings: mdio: Clarify binding document")
+> declared that a MDIO reset GPIO property should have only a single GPIO
+> reference/specifier, however the supporting code was left intact...
+> Here's a couple of the obvious cleanups to that code:
 
-In case the pwrseq instance hasn't been registered yet, then there is
-no way to deal with -EPROBE_DEFER properly here.
+    Apparently, I forgot how to write cover letters: the patches were against 
+net-next (well, at least this could be deduced from the patches themselves).
 
-I haven't been following the discussions in-depth during all
-iterations, so perhaps you have already discussed why doing it like
-this.
-
-Anyway, that means all pwrseq instances needs to be registered an
-early boot level, to be safe. To me, that seems like poor design
-choice.
-
-[...]
-
-Otherwise I think this looks okay to me.
-
-Kind regards
-Uffe
+MBR, Sergei
