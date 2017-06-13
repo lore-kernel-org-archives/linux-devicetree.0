@@ -1,34 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: thermal: add file extension to
- brcm,ns-thermal
-Date: Tue, 13 Jun 2017 17:17:38 -0500
-Message-ID: <20170613221738.7qfnzcy55ybzseul@rob-hp-laptop>
-References: <20170602173139.71901-1-code@mmayer.net>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/5] of: Add vendor prefix for iWave Systems
+ Technologies Pvt. Ltd
+Date: Tue, 13 Jun 2017 17:18:31 -0500
+Message-ID: <20170613221831.f3oakmgowl7x262b@rob-hp-laptop>
+References: <1496420523-23506-4-git-send-email-biju.das@bp.renesas.com>
+ <1496761818-62126-1-git-send-email-biju.das@bp.renesas.com>
+ <1496761818-62126-2-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170602173139.71901-1-code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1496761818-62126-2-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Chris Paterson <chris.paterson2@renesas.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 02, 2017 at 10:31:39AM -0700, Markus Mayer wrote:
-> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Tue, Jun 06, 2017 at 04:10:14PM +0100, Biju Das wrote:
+> This patch adds vendor prefix for iWave Systems Technologies Pvt. Ltd.
+> Website: http://www.iwavesystems.com/
 > 
-> Add the missing .txt extension to the Broadcom Northstar binding document.
-> 
-> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
-> 
-> I noticed the missing .txt extension while preparing another patch series.
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-I can take this, but if you have another series it should go thru the 
-thermal tree.
+Now applied to DT tree to avoid conflicts.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
