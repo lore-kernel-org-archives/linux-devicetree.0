@@ -1,42 +1,55 @@
 From: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: thermal: add file extension to brcm,ns-thermal
-Date: Tue, 13 Jun 2017 15:26:29 -0700
-Message-ID: <CANEuBv7riK2fMtdMkGxm_aTe5XOyu1bJjMZDyh7LwkRO6QAx1A@mail.gmail.com>
-References: <20170602173139.71901-1-code@mmayer.net> <20170613221738.7qfnzcy55ybzseul@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Subject: [PATCH v2 0/2] SoC driver for Broadcom STB DPFE
+Date: Tue, 13 Jun 2017 15:37:08 -0700
+Message-ID: <20170613223710.31719-1-code@mmayer.net>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170613221738.7qfnzcy55ybzseul@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13 June 2017 at 15:17, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Jun 02, 2017 at 10:31:39AM -0700, Markus Mayer wrote:
->> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>
->> Add the missing .txt extension to the Broadcom Northstar binding document.
->>
->> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->> ---
->>
->> I noticed the missing .txt extension while preparing another patch series.
->
-> I can take this, but if you have another series it should go thru the
-> thermal tree.
->
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 
-The other series is unrelated to Northstar:
-https://www.spinics.net/lists/kernel/msg2525115.html
+This series introduces a driver to interact with the Broadcom STB DDR
+PHY Front End (DPFE), specifically to communicate with the DCPU that is
+part of the DDR PHY and which is running its own firmware.
 
-An updated version for that will be coming soon.
+The DCPU provides information such as DRAM refresh rate, which can be
+used as indirect indicator for the DRAM temperature (the higher the
+refresh rate, the hotter the RAM).
 
-Not sure if that'll influence what happens to this patch.
+The series was previously submitted as HWMON driver[1]. It has been
+removed from that subsystem, because it doesn't provide any standard
+HWMON data due to hardware design properties, and is now implemented as
+SoC driver.
 
-Thanks,
--Markus
+Changes since v1:
+  - binding simplified to use one node with three memory regions
+    instead of three nodes with one region
+  - no longer part of the HWMON subsystem
+  - better error handling and error reporting to userland
+  - uses [readl|writel]_relaxed() directly, since there is no need for
+    wrappers doing endian conversion
+  - re-download firmware upon "resume"
+  - minor changes to improve clarity
+
+[1] https://lkml.org/lkml/2017/4/18/640
+
+Markus Mayer (2):
+  dt/bindings: Add bindings for Broadcom STB DRAM Sensors
+  soc: brcmstb: Add driver for DPFE
+
+ .../devicetree/bindings/soc/bcm/brcm,dpfe-cpu.txt  |  27 +
+ MAINTAINERS                                        |   8 +
+ drivers/soc/bcm/brcmstb/Makefile                   |   2 +-
+ drivers/soc/bcm/brcmstb/dpfe.c                     | 689 +++++++++++++++++++++
+ 4 files changed, 725 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,dpfe-cpu.txt
+ create mode 100644 drivers/soc/bcm/brcmstb/dpfe.c
+
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
