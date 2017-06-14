@@ -1,50 +1,217 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] ARM: dts: tps65217: Add power button interrupt to
- the common tps65217.dtsi file
-Date: Tue, 13 Jun 2017 21:55:52 -0700
-Message-ID: <20170614045551.GB3730@atomide.com>
-References: <20170612212412.22719-1-enric.balletbo@collabora.com>
- <20170612212412.22719-2-enric.balletbo@collabora.com>
- <20170613073519.GA3730@atomide.com>
- <CAFqH_50syu5aHBQtJkh-Dpz8Yc_6w0X853DO46T3ZAAJ10F-Pw@mail.gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable
+ to handle kernel NULL pointer dereference at 00000000000000a8
+Date: Wed, 14 Jun 2017 07:00:49 +0200
+Message-ID: <20170614050049.GA11630@kroah.com>
+References: <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
+ <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
+ <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
+ <20170613041842.GA13308@kroah.com>
+ <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
+ <20170613043416.GB14217@kroah.com>
+ <20170613043518.GA14621@kroah.com>
+ <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
+ <20170613163508.GA31961@kroah.com>
+ <f848a5fb-096c-a025-cc3b-314cc3899f9e@deltatee.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFqH_50syu5aHBQtJkh-Dpz8Yc_6w0X853DO46T3ZAAJ10F-Pw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <f848a5fb-096c-a025-cc3b-314cc3899f9e@deltatee.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Logan Gunthorpe <logang@deltatee.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-* Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [170613 02:12]:
-> Hi Tony,
+On Tue, Jun 13, 2017 at 11:47:30AM -0600, Logan Gunthorpe wrote:
 > 
-> 2017-06-13 9:35 GMT+02:00 Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>:
-> > * Enric Balletbo i Serra <enric.balletbo-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org> [170612 14:28]:
-> >> The interrupt for power button is static data that comes from the
-> >> datasheet, there is no reason to need to define this value on every
-> >> board so seams reasonable put this information into the common tps65217
-> >> file.
-> >
-> > I think there's a problem with these patches where we no longer know
-> > if the interrupts are wired up on a board. For example, if the USB PHY
-> > VBUS interrupt is not connected, the phy driver needs poll the
-> > cable state.
-> >
 > 
-> Hmm, the tps65217 doesn't have a USB PHY like others tps, so not sure
-> how could affect this patch. Did you see this issue in any board that
-> uses tps65217 or any am335x based board which commonly uses this pmic?
+> On 13/06/17 10:35 AM, Greg Kroah-Hartman wrote:
+> > For char devices, I doubt it, but we can't take the chance, which is why
+> > you make it an option.  Then, it's enabled for 'allmodconfig' builds,
+> > which helps testers out.
+> 
+> Well I took a look at this and it looks like a lot of work to modify all
+> the drivers to support a possible dynamic allocation and I'm not really
+> able to do all that right now.
 
-Oh sorry I misread your patch. I thought you're removing
-the interrupts from dts, but you're just moving the dts entries
-to the common dtsi file :) So seems just fine with me.
+No, don't modify any drivers, do this in the core chardev code.
 
-Regards,
+> However, correct me if I'm missing something, but it looks fairly
+> straightforward to extend the dynamic region above 256 in cases like
+> this. There are already fixed major numbers above 255 and the
+> infrastructure appears to support it. So what are your thoughts on the
+> change below? I'd be happy to clean it up into a proper patch if you
+> agree it's a workable option.
+> 
+> Thanks,
+> 
+> Logan
+> 
+> 
+> 
+> diff --git a/fs/char_dev.c b/fs/char_dev.c
+> index fb8507f521b2..539352425d95 100644
+> --- a/fs/char_dev.c
+> +++ b/fs/char_dev.c
+> @@ -59,6 +59,29 @@ void chrdev_show(struct seq_file *f, off_t offset)
+> 
+>  #endif /* CONFIG_PROC_FS */
+> 
+> +static int find_dynamic_major(void)
+> +{
+> +	int i;
+> +	struct char_device_struct **cp;
+> +
+> +	for (i = ARRAY_SIZE(chrdevs)-1; i > CHRDEV_MAJOR_DYN_END; i--) {
+> +		if (chrdevs[i] == NULL)
+> +			return i;
+> +	}
+> +
+> +	for (i = CHRDEV_MAJOR_DYN_EXT_START;
+> +	     i > CHRDEV_MAJOR_DYN_EXT_END; i--) {
+> +		for (cp = &chrdevs[major_to_index(i)]; *cp; cp = &(*cp)->next)
+> +			if ((*cp)->major == i)
+> +				break;
+> +
+> +		if (*cp == NULL || (*cp)->major != i)
+> +			return i;
+> +	}
+> +
+> +	return -EBUSY;
+> +}
+> +
+>  /*
+>   * Register a single major with a specified minor range.
+>   *
+> @@ -84,22 +107,11 @@ __register_chrdev_region(unsigned int major,
+> unsigned int baseminor,
+> 
+>  	mutex_lock(&chrdevs_lock);
+> 
+> -	/* temporary */
+>  	if (major == 0) {
+> -		for (i = ARRAY_SIZE(chrdevs)-1; i > 0; i--) {
+> -			if (chrdevs[i] == NULL)
+> -				break;
+> -		}
+> -
+> -		if (i < CHRDEV_MAJOR_DYN_END)
+> -			pr_warn("CHRDEV \"%s\" major number %d goes below the dynamic
+> allocation range\n",
+> -				name, i);
+> -
+> -		if (i == 0) {
+> -			ret = -EBUSY;
+> +		ret = find_dynamic_major();
+> +		if (ret < 0)
+>  			goto out;
+> -		}
+> -		major = i;
+> +		major = ret;
+>  	}
+> 
+>  	cd->major = major;
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 249dad4e8d26..5780d69034ca 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2448,6 +2448,9 @@ static inline void bd_unlink_disk_holder(struct
+> block_device *bdev,
+>  #define CHRDEV_MAJOR_HASH_SIZE	255
+>  /* Marks the bottom of the first segment of free char majors */
+>  #define CHRDEV_MAJOR_DYN_END 234
+> +#define CHRDEV_MAJOR_DYN_EXT_START 511
+> +#define CHRDEV_MAJOR_DYN_EXT_END 384
+> +
+>  extern int alloc_chrdev_region(dev_t *, unsigned, unsigned, const char *);
+>  extern int register_chrdev_region(dev_t, unsigned, const char *);
+>  extern int __register_chrdev(unsigned int major, unsigned int baseminor,
+> 
+> 
+> 
+> ----
+> 
+> This results in char devices like this (another patch might be prudent
+> to fix the ordering):
+> 
+> Character devices:
+> 510 ttySLM
+>   1 mem
+> 511 noz
+>   4 /dev/vc/0
+>   4 tty
+>   4 ttyS
+>   5 /dev/tty
+>   5 /dev/console
+>   5 /dev/ptmx
+>   7 vcs
+>   9 st
+>  10 misc
+>  13 input
+>  21 sg
+>  29 fb
+>  43 ttyI
+>  45 isdn
+>  68 capi20
+>  86 ch
+>  90 mtd
+>  99 ppdev
+> 108 ppp
+> 128 ptm
+> 136 pts
+> 152 aoechr
+> 153 spi
+> 161 ircomm
+> 172 ttyMX
+> 174 ttyMI
+> 202 cpu/msr
+> 203 cpu/cpuid
+> 204 ttyJ
+> 204 ttyMAX
+> 206 osst
+> 226 drm
+> 235 ttyS
+> 236 ttyRP
+> 237 ttyARC
+> 238 ttyPS
+> 239 ttyIFX
+> 494 rio_cm
+> 240 ttySC
+> 495 cros_ec
+> 241 ipmidev
+> 496 hidraw
+> 242 rio_mport
+> 497 ttySDIO
+> 243 xz_dec_test
+> 498 uio
+> 244 bsg
+> 499 firewire
+> 245 pvfs2-req
+> 500 nvme
+> 246 watchdog
+> 501 aac
+> 247 iio
+> 502 mei
+> 248 ptp
+> 503 phantom
+> 249 pps
+> 504 aux
+> 250 dax
+> 505 cmx
+> 251 dimmctl
+> 506 cmm
+> 252 ndctl
+> 507 ttySLP
+> 253 tpm
+> 508 ttyIPWp
+> 254 gpiochip
+> 509 ttySL
+> 
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+At quick glance, ooks good to me, care to clean it up and make it behind
+a config option?
+
+thanks,
+
+greg k-h
