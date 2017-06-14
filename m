@@ -1,144 +1,110 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v11 6/6] i2c: designware: enable SLAVE in platform module
-Date: Wed, 14 Jun 2017 15:21:30 +0300
-Message-ID: <CAHp75Ve-25uf4xXbubP7rrfnTyjwY50TDXnjODyMok2zV6J9CQ@mail.gmail.com>
-References: <cover.1497025304.git.lolivei@synopsys.com> <e7b28fca3e419c3a9177acb99236597197124c0f.1497025304.git.lolivei@synopsys.com>
+From: =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
+Subject: [PATCH] regulator: tps65910: wire up sleep control configuration
+Date: Wed, 14 Jun 2017 14:25:13 +0200
+Message-ID: <efc798c2a1140c545cc210a29ed2791495956510.1497442770.git.mirq-linux@rere.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e7b28fca3e419c3a9177acb99236597197124c0f.1497025304.git.lolivei@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Keerthy <j-keerthy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 1:43 PM, Luis Oliveira
-<Luis.Oliveira@synopsys.com> wrote:
-> - Slave mode selected in platform module if the support is detected in
->   the DT.
->
-> Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
+This enables configuring the PMIC's sleep mode via device-tree.
 
-This one looks fine to me.
+A pointer indirection to sleep mode data is removed, as it simplifies
+the implementation slightly.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+References: 201cf052810d20814a77ca0e0045a2c1a3508a1f
+Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+---
+ Documentation/devicetree/bindings/mfd/tps65910.txt |  4 ++++
+ drivers/mfd/tps65910.c                             | 22 +++++++++++++++-------
+ include/linux/mfd/tps65910.h                       |  2 +-
+ 3 files changed, 20 insertions(+), 8 deletions(-)
 
-> ---
-> v10-v11
-> - no changes
->
->  drivers/i2c/busses/i2c-designware-core.h    |  2 ++
->  drivers/i2c/busses/i2c-designware-platdrv.c | 41 +++++++++++++++++++++++++----
->  2 files changed, 38 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-> index 64a39a983410..7bfbcc62f6c5 100644
-> --- a/drivers/i2c/busses/i2c-designware-core.h
-> +++ b/drivers/i2c/busses/i2c-designware-core.h
-> @@ -228,6 +228,7 @@
->   * @disable: function to disable the controller
->   * @disable_int: function to disable all interrupts
->   * @init: function to initialize the I2C hardware
-> + * @mode: operation mode - DW_IC_MASTER or DW_IC_SLAVE
->   *
->   * HCNT and LCNT parameters can be used if the platform knows more accurate
->   * values than the one computed based only on the input clock frequency.
-> @@ -282,6 +283,7 @@ struct dw_i2c_dev {
->         void                    (*disable)(struct dw_i2c_dev *dev);
->         void                    (*disable_int)(struct dw_i2c_dev *dev);
->         int                     (*init)(struct dw_i2c_dev *dev);
-> +       int                     mode;
->  };
->
->  #define ACCESS_SWAP            0x00000001
-> diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-> index 1f38c807be5f..2ea6d0d25a01 100644
-> --- a/drivers/i2c/busses/i2c-designware-platdrv.c
-> +++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Synopsys DesignWare I2C adapter driver (master only).
-> + * Synopsys DesignWare I2C adapter driver.
->   *
->   * Based on the TI DAVINCI I2C adapter driver.
->   *
-> @@ -174,9 +174,13 @@ static inline int dw_i2c_acpi_configure(struct platform_device *pdev)
->
->  static void i2c_dw_configure_master(struct dw_i2c_dev *dev)
->  {
-> +       dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
-> +
->         dev->master_cfg = DW_IC_CON_MASTER | DW_IC_CON_SLAVE_DISABLE |
->                           DW_IC_CON_RESTART_EN;
->
-> +       dev->mode = DW_IC_MASTER;
-> +
->         switch (dev->clk_freq) {
->         case 100000:
->                 dev->master_cfg |= DW_IC_CON_SPEED_STD;
-> @@ -189,6 +193,28 @@ static void i2c_dw_configure_master(struct dw_i2c_dev *dev)
->         }
->  }
->
-> +static void i2c_dw_configure_slave(struct dw_i2c_dev *dev)
-> +{
-> +       dev->functionality = I2C_FUNC_SLAVE | DW_IC_DEFAULT_FUNCTIONALITY;
-> +
-> +       dev->slave_cfg = DW_IC_CON_RX_FIFO_FULL_HLD_CTRL |
-> +                        DW_IC_CON_RESTART_EN | DW_IC_CON_STOP_DET_IFADDRESSED |
-> +                        DW_IC_CON_SPEED_FAST;
-> +
-> +       dev->mode = DW_IC_SLAVE;
-> +
-> +       switch (dev->clk_freq) {
-> +       case 100000:
-> +               dev->slave_cfg |= DW_IC_CON_SPEED_STD;
-> +               break;
-> +       case 3400000:
-> +               dev->slave_cfg |= DW_IC_CON_SPEED_HIGH;
-> +               break;
-> +       default:
-> +               dev->slave_cfg |= DW_IC_CON_SPEED_FAST;
-> +       }
-> +}
-> +
->  static int i2c_dw_plat_prepare_clk(struct dw_i2c_dev *i_dev, bool prepare)
->  {
->         if (IS_ERR(i_dev->clk))
-> @@ -302,9 +328,10 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->         if (ret)
->                 goto exit_reset;
->
-> -       dev->functionality = I2C_FUNC_10BIT_ADDR | DW_IC_DEFAULT_FUNCTIONALITY;
-> -
-> -       i2c_dw_configure_master(dev);
-> +       if (i2c_detect_slave_mode(&pdev->dev))
-> +               i2c_dw_configure_slave(dev);
-> +       else
-> +               i2c_dw_configure_master(dev);
->
->         dev->clk = devm_clk_get(&pdev->dev, NULL);
->         if (!i2c_dw_plat_prepare_clk(dev, true)) {
-> @@ -333,7 +360,11 @@ static int dw_i2c_plat_probe(struct platform_device *pdev)
->                 pm_runtime_enable(&pdev->dev);
->         }
->
-> -       ret = i2c_dw_probe(dev);
-> +       if (dev->mode == DW_IC_SLAVE)
-> +               ret = i2c_dw_probe_slave(dev);
-> +       else
-> +               ret = i2c_dw_probe(dev);
-> +
->         if (ret)
->                 goto exit_probe;
->
-> --
-> 2.13.0
->
->
-
-
-
+diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
+index 38833e63a59f9..8af1202b381dc 100644
+--- a/Documentation/devicetree/bindings/mfd/tps65910.txt
++++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
+@@ -61,6 +61,10 @@ Optional properties:
+   There should be 9 entries here, one for each gpio.
+ - ti,system-power-controller: Telling whether or not this pmic is controlling
+   the system power.
++- ti,sleep-enable: Enable SLEEP state.
++- ti,sleep-keep-therm: Keep thermal monitoring on in sleep state.
++- ti,sleep-keep-ck32k: Keep the 32KHz clock output on in sleep state.
++- ti,sleep-keep-hsclk: Keep high speed internal clock on in sleep state.
+ 
+ Regulator Optional properties:
+ - ti,regulator-ext-sleep-control: enable external sleep
+diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
+index 11cab1582f2f2..8263605f6d2fa 100644
+--- a/drivers/mfd/tps65910.c
++++ b/drivers/mfd/tps65910.c
+@@ -328,11 +328,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
+ 		goto err_sleep_init;
+ 	}
+ 
+-	/* Return if there is no sleep keepon data. */
+-	if (!pmic_pdata->slp_keepon)
+-		return 0;
+-
+-	if (pmic_pdata->slp_keepon->therm_keepon) {
++	if (pmic_pdata->slp_keepon.therm_keepon) {
+ 		ret = tps65910_reg_set_bits(tps65910,
+ 				TPS65910_SLEEP_KEEP_RES_ON,
+ 				SLEEP_KEEP_RES_ON_THERM_KEEPON_MASK);
+@@ -342,7 +338,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
+ 		}
+ 	}
+ 
+-	if (pmic_pdata->slp_keepon->clkout32k_keepon) {
++	if (pmic_pdata->slp_keepon.clkout32k_keepon) {
+ 		ret = tps65910_reg_set_bits(tps65910,
+ 				TPS65910_SLEEP_KEEP_RES_ON,
+ 				SLEEP_KEEP_RES_ON_CLKOUT32K_KEEPON_MASK);
+@@ -352,7 +348,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
+ 		}
+ 	}
+ 
+-	if (pmic_pdata->slp_keepon->i2chs_keepon) {
++	if (pmic_pdata->slp_keepon.i2chs_keepon) {
+ 		ret = tps65910_reg_set_bits(tps65910,
+ 				TPS65910_SLEEP_KEEP_RES_ON,
+ 				SLEEP_KEEP_RES_ON_I2CHS_KEEPON_MASK);
+@@ -415,6 +411,18 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
+ 	prop = of_property_read_bool(np, "ti,en-ck32k-xtal");
+ 	board_info->en_ck32k_xtal = prop;
+ 
++	prop = of_property_read_bool(np, "ti,sleep-enable");
++	board_info->en_dev_slp = prop;
++
++	prop = of_property_read_bool(np, "ti,sleep-keep-therm");
++	board_info->slp_keepon.therm_keepon = prop;
++
++	prop = of_property_read_bool(np, "ti,sleep-keep-ck32k");
++	board_info->slp_keepon.clkout32k_keepon = prop;
++
++	prop = of_property_read_bool(np, "ti,sleep-keep-hsclk");
++	board_info->slp_keepon.i2chs_keepon = prop;
++
+ 	board_info->irq = client->irq;
+ 	board_info->irq_base = -1;
+ 	board_info->pm_off = of_property_read_bool(np,
+diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
+index ffb21e79204d6..deffdcd0236f9 100644
+--- a/include/linux/mfd/tps65910.h
++++ b/include/linux/mfd/tps65910.h
+@@ -879,7 +879,7 @@ struct tps65910_board {
+ 	bool en_ck32k_xtal;
+ 	bool en_dev_slp;
+ 	bool pm_off;
+-	struct tps65910_sleep_keepon_data *slp_keepon;
++	struct tps65910_sleep_keepon_data slp_keepon;
+ 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
+ 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
+ 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
 -- 
-With Best Regards,
-Andy Shevchenko
+2.11.0
