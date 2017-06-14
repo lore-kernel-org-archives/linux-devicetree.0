@@ -1,102 +1,111 @@
-From: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 11/18] spi: qup: properly detect extra interrupts
-Date: Wed, 14 Jun 2017 16:51:07 -0500
-Message-ID: <CAEsOVNfKcc7BxRpU7S8m30kuHhh9j4MUw5pY50aWWaQnUDfvng@mail.gmail.com>
-References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
- <1497419551-21834-12-git-send-email-varada@codeaurora.org>
- <bb1469ad-542f-1a47-5ef9-84d7cd02cf49@codeaurora.org> <20170614195953.GD32733@hector.wework.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH 6/8] leds: as3645a: Add LED flash class driver
+Date: Thu, 15 Jun 2017 01:10:29 +0300
+Message-ID: <20170614221028.GS12407@valkosipuli.retiisi.org.uk>
+References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1497433639-13101-7-git-send-email-sakari.ailus@linux.intel.com>
+ <343d88ea-c839-6682-df84-844f92bc9050@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170614195953.GD32733-5taXn+FmohyKb9UB7mSz9QC/G2K4zDHf@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <343d88ea-c839-6682-df84-844f92bc9050@gmail.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, sebastian.reichel@collabora.co.uk, robh@kernel.org, pavel@ucw.cz
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 2:59 PM, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Jun 14, 2017 at 12:57:25PM +0530, Sricharan R wrote:
->> Hi Varada,
->>
->> On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
->> > It's possible for a SPI transaction to complete and get another
->> > interrupt and have it processed on the same spi_transfer before the
->> > transfer_one can set it to NULL.
->> >
->> > This masks unexpected interrupts, so let's set the spi_transfer to
->> > NULL in the interrupt once the transaction is done. So we can
->> > properly detect these bad interrupts and print warning messages.
->> >
->> > Signed-off-by: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> > Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> > ---
->> >  drivers/spi/spi-qup.c | 20 +++++++++++---------
->> >  1 file changed, 11 insertions(+), 9 deletions(-)
->> >
->> > diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
->> > index bd53e82..1a2a9d9 100644
->> > --- a/drivers/spi/spi-qup.c
->> > +++ b/drivers/spi/spi-qup.c
->> > @@ -496,13 +496,13 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
->> >     struct spi_qup *controller = dev_id;
->> >     struct spi_transfer *xfer;
->> >     u32 opflags, qup_err, spi_err;
->> > -   unsigned long flags;
->> >     int error = 0;
->> > +   bool done = 0;
->> >
->> > -   spin_lock_irqsave(&controller->lock, flags);
->> > +   spin_lock(&controller->lock);
->> >     xfer = controller->xfer;
->> >     controller->xfer = NULL;
->> > -   spin_unlock_irqrestore(&controller->lock, flags);
->> > +   spin_unlock(&controller->lock);
->>
->>  Why change the locking here ?
->>
->> >
->> >     qup_err = readl_relaxed(controller->base + QUP_ERROR_FLAGS);
->> >     spi_err = readl_relaxed(controller->base + SPI_ERROR_FLAGS);
->> > @@ -556,16 +556,19 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
->> >                     spi_qup_write(controller, xfer);
->> >     }
->> >
->> > -   spin_lock_irqsave(&controller->lock, flags);
->> > -   controller->error = error;
->> > -   controller->xfer = xfer;
->> > -   spin_unlock_irqrestore(&controller->lock, flags);
->> > -
->> >     /* re-read opflags as flags may have changed due to actions above */
->> >     opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
->> >
->> >     if ((controller->rx_bytes == xfer->len &&
->> >             (opflags & QUP_OP_MAX_INPUT_DONE_FLAG)) ||  error)
->> > +           done = true;
->> > +
->> > +   spin_lock(&controller->lock);
->> > +   controller->error = error;
->> > +   controller->xfer = done ? NULL : xfer;
->> > +   spin_unlock(&controller->lock);
->> > +
->> > +   if (done)
->> >             complete(&controller->done);
->> >
->>   Its not clear, why the driver is setting the controller->xfer = NULL
->>   and restoring it inside the irq. This patch seems to fix things on
->>   top of that.
->
-> I think the original intent was to make sure that the irqhandler knew that there
-> was no outstanding transaction.  This begs the question of why that would ever
-> be necessary.  I think it would suffice to rework all of that to remove that
-> behavior and perhaps enable/disable the irq as we need to during transactions.
->
-> I've never been a fan of the controller->xfer being set to NULL.
+Hi Jacek,
 
-Also, this patch presumably fixes an issue seen on Dakota SoCs,
-doesn't add or remote the NULL bits.
+Thanks for the review!
 
--M
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have to say I found the v4l2-flash-led-class framework quite useful, now
+that I refactored a driver for using it. Now we have a user for the
+indicator, too. :-)
+
+On Wed, Jun 14, 2017 at 11:15:24PM +0200, Jacek Anaszewski wrote:
+> > +static __maybe_unused int as3645a_suspend(struct device *dev)
+> > +{
+> > +	struct i2c_client *client = to_i2c_client(dev);
+> > +	struct as3645a *flash = i2c_get_clientdata(client);
+> > +	int rval;
+> > +
+> > +	rval = as3645a_set_control(flash, AS_MODE_EXT_TORCH, false);
+> > +	dev_dbg(dev, "Suspend %s\n", rval < 0 ? "failed" : "ok");
+> > +
+> > +	return rval;
+> > +}
+> > +
+> > +static __maybe_unused int as3645a_resume(struct device *dev)
+> > +{
+> > +	struct i2c_client *client = to_i2c_client(dev);
+> > +	struct as3645a *flash = i2c_get_clientdata(client);
+> > +	int rval;
+> > +
+> > +	rval = as3645a_setup(flash);
+> > +
+> 
+> nitpicking: inconsistent coding style - there is no empty line before
+> dev_dbg() in the as3645a_suspend().
+
+Added one for as3645a_suspend() --- it should have been there.
+
+> 
+> > +	dev_dbg(dev, "Resume %s\n", rval < 0 ? "fail" : "ok");
+> > +
+> > +	return rval;
+> > +}
+
+...
+
+> > +static int as3645a_led_class_setup(struct as3645a *flash)
+> > +{
+> > +	struct led_classdev *fled_cdev = &flash->fled.led_cdev;
+> > +	struct led_classdev *iled_cdev = &flash->iled_cdev;
+> > +	struct led_flash_setting *cfg;
+> > +	int rval;
+> > +
+> > +	iled_cdev->name = "as3645a indicator";
+> > +	iled_cdev->brightness_set_blocking = as3645a_set_indicator_brightness;
+> > +	iled_cdev->max_brightness =
+> > +		flash->cfg.indicator_max_ua / AS_INDICATOR_INTENSITY_STEP;
+> > +
+> > +	rval = led_classdev_register(&flash->client->dev, iled_cdev);
+> > +	if (rval < 0)
+> > +		return rval;
+> > +
+> > +	cfg = &flash->fled.brightness;
+> > +	cfg->min = AS_FLASH_INTENSITY_MIN;
+> > +	cfg->max = flash->cfg.flash_max_ua;
+> > +	cfg->step = AS_FLASH_INTENSITY_STEP;
+> > +	cfg->val = flash->cfg.flash_max_ua;
+> > +
+> > +	cfg = &flash->fled.timeout;
+> > +	cfg->min = AS_FLASH_TIMEOUT_MIN;
+> > +	cfg->max = flash->cfg.flash_timeout_us;
+> > +	cfg->step = AS_FLASH_TIMEOUT_STEP;
+> > +	cfg->val = flash->cfg.flash_timeout_us;
+> > +
+> > +	flash->fled.ops = &as3645a_led_flash_ops;
+> > +
+> > +	fled_cdev->name = "as3645a flash";
+> 
+> LED class device name should be taken from label DT property,
+> or DT node name if the former wasn't defined.
+> 
+> Also LED device naming convention defines colon as a separator
+> between name segments.
+
+Right. I'll fix that.
+
+I just realised I'm missing DT binding documentation for this device; I'll
+add that, too.
+
+Is the preference to allow freely chosen node names for the LEDs? Now that
+there's the label, too, this appears to be somewhat duplicated information.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
