@@ -1,64 +1,33 @@
-From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Wed, 14 Jun 2017 11:39:17 -0700
-Message-ID: <d23bbbcc-9f3f-d664-fd83-58414925f566@broadcom.com>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
- <20170613050947.GA1684@localhost.localdomain>
- <cb008f0f-1585-653e-0b89-47478f9f4734@broadcom.com>
- <a4586d75-2aca-94f3-ab7a-fc94c9dc5a4a@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] MAINTAINERS: add device tree ABI documentation file
+Date: Wed, 14 Jun 2017 13:42:33 -0500
+Message-ID: <20170614184233.q5pt5dndc26twfpx@rob-hp-laptop>
+References: <1497394283-3766-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a4586d75-2aca-94f3-ab7a-fc94c9dc5a4a-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1497394283-3766-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 17-06-14 11:18 AM, Ray Jui wrote:
+On Tue, Jun 13, 2017 at 03:51:23PM -0700, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 > 
+> sysfs-firmware-ofw describes the /sys/firmware/devicetree/ hierarchy
+> and /proc/device-tree so add a file line for it to the entry
+> OPEN FIRMWARE AND FLATTENED DEVICE TREE
 > 
-> On 6/13/17 10:46 AM, Arun Parameswaran wrote:
->>
->> Hi Richard,
->>
->> On 17-06-12 10:09 PM, Richard Cochran wrote:
->>> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
->>>> +Example:
->>>> +
->>>> +ptp_dte: ptp_dte@180af650 {
->>>> +	compatible = "brcm,ptp-dte";
->>>> +	reg = <0x180af650 0x10>;
->>>> +	status = "okay";
->>>> +};
->>> This patch set looks okay, as far as it goes, but how does one
->>> actually use the clock?
->>>
->>> How does one connect this node to an Ethernet MAC, for example?
->> In some of the SoC's, the DTE's NCO is synced in hardware with the Ethernet's
->> 1588 Shim NCO (used for time-stamping the packets). We are working on getting
->> all the future SoC's synced this way (for Ethernet).
->>
-> 
-> So apparently you do not need any phandle based DT binding defined for
-> the connection between the Ethernet device node and the PTP device node?
-> 
-Correct. This driver doesn't need any phandle.
+> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 
-The Ethernet driver, in SoC's where the hardware link is not available,
-might need the phandle to this driver.
+Applied, thanks.
 
->> In other scenarios, we use an user-space app to perform the sync based on
->> time-stamps from external hardware sources like the Wi-Fi.
->>> Thanks,
->>> Richard
->>
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
