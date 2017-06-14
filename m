@@ -1,70 +1,81 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 08/18] spi: qup: Handle v1 dma completion differently
-Date: Wed, 14 Jun 2017 12:45:51 +0530
-Message-ID: <a0e499a7-8f89-96d6-9463-c2b3f774cd6d@codeaurora.org>
-References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
- <1497419551-21834-9-git-send-email-varada@codeaurora.org>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: Re: [PATCH 2/3] drm/panel: Add support for s6e63j0x03 panel driver
+Date: Wed, 14 Jun 2017 16:19:59 +0900
+Message-ID: <d87f4fcc-ad22-cd21-d6c5-a5ef1a5a8ab0@samsung.com>
+References: <1496984354-5271-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170609045938epcas5p216c0ff705d60a32ee57ecb55de9233b5@epcas5p2.samsung.com>
+ <1496984354-5271-3-git-send-email-hoegeun.kwon@samsung.com>
+ <04f1d0f1-0010-d21a-1d02-e4e5f9440e56@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497419551-21834-9-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <04f1d0f1-0010-d21a-1d02-e4e5f9440e56@samsung.com>
+Content-language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hyungwon Hwang <human.hwang@samsung.com>, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Varada,
-
-On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
-> Do not assign i/o completion callbacks while running
-> on v1 of QUP.
-> 
-> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/spi/spi-qup.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-> index 7c22ee4..0f6a4c7 100644
-> --- a/drivers/spi/spi-qup.c
-> +++ b/drivers/spi/spi-qup.c
-> @@ -334,6 +334,7 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
->  			  unsigned long timeout)
->  {
->  	struct spi_qup *qup = spi_master_get_devdata(master);
-> +	dma_async_tx_callback done = qup->qup_v1 ? NULL : spi_qup_dma_done;
->  	int ret;
->  
->  	/* before issuing the descriptors, set the QUP to run */
-> @@ -346,7 +347,7 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
->  
->  	if (xfer->rx_buf) {
->  		ret = spi_qup_prep_sg(master, xfer, DMA_DEV_TO_MEM,
-> -					spi_qup_dma_done, &qup->rxc);
-> +					done, &qup->rxc);
->  		if (ret)
->  			return ret;
->  
-> @@ -355,7 +356,7 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
->  
->  	if (xfer->tx_buf) {
->  		ret = spi_qup_prep_sg(master, xfer, DMA_MEM_TO_DEV,
-> -					spi_qup_dma_done, &qup->txc);
-> +					done, &qup->txc);
->  		if (ret)
->  			return ret;
->  
-> 
-
- Not sure why we cannot use dma callback for V1 ?
-
-Regards,
- Sricharan
-
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQW5kcnplaiwKClRoYW5rcyBmb3IgeW91ciByZXZpZXcuCgpPbiAwNi8xMi8yMDE3IDEwOjE2
+IFBNLCBBbmRyemVqIEhhamRhIHdyb3RlOgo+IEhpIEhvZWdldW4sCj4KPiBOaWNlIHRvIHNlZSBw
+YXRjaGVzIGNvbXBsZXRpbmcgc3VwcG9ydCBmb3IgbWFpbmxpbmVkIHBsYXRmb3Jtcy4KPgo+IE9u
+IDA5LjA2LjIwMTcgMDY6NTksIEhvZWdldW4gS3dvbiB3cm90ZToKPj4gVGhpcyBwYXRjaCBhZGRz
+IE1JUEktRFNJIGJhc2VkIFM2RTYzSjBYMDMgQU1PTEVEIExDRCBwYW5lbCBkcml2ZXIKPj4gd2hp
+Y2ggdXNlcyBtaXBpX2RzaSBidXMgdG8gY29tbXVuaWNhdGUgd2l0aCBwYW5lbC4gVGhlIHBhbmVs
+IGhhcwo+PiAzMjDDlzMyMCByZXNvbHV0aW9uIGluIDEuNjMiIHBoeXNpY2FsIHBhbmVsLiBUaGlz
+IHBhbmVsIGlzIHVzZWQgaW4KPj4gU2Ftc3VuZyBHYWxheHkgR2VhciAyLgo+Pgo+PiBTaWduZWQt
+b2ZmLWJ5OiBJbmtpIERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+Cj4+IFNpZ25lZC1vZmYtYnk6
+IEh5dW5nd29uIEh3YW5nIDxodW1hbi5od2FuZ0BzYW1zdW5nLmNvbT4KPj4gU2lnbmVkLW9mZi1i
+eTogSG9lZ2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+Cj4+IC0tLQo+PiAgIGRy
+aXZlcnMvZ3B1L2RybS9wYW5lbC9LY29uZmlnICAgICAgICAgICAgICAgICAgICB8ICAgNyArCj4+
+ICAgZHJpdmVycy9ncHUvZHJtL3BhbmVsL01ha2VmaWxlICAgICAgICAgICAgICAgICAgIHwgICAx
+ICsKPj4gICBkcml2ZXJzL2dwdS9kcm0vcGFuZWwvcGFuZWwtc2Ftc3VuZy1zNmU2M2oweDAzLmMg
+fCA0OTEgKysrKysrKysrKysrKysrKysrKysrKysKPj4gICAzIGZpbGVzIGNoYW5nZWQsIDQ5OSBp
+bnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9wYW5l
+bC9wYW5lbC1zYW1zdW5nLXM2ZTYzajB4MDMuYwo+Pgo+PgoKLi4uCgo+PiArCj4+ICtzdGF0aWMg
+aW50IHM2ZTYzajB4MDNfZW5hYmxlKHN0cnVjdCBkcm1fcGFuZWwgKnBhbmVsKQo+PiArewo+PiAr
+CXN0cnVjdCBzNmU2M2oweDAzICpjdHggPSBwYW5lbF90b19zNmU2M2oweDAzKHBhbmVsKTsKPj4g
+KwlzdHJ1Y3QgYmFja2xpZ2h0X2RldmljZSAqYmxfZGV2ID0gY3R4LT5ibF9kZXY7Cj4+ICsJdTgg
+c2VxW10gPSB7IE1JUElfRENTX1NFVF9ESVNQTEFZX09OIH07Cj4+ICsJaW50IHJldDsKPj4gKwo+
+PiArCXJldCA9IHM2ZTYzajB4MDNfZGNzX3dyaXRlX3NlcShjdHgsIHNlcSwgQVJSQVlfU0laRShz
+ZXEpKTsKPj4gKwlpZiAocmV0ID4gMCkKPj4gKwkJYmxfZGV2LT5wcm9wcy5wb3dlciA9IEZCX0JM
+QU5LX1VOQkxBTks7Cj4+ICsKPj4gKwlyZXR1cm4gMDsKPj4gK30KPiBGb3IgbWFueSAobWF5YmUg
+bW9zdCkgcGFuZWxzIHBvd2VyIG9uIHNlcXVlbmNlIGlzIGFzIGZvbGxvd3M6Cj4gMC4gRW5hYmxl
+IHBvd2VyIHN1cHBsaWVzIGFuZCBncGlvcy4KPiAxLiBJbml0aWFsaXphdGlvbiwgaW5jbHVkaW5n
+IE1JUElfRENTX0VYSVRfU0xFRVBfTU9ERQo+IDIuIFdhaXQgZm9yIDEyMG1zLCB0byBhdm9pZCBk
+aXNwbGF5IGdsaXRjaGVzLgo+IDMuIFVuYmxhbmtpbmcgYW5kIGFkanVzdGluZyBkaXNwbGF5LCBp
+bmNsdWRpbmcgTUlQSV9EQ1NfU0VUX0RJU1BMQVlfT04uCj4KPiBBbmQgcG93ZXItb2ZmOgo+IDQu
+IE1JUElfRENTX1NFVF9ESVNQTEFZX09GRgo+IDUuIE1JUElfRENTX0VOVEVSX1NMRUVQX01PREUK
+PiA2LiBXYWl0IGZvciAxMjBtcwo+IDcuIERpc2FibGUgcG93ZXIgc3VwcGxpZXMgYW5kIGdwaW9z
+Lgo+Cj4gSSBzdXBwb3NlIHdhaXRpbmcgZm9yIDEyMG1zIGlzIGEgZ29vZCBpbmRpY2F0b3Igd2hh
+dCBzaG91bGQgYmUgcHV0IGludG8KPiBwcmVwYXJlL2VuYWJsZS9kaXNhYmxlL3VucHJlcGFyZSBw
+aGFzZS4KPiBJbiBteSBvcGluaW9uIGl0IHNob3VsZCBiZSBhcyBmb2xsb3dzOgo+IFByZXBhcmU6
+IDAsIDEKPiBFbmFibGU6IDIsIDMKPiBEaXNhYmxlOiA0LDUsNgo+IFVucHJlcGFyZTogNwo+Cj4g
+V2hhdCBkbyB5b3UgdGhpbmsgYWJvdXQgaXQ/Cj4gQ291bGQgeW91IGFycmFuZ2UgdGhlIGNvZGUg
+dGhpcyB3YXkgYW5kIHRlc3QgaWYgaXQgd29ya3MgY29ycmVjdGx5Pwo+IE1heWJlIHlvdS9vdGhl
+ciBkZXZlbG9wZXJzIGhhdmUgc29tZSBvcGluaW9ucyBhYm91dCBpdD8KCkkgYWdyZWUgd2l0aCB5
+b3UuCkkgd2lsbCBzZW5kIHZlcjIgcGF0Y2ggd2l0aCB0aGUgYWJvdmUgc3R5bGUuCkFuZCBtb2Rp
+ZnkgaXQgdG8gdXNlIGFzIG1pcGlfZHNpX2Rjc18qLgoKPj4gKwo+PiArc3RhdGljIGNvbnN0IHN0
+cnVjdCBkcm1fZGlzcGxheV9tb2RlIGRlZmF1bHRfbW9kZSA9IHsKPj4gKwkuY2xvY2sgPSA0NjQ0
+LAo+PiArCS5oZGlzcGxheSA9IDMyMCwKPj4gKwkuaHN5bmNfc3RhcnQgPSAzMjAgKyAxLAo+PiAr
+CS5oc3luY19lbmQgPSAzMjAgKyAxICsgMSwKPj4gKwkuaHRvdGFsID0gMzIwICsgMSArIDEgKyAx
+LAo+PiArCS52ZGlzcGxheSA9IDMyMCwKPj4gKwkudnN5bmNfc3RhcnQgPSAzMjAgKyAxNTAsCj4+
+ICsJLnZzeW5jX2VuZCA9IDMyMCArIDE1MCArIDEsCj4+ICsJLnZ0b3RhbCA9IDMyMCArIDE1MCAr
+IDEgKyAyLAo+PiArCS52cmVmcmVzaCA9IDMwLAo+PiArCS5mbGFncyA9IDAsCj4+ICt9Owo+IGNs
+b2NrIHNob3VsZCBiZSBlcXVhbCB2dG90YWwqaHRvdGFsKnZyZWZyZXNoLCBpdCBpcyBsaXR0bGUg
+aGlnaGVyPyB3aGF0Cj4gaXMgdGhlIHJlYXNvbj8KPiBXaGF0IGlzIGFjdHVhbCByZWZyZXNoIHJh
+dGU/CgpUaGUgYWN0dWFsIHJlZnJlc2ggcmF0ZSBpcyAzMC40M0h6ClNvIEkgd2lsbCBtb2RmaXkg
+dGhlIGNsb2NrIEh6IHRvIDQ2NDkuCgooKDMyMyAqIDQ3MyApKiAzMC40MykgLyAxMDAwID0gNDY0
+OQoKQmVzdCByZWdhcmRzLApIb2VnZXVuCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
+dGluZm8vZHJpLWRldmVsCg==
