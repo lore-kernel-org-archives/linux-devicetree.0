@@ -1,110 +1,56 @@
-From: =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Subject: [PATCH] regulator: tps65910: wire up sleep control configuration
-Date: Wed, 14 Jun 2017 14:25:13 +0200
-Message-ID: <efc798c2a1140c545cc210a29ed2791495956510.1497442770.git.mirq-linux@rere.qmqm.pl>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Keerthy <j-keerthy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 01/23] arm: aspeed: Add clock-names property to timer node
+Date: Wed, 14 Jun 2017 14:39:22 +0200
+Message-ID: <1497443984-12371-1-git-send-email-daniel.lezcano@linaro.org>
+References: <20170614123800.GH2261@mai>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170614123800.GH2261@mai>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM PORT" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This enables configuring the PMIC's sleep mode via device-tree.
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
 
-A pointer indirection to sleep mode data is removed, as it simplifies
-the implementation slightly.
+The merging of a number of clocksource drivers into fttmr010 means we
+require clock-names to be specified in the Aspeed timer node, else the
+clocksource fails to probe and boot hangs.
 
-References: 201cf052810d20814a77ca0e0045a2c1a3508a1f
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/mfd/tps65910.txt |  4 ++++
- drivers/mfd/tps65910.c                             | 22 +++++++++++++++-------
- include/linux/mfd/tps65910.h                       |  2 +-
- 3 files changed, 20 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/aspeed-g4.dtsi | 1 +
+ arch/arm/boot/dts/aspeed-g5.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-index 38833e63a59f9..8af1202b381dc 100644
---- a/Documentation/devicetree/bindings/mfd/tps65910.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -61,6 +61,10 @@ Optional properties:
-   There should be 9 entries here, one for each gpio.
- - ti,system-power-controller: Telling whether or not this pmic is controlling
-   the system power.
-+- ti,sleep-enable: Enable SLEEP state.
-+- ti,sleep-keep-therm: Keep thermal monitoring on in sleep state.
-+- ti,sleep-keep-ck32k: Keep the 32KHz clock output on in sleep state.
-+- ti,sleep-keep-hsclk: Keep high speed internal clock on in sleep state.
+diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
+index 8c6bc29..3e74929 100644
+--- a/arch/arm/boot/dts/aspeed-g4.dtsi
++++ b/arch/arm/boot/dts/aspeed-g4.dtsi
+@@ -893,6 +893,7 @@
+ 				//interrupts = <16 17 18 35 36 37 38 39>;
+ 				interrupts = <16>;
+ 				clocks = <&clk_apb>;
++				clock-names = "PCLK";
+ 			};
  
- Regulator Optional properties:
- - ti,regulator-ext-sleep-control: enable external sleep
-diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-index 11cab1582f2f2..8263605f6d2fa 100644
---- a/drivers/mfd/tps65910.c
-+++ b/drivers/mfd/tps65910.c
-@@ -328,11 +328,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
- 		goto err_sleep_init;
- 	}
+ 			wdt1: wdt@1e785000 {
+diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
+index a0bea4a..1e6c701 100644
+--- a/arch/arm/boot/dts/aspeed-g5.dtsi
++++ b/arch/arm/boot/dts/aspeed-g5.dtsi
+@@ -1000,6 +1000,7 @@
+ 				//interrupts = <16 17 18 35 36 37 38 39>;
+ 				interrupts = <16>;
+ 				clocks = <&clk_apb>;
++				clock-names = "PCLK";
+ 			};
  
--	/* Return if there is no sleep keepon data. */
--	if (!pmic_pdata->slp_keepon)
--		return 0;
--
--	if (pmic_pdata->slp_keepon->therm_keepon) {
-+	if (pmic_pdata->slp_keepon.therm_keepon) {
- 		ret = tps65910_reg_set_bits(tps65910,
- 				TPS65910_SLEEP_KEEP_RES_ON,
- 				SLEEP_KEEP_RES_ON_THERM_KEEPON_MASK);
-@@ -342,7 +338,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
- 		}
- 	}
  
--	if (pmic_pdata->slp_keepon->clkout32k_keepon) {
-+	if (pmic_pdata->slp_keepon.clkout32k_keepon) {
- 		ret = tps65910_reg_set_bits(tps65910,
- 				TPS65910_SLEEP_KEEP_RES_ON,
- 				SLEEP_KEEP_RES_ON_CLKOUT32K_KEEPON_MASK);
-@@ -352,7 +348,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
- 		}
- 	}
- 
--	if (pmic_pdata->slp_keepon->i2chs_keepon) {
-+	if (pmic_pdata->slp_keepon.i2chs_keepon) {
- 		ret = tps65910_reg_set_bits(tps65910,
- 				TPS65910_SLEEP_KEEP_RES_ON,
- 				SLEEP_KEEP_RES_ON_I2CHS_KEEPON_MASK);
-@@ -415,6 +411,18 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
- 	prop = of_property_read_bool(np, "ti,en-ck32k-xtal");
- 	board_info->en_ck32k_xtal = prop;
- 
-+	prop = of_property_read_bool(np, "ti,sleep-enable");
-+	board_info->en_dev_slp = prop;
-+
-+	prop = of_property_read_bool(np, "ti,sleep-keep-therm");
-+	board_info->slp_keepon.therm_keepon = prop;
-+
-+	prop = of_property_read_bool(np, "ti,sleep-keep-ck32k");
-+	board_info->slp_keepon.clkout32k_keepon = prop;
-+
-+	prop = of_property_read_bool(np, "ti,sleep-keep-hsclk");
-+	board_info->slp_keepon.i2chs_keepon = prop;
-+
- 	board_info->irq = client->irq;
- 	board_info->irq_base = -1;
- 	board_info->pm_off = of_property_read_bool(np,
-diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
-index ffb21e79204d6..deffdcd0236f9 100644
---- a/include/linux/mfd/tps65910.h
-+++ b/include/linux/mfd/tps65910.h
-@@ -879,7 +879,7 @@ struct tps65910_board {
- 	bool en_ck32k_xtal;
- 	bool en_dev_slp;
- 	bool pm_off;
--	struct tps65910_sleep_keepon_data *slp_keepon;
-+	struct tps65910_sleep_keepon_data slp_keepon;
- 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
- 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
- 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
 -- 
-2.11.0
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
