@@ -1,43 +1,34 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH v2 0/3] clk: hi3660: add more clocks and fix bugs
-Date: Wed, 14 Jun 2017 11:20:58 +0800
-Message-ID: <CAFGCpxxtrqCNXCM44XfoEON22jjKcCtNkA+bvOMU-38gXTkX6Q@mail.gmail.com>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] clk: hi3660: fix wrong parent name of
+ clk_mux_sysbus
+Date: Wed, 14 Jun 2017 11:23:38 +0800
+Message-ID: <404d8df2-9a12-1735-6676-097812000178@linaro.org>
 References: <20170526073821.25971-1-guodong.xu@linaro.org>
+ <20170526073821.25971-2-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170526073821.25971-1-guodong.xu@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "chenjun (P)" <chenjun14@huawei.com>, zhongkaihua <zhongkaihua@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, Leo Yan <leo.yan@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Guodong Xu <guodong.xu@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170526073821.25971-2-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, zhongkaihua-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, leo.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stephen, Mike
 
-May I get your review opinion and comments on this patchset?
 
-Thanks you.
+On 2017年05月26日 15:38, Guodong Xu wrote:
+> From: Chen Jun <chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+>
+> Parent name of clk_mux_sysbus is not correct. This patch fixes it.
+>
+> Signed-off-by: Chen Jun <chenjun14-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: John Stultz <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
--Guodong Xu
-
-On Fri, May 26, 2017 at 3:38 PM, Guodong Xu <guodong.xu@linaro.org> wrote:
-> This patchset adds more clocks for hi3660, video encoder/decoder, ISP. It
-> includes also bug fixes.
->
-> v2 update:
->  - added ISP clocks into patch 2.
->
-> Chen Jun (2):
->   clk: hi3660: fix wrong parent name of clk_mux_sysbus
->   clk: hi3660: add clocks for video encoder, decoder and ISP
->
-> Zhong Kaihua (1):
->   clk: hi3660: Set PPLL2 to 2880M
->
->  drivers/clk/hisilicon/clk-hi3660.c       | 50 +++++++++++++++++++++++++++++---
->  include/dt-bindings/clock/hi3660-clock.h | 17 +++++++++++
->  2 files changed, 63 insertions(+), 4 deletions(-)
->
-> --
-> 2.10.2
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
