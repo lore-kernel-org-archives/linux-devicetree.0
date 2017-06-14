@@ -1,177 +1,60 @@
-From: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 1/3] dt-bindings: remoteproc: Add Keystone DSP remoteproc binding
-Date: Tue, 13 Jun 2017 18:45:11 -0500
-Message-ID: <20170613234513.7624-2-s-anna@ti.com>
-References: <20170613234513.7624-1-s-anna@ti.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] soc: brcmstb: Add driver for DPFE
+Date: Tue, 13 Jun 2017 17:03:26 -0700
+Message-ID: <5b79dee6-bb84-30b3-1bb2-287b24d42534@gmail.com>
+References: <20170613223710.31719-1-code@mmayer.net>
+ <20170613223710.31719-3-code@mmayer.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170613234513.7624-1-s-anna-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20170613223710.31719-3-code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
+To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the device tree bindings document for the Texas Instrument's
-Keystone 2 DSP remoteproc devices.
+Hi Markus,
 
-Signed-off-by: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Acked-by: Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-v3:
- - Picked up the Acks from Rob and Santosh, and addressed
-   the one minor comment from Rob - removing the label property
-   usage from example
-v2: https://patchwork.kernel.org/patch/9773681/
+On 06/13/2017 03:37 PM, Markus Mayer wrote:
+> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> This driver allows access to DRAM properties, such as the refresh rate,
+> via the Broadcom STB DDR PHY Front End (DPFE). The refresh rate can be
+> used as indirect indicator of the DRAM temperature.
+> 
+> The driver also allows setting of the sampling interval.
+> 
+> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
+>  MAINTAINERS                      |   8 +
+>  drivers/soc/bcm/brcmstb/Makefile |   2 +-
+>  drivers/soc/bcm/brcmstb/dpfe.c   | 689 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 698 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/soc/bcm/brcmstb/dpfe.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f7d568b..04f0be6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2864,6 +2864,14 @@ S:	Maintained
+>  F:	Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>  F:	drivers/cpufreq/brcmstb*
+>  
+> +BROADCOM STB SOC DPFE DRIVER
+> +M:	Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> +M:	bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+> +L:	linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+> +S:	Maintained
+> +F:	Documentation/devicetree/bindings/soc/bcm/brcm,dpfe-cpu.txt
+> +F:	drivers/misc/brcmstb-dpfe.c
 
- .../bindings/remoteproc/ti,keystone-rproc.txt      | 133 +++++++++++++++++++++
- 1 file changed, 133 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
-new file mode 100644
-index 000000000000..2aac1aa4123d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/ti,keystone-rproc.txt
-@@ -0,0 +1,133 @@
-+TI Keystone DSP devices
-+=======================
-+
-+The TI Keystone 2 family of SoCs usually have one or more (upto 8) TI DSP Core
-+sub-systems that are used to offload some of the processor-intensive tasks or
-+algorithms, for achieving various system level goals.
-+
-+These processor sub-systems usually contain additional sub-modules like L1
-+and/or L2 caches/SRAMs, an Interrupt Controller, an external memory controller,
-+a dedicated local power/sleep controller etc. The DSP processor core in
-+Keystone 2 SoCs is usually a TMS320C66x CorePac processor.
-+
-+DSP Device Node:
-+================
-+Each DSP Core sub-system is represented as a single DT node, and should also
-+have an alias with the stem 'rproc' defined. Each node has a number of required
-+or optional properties that enable the OS running on the host processor (ARM
-+CorePac) to perform the device management of the remote processor and to
-+communicate with the remote processor.
-+
-+Required properties:
-+--------------------
-+The following are the mandatory properties:
-+
-+- compatible:		Should be one of the following,
-+			    "ti,k2hk-dsp" for DSPs on Keystone 2 66AK2H/K SoCs
-+			    "ti,k2l-dsp" for DSPs on Keystone 2 66AK2L SoCs
-+			    "ti,k2e-dsp" for DSPs on Keystone 2 66AK2E SoCs
-+
-+- reg:			Should contain an entry for each value in 'reg-names'.
-+			Each entry should have the memory region's start address
-+			and the size of the region, the representation matching
-+			the parent node's '#address-cells' and '#size-cells' values.
-+
-+- reg-names:		Should contain strings with the following names, each
-+			representing a specific internal memory region, and
-+			should be defined in this order,
-+			     "l2sram", "l1pram", "l1dram"
-+
-+- clocks: 		Should contain the device's input clock, and should be
-+			defined as per the bindings in,
-+			Documentation/devicetree/bindings/clock/keystone-gate.txt
-+
-+- ti,syscon-dev:	Should be a pair of the phandle to the Keystone Device
-+			State Control node, and the register offset of the DSP
-+			boot address register within that node's address space.
-+
-+- resets:		Should contain the phandle to the reset controller node
-+			managing the resets for this device, and a reset
-+			specifier. Please refer to the following reset bindings
-+			for the reset argument specifier as per SoC,
-+			Documentation/devicetree/bindings/reset/ti-syscon-reset.txt
-+			    for 66AK2HK/66AK2L/66AK2E SoCs
-+
-+- interrupt-parent:	Should contain a phandle to the Keystone 2 IRQ controller
-+			IP node that is used by the ARM CorePac processor to
-+			receive interrupts from the DSP remote processors. See
-+			Documentation/devicetree/bindings/interrupt-controller/ti,keystone-irq.txt
-+			for details.
-+
-+- interrupts: 		Should contain an entry for each value in 'interrupt-names'.
-+			Each entry should have the interrupt source number used by
-+			the remote processor to the host processor. The values should
-+			follow the interrupt-specifier format as dictated by the
-+			'interrupt-parent' node. The purpose of each is as per the
-+			description in the 'interrupt-names' property.
-+
-+- interrupt-names:	Should contain strings with the following names, each
-+			representing a specific interrupt,
-+			    "vring" - interrupt for virtio based IPC
-+			    "exception" - interrupt for exception notification
-+
-+- kick-gpios: 		Should specify the gpio device needed for the virtio IPC
-+			stack. This will be used to interrupt the remote processor.
-+			The gpio device to be used is as per the bindings in,
-+			Documentation/devicetree/bindings/gpio/gpio-dsp-keystone.txt
-+
-+Optional properties:
-+--------------------
-+
-+- memory-region:	phandle to the reserved memory node to be associated
-+			with the remoteproc device. The reserved memory node
-+			can be a CMA memory node, and should be defined as
-+			per the bindings in
-+			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
-+
-+
-+Example:
-+--------
-+	/* 66AK2H/K DSP aliases */
-+	aliases {
-+		rproc0 = &dsp0;
-+		rproc1 = &dsp1;
-+		rproc2 = &dsp2;
-+		rproc3 = &dsp3;
-+		rproc4 = &dsp4;
-+		rproc5 = &dsp5;
-+		rproc6 = &dsp6;
-+		rproc7 = &dsp7;
-+	};
-+
-+	/* 66AK2H/K DSP memory node */
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		dsp_common_memory: dsp-common-memory@81f800000 {
-+			compatible = "shared-dma-pool";
-+			reg = <0x00000008 0x1f800000 0x00000000 0x800000>;
-+			reusable;
-+		};
-+	};
-+
-+	/* 66AK2H/K DSP node */
-+	soc {
-+		dsp0: dsp@10800000 {
-+			compatible = "ti,k2hk-dsp";
-+			reg = <0x10800000 0x00100000>,
-+			      <0x10e00000 0x00008000>,
-+			      <0x10f00000 0x00008000>;
-+			reg-names = "l2sram", "l1pram", "l1dram";
-+			clocks = <&clkgem0>;
-+			ti,syscon-dev = <&devctrl 0x40>;
-+			resets = <&pscrst 0>;
-+			interrupt-parent = <&kirq0>;
-+			interrupts = <0 8>;
-+			interrupt-names = "vring", "exception";
-+			kick-gpios = <&dspgpio0 27 0>;
-+			memory-region = <&dsp_common_memory>;
-+		};
-+
-+	};
+Just one nit: this should be drivers/soc/bcm/brcmstb/dpfe.c, other than
+that, I just need an Ack from Rob on the binding, and I will queue this
+up, thanks!
 -- 
-2.13.1
-
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
