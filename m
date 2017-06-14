@@ -1,7 +1,7 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/4] of: find_node_by_full_name rewrite to compare each level
-Date: Wed, 14 Jun 2017 15:30:23 -0500
-Message-ID: <20170614203025.7581-3-robh@kernel.org>
+Subject: [PATCH 4/4] of: Convert to using %pOF instead of full_name
+Date: Wed, 14 Jun 2017 15:30:25 -0500
+Message-ID: <20170614203025.7581-5-robh@kernel.org>
 References: <20170614203025.7581-1-robh@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170614203025.7581-1-robh@kernel.org>
@@ -10,129 +10,863 @@ To: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>
 Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-find_node_by_full_name() does the same thing as of_find_node_by_path(),
-but takes no locks and doesn't work on aliases. Refactor
-of_find_node_opts_by_path() into __of_find_node_by_full_path() and
-replace find_node_by_full_name() with it.
+Now that we have a custom printf format specifier, convert users of
+full_name to use %pOF instead. This is preparation to remove storing
+of the full path string for each node.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/base.c       | 29 +++++++++++++++++++----------
- drivers/of/of_private.h |  3 +++
- drivers/of/resolver.c   | 30 +++---------------------------
- 3 files changed, 25 insertions(+), 37 deletions(-)
+ drivers/of/address.c  | 21 ++++++++--------
+ drivers/of/base.c     | 42 ++++++++++++++++----------------
+ drivers/of/device.c   |  2 +-
+ drivers/of/dynamic.c  | 33 +++++++++++++-------------
+ drivers/of/irq.c      | 10 ++++----
+ drivers/of/of_mdio.c  | 10 ++++----
+ drivers/of/of_pci.c   | 29 +++++++++++-----------
+ drivers/of/overlay.c  | 21 ++++++++--------
+ drivers/of/platform.c | 32 ++++++++++++-------------
+ drivers/of/unittest.c | 66 +++++++++++++++++++++++++++++----------------------
+ 10 files changed, 136 insertions(+), 130 deletions(-)
 
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 72914cdfce2a..6cce3c750a8f 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -559,7 +559,7 @@ static u64 __of_translate_address(struct device_node *dev,
+ 	int na, ns, pna, pns;
+ 	u64 result = OF_BAD_ADDR;
+ 
+-	pr_debug("** translation for device %s **\n", of_node_full_name(dev));
++	pr_debug("** translation for device %pOF **\n", dev);
+ 
+ 	/* Increase refcount at current level */
+ 	of_node_get(dev);
+@@ -573,13 +573,13 @@ static u64 __of_translate_address(struct device_node *dev,
+ 	/* Count address cells & copy address locally */
+ 	bus->count_cells(dev, &na, &ns);
+ 	if (!OF_CHECK_COUNTS(na, ns)) {
+-		pr_debug("Bad cell count for %s\n", of_node_full_name(dev));
++		pr_debug("Bad cell count for %pOF\n", dev);
+ 		goto bail;
+ 	}
+ 	memcpy(addr, in_addr, na * 4);
+ 
+-	pr_debug("bus is %s (na=%d, ns=%d) on %s\n",
+-	    bus->name, na, ns, of_node_full_name(parent));
++	pr_debug("bus is %s (na=%d, ns=%d) on %pOF\n",
++	    bus->name, na, ns, parent);
+ 	of_dump_addr("translating address:", addr, na);
+ 
+ 	/* Translate */
+@@ -600,13 +600,12 @@ static u64 __of_translate_address(struct device_node *dev,
+ 		pbus = of_match_bus(parent);
+ 		pbus->count_cells(dev, &pna, &pns);
+ 		if (!OF_CHECK_COUNTS(pna, pns)) {
+-			pr_err("Bad cell count for %s\n",
+-			       of_node_full_name(dev));
++			pr_err("Bad cell count for %pOF\n", dev);
+ 			break;
+ 		}
+ 
+-		pr_debug("parent bus is %s (na=%d, ns=%d) on %s\n",
+-		    pbus->name, pna, pns, of_node_full_name(parent));
++		pr_debug("parent bus is %s (na=%d, ns=%d) on %pOF\n",
++		    pbus->name, pna, pns, parent);
+ 
+ 		/* Apply bus translation */
+ 		if (of_translate_one(dev, bus, pbus, addr, na, ns, pna, rprop))
+@@ -855,7 +854,7 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	}
+ 
+ 	if (!ranges) {
+-		pr_debug("no dma-ranges found for node(%s)\n", np->full_name);
++		pr_debug("no dma-ranges found for node(%pOF)\n", np);
+ 		ret = -ENODEV;
+ 		goto out;
+ 	}
+@@ -872,8 +871,8 @@ int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *siz
+ 	dmaaddr = of_read_number(ranges, naddr);
+ 	*paddr = of_translate_dma_address(np, ranges);
+ 	if (*paddr == OF_BAD_ADDR) {
+-		pr_err("translation of DMA address(%pad) to CPU address failed node(%s)\n",
+-		       dma_addr, np->full_name);
++		pr_err("translation of DMA address(%pad) to CPU address failed node(%pOF)\n",
++		       dma_addr, np);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 054159ccd5f8..02be991a29c5 100644
+index 02be991a29c5..bbbaf1d080c2 100644
 --- a/drivers/of/base.c
 +++ b/drivers/of/base.c
-@@ -780,6 +780,24 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
- 	return NULL;
+@@ -160,7 +160,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ 	pp->attr.read = of_node_property_read;
+ 
+ 	rc = sysfs_create_bin_file(&np->kobj, &pp->attr);
+-	WARN(rc, "error adding attribute %s to node %s\n", pp->name, np->full_name);
++	WARN(rc, "error adding attribute %s to node %pOF\n", pp->name, np);
+ 	return rc;
  }
  
-+struct device_node *__of_find_node_by_full_path(struct device_node *node,
-+						const char *path)
-+{
-+	const char *separator = strchr(path, ':');
-+
-+	while (node && *path == '/') {
-+		struct device_node *tmp = node;
-+
-+		path++; /* Increment past '/' delimiter */
-+		node = __of_find_node_by_path(node, path);
-+		of_node_put(tmp);
-+		path = strchrnul(path, '/');
-+		if (separator && separator < path)
-+			break;
-+	}
-+	return node;
-+}
-+
- /**
-  *	of_find_node_opts_by_path - Find a node matching a full OF path
-  *	@path: Either the full path to match, or if the path does not
-@@ -839,16 +857,7 @@ struct device_node *of_find_node_opts_by_path(const char *path, const char **opt
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	if (!np)
- 		np = of_node_get(of_root);
--	while (np && *path == '/') {
--		struct device_node *tmp = np;
--
--		path++; /* Increment past '/' delimiter */
--		np = __of_find_node_by_path(np, path);
--		of_node_put(tmp);
--		path = strchrnul(path, '/');
--		if (separator && separator < path)
--			break;
--	}
-+	np =__of_find_node_by_full_path(np, path);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 	return np;
- }
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-index 4ebb0149d118..e7bbfa3e9632 100644
---- a/drivers/of/of_private.h
-+++ b/drivers/of/of_private.h
-@@ -77,6 +77,9 @@ extern void *__unflatten_device_tree(const void *blob,
- struct property *__of_prop_dup(const struct property *prop, gfp_t allocflags);
- __printf(2, 3) struct device_node *__of_node_dup(const struct device_node *np, const char *fmt, ...);
+@@ -1142,8 +1142,8 @@ int of_property_count_elems_of_size(const struct device_node *np,
+ 		return -ENODATA;
  
-+struct device_node *__of_find_node_by_full_path(struct device_node *node,
-+						const char *path);
-+
- extern const void *__of_get_property(const struct device_node *np,
- 				     const char *name, int *lenp);
- extern int __of_add_property(struct device_node *np, struct property *prop);
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 63626d7d9adb..b3f987c1301b 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -20,35 +20,11 @@
- #include <linux/errno.h>
- #include <linux/slab.h>
+ 	if (prop->length % elem_size != 0) {
+-		pr_err("size of %s in node %s is not a multiple of %d\n",
+-		       propname, np->full_name, elem_size);
++		pr_err("size of %s in node %pOF is not a multiple of %d\n",
++		       propname, np, elem_size);
+ 		return -EINVAL;
+ 	}
  
-+#include "of_private.h"
-+
- /* illegal phandle value (set when unresolved) */
- #define OF_PHANDLE_ILLEGAL	0xdeadbeef
- 
--/**
-- * Find a node with the give full name by recursively following any of
-- * the child node links.
-- */
--static struct device_node *find_node_by_full_name(struct device_node *node,
--		const char *full_name)
--{
--	struct device_node *child, *found;
--
--	if (!node)
--		return NULL;
--
--	if (!of_node_cmp(node->full_name, full_name))
--		return of_node_get(node);
--
--	for_each_child_of_node(node, child) {
--		found = find_node_by_full_name(child, full_name);
--		if (found != NULL) {
--			of_node_put(child);
--			return found;
--		}
--	}
--
--	return NULL;
--}
--
- static phandle live_tree_max_phandle(void)
+@@ -1574,7 +1574,7 @@ EXPORT_SYMBOL_GPL(of_property_read_string_helper);
+ void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
  {
- 	struct device_node *node;
-@@ -138,7 +114,7 @@ static int update_usages_of_a_phandle_reference(struct device_node *overlay,
- 		if (err)
- 			goto err_fail;
+ 	int i;
+-	printk("%s %s", msg, of_node_full_name(args->np));
++	printk("%s %pOF", msg, args->np);
+ 	for (i = 0; i < args->args_count; i++) {
+ 		const char delim = i ? ',' : ':';
  
--		refnode = find_node_by_full_name(overlay, node_path);
-+		refnode = __of_find_node_by_full_path(overlay, node_path);
- 		if (!refnode)
+@@ -1635,17 +1635,17 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
+ 
+ 		if (it->cells_name) {
+ 			if (!it->node) {
+-				pr_err("%s: could not find phandle\n",
+-				       it->parent->full_name);
++				pr_err("%pOF: could not find phandle\n",
++				       it->parent);
+ 				goto err;
+ 			}
+ 
+ 			if (of_property_read_u32(it->node, it->cells_name,
+ 						 &count)) {
+-				pr_err("%s: could not get %s for %s\n",
+-				       it->parent->full_name,
++				pr_err("%pOF: could not get %s for %pOF\n",
++				       it->parent,
+ 				       it->cells_name,
+-				       it->node->full_name);
++				       it->node);
+ 				goto err;
+ 			}
+ 		} else {
+@@ -1657,8 +1657,8 @@ int of_phandle_iterator_next(struct of_phandle_iterator *it)
+ 		 * property data length
+ 		 */
+ 		if (it->cur + count > it->list_end) {
+-			pr_err("%s: arguments longer than property\n",
+-			       it->parent->full_name);
++			pr_err("%pOF: arguments longer than property\n",
++			       it->parent);
+ 			goto err;
+ 		}
+ 	}
+@@ -2089,8 +2089,8 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
+ 	strncpy(ap->stem, stem, stem_len);
+ 	ap->stem[stem_len] = 0;
+ 	list_add_tail(&ap->link, &aliases_lookup);
+-	pr_debug("adding DT alias:%s: stem=%s id=%i node=%s\n",
+-		 ap->alias, ap->stem, ap->id, of_node_full_name(np));
++	pr_debug("adding DT alias:%s: stem=%s id=%i node=%pOF\n",
++		 ap->alias, ap->stem, ap->id, np);
+ }
+ 
+ /**
+@@ -2344,8 +2344,8 @@ int of_graph_parse_endpoint(const struct device_node *node,
+ {
+ 	struct device_node *port_node = of_get_parent(node);
+ 
+-	WARN_ONCE(!port_node, "%s(): endpoint %s has no parent node\n",
+-		  __func__, node->full_name);
++	WARN_ONCE(!port_node, "%s(): endpoint %pOF has no parent node\n",
++		  __func__, node);
+ 
+ 	memset(endpoint, 0, sizeof(*endpoint));
+ 
+@@ -2428,14 +2428,14 @@ struct device_node *of_graph_get_next_endpoint(const struct device_node *parent,
+ 		of_node_put(node);
+ 
+ 		if (!port) {
+-			pr_err("graph: no port node found in %s\n",
+-			       parent->full_name);
++			pr_err("graph: no port node found in %pOF\n",
++			       parent);
+ 			return NULL;
+ 		}
+ 	} else {
+ 		port = of_get_parent(prev);
+-		if (WARN_ONCE(!port, "%s(): endpoint %s has no parent node\n",
+-			      __func__, prev->full_name))
++		if (WARN_ONCE(!port, "%s(): endpoint %pOF has no parent node\n",
++			      __func__, prev))
+ 			return NULL;
+ 	}
+ 
+@@ -2551,8 +2551,8 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
+ 
+ 	endpoint_node = of_graph_get_endpoint_by_regs(node, port, endpoint);
+ 	if (!endpoint_node) {
+-		pr_debug("no valid endpoint (%d, %d) for node %s\n",
+-			 port, endpoint, node->full_name);
++		pr_debug("no valid endpoint (%d, %d) for node %pOF\n",
++			 port, endpoint, node);
+ 		return NULL;
+ 	}
+ 
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 9416d052cb89..cce2f48c92be 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -294,7 +294,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		return;
+ 
+ 	add_uevent_var(env, "OF_NAME=%s", dev->of_node->name);
+-	add_uevent_var(env, "OF_FULLNAME=%s", dev->of_node->full_name);
++	add_uevent_var(env, "OF_FULLNAME=%pOF", dev->of_node);
+ 	if (dev->of_node->type && strcmp("<NULL>", dev->of_node->type) != 0)
+ 		add_uevent_var(env, "OF_TYPE=%s", dev->of_node->type);
+ 
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 888fdbc09992..4ee1bd9bd79c 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -98,14 +98,14 @@ int of_reconfig_notify(unsigned long action, struct of_reconfig_data *p)
+ 	switch (action) {
+ 	case OF_RECONFIG_ATTACH_NODE:
+ 	case OF_RECONFIG_DETACH_NODE:
+-		pr_debug("notify %-15s %s\n", action_names[action],
+-			pr->dn->full_name);
++		pr_debug("notify %-15s %pOF\n", action_names[action],
++			pr->dn);
+ 		break;
+ 	case OF_RECONFIG_ADD_PROPERTY:
+ 	case OF_RECONFIG_REMOVE_PROPERTY:
+ 	case OF_RECONFIG_UPDATE_PROPERTY:
+-		pr_debug("notify %-15s %s:%s\n", action_names[action],
+-			pr->dn->full_name, pr->prop->name);
++		pr_debug("notify %-15s %pOF:%s\n", action_names[action],
++			pr->dn, pr->prop->name);
+ 		break;
+ 
+ 	}
+@@ -328,11 +328,10 @@ void of_node_release(struct kobject *kobj)
+ 
+ 	/* We should never be releasing nodes that haven't been detached. */
+ 	if (!of_node_check_flag(node, OF_DETACHED)) {
+-		pr_err("ERROR: Bad of_node_put() on %s\n", node->full_name);
++		pr_err("ERROR: Bad of_node_put() on %pOF\n", node);
+ 		dump_stack();
+ 		return;
+ 	}
+-
+ 	if (!of_node_check_flag(node, OF_DYNAMIC))
+ 		return;
+ 
+@@ -462,13 +461,13 @@ static void __of_changeset_entry_dump(struct of_changeset_entry *ce)
+ 	case OF_RECONFIG_ADD_PROPERTY:
+ 	case OF_RECONFIG_REMOVE_PROPERTY:
+ 	case OF_RECONFIG_UPDATE_PROPERTY:
+-		pr_debug("cset<%p> %-15s %s/%s\n", ce, action_names[ce->action],
+-			ce->np->full_name, ce->prop->name);
++		pr_debug("cset<%p> %-15s %pOF/%s\n", ce, action_names[ce->action],
++			ce->np, ce->prop->name);
+ 		break;
+ 	case OF_RECONFIG_ATTACH_NODE:
+ 	case OF_RECONFIG_DETACH_NODE:
+-		pr_debug("cset<%p> %-15s %s\n", ce, action_names[ce->action],
+-			ce->np->full_name);
++		pr_debug("cset<%p> %-15s %pOF\n", ce, action_names[ce->action],
++			ce->np);
+ 		break;
+ 	}
+ }
+@@ -539,7 +538,7 @@ static void __of_changeset_entry_notify(struct of_changeset_entry *ce, bool reve
+ 	}
+ 
+ 	if (ret)
+-		pr_err("changeset notifier error @%s\n", ce->np->full_name);
++		pr_err("changeset notifier error @%pOF\n", ce->np);
+ }
+ 
+ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
+@@ -570,8 +569,8 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
+ 
+ 		ret = __of_add_property(ce->np, ce->prop);
+ 		if (ret) {
+-			pr_err("changeset: add_property failed @%s/%s\n",
+-				ce->np->full_name,
++			pr_err("changeset: add_property failed @%pOF/%s\n",
++				ce->np,
+ 				ce->prop->name);
+ 			break;
+ 		}
+@@ -579,8 +578,8 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
+ 	case OF_RECONFIG_REMOVE_PROPERTY:
+ 		ret = __of_remove_property(ce->np, ce->prop);
+ 		if (ret) {
+-			pr_err("changeset: remove_property failed @%s/%s\n",
+-				ce->np->full_name,
++			pr_err("changeset: remove_property failed @%pOF/%s\n",
++				ce->np,
+ 				ce->prop->name);
+ 			break;
+ 		}
+@@ -598,8 +597,8 @@ static int __of_changeset_entry_apply(struct of_changeset_entry *ce)
+ 
+ 		ret = __of_update_property(ce->np, ce->prop, &old_prop);
+ 		if (ret) {
+-			pr_err("changeset: update_property failed @%s/%s\n",
+-				ce->np->full_name,
++			pr_err("changeset: update_property failed @%pOF/%s\n",
++				ce->np,
+ 				ce->prop->name);
+ 			break;
+ 		}
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 6ce72aa65425..9c4b32522bc2 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -131,7 +131,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 		goto fail;
+ 	}
+ 
+-	pr_debug("of_irq_parse_raw: ipar=%s, size=%d\n", of_node_full_name(ipar), intsize);
++	pr_debug("of_irq_parse_raw: ipar=%pOF, size=%d\n", ipar, intsize);
+ 
+ 	if (out_irq->args_count != intsize)
+ 		goto fail;
+@@ -269,7 +269,7 @@ int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
+ 	skiplevel:
+ 		/* Iterate again with new parent */
+ 		out_irq->np = newpar;
+-		pr_debug(" -> new parent: %s\n", of_node_full_name(newpar));
++		pr_debug(" -> new parent: %pOF\n", newpar);
+ 		of_node_put(ipar);
+ 		ipar = newpar;
+ 		newpar = NULL;
+@@ -301,7 +301,7 @@ int of_irq_parse_one(struct device_node *device, int index, struct of_phandle_ar
+ 	u32 intsize, intlen;
+ 	int i, res;
+ 
+-	pr_debug("of_irq_parse_one: dev=%s, index=%d\n", of_node_full_name(device), index);
++	pr_debug("of_irq_parse_one: dev=%pOF, index=%d\n", device, index);
+ 
+ 	/* OldWorld mac stuff is "special", handle out of line */
+ 	if (of_irq_workarounds & OF_IMAP_OLDWORLD_MAC)
+@@ -555,8 +555,8 @@ void __init of_irq_init(const struct of_device_id *matches)
+ 
+ 			of_node_set_flag(desc->dev, OF_POPULATED);
+ 
+-			pr_debug("of_irq_init: init %s (%p), parent %p\n",
+-				 desc->dev->full_name,
++			pr_debug("of_irq_init: init %pOF (%p), parent %p\n",
++				 desc->dev,
+ 				 desc->dev, desc->interrupt_parent);
+ 			ret = desc->irq_init_cb(desc->dev,
+ 						desc->interrupt_parent);
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 7e4c80f9b6cd..f0a32be9cc61 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -126,14 +126,14 @@ int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+ 
+ 	ret = of_property_read_u32(np, "reg", &addr);
+ 	if (ret < 0) {
+-		dev_err(dev, "%s has invalid PHY address\n", np->full_name);
++		dev_err(dev, "%pOF has invalid PHY address\n", np);
+ 		return ret;
+ 	}
+ 
+ 	/* A PHY must have a reg property in the range [0-31] */
+ 	if (addr >= PHY_MAX_ADDR) {
+-		dev_err(dev, "%s PHY address %i is too large\n",
+-			np->full_name, addr);
++		dev_err(dev, "%pOF PHY address %i is too large\n",
++			np, addr);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -188,8 +188,8 @@ static bool of_mdiobus_child_is_phy(struct device_node *child)
+ 
+ 	if (of_match_node(whitelist_phys, child)) {
+ 		pr_warn(FW_WARN
+-			"%s: Whitelisted compatible string. Please remove\n",
+-			child->full_name);
++			"%pOF: Whitelisted compatible string. Please remove\n",
++			child);
+ 		return true;
+ 	}
+ 
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index c9d4d3a7b0fe..3d4cb7090878 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -204,15 +204,15 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+ 	if (!bus_range)
+ 		return -ENOMEM;
+ 
+-	pr_info("host bridge %s ranges:\n", dev->full_name);
++	pr_info("host bridge %pOF ranges:\n", dev);
+ 
+ 	err = of_pci_parse_bus_range(dev, bus_range);
+ 	if (err) {
+ 		bus_range->start = busno;
+ 		bus_range->end = bus_max;
+ 		bus_range->flags = IORESOURCE_BUS;
+-		pr_info("  No bus range found for %s, using %pR\n",
+-			dev->full_name, bus_range);
++		pr_info("  No bus range found for %pOF, using %pR\n",
++			dev, bus_range);
+ 	} else {
+ 		if (bus_range->end > bus_range->start + bus_max)
+ 			bus_range->end = bus_range->start + bus_max;
+@@ -258,14 +258,14 @@ int of_pci_get_host_bridge_resources(struct device_node *dev,
+ 
+ 		if (resource_type(res) == IORESOURCE_IO) {
+ 			if (!io_base) {
+-				pr_err("I/O range found for %s. Please provide an io_base pointer to save CPU base address\n",
+-					dev->full_name);
++				pr_err("I/O range found for %pOF. Please provide an io_base pointer to save CPU base address\n",
++					dev);
+ 				err = -EINVAL;
+ 				goto conversion_failed;
+ 			}
+ 			if (*io_base != (resource_size_t)OF_BAD_ADDR)
+-				pr_warn("More than one I/O resource converted for %s. CPU base address for old range lost!\n",
+-					dev->full_name);
++				pr_warn("More than one I/O resource converted for %pOF. CPU base address for old range lost!\n",
++					dev);
+ 			*io_base = range.cpu_addr;
+ 		}
+ 
+@@ -325,7 +325,7 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
+ 	}
+ 
+ 	if (!map_len || map_len % (4 * sizeof(*map))) {
+-		pr_err("%s: Error: Bad %s length: %d\n", np->full_name,
++		pr_err("%pOF: Error: Bad %s length: %d\n", np,
+ 			map_name, map_len);
+ 		return -EINVAL;
+ 	}
+@@ -349,8 +349,8 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
+ 		u32 rid_len = be32_to_cpup(map + 3);
+ 
+ 		if (rid_base & ~map_mask) {
+-			pr_err("%s: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
+-				np->full_name, map_name, map_name,
++			pr_err("%pOF: Invalid %s translation - %s-mask (0x%x) ignores rid-base (0x%x)\n",
++				np, map_name, map_name,
+ 				map_mask, rid_base);
+ 			return -EFAULT;
+ 		}
+@@ -375,14 +375,13 @@ int of_pci_map_rid(struct device_node *np, u32 rid,
+ 		if (id_out)
+ 			*id_out = masked_rid - rid_base + out_base;
+ 
+-		pr_debug("%s: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
+-			np->full_name, map_name, map_mask, rid_base, out_base,
++		pr_debug("%pOF: %s, using mask %08x, rid-base: %08x, out-base: %08x, length: %08x, rid: %08x -> %08x\n",
++			np, map_name, map_mask, rid_base, out_base,
+ 			rid_len, rid, *id_out);
+ 		return 0;
+ 	}
+ 
+-	pr_err("%s: Invalid %s translation - no match for rid 0x%x on %s\n",
+-		np->full_name, map_name, rid,
+-		target && *target ? (*target)->full_name : "any target");
++	pr_err("%pOF: Invalid %s translation - no match for rid 0x%x on %pOF\n",
++		np, map_name, rid, target && *target ? *target : NULL);
+ 	return -EFAULT;
+ }
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
+index 7827786718d8..5948eac07f34 100644
+--- a/drivers/of/overlay.c
++++ b/drivers/of/overlay.c
+@@ -137,7 +137,7 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
+ 		of_node_put(tchild);
+ 	} else {
+ 		/* create empty tree as a target */
+-		tchild = __of_node_dup(child, "%s/%s", target->full_name, cname);
++		tchild = __of_node_dup(child, "%pOF/%s", target, cname);
+ 		if (!tchild)
+ 			return -ENOMEM;
+ 
+@@ -173,8 +173,8 @@ static int of_overlay_apply_one(struct of_overlay *ov,
+ 	for_each_property_of_node(overlay, prop) {
+ 		ret = of_overlay_apply_single_property(ov, target, prop);
+ 		if (ret) {
+-			pr_err("Failed to apply prop @%s/%s\n",
+-			       target->full_name, prop->name);
++			pr_err("Failed to apply prop @%pOF/%s\n",
++			       target, prop->name);
+ 			return ret;
+ 		}
+ 	}
+@@ -182,8 +182,8 @@ static int of_overlay_apply_one(struct of_overlay *ov,
+ 	for_each_child_of_node(overlay, child) {
+ 		ret = of_overlay_apply_single_device_node(ov, target, child);
+ 		if (ret != 0) {
+-			pr_err("Failed to apply single node @%s/%s\n",
+-			       target->full_name, child->name);
++			pr_err("Failed to apply single node @%pOF/%s\n",
++			       target, child->name);
+ 			of_node_put(child);
+ 			return ret;
+ 		}
+@@ -211,7 +211,7 @@ static int of_overlay_apply(struct of_overlay *ov)
+ 
+ 		err = of_overlay_apply_one(ov, ovinfo->target, ovinfo->overlay);
+ 		if (err != 0) {
+-			pr_err("apply failed '%s'\n", ovinfo->target->full_name);
++			pr_err("apply failed '%pOF'\n", ovinfo->target);
+ 			return err;
+ 		}
+ 	}
+@@ -396,8 +396,8 @@ int of_overlay_create(struct device_node *tree)
+ 	/* build the overlay info structures */
+ 	err = of_build_overlay_info(ov, tree);
+ 	if (err) {
+-		pr_err("of_build_overlay_info() failed for tree@%s\n",
+-		       tree->full_name);
++		pr_err("of_build_overlay_info() failed for tree@%pOF\n",
++		       tree);
+ 		goto err_free_idr;
+ 	}
+ 
+@@ -476,9 +476,8 @@ static int overlay_is_topmost(struct of_overlay *ov, struct device_node *dn)
+ 		/* check against each subtree affected by this overlay */
+ 		list_for_each_entry(ce, &ovt->cset.entries, node) {
+ 			if (overlay_subtree_check(ce->np, dn)) {
+-				pr_err("%s: #%d clashes #%d @%s\n",
+-					__func__, ov->id, ovt->id,
+-					dn->full_name);
++				pr_err("%s: #%d clashes #%d @%pOF\n",
++					__func__, ov->id, ovt->id, dn);
+ 				return 0;
+ 			}
+ 		}
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 8f73413fa243..09045265b1b9 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -228,7 +228,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 	const void *prop;
+ 	int i, ret;
+ 
+-	pr_debug("Creating amba device %s\n", node->full_name);
++	pr_debug("Creating amba device %pOF\n", node);
+ 
+ 	if (!of_device_is_available(node) ||
+ 	    of_node_test_and_set_flag(node, OF_POPULATED))
+@@ -259,15 +259,15 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 
+ 	ret = of_address_to_resource(node, 0, &dev->res);
+ 	if (ret) {
+-		pr_err("amba: of_address_to_resource() failed (%d) for %s\n",
+-		       ret, node->full_name);
++		pr_err("amba: of_address_to_resource() failed (%d) for %pOF\n",
++		       ret, node);
+ 		goto err_free;
+ 	}
+ 
+ 	ret = amba_device_add(dev, &iomem_resource);
+ 	if (ret) {
+-		pr_err("amba_device_add() failed (%d) for %s\n",
+-		       ret, node->full_name);
++		pr_err("amba_device_add() failed (%d) for %pOF\n",
++		       ret, node);
+ 		goto err_free;
+ 	}
+ 
+@@ -310,7 +310,7 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
+ 		if (!of_address_to_resource(np, 0, &res))
+ 			if (res.start != auxdata->phys_addr)
+ 				continue;
+-		pr_debug("%s: devname=%s\n", np->full_name, auxdata->name);
++		pr_debug("%pOF: devname=%s\n", np, auxdata->name);
+ 		return auxdata;
+ 	}
+ 
+@@ -323,7 +323,7 @@ static const struct of_dev_auxdata *of_dev_lookup(const struct of_dev_auxdata *l
+ 		if (!of_device_is_compatible(np, auxdata->compatible))
  			continue;
+ 		if (!auxdata->phys_addr && !auxdata->name) {
+-			pr_debug("%s: compatible match\n", np->full_name);
++			pr_debug("%pOF: compatible match\n", np);
+ 			return auxdata;
+ 		}
+ 	}
+@@ -356,14 +356,14 @@ static int of_platform_bus_create(struct device_node *bus,
  
+ 	/* Make sure it has a compatible property */
+ 	if (strict && (!of_get_property(bus, "compatible", NULL))) {
+-		pr_debug("%s() - skipping %s, no compatible prop\n",
+-			 __func__, bus->full_name);
++		pr_debug("%s() - skipping %pOF, no compatible prop\n",
++			 __func__, bus);
+ 		return 0;
+ 	}
+ 
+ 	if (of_node_check_flag(bus, OF_POPULATED_BUS)) {
+-		pr_debug("%s() - skipping %s, already populated\n",
+-			__func__, bus->full_name);
++		pr_debug("%s() - skipping %pOF, already populated\n",
++			__func__, bus);
+ 		return 0;
+ 	}
+ 
+@@ -387,7 +387,7 @@ static int of_platform_bus_create(struct device_node *bus,
+ 		return 0;
+ 
+ 	for_each_child_of_node(bus, child) {
+-		pr_debug("   create child: %s\n", child->full_name);
++		pr_debug("   create child: %pOF\n", child);
+ 		rc = of_platform_bus_create(child, matches, lookup, &dev->dev, strict);
+ 		if (rc) {
+ 			of_node_put(child);
+@@ -419,7 +419,7 @@ int of_platform_bus_probe(struct device_node *root,
+ 		return -EINVAL;
+ 
+ 	pr_debug("%s()\n", __func__);
+-	pr_debug(" starting at: %s\n", root->full_name);
++	pr_debug(" starting at: %pOF\n", root);
+ 
+ 	/* Do a self check of bus type, if there's a match, create children */
+ 	if (of_match_node(matches, root)) {
+@@ -471,7 +471,7 @@ int of_platform_populate(struct device_node *root,
+ 		return -EINVAL;
+ 
+ 	pr_debug("%s()\n", __func__);
+-	pr_debug(" starting at: %s\n", root->full_name);
++	pr_debug(" starting at: %pOF\n", root);
+ 
+ 	for_each_child_of_node(root, child) {
+ 		rc = of_platform_bus_create(child, matches, lookup, parent, true);
+@@ -659,8 +659,8 @@ static int of_platform_notify(struct notifier_block *nb,
+ 		of_dev_put(pdev_parent);
+ 
+ 		if (pdev == NULL) {
+-			pr_err("%s: failed to create for '%s'\n",
+-					__func__, rd->dn->full_name);
++			pr_err("%s: failed to create for '%pOF'\n",
++					__func__, rd->dn);
+ 			/* of_platform_device_create tosses the error code */
+ 			return notifier_from_errno(-EINVAL);
+ 		}
+diff --git a/drivers/of/unittest.c b/drivers/of/unittest.c
+index 987a1530282a..038fec3e3463 100644
+--- a/drivers/of/unittest.c
++++ b/drivers/of/unittest.c
+@@ -46,46 +46,54 @@ static struct unittest_results {
+ static void __init of_unittest_find_node_by_name(void)
+ {
+ 	struct device_node *np;
+-	const char *options;
++	const char *options, *name;
+ 
+ 	np = of_find_node_by_path("/testcase-data");
+-	unittest(np && !strcmp("/testcase-data", np->full_name),
++	name = kasprintf(GFP_KERNEL, "%pOF", np);
++	unittest(np && !strcmp("/testcase-data", name),
+ 		"find /testcase-data failed\n");
+ 	of_node_put(np);
++	kfree(name);
+ 
+ 	/* Test if trailing '/' works */
+ 	np = of_find_node_by_path("/testcase-data/");
+ 	unittest(!np, "trailing '/' on /testcase-data/ should fail\n");
+ 
+ 	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
+-	unittest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
++	name = kasprintf(GFP_KERNEL, "%pOF", np);
++	unittest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", name),
+ 		"find /testcase-data/phandle-tests/consumer-a failed\n");
+ 	of_node_put(np);
++	kfree(name);
+ 
+ 	np = of_find_node_by_path("testcase-alias");
+-	unittest(np && !strcmp("/testcase-data", np->full_name),
++	name = kasprintf(GFP_KERNEL, "%pOF", np);
++	unittest(np && !strcmp("/testcase-data", name),
+ 		"find testcase-alias failed\n");
+ 	of_node_put(np);
++	kfree(name);
+ 
+ 	/* Test if trailing '/' works on aliases */
+ 	np = of_find_node_by_path("testcase-alias/");
+ 	unittest(!np, "trailing '/' on testcase-alias/ should fail\n");
+ 
+ 	np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
+-	unittest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
++	name = kasprintf(GFP_KERNEL, "%pOF", np);
++	unittest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", name),
+ 		"find testcase-alias/phandle-tests/consumer-a failed\n");
+ 	of_node_put(np);
++	kfree(name);
+ 
+ 	np = of_find_node_by_path("/testcase-data/missing-path");
+-	unittest(!np, "non-existent path returned node %s\n", np->full_name);
++	unittest(!np, "non-existent path returned node %pOF\n", np);
+ 	of_node_put(np);
+ 
+ 	np = of_find_node_by_path("missing-alias");
+-	unittest(!np, "non-existent alias returned node %s\n", np->full_name);
++	unittest(!np, "non-existent alias returned node %pOF\n", np);
+ 	of_node_put(np);
+ 
+ 	np = of_find_node_by_path("testcase-alias/missing-path");
+-	unittest(!np, "non-existent alias with relative path returned node %s\n", np->full_name);
++	unittest(!np, "non-existent alias with relative path returned node %pOF\n", np);
+ 	of_node_put(np);
+ 
+ 	np = of_find_node_opts_by_path("/testcase-data:testoption", &options);
+@@ -258,8 +266,8 @@ static void __init of_unittest_check_phandles(void)
+ 
+ 		hash_for_each_possible(phandle_ht, nh, node, np->phandle) {
+ 			if (nh->np->phandle == np->phandle) {
+-				pr_info("Duplicate phandle! %i used by %s and %s\n",
+-					np->phandle, nh->np->full_name, np->full_name);
++				pr_info("Duplicate phandle! %i used by %pOF and %pOF\n",
++					np->phandle, nh->np, np);
+ 				dup_count++;
+ 				break;
+ 			}
+@@ -349,8 +357,8 @@ static void __init of_unittest_parse_phandle_with_args(void)
+ 			passed = false;
+ 		}
+ 
+-		unittest(passed, "index %i - data error on node %s rc=%i\n",
+-			 i, args.np->full_name, rc);
++		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
++			 i, args.np, rc);
+ 	}
+ 
+ 	/* Check for missing list property */
+@@ -533,7 +541,7 @@ static void __init of_unittest_changeset(void)
+ 
+ 	/* Make sure node names are constructed correctly */
+ 	unittest((np = of_find_node_by_path("/testcase-data/changeset/n2/n21")),
+-		 "'%s' not added\n", n21->full_name);
++		 "'%pOF' not added\n", n21);
+ 	of_node_put(np);
+ 
+ 	unittest(!of_changeset_revert(&chgset), "revert failed\n");
+@@ -564,8 +572,8 @@ static void __init of_unittest_parse_interrupts(void)
+ 		passed &= (args.args_count == 1);
+ 		passed &= (args.args[0] == (i + 1));
+ 
+-		unittest(passed, "index %i - data error on node %s rc=%i\n",
+-			 i, args.np->full_name, rc);
++		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
++			 i, args.np, rc);
+ 	}
+ 	of_node_put(np);
+ 
+@@ -610,8 +618,8 @@ static void __init of_unittest_parse_interrupts(void)
+ 		default:
+ 			passed = false;
+ 		}
+-		unittest(passed, "index %i - data error on node %s rc=%i\n",
+-			 i, args.np->full_name, rc);
++		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
++			 i, args.np, rc);
+ 	}
+ 	of_node_put(np);
+ }
+@@ -680,8 +688,8 @@ static void __init of_unittest_parse_interrupts_extended(void)
+ 			passed = false;
+ 		}
+ 
+-		unittest(passed, "index %i - data error on node %s rc=%i\n",
+-			 i, args.np->full_name, rc);
++		unittest(passed, "index %i - data error on node %pOF rc=%i\n",
++			 i, args.np, rc);
+ 	}
+ 	of_node_put(np);
+ }
+@@ -861,7 +869,9 @@ static int attach_node_and_children(struct device_node *np)
+ 	struct device_node *next, *dup, *child;
+ 	unsigned long flags;
+ 
+-	dup = of_find_node_by_path(np->full_name);
++	full_name = kasprintf(GFP_KERNEL, "%pOF", np);
++	dup = of_find_node_by_path(full_name);
++	kfree(full_name);
+ 	if (dup) {
+ 		update_node_properties(np, dup);
+ 		return 0;
+@@ -966,7 +976,7 @@ static int unittest_probe(struct platform_device *pdev)
+ 
+ 	}
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 
+ 	of_platform_populate(np, NULL, NULL, &pdev->dev);
+ 
+@@ -978,7 +988,7 @@ static int unittest_remove(struct platform_device *pdev)
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 	return 0;
+ }
+ 
+@@ -1592,7 +1602,7 @@ static int unittest_i2c_bus_probe(struct platform_device *pdev)
+ 
+ 	}
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 
+ 	std = devm_kzalloc(dev, sizeof(*std), GFP_KERNEL);
+ 	if (!std) {
+@@ -1630,7 +1640,7 @@ static int unittest_i2c_bus_remove(struct platform_device *pdev)
+ 	struct device_node *np = dev->of_node;
+ 	struct unittest_i2c_bus_data *std = platform_get_drvdata(pdev);
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 	i2c_del_adapter(&std->adap);
+ 
+ 	return 0;
+@@ -1661,7 +1671,7 @@ static int unittest_i2c_dev_probe(struct i2c_client *client,
+ 		return -EINVAL;
+ 	}
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 
+ 	return 0;
+ };
+@@ -1671,7 +1681,7 @@ static int unittest_i2c_dev_remove(struct i2c_client *client)
+ 	struct device *dev = &client->dev;
+ 	struct device_node *np = client->dev.of_node;
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 	return 0;
+ }
+ 
+@@ -1706,7 +1716,7 @@ static int unittest_i2c_mux_probe(struct i2c_client *client,
+ 	struct i2c_mux_core *muxc;
+ 	u32 reg, max_reg;
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 
+ 	if (!np) {
+ 		dev_err(dev, "No OF node\n");
+@@ -1751,7 +1761,7 @@ static int unittest_i2c_mux_remove(struct i2c_client *client)
+ 	struct device_node *np = client->dev.of_node;
+ 	struct i2c_mux_core *muxc = i2c_get_clientdata(client);
+ 
+-	dev_dbg(dev, "%s for node @%s\n", __func__, np->full_name);
++	dev_dbg(dev, "%s for node @%pOF\n", __func__, np);
+ 	i2c_mux_del_adapters(muxc);
+ 	return 0;
+ }
 -- 
 2.11.0
