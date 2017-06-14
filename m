@@ -1,26 +1,55 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: ahci-fsl-qoriq: add ls1088a chip name
- to the list
-Date: Wed, 14 Jun 2017 22:43:32 +0800
-Message-ID: <20170614144330.GA30112@dragon>
-References: <1496817168-26567-1-git-send-email-andy.tang@nxp.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec node
+Date: Wed, 14 Jun 2017 20:17:04 +0530
+Message-ID: <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com>
+References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
+ <1491501735-1649-2-git-send-email-jagan@openedev.com> <20170407131649.GH16503@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1496817168-26567-1-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20170407131649.GH16503@dragon>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
-Cc: tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 07, 2017 at 02:32:47PM +0800, Yuantian Tang wrote:
-> Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/ata/ahci-fsl-qoriq.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On Fri, Apr 7, 2017 at 6:46 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
+>> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>>
+>> Add support for Sound card and related codec(via i2c1) nodes
+>> on Engicam Is.IoT MX6UL variant module boards.
+>>
+>> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+>> ---
+>> Changes for v3:
+>> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
+>> Changes for v2:
+>> - Use proper [label:] node-name[@unit-address] for codec
+>> - Remove incorrect codec property 'wlf,shared-lrclk'
+>> - Remove 'gpr' from sound card node
+>>
+>>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
+>>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
+>
+> Can you help me understand how these two files are related?  Why is
+> sgtl5000 added into one and sound node added into the other?
 
-Applied both, thanks.
+lcdif, ts and sound card which may differ based on the base-board
+connected with SOM, So I moved these stuff which are related to
+Starter kit supported once's and used with SOM dts files. if some
+other board with same SOM can have different lcdif and etc so they can
+define locally to dts.
+
+thanks!
+-- 
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
