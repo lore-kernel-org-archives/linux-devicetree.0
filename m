@@ -1,69 +1,146 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2] Documentation: clock: address more for clock-cells property
-Date: Wed, 14 Jun 2017 11:42:35 +0200
-Message-ID: <CAMuHMdU6ZsqbRhG7=dYE=B_7To=ioWrwWwdoRYGdEQJwB4wW6A@mail.gmail.com>
-References: <1497432104-22609-1-git-send-email-zhang.chunyan@linaro.org>
+From: Jun Gao <jun.gao@mediatek.com>
+Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
+Date: Wed, 14 Jun 2017 17:43:22 +0800
+Message-ID: <1497433402.930.56.camel@mhfsdcap03>
+References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
+         <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
+         <1497268468.930.26.camel@mhfsdcap03>
+         <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
+         <1497349452.930.36.camel@mhfsdcap03>
+         <ba658a59-7ef9-2340-57fa-3bcefa3f47ed@gmail.com>
+         <1497360189.930.42.camel@mhfsdcap03>
+         <8c0e441c-a3d9-9cfd-dbf9-556ad852a072@gmail.com>
+         <1497402709.930.48.camel@mhfsdcap03>
+         <d63b8cfc-145f-7b2d-b85f-9ff5c18b3e65@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497432104-22609-1-git-send-email-zhang.chunyan@linaro.org>
+In-Reply-To: <d63b8cfc-145f-7b2d-b85f-9ff5c18b3e65@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunyan Zhang <zhang.chunyan@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, zhang.lyra@gmail.com
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chunyan,
+On Wed, 2017-06-14 at 11:24 +0200, Matthias Brugger wrote:
+> 
+> On 14/06/17 03:11, Jun Gao wrote:
+> > On Tue, 2017-06-13 at 15:45 +0200, Matthias Brugger wrote:
+> >>
+> >> On 13/06/17 15:23, Jun Gao wrote:
+> >>> On Tue, 2017-06-13 at 14:52 +0200, Matthias Brugger wrote:
+> >>>>
+> >>>> On 13/06/17 12:24, Jun Gao wrote:
+> >>>>> On Tue, 2017-06-13 at 11:36 +0200, Matthias Brugger wrote:
+> >>>>>>
+> >>>>>> On 12/06/17 13:54, Jun Gao wrote:
+> >>>>>>> On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
+> >>>>>>>> From: Jun Gao <jun.gao@mediatek.com>
+> >>>>>>>>
+> >>>>>>>> Add MT2701 i2c device node.
+> >>>>>>>>
+> >>>>>>>> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
+> >>>>>>>> ---
+> >>>>>>>>      arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
+> >>>>>>>>      arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
+> >>>>>>>>      2 files changed, 84 insertions(+)
+> >>>>>> [...]
+> >>>>>>>
+> >>>>>>> Dear Matthias,
+> >>>>>>>
+> >>>>>>> Could you take this patch together with
+> >>>>>>> [PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
+> >>>>>>>
+> >>>>>>> Thanks!
+> >>>>>>>
+> >>>>>>
+> >>>>>> They are both included in the pull request I send [1] [2], or do I miss
+> >>>>>> something?
+> >>>>>>
+> >>>>>> Regards,
+> >>>>>> Matthias
+> >>>>>>
+> >>>>>> [1]
+> >>>>>> https://github.com/mbgg/linux-mediatek/commit/729b7f8dbdaff270c53052897ea06486221a49a2
+> >>>>>> [2]
+> >>>>>> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
+> >>>>>
+> >>>>> Dear Matthias,
+> >>>>>
+> >>>>> Would you mind to use the same style as follows in i2c-mtk.txt of [2]?
+> >>>>>
+> >>>>> "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
+> >>>>> "mediatek,mt6577-i2c": for Mediatek MT6577
+> >>>>> "mediatek,mt6589-i2c": for Mediatek MT6589
+> >>>>> "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
+> >>>>> "mediatek,mt8173-i2c": for Mediatek MT8173
+> >>>>>
+> >>>>>
+> >>>>> Thanks!
+> >>>>>
+> >>>>
+> >>>> You mean I should fix-up the patch to fit to the new binding
+> >>>> description? Or do you mean it should be MTxxxx instead of mtxxxx?
+> >>>>
+> >>>> Regards,
+> >>>> Matthias
+> >>>
+> >>> Dear Matthias,
+> >>>
+> >>> I mean fix-up the patch to fit to the new binding description. Is it OK?
+> >>>
+> >>
+> >> Then I can't see the difference between what you are asking for and what
+> >> is already pushed to the repository. Please send a patch, that will make
+> >> things clearer.
+> >>
+> >> Regards,
+> >> Matthias
+> > 
+> > Dear Matthias,
+> > 
+> > like this:
+> > 
+> > diff:
+> >   Required properties:
+> >     - compatible: value should be either of the following.
+> > -      (a) "mediatek,mt6577-i2c", for i2c compatible with mt6577 i2c.
+> > -      (b) "mediatek,mt6589-i2c", for i2c compatible with mt6589 i2c.
+> > -      (c) "mediatek,mt8127-i2c", for i2c compatible with mt8127 i2c.
+> > -      (d) "mediatek,mt8135-i2c", for i2c compatible with mt8135 i2c.
+> > -      (e) "mediatek,mt8173-i2c", for i2c compatible with mt8173 i2c.
+> > +       "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek
+> > MT2701
+> > +       "mediatek,mt6577-i2c": for Mediatek MT6577
+> > +       "mediatek,mt6589-i2c": for Mediatek MT6589
+> > +       "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek
+> > MT7623
+> > +       "mediatek,mt8173-i2c": for Mediatek MT8173
+> >     - reg: physical base address of the controller and dma base, length
+> > of memory
+> >       mapped region.
+> >     - interrupts: interrupt number to the cpu.
+> > 
+> 
+> Please look at [2], this is already staged.
+> 
+> [2] 
+> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
 
-On Wed, Jun 14, 2017 at 11:21 AM, Chunyan Zhang
-<zhang.chunyan@linaro.org> wrote:
-> The value of property 'clock-cells' is not determined only by the number
-> of clock outputs in one clock node, it is determined by whether the clock
-> output in this node can be referenced directly without index. If the
-> output clock has to be referenced by a index, the clock-cell of this
-> clock node can't be defined 0.
->
-> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-> ---
->  Documentation/devicetree/bindings/clock/clock-bindings.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> index 2ec489e..e2b76b4 100644
-> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -18,6 +18,9 @@ Required properties:
->                    with a single clock output and 1 for nodes with multiple
->                    clock outputs.
->
-> +                  There's one exception, please see the description for
-> +                  clock-indices below.
-> +
->  Optional properties:
->  clock-output-names: Recommended to be a list of strings of clock output signal
->                     names indexed by the first cell in the clock specifier.
-> @@ -48,6 +51,13 @@ clock-indices:          If the identifying number for the clocks in the node
->                    is not linear from zero, then this allows the mapping of
->                    identifiers into the clock-output-names array.
->
-> +                  This property not only servers for clocks with multiple
+Dear Matthias,
 
-serves
+base on [2]
+diff:
+"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
+-  "mediatek,mt6577-i2c": for i2c compatible with mt6577 i2c.
+-  "mediatek,mt6589-i2c": for i2c compatible with mt6589 i2c.
+-  "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with
+mt7623 i2c.
+-  "mediatek,mt8173-i2c": for i2c compatible with mt8173 i2c.
++  "mediatek,mt6577-i2c": for Mediatek MT6577
++  "mediatek,mt6589-i2c": for Mediatek MT6589
++  "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
++  "mediatek,mt8173-i2c": for Mediatek MT8173
 
-> +                  clock outputs, but also for clocks with a single clock
-> +                  output whose identifying number is not zero.
 
-Why would you want a single clock and a non-zero identifying number?
-
-> +                  So long as clock-indices is set, clock-cells cannot be
-> +                  set zero.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks!
