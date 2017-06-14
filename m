@@ -1,56 +1,33 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec node
-Date: Wed, 14 Jun 2017 20:17:04 +0530
-Message-ID: <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com>
-References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-2-git-send-email-jagan@openedev.com> <20170407131649.GH16503@dragon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170407131649.GH16503@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] manual: Document missing options
+Date: Wed, 14 Jun 2017 17:50:27 +0300
+Message-ID: <1497451827-15219-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 7, 2017 at 6:46 PM, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
->> From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->>
->> Add support for Sound card and related codec(via i2c1) nodes
->> on Engicam Is.IoT MX6UL variant module boards.
->>
->> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>
->> Cc: Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
->> ---
->> Changes for v3:
->> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
->> Changes for v2:
->> - Use proper [label:] node-name[@unit-address] for codec
->> - Remove incorrect codec property 'wlf,shared-lrclk'
->> - Remove 'gpr' from sound card node
->>
->>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
->>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
->
-> Can you help me understand how these two files are related?  Why is
-> sgtl5000 added into one and sound node added into the other?
+The -d and -s options were undocumented. Add an entry in the manual.
 
-lcdif, ts and sound card which may differ based on the base-board
-connected with SOM, So I moved these stuff which are related to
-Starter kit supported once's and used with SOM dts files. if some
-other board with same SOM can have different lcdif and etc so they can
-define locally to dts.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/manual.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-thanks!
+diff --git a/Documentation/manual.txt b/Documentation/manual.txt
+index 2f07350..d4e99e3 100644
+--- a/Documentation/manual.txt
++++ b/Documentation/manual.txt
+@@ -674,4 +674,8 @@ The fdtdump program prints a readable version of a flat device tree file.
+ 
+ The syntax of the fdtdump command line is:
+ 
+-    fdtdump <DTB-file-name>
++    fdtdump [options] <DTB-file-name>
++
++Where options are:
++    -d,--debug          Dump debug information while decoding the file
++    -s,--scan           Scan for an embedded fdt in given file
 -- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.1.4
