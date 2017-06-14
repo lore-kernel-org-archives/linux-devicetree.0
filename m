@@ -1,54 +1,79 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH V3 2/3] watchdog: uniphier: add UniPhier watchdog driver
-Date: Wed, 14 Jun 2017 12:07:31 +0900
-Message-ID: <CAK7LNASq9MxUwDrNeRrg_eNkJbXR2J-9hHKGZe6-DtioO3p4cQ@mail.gmail.com>
-References: <1497316499-22254-1-git-send-email-hayashibara.keiji@socionext.com>
- <1497316499-22254-3-git-send-email-hayashibara.keiji@socionext.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: dts: mt2701: Add ethernet device node
+Date: Wed, 14 Jun 2017 11:08:28 +0800
+Message-ID: <1497409708.21216.2.camel@mtkswgap22>
+References: <1496297324-21091-1-git-send-email-erin.lo@mediatek.com>
+         <1496297324-21091-2-git-send-email-erin.lo@mediatek.com>
+         <d0a1217b-7761-fea6-888a-da06573400b8@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497316499-22254-3-git-send-email-hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+In-Reply-To: <d0a1217b-7761-fea6-888a-da06573400b8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Keiji Hayashibara <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Kiyoshi Owada <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hayashibara-san
+On Fri, 2017-06-09 at 10:22 +0200, Matthias Brugger wrote:
+> 
+> On 01/06/17 08:08, Erin Lo wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > Add ethernet device node for MT2701
+> > 
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   arch/arm/boot/dts/mt2701.dtsi | 20 ++++++++++++++++++++
+> >   1 file changed, 20 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+> > index 8037210..de88bd7 100644
+> > --- a/arch/arm/boot/dts/mt2701.dtsi
+> > +++ b/arch/arm/boot/dts/mt2701.dtsi
+> > @@ -420,6 +420,26 @@
+> >   		#clock-cells = <1>;
+> >   	};
+> >   
+> > +	eth: ethernet@1b100000 {
+> > +		compatible = "mediatek,mt2701-eth", "syscon";
+> > +		reg = <0 0x1b100000 0 0x20000>;
+> > +		interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 199 IRQ_TYPE_LEVEL_LOW>,
+> > +			     <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
+> > +			 <&ethsys CLK_ETHSYS_ESW>,
+> > +			 <&ethsys CLK_ETHSYS_GP1>,
+> > +			 <&ethsys CLK_ETHSYS_GP2>,
+> > +			 <&apmixedsys CLK_APMIXED_TRGPLL>;
+> > +		clock-names = "ethif", "esw", "gp1", "gp2", "trgpll";
+> > +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
+> > +		mediatek,ethsys = <&ethsys>;
+> > +		mediatek,pctl = <&syscfg_pctl_a>;
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +		status = "disabled";
+> > +	};
+> > +
+> 
+> I'm missing the reset properties.
 
 
-2017-06-13 10:14 GMT+09:00 Keiji Hayashibara
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 52a70ee..2a9d9a6 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -744,6 +744,17 @@ config ZX2967_WATCHDOG
->           To compile this driver as a module, choose M here: the
->           module will be called zx2967_wdt.
->
-> +config UNIPHIER_WATCHDOG
-> +       tristate "UniPhier watchdog support"
-> +       depends on ARCH_UNIPHIER || COMPILE_TEST
+Hi Matthias,
 
-This driver relies on syscon_node_to_regmap().
-Could you also add "depends on OF && MFD_SYSCON" ?
+Appreciate your careful reviewing, 
+
+I'll add it for the missing which causes binding violation. 
 
 
+	Sean
+
+> 
+> Regards,
+> Matthias
 
 
-> +       select WATCHDOG_CORE
-> +       help
-> +         Say Y here to include support watchdog timer embedded
-> +         into the UniPhier system.
-> +
-> +         To compile this driver as a module, choose M here: the
-> +         module will be called uniphier_wdt.
-> +
-
-
-
--- 
-Best Regards
-Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
