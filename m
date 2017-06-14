@@ -1,71 +1,71 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: Re: [PATCH v2] mmc: core: add mmc-card hardware reset enable support
-Date: Wed, 14 Jun 2017 09:25:00 +0200
-Message-ID: <0a29de1a-2635-2bb8-808a-7b9a0197921a@skidata.com>
-References: <1491895862-7952-1-git-send-email-richard.leitner@skidata.com>
- <CACRpkdaBrk91hh3JGZ0vcD3aXO+OHD41xwRKn9prPSOX_SXuWg@mail.gmail.com>
- <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
+From: Guy Shapiro <guy.shapiro@mobi-wize.com>
+Subject: Re: [PATCH v5 1/3] nvmem: dt: document SNVS LPGPR binding
+Date: Wed, 14 Jun 2017 10:35:12 +0300
+Message-ID: <442e0336-fbd3-f92c-ab6a-0622c710e232@mobi-wize.com>
+References: <20170609125730.25502-1-o.rempel@pengutronix.de>
+ <20170609125730.25502-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Bart Van Assche <bart.vanassche@sandisk.com>, Luca Porzio <lporzio@micron.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Leitner <dev@g0hl1n.net>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170609125730.25502-2-o.rempel@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: guy.shapiro@mobi-wize.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/11/2017 12:43 PM, Ulf Hansson wrote:
-> On 11 April 2017 at 10:17, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Tue, Apr 11, 2017 at 9:31 AM, Richard Leitner
->> <richard.leitner@skidata.com> wrote:
->>
->>> Some eMMCs disable their hardware reset line (RST_N) by default. To enable
->>> it the host must set the corresponding bit in ECSD. An example for such
->>> a device is the Micron MTFCxGACAANA-4M.
->>>
->>> This patch adds a new mmc-card devicetree property to let the host enable
->>> this feature during card initialization.
->>>
->>> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
->>
->> Do we know *WHY* these cards disable their hardware reset lines?
-> 
-> Allow me to make a guess. In case the reset isn't enabled, the
-> internal eMMC card firmware don't monitor the pin for the reset. I
-> guess that could makes sense if SoC vendors has failed to properly
-> connect the pin, avoiding the eMMC card to be reset when it shouldn't.
-> 
->> If it is just some random over-cautious panic thing we might consider
->> just force re-enableing it, maybe with a warning in the dmesg, so we can
->> always reset the card. No DT property needed.
-> 
-> There is actually already a DT property "cap-mmc-hw-reset"
-> (MMC_CAP_HW_RESET), which tells whether the eMMC reset is supported by
-> the host.
-> 
-> Perhaps we can consider to force-enabling it for the eMMC card, when
-> this property is set for the mmc host!? At least, inventing yet
-> another binding doesn't make sense to me.
+On 09/06/2017 15:57, Oleksij Rempel wrote:
 
-IMHO setting this (permanent) configuration bit should be done
-explicitly and not within another DT property. Otherwise somebody may
-accidentally set this configuration by (for example) including a dtsi
-which has cap-mmc-hw-reset configured.
+> Documentation bindings for the Low Power General Purpose Register
+> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
+>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  .../devicetree/bindings/nvmem/snvs-lpgpr.txt          | 19
+> +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>
+> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+> b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+> new file mode 100644
+> index 000000000000..21910fb3159f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+> @@ -0,0 +1,19 @@
+> +Device tree bindings for Low Power General Purpose Register found in
+> i.MX6Q/D
+> +Secure Non-Volatile Storage.
+> +
+> +This DT node should be represented as a sub-node of a "syscon",
+> +"simple-mfd" node.
+> +
+> +Required properties:
+> +- compatible: should be:
+> +	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
 
-Nonetheless if the majority agrees to implicitly set it when
-"cap-mmc-hw-reset" is configured I'm fine with that too.
+I've tested the basic functionality on i.MX6UL. It seems to work as is.
+Please add "/UL" on the next version.
 
-Another possibility is to don't include it in the kernel at all and
-therefore require the mmc userspace program to configure it...?
+Regards,
+Guy
 
-> 
->> Putting some people who work for eMMC vendors in the To: line so they
->> can say if they know about this.
-> 
-> Yes, let's see what they say about it.
-
-Any news/comments?
-
-kind regards,
-Richard.L
+> +
+> +Example:
+> +snvs: snvs@020cc000 {
+> +	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+> +	reg = <0x020cc000 0x4000>;
+> +
+> +	snvs_lpgpr: snvs-lpgpr {
+> +		compatible = "fsl,imx6q-snvs-lpgpr";
+> +	};
+> +};
