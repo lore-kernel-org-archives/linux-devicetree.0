@@ -1,91 +1,64 @@
-From: "Luca Porzio (lporzio)" <lporzio@micron.com>
-Subject: RE: [EXT] Re: [PATCH v2] mmc: core: add mmc-card hardware reset
- enable support
-Date: Wed, 14 Jun 2017 16:12:49 +0000
-Message-ID: <6b92d0af00024549a0d22dda039780dd@bowex36d.micron.com>
-References: <1491895862-7952-1-git-send-email-richard.leitner@skidata.com>
- <CACRpkdaBrk91hh3JGZ0vcD3aXO+OHD41xwRKn9prPSOX_SXuWg@mail.gmail.com>
- <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
- <0a29de1a-2635-2bb8-808a-7b9a0197921a@skidata.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <0a29de1a-2635-2bb8-808a-7b9a0197921a@skidata.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Richard Leitner <richard.leitner@skidata.com>, Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Bart Van Assche <bart.vanassche@sandisk.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Leitner <dev@g0hl1n.net>
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: [PATCH v3 0/4] Add bcm2835aux interrupt controller
+Date: Wed, 14 Jun 2017 17:29:06 +0100
+Message-ID: <1497457750-35585-1-git-send-email-phil@raspberrypi.org>
+References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: Phil Elwell <phil@raspberrypi.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUmljaGFyZCBMZWl0
-bmVyIFttYWlsdG86cmljaGFyZC5sZWl0bmVyQHNraWRhdGEuY29tXQ0KPiBTZW50OiBXZWRuZXNk
-YXksIEp1bmUgMTQsIDIwMTcgOToyNSBBTQ0KPiBUbzogVWxmIEhhbnNzb24gPHVsZi5oYW5zc29u
-QGxpbmFyby5vcmc+OyBMaW51cyBXYWxsZWlqDQo+IDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+
-DQo+IENjOiBCYXJ0IFZhbiBBc3NjaGUgPGJhcnQudmFuYXNzY2hlQHNhbmRpc2suY29tPjsgTHVj
-YSBQb3J6aW8gKGxwb3J6aW8pDQo+IDxscG9yemlvQG1pY3Jvbi5jb20+OyBSb2IgSGVycmluZyA8
-cm9iaCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+IDxtYXJrLnJ1dGxhbmRAYXJtLmNv
-bT47IFNoYXduIExpbiA8c2hhd24ubGluQHJvY2stY2hpcHMuY29tPjsgQWRyaWFuDQo+IEh1bnRl
-ciA8YWRyaWFuLmh1bnRlckBpbnRlbC5jb20+OyBKYWVob29uIENodW5nDQo+IDxqaDgwLmNodW5n
-QHNhbXN1bmcuY29tPjsgbGludXgtbW1jQHZnZXIua2VybmVsLm9yZzsgbGludXgtDQo+IGtlcm5l
-bEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBSaWNoYXJkIExl
-aXRuZXINCj4gPGRldkBnMGhsMW4ubmV0Pg0KPiBTdWJqZWN0OiBbRVhUXSBSZTogW1BBVENIIHYy
-XSBtbWM6IGNvcmU6IGFkZCBtbWMtY2FyZCBoYXJkd2FyZSByZXNldA0KPiBlbmFibGUgc3VwcG9y
-dA0KPiANCj4gT24gMDQvMTEvMjAxNyAxMjo0MyBQTSwgVWxmIEhhbnNzb24gd3JvdGU6DQo+ID4g
-T24gMTEgQXByaWwgMjAxNyBhdCAxMDoxNywgTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBs
-aW5hcm8ub3JnPiB3cm90ZToNCj4gPj4gT24gVHVlLCBBcHIgMTEsIDIwMTcgYXQgOTozMSBBTSwg
-UmljaGFyZCBMZWl0bmVyDQo+ID4+IDxyaWNoYXJkLmxlaXRuZXJAc2tpZGF0YS5jb20+IHdyb3Rl
-Og0KPiA+Pg0KPiA+Pj4gU29tZSBlTU1DcyBkaXNhYmxlIHRoZWlyIGhhcmR3YXJlIHJlc2V0IGxp
-bmUgKFJTVF9OKSBieSBkZWZhdWx0LiBUbw0KPiA+Pj4gZW5hYmxlIGl0IHRoZSBob3N0IG11c3Qg
-c2V0IHRoZSBjb3JyZXNwb25kaW5nIGJpdCBpbiBFQ1NELiBBbg0KPiA+Pj4gZXhhbXBsZSBmb3Ig
-c3VjaCBhIGRldmljZSBpcyB0aGUgTWljcm9uIE1URkN4R0FDQUFOQS00TS4NCj4gPj4+DQoNClRo
-aXMgYmVoYXZpb3IgaXMgbm90IE1pY3JvbiBzcGVjaWZpYyBidXQgaW5zdGVhZCBpdCBpcyBlbmZv
-cmNlZCBieSB0aGUgSmVkZWMgDQpTcGVjaWZpY2F0aW9uLiBBbGwgZU1NQyBtdXN0IGhhdmUgSFcg
-cmVzZXQgZGlzYWJsZWQgYnkgZGVmYXVsdC4NCg0KPiA+Pj4gVGhpcyBwYXRjaCBhZGRzIGEgbmV3
-IG1tYy1jYXJkIGRldmljZXRyZWUgcHJvcGVydHkgdG8gbGV0IHRoZSBob3N0DQo+ID4+PiBlbmFi
-bGUgdGhpcyBmZWF0dXJlIGR1cmluZyBjYXJkIGluaXRpYWxpemF0aW9uLg0KPiA+Pj4NCj4gPj4+
-IFNpZ25lZC1vZmYtYnk6IFJpY2hhcmQgTGVpdG5lciA8cmljaGFyZC5sZWl0bmVyQHNraWRhdGEu
-Y29tPg0KPiA+Pg0KPiA+PiBEbyB3ZSBrbm93ICpXSFkqIHRoZXNlIGNhcmRzIGRpc2FibGUgdGhl
-aXIgaGFyZHdhcmUgcmVzZXQgbGluZXM/DQo+ID4NCj4gPiBBbGxvdyBtZSB0byBtYWtlIGEgZ3Vl
-c3MuIEluIGNhc2UgdGhlIHJlc2V0IGlzbid0IGVuYWJsZWQsIHRoZQ0KPiA+IGludGVybmFsIGVN
-TUMgY2FyZCBmaXJtd2FyZSBkb24ndCBtb25pdG9yIHRoZSBwaW4gZm9yIHRoZSByZXNldC4gSQ0K
-PiA+IGd1ZXNzIHRoYXQgY291bGQgbWFrZXMgc2Vuc2UgaWYgU29DIHZlbmRvcnMgaGFzIGZhaWxl
-ZCB0byBwcm9wZXJseQ0KPiA+IGNvbm5lY3QgdGhlIHBpbiwgYXZvaWRpbmcgdGhlIGVNTUMgY2Fy
-ZCB0byBiZSByZXNldCB3aGVuIGl0IHNob3VsZG4ndC4NCj4gPg0KPiA+PiBJZiBpdCBpcyBqdXN0
-IHNvbWUgcmFuZG9tIG92ZXItY2F1dGlvdXMgcGFuaWMgdGhpbmcgd2UgbWlnaHQgY29uc2lkZXIN
-Cj4gPj4ganVzdCBmb3JjZSByZS1lbmFibGVpbmcgaXQsIG1heWJlIHdpdGggYSB3YXJuaW5nIGlu
-IHRoZSBkbWVzZywgc28gd2UNCj4gPj4gY2FuIGFsd2F5cyByZXNldCB0aGUgY2FyZC4gTm8gRFQg
-cHJvcGVydHkgbmVlZGVkLg0KPiA+DQoNClRoaXMgc3BlY2lmaWNhdGlvbiAoYXMgVWxmIGNvcnJl
-Y3RseSBoaW50ZWQpIG9yaWdpbmF0ZWQgZnJvbSBiYWRseSBjb25uZWN0ZWQgDQpIVyBSZXNldCBw
-aW5zIHdoaWNoIGNhdXNlZCB1bm5lY2Vzc2FyeSBlTU1DIHJlc2V0IGdsaXRjaGVzLg0KRGlzYWJs
-aW5nIHRoaXMgZmVhdHVyZSBpcyBhIGdvb2Qgb3B0aW9uIHRvIGNvbnRhaW4gZ2xpdGNoZXMgYW5k
-IGF2b2lkIA0Kc3lzdGVtIGxldmVsIGJ1Z3MuDQoNCj4gPiBUaGVyZSBpcyBhY3R1YWxseSBhbHJl
-YWR5IGEgRFQgcHJvcGVydHkgImNhcC1tbWMtaHctcmVzZXQiDQo+ID4gKE1NQ19DQVBfSFdfUkVT
-RVQpLCB3aGljaCB0ZWxscyB3aGV0aGVyIHRoZSBlTU1DIHJlc2V0IGlzDQo+IHN1cHBvcnRlZCBi
-eQ0KPiA+IHRoZSBob3N0Lg0KPiA+DQo+ID4gUGVyaGFwcyB3ZSBjYW4gY29uc2lkZXIgdG8gZm9y
-Y2UtZW5hYmxpbmcgaXQgZm9yIHRoZSBlTU1DIGNhcmQsIHdoZW4NCj4gPiB0aGlzIHByb3BlcnR5
-IGlzIHNldCBmb3IgdGhlIG1tYyBob3N0IT8gQXQgbGVhc3QsIGludmVudGluZyB5ZXQNCj4gPiBh
-bm90aGVyIGJpbmRpbmcgZG9lc24ndCBtYWtlIHNlbnNlIHRvIG1lLg0KPiANCj4gSU1ITyBzZXR0
-aW5nIHRoaXMgKHBlcm1hbmVudCkgY29uZmlndXJhdGlvbiBiaXQgc2hvdWxkIGJlIGRvbmUgZXhw
-bGljaXRseQ0KPiBhbmQgbm90IHdpdGhpbiBhbm90aGVyIERUIHByb3BlcnR5LiBPdGhlcndpc2Ug
-c29tZWJvZHkgbWF5IGFjY2lkZW50YWxseQ0KPiBzZXQgdGhpcyBjb25maWd1cmF0aW9uIGJ5IChm
-b3IgZXhhbXBsZSkgaW5jbHVkaW5nIGEgZHRzaSB3aGljaCBoYXMgY2FwLW1tYy0NCj4gaHctcmVz
-ZXQgY29uZmlndXJlZC4NCj4gDQo+IE5vbmV0aGVsZXNzIGlmIHRoZSBtYWpvcml0eSBhZ3JlZXMg
-dG8gaW1wbGljaXRseSBzZXQgaXQgd2hlbiAiY2FwLW1tYy1ody0NCj4gcmVzZXQiIGlzIGNvbmZp
-Z3VyZWQgSSdtIGZpbmUgd2l0aCB0aGF0IHRvby4NCj4gDQo+IEFub3RoZXIgcG9zc2liaWxpdHkg
-aXMgdG8gZG9uJ3QgaW5jbHVkZSBpdCBpbiB0aGUga2VybmVsIGF0IGFsbCBhbmQgdGhlcmVmb3Jl
-DQo+IHJlcXVpcmUgdGhlIG1tYyB1c2Vyc3BhY2UgcHJvZ3JhbSB0byBjb25maWd1cmUgaXQuLi4/
-DQo+IA0KPiA+DQo+ID4+IFB1dHRpbmcgc29tZSBwZW9wbGUgd2hvIHdvcmsgZm9yIGVNTUMgdmVu
-ZG9ycyBpbiB0aGUgVG86IGxpbmUgc28gdGhleQ0KPiA+PiBjYW4gc2F5IGlmIHRoZXkga25vdyBh
-Ym91dCB0aGlzLg0KPiA+DQo+ID4gWWVzLCBsZXQncyBzZWUgd2hhdCB0aGV5IHNheSBhYm91dCBp
-dC4NCg0KSGVyZSBJIGFtIDotKQ0KDQo+IA0KPiBBbnkgbmV3cy9jb21tZW50cz8NCj4gDQoNCklN
-SE8gbW1jLXV0aWwgaXMgd2hlcmUgdGhlIHBhdGNoIHJlYWxseSBzdGFuZHM6IHRoZSBlbmFibGlu
-ZyBpcyBPVFAsIA0KdGhlIHByb2dyYW1tZXIgaGF2ZSB0byB1c2UgbW1jLXV0aWwgb25seSBvbmNl
-IGFuZCB0aGUga2VybmVsIA0Kd2lsbCBiZWhhdmUgYWNjb3JkaW5nbHkuIA0KDQpBbnkgcGxhdGZv
-cm0gdmVuZG9yIG11c3QgY2hlY2sgdGhhdCB0aGUgSFcgUmVzZXQgcGluIGlzIGFjdHVhbGx5DQpD
-b25uZWN0ZWQgQkVGT1JFIGVuYWJsaW5nIHRoaXMgZmVhdHVyZSBvdGhlcndpc2UgdGhlIHN5c3Rl
-bSBtYXkgYmUNCnVuc3RhYmxlLiBBIERUIEJpbmRpbmcgbWF5IGJlIGRhbmdlcm91cyBpZiB0aGlz
-IGNvbmRpdGlvbiBpcyBub3QgbWV0IA0KYXMgd2VsbCBhcyB0aGUgY29kZSBleGVjdXRpb24gYXQg
-ZWFjaCBNTUMgaW5pdCBpcyBob25lc3RseSByZWR1bmRhbnQNCmZvciBhbiBPVFAgbG9jYXRpb24g
-b2YgdGhlIGV4dENTRC4NCg0KQ2hlZXJzLA0KICAgTHVjYQ0KDQo+IGtpbmQgcmVnYXJkcywNCj4g
-UmljaGFyZC5MDQo=
+Devices in the AUX block share a common interrupt line, with a register
+indicating which devices have active IRQs. Expose this as a nested
+interrupt controller to avoid IRQ sharing problems (easily observed if
+UART1 and SPI1/2 are enabled simultaneously).
+
+There was a suggestion that this driver is unnecessary and that it
+should be left to IRQ sharing, but the use of AUXIRQ is meant to
+be an optimisation to avoid having to poll all of the peripherals.
+
+This patch set is complicated by the fact that the DT node for the AUX
+clock controller includes the AUXIRQ register needed by this driver.
+Patch 1 lays the groundwork by allowing this overlap and preparing for
+a future DT change that removes it.
+
+Changes in v3:
+* Expanded comment on the remapping logic (patch 1).
+* Removed explicit "Valid values" in dt bindings (patch 2).
+* Added Reviewed-by: (patch 2).
+* Moved irq_set_chip_and_handler into .map method (patch 3).
+* Set IRQ type to TYPE_LEVEL_HIGH.
+
+Changes in v2:
+* Add DT bindings and header file for bcm2835-aux-intc.
+* Split the interrupt-controller functionality into a dedicated irqchip
+  driver with a dedicated DT node.
+* Remove mask tracking from the intc driver, so that all interrupts
+  (including spurious ones) are submitted to the IRQ framework.
+* Replace hard-coded masks with BIT macro in the intc driver.
+* Prepare the AUX clock driver for a time when its DT node may only be
+  a single word register, but until then ioremap its region without
+  reserving it to permit sharing.
+
+Phil Elwell (4):
+  clk: bcm2835: More flexible IO register remapping
+  dt: bindings: Add bindings for bcm2835-aux-intc
+  irqchip: Add BCM2835 AUX interrupt controller
+  ARM: dts: bcm283x: Add and use bcm2835-aux-intc
+
+ .../interrupt-controller/brcm,bcm2835-aux-intc.txt |  28 ++++
+ arch/arm/boot/dts/bcm283x.dtsi                     |  27 +++-
+ drivers/clk/bcm/clk-bcm2835-aux.c                  |  20 ++-
+ drivers/irqchip/Makefile                           |   2 +-
+ drivers/irqchip/irq-bcm2835-aux.c                  | 155 +++++++++++++++++++++
+ .../interrupt-controller/bcm2835-aux-intc.h        |  20 +++
+ 6 files changed, 243 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
+ create mode 100644 drivers/irqchip/irq-bcm2835-aux.c
+ create mode 100644 include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
+
+-- 
+1.9.1
+
