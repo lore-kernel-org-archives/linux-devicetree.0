@@ -1,73 +1,328 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 1/4] of: use kbasename instead of open coding
-Date: Wed, 14 Jun 2017 15:30:22 -0500
-Message-ID: <20170614203025.7581-2-robh@kernel.org>
-References: <20170614203025.7581-1-robh@kernel.org>
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [RFC PATCH 2/3] remoteproc: imx_rproc: add a NXP/Freescale imx rproc driver
+Date: Wed, 14 Jun 2017 22:48:54 +0200
+Message-ID: <20170614204855.18347-3-o.rempel@pengutronix.de>
+References: <20170614204855.18347-1-o.rempel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170614203025.7581-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <20170614204855.18347-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Several places in DT code open code the equivalent of kbasename.
-Replace them.
+From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 
-The behavior for root nodes in node_name_cmp will be slightly different.
-Instead of comparing "/", "" will be compared. The comparison will be
-the same.
+this driver was tested on NXP imx7d but should work on
+imx6sx as well.
+It will upload firmware to OCRAM, which shared memory between
+Cortex A7 and Cortex M4, then turn M4 on.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 ---
- drivers/of/base.c     | 5 +----
- drivers/of/platform.c | 2 +-
- drivers/of/resolver.c | 4 ++--
- 3 files changed, 4 insertions(+), 7 deletions(-)
+ drivers/remoteproc/Kconfig     |   8 ++
+ drivers/remoteproc/Makefile    |   1 +
+ drivers/remoteproc/imx_rproc.c | 264 +++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 273 insertions(+)
+ create mode 100644 drivers/remoteproc/imx_rproc.c
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 28d5f53bc631..054159ccd5f8 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -773,10 +773,7 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
- 		return NULL;
+diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+index faad69a1a597..8d33bff4f530 100644
+--- a/drivers/remoteproc/Kconfig
++++ b/drivers/remoteproc/Kconfig
+@@ -130,6 +130,14 @@ config ST_SLIM_REMOTEPROC
+ 	tristate
+ 	depends on REMOTEPROC
  
- 	__for_each_child_of_node(parent, child) {
--		const char *name = strrchr(child->full_name, '/');
--		if (WARN(!name, "malformed device_node %s\n", child->full_name))
--			continue;
--		name++;
-+		const char *name = kbasename(child->full_name);
- 		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
- 			return child;
- 	}
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 71fecc2debfc..8f73413fa243 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -99,7 +99,7 @@ static void of_device_make_bus_id(struct device *dev)
++config IMX_REMOTEPROC
++	tristate "IMX6/7 remoteproc support"
++	depends on SOC_IMX6SX || SOC_IMX7D
++	depends on REMOTEPROC
++	help
++	  TODO, write some thing here
++	  This can be either built-in or a loadable module.
++
+ endif # REMOTEPROC
  
- 		/* format arguments only used if dev_name() resolves to NULL */
- 		dev_set_name(dev, dev_name(dev) ? "%s:%s" : "%s",
--			     strrchr(node->full_name, '/') + 1, dev_name(dev));
-+			     kbasename(node->full_name), dev_name(dev));
- 		node = node->parent;
- 	}
- }
-diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-index 771f4844c781..63626d7d9adb 100644
---- a/drivers/of/resolver.c
-+++ b/drivers/of/resolver.c
-@@ -165,8 +165,8 @@ static int update_usages_of_a_phandle_reference(struct device_node *overlay,
- static int node_name_cmp(const struct device_node *dn1,
- 		const struct device_node *dn2)
- {
--	const char *n1 = strrchr(dn1->full_name, '/') ? : "/";
--	const char *n2 = strrchr(dn2->full_name, '/') ? : "/";
-+	const char *n1 = kbasename(dn1->full_name);
-+	const char *n2 = kbasename(dn2->full_name);
- 
- 	return of_node_cmp(n1, n2);
- }
+ endmenu
+diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+index ffc5e430df27..d351c25cdb4e 100644
+--- a/drivers/remoteproc/Makefile
++++ b/drivers/remoteproc/Makefile
+@@ -19,3 +19,4 @@ qcom_wcnss_pil-y			+= qcom_wcnss.o
+ qcom_wcnss_pil-y			+= qcom_wcnss_iris.o
+ obj-$(CONFIG_ST_REMOTEPROC)		+= st_remoteproc.o
+ obj-$(CONFIG_ST_SLIM_REMOTEPROC)	+= st_slim_rproc.o
++obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+diff --git a/drivers/remoteproc/imx_rproc.c b/drivers/remoteproc/imx_rproc.c
+new file mode 100644
+index 000000000000..6bef85237a27
+--- /dev/null
++++ b/drivers/remoteproc/imx_rproc.c
+@@ -0,0 +1,264 @@
++/*
++ * Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/err.h>
++#include <linux/interrupt.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/of_address.h>
++#include <linux/platform_device.h>
++#include <linux/remoteproc.h>
++#include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
++
++#define IMX7D_ENABLE_M4			BIT(3)
++#define IMX7D_SW_M4P_RST		BIT(2)
++#define IMX7D_SW_M4C_RST		BIT(1)
++#define IMX7D_SW_M4C_NON_SCLR_RST	BIT(0)
++
++#define IMX7D_M4_RST_MASK		0xf
++
++
++#define IMX7D_RPROC_MEM_MAX		2
++enum {
++	IMX7D_RPROC_IMEM,
++	IMX7D_RPROC_DMEM,
++};
++
++static const char *mem_names[IMX7D_RPROC_MEM_MAX] = {
++	[IMX7D_RPROC_IMEM]	= "imem",
++	[IMX7D_RPROC_DMEM]	= "dmem",
++};
++
++/**
++ * struct imx_rproc_mem - slim internal memory structure
++ * @cpu_addr: MPU virtual address of the memory region
++ * @bus_addr: Bus address used to access the memory region
++ * @size: Size of the memory region
++ */
++struct imx_rproc_mem {
++	void __iomem *cpu_addr;
++	phys_addr_t bus_addr;
++	size_t size;
++};
++
++struct imx_rproc_dcfg {
++	int offset;
++};
++
++struct imx_rproc {
++	struct device			*dev;
++	struct regmap			*regmap;
++	struct rproc			*rproc;
++	const struct imx_rproc_dcfg	*dcfg;
++	struct imx_rproc_mem mem[IMX7D_RPROC_MEM_MAX];
++	struct clk		*clk;
++};
++
++static const struct imx_rproc_dcfg imx_rproc_cfg_imx7d = {
++	.offset = 0xc,
++};
++
++static int imx_rproc_start(struct rproc *rproc)
++{
++	struct imx_rproc *priv = rproc->priv;
++	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
++	struct device *dev = priv->dev;
++	int ret;
++
++	ret = clk_enable(priv->clk);
++	if (ret) {
++		dev_err(&rproc->dev, "Failed to enable clock\n");
++		return ret;
++	}
++
++	ret = regmap_update_bits(priv->regmap, dcfg->offset,
++				 IMX7D_M4_RST_MASK,
++				 IMX7D_SW_M4C_RST | IMX7D_SW_M4P_RST | IMX7D_ENABLE_M4);
++	if (ret) {
++		dev_err(dev, "Filed to enable M4!\n");
++		clk_disable(priv->clk);
++	}
++
++	return ret;
++}
++
++static int imx_rproc_stop(struct rproc *rproc)
++{
++	struct imx_rproc *priv = rproc->priv;
++	const struct imx_rproc_dcfg *dcfg = priv->dcfg;
++	struct device *dev = priv->dev;
++	int ret;
++
++	ret = regmap_update_bits(priv->regmap, dcfg->offset,
++				 IMX7D_M4_RST_MASK,
++				 IMX7D_SW_M4C_NON_SCLR_RST);
++	if (ret)
++		dev_err(dev, "Filed to stop M4!\n");
++
++	clk_disable(priv->clk);
++
++	return ret;
++}
++
++static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
++{
++	struct imx_rproc *priv = rproc->priv;
++	void *va = NULL;
++	int i;
++
++	for (i = 0; i < IMX7D_RPROC_MEM_MAX; i++) {
++		if (da != priv->mem[i].bus_addr)
++			continue;
++
++		if (len <= priv->mem[i].size) {
++			/* __force to make sparse happy with type conversion */
++			va = (__force void *)priv->mem[i].cpu_addr;
++			break;
++		}
++	}
++
++	dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%p\n", da, len, va);
++
++	return va;
++}
++
++static const struct rproc_ops imx_rproc_ops = {
++	.start		= imx_rproc_start,
++	.stop		= imx_rproc_stop,
++	.da_to_va       = imx_rproc_da_to_va,
++};
++
++static const struct of_device_id imx_rproc_of_match[] = {
++	{ .compatible = "fsl,imx7d-rproc", .data = &imx_rproc_cfg_imx7d },
++	{},
++};
++MODULE_DEVICE_TABLE(of, imx_rproc_of_match);
++
++static int imx_rproc_addr_init(struct imx_rproc *priv,
++			       struct platform_device *pdev)
++{
++	int i, err;
++	struct resource *res;
++
++	/* get imem and dmem */
++	for (i = 0; i < ARRAY_SIZE(mem_names); i++) {
++		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
++						mem_names[i]);
++		if (!res)
++			continue;
++
++		priv->mem[i].cpu_addr = devm_ioremap_resource(&pdev->dev, res);
++		if (IS_ERR(priv->mem[i].cpu_addr)) {
++			dev_err(&pdev->dev, "devm_ioremap_resource failed\n");
++			err = PTR_ERR(priv->mem[i].cpu_addr);
++			return err;
++		}
++		priv->mem[i].bus_addr = res->start & 0xffff;
++		priv->mem[i].size = resource_size(res);
++	}
++
++	return 0;
++}
++
++static int imx_rproc_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *np = dev->of_node;
++	struct imx_rproc *priv;
++	struct rproc *rproc;
++	struct regmap_config config = { .name = "imx_rproc" };
++	const struct imx_rproc_dcfg *dcfg;
++	struct regmap *regmap;
++	int ret;
++
++	regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "failed to find syscon\n");
++		return PTR_ERR(regmap);
++	}
++        regmap_attach_dev(dev, regmap, &config);
++
++	/* set some other name then imx */
++	rproc = rproc_alloc(dev, "imx_rproc", &imx_rproc_ops, NULL, sizeof(*priv));
++	if (!rproc) {
++		ret = -ENOMEM;
++		goto err;
++	}
++
++	dcfg = of_device_get_match_data(dev);
++	if (!dcfg)
++		return -EINVAL;
++
++	priv = rproc->priv;
++	priv->rproc = rproc;
++	priv->regmap = regmap;
++	priv->dcfg = dcfg;
++
++	dev_set_drvdata(dev, rproc);
++
++	ret = imx_rproc_addr_init(priv, pdev);
++	if (ret) {
++		dev_err(dev, "filed on imx_rproc_addr_init\n");
++		goto err_put_rproc;
++	}
++
++	priv->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(priv->clk)) {
++		dev_err(dev, "Failed to get clock\n");
++		return PTR_ERR(priv->clk);
++	}
++
++	ret = rproc_add(rproc);
++	if (ret) {
++		dev_err(dev, "rproc_add failed\n");
++		goto err_put_rproc;
++	}
++
++	ret = clk_prepare(priv->clk);
++	if (ret)
++		dev_err(dev, "failed to get clock\n");
++
++	return ret;
++
++err_put_rproc:
++	rproc_free(rproc);
++err:
++	return ret;
++}
++
++static int imx_rproc_remove(struct platform_device *pdev)
++{
++	struct rproc *rproc = platform_get_drvdata(pdev);
++
++	rproc_del(rproc);
++	rproc_free(rproc);
++
++	return 0;
++}
++
++static struct platform_driver imx_rproc_driver = {
++	.probe = imx_rproc_probe,
++	.remove = imx_rproc_remove,
++	.driver = {
++		.name = "imx_rproc",
++		.of_match_table = imx_rproc_of_match,
++	},
++};
++
++module_platform_driver(imx_rproc_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("IMX6/7 remote processor control driver");
++MODULE_AUTHOR("Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>");
 -- 
 2.11.0
 
