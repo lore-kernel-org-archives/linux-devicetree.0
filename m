@@ -1,80 +1,43 @@
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: dts: mt2701: Add ethernet device node
-Date: Wed, 14 Jun 2017 11:08:28 +0800
-Message-ID: <1497409708.21216.2.camel@mtkswgap22>
-References: <1496297324-21091-1-git-send-email-erin.lo@mediatek.com>
-         <1496297324-21091-2-git-send-email-erin.lo@mediatek.com>
-         <d0a1217b-7761-fea6-888a-da06573400b8@gmail.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH v2 0/3] clk: hi3660: add more clocks and fix bugs
+Date: Wed, 14 Jun 2017 11:20:58 +0800
+Message-ID: <CAFGCpxxtrqCNXCM44XfoEON22jjKcCtNkA+bvOMU-38gXTkX6Q@mail.gmail.com>
+References: <20170526073821.25971-1-guodong.xu@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <d0a1217b-7761-fea6-888a-da06573400b8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170526073821.25971-1-guodong.xu@linaro.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "chenjun (P)" <chenjun14@huawei.com>, zhongkaihua <zhongkaihua@huawei.com>, Zhangfei Gao <zhangfei.gao@linaro.org>, Leo Yan <leo.yan@linaro.org>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Guodong Xu <guodong.xu@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-06-09 at 10:22 +0200, Matthias Brugger wrote:
-> 
-> On 01/06/17 08:08, Erin Lo wrote:
-> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > 
-> > Add ethernet device node for MT2701
-> > 
-> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   arch/arm/boot/dts/mt2701.dtsi | 20 ++++++++++++++++++++
-> >   1 file changed, 20 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> > index 8037210..de88bd7 100644
-> > --- a/arch/arm/boot/dts/mt2701.dtsi
-> > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> > @@ -420,6 +420,26 @@
-> >   		#clock-cells = <1>;
-> >   	};
-> >   
-> > +	eth: ethernet@1b100000 {
-> > +		compatible = "mediatek,mt2701-eth", "syscon";
-> > +		reg = <0 0x1b100000 0 0x20000>;
-> > +		interrupts = <GIC_SPI 200 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 199 IRQ_TYPE_LEVEL_LOW>,
-> > +			     <GIC_SPI 198 IRQ_TYPE_LEVEL_LOW>;
-> > +		clocks = <&topckgen CLK_TOP_ETHIF_SEL>,
-> > +			 <&ethsys CLK_ETHSYS_ESW>,
-> > +			 <&ethsys CLK_ETHSYS_GP1>,
-> > +			 <&ethsys CLK_ETHSYS_GP2>,
-> > +			 <&apmixedsys CLK_APMIXED_TRGPLL>;
-> > +		clock-names = "ethif", "esw", "gp1", "gp2", "trgpll";
-> > +		power-domains = <&scpsys MT2701_POWER_DOMAIN_ETH>;
-> > +		mediatek,ethsys = <&ethsys>;
-> > +		mediatek,pctl = <&syscfg_pctl_a>;
-> > +		#address-cells = <1>;
-> > +		#size-cells = <0>;
-> > +		status = "disabled";
-> > +	};
-> > +
-> 
-> I'm missing the reset properties.
+Hi, Stephen, Mike
 
+May I get your review opinion and comments on this patchset?
 
-Hi Matthias,
+Thanks you.
 
-Appreciate your careful reviewing, 
+-Guodong Xu
 
-I'll add it for the missing which causes binding violation. 
-
-
-	Sean
-
-> 
-> Regards,
-> Matthias
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, May 26, 2017 at 3:38 PM, Guodong Xu <guodong.xu@linaro.org> wrote:
+> This patchset adds more clocks for hi3660, video encoder/decoder, ISP. It
+> includes also bug fixes.
+>
+> v2 update:
+>  - added ISP clocks into patch 2.
+>
+> Chen Jun (2):
+>   clk: hi3660: fix wrong parent name of clk_mux_sysbus
+>   clk: hi3660: add clocks for video encoder, decoder and ISP
+>
+> Zhong Kaihua (1):
+>   clk: hi3660: Set PPLL2 to 2880M
+>
+>  drivers/clk/hisilicon/clk-hi3660.c       | 50 +++++++++++++++++++++++++++++---
+>  include/dt-bindings/clock/hi3660-clock.h | 17 +++++++++++
+>  2 files changed, 63 insertions(+), 4 deletions(-)
+>
+> --
+> 2.10.2
+>
