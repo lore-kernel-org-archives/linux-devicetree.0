@@ -1,49 +1,51 @@
-From: Logan Gunthorpe <logang@deltatee.com>
-Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable to
- handle kernel NULL pointer dereference at 00000000000000a8
-Date: Wed, 14 Jun 2017 09:49:52 -0600
-Message-ID: <c3148aca-5707-1858-d889-af004321b140@deltatee.com>
-References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
- <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
- <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
- <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
- <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
- <20170613041842.GA13308@kroah.com>
- <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
- <20170613043416.GB14217@kroah.com>
- <CACRpkdZyup+dH6Yp747yLyaC8DSbA8bEnk37gJKnmnjBvjn=-A@mail.gmail.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/2] Add Basic SoC support for MT7622
+Date: Thu, 15 Jun 2017 00:11:29 +0800
+Message-ID: <cover.1497455465.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZyup+dH6Yp747yLyaC8DSbA8bEnk37gJKnmnjBvjn=-A@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-On 14/06/17 03:59 AM, Linus Walleij wrote:
-> I started to take a stab at it at one point and incorporated some feedback
-> from Torvalds etc, it's here:
-> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=chrdev-warn&id=65e5b1e9eb3f777ab7535b74b490e882eeec79d7
+Changes since v3:
+- get rid of those accepted patches
+- rebased to branch v4.12-next/dts64 in Matthias' tree
+- fixed uart node in dts with two clocks as described in bindings documentation
 
-Yes, thanks, I did find your work after a google search. However, seeing
-it seems to recover only a handful of numbers with some significant
-complexity required it seemed like a stopgap solution anyway. I posted a
-proposal in this thread that simply extends the dynamic range into a
-region above 256 which seems to work well. This means regular
-configurations won't be affected an any configuration requiring more
-than 20 dynamic majors will simply end up with high numbers.
+Changes since v2:
+- merge back required basic clock nodes into the .dtsi file
+- update the property of interrupts in timer nodes with 2 CPUs
 
-So unless anyone can think of a reason why this won't work, it's my
-preferred direction.
+Changes since v1:
+- update SPDX-License-Identifier
+- remove next-level-cache property since cache geometry detection was removed since 4.12
 
-> Making them all dynamic seemed dangerous because I was afraid
-> of userspace ABI breakage because of old userlands with
-> static mknod:s.
+This patch set adds basic SoC support for MediaTek MT7622
+SoC based on 4.12-rc1.
 
-I agree.
 
-Logan
+
+
+Sean Wang (2):
+  arm64: dts: mt7622: add basic nodes to the mt7622.dtsi file
+  arm64: dts: mt7622: add dts file for MT7622 reference board variant 1
+
+ arch/arm64/boot/dts/mediatek/Makefile        |   1 +
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts |  27 +++++++
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 104 +++++++++++++++++++++++++++
+ 3 files changed, 132 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
+
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
