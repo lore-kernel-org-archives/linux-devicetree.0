@@ -1,48 +1,83 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable to
- handle kernel NULL pointer dereference at 00000000000000a8
-Date: Wed, 14 Jun 2017 11:59:29 +0200
-Message-ID: <CACRpkdZyup+dH6Yp747yLyaC8DSbA8bEnk37gJKnmnjBvjn=-A@mail.gmail.com>
-References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
- <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
- <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com> <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
- <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com> <20170613041842.GA13308@kroah.com>
- <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com> <20170613043416.GB14217@kroah.com>
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
+Subject: Re: [PATCH v2] Documentation: clock: address more for clock-cells property
+Date: Wed, 14 Jun 2017 18:11:37 +0800
+Message-ID: <CAG2=9p-8YtSt50HnXs2xeS53RTEjHdLw9Z09HPSZ9oEOgCi4uQ@mail.gmail.com>
+References: <1497432104-22609-1-git-send-email-zhang.chunyan@linaro.org> <CAMuHMdU6ZsqbRhG7=dYE=B_7To=ioWrwWwdoRYGdEQJwB4wW6A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20170613043416.GB14217@kroah.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU6ZsqbRhG7=dYE=B_7To=ioWrwWwdoRYGdEQJwB4wW6A@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lyra Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 6:34 AM, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+Hi Geert,
 
-> Ah, that makes sense.  Well, someone can always work on expanding the
-> range of dynamic char major numbers if they are running out of them on a
-> real system, I'll gladly take patches for that :)
+On 14 June 2017 at 17:42, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Chunyan,
+>
+> On Wed, Jun 14, 2017 at 11:21 AM, Chunyan Zhang
+> <zhang.chunyan@linaro.org> wrote:
+>> The value of property 'clock-cells' is not determined only by the number
+>> of clock outputs in one clock node, it is determined by whether the clock
+>> output in this node can be referenced directly without index. If the
+>> output clock has to be referenced by a index, the clock-cell of this
+>> clock node can't be defined 0.
+>>
+>> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+>> ---
+>>  Documentation/devicetree/bindings/clock/clock-bindings.txt | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> index 2ec489e..e2b76b4 100644
+>> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> @@ -18,6 +18,9 @@ Required properties:
+>>                    with a single clock output and 1 for nodes with multiple
+>>                    clock outputs.
+>>
+>> +                  There's one exception, please see the description for
+>> +                  clock-indices below.
+>> +
+>>  Optional properties:
+>>  clock-output-names: Recommended to be a list of strings of clock output signal
+>>                     names indexed by the first cell in the clock specifier.
+>> @@ -48,6 +51,13 @@ clock-indices:          If the identifying number for the clocks in the node
+>>                    is not linear from zero, then this allows the mapping of
+>>                    identifiers into the clock-output-names array.
+>>
+>> +                  This property not only servers for clocks with multiple
+>
+> serves
 
-I started to take a stab at it at one point and incorporated some feedback
-from Torvalds etc, it's here:
-https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=chrdev-warn&id=65e5b1e9eb3f777ab7535b74b490e882eeec79d7
+Thanks, I will fix that.
 
-It tries to use all "holes" in the chardev major map to shun in a bit
-more devices when we run out of the high dynamic major range.
+>
+>> +                  clock outputs, but also for clocks with a single clock
+>> +                  output whose identifying number is not zero.
+>
+> Why would you want a single clock and a non-zero identifying number?
 
-Making them all dynamic seemed dangerous because I was afraid
-of userspace ABI breakage because of old userlands with
-static mknod:s.
+Because of the probably weird hardwire design :)
+There indeed some clocks like that on the platform I'm working on.
 
-I lost interest when it turned out that the zeroday QEMU stuff was
-generating random machines that have no counterpart in the real
-world, and then the exercise seemed a bit academic.
+>
+>> +                  So long as clock-indices is set, clock-cells cannot be
+>> +                  set zero.
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
 
-The last failures were due to (AFAICT) some relationship between
-major and minor numbers that I didn't untangle.
+Thanks for your review,
+Chunyan
 
-If there is interest I could try to revive it.
-
-Yours,
-Linus Walleij
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
