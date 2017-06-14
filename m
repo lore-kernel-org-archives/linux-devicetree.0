@@ -1,50 +1,25 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 00/11] ARM: dts: imx6qdl: video capture support
-Date: Wed, 14 Jun 2017 23:09:39 +0800
-Message-ID: <20170614150938.GB30112@dragon>
-References: <1497291844-14632-1-git-send-email-steve_longerbeam@mentor.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v6 0/3] ARM: dts: imx7: add NAND support
+Date: Wed, 14 Jun 2017 23:11:47 +0800
+Message-ID: <20170614151146.GC30112@dragon>
+References: <cover.9fab78eaa869dbad4c9ad7e8578c9cef3e49daa8.1496961128.git-series.stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1497291844-14632-1-git-send-email-steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <cover.9fab78eaa869dbad4c9ad7e8578c9cef3e49daa8.1496961128.git-series.stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: kernel@pengutronix.de, sboyd@codeaurora.org, aisheng.dong@nxp.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@KARO-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 11:23:53AM -0700, Steve Longerbeam wrote:
-> This series defines the i.MX6 internal video multiplexers and MIPI CSI-2
-> receiver device nodes, and their connections to eachother and the i.MX6
-> IPU CSI ports.
-> 
-> It also implements video capture support on the SabreLite, SabreSD, and
-> SabreAuto reference platforms, by defining the video sensor nodes on those
-> platforms, and their connections to the video muxes and MIPI CSI-2 receiver.
-> 
-> There should not be much of anything controversial in this series. The
-> imx-media driver is set to be merged in time for 4.13, so please accept
-> this series soon.
-> 
-> 
-> Philipp Zabel (2):
->   ARM: dts: imx6qdl: add multiplexer controls
->   ARM: dts: imx6qdl: Add video multiplexers, mipi_csi, and their
->     connections
-> 
-> Steve Longerbeam (9):
->   ARM: dts: imx6qdl: Add compatible, clocks, irqs to MIPI CSI-2 node
->   ARM: dts: imx6qdl: add capture-subsystem device
->   ARM: dts: imx6qdl-sabrelite: remove erratum ERR006687 workaround
->   ARM: dts: imx6-sabrelite: add OV5642 and OV5640 camera sensors
->   ARM: dts: imx6-sabresd: add OV5642 and OV5640 camera sensors
->   ARM: dts: imx6-sabreauto: create i2cmux for i2c3
->   ARM: dts: imx6-sabreauto: add reset-gpios property for max7310_b
->   ARM: dts: imx6-sabreauto: add pinctrl for gpt input capture
->   ARM: dts: imx6-sabreauto: add the ADV7180 video decoder
+On Thu, Jun 08, 2017 at 03:34:46PM -0700, Stefan Agner wrote:
+> Stefan Agner (3):
+>   clk: imx7d: create clocks behind rawnand clock gate
+>   ARM: dts: imx7: add GPMI NAND and APBH DMA
+>   ARM: dts: imx7-colibri: add NAND support
 
-Applied all, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Both dts patches look good to me.  Please ping me after the clk patch
+lands on mainline.
+
+Shawn
