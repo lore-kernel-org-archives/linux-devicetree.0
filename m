@@ -1,77 +1,66 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 10/18] spi: qup: Fix DMA mode interrupt handling
-Date: Wed, 14 Jun 2017 16:06:08 -0400
-Message-ID: <20170614200608.GE32733@hector.wework.com>
-References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
- <1497419551-21834-11-git-send-email-varada@codeaurora.org>
- <66ba7dfb-6ff3-884e-6db0-8d5191f87c93@codeaurora.org>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: supply: move maxim,max14656.txt
+ to proper location
+Date: Wed, 14 Jun 2017 22:12:07 +0200
+Message-ID: <20170614201206.wydlkxugmi26sqgy@earth>
+References: <20170608213602.13311-1-sre@kernel.org>
+ <20170614152707.5iymwfw6fxerf6b7@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s2ggw4o7wdgzxb2w"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <66ba7dfb-6ff3-884e-6db0-8d5191f87c93-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170614152707.5iymwfw6fxerf6b7@rob-hp-laptop>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 12:51:11PM +0530, Sricharan R wrote:
-> Hi Varada,
-> 
-> On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
-> > This is needed for v1, where the i/o completion is not
-> > handled in the dma driver.
-> > 
-> > Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+--s2ggw4o7wdgzxb2w
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Jun 14, 2017 at 10:27:07AM -0500, Rob Herring wrote:
+> On Thu, Jun 08, 2017 at 11:36:01PM +0200, Sebastian Reichel wrote:
+> > This moves maxim,max14656.txt to proper location for
+> > power-supply bindings.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
 > > ---
-> >  drivers/spi/spi-qup.c | 15 +++++++++++++--
-> >  1 file changed, 13 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-> > index 872de28..bd53e82 100644
-> > --- a/drivers/spi/spi-qup.c
-> > +++ b/drivers/spi/spi-qup.c
-> > @@ -510,9 +510,9 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
-> >  
-> >  	writel_relaxed(qup_err, controller->base + QUP_ERROR_FLAGS);
-> >  	writel_relaxed(spi_err, controller->base + SPI_ERROR_FLAGS);
-> > -	writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
-> >  
-> >  	if (!xfer) {
-> > +		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
-> 
->  This does look correct to remove acknowledging the QUP in normal case and
->   do it conditionally only when xfer = NULL.
+> >  .../devicetree/bindings/{power_supply =3D> power/supply}/maxim,max1465=
+6.txt | 0
+> >  1 file changed, 0 insertions(+), 0 deletions(-)
+> >  rename Documentation/devicetree/bindings/{power_supply =3D> power/supp=
+ly}/maxim,max14656.txt (100%)
+>=20
+> Acked-by: Rob Herring <robh@kernel.org>
 
-This is to probably mask the issue of getting erroneous/spurious IRQs.
+Thanks for your Acks, both queued.
 
-> 
-> >  		dev_err_ratelimited(controller->dev, "unexpected irq %08x %08x %08x\n",
-> >  				    qup_err, spi_err, opflags);
-> >  		return IRQ_HANDLED;
-> > @@ -540,7 +540,15 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
-> >  		error = -EIO;
-> >  	}
-> >  
-> > -	if (!spi_qup_is_dma_xfer(controller->mode)) {
-> > +	if (spi_qup_is_dma_xfer(controller->mode)) {
-> > +		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
-> > +		if (opflags & QUP_OP_IN_SERVICE_FLAG &&
-> > +		    opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
-> > +			complete(&controller->rxc);
-> > +		if (opflags & QUP_OP_OUT_SERVICE_FLAG &&
-> > +		    opflags & QUP_OP_MAX_OUTPUT_DONE_FLAG)
-> > +			complete(&controller->txc);
-> > +	} else {
-> 
->  Is this because in patch #8 that we do not populate the dma callback
->  for v1. If that is done, this should not be required at all, as the
->  complete would be signalled from the dma callback.
+-- Sebastian
 
-I believe that is true.  There shouldn't be any IRQs for DMA enabled
-transactions (at least BAM-dma).
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--s2ggw4o7wdgzxb2w
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllBmJYACgkQ2O7X88g7
++pp6AQ//bHsCO7opjXFQI13KOCW6mWlUbKwIrQ14mvv5mUDwiH5+dtGpiUvLH9cE
+GSUsIg/BbysmFK616ROK1RDs+qFfzrME0w0vqNxLimhQbxzBpyrWoMm5iml0aS3k
+0M/17HX6sEOS5l/jppAQl2gCNjsSZlTPjTzQgFYeyRQSb/URHNglOYcT1OmLVnXP
+mS+hz8uFYTjyNlGMq9o+fi9BmrmbWbVJM9gR7L5H1nVEXks1c0To2JEY28s7Sq+R
+up/P1hZKwDct1luUfNO9erSY8cgusiZ284P8alXPVAyEbpAecMnNbk83B7JXoE8k
+ZqtK4wiYZROV7C9nqpkF8MY8rPZ4x53d03tPBKrXMrs4Qgj+B60u6ylyl7jiEV7a
+lHQmiSgzW1f3p3lYVRhE6NNFYPvIWVLCBNRiBKFzTCwp1sMdmvG73acYGaBJ1hgw
+yZffjJxaPZ99rvb0qVSzIwluHsScL28g+GiXGkwQizCtZGIiyQu8udfqrOiUmfW8
+qubTet+HX5H9pVKMFUezAI8QgCq9yhjVWwqtazgUuG5MUiRCaPwtxwNc1Lo1P7XX
+izgYK5YYN+2wop8Mekbk/hyNjMMsfL4ngLMMqq+9SPrt+yLT9Am0aFhHexDpw/tn
+adkXOCMZbOqaYoo4Xork/2WGuYGEfyVp1n3Opk9QMKpT5iNFlKs=
+=MvZm
+-----END PGP SIGNATURE-----
+
+--s2ggw4o7wdgzxb2w--
