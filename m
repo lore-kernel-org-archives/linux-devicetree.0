@@ -1,95 +1,71 @@
-From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 11/18] spi: qup: properly detect extra interrupts
-Date: Wed, 14 Jun 2017 12:57:25 +0530
-Message-ID: <bb1469ad-542f-1a47-5ef9-84d7cd02cf49@codeaurora.org>
-References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
- <1497419551-21834-12-git-send-email-varada@codeaurora.org>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [PATCH v2] mmc: core: add mmc-card hardware reset enable support
+Date: Wed, 14 Jun 2017 09:25:00 +0200
+Message-ID: <0a29de1a-2635-2bb8-808a-7b9a0197921a@skidata.com>
+References: <1491895862-7952-1-git-send-email-richard.leitner@skidata.com>
+ <CACRpkdaBrk91hh3JGZ0vcD3aXO+OHD41xwRKn9prPSOX_SXuWg@mail.gmail.com>
+ <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497419551-21834-12-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Bart Van Assche <bart.vanassche@sandisk.com>, Luca Porzio <lporzio@micron.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Leitner <dev@g0hl1n.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Varada,
-
-On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
-> It's possible for a SPI transaction to complete and get another
-> interrupt and have it processed on the same spi_transfer before the
-> transfer_one can set it to NULL.
+On 04/11/2017 12:43 PM, Ulf Hansson wrote:
+> On 11 April 2017 at 10:17, Linus Walleij <linus.walleij@linaro.org> wrote:
+>> On Tue, Apr 11, 2017 at 9:31 AM, Richard Leitner
+>> <richard.leitner@skidata.com> wrote:
+>>
+>>> Some eMMCs disable their hardware reset line (RST_N) by default. To enable
+>>> it the host must set the corresponding bit in ECSD. An example for such
+>>> a device is the Micron MTFCxGACAANA-4M.
+>>>
+>>> This patch adds a new mmc-card devicetree property to let the host enable
+>>> this feature during card initialization.
+>>>
+>>> Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
+>>
+>> Do we know *WHY* these cards disable their hardware reset lines?
 > 
-> This masks unexpected interrupts, so let's set the spi_transfer to
-> NULL in the interrupt once the transaction is done. So we can
-> properly detect these bad interrupts and print warning messages.
+> Allow me to make a guess. In case the reset isn't enabled, the
+> internal eMMC card firmware don't monitor the pin for the reset. I
+> guess that could makes sense if SoC vendors has failed to properly
+> connect the pin, avoiding the eMMC card to be reset when it shouldn't.
 > 
-> Signed-off-by: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/spi/spi-qup.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
+>> If it is just some random over-cautious panic thing we might consider
+>> just force re-enableing it, maybe with a warning in the dmesg, so we can
+>> always reset the card. No DT property needed.
 > 
-> diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-> index bd53e82..1a2a9d9 100644
-> --- a/drivers/spi/spi-qup.c
-> +++ b/drivers/spi/spi-qup.c
-> @@ -496,13 +496,13 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
->  	struct spi_qup *controller = dev_id;
->  	struct spi_transfer *xfer;
->  	u32 opflags, qup_err, spi_err;
-> -	unsigned long flags;
->  	int error = 0;
-> +	bool done = 0;
->  
-> -	spin_lock_irqsave(&controller->lock, flags);
-> +	spin_lock(&controller->lock);
->  	xfer = controller->xfer;
->  	controller->xfer = NULL;
-> -	spin_unlock_irqrestore(&controller->lock, flags);
-> +	spin_unlock(&controller->lock);
+> There is actually already a DT property "cap-mmc-hw-reset"
+> (MMC_CAP_HW_RESET), which tells whether the eMMC reset is supported by
+> the host.
+> 
+> Perhaps we can consider to force-enabling it for the eMMC card, when
+> this property is set for the mmc host!? At least, inventing yet
+> another binding doesn't make sense to me.
 
- Why change the locking here ?
+IMHO setting this (permanent) configuration bit should be done
+explicitly and not within another DT property. Otherwise somebody may
+accidentally set this configuration by (for example) including a dtsi
+which has cap-mmc-hw-reset configured.
 
->  
->  	qup_err = readl_relaxed(controller->base + QUP_ERROR_FLAGS);
->  	spi_err = readl_relaxed(controller->base + SPI_ERROR_FLAGS);
-> @@ -556,16 +556,19 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
->  			spi_qup_write(controller, xfer);
->  	}
->  
-> -	spin_lock_irqsave(&controller->lock, flags);
-> -	controller->error = error;
-> -	controller->xfer = xfer;
-> -	spin_unlock_irqrestore(&controller->lock, flags);
-> -
->  	/* re-read opflags as flags may have changed due to actions above */
->  	opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
->  
->  	if ((controller->rx_bytes == xfer->len &&
->  		(opflags & QUP_OP_MAX_INPUT_DONE_FLAG)) ||  error)
-> +		done = true;
-> +
-> +	spin_lock(&controller->lock);
-> +	controller->error = error;
-> +	controller->xfer = done ? NULL : xfer;
-> +	spin_unlock(&controller->lock);
-> +
-> +	if (done)
->  		complete(&controller->done);
->  
-  Its not clear, why the driver is setting the controller->xfer = NULL
-  and restoring it inside the irq. This patch seems to fix things on
-  top of that.
+Nonetheless if the majority agrees to implicitly set it when
+"cap-mmc-hw-reset" is configured I'm fine with that too.
 
-Regards,
- Sricharan
+Another possibility is to don't include it in the kernel at all and
+therefore require the mmc userspace program to configure it...?
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> Putting some people who work for eMMC vendors in the To: line so they
+>> can say if they know about this.
+> 
+> Yes, let's see what they say about it.
+
+Any news/comments?
+
+kind regards,
+Richard.L
