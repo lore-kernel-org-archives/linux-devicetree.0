@@ -1,87 +1,64 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: [PATCH v3 2/4] dt: bindings: Add bindings for bcm2835-aux-intc
-Date: Wed, 14 Jun 2017 17:29:08 +0100
-Message-ID: <1497457750-35585-3-git-send-email-phil@raspberrypi.org>
-References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
- <1497457750-35585-1-git-send-email-phil@raspberrypi.org>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1497457750-35585-1-git-send-email-phil@raspberrypi.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
-Cc: Phil Elwell <phil@raspberrypi.org>
+From: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] soc: brcmstb: Add driver for DPFE
+Date: Wed, 14 Jun 2017 09:34:11 -0700
+Message-ID: <CANEuBv6N3TTNzSuDQXk-eiEV_fvGtVJZhdWUO_XdgPj6+j7q5A@mail.gmail.com>
+References: <20170613223710.31719-1-code@mmayer.net> <20170613223710.31719-3-code@mmayer.net>
+ <5b79dee6-bb84-30b3-1bb2-287b24d42534@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5b79dee6-bb84-30b3-1bb2-287b24d42534-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for brcm,bcm2835-aux-intc and human-readable
-declarations for the BCM2835 AUX IRQs.
+On 13 June 2017 at 17:03, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Markus,
+>
+> On 06/13/2017 03:37 PM, Markus Mayer wrote:
+>> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>
+>> This driver allows access to DRAM properties, such as the refresh rate,
+>> via the Broadcom STB DDR PHY Front End (DPFE). The refresh rate can be
+>> used as indirect indicator of the DRAM temperature.
+>>
+>> The driver also allows setting of the sampling interval.
+>>
+>> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  MAINTAINERS                      |   8 +
+>>  drivers/soc/bcm/brcmstb/Makefile |   2 +-
+>>  drivers/soc/bcm/brcmstb/dpfe.c   | 689 +++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 698 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/soc/bcm/brcmstb/dpfe.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index f7d568b..04f0be6 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -2864,6 +2864,14 @@ S:     Maintained
+>>  F:   Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>>  F:   drivers/cpufreq/brcmstb*
+>>
+>> +BROADCOM STB SOC DPFE DRIVER
+>> +M:   Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> +M:   bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+>> +L:   linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>> +S:   Maintained
+>> +F:   Documentation/devicetree/bindings/soc/bcm/brcm,dpfe-cpu.txt
+>> +F:   drivers/misc/brcmstb-dpfe.c
+>
+> Just one nit: this should be drivers/soc/bcm/brcmstb/dpfe.c, other than
+> that, I just need an Ack from Rob on the binding, and I will queue this
+> up, thanks!
 
-Signed-off-by: Phil Elwell <phil@raspberrypi.org>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- .../interrupt-controller/brcm,bcm2835-aux-intc.txt | 27 ++++++++++++++++++++++
- .../interrupt-controller/bcm2835-aux-intc.h        | 20 ++++++++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
- create mode 100644 include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
+Oops. Thanks for catching that. Would you like me to re-send or will
+you fix up that path on your end?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
-new file mode 100644
-index 0000000..9cbbab6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,bcm2835-aux-intc.txt
-@@ -0,0 +1,27 @@
-+BCM2835 Auxiliary ("AUXIRQ") Interrupt Controller
-+
-+The BCM2835 family of SoCs multiplexes the interrupts for peripherals in
-+the AUX block into a single IRQ. The AUXIRQ register shows the IRQ status
-+of each of the peripherals. Note that there are no masking or clearing
-+facilities - interrupts must be enabled and acknowledged in the
-+individual peripherals.
-+
-+Required properties:
-+- compatible :	     Should be "brcm,bcm2835-aux-intc".
-+- reg :		     Specifies base physical address and size of the registers.
-+- interrupts :	     The interrupt number - see
-+		     bindings/interrupt-controller/brcm,bcm2835-armctrl-ic.txt
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+		     interrupt source. The value shall be 1.
-+
-+  The cell contains the interrupt specifier, as found in
-+  include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h.
-+
-+Example:
-+
-+	auxintc: interrupt-controller@7e215000 {
-+		compatible = "brcm,bcm2835-aux-intc";
-+		reg = <0x7e215000 0x4>;
-+		interrupts = <1 29>;
-+		interrupt-controller;
-diff --git a/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
-new file mode 100644
-index 0000000..8b9fc12
---- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/bcm2835-aux-intc.h
-@@ -0,0 +1,20 @@
-+/*
-+ * Copyright (C) 2017 Raspberry Pi (Trading) Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#define BCM2835_AUX_IRQ_UART	0
-+#define BCM2835_AUX_IRQ_SPI1	1
-+#define BCM2835_AUX_IRQ_SPI2	2
-+#define BCM2835_AUX_IRQ_COUNT	3
--- 
-1.9.1
-
+> --
+> Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
