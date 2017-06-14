@@ -1,39 +1,133 @@
-From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 5/8] regulator: hi6421v530: add driver for hi6421v530
- voltage regulator
-Date: Wed, 14 Jun 2017 16:13:04 +0800
-Message-ID: <CAFGCpxxU8FJi20rUVw6G+Add9A2XqhNULsnKNU5T78Eq9V7HxQ@mail.gmail.com>
-References: <20170608220841.26531-1-guodong.xu@linaro.org> <20170608220841.26531-6-guodong.xu@linaro.org>
- <20170613203527.ecykjzzpvkrzl7zz@sirena.org.uk>
+From: Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 5/7] drm/vc4: Add support for the TXP (transposer) block
+Date: Wed, 14 Jun 2017 09:23:33 +0100
+Message-ID: <20170614082332.GA16457@e106950-lin.cambridge.arm.com>
+References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1496392332-8722-6-git-send-email-boris.brezillon@free-electrons.com>
+ <20170605112549.GA32480@e106950-lin.cambridge.arm.com>
+ <20170606211300.61e93ec1@bbrezillon>
+ <20170613103403.GA3989@e106950-lin.cambridge.arm.com>
+ <87efunaj4o.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170613203527.ecykjzzpvkrzl7zz-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87efunaj4o.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TZNg+MwTxZMZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 4:35 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Jun 09, 2017 at 06:08:38AM +0800, Guodong Xu wrote:
->> From: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
->>
->> add the driver for hi6421v530 voltage regulator
+On Tue, Jun 13, 2017 at 10:32:23AM -0700, Eric Anholt wrote:
+>Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org> writes:
 >
-> Please don't resubmit patches that have already been applied, you should
-> submit patches against current code in the tree you're expecting things
-> to be applied to.  If any updates are needed to a patch that's already
-> been applied you should submit incremental patches which make those
-> updates.  This avoids having to change published git commits which could
-> cause problems for people working against git.
+>> Hi Boris,
+>>
+>> Sorry lost track of this thread.
+>>
+>>
+>> On Tue, Jun 06, 2017 at 09:13:00PM +0200, Boris Brezillon wrote:
+>>>Hi Brian,
+>>>
+>>>Le Mon, 5 Jun 2017 12:25:50 +0100,
+>>>Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org> a écrit :
+>>>
+>>>> Hi Boris,
+>>>>
+>>>> I can't speak for the HW-specific details, but the writeback part
+>>>> looks pretty good (and familiar ;-) to me. There certainly seems to be
+>>>> some scope for code-sharing there, but I think it's fine not to do it
+>>>> yet.
+>>>
+>>>Agreed.
+>>>
+>>>>
+>>>> I've a further query below about the handling of CRTC events.
+>>>>
+>>>
+>>>[...]
+>>>
+>>>> >+
+>>>> >+void vc4_txp_atomic_commit(struct drm_device *dev,
+>>>> >+			   struct drm_atomic_state *old_state)
+>>>> >+{
+>>>> >+	struct vc4_dev *vc4 = to_vc4_dev(dev);
+>>>> >+	struct vc4_txp *txp = vc4->txp;
+>>>> >+	struct drm_connector_state *conn_state = txp->connector.base.state;
+>>>> >+	struct drm_display_mode *mode;
+>>>> >+	struct drm_gem_cma_object *gem;
+>>>> >+	struct drm_framebuffer *fb;
+>>>> >+	u32 ctrl = TXP_GO | TXP_EI;
+>>>> >+
+>>>> >+	/* Writeback connector is disabled, nothing to do. */
+>>>> >+	if (!conn_state->crtc)
+>>>> >+		return;
+>>>> >+
+>>>> >+	/* Writeback connector is enabled, but has no FB assigned to it. Fake a
+>>>> >+	 * vblank event to complete ->flip_done.
+>>>> >+	 */
+>>>> >+	if (!conn_state->writeback_job || !conn_state->writeback_job->fb) {
+>>>> >+		vc4_crtc_eof_event(conn_state->crtc);
+>>>>
+>>>> I'm not sure about hiding away the one-shot thing like this. If the
+>>>> CRTC remains "active" from the API point of view, I'd expect it to be
+>>>> able to keep generating VBLANK events.
+>>>>
+>>>> I don't know how to do if, but if there were some notion of
+>>>> "auto-disabling" CRTCs then this quirk would go away, and you'd also
+>>>> be able to enforce that the CRTC can't be enabled without a writeback
+>>>> framebuffer.
+>>>
+>>>I don't have a strong opinion on "auto-disabling CRTC" vs "fake VBLANK
+>>>events". Note that I'm already faking a VBLANK event when activating
+>>>writeback, because there's no such concept at the HVS/TXP level. We
+>>>do have EOF (End Of Frame) and writeback done events, but these are
+>>>quite independent from the VBLANK events generated by the pixelvalve
+>>>block (the block responsible for generating the HSYNC/VSYNC signals).
+>>>
+>>>>
+>>>> I'm also not sure how (if?) this works today with a CRTC driving a DSI
+>>>> command-mode panel. Does the CRTC keep generating VBLANKs even when
+>>>> there are no updates?
+>>>
+>>>I don't know. Is this mandatory to have VBLANK events? I mean, the
+>>>core is using VBLANK events to detect when page flips have been done,
+>>>that is, when old framebuffers are unused and new ones started to be
+>>>fetched by the CRTC, but on some HW, VBLANK is not the only way to
+>>>detect such situations. The question is, are there other situations
+>>>where VBLANK events are required, or is there an implicit rule stating
+>>>that a CRTC has to generate VBLANK events at a vrefresh rate even when
+>>>the display is actually not updated when nothing changes?
+>>
+>> I'm not sure how widely relied upon it is, but I'd expect that there's
+>> a requirement to make sure DRM_IOCTL_WAIT_VBLANK works. I _think_ that
+>> means the CRTC should generate events at vrefresh rate if there's a
+>> wait request outstanding that depends on that.
+>
+>In our case, there's no vrefresh rate, though.  Just completion.
+>
+>I've been trying to come up with a usecase for vblank events on
+>writeack, and the best I have is: to enable VNC-style capture of a
+>complete hardware rendering stack, we could run modesetting against the
+>writeback connector and do one-shot writebacks when damage comes in.
+>You would want GL apps to be throttled to the frame capture rate, so X
+>needs to implement waits for at least a swapinterval of 1 (I don't see
+>how greater than 1 would make any sense)
+>
+>However, given that you'd be triggering writebacks on damage, and using
+>the fence to trigger the next wait for damage and writeback already, I
+>think you'd use that set of code for Present/DRI2 swapinterval support,
+>not the current vblank path.
+>
+>My current inclination would be to throw -EINVAL for userspace vblank
+>requests on writeback conncetor pipes.
 
-ok. I see your point. Sorry about this submission. Before sending out
-v6, I did see your email notification about inclusion of v5 patchset
-into regulator -next tree.
+I'm not sure how you'd plumb that in, but the behaviour sounds OK to
+me. We can write-back at the same time as scanout to the display from
+the same CRTC, so we'd not want to return -EINVAL in that case.
 
-I will send incremental patch.
-
--Guodong
+-Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
