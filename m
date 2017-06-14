@@ -1,42 +1,49 @@
-From: =?iso-8859-2?Q?Micha=B3_Miros=B3aw?= <mirq-linux@rere.qmqm.pl>
-Subject: Re: [PATCH] regulator: tps65910: wire up sleep control configuration
-Date: Wed, 14 Jun 2017 17:13:29 +0200
-Message-ID: <20170614151329.7kb266gnksryr45y@qmqm.qmqm.pl>
-References: <efc798c2a1140c545cc210a29ed2791495956510.1497442770.git.mirq-linux@rere.qmqm.pl>
- <20170614144208.nmiq2zijkyoajqgn@sirena.org.uk>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 1/3] dt-bindings: mfd: update STM32 timers clock names
+Date: Wed, 14 Jun 2017 17:13:14 +0200
+Message-ID: <1497453196-31470-2-git-send-email-fabrice.gasnier@st.com>
+References: <1497453196-31470-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-2
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170614144208.nmiq2zijkyoajqgn@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Keerthy <j-keerthy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1497453196-31470-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 03:42:08PM +0100, Mark Brown wrote:
-> On Wed, Jun 14, 2017 at 02:25:13PM +0200, Micha³ Miros³aw wrote:
-> > References: 201cf052810d20814a77ca0e0045a2c1a3508a1f
-> I have no idea what you mean by this, sorry.
+Clock name has been updated during driver/DT binding review:
+https://lkml.org/lkml/2016/12/13/718
+Update DT binding doc to reflect this.
 
-This is a commit id which introduced the feature:
+Fixes: 8f9359c6c6a0 (dt-bindings: mfd: Add bindings for STM32 Timers driver)
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Acked-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+---
+ Documentation/devicetree/bindings/mfd/stm32-timers.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-commit 201cf052810d20814a77ca0e0045a2c1a3508a1f
-Author: Laxman Dewangan <ldewangan@nvidia.com>
-Date:   Wed Apr 18 12:13:51 2012 +0200
-
-    mfd: Add support for tps65910 device sleep
-
-    Adding support for device sleep through the external input control
-    signal "SLEEP".
-    Changing the SLEEP signal state can switch the device into SLEEP and
-    ACTIVE state.
-    Also adding sleep configuration for different resources so that they
-    should be keep on during sleep state of device.
-
-    Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-    Signed-off-by: Samuel Ortiz <sameo@linux.intel.com>
-
-Best Regards,
-Micha³ Miros³aw
+diff --git a/Documentation/devicetree/bindings/mfd/stm32-timers.txt b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
+index bbd083f..1db6e00 100644
+--- a/Documentation/devicetree/bindings/mfd/stm32-timers.txt
++++ b/Documentation/devicetree/bindings/mfd/stm32-timers.txt
+@@ -31,7 +31,7 @@ Example:
+ 		compatible = "st,stm32-timers";
+ 		reg = <0x40010000 0x400>;
+ 		clocks = <&rcc 0 160>;
+-		clock-names = "clk_int";
++		clock-names = "int";
+ 
+ 		pwm {
+ 			compatible = "st,stm32-pwm";
+-- 
+1.9.1
