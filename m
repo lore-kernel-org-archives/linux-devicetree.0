@@ -1,95 +1,102 @@
-From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Subject: Re: [PATCH 09/13] ARM: dts: meson8: add reserved memory zones
-Date: Wed, 14 Jun 2017 23:46:29 +0200
-Message-ID: <CAFBinCDv=fNVhuOatRukHED9xRMQ_8jTHvWpg1b4v4Pn11bevA@mail.gmail.com>
-References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
- <20170611101644.28581-10-martin.blumenstingl@googlemail.com> <2f93816d-4276-2ccb-fd3e-e6ec8a6c9f70@baylibre.com>
+From: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 11/18] spi: qup: properly detect extra interrupts
+Date: Wed, 14 Jun 2017 16:51:07 -0500
+Message-ID: <CAEsOVNfKcc7BxRpU7S8m30kuHhh9j4MUw5pY50aWWaQnUDfvng@mail.gmail.com>
+References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
+ <1497419551-21834-12-git-send-email-varada@codeaurora.org>
+ <bb1469ad-542f-1a47-5ef9-84d7cd02cf49@codeaurora.org> <20170614195953.GD32733@hector.wework.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2f93816d-4276-2ccb-fd3e-e6ec8a6c9f70-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170614195953.GD32733-5taXn+FmohyKb9UB7mSz9QC/G2K4zDHf@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 9:32 AM, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> wrote:
-> On 06/11/2017 12:16 PM, Martin Blumenstingl wrote:
->> There seem to be two memory regions that need to be reserved, otherwise
->> the system just hangs when running:
->> $ stress --vm-bytes $(awk '/MemFree/{printf "%d\n", $2 * 0.9;}' < /proc/meminfo)k \
->>   --vm-keep -m 1
+On Wed, Jun 14, 2017 at 2:59 PM, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Jun 14, 2017 at 12:57:25PM +0530, Sricharan R wrote:
+>> Hi Varada,
 >>
->> The first memory region is really crucial and without it the system
->> hangs. I could not find any references to this in Amlogic's GPL kernel
->> sources.
->> The second region is used by the "suspend firmware". The u-boot sources
->> (/arch/arm/cpu/aml_meson/m8/firmwareld.c) state that the suspend
->> firmware is located at "64M + 15M" which matches CONFIG_MESON_SUSPEND in
->> the Amlogic GPL kernel sources. The "suspend firmware" is responsible
->> for waking up the system from suspend state.
+>> On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
+>> > It's possible for a SPI transaction to complete and get another
+>> > interrupt and have it processed on the same spi_transfer before the
+>> > transfer_one can set it to NULL.
+>> >
+>> > This masks unexpected interrupts, so let's set the spi_transfer to
+>> > NULL in the interrupt once the transaction is done. So we can
+>> > properly detect these bad interrupts and print warning messages.
+>> >
+>> > Signed-off-by: Matthew McClintock <mmcclint-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> > Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> > ---
+>> >  drivers/spi/spi-qup.c | 20 +++++++++++---------
+>> >  1 file changed, 11 insertions(+), 9 deletions(-)
+>> >
+>> > diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+>> > index bd53e82..1a2a9d9 100644
+>> > --- a/drivers/spi/spi-qup.c
+>> > +++ b/drivers/spi/spi-qup.c
+>> > @@ -496,13 +496,13 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+>> >     struct spi_qup *controller = dev_id;
+>> >     struct spi_transfer *xfer;
+>> >     u32 opflags, qup_err, spi_err;
+>> > -   unsigned long flags;
+>> >     int error = 0;
+>> > +   bool done = 0;
+>> >
+>> > -   spin_lock_irqsave(&controller->lock, flags);
+>> > +   spin_lock(&controller->lock);
+>> >     xfer = controller->xfer;
+>> >     controller->xfer = NULL;
+>> > -   spin_unlock_irqrestore(&controller->lock, flags);
+>> > +   spin_unlock(&controller->lock);
 >>
->> This also fixes reading the full SD card as without this the system
->> would simply hang (probably related to the first memory region, if some
->> buffer is allocated there).
+>>  Why change the locking here ?
 >>
->> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/meson8.dtsi | 27 +++++++++++++++++++++++++++
->>  1 file changed, 27 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/meson8.dtsi b/arch/arm/boot/dts/meson8.dtsi
->> index 8582490fcb52..cf011dfe050e 100644
->> --- a/arch/arm/boot/dts/meson8.dtsi
->> +++ b/arch/arm/boot/dts/meson8.dtsi
->> @@ -83,6 +83,33 @@
->>                       reg = <0x203>;
->>               };
->>       };
->> +
->> +     reserved-memory {
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             ranges;
->> +
->> +             /* 2 MiB reserved for Hardware ROM Firmware? */
->> +             hwrom_reserved: hwrom@0 {
->> +                     reg = <0x0 0x200000>;
->> +                     no-map;
->> +             };
->> +
->> +             /*
->> +              * 1 MiB reserved for the "ARM Power Firmware": this is ARM
->> +              * code which is responsible for system suspend. It loads a
->> +              * piece of ARC code ("arc_power" in the vendor u-boot tree)
->> +              * into SRAM, executes that and shuts down the (last) ARM core.
->> +              * The arc_power firmware then checks various wakeup sources
->> +              * (IR remote receiver, HDMI CEC, WIFI and Bluetooth wakeup or
->> +              * simply the power key) and re-starts the ARM core once it
->> +              * detects a wakeup request.
->> +              */
->> +             suspend_firmware: secmon@4f00000 {
->> +                     reg = <0x4f00000 0x100000>;
->> +                     no-map;
->> +             };
->> +     };
->>  }; /* end of / */
->>
->>  &aobus {
->>
+>> >
+>> >     qup_err = readl_relaxed(controller->base + QUP_ERROR_FLAGS);
+>> >     spi_err = readl_relaxed(controller->base + SPI_ERROR_FLAGS);
+>> > @@ -556,16 +556,19 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+>> >                     spi_qup_write(controller, xfer);
+>> >     }
+>> >
+>> > -   spin_lock_irqsave(&controller->lock, flags);
+>> > -   controller->error = error;
+>> > -   controller->xfer = xfer;
+>> > -   spin_unlock_irqrestore(&controller->lock, flags);
+>> > -
+>> >     /* re-read opflags as flags may have changed due to actions above */
+>> >     opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
+>> >
+>> >     if ((controller->rx_bytes == xfer->len &&
+>> >             (opflags & QUP_OP_MAX_INPUT_DONE_FLAG)) ||  error)
+>> > +           done = true;
+>> > +
+>> > +   spin_lock(&controller->lock);
+>> > +   controller->error = error;
+>> > +   controller->xfer = done ? NULL : xfer;
+>> > +   spin_unlock(&controller->lock);
+>> > +
+>> > +   if (done)
+>> >             complete(&controller->done);
+>> >
+>>   Its not clear, why the driver is setting the controller->xfer = NULL
+>>   and restoring it inside the irq. This patch seems to fix things on
+>>   top of that.
 >
-> Good, but maybe you could add _reserved to the secmon alias.
-good catch, thanks
-it seems that "secmon@" is still a copy-and-paste left-over so I'd
-rather change the whole line to "power_firmware:
-power-firmware-memory@4f00000" (as it's definitely not the secure
-monitor firmware) instead
-does that also sound good for you?
+> I think the original intent was to make sure that the irqhandler knew that there
+> was no outstanding transaction.  This begs the question of why that would ever
+> be necessary.  I think it would suffice to rework all of that to remove that
+> behavior and perhaps enable/disable the irq as we need to during transactions.
+>
+> I've never been a fan of the controller->xfer being set to NULL.
 
+Also, this patch presumably fixes an issue seen on Dakota SoCs,
+doesn't add or remote the NULL bits.
 
-Regards,
-Martin
+-M
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
