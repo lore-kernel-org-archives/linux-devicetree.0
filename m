@@ -1,70 +1,71 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH 5/8] v4l2-flash: Flash ops aren't mandatory
-Date: Thu, 15 Jun 2017 00:19:40 +0300
-Message-ID: <20170614211939.GR12407@valkosipuli.retiisi.org.uk>
-References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497433639-13101-6-git-send-email-sakari.ailus@linux.intel.com>
- <3e0a8823-a8b4-3f78-25e0-22d8cb8ad090@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] soc: brcmstb: Add driver for DPFE
+Date: Wed, 14 Jun 2017 14:32:54 -0700
+Message-ID: <79cb33fc-cc6a-e79c-5e5c-af632e20dc76@gmail.com>
+References: <20170613223710.31719-1-code@mmayer.net>
+ <20170613223710.31719-3-code@mmayer.net>
+ <5b79dee6-bb84-30b3-1bb2-287b24d42534@gmail.com>
+ <CANEuBv6N3TTNzSuDQXk-eiEV_fvGtVJZhdWUO_XdgPj6+j7q5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <3e0a8823-a8b4-3f78-25e0-22d8cb8ad090-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CANEuBv6N3TTNzSuDQXk-eiEV_fvGtVJZhdWUO_XdgPj6+j7q5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
-
-On Wed, Jun 14, 2017 at 11:14:13PM +0200, Jacek Anaszewski wrote:
-> Hi Sakari,
+On 06/14/2017 09:34 AM, Markus Mayer wrote:
+> On 13 June 2017 at 17:03, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Markus,
+>>
+>> On 06/13/2017 03:37 PM, Markus Mayer wrote:
+>>> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>
+>>> This driver allows access to DRAM properties, such as the refresh rate,
+>>> via the Broadcom STB DDR PHY Front End (DPFE). The refresh rate can be
+>>> used as indirect indicator of the DRAM temperature.
+>>>
+>>> The driver also allows setting of the sampling interval.
+>>>
+>>> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  MAINTAINERS                      |   8 +
+>>>  drivers/soc/bcm/brcmstb/Makefile |   2 +-
+>>>  drivers/soc/bcm/brcmstb/dpfe.c   | 689 +++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 698 insertions(+), 1 deletion(-)
+>>>  create mode 100644 drivers/soc/bcm/brcmstb/dpfe.c
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index f7d568b..04f0be6 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -2864,6 +2864,14 @@ S:     Maintained
+>>>  F:   Documentation/devicetree/bindings/cpufreq/brcm,stb-avs-cpu-freq.txt
+>>>  F:   drivers/cpufreq/brcmstb*
+>>>
+>>> +BROADCOM STB SOC DPFE DRIVER
+>>> +M:   Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> +M:   bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+>>> +L:   linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org (moderated for non-subscribers)
+>>> +S:   Maintained
+>>> +F:   Documentation/devicetree/bindings/soc/bcm/brcm,dpfe-cpu.txt
+>>> +F:   drivers/misc/brcmstb-dpfe.c
+>>
+>> Just one nit: this should be drivers/soc/bcm/brcmstb/dpfe.c, other than
+>> that, I just need an Ack from Rob on the binding, and I will queue this
+>> up, thanks!
 > 
-> On 06/14/2017 11:47 AM, Sakari Ailus wrote:
-> > None of the flash operations are not mandatory and therefore there should
-> > be no need for the flash ops structure either. Accept NULL.
-> > 
-> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> > ---
-> >  drivers/media/v4l2-core/v4l2-flash-led-class.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> > index 6d69119..fdb79da 100644
-> > --- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> > +++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> > @@ -18,7 +18,7 @@
-> >  #include <media/v4l2-flash-led-class.h>
-> >  
-> >  #define has_flash_op(v4l2_flash, op)				\
-> > -	(v4l2_flash && v4l2_flash->ops->op)
-> > +	(v4l2_flash && v4l2_flash->ops && v4l2_flash->ops->op)
-> 
-> This change doesn't seem to be related to the patch subject.
+> Oops. Thanks for catching that. Would you like me to re-send or will
+> you fix up that path on your end?
 
-Yes, it is: if there's a chance that ops is NULL, then you have to test here
-you actually have the ops struct around. The test is no longer in
-v4l2_flash_init().
-
-> 
-> >  #define call_flash_op(v4l2_flash, op, arg)			\
-> >  		(has_flash_op(v4l2_flash, op) ?			\
-> > @@ -618,7 +618,7 @@ struct v4l2_flash *v4l2_flash_init(
-> >  	struct v4l2_subdev *sd;
-> >  	int ret;
-> >  
-> > -	if (!fled_cdev || !ops || !config)
-> > +	if (!fled_cdev || !config)
-> >  		return ERR_PTR(-EINVAL);
-> >  
-> >  	led_cdev = &fled_cdev->led_cdev;
-> > 
-
+I can fix it up if Rob is happy with the current binding, if you need to
+resubmit, please fix that as well. Thanks!
 -- 
-Regards,
-
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
