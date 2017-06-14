@@ -1,64 +1,35 @@
-From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Wed, 14 Jun 2017 11:33:25 -0700
-Message-ID: <55054c58-b493-7225-4aec-84f9e1c6e022@broadcom.com>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
- <20170613050947.GA1684@localhost.localdomain>
- <cb008f0f-1585-653e-0b89-47478f9f4734@broadcom.com>
- <a4586d75-2aca-94f3-ab7a-fc94c9dc5a4a@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] drm/rockchip: dw_hdmi: introduce the pclk for grf
+Date: Wed, 14 Jun 2017 13:38:44 -0500
+Message-ID: <20170614183844.hd6ckfhtvn4x3eg2@rob-hp-laptop>
+References: <1496992228-10582-1-git-send-email-mark.yao@rock-chips.com>
+ <1496992247-10727-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <a4586d75-2aca-94f3-ab7a-fc94c9dc5a4a-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1496992247-10727-1-git-send-email-mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+To: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 17-06-14 11:18 AM, Ray Jui wrote:
+On Fri, Jun 09, 2017 at 03:10:46PM +0800, Mark Yao wrote:
+> For RK3399's GRF module, if we want to operate the graphic related grf
+> registers, we need to enable the pclk_vio_grf which supply power for VIO
+> GRF IOs, so it's better to introduce an optional grf clock in driver.
 > 
+> Signed-off-by: Yakir Yang <ykk-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Signed-off-by: Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> Changes in v3: none
+> Changes in v2: describe grf on Documentation.
 > 
-> On 6/13/17 10:46 AM, Arun Parameswaran wrote:
->>
->> Hi Richard,
->>
->> On 17-06-12 10:09 PM, Richard Cochran wrote:
->>> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
->>>> +Example:
->>>> +
->>>> +ptp_dte: ptp_dte@180af650 {
->>>> +	compatible = "brcm,ptp-dte";
->>>> +	reg = <0x180af650 0x10>;
->>>> +	status = "okay";
->>>> +};
->>> This patch set looks okay, as far as it goes, but how does one
->>> actually use the clock?
->>>
->>> How does one connect this node to an Ethernet MAC, for example?
->> In some of the SoC's, the DTE's NCO is synced in hardware with the Ethernet's
->> 1588 Shim NCO (used for time-stamping the packets). We are working on getting
->> all the future SoC's synced this way (for Ethernet).
->>
-> 
-> So apparently you do not need any phandle based DT binding defined for
-> the connection between the Ethernet device node and the PTP device node?
-> 
-Correct. This driver doesn't need any phandle.
+>  .../bindings/display/rockchip/dw_hdmi-rockchip.txt     |  1 +
+>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c            | 18 ++++++++++++++++++
+>  2 files changed, 19 insertions(+)
 
-The Ethernet/Switch driver, in the SoC's where the hardware link is not
-available, might need the phandle to this driver.
-
->> In other scenarios, we use an user-space app to perform the sync based on
->> time-stamps from external hardware sources like the Wi-Fi.
->>> Thanks,
->>> Richard
->>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
