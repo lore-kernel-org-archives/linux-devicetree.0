@@ -1,44 +1,127 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: Re: [PATCH v11 5/6] i2c: designware: add SLAVE mode functions
-Date: Wed, 14 Jun 2017 14:06:45 +0100
-Message-ID: <6e332d71-1891-21aa-4479-b91a7550f8af@synopsys.com>
-References: <cover.1497025304.git.lolivei@synopsys.com>
- <bef9f237bed23f0ea05499b085103f7eea9058a1.1497025304.git.lolivei@synopsys.com>
- <CAHp75VeHoUrq-PfayNZYGP0f-bbnKQQEN4uMBg6ZASJs46b_PQ@mail.gmail.com>
+From: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [v2 1/1] usb:host:xhci support option to disable xHCI 1.0 USB2 HW LPM
+Date: Wed, 14 Jun 2017 20:27:26 +0700
+Message-ID: <CAKrQpSszfRGwbYQxZHy7hFyi9F45BvomhOLZXV8g-U28x1fuug@mail.gmail.com>
+References: <1495265096-14851-1-git-send-email-tqnguyen@apm.com>
+ <59353D0B.1070005@linux.intel.com> <CAKrQpSvWLE6Qb_o7XOvtUGOST8TT=vDyV=fUATNa0B3Cx_46-A@mail.gmail.com>
+ <59356BCA.6@intel.com> <CAKrQpSuqFNt5wHMbTOR4nDXXPiHdXv3So7bovos=Hrk_WccmAA@mail.gmail.com>
+ <593FE4BC.4020709@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeHoUrq-PfayNZYGP0f-bbnKQQEN4uMBg6ZASJs46b_PQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>, Luis Oliveira <Luis.Oliveira@synopsys.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <593FE4BC.4020709-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <felipe.balbi-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Duc Tran <dxtran-qTEPVZfXA3Y@public.gmane.org>, Quang Han <qhan-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14-Jun-17 13:20, Andy Shevchenko wrote:
-> On Wed, Jun 14, 2017 at 1:43 PM, Luis Oliveira
-> <Luis.Oliveira@synopsys.com> wrote:
->> - Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
->> - Slave functions added to core library file
->> - Slave abort sources added to common source file
->> - New driver: i2c-designware-slave added
->> - Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
->>   when supported by the architecture.
+On Tue, Jun 13, 2017 at 8:12 PM, Mathias Nyman
+<mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> On 06.06.2017 09:33, Thang Q. Nguyen wrote:
 >>
->> All the SLAVE flow is added but it is not enabled via platform
->> driver.
-> 
->> +       //~ if (stat & DW_IC_INTR_TX_OVER)
->> +               //~ dw_readl(dev, DW_IC_CLR_TX_OVER);
-> 
-> If you are going to ignore reviewers' comments you will delay your
-> work to be applied.
-> 
-Im so sorry. I was doing some tests on the irq_handler and used the wrong branch
-to create the patchset.
-Believe me I've looked for mistakes like this but I've read the code so many
-times I don't think I can see the obvious anymore.
-
-> Certainly you are about to miss v4.13.
-> 
+>> On Mon, Jun 5, 2017 at 9:33 PM, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+>> wrote:
+>>>
+>>> On 05.06.2017 15:57, Thang Q. Nguyen wrote:
+>>>>
+>>>>
+>>>> On Mon, Jun 5, 2017 at 6:14 PM, Mathias Nyman
+>>>> <mathias.nyman-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+>>>>>
+>>>>>
+>>>>> On 20.05.2017 10:24, Thang Q. Nguyen wrote:
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> XHCI specification 1.1 does not require xHCI 1.0 compliant controllers
+>>>>>> to always enable hardware USB2 LPM.
+>>>>>> However, the current xHCI driver always enable it by setting HLE=1
+>>>>>> when
+>>>>>> seeing HLC=1. This makes certain xHCI controllers that have broken
+>>>>>> USB2
+>>>>>> HW LPM fail to work as there is no way to disable this feature.
+>>>>>> This patch adds support to control disabling USB2 Hardware LPM via
+>>>>>> DT/ACPI attribute.
+>>>>>>
+>>>>>
+>>>>>    Wouldn't it be better to just keep  xhci->hw_lpm_support = 0 if the
+>>>>> host
+>>>>> doesn't support Hardware LPM Capability, (HLC)?
+>>>>>
+>>>>> This should prevent all those extra steps getting here just to do
+>>>>> nothing.
+>>>>
+>>>>
+>>>> No, HLC = 0 means the host doesn't support Hardware LPM.
+>>>> The problem here is the host support Hardware LPM but there is a bug
+>>>> in host controller that make the LPM fail to work.
+>>>>
+>>>
+>>> So the host support hw LPM, and has its HLC capability bit set,
+>>> but in the end it just doesn't work at all, and should be prevented.
+>>>
+>>>> When debugging the host controller, we detect there are some holes in
+>>>> the current usb specifications which can can result in inter-operating
+>>>> problems between USB Host Controller and USB PHY. To be more specific,
+>>>> the specs have not clarified the resume recovery timing after the port
+>>>> has just waken up from L1. This can lead to different interpretations
+>>>> of the specs by Host Controller and PHY. What happened in our case is
+>>>> that a Host controller cannot work with a PHY right after resuming
+>>>> from L1 because these two Vendors have different views of the specs
+>>>> regarding LPM timing after L1. These views are contradictory and
+>>>> cannot work together.
+>>>>
+>>>> If Host Controller and PHY are from the same vendor, they might have
+>>>> some "internal handshake mechanisms" to avoid these holes of the USB
+>>>> specs. However, these mechanisms are not standardized in USB specs;
+>>>> and not all vendors follow these mechanisms. In fact, we have observed
+>>>> this kind of "internal handshake mechanism" in HOST Controller and PHY
+>>>> from SYNOPSYS DWC. So, we can say that if users use Host Controller
+>>>> and PHY from different Vendors, the inteopering problems after waking
+>>>> up from L1 are more likely to occur.
+>>>
+>>>
+>>>
+>>> Can you explain the reason why you prefer preventing hw lpm inside the
+>>> xhci_set_usb2_hardware_lpm() function instead of preventing hw lpm usage
+>>> all together for this platform -i.e. by not setting xhci->hw_lpm_support
+>>
+>> The reason I don't change in the xhci_add_in_port() function inside
+>> xhci-mem.c is because of the description for xhci->hw_lpm_support in
+>> the drivers/usb/host/xhci.h header file: support xHCI 1.0 spec USB2
+>> hardware LPM. Per my understanding, this attribute is used to indicate
+>> if the host supports HW LPM and this can be checked via HLC.
+>> My intension is to support an option for user to disable the HW LPM
+>> because of some reasons (in my case because HW LPM is broken).
+>
+>
+> I think we should keep supporting new options separate from workarounds
+> for broken HW.
+So, I will continue to use usb2-lpm-disable to let kernel know that we
+want to disable USB2 HW LPM.
+>
+>>>
+>>>
+>>> Again, something like:
+>>> if (temp & XHCI_HLC && !(xhci->quirks & XHCI_HW_LPM_BROKEN))
+>>>          xhci->hw_lpm_support = 1;
+>>
+>> This should work too. But the DT/ACPI attribute should change to
+>> "usb2-lpm-broken".
+>
+>
+> This would be more clear for future developers and prevent them from
+> enabling hw lpm for this host to gain some powersaving.
+>
+> A new feature allowing optional host hw lpm disabling can then be written
+> separately,
+> preferable without using the quirk bits.
+How's about adding a new attribute such as sw_lpm_disable to the
+xhci_hcd struct to indicate that we will disable USB2 HW LPM by
+software?
+>
+> -Mathias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
