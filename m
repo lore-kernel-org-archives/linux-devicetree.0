@@ -1,76 +1,49 @@
-From: Alan Tull <atull@kernel.org>
-Subject: [PATCH v2 01/11] dt-bindings: fpga: Add bindings document for Xilinx LogiCore PR Decoupler
-Date: Wed, 14 Jun 2017 10:36:25 -0500
-Message-ID: <20170614153635.2763-2-atull@kernel.org>
-References: <20170614153635.2763-1-atull@kernel.org>
+From: Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable to
+ handle kernel NULL pointer dereference at 00000000000000a8
+Date: Wed, 14 Jun 2017 09:49:52 -0600
+Message-ID: <c3148aca-5707-1858-d889-af004321b140@deltatee.com>
+References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
+ <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
+ <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
+ <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
+ <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
+ <20170613041842.GA13308@kroah.com>
+ <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
+ <20170613043416.GB14217@kroah.com>
+ <CACRpkdZyup+dH6Yp747yLyaC8DSbA8bEnk37gJKnmnjBvjn=-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170614153635.2763-1-atull@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Moritz Fischer <moritz.fischer@ettus.com>, Alan Tull <atull@kernel.org>, linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org, Moritz Fischer <mdf@kernel.org>, Michal Simek <michal.simek@xilinx.com>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZyup+dH6Yp747yLyaC8DSbA8bEnk37gJKnmnjBvjn=-A@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-From: Moritz Fischer <mdf@kernel.org>
+Hi Linus,
 
-This adds the binding documentation for the Xilinx LogiCORE PR
-Decoupler soft core.
+On 14/06/17 03:59 AM, Linus Walleij wrote:
+> I started to take a stab at it at one point and incorporated some feedback
+> from Torvalds etc, it's here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=chrdev-warn&id=65e5b1e9eb3f777ab7535b74b490e882eeec79d7
 
-Signed-off-by: Moritz Fischer <mdf@kernel.org>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Cc: Sören Brinkmann <soren.brinkmann@xilinx.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Acked-by: Rob Herring <robh@kernel.org>
-Signed off-by: Alan Tull <atull@kernel.org>
----
- .../bindings/fpga/xilinx-pr-decoupler.txt          | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
+Yes, thanks, I did find your work after a google search. However, seeing
+it seems to recover only a handful of numbers with some significant
+complexity required it seemed like a stopgap solution anyway. I posted a
+proposal in this thread that simply extends the dynamic range into a
+region above 256 which seems to work well. This means regular
+configurations won't be affected an any configuration requiring more
+than 20 dynamic majors will simply end up with high numbers.
 
-diff --git a/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-new file mode 100644
-index 0000000..8dcfba9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/xilinx-pr-decoupler.txt
-@@ -0,0 +1,36 @@
-+Xilinx LogiCORE Partial Reconfig Decoupler Softcore
-+
-+The Xilinx LogiCORE Partial Reconfig Decoupler manages one or more
-+decouplers / fpga bridges.
-+The controller can decouple/disable the bridges which prevents signal
-+changes from passing through the bridge.  The controller can also
-+couple / enable the bridges which allows traffic to pass through the
-+bridge normally.
-+
-+The Driver supports only MMIO handling. A PR region can have multiple
-+PR Decouplers which can be handled independently or chained via decouple/
-+decouple_status signals.
-+
-+Required properties:
-+- compatible		: Should contain "xlnx,pr-decoupler-1.00" followed by
-+                          "xlnx,pr-decoupler"
-+- regs			: base address and size for decoupler module
-+- clocks		: input clock to IP
-+- clock-names		: should contain "aclk"
-+
-+Optional properties:
-+- bridge-enable		: 0 if driver should disable bridge at startup
-+			  1 if driver should enable bridge at startup
-+			  Default is to leave bridge in current state.
-+
-+See Documentation/devicetree/bindings/fpga/fpga-region.txt for generic bindings.
-+
-+Example:
-+	fpga-bridge@100000450 {
-+		compatible = "xlnx,pr-decoupler-1.00",
-+			     "xlnx-pr-decoupler";
-+		regs = <0x10000045 0x10>;
-+		clocks = <&clkc 15>;
-+		clock-names = "aclk";
-+		bridge-enable = <0>;
-+	};
--- 
-2.7.4
+So unless anyone can think of a reason why this won't work, it's my
+preferred direction.
+
+> Making them all dynamic seemed dangerous because I was afraid
+> of userspace ABI breakage because of old userlands with
+> static mknod:s.
+
+I agree.
+
+Logan
