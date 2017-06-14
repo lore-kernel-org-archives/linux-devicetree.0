@@ -1,99 +1,48 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] of: document /sys/firmware/fdt
-Date: Wed, 14 Jun 2017 10:55:20 +0100
-Message-ID: <20170614095519.GA6085@leverpostej>
-References: <1497414007-8380-1-git-send-email-frowand.list@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable to
+ handle kernel NULL pointer dereference at 00000000000000a8
+Date: Wed, 14 Jun 2017 11:59:29 +0200
+Message-ID: <CACRpkdZyup+dH6Yp747yLyaC8DSbA8bEnk37gJKnmnjBvjn=-A@mail.gmail.com>
+References: <5933fe2d.V33ODGPU9noDVuyF%fengguang.wu@intel.com>
+ <20170606175552.GA12672@bhelgaas-glaptop.roam.corp.google.com>
+ <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com> <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
+ <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com> <20170613041842.GA13308@kroah.com>
+ <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com> <20170613043416.GB14217@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1497414007-8380-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ard Biesheuvel <ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170613043416.GB14217@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-[Adding Ard, as he added /sys/firmware/fdt]
+On Tue, Jun 13, 2017 at 6:34 AM, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 
-On Tue, Jun 13, 2017 at 09:20:07PM -0700, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
-> Add ABI documentation for /sys/firmware/fdt
->
-> Update contact for /sys/firmware/devicetree/* to include mail list
->
-> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+> Ah, that makes sense.  Well, someone can always work on expanding the
+> range of dynamic char major numbers if they are running out of them on a
+> real system, I'll gladly take patches for that :)
 
-FWIW:
+I started to take a stab at it at one point and incorporated some feedback
+from Torvalds etc, it's here:
+https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git/commit/?h=chrdev-warn&id=65e5b1e9eb3f777ab7535b74b490e882eeec79d7
 
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+It tries to use all "holes" in the chardev major map to shun in a bit
+more devices when we run out of the high dynamic major range.
 
-Mark.
+Making them all dynamic seemed dangerous because I was afraid
+of userspace ABI breakage because of old userlands with
+static mknod:s.
 
-> ---
->  Documentation/ABI/testing/sysfs-firmware-ofw | 27 ++++++++++++++++++++++=
-++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation=
-/ABI/testing/sysfs-firmware-ofw
-> index f562b188e71d..8e700db6c295 100644
-> --- a/Documentation/ABI/testing/sysfs-firmware-ofw
-> +++ b/Documentation/ABI/testing/sysfs-firmware-ofw
-> @@ -1,6 +1,6 @@
->  What:                /sys/firmware/devicetree/*
->  Date:                November 2013
-> -Contact:     Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> +Contact:     Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY@public.gmane.org=
-nel.org
->  Description:
->               When using OpenFirmware or a Flattened Device Tree to enume=
-rate
->               hardware, the device tree structure will be exposed in this
-> @@ -26,3 +26,28 @@ Description:
->               name plus address). Properties are represented as files
->               in the directory. The contents of each file is the exact
->               binary data from the device tree.
-> +
-> +What:                /sys/firmware/fdt
-> +Date:                February 2015
-> +KernelVersion:       3.19
-> +Contact:     Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>, devicetree-u79uwXL29TZNg+MwTxZMZA@public.gmane.org=
-l.org
-> +Description:
-> +             Exports the FDT blob that was passed to the kernel by
-> +             the bootloader. This allows userland applications such
-> +             as kexec to access the raw binary. This blob is also
-> +             useful when debugging since it contains any changes
-> +             made to the blob by the bootloader.
-> +
-> +             The fact that this node does not reside under
-> +             /sys/firmware/device-tree is deliberate: FDT is also used
-> +             on arm64 UEFI/ACPI systems to communicate just the UEFI
-> +             and ACPI entry points, but the FDT is never unflattened
-> +             and used to configure the system.
-> +
-> +             A CRC32 checksum is calculated over the entire FDT
-> +             blob, and verified at late_initcall time. The sysfs
-> +             entry is instantiated only if the checksum is valid,
-> +             i.e., if the FDT blob has not been modified in the mean
-> +             time. Otherwise, a warning is printed.
-> +Users:               kexec, debugging
-> +
-> --
-> Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-IMPORTANT NOTICE: The contents of this email and any attachments are confid=
-ential and may also be privileged. If you are not the intended recipient, p=
-lease notify the sender immediately and do not disclose the contents to any=
- other person, use it for any purpose, or store or copy the information in =
-any medium. Thank you.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I lost interest when it turned out that the zeroday QEMU stuff was
+generating random machines that have no counterpart in the real
+world, and then the exercise seemed a bit academic.
+
+The last failures were due to (AFAICT) some relationship between
+major and minor numbers that I didn't untangle.
+
+If there is interest I could try to revive it.
+
+Yours,
+Linus Walleij
