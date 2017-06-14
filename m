@@ -1,87 +1,51 @@
-From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [RFC PATCH 0/3] provide imx rproc driver
-Date: Wed, 14 Jun 2017 22:48:52 +0200
-Message-ID: <20170614204855.18347-1-o.rempel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [RFC PATCH 3/3] ARM: dts: imx7s: add rproc node
+Date: Wed, 14 Jun 2017 22:48:55 +0200
+Message-ID: <20170614204855.18347-4-o.rempel@pengutronix.de>
+References: <20170614204855.18347-1-o.rempel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170614204855.18347-1-o.rempel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-remoteproc@vger.kernel.org
+Cc: Oleksij Rempel <linux@rempel-privat.de>
 List-Id: devicetree@vger.kernel.org
 
-Hallo all,
+From: Oleksij Rempel <linux@rempel-privat.de>
 
-this is RFC patchset to provide remoteproc functionality on
-imx7d SoC.
-Since current kernel do not have devicetrees for board which
-I used for testing, this RFC patchset includes this too.
+Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
+---
+ arch/arm/boot/dts/imx7s.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-For testing I used this simple counter written in ASM:
-======================================
-        .syntax unified
-        .text
-        .thumb
-        .int 0x10020000                 @ Initial SP value
-        .int reset + 1
-
-reset:
-
-        mov     r0, #0x55
-        ldr     r1, =(0x40)
-1:
-        str     r0, [r1]
-        add     r0, 1
-        b       1b
-
-        /* Dummy data, required by remoteproc loader */
-        /* Please FIXME, this part seem to be incorrect */
-        .data
-        .section .resource_table, "aw"
-        .word   1, 0, 0, 0      /* struct resource_table base */
-        .word   0               /* uint32_t offset[1] */
-============================================================
-compiled with:
-${CROSS}as -o imx7m4.o imx7m4.S
-${CROSS}ld -Ttext=0x0 -o imx7m4.elf imx7m4.o
-cp imx7m4.elf /srv/nfs/sid-armhf/lib/firmware/rproc-imx_rproc-fw
-
-Functionality was confirmed with current OpenOCD master.
-OpenOCD cfg file can be found here:
-https://github.com/olerem/openocd/blob/imx7-2017.06.14/tcl/target/imx7.cfg
-
-Comment and suggestions are welcome.
-
-Regards,
-Oleksij
-
-Oleksij Rempel (3):
-  ARM: dts: imx7d: add imx7d-phyboard-zeta
-  remoteproc: imx_rproc: add a NXP/Freescale imx rproc driver
-  ARM: dts: imx7s: add rproc node
-
- arch/arm/boot/dts/Makefile                |   1 +
- arch/arm/boot/dts/imx7d-pba-c-09.dtsi     | 272 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7d-peb-av-02.dtsi    | 104 ++++++++++++
- arch/arm/boot/dts/imx7d-peb-eval-02.dtsi  | 130 ++++++++++++++
- arch/arm/boot/dts/imx7d-phyboard-zeta.dts | 144 ++++++++++++++++
- arch/arm/boot/dts/imx7d-phycore-som.dtsi  | 272 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/imx7d-pinfunc-lpsr.h    |  76 +++++++++
- arch/arm/boot/dts/imx7s.dtsi              |   9 +
- drivers/remoteproc/Kconfig                |   8 +
- drivers/remoteproc/Makefile               |   1 +
- drivers/remoteproc/imx_rproc.c            | 264 +++++++++++++++++++++++++++++
- 11 files changed, 1281 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-pba-c-09.dtsi
- create mode 100644 arch/arm/boot/dts/imx7d-peb-av-02.dtsi
- create mode 100644 arch/arm/boot/dts/imx7d-peb-eval-02.dtsi
- create mode 100644 arch/arm/boot/dts/imx7d-phyboard-zeta.dts
- create mode 100644 arch/arm/boot/dts/imx7d-phycore-som.dtsi
- create mode 100644 arch/arm/boot/dts/imx7d-pinfunc-lpsr.h
- create mode 100644 drivers/remoteproc/imx_rproc.c
-
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index c138b0fb410a..8b84cd3cdd28 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -566,6 +566,14 @@
+ 			};
+ 		};
+ 
++		imx_rproc: imx7d-rp0@0 {
++			compatible	= "fsl,imx7d-rproc";
++			reg		= <0x00180000 0x4000>, <0x00184000 0x4000>;
++			reg-names	= "imem", "dmem";
++			syscon		= <&src>;
++			clocks		= <&clks IMX7D_ARM_M4_ROOT_CLK>;
++		};
++
+ 		aips2: aips-bus@30400000 {
+ 			compatible = "fsl,aips-bus", "simple-bus";
+ 			#address-cells = <1>;
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
