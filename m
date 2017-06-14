@@ -1,33 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] Documentation: dt: iio: at91-sama5d2_adc: add hw
- trigger edge binding
-Date: Wed, 14 Jun 2017 10:30:08 -0500
-Message-ID: <20170614153008.wgww2b5fweocqmmk@rob-hp-laptop>
-References: <1496992039-17964-1-git-send-email-eugen.hristev@microchip.com>
- <1496992039-17964-3-git-send-email-eugen.hristev@microchip.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] drm/rockchip: dw_hdmi: add RK3399 HDMI support
+Date: Wed, 14 Jun 2017 10:32:32 -0500
+Message-ID: <20170614153232.wbaa37zn24uusqlx@rob-hp-laptop>
+References: <1496992228-10582-1-git-send-email-mark.yao@rock-chips.com>
+ <1496992236-10634-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1496992039-17964-3-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+In-Reply-To: <1496992236-10634-1-git-send-email-mark.yao@rock-chips.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Yao <mark.yao@rock-chips.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 10:07:17AM +0300, Eugen Hristev wrote:
-> Add property for the edge type of the hardware trigger pin ADTRG
-> 
-> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-> ---
->   Changes in v4:
->  - Modified bindings to be similar with interrupts
-> 
->  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 6 ++++++
->  1 file changed, 6 insertions(+)
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKdW4gMDksIDIwMTcgYXQgMDM6MTA6MzZQTSArMDgwMCwgTWFyayBZYW8gd3JvdGU6
+Cj4gUkszMzk5IGFuZCBSSzMyODggc2hhcmVkIHRoZSBzYW1lIEhETUkgSVAgY29udHJvbGxlciwg
+b25seSBzb21lIGxpZ2h0Cj4gZGlmZmVyZW5jZSB3aXRoIEdSRiBjb25maWd1cmUuCj4gCj4gU2ln
+bmVkLW9mZi1ieTogWWFraXIgWWFuZyA8eWtrQHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYt
+Ynk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBzLmNvbT4KPiAtLS0KPiBDaGFuZ2VzIGlu
+IHYzOgo+ICAgcmVtb3ZlIGhkbWlfcGh5X2NvbmZpZ3VyZV9kd2NfaGRtaV8zZF90eCBjYWxsYmFr
+Lgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gICByZXVzZSBoZG1pX3BoeV9jb25maWd1cmVfZHdjX2hk
+bWlfM2RfdHggZm9yIHBoeSBjb25maWd1cmUKPiAgIGZpeHVwIERvY3VtZW50YXRpb24KPiAKPiAg
+Li4uL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQgfCAgMyAr
+LQo+ICBkcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jICAgICAgICB8
+IDY3ICsrKysrKysrKysrKysrKysrKy0tLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA1OCBpbnNlcnRp
+b25zKCspLCAxMiBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQg
+Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19o
+ZG1pLXJvY2tjaGlwLnR4dAo+IGluZGV4IDA0NjA3NmMuLjQ5NWJjZjUgMTAwNjQ0Cj4gLS0tIGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRt
+aS1yb2NrY2hpcC50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+ZGlzcGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dAo+IEBAIC0xMSw3ICsxMSw4IEBA
+IGZvbGxvd2luZyBkZXZpY2Utc3BlY2lmaWMgcHJvcGVydGllcy4KPiAgCj4gIFJlcXVpcmVkIHBy
+b3BlcnRpZXM6Cj4gIAo+IC0tIGNvbXBhdGlibGU6IFNoYWxsIGNvbnRhaW4gInJvY2tjaGlwLHJr
+MzI4OC1kdy1oZG1pIi4KPiArLSBjb21wYXRpYmxlOiAicm9ja2NoaXAscmszMjg4LWR3LWhkbWki
+LAo+ICsgICAgICAgICAgICAgICJyb2NrY2hpcCxyazMzOTktZHctaGRtaSI7CgpJcyB0aGlzIHN1
+cHBvc2VkIHRvIGJlICJvbmUgb2YiIG9yIGJvdGg/IFBsZWFzZSBmb3JtYXQgaXQgYXMgMSB2YWxp
+ZCAKY29tYmluYXRpb24gcGVyIGxpbmUuIERyb3AgdGhlICcsJyBhbmQgdGhlICc7JyBiZWNhdXNl
+IEkgc2VlIHRoYXQgYXMgZHRzIApzeW50YXguCgo+ICAtIHJlZzogU2VlIGR3X2hkbWkudHh0Lgo+
+ICAtIHJlZy1pby13aWR0aDogU2VlIGR3X2hkbWkudHh0LiBTaGFsbCBiZSA0Lgo+ICAtIGludGVy
+cnVwdHM6IEhETUkgaW50ZXJydXB0IG51bWJlcgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
+cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9kcmktZGV2ZWwK
