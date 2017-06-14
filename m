@@ -1,43 +1,31 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 4/5] dt-bindings: phy: Modify Broadcom NS USB 3.0 PHY
- binding to use MDIO
-Date: Wed, 14 Jun 2017 10:26:30 -0500
-Message-ID: <20170614152630.j2pq7fnqxdnu6chf@rob-hp-laptop>
-References: <20170511132925.14564-1-zajec5@gmail.com>
- <20170608200428.9187-1-zajec5@gmail.com>
- <20170608200428.9187-5-zajec5@gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: power: supply: move maxim,max14656.txt
+ to proper location
+Date: Wed, 14 Jun 2017 10:27:07 -0500
+Message-ID: <20170614152707.5iymwfw6fxerf6b7@rob-hp-laptop>
+References: <20170608213602.13311-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170608200428.9187-5-zajec5@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+In-Reply-To: <20170608213602.13311-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 08, 2017 at 10:04:27PM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
+On Thu, Jun 08, 2017 at 11:36:01PM +0200, Sebastian Reichel wrote:
+> This moves maxim,max14656.txt to proper location for
+> power-supply bindings.
 > 
-> Thanks to work done by Broadcom explaining their USB 3.0 PHY details we
-> know it's attached to the MDIO bus. Use this knowledge to update the
-> binding: make it a subnode to the MDIO bus and rework way of specifying
-> required registers. This will describe hardware more precisely and will
-> allow to support (describe) more devices attached to the MDIO.
-> 
-> While compatibility strings remain the same there isn't a direct
-> conflict (compatibility breakage) for the binding. Originally it wasn't
-> supposed to be used for MDIO subnode so this change should be safe
-> unless some operating system was probing MDIO subnodes as standalone
-> devices.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
-> V2: Extend commit message to better describe reason and includ info on
->     (non-)breakage.
-> ---
->  .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    | 27 +++++++++++++++-------
->  1 file changed, 19 insertions(+), 8 deletions(-)
+>  .../devicetree/bindings/{power_supply => power/supply}/maxim,max14656.txt | 0
+>  1 file changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{power_supply => power/supply}/maxim,max14656.txt (100%)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
