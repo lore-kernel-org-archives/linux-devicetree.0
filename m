@@ -1,39 +1,43 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 4/4] drm/panel: simple: add support for AUO P320HVN03
-Date: Wed, 14 Jun 2017 10:24:56 -0500
-Message-ID: <20170614152456.t7skkjhofw44u6si@rob-hp-laptop>
-References: <20170608180758.31020-1-l.stach@pengutronix.de>
- <20170608180758.31020-4-l.stach@pengutronix.de>
+Subject: Re: [PATCH V2 4/5] dt-bindings: phy: Modify Broadcom NS USB 3.0 PHY
+ binding to use MDIO
+Date: Wed, 14 Jun 2017 10:26:30 -0500
+Message-ID: <20170614152630.j2pq7fnqxdnu6chf@rob-hp-laptop>
+References: <20170511132925.14564-1-zajec5@gmail.com>
+ <20170608200428.9187-1-zajec5@gmail.com>
+ <20170608200428.9187-5-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170608180758.31020-4-l.stach@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org, patchwork-lst@pengutronix.de
+In-Reply-To: <20170608200428.9187-5-zajec5@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, Jon Mason <jonmason@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKdW4gMDgsIDIwMTcgYXQgMDg6MDc6NThQTSArMDIwMCwgTHVjYXMgU3RhY2ggd3Jv
-dGU6Cj4gVGhpcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBBVSBPcHRyb25pY3MgQ29ycG9yYXRpb24g
-MzEuNSIKPiBGSEQgKDE5MjB4MTA4MCkgTFZEUyBURlQgTENEIHBhbmVsLCB3aGljaCBjYW4gYmUg
-c3VwcG9ydGVkCj4gYnkgdGhlIHNpbXBsZSBwYW5lbCBkcml2ZXIKPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4KPiAtLS0KPiB2MjogbWVudGlv
-biBwb3dlci1zdXBwbHkgcHJvcGVydHkKPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvYXVvLHAzMjBodm4wMy50eHQgICAgICAgfCAgOCArKysrKysKPiAgZHJpdmVycy9ncHUvZHJt
-L3BhbmVsL3BhbmVsLXNpbXBsZS5jICAgICAgICAgICAgICAgfCAzMSArKysrKysrKysrKysrKysr
-KysrKysrCj4gIDIgZmlsZXMgY2hhbmdlZCwgMzkgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-YXVvLHAzMjBodm4wMy50eHQKCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3Jn
-PgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, Jun 08, 2017 at 10:04:27PM +0200, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
+> 
+> Thanks to work done by Broadcom explaining their USB 3.0 PHY details we
+> know it's attached to the MDIO bus. Use this knowledge to update the
+> binding: make it a subnode to the MDIO bus and rework way of specifying
+> required registers. This will describe hardware more precisely and will
+> allow to support (describe) more devices attached to the MDIO.
+> 
+> While compatibility strings remain the same there isn't a direct
+> conflict (compatibility breakage) for the binding. Originally it wasn't
+> supposed to be used for MDIO subnode so this change should be safe
+> unless some operating system was probing MDIO subnodes as standalone
+> devices.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+> V2: Extend commit message to better describe reason and includ info on
+>     (non-)breakage.
+> ---
+>  .../devicetree/bindings/phy/bcm-ns-usb3-phy.txt    | 27 +++++++++++++++-------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+
+Acked-by: Rob Herring <robh@kernel.org>
