@@ -1,59 +1,94 @@
-From: "Keiji Hayashibara" <hayashibara.keiji-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: RE: [PATCH V3 2/3] watchdog: uniphier: add UniPhier watchdog driver
-Date: Wed, 14 Jun 2017 15:50:37 +0900
-Message-ID: <000101d2e4da$87e7e210$97b7a630$@socionext.com>
-References: <1497316499-22254-1-git-send-email-hayashibara.keiji@socionext.com> <1497316499-22254-3-git-send-email-hayashibara.keiji@socionext.com> <CAK7LNASq9MxUwDrNeRrg_eNkJbXR2J-9hHKGZe6-DtioO3p4cQ@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH v4 0/4] iio: adc: sama5d2_adc hw triggers and buffers
+Date: Wed, 14 Jun 2017 08:57:53 +0200
+Message-ID: <20170614065753.k4jqetwjxsingcpm@rfolt0960.corp.atmel.com>
+References: <1496992039-17964-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNASq9MxUwDrNeRrg_eNkJbXR2J-9hHKGZe6-DtioO3p4cQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: ja
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?WWFtYWRhLCBNYXNhaGlyby/lsbHnlLAg55yf5byY?= <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masami Hiramatsu <masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?utf-8?Q?Hayashi=2C_Kunihiko/=E6=9E=97_=E9=82=A6=E5=BD=A6?= <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?utf-8?B?T3dhZGEsIEtpeW9zaGkv5aSn5ZKM55SwIOa4heW/lw==?= <owada.kiyoshi-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1496992039-17964-1-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Yamada-san,
+Hi,
 
-From: Masahiro Yamada [mailto:yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org]
-Sent: Wednesday, June 14, 2017 12:08 PM
+On Fri, Jun 09, 2017 at 10:07:15AM +0300, Eugen Hristev wrote:
+> This patch implements the hardware triggers support and buffer management
+> for sama5d2.
+> The DT modifications ( [PATCH v4 1/4] ARM: dts: at91: sama5d2_xplained:
+> enable ADTRG pin) are for demonstration purposes of the feature,
+> setting the pinctrl for the ADC hw trigger pin,should go through
+> at91 maintainers.
+> As discussed on the mailing list, since we have a single external trigger
+> namely the ADTRG, but three different possible edges that can trigger it,
+> will have a single trigger in the IIO subsystem and three possible edges
+> which can be selected from the device tree.
+> Thus I created new bindings in the device tree for having the possible
+> edge types for the ADTRG pin.
+> The documentation for the bindings is in the patch
+> [PATCH v4 2/4] Documentation: dt: iio: at91-sama5d2_adc: add adtrg
+>  trigger binding
+> The modifications in the DT are in the patch
+> [PATCH v4 3/4] ARM: dts: at91: sama5d2: add ADC hw trigger
+> The new property must be set with the values from interrupt edge types, as this
+> pin is effectively an internal interrupt.
 >
-> 2017-06-13 10:14 GMT+09:00 Keiji Hayashibara
-> > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > index 52a70ee..2a9d9a6 100644
-> > --- a/drivers/watchdog/Kconfig
-> > +++ b/drivers/watchdog/Kconfig
-> > @@ -744,6 +744,17 @@ config ZX2967_WATCHDOG
-> >           To compile this driver as a module, choose M here: the
-> >           module will be called zx2967_wdt.
-> >
-> > +config UNIPHIER_WATCHDOG
-> > +       tristate "UniPhier watchdog support"
-> > +       depends on ARCH_UNIPHIER || COMPILE_TEST
+
+If the reuse of IRQ macros in the trigger case is accepted, you can add
+
+Acked-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+
+for the next version with the corrections suggested by Jonathan.
+
+Regards
+
+Ludovic
+ 
+>   Changes in v4:
+>  - Modified bindings to be similar with interrupts
+>  - Used iio claim direct to make sure buffer is not enabled when someone might
+>    try to use a software triggered conversion
 > 
-> This driver relies on syscon_node_to_regmap().
-> Could you also add "depends on OF && MFD_SYSCON" ?
-
-OK. I will fix this.
+>   Changes in v3:
+>  - No longer have all three possible triggers registered in the subsystem and
+>    available in the sysfs. Only registering one trigger, and the possible edge
+>    is being read from the device tree. In the device tree, any possible edge
+>    can be set. There are three already made nodes for each possible edge which
+>    can be selected.
+>  - Fixed a bug where software triggered conversion could be started even if
+>    the hardware trigger was enabled.
+>  - Preallocate enough space for the buffer, considering all the channels
+>    and timestamp
 > 
 > 
-> > +       select WATCHDOG_CORE
-> > +       help
-> > +         Say Y here to include support watchdog timer embedded
-> > +         into the UniPhier system.
-> > +
-> > +         To compile this driver as a module, choose M here: the
-> > +         module will be called uniphier_wdt.
-> > +
-
-----------
-Best Regards,
-Keiji Hayashibara
-
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>   Changes in v2:
+>  - Moved buffer allocation and freeing into the preenable and postdisable
+>    callbacks.
+>    We have a total of scan bytes that can vary a lot depending on each channel
+>    enabled at a certain point.
+>  - made the at91 trigger list part of state structure
+>  - made the iio trigger list preallocated in state structure
+>  - moved irq enabling/disabling into the try_reenable callback
+>  - on trigger disable must write disable registries as well
+>  - Modified trigger name length to 64
+> 
+> 
+> Eugen Hristev (4):
+>   ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
+>   Documentation: dt: iio: at91-sama5d2_adc: add hw trigger edge binding
+>   ARM: dts: at91: sama5d2: add ADC hw trigger edge type
+>   iio: adc: at91-sama5d2_adc: add hw trigger and buffer support
+> 
+>  .../bindings/iio/adc/at91-sama5d2_adc.txt          |   6 +
+>  arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  16 +-
+>  arch/arm/boot/dts/sama5d2.dtsi                     |   1 +
+>  drivers/iio/adc/at91-sama5d2_adc.c                 | 236 ++++++++++++++++++++-
+>  4 files changed, 253 insertions(+), 6 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
