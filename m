@@ -1,51 +1,73 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v4 0/2] Add Basic SoC support for MT7622
-Date: Thu, 15 Jun 2017 00:11:29 +0800
-Message-ID: <cover.1497455465.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v4 2/2] arm64: dts: mt7622: add dts file for MT7622 reference board variant 1
+Date: Thu, 15 Jun 2017 00:11:31 +0800
+Message-ID: <1f0a32da95e1d70c62e7f67564cfda01d7abd79a.1497455465.git.sean.wang@mediatek.com>
+References: <cover.1497455465.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1497455465.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, john@phrozen.org, linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-Changes since v3:
-- get rid of those accepted patches
-- rebased to branch v4.12-next/dts64 in Matthias' tree
-- fixed uart node in dts with two clocks as described in bindings documentation
+Add the support for the MT7622 reference board variant 1 from
+MediaTek.
 
-Changes since v2:
-- merge back required basic clock nodes into the .dtsi file
-- update the property of interrupts in timer nodes with 2 CPUs
-
-Changes since v1:
-- update SPDX-License-Identifier
-- remove next-level-cache property since cache geometry detection was removed since 4.12
-
-This patch set adds basic SoC support for MediaTek MT7622
-SoC based on 4.12-rc1.
-
-
-
-
-Sean Wang (2):
-  arm64: dts: mt7622: add basic nodes to the mt7622.dtsi file
-  arm64: dts: mt7622: add dts file for MT7622 reference board variant 1
-
- arch/arm64/boot/dts/mediatek/Makefile        |   1 +
- arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts |  27 +++++++
- arch/arm64/boot/dts/mediatek/mt7622.dtsi     | 104 +++++++++++++++++++++++++++
- 3 files changed, 132 insertions(+)
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/Makefile        |  1 +
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 27 +++++++++++++++++++++++++++
+ 2 files changed, 28 insertions(+)
  create mode 100644 arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
- create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
 
+diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+index 015eb07..89371be 100644
+--- a/arch/arm64/boot/dts/mediatek/Makefile
++++ b/arch/arm64/boot/dts/mediatek/Makefile
+@@ -1,6 +1,7 @@
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt6797-evb.dtb
++dtb-$(CONFIG_ARCH_MEDIATEK) += mt7622-rfb1.dtb
+ dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+ 
+ always		:= $(dtb-y)
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+new file mode 100644
+index 0000000..c08309d
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -0,0 +1,27 @@
++/*
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: Ming Huang <ming.huang@mediatek.com>
++ *	   Sean Wang <sean.wang@mediatek.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
++ */
++
++/dts-v1/;
++#include "mt7622.dtsi"
++
++/ {
++	model = "MediaTek MT7622 RFB1 board";
++	compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
++
++	chosen {
++		bootargs = "console=ttyS0,115200n1";
++	};
++
++	memory {
++		reg = <0 0x40000000 0 0x3F000000>;
++	};
++};
++
++&uart0 {
++	status = "okay";
++};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
