@@ -1,57 +1,264 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable
- to handle kernel NULL pointer dereference at 00000000000000a8
-Date: Wed, 14 Jun 2017 07:01:12 +0200
-Message-ID: <20170614050112.GB11630@kroah.com>
-References: <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
- <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
- <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
- <20170613041842.GA13308@kroah.com>
- <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
- <20170613043416.GB14217@kroah.com>
- <20170613043518.GA14621@kroah.com>
- <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
- <20170613163508.GA31961@kroah.com>
- <alpine.DEB.2.20.1706132106410.11042@aurora.sdinet.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.20.1706132106410.11042@aurora.sdinet.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sven-Haegar Koch <haegar@sdinet.de>
-Cc: Logan Gunthorpe <logang@deltatee.com>, Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 02/18] spi: qup: Setup DMA mode correctly
+Date: Wed, 14 Jun 2017 11:22:15 +0530
+Message-ID: <1497419551-21834-3-git-send-email-varada@codeaurora.org>
+References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497419551-21834-1-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 09:13:32PM +0200, Sven-Haegar Koch wrote:
-> On Tue, 13 Jun 2017, Greg Kroah-Hartman wrote:
-> 
-> > On Tue, Jun 13, 2017 at 10:25:40AM -0600, Logan Gunthorpe wrote:
-> > > 
-> > > On 12/06/17 10:35 PM, Greg Kroah-Hartman wrote:
-> > > > Or better yet, just turn all char major allocations into dynamic, which
-> > > > would be really good for test systems.  I thought someone proposed
-> > > > patches for that a long time ago, but I can't find them anymore.  That
-> > > > would be the simplest solution here.
-> > > 
-> > > Would people not complain about that? I would not be surprised if some
-> > > crazy application is using hard coded major numbers in userspace. So
-> > > such a change could potentially break userspace...
-> > 
-> > For char devices, I doubt it, but we can't take the chance, which is why
-> > you make it an option.  Then, it's enabled for 'allmodconfig' builds,
-> > which helps testers out.
-> 
-> At least for /dev/null, /dev/zero, and perhaps /dev/tty it would 
-> definitely break things if the major+minor number is not static. I have 
-> multiple chroot environments having only some minimal needed static 
-> /dev subdir, with naturally no daemons or filesystem creating those 
-> on-demand. For the main /dev I use whatever the system sets up, so 
-> devtmpfs with udev.
+To operate in DMA mode, the buffer should be aligned and
+the size of the transfer should be a multiple of block size
+(for v1). And the no. of words being transferred should
+be programmed in the count registers appropriately.
 
-No, it wouldn't be required, it would be an option for those people
-using devtmpfs.
+Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+ drivers/spi/spi-qup.c | 118 +++++++++++++++++++++++---------------------------
+ 1 file changed, 55 insertions(+), 63 deletions(-)
 
-thanks,
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index c0d4def..abe799b 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -149,11 +149,18 @@ struct spi_qup {
+ 	int			rx_bytes;
+ 	int			qup_v1;
+ 
+-	int			use_dma;
++	int			mode;
+ 	struct dma_slave_config	rx_conf;
+ 	struct dma_slave_config	tx_conf;
+ };
+ 
++static inline bool spi_qup_is_dma_xfer(int mode)
++{
++	if (mode == QUP_IO_M_MODE_DMOV || mode == QUP_IO_M_MODE_BAM)
++		return true;
++
++	return false;
++}
+ 
+ static inline bool spi_qup_is_valid_state(struct spi_qup *controller)
+ {
+@@ -424,7 +431,7 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ 		error = -EIO;
+ 	}
+ 
+-	if (!controller->use_dma) {
++	if (!spi_qup_is_dma_xfer(controller->mode)) {
+ 		if (opflags & QUP_OP_IN_SERVICE_FLAG)
+ 			spi_qup_fifo_read(controller, xfer);
+ 
+@@ -443,34 +450,11 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static u32
+-spi_qup_get_mode(struct spi_master *master, struct spi_transfer *xfer)
+-{
+-	struct spi_qup *qup = spi_master_get_devdata(master);
+-	u32 mode;
+-
+-	qup->w_size = 4;
+-
+-	if (xfer->bits_per_word <= 8)
+-		qup->w_size = 1;
+-	else if (xfer->bits_per_word <= 16)
+-		qup->w_size = 2;
+-
+-	qup->n_words = xfer->len / qup->w_size;
+-
+-	if (qup->n_words <= (qup->in_fifo_sz / sizeof(u32)))
+-		mode = QUP_IO_M_MODE_FIFO;
+-	else
+-		mode = QUP_IO_M_MODE_BLOCK;
+-
+-	return mode;
+-}
+-
+ /* set clock freq ... bits per word */
+ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ {
+ 	struct spi_qup *controller = spi_master_get_devdata(spi->master);
+-	u32 config, iomode, mode, control;
++	u32 config, iomode, control;
+ 	int ret, n_words;
+ 
+ 	if (spi->mode & SPI_LOOP && xfer->len > controller->in_fifo_sz) {
+@@ -491,25 +475,30 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ 		return -EIO;
+ 	}
+ 
+-	mode = spi_qup_get_mode(spi->master, xfer);
++	controller->w_size = DIV_ROUND_UP(xfer->bits_per_word, 8);
++	controller->n_words = xfer->len / controller->w_size;
+ 	n_words = controller->n_words;
+ 
+-	if (mode == QUP_IO_M_MODE_FIFO) {
++	if (n_words <= (controller->in_fifo_sz / sizeof(u32))) {
++
++		controller->mode = QUP_IO_M_MODE_FIFO;
++
+ 		writel_relaxed(n_words, controller->base + QUP_MX_READ_CNT);
+ 		writel_relaxed(n_words, controller->base + QUP_MX_WRITE_CNT);
+ 		/* must be zero for FIFO */
+ 		writel_relaxed(0, controller->base + QUP_MX_INPUT_CNT);
+ 		writel_relaxed(0, controller->base + QUP_MX_OUTPUT_CNT);
+-	} else if (!controller->use_dma) {
++	} else if (spi->master->can_dma &&
++		   spi->master->can_dma(spi->master, spi, xfer) &&
++		   spi->master->cur_msg_mapped) {
++
++		controller->mode = QUP_IO_M_MODE_BAM;
++
+ 		writel_relaxed(n_words, controller->base + QUP_MX_INPUT_CNT);
+ 		writel_relaxed(n_words, controller->base + QUP_MX_OUTPUT_CNT);
+ 		/* must be zero for BLOCK and BAM */
+ 		writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
+ 		writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
+-	} else {
+-		mode = QUP_IO_M_MODE_BAM;
+-		writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
+-		writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
+ 
+ 		if (!controller->qup_v1) {
+ 			void __iomem *input_cnt;
+@@ -528,19 +517,28 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ 
+ 			writel_relaxed(0, controller->base + QUP_MX_OUTPUT_CNT);
+ 		}
++	} else {
++
++		controller->mode = QUP_IO_M_MODE_BLOCK;
++
++		writel_relaxed(n_words, controller->base + QUP_MX_INPUT_CNT);
++		writel_relaxed(n_words, controller->base + QUP_MX_OUTPUT_CNT);
++		/* must be zero for BLOCK and BAM */
++		writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
++		writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
+ 	}
+ 
+ 	iomode = readl_relaxed(controller->base + QUP_IO_M_MODES);
+ 	/* Set input and output transfer mode */
+ 	iomode &= ~(QUP_IO_M_INPUT_MODE_MASK | QUP_IO_M_OUTPUT_MODE_MASK);
+ 
+-	if (!controller->use_dma)
++	if (!spi_qup_is_dma_xfer(controller->mode))
+ 		iomode &= ~(QUP_IO_M_PACK_EN | QUP_IO_M_UNPACK_EN);
+ 	else
+ 		iomode |= QUP_IO_M_PACK_EN | QUP_IO_M_UNPACK_EN;
+ 
+-	iomode |= (mode << QUP_IO_M_OUTPUT_MODE_MASK_SHIFT);
+-	iomode |= (mode << QUP_IO_M_INPUT_MODE_MASK_SHIFT);
++	iomode |= (controller->mode << QUP_IO_M_OUTPUT_MODE_MASK_SHIFT);
++	iomode |= (controller->mode << QUP_IO_M_INPUT_MODE_MASK_SHIFT);
+ 
+ 	writel_relaxed(iomode, controller->base + QUP_IO_M_MODES);
+ 
+@@ -581,7 +579,7 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ 	config |= xfer->bits_per_word - 1;
+ 	config |= QUP_CONFIG_SPI_MODE;
+ 
+-	if (controller->use_dma) {
++	if (spi_qup_is_dma_xfer(controller->mode)) {
+ 		if (!xfer->tx_buf)
+ 			config |= QUP_CONFIG_NO_OUTPUT;
+ 		if (!xfer->rx_buf)
+@@ -599,7 +597,7 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
+ 		 * status change in BAM mode
+ 		 */
+ 
+-		if (mode == QUP_IO_M_MODE_BAM)
++		if (spi_qup_is_dma_xfer(controller->mode))
+ 			mask = QUP_OP_IN_SERVICE_FLAG | QUP_OP_OUT_SERVICE_FLAG;
+ 
+ 		writel_relaxed(mask, controller->base + QUP_OPERATIONAL_MASK);
+@@ -633,7 +631,7 @@ static int spi_qup_transfer_one(struct spi_master *master,
+ 	controller->tx_bytes = 0;
+ 	spin_unlock_irqrestore(&controller->lock, flags);
+ 
+-	if (controller->use_dma)
++	if (spi_qup_is_dma_xfer(controller->mode))
+ 		ret = spi_qup_do_dma(master, xfer);
+ 	else
+ 		ret = spi_qup_do_pio(master, xfer);
+@@ -641,14 +639,6 @@ static int spi_qup_transfer_one(struct spi_master *master,
+ 	if (ret)
+ 		goto exit;
+ 
+-	if (spi_qup_set_state(controller, QUP_STATE_RUN)) {
+-		dev_warn(controller->dev, "cannot set EXECUTE state\n");
+-		goto exit;
+-	}
+-
+-	if (!wait_for_completion_timeout(&controller->done, timeout))
+-		ret = -ETIMEDOUT;
+-
+ exit:
+ 	spi_qup_set_state(controller, QUP_STATE_RESET);
+ 	spin_lock_irqsave(&controller->lock, flags);
+@@ -657,7 +647,7 @@ static int spi_qup_transfer_one(struct spi_master *master,
+ 		ret = controller->error;
+ 	spin_unlock_irqrestore(&controller->lock, flags);
+ 
+-	if (ret && controller->use_dma)
++	if (ret && spi_qup_is_dma_xfer(controller->mode))
+ 		spi_qup_dma_terminate(master, xfer);
+ 
+ 	return ret;
+@@ -668,26 +658,28 @@ static bool spi_qup_can_dma(struct spi_master *master, struct spi_device *spi,
+ {
+ 	struct spi_qup *qup = spi_master_get_devdata(master);
+ 	size_t dma_align = dma_get_cache_alignment();
+-	u32 mode;
+-
+-	qup->use_dma = 0;
++	int n_words;
+ 
+-	if (xfer->rx_buf && (xfer->len % qup->in_blk_sz ||
+-	    IS_ERR_OR_NULL(master->dma_rx) ||
+-	    !IS_ALIGNED((size_t)xfer->rx_buf, dma_align)))
+-		return false;
++	if (xfer->rx_buf) {
++		if (!IS_ALIGNED((size_t)xfer->rx_buf, dma_align) ||
++		    IS_ERR_OR_NULL(master->dma_rx))
++			return false;
++		if (qup->qup_v1 && (xfer->len % qup->in_blk_sz))
++			return false;
++	}
+ 
+-	if (xfer->tx_buf && (xfer->len % qup->out_blk_sz ||
+-	    IS_ERR_OR_NULL(master->dma_tx) ||
+-	    !IS_ALIGNED((size_t)xfer->tx_buf, dma_align)))
+-		return false;
++	if (xfer->tx_buf) {
++		if (!IS_ALIGNED((size_t)xfer->tx_buf, dma_align) ||
++		    IS_ERR_OR_NULL(master->dma_tx))
++			return false;
++		if (qup->qup_v1 && (xfer->len % qup->out_blk_sz))
++			return false;
++	}
+ 
+-	mode = spi_qup_get_mode(master, xfer);
+-	if (mode == QUP_IO_M_MODE_FIFO)
++	n_words = xfer->len / DIV_ROUND_UP(xfer->bits_per_word, 8);
++	if (n_words <= (qup->in_fifo_sz / sizeof(u32)))
+ 		return false;
+ 
+-	qup->use_dma = 1;
+-
+ 	return true;
+ }
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 
-greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
