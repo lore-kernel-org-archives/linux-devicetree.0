@@ -1,146 +1,39 @@
-From: Jun Gao <jun.gao@mediatek.com>
-Subject: Re: [PATCH v4 2/2] arm: dts: Add Mediatek MT2701 i2c device node
-Date: Wed, 14 Jun 2017 17:43:22 +0800
-Message-ID: <1497433402.930.56.camel@mhfsdcap03>
-References: <1495784107-6711-1-git-send-email-jun.gao@mediatek.com>
-         <1495784107-6711-3-git-send-email-jun.gao@mediatek.com>
-         <1497268468.930.26.camel@mhfsdcap03>
-         <dbfcfd5b-8812-8df2-40dc-42e889577c9a@gmail.com>
-         <1497349452.930.36.camel@mhfsdcap03>
-         <ba658a59-7ef9-2340-57fa-3bcefa3f47ed@gmail.com>
-         <1497360189.930.42.camel@mhfsdcap03>
-         <8c0e441c-a3d9-9cfd-dbf9-556ad852a072@gmail.com>
-         <1497402709.930.48.camel@mhfsdcap03>
-         <d63b8cfc-145f-7b2d-b85f-9ff5c18b3e65@gmail.com>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH 01/18] spi: qup: Enable chip select support
+Date: Wed, 14 Jun 2017 12:47:05 +0300
+Message-ID: <41827ac4-fe95-d07d-095d-3c78f6fbded1@linaro.org>
+References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
+ <1497419551-21834-2-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d63b8cfc-145f-7b2d-b85f-9ff5c18b3e65@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-i2c@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1497419551-21834-2-git-send-email-varada@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: Sham Muthayyan <smuthayy@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-06-14 at 11:24 +0200, Matthias Brugger wrote:
+Hi,
+
+On 06/14/2017 08:52 AM, Varadarajan Narayanan wrote:
+> Enable chip select support for QUP versions later than v1
+
+Could you be more descriptive here because in the git history of the
+driver there is a commit "4a8573abe965115bc5b064401fd669b74e985258 spi:
+qup: Remove chip select function" which removes chip select
+functionality. So this patch leads to a situation where we use gpio cs
+for qup_v1 and not for next versions!?
+
 > 
-> On 14/06/17 03:11, Jun Gao wrote:
-> > On Tue, 2017-06-13 at 15:45 +0200, Matthias Brugger wrote:
-> >>
-> >> On 13/06/17 15:23, Jun Gao wrote:
-> >>> On Tue, 2017-06-13 at 14:52 +0200, Matthias Brugger wrote:
-> >>>>
-> >>>> On 13/06/17 12:24, Jun Gao wrote:
-> >>>>> On Tue, 2017-06-13 at 11:36 +0200, Matthias Brugger wrote:
-> >>>>>>
-> >>>>>> On 12/06/17 13:54, Jun Gao wrote:
-> >>>>>>> On Fri, 2017-05-26 at 15:35 +0800, Jun Gao wrote:
-> >>>>>>>> From: Jun Gao <jun.gao@mediatek.com>
-> >>>>>>>>
-> >>>>>>>> Add MT2701 i2c device node.
-> >>>>>>>>
-> >>>>>>>> Signed-off-by: Jun Gao <jun.gao@mediatek.com>
-> >>>>>>>> ---
-> >>>>>>>>      arch/arm/boot/dts/mt2701-evb.dts | 42 ++++++++++++++++++++++++++++++++++++++++
-> >>>>>>>>      arch/arm/boot/dts/mt2701.dtsi    | 42 ++++++++++++++++++++++++++++++++++++++++
-> >>>>>>>>      2 files changed, 84 insertions(+)
-> >>>>>> [...]
-> >>>>>>>
-> >>>>>>> Dear Matthias,
-> >>>>>>>
-> >>>>>>> Could you take this patch together with
-> >>>>>>> [PATCH v4 1/2]dt-bindings: i2c: Add Mediatek MT2701 i2c binding ?
-> >>>>>>>
-> >>>>>>> Thanks!
-> >>>>>>>
-> >>>>>>
-> >>>>>> They are both included in the pull request I send [1] [2], or do I miss
-> >>>>>> something?
-> >>>>>>
-> >>>>>> Regards,
-> >>>>>> Matthias
-> >>>>>>
-> >>>>>> [1]
-> >>>>>> https://github.com/mbgg/linux-mediatek/commit/729b7f8dbdaff270c53052897ea06486221a49a2
-> >>>>>> [2]
-> >>>>>> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
-> >>>>>
-> >>>>> Dear Matthias,
-> >>>>>
-> >>>>> Would you mind to use the same style as follows in i2c-mtk.txt of [2]?
-> >>>>>
-> >>>>> "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
-> >>>>> "mediatek,mt6577-i2c": for Mediatek MT6577
-> >>>>> "mediatek,mt6589-i2c": for Mediatek MT6589
-> >>>>> "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-> >>>>> "mediatek,mt8173-i2c": for Mediatek MT8173
-> >>>>>
-> >>>>>
-> >>>>> Thanks!
-> >>>>>
-> >>>>
-> >>>> You mean I should fix-up the patch to fit to the new binding
-> >>>> description? Or do you mean it should be MTxxxx instead of mtxxxx?
-> >>>>
-> >>>> Regards,
-> >>>> Matthias
-> >>>
-> >>> Dear Matthias,
-> >>>
-> >>> I mean fix-up the patch to fit to the new binding description. Is it OK?
-> >>>
-> >>
-> >> Then I can't see the difference between what you are asking for and what
-> >> is already pushed to the repository. Please send a patch, that will make
-> >> things clearer.
-> >>
-> >> Regards,
-> >> Matthias
-> > 
-> > Dear Matthias,
-> > 
-> > like this:
-> > 
-> > diff:
-> >   Required properties:
-> >     - compatible: value should be either of the following.
-> > -      (a) "mediatek,mt6577-i2c", for i2c compatible with mt6577 i2c.
-> > -      (b) "mediatek,mt6589-i2c", for i2c compatible with mt6589 i2c.
-> > -      (c) "mediatek,mt8127-i2c", for i2c compatible with mt8127 i2c.
-> > -      (d) "mediatek,mt8135-i2c", for i2c compatible with mt8135 i2c.
-> > -      (e) "mediatek,mt8173-i2c", for i2c compatible with mt8173 i2c.
-> > +       "mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek
-> > MT2701
-> > +       "mediatek,mt6577-i2c": for Mediatek MT6577
-> > +       "mediatek,mt6589-i2c": for Mediatek MT6589
-> > +       "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek
-> > MT7623
-> > +       "mediatek,mt8173-i2c": for Mediatek MT8173
-> >     - reg: physical base address of the controller and dma base, length
-> > of memory
-> >       mapped region.
-> >     - interrupts: interrupt number to the cpu.
-> > 
-> 
-> Please look at [2], this is already staged.
-> 
-> [2] 
-> https://github.com/mbgg/linux-mediatek/commit/c6c301d3ff7531894257acc4f4a73928a109bda1
+> Signed-off-by: Sham Muthayyan <smuthayy@codeaurora.org>
+> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+> ---
+>  drivers/spi/spi-qup.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 
-Dear Matthias,
+<snip>
 
-base on [2]
-diff:
-"mediatek,mt2701-i2c", "mediatek,mt6577-i2c": for Mediatek MT2701
--  "mediatek,mt6577-i2c": for i2c compatible with mt6577 i2c.
--  "mediatek,mt6589-i2c": for i2c compatible with mt6589 i2c.
--  "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for i2c compatible with
-mt7623 i2c.
--  "mediatek,mt8173-i2c": for i2c compatible with mt8173 i2c.
-+  "mediatek,mt6577-i2c": for Mediatek MT6577
-+  "mediatek,mt6589-i2c": for Mediatek MT6589
-+  "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for Mediatek MT7623
-+  "mediatek,mt8173-i2c": for Mediatek MT8173
-
-
-Thanks!
+-- 
+regards,
+Stan
