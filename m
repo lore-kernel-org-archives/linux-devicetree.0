@@ -1,100 +1,56 @@
-From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: Re: [PATCH] of: document /sys/firmware/fdt
-Date: Wed, 14 Jun 2017 12:16:53 +0200
-Message-ID: <CAKv+Gu-kTMUuYRaTdikzRZ_ZKKkQEDCiCrR=-Mzok67xmMN5zQ@mail.gmail.com>
-References: <1497414007-8380-1-git-send-email-frowand.list@gmail.com> <20170614095519.GA6085@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170614095519.GA6085@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Luis Oliveira <Luis.Oliveira@synopsys.com>
+Subject: [PATCH v11 0/6] i2c: designware: add I2C SLAVE support
+Date: Wed, 14 Jun 2017 11:43:20 +0100
+Message-ID: <cover.1497025304.git.lolivei@synopsys.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-On 14 June 2017 at 11:55, Mark Rutland <mark.rutland@arm.com> wrote:
-> [Adding Ard, as he added /sys/firmware/fdt]
->
+The purpose of this patchset is to enable Linux to be a I2C slave by 
+enabling the slave functionality in the designware I2C controller and at
+the same time it does some cleaning of the existing code.
 
-Thanks
+The patch 1 is for cleaning and commentary fix.
+The patch 2 refactors the original i2c-designware-core and extracts all
+master functions to a i2c-designware-master source file as suggested by
+Andy Shevchenko when I first submited the update. The patch 3 then
+separates the MASTER flow from the common flow.
+The patch 4 introduces the SLAVE necessary definitions to the 
+i2c-designware library and adds a how-to-use example to the designware.txt
+in device tree bindings.
+The patch 5 adds the necessary functions to give the ability to be a SLAVE
+to the controller and for that changes also had to be made in the 
+Makefile and Kconfig.
+The patch 6 enables the SLAVE mode to be detected by the platform module.
 
-> On Tue, Jun 13, 2017 at 09:20:07PM -0700, frowand.list@gmail.com wrote:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Add ABI documentation for /sys/firmware/fdt
->>
->> Update contact for /sys/firmware/devicetree/* to include mail list
->>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->
-> FWIW:
->
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->
+The functionality was tested using the hardware independent slave-eeprom
+driver based on top of i2c/for-next. The tree I used can be found here:
 
-Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+https://git.kernel.org/cgit/linux/kernel/git/wsa/linux.git/log/?h=i2c/for-next
 
->> ---
->>  Documentation/ABI/testing/sysfs-firmware-ofw | 27 +++++++++++++++++++++=
-+++++-
->>  1 file changed, 26 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentatio=
-n/ABI/testing/sysfs-firmware-ofw
->> index f562b188e71d..8e700db6c295 100644
->> --- a/Documentation/ABI/testing/sysfs-firmware-ofw
->> +++ b/Documentation/ABI/testing/sysfs-firmware-ofw
->> @@ -1,6 +1,6 @@
->>  What:                /sys/firmware/devicetree/*
->>  Date:                November 2013
->> -Contact:     Grant Likely <grant.likely@linaro.org>
->> +Contact:     Grant Likely <grant.likely@linaro.org>, devicetree@vger.ke=
-rnel.org
->>  Description:
->>               When using OpenFirmware or a Flattened Device Tree to enum=
-erate
->>               hardware, the device tree structure will be exposed in thi=
-s
->> @@ -26,3 +26,28 @@ Description:
->>               name plus address). Properties are represented as files
->>               in the directory. The contents of each file is the exact
->>               binary data from the device tree.
->> +
->> +What:                /sys/firmware/fdt
->> +Date:                February 2015
->> +KernelVersion:       3.19
->> +Contact:     Frank Rowand <frank.rowand@sony.com>, devicetree@vger.kern=
-el.org
->> +Description:
->> +             Exports the FDT blob that was passed to the kernel by
->> +             the bootloader. This allows userland applications such
->> +             as kexec to access the raw binary. This blob is also
->> +             useful when debugging since it contains any changes
->> +             made to the blob by the bootloader.
->> +
->> +             The fact that this node does not reside under
->> +             /sys/firmware/device-tree is deliberate: FDT is also used
->> +             on arm64 UEFI/ACPI systems to communicate just the UEFI
->> +             and ACPI entry points, but the FDT is never unflattened
->> +             and used to configure the system.
->> +
->> +             A CRC32 checksum is calculated over the entire FDT
->> +             blob, and verified at late_initcall time. The sysfs
->> +             entry is instantiated only if the checksum is valid,
->> +             i.e., if the FDT blob has not been modified in the mean
->> +             time. Otherwise, a warning is printed.
->> +Users:               kexec, debugging
->> +
->> --
->> Frank Rowand <frank.rowand@sony.com>
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> IMPORTANT NOTICE: The contents of this email and any attachments are conf=
-idential and may also be privileged. If you are not the intended recipient,=
- please notify the sender immediately and do not disclose the contents to a=
-ny other person, use it for any purpose, or store or copy the information i=
-n any medium. Thank you.
+Luis Oliveira (6):
+  i2c: designware: Cleaning and comment style fixes.
+  i2c: designware: refactoring of the i2c-designware
+  i2c: designware: MASTER mode as separated driver
+  i2c: designware: introducing I2C_SLAVE definitions
+  i2c: designware: add SLAVE mode functions
+  i2c: designware: enable SLAVE in platform module
+
+ .../devicetree/bindings/i2c/i2c-designware.txt     |  16 +-
+ drivers/i2c/busses/Kconfig                         |  14 +-
+ drivers/i2c/busses/Makefile                        |   4 +
+ drivers/i2c/busses/i2c-designware-common.c         | 281 +++++++++++++
+ drivers/i2c/busses/i2c-designware-core.h           | 180 +++++++-
+ ...c-designware-core.c => i2c-designware-master.c} | 467 +++------------------
+ drivers/i2c/busses/i2c-designware-pcidrv.c         |   9 +-
+ drivers/i2c/busses/i2c-designware-platdrv.c        | 117 ++++--
+ drivers/i2c/busses/i2c-designware-slave.c          | 398 ++++++++++++++++++
+ 9 files changed, 1033 insertions(+), 453 deletions(-)
+ create mode 100644 drivers/i2c/busses/i2c-designware-common.c
+ rename drivers/i2c/busses/{i2c-designware-core.c => i2c-designware-master.c} (60%)
+ create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+
+-- 
+2.13.0
