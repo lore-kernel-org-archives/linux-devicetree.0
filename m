@@ -1,83 +1,100 @@
-From: Chunyan Zhang <zhang.chunyan@linaro.org>
-Subject: Re: [PATCH v2] Documentation: clock: address more for clock-cells property
-Date: Wed, 14 Jun 2017 18:11:37 +0800
-Message-ID: <CAG2=9p-8YtSt50HnXs2xeS53RTEjHdLw9Z09HPSZ9oEOgCi4uQ@mail.gmail.com>
-References: <1497432104-22609-1-git-send-email-zhang.chunyan@linaro.org> <CAMuHMdU6ZsqbRhG7=dYE=B_7To=ioWrwWwdoRYGdEQJwB4wW6A@mail.gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH] of: document /sys/firmware/fdt
+Date: Wed, 14 Jun 2017 12:16:53 +0200
+Message-ID: <CAKv+Gu-kTMUuYRaTdikzRZ_ZKKkQEDCiCrR=-Mzok67xmMN5zQ@mail.gmail.com>
+References: <1497414007-8380-1-git-send-email-frowand.list@gmail.com> <20170614095519.GA6085@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdU6ZsqbRhG7=dYE=B_7To=ioWrwWwdoRYGdEQJwB4wW6A@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lyra Zhang <zhang.lyra@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170614095519.GA6085@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On 14 June 2017 at 17:42, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Hi Chunyan,
+On 14 June 2017 at 11:55, Mark Rutland <mark.rutland@arm.com> wrote:
+> [Adding Ard, as he added /sys/firmware/fdt]
 >
-> On Wed, Jun 14, 2017 at 11:21 AM, Chunyan Zhang
-> <zhang.chunyan@linaro.org> wrote:
->> The value of property 'clock-cells' is not determined only by the number
->> of clock outputs in one clock node, it is determined by whether the clock
->> output in this node can be referenced directly without index. If the
->> output clock has to be referenced by a index, the clock-cell of this
->> clock node can't be defined 0.
+
+Thanks
+
+> On Tue, Jun 13, 2017 at 09:20:07PM -0700, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
 >>
->> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+>> Add ABI documentation for /sys/firmware/fdt
+>>
+>> Update contact for /sys/firmware/devicetree/* to include mail list
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>
+> FWIW:
+>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>
+
+Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+
 >> ---
->>  Documentation/devicetree/bindings/clock/clock-bindings.txt | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
+>>  Documentation/ABI/testing/sysfs-firmware-ofw | 27 +++++++++++++++++++++=
++++++-
+>>  1 file changed, 26 insertions(+), 1 deletion(-)
 >>
->> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> index 2ec489e..e2b76b4 100644
->> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> @@ -18,6 +18,9 @@ Required properties:
->>                    with a single clock output and 1 for nodes with multiple
->>                    clock outputs.
->>
->> +                  There's one exception, please see the description for
->> +                  clock-indices below.
+>> diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentatio=
+n/ABI/testing/sysfs-firmware-ofw
+>> index f562b188e71d..8e700db6c295 100644
+>> --- a/Documentation/ABI/testing/sysfs-firmware-ofw
+>> +++ b/Documentation/ABI/testing/sysfs-firmware-ofw
+>> @@ -1,6 +1,6 @@
+>>  What:                /sys/firmware/devicetree/*
+>>  Date:                November 2013
+>> -Contact:     Grant Likely <grant.likely@linaro.org>
+>> +Contact:     Grant Likely <grant.likely@linaro.org>, devicetree@vger.ke=
+rnel.org
+>>  Description:
+>>               When using OpenFirmware or a Flattened Device Tree to enum=
+erate
+>>               hardware, the device tree structure will be exposed in thi=
+s
+>> @@ -26,3 +26,28 @@ Description:
+>>               name plus address). Properties are represented as files
+>>               in the directory. The contents of each file is the exact
+>>               binary data from the device tree.
 >> +
->>  Optional properties:
->>  clock-output-names: Recommended to be a list of strings of clock output signal
->>                     names indexed by the first cell in the clock specifier.
->> @@ -48,6 +51,13 @@ clock-indices:          If the identifying number for the clocks in the node
->>                    is not linear from zero, then this allows the mapping of
->>                    identifiers into the clock-output-names array.
+>> +What:                /sys/firmware/fdt
+>> +Date:                February 2015
+>> +KernelVersion:       3.19
+>> +Contact:     Frank Rowand <frank.rowand@sony.com>, devicetree@vger.kern=
+el.org
+>> +Description:
+>> +             Exports the FDT blob that was passed to the kernel by
+>> +             the bootloader. This allows userland applications such
+>> +             as kexec to access the raw binary. This blob is also
+>> +             useful when debugging since it contains any changes
+>> +             made to the blob by the bootloader.
+>> +
+>> +             The fact that this node does not reside under
+>> +             /sys/firmware/device-tree is deliberate: FDT is also used
+>> +             on arm64 UEFI/ACPI systems to communicate just the UEFI
+>> +             and ACPI entry points, but the FDT is never unflattened
+>> +             and used to configure the system.
+>> +
+>> +             A CRC32 checksum is calculated over the entire FDT
+>> +             blob, and verified at late_initcall time. The sysfs
+>> +             entry is instantiated only if the checksum is valid,
+>> +             i.e., if the FDT blob has not been modified in the mean
+>> +             time. Otherwise, a warning is printed.
+>> +Users:               kexec, debugging
+>> +
+>> --
+>> Frank Rowand <frank.rowand@sony.com>
 >>
->> +                  This property not only servers for clocks with multiple
->
-> serves
-
-Thanks, I will fix that.
-
->
->> +                  clock outputs, but also for clocks with a single clock
->> +                  output whose identifying number is not zero.
->
-> Why would you want a single clock and a non-zero identifying number?
-
-Because of the probably weird hardwire design :)
-There indeed some clocks like that on the platform I'm working on.
-
->
->> +                  So long as clock-indices is set, clock-cells cannot be
->> +                  set zero.
->
-> Gr{oetje,eeting}s,
->
->                         Geert
-
-Thanks for your review,
-Chunyan
-
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> IMPORTANT NOTICE: The contents of this email and any attachments are conf=
+idential and may also be privileged. If you are not the intended recipient,=
+ please notify the sender immediately and do not disclose the contents to a=
+ny other person, use it for any purpose, or store or copy the information i=
+n any medium. Thank you.
