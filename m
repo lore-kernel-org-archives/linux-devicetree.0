@@ -1,79 +1,65 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 03/23] clocksource/drivers/fttmr010: Merge FTTMR010 DT bindings
-Date: Wed, 14 Jun 2017 14:39:24 +0200
-Message-ID: <1497443984-12371-3-git-send-email-daniel.lezcano@linaro.org>
-References: <20170614123800.GH2261@mai>
- <1497443984-12371-1-git-send-email-daniel.lezcano@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 3/7] includes: dt-bindings: Rename STM32F429 pinctrl DT bindings
+Date: Wed, 14 Jun 2017 08:05:52 -0500
+Message-ID: <CAL_JsqJHFmamtr_o852fsbzq2S6V0i+xWi62=3HJ0w5F=3SG6g@mail.gmail.com>
+References: <1491568984-20169-1-git-send-email-alexandre.torgue@st.com>
+ <1491568984-20169-4-git-send-email-alexandre.torgue@st.com>
+ <20170410202736.zy7naw74hvrdmfzk@rob-hp-laptop> <800a68a4-d6ce-212b-5849-56c9d32f891a@st.com>
+ <832cd436-0704-3709-ba2c-2c1f6db48615@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497443984-12371-1-git-send-email-daniel.lezcano@linaro.org>
+In-Reply-To: <832cd436-0704-3709-ba2c-2c1f6db48615@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Joel Stanley <joel@jms.id.au>, Rob Herring <robh@kernel.org>, Jonas Jensen <jonas.jensen@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+To: Alexandre Torgue <alexandre.torgue@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Russell King <linux@armlinux.org.uk>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, Jonathan Corbet <corbet@lwn.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+On Wed, Jun 7, 2017 at 11:35 AM, Alexandre Torgue
+<alexandre.torgue@st.com> wrote:
+> Hi Rob,
+>
+> Gentle ping.
+>
+> On 04/12/2017 03:31 PM, Alexandre Torgue wrote:
+>>
+>> Hi Rob,
+>>
+>> On 04/10/2017 10:27 PM, Rob Herring wrote:
+>>>
+>>> On Fri, Apr 07, 2017 at 02:43:00PM +0200, Alexandre TORGUE wrote:
+>>>>
+>>>> STM32F4 MCU series is composed of several SOC (STM32F429, STM32F469,
+>>>> ...).
+>>>> Most of muxing definition are identical. So to avoid to duplicate
+>>>> bindings
+>>>> definition, this patch create common definitions.
+>>>
+>>>
+>>> This is a lot of churn. Some confirmation that the resultant dtb is the
+>>> same before and after would be nice. Perhaps the script you used to
+>>> convert this as well.
+>>
+>>
+>> I tried to use fdtdump but it seems bugged. So I used directly dtc
+>> binary to (re)generate dts files (before and after apply the series) and
+>> I compared "pinmux" field in both case.
+>>
+>> Example on stm32f469-disco:
+>>
+>> ./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-after.dts
+>> stm32f469-disco-after.dtb
+>>
+>> ./scripts/dtc/dtc -I dtb -O dts -o stm32f469-disco-before.dts
+>> stm32f469-disco-before.dtb
+>>
+>> cat stm32f469-disco-after.dts | grep pinmux
+>> cat stm32f469-disco-before.dts | grep pinmux
+>>
+>
+> Do you agree with verifications ?
 
-This merges the Moxa and FTTMR010 device tree bindings into the
-Faraday binding document to avoid confusion.
+I would expect you do "diff -u stm32f469-disco-before.dts
+stm32f469-disco-after.dts".
 
-The FTTMR010 is the IP block used by these SoCs, in vanilla
-or modified variant.
-
-The Aspeed variant is modified such that it is no longer fully
-register-compatible with FTTMR010 so for this reason it is not
-listed with two compatible strings, instead just one.
-
-Cc: Joel Stanley <joel@jms.id.au>
-Tested-by: Jonas Jensen <jonas.jensen@gmail.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- .../devicetree/bindings/timer/faraday,fttmr010.txt    |  4 +++-
- .../devicetree/bindings/timer/moxa,moxart-timer.txt   | 19 -------------------
- 2 files changed, 3 insertions(+), 20 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-
-diff --git a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-index b73ca6c..6e18bd6 100644
---- a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-+++ b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-@@ -7,7 +7,9 @@ Required properties:
- 
- - compatible : Must be one of
-   "faraday,fttmr010"
--  "cortina,gemini-timer"
-+  "cortina,gemini-timer", "faraday,fttmr010"
-+  "moxa,moxart-timer", "faraday,fttmr010"
-+  "aspeed,ast2400-timer"
- - reg : Should contain registers location and length
- - interrupts : Should contain the three timer interrupts usually with
-   flags for falling edge
-diff --git a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt b/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-deleted file mode 100644
-index e207c11..0000000
---- a/Documentation/devicetree/bindings/timer/moxa,moxart-timer.txt
-+++ /dev/null
-@@ -1,19 +0,0 @@
--MOXA ART timer
--
--Required properties:
--
--- compatible : Must be one of:
-- 	- "moxa,moxart-timer"
-- 	- "aspeed,ast2400-timer"
--- reg : Should contain registers location and length
--- interrupts : Should contain the timer interrupt number
--- clocks : Should contain phandle for the clock that drives the counter
--
--Example:
--
--	timer: timer@98400000 {
--		compatible = "moxa,moxart-timer";
--		reg = <0x98400000 0x42>;
--		interrupts = <19 1>;
--		clocks = <&coreclk>;
--	};
--- 
-2.7.4
+Rob
