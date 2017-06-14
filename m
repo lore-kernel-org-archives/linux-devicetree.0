@@ -1,197 +1,46 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH 12/18] spi: qup: refactor spi_qup_io_config into two functions
-Date: Wed, 14 Jun 2017 11:22:25 +0530
-Message-ID: <1497419551-21834-13-git-send-email-varada@codeaurora.org>
-References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>, Matthew McClintock <mmcclint@codeaurora.org>
+From: Logan Gunthorpe <logang@deltatee.com>
+Subject: Re: [Merge tag 'pci-v4.12-changes' of git] 857f864014: BUG: unable to
+ handle kernel NULL pointer dereference at 00000000000000a8
+Date: Tue, 13 Jun 2017 23:55:37 -0600
+Message-ID: <541d1104-6139-c902-ec91-943ec1e8a881@deltatee.com>
+References: <fe0543c1-cba6-02bb-36eb-395910bd5012@deltatee.com>
+ <20170612200852.GA28578@bhelgaas-glaptop.roam.corp.google.com>
+ <61e11e67-6c1b-ef1e-5fb8-a7c9efb17666@deltatee.com>
+ <20170613041842.GA13308@kroah.com>
+ <f6322f70-7ca7-abf6-b947-4cbbfd598948@deltatee.com>
+ <20170613043416.GB14217@kroah.com> <20170613043518.GA14621@kroah.com>
+ <8462abee-0a7f-00fb-6111-1f78362ea3f7@deltatee.com>
+ <20170613163508.GA31961@kroah.com>
+ <f848a5fb-096c-a025-cc3b-314cc3899f9e@deltatee.com>
+ <20170614050049.GA11630@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20170614050049.GA11630@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, kernel test robot <fengguang.wu@intel.com>, Linus Torvalds <torvalds@linux-foundation.org>, LKP <lkp@01.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>, wfg@linux.intel.com, Alan Cox <alan@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@linux.ie>, David Herrmann <dh.herrmann@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>
 List-Id: devicetree@vger.kernel.org
 
-This is in preparation for handling transactions larger than
-64K-1 bytes in block mode, which is currently unsupported and
-quietly fails.
 
-We need to break these into two functions 1) prep is
-called once per spi_message and 2) io_config is called
-once per spi-qup bus transaction
 
-This is just refactoring, there should be no functional
-change
+On 13/06/17 11:00 PM, Greg Kroah-Hartman wrote:
+> No, don't modify any drivers, do this in the core chardev code.
 
-Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- drivers/spi/spi-qup.c | 109 +++++++++++++++++++++++++++++++-------------------
- 1 file changed, 67 insertions(+), 42 deletions(-)
+Ok, well then maybe I misunderstood what you originally asked for
+because I don't see how you can change a fixed allocation to a dynamic
+one without touching the driver code which needs to know the major that
+was assigned in the end.
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 1a2a9d9..c023dc1 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -574,12 +574,11 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--/* set clock freq ... bits per word */
--static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
-+/* set clock freq ... bits per word, determine mode */
-+static int spi_qup_io_prep(struct spi_device *spi, struct spi_transfer *xfer)
- {
- 	struct spi_qup *controller = spi_master_get_devdata(spi->master);
--	u32 config, iomode, control;
--	int ret, n_words;
-+	int ret;
- 
- 	if (spi->mode & SPI_LOOP && xfer->len > controller->in_fifo_sz) {
- 		dev_err(controller->dev, "too big size for loopback %d > %d\n",
-@@ -594,32 +593,59 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
- 		return -EIO;
- 	}
- 
--	if (spi_qup_set_state(controller, QUP_STATE_RESET)) {
--		dev_err(controller->dev, "cannot set RESET state\n");
--		return -EIO;
--	}
--
- 	controller->w_size = DIV_ROUND_UP(xfer->bits_per_word, 8);
- 	controller->n_words = xfer->len / controller->w_size;
--	n_words = controller->n_words;
--
--	if (n_words <= (controller->in_fifo_sz / sizeof(u32))) {
- 
-+	if (controller->n_words <= (controller->in_fifo_sz / sizeof(u32)))
- 		controller->mode = QUP_IO_M_MODE_FIFO;
-+	else if (spi->master->can_dma &&
-+		 spi->master->can_dma(spi->master, spi, xfer) &&
-+		 spi->master->cur_msg_mapped)
-+		controller->mode = QUP_IO_M_MODE_BAM;
-+	else
-+		controller->mode = QUP_IO_M_MODE_BLOCK;
-+
-+	return 0;
-+}
-+
-+/* prep qup for another spi transaction of specific type */
-+static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
-+{
-+	struct spi_qup *controller = spi_master_get_devdata(spi->master);
-+	u32 config, iomode, control;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&controller->lock, flags);
-+	controller->xfer     = xfer;
-+	controller->error    = 0;
-+	controller->rx_bytes = 0;
-+	controller->tx_bytes = 0;
-+	spin_unlock_irqrestore(&controller->lock, flags);
-+
-+
-+	if (spi_qup_set_state(controller, QUP_STATE_RESET)) {
-+		dev_err(controller->dev, "cannot set RESET state\n");
-+		return -EIO;
-+	}
- 
--		writel_relaxed(n_words, controller->base + QUP_MX_READ_CNT);
--		writel_relaxed(n_words, controller->base + QUP_MX_WRITE_CNT);
-+	switch (controller->mode) {
-+	case QUP_IO_M_MODE_FIFO:
-+		reinit_completion(&controller->done);
-+		writel_relaxed(controller->n_words,
-+			       controller->base + QUP_MX_READ_CNT);
-+		writel_relaxed(controller->n_words,
-+			       controller->base + QUP_MX_WRITE_CNT);
- 		/* must be zero for FIFO */
- 		writel_relaxed(0, controller->base + QUP_MX_INPUT_CNT);
- 		writel_relaxed(0, controller->base + QUP_MX_OUTPUT_CNT);
--	} else if (spi->master->can_dma &&
--		   spi->master->can_dma(spi->master, spi, xfer) &&
--		   spi->master->cur_msg_mapped) {
--
--		controller->mode = QUP_IO_M_MODE_BAM;
--
--		writel_relaxed(n_words, controller->base + QUP_MX_INPUT_CNT);
--		writel_relaxed(n_words, controller->base + QUP_MX_OUTPUT_CNT);
-+		break;
-+	case QUP_IO_M_MODE_BAM:
-+		reinit_completion(&controller->txc);
-+		reinit_completion(&controller->rxc);
-+		writel_relaxed(controller->n_words,
-+			       controller->base + QUP_MX_INPUT_CNT);
-+		writel_relaxed(controller->n_words,
-+			       controller->base + QUP_MX_OUTPUT_CNT);
- 		/* must be zero for BLOCK and BAM */
- 		writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
- 		writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
-@@ -637,19 +663,25 @@ static int spi_qup_io_config(struct spi_device *spi, struct spi_transfer *xfer)
- 			if (xfer->tx_buf)
- 				writel_relaxed(0, input_cnt);
- 			else
--				writel_relaxed(n_words, input_cnt);
-+				writel_relaxed(controller->n_words, input_cnt);
- 
- 			writel_relaxed(0, controller->base + QUP_MX_OUTPUT_CNT);
- 		}
--	} else {
--
--		controller->mode = QUP_IO_M_MODE_BLOCK;
--
--		writel_relaxed(n_words, controller->base + QUP_MX_INPUT_CNT);
--		writel_relaxed(n_words, controller->base + QUP_MX_OUTPUT_CNT);
-+		break;
-+	case QUP_IO_M_MODE_BLOCK:
-+		reinit_completion(&controller->done);
-+		writel_relaxed(controller->n_words,
-+			       controller->base + QUP_MX_INPUT_CNT);
-+		writel_relaxed(controller->n_words,
-+			       controller->base + QUP_MX_OUTPUT_CNT);
- 		/* must be zero for BLOCK and BAM */
- 		writel_relaxed(0, controller->base + QUP_MX_READ_CNT);
- 		writel_relaxed(0, controller->base + QUP_MX_WRITE_CNT);
-+		break;
-+	default:
-+		dev_err(controller->dev, "unknown mode = %d\n",
-+				controller->mode);
-+		return -EIO;
- 	}
- 
- 	iomode = readl_relaxed(controller->base + QUP_IO_M_MODES);
-@@ -738,6 +770,10 @@ static int spi_qup_transfer_one(struct spi_master *master,
- 	unsigned long timeout, flags;
- 	int ret = -EIO;
- 
-+	ret = spi_qup_io_prep(spi, xfer);
-+	if (ret)
-+		return ret;
-+
- 	ret = spi_qup_io_config(spi, xfer);
- 	if (ret)
- 		return ret;
-@@ -746,21 +782,10 @@ static int spi_qup_transfer_one(struct spi_master *master,
- 	timeout = DIV_ROUND_UP(xfer->len * 8, timeout);
- 	timeout = 100 * msecs_to_jiffies(timeout);
- 
--	spin_lock_irqsave(&controller->lock, flags);
--	controller->xfer     = xfer;
--	controller->error    = 0;
--	controller->rx_bytes = 0;
--	controller->tx_bytes = 0;
--	spin_unlock_irqrestore(&controller->lock, flags);
--
--	if (spi_qup_is_dma_xfer(controller->mode)) {
--		reinit_completion(&controller->rxc);
--		reinit_completion(&controller->txc);
-+	if (spi_qup_is_dma_xfer(controller->mode))
- 		ret = spi_qup_do_dma(master, xfer, timeout);
--	} else {
--		reinit_completion(&controller->done);
-+	else
- 		ret = spi_qup_do_pio(master, xfer, timeout);
--	}
- 
- 	if (ret)
- 		goto exit;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> At quick glance, looks good to me, care to clean it up and make it behind
+> a config option?
+
+Sure. However, is a config option really necessary here? As is, the
+extended dynamic region will only be used if there are too many chardev
+majors and it shouldn't have _any_ effect on users that have a small
+number. So it seems like not selecting that option is just telling the
+kernel to be broken for no obvious trade-off.
+
+Logan
+
