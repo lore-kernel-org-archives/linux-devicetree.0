@@ -1,94 +1,57 @@
-From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v4 0/4] iio: adc: sama5d2_adc hw triggers and buffers
-Date: Wed, 14 Jun 2017 08:57:53 +0200
-Message-ID: <20170614065753.k4jqetwjxsingcpm@rfolt0960.corp.atmel.com>
-References: <1496992039-17964-1-git-send-email-eugen.hristev@microchip.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH] dt-bindings: Drop k2g genpd device ID macros
+Date: Wed, 14 Jun 2017 10:07:23 +0300
+Message-ID: <3de2ed22-2de9-101a-5ee6-0077fe523ce2@ti.com>
+References: <20170522183737.24946-1-d-gerlach@ti.com>
+ <20170531162850.mf6giowmxj5vetxq@rob-hp-laptop>
+ <ca91000a-627b-a655-4304-b64b78bbcf9a@ti.com>
+ <fc503960-d225-895c-c993-974ba6c5a92d@oracle.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1496992039-17964-1-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <fc503960-d225-895c-c993-974ba6c5a92d@oracle.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@oracle.com>, Dave Gerlach <d-gerlach@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>
+Cc: Nishanth Menon <nm@ti.com>, Rob Herring <robh@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Keerthy <j-keerthy@ti.com>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>, Kevin Hilman <khilman@kernel.org>, Franklin Cooper <fcooper@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 13/06/17 23:32, Santosh Shilimkar wrote:
+> On 6/13/2017 1:16 PM, Dave Gerlach wrote:
+>> Santosh,
+>> On 05/31/2017 11:28 AM, Rob Herring wrote:
+>>> On Mon, May 22, 2017 at 01:37:37PM -0500, Dave Gerlach wrote:
+> [...]
+> 
+>>>> [1] https://www.spinics.net/lists/arm-kernel/msg577079.html
+>>>>
+>>>>   .../devicetree/bindings/soc/ti/sci-pm-domain.txt   |  5 +-
+>>>>   include/dt-bindings/genpd/k2g.h                    | 90 
+>>>> ----------------------
+>>>>   2 files changed, 3 insertions(+), 92 deletions(-)
+>>>>   delete mode 100644 include/dt-bindings/genpd/k2g.h
+>>>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>>
+>>
+>> Gentle ping on this. If you're OK with the patch any chance you can 
+>> pick it up?
+>>
+> Sorry Dave I missed to pick this one in pull request for 4.13. Will pick 
+> this
+> one along with what Suman and Tero have been working for following merge
+> window. Thanks for reminding about this one.
 
-On Fri, Jun 09, 2017 at 10:07:15AM +0300, Eugen Hristev wrote:
-> This patch implements the hardware triggers support and buffer management
-> for sama5d2.
-> The DT modifications ( [PATCH v4 1/4] ARM: dts: at91: sama5d2_xplained:
-> enable ADTRG pin) are for demonstration purposes of the feature,
-> setting the pinctrl for the ADC hw trigger pin,should go through
-> at91 maintainers.
-> As discussed on the mailing list, since we have a single external trigger
-> namely the ADTRG, but three different possible edges that can trigger it,
-> will have a single trigger in the IIO subsystem and three possible edges
-> which can be selected from the device tree.
-> Thus I created new bindings in the device tree for having the possible
-> edge types for the ADTRG pin.
-> The documentation for the bindings is in the patch
-> [PATCH v4 2/4] Documentation: dt: iio: at91-sama5d2_adc: add adtrg
->  trigger binding
-> The modifications in the DT are in the patch
-> [PATCH v4 3/4] ARM: dts: at91: sama5d2: add ADC hw trigger
-> The new property must be set with the values from interrupt edge types, as this
-> pin is effectively an internal interrupt.
->
+I think Stephen will probably be picking up the clock part directly by 
+himself.
 
-If the reuse of IRQ macros in the trigger case is accepted, you can add
-
-Acked-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-
-for the next version with the corrections suggested by Jonathan.
-
-Regards
-
-Ludovic
- 
->   Changes in v4:
->  - Modified bindings to be similar with interrupts
->  - Used iio claim direct to make sure buffer is not enabled when someone might
->    try to use a software triggered conversion
-> 
->   Changes in v3:
->  - No longer have all three possible triggers registered in the subsystem and
->    available in the sysfs. Only registering one trigger, and the possible edge
->    is being read from the device tree. In the device tree, any possible edge
->    can be set. There are three already made nodes for each possible edge which
->    can be selected.
->  - Fixed a bug where software triggered conversion could be started even if
->    the hardware trigger was enabled.
->  - Preallocate enough space for the buffer, considering all the channels
->    and timestamp
-> 
-> 
-> 
->   Changes in v2:
->  - Moved buffer allocation and freeing into the preenable and postdisable
->    callbacks.
->    We have a total of scan bytes that can vary a lot depending on each channel
->    enabled at a certain point.
->  - made the at91 trigger list part of state structure
->  - made the iio trigger list preallocated in state structure
->  - moved irq enabling/disabling into the try_reenable callback
->  - on trigger disable must write disable registries as well
->  - Modified trigger name length to 64
-> 
-> 
-> Eugen Hristev (4):
->   ARM: dts: at91: sama5d2_xplained: enable ADTRG pin
->   Documentation: dt: iio: at91-sama5d2_adc: add hw trigger edge binding
->   ARM: dts: at91: sama5d2: add ADC hw trigger edge type
->   iio: adc: at91-sama5d2_adc: add hw trigger and buffer support
-> 
->  .../bindings/iio/adc/at91-sama5d2_adc.txt          |   6 +
->  arch/arm/boot/dts/at91-sama5d2_xplained.dts        |  16 +-
->  arch/arm/boot/dts/sama5d2.dtsi                     |   1 +
->  drivers/iio/adc/at91-sama5d2_adc.c                 | 236 ++++++++++++++++++++-
->  4 files changed, 253 insertions(+), 6 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+-Tero
