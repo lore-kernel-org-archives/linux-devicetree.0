@@ -1,58 +1,69 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH] powerpc: dts: use #include "..." to include local DT
-Date: Wed, 14 Jun 2017 14:55:00 +0900
-Message-ID: <CAK7LNAS0tkpCuCjjCe=P_Qc2Q12B-+7YgAipko5n+AoeASpQnQ@mail.gmail.com>
-References: <1495602744-18874-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNARnkHTyAMXjPZnOxOkP_b8vc6qvYOv-wf_Fn0eaPSdpeA@mail.gmail.com> <87r2yogpc6.fsf@concordia.ellerman.id.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH 17/18] spi: qup: Ensure done detection
+Date: Wed, 14 Jun 2017 11:22:30 +0530
+Message-ID: <1497419551-21834-18-git-send-email-varada@codeaurora.org>
+References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87r2yogpc6.fsf@concordia.ellerman.id.au>
+In-Reply-To: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>, Andy Gross <agross@codeaurora.org>, Abhishek Sahu <absahu@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi.
+This patch fixes an issue where a SPI transaction has completed, but the
+done condition is missed.  This occurs because at the time of interrupt the
+MAX_INPUT_DONE_FLAG is not asserted.  However, in the process of reading
+blocks of data from the FIFO, the last portion of data comes in.
 
+The opflags read at the beginning of the irq handler no longer matches the
+current opflag state.  To get around this condition, the block read
+function should update the opflags so that done detection is correct after
+the return.
 
-2017-06-13 19:21 GMT+09:00 Michael Ellerman <mpe@ellerman.id.au>:
-> Masahiro Yamada <yamada.masahiro@socionext.com> writes:
->
->> Hi
->>
->> (+Anatolij Gustschin <agust@denx.de>)
->>
->>
->> Ping.
->> I am not 100% sure who is responsible for this,
->> but somebody, could take a look at this patch, please?
->
-> Have you tested it actually works?
->
-> It sounds reasonable, and if it behaves as you describe there is no
-> change in behaviour, right?
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+---
+ drivers/spi/spi-qup.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-
-I do not have access to hardware,
-but it is pretty easy to test this patch.
-
-
-$ make O=foo ARCH=powerpc CROSS_COMPILE=powerpc-linux-  dts/ac14xx.dtb
-
-gave me the DTB output.
-
-The binary comparison matched with/without this patch,
-so I am sure there is no change in behavior.
-
-Likewise for mpc5121ads and pdm360ng.
-
-
-Double-check by Anatolij was very appreciated.
-
-
-
-
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index 35e12ba..4ef9301 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -268,7 +268,7 @@ static void spi_qup_read_from_fifo(struct spi_qup *controller, u32 num_words)
+ 	}
+ }
+ 
+-static void spi_qup_read(struct spi_qup *controller)
++static void spi_qup_read(struct spi_qup *controller, u32 *opflags)
+ {
+ 	u32 remainder, words_per_block, num_words;
+ 	bool is_block_mode = controller->mode == QUP_IO_M_MODE_BLOCK;
+@@ -307,10 +307,12 @@ static void spi_qup_read(struct spi_qup *controller)
+ 
+ 	/*
+ 	 * Due to extra stickiness of the QUP_OP_IN_SERVICE_FLAG during block
+-	 * mode reads, it has to be cleared again at the very end
++	 * reads, it has to be cleared again at the very end.  However, be sure
++	 * to refresh opflags value because MAX_INPUT_DONE_FLAG may now be
++	 * present and this is used to determine if transaction is complete
+ 	 */
+-	if (is_block_mode && spi_qup_is_flag_set(controller,
+-				QUP_OP_MAX_INPUT_DONE_FLAG))
++	*opflags = readl_relaxed(controller->base + QUP_OPERATIONAL);
++	if (is_block_mode && *opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
+ 		writel_relaxed(QUP_OP_IN_SERVICE_FLAG,
+ 			       controller->base + QUP_OPERATIONAL);
+ 
+@@ -638,7 +640,7 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ 			complete(&controller->txc);
+ 	} else {
+ 		if (opflags & QUP_OP_IN_SERVICE_FLAG)
+-			spi_qup_read(controller);
++			spi_qup_read(controller, &opflags);
+ 
+ 		if (opflags & QUP_OP_OUT_SERVICE_FLAG)
+ 			spi_qup_write(controller);
 -- 
-Best Regards
-Masahiro Yamada
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
