@@ -1,107 +1,77 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec node
-Date: Thu, 15 Jun 2017 13:01:22 +0530
-Message-ID: <CAMty3ZCwkP=EaFcSdA--yQNN9ebjE9JptfwWjQpceXqDq-xkyA@mail.gmail.com>
-References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-2-git-send-email-jagan@openedev.com> <20170407131649.GH16503@dragon>
- <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com>
- <20170615022024.GE30112@dragon> <CAMty3ZAUK37JYnPwVRuBA6B67QV+S_BYQ6f=k6_rjw__ypTxBg@mail.gmail.com>
- <20170615071529.GC5902@dragon>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 0/2] fdtoverlay, an overlay application tool
+Date: Thu, 15 Jun 2017 15:40:15 +0800
+Message-ID: <20170615074015.GA30484@umbus>
+References: <1497451872-15289-1-git-send-email-pantelis.antoniou@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615071529.GC5902@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Jagan Teki <jagan@openedev.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1497451872-15289-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
 
-On Thu, Jun 15, 2017 at 12:45 PM, Shawn Guo <shawnguo@kernel.org> wrote:
-> On Thu, Jun 15, 2017 at 10:21:43AM +0530, Jagan Teki wrote:
->> On Thu, Jun 15, 2017 at 7:50 AM, Shawn Guo <shawnguo@kernel.org> wrote:
->> > On Wed, Jun 14, 2017 at 08:17:04PM +0530, Jagan Teki wrote:
->> >> On Fri, Apr 7, 2017 at 6:46 PM, Shawn Guo <shawnguo@kernel.org> wrote:
->> >> > On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
->> >> >> From: Jagan Teki <jagan@amarulasolutions.com>
->> >> >>
->> >> >> Add support for Sound card and related codec(via i2c1) nodes
->> >> >> on Engicam Is.IoT MX6UL variant module boards.
->> >> >>
->> >> >> Cc: Shawn Guo <shawnguo@kernel.org>
->> >> >> Cc: Matteo Lisi <matteo.lisi@engicam.com>
->> >> >> Cc: Michael Trimarchi <michael@amarulasolutions.com>
->> >> >> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->> >> >> ---
->> >> >> Changes for v3:
->> >> >> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
->> >> >> Changes for v2:
->> >> >> - Use proper [label:] node-name[@unit-address] for codec
->> >> >> - Remove incorrect codec property 'wlf,shared-lrclk'
->> >> >> - Remove 'gpr' from sound card node
->> >> >>
->> >> >>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
->> >> >>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
->> >> >
->> >> > Can you help me understand how these two files are related?  Why is
->> >> > sgtl5000 added into one and sound node added into the other?
->> >>
->> >> lcdif, ts and sound card which may differ based on the base-board
->> >> connected with SOM, So I moved these stuff which are related to
->> >> Starter kit supported once's and used with SOM dts files. if some
->> >> other board with same SOM can have different lcdif and etc so they can
->> >> define locally to dts.
->> >
->> > I do not follow how these stuff are organized.  So far we have the
->> > following isiot dts files.
->> >
->> >  - imx6ul-isiot-common.dtsi
->> >  - imx6ul-isiot.dtsi
->> >  - imx6ul-isiot-emmc.dts and imx6ul-isiot-nand.dts
->> >
->> > How are they mapping to SoM and base-board?
->>
->> isiot is a modules class, with that emmc and nand are two separate
->> SOM's. the current support is for mounting these SOM's on Development
->> base board[1]. So, for isiot module class we have imx6ul-isiot.dtsi
->> and emmc and nand SOM's have imx6ul-isiot-emmc.dts and
->> imx6ul-isiot-nand.dts. There are some Carrier boards[1] which were
->> used with different lcdif and other changes, So
->> imx6ul-isiot-common.dtsi have changes common across emmc and nand,
->> instead of adding them into individual dts files I moved in
->> -common.dtsi.  So in future if isiot SOM mounted on carrier board
->> which should have a separate dts and which may or may not use
->> imx6ul-isiot-common.dtsi
->
-> So you are not sure if imx6ul-isiot-common.dtsi will be used by carrier
-> board.  Then what's the point to have it now?
->
-> You are saying imx6ul-isiot-common.dtsi is created to accommodate the
-> common things across emmc and nand SoMs, but it actually contains LCD
-> and Touch such base-board level of stuff.  Confusing.
->
-> I feel the abstraction is wrong from the beginning.  Ideally, we should
-> have something like below.
->
->  - imx6ul-isiot.dtsi
->  - imx6ul-isiot-kit.dts and imx6ul-isiot-carrier.dts
->
-> The -isiot should have everything on SoM and common stuff between -kit
-> and -carrier boards, while -kit and -carrier include -isiot and contains
-> the base-board specific things.  The -isiot can have both emmc and nand
-> devices with "disabled" status, and let firmware turn device on per SoM
-> it boots.  In that case, the abstraction level can be less and clearer.
->
-> Thoughts?
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So,even the common stuff (lcdif, ts and etc) should be in -isiot.dtsi
-and make it "disabled" and let them enabled on respective dts. this
-what you mentioned here?
+On Wed, Jun 14, 2017 at 05:51:10PM +0300, Pantelis Antoniou wrote:
+> libfdt supports overlays, so it's trivial to create a tool
+> that applies them on a host using binary blobs.
+>=20
+> fdtoverlay is that tool which given a base tree and a number
+> of overlays generates a target blob as the result.
 
-thank!
--- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+Applied, thanks.
+
+>=20
+> Pantelis Antoniou (2):
+>   fdtoverlay: A tool that applies overlays
+>   tests: fdtoverlay unit test
+>=20
+>  Documentation/manual.txt    |  14 ++++
+>  Makefile                    |   5 ++
+>  Makefile.utils              |   6 ++
+>  fdtoverlay.c                | 168 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  tests/fdtoverlay-runtest.sh |  40 +++++++++++
+>  tests/run_tests.sh          |  27 ++++++-
+>  tests/tests.sh              |   1 +
+>  7 files changed, 260 insertions(+), 1 deletion(-)
+>  create mode 100644 fdtoverlay.c
+>  create mode 100644 tests/fdtoverlay-runtest.sh
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJZQjncAAoJEGw4ysog2bOSTYAP/jOKKAnAmIXFCaxo6bRDwtxd
+tFTJaNHatavQ5hLB6ljQAann6H1FxsoI35DvV4ehZs9104rXPCBETEWRUjxQzTrC
+YVT0WO3eZ7e+i6Wjn/9Thz4x7KR6azWA9gIpQrsrqpyNnb6ovDUaTpoaj+MH9rxt
+n3uueAK4rcO28ezVafdskTqY8FMjDz8Trp2YLoj92fKHjTPmibn/ed2AXCyL+hqx
+D7uT0tQaSKGZMH8+8K9vdaUZZ0yApbkPSKXAlsEgGXQwH0SSHzVfSIK8adwKEzTP
+pPKpF3ud68mVxi4n0BG6aKbhRj7VPkcQpesyCH2gVmLrs0Au3AZzIunOKQBUDrKf
+su/Z5wQE3sQqUiFo0toeRKf8cAdr1T8ZcJcVn+DMfX8Drf5pn7qSd0497ZxC4IHc
+20APEp7pM3XZhCEqui93YUWKFWXUTGLEiWEF6Jj11PD3c86WKp1GncCBpu+ZHUPK
+mc8M4RtuuTHlHVQ4YchkJtT2sjTRDiSt6JULOH20XUNeAKvTdCuw0EKK/NtUm8TR
+8ulQwKapp0E2USyc7dUpi1mjuMqLgbKu7oJhrBzsPYDgQ160ZPsuf52kQ2XdMLP/
+Pb/HdtqDsljoJ691Q/fuKli0zbWc8fiEBuq0GpEMK94QsWfoUMgbqgyUgKc0mULN
+vP+fJfOYVGPnNlRIy9F4
+=wO4P
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
