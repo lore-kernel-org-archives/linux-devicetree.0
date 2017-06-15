@@ -1,102 +1,335 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v6 4/4] power: supply: twl4030-charger: add deferred
- probing for phy and iio
-Date: Thu, 15 Jun 2017 13:57:57 +0200
-Message-ID: <20170615115757.wuhzc6c2qrme2te6@earth>
-References: <cover.1497432355.git.hns@goldelico.com>
- <6573ec523aa73971562c9b7e7d89f6045185d8c4.1497432355.git.hns@goldelico.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yei5vw3glv6etrnr"
+From: Jagan Teki <jagannadh.teki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v4 1/3] ARM: dts: imx6ul-isiot: Move common nodes in imx6ul-isiot.dtsi
+Date: Thu, 15 Jun 2017 17:33:37 +0530
+Message-ID: <1497528219-20396-1-git-send-email-jteki@openedev.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6573ec523aa73971562c9b7e7d89f6045185d8c4.1497432355.git.hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, NeilBrown <neil-+NVA1uvv1dVBDLzU/O5InQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org, notasas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
---yei5vw3glv6etrnr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Maintaining separate dtsi file with common nodes make unclear and
+confusing since -isiot.dtsi is available for adding common nodes.
+If the nodes are common between the dts files then mark status
+as "okay" otherwise mark it "disabled" so-that respective dts
+can mark status "okay"
 
-Hi,
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+Changes for v4:
+- new patch
 
-On Wed, Jun 14, 2017 at 11:25:56AM +0200, H. Nikolaus Schaller wrote:
-> This fixes an issue if both this twl4030_charger driver and
-> phy-twl4030-usb are compiled as modules and loaded in random order.
->=20
-> It has been observed on GTA04 and OpenPandora devices that in worst
-> case the boot process hangs and in best case the AC detection fails
-> with a warning.
->=20
-> Therefore we add deferred probing checks for the usb_phy and the
-> iio channel for AC detection.
->=20
-> Signed-off-by: H. Nikolaus Schaller <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-> ---
->  drivers/power/supply/twl4030_charger.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/suppl=
-y/twl4030_charger.c
-> index 3bebeecb4a1f..6ac8816262bd 100644
-> --- a/drivers/power/supply/twl4030_charger.c
-> +++ b/drivers/power/supply/twl4030_charger.c
-> @@ -989,15 +989,21 @@ static int twl4030_bci_probe(struct platform_device=
- *pdev)
-> =20
->  		phynode =3D of_find_compatible_node(bci->dev->of_node->parent,
->  						  NULL, "ti,twl4030-usb");
-> -		if (phynode)
-> +		if (phynode) {
->  			bci->transceiver =3D devm_usb_get_phy_by_node(
->  				bci->dev, phynode, &bci->usb_nb);
-> +			if (IS_ERR(bci->transceiver) &&
-> +			    PTR_ERR(bci->transceiver) =3D=3D -EPROBE_DEFER)
-> +				return -EPROBE_DEFER;	/* PHY not ready */
-> +		}
->  	}
+ arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 141 -----------------------------
+ arch/arm/boot/dts/imx6ul-isiot-emmc.dts    |   1 -
+ arch/arm/boot/dts/imx6ul-isiot-nand.dts    |   1 -
+ arch/arm/boot/dts/imx6ul-isiot.dtsi        |  96 ++++++++++++++++++++
+ 4 files changed, 96 insertions(+), 143 deletions(-)
+ delete mode 100644 arch/arm/boot/dts/imx6ul-isiot-common.dtsi
 
-Let's also set to NULL + dev_warn for other errors (like the iio
-channel error handling).
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi b/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
+deleted file mode 100644
+index 2beaab6..0000000
+--- a/arch/arm/boot/dts/imx6ul-isiot-common.dtsi
++++ /dev/null
+@@ -1,141 +0,0 @@
+-/*
+- * Copyright (C) 2016 Amarula Solutions B.V.
+- * Copyright (C) 2016 Engicam S.r.l.
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful,
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively,
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use,
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+- */
+-
+-&i2c1 {
+-	stmpe811: gpio-expander@44 {
+-		compatible = "st,stmpe811";
+-		reg = <0x44>;
+-		#address-cells = <1>;
+-		#size-cells = <0>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_stmpe>;
+-		interrupt-parent = <&gpio1>;
+-		interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
+-		interrupt-controller;
+-		#interrupt-cells = <2>;
+-
+-		stmpe: touchscreen {
+-			compatible = "st,stmpe-ts";
+-			st,sample-time = <4>;
+-			st,mod-12b = <1>;
+-			st,ref-sel = <0>;
+-			st,adc-freq = <1>;
+-			st,ave-ctrl = <1>;
+-			st,touch-det-delay = <2>;
+-			st,settling = <2>;
+-			st,fraction-z = <7>;
+-			st,i-drive = <1>;
+-		};
+-	};
+-};
+-
+-&lcdif {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_lcdif_dat
+-		     &pinctrl_lcdif_ctrl>;
+-	display = <&display0>;
+-	status = "okay";
+-
+-	display0: display {
+-		bits-per-pixel = <16>;
+-		bus-width = <18>;
+-
+-		display-timings {
+-			native-mode = <&timing0>;
+-			timing0: timing0 {
+-				clock-frequency = <28000000>;
+-				hactive = <800>;
+-				vactive = <480>;
+-				hfront-porch = <30>;
+-				hback-porch = <30>;
+-				hsync-len = <64>;
+-				vback-porch = <5>;
+-				vfront-porch = <5>;
+-				vsync-len = <20>;
+-				hsync-active = <0>;
+-				vsync-active = <0>;
+-				de-active = <1>;
+-				pixelclk-active = <0>;
+-			};
+-		};
+-	};
+-};
+-
+-&iomuxc {
+-	pinctrl_lcdif_ctrl: lcdifctrlgrp {
+-		fsl,pins = <
+-			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x79
+-			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x79
+-			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x79
+-			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x79
+-		>;
+-	};
+-
+-	pinctrl_lcdif_dat: lcdifdatgrp {
+-		fsl,pins = <
+-			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x79
+-			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x79
+-			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x79
+-			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x79
+-			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x79
+-			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x79
+-			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x79
+-			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x79
+-			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x79
+-			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x79
+-			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x79
+-			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x79
+-			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x79
+-			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x79
+-			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x79
+-			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x79
+-			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x79
+-			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
+-		>;
+-	};
+-
+-	pinctrl_stmpe: stmpegrp  {
+-		fsl,pins = <
+-			MX6UL_PAD_UART1_CTS_B__GPIO1_IO18 0x1b0b0
+-		>;
+-	};
+-};
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-emmc.dts b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
+index 73a1d0f..f5b4228 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
++++ b/arch/arm/boot/dts/imx6ul-isiot-emmc.dts
+@@ -43,7 +43,6 @@
+ /dts-v1/;
+ 
+ #include "imx6ul-isiot.dtsi"
+-#include "imx6ul-isiot-common.dtsi"
+ 
+ / {
+ 	model = "Engicam Is.IoT MX6UL eMMC Starter kit";
+diff --git a/arch/arm/boot/dts/imx6ul-isiot-nand.dts b/arch/arm/boot/dts/imx6ul-isiot-nand.dts
+index da29a86..de15e1c 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot-nand.dts
++++ b/arch/arm/boot/dts/imx6ul-isiot-nand.dts
+@@ -43,7 +43,6 @@
+ /dts-v1/;
+ 
+ #include "imx6ul-isiot.dtsi"
+-#include "imx6ul-isiot-common.dtsi"
+ 
+ / {
+ 	model = "Engicam Is.IoT MX6UL NAND Starter kit";
+diff --git a/arch/arm/boot/dts/imx6ul-isiot.dtsi b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+index ea30380..3c442f6 100644
+--- a/arch/arm/boot/dts/imx6ul-isiot.dtsi
++++ b/arch/arm/boot/dts/imx6ul-isiot.dtsi
+@@ -76,6 +76,32 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c1>;
+ 	status = "okay";
++
++	stmpe811: gpio-expander@44 {
++		compatible = "st,stmpe811";
++		reg = <0x44>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_stmpe>;
++		interrupt-parent = <&gpio1>;
++		interrupts = <18 IRQ_TYPE_EDGE_FALLING>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++
++		stmpe: touchscreen {
++			compatible = "st,stmpe-ts";
++			st,sample-time = <4>;
++			st,mod-12b = <1>;
++			st,ref-sel = <0>;
++			st,adc-freq = <1>;
++			st,ave-ctrl = <1>;
++			st,touch-det-delay = <2>;
++			st,settling = <2>;
++			st,fraction-z = <7>;
++			st,i-drive = <1>;
++		};
++	};
+ };
+ 
+ &i2c2 {
+@@ -85,6 +111,38 @@
+ 	status = "okay";
+ };
+ 
++&lcdif {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_lcdif_dat
++		     &pinctrl_lcdif_ctrl>;
++	display = <&display0>;
++	status = "okay";
++
++	display0: display {
++		bits-per-pixel = <16>;
++		bus-width = <18>;
++
++		display-timings {
++			native-mode = <&timing0>;
++			timing0: timing0 {
++				clock-frequency = <28000000>;
++				hactive = <800>;
++				vactive = <480>;
++				hfront-porch = <30>;
++				hback-porch = <30>;
++				hsync-len = <64>;
++				vback-porch = <5>;
++				vfront-porch = <5>;
++				vsync-len = <20>;
++				hsync-active = <0>;
++				vsync-active = <0>;
++				de-active = <1>;
++				pixelclk-active = <0>;
++			};
++		};
++	};
++};
++
+ &pwm8 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_pwm8>;
+@@ -129,6 +187,38 @@
+ 		>;
+ 	};
+ 
++	pinctrl_lcdif_ctrl: lcdifctrlgrp {
++		fsl,pins = <
++			MX6UL_PAD_LCD_CLK__LCDIF_CLK	    0x79
++			MX6UL_PAD_LCD_ENABLE__LCDIF_ENABLE  0x79
++			MX6UL_PAD_LCD_HSYNC__LCDIF_HSYNC    0x79
++			MX6UL_PAD_LCD_VSYNC__LCDIF_VSYNC    0x79
++		>;
++	};
++
++	pinctrl_lcdif_dat: lcdifdatgrp {
++		fsl,pins = <
++			MX6UL_PAD_LCD_DATA00__LCDIF_DATA00  0x79
++			MX6UL_PAD_LCD_DATA01__LCDIF_DATA01  0x79
++			MX6UL_PAD_LCD_DATA02__LCDIF_DATA02  0x79
++			MX6UL_PAD_LCD_DATA03__LCDIF_DATA03  0x79
++			MX6UL_PAD_LCD_DATA04__LCDIF_DATA04  0x79
++			MX6UL_PAD_LCD_DATA05__LCDIF_DATA05  0x79
++			MX6UL_PAD_LCD_DATA06__LCDIF_DATA06  0x79
++			MX6UL_PAD_LCD_DATA07__LCDIF_DATA07  0x79
++			MX6UL_PAD_LCD_DATA08__LCDIF_DATA08  0x79
++			MX6UL_PAD_LCD_DATA09__LCDIF_DATA09  0x79
++			MX6UL_PAD_LCD_DATA10__LCDIF_DATA10  0x79
++			MX6UL_PAD_LCD_DATA11__LCDIF_DATA11  0x79
++			MX6UL_PAD_LCD_DATA12__LCDIF_DATA12  0x79
++			MX6UL_PAD_LCD_DATA13__LCDIF_DATA13  0x79
++			MX6UL_PAD_LCD_DATA14__LCDIF_DATA14  0x79
++			MX6UL_PAD_LCD_DATA15__LCDIF_DATA15  0x79
++			MX6UL_PAD_LCD_DATA16__LCDIF_DATA16  0x79
++			MX6UL_PAD_LCD_DATA17__LCDIF_DATA17  0x79
++		>;
++	};
++
+ 	pinctrl_pwm8: pwm8grp {
+ 		fsl,pins = <
+ 			MX6UL_PAD_ENET1_RX_ER__PWM8_OUT   0x110b0
+@@ -145,6 +235,12 @@
+ 		>;
+ 	};
+ 
++	pinctrl_stmpe: stmpegrp  {
++		fsl,pins = <
++			MX6UL_PAD_UART1_CTS_B__GPIO1_IO18 0x1b0b0
++		>;
++	};
++
+ 	pinctrl_uart1: uart1grp {
+ 		fsl,pins = <
+ 			MX6UL_PAD_UART1_TX_DATA__UART1_DCE_TX 0x1b0b1
+-- 
+2.7.4
 
->  	bci->channel_vac =3D devm_iio_channel_get(&pdev->dev, "vac");
->  	if (IS_ERR(bci->channel_vac)) {
-> -		bci->channel_vac =3D NULL;
-> +		if (PTR_ERR(bci->channel_vac) =3D=3D -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;	/* iio not ready */
->  		dev_warn(&pdev->dev, "could not request vac iio channel");
-> +		bci->channel_vac =3D NULL;
->  	}
-> =20
->  	bci->ac =3D devm_power_supply_register(&pdev->dev, &twl4030_bci_ac_desc,
-
--- Sebastian
-
---yei5vw3glv6etrnr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllCdj4ACgkQ2O7X88g7
-+pq3pQ//YdgjK08d4Qo+JNTJvl7rl1a8qj9xta76fAxITCzbXNMtv8vgcU28tAoD
-xJWXEViSC5BBkhc2sS5UW9qErCppSGsPixef5jF4OtYY7J4QTSJvlHuC1N94R9SR
-aXSHJpYqBLcgkba8Zxl/MpI0Kp6+8z0Rk7IelxQrdP7ZkNyBayEj6wNZLysaJbfv
-/qb4Ec/uHOKq+/lIcl2Z8s9S7iNCKqsoEM4UmBLUAWpnkqSHfRmmyoGHYa73NwaB
-4U+VLN2w1qPcUYfhXTfqZNz7Q47LrVfVaCQZbH+oNtJ7fSTi9RzLMDMS7Qw+6jc+
-ooa5iBS1PsEMMXXrX9FEarlFaLqud9eyW5jIvu15VqYc7IaZMY5oYWF7eWTzMvNa
-rWaitrCIZuEKlu5Twcqm7beBH7xFNwVZlWaB+v2gbqLYYVE0JodoHBHAQTQkYlpz
-Z78lThBMrXgXv6+Z7vge7chohDrfUuXhfBezZM3UfHrfh2/oJNhllLk9rwYv+eAB
-nZ1LcI2+h3iJlV/6qrBOIHd1sWL6TE4SDFoprj89gpT2IL2JbVp4IiSBoiLtY3D+
-umffIUQjp5g6fN/4nxCnQFsO2uuzlnXcacazc8xB1Km3RnSq/7vuewIcAlJQXQOC
-A/uetea2pnQeQL+R8oS+odJgGXKj8D/fyM6li6fXFwLTF/hdK7E=
-=mtLQ
------END PGP SIGNATURE-----
-
---yei5vw3glv6etrnr--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
