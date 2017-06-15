@@ -1,191 +1,155 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v7 1/9] irqchip: add Amlogic Meson GPIO irqchip driver
-Date: Thu, 15 Jun 2017 17:04:21 +0100
-Message-ID: <daddce59-cfe6-a1be-6c04-093dfa146aca@arm.com>
-References: <5b352c8d-a426-fa73-58b7-0c935979492b@gmail.com>
- <b33ccc5c-f383-97e7-44e6-d6e1f104e26c@gmail.com>
- <91b20fc4-4969-02a6-cc47-ff711f604342@arm.com>
- <1510ca1c-0a50-283d-42d5-b5710700460f@gmail.com>
- <9129464d-b7b6-a8f6-8671-091fc30e3161@arm.com>
- <c04dce8b-f3b9-e49e-47e8-0b24f3b66974@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] arm64: dts: mt7622: add basic nodes to the
+ mt7622.dtsi file
+Date: Thu, 15 Jun 2017 18:04:26 +0200
+Message-ID: <37f67b23-7995-3b93-2ee0-c04b34428bd9@gmail.com>
+References: <cover.1497455465.git.sean.wang@mediatek.com>
+ <4d7c2a58fb2bd68cc5c17a313ee426e0d4233ca0.1497455465.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <c04dce8b-f3b9-e49e-47e8-0b24f3b66974@gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Heiner Kallweit <hkallweit1@gmail.com>, Jerome Brunet <jbrunet@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-gpio@vger.kernel.org, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Thierry Reding <treding@nvidia.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4d7c2a58fb2bd68cc5c17a313ee426e0d4233ca0.1497455465.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/06/17 16:24, Heiner Kallweit wrote:
-> Am 15.06.2017 um 15:27 schrieb Marc Zyngier:
->> On 15/06/17 14:10, Heiner Kallweit wrote:
->>> Am 13.06.2017 um 10:31 schrieb Marc Zyngier:
->>>> On 10/06/17 22:57, Heiner Kallweit wrote:
->>>>> Add a driver supporting the GPIO interrupt controller on certain
->>>>> Amlogic meson SoC's.
->>>>>
->>>>> Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
->>>>> ---
->>>>> v5:
->>>>> - changed Kconfig entry based on Neil's suggestion
->>>>> - added authors
->>>>> - extended explanation why 2 * n hwirqs are used
->>>>> v6:
->>>>> - change DT property parent-interrupts to interrupts
->>>>> v7:
->>>>> - no changes
->>>>> ---
->>>>>  drivers/irqchip/Kconfig          |   5 +
->>>>>  drivers/irqchip/Makefile         |   1 +
->>>>>  drivers/irqchip/irq-meson-gpio.c | 295 +++++++++++++++++++++++++++++++++++++++
->>>>>  3 files changed, 301 insertions(+)
->>>>>  create mode 100644 drivers/irqchip/irq-meson-gpio.c
->>>>>
->>>>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->>>>> index 478f8ace..bdc86e14 100644
->>>>> --- a/drivers/irqchip/Kconfig
->>>>> +++ b/drivers/irqchip/Kconfig
->>>>> @@ -301,3 +301,8 @@ config QCOM_IRQ_COMBINER
->>>>>  	help
->>>>>  	  Say yes here to add support for the IRQ combiner devices embedded
->>>>>  	  in Qualcomm Technologies chips.
->>>>> +
->>>>> +config MESON_GPIO_INTC
->>>>> +	bool
->>>>> +	depends on ARCH_MESON
->>>>> +	default y
->>>>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->>>>> index b64c59b8..1be482bd 100644
->>>>> --- a/drivers/irqchip/Makefile
->>>>> +++ b/drivers/irqchip/Makefile
->>>>> @@ -76,3 +76,4 @@ obj-$(CONFIG_EZNPS_GIC)			+= irq-eznps.o
->>>>>  obj-$(CONFIG_ARCH_ASPEED)		+= irq-aspeed-vic.o
->>>>>  obj-$(CONFIG_STM32_EXTI) 		+= irq-stm32-exti.o
->>>>>  obj-$(CONFIG_QCOM_IRQ_COMBINER)		+= qcom-irq-combiner.o
->>>>> +obj-$(CONFIG_MESON_GPIO_INTC)		+= irq-meson-gpio.o
->>>>> diff --git a/drivers/irqchip/irq-meson-gpio.c b/drivers/irqchip/irq-meson-gpio.c
->>>>> new file mode 100644
->>>>> index 00000000..925d00c2
->>>>> --- /dev/null
->>>>> +++ b/drivers/irqchip/irq-meson-gpio.c
->>>>> @@ -0,0 +1,295 @@
->>>>> +/*
->>>>> + * Amlogic Meson GPIO IRQ chip driver
->>>>> + *
->>>>> + * Copyright (c) 2015 Endless Mobile, Inc.
->>>>> + * Author: Carlo Caione <carlo@endlessm.com>
->>>>> + * Copyright (c) 2016 BayLibre, SAS.
->>>>> + * Author: Jerome Brunet <jbrunet@baylibre.com>
->>>>> + * Copyright (c) 2017 Heiner Kallweit <hkallweit1@gmail.com>
->>>>> + *
->>>>> + * This program is free software; you can redistribute it and/or
->>>>> + * modify it under the terms of the GNU General Public License as
->>>>> + * published by the Free Software Foundation, version 2.
->>>>> + */
->>>>> +
->>>>> +#include <linux/device.h>
->>>>> +#include <linux/init.h>
->>>>> +#include <linux/interrupt.h>
->>>>> +#include <linux/irqchip.h>
->>>>> +#include <linux/of.h>
->>>>> +#include <linux/of_irq.h>
->>>>> +#include <linux/of_address.h>
->>>>> +#include <linux/regmap.h>
->>>>> +
->>>>> +#define REG_EDGE_POL		0x00
->>>>> +#define REG_PIN_03_SEL		0x04
->>>>> +#define REG_PIN_47_SEL		0x08
->>>>> +#define REG_FILTER_SEL		0x0c
->>>>> +
->>>>> +#define REG_EDGE_POL_MASK(x)	(BIT(x) | BIT(16 + (x)))
->>>>> +#define REG_EDGE_POL_EDGE(x)	BIT(x)
->>>>> +#define REG_EDGE_POL_LOW(x)	BIT(16 + (x))
->>>>> +
->>>>> +#define MAX_PARENT_IRQ_NUM	8
->>>>> +
->>>>> +/* maximum number of GPIO IRQs on supported platforms */
->>>>> +#define MAX_NUM_GPIO_IRQ	133
->>>>
->>>> Why aren't these values coming from DT? I bet that a future revision of
->>>> the same HW will double these. Or at least, you could match it on the
->>>> compatible string.
->>>>
->>> Alternatively this value can be set to 255. The GPIO source is an 8 bit
->>> value with 255 being reserved for "no interrupt source assigned".
->>
->> Who is reserving it? The HW? Or is that your own defined convention?
->>
->>> This way we cover all chips based on the same IP.
->>
->> Why? Where is that 8bit limit coming from?
->>
-> The 8 bit limit is in the HW.
+
+
+On 14/06/17 18:11, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
->>> I think what we could gain by introducing an additional DT property
->>> (saving a few bytes in the irqdomain mapping table) isn't worth the effort.
->>
->> It is not about saving or wasting memory. It is about making the driver
->> and its binding able to span multiple generation of the HW without too
->> much churn. Which is why I'm suggesting that you either define these
->> properties in DT *or* match the compatible string to obtain these values.
->>
->>>>> +
->>>>> +/*
->>>>> + * In case of IRQ_TYPE_EDGE_BOTH we need two parent interrupts, one for each
->>>>> + * edge. That's due to HW constraints.
->>>>> + * We use format 2 * GPIO_HWIRQ +(0|1) for the hwirq, so we can have one
->>>>> + * GPIO_HWIRQ twice and derive the GPIO_HWIRQ from hwirq by shifting hwirq
->>>>> + * one bit to the right.
->>>>
->>>> Please expand on how you expect this to work, specially when a random
->>>> driver expects a single interrupt.
->>>>
->>> The gpio interrupt controller in this chip doesn't have native support for
->>> IRQ_TYPE_EDGE_BOTH. As a workaround we would need to assign the same gpio
->>> to two parent interrupts, one for each edge.
->>
->> No, that's horrible, racy, and impractical. It has been proposed in the
->> past (for the same HW), and we're not going there again.
->>
-> IIRC what has been proposed before is to re-program the polarity of edge
-> detection withing the ISR. This would match your concern that it is racy.
+> add basic nodes into the mt7622.dtsi for the system
+> bring-up which includes ARM CPU, GIC, timer, MediaTek
+> UART, SYSIRQ and one reserved memory region for ATF.
 > 
-> Here it's about using two parent irq's, one programmed to react on the
-> rising edge whilst the other is triggered in case of falling edge.
-> Would you consider this to be racy too?
-
-How do you reconcile two interrupts to make look like a single one for a
-random, pre-existing driver?
-
-[...]
-
->>>> So you reject EDGE_BOTH? So what's the deal with the beginning of the patch?
->>>>
->>> We reject it in the initial version of the patch set as there's no consensus
->>> yet on some details of the workaround needed for EDGE_BOTH support.
->>
->> There is a consensus: The HW doesn't support this feature.
->>
-> Means what? There is no acceptable way to support EDGE_BOTH on this HW?
-> In this case I could stop here as for me this feature is important.
-
-Answer my question above, which I asked in my initial review: How do you
-make two interrupts appear as one for a driver that wants to get
-signaled on each edge, using the existing API.
-
+> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 104 +++++++++++++++++++++++++++++++
+>   1 file changed, 104 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
 > 
-> Would be somewhat a pity as there is a working solution. If it doesn't fit
-> into the current irq(chip) framework, shouldn't this be considered a gap
-> in the framework?
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> new file mode 100644
+> index 0000000..239b9b3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -0,0 +1,104 @@
+> +/*
+> + * Copyright (c) 2017 MediaTek Inc.
+> + * Author: Ming Huang <ming.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +
+> +/ {
+> +	compatible = "mediatek,mt7622";
+> +	interrupt-parent = <&sysirq>;
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +
+> +	cpus {
+> +		#address-cells = <2>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x0>;
+> +			enable-method = "psci";
+> +			clock-frequency = <1300000000>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a53", "arm,armv8";
+> +			reg = <0x0 0x1>;
+> +			enable-method = "psci";
+> +			clock-frequency = <1300000000>;
+> +		};
+> +	};
+> +
+> +	uart_clk: dummy25m {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+> +		clock-frequency = <25000000>;
+> +	};
+> +
+> +	psci {
+> +		compatible  = "arm,psci-0.2";
+> +		method      = "smc";
+> +	};
+> +
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
+> +		secmon_reserved: secmon@43000000 {
+> +			reg = <0 0x43000000 0 0x30000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+> +			      IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
+> +			      IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
+> +			      IRQ_TYPE_LEVEL_HIGH)>,
+> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
+> +			      IRQ_TYPE_LEVEL_HIGH)>;
+> +	};
+> +
+> +	sysirq: interrupt-controller@10200620 {
+> +		compatible = "mediatek,mt7622-sysirq",
+> +			     "mediatek,mt6577-sysirq";
+> +		interrupt-controller;
+> +		#interrupt-cells = <3>;
+> +		interrupt-parent = <&gic>;
+> +		reg = <0 0x10200620 0 0x20>;
+> +	};
+> +
+> +	gic: interrupt-controller@10300000 {
+> +		compatible = "arm,gic-400";
+> +		interrupt-controller;
+> +		#interrupt-cells = <3>;
+> +		interrupt-parent = <&gic>;
+> +		reg = <0 0x10310000 0 0x1000>,
+> +		      <0 0x10320000 0 0x1000>,
+> +		      <0 0x10340000 0 0x2000>,
+> +		      <0 0x10360000 0 0x2000>;
+> +	};
+> +
+> +	uart0: serial@11002000 {
+> +		compatible = "mediatek,mt7622-uart",
+> +			     "mediatek,mt6577-uart";
+> +		reg = <0 0x11002000 0 0x400>;
+> +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> +		clocks = <&uart_clk>, <&uart_clk>;
 
-Again, this is not about the framework, which we can almost twist as we
-see fit. It is about the API that a driver expects. At the moment, you
-haven't proposed anything.
+Please add a dummy clock node with the correct frequency, as done in 
+other chips as well.
 
 Thanks,
+Matthias
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> +		clock-names = "baud", "bus";
+> +		status = "disabled";
+> +	};
+> +};
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
