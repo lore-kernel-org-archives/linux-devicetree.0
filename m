@@ -1,93 +1,70 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH v2] [media] mtk-mdp: Fix g_/s_selection capture/compose
- logic
-Date: Thu, 15 Jun 2017 10:45:10 +0200
-Message-ID: <74fd208e-b3d4-6d39-66b2-4fe1ee28be27@xs4all.nl>
-References: <1494556970-12278-1-git-send-email-minghsiu.tsai@mediatek.com>
- <1497508166.3384.5.camel@mtksdaap41>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/2 v4] clk: Add Gemini SoC clock controller
+Date: Thu, 15 Jun 2017 10:55:40 +0200
+Message-ID: <CAMuHMdXdYNTLCUfQ9rdj8Fffff5G6fGREcHs5-E5LbwPU9yyLw@mail.gmail.com>
+References: <20170524082044.8473-1-linus.walleij@linaro.org>
+ <20170601070208.GO20170@codeaurora.org> <CACRpkdZv8MzXVecEXVdJ+P0MxVscYSy=MxC-yQAR0S4yQ6-rwQ@mail.gmail.com>
+ <20170605195812.GH20170@codeaurora.org> <CACRpkdbya9xaN-i7AkG0bTyuFYfZc59sSTYhWB43=9btSKfPpQ@mail.gmail.com>
+ <CACRpkdapAgHix2vw-woDFi4sh+H3_EX7w-5q=opBGMyegFrXbA@mail.gmail.com>
+ <20170612210248.GP20170@codeaurora.org> <CACRpkdaZJbzC0-xg_go=-o+0cQ-JOY3mUe27HUnwQ+DnZYbyMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1497508166.3384.5.camel@mtksdaap41>
-Sender: linux-media-owner@vger.kernel.org
-To: Minghsiu Tsai <minghsiu.tsai@mediatek.com>, Hans Verkuil <hans.verkuil@cisco.com>
-Cc: daniel.thompson@linaro.org, Rob Herring <robh+dt@kernel.org>, Mauro Carvalho Chehab <mchehab@osg.samsung.com>, Matthias Brugger <matthias.bgg@gmail.com>, Daniel Kurtz <djkurtz@chromium.org>, Pawel Osciak <posciak@chromium.org>, Houlong Wei <houlong.wei@mediatek.com>, srv_heupstream@mediatek.com, Eddie Huang <eddie.huang@mediatek.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Wu-Cheng Li <wuchengli@google.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaZJbzC0-xg_go=-o+0cQ-JOY3mUe27HUnwQ+DnZYbyMA@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/15/17 08:29, Minghsiu Tsai wrote:
-> Hi, Hans,
-> 
-> Would you have time to review this patch v2?
-> The patch v1 violates v4l2 spec. I have fixed it in v2.
+Hi Liinus,
 
-I plan to review it Friday or Monday.
+On Thu, Jun 15, 2017 at 9:16 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Jun 12, 2017 at 11:02 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> So can the certain clks that are required to get the timer
+>> going be put into CLK_OF_DECLARE_DRIVER() and then have a regular
+>> platform driver for the rest of the clks that aren't required for
+>> early boot? We've been doing this sort of hybrid design lately,
+>> so hopefully that works here too.
+>
+> So I tried this hybrid approach.
+>
+> It works and it doesn't work, it is very annoying actually... we get
+> a conflict of interest between the clock driver, the reset driver and
+> the device tree bindings and how Linux uses device tree.
+>
+> The reason is that no less than three devices probe from the same
+> device tree node, essentially this is the problem:
+>
+> syscon: syscon@40000000 {
+>       compatible = "cortina,gemini-syscon", "syscon";
+>       reg = <0x40000000 0x1000>;
+>       #clock-cells = <1>;
+>       #reset-cells = <1>;
+> };
+>
+> This has already a driver in drivers/reset/reset-gemini.c
+> binding and probing from "cortina,gemini-syscon".
+>
+> That works fine, because CLK_OF_DECLARE_DRIVER() does not
+> bind to the device using the device core, and syscon will always probe
+> itself when the first user tries to access it.
+>
+> If we make the clocks bind to the platform device, the reset
+> controller will not probe, regressing the boot in another way, because
+> some drivers need their reset lines.
 
-Regards,
+If clocks and resets are provided by the same hardware module, you can
+have a single (platform) driver registering both the clock and reset
+controllers.
+Cfr. drivers/clk/renesas/renesas-cpg-mssr.c.
 
-	Hans
+Gr{oetje,eeting}s,
 
-> 
-> 
-> Sincerely,
-> Ming Hsiu
-> 
-> On Fri, 2017-05-12 at 10:42 +0800, Minghsiu Tsai wrote:
->> From: Daniel Kurtz <djkurtz@chromium.org>
->>
->> Experiments show that the:
->>  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
->>  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
->>
->> Signed-off-by: Daniel Kurtz <djkurtz@chromium.org>
->> Signed-off-by: Minghsiu Tsai <minghsiu.tsai@mediatek.com>
->> Signed-off-by: Houlong Wei <houlong.wei@mediatek.com>
->>
->> ---
->> Changes in v2:
->> . Can not use *_MPLANE type in g_/s_selection 
->> ---
->>  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 10 +++++-----
->>  1 file changed, 5 insertions(+), 5 deletions(-)
->>
->> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
->> index 13afe48..e18ac626 100644
->> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
->> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
->> @@ -838,10 +838,10 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
->>  	bool valid = false;
->>  
->>  	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
->> -		if (mtk_mdp_is_target_compose(s->target))
->> +		if (mtk_mdp_is_target_crop(s->target))
->>  			valid = true;
->>  	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
->> -		if (mtk_mdp_is_target_crop(s->target))
->> +		if (mtk_mdp_is_target_compose(s->target))
->>  			valid = true;
->>  	}
->>  	if (!valid) {
->> @@ -908,10 +908,10 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
->>  	bool valid = false;
->>  
->>  	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
->> -		if (s->target == V4L2_SEL_TGT_COMPOSE)
->> +		if (s->target == V4L2_SEL_TGT_CROP)
->>  			valid = true;
->>  	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
->> -		if (s->target == V4L2_SEL_TGT_CROP)
->> +		if (s->target == V4L2_SEL_TGT_COMPOSE)
->>  			valid = true;
->>  	}
->>  	if (!valid) {
->> @@ -925,7 +925,7 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
->>  	if (ret)
->>  		return ret;
->>  
->> -	if (mtk_mdp_is_target_crop(s->target))
->> +	if (mtk_mdp_is_target_compose(s->target))
->>  		frame = &ctx->s_frame;
->>  	else
->>  		frame = &ctx->d_frame;
-> 
-> 
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
