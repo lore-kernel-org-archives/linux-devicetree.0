@@ -1,102 +1,120 @@
-From: Peter Chen <hzpeterchen@gmail.com>
-Subject: Re: [PATCH v15 2/7] power: add power sequence library
-Date: Thu, 15 Jun 2017 18:06:04 +0800
-Message-ID: <20170615100604.GC24157@b29397-desktop>
-References: <1497319166-17287-1-git-send-email-peter.chen@nxp.com>
- <1497319166-17287-3-git-send-email-peter.chen@nxp.com>
- <CAPDyKFpOQWTPpdd__OBP1DcW58CbqnygGAOxiEFq5kqqvCm0QA@mail.gmail.com>
- <20170614015338.GA4635@b29397-desktop>
- <CAPDyKFrLL10TY1JZAhF44_0+qGETLNtFc6ujKVUu7Ay=O8+M5A@mail.gmail.com>
- <20170615065854.GA24157@b29397-desktop>
- <CAPDyKFpc8GRKK8bafMU_HPaqWNrger3grPSd5rWWCTYhUGHZLA@mail.gmail.com>
- <20170615091131.GB24157@b29397-desktop>
- <CAPDyKFrZoyoYCQA1rnRbz9tmT9vJigzSb+xyTZpJjhd=5eFA5A@mail.gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH 8/8] arm: dts: omap3: N9/N950: Add AS3645A camera flash
+Date: Thu, 15 Jun 2017 12:15:37 +0200
+Message-ID: <20170615101537.wbahrypnwcd5jkdn@earth>
+References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1497433639-13101-9-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6365dckl7rmwu6rx"
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFrZoyoYCQA1rnRbz9tmT9vJigzSb+xyTZpJjhd=5eFA5A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Peter Chen <peter.chen@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, frank.li@nxp.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gary Bisson <gary.bisson@boundarydevices.com>, Fabio Estevam <festevam@gmail.com>, Joshua Clayton <stillcompiling@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.ker>
+In-Reply-To: <1497433639-13101-9-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, pavel@ucw.cz, Sakari Ailus <sakari.ailus@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 11:35:20AM +0200, Ulf Hansson wrote:
-> On 15 June 2017 at 11:11, Peter Chen <hzpeterchen@gmail.com> wrote:
-> > On Thu, Jun 15, 2017 at 10:11:45AM +0200, Ulf Hansson wrote:
-> >> > Yes, you are right. This is the limitation for this power sequence
-> >> > library, the registration for the 1st power sequence instance must
-> >> > be finished before device driver uses it. I am appreciated that
-> >> > you can supply some suggestions for it.
-> >>
-> >> In general this kind of problems is solved by first parsing the DTB,
-> >> which means you will find out whether there is a resource (a pwrseq)
-> >> required for the device. Then you try to fetch that resource, and if
-> >> that fails, it means the resource is not yet available, and hence you
-> >> want to retry later and should return -EPROBE_DEFER.
-> >>
-> >> In this case, of_pwrseq_on() needs to be converted to start looking
-> >> for a pwrseq compatible in it's child node - I guess. Then if that is
-> >> found, you try to fetch the instance of the corresponding library.
-> >> Failing to fetch the library instance should then cause a return
-> >> -EPROBE_DEFER.
-> >
-> > The most difficulty for this is we can't know whether the requested
-> > pwrseq instance will be registered or not, the kernel configuration
-> > for this pwrseq library may not be chosen at all.
-> 
-> In such case it is still correct to return -EPROBE_DEFER, because the
-> driver that tries to probe its device will fail unless it can run the
-> needed pwrseq. Right?
-> 
 
-Unlike the MMC design, there is no dts entry to indicate whether this
-device needs pwrseq or not at this design, it will only carry out power
-on sequence after matching. So, return -EPROBE_DEFER may not work since
-this device may never need pwrseq.
+--6365dckl7rmwu6rx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> >
-> >>
-> >> >
-> >> >> Moreover, I have found yet another severe problem but reviewing the code:
-> >> >> In the struct pwrseq, you have a "bool used", which you are setting to
-> >> >> "true" once the pwrseq has been hooked up with the device, when a
-> >> >> driver calls of_pwrseq_on(). Setting that variable to true, will also
-> >> >> prevent another driver from using the same instance of the pwrseq for
-> >> >> its device. So, to cope with multiple users, you register a new
-> >> >> instance of the same pwrseq library that got hooked up, once the
-> >> >> ->get() callback is about to complete.
-> >> >>
-> >> >> The problem the occurs, when there is another driver calling
-> >> >> of_pwrseq_on() in between, meaning that the new instance has not yet
-> >> >> been registered. This will simply fail, won't it?
-> >> >
-> >> > Yes, you are right, thanks for pointing that, I will add mutex_lock for
-> >> > of_pwrseq_on.
-> >>
-> >> Another option is to entirely skip to two step approach.
-> >>
-> >> In other words, make the library to cope with multiple users via the
-> >> same registered library instance.
-> >>
-> >
-> > No, the pwrseq instance stores dtb information (clock, gpio, etc), it
-> > needs to be per device.
-> 
-> I think you misunderstood my suggestion here. Of course you need to
-> allocate one pwrseq data per device.
-> 
-> However, my point is that you shouldn't need more than one instance of
-> the library functions to be registered in the list of available pwrseq
-> libraries.
-> 
+Hi,
 
-This additional instance is used to store compatible information for
-this pwrseq library, it is used for the next matching between device
-and pwrseq library, it just likes we need the first pwrseq instance
-registered at boot stage.
+On Wed, Jun 14, 2017 at 12:47:19PM +0300, Sakari Ailus wrote:
+> From: Sakari Ailus <sakari.ailus@iki.fi>
+>=20
+> Add the as3645a flash controller to the DT source as well as the flash
+> property with the as3645a device phandle to the sensor DT node.
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
--- 
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 
-Best Regards,
-Peter Chen
+-- Sebastian
+
+> ---
+>  arch/arm/boot/dts/omap3-n9.dts       |  1 +
+>  arch/arm/boot/dts/omap3-n950-n9.dtsi | 14 ++++++++++++++
+>  arch/arm/boot/dts/omap3-n950.dts     |  1 +
+>  3 files changed, 16 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/omap3-n9.dts b/arch/arm/boot/dts/omap3-n9.=
+dts
+> index b9e58c5..f95e7b1 100644
+> --- a/arch/arm/boot/dts/omap3-n9.dts
+> +++ b/arch/arm/boot/dts/omap3-n9.dts
+> @@ -26,6 +26,7 @@
+>  		clocks =3D <&isp 0>;
+>  		clock-frequency =3D <9600000>;
+>  		nokia,nvm-size =3D <(16 * 64)>;
+> +		flash =3D <&as3645a>;
+>  		port {
+>  			smia_1_1: endpoint {
+>  				link-frequencies =3D /bits/ 64 <199200000 210000000 499200000>;
+> diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/oma=
+p3-n950-n9.dtsi
+> index df3366f..8bd6673 100644
+> --- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> +++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+> @@ -265,6 +265,20 @@
+> =20
+>  &i2c2 {
+>  	clock-frequency =3D <400000>;
+> +
+> +	as3645a: flash@30 {
+> +		reg =3D <0x30>;
+> +		compatible =3D "ams,as3645a";
+> +		flash {
+> +			flash-timeout-us =3D <150000>;
+> +			flash-max-microamp =3D <320000>;
+> +			led-max-microamp =3D <60000>;
+> +			peak-current-limit =3D <1750000>;
+> +		};
+> +		indicator {
+> +			led-max-microamp =3D <10000>;
+> +		};
+> +	};
+>  };
+> =20
+>  &i2c3 {
+> diff --git a/arch/arm/boot/dts/omap3-n950.dts b/arch/arm/boot/dts/omap3-n=
+950.dts
+> index 646601a..8fca038 100644
+> --- a/arch/arm/boot/dts/omap3-n950.dts
+> +++ b/arch/arm/boot/dts/omap3-n950.dts
+> @@ -60,6 +60,7 @@
+>  		clocks =3D <&isp 0>;
+>  		clock-frequency =3D <9600000>;
+>  		nokia,nvm-size =3D <(16 * 64)>;
+> +		flash =3D <&as3645a>;
+>  		port {
+>  			smia_1_1: endpoint {
+>  				link-frequencies =3D /bits/ 64 <210000000 333600000 398400000>;
+> --=20
+> 2.1.4
+>=20
+
+--6365dckl7rmwu6rx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllCXkMACgkQ2O7X88g7
++pqnsA/+L/KlOTqWCbU1yc8OLzEIYXdZwFJirbiADe+ah3oNBFtw+gXEBPW49ZN5
+D8bB9YgfPCcauzulew7yGCY8Hc6XFpbyOC4w4RDwIH5cWzT1GvsSzAArunmH+gvV
+fqrLxjCaIqR39nWyGIwZm0Xy239Lh8nG23hMHL4+Wc2nW6tl96rx6e9AUK6pbnFu
+YwfehnztmW4ZOn4FeAHXN4DIW7pfA+ptYput+alO/5T+1qU8rLWtZQz6WTztnuW4
++RWOuPTc2cZr/jugd+dJUqUXdXUf5ZD86u5oOhaAizuHna0+JtfM/qlTvh2cG6+3
+jt+nuSLDwELNKqktKz66kdwarxr++3anlOd9hO6ClP6vMvkMqBE5yABfLn50Ux8c
+F6dhbLt/o7hYa6ctdAhvAKsqhC58p7RwhEQ5Qw+rpkBU0FU2cv98gP0shvwAqn4i
+qlFvwi35qse7Sa18qY0mnKIoQ7+j2W1PHlE4Mq0O60CQCb03vHmRtgP98AwUnbYp
+JnNZjCX/sd7t5i9C6c6mfMHhciOmup6DboSAOjJpgFj3b+/j2TxRIUN4maWNAzq8
+3Bs59mGyX/8vcMj5mCbeZ1kiNDaq6SIdJF7PUAq+m7GGeAeEY/bbrCKkAo9fc8kU
+Tc5FThvDtYT/gD5eoyul1YvowdQmAFYqcD92qz4hsxmyEERue3s=
+=EgCU
+-----END PGP SIGNATURE-----
+
+--6365dckl7rmwu6rx--
