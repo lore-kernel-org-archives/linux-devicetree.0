@@ -1,80 +1,48 @@
-From: Alexander Kurz <akurz@blala.de>
-Subject: [PATCH] ARM: dts: imx6qdl-wandboard: enable USB OTG
-Date: Thu, 15 Jun 2017 08:41:10 +0200
-Message-ID: <1497508870-4028-1-git-send-email-akurz@blala.de>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v5 1/4] of: remove *phandle properties from expanded device tree
+Date: Thu, 15 Jun 2017 16:53:03 +1000
+Message-ID: <87bmpppws0.fsf@concordia.ellerman.id.au>
+References: <1497073632-22402-1-git-send-email-frowand.list@gmail.com> <1497073632-22402-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: devicetree@vger.kernel.org, Alexander Kurz <akurz@blala.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497073632-22402-2-git-send-email-frowand.list@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable USB OTG (dual-role) on the Wandboard.
-Note, that the USB_OTG_VBUS current is quite limited due to a 22R resistor
-in the power line. Hence, the overcurrent signal of 1A will never be
-triggered on this board.
+frowand.list@gmail.com writes:
 
-Signed-off-by: Alexander Kurz <akurz@blala.de>
----
- arch/arm/boot/dts/imx6qdl-wandboard.dtsi | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> Remove "phandle", "linux,phandle", and "ibm,phandle" properties from
+> the internal device tree.  The phandle will still be in the struct
+> device_node phandle field.
+>
+> This is to resolve the issue found by Stephen Boyd [1] when he changed
+> the type of struct property.value from void * to const void *.  As
+> a result of the type change, the overlay code had compile errors
+> where the resolver updates phandle values.
+>
+>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+>
+> - Add sysfs infrastructure to report np->phandle, as if it was a property.
+> - Do not create "phandle" "ibm,phandle", and "linux,phandle" properties
+>   in the expanded device tree.
+> - Remove phandle properties in of_attach_node(), for nodes dynamically
+>   attached to the live tree.  Add the phandle sysfs entry for these nodes.
+> - When creating an overlay changeset, duplicate the node phandle in
+>   __of_node_dup().
+> - Remove no longer needed checks to exclude "phandle" and "linux,phandle"
+>   properties in several locations.
+> - A side effect of these changes is that the obsolete "linux,phandle" and
+>   "ibm,phandle" properties will no longer appear in /proc/device-tree (they
+>   will appear as "phandle").
+> - A side effect is that the value of property "ibm,phandle" will no longer
+>   override the value of properties "phandle" and "linux,phandle".
 
-diff --git a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-index 82dc5744..cbf69ae 100644
---- a/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl-wandboard.dtsi
-@@ -34,6 +34,16 @@
- 			regulator-max-microvolt = <3300000>;
- 			regulator-always-on;
- 		};
-+
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_usbotgvbus>;
-+			gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
-+		};
- 	};
- 
- 	sound {
-@@ -169,6 +179,12 @@
- 			>;
- 		};
- 
-+		pinctrl_usbotgvbus: usbotgvbusgrp {
-+			fsl,pins = <
-+				MX6QDL_PAD_EIM_D22__GPIO3_IO22		0x130b0
-+			>;
-+		};
-+
- 		pinctrl_usdhc1: usdhc1grp {
- 			fsl,pins = <
- 				MX6QDL_PAD_SD1_CMD__SD1_CMD		0x17059
-@@ -243,10 +259,11 @@
- };
- 
- &usbotg {
-+	vbus-supply = <&reg_usb_otg_vbus>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usbotg>;
- 	disable-over-current;
--	dr_mode = "peripheral";
-+	dr_mode = "otg";
- 	status = "okay";
- };
- 
--- 
-2.1.4
+Can you please Cc linuxppc-dev in future on patches which clearly are
+going to impact powerpc?
+
+cheers
