@@ -1,13 +1,13 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [RESEND PATCH v5 16/16] powerpc/44x: Add generic compatible string for I2C EEPROM
-Date: Thu, 15 Jun 2017 20:54:18 +0200
-Message-ID: <20170615185418.13980-17-javier@dowhile0.org>
+Subject: [RESEND PATCH v5 09/16] ARM: dts: uniphier: Add generic compatible string for I2C EEPROM
+Date: Thu, 15 Jun 2017 20:54:11 +0200
+Message-ID: <20170615185418.13980-10-javier@dowhile0.org>
 References: <20170615185418.13980-1-javier@dowhile0.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170615185418.13980-1-javier@dowhile0.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -25,7 +25,9 @@ Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
 
 ---
 
-Changes in v5: None
+Changes in v5:
+- Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
+
 Changes in v4:
 - Only use the atmel manufacturer in the compatible string instead of
   keeping the deprecated ones (Rob Herring).
@@ -33,21 +35,49 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/powerpc/boot/dts/warp.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/uniphier-pro4-ace.dts    | 2 +-
+ arch/arm/boot/dts/uniphier-pro4-sanji.dts  | 2 +-
+ arch/arm/boot/dts/uniphier-pxs2-gentil.dts | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/warp.dts b/arch/powerpc/boot/dts/warp.dts
-index e576ee85c42f..ea9053ef4819 100644
---- a/arch/powerpc/boot/dts/warp.dts
-+++ b/arch/powerpc/boot/dts/warp.dts
-@@ -238,7 +238,7 @@
+diff --git a/arch/arm/boot/dts/uniphier-pro4-ace.dts b/arch/arm/boot/dts/uniphier-pro4-ace.dts
+index fefc89149234..b9a4919d7c93 100644
+--- a/arch/arm/boot/dts/uniphier-pro4-ace.dts
++++ b/arch/arm/boot/dts/uniphier-pro4-ace.dts
+@@ -88,7 +88,7 @@
+ 	status = "okay";
  
- 				/* This will create 52 and 53 */
- 				at24@52 {
--					compatible = "at,24c04";
-+					compatible = "atmel,24c04";
- 					reg = <0x52>;
- 				};
- 			};
+ 	eeprom@54 {
+-		compatible = "st,24c64";
++		compatible = "st,24c64", "atmel,24c64";
+ 		reg = <0x54>;
+ 		pagesize = <32>;
+ 	};
+diff --git a/arch/arm/boot/dts/uniphier-pro4-sanji.dts b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
+index 6c63c8bad825..3950baa8d55d 100644
+--- a/arch/arm/boot/dts/uniphier-pro4-sanji.dts
++++ b/arch/arm/boot/dts/uniphier-pro4-sanji.dts
+@@ -83,7 +83,7 @@
+ 	status = "okay";
+ 
+ 	eeprom@54 {
+-		compatible = "st,24c64";
++		compatible = "st,24c64", "atmel,24c64";
+ 		reg = <0x54>;
+ 		pagesize = <32>;
+ 	};
+diff --git a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
+index cccc86658d20..afba587ffbbc 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
++++ b/arch/arm/boot/dts/uniphier-pxs2-gentil.dts
+@@ -80,7 +80,7 @@
+ 	status = "okay";
+ 
+ 	eeprom@54 {
+-		compatible = "st,24c64";
++		compatible = "st,24c64", "atmel,24c64";
+ 		reg = <0x54>;
+ 		pagesize = <32>;
+ 	};
 -- 
 2.9.3
