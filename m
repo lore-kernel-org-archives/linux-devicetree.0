@@ -1,13 +1,13 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [RESEND PATCH v6 7/8] mfd: tps6105x: Add OF device ID table
-Date: Thu, 15 Jun 2017 20:49:27 +0200
-Message-ID: <20170615184928.12007-8-javier@dowhile0.org>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: [RESEND PATCH v6 3/8] mfd: retu: Add OF device ID table
+Date: Thu, 15 Jun 2017 20:49:23 +0200
+Message-ID: <20170615184928.12007-4-javier@dowhile0.org>
 References: <20170615184928.12007-1-javier@dowhile0.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615184928.12007-1-javier@dowhile0.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Lee Jones <lee.jones@linaro.org>, Aaro Koskinen <aaro.koskinen@iki.fi>, Javier Martinez Canillas <javier@dowhile0.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170615184928.12007-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 The driver doesn't have a struct of_device_id table but supported devices
@@ -18,50 +18,62 @@ that the MODALIAS reported will always be of the form i2c:<device>.
 But this could change in the future so the correct approach is to have a
 OF device ID table if the devices are registered via OF.
 
-Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
-Acked-by: Rob Herring <robh@kernel.org>
-Acked-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Acked-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Reviewed-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
 
 ---
 
-Changes in v6: None
+Changes in v6:
+- Add Wolfram Sang's Reviewed-by tag.
+
 Changes in v5:
 - Add Rob Herring's Acked-by tag.
-- Add Acked-by: Tony Lindgren <tony@atomide.com>'s Acked-by tag.
-- Add Lee Jones <lee.jones@linaro.org>'s Acked-by tag.
+- Add Aaro Koskinen's Acked-by tag.
+- Add Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'s Acked-by tag.
+- Add Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>'s Acked-by tag.
 
-Changes in v4: None
+Changes in v4:
+- Drop -mfd suffix in compatible string (Lee Jones).
+
 Changes in v3:
 - Add a vendor prefix to the compatible string (Rob Herring).
 
 Changes in v2:
 - Don't use of_match_ptr() to avoid build warning when CONFIG_OF is disabled.
 
- drivers/mfd/tps6105x.c | 8 ++++++++
+ drivers/mfd/retu-mfd.c | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/drivers/mfd/tps6105x.c b/drivers/mfd/tps6105x.c
-index baa12ea666fb..187848c93779 100644
---- a/drivers/mfd/tps6105x.c
-+++ b/drivers/mfd/tps6105x.c
-@@ -173,9 +173,17 @@ static const struct i2c_device_id tps6105x_id[] = {
+diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
+index 53e1d386d2c0..e7d27b7861c1 100644
+--- a/drivers/mfd/retu-mfd.c
++++ b/drivers/mfd/retu-mfd.c
+@@ -308,9 +308,17 @@ static const struct i2c_device_id retu_id[] = {
  };
- MODULE_DEVICE_TABLE(i2c, tps6105x_id);
+ MODULE_DEVICE_TABLE(i2c, retu_id);
  
-+static const struct of_device_id tps6105x_of_match[] = {
-+	{ .compatible = "ti,tps61050" },
-+	{ .compatible = "ti,tps61052" },
-+	{ },
++static const struct of_device_id retu_of_match[] = {
++	{ .compatible = "nokia,retu" },
++	{ .compatible = "nokia,tahvo" },
++	{ }
 +};
-+MODULE_DEVICE_TABLE(of, tps6105x_of_match);
++MODULE_DEVICE_TABLE(of, retu_of_match);
 +
- static struct i2c_driver tps6105x_driver = {
- 	.driver = {
- 		.name	= "tps6105x",
-+		.of_match_table = tps6105x_of_match,
+ static struct i2c_driver retu_driver = {
+ 	.driver		= {
+ 		.name = "retu-mfd",
++		.of_match_table = retu_of_match,
  	},
- 	.probe		= tps6105x_probe,
- 	.remove		= tps6105x_remove,
+ 	.probe		= retu_probe,
+ 	.remove		= retu_remove,
 -- 
 2.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
