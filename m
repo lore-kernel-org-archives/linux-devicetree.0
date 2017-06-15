@@ -1,66 +1,55 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v3 2/2] arm64: dts: add sp804 timer node for Hi3660
-Date: Thu, 15 Jun 2017 21:00:58 +0100
-Message-ID: <5942E77A.8080500@hisilicon.com>
-References: <1495428748-11153-1-git-send-email-leo.yan@linaro.org>
- <1495428748-11153-3-git-send-email-leo.yan@linaro.org>
+From: Eric Anholt <eric@anholt.net>
+Subject: [PATCH 3/7] drm/vc4: Fix misleading name of the continuous flag.
+Date: Thu, 15 Jun 2017 13:41:26 -0700
+Message-ID: <20170615204130.19255-4-eric@anholt.net>
+References: <20170615204130.19255-1-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <1495428748-11153-3-git-send-email-leo.yan@linaro.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Zhangfei Gao <zhangfei.gao@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, Guodong Xu <guodong.xu@linaro.org>, Haojian Zhuang <haojian.zhuang@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20170615204130.19255-1-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Leo,
-
-On 2017/5/22 5:52, Leo Yan wrote:
-> The Hi3660 SoC comes with the sp804 timer in addition to the
-> architecture timers. These ones are shutdown when reaching a deep idle
-> states and a backup timer is needed. The sp804 belongs to another power
-> domain and can fulfill the purpose of replacing temporarily an
-> architecture timer when the CPU is idle.
-> 
-> Describe it in the device tree, so it can be enabled at boot time.
-> 
-> Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> index 138fcba..f75c792 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> @@ -173,6 +173,17 @@
->  			#clock-cells = <1>;
->  		};
->  
-> +		dual_timer0: timer@fff14000 {
-> +			compatible = "arm,sp804", "arm,primecell";
-> +			reg = <0x0 0xfff14000 0x0 0x1000>;
-> +			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
-> +				     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&crg_ctrl HI3660_OSC32K>,
-> +				 <&crg_ctrl HI3660_OSC32K>,
-> +				 <&crg_ctrl HI3660_OSC32K>;
-> +			clock-names = "timer1", "timer2", "apb_pclk";
-> +		};
-> +
->  		ufs: ufs@ff3b0000 {
->  			compatible = "jedec,ufs-1.1", "hisilicon,hi3660-ufs";
->  			reg = <0x0 0xff3b0000 0x0 0x1000>, /* 0: HCI standard */
-> 
-
-Since the dts part is not depended on the driver and Guodong has put this into another
-patch set[1], I will pick up that one.
-Thanks!
-
-[1]: https://lkml.org/lkml/2017/6/14/1049
-
-BR,
-Wei
-
+VGhlIGxvZ2ljIHdhcyBhbGwgcmlnaHQgaW4gdGhlIGVuZCwgdGhlIG5hbWUgd2FzIGp1c3QgYmFj
+a3dhcmRzLgoKU2lnbmVkLW9mZi1ieTogRXJpYyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KLS0t
+CiBkcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYyB8IDggKysrKy0tLS0KIDEgZmlsZSBjaGFu
+Z2VkLCA0IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVy
+cy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vdmM0L3ZjNF9kc2kuYwpp
+bmRleCAxNWY2ZDUwMDVhYjkuLjYyOWQzNzI2MzNlNiAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUv
+ZHJtL3ZjNC92YzRfZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3ZjNC92YzRfZHNpLmMKQEAg
+LTczNiwxOCArNzM2LDE4IEBAIHN0YXRpYyB2b2lkIHZjNF9kc2lfbGF0Y2hfdWxwcyhzdHJ1Y3Qg
+dmM0X2RzaSAqZHNpLCBib29sIGxhdGNoKQogLyogRW50ZXJzIG9yIGV4aXRzIFVsdHJhIExvdyBQ
+b3dlciBTdGF0ZS4gKi8KIHN0YXRpYyB2b2lkIHZjNF9kc2lfdWxwcyhzdHJ1Y3QgdmM0X2RzaSAq
+ZHNpLCBib29sIHVscHMpCiB7Ci0JYm9vbCBjb250aW51b3VzID0gZHNpLT5tb2RlX2ZsYWdzICYg
+TUlQSV9EU0lfQ0xPQ0tfTk9OX0NPTlRJTlVPVVM7Ci0JdTMyIHBoeWNfdWxwcyA9ICgoY29udGlu
+dW91cyA/IERTSV9QT1JUX0JJVChQSFlDX0NMQU5FX1VMUFMpIDogMCkgfAorCWJvb2wgbm9uX2Nv
+bnRpbnVvdXMgPSBkc2ktPm1vZGVfZmxhZ3MgJiBNSVBJX0RTSV9DTE9DS19OT05fQ09OVElOVU9V
+UzsKKwl1MzIgcGh5Y191bHBzID0gKChub25fY29udGludW91cyA/IERTSV9QT1JUX0JJVChQSFlD
+X0NMQU5FX1VMUFMpIDogMCkgfAogCQkJIERTSV9QSFlDX0RMQU5FMF9VTFBTIHwKIAkJCSAoZHNp
+LT5sYW5lcyA+IDEgPyBEU0lfUEhZQ19ETEFORTFfVUxQUyA6IDApIHwKIAkJCSAoZHNpLT5sYW5l
+cyA+IDIgPyBEU0lfUEhZQ19ETEFORTJfVUxQUyA6IDApIHwKIAkJCSAoZHNpLT5sYW5lcyA+IDMg
+PyBEU0lfUEhZQ19ETEFORTNfVUxQUyA6IDApKTsKLQl1MzIgc3RhdF91bHBzID0gKChjb250aW51
+b3VzID8gRFNJMV9TVEFUX1BIWV9DTE9DS19VTFBTIDogMCkgfAorCXUzMiBzdGF0X3VscHMgPSAo
+KG5vbl9jb250aW51b3VzID8gRFNJMV9TVEFUX1BIWV9DTE9DS19VTFBTIDogMCkgfAogCQkJIERT
+STFfU1RBVF9QSFlfRDBfVUxQUyB8CiAJCQkgKGRzaS0+bGFuZXMgPiAxID8gRFNJMV9TVEFUX1BI
+WV9EMV9VTFBTIDogMCkgfAogCQkJIChkc2ktPmxhbmVzID4gMiA/IERTSTFfU1RBVF9QSFlfRDJf
+VUxQUyA6IDApIHwKIAkJCSAoZHNpLT5sYW5lcyA+IDMgPyBEU0kxX1NUQVRfUEhZX0QzX1VMUFMg
+OiAwKSk7Ci0JdTMyIHN0YXRfc3RvcCA9ICgoY29udGludW91cyA/IERTSTFfU1RBVF9QSFlfQ0xP
+Q0tfU1RPUCA6IDApIHwKKwl1MzIgc3RhdF9zdG9wID0gKChub25fY29udGludW91cyA/IERTSTFf
+U1RBVF9QSFlfQ0xPQ0tfU1RPUCA6IDApIHwKIAkJCSBEU0kxX1NUQVRfUEhZX0QwX1NUT1AgfAog
+CQkJIChkc2ktPmxhbmVzID4gMSA/IERTSTFfU1RBVF9QSFlfRDFfU1RPUCA6IDApIHwKIAkJCSAo
+ZHNpLT5sYW5lcyA+IDIgPyBEU0kxX1NUQVRfUEhZX0QyX1NUT1AgOiAwKSB8Ci0tIAoyLjExLjAK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZl
+bCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xp
+c3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
