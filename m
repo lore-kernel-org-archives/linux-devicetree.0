@@ -1,133 +1,93 @@
-From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 6/8] leds: as3645a: Add LED flash class driver
-Date: Thu, 15 Jun 2017 15:01:47 +0200
-Message-ID: <6d27154d-4550-d1ae-8b7a-07dcaaee69ac@gmail.com>
-References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497433639-13101-7-git-send-email-sakari.ailus@linux.intel.com>
- <343d88ea-c839-6682-df84-844f92bc9050@gmail.com>
- <20170614221028.GS12407@valkosipuli.retiisi.org.uk>
+From: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 2/9] dt-bindings: add Amlogic Meson GPIO
+ interrupt-controller DT binding documentation
+Date: Thu, 15 Jun 2017 10:34:46 +0200
+Message-ID: <d6fd8d6f-7b81-68be-7e7e-cbfdc422e1de@gmail.com>
+References: <5b352c8d-a426-fa73-58b7-0c935979492b@gmail.com>
+ <d7c3fd04-d3d7-c128-1dcc-921e99677130@gmail.com>
+ <c5453bc7-1d8b-d3a1-91ac-779734444b8b@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170614221028.GS12407-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
+In-Reply-To: <c5453bc7-1d8b-d3a1-91ac-779734444b8b-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
-
-On 06/15/2017 12:10 AM, Sakari Ailus wrote:
-> Hi Jacek,
-> 
-> Thanks for the review!
-
-You're welcome!
-
-> I have to say I found the v4l2-flash-led-class framework quite useful, now
-> that I refactored a driver for using it. Now we have a user for the
-> indicator, too. :-)
-
-Nice :-). I'm also surprised that v4l2-flash API is also used in
-drivers/staging/greybus/light.c which popped up with kbuild test robot
-complaints.
-
-> On Wed, Jun 14, 2017 at 11:15:24PM +0200, Jacek Anaszewski wrote:
->>> +static __maybe_unused int as3645a_suspend(struct device *dev)
->>> +{
->>> +	struct i2c_client *client = to_i2c_client(dev);
->>> +	struct as3645a *flash = i2c_get_clientdata(client);
->>> +	int rval;
->>> +
->>> +	rval = as3645a_set_control(flash, AS_MODE_EXT_TORCH, false);
->>> +	dev_dbg(dev, "Suspend %s\n", rval < 0 ? "failed" : "ok");
->>> +
->>> +	return rval;
->>> +}
->>> +
->>> +static __maybe_unused int as3645a_resume(struct device *dev)
->>> +{
->>> +	struct i2c_client *client = to_i2c_client(dev);
->>> +	struct as3645a *flash = i2c_get_clientdata(client);
->>> +	int rval;
->>> +
->>> +	rval = as3645a_setup(flash);
->>> +
+Am 13.06.2017 um 10:53 schrieb Marc Zyngier:
+> On 10/06/17 22:57, Heiner Kallweit wrote:
+>> Add dt binding documentation for Amlogic meson GPIO interrupt controller.
 >>
->> nitpicking: inconsistent coding style - there is no empty line before
->> dev_dbg() in the as3645a_suspend().
-> 
-> Added one for as3645a_suspend() --- it should have been there.
-> 
+>> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> ---
+>> v5:
+>> - added Reviewed-by
+>> v6:
+>> - rename parent-interrupts to interrupts
+>> v7:
+>> - no changes
+>> ---
+>>  .../amlogic,meson-gpio-intc.txt                    | 26 ++++++++++++++++++++++
+>>  1 file changed, 26 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
 >>
->>> +	dev_dbg(dev, "Resume %s\n", rval < 0 ? "fail" : "ok");
->>> +
->>> +	return rval;
->>> +}
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+>> new file mode 100644
+>> index 00000000..4c9bb323
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+>> @@ -0,0 +1,26 @@
+>> +Amlogic meson GPIO interrupt controller
+>> +
+>> +Meson SoCs contains an interrupt controller which is able watch the SoC pads
+>> +and generate an interrupt on edges or level. The controller is essentially a
+>> +256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
+>> +or level and polarity. The actual number of interrupt exposed depends on the
+>> +SoC.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible : should be "amlogic,meson-gpio-intc".
+>> +- reg : Specifies base physical address and size of the registers.
+>> +- interrupt-controller : Identifies the node as an interrupt controller.
+>> +- #interrupt-cells : should be 2.
+>> +- interrupts : list of GIC interrupts which can be used with the
+>> +	       GPIO IRQ multiplexer
+>> +
+>> +Example:
+>> +
+>> +gpio_intc: interrupt-controller@9880 {
+>> +	compatible = "amlogic,meson-gpio-intc";
+>> +	reg = <0x0 0x09880 0x0 0x10>;
+>> +	interrupt-controller;
+>> +	#interrupt-cells = <2>;
+>> +	interrupts = <64 65 66 67 68 69 70 71>;
 > 
-> ...
+> What does it mean to have single-cell interrupt specifiers like this,
+> when the interrupt-parent is a GIC, which has #interrupt-cells set to 3?
+> Either you use actual interrupt specifiers, or you use another identifier.
 > 
->>> +static int as3645a_led_class_setup(struct as3645a *flash)
->>> +{
->>> +	struct led_classdev *fled_cdev = &flash->fled.led_cdev;
->>> +	struct led_classdev *iled_cdev = &flash->iled_cdev;
->>> +	struct led_flash_setting *cfg;
->>> +	int rval;
->>> +
->>> +	iled_cdev->name = "as3645a indicator";
->>> +	iled_cdev->brightness_set_blocking = as3645a_set_indicator_brightness;
->>> +	iled_cdev->max_brightness =
->>> +		flash->cfg.indicator_max_ua / AS_INDICATOR_INTENSITY_STEP;
->>> +
->>> +	rval = led_classdev_register(&flash->client->dev, iled_cdev);
->>> +	if (rval < 0)
->>> +		return rval;
->>> +
->>> +	cfg = &flash->fled.brightness;
->>> +	cfg->min = AS_FLASH_INTENSITY_MIN;
->>> +	cfg->max = flash->cfg.flash_max_ua;
->>> +	cfg->step = AS_FLASH_INTENSITY_STEP;
->>> +	cfg->val = flash->cfg.flash_max_ua;
->>> +
->>> +	cfg = &flash->fled.timeout;
->>> +	cfg->min = AS_FLASH_TIMEOUT_MIN;
->>> +	cfg->max = flash->cfg.flash_timeout_us;
->>> +	cfg->step = AS_FLASH_TIMEOUT_STEP;
->>> +	cfg->val = flash->cfg.flash_timeout_us;
->>> +
->>> +	flash->fled.ops = &as3645a_led_flash_ops;
->>> +
->>> +	fled_cdev->name = "as3645a flash";
->>
->> LED class device name should be taken from label DT property,
->> or DT node name if the former wasn't defined.
->>
->> Also LED device naming convention defines colon as a separator
->> between name segments.
-> 
-> Right. I'll fix that.
-> 
-> I just realised I'm missing DT binding documentation for this device; I'll
-> add that, too.
-> 
-> Is the preference to allow freely chosen node names for the LEDs? Now that
-> there's the label, too, this appears to be somewhat duplicated information.
+The following approaches have been used already:
 
-It depends on whether the sub-leds are identified by reg property.
-In this case usually common prefix is used followed by reg value,
-e.g. led@1, led@2 etc.
+- standard interrupts property (3-cell): was rejected because the chip doesn't
+  actually generate the interrupts but just provides a programmable IRQ routing
 
-Otherwise prevailing scheme is e.g.:
+- property "parent-interrupts" (1-cell): Rob suggested to use "interrupts" instead
 
-        blue-power {
-		...
-                label = "netxbig:blue:power";
-	}
+I'd appreciate if you could come to an agreement with Rob, whatever the outcome
+is is fine with me.
 
--- 
-Best regards,
-Jacek Anaszewski
+Rgds, Heiner
+
+> Thanks,
+> 
+> 	M.
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
