@@ -1,88 +1,62 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: [PATCH 7/7] ARM: dts: bcm2835: Enable the Raspberry Pi touchscreen
- panel.
-Date: Thu, 15 Jun 2017 13:41:30 -0700
-Message-ID: <20170615204130.19255-8-eric@anholt.net>
-References: <20170615204130.19255-1-eric@anholt.net>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 2/2 v4] clk: Add Gemini SoC clock controller
+Date: Thu, 15 Jun 2017 14:00:20 -0700
+Message-ID: <20170615210020.GG20170@codeaurora.org>
+References: <20170524082044.8473-1-linus.walleij@linaro.org>
+ <20170601070208.GO20170@codeaurora.org>
+ <CACRpkdZv8MzXVecEXVdJ+P0MxVscYSy=MxC-yQAR0S4yQ6-rwQ@mail.gmail.com>
+ <20170605195812.GH20170@codeaurora.org>
+ <CACRpkdbya9xaN-i7AkG0bTyuFYfZc59sSTYhWB43=9btSKfPpQ@mail.gmail.com>
+ <CACRpkdapAgHix2vw-woDFi4sh+H3_EX7w-5q=opBGMyegFrXbA@mail.gmail.com>
+ <20170612210248.GP20170@codeaurora.org>
+ <CACRpkdaZJbzC0-xg_go=-o+0cQ-JOY3mUe27HUnwQ+DnZYbyMA@mail.gmail.com>
+ <CAMuHMdXdYNTLCUfQ9rdj8Fffff5G6fGREcHs5-E5LbwPU9yyLw@mail.gmail.com>
+ <CACRpkdY+aSyec9PZaoXErzsRefWg2zzw1xihQt_whmote-jBBw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20170615204130.19255-1-eric@anholt.net>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdY+aSyec9PZaoXErzsRefWg2zzw1xihQt_whmote-jBBw@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBjb21taXQgaXMgbm90IGludGVuZGVkIHRvIGJlIG1lcmdlZC4gIEluc3RlYWQgd2Ugd2ls
-bCB1c2UKb3ZlcmxheXMgdG8gZW5hYmxlIHRoZSBwYW5lbCwgYW5kIHRoaXMgY29tbWl0IGlzIGp1
-c3QgYSBkZW1vIG9mIGhvdwp0aGluZ3MgZ2V0IHdpcmVkIHVwLgoKU2lnbmVkLW9mZi1ieTogRXJp
-YyBBbmhvbHQgPGVyaWNAYW5ob2x0Lm5ldD4KLS0tCiBhcmNoL2FybS9ib290L2R0cy9iY20yODM1
-LXJwaS1iLXBsdXMuZHRzICAgICAgICAgfCAgNSArKysrCiBhcmNoL2FybS9ib290L2R0cy9iY20y
-ODM1LXJwaS1iLXJldjIuZHRzICAgICAgICAgfCAgNSArKysrCiBhcmNoL2FybS9ib290L2R0cy9i
-Y20yODM1LXJwaS1iLmR0cyAgICAgICAgICAgICAgfCAgNSArKysrCiBhcmNoL2FybS9ib290L2R0
-cy9iY20yODM2LXJwaS0yLWIuZHRzICAgICAgICAgICAgfCAgNSArKysrCiBhcmNoL2FybS9ib290
-L2R0cy9iY20yODN4LmR0c2kgICAgICAgICAgICAgICAgICAgfCAzMCArKysrKysrKysrKysrKysr
-KysrKysrKy0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvYnJvYWRjb20vYmNtMjgzNy1ycGktMy1iLmR0
-cyB8ICA1ICsrKysKIDYgZmlsZXMgY2hhbmdlZCwgNTQgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlv
-bigtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLWItcGx1cy5k
-dHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS1iLXBsdXMuZHRzCmluZGV4IDQzMjA4
-OGViYjBhMS4uNzlmNDMzZWFjYjhiIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20y
-ODM1LXJwaS1iLXBsdXMuZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzUtcnBpLWIt
-cGx1cy5kdHMKQEAgLTEwMSwzICsxMDEsOCBAQAogJmhkbWkgewogCWhwZC1ncGlvcyA9IDwmZ3Bp
-byA0NiBHUElPX0FDVElWRV9MT1c+OwogfTsKKworJmkyY19kc2kgeworCWdwaW9zID0gPCZncGlv
-IDI4IDAKKwkJICZncGlvIDI5IDA+OworfTsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2JjbTI4MzUtcnBpLWItcmV2Mi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS1i
-LXJldjIuZHRzCmluZGV4IDQxMzNiYzJjZDliZS4uMTQ1ZTBlNGMyYzdmIDEwMDY0NAotLS0gYS9h
-cmNoL2FybS9ib290L2R0cy9iY20yODM1LXJwaS1iLXJldjIuZHRzCisrKyBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2JjbTI4MzUtcnBpLWItcmV2Mi5kdHMKQEAgLTk0LDMgKzk0LDggQEAKICZoZG1pIHsK
-IAlocGQtZ3Bpb3MgPSA8JmdwaW8gNDYgR1BJT19BQ1RJVkVfTE9XPjsKIH07CisKKyZpMmNfZHNp
-IHsKKwlncGlvcyA9IDwmZ3BpbyAyIDAKKwkJICZncGlvIDMgMD47Cit9OwpkaWZmIC0tZ2l0IGEv
-YXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktYi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9i
-Y20yODM1LXJwaS1iLmR0cwppbmRleCA0ZDU2ZmUzMDA2YjAuLjViM2Y4NTg4M2YwYyAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYmNtMjgzNS1ycGktYi5kdHMKKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvYmNtMjgzNS1ycGktYi5kdHMKQEAgLTg5LDMgKzg5LDggQEAKICZoZG1pIHsKIAlo
-cGQtZ3Bpb3MgPSA8JmdwaW8gNDYgR1BJT19BQ1RJVkVfSElHSD47CiB9OworCismaTJjX2RzaSB7
-CisJZ3Bpb3MgPSA8JmdwaW8gMCAwCisJCSAmZ3BpbyAxIDA+OworfTsKZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2JjbTI4MzYtcnBpLTItYi5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9i
-Y20yODM2LXJwaS0yLWIuZHRzCmluZGV4IGJmMTllOGNmYjllNi4uYWE2M2NjMjllY2E4IDEwMDY0
-NAotLS0gYS9hcmNoL2FybS9ib290L2R0cy9iY20yODM2LXJwaS0yLWIuZHRzCisrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2JjbTI4MzYtcnBpLTItYi5kdHMKQEAgLTM5LDMgKzM5LDggQEAKICZoZG1p
-IHsKIAlocGQtZ3Bpb3MgPSA8JmdwaW8gNDYgR1BJT19BQ1RJVkVfTE9XPjsKIH07CisKKyZpMmNf
-ZHNpIHsKKwlncGlvcyA9IDwmZ3BpbyAyOCAwCisJCSAmZ3BpbyAyOSAwPjsKK307CmRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9iY20yODN4LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9i
-Y20yODN4LmR0c2kKaW5kZXggMzVjZWEzZmNhZjVjLi42ODJmMTFhNGZjOTEgMTAwNjQ0Ci0tLSBh
-L2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTI4M3guZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9i
-Y20yODN4LmR0c2kKQEAgLTUwNSw3ICs1MDUsMTEgQEAKIAkJCQkJICAgICAiZHNpMV9kZHIyIiwK
-IAkJCQkJICAgICAiZHNpMV9kZHIiOwogCi0JCQlzdGF0dXMgPSAiZGlzYWJsZWQiOworCQkJcG9y
-dCB7CisJCQkJZHNpX291dF9wb3J0OiBlbmRwb2ludCB7CisJCQkJCXJlbW90ZS1lbmRwb2ludCA9
-IDwmcGFuZWxfZHNpX3BvcnQ+OworCQkJCX07CisJCQl9OwogCQl9OwogCiAJCWkyYzE6IGkyY0A3
-ZTgwNDAwMCB7CkBAIC01NzUsNiArNTc5LDMwIEBACiAJCXZjNDogZ3B1IHsKIAkJCWNvbXBhdGli
-bGUgPSAiYnJjbSxiY20yODM1LXZjNCI7CiAJCX07CisKKwkJaTJjX2RzaTogaTJjIHsKKwkJCS8q
-IFdlIGhhdmUgdG8gdXNlIGkyYy1ncGlvIGJlY2F1c2UgdGhlCisJCQkgKiBmaXJtd2FyZSBpcyBh
-bHNvIHBvbGxpbmcgYW5vdGhlciBkZXZpY2UKKwkJCSAqIHVzaW5nIHRoZSBvbmx5IGhhcmR3YXJl
-IEkyQyBidXMgdGhhdCBjb3VsZAorCQkJICogY29ubmVjdCB0byB0aGVzZSBwaW5zLgorCQkJICov
-CisJCQljb21wYXRpYmxlID0gImkyYy1ncGlvIjsKKwkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owor
-CQkJI3NpemUtY2VsbHMgPSA8MD47CisJCQlncGlvcyA9IDwmZ3BpbyAyOCAwCisJCQkJICZncGlv
-IDI5IDA+OworCisJCQlsY2RANDUgeworCQkJCWNvbXBhdGlibGUgPSAicmFzcGJlcnJ5cGksN2lu
-Y2gtdG91Y2hzY3JlZW4tcGFuZWwiOworCQkJCXJlZyA9IDwweDQ1PjsKKworCQkJCXBvcnQgewor
-CQkJCQlwYW5lbF9kc2lfcG9ydDogZW5kcG9pbnQgeworCQkJCQkJcmVtb3RlLWVuZHBvaW50ID0g
-PCZkc2lfb3V0X3BvcnQ+OworCQkJCQl9OworCQkJCX07CisJCQl9OworCQl9OwogCX07CiAKIAlj
-bG9ja3MgewpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9icm9hZGNvbS9iY20yODM3
-LXJwaS0zLWIuZHRzIGIvYXJjaC9hcm02NC9ib290L2R0cy9icm9hZGNvbS9iY20yODM3LXJwaS0z
-LWIuZHRzCmluZGV4IGMzMDk2MzNhMWU4Ny4uYzExMDI2YzZjOGI0IDEwMDY0NAotLS0gYS9hcmNo
-L2FybTY0L2Jvb3QvZHRzL2Jyb2FkY29tL2JjbTI4MzctcnBpLTMtYi5kdHMKKysrIGIvYXJjaC9h
-cm02NC9ib290L2R0cy9icm9hZGNvbS9iY20yODM3LXJwaS0zLWIuZHRzCkBAIC0yMiwzICsyMiw4
-IEBACiAmdWFydDEgewogCXN0YXR1cyA9ICJva2F5IjsKIH07CisKKyZpMmNfZHNpIHsKKwlncGlv
-cyA9IDwmZ3BpbyA0NCAwCisJCSAmZ3BpbyA0NSAwPjsKK307Ci0tIAoyLjExLjAKCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5n
-IGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 06/15, Linus Walleij wrote:
+> On Thu, Jun 15, 2017 at 10:55 AM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> 
+> > If clocks and resets are provided by the same hardware module, you can
+> > have a single (platform) driver registering both the clock and reset
+> > controllers.
+> > Cfr. drivers/clk/renesas/renesas-cpg-mssr.c.
+> 
+> That is indeed an option.
+> 
+> So I would say, clk & reset maintainers: would you prefer that I merge the
+> reset control into the clock driver as well, ask Philipp to drop the pending
+> reset control patches from his subsystem tree and have you manage the
+> combined driver and bindings?
+> 
+> It seems to me as very ugly from a divide & conquer subsystem and file
+> split point of view.
+> 
+> I seems elegant from the "make clocks a platform device" point of view.
+> 
+> I am happy with either approach as long as it works.
+> 
+> I guess it is up to the taste of the subsystem maintainers, especially
+> clk.
+> 
+> If I get some time I might just hack this up and send the patches so
+> it is on the table as an alternative to the current v5 patch. Certainly it is
+> better than going back and augmenting the DT bindings.
+> 
+
+We have quite a few clock and reset controllers that put their
+drivers into the clk directory. I don't see any problem with that
+approach.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
