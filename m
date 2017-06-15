@@ -1,115 +1,91 @@
-From: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm: dts: mt2701: Add display bls related nodes for
- MT2701
-Date: Thu, 15 Jun 2017 13:34:41 +0800
-Message-ID: <1497504881.25398.9.camel@mhfsdcap03>
-References: <1496297324-21091-1-git-send-email-erin.lo@mediatek.com>
-         <1496297324-21091-3-git-send-email-erin.lo@mediatek.com>
-         <82c8b877-ec34-bd37-7428-8af86191a66e@gmail.com>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: Re: [PATCH 10/18] spi: qup: Fix DMA mode interrupt handling
+Date: Thu, 15 Jun 2017 11:22:10 +0530
+Message-ID: <2fa0690c-ee1d-f29b-4bd5-23bbe26aacfc@codeaurora.org>
+References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
+ <1497419551-21834-11-git-send-email-varada@codeaurora.org>
+ <66ba7dfb-6ff3-884e-6db0-8d5191f87c93@codeaurora.org>
+ <20170614200608.GE32733@hector.wework.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <82c8b877-ec34-bd37-7428-8af86191a66e-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170614200608.GE32733@hector.wework.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: Varadarajan Narayanan <varada@codeaurora.org>, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-06-09 at 10:12 +0200, Matthias Brugger wrote:
-> 
-> On 01/06/17 08:08, Erin Lo wrote:
-> > From: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> I miss the Singed-off-by from YT Shen.
-> 
-> > 
-> > This patch adds the device node of display backlight for MT2701
-> > 
-> > Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >   arch/arm/boot/dts/mt2701-evb.dts | 29 +++++++++++++++++++++++++++++
-> >   arch/arm/boot/dts/mt2701.dtsi    |  9 +++++++++
-> >   2 files changed, 38 insertions(+)
-> > 
-> > diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-> > index a483798..e49c2b7 100644
-> > --- a/arch/arm/boot/dts/mt2701-evb.dts
-> > +++ b/arch/arm/boot/dts/mt2701-evb.dts
-> > @@ -22,6 +22,35 @@
-> >   	memory {
-> >   		reg = <0 0x80000000 0 0x40000000>;
-> >   	};
-> > +
-> > +	backlight_lcd: backlight_lcd {
-> > +		compatible = "pwm-backlight";
-> > +		pwms = <&bls 0 100000>;
-> > +		brightness-levels = <
-> > +			  0  16  32  48  64  80  96 112
-> > +			128 144 160 176 192 208 224 240
-> > +			255
-> > +		>;
-> > +		default-brightness-level = <9>;
-> > +		pinctrl-names = "default";
-> > +		pinctrl-0 = <&pwm_bls_gpio>;
-> > +	};
-> > +};
-> > +
-> > +&bls {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&mmsys {
-> > +	status = "okay";
-> > +};
-> > +
-> > +&pio {
-> > +	pwm_bls_gpio: pwm_bls_gpio {
-> > +		pins_cmd_dat {
-> > +			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
-> > +		};
-> > +	};
-> >   };
-> >   
-> >   &auxadc {
-> > diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-> > index de88bd7..4f110d5 100644
-> > --- a/arch/arm/boot/dts/mt2701.dtsi
-> > +++ b/arch/arm/boot/dts/mt2701.dtsi
-> > @@ -366,6 +366,15 @@
-> >   		#clock-cells = <1>;
-> >   	};
-> >   
-> > +	bls: bls@1400a000 {
-> > +		compatible = "mediatek,mt2701-disp-pwm";
-> > +		reg = <0 0x1400a000 0 0x1000>;
-> > +		#pwm-cells = <2>;
-> > +		clocks = <&mmsys CLK_MM_MDP_BLS_26M>, <&mmsys CLK_MM_DISP_BLS>;
-> > +		clock-names = "main", "mm";
-> > +		status = "disabled";
-> > +	};
-> > +
-> 
-> Can you make this a new patch please. It's preferred to have one patch 
-> for the dtsi and another one for the actual board.
-> 
-> Thanks,
-> Matthias
+Hi Andy,
 
-OK, I will split it into two patches.
-
-Thanks,
-Weiqing Kong
-
+On 6/15/2017 1:36 AM, Andy Gross wrote:
+> On Wed, Jun 14, 2017 at 12:51:11PM +0530, Sricharan R wrote:
+>> Hi Varada,
+>>
+>> On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
+>>> This is needed for v1, where the i/o completion is not
+>>> handled in the dma driver.
+>>>
+>>> Signed-off-by: Andy Gross <andy.gross@linaro.org>
+>>> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+>>> ---
+>>>  drivers/spi/spi-qup.c | 15 +++++++++++++--
+>>>  1 file changed, 13 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+>>> index 872de28..bd53e82 100644
+>>> --- a/drivers/spi/spi-qup.c
+>>> +++ b/drivers/spi/spi-qup.c
+>>> @@ -510,9 +510,9 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+>>>  
+>>>  	writel_relaxed(qup_err, controller->base + QUP_ERROR_FLAGS);
+>>>  	writel_relaxed(spi_err, controller->base + SPI_ERROR_FLAGS);
+>>> -	writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
+>>>  
+>>>  	if (!xfer) {
+>>> +		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
+>>
+>>  This does look correct to remove acknowledging the QUP in normal case and
+>>   do it conditionally only when xfer = NULL.
 > 
-> >   	larb0: larb@14010000 {
-> >   		compatible = "mediatek,mt2701-smi-larb";
-> >   		reg = <0 0x14010000 0 0x1000>;
-> > 
+> This is to probably mask the issue of getting erroneous/spurious IRQs.
+> 
 
+ hmm, now the QUP_OPERATIONAL is not written to acknowledge the interrupts in
+ normal case seems to be wrong.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>>  		dev_err_ratelimited(controller->dev, "unexpected irq %08x %08x %08x\n",
+>>>  				    qup_err, spi_err, opflags);
+>>>  		return IRQ_HANDLED;
+>>> @@ -540,7 +540,15 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+>>>  		error = -EIO;
+>>>  	}
+>>>  
+>>> -	if (!spi_qup_is_dma_xfer(controller->mode)) {
+>>> +	if (spi_qup_is_dma_xfer(controller->mode)) {
+>>> +		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
+>>> +		if (opflags & QUP_OP_IN_SERVICE_FLAG &&
+>>> +		    opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
+>>> +			complete(&controller->rxc);
+>>> +		if (opflags & QUP_OP_OUT_SERVICE_FLAG &&
+>>> +		    opflags & QUP_OP_MAX_OUTPUT_DONE_FLAG)
+>>> +			complete(&controller->txc);
+>>> +	} else {
+>>
+>>  Is this because in patch #8 that we do not populate the dma callback
+>>  for v1. If that is done, this should not be required at all, as the
+>>  complete would be signalled from the dma callback.
+> 
+> I believe that is true.  There shouldn't be any IRQs for DMA enabled
+> transactions (at least BAM-dma).
+
+ yeah, the above hunk looks like is ADM specific, not sure why ADM cannot
+ work with dma callbacks.
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
