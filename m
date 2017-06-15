@@ -1,13 +1,13 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [RESEND PATCH v5 04/16] ARM: dts: keystone: Add generic compatible string for I2C EEPROM
-Date: Thu, 15 Jun 2017 20:54:06 +0200
-Message-ID: <20170615185418.13980-5-javier@dowhile0.org>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: [RESEND PATCH v5 05/16] ARM: dts: lpc18xx: Add generic compatible string for I2C EEPROM
+Date: Thu, 15 Jun 2017 20:54:07 +0200
+Message-ID: <20170615185418.13980-6-javier@dowhile0.org>
 References: <20170615185418.13980-1-javier@dowhile0.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170615185418.13980-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615185418.13980-1-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Joachim Eastwood <manabian@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -21,11 +21,13 @@ using the "atmel" vendor as a generic fallback for compatible I2C devices.
 So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
-Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
 
 ---
 
-Changes in v5: None
+Changes in v5:
+- Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
+
 Changes in v4:
 - Only use the atmel manufacturer in the compatible string instead of
   keeping the deprecated ones (Rob Herring).
@@ -33,54 +35,61 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/keystone-k2e-evm.dts  | 2 +-
- arch/arm/boot/dts/keystone-k2hk-evm.dts | 2 +-
- arch/arm/boot/dts/keystone-k2l-evm.dts  | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/lpc4337-ciaa.dts          | 6 +++---
+ arch/arm/boot/dts/lpc4350-hitex-eval.dts    | 2 +-
+ arch/arm/boot/dts/lpc4357-ea4357-devkit.dts | 2 +-
+ 3 files changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/keystone-k2e-evm.dts b/arch/arm/boot/dts/keystone-k2e-evm.dts
-index ae1ebe7ee021..c8d45e6cd9e6 100644
---- a/arch/arm/boot/dts/keystone-k2e-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2e-evm.dts
-@@ -69,7 +69,7 @@
+diff --git a/arch/arm/boot/dts/lpc4337-ciaa.dts b/arch/arm/boot/dts/lpc4337-ciaa.dts
+index 7c16d639a1b4..beddaba85393 100644
+--- a/arch/arm/boot/dts/lpc4337-ciaa.dts
++++ b/arch/arm/boot/dts/lpc4337-ciaa.dts
+@@ -174,17 +174,17 @@
+ 	clock-frequency = <400000>;
  
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
+ 	eeprom@50 {
+-		compatible = "microchip,24c512";
++		compatible = "microchip,24c512", "atmel,24c512";
  		reg = <0x50>;
  	};
- };
-diff --git a/arch/arm/boot/dts/keystone-k2hk-evm.dts b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-index 2156ff92d08f..69af3a950da6 100644
---- a/arch/arm/boot/dts/keystone-k2hk-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2hk-evm.dts
-@@ -145,7 +145,7 @@
  
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
- 		reg = <0x50>;
+ 	eeprom@51 {
+-		compatible = "microchip,24c02";
++		compatible = "microchip,24c02", "atmel,24c02";
+ 		reg = <0x51>;
+ 	};
+ 
+ 	eeprom@54 {
+-		compatible = "microchip,24c512";
++		compatible = "microchip,24c512", "atmel,24c512";
+ 		reg = <0x54>;
  	};
  };
-diff --git a/arch/arm/boot/dts/keystone-k2l-evm.dts b/arch/arm/boot/dts/keystone-k2l-evm.dts
-index 056b42f99d7a..402190e55e40 100644
---- a/arch/arm/boot/dts/keystone-k2l-evm.dts
-+++ b/arch/arm/boot/dts/keystone-k2l-evm.dts
-@@ -42,7 +42,7 @@
+diff --git a/arch/arm/boot/dts/lpc4350-hitex-eval.dts b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
+index 874c75d44013..8b973f537d3a 100644
+--- a/arch/arm/boot/dts/lpc4350-hitex-eval.dts
++++ b/arch/arm/boot/dts/lpc4350-hitex-eval.dts
+@@ -429,7 +429,7 @@
+ 	};
  
- &i2c0 {
- 	dtt@50 {
--		compatible = "at,24c1024";
-+		compatible = "atmel,24c1024";
+ 	eeprom@50 {
+-		compatible = "nxp,24c02";
++		compatible = "nxp,24c02", "atmel,24c02";
  		reg = <0x50>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
+index 9b5fad622522..02b23fa29d75 100644
+--- a/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
++++ b/arch/arm/boot/dts/lpc4357-ea4357-devkit.dts
+@@ -490,7 +490,7 @@
+ 	};
+ 
+ 	eeprom@57 {
+-		compatible = "microchip,24c64";
++		compatible = "microchip,24c64", "atmel,24c64";
+ 		reg = <0x57>;
  	};
  };
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
