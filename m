@@ -1,105 +1,71 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 2/2] pinctrl: samsung: Use define from dt-bindings for pin mux function
-Date: Thu, 15 Jun 2017 17:06:28 +0200
-Message-ID: <20170615150628.26723-2-krzk@kernel.org>
-References: <20170615150628.26723-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615150628.26723-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: rockchip: add efuse device node for rk3228
+Date: Thu, 15 Jun 2017 17:10:38 +0200
+Message-ID: <2537345.MJmYY2BcSn@phil>
+References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com> <1497511396-23308-1-git-send-email-frank.wang@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497511396-23308-1-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We already have macros for values used by driver and Device Tree
-sources for Pin mux configuration.  Use them instead of duplicating
-defines.
+Hi Frank,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/pinctrl/samsung/pinctrl-exynos.c  | 6 ++++--
- drivers/pinctrl/samsung/pinctrl-exynos.h  | 1 -
- drivers/pinctrl/samsung/pinctrl-samsung.c | 4 +++-
- drivers/pinctrl/samsung/pinctrl-samsung.h | 4 ----
- 4 files changed, 7 insertions(+), 8 deletions(-)
+Am Donnerstag, 15. Juni 2017, 15:23:16 CEST schrieb Frank Wang:
+> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> Add a efuse node in the device tree for the rk3228 SoC.
+> 
+> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/rk322x.dtsi | 17 +++++++++++++++++
+>  1 file changed, 17 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+> index c2a78f4..dad195e 100644
+> --- a/arch/arm/boot/dts/rk322x.dtsi
+> +++ b/arch/arm/boot/dts/rk322x.dtsi
+> @@ -314,6 +314,23 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	efuse: efuse@11040000 {
+> +		compatible = "rockchip,rk322x-efuse";
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index d95a746f45d7..bdc4e0310060 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -31,6 +31,8 @@
- #include <linux/err.h>
- #include <linux/soc/samsung/exynos-pmu.h>
- 
-+#include <dt-bindings/pinctrl/samsung.h>
-+
- #include "pinctrl-samsung.h"
- #include "pinctrl-exynos.h"
- 
-@@ -176,7 +178,7 @@ static int exynos_irq_request_resources(struct irq_data *irqd)
- 
- 	con = readl(bank->pctl_base + reg_con);
- 	con &= ~(mask << shift);
--	con |= EXYNOS_EINT_FUNC << shift;
-+	con |= EXYNOS_PIN_FUNC_EINT << shift;
- 	writel(con, bank->pctl_base + reg_con);
- 
- 	spin_unlock_irqrestore(&bank->slock, flags);
-@@ -208,7 +210,7 @@ static void exynos_irq_release_resources(struct irq_data *irqd)
- 
- 	con = readl(bank->pctl_base + reg_con);
- 	con &= ~(mask << shift);
--	con |= FUNC_INPUT << shift;
-+	con |= EXYNOS_PIN_FUNC_INPUT << shift;
- 	writel(con, bank->pctl_base + reg_con);
- 
- 	spin_unlock_irqrestore(&bank->slock, flags);
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
-index b90139715c8f..7639b926c5c1 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-@@ -32,7 +32,6 @@
- #define EXYNOS7_WKUP_EMASK_OFFSET	0x900
- #define EXYNOS7_WKUP_EPEND_OFFSET	0xA00
- #define EXYNOS_SVC_OFFSET		0xB08
--#define EXYNOS_EINT_FUNC		0xF
- 
- /* helpers to access interrupt service register */
- #define EXYNOS_SVC_GROUP_SHIFT		3
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index a25c3ffae25c..86c98c1dec3a 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -30,6 +30,8 @@
- #include <linux/of_device.h>
- #include <linux/spinlock.h>
- 
-+#include <dt-bindings/pinctrl/samsung.h>
-+
- #include "../core.h"
- #include "pinctrl-samsung.h"
- 
-@@ -586,7 +588,7 @@ static int samsung_gpio_set_direction(struct gpio_chip *gc,
- 	data = readl(reg);
- 	data &= ~(mask << shift);
- 	if (!input)
--		data |= FUNC_OUTPUT << shift;
-+		data |= EXYNOS_PIN_FUNC_OUTPUT << shift;
- 	writel(data, reg);
- 
- 	return 0;
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index 61c4cab0ad24..15b26c786b1e 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -25,10 +25,6 @@
- 
- #include <linux/gpio.h>
- 
--/* pinmux function number for pin as gpio output line */
--#define FUNC_INPUT	0x0
--#define FUNC_OUTPUT	0x1
--
- /**
-  * enum pincfg_type - possible pin configuration types supported.
-  * @PINCFG_TYPE_FUNC: Function configuration.
--- 
-2.9.3
+was this binding included already? Simply because compatibles should
+not contain placeholders, so rockchip,rk3228-efuse please - same for
+the driver side.
+
+
+Heiko
+
+
+> +		reg = <0x11040000 0x20>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		clocks = <&cru PCLK_EFUSE_256>;
+> +		clock-names = "pclk_efuse";
+> +
+> +		/* Data cells */
+> +		efuse_id: id@7 {
+> +			reg = <0x7 0x10>;
+> +		};
+> +		cpu_leakage: cpu_leakage@17 {
+> +			reg = <0x17 0x1>;
+> +		};
+> +	};
+> +
+>  	i2c0: i2c@11050000 {
+>  		compatible = "rockchip,rk3228-i2c";
+>  		reg = <0x11050000 0x1000>;
+> 
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
