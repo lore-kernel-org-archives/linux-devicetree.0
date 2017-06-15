@@ -1,78 +1,86 @@
-From: Peter Chen <hzpeterchen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v15 2/7] power: add power sequence library
-Date: Thu, 15 Jun 2017 17:11:31 +0800
-Message-ID: <20170615091131.GB24157@b29397-desktop>
-References: <1497319166-17287-1-git-send-email-peter.chen@nxp.com>
- <1497319166-17287-3-git-send-email-peter.chen@nxp.com>
- <CAPDyKFpOQWTPpdd__OBP1DcW58CbqnygGAOxiEFq5kqqvCm0QA@mail.gmail.com>
- <20170614015338.GA4635@b29397-desktop>
- <CAPDyKFrLL10TY1JZAhF44_0+qGETLNtFc6ujKVUu7Ay=O8+M5A@mail.gmail.com>
- <20170615065854.GA24157@b29397-desktop>
- <CAPDyKFpc8GRKK8bafMU_HPaqWNrger3grPSd5rWWCTYhUGHZLA@mail.gmail.com>
+From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Subject: Re: [PATCH 1/8] dt: bindings: Add a binding for flash devices
+ associated to a sensor
+Date: Thu, 15 Jun 2017 11:21:33 +0200
+Message-ID: <20170615092133.edwi7szqowbnktev@earth>
+References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1497433639-13101-2-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="asxt4pmjxf6f757o"
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFpc8GRKK8bafMU_HPaqWNrger3grPSd5rWWCTYhUGHZLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Peter Chen <peter.chen-3arQi8VN3Tc@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, frank.li-3arQi8VN3Tc@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Gary Bisson <gary.bisson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joshua Clayton <stillcompiling-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vaibhav Hiremath <vaibhav.hiremath-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Maciej S. Szmigiero" <mail-APzI5cXaD1zVlRWJc41N0YvC60bnQu0Y@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY@public.gmane.org>
+In-Reply-To: <1497433639-13101-2-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, pavel@ucw.cz
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 10:11:45AM +0200, Ulf Hansson wrote:
-> > Yes, you are right. This is the limitation for this power sequence
-> > library, the registration for the 1st power sequence instance must
-> > be finished before device driver uses it. I am appreciated that
-> > you can supply some suggestions for it.
-> 
-> In general this kind of problems is solved by first parsing the DTB,
-> which means you will find out whether there is a resource (a pwrseq)
-> required for the device. Then you try to fetch that resource, and if
-> that fails, it means the resource is not yet available, and hence you
-> want to retry later and should return -EPROBE_DEFER.
-> 
-> In this case, of_pwrseq_on() needs to be converted to start looking
-> for a pwrseq compatible in it's child node - I guess. Then if that is
-> found, you try to fetch the instance of the corresponding library.
-> Failing to fetch the library instance should then cause a return
-> -EPROBE_DEFER.
 
-The most difficulty for this is we can't know whether the requested
-pwrseq instance will be registered or not, the kernel configuration
-for this pwrseq library may not be chosen at all.
+--asxt4pmjxf6f757o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> >
-> >> Moreover, I have found yet another severe problem but reviewing the code:
-> >> In the struct pwrseq, you have a "bool used", which you are setting to
-> >> "true" once the pwrseq has been hooked up with the device, when a
-> >> driver calls of_pwrseq_on(). Setting that variable to true, will also
-> >> prevent another driver from using the same instance of the pwrseq for
-> >> its device. So, to cope with multiple users, you register a new
-> >> instance of the same pwrseq library that got hooked up, once the
-> >> ->get() callback is about to complete.
-> >>
-> >> The problem the occurs, when there is another driver calling
-> >> of_pwrseq_on() in between, meaning that the new instance has not yet
-> >> been registered. This will simply fail, won't it?
-> >
-> > Yes, you are right, thanks for pointing that, I will add mutex_lock for
-> > of_pwrseq_on.
-> 
-> Another option is to entirely skip to two step approach.
-> 
-> In other words, make the library to cope with multiple users via the
-> same registered library instance.
-> 
+Hi,
 
-No, the pwrseq instance stores dtb information (clock, gpio, etc), it
-needs to be per device.
+On Wed, Jun 14, 2017 at 12:47:12PM +0300, Sakari Ailus wrote:
+> Camera flash drivers (and LEDs) are separate from the sensor devices in
+> DT. In order to make an association between the two, provide the
+> association information to the software.
+>=20
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
--- 
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- Sebastian
+
+> ---
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt=
+ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> index 9cd2a36..9723f7e 100644
+> --- a/Documentation/devicetree/bindings/media/video-interfaces.txt
+> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+> @@ -67,6 +67,14 @@ are required in a relevant parent node:
+>  		    identifier, should be 1.
+>   - #size-cells    : should be zero.
+> =20
+> +
+> +Optional properties
+> +-------------------
+> +
+> +- flash: phandle referring to the flash driver chip. A flash driver may
+> +  have multiple flashes connected to it.
+> +
+> +
+>  Optional endpoint properties
+>  ----------------------------
+> =20
+> --=20
+> 2.1.4
+>=20
+
+--asxt4pmjxf6f757o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllCUZoACgkQ2O7X88g7
++ppcgg//bpZhmnLRACd8mVUt9Fs5oBnWSX3nuFakCDnKyNI1bOpdpc3og7Toe5gi
+ig1tTr6nkh4egAlo/U9AvgjPJdJ64/cTa+cO95cESgYHQCxd089HcUwKvfRqkQeg
+brjP3ToaaEIYQ2nixrGiEFWpV6r5ZBr5S2cW286LRg/qVRlWmpY0EHDZnOA3AekG
+rFVmC5iNcukc6Gvp+28X2pu44HpUf66rZ2Wh2wbiJMBjukkC/c0tIX+2dOkwN5An
+wuV3FulbdWHgVRwy4TjTfFzRr+k5y2pkfKcw7E0yKlL5ctOtWCGa0UpGOUI5+YTo
+47sb1lCc4OpNxGwnOMrWRCjApSosn6ABT4lSLWrev/+jqKOckirRg+kDZXvPn24G
+tMUrdmoObbBkkBycxvTJnroIt7tbLrIJsOnBeuiDCQ3QGYthJl1KIU9dlaRDDu0u
+12ELTFtC1NGthFEYwg4noTzUNX5YB3IzvSJ6ppg13dJdrNND2YLH/jCFz9TUf4z+
+Waz5EcklMYzqStXjM8T8xjh3dgWFY+pMUulN9vGAzWh8zFkONrn2BABL/3wfpYaQ
+UDFLxVoh2wAIpcKhEzV+Luv9svAybwPDJnkcuZ3wW3piAHxNFDgmpxj6O0sNTIcP
+BTfiiajlTlw6JHKxhuh4/bRVz39d/vpsH3oVqD9hXck1+VaDxB0=
+=Tsvz
+-----END PGP SIGNATURE-----
+
+--asxt4pmjxf6f757o--
