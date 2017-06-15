@@ -1,38 +1,59 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v3 4/6] ARM64: meson: enable MESON_IRQ_GPIO in Kconfig
-Date: Thu, 15 Jun 2017 18:18:02 +0200
-Message-ID: <20170615161804.32658-5-jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v3 5/6] ARM: dts: meson8b: enable gpio interrupt controller
+Date: Thu, 15 Jun 2017 18:18:03 +0200
+Message-ID: <20170615161804.32658-6-jbrunet@baylibre.com>
 References: <20170615161804.32658-1-jbrunet@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170615161804.32658-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615161804.32658-1-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-select MESON_IRQ_GPIO in Kconfig for Amlogic's meson SoC family
+Add gpio interrupt controller node to the meson8b boards
 
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/meson.dtsi   | 9 +++++++++
+ arch/arm/boot/dts/meson8b.dtsi | 6 ++++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 73272f43ca01..3906472fae16 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -98,6 +98,7 @@ config ARCH_MESON
- 	select PINCTRL_MESON
- 	select COMMON_CLK_AMLOGIC
- 	select COMMON_CLK_GXBB
-+	select MESON_IRQ_GPIO
- 	help
- 	  This enables support for the Amlogic S905 SoCs.
+diff --git a/arch/arm/boot/dts/meson.dtsi b/arch/arm/boot/dts/meson.dtsi
+index 8d9c36970dfd..351783e72fab 100644
+--- a/arch/arm/boot/dts/meson.dtsi
++++ b/arch/arm/boot/dts/meson.dtsi
+@@ -78,6 +78,15 @@
+ 			#size-cells = <1>;
+ 			ranges = <0x0 0xc1100000 0x200000>;
  
++			gpio_intc: interrupt-controller@9880 {
++				compatible = "amlogic,meson-gpio-intc";
++				reg = <0xc1109880 0x10>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				amlogic,upstream-interrupts = <64 65 66 67 68 69 70 71>;
++				status = "disabled";
++			};
++
+ 			uart_A: serial@84c0 {
+ 				compatible = "amlogic,meson-uart";
+ 				reg = <0x84c0 0x18>;
+diff --git a/arch/arm/boot/dts/meson8b.dtsi b/arch/arm/boot/dts/meson8b.dtsi
+index d9f116a418b2..cbb85de864b6 100644
+--- a/arch/arm/boot/dts/meson8b.dtsi
++++ b/arch/arm/boot/dts/meson8b.dtsi
+@@ -171,6 +171,12 @@
+ 	};
+ };
+ 
++&gpio_intc {
++	compatible = "amlogic,meson-gpio-intc",
++		     "amlogic,meson8b-gpio-intc";
++	status = "okay";
++};
++
+ &L2 {
+ 	arm,data-latency = <3 3 3>;
+ 	arm,tag-latency = <2 2 2>;
 -- 
 2.9.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
