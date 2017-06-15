@@ -1,61 +1,91 @@
 From: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Subject: Re: [PATCH 2/7] drm/vc4: Fix vblank handling
-Date: Thu, 15 Jun 2017 16:30:58 -0700
-Message-ID: <87fuf0u8ul.fsf@eliezer.anholt.net>
-References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com> <1496392332-8722-3-git-send-email-boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 3/7] drm/vc4: Mimic drm_atomic_helper_commit() behavior
+Date: Thu, 15 Jun 2017 16:33:11 -0700
+Message-ID: <87d1a4u8qw.fsf@eliezer.anholt.net>
+References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com> <1496392332-8722-4-git-send-email-boris.brezillon@free-electrons.com> <87k24orheq.fsf@eliezer.anholt.net> <20170606224817.7244d0e0@bbrezillon> <87o9tzg06z.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
 Content-Type: multipart/signed; boundary="=-=-=";
         micalg=pgp-sha512; protocol="application/pgp-signature"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1496392332-8722-3-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <87o9tzg06z.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.orgBoris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eben Upton <eben-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "Hollingworth, Gordon" <gordon-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, "Cobley, Dom" <dom-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, Brian Starkey <brian.starkey-5wv7dgnIgG8@public.gmane.org>
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eben Upton <eben-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Hollingwort
 List-Id: devicetree@vger.kernel.org
 
 --=-=-=
 Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> writes:
 
-> There are two problems related to VBLANK handling in the current CRTC
-> driver:
+> [ Unknown signature status ]
+> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
 >
-> * VBLANK events are missed when the CRTC is being disabled because the
->   driver does not wait till the end of the frame before stopping the
->   HVS and PV blocks. In this case, we should explicitly issue a VBLANK
->   event if there's one waiting
-> * when we are enabling a CRTC, drm_crtc_vblank_get() is called before
->   drm_crtc_vblank_on(), which is not supposed to happen (hence the
->   WARN_ON() in the code). To solve the problem, we delay the 'update
->   display list' operation after the CRTC is actually enabled.
+>> On Tue, 06 Jun 2017 13:27:09 -0700
+>> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+>>
+>>> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+>>>=20
+>>> > The VC4 KMS driver is implementing its own ->atomic_commit() but there
+>>> > are a few generic helpers we can use instead of open-coding the logic.
+>>> >
+>>> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> > ---
+>>> >  drivers/gpu/drm/vc4/vc4_kms.c | 38 ++++++++++++---------------------=
+-----
+>>> >  1 file changed, 12 insertions(+), 26 deletions(-)
+>>> >
+>>> > diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_=
+kms.c
+>>> > index ad7925a9e0ea..f229abc0991b 100644
+>>> > --- a/drivers/gpu/drm/vc4/vc4_kms.c
+>>> > +++ b/drivers/gpu/drm/vc4/vc4_kms.c
+>>> > @@ -42,6 +42,10 @@ vc4_atomic_complete_commit(struct vc4_commit *c)
+>>> >  	struct drm_device *dev =3D state->dev;
+>>> >  	struct vc4_dev *vc4 =3D to_vc4_dev(dev);
+>>> >=20=20
+>>> > +	drm_atomic_helper_wait_for_fences(dev, state, false);
+>>> > +
+>>> > +	drm_atomic_helper_wait_for_dependencies(state);=20=20
+>>>=20
+>>> With this wait_for_fences() addition and the reservation stuff that
+>>> landed, I think we can rip out the "seqno cb" in vc4, and just use
+>>> drm_atomic_helper_commit() and drm_atomic_hepler_commit_tail().  Do you
+>>> see anything missing, with that?
+>>
+>> I can't tell. I haven't dig enough to understand what this seqno cb was
+>> used for :-), but Daniel was suggesting the same thing. I'll try to
+>> better understand what seqno cb does and if it's all safe to get rid of
+>> it and use the standard helpers.
+>
+> The seqno cb was the thing for stalling the modeset until V3D was done
+> rendering to the planes.  The wait_for_fences() does the same thing
+> using generic dmabuf reservations, so the seqno cb isn't needed any
+> more.
 
-Does drm_crtc_vblank_get() actually fail when drm_crtc_vblank_on()
-hasn't been called?  The code is a bit twisty, but it looked like we
-would track the get refcount and then turn on the interrupt once
-drm_crtc_vblank_on() was called.
-
-The first change of the two seems straightforward and good, though (and
-possible to separate, right?).
+Oh, we've got another user of the seqno cb (async flips), anyway, so we
+can't delete it quite yet.  I've pushed this patch since it's a clear
+improvement (less code, waits for fences from other devices if any).
 
 --=-=-=
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAllDGLIACgkQtdYpNtH8
-nujsTQ/7BegZ1dwCM0HttJQlJWjWxpYANChBmI/35558blY/Hq2Tzbkwh1W8frGQ
-oH7hrfQ40CYR3tgHJK8NFSJLFsrSf7wYoHveJtd4jlzmeBI++QxBu+w45Rsvxiay
-W+8AIjgz3Bmjc16fypVEFjrbN5Y9YlX7yLmHVzGXRaZBxq6hdw0lW43scP11uMmG
-MOKADChhf1mKbVBFJYQ8ghBrNsSWpbwl/I8PnqAMKouigxeZoM0bQqCcqqrUD9oC
-eg+BcidkSbhSGWplPD0udT0DKzDFCluGH3CJcQW2MVjTZsRwFjEadhcGid/76lWu
-C7ebkjQLlm1nUw9BFDR4PjfI4HrTxX8/BpohqRtm5qST641ZBkAbbCYzxCJVtXJY
-4ypns1W51C+/Pzte37D98+XkRHUyITJr+7F/wXja+9uJlHZlu1kJDRG0IEcGLSNp
-6dQ7SFUNBYejxjuLArubGMtxzT+s/Z5q6+pAa55jw3KyvHFWi8XXROPdv+k8DhRN
-Oq0zfjO0W56D8jY05wUUufuSRFveCM8zwMsFvB6FPMv9oq61sNGqsBSUSCGiVUMj
-urKJ9OmuZUhNUEHLrDNKilxfSyfGZ/gEWNQVbLhejwiFMjGLgkiFWk3JZm9FSgbe
-/Ztea3QHsZTD7nzR/36f980lMg6mxCDtM8K7oGwSGb4Gss6Ca78=
-=lL30
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAllDGTcACgkQtdYpNtH8
+nuhfwRAAnEBY9cm9qwVzrDocAFJBmKtA2jNg7uHByNwD5fKx55Hg0mU7MnEikAfS
+WeL7jIgD/v+V3PZlvxbRQF4dBGfRp+efYsePGGzu8jYQmErfWFQ0mMUPNSBImxyy
+7VRxlgv1ObZJXmf+n59TqmRI9rENkDT0TdTHfiibHW65KyUCy6e8e9e55Mk3lPXn
+5HOtzseqd5InNXKyYTCShv6m+4V1A1PVhtR23TucR1oHlaNA5+GPuOebMLL7ntIK
+kM+zwdq1Fk4FiUA0N2m3S+f6vrz7YhCIavXqAG8ouzOEoBKIYN2yBU7sExEpBdAU
+47Y1cx120dO8hT1Uur3zPFZOljrQKtWWsvLZB7k4Te+qaeIroP9spI8Vhpsvzdu8
+YFcGI1+PdoGcMmAVxCCoxRY8JQrXFvhmxmF+ur/d2flaUbkdOFAhmS3Nk9RrA8VP
+jtVJw3N6XX4m3BAudKsaikxLRno8Hzosrey+ip3zDMUy1q9sed0W8JTssnUz6BkI
+2vxoszDtEDmkV8YemaUCMqKI8tSLgfJWM5KUooAQULpZVdh9VXusT+shtOjyamZ0
+cdJkY8wBIJ97FOYM06+bIlYXcQokUfhuMTEQsmS4/bGjBOX0Nj6mom4nBaqNc/iF
+9iOWnH/UhVpTqG1Iuv4jio3GAuJHfAYYaA65WKySYXFoBoWyrZQ=
+=ccT/
 -----END PGP SIGNATURE-----
 --=-=-=--
 --
