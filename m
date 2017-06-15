@@ -1,422 +1,355 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 2/2] rtc: brcmstb-waketimer: Add Broadcom STB wake-timer
-Date: Thu, 15 Jun 2017 12:59:04 -0700
-Message-ID: <20170615195904.12653-3-f.fainelli@gmail.com>
-References: <20170615195904.12653-1-f.fainelli@gmail.com>
+From: Moritz Fischer <moritz.fischer@ettus.com>
+Subject: Re: [PATCH v3 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
+Date: Thu, 15 Jun 2017 13:03:41 -0700
+Message-ID: <CAAtXAHfv75VC=J+J5Xd7xeAoPtu1k97XRp2FSOS0ttwnrvWurg@mail.gmail.com>
+References: <1497525185-30232-1-git-send-email-p.pisati@gmail.com> <1497525185-30232-3-git-send-email-p.pisati@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615195904.12653-1-f.fainelli@gmail.com>
+In-Reply-To: <1497525185-30232-3-git-send-email-p.pisati@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Brian Norris <computersforpeace@gmail.com>, Markus Mayer <mmayer@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux@googlegroups.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Paolo Pisati <p.pisati@gmail.com>
+Cc: Alan Tull <atull@opensource.altera.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-fpga@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <computersforpeace@gmail.com>
+On Thu, Jun 15, 2017 at 4:13 AM, Paolo Pisati <p.pisati@gmail.com> wrote:
+> This patch adds support to the FPGA manager for programming
+> MachXO2 device=E2=80=99s internal flash memory, via slave SPI.
+>
+> Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
+> ---
+>  drivers/fpga/Kconfig       |   7 ++
+>  drivers/fpga/Makefile      |   1 +
+>  drivers/fpga/machxo2-spi.c | 277 +++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 285 insertions(+)
+>  create mode 100644 drivers/fpga/machxo2-spi.c
+>
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index c81cb7d..cce135b 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -26,6 +26,13 @@ config FPGA_MGR_ICE40_SPI
+>         help
+>           FPGA manager driver support for Lattice iCE40 FPGAs over SPI.
+>
+> +config FPGA_MGR_MACHXO2_SPI
+> +       tristate "Lattice MachXO2 SPI"
+> +       depends on SPI
+> +       help
+> +        FPGA manager driver support for Lattice MachXO2 configuration
+> +        over slave SPI interface.
+> +
+>  config FPGA_MGR_SOCFPGA
+>         tristate "Altera SOCFPGA FPGA Manager"
+>         depends on ARCH_SOCFPGA || COMPILE_TEST
+> diff --git a/drivers/fpga/Makefile b/drivers/fpga/Makefile
+> index c6f5d74..cdab1fe 100644
+> --- a/drivers/fpga/Makefile
+> +++ b/drivers/fpga/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_FPGA)                      +=3D fpga-mgr.o
+>
+>  # FPGA Manager Drivers
+>  obj-$(CONFIG_FPGA_MGR_ICE40_SPI)       +=3D ice40-spi.o
+> +obj-$(CONFIG_FPGA_MGR_MACHXO2_SPI)     +=3D machxo2-spi.o
+>  obj-$(CONFIG_FPGA_MGR_SOCFPGA)         +=3D socfpga.o
+>  obj-$(CONFIG_FPGA_MGR_SOCFPGA_A10)     +=3D socfpga-a10.o
+>  obj-$(CONFIG_FPGA_MGR_TS73XX)          +=3D ts73xx-fpga.o
+> diff --git a/drivers/fpga/machxo2-spi.c b/drivers/fpga/machxo2-spi.c
+> new file mode 100644
+> index 0000000..ea8793c
+> --- /dev/null
+> +++ b/drivers/fpga/machxo2-spi.c
+> @@ -0,0 +1,277 @@
+> +/**
+> + * Lattice MachXO2 Slave SPI Driver
+> + *
+> + * Copyright (C) 2017 Paolo Pisati <p.pisati@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify =
+it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * Manage Lattice FPGA firmware that is loaded over SPI using
+> + * the slave serial configuration interface.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/fpga/fpga-mgr.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/spi/spi.h>
+> +
+> +/* MachXO2 Programming Guide - sysCONFIG Programming Commands */
+> +
+> +#define ISC_DISABLE            0x00000026
+> +#define ISC_ENABLE             0x000008c6
+> +#define ISC_ERASE              0x0000040e
+> +#define ISC_NOOP               0xffffffff
+> +#define ISC_PROGRAMDONE                0x0000005e
+> +#define LSC_CHECKBUSY          0x000000f0
+> +#define LSC_INITADDRESS                0x00000046
+> +#define LSC_PROGINCRNV         0x01000070
+> +#define LSC_REFRESH            0x00000079
+> +
+> +#define BUSYFLAG               BIT(7)
+> +
+> +/*
+> + * Max CCLK in Slave SPI mode according to 'MachXO2 Family Data
+> + * Sheet' sysCONFIG Port Timing Specifications (3-36)
+> + */
+> +#define MACHXO2_MAX_SPEED      66000000
+> +
+> +#define MACHXO2_LOW_DELAY      5       /* us */
+> +#define MACHXO2_HIGH_DELAY     200     /* us */
+> +#define MACHXO2_REFRESH                4800    /* us */
+> +
+> +#define MACHXO2_OP_SIZE                sizeof(u32)
+> +#define MACHXO2_PAGE_SIZE      16
+> +#define MACHXO2_BUF_SIZE       (MACHXO2_OP_SIZE + MACHXO2_PAGE_SIZE)
+> +
+> +static int wait_until_not_busy(struct spi_device *spi)
+> +{
+> +       struct spi_message msg;
+> +       struct spi_transfer rx, tx;
+> +       u32 checkbusy =3D LSC_CHECKBUSY;
+> +       u8 busy;
+> +       int ret;
+> +
+> +       do {
+> +               memset(&rx, 0, sizeof(rx));
+> +               memset(&tx, 0, sizeof(tx));
+> +               tx.tx_buf =3D &checkbusy;
+> +               tx.len =3D MACHXO2_OP_SIZE;
+> +               rx.rx_buf =3D &busy;
+> +               rx.len =3D sizeof(busy);
+> +               spi_message_init(&msg);
+> +               spi_message_add_tail(&tx, &msg);
+> +               spi_message_add_tail(&rx, &msg);
+> +               ret =3D spi_sync(spi, &msg);
+> +               if (ret)
+> +                       return ret;
+> +       } while (busy & BUSYFLAG);
+> +
+> +       return 0;
+> +}
+> +
+> +static enum fpga_mgr_states machxo2_spi_state(struct fpga_manager *mgr)
+> +{
+> +       return FPGA_MGR_STATE_UNKNOWN;
+> +}
+> +
+> +static int machxo2_write_init(struct fpga_manager *mgr,
+> +                             struct fpga_image_info *info,
+> +                             const char *buf, size_t count)
+> +{
+> +       struct spi_device *spi =3D mgr->priv;
+> +       struct spi_message msg;
+> +       struct spi_transfer tx[5];
+> +       u32 disable =3D ISC_DISABLE;
+> +       u32 bypass =3D ISC_NOOP;
+> +       u32 enable =3D ISC_ENABLE;
+> +       u32 erase =3D ISC_ERASE;
+> +       u32 initaddr =3D LSC_INITADDRESS;
+> +       int ret;
+> +
+> +       if ((info->flags & FPGA_MGR_PARTIAL_RECONFIG)) {
+> +               dev_err(&mgr->dev,
+> +                       "Partial reconfiguration is not supported\n");
+> +               return -ENOTSUPP;
+> +       }
+> +
+> +       memset(tx, 0, sizeof(tx));
+> +       spi_message_init(&msg);
+> +       tx[0].tx_buf =3D &disable;
+> +       tx[0].len =3D MACHXO2_OP_SIZE - 1;
+> +       spi_message_add_tail(&tx[0], &msg);
+> +
+> +       tx[1].tx_buf =3D &bypass;
+> +       tx[1].len =3D MACHXO2_OP_SIZE;
+> +       spi_message_add_tail(&tx[1], &msg);
+> +       ret =3D spi_sync(spi, &msg);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       ret =3D wait_until_not_busy(spi);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       spi_message_init(&msg);
+> +       tx[2].tx_buf =3D &enable;
+> +       tx[2].len =3D MACHXO2_OP_SIZE;
+> +       tx[2].delay_usecs =3D MACHXO2_LOW_DELAY;
+> +       spi_message_add_tail(&tx[2], &msg);
+> +
+> +       tx[3].tx_buf =3D &erase;
+> +       tx[3].len =3D MACHXO2_OP_SIZE;
+> +       spi_message_add_tail(&tx[3], &msg);
+> +       ret =3D spi_sync(spi, &msg);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       ret =3D wait_until_not_busy(spi);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       spi_message_init(&msg);
+> +       tx[4].tx_buf =3D &initaddr;
+> +       tx[4].len =3D MACHXO2_OP_SIZE;
+> +       spi_message_add_tail(&tx[4], &msg);
+> +       ret =3D spi_sync(spi, &msg);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       return 0;
+> +
+> +fail:
+> +       dev_err(&mgr->dev, "Error during FPGA init.\n");
+> +       return ret;
+> +}
+> +
+> +static int machxo2_write(struct fpga_manager *mgr, const char *buf,
+> +                        size_t count)
+> +{
+> +       struct spi_device *spi =3D mgr->priv;
+> +       struct spi_message msg;
+> +       struct spi_transfer tx;
+> +       u32 progincr =3D LSC_PROGINCRNV;
+> +       u8 payload[MACHXO2_BUF_SIZE];
+> +       int i, ret;
+> +
+> +       if (count % MACHXO2_PAGE_SIZE !=3D 0) {
+> +               dev_err(&mgr->dev, "Malformed payload.\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       memcpy(payload, &progincr, MACHXO2_OP_SIZE);
+> +       for (i =3D 0; i < count; i +=3D MACHXO2_PAGE_SIZE) {
+> +               memcpy(&payload[MACHXO2_OP_SIZE], &buf[i], MACHXO2_PAGE_S=
+IZE);
+> +               memset(&tx, 0, sizeof(tx));
+> +               spi_message_init(&msg);
+> +               tx.tx_buf =3D payload;
+> +               tx.len =3D MACHXO2_BUF_SIZE;
+> +               tx.delay_usecs =3D MACHXO2_HIGH_DELAY;
+> +               spi_message_add_tail(&tx, &msg);
+> +               ret =3D spi_sync(spi, &msg);
+> +               if (ret) {
+> +                       dev_err(&mgr->dev, "Error loading the bitstream.\=
+n");
+> +                       return ret;
+> +               }
+> +       }
 
-This adds support for the Broadcom STB wake-timer which is a timer in
-the chip's 27Mhz clock domain that offers the ability to wake the system
-(wake-up source) from suspend states (S2, S3, S5). It is supported using
-the rtc framework allowing us to configure alarms for system wake-up.
+Can't you chain them together and submit it as one? Instead of calling
+spi_sync in a loop?
+You don't seem to wait for _wait_until_not_busy, so wouldn't that work?
 
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/rtc/Kconfig                 |  11 ++
- drivers/rtc/Makefile                |   1 +
- drivers/rtc/rtc-brcmstb-waketimer.c | 345 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 357 insertions(+)
- create mode 100644 drivers/rtc/rtc-brcmstb-waketimer.c
+> +
+> +       return 0;
+> +}
+> +
+> +static int machxo2_write_complete(struct fpga_manager *mgr,
+> +                                 struct fpga_image_info *info)
+> +{
+> +       struct spi_device *spi =3D mgr->priv;
+> +       struct spi_message msg;
+> +       struct spi_transfer tx[2];
+> +       u32 progdone =3D ISC_PROGRAMDONE;
+> +       u32 refresh =3D LSC_REFRESH;
+> +       int ret;
+> +
+> +       memset(tx, 0, sizeof(tx));
+> +       spi_message_init(&msg);
+> +       tx[0].tx_buf =3D &progdone;
+> +       tx[0].len =3D MACHXO2_OP_SIZE;
+> +       spi_message_add_tail(&tx[0], &msg);
+> +       ret =3D spi_sync(spi, &msg);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       ret =3D wait_until_not_busy(spi);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       spi_message_init(&msg);
+> +       tx[1].tx_buf =3D &refresh;
+> +       tx[1].len =3D MACHXO2_OP_SIZE - 1;
+> +       tx[1].delay_usecs =3D MACHXO2_REFRESH;
+> +       spi_message_add_tail(&tx[1], &msg);
+> +       ret =3D spi_sync(spi, &msg);
+> +       if (ret)
+> +               goto fail;
+> +
+> +       return 0;
+> +
+> +fail:
+> +       dev_err(&mgr->dev, "Refresh failed.\n");
+> +       return ret;
+> +}
+> +
+> +static const struct fpga_manager_ops machxo2_ops =3D {
+> +       .state =3D machxo2_spi_state,
+> +       .write_init =3D machxo2_write_init,
+> +       .write =3D machxo2_write,
+> +       .write_complete =3D machxo2_write_complete,
+> +};
+> +
+> +static int machxo2_spi_probe(struct spi_device *spi)
+> +{
+> +       struct device *dev =3D &spi->dev;
+> +
+> +       if (spi->max_speed_hz > MACHXO2_MAX_SPEED) {
+> +               dev_err(dev, "Speed is too high\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       return fpga_mgr_register(dev, "Lattice MachXO2 SPI FPGA Manager",
+> +                                &machxo2_ops, spi);
+> +}
+> +
+> +static int machxo2_spi_remove(struct spi_device *spi)
+> +{
+> +       struct device *dev =3D &spi->dev;
+> +
+> +       fpga_mgr_unregister(dev);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id of_match[] =3D {
+> +       { .compatible =3D "lattice,machxo2-slave-spi", },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(of, of_match);
+> +
+> +static const struct spi_device_id lattice_ids[] =3D {
+> +       { "machxo2-slave-spi", 0 },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(spi, lattice_ids);
+> +
+> +static struct spi_driver machxo2_spi_driver =3D {
+> +       .driver =3D {
+> +               .name =3D "machxo2-slave-spi",
+> +               .of_match_table =3D of_match_ptr(of_match),
+> +       },
+> +       .probe =3D machxo2_spi_probe,
+> +       .remove =3D machxo2_spi_remove,
+> +       .id_table =3D lattice_ids,
+> +};
+> +
+> +module_spi_driver(machxo2_spi_driver)
+> +
+> +MODULE_AUTHOR("Paolo Pisati <p.pisati@gmail.com>");
+> +MODULE_DESCRIPTION("Load Lattice FPGA firmware over SPI");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.7.4
+>
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 8d3b95728326..8e1aa67fe533 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -197,6 +197,17 @@ config RTC_DRV_AC100
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-ac100.
- 
-+config RTC_DRV_BRCMSTB
-+	tristate "Broadcom STB wake-timer"
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-+	default ARCH_BRCMSTB || BMIPS_GENERIC
-+	help
-+	  If you say yes here you get support for the wake-timer found on
-+	  Broadcom STB SoCs (BCM7xxx).
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called rtc-brcmstb-waketimer.
-+
- config RTC_DRV_AS3722
- 	tristate "ams AS3722 RTC driver"
- 	depends on MFD_AS3722
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 13857d2fce09..df89cac1f9ae 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_RTC_DRV_AT91RM9200)+= rtc-at91rm9200.o
- obj-$(CONFIG_RTC_DRV_AT91SAM9)	+= rtc-at91sam9.o
- obj-$(CONFIG_RTC_DRV_AU1XXX)	+= rtc-au1xxx.o
- obj-$(CONFIG_RTC_DRV_BFIN)	+= rtc-bfin.o
-+obj-$(CONFIG_RTC_DRV_BRCMSTB)	+= rtc-brcmstb-waketimer.o
- obj-$(CONFIG_RTC_DRV_BQ32K)	+= rtc-bq32k.o
- obj-$(CONFIG_RTC_DRV_BQ4802)	+= rtc-bq4802.o
- obj-$(CONFIG_RTC_DRV_CMOS)	+= rtc-cmos.o
-diff --git a/drivers/rtc/rtc-brcmstb-waketimer.c b/drivers/rtc/rtc-brcmstb-waketimer.c
-new file mode 100644
-index 000000000000..c7f166e39f5e
---- /dev/null
-+++ b/drivers/rtc/rtc-brcmstb-waketimer.c
-@@ -0,0 +1,345 @@
-+/*
-+ * Copyright © 2014-2017 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irqreturn.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/pm_wakeup.h>
-+#include <linux/reboot.h>
-+#include <linux/rtc.h>
-+#include <linux/stat.h>
-+#include <linux/suspend.h>
-+
-+struct brcmstb_waketmr {
-+	struct rtc_device *rtc;
-+	struct device *dev;
-+	void __iomem *base;
-+	int irq;
-+	struct notifier_block reboot_notifier;
-+	struct clk *clk;
-+	u32 rate;
-+};
-+
-+#define BRCMSTB_WKTMR_EVENT		0x00
-+#define BRCMSTB_WKTMR_COUNTER		0x04
-+#define BRCMSTB_WKTMR_ALARM		0x08
-+#define BRCMSTB_WKTMR_PRESCALER		0x0C
-+#define BRCMSTB_WKTMR_PRESCALER_VAL	0x10
-+
-+#define BRCMSTB_WKTMR_DEFAULT_FREQ	27000000
-+
-+static inline void brcmstb_waketmr_clear_alarm(struct brcmstb_waketmr *timer)
-+{
-+	writel_relaxed(1, timer->base + BRCMSTB_WKTMR_EVENT);
-+	(void)readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
-+}
-+
-+static void brcmstb_waketmr_set_alarm(struct brcmstb_waketmr *timer,
-+				      unsigned int secs)
-+{
-+	brcmstb_waketmr_clear_alarm(timer);
-+
-+	writel_relaxed(secs + 1, timer->base + BRCMSTB_WKTMR_ALARM);
-+}
-+
-+static irqreturn_t brcmstb_waketmr_irq(int irq, void *data)
-+{
-+	struct brcmstb_waketmr *timer = data;
-+
-+	pm_wakeup_event(timer->dev, 0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+struct wktmr_time {
-+	u32 sec;
-+	u32 pre;
-+};
-+
-+static void wktmr_read(struct brcmstb_waketmr *timer,
-+		       struct wktmr_time *t)
-+{
-+	u32 tmp;
-+
-+	do {
-+		t->sec = readl_relaxed(timer->base + BRCMSTB_WKTMR_COUNTER);
-+		tmp = readl_relaxed(timer->base + BRCMSTB_WKTMR_PRESCALER_VAL);
-+	} while (tmp >= timer->rate);
-+
-+	t->pre = timer->rate - tmp;
-+}
-+
-+static int brcmstb_waketmr_prepare_suspend(struct brcmstb_waketmr *timer)
-+{
-+	struct device *dev = timer->dev;
-+	int ret = 0;
-+
-+	if (device_may_wakeup(dev)) {
-+		dev_dbg(dev, "enable wake IRQ\n");
-+		ret = enable_irq_wake(timer->irq);
-+		if (ret) {
-+			dev_err(dev, "failed to enable wake-up interrupt\n");
-+			return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+/* If enabled as a wakeup-source, arm the timer when powering off */
-+static int brcmstb_waketmr_reboot(struct notifier_block *nb,
-+		unsigned long action, void *data)
-+{
-+	struct brcmstb_waketmr *timer;
-+
-+	timer = container_of(nb, struct brcmstb_waketmr, reboot_notifier);
-+
-+	/* Set timer for cold boot */
-+	if (action == SYS_POWER_OFF)
-+		brcmstb_waketmr_prepare_suspend(timer);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int brcmstb_waketmr_gettime(struct device *dev,
-+				   struct rtc_time *tm)
-+{
-+	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
-+	struct wktmr_time now;
-+
-+	wktmr_read(timer, &now);
-+
-+	rtc_time_to_tm(now.sec, tm);
-+
-+	return 0;
-+}
-+
-+static int brcmstb_waketmr_settime(struct device *dev,
-+				   struct rtc_time *tm)
-+{
-+	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
-+	unsigned long sec;
-+	int ret;
-+
-+	ret = rtc_valid_tm(tm);
-+	if (ret)
-+		return ret;
-+
-+	rtc_tm_to_time(tm, &sec);
-+
-+	dev_dbg(dev, "%s: sec=%ld\n", __func__, sec);
-+	writel_relaxed(sec, timer->base + BRCMSTB_WKTMR_COUNTER);
-+
-+	return 0;
-+}
-+
-+static int brcmstb_waketmr_getalarm(struct device *dev,
-+				    struct rtc_wkalrm *alarm)
-+{
-+	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
-+	unsigned long sec;
-+	u32 reg;
-+
-+	sec = readl_relaxed(timer->base + BRCMSTB_WKTMR_ALARM);
-+	if (sec == 0) {
-+		/* Alarm is disabled */
-+		alarm->enabled = 0;
-+		alarm->time.tm_mon = -1;
-+		alarm->time.tm_mday = -1;
-+		alarm->time.tm_year = -1;
-+		alarm->time.tm_hour = -1;
-+		alarm->time.tm_min = -1;
-+		alarm->time.tm_sec = -1;
-+		dev_dbg(dev, "%s: alarm is disabled\n", __func__);
-+	} else {
-+		/* Alarm is enabled */
-+		alarm->enabled = 1;
-+		rtc_time_to_tm(sec, &alarm->time);
-+		dev_dbg(dev, "%s: alarm is enabled\n", __func__);
-+	}
-+
-+	reg = readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
-+	alarm->pending = !!(reg & 1);
-+	dev_dbg(dev, "%s: alarm pending=%d\n", __func__, alarm->pending);
-+
-+	return 0;
-+}
-+
-+static int brcmstb_waketmr_setalarm(struct device *dev,
-+				     struct rtc_wkalrm *alarm)
-+{
-+	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
-+	unsigned long sec;
-+
-+	if (alarm->enabled)
-+		rtc_tm_to_time(&alarm->time, &sec);
-+	else
-+		sec = 0;
-+
-+	dev_dbg(dev, "%s: timeout=%ld\n", __func__, sec);
-+	brcmstb_waketmr_set_alarm(timer, sec);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Does not do much but keep the RTC class happy. We always support
-+ * alarms.
-+ */
-+static int brcmstb_waketmr_alarm_enable(struct device *dev,
-+					unsigned int enabled)
-+{
-+	dev_dbg(dev, "%s: enabled=%d\n", __func__, enabled);
-+	return 0;
-+}
-+
-+static const struct rtc_class_ops brcmstb_waketmr_ops = {
-+	.read_time	= brcmstb_waketmr_gettime,
-+	.set_time	= brcmstb_waketmr_settime,
-+	.read_alarm	= brcmstb_waketmr_getalarm,
-+	.set_alarm	= brcmstb_waketmr_setalarm,
-+	.alarm_irq_enable = brcmstb_waketmr_alarm_enable,
-+};
-+
-+static int brcmstb_waketmr_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct brcmstb_waketmr *timer;
-+	struct resource *res;
-+	int ret;
-+
-+	timer = devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
-+	if (!timer)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, timer);
-+	timer->dev = dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	timer->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(timer->base))
-+		return PTR_ERR(timer->base);
-+
-+	/*
-+	 * Set wakeup capability before requesting wakeup interrupt, so we can
-+	 * process boot-time "wakeups" (e.g., from S5 soft-off)
-+	 */
-+	device_set_wakeup_capable(dev, true);
-+	device_wakeup_enable(dev);
-+
-+	timer->irq = platform_get_irq(pdev, 0);
-+	if (timer->irq < 0)
-+		return -ENODEV;
-+
-+	timer->clk = devm_clk_get(dev, NULL);
-+	if (!IS_ERR(timer->clk)) {
-+		ret = clk_prepare_enable(timer->clk);
-+		if (ret)
-+			return ret;
-+		timer->rate = clk_get_rate(timer->clk);
-+		if (!timer->rate)
-+			timer->rate = BRCMSTB_WKTMR_DEFAULT_FREQ;
-+	} else {
-+		timer->rate = BRCMSTB_WKTMR_DEFAULT_FREQ;
-+		timer->clk = NULL;
-+	}
-+
-+	ret = devm_request_irq(dev, timer->irq, brcmstb_waketmr_irq, 0,
-+			       "brcmstb-waketimer", timer);
-+	if (ret < 0)
-+		return ret;
-+
-+	timer->reboot_notifier.notifier_call = brcmstb_waketmr_reboot;
-+	register_reboot_notifier(&timer->reboot_notifier);
-+
-+	timer->rtc = rtc_device_register("brcmstb-waketmr", dev,
-+					 &brcmstb_waketmr_ops, THIS_MODULE);
-+	if (IS_ERR(timer->rtc)) {
-+		dev_err(dev, "unable to register device\n");
-+		unregister_reboot_notifier(&timer->reboot_notifier);
-+		return PTR_ERR(timer->rtc);
-+	}
-+
-+	dev_info(dev, "registered, with irq %d\n", timer->irq);
-+
-+	return ret;
-+}
-+
-+static int brcmstb_waketmr_remove(struct platform_device *pdev)
-+{
-+	struct brcmstb_waketmr *timer = dev_get_drvdata(&pdev->dev);
-+
-+	unregister_reboot_notifier(&timer->reboot_notifier);
-+	rtc_device_unregister(timer->rtc);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int brcmstb_waketmr_suspend(struct device *dev)
-+{
-+	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
-+
-+	return brcmstb_waketmr_prepare_suspend(timer);
-+}
-+
-+static int brcmstb_waketmr_resume(struct device *dev)
-+{
-+	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (!device_may_wakeup(dev))
-+		return 0;
-+
-+	ret = disable_irq_wake(timer->irq);
-+
-+	brcmstb_waketmr_clear_alarm(timer);
-+
-+	return ret;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static SIMPLE_DEV_PM_OPS(brcmstb_waketmr_pm_ops,
-+			 brcmstb_waketmr_suspend, brcmstb_waketmr_resume);
-+
-+static const struct of_device_id brcmstb_waketmr_of_match[] = {
-+	{ .compatible = "brcm,brcmstb-waketimer" },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver brcmstb_waketmr_driver = {
-+	.probe			= brcmstb_waketmr_probe,
-+	.remove			= brcmstb_waketmr_remove,
-+	.driver = {
-+		.name		= "brcmstb-waketimer",
-+		.pm		= &brcmstb_waketmr_pm_ops,
-+		.of_match_table	= of_match_ptr(brcmstb_waketmr_of_match),
-+	}
-+};
-+module_platform_driver(brcmstb_waketmr_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Brian Norris");
-+MODULE_AUTHOR("Markus Mayer");
-+MODULE_DESCRIPTION("Wake-up timer driver for STB chips");
--- 
-2.9.3
+Thanks,
+Moritz
