@@ -1,82 +1,124 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v15 2/7] power: add power sequence library
-Date: Thu, 15 Jun 2017 11:35:20 +0200
-Message-ID: <CAPDyKFrZoyoYCQA1rnRbz9tmT9vJigzSb+xyTZpJjhd=5eFA5A@mail.gmail.com>
-References: <1497319166-17287-1-git-send-email-peter.chen@nxp.com>
- <1497319166-17287-3-git-send-email-peter.chen@nxp.com> <CAPDyKFpOQWTPpdd__OBP1DcW58CbqnygGAOxiEFq5kqqvCm0QA@mail.gmail.com>
- <20170614015338.GA4635@b29397-desktop> <CAPDyKFrLL10TY1JZAhF44_0+qGETLNtFc6ujKVUu7Ay=O8+M5A@mail.gmail.com>
- <20170615065854.GA24157@b29397-desktop> <CAPDyKFpc8GRKK8bafMU_HPaqWNrger3grPSd5rWWCTYhUGHZLA@mail.gmail.com>
- <20170615091131.GB24157@b29397-desktop>
+From: Liviu Dudau <liviu@dudau.co.uk>
+Subject: Re: [PATCH net-next] of_mdio: move of_mdio_parse_addr to header file
+Date: Thu, 15 Jun 2017 10:45:37 +0100
+Message-ID: <20170615094537.GA24982@bart.dudau.co.uk>
+References: <1497365768-17627-1-git-send-email-jon.mason@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170615091131.GB24157@b29397-desktop>
-Sender: linux-pm-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: Peter Chen <peter.chen@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, frank.li@nxp.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gary Bisson <gary.bisson@boundarydevices.com>, Fabio Estevam <festevam@gmail.com>, Joshua Clayton <stillcompiling@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1497365768-17627-1-git-send-email-jon.mason@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Mason <jon.mason@broadcom.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>
 List-Id: devicetree@vger.kernel.org
 
-On 15 June 2017 at 11:11, Peter Chen <hzpeterchen@gmail.com> wrote:
-> On Thu, Jun 15, 2017 at 10:11:45AM +0200, Ulf Hansson wrote:
->> > Yes, you are right. This is the limitation for this power sequence
->> > library, the registration for the 1st power sequence instance must
->> > be finished before device driver uses it. I am appreciated that
->> > you can supply some suggestions for it.
->>
->> In general this kind of problems is solved by first parsing the DTB,
->> which means you will find out whether there is a resource (a pwrseq)
->> required for the device. Then you try to fetch that resource, and if
->> that fails, it means the resource is not yet available, and hence you
->> want to retry later and should return -EPROBE_DEFER.
->>
->> In this case, of_pwrseq_on() needs to be converted to start looking
->> for a pwrseq compatible in it's child node - I guess. Then if that is
->> found, you try to fetch the instance of the corresponding library.
->> Failing to fetch the library instance should then cause a return
->> -EPROBE_DEFER.
->
-> The most difficulty for this is we can't know whether the requested
-> pwrseq instance will be registered or not, the kernel configuration
-> for this pwrseq library may not be chosen at all.
+On Tue, Jun 13, 2017 at 10:56:08AM -0400, Jon Mason wrote:
+> The of_mdio_parse_addr() helper function is useful to other code, but
+> the module dependency chain causes issues.  To work around this, we can
+> move of_mdio_parse_addr() to be an inline function in the header file.
+> This gets rid of the dependencies and still allows for the reuse of
+> code.
 
-In such case it is still correct to return -EPROBE_DEFER, because the
-driver that tries to probe its device will fail unless it can run the
-needed pwrseq. Right?
+This patch fixes the modules_install issue I was seeing with module
+dependency cycle.
 
->
->>
->> >
->> >> Moreover, I have found yet another severe problem but reviewing the code:
->> >> In the struct pwrseq, you have a "bool used", which you are setting to
->> >> "true" once the pwrseq has been hooked up with the device, when a
->> >> driver calls of_pwrseq_on(). Setting that variable to true, will also
->> >> prevent another driver from using the same instance of the pwrseq for
->> >> its device. So, to cope with multiple users, you register a new
->> >> instance of the same pwrseq library that got hooked up, once the
->> >> ->get() callback is about to complete.
->> >>
->> >> The problem the occurs, when there is another driver calling
->> >> of_pwrseq_on() in between, meaning that the new instance has not yet
->> >> been registered. This will simply fail, won't it?
->> >
->> > Yes, you are right, thanks for pointing that, I will add mutex_lock for
->> > of_pwrseq_on.
->>
->> Another option is to entirely skip to two step approach.
->>
->> In other words, make the library to cope with multiple users via the
->> same registered library instance.
->>
->
-> No, the pwrseq instance stores dtb information (clock, gpio, etc), it
-> needs to be per device.
+You can add my:
 
-I think you misunderstood my suggestion here. Of course you need to
-allocate one pwrseq data per device.
+Tested-by: Liviu Dudau <liviu@dudau.co.uk>
 
-However, my point is that you shouldn't need more than one instance of
-the library functions to be registered in the list of available pwrseq
-libraries.
+Thanks,
+Liviu
 
-Kind regards
-Uffe
+> 
+> Reported-by: Liviu Dudau <liviu@dudau.co.uk>
+> Signed-off-by: Jon Mason <jon.mason@broadcom.com>
+> Fixes: 342fa1964439 ("mdio: mux: make child bus walking more permissive and errors more verbose")
+> ---
+>  drivers/of/of_mdio.c    | 22 ----------------------
+>  include/linux/of_mdio.h | 24 +++++++++++++++++++++++-
+>  2 files changed, 23 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 7e4c80f9b6cd..057963f2b74f 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -119,28 +119,6 @@ static void of_mdiobus_register_device(struct mii_bus *mdio,
+>  		child->name, addr);
+>  }
+>  
+> -int of_mdio_parse_addr(struct device *dev, const struct device_node *np)
+> -{
+> -	u32 addr;
+> -	int ret;
+> -
+> -	ret = of_property_read_u32(np, "reg", &addr);
+> -	if (ret < 0) {
+> -		dev_err(dev, "%s has invalid PHY address\n", np->full_name);
+> -		return ret;
+> -	}
+> -
+> -	/* A PHY must have a reg property in the range [0-31] */
+> -	if (addr >= PHY_MAX_ADDR) {
+> -		dev_err(dev, "%s PHY address %i is too large\n",
+> -			np->full_name, addr);
+> -		return -EINVAL;
+> -	}
+> -
+> -	return addr;
+> -}
+> -EXPORT_SYMBOL(of_mdio_parse_addr);
+> -
+>  /* The following is a list of PHY compatible strings which appear in
+>   * some DTBs. The compatible string is never matched against a PHY
+>   * driver, so is pointless. We only expect devices which are not PHYs
+> diff --git a/include/linux/of_mdio.h b/include/linux/of_mdio.h
+> index ba35ba520487..f5db93bcd069 100644
+> --- a/include/linux/of_mdio.h
+> +++ b/include/linux/of_mdio.h
+> @@ -27,11 +27,33 @@ struct phy_device *of_phy_attach(struct net_device *dev,
+>  				 phy_interface_t iface);
+>  
+>  extern struct mii_bus *of_mdio_find_bus(struct device_node *mdio_np);
+> -extern int of_mdio_parse_addr(struct device *dev, const struct device_node *np);
+>  extern int of_phy_register_fixed_link(struct device_node *np);
+>  extern void of_phy_deregister_fixed_link(struct device_node *np);
+>  extern bool of_phy_is_fixed_link(struct device_node *np);
+>  
+> +
+> +static inline int of_mdio_parse_addr(struct device *dev,
+> +				     const struct device_node *np)
+> +{
+> +	u32 addr;
+> +	int ret;
+> +
+> +	ret = of_property_read_u32(np, "reg", &addr);
+> +	if (ret < 0) {
+> +		dev_err(dev, "%s has invalid PHY address\n", np->full_name);
+> +		return ret;
+> +	}
+> +
+> +	/* A PHY must have a reg property in the range [0-31] */
+> +	if (addr >= PHY_MAX_ADDR) {
+> +		dev_err(dev, "%s PHY address %i is too large\n",
+> +			np->full_name, addr);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return addr;
+> +}
+> +
+>  #else /* CONFIG_OF_MDIO */
+>  static inline int of_mdiobus_register(struct mii_bus *mdio, struct device_node *np)
+>  {
+> -- 
+> 2.7.4
+> 
+
+-- 
+   _
+ _|_|_
+ ('_')
+ (⊃  )⊃
+ |_|_|
