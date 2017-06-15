@@ -1,54 +1,52 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec
- node
-Date: Thu, 15 Jun 2017 15:51:01 +0800
-Message-ID: <20170615075059.GD5902@dragon>
-References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-2-git-send-email-jagan@openedev.com>
- <20170407131649.GH16503@dragon>
- <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com>
- <20170615022024.GE30112@dragon>
- <CAMty3ZAUK37JYnPwVRuBA6B67QV+S_BYQ6f=k6_rjw__ypTxBg@mail.gmail.com>
- <20170615071529.GC5902@dragon>
- <CAMty3ZCwkP=EaFcSdA--yQNN9ebjE9JptfwWjQpceXqDq-xkyA@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 2/6] Documentation: rockchip-dw-mshc: add description for rk3228
+Date: Thu, 15 Jun 2017 09:51:59 +0200
+Message-ID: <2961285.cLXt8uGUMN@diego>
+References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com> <1497510980-23207-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCwkP=EaFcSdA--yQNN9ebjE9JptfwWjQpceXqDq-xkyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1497510980-23207-3-git-send-email-frank.wang@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Frank Wang <frank.wang@rock-chips.com>
+Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, finley.xiao@rock-chips.com, david.wu@rock-chips.com, shawn.lin@rock-chips.com, wmc@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 01:01:22PM +0530, Jagan Teki wrote:
-> > I feel the abstraction is wrong from the beginning.  Ideally, we should
-> > have something like below.
-> >
-> >  - imx6ul-isiot.dtsi
-> >  - imx6ul-isiot-kit.dts and imx6ul-isiot-carrier.dts
-> >
-> > The -isiot should have everything on SoM and common stuff between -kit
-> > and -carrier boards, while -kit and -carrier include -isiot and contains
-> > the base-board specific things.  The -isiot can have both emmc and nand
-> > devices with "disabled" status, and let firmware turn device on per SoM
-> > it boots.  In that case, the abstraction level can be less and clearer.
-> >
-> > Thoughts?
+Hi Frank,
+
+Am Donnerstag, 15. Juni 2017, 15:16:16 CEST schrieb Frank Wang:
+> From: Shawn Lin <shawn.lin@rock-chips.com>
 > 
-> So,even the common stuff (lcdif, ts and etc) should be in -isiot.dtsi
+> Add "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc" for
+> dwmmc on rk322x platform.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt index
+> 520d61d..ce30dff 100644
+> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> @@ -15,6 +15,7 @@ Required Properties:
+>  	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
+>  	- "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip
+> RV1108 - "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip
+> RK3036 +	- "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc": for
+> Rockchip RK322X - "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for
+> Rockchip RK3368 - "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for
+> Rockchip RK3399
 
-Yes, anything common can be in -isiot.dtsi.
+you might want to rebase this patch on top of Ulfs next branch [0],
+as there is also the support for the rk3328 in there now.
 
-> and make it "disabled" and let them enabled on respective dts. this
-> what you mentioned here?
+Otherwise looks good to me, so
+Reviewed-by: Heiko Stuebner <heiko@sntech.de>
 
-It doesn't matter.  If the lcd/touch is same on -kit and -carrier, you
-can even have them enabled by default in -isiot.dtsi.  The -kit.dts and
--carrier.dts are there to accommodate base-board specific differences.
 
-Shawn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git/log/?h=next
+
