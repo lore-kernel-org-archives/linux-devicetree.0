@@ -1,154 +1,27 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] arm64: dts: mt7622: add basic nodes to the
- mt7622.dtsi file
-Date: Thu, 15 Jun 2017 18:04:26 +0200
-Message-ID: <37f67b23-7995-3b93-2ee0-c04b34428bd9@gmail.com>
-References: <cover.1497455465.git.sean.wang@mediatek.com>
- <4d7c2a58fb2bd68cc5c17a313ee426e0d4233ca0.1497455465.git.sean.wang@mediatek.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v1 0/2] Add support for Broadcom DTE based PTP clock
+Date: Thu, 15 Jun 2017 12:07:52 -0400 (EDT)
+Message-ID: <20170615.120752.1877679480298671096.davem@davemloft.net>
+References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4d7c2a58fb2bd68cc5c17a313ee426e0d4233ca0.1497455465.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <1497299161-6458-1-git-send-email-arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Cc: richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Date: Mon, 12 Jun 2017 13:25:59 -0700
 
-
-On 14/06/17 18:11, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> This patchset adds support for the DTE based PTP clock for Broadcom SoCs.
 > 
-> add basic nodes into the mt7622.dtsi for the system
-> bring-up which includes ARM CPU, GIC, timer, MediaTek
-> UART, SYSIRQ and one reserved memory region for ATF.
-> 
-> Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 104 +++++++++++++++++++++++++++++++
->   1 file changed, 104 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> new file mode 100644
-> index 0000000..239b9b3
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> @@ -0,0 +1,104 @@
-> +/*
-> + * Copyright (c) 2017 MediaTek Inc.
-> + * Author: Ming Huang <ming.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> + *
-> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +/ {
-> +	compatible = "mediatek,mt7622";
-> +	interrupt-parent = <&sysirq>;
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +
-> +	cpus {
-> +		#address-cells = <2>;
-> +		#size-cells = <0>;
-> +
-> +		cpu0: cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x0>;
-> +			enable-method = "psci";
-> +			clock-frequency = <1300000000>;
-> +		};
-> +
-> +		cpu1: cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a53", "arm,armv8";
-> +			reg = <0x0 0x1>;
-> +			enable-method = "psci";
-> +			clock-frequency = <1300000000>;
-> +		};
-> +	};
-> +
-> +	uart_clk: dummy25m {
-> +		compatible = "fixed-clock";
-> +		#clock-cells = <0>;
-> +		clock-frequency = <25000000>;
-> +	};
-> +
-> +	psci {
-> +		compatible  = "arm,psci-0.2";
-> +		method      = "smc";
-> +	};
-> +
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
-> +		secmon_reserved: secmon@43000000 {
-> +			reg = <0 0x43000000 0 0x30000>;
-> +			no-map;
-> +		};
-> +	};
-> +
-> +	timer {
-> +		compatible = "arm,armv8-timer";
-> +		interrupt-parent = <&gic>;
-> +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>,
-> +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
-> +			      IRQ_TYPE_LEVEL_HIGH)>;
-> +	};
-> +
-> +	sysirq: interrupt-controller@10200620 {
-> +		compatible = "mediatek,mt7622-sysirq",
-> +			     "mediatek,mt6577-sysirq";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +		reg = <0 0x10200620 0 0x20>;
-> +	};
-> +
-> +	gic: interrupt-controller@10300000 {
-> +		compatible = "arm,gic-400";
-> +		interrupt-controller;
-> +		#interrupt-cells = <3>;
-> +		interrupt-parent = <&gic>;
-> +		reg = <0 0x10310000 0 0x1000>,
-> +		      <0 0x10320000 0 0x1000>,
-> +		      <0 0x10340000 0 0x2000>,
-> +		      <0 0x10360000 0 0x2000>;
-> +	};
-> +
-> +	uart0: serial@11002000 {
-> +		compatible = "mediatek,mt7622-uart",
-> +			     "mediatek,mt6577-uart";
-> +		reg = <0 0x11002000 0 0x400>;
-> +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
-> +		clocks = <&uart_clk>, <&uart_clk>;
+> The DTE nco based PTP clock can be used in both wired and wireless networks
+> for precision time-stmaping purposes.
 
-Please add a dummy clock node with the correct frequency, as done in 
-other chips as well.
-
-Thanks,
-Matthias
-
-> +		clock-names = "baud", "bus";
-> +		status = "disabled";
-> +	};
-> +};
-> 
+Series applied to net-next, thanks.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
