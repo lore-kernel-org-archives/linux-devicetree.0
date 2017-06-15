@@ -1,53 +1,133 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2 v4] clk: Add Gemini SoC clock controller
-Date: Thu, 15 Jun 2017 14:57:53 +0200
-Message-ID: <CACRpkdY+aSyec9PZaoXErzsRefWg2zzw1xihQt_whmote-jBBw@mail.gmail.com>
-References: <20170524082044.8473-1-linus.walleij@linaro.org>
- <20170601070208.GO20170@codeaurora.org> <CACRpkdZv8MzXVecEXVdJ+P0MxVscYSy=MxC-yQAR0S4yQ6-rwQ@mail.gmail.com>
- <20170605195812.GH20170@codeaurora.org> <CACRpkdbya9xaN-i7AkG0bTyuFYfZc59sSTYhWB43=9btSKfPpQ@mail.gmail.com>
- <CACRpkdapAgHix2vw-woDFi4sh+H3_EX7w-5q=opBGMyegFrXbA@mail.gmail.com>
- <20170612210248.GP20170@codeaurora.org> <CACRpkdaZJbzC0-xg_go=-o+0cQ-JOY3mUe27HUnwQ+DnZYbyMA@mail.gmail.com>
- <CAMuHMdXdYNTLCUfQ9rdj8Fffff5G6fGREcHs5-E5LbwPU9yyLw@mail.gmail.com>
+From: Jacek Anaszewski <jacek.anaszewski-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 6/8] leds: as3645a: Add LED flash class driver
+Date: Thu, 15 Jun 2017 15:01:47 +0200
+Message-ID: <6d27154d-4550-d1ae-8b7a-07dcaaee69ac@gmail.com>
+References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1497433639-13101-7-git-send-email-sakari.ailus@linux.intel.com>
+ <343d88ea-c839-6682-df84-844f92bc9050@gmail.com>
+ <20170614221028.GS12407@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdXdYNTLCUfQ9rdj8Fffff5G6fGREcHs5-E5LbwPU9yyLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20170614221028.GS12407-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pavel-+ZI9xUNit7I@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 10:55 AM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+Hi Sakari,
 
-> If clocks and resets are provided by the same hardware module, you can
-> have a single (platform) driver registering both the clock and reset
-> controllers.
-> Cfr. drivers/clk/renesas/renesas-cpg-mssr.c.
+On 06/15/2017 12:10 AM, Sakari Ailus wrote:
+> Hi Jacek,
+> 
+> Thanks for the review!
 
-That is indeed an option.
+You're welcome!
 
-So I would say, clk & reset maintainers: would you prefer that I merge the
-reset control into the clock driver as well, ask Philipp to drop the pending
-reset control patches from his subsystem tree and have you manage the
-combined driver and bindings?
+> I have to say I found the v4l2-flash-led-class framework quite useful, now
+> that I refactored a driver for using it. Now we have a user for the
+> indicator, too. :-)
 
-It seems to me as very ugly from a divide & conquer subsystem and file
-split point of view.
+Nice :-). I'm also surprised that v4l2-flash API is also used in
+drivers/staging/greybus/light.c which popped up with kbuild test robot
+complaints.
 
-I seems elegant from the "make clocks a platform device" point of view.
+> On Wed, Jun 14, 2017 at 11:15:24PM +0200, Jacek Anaszewski wrote:
+>>> +static __maybe_unused int as3645a_suspend(struct device *dev)
+>>> +{
+>>> +	struct i2c_client *client = to_i2c_client(dev);
+>>> +	struct as3645a *flash = i2c_get_clientdata(client);
+>>> +	int rval;
+>>> +
+>>> +	rval = as3645a_set_control(flash, AS_MODE_EXT_TORCH, false);
+>>> +	dev_dbg(dev, "Suspend %s\n", rval < 0 ? "failed" : "ok");
+>>> +
+>>> +	return rval;
+>>> +}
+>>> +
+>>> +static __maybe_unused int as3645a_resume(struct device *dev)
+>>> +{
+>>> +	struct i2c_client *client = to_i2c_client(dev);
+>>> +	struct as3645a *flash = i2c_get_clientdata(client);
+>>> +	int rval;
+>>> +
+>>> +	rval = as3645a_setup(flash);
+>>> +
+>>
+>> nitpicking: inconsistent coding style - there is no empty line before
+>> dev_dbg() in the as3645a_suspend().
+> 
+> Added one for as3645a_suspend() --- it should have been there.
+> 
+>>
+>>> +	dev_dbg(dev, "Resume %s\n", rval < 0 ? "fail" : "ok");
+>>> +
+>>> +	return rval;
+>>> +}
+> 
+> ...
+> 
+>>> +static int as3645a_led_class_setup(struct as3645a *flash)
+>>> +{
+>>> +	struct led_classdev *fled_cdev = &flash->fled.led_cdev;
+>>> +	struct led_classdev *iled_cdev = &flash->iled_cdev;
+>>> +	struct led_flash_setting *cfg;
+>>> +	int rval;
+>>> +
+>>> +	iled_cdev->name = "as3645a indicator";
+>>> +	iled_cdev->brightness_set_blocking = as3645a_set_indicator_brightness;
+>>> +	iled_cdev->max_brightness =
+>>> +		flash->cfg.indicator_max_ua / AS_INDICATOR_INTENSITY_STEP;
+>>> +
+>>> +	rval = led_classdev_register(&flash->client->dev, iled_cdev);
+>>> +	if (rval < 0)
+>>> +		return rval;
+>>> +
+>>> +	cfg = &flash->fled.brightness;
+>>> +	cfg->min = AS_FLASH_INTENSITY_MIN;
+>>> +	cfg->max = flash->cfg.flash_max_ua;
+>>> +	cfg->step = AS_FLASH_INTENSITY_STEP;
+>>> +	cfg->val = flash->cfg.flash_max_ua;
+>>> +
+>>> +	cfg = &flash->fled.timeout;
+>>> +	cfg->min = AS_FLASH_TIMEOUT_MIN;
+>>> +	cfg->max = flash->cfg.flash_timeout_us;
+>>> +	cfg->step = AS_FLASH_TIMEOUT_STEP;
+>>> +	cfg->val = flash->cfg.flash_timeout_us;
+>>> +
+>>> +	flash->fled.ops = &as3645a_led_flash_ops;
+>>> +
+>>> +	fled_cdev->name = "as3645a flash";
+>>
+>> LED class device name should be taken from label DT property,
+>> or DT node name if the former wasn't defined.
+>>
+>> Also LED device naming convention defines colon as a separator
+>> between name segments.
+> 
+> Right. I'll fix that.
+> 
+> I just realised I'm missing DT binding documentation for this device; I'll
+> add that, too.
+> 
+> Is the preference to allow freely chosen node names for the LEDs? Now that
+> there's the label, too, this appears to be somewhat duplicated information.
 
-I am happy with either approach as long as it works.
+It depends on whether the sub-leds are identified by reg property.
+In this case usually common prefix is used followed by reg value,
+e.g. led@1, led@2 etc.
 
-I guess it is up to the taste of the subsystem maintainers, especially
-clk.
+Otherwise prevailing scheme is e.g.:
 
-If I get some time I might just hack this up and send the patches so
-it is on the table as an alternative to the current v5 patch. Certainly it is
-better than going back and augmenting the DT bindings.
+        blue-power {
+		...
+                label = "netxbig:blue:power";
+	}
 
-Yours,
-Linus Walleij
+-- 
+Best regards,
+Jacek Anaszewski
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
