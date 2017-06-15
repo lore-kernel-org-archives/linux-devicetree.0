@@ -1,77 +1,54 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 0/2] fdtoverlay, an overlay application tool
-Date: Thu, 15 Jun 2017 15:40:15 +0800
-Message-ID: <20170615074015.GA30484@umbus>
-References: <1497451872-15289-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec
+ node
+Date: Thu, 15 Jun 2017 15:51:01 +0800
+Message-ID: <20170615075059.GD5902@dragon>
+References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
+ <1491501735-1649-2-git-send-email-jagan@openedev.com>
+ <20170407131649.GH16503@dragon>
+ <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com>
+ <20170615022024.GE30112@dragon>
+ <CAMty3ZAUK37JYnPwVRuBA6B67QV+S_BYQ6f=k6_rjw__ypTxBg@mail.gmail.com>
+ <20170615071529.GC5902@dragon>
+ <CAMty3ZCwkP=EaFcSdA--yQNN9ebjE9JptfwWjQpceXqDq-xkyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1497451872-15289-1-git-send-email-pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAMty3ZCwkP=EaFcSdA--yQNN9ebjE9JptfwWjQpceXqDq-xkyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Jagan Teki <jagan-oRp2ZoJdM/RWk0Htik3J/w@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Matteo Lisi <matteo.lisi-4s7YQHO/iPVBDgjK7y7TUQ@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 15, 2017 at 01:01:22PM +0530, Jagan Teki wrote:
+> > I feel the abstraction is wrong from the beginning.  Ideally, we should
+> > have something like below.
+> >
+> >  - imx6ul-isiot.dtsi
+> >  - imx6ul-isiot-kit.dts and imx6ul-isiot-carrier.dts
+> >
+> > The -isiot should have everything on SoM and common stuff between -kit
+> > and -carrier boards, while -kit and -carrier include -isiot and contains
+> > the base-board specific things.  The -isiot can have both emmc and nand
+> > devices with "disabled" status, and let firmware turn device on per SoM
+> > it boots.  In that case, the abstraction level can be less and clearer.
+> >
+> > Thoughts?
+> 
+> So,even the common stuff (lcdif, ts and etc) should be in -isiot.dtsi
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, anything common can be in -isiot.dtsi.
 
-On Wed, Jun 14, 2017 at 05:51:10PM +0300, Pantelis Antoniou wrote:
-> libfdt supports overlays, so it's trivial to create a tool
-> that applies them on a host using binary blobs.
->=20
-> fdtoverlay is that tool which given a base tree and a number
-> of overlays generates a target blob as the result.
+> and make it "disabled" and let them enabled on respective dts. this
+> what you mentioned here?
 
-Applied, thanks.
+It doesn't matter.  If the lcd/touch is same on -kit and -carrier, you
+can even have them enabled by default in -isiot.dtsi.  The -kit.dts and
+-carrier.dts are there to accommodate base-board specific differences.
 
->=20
-> Pantelis Antoniou (2):
->   fdtoverlay: A tool that applies overlays
->   tests: fdtoverlay unit test
->=20
->  Documentation/manual.txt    |  14 ++++
->  Makefile                    |   5 ++
->  Makefile.utils              |   6 ++
->  fdtoverlay.c                | 168 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  tests/fdtoverlay-runtest.sh |  40 +++++++++++
->  tests/run_tests.sh          |  27 ++++++-
->  tests/tests.sh              |   1 +
->  7 files changed, 260 insertions(+), 1 deletion(-)
->  create mode 100644 fdtoverlay.c
->  create mode 100644 tests/fdtoverlay-runtest.sh
->=20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBCAAGBQJZQjncAAoJEGw4ysog2bOSTYAP/jOKKAnAmIXFCaxo6bRDwtxd
-tFTJaNHatavQ5hLB6ljQAann6H1FxsoI35DvV4ehZs9104rXPCBETEWRUjxQzTrC
-YVT0WO3eZ7e+i6Wjn/9Thz4x7KR6azWA9gIpQrsrqpyNnb6ovDUaTpoaj+MH9rxt
-n3uueAK4rcO28ezVafdskTqY8FMjDz8Trp2YLoj92fKHjTPmibn/ed2AXCyL+hqx
-D7uT0tQaSKGZMH8+8K9vdaUZZ0yApbkPSKXAlsEgGXQwH0SSHzVfSIK8adwKEzTP
-pPKpF3ud68mVxi4n0BG6aKbhRj7VPkcQpesyCH2gVmLrs0Au3AZzIunOKQBUDrKf
-su/Z5wQE3sQqUiFo0toeRKf8cAdr1T8ZcJcVn+DMfX8Drf5pn7qSd0497ZxC4IHc
-20APEp7pM3XZhCEqui93YUWKFWXUTGLEiWEF6Jj11PD3c86WKp1GncCBpu+ZHUPK
-mc8M4RtuuTHlHVQ4YchkJtT2sjTRDiSt6JULOH20XUNeAKvTdCuw0EKK/NtUm8TR
-8ulQwKapp0E2USyc7dUpi1mjuMqLgbKu7oJhrBzsPYDgQ160ZPsuf52kQ2XdMLP/
-Pb/HdtqDsljoJ691Q/fuKli0zbWc8fiEBuq0GpEMK94QsWfoUMgbqgyUgKc0mULN
-vP+fJfOYVGPnNlRIy9F4
-=wO4P
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
