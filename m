@@ -1,77 +1,72 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH v3 6/6] ARM64: dts: meson-gx: add gpio interrupt controller
-Date: Thu, 15 Jun 2017 18:18:04 +0200
-Message-ID: <20170615161804.32658-7-jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 1/6] dt-bindings: interrupt-controller: add DT binding for meson GPIO interrupt controller
+Date: Thu, 15 Jun 2017 18:17:59 +0200
+Message-ID: <20170615161804.32658-2-jbrunet@baylibre.com>
 References: <20170615161804.32658-1-jbrunet@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615161804.32658-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>, Jason Cooper <jason@lakedaemon.net>, Thomas Gleixner <tglx@linutronix.de>, Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170615161804.32658-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add gpio interrupt controller to Amlogic GX family SoCs
+This commit adds the device tree bindings description for Amlogic's GPIO
+interrupt controller available on the meson8b, gxbb and gxl SoC families
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 9 +++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 6 ++++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 6 ++++++
- 3 files changed, 21 insertions(+)
+ .../amlogic,meson-gpio-intc.txt                    | 35 ++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 603491df9f0f..95d4f4c60b4f 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -218,6 +218,15 @@
- 			#size-cells = <2>;
- 			ranges = <0x0 0x0 0x0 0xc1100000 0x0 0x100000>;
- 
-+			gpio_intc: interrupt-controller@9880 {
-+				compatible = "amlogic,meson-gpio-intc";
-+				reg = <0x0 0x9880 0x0 0x10>;
-+				interrupt-controller;
-+				#interrupt-cells = <2>;
-+				amlogic,upstream-interrupts = <64 65 66 67 68 69 70 71>;
-+				status = "disabled";
-+			};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+new file mode 100644
+index 000000000000..288e97fb9db4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/amlogic,meson-gpio-intc.txt
+@@ -0,0 +1,35 @@
++Amlogic meson GPIO interrupt controller
 +
- 			reset: reset-controller@4404 {
- 				compatible = "amlogic,meson-gx-reset", "amlogic,meson-gxbb-reset";
- 				reg = <0x0 0x04404 0x0 0x20>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index dbd300fffa8a..b6f3561c803c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -314,6 +314,12 @@
- 	clock-names = "stmmaceth", "clkin0", "clkin1";
- };
- 
-+&gpio_intc {
-+	compatible = "amlogic,meson-gpio-intc",
-+		     "amlogic,meson-gxbb-gpio-intc";
-+	status = "okay";
++Meson SoCs contains an interrupt controller which is able watch the SoC pads
++and generate an interrupt on edges or level. The controller is essentially a
++256 pads to 8 GIC interrupt multiplexer, with a filter block to select edge
++or level and polarity. We don’t expose all 256 mux inputs because the
++documentation shows that upper part is not mapped to any pad. The actual number
++of interrupt exposed depends on the SoC.
++
++Required properties:
++
++- compatible : must have "amlogic,meson8-gpio-intc” and either
++   “amlogic,meson8b-gpio-intc” for meson8b SoCs (S805) or
++   “amlogic,meson-gxbb-gpio-intc” for GXBB SoCs (S905) or
++   “amlogic,meson-gxl-gpio-intc” for GXL SoCs (S905X, S912)
++- interrupt-parent : a phandle to the GIC the interrupts are routed to.
++   Usually this is provided at the root level of the device tree as it is
++   common to most of the SoC.
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller.
++- #interrupt-cells : Specifies the number of cells needed to encode an
++   interrupt source. The value must be 2.
++- meson,upstream-interrupts: Array with the 8 upstream hwirq numbers. These
++   are the hwirqs used on the parent interrupt controller.
++
++Example:
++
++gpio_interrupt: interrupt-controller@9880 {
++	compatible = "amlogic,meson-gxbb-gpio-intc",
++		     "amlogic,meson-gpio-intc";
++	reg = <0x0 0x9880 0x0 0x10>;
++	interrupt-controller;
++	#interrupt-cells = <2>;
++	meson,upstream-interrupts = <64 65 66 67 68 69 70 71>;
 +};
-+
- &hdmi_tx {
- 	compatible = "amlogic,meson-gxbb-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
- 	resets = <&reset RESET_HDMITX_CAPB3>,
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 4dfc22b07bf0..08268cedd965 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -207,6 +207,12 @@
- 	};
- };
- 
-+&gpio_intc {
-+	compatible = "amlogic,meson-gpio-intc",
-+		     "amlogic,meson-gxl-gpio-intc";
-+	status = "okay";
-+};
-+
- &hdmi_tx {
- 	compatible = "amlogic,meson-gxl-dw-hdmi", "amlogic,meson-gx-dw-hdmi";
- 	resets = <&reset RESET_HDMITX_CAPB3>,
 -- 
 2.9.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
