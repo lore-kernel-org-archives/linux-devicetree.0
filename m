@@ -1,98 +1,42 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec
- node
-Date: Thu, 15 Jun 2017 15:15:31 +0800
-Message-ID: <20170615071529.GC5902@dragon>
-References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-2-git-send-email-jagan@openedev.com>
- <20170407131649.GH16503@dragon>
- <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com>
- <20170615022024.GE30112@dragon>
- <CAMty3ZAUK37JYnPwVRuBA6B67QV+S_BYQ6f=k6_rjw__ypTxBg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZAUK37JYnPwVRuBA6B67QV+S_BYQ6f=k6_rjw__ypTxBg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Jagan Teki <jagan@openedev.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
+From: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 0/6] add some device nodes support for rk322x SoC
+Date: Thu, 15 Jun 2017 15:16:14 +0800
+Message-ID: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 10:21:43AM +0530, Jagan Teki wrote:
-> On Thu, Jun 15, 2017 at 7:50 AM, Shawn Guo <shawnguo@kernel.org> wrote:
-> > On Wed, Jun 14, 2017 at 08:17:04PM +0530, Jagan Teki wrote:
-> >> On Fri, Apr 7, 2017 at 6:46 PM, Shawn Guo <shawnguo@kernel.org> wrote:
-> >> > On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
-> >> >> From: Jagan Teki <jagan@amarulasolutions.com>
-> >> >>
-> >> >> Add support for Sound card and related codec(via i2c1) nodes
-> >> >> on Engicam Is.IoT MX6UL variant module boards.
-> >> >>
-> >> >> Cc: Shawn Guo <shawnguo@kernel.org>
-> >> >> Cc: Matteo Lisi <matteo.lisi@engicam.com>
-> >> >> Cc: Michael Trimarchi <michael@amarulasolutions.com>
-> >> >> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> >> >> ---
-> >> >> Changes for v3:
-> >> >> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
-> >> >> Changes for v2:
-> >> >> - Use proper [label:] node-name[@unit-address] for codec
-> >> >> - Remove incorrect codec property 'wlf,shared-lrclk'
-> >> >> - Remove 'gpr' from sound card node
-> >> >>
-> >> >>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
-> >> >>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
-> >> >
-> >> > Can you help me understand how these two files are related?  Why is
-> >> > sgtl5000 added into one and sound node added into the other?
-> >>
-> >> lcdif, ts and sound card which may differ based on the base-board
-> >> connected with SOM, So I moved these stuff which are related to
-> >> Starter kit supported once's and used with SOM dts files. if some
-> >> other board with same SOM can have different lcdif and etc so they can
-> >> define locally to dts.
-> >
-> > I do not follow how these stuff are organized.  So far we have the
-> > following isiot dts files.
-> >
-> >  - imx6ul-isiot-common.dtsi
-> >  - imx6ul-isiot.dtsi
-> >  - imx6ul-isiot-emmc.dts and imx6ul-isiot-nand.dts
-> >
-> > How are they mapping to SoM and base-board?
-> 
-> isiot is a modules class, with that emmc and nand are two separate
-> SOM's. the current support is for mounting these SOM's on Development
-> base board[1]. So, for isiot module class we have imx6ul-isiot.dtsi
-> and emmc and nand SOM's have imx6ul-isiot-emmc.dts and
-> imx6ul-isiot-nand.dts. There are some Carrier boards[1] which were
-> used with different lcdif and other changes, So
-> imx6ul-isiot-common.dtsi have changes common across emmc and nand,
-> instead of adding them into individual dts files I moved in
-> -common.dtsi.  So in future if isiot SOM mounted on carrier board
-> which should have a separate dts and which may or may not use
-> imx6ul-isiot-common.dtsi
+These series add sdmmc, sdio, and other device nodes support for
+rk322x SoCs, and also introduce rk3229 basic dtsi file specifically.
 
-So you are not sure if imx6ul-isiot-common.dtsi will be used by carrier
-board.  Then what's the point to have it now?
+David Wu (1):
+  ARM: dts: rockchip: Add io-domain node for rk3228
 
-You are saying imx6ul-isiot-common.dtsi is created to accommodate the
-common things across emmc and nand SoMs, but it actually contains LCD
-and Touch such base-board level of stuff.  Confusing.
+Finley Xiao (1):
+  ARM: dts: rockchip: add efuse device node for rk3228
 
-I feel the abstraction is wrong from the beginning.  Ideally, we should
-have something like below.
+Frank Wang (1):
+  ARM: dts: rockchip: add basic dtsi file for RK3229 SoC
 
- - imx6ul-isiot.dtsi
- - imx6ul-isiot-kit.dts and imx6ul-isiot-carrier.dts
+Shawn Lin (3):
+  Documentation: rockchip-dw-mshc: add description for rk3228
+  ARM: dts: rockchip: fix compatible string for eMMC node of rk3228 SoC
+  ARM: dts: rockchip: add sdmmc and sdio nodes for rk3228 SoC
 
-The -isiot should have everything on SoM and common stuff between -kit
-and -carrier boards, while -kit and -carrier include -isiot and contains
-the base-board specific things.  The -isiot can have both emmc and nand
-devices with "disabled" status, and let firmware turn device on per SoM
-it boots.  In that case, the abstraction level can be less and clearer.
+ .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |   1 +
+ arch/arm/boot/dts/rk3229-evb.dts                   |   2 +-
+ arch/arm/boot/dts/rk3229.dtsi                      | 110 +++++++++++++++++++++
+ arch/arm/boot/dts/rk322x.dtsi                      |  84 +++++++++++++++-
+ 4 files changed, 195 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3229.dtsi
 
-Thoughts?
+-- 
+2.0.0
 
-Shawn
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
