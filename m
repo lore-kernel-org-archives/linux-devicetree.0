@@ -1,99 +1,77 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v4 2/6] ARM: imx6: register pm_power_off handler if
- "fsl,pmic-stby-poweroff" is set
-Date: Thu, 15 Jun 2017 11:24:26 +0800
-Message-ID: <20170615032425.GG30112@dragon>
-References: <20170609140739.15726-1-o.rempel@pengutronix.de>
- <20170609140739.15726-3-o.rempel@pengutronix.de>
+From: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] mfd: Add driver for RAVE Supervisory Processor
+Date: Wed, 14 Jun 2017 21:19:45 -0700
+Message-ID: <CAFXsbZociERie6bqHUz2fGw71d9JXN512BG27UgXN1EEyRC+YA@mail.gmail.com>
+References: <20170613012358.15084-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170609140739.15726-3-o.rempel@pengutronix.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170613012358.15084-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+Leonard, in case he wants to have a look.
-
-One small comment below ...
-
-On Fri, Jun 09, 2017 at 04:07:35PM +0200, Oleksij Rempel wrote:
-> One of the Freescale recommended sequences for power off with external
-> PMIC is the following:
-> ...
-> 3.  SoC is programming PMIC for power off when standby is asserted.
-> 4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
-> 
-> See:
-> http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
-> page 5083
-> 
-> This patch implements step 4. of this sequence.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+On Mon, Jun 12, 2017 at 6:23 PM, Andrey Smirnov
+<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add a driver for RAVE Supervisory Processor, an MCU implementing
+> varoius bits of housekeeping functionality (watchdoging, backlight
+> control, LED control, etc) on RAVE family of products by Zodiac
+> Inflight Innovations.
+>
+> This driver implementes core MFD/serdev device as well as
+> communication subroutines necessary for commanding the device.
+>
+> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  arch/arm/mach-imx/pm-imx6.c | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
-> index e61b1d1027e1..3a4f8f289f4d 100644
-> --- a/arch/arm/mach-imx/pm-imx6.c
-> +++ b/arch/arm/mach-imx/pm-imx6.c
-> @@ -27,6 +27,8 @@
->  #include <asm/proc-fns.h>
->  #include <asm/suspend.h>
->  #include <asm/tlb.h>
-> +#include <linux/kallsyms.h>
-> +#include <linux/regulator/machine.h>
+>
+> Changes since [v1]:
+>
+>  - Fix MODULE_LICENSE to specify "GPL v2"
+>
+>  - Fix a bug in rave_sp_get_status()
+>
+>  - Use %zu to fix warning repored by kbuild test robot
+>
+>  - Remove "status" properties from examples zii,rave-sp.txt as well as
+>    clarify the fact that device node is expected to be a child of a
+>    serial device node
+>
+> NOTE:
+>
+>  * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+>    submitted it yet, becuase I wanted to make sure that API exposed by
+>    this MFD is acceptable and doesn't need drastic changes
+>
+>  * This driver is dependent on crc_ccitt_false() introduced in
+>    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+>
+>
+> [v1] lkml.kernel.org/r/20170606180643.14258-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+>
+>
+>  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   36 +
+>  drivers/mfd/Kconfig                                |    9 +
+>  drivers/mfd/Makefile                               |    1 +
+>  drivers/mfd/rave-sp.c                              | 1009 ++++++++++++++++++++
+>  include/linux/rave-sp.h                            |   54 ++
+>  5 files changed, 1109 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+>  create mode 100644 drivers/mfd/rave-sp.c
+>  create mode 100644 include/linux/rave-sp.h
+>
 
-How are these headers used?
+This patch was tested on Zodiac RDU1 and RDU2 platforms.
 
-Shawn
-
->  
->  #include "common.h"
->  #include "hardware.h"
-> @@ -602,6 +604,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
->  				   IMX6Q_GPR1_GINT);
->  }
->  
-> +static void imx6_pm_poweroff(void)
-> +{
-> +	imx6_set_lpm(STOP_POWER_OFF);
-> +	cpu_suspend(0, imx6q_suspend_finish);
-> +
-> +	mdelay(1000);
-> +
-> +	pr_emerg("Unable to poweroff system\n");
-> +}
-> +
-> +static int imx6_pm_poweroff_probe(void)
-> +{
-> +	if (pm_power_off) {
-> +		pr_warn("%s: pm_power_off already claimed  %p %pf!\n",
-> +			__func__, pm_power_off, pm_power_off);
-> +		return -EBUSY;
-> +	}
-> +
-> +	pm_power_off = imx6_pm_poweroff;
-> +	return 0;
-> +}
-> +
->  void __init imx6_pm_ccm_init(const char *ccm_compat)
->  {
->  	struct device_node *np;
-> @@ -618,6 +642,9 @@ void __init imx6_pm_ccm_init(const char *ccm_compat)
->  	val = readl_relaxed(ccm_base + CLPCR);
->  	val &= ~BM_CLPCR_LPM;
->  	writel_relaxed(val, ccm_base + CLPCR);
-> +
-> +	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
-> +		imx6_pm_poweroff_probe();
->  }
->  
->  void __init imx6q_pm_init(void)
-> -- 
-> 2.11.0
-> 
+Tested-by: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
