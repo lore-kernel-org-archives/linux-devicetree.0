@@ -1,13 +1,13 @@
 From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [RESEND PATCH v5 03/16] ARM: dts: efm32: Add generic compatible string for I2C EEPROM
-Date: Thu, 15 Jun 2017 20:54:05 +0200
-Message-ID: <20170615185418.13980-4-javier@dowhile0.org>
+Subject: [RESEND PATCH v5 08/16] ARM: dts: socfpga: Add generic compatible string for I2C EEPROM
+Date: Thu, 15 Jun 2017 20:54:10 +0200
+Message-ID: <20170615185418.13980-9-javier@dowhile0.org>
 References: <20170615185418.13980-1-javier@dowhile0.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170615185418.13980-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -25,9 +25,7 @@ Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gm
 
 ---
 
-Changes in v5:
-- Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
-
+Changes in v5: None
 Changes in v4:
 - Only use the atmel manufacturer in the compatible string instead of
   keeping the deprecated ones (Rob Herring).
@@ -35,22 +33,22 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm/boot/dts/efm32gg-dk3750.dts | 2 +-
+ arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/efm32gg-dk3750.dts b/arch/arm/boot/dts/efm32gg-dk3750.dts
-index 98fc667d22c7..84f0a9abc290 100644
---- a/arch/arm/boot/dts/efm32gg-dk3750.dts
-+++ b/arch/arm/boot/dts/efm32gg-dk3750.dts
-@@ -36,7 +36,7 @@
- 			};
+diff --git a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+index 893198049397..4bb2791ab04a 100644
+--- a/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
++++ b/arch/arm/boot/dts/socfpga_cyclone5_vining_fpga.dts
+@@ -294,7 +294,7 @@
+ 	clock-frequency = <100000>;
  
- 			eeprom@50 {
--				compatible = "microchip,24c02";
-+				compatible = "microchip,24c02", "atmel,24c02";
- 				reg = <0x50>;
- 				pagesize = <16>;
- 			};
+ 	at24@50 {
+-		compatible = "at24,24c02";
++		compatible = "atmel,24c02";
+ 		pagesize = <8>;
+ 		reg = <0x50>;
+ 	};
 -- 
 2.9.3
 
