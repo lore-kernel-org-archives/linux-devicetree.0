@@ -1,111 +1,53 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH 6/8] leds: as3645a: Add LED flash class driver
-Date: Thu, 15 Jun 2017 01:43:05 +0300
-Message-ID: <20170614224304.GW12407@valkosipuli.retiisi.org.uk>
-References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497433639-13101-7-git-send-email-sakari.ailus@linux.intel.com>
- <20170614213941.GC10200@amd>
- <20170614222135.GT12407@valkosipuli.retiisi.org.uk>
- <20170614222833.GA26406@amd>
+From: Leo Yan <leo.yan@linaro.org>
+Subject: Re: [PATCH v3 14/21] arm64: dts: hi3660: enable idle states
+Date: Thu, 15 Jun 2017 08:23:58 +0800
+Message-ID: <20170615002358.GD28496@leoy-ThinkPad-T440>
+References: <20170614082338.15673-1-guodong.xu@linaro.org>
+ <20170614082338.15673-15-guodong.xu@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170614222833.GA26406@amd>
-Sender: linux-leds-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, sebastian.reichel@collabora.co.uk, robh@kernel.org
+In-Reply-To: <20170614082338.15673-15-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, xuejiancheng@hisilicon.com, peter.griffin@linaro.org, puck.chen@hisilicon.com, lee.jones@linaro.org, ulf.hansson@linaro.org, bhelgaas@google.com, arnd@arndb.de, zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Kevin Wang <jean.wangtao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Ahoy!
-
-On Thu, Jun 15, 2017 at 12:28:33AM +0200, Pavel Machek wrote:
-> Hi!
+On Wed, Jun 14, 2017 at 04:23:31PM +0800, Guodong Xu wrote:
+> From: Leo Yan <leo.yan@linaro.org>
 > 
-> > Thanks for the review!
+> On Hi3660 there have two clusters, one is CA53 cluster and another is
+> CA73 cluster. This two clusters have different idle states separately.
+> With Daniel Lezcano's patch (ARM: cpuidle: Support asymmetric idle
+> definition), now ARM idle driver can support different clusters with
+> different idle states.
 > 
-> You are welcome :-).
+> Base on this, this patch is to bind two clusters idle states on Hi3660.
+> Except the "WFI" states are enabled by default for all CPUs, this patch
+> also binds below extra idle states:
 > 
-> > On Wed, Jun 14, 2017 at 11:39:41PM +0200, Pavel Machek wrote:
-> > > Hi!
-> > > 
-> > > > From: Sakari Ailus <sakari.ailus@iki.fi>
-> > > 
-> > > That address no longer works, right?
-> > 
-> > Why wouldn't it work? Or... do you know something I don't? :-)
+> - CA53 CPUs have two more states:
+>   CPU_SLEEP:       CPU power off state
+>   CLUSTER_SLEEP_0: Cluster power off state
 > 
-> Aha. I thought I was removing it from source files because it was no
-> longer working, but maybe I'm misremembering? 
+> - CA73 CPUs have three more states:
+>   CPU_NAP:         CPU retention state
+>   CPU_SLEEP:       CPU power off state
+>   CLUSTER_SLEEP_1: Cluster power off state
 
-That was probably my @maxwell.research.nokia.com address. :-) There are no
-occurrences of that in the kernel source anymore.
+Hi Guodong, Wei and all,
 
-> 
-> > > > +static unsigned int as3645a_current_to_reg(struct as3645a *flash, bool is_flash,
-> > > > +					   unsigned int ua)
-> > > > +{
-> > > > +	struct {
-> > > > +		unsigned int min;
-> > > > +		unsigned int max;
-> > > > +		unsigned int step;
-> > > > +	} __mms[] = {
-> > > > +		{
-> > > > +			AS_TORCH_INTENSITY_MIN,
-> > > > +			flash->cfg.assist_max_ua,
-> > > > +			AS_TORCH_INTENSITY_STEP
-> > > > +		},
-> > > > +		{
-> > > > +			AS_FLASH_INTENSITY_MIN,
-> > > > +			flash->cfg.flash_max_ua,
-> > > > +			AS_FLASH_INTENSITY_STEP
-> > > > +		},
-> > > > +	}, *mms = &__mms[is_flash];
-> > > > +
-> > > > +	if (ua < mms->min)
-> > > > +		ua = mms->min;
-> > > 
-> > > That's some... seriously interesting code. And you are forcing gcc to
-> > > create quite interesting structure on stack. Would it be easier to do
-> > > normal if()... without this magic?
-> > > 
-> > > > +	struct v4l2_flash_config cfg = {
-> > > > +		.torch_intensity = {
-> > > > +			.min = AS_TORCH_INTENSITY_MIN,
-> > > > +			.max = flash->cfg.assist_max_ua,
-> > > > +			.step = AS_TORCH_INTENSITY_STEP,
-> > > > +			.val = flash->cfg.assist_max_ua,
-> > > > +		},
-> > > > +		.indicator_intensity = {
-> > > > +			.min = AS_INDICATOR_INTENSITY_MIN,
-> > > > +			.max = flash->cfg.indicator_max_ua,
-> > > > +			.step = AS_INDICATOR_INTENSITY_STEP,
-> > > > +			.val = flash->cfg.indicator_max_ua,
-> > > > +		},
-> > > > +	};
-> > > 
-> > > Ugh. And here you have copy of the above struct, + .val. Can it be
-> > > somehow de-duplicated?
-> > 
-> > The flash_brightness_set callback uses micro-Amps as the unit and the driver
-> > needs to convert that to its own specific units. Yeah, there would be
-> > probably an easier way, too. But that'd likely require changes to the LED
-> > flash class.
-> 
-> Can as3645a_current_to_reg just access struct v4l2_flash_config so
-> that it does not have to recreate its look-alike on the fly?
+As Daniel reminded, this patch is dependent on patch (ARM: cpuidle:
+Support asymmetric idle definition) [1] but his patch has not been
+finally merged yet. So let us hold on this patch for Daniel's patch
+is picked up firstly.
 
-struct v4l2_flash_config is only needed as an argument for
-v4l2_flash_init(). I'll split that into two functions in this occasion,
-it'll be nicer.
+At the meantime welcome the review and comment for this patch ahead.
 
-We now have more or less the same conversion implemented in three or so
-times, there have to be ways to make that easier for drivers. I think that
-could be done later, as well as adding support for checking the flash
-strobe status.
+[1] https://patchwork.kernel.org/patch/9781869/
 
--- 
-Regards,
+[...]
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+Thanks,
+Leo Yan
