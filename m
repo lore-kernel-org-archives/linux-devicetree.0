@@ -1,13 +1,13 @@
-From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Subject: [RESEND PATCH v5 11/16] arm64: zynqmp: Add generic compatible string for I2C EEPROM
-Date: Thu, 15 Jun 2017 20:54:13 +0200
-Message-ID: <20170615185418.13980-12-javier@dowhile0.org>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: [RESEND PATCH v5 14/16] powerpc/512x: Add generic compatible string for I2C EEPROM
+Date: Thu, 15 Jun 2017 20:54:16 +0200
+Message-ID: <20170615185418.13980-15-javier@dowhile0.org>
 References: <20170615185418.13980-1-javier@dowhile0.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170615185418.13980-1-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615185418.13980-1-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, devicetree@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 The at24 driver allows to register I2C EEPROM chips using different vendor
@@ -21,7 +21,7 @@ using the "atmel" vendor as a generic fallback for compatible I2C devices.
 So add this generic fallback to the device node compatible string to make
 the device to match the driver using the OF device ID table.
 
-Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
 
 ---
 
@@ -33,35 +33,21 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/boot/dts/mpc5121ads.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-index ef1b9e573af0..53907b7a7fd9 100644
---- a/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-+++ b/arch/arm64/boot/dts/xilinx/zynqmp-ep108.dts
-@@ -55,7 +55,7 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
- 	eeprom@54 {
--		compatible = "at,24c64";
-+		compatible = "atmel,24c64";
- 		reg = <0x54>;
- 	};
- };
-@@ -64,7 +64,7 @@
- 	status = "okay";
- 	clock-frequency = <400000>;
- 	eeprom@55 {
--		compatible = "at,24c64";
-+		compatible = "atmel,24c64";
- 		reg = <0x55>;
- 	};
- };
+diff --git a/arch/powerpc/boot/dts/mpc5121ads.dts b/arch/powerpc/boot/dts/mpc5121ads.dts
+index 75888ce2c792..fcaa9bad4bda 100644
+--- a/arch/powerpc/boot/dts/mpc5121ads.dts
++++ b/arch/powerpc/boot/dts/mpc5121ads.dts
+@@ -94,7 +94,7 @@
+ 			};
+ 
+ 			eeprom@50 {
+-				compatible = "at,24c32";
++				compatible = "atmel,24c32";
+ 				reg = <0x50>;
+ 			};
+ 
 -- 
 2.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
