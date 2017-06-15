@@ -1,59 +1,60 @@
-From: Paolo Pisati <p.pisati@gmail.com>
-Subject: [PATCH v3 1/2] dt: bindings: fpga: add lattice machxo2 slave spi binding description
-Date: Thu, 15 Jun 2017 13:15:58 +0200
-Message-ID: <1497525359-30519-2-git-send-email-p.pisati@gmail.com>
-References: <1497525359-30519-1-git-send-email-p.pisati@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497525359-30519-1-git-send-email-p.pisati@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alan Tull <atull@kernel.org>, Moritz Fischer <moritz.fischer@ettus.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-fpga@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Baolin Wang <baolin.wang@spreadtrum.com>
+Subject: [PATCH 1/2] dt-bindings: i2c: Add Spreadtrum I2C controller documentation
+Date: Thu, 15 Jun 2017 19:30:07 +0800
+Message-ID: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1497525667.git.baolin.wang@spreadtrum.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-Add dt binding documentation details for Lattice MachXO2 FPGA configuration
-over Slave SPI interface.
+This patch adds the binding documentation for Spreadtrum I2C
+controller device.
 
-Signed-off-by: Paolo Pisati <p.pisati@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
 ---
- .../bindings/fpga/lattice-machxo2-spi.txt          | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+ Documentation/devicetree/bindings/i2c/i2c-sprd.txt |   31 ++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sprd.txt
 
-diff --git a/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-sprd.txt b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
 new file mode 100644
-index 0000000..c3ef26bd
+index 0000000..f285e5b
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/fpga/lattice-machxo2-spi.txt
-@@ -0,0 +1,29 @@
-+Lattice MachXO2 Slave SPI FPGA Manager
-+
-+Lattice MachXO2 FPGAs support a method of loading the bitstream over
-+'slave SPI' interface.
-+
-+See 'MachXO2ProgrammingandConfigurationUsageGuide.pdf' on www.latticesemi.com
++++ b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
+@@ -0,0 +1,31 @@
++I2C for Spreadtrum platforms
 +
 +Required properties:
-+- compatible: should contain "lattice,machxo2-slave-spi"
-+- reg: spi chip select of the FPGA
++- compatible: Should be "sprd,r8p0-i2c".
++- reg: Specify the physical base address of the controller and length
++  of memory mapped region.
++- interrupts: Should contain I2C interrupt.
++- clock-names: Should contain following entries:
++  "i2c" for I2C clock,
++  "source" for I2C source (parent) clock,
++  "enable" for I2C module enable clock.
++- clocks: Should contain a clock specifier for each entry in clock-names.
++- clock-frequency: Constains desired I2C bus clock frequency in Hz.
++- #address-cells: Should be 1 to describe address cells for I2C device address.
++- #size-cells: Should be 0 means no size cell for I2C device address.
 +
-+Example for full FPGA configuration:
++Optional properties:
++- Child nodes conforming to I2C bus binding
 +
-+	fpga-region0 {
-+		compatible = "fpga-region";
-+		fpga-mgr = <&fpga_mgr_spi>;
-+		#address-cells = <0x1>;
-+		#size-cells = <0x1>;
-+	};
++Examples:
++i2c0: i2c@70500000 {
++	compatible = "sprd,r8p0-i2c";
++	reg = <0 0x70500000 0 0x1000>;
++	interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++	clock-names = "i2c", "source", "enable";
++	clocks = <&clk_i2c3>, <&ext_26m>, <&clk_ap_apb_gates 11>;
++	clock-frequency = <400000>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++};
 +
-+	spi1: spi@2000 {
-+        ...
-+
-+		fpga_mgr_spi: fpga-mgr@0 {
-+			compatible = "lattice,machxo2-slave-spi";
-+			spi-max-frequency = <60000000>;
-+			reg = <0>;
-+		};
-+	};
 -- 
-2.7.4
+1.7.9.5
