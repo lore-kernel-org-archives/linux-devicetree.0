@@ -1,58 +1,39 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [RESEND PATCH v5 06/16] ARM: dts: r7s72100: Add generic compatible string for I2C EEPROM
-Date: Thu, 15 Jun 2017 20:54:08 +0200
-Message-ID: <20170615185418.13980-7-javier@dowhile0.org>
-References: <20170615185418.13980-1-javier@dowhile0.org>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] Doc: net: dsa: b53: update location of referenced dsa.txt
+Date: Thu, 15 Jun 2017 20:59:57 +0200
+Message-ID: <20170615185957.16405-1-xypron.glpk@gmx.de>
+References: <20170615.144635.940189694308591273.davem@davemloft.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615185418.13980-1-javier@dowhile0.org>
+In-Reply-To: <20170615.144635.940189694308591273.davem@davemloft.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh@kernel.org>, Javier Martinez Canillas <javier@dowhile0.org>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org, Russell King <linux@armlinux.org.uk>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "David S . Miller" <davem@davemloft.net>, Florian Fainelli <f.fainelli@gmail.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-The at24 driver allows to register I2C EEPROM chips using different vendor
-and devices, but the I2C subsystem does not take the vendor into account
-when matching using the I2C table since it only has device entries.
+The referenced file dsa.txt is located at
+Documentation/devicetree/bindings/net/dsa/dsa.txt
 
-But when matching using an OF table, both the vendor and device has to be
-taken into account so the driver defines only a set of compatible strings
-using the "atmel" vendor as a generic fallback for compatible I2C devices.
-
-So add this generic fallback to the device node compatible string to make
-the device to match the driver using the OF device ID table.
-
-Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
 ---
-
-Changes in v5:
-- Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
-
-Changes in v4:
-- Only use the atmel manufacturer in the compatible string instead of
-  keeping the deprecated ones (Rob Herring).
-
-Changes in v3:
-- Add Geert Uytterhoeven reviewed-by tag.
-
-Changes in v2: None
-
- arch/arm/boot/dts/r7s72100-genmai.dts | 2 +-
+Resent due to missing
+Cc: netdev@vger.kernel.org
+---
+ Documentation/devicetree/bindings/net/dsa/b53.txt | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/r7s72100-genmai.dts b/arch/arm/boot/dts/r7s72100-genmai.dts
-index 52a7b586bac7..b0db621ff176 100644
---- a/arch/arm/boot/dts/r7s72100-genmai.dts
-+++ b/arch/arm/boot/dts/r7s72100-genmai.dts
-@@ -57,7 +57,7 @@
- 	clock-frequency = <400000>;
+diff --git a/Documentation/devicetree/bindings/net/dsa/b53.txt b/Documentation/devicetree/bindings/net/dsa/b53.txt
+index d6c6e41648d4..8ec2ca21adeb 100644
+--- a/Documentation/devicetree/bindings/net/dsa/b53.txt
++++ b/Documentation/devicetree/bindings/net/dsa/b53.txt
+@@ -34,7 +34,7 @@ Required properties:
+       "brcm,bcm6328-switch"
+       "brcm,bcm6368-switch" and the mandatory "brcm,bcm63xx-switch"
  
- 	eeprom@50 {
--		compatible = "renesas,24c128";
-+		compatible = "renesas,24c128", "atmel,24c128";
- 		reg = <0x50>;
- 		pagesize = <64>;
- 	};
+-See Documentation/devicetree/bindings/dsa/dsa.txt for a list of additional
++See Documentation/devicetree/bindings/net/dsa/dsa.txt for a list of additional
+ required and optional properties.
+ 
+ Examples:
 -- 
-2.9.3
+2.11.0
