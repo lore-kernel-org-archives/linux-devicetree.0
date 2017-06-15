@@ -1,77 +1,164 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH] watchdog: meson-wdt: add support for the watchdog on
- Meson8 and Meson8m2
-Date: Thu, 15 Jun 2017 10:25:10 -0700
-Message-ID: <20170615172510.GA7549@roeck-us.net>
-References: <20170611095219.22095-1-martin.blumenstingl@googlemail.com>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] arm64: dts: mt7622: add basic nodes to the
+ mt7622.dtsi file
+Date: Fri, 16 Jun 2017 01:39:26 +0800
+Message-ID: <1497548366.4975.3.camel@mtkswgap22>
+References: <cover.1497455465.git.sean.wang@mediatek.com>
+         <4d7c2a58fb2bd68cc5c17a313ee426e0d4233ca0.1497455465.git.sean.wang@mediatek.com>
+         <37f67b23-7995-3b93-2ee0-c04b34428bd9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170611095219.22095-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <37f67b23-7995-3b93-2ee0-c04b34428bd9-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 11, 2017 at 11:52:19AM +0200, Martin Blumenstingl wrote:
-> The watchdog IP block on Meson8 and Meson8m2 is already supported by the
-> existing meson-wdt driver. Meson8 uses the same register bits as Meson6,
-> while the newer Meson8m2 SoC uses the same register bits as Meson8b.
+On Thu, 2017-06-15 at 18:04 +0200, Matthias Brugger wrote:
 > 
-> Currently watchdog support on Meson8 SoC already works because
-> meson8.dtsi simply uses the "amlogic,meson6-wdt" compatible. Adding a
-> separate compatible for Meson8 makes this more explicit though.
+> On 14/06/17 18:11, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
+> > From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > 
+> > add basic nodes into the mt7622.dtsi for the system
+> > bring-up which includes ARM CPU, GIC, timer, MediaTek
+> > UART, SYSIRQ and one reserved memory region for ATF.
+> > 
+> > Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >   arch/arm64/boot/dts/mediatek/mt7622.dtsi | 104 +++++++++++++++++++++++++++++++
+> >   1 file changed, 104 insertions(+)
+> >   create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > 
+> > diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > new file mode 100644
+> > index 0000000..239b9b3
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> > @@ -0,0 +1,104 @@
+> > +/*
+> > + * Copyright (c) 2017 MediaTek Inc.
+> > + * Author: Ming Huang <ming.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > + *
+> > + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > + */
+> > +
+> > +#include <dt-bindings/interrupt-controller/irq.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +/ {
+> > +	compatible = "mediatek,mt7622";
+> > +	interrupt-parent = <&sysirq>;
+> > +	#address-cells = <2>;
+> > +	#size-cells = <2>;
+> > +
+> > +	cpus {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <0>;
+> > +
+> > +		cpu0: cpu@0 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53", "arm,armv8";
+> > +			reg = <0x0 0x0>;
+> > +			enable-method = "psci";
+> > +			clock-frequency = <1300000000>;
+> > +		};
+> > +
+> > +		cpu1: cpu@1 {
+> > +			device_type = "cpu";
+> > +			compatible = "arm,cortex-a53", "arm,armv8";
+> > +			reg = <0x0 0x1>;
+> > +			enable-method = "psci";
+> > +			clock-frequency = <1300000000>;
+> > +		};
+> > +	};
+> > +
+> > +	uart_clk: dummy25m {
+> > +		compatible = "fixed-clock";
+> > +		#clock-cells = <0>;
+> > +		clock-frequency = <25000000>;
+> > +	};
+> > +
+> > +	psci {
+> > +		compatible  = "arm,psci-0.2";
+> > +		method      = "smc";
+> > +	};
+> > +
+> > +	reserved-memory {
+> > +		#address-cells = <2>;
+> > +		#size-cells = <2>;
+> > +		ranges;
+> > +
+> > +		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
+> > +		secmon_reserved: secmon@43000000 {
+> > +			reg = <0 0x43000000 0 0x30000>;
+> > +			no-map;
+> > +		};
+> > +	};
+> > +
+> > +	timer {
+> > +		compatible = "arm,armv8-timer";
+> > +		interrupt-parent = <&gic>;
+> > +		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
+> > +			      IRQ_TYPE_LEVEL_HIGH)>,
+> > +			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
+> > +			      IRQ_TYPE_LEVEL_HIGH)>,
+> > +			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
+> > +			      IRQ_TYPE_LEVEL_HIGH)>,
+> > +			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
+> > +			      IRQ_TYPE_LEVEL_HIGH)>;
+> > +	};
+> > +
+> > +	sysirq: interrupt-controller@10200620 {
+> > +		compatible = "mediatek,mt7622-sysirq",
+> > +			     "mediatek,mt6577-sysirq";
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-parent = <&gic>;
+> > +		reg = <0 0x10200620 0 0x20>;
+> > +	};
+> > +
+> > +	gic: interrupt-controller@10300000 {
+> > +		compatible = "arm,gic-400";
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <3>;
+> > +		interrupt-parent = <&gic>;
+> > +		reg = <0 0x10310000 0 0x1000>,
+> > +		      <0 0x10320000 0 0x1000>,
+> > +		      <0 0x10340000 0 0x2000>,
+> > +		      <0 0x10360000 0 0x2000>;
+> > +	};
+> > +
+> > +	uart0: serial@11002000 {
+> > +		compatible = "mediatek,mt7622-uart",
+> > +			     "mediatek,mt6577-uart";
+> > +		reg = <0 0x11002000 0 0x400>;
+> > +		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+> > +		clocks = <&uart_clk>, <&uart_clk>;
 > 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-
-Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-
-In general, changes like this are not necessary, though. The dts file
-is supposed to reference both generic and specific compatible strings.
-
-Thanks,
-Guenter
-
-> ---
->  Documentation/devicetree/bindings/watchdog/meson-wdt.txt | 6 +++++-
->  drivers/watchdog/meson_wdt.c                             | 2 ++
->  2 files changed, 7 insertions(+), 1 deletion(-)
+> Please add a dummy clock node with the correct frequency, as done in 
+> other chips as well.
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
-> index ae70185d96e6..f2fbe1a39d31 100644
-> --- a/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/meson-wdt.txt
-> @@ -2,7 +2,11 @@ Meson SoCs Watchdog timer
->  
->  Required properties:
->  
-> -- compatible : should be "amlogic,meson6-wdt" or "amlogic,meson8b-wdt"
-> +- compatible : depending on the SoC this should be one of:
-> +	"amlogic,meson6-wdt"
-> +	"amlogic,meson8-wdt"
-> +	"amlogic,meson8b-wdt"
-> +	"amlogic,meson8m2-wdt"
->  - reg : Specifies base physical address and size of the registers.
->  
->  Example:
-> diff --git a/drivers/watchdog/meson_wdt.c b/drivers/watchdog/meson_wdt.c
-> index 491b9bf13d84..304274c67735 100644
-> --- a/drivers/watchdog/meson_wdt.c
-> +++ b/drivers/watchdog/meson_wdt.c
-> @@ -155,7 +155,9 @@ static const struct watchdog_ops meson_wdt_ops = {
->  
->  static const struct of_device_id meson_wdt_dt_ids[] = {
->  	{ .compatible = "amlogic,meson6-wdt", .data = &meson6_wdt_data },
-> +	{ .compatible = "amlogic,meson8-wdt", .data = &meson6_wdt_data },
->  	{ .compatible = "amlogic,meson8b-wdt", .data = &meson8b_wdt_data },
-> +	{ .compatible = "amlogic,meson8m2-wdt", .data = &meson8b_wdt_data },
->  	{ /* sentinel */ }
->  };
->  MODULE_DEVICE_TABLE(of, meson_wdt_dt_ids);
-> -- 
-> 2.13.1
+> Thanks,
+> Matthias
 > 
+
+Okay, the uart clock should be 50MHz, and bus clock should be 280MHz
+from AXI bus
+
+I will update in the next version .
+	
+	Sean 
+
+> > +		clock-names = "baud", "bus";
+> > +		status = "disabled";
+> > +	};
+> > +};
+> > 
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
