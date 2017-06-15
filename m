@@ -1,91 +1,104 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH v7 02/10] power: supply: bq24735: remove incorrect
- le16_to_cpu calls
-Date: Thu, 15 Jun 2017 16:50:15 +0200
-Message-ID: <20170615145015.knusjwnaqjlm3bmw@earth>
-References: <1497535178-12001-1-git-send-email-preid@electromag.com.au>
- <1497535178-12001-3-git-send-email-preid@electromag.com.au>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v6 7/8] arm64: dts: hikey960: add device node for pmic and
+ regulators
+Date: Thu, 15 Jun 2017 16:01:05 +0100
+Message-ID: <5942A131.9020607@hisilicon.com>
+References: <20170608220841.26531-1-guodong.xu@linaro.org>
+ <20170608220841.26531-8-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="dl6lvgsoyshq3man"
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1497535178-12001-3-git-send-email-preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+In-Reply-To: <20170608220841.26531-8-guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jdelvare-IBi9RG/b67k@public.gmane.org, jglauber-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org, peda-koto5C5qi+TLoDKTGw+V6w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org, damm+renesas-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, ard.biesheuvel-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Guodong,
 
---dl6lvgsoyshq3man
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 2017/6/8 23:08, Guodong Xu wrote:
+> From: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> 
+> add device node for hi6421 pmic core and hi6421v530
+> voltage regulator,include LDO(1,3,9,11,15,16)
+> 
+> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Signed-off-by: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-Hi,
+Thanks!
+Acked-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 
-On Thu, Jun 15, 2017 at 09:59:30PM +0800, Phil Reid wrote:
-> i2c_smbus commands handle the correct byte order for smbus transactions
-> internally. This will currently result in incorrect operation on big
-> endian systems.
->=20
-> Signed-off-by: Phil Reid <preid-qgqNFa1JUf/o2iN0hyhwsIdd74u8MsAO@public.gmane.org>
+So the whole patch set can be picked up by the Lee
+to avoid dependence issue.
 
-Thanks, queued.
+BR,
+Wei
 
--- Sebastian
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 46 +++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> index ca448f0..e579333 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> @@ -97,6 +97,52 @@
+>  			default-state = "off";
+>  		};
+>  	};
+> +
+> +	pmic: pmic@fff34000 {
+> +		compatible = "hisilicon,hi6421v530-pmic";
+> +		reg = <0x0 0xfff34000 0x0 0x1000>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +
+> +		regulators {
+> +			ldo3: LDO3 { /* HDMI */
+> +				regulator-name = "VOUT3_1V85";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <2200000>;
+> +				regulator-enable-ramp-delay = <120>;
+> +			};
+> +
+> +			ldo9: LDO9 { /* SDCARD I/O */
+> +				regulator-name = "VOUT9_1V8_2V95";
+> +				regulator-min-microvolt = <1750000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <240>;
+> +			};
+> +
+> +			ldo11: LDO11 { /* Low Speed Connector */
+> +				regulator-name = "VOUT11_1V8_2V95";
+> +				regulator-min-microvolt = <1750000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-enable-ramp-delay = <240>;
+> +			};
+> +
+> +			ldo15: LDO15 { /* UFS VCC */
+> +				regulator-name = "VOUT15_3V0";
+> +				regulator-min-microvolt = <1750000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-enable-ramp-delay = <120>;
+> +			};
+> +
+> +			ldo16: LDO16 { /* SD VDD */
+> +				regulator-name = "VOUT16_2V95";
+> +				regulator-min-microvolt = <1750000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-enable-ramp-delay = <360>;
+> +			};
+> +		};
+> +	};
+>  };
+>  
+>  &i2c0 {
+> 
 
->  drivers/power/supply/bq24735-charger.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/power/supply/bq24735-charger.c b/drivers/power/suppl=
-y/bq24735-charger.c
-> index eb01453..6931e1d 100644
-> --- a/drivers/power/supply/bq24735-charger.c
-> +++ b/drivers/power/supply/bq24735-charger.c
-> @@ -81,14 +81,12 @@ static int bq24735_charger_property_is_writeable(stru=
-ct power_supply *psy,
->  static inline int bq24735_write_word(struct i2c_client *client, u8 reg,
->  				     u16 value)
->  {
-> -	return i2c_smbus_write_word_data(client, reg, le16_to_cpu(value));
-> +	return i2c_smbus_write_word_data(client, reg, value);
->  }
-> =20
->  static inline int bq24735_read_word(struct i2c_client *client, u8 reg)
->  {
-> -	s32 ret =3D i2c_smbus_read_word_data(client, reg);
-> -
-> -	return ret < 0 ? ret : le16_to_cpu(ret);
-> +	return i2c_smbus_read_word_data(client, reg);
->  }
-> =20
->  static int bq24735_update_word(struct i2c_client *client, u8 reg,
-> --=20
-> 1.8.3.1
->=20
-
---dl6lvgsoyshq3man
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllCnqYACgkQ2O7X88g7
-+pqAWBAAiiwpm2bak7/FXPSkHj4t6zQoATl7jjXIY4bRifFSK91I+vA0C7XJsfS+
-+CEgM5jvH9FnEtGNeSp8D8K21ylov08LhXDbqbDYsXMJmIJeORwvcQoVXPMOWEa3
-Rpi6N/g/i6smAi1F36Q6y6c//wd0P6fVILhqhUXI9Uxhm3r3yemD7MdO49LYS4uM
-uXBZ9p76REix+imARcGmvShg8RL4P1W82A5jFk2+NZqEwdFfKB0R1bpqAfbSsqxn
-biVSjSb5ygmzvTiLOEoO88b+Lr57ui1H1iTQS9dk0jN7ZvuYVF5xa1lGqEAceULV
-+NLZW5kFMTQ9HA6Tu+HBnfcamYF+vXCYOcv5+3m8KhVy77WCeS9g8t8ONljCHl+c
-/kZPsJT2noN/MPOgToMNIn/DY2P891La0ACVt3uw0syqUSlim6c+4P8C6JPlVqVx
-Q87Kd6L0ePdffJnsCf4lY4VUwEuMvGbQxiJXA9FnCVGNs4bkUo+HB+7oBoTCyqWq
-xrpbu77dKzthRdykkxAomswUYJQaZ3jNPck9FWIB3TeVX6TgeQ1L3rwCaHoukmcH
-SoCOoa6dpukhBoytoS93hv9mIM2FaPUaYbSVyxNhaTCLOMlmsFHnVll2sfcUp0wh
-MKPLezbCqnoTrD8gCxNJmjsxv5Xn8R1aBhSRCafpbCEXmXb6xqg=
-=GZO6
------END PGP SIGNATURE-----
-
---dl6lvgsoyshq3man--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
