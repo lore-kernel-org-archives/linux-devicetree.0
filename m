@@ -1,79 +1,73 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec node
-Date: Thu, 15 Jun 2017 10:21:43 +0530
-Message-ID: <CAMty3ZAUK37JYnPwVRuBA6B67QV+S_BYQ6f=k6_rjw__ypTxBg@mail.gmail.com>
-References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
- <1491501735-1649-2-git-send-email-jagan@openedev.com> <20170407131649.GH16503@dragon>
- <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com> <20170615022024.GE30112@dragon>
+From: Sricharan R <sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH 07/18] spi: qup: Fix transaction done signaling
+Date: Thu, 15 Jun 2017 10:44:43 +0530
+Message-ID: <83e60e35-747f-4427-b77c-5dda653432ae@codeaurora.org>
+References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
+ <1497419551-21834-8-git-send-email-varada@codeaurora.org>
+ <4b81a4c7-b85c-a35d-15fb-4aaaec3c7e8c@codeaurora.org>
+ <20170614195155.GB32733@hector.wework.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170615022024.GE30112@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Jagan Teki <jagan@openedev.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170614195155.GB32733-5taXn+FmohyKb9UB7mSz9QC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 7:50 AM, Shawn Guo <shawnguo@kernel.org> wrote:
-> On Wed, Jun 14, 2017 at 08:17:04PM +0530, Jagan Teki wrote:
->> On Fri, Apr 7, 2017 at 6:46 PM, Shawn Guo <shawnguo@kernel.org> wrote:
->> > On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
->> >> From: Jagan Teki <jagan@amarulasolutions.com>
->> >>
->> >> Add support for Sound card and related codec(via i2c1) nodes
->> >> on Engicam Is.IoT MX6UL variant module boards.
->> >>
->> >> Cc: Shawn Guo <shawnguo@kernel.org>
->> >> Cc: Matteo Lisi <matteo.lisi@engicam.com>
->> >> Cc: Michael Trimarchi <michael@amarulasolutions.com>
->> >> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
->> >> ---
->> >> Changes for v3:
->> >> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
->> >> Changes for v2:
->> >> - Use proper [label:] node-name[@unit-address] for codec
->> >> - Remove incorrect codec property 'wlf,shared-lrclk'
->> >> - Remove 'gpr' from sound card node
->> >>
->> >>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
->> >>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
->> >
->> > Can you help me understand how these two files are related?  Why is
->> > sgtl5000 added into one and sound node added into the other?
+Hi Andy,
+
+On 6/15/2017 1:21 AM, Andy Gross wrote:
+> On Wed, Jun 14, 2017 at 12:43:43PM +0530, Sricharan R wrote:
+>> Hi Varada,
 >>
->> lcdif, ts and sound card which may differ based on the base-board
->> connected with SOM, So I moved these stuff which are related to
->> Starter kit supported once's and used with SOM dts files. if some
->> other board with same SOM can have different lcdif and etc so they can
->> define locally to dts.
->
-> I do not follow how these stuff are organized.  So far we have the
-> following isiot dts files.
->
->  - imx6ul-isiot-common.dtsi
->  - imx6ul-isiot.dtsi
->  - imx6ul-isiot-emmc.dts and imx6ul-isiot-nand.dts
->
-> How are they mapping to SoM and base-board?
+>> On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
+>>> Wait to signal done until we get all of the interrupts we are expecting
+>>> to get for a transaction.  If we don't wait for the input done flag, we
+>>> can be inbetween transactions when the done flag comes in and this can
+>>> mess up the next transaction.
+>>>
+>>> Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> ---
+>>>  drivers/spi/spi-qup.c | 3 ++-
+>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+>>> index 2124815..7c22ee4 100644
+>>> --- a/drivers/spi/spi-qup.c
+>>> +++ b/drivers/spi/spi-qup.c
+>>> @@ -465,7 +465,8 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+>>>  	controller->xfer = xfer;
+>>>  	spin_unlock_irqrestore(&controller->lock, flags);
+>>>  
+>>> -	if (controller->rx_bytes == xfer->len || error)
+>>> +	if ((controller->rx_bytes == xfer->len &&
+>>> +		(opflags & QUP_OP_MAX_INPUT_DONE_FLAG)) ||  error)
+>>
+>>  Not sure why we need this additional check, because having read all the
+>>  bytes implies transfer complete (or) why not just check only for
+>>  QUP_OP_MAX_INPUT_DONE_FLAG ?
+> 
+> So you can receive an interrupt for the last data without it having also
+> signalled the INPUT_DONE.  That means you'd have one more IRQ come in and if you
+> don't wait for that, you could start up the next transaction and have an irq
+> come in that screws up that transaction.
+> 
+> It might be sufficient to just wait for the INPUT_DONE_FLAG.  That cannot be
+> signalled unless the rx_bytes == xfer->len.
+> 
 
-isiot is a modules class, with that emmc and nand are two separate
-SOM's. the current support is for mounting these SOM's on Development
-base board[1]. So, for isiot module class we have imx6ul-isiot.dtsi
-and emmc and nand SOM's have imx6ul-isiot-emmc.dts and
-imx6ul-isiot-nand.dts. There are some Carrier boards[1] which were
-used with different lcdif and other changes, So
-imx6ul-isiot-common.dtsi have changes common across emmc and nand,
-instead of adding them into individual dts files I moved in
--common.dtsi.  So in future if isiot SOM mounted on carrier board
-which should have a separate dts and which may or may not use
-imx6ul-isiot-common.dtsi
+ Right, that should simply it little bit.
 
-[1] https://www.engicam.com/vis-prod/101142
-[2] https://www.engicam.com/vis-prod/101128
+Regards,
+ Sricharan
 
-thanks!
 -- 
-Jagan Teki
-Senior Linux Kernel Engineer | Amarula Solutions
-U-Boot, Linux | Upstream Maintainer
-Hyderabad, India.
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
