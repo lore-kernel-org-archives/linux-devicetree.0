@@ -1,52 +1,89 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 2/6] Documentation: rockchip-dw-mshc: add description for rk3228
-Date: Thu, 15 Jun 2017 09:51:59 +0200
-Message-ID: <2961285.cLXt8uGUMN@diego>
-References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com> <1497510980-23207-3-git-send-email-frank.wang@rock-chips.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4] mfd: lp87565: Add lp87565 PMIC support
+Date: Thu, 15 Jun 2017 08:52:07 +0100
+Message-ID: <20170615075207.frl24lgybya6ttgo@dell>
+References: <1496894894-6969-1-git-send-email-j-keerthy@ti.com>
+ <20170609142855.tfixhw3cb5qjkcne@rob-hp-laptop>
+ <7596b39a-3135-7cca-e3dc-18c05cf54a8b@ti.com>
+ <7e352aa3-4483-1fa4-e424-cc90f62cdf46@ti.com>
+ <20170612091133.kt2doom32bun6ujp@dell>
+ <373e82d1-39fb-9cbb-300a-aa8a99544cdc@ti.com>
+ <CABxcv=nHOtGtwpt+fAMtHf6DpAzerxoho45yCJiJoS8cP-0c4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1497510980-23207-3-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, finley.xiao@rock-chips.com, david.wu@rock-chips.com, shawn.lin@rock-chips.com, wmc@rock-chips.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CABxcv=nHOtGtwpt+fAMtHf6DpAzerxoho45yCJiJoS8cP-0c4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+On Mon, 12 Jun 2017, Javier Martinez Canillas wrote:
 
-Am Donnerstag, 15. Juni 2017, 15:16:16 CEST schrieb Frank Wang:
-> From: Shawn Lin <shawn.lin@rock-chips.com>
+> Hello Lee and Keerthy,
 > 
-> Add "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc" for
-> dwmmc on rk322x platform.
+> On Mon, Jun 12, 2017 at 11:17 AM, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org> wrote:
+> >
+> >
+> > On Monday 12 June 2017 02:41 PM, Lee Jones wrote:
+> >> On Sun, 11 Jun 2017, Keerthy wrote:
+> >>
+> >>>
+> >>>
+> >>> On Sunday 11 June 2017 10:36 AM, Keerthy wrote:
+> >>>>
+> >>>>
+> >>>> On Friday 09 June 2017 07:58 PM, Rob Herring wrote:
+> >>>>> On Thu, Jun 08, 2017 at 09:38:14AM +0530, Keerthy wrote:
+> >>>>>> The LP87565 chip is a power management IC for Portable Navigation Systems
+> >>>>>> and Tablet Computing devices. It contains the following components:
+> >>>>>>
+> >>>>>>         - Configurable Bucks(Single and multi-phase).
+> >>>>>>         - Configurable General Purpose Output Signals (GPO).
+> >>>>>>
+> >>>>>> The LP87565-Q1 variant device uses two 2-phase outputs configuration,
+> >>>>>> Buck0 is master for Buck0/1 output and Buck2 is master for Buck2/3
+> >>>>>> output.
+> >>>>>>
+> >>>
+> >>> Lee Jones,
+> >>>
+> >>> Shall i add back i2c_device_id as pointed here:
+> >>> http://www.mail-archive.com/linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg1417316.html
+> >>
+> >> Hasn't that been fixed yet?
+> >>
 > 
-> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
-> ---
->  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
->  1 file changed, 1 insertion(+)
+> There are only 2 patch series remaining to be merged so we can finally
+> fix this in the I2C core, making sure that no drivers will be
+> regressed. One of the series is for MFD and have been around for a
+> while (it already contains all the relevant acks AFAICT), it would be
+> very helpful if you can look at it and merge if you think is correct:
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt index
-> 520d61d..ce30dff 100644
-> --- a/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
-> @@ -15,6 +15,7 @@ Required Properties:
->  	- "rockchip,rk3288-dw-mshc": for Rockchip RK3288
->  	- "rockchip,rv1108-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip
-> RV1108 - "rockchip,rk3036-dw-mshc", "rockchip,rk3288-dw-mshc": for Rockchip
-> RK3036 +	- "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc": for
-> Rockchip RK322X - "rockchip,rk3368-dw-mshc", "rockchip,rk3288-dw-mshc": for
-> Rockchip RK3368 - "rockchip,rk3399-dw-mshc", "rockchip,rk3288-dw-mshc": for
-> Rockchip RK3399
+> https://lkml.org/lkml/2017/5/4/11
 
-you might want to rebase this patch on top of Ulfs next branch [0],
-as there is also the support for the rk3328 in there now.
+Please use the normal procedure and [RESEND].
 
-Otherwise looks good to me, so
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+> >> I guess so then. :(
+> >
+> > Okay. So with that i assume i should reintroduce probe instead of probe_new.
+> >
+> 
+> It's orthogonal, you can have probe_new and also the I2C device ID
+> table (the OF table will be used for matching, you just need the I2C
+> table to export the aliases with MODULE_DEVICE_TABLE(i2c,.. ).
+> 
+> Best regards,
+> Javier
 
-
-
-[0] https://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git/log/?h=next
-
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
