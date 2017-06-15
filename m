@@ -1,103 +1,88 @@
-From: Oleksij Rempel <ore@pengutronix.de>
-Subject: Re: [PATCH v1 1/1] gpio: of: provide option generic property for
- initial line states
-Date: Thu, 15 Jun 2017 07:56:32 +0200
-Message-ID: <20170615055632.qjtyf6kiqdam3mho@pengutronix.de>
-References: <20170609141622.21502-1-o.rempel@pengutronix.de>
- <CAL_JsqJeSCN88JnVnofb2Ncy4bDyXiKQbLniHmvbE4j854ZePA@mail.gmail.com>
- <20170611061919.jsbc7x67ut4segj5@pengutronix.de>
- <2432df7e-5d20-42c9-ddc0-044c2ca5ce2b@mentor.com>
+From: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] [media] mtk-mdp: Fix g_/s_selection capture/compose
+ logic
+Date: Thu, 15 Jun 2017 14:29:26 +0800
+Message-ID: <1497508166.3384.5.camel@mtksdaap41>
+References: <1494556970-12278-1-git-send-email-minghsiu.tsai@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2432df7e-5d20-42c9-ddc0-044c2ca5ce2b@mentor.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, barebox@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1494556970-12278-1-git-send-email-minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wu-Cheng Li <wuchengli-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vladimir,
+Hi, Hans,
 
-On Sun, Jun 11, 2017 at 10:57:18PM +0300, Vladimir Zapolskiy wrote:
-> Hi Oleksij,
+Would you have time to review this patch v2?
+The patch v1 violates v4l2 spec. I have fixed it in v2.
+
+
+Sincerely,
+Ming Hsiu
+
+On Fri, 2017-05-12 at 10:42 +0800, Minghsiu Tsai wrote:
+> From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 > 
-> On 06/11/2017 09:19 AM, Oleksij Rempel wrote:
-> > Hi Rob,
-> > 
-> > On Fri, Jun 09, 2017 at 10:41:30AM -0500, Rob Herring wrote:
-> >> On Fri, Jun 9, 2017 at 9:16 AM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
-> >>> This property is needed for barebox or may be other bootloaders
-> >>> to set proper gpio configuration as early as possible.
-> >>>
-> >>> This example is mainly based on "lines-initial-states" property
-> >>> from this binding documentation:
-> >>> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> >>
-> >> Don't we have a binding for this already based on gpio-hogs.
-> > 
-> > Markus Pargmann was working on this topic before and suddenly was not
-> > able to finish it.
+> Experiments show that the:
+>  (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
+>  (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
 > 
-> that's fine, but the proposed extension is supposedly not wanted.
-
-:(
-
-> > I found only some not finished discussions and no code or documentation
-> > in linux kernel upstream.
-> > 
-> > So far, I was able to find fallowing patches and discussions:
-> > patch 23.08.2015, last comment 11.05.2017:
-> > https://patchwork.kernel.org/patch/7096721/
-> > 
-> > patch 23.02.2016, last comment 09.03.2016:
-> > https://patchwork.ozlabs.org/patch/586743/
-> > 
-> > Since there was objections about node-like design for gpio-initval, I
-> > provided an array property, which is similar to initval properties already used
-> > for different other device nodes. For example:
-> > 
-> > Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
-> > qcom,ath10k-calibration-data
-> > 
-> > Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
-> > lines-initial-states
+> Signed-off-by: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 > 
-> It'd rather be better to fix the drivers and remove the properties
-> from these found device tree binding descriptions.
-
-no sure if it is possible. WiFi calibration data is kind of initval too.
-
-> > 
-> > Please fixme if I miss something.
+> ---
+> Changes in v2:
+> . Can not use *_MPLANE type in g_/s_selection 
+> ---
+>  drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
 > 
-> Why is GPIO hogging mechanism not good enough for your purpose?
+> diff --git a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> index 13afe48..e18ac626 100644
+> --- a/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> +++ b/drivers/media/platform/mtk-mdp/mtk_mdp_m2m.c
+> @@ -838,10 +838,10 @@ static int mtk_mdp_m2m_g_selection(struct file *file, void *fh,
+>  	bool valid = false;
+>  
+>  	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+> -		if (mtk_mdp_is_target_compose(s->target))
+> +		if (mtk_mdp_is_target_crop(s->target))
+>  			valid = true;
+>  	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
+> -		if (mtk_mdp_is_target_crop(s->target))
+> +		if (mtk_mdp_is_target_compose(s->target))
+>  			valid = true;
+>  	}
+>  	if (!valid) {
+> @@ -908,10 +908,10 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
+>  	bool valid = false;
+>  
+>  	if (s->type == V4L2_BUF_TYPE_VIDEO_CAPTURE) {
+> -		if (s->target == V4L2_SEL_TGT_COMPOSE)
+> +		if (s->target == V4L2_SEL_TGT_CROP)
+>  			valid = true;
+>  	} else if (s->type == V4L2_BUF_TYPE_VIDEO_OUTPUT) {
+> -		if (s->target == V4L2_SEL_TGT_CROP)
+> +		if (s->target == V4L2_SEL_TGT_COMPOSE)
+>  			valid = true;
+>  	}
+>  	if (!valid) {
+> @@ -925,7 +925,7 @@ static int mtk_mdp_m2m_s_selection(struct file *file, void *fh,
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (mtk_mdp_is_target_crop(s->target))
+> +	if (mtk_mdp_is_target_compose(s->target))
+>  		frame = &ctx->s_frame;
+>  	else
+>  		frame = &ctx->d_frame;
 
-Becouse it should not permanently hog a gpio. The "Hogging" should be
-released as soon as some driver will request it.
 
-Right now, if I define gpio-hog, boot loader will configure it and start
-linux. But linux will never let it free.
-
-If you have other suggestions which fit to this use case, please tell
-me. I assume, right now I'm just blind.
-
-Other way, I can imagine is to create real device nodes which use this
-gpios. Compatible for this devices will be like this:
-some_gpio_holder: gpio@0 {
-	compatible = "gpio-for-userspace";
-	gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
-};
-
-Boot loader will configure it as needed, an linux will do nothing with
-it so it can be used over /dev/gpio interface.
-
-> --
-> With best wishes,
-> Vladimir
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
