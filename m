@@ -1,77 +1,79 @@
-From: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] mfd: Add driver for RAVE Supervisory Processor
-Date: Wed, 14 Jun 2017 21:19:45 -0700
-Message-ID: <CAFXsbZociERie6bqHUz2fGw71d9JXN512BG27UgXN1EEyRC+YA@mail.gmail.com>
-References: <20170613012358.15084-1-andrew.smirnov@gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v3 1/9] ARM: dts: imx6ul-isiot: Add Sound card with codec node
+Date: Thu, 15 Jun 2017 10:21:43 +0530
+Message-ID: <CAMty3ZAUK37JYnPwVRuBA6B67QV+S_BYQ6f=k6_rjw__ypTxBg@mail.gmail.com>
+References: <1491501735-1649-1-git-send-email-jagan@openedev.com>
+ <1491501735-1649-2-git-send-email-jagan@openedev.com> <20170407131649.GH16503@dragon>
+ <CAMty3ZDj3XgeZwUTXTTX2svoXaNWJ3GJtbNAt9+jj+n8Z4640w@mail.gmail.com> <20170615022024.GE30112@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170613012358.15084-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615022024.GE30112@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Jagan Teki <jagan@openedev.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Matteo Lisi <matteo.lisi@engicam.com>, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 6:23 PM, Andrey Smirnov
-<andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Add a driver for RAVE Supervisory Processor, an MCU implementing
-> varoius bits of housekeeping functionality (watchdoging, backlight
-> control, LED control, etc) on RAVE family of products by Zodiac
-> Inflight Innovations.
+On Thu, Jun 15, 2017 at 7:50 AM, Shawn Guo <shawnguo@kernel.org> wrote:
+> On Wed, Jun 14, 2017 at 08:17:04PM +0530, Jagan Teki wrote:
+>> On Fri, Apr 7, 2017 at 6:46 PM, Shawn Guo <shawnguo@kernel.org> wrote:
+>> > On Thu, Apr 06, 2017 at 11:32:07PM +0530, Jagan Teki wrote:
+>> >> From: Jagan Teki <jagan@amarulasolutions.com>
+>> >>
+>> >> Add support for Sound card and related codec(via i2c1) nodes
+>> >> on Engicam Is.IoT MX6UL variant module boards.
+>> >>
+>> >> Cc: Shawn Guo <shawnguo@kernel.org>
+>> >> Cc: Matteo Lisi <matteo.lisi@engicam.com>
+>> >> Cc: Michael Trimarchi <michael@amarulasolutions.com>
+>> >> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+>> >> ---
+>> >> Changes for v3:
+>> >> - Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
+>> >> Changes for v2:
+>> >> - Use proper [label:] node-name[@unit-address] for codec
+>> >> - Remove incorrect codec property 'wlf,shared-lrclk'
+>> >> - Remove 'gpr' from sound card node
+>> >>
+>> >>  arch/arm/boot/dts/imx6ul-isiot-common.dtsi | 10 +++++++
+>> >>  arch/arm/boot/dts/imx6ul-isiot.dtsi        | 44 ++++++++++++++++++++++++++++++
+>> >
+>> > Can you help me understand how these two files are related?  Why is
+>> > sgtl5000 added into one and sound node added into the other?
+>>
+>> lcdif, ts and sound card which may differ based on the base-board
+>> connected with SOM, So I moved these stuff which are related to
+>> Starter kit supported once's and used with SOM dts files. if some
+>> other board with same SOM can have different lcdif and etc so they can
+>> define locally to dts.
 >
-> This driver implementes core MFD/serdev device as well as
-> communication subroutines necessary for commanding the device.
+> I do not follow how these stuff are organized.  So far we have the
+> following isiot dts files.
 >
-> Cc: cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Cc: Nikita Yushchenko <nikita.yoush-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+>  - imx6ul-isiot-common.dtsi
+>  - imx6ul-isiot.dtsi
+>  - imx6ul-isiot-emmc.dts and imx6ul-isiot-nand.dts
 >
-> Changes since [v1]:
->
->  - Fix MODULE_LICENSE to specify "GPL v2"
->
->  - Fix a bug in rave_sp_get_status()
->
->  - Use %zu to fix warning repored by kbuild test robot
->
->  - Remove "status" properties from examples zii,rave-sp.txt as well as
->    clarify the fact that device node is expected to be a child of a
->    serial device node
->
-> NOTE:
->
->  * The driver for "zii,rave-sp-watchdog" exists, but I haven't
->    submitted it yet, becuase I wanted to make sure that API exposed by
->    this MFD is acceptable and doesn't need drastic changes
->
->  * This driver is dependent on crc_ccitt_false() introduced in
->    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
->
->
-> [v1] lkml.kernel.org/r/20170606180643.14258-1-andrew.smirnov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
->
->
->  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   36 +
->  drivers/mfd/Kconfig                                |    9 +
->  drivers/mfd/Makefile                               |    1 +
->  drivers/mfd/rave-sp.c                              | 1009 ++++++++++++++++++++
->  include/linux/rave-sp.h                            |   54 ++
->  5 files changed, 1109 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
->  create mode 100644 drivers/mfd/rave-sp.c
->  create mode 100644 include/linux/rave-sp.h
->
+> How are they mapping to SoM and base-board?
 
-This patch was tested on Zodiac RDU1 and RDU2 platforms.
+isiot is a modules class, with that emmc and nand are two separate
+SOM's. the current support is for mounting these SOM's on Development
+base board[1]. So, for isiot module class we have imx6ul-isiot.dtsi
+and emmc and nand SOM's have imx6ul-isiot-emmc.dts and
+imx6ul-isiot-nand.dts. There are some Carrier boards[1] which were
+used with different lcdif and other changes, So
+imx6ul-isiot-common.dtsi have changes common across emmc and nand,
+instead of adding them into individual dts files I moved in
+-common.dtsi.  So in future if isiot SOM mounted on carrier board
+which should have a separate dts and which may or may not use
+imx6ul-isiot-common.dtsi
 
-Tested-by: Chris Healy <cphealy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://www.engicam.com/vis-prod/101142
+[2] https://www.engicam.com/vis-prod/101128
+
+thanks!
+-- 
+Jagan Teki
+Senior Linux Kernel Engineer | Amarula Solutions
+U-Boot, Linux | Upstream Maintainer
+Hyderabad, India.
