@@ -1,756 +1,261 @@
-From: Baolin Wang <baolin.wang@spreadtrum.com>
-Subject: [PATCH 2/2] i2c: Add Spreadtrum I2C controller driver
-Date: Thu, 15 Jun 2017 19:30:08 +0800
-Message-ID: <f3cdd27dcfa2ca6347502608928081fb9271c0b5.1497525667.git.baolin.wang@spreadtrum.com>
-References: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1497525667.git.baolin.wang@spreadtrum.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH/RFC] phy: renesas: rcar-gen3-usb2-clksel: Add R-Car Gen3 USB 2.0 clock selector PHY
+Date: Thu, 15 Jun 2017 20:34:22 +0900
+Message-ID: <1497526462-9179-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1497525667.git.baolin.wang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the I2C controller driver for Spreadtrum platform.
+USB 2.0 PHY of R-Car Gen3 can change the clock source from an oscillator
+to an external clock via a register. So, this patch adds support
+the clock source selector as a generic PHY driver.
 
-Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 ---
- drivers/i2c/busses/Kconfig    |   10 +
- drivers/i2c/busses/Makefile   |    1 +
- drivers/i2c/busses/i2c-sprd.c |  691 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 702 insertions(+)
- create mode 100644 drivers/i2c/busses/i2c-sprd.c
+ This patch is based on the latest linux-phy.git / next branch
+ (commit id = 787f24543c4a599e5d9d311a3fce839ce87bbff0)
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index 8adc0f1..dfbc301 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -877,6 +877,16 @@ config I2C_SIRF
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-sirf.
- 
-+config I2C_SPRD
-+	tristate "Spreadtrum I2C interface"
-+	depends on ARCH_SPRD
-+	help
-+	  If you say yes to this option, support will be included for the
-+	  Spreadtrum I2C interface.
-+
-+	  This driver can also be built as a module.  If so, the module
-+	  will be called i2c-sprd.
-+
- config I2C_ST
- 	tristate "STMicroelectronics SSC I2C support"
- 	depends on ARCH_STI
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index 30b6085..dd46c21 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -84,6 +84,7 @@ obj-$(CONFIG_I2C_SH7760)	+= i2c-sh7760.o
- obj-$(CONFIG_I2C_SH_MOBILE)	+= i2c-sh_mobile.o
- obj-$(CONFIG_I2C_SIMTEC)	+= i2c-simtec.o
- obj-$(CONFIG_I2C_SIRF)		+= i2c-sirf.o
-+obj-$(CONFIG_I2C_SPRD)		+= i2c-sprd.o
- obj-$(CONFIG_I2C_ST)		+= i2c-st.o
- obj-$(CONFIG_I2C_STM32F4)	+= i2c-stm32f4.o
- obj-$(CONFIG_I2C_STU300)	+= i2c-stu300.o
-diff --git a/drivers/i2c/busses/i2c-sprd.c b/drivers/i2c/busses/i2c-sprd.c
+ I'm not sure this driver ss OK or not as a generic phy driver.
+ So, I send this patch as RFC.
+
+ .../bindings/phy/rcar-gen3-phy-usb2-clksel.txt     |  58 +++++++++
+ drivers/phy/renesas/Kconfig                        |   8 ++
+ drivers/phy/renesas/Makefile                       |   1 +
+ drivers/phy/renesas/phy-rcar-gen3-usb2-clksel.c    | 129 +++++++++++++++++++++
+ 4 files changed, 196 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt
+ create mode 100644 drivers/phy/renesas/phy-rcar-gen3-usb2-clksel.c
+
+diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt
 new file mode 100644
-index 0000000..16d3e2c
+index 0000000..71b2f1b
 --- /dev/null
-+++ b/drivers/i2c/busses/i2c-sprd.c
-@@ -0,0 +1,691 @@
++++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt
+@@ -0,0 +1,58 @@
++* Renesas R-Car generation 3 USB 2.0 clock selector PHY
++
++This file provides information on what the device node for the R-Car generation
++3 USB 2.0 clock selector PHY contains.
++
++If you connect an external clock to the USB_EXTAL pin, you can use the
++"renesas,usb_extal_only" property for it.
++If you connect an oscillator to both the USB_XTAL and USB_EXTAL, this module
++is not needed because this is default setting.
++
++Case 1: An external clock connects to R-Car SoC
++	+----------+   +--- R-Car ---------------------+
++	|External  |---|USB_EXTAL ---> all usb channels|
++	|clock     |   |USB_XTAL                       |
++	+----------+   +-------------------------------+
++In this case, we need this driver with "usb-extal-only" property.
++
++Case 2: An oscillator connects to R-Car SoC
++	+----------+   +--- R-Car ---------------------+
++	|Oscillator|---|USB_EXTAL -+-> all usb channels|
++	|          |---|USB_XTAL --+                   |
++	+----------+   +-------------------------------+
++In this case, we don't need this selector.
++
++Required properties:
++- compatible: "renesas,r8a7795-usb2-clksel-phy" if the device is a part of an
++	      R8A7795 SoC.
++	      "renesas,r8a7796-usb2-clksel-phy" if the device is a part of an
++	      R8A7796 SoC.
++
++	      When compatible with the generic version, nodes must list the
++	      SoC-specific version corresponding to the platform first
++	      followed by the generic version.
++
++- reg: offset and length of the USB 2.0 clock selector register block.
++- clocks: clock phandle and specifier pair(s).
++- #phy-cells: see phy-bindings.txt in the same directory, must be <0>.
++
++Optional properties:
++- renesas,usb-extal-only: to connect a clock generator to USB_EXTAL pin.
++
++Example (R-Car H3):
++
++	usb2_clksel_phy: usb-phy@e6590630 {
++		compatible = "renesas,r8a7795-usb2-clksel-phy",
++			     "renesas,rcar-gen3-usb2-clksel-phy";
++		reg = <0 0xe6590630 0 0x02>;
++		clocks = <&cpg CPG_MOD 703>;
++		renesas,usb-extal-only;
++	};
++
++	&ehci0 {
++		/* We should set usb2_clksel_phy into the first phys prop */
++		phys = <&usb2_clksel_phy>, <&usb2_phy0>;
++		phy-names = "usb_clk", "usb";
++
++		status = "okay";
++	};
+diff --git a/drivers/phy/renesas/Kconfig b/drivers/phy/renesas/Kconfig
+index cb09245..a3b511b 100644
+--- a/drivers/phy/renesas/Kconfig
++++ b/drivers/phy/renesas/Kconfig
+@@ -16,6 +16,14 @@ config PHY_RCAR_GEN3_USB2
+ 	help
+ 	  Support for USB 2.0 PHY found on Renesas R-Car generation 3 SoCs.
+ 
++config PHY_RCAR_GEN3_USB2_CLKSEL
++	tristate "Renesas R-Car generation 3 USB 2.0 clock selector PHY driver"
++	depends on ARCH_RENESAS
++	select GENERIC_PHY
++	help
++	  Support for USB 2.0 clock selector PHY found on Renesas R-Car
++	  generation 3 SoCs.
++
+ config PHY_RCAR_GEN3_USB3
+ 	tristate "Renesas R-Car generation 3 USB 3.0 PHY driver"
+ 	depends on ARCH_RENESAS || COMPILE_TEST
+diff --git a/drivers/phy/renesas/Makefile b/drivers/phy/renesas/Makefile
+index 8b60259..26175b7 100644
+--- a/drivers/phy/renesas/Makefile
++++ b/drivers/phy/renesas/Makefile
+@@ -1,3 +1,4 @@
+ obj-$(CONFIG_PHY_RCAR_GEN2)		+= phy-rcar-gen2.o
+ obj-$(CONFIG_PHY_RCAR_GEN3_USB2)	+= phy-rcar-gen3-usb2.o
++obj-$(CONFIG_PHY_RCAR_GEN3_USB2_CLKSEL)	+= phy-rcar-gen3-usb2-clksel.o
+ obj-$(CONFIG_PHY_RCAR_GEN3_USB3)	+= phy-rcar-gen3-usb3.o
+diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2-clksel.c b/drivers/phy/renesas/phy-rcar-gen3-usb2-clksel.c
+new file mode 100644
+index 0000000..e0e41c9
+--- /dev/null
++++ b/drivers/phy/renesas/phy-rcar-gen3-usb2-clksel.c
+@@ -0,0 +1,129 @@
 +/*
-+ * Copyright (C) 2017 Spreadtrum Communications Inc.
++ * Renesas R-Car Gen3 for USB2.0 clock selector PHY driver
 + *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
++ * Copyright (C) 2017 Renesas Electronics Corporation
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
 +#include <linux/io.h>
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/of_device.h>
++#include <linux/phy/phy.h>
 +#include <linux/platform_device.h>
 +#include <linux/pm_runtime.h>
-+#include <linux/slab.h>
 +
-+#define I2C_CTL			0x0
-+#define I2C_ADDR_CFG		0x4
-+#define I2C_COUNT		0x8
-+#define I2C_RX			0xC
-+#define I2C_TX			0x10
-+#define I2C_STATUS		0x14
-+#define I2C_HSMODE_CFG		0x18
-+#define I2C_VERSION		0x1C
-+#define ADDR_DVD0		0x20
-+#define ADDR_DVD1		0x24
-+#define ADDR_STA0_DVD		0x28
-+#define ADDR_RST		0x2C
++#define USB20_CLKSET0		0x00
++#define CLKSET0_INTCLK_EN	BIT(11)
++#define CLKSET0_PRIVATE		BIT(0)
++#define CLKSET0_EXTAL_ONLY	(CLKSET0_INTCLK_EN | CLKSET0_PRIVATE)
 +
-+/* I2C_CTL */
-+#define STP_EN			BIT(20)
-+#define FIFO_AF_LVL		16
-+#define FIFO_AE_LVL		12
-+#define I2C_DMA_EN		BIT(11)
-+#define FULL_INTEN		BIT(10)
-+#define EMPTY_INTEN		BIT(9)
-+#define I2C_DVD_OPT		BIT(8)
-+#define I2C_OUT_OPT		BIT(7)
-+#define I2C_TRIM_OPT		BIT(6)
-+#define I2C_HS_MODE		BIT(4)
-+#define I2C_MODE		BIT(3)
-+#define I2C_EN			BIT(2)
-+#define I2C_INT_EN		BIT(1)
-+#define I2C_START		BIT(0)
-+
-+/* I2C_STATUS */
-+#define SDA_IN			BIT(21)
-+#define SCL_IN			BIT(20)
-+#define FIFO_FULL		BIT(4)
-+#define FIFO_EMPTY		BIT(3)
-+#define I2C_INT			BIT(2)
-+#define I2C_RX_ACK		BIT(1)
-+#define I2C_BUSY		BIT(0)
-+
-+/* ADDR_RST */
-+#define I2C_RST			BIT(0)
-+
-+#define I2C_FIFO_DEEP		12
-+#define I2C_FIFO_FULL_THLD	15
-+#define I2C_FIFO_EMPTY_THLD	4
-+#define I2C_DATA_STEP		8
-+#define SPRD_I2C_TIMEOUT	(msecs_to_jiffies(1000))
-+
-+/* timeout (ms) for pm runtime autosuspend */
-+#define SPRD_I2C_PM_TIMEOUT	1000
-+
-+/* SPRD i2c data structure */
-+struct sprd_i2c {
-+	struct i2c_adapter adap;
-+	struct device *dev;
++struct rcar_gen3_usb2_clksel {
 +	void __iomem *base;
-+	struct i2c_msg *msg;
-+	struct clk *clk;
-+	unsigned int src_clk;
-+	unsigned int bus_freq;
-+	struct completion complete;
-+	u8 *buf;
-+	u16 count;
-+	int irq;
-+	int err;
++	struct phy *phy;
++	bool usb_extal_only;
 +};
 +
-+static void sprd_i2c_dump_reg(struct sprd_i2c *i2c_dev)
++static int rcar_gen3_usb2_clksel_init(struct phy *p)
 +{
-+	dev_err(&i2c_dev->adap.dev, ": ======dump i2c-%d reg=======\n",
-+		i2c_dev->adap.nr);
-+	dev_err(&i2c_dev->adap.dev, ": I2C_CTRL:0x%x\n",
-+		readl(i2c_dev->base + I2C_CTL));
-+	dev_err(&i2c_dev->adap.dev, ": I2C_ADDR_CFG:0x%x\n",
-+		readl(i2c_dev->base + I2C_ADDR_CFG));
-+	dev_err(&i2c_dev->adap.dev, ": I2C_COUNT:0x%x\n",
-+		readl(i2c_dev->base + I2C_COUNT));
-+	dev_err(&i2c_dev->adap.dev, ": I2C_RX:0x%x\n",
-+		readl(i2c_dev->base + I2C_RX));
-+	dev_err(&i2c_dev->adap.dev, ": I2C_STATUS:0x%x\n",
-+		readl(i2c_dev->base + I2C_STATUS));
-+	dev_err(&i2c_dev->adap.dev, ": ADDR_DVD0:0x%x\n",
-+		readl(i2c_dev->base + ADDR_DVD0));
-+	dev_err(&i2c_dev->adap.dev, ": ADDR_DVD1:0x%x\n",
-+		readl(i2c_dev->base + ADDR_DVD1));
-+	dev_err(&i2c_dev->adap.dev, ": ADDR_STA0_DVD:0x%x\n",
-+		readl(i2c_dev->base + ADDR_STA0_DVD));
-+	dev_err(&i2c_dev->adap.dev, ": ADDR_RST:0x%x\n",
-+		readl(i2c_dev->base + ADDR_RST));
-+}
++	struct rcar_gen3_usb2_clksel *r = phy_get_drvdata(p);
++	u16 val = readw(r->base + USB20_CLKSET0);
 +
-+static void sprd_i2c_set_count(struct sprd_i2c *i2c_dev, u32 count)
-+{
-+	writel(count, i2c_dev->base + I2C_COUNT);
-+}
++	dev_vdbg(&r->phy->dev, "%s: %d, %04x\n", __func__, r->usb_extal_only,
++		 val);
 +
-+static void sprd_i2c_send_stop(struct sprd_i2c *i2c_dev, int stop)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	if (stop)
-+		writel(tmp & (~STP_EN), i2c_dev->base + I2C_CTL);
-+	else
-+		writel(tmp | STP_EN, i2c_dev->base + I2C_CTL);
-+}
-+
-+static void sprd_i2c_clear_start(struct sprd_i2c *i2c_dev)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	writel(tmp & (~I2C_START), i2c_dev->base + I2C_CTL);
-+}
-+
-+static void sprd_i2c_clear_ack(struct sprd_i2c *i2c_dev)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_STATUS);
-+
-+	writel(tmp & (~I2C_RX_ACK), i2c_dev->base + I2C_STATUS);
-+}
-+
-+static void sprd_i2c_clear_irq(struct sprd_i2c *i2c_dev)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_STATUS);
-+
-+	writel(tmp & (~I2C_INT), i2c_dev->base + I2C_STATUS);
-+}
-+
-+static void sprd_i2c_reset_fifo(struct sprd_i2c *i2c_dev)
-+{
-+	writel(I2C_RST, i2c_dev->base + ADDR_RST);
-+}
-+
-+static void sprd_i2c_set_devaddr(struct sprd_i2c *i2c_dev, struct i2c_msg *m)
-+{
-+	writel(m->addr << 1, i2c_dev->base + I2C_ADDR_CFG);
-+}
-+
-+static void sprd_i2c_write_bytes(struct sprd_i2c *i2c_dev, u8 *buf, u32 len)
-+{
-+	u32 i = 0;
-+
-+	for (i = 0; i < len; i++) {
-+		writel(buf[i], i2c_dev->base + I2C_TX);
-+		dev_dbg(&i2c_dev->adap.dev, "write bytes[%d] = %x\n", i, buf[i]);
-+	}
-+}
-+
-+static void sprd_i2c_read_bytes(struct sprd_i2c *i2c_dev, u8 *buf, u16 len)
-+{
-+	u32 i = 0;
-+
-+	for (i = 0; i < len; i++) {
-+		buf[i] = readl(i2c_dev->base + I2C_RX);
-+		dev_dbg(&i2c_dev->adap.dev, "read bytes[%d] = %x\n", i, buf[i]);
-+	}
-+}
-+
-+static void sprd_i2c_set_full_thld(struct sprd_i2c *i2c_dev, u32 full_thld)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	tmp &= ~(0xf << FIFO_AF_LVL);
-+	tmp |= (full_thld << FIFO_AF_LVL);
-+	writel(tmp, i2c_dev->base + I2C_CTL);
-+};
-+
-+static void sprd_i2c_set_empty_thld(struct sprd_i2c *i2c_dev, u32 empty_thld)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	tmp &= ~(0xf << FIFO_AE_LVL);
-+	tmp |= (empty_thld << FIFO_AE_LVL);
-+	writel(tmp, i2c_dev->base + I2C_CTL);
-+};
-+
-+static void sprd_i2c_set_fifo_full_int(struct sprd_i2c *i2c_dev, int enable)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	if (enable)
-+		tmp |= FULL_INTEN;
-+	else
-+		tmp &= ~FULL_INTEN;
-+
-+	writel(tmp, i2c_dev->base + I2C_CTL);
-+};
-+
-+static void sprd_i2c_set_fifo_empty_int(struct sprd_i2c *i2c_dev, int enable)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	if (enable)
-+		tmp |= EMPTY_INTEN;
-+	else
-+		tmp &= ~EMPTY_INTEN;
-+
-+	writel(tmp, i2c_dev->base + I2C_CTL);
-+};
-+
-+static void sprd_i2c_opt_start(struct sprd_i2c *i2c_dev)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	writel(tmp | I2C_START, i2c_dev->base + I2C_CTL);
-+}
-+
-+static void sprd_i2c_opt_mode(struct sprd_i2c *i2c_dev, int rw)
-+{
-+	unsigned int cmd = readl(i2c_dev->base + I2C_CTL) & (~I2C_MODE);
-+
-+	writel((cmd | rw << 3), i2c_dev->base + I2C_CTL);
-+}
-+
-+static void sprd_i2c_data_transfer(struct sprd_i2c *i2c_dev)
-+{
-+	u32 i2c_count = i2c_dev->count;
-+	u32 need_tran = i2c_count <= I2C_FIFO_DEEP ? i2c_count : I2C_FIFO_DEEP;
-+	struct i2c_msg *msg = i2c_dev->msg;
-+
-+	if ((msg->flags & I2C_M_RD)) {
-+		sprd_i2c_read_bytes(i2c_dev, i2c_dev->buf, I2C_FIFO_FULL_THLD);
-+		i2c_dev->count -= I2C_FIFO_FULL_THLD;
-+		i2c_dev->buf += I2C_FIFO_FULL_THLD;
-+
-+		/*
-+		 * If the read data count is larger than rx fifo full threshold,
-+		 * we should enable the rx fifo full interrupt to read data
-+		 * again.
-+		 */
-+		if (i2c_dev->count >= I2C_FIFO_FULL_THLD)
-+			sprd_i2c_set_fifo_full_int(i2c_dev, 1);
-+	} else {
-+		sprd_i2c_write_bytes(i2c_dev, i2c_dev->buf, need_tran);
-+		i2c_dev->buf += need_tran;
-+		i2c_dev->count -= need_tran;
-+
-+		/*
-+		 * If the write data count is arger than tx fifo depth which
-+		 * means we can not write all data in one time, then we should
-+		 * enable the tx fifo empty interrupt to write again.
-+		 */
-+		if (i2c_count > I2C_FIFO_DEEP)
-+			sprd_i2c_set_fifo_empty_int(i2c_dev, 1);
-+	}
-+}
-+
-+static int sprd_i2c_handle_msg(struct i2c_adapter *i2c_adap,
-+			       struct i2c_msg *msg, int is_last_msg)
-+{
-+	struct sprd_i2c *i2c_dev = i2c_adap->algo_data;
-+
-+	i2c_dev->msg = msg;
-+	i2c_dev->buf = msg->buf;
-+	i2c_dev->count = msg->len;
-+
-+	reinit_completion(&i2c_dev->complete);
-+	/* Reset rx/tx fifos */
-+	sprd_i2c_reset_fifo(i2c_dev);
-+	/* Set device address */
-+	sprd_i2c_set_devaddr(i2c_dev, msg);
-+	/* Set I2C read or write bytes count */
-+	sprd_i2c_set_count(i2c_dev, msg->len);
-+
-+	if ((msg->flags & I2C_M_RD)) {
-+		/* Set read operation */
-+		sprd_i2c_opt_mode(i2c_dev, 1);
-+		/* Last byte transmission should excute stop operation */
-+		sprd_i2c_send_stop(i2c_dev, 1);
-+	} else {
-+		/* Set write operation */
-+		sprd_i2c_opt_mode(i2c_dev, 0);
-+
-+		/* Last byte transmission should excute stop operation */
-+		if (is_last_msg)
-+			sprd_i2c_send_stop(i2c_dev, 1);
-+		else
-+			sprd_i2c_send_stop(i2c_dev, 0);
-+	}
-+
-+	/*
-+	 * We should enable rx fifo full interrupt to get data when receiving
-+	 * full data.
-+	 */
-+	if ((msg->flags & I2C_M_RD))
-+		sprd_i2c_set_fifo_full_int(i2c_dev, 1);
-+	else
-+		sprd_i2c_data_transfer(i2c_dev);
-+
-+	/* Start to transmit */
-+	sprd_i2c_opt_start(i2c_dev);
-+
-+	wait_for_completion(&i2c_dev->complete);
-+
-+	return i2c_dev->err;
-+}
-+
-+static int sprd_i2c_master_xfer(struct i2c_adapter *i2c_adap,
-+				struct i2c_msg *msgs, int num)
-+{
-+	struct sprd_i2c *i2c_dev = i2c_adap->algo_data;
-+	int im, ret;
-+
-+	ret = pm_runtime_get_sync(i2c_dev->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (im = 0; im != num; im++)
-+		ret = sprd_i2c_handle_msg(i2c_adap, &msgs[im], im == num - 1);
-+
-+	pm_runtime_mark_last_busy(i2c_dev->dev);
-+	pm_runtime_put_autosuspend(i2c_dev->dev);
-+
-+	return (ret >= 0) ? im : ret;
-+}
-+
-+static u32 sprd_i2c_func(struct i2c_adapter *adap)
-+{
-+	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
-+}
-+
-+static const struct i2c_algorithm sprd_i2c_algo = {
-+	.master_xfer = sprd_i2c_master_xfer,
-+	.functionality = sprd_i2c_func,
-+};
-+
-+static void sprd_i2c_set_clk(struct sprd_i2c *i2c_dev, unsigned int freq)
-+{
-+	u32 apb_clk = i2c_dev->src_clk;
-+	u32 i2c_dvd = apb_clk / (4 * freq) - 1;
-+	u32 high = ((i2c_dvd << 1) * 2) / 5;
-+	u32 low = ((i2c_dvd << 1) * 3) / 5;
-+	u32 div0 = (high & 0xffff) << 16 | (low & 0xffff);
-+	u32 div1 =  (high & 0xffff0000) | ((low & 0xffff0000) >> 16);
-+
-+	writel(div0, i2c_dev->base + ADDR_DVD0);
-+	writel(div1, i2c_dev->base + ADDR_DVD1);
-+
-+	if (freq == 400000)
-+		writel((6 * apb_clk) / 10000000, i2c_dev->base + ADDR_STA0_DVD);
-+	else if (freq == 100000)
-+		writel((4 * apb_clk) / 1000000, i2c_dev->base + ADDR_STA0_DVD);
-+}
-+
-+static void __maybe_unused sprd_i2c_enable(struct sprd_i2c *i2c_dev)
-+{
-+	unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-+
-+	tmp &= ~(I2C_EN | I2C_TRIM_OPT | (0xF << FIFO_AF_LVL) |
-+		 (0xF << FIFO_AE_LVL));
-+	tmp |= I2C_INT_EN | I2C_DVD_OPT;
-+	writel(tmp, i2c_dev->base + I2C_CTL);
-+
-+	/* Set rx fifo full data threshold */
-+	sprd_i2c_set_full_thld(i2c_dev, I2C_FIFO_FULL_THLD);
-+	/* Set tx fifo empty data threshold */
-+	sprd_i2c_set_empty_thld(i2c_dev, I2C_FIFO_EMPTY_THLD);
-+
-+	sprd_i2c_set_clk(i2c_dev, i2c_dev->bus_freq);
-+	/* Reset rx/tx fifo */
-+	sprd_i2c_reset_fifo(i2c_dev);
-+	sprd_i2c_clear_irq(i2c_dev);
-+
-+	/* Enable I2C module */
-+	tmp = readl(i2c_dev->base + I2C_CTL);
-+	writel(tmp | I2C_EN, i2c_dev->base + I2C_CTL);
-+}
-+
-+static irqreturn_t sprd_i2c_isr_thread(int irq, void *dev_id)
-+{
-+	struct sprd_i2c *i2c_dev = dev_id;
-+	struct i2c_msg *msg = i2c_dev->msg;
-+	int ack = readl(i2c_dev->base + I2C_STATUS) & I2C_RX_ACK;
-+	u32 i2c_count = readl(i2c_dev->base + I2C_COUNT);
-+	u32 i2c_tran;
-+
-+	if (msg->flags & I2C_M_RD)
-+		i2c_tran = i2c_dev->count >= I2C_FIFO_FULL_THLD;
-+	else
-+		i2c_tran = i2c_count;
-+
-+	/*
-+	 * If we got one ACK from slave when writing data, and we did not
-+	 * finish this transmission (i2c_tran is not zero), then we should
-+	 * continue to write data.
-+	 *
-+	 * For reading data, ack is always 0, if i2c_tran is not 0 which
-+	 * means we still need to contine to read data from slave.
-+	 */
-+	if (i2c_tran && !ack) {
-+		sprd_i2c_data_transfer(i2c_dev);
-+		return IRQ_HANDLED;
-+	}
-+
-+	i2c_dev->err = 0;
-+
-+	/*
-+	 * If we did not get one ACK from slave when writing data, we should
-+	 * dump all registers to check I2C status.
-+	 */
-+	if (ack) {
-+		i2c_dev->err = -EIO;
-+		sprd_i2c_dump_reg(i2c_dev);
-+	} else if (msg->flags & I2C_M_RD && i2c_dev->count) {
-+		sprd_i2c_read_bytes(i2c_dev, i2c_dev->buf, i2c_dev->count);
-+	}
-+
-+	/* Transmission is done and clear ack and start operation */
-+	sprd_i2c_clear_ack(i2c_dev);
-+	sprd_i2c_clear_start(i2c_dev);
-+	complete(&i2c_dev->complete);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t sprd_i2c_isr(int irq, void *dev_id)
-+{
-+	struct sprd_i2c *i2c_dev = dev_id;
-+	struct i2c_msg *msg = i2c_dev->msg;
-+	u32 i2c_count = readl(i2c_dev->base + I2C_COUNT);
-+	int ack = readl(i2c_dev->base + I2C_STATUS) & I2C_RX_ACK;
-+	u32 i2c_tran;
-+
-+	if (msg->flags & I2C_M_RD)
-+		i2c_tran = i2c_dev->count >= I2C_FIFO_FULL_THLD;
-+	else
-+		i2c_tran = i2c_count;
-+
-+	/*
-+	 * If ack == 0 means we got one ACK, if ack != 0 means we did not
-+	 * get one ACK from slave when writing data, then we should finish
-+	 * this transmission since we got some errors.
-+	 *
-+	 * When writing data, if i2c_tran == 0 which means we have writen
-+	 * done all data, then we can finish this transmission.
-+	 *
-+	 * When reading data, if conut < rx fifo full threshold, which
-+	 * means we can read all data in one time, then we can finish this
-+	 * transmission too.
-+	 */
-+	if (!i2c_tran || ack) {
-+		sprd_i2c_clear_start(i2c_dev);
-+		sprd_i2c_clear_irq(i2c_dev);
-+	}
-+
-+	/* Clear rx/tx fifo interrupts */
-+	sprd_i2c_set_fifo_empty_int(i2c_dev, 0);
-+	sprd_i2c_set_fifo_full_int(i2c_dev, 0);
-+
-+	return IRQ_WAKE_THREAD;
-+}
-+
-+static int sprd_i2c_clk_init(struct sprd_i2c *i2c_dev)
-+{
-+	struct clk *clk_i2c, *clk_parent;
-+	struct device_node *np = i2c_dev->adap.dev.of_node;
-+
-+	clk_i2c = of_clk_get_by_name(np, "i2c");
-+	if (IS_ERR(clk_i2c)) {
-+		dev_warn(&i2c_dev->adap.dev, "i2c%d can't get the i2c clock\n",
-+			 i2c_dev->adap.nr);
-+		clk_i2c = NULL;
-+	}
-+
-+	clk_parent = of_clk_get_by_name(np, "source");
-+	if (IS_ERR(clk_parent)) {
-+		dev_warn(&i2c_dev->adap.dev,
-+			 "i2c%d can't get the source clock\n",
-+			 i2c_dev->adap.nr);
-+		clk_parent = NULL;
-+	}
-+
-+	if (clk_set_parent(clk_i2c, clk_parent))
-+		i2c_dev->src_clk = clk_get_rate(clk_i2c);
-+	else
-+		i2c_dev->src_clk = 26000000;
-+
-+	dev_dbg(&i2c_dev->adap.dev, "i2c%d set source clock is %d\n",
-+		i2c_dev->adap.nr, i2c_dev->src_clk);
-+
-+	i2c_dev->clk = of_clk_get_by_name(np, "enable");
-+	if (IS_ERR(i2c_dev->clk)) {
-+		dev_warn(&i2c_dev->adap.dev,
-+			 "i2c%d can't get the enable clock\n",
-+			 i2c_dev->adap.nr);
-+		i2c_dev->clk = NULL;
-+	}
++	if (r->usb_extal_only && val != CLKSET0_EXTAL_ONLY)
++		writew(CLKSET0_EXTAL_ONLY, r->base + USB20_CLKSET0);
 +
 +	return 0;
 +}
 +
-+static int sprd_i2c_probe(struct platform_device *pdev)
++static const struct phy_ops rcar_gen3_usb2_clksel_ops = {
++	.init		= rcar_gen3_usb2_clksel_init,
++	.owner		= THIS_MODULE,
++};
++
++static const struct of_device_id rcar_gen3_usb2_clksel_match_table[] = {
++	{ .compatible = "renesas,rcar-gen3-usb2-clksel-phy" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, rcar_gen3_usb2_clksel_match_table);
++
++static int rcar_gen3_usb2_clksel_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	struct sprd_i2c *i2c_dev;
++	struct rcar_gen3_usb2_clksel *r;
++	struct phy_provider *provider;
 +	struct resource *res;
-+	u32 prop;
-+	int ret;
++	int ret = 0;
 +
-+	pdev->id = of_alias_get_id(dev->of_node, "i2c");
++	if (!dev->of_node) {
++		dev_err(dev, "This driver needs device tree\n");
++		return -EINVAL;
++	}
 +
-+	i2c_dev = devm_kzalloc(dev, sizeof(struct sprd_i2c), GFP_KERNEL);
-+	if (!i2c_dev)
++	r = devm_kzalloc(dev, sizeof(*r), GFP_KERNEL);
++	if (!r)
 +		return -ENOMEM;
 +
 +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	i2c_dev->base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(i2c_dev->base))
-+		return PTR_ERR(i2c_dev->base);
++	r->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(r->base))
++		return PTR_ERR(r->base);
 +
-+	i2c_dev->irq = platform_get_irq(pdev, 0);
-+	if (i2c_dev->irq < 0) {
-+		dev_err(&pdev->dev, "failed to get irq resource\n");
-+		return -ENXIO;
-+	}
++	/*
++	 * devm_phy_create() will call pm_runtime_enable(&phy->dev);
++	 * And then, phy-core will manage runtime pm for this device.
++	 */
++	pm_runtime_enable(dev);
 +
-+	i2c_set_adapdata(&i2c_dev->adap, i2c_dev);
-+	init_completion(&i2c_dev->complete);
-+	snprintf(i2c_dev->adap.name, sizeof(i2c_dev->adap.name),
-+		 "%s", "sprd-i2c");
-+
-+	i2c_dev->bus_freq = 100000;
-+	i2c_dev->adap.owner = THIS_MODULE;
-+	i2c_dev->dev = dev;
-+	i2c_dev->adap.retries = 3;
-+	i2c_dev->adap.algo = &sprd_i2c_algo;
-+	i2c_dev->adap.algo_data = i2c_dev;
-+	i2c_dev->adap.dev.parent = dev;
-+	i2c_dev->adap.nr = pdev->id;
-+	i2c_dev->adap.dev.of_node = dev->of_node;
-+
-+	if (!of_property_read_u32(dev->of_node, "clock-frequency", &prop))
-+		i2c_dev->bus_freq = prop;
-+
-+	sprd_i2c_clk_init(i2c_dev);
-+	platform_set_drvdata(pdev, i2c_dev);
-+
-+	pm_runtime_set_autosuspend_delay(i2c_dev->dev, SPRD_I2C_PM_TIMEOUT);
-+	pm_runtime_use_autosuspend(i2c_dev->dev);
-+	pm_runtime_set_active(i2c_dev->dev);
-+	pm_runtime_enable(i2c_dev->dev);
-+
-+	ret = pm_runtime_get_sync(i2c_dev->dev);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "i2c%d pm runtime resume failed!\n",
-+			pdev->id);
-+		return ret;
-+	}
-+
-+	ret = devm_request_threaded_irq(dev, i2c_dev->irq,
-+		sprd_i2c_isr, sprd_i2c_isr_thread,
-+		IRQF_NO_SUSPEND | IRQF_ONESHOT,
-+		pdev->name, i2c_dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to request irq %d\n", i2c_dev->irq);
++	r->phy = devm_phy_create(dev, NULL, &rcar_gen3_usb2_clksel_ops);
++	if (IS_ERR(r->phy)) {
++		dev_err(dev, "Failed to create USB 2.0 clock selector PHY\n");
++		ret = PTR_ERR(r->phy);
 +		goto error;
 +	}
 +
-+	ret = i2c_add_numbered_adapter(&i2c_dev->adap);
-+	if (ret) {
-+		dev_err(&pdev->dev, "add adapter failed\n");
++	r->usb_extal_only = of_property_read_bool(dev->of_node,
++						"renesas,usb-extal-only");
++
++	platform_set_drvdata(pdev, r);
++	phy_set_drvdata(r->phy, r);
++
++	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (IS_ERR(provider)) {
++		dev_err(dev, "Failed to register PHY provider\n");
++		ret = PTR_ERR(provider);
 +		goto error;
 +	}
 +
-+	pm_runtime_mark_last_busy(i2c_dev->dev);
-+	pm_runtime_put_autosuspend(i2c_dev->dev);
 +	return 0;
 +
 +error:
-+	pm_runtime_put_noidle(i2c_dev->dev);
-+	pm_runtime_disable(i2c_dev->dev);
++	pm_runtime_disable(dev);
++
 +	return ret;
 +}
 +
-+static int sprd_i2c_remove(struct platform_device *pdev)
++static int rcar_gen3_usb2_clksel_remove(struct platform_device *pdev)
 +{
-+	struct sprd_i2c *i2c_dev = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pm_runtime_get_sync(i2c_dev->dev);
-+	if (ret < 0)
-+		return ret;
-+
-+	i2c_del_adapter(&i2c_dev->adap);
-+
-+	if (!IS_ERR_OR_NULL(i2c_dev->clk))
-+		clk_unprepare(i2c_dev->clk);
-+
-+	pm_runtime_put_noidle(i2c_dev->dev);
-+	pm_runtime_disable(i2c_dev->dev);
++	pm_runtime_disable(&pdev->dev);
 +
 +	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int sprd_i2c_suspend_noirq(struct device *pdev)
-+{
-+	return pm_runtime_force_suspend(pdev);
-+}
-+
-+static int sprd_i2c_resume_noirq(struct device *pdev)
-+{
-+	return pm_runtime_force_resume(pdev);
-+}
-+#endif  /* CONFIG_PM_SLEEP */
-+
-+#ifdef CONFIG_PM
-+static int sprd_i2c_runtime_suspend(struct device *pdev)
-+{
-+	struct sprd_i2c *i2c_dev = dev_get_drvdata(pdev);
-+
-+	clk_disable_unprepare(i2c_dev->clk);
-+
-+	return 0;
-+}
-+
-+static int sprd_i2c_runtime_resume(struct device *pdev)
-+{
-+	struct sprd_i2c *i2c_dev = dev_get_drvdata(pdev);
-+
-+	clk_prepare_enable(i2c_dev->clk);
-+	sprd_i2c_enable(i2c_dev);
-+
-+	return 0;
-+}
-+#endif  /* CONFIG_PM */
-+
-+static const struct dev_pm_ops sprd_i2c_pm_ops = {
-+	SET_RUNTIME_PM_OPS(sprd_i2c_runtime_suspend,
-+			   sprd_i2c_runtime_resume, NULL)
-+
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(sprd_i2c_suspend_noirq,
-+				      sprd_i2c_resume_noirq)
 +};
 +
-+static const struct of_device_id sprd_i2c_of_match[] = {
-+	{ .compatible = "sprd,r8p0-i2c", },
-+};
-+MODULE_DEVICE_TABLE(of, sprd_i2c_of_match);
-+
-+static struct platform_driver sprd_i2c_driver = {
-+	.probe = sprd_i2c_probe,
-+	.remove = sprd_i2c_remove,
++static struct platform_driver rcar_gen3_usb2_clksel_driver = {
 +	.driver = {
-+		   .name = "sprd-i2c",
-+		   .of_match_table = of_match_ptr(sprd_i2c_of_match),
-+		   .pm = &sprd_i2c_pm_ops,
++		.name		= "phy_rcar_gen3_usb2_clksel",
++		.of_match_table	= rcar_gen3_usb2_clksel_match_table,
 +	},
++	.probe	= rcar_gen3_usb2_clksel_probe,
++	.remove = rcar_gen3_usb2_clksel_remove,
 +};
++module_platform_driver(rcar_gen3_usb2_clksel_driver);
 +
-+static int __init sprd_i2c_init(void)
-+{
-+	return platform_driver_register(&sprd_i2c_driver);
-+}
-+arch_initcall_sync(sprd_i2c_init);
-+
-+static void __exit sprd_i2c_exit(void)
-+{
-+	platform_driver_unregister(&sprd_i2c_driver);
-+}
-+module_exit(sprd_i2c_exit);
-+
-+MODULE_DESCRIPTION("Spreadtrum I2C bus adapter driver");
-+MODULE_AUTHOR("Lanqing Liu <lanqing.liu@spreadtrum.com>");
-+MODULE_LICENSE("GPL");
++MODULE_LICENSE("GPL v2");
++MODULE_DESCRIPTION("Renesas R-Car Gen3 USB 2.0 clock selector PHY");
++MODULE_AUTHOR("Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>");
 -- 
-1.7.9.5
+1.9.1
