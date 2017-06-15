@@ -1,7 +1,7 @@
 From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: [RESEND PATCH v5 14/16] powerpc/512x: Add generic compatible string for I2C EEPROM
-Date: Thu, 15 Jun 2017 20:54:16 +0200
-Message-ID: <20170615185418.13980-15-javier@dowhile0.org>
+Subject: [RESEND PATCH v5 12/16] powerpc/5200: Add generic compatible string for I2C EEPROM
+Date: Thu, 15 Jun 2017 20:54:14 +0200
+Message-ID: <20170615185418.13980-13-javier@dowhile0.org>
 References: <20170615185418.13980-1-javier@dowhile0.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170615185418.13980-1-javier@dowhile0.org>
@@ -25,7 +25,9 @@ Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
 
 ---
 
-Changes in v5: None
+Changes in v5:
+- Only replace atmel variant but keep other EEPROM vendors (Geert Uytterhoeven).
+
 Changes in v4:
 - Only use the atmel manufacturer in the compatible string instead of
   keeping the deprecated ones (Rob Herring).
@@ -33,21 +35,49 @@ Changes in v4:
 Changes in v3: None
 Changes in v2: None
 
- arch/powerpc/boot/dts/mpc5121ads.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/boot/dts/digsy_mtc.dts | 2 +-
+ arch/powerpc/boot/dts/pcm030.dts    | 2 +-
+ arch/powerpc/boot/dts/pcm032.dts    | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/mpc5121ads.dts b/arch/powerpc/boot/dts/mpc5121ads.dts
-index 75888ce2c792..fcaa9bad4bda 100644
---- a/arch/powerpc/boot/dts/mpc5121ads.dts
-+++ b/arch/powerpc/boot/dts/mpc5121ads.dts
-@@ -94,7 +94,7 @@
- 			};
+diff --git a/arch/powerpc/boot/dts/digsy_mtc.dts b/arch/powerpc/boot/dts/digsy_mtc.dts
+index 955bff629df3..c280e75c86bf 100644
+--- a/arch/powerpc/boot/dts/digsy_mtc.dts
++++ b/arch/powerpc/boot/dts/digsy_mtc.dts
+@@ -73,7 +73,7 @@
  
+ 		i2c@3d00 {
  			eeprom@50 {
--				compatible = "at,24c32";
-+				compatible = "atmel,24c32";
+-				compatible = "at,24c08";
++				compatible = "atmel,24c08";
  				reg = <0x50>;
  			};
  
+diff --git a/arch/powerpc/boot/dts/pcm030.dts b/arch/powerpc/boot/dts/pcm030.dts
+index 192e66af0001..836e47cc4bed 100644
+--- a/arch/powerpc/boot/dts/pcm030.dts
++++ b/arch/powerpc/boot/dts/pcm030.dts
+@@ -71,7 +71,7 @@
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "catalyst,24c32";
++				compatible = "catalyst,24c32", "atmel,24c32";
+ 				reg = <0x52>;
+ 				pagesize = <32>;
+ 			};
+diff --git a/arch/powerpc/boot/dts/pcm032.dts b/arch/powerpc/boot/dts/pcm032.dts
+index 96b139bf50e9..576249bf2fb9 100644
+--- a/arch/powerpc/boot/dts/pcm032.dts
++++ b/arch/powerpc/boot/dts/pcm032.dts
+@@ -75,7 +75,7 @@
+ 				reg = <0x51>;
+ 			};
+ 			eeprom@52 {
+-				compatible = "catalyst,24c32";
++				compatible = "catalyst,24c32", "atmel,24c32";
+ 				reg = <0x52>;
+ 				pagesize = <32>;
+ 			};
 -- 
 2.9.3
