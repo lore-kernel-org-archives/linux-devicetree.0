@@ -1,91 +1,103 @@
-From: Sricharan R <sricharan@codeaurora.org>
-Subject: Re: [PATCH 10/18] spi: qup: Fix DMA mode interrupt handling
-Date: Thu, 15 Jun 2017 11:22:10 +0530
-Message-ID: <2fa0690c-ee1d-f29b-4bd5-23bbe26aacfc@codeaurora.org>
-References: <1497419551-21834-1-git-send-email-varada@codeaurora.org>
- <1497419551-21834-11-git-send-email-varada@codeaurora.org>
- <66ba7dfb-6ff3-884e-6db0-8d5191f87c93@codeaurora.org>
- <20170614200608.GE32733@hector.wework.com>
+From: Oleksij Rempel <ore@pengutronix.de>
+Subject: Re: [PATCH v1 1/1] gpio: of: provide option generic property for
+ initial line states
+Date: Thu, 15 Jun 2017 07:56:32 +0200
+Message-ID: <20170615055632.qjtyf6kiqdam3mho@pengutronix.de>
+References: <20170609141622.21502-1-o.rempel@pengutronix.de>
+ <CAL_JsqJeSCN88JnVnofb2Ncy4bDyXiKQbLniHmvbE4j854ZePA@mail.gmail.com>
+ <20170611061919.jsbc7x67ut4segj5@pengutronix.de>
+ <2432df7e-5d20-42c9-ddc0-044c2ca5ce2b@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170614200608.GE32733@hector.wework.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: Varadarajan Narayanan <varada@codeaurora.org>, broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2432df7e-5d20-42c9-ddc0-044c2ca5ce2b@mentor.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, barebox@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Vladimir,
 
-On 6/15/2017 1:36 AM, Andy Gross wrote:
-> On Wed, Jun 14, 2017 at 12:51:11PM +0530, Sricharan R wrote:
->> Hi Varada,
->>
->> On 6/14/2017 11:22 AM, Varadarajan Narayanan wrote:
->>> This is needed for v1, where the i/o completion is not
->>> handled in the dma driver.
->>>
->>> Signed-off-by: Andy Gross <andy.gross@linaro.org>
->>> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
->>> ---
->>>  drivers/spi/spi-qup.c | 15 +++++++++++++--
->>>  1 file changed, 13 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
->>> index 872de28..bd53e82 100644
->>> --- a/drivers/spi/spi-qup.c
->>> +++ b/drivers/spi/spi-qup.c
->>> @@ -510,9 +510,9 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
->>>  
->>>  	writel_relaxed(qup_err, controller->base + QUP_ERROR_FLAGS);
->>>  	writel_relaxed(spi_err, controller->base + SPI_ERROR_FLAGS);
->>> -	writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
->>>  
->>>  	if (!xfer) {
->>> +		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
->>
->>  This does look correct to remove acknowledging the QUP in normal case and
->>   do it conditionally only when xfer = NULL.
+On Sun, Jun 11, 2017 at 10:57:18PM +0300, Vladimir Zapolskiy wrote:
+> Hi Oleksij,
 > 
-> This is to probably mask the issue of getting erroneous/spurious IRQs.
+> On 06/11/2017 09:19 AM, Oleksij Rempel wrote:
+> > Hi Rob,
+> > 
+> > On Fri, Jun 09, 2017 at 10:41:30AM -0500, Rob Herring wrote:
+> >> On Fri, Jun 9, 2017 at 9:16 AM, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+> >>> This property is needed for barebox or may be other bootloaders
+> >>> to set proper gpio configuration as early as possible.
+> >>>
+> >>> This example is mainly based on "lines-initial-states" property
+> >>> from this binding documentation:
+> >>> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> >>
+> >> Don't we have a binding for this already based on gpio-hogs.
+> > 
+> > Markus Pargmann was working on this topic before and suddenly was not
+> > able to finish it.
 > 
+> that's fine, but the proposed extension is supposedly not wanted.
 
- hmm, now the QUP_OPERATIONAL is not written to acknowledge the interrupts in
- normal case seems to be wrong.
+:(
 
->>
->>>  		dev_err_ratelimited(controller->dev, "unexpected irq %08x %08x %08x\n",
->>>  				    qup_err, spi_err, opflags);
->>>  		return IRQ_HANDLED;
->>> @@ -540,7 +540,15 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
->>>  		error = -EIO;
->>>  	}
->>>  
->>> -	if (!spi_qup_is_dma_xfer(controller->mode)) {
->>> +	if (spi_qup_is_dma_xfer(controller->mode)) {
->>> +		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
->>> +		if (opflags & QUP_OP_IN_SERVICE_FLAG &&
->>> +		    opflags & QUP_OP_MAX_INPUT_DONE_FLAG)
->>> +			complete(&controller->rxc);
->>> +		if (opflags & QUP_OP_OUT_SERVICE_FLAG &&
->>> +		    opflags & QUP_OP_MAX_OUTPUT_DONE_FLAG)
->>> +			complete(&controller->txc);
->>> +	} else {
->>
->>  Is this because in patch #8 that we do not populate the dma callback
->>  for v1. If that is done, this should not be required at all, as the
->>  complete would be signalled from the dma callback.
+> > I found only some not finished discussions and no code or documentation
+> > in linux kernel upstream.
+> > 
+> > So far, I was able to find fallowing patches and discussions:
+> > patch 23.08.2015, last comment 11.05.2017:
+> > https://patchwork.kernel.org/patch/7096721/
+> > 
+> > patch 23.02.2016, last comment 09.03.2016:
+> > https://patchwork.ozlabs.org/patch/586743/
+> > 
+> > Since there was objections about node-like design for gpio-initval, I
+> > provided an array property, which is similar to initval properties already used
+> > for different other device nodes. For example:
+> > 
+> > Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt
+> > qcom,ath10k-calibration-data
+> > 
+> > Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt
+> > lines-initial-states
 > 
-> I believe that is true.  There shouldn't be any IRQs for DMA enabled
-> transactions (at least BAM-dma).
+> It'd rather be better to fix the drivers and remove the properties
+> from these found device tree binding descriptions.
 
- yeah, the above hunk looks like is ADM specific, not sure why ADM cannot
- work with dma callbacks.
+no sure if it is possible. WiFi calibration data is kind of initval too.
 
-Regards,
- Sricharan
+> > 
+> > Please fixme if I miss something.
+> 
+> Why is GPIO hogging mechanism not good enough for your purpose?
+
+Becouse it should not permanently hog a gpio. The "Hogging" should be
+released as soon as some driver will request it.
+
+Right now, if I define gpio-hog, boot loader will configure it and start
+linux. But linux will never let it free.
+
+If you have other suggestions which fit to this use case, please tell
+me. I assume, right now I'm just blind.
+
+Other way, I can imagine is to create real device nodes which use this
+gpios. Compatible for this devices will be like this:
+some_gpio_holder: gpio@0 {
+	compatible = "gpio-for-userspace";
+	gpio = <&gpio1 5 GPIO_ACTIVE_HIGH>;
+};
+
+Boot loader will configure it as needed, an linux will do nothing with
+it so it can be used over /dev/gpio interface.
+
+> --
+> With best wishes,
+> Vladimir
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
