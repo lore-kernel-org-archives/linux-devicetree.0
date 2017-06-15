@@ -1,29 +1,58 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: ls1021a: update the clockgen node
-Date: Thu, 15 Jun 2017 10:24:07 +0800
-Message-ID: <20170615022406.GF30112@dragon>
-References: <1496989545-27282-1-git-send-email-andy.tang@nxp.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH v3 14/21] arm64: dts: hi3660: enable idle states
+Date: Thu, 15 Jun 2017 10:55:07 +0800
+Message-ID: <CAFGCpxyxUnML7E_vszXAX=sHOgHFEBcYkXxY=tfNK5YC9NariA@mail.gmail.com>
+References: <20170614082338.15673-1-guodong.xu@linaro.org> <20170614082338.15673-15-guodong.xu@linaro.org>
+ <20170615002358.GD28496@leoy-ThinkPad-T440>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1496989545-27282-1-git-send-email-andy.tang-3arQi8VN3Tc@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yuantian Tang <andy.tang-3arQi8VN3Tc@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20170615002358.GD28496@leoy-ThinkPad-T440>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Leo Yan <leo.yan@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Xuejiancheng <xuejiancheng@hisilicon.com>, Peter Griffin <peter.griffin@linaro.org>, "Chenfeng (puck)" <puck.chen@hisilicon.com>, Lee Jones <lee.jones@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Zhangfei Gao <zhangfei.gao@linaro.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-mmc@vger.kernel.org, linux-pci <linux-pci@vger.kernel.org>D
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 02:25:45PM +0800, Yuantian Tang wrote:
-> qoriq clock driver has been updated to parse the clock configuration
-> information defined in driver itself not in dts.
-> Since the new implementation and the bindings have been merged,
-> it is time to update the clock related node and remove redundent clock
-> configuration information from the dts.
-> 
-> Signed-off-by: Tang Yuantian <andy.tang-3arQi8VN3Tc@public.gmane.org>
+On Thu, Jun 15, 2017 at 8:23 AM, Leo Yan <leo.yan@linaro.org> wrote:
+> On Wed, Jun 14, 2017 at 04:23:31PM +0800, Guodong Xu wrote:
+>> From: Leo Yan <leo.yan@linaro.org>
+>>
+>> On Hi3660 there have two clusters, one is CA53 cluster and another is
+>> CA73 cluster. This two clusters have different idle states separately.
+>> With Daniel Lezcano's patch (ARM: cpuidle: Support asymmetric idle
+>> definition), now ARM idle driver can support different clusters with
+>> different idle states.
+>>
+>> Base on this, this patch is to bind two clusters idle states on Hi3660.
+>> Except the "WFI" states are enabled by default for all CPUs, this patch
+>> also binds below extra idle states:
+>>
+>> - CA53 CPUs have two more states:
+>>   CPU_SLEEP:       CPU power off state
+>>   CLUSTER_SLEEP_0: Cluster power off state
+>>
+>> - CA73 CPUs have three more states:
+>>   CPU_NAP:         CPU retention state
+>>   CPU_SLEEP:       CPU power off state
+>>   CLUSTER_SLEEP_1: Cluster power off state
+>
+> Hi Guodong, Wei and all,
+>
+> As Daniel reminded, this patch is dependent on patch (ARM: cpuidle:
+> Support asymmetric idle definition) [1] but his patch has not been
+> finally merged yet. So let us hold on this patch for Daniel's patch
+> is picked up firstly.
+>
+> At the meantime welcome the review and comment for this patch ahead.
+>
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok, so, I will drop this patch, and resend my patchset as v4.
+
+-Guodong
+
+> [1] https://patchwork.kernel.org/patch/9781869/
+>
+> [...]
+>
+> Thanks,
+> Leo Yan
