@@ -1,181 +1,148 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: Re: [PATCH 4/8] v4l2-flash: Use led_classdev instead of
- led_classdev_flash for indicator
-Date: Thu, 15 Jun 2017 12:45:12 +0200
-Message-ID: <20170615104512.3qoplzxbhcwfeins@earth>
-References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497433639-13101-5-git-send-email-sakari.ailus@linux.intel.com>
+From: jmondi <jacopo@jmondi.org>
+Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and
+ output-enable
+Date: Thu, 15 Jun 2017 13:11:24 +0200
+Message-ID: <20170615111124.GD22030@w540>
+References: <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
+ <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ@mail.gmail.com>
+ <20170523183735.GC13664@w540>
+ <CACRpkdYcaGzSvAN2Trqwer+8GbqXyfpE=VqiYcQvCOqhDO9MMw@mail.gmail.com>
+ <20170529104229.GB21347@w540>
+ <CAA+hA=T56WHugmA+5V5ZC6TTxeSUVt1hr0v53YuDsUYgBcvKTw@mail.gmail.com>
+ <20170609075028.GE15739@w540>
+ <CACRpkdZ=hNJLyV94FyRBSR3Dk8NLe-jEo3qbUKDya6ruqG3KNQ@mail.gmail.com>
+ <20170612094424.GG15739@w540>
+ <CAA+hA=RmDEybOkbimtyQBq+vK=6T9GYJn9Jw-GcDy7XxR0b0AA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qnkw72h6ycc7wl33"
-Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1497433639-13101-5-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, pavel@ucw.cz
+In-Reply-To: <CAA+hA=RmDEybOkbimtyQBq+vK=6T9GYJn9Jw-GcDy7XxR0b0AA@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Dong Aisheng <dongas86@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Chris Brandt <Chris.Brandt@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Dong,
 
---qnkw72h6ycc7wl33
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 13, 2017 at 02:25:08PM +0800, Dong Aisheng wrote:
+> On Mon, Jun 12, 2017 at 5:44 PM, jmondi <jacopo@jmondi.org> wrote:
+> > Fair enough :)
+> >
+> > I'll try to keep this short: I don't like "output-enable", and at the
+> > same time I don't think "output-high" and "output-low" fit well for
+> > this purpose, as they electrically means something different from what
+> > our (and IMX) use case is: enabling/disabling input/output
+> > buffers internal to pin controller/gpio block HW and not driving a value
+> > there.
+> >
+> > This seems clear to me from the "GPIO mode pitfalls" section of
+> > pinctrl.txt documentation examples and from the fact that generic bindings
+> > did not expose an "output" flag because if you drive an output line, you
+> > reasonably either drive it high or low.
+> >
+> > Unfortunately I cannot convince myself that the same reasons apply
+> > to the input use case.  Enabling input on a pin implies the pinctrl/gpio driver
+> > has to enable any input buffer required to use that pin as a properly
+> > working input line, and enabling an input buffer implies being able to sense
+> > the line value from there, so I don't see that much use for "input-buffer-enable"
+> > alone.
+> >
+> > So, even if bindings could look a bit weird as there won't be a direct
+> > matching between properties names used to enable input/output buffers,
+> > my vote is to add "output-buffer-enable" only, and keep using the
+> > already there "input-enable" properties for the input use case.
+> >
+>
+> Yes, it may be a bit weird.
+> I'm not pad internal details expert and can't tell much difference between
+> output-enable and output-buffer-enable.
+> I just feel a bit confuse if only using output-buffer-enable.
 
-Hi,
+Yes it is, and I actually like your proposal, I was just trying to
+make sure I was not confusing the property semantic with its
+real-world effect.
 
-On Wed, Jun 14, 2017 at 12:47:15PM +0300, Sakari Ailus wrote:
-> The V4L2 flash class initialisation expects struct led_classdev_flash that
-> describes an indicator but only uses struct led_classdev which is a field
-> iled_cdev in the struct. Use struct iled_cdev only.
->=20
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+If no one as different opinions on this, I can send a patch later to
+add output-enable only, or since you have almost done it down here you
+can do the same resusing what you have proposed below.
+>
+> If enable both input and output, it becomes:
+> pinctrl_xxx: gpios_xxx_grp {
+>         pins = <
+>                 ULP1_PAD_PTD0__PTD0
+>         >;
+>         input-enable;
+>         output-buffer-enable;
+>         bias-pull-up;
+> };
+>
+> How about still use output-enable in pairs to input-enable but explain more
+> in comments?
+> Aslo update 'input-enable' comment to 'enable input buffer'.
+> e.g.
+> diff --git a/drivers/pinctrl/pinconf-generic.c
+> b/drivers/pinctrl/pinconf-generic.c
+> index 720a19f..96c83a4 100644
+> --- a/drivers/pinctrl/pinconf-generic.c
+> +++ b/drivers/pinctrl/pinconf-generic.c
+> @@ -172,6 +172,7 @@ static const struct pinconf_generic_params dt_params[] = {
+>         { "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
+>         { "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
+>         { "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
+> +       { "output-enable", PIN_CONFIG_OUTPUT_ENABLE, 1 },
+>         { "output-high", PIN_CONFIG_OUTPUT, 1, },
+>         { "output-low", PIN_CONFIG_OUTPUT, 0, },
+>         { "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+> diff --git a/include/linux/pinctrl/pinconf-generic.h
+> b/include/linux/pinctrl/pinconf-generic.h
+> index 7620eb1..d30f4fe 100644
+> --- a/include/linux/pinctrl/pinconf-generic.h
+> +++ b/include/linux/pinctrl/pinconf-generic.h
+> @@ -59,9 +59,9 @@
+>   *     which means it will wait for signals to settle when reading inputs. The
+>   *     argument gives the debounce time in usecs. Setting the
+>   *     argument to zero turns debouncing off.
+> - * @PIN_CONFIG_INPUT_ENABLE: enable the pin's input.  Note that this does not
+> - *     affect the pin's ability to drive output.  1 enables input, 0 disables
+> - *     input.
+> + * @PIN_CONFIG_INPUT_ENABLE: enable the pin's input buffer.  Note
+> that this does
+> + *     not affect the pin's ability to drive output.
+> + *     1 enables input, 0 disables input.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+I would not mention the "input buffer" here, as enabling input implies enabling
+the buffer if you want to read values from there. Actually I guess
+there may be platforms where buffer enabling may be implicit, so I
+would leave this out and let drivers handle it internally.
 
--- Sebastian
-
-> ---
->  drivers/media/v4l2-core/v4l2-flash-led-class.c | 19 +++++++------------
->  include/media/v4l2-flash-led-class.h           |  6 +++---
->  2 files changed, 10 insertions(+), 15 deletions(-)
->=20
-> diff --git a/drivers/media/v4l2-core/v4l2-flash-led-class.c b/drivers/med=
-ia/v4l2-core/v4l2-flash-led-class.c
-> index 7b82881..6d69119 100644
-> --- a/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> +++ b/drivers/media/v4l2-core/v4l2-flash-led-class.c
-> @@ -110,7 +110,7 @@ static void v4l2_flash_set_led_brightness(struct v4l2=
-_flash *v4l2_flash,
->  		led_set_brightness_sync(&v4l2_flash->fled_cdev->led_cdev,
->  					brightness);
->  	} else {
-> -		led_set_brightness_sync(&v4l2_flash->iled_cdev->led_cdev,
-> +		led_set_brightness_sync(v4l2_flash->iled_cdev,
->  					brightness);
->  	}
->  }
-> @@ -133,7 +133,7 @@ static int v4l2_flash_update_led_brightness(struct v4=
-l2_flash *v4l2_flash,
->  			return 0;
->  		led_cdev =3D &v4l2_flash->fled_cdev->led_cdev;
->  	} else {
-> -		led_cdev =3D &v4l2_flash->iled_cdev->led_cdev;
-> +		led_cdev =3D v4l2_flash->iled_cdev;
->  	}
-> =20
->  	ret =3D led_update_brightness(led_cdev);
-> @@ -529,8 +529,7 @@ static int v4l2_flash_open(struct v4l2_subdev *sd, st=
-ruct v4l2_subdev_fh *fh)
->  	struct v4l2_flash *v4l2_flash =3D v4l2_subdev_to_v4l2_flash(sd);
->  	struct led_classdev_flash *fled_cdev =3D v4l2_flash->fled_cdev;
->  	struct led_classdev *led_cdev =3D &fled_cdev->led_cdev;
-> -	struct led_classdev_flash *iled_cdev =3D v4l2_flash->iled_cdev;
-> -	struct led_classdev *led_cdev_ind =3D NULL;
-> +	struct led_classdev *led_cdev_ind =3D v4l2_flash->iled_cdev;
->  	int ret =3D 0;
-> =20
->  	if (!v4l2_fh_is_singular(&fh->vfh))
-> @@ -543,9 +542,7 @@ static int v4l2_flash_open(struct v4l2_subdev *sd, st=
-ruct v4l2_subdev_fh *fh)
-> =20
->  	mutex_unlock(&led_cdev->led_access);
-> =20
-> -	if (iled_cdev) {
-> -		led_cdev_ind =3D &iled_cdev->led_cdev;
-> -
-> +	if (led_cdev_ind) {
->  		mutex_lock(&led_cdev_ind->led_access);
-> =20
->  		led_sysfs_disable(led_cdev_ind);
-> @@ -578,7 +575,7 @@ static int v4l2_flash_close(struct v4l2_subdev *sd, s=
-truct v4l2_subdev_fh *fh)
->  	struct v4l2_flash *v4l2_flash =3D v4l2_subdev_to_v4l2_flash(sd);
->  	struct led_classdev_flash *fled_cdev =3D v4l2_flash->fled_cdev;
->  	struct led_classdev *led_cdev =3D &fled_cdev->led_cdev;
-> -	struct led_classdev_flash *iled_cdev =3D v4l2_flash->iled_cdev;
-> +	struct led_classdev *led_cdev_ind =3D v4l2_flash->iled_cdev;
->  	int ret =3D 0;
-> =20
->  	if (!v4l2_fh_is_singular(&fh->vfh))
-> @@ -593,9 +590,7 @@ static int v4l2_flash_close(struct v4l2_subdev *sd, s=
-truct v4l2_subdev_fh *fh)
-> =20
->  	mutex_unlock(&led_cdev->led_access);
-> =20
-> -	if (iled_cdev) {
-> -		struct led_classdev *led_cdev_ind =3D &iled_cdev->led_cdev;
-> -
-> +	if (led_cdev_ind) {
->  		mutex_lock(&led_cdev_ind->led_access);
->  		led_sysfs_enable(led_cdev_ind);
->  		mutex_unlock(&led_cdev_ind->led_access);
-> @@ -614,7 +609,7 @@ static const struct v4l2_subdev_ops v4l2_flash_subdev=
-_ops;
->  struct v4l2_flash *v4l2_flash_init(
->  	struct device *dev, struct fwnode_handle *fwn,
->  	struct led_classdev_flash *fled_cdev,
-> -	struct led_classdev_flash *iled_cdev,
-> +	struct led_classdev *iled_cdev,
->  	const struct v4l2_flash_ops *ops,
->  	struct v4l2_flash_config *config)
->  {
-> diff --git a/include/media/v4l2-flash-led-class.h b/include/media/v4l2-fl=
-ash-led-class.h
-> index f9dcd54..54e31a8 100644
-> --- a/include/media/v4l2-flash-led-class.h
-> +++ b/include/media/v4l2-flash-led-class.h
-> @@ -85,7 +85,7 @@ struct v4l2_flash_config {
->   */
->  struct v4l2_flash {
->  	struct led_classdev_flash *fled_cdev;
-> -	struct led_classdev_flash *iled_cdev;
-> +	struct led_classdev *iled_cdev;
->  	const struct v4l2_flash_ops *ops;
-> =20
->  	struct v4l2_subdev sd;
-> @@ -124,7 +124,7 @@ static inline struct v4l2_flash *v4l2_ctrl_to_v4l2_fl=
-ash(struct v4l2_ctrl *c)
->  struct v4l2_flash *v4l2_flash_init(
->  	struct device *dev, struct fwnode_handle *fwn,
->  	struct led_classdev_flash *fled_cdev,
-> -	struct led_classdev_flash *iled_cdev,
-> +	struct led_classdev *iled_cdev,
->  	const struct v4l2_flash_ops *ops,
->  	struct v4l2_flash_config *config);
-> =20
-> @@ -140,7 +140,7 @@ void v4l2_flash_release(struct v4l2_flash *v4l2_flash=
-);
->  static inline struct v4l2_flash *v4l2_flash_init(
->  	struct device *dev, struct fwnode_handle *fwn,
->  	struct led_classdev_flash *fled_cdev,
-> -	struct led_classdev_flash *iled_cdev,
-> +	struct led_classdev *iled_cdev,
->  	const struct v4l2_flash_ops *ops,
->  	struct v4l2_flash_config *config)
->  {
-> --=20
-> 2.1.4
->=20
-
---qnkw72h6ycc7wl33
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllCZS0ACgkQ2O7X88g7
-+ppmaRAAmiYetGTVZORV+kQvcBSuhEhyneUPsUkJIwVCGtNctHiCQa6Rl+SWaxpm
-LqZmFGPmdnKQONu0uv9BRCM2Yo7CYtWTdpya+YTmuH83FzjFEFzFksYVurfa0BLe
-/gncBcFE+XuLpBraN0u4W/2EUBoH7KARJ1eSAyQN7gVjCXnnXJDoY0uAL9oSG2qG
-YM/Ai2uJtuTDnOferhipyw0HOHuFmY7SNpmfFVVzKobAgxQF+bnoKHH055YnSREK
-xgbQO71QTCpU4MipPa7WivjcblyO9QLxGLJ+r5vlpOD2gOQEZ/lnEFveh/PRyR0+
-4V71H28QBEM3RsjHdZVSWaeF6a/4MwVB72Wydb5LpvBar9nHQeeD1xdYvwTZ38o+
-6s5VdOVcZg7O1PwFEHsf0TXT9T1J1PCzuz8srJS+/716zpNsFlWWlSSzZ//+RSPf
-dPDfXfiY1K0U1R3UQpLI6UmB8OMIdNoMpNoXiDlYtM7/eyS0TgxW0ENVKbG3i9ly
-Yro7uWYKnzgvTHWrgcIjBuPigy5nnOwao8+7fWTDhGaWtv1g8Cg2O83+xgiHAbiY
-gEpebIp086NQAktqcJVZT8Es7qllOXA/N3Yw4OGKeBX/JaONRb0fUIRsznwSkZWy
-t3AHGpJrY5iIyk42q1iLZsWG3MiDjlhJo2qryqkYydiQHbqOSVk=
-=EC5X
------END PGP SIGNATURE-----
-
---qnkw72h6ycc7wl33--
+>   * @PIN_CONFIG_INPUT_SCHMITT: this will configure an input pin to run in
+>   *     schmitt-trigger mode. If the schmitt-trigger has adjustable hysteresis,
+>   *     the threshold value is given on a custom format as argument when
+> @@ -73,6 +73,9 @@
+>   *     operation, if several modes of operation are supported these can be
+>   *     passed in the argument on a custom form, else just use argument 1
+>   *     to indicate low power mode, argument 0 turns low power mode off.
+> + * @PIN_CONFIG_OUTPUT_ENABLE: only enable the pin's output buffer, not driving
+> + *     a value.
+> + *     1 enables output buffer, 0 disables output buffer.
+>   * @PIN_CONFIG_OUTPUT: this will configure the pin as an output. Use argument
+>   *     1 to indicate high level, argument 0 to indicate low level. (Please
+>   *     see Documentation/pinctrl.txt, section "GPIO mode pitfalls" for a
+>
+> Or
+> invent both input-buffer-enable and output-buffer-enable and
+> deprecated input-enable?
+>
+> Andy,
+> how about your comments?
+>
+> Regards
+> Dong Aisheng
+>
+> > Thanks
+> >    j
+> >
+> >>
+> >> Yours,
+> >> Linus Walleij
