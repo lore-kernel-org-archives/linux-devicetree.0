@@ -1,99 +1,56 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v6 7/8] arm64: dts: hikey960: add device node for pmic and
- regulators
-Date: Thu, 15 Jun 2017 20:55:31 +0100
-Message-ID: <5942E633.9040908@hisilicon.com>
-References: <20170608220841.26531-1-guodong.xu@linaro.org>
- <20170608220841.26531-8-guodong.xu@linaro.org>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] Broadcom STB wake-timer support
+Date: Thu, 15 Jun 2017 12:59:02 -0700
+Message-ID: <20170615195904.12653-1-f.fainelli@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170608220841.26531-8-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, lgirdwood@gmail.com, broonie@kernel.org, khilman@baylibre.com, arnd@arndb.de, gregory.clement@free-electrons.com, horms+renesas@verge.net.au, olof@lixom.net, thomas.petazzoni@free-electrons.com, yamada.masahiro@socionext.com, riku.voipio@linaro.org, treding@nvidia.com, krzk@kernel.org, eric@anholt.net, damm+renesas@opensource.se, ard.biesheuvel@linaro.org, linus.walleij@linaro.org, geert+renesas@glider.be
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, hw.wangxiaoyin@hisilicon.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <rtc-linux+bncBCH67JWTV4DBBGGORPFAKGQEXLN7FFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guodong,
+Hi Alexandre,
 
-On 2017/6/8 23:08, Guodong Xu wrote:
-> From: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-> 
-> add device node for hi6421 pmic core and hi6421v530
-> voltage regulator,include LDO(1,3,9,11,15,16)
-> 
-> Signed-off-by: Wang Xiaoyin <hw.wangxiaoyin@hisilicon.com>
-> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts | 46 +++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> index ca448f0..e579333 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> @@ -97,6 +97,52 @@
->  			default-state = "off";
->  		};
->  	};
-> +
-> +	pmic: pmic@fff34000 {
-> +		compatible = "hisilicon,hi6421v530-pmic";
-> +		reg = <0x0 0xfff34000 0x0 0x1000>;
-> +		interrupt-controller;
-> +		#interrupt-cells = <2>;
-> +
-> +		regulators {
-> +			ldo3: LDO3 { /* HDMI */
-> +				regulator-name = "VOUT3_1V85";
-> +				regulator-min-microvolt = <1800000>;
-> +				regulator-max-microvolt = <2200000>;
-> +				regulator-enable-ramp-delay = <120>;
-> +			};
-> +
-> +			ldo9: LDO9 { /* SDCARD I/O */
-> +				regulator-name = "VOUT9_1V8_2V95";
-> +				regulator-min-microvolt = <1750000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <240>;
-> +			};
-> +
-> +			ldo11: LDO11 { /* Low Speed Connector */
-> +				regulator-name = "VOUT11_1V8_2V95";
-> +				regulator-min-microvolt = <1750000>;
-> +				regulator-max-microvolt = <3300000>;
-> +				regulator-enable-ramp-delay = <240>;
-> +			};
-> +
-> +			ldo15: LDO15 { /* UFS VCC */
-> +				regulator-name = "VOUT15_3V0";
-> +				regulator-min-microvolt = <1750000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-boot-on;
-> +				regulator-always-on;
-> +				regulator-enable-ramp-delay = <120>;
-> +			};
-> +
-> +			ldo16: LDO16 { /* SD VDD */
-> +				regulator-name = "VOUT16_2V95";
-> +				regulator-min-microvolt = <1750000>;
-> +				regulator-max-microvolt = <3000000>;
-> +				regulator-enable-ramp-delay = <360>;
-> +			};
-> +		};
-> +	};
->  };
->  
->  &i2c0 {
-> 
+This patch series adds support for the Broadcom STB wake-timer. This is a 27Mhz
+timer which allows the system to exit S2/S3/S5 sleep states when configured.
 
-Since you put the dts part into another patch set[1] and the driver part has been applied.
-I will pick up [1].
+The wake-timer has has a long history within our internal/downstream tree, and
+Brian authored it in the first place, then Markus added the rtc bits, and then I
+cleaned it up for upstream.
+
 Thanks!
 
-[1]: https://lkml.org/lkml/2017/6/14/1052
+Brian Norris (1):
+  rtc: brcmstb-waketimer: Add Broadcom STB wake-timer
 
-BR,
-Wei
+Florian Fainelli (1):
+  dt-bindings: Document the Broadcom STB wake-up timer node
+
+ .../bindings/rtc/brcm,brcmstb-waketimer.txt        |  22 ++
+ drivers/rtc/Kconfig                                |  11 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-brcmstb-waketimer.c                | 345 +++++++++++++++++++++
+ 4 files changed, 379 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
+ create mode 100644 drivers/rtc/rtc-brcmstb-waketimer.c
+
+-- 
+2.9.3
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
