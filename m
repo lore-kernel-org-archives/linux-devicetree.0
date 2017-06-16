@@ -1,38 +1,99 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 8/9] gpio: mvebu: Add support for the Armada 7K/8K SoCs
-Date: Fri, 16 Jun 2017 11:29:22 +0200
-Message-ID: <CACRpkdYm7OYJ6ufzUtYqb6dJFEOMLdiw8zJ2Et1uEhxe7ARH9A@mail.gmail.com>
-References: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
- <b6357b8b179d66aab45548e693193054942e7dcc.1497281623.git-series.gregory.clement@free-electrons.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: rockchip: add efuse device node for rk3228
+Date: Fri, 16 Jun 2017 11:35:12 +0200
+Message-ID: <2264017.eLNdPIXHd9@diego>
+References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com> <2537345.MJmYY2BcSn@phil> <da5fbd76-c9a1-a16f-3ed8-adfd2b1c346f@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <b6357b8b179d66aab45548e693193054942e7dcc.1497281623.git-series.gregory.clement@free-electrons.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <da5fbd76-c9a1-a16f-3ed8-adfd2b1c346f-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 5:34 PM, Gregory CLEMENT
-<gregory.clement@free-electrons.com> wrote:
+Am Freitag, 16. Juni 2017, 17:24:23 CEST schrieb Frank Wang:
+> Hi Heiko,
+> 
+> On 2017/6/15 23:10, Heiko Stuebner wrote:
+> > Hi Frank,
+> > 
+> > Am Donnerstag, 15. Juni 2017, 15:23:16 CEST schrieb Frank Wang:
+> >> From: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> 
+> >> Add a efuse node in the device tree for the rk3228 SoC.
+> >> 
+> >> Signed-off-by: Finley Xiao <finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> ---
+> >> 
+> >>   arch/arm/boot/dts/rk322x.dtsi | 17 +++++++++++++++++
+> >>   1 file changed, 17 insertions(+)
+> >> 
+> >> diff --git a/arch/arm/boot/dts/rk322x.dtsi
+> >> b/arch/arm/boot/dts/rk322x.dtsi
+> >> index c2a78f4..dad195e 100644
+> >> --- a/arch/arm/boot/dts/rk322x.dtsi
+> >> +++ b/arch/arm/boot/dts/rk322x.dtsi
+> >> @@ -314,6 +314,23 @@
+> >> 
+> >>   		status = "disabled";
+> >>   	
+> >>   	};
+> >> 
+> >> +	efuse: efuse@11040000 {
+> >> +		compatible = "rockchip,rk322x-efuse";
+> > 
+> > was this binding included already? Simply because compatibles should
+> > not contain placeholders, so rockchip,rk3228-efuse please - same for
+> > the driver side.
+> 
+> Actually, I always remember it should be without placeholders from the
+> first time you commented :-)
+> but I saw that the binding and driver (rockchip,rk322x-efuse) have
+> already been applied, so I send this one keep the same with driver side.
+> Shall I resend a new patch to correct both of them to
+> 'rockchip,rk3228-efuse' ?
 
-> The Armada 7K and 8K SoCs use the same gpio controller as most of the
-> other mvebu SoCs. However, the main difference is that the GPIO
-> controller is part of a bigger system controller, and a syscon is used to
-> control the overall system controller. Therefore, the driver needs to be
-> adjusted to retrieve the regmap of the syscon to access registers, and
-> account for the fact that registers are located at a certain offset
-> within the regmap.
->
-> This commit add the support of the syscon and introduce a new variant for
-> this case.
->
-> It was based on the preliminary work of Thomas Petazzoni.
->
-> Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Yes please :-) .
 
-Patch applied.
+As it was probably applied for 4.13, changing the compatible shouldn't be
+a problem.
 
-Yours,
-Linus Walleij
+
+Thanks
+Heiko
+
+> 
+> 
+> BR.
+> Frank
+> 
+> > Heiko
+> > 
+> >> +		reg = <0x11040000 0x20>;
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <1>;
+> >> +		clocks = <&cru PCLK_EFUSE_256>;
+> >> +		clock-names = "pclk_efuse";
+> >> +
+> >> +		/* Data cells */
+> >> +		efuse_id: id@7 {
+> >> +			reg = <0x7 0x10>;
+> >> +		};
+> >> +		cpu_leakage: cpu_leakage@17 {
+> >> +			reg = <0x17 0x1>;
+> >> +		};
+> >> +	};
+> >> +
+> >> 
+> >>   	i2c0: i2c@11050000 {
+> >>   	
+> >>   		compatible = "rockchip,rk3228-i2c";
+> >>   		reg = <0x11050000 0x1000>;
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
