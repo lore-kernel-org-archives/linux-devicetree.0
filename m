@@ -1,143 +1,148 @@
-From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] PCI: imx6: add regulator support
-Date: Fri, 16 Jun 2017 11:58:18 -0500
-Message-ID: <20170616165818.GC11129@bhelgaas-glaptop.roam.corp.google.com>
-References: <20170608080742.3910-1-quentin.schulz@free-electrons.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5 1/2] arm64: dts: mt7622: add basic nodes to the mt7622.dtsi file
+Date: Sat, 17 Jun 2017 01:06:26 +0800
+Message-ID: <e27892660949e063b23165d2a53334f68c916a50.1497631953.git.sean.wang@mediatek.com>
+References: <cover.1497631953.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170608080742.3910-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <cover.1497631953.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: hongxing.zhu-3arQi8VN3Tc@public.gmane.org, l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 08, 2017 at 10:07:42AM +0200, Quentin Schulz wrote:
-> Some boards might require to control a regulator to power the PCIe port.
-> 
-> This adds support for an optional regulator defined in Device Tree
-> linked in the PCIe controller under `vpcie-supply`. If present, the
-> regulator will be disabled and then enabled as part of the PCIe host
-> initialization process and will be disabled when shutting down.
-> 
-> Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Applied with acks from Rob & Richard to pci/host-imx6 for v4.13, thanks!
+add basic nodes into the mt7622.dtsi for the system
+bring-up which includes ARM CPU, GIC, timer, MediaTek
+UART, SYSIRQ and one reserved memory region for ATF.
 
-I converted the pr_err() in imx6_pcie_assert_core_reset() to a dev_err().
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ arch/arm64/boot/dts/mediatek/mt7622.dtsi | 110 +++++++++++++++++++++++++++++++
+ 1 file changed, 110 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt7622.dtsi
 
-> ---
->  .../devicetree/bindings/pci/fsl,imx6q-pcie.txt     |  4 +++
->  drivers/pci/dwc/pci-imx6.c                         | 34 +++++++++++++++++++++-
->  2 files changed, 37 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index e3d5680875b1..cf92d3ba5a26 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -33,6 +33,10 @@ Optional properties:
->  - reset-gpio-active-high: If present then the reset sequence using the GPIO
->    specified in the "reset-gpio" property is reversed (H=reset state,
->    L=operation state).
-> +- vpcie-supply: Should specify the regulator in charge of PCIe port power.
-> +  The regulator will be enabled when initializing the PCIe host and
-> +  disabled either as part of the init process or when shutting down the
-> +  host.
->  
->  Additional required properties for imx6sx-pcie:
->  - clock names: Must include the following additional entries:
-> diff --git a/drivers/pci/dwc/pci-imx6.c b/drivers/pci/dwc/pci-imx6.c
-> index 19a289b8cc94..f9b7500c9aff 100644
-> --- a/drivers/pci/dwc/pci-imx6.c
-> +++ b/drivers/pci/dwc/pci-imx6.c
-> @@ -24,6 +24,7 @@
->  #include <linux/pci.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
-> +#include <linux/regulator/consumer.h>
->  #include <linux/resource.h>
->  #include <linux/signal.h>
->  #include <linux/types.h>
-> @@ -59,6 +60,7 @@ struct imx6_pcie {
->  	u32			tx_swing_full;
->  	u32			tx_swing_low;
->  	int			link_gen;
-> +	struct regulator	*vpcie;
->  };
->  
->  /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
-> @@ -310,6 +312,13 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
->  				   IMX6Q_GPR1_PCIE_REF_CLK_EN, 0 << 16);
->  		break;
->  	}
-> +
-> +	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
-> +		int ret = regulator_disable(imx6_pcie->vpcie);
-> +
-> +		if (ret)
-> +			pr_err("failed to disable vpcie regulator: %d\n", ret);
-> +	}
->  }
->  
->  static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
-> @@ -376,10 +385,19 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	struct device *dev = pci->dev;
->  	int ret;
->  
-> +	if (imx6_pcie->vpcie && !regulator_is_enabled(imx6_pcie->vpcie)) {
-> +		ret = regulator_enable(imx6_pcie->vpcie);
-> +		if (ret) {
-> +			dev_err(dev, "failed to enable vpcie regulator: %d\n",
-> +				ret);
-> +			return;
-> +		}
-> +	}
-> +
->  	ret = clk_prepare_enable(imx6_pcie->pcie_phy);
->  	if (ret) {
->  		dev_err(dev, "unable to enable pcie_phy clock\n");
-> -		return;
-> +		goto err_pcie_phy;
->  	}
->  
->  	ret = clk_prepare_enable(imx6_pcie->pcie_bus);
-> @@ -439,6 +457,13 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
->  	clk_disable_unprepare(imx6_pcie->pcie_bus);
->  err_pcie_bus:
->  	clk_disable_unprepare(imx6_pcie->pcie_phy);
-> +err_pcie_phy:
-> +	if (imx6_pcie->vpcie && regulator_is_enabled(imx6_pcie->vpcie) > 0) {
-> +		ret = regulator_disable(imx6_pcie->vpcie);
-> +		if (ret)
-> +			dev_err(dev, "failed to disable vpcie regulator: %d\n",
-> +				ret);
-> +	}
->  }
->  
->  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
-> @@ -802,6 +827,13 @@ static int imx6_pcie_probe(struct platform_device *pdev)
->  	if (ret)
->  		imx6_pcie->link_gen = 1;
->  
-> +	imx6_pcie->vpcie = devm_regulator_get_optional(&pdev->dev, "vpcie");
-> +	if (IS_ERR(imx6_pcie->vpcie)) {
-> +		if (PTR_ERR(imx6_pcie->vpcie) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +		imx6_pcie->vpcie = NULL;
-> +	}
-> +
->  	platform_set_drvdata(pdev, imx6_pcie);
->  
->  	ret = imx6_add_pcie_port(imx6_pcie, pdev);
-> -- 
-> 2.11.0
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+new file mode 100644
+index 0000000..b111fec
+--- /dev/null
++++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+@@ -0,0 +1,110 @@
++/*
++ * Copyright (c) 2017 MediaTek Inc.
++ * Author: Ming Huang <ming.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *	   Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
++ *
++ * SPDX-License-Identifier: (GPL-2.0 OR MIT)
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "mediatek,mt7622";
++	interrupt-parent = <&sysirq>;
++	#address-cells = <2>;
++	#size-cells = <2>;
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x0>;
++			enable-method = "psci";
++			clock-frequency = <1300000000>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a53", "arm,armv8";
++			reg = <0x0 0x1>;
++			enable-method = "psci";
++			clock-frequency = <1300000000>;
++		};
++	};
++
++	uart_clk: dummy25m {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++	};
++
++	bus_clk: dummy280m {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <280000000>;
++	};
++
++	psci {
++		compatible  = "arm,psci-0.2";
++		method      = "smc";
++	};
++
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		/* 192 KiB reserved for ARM Trusted Firmware (BL31) */
++		secmon_reserved: secmon@43000000 {
++			reg = <0 0x43000000 0 0x30000>;
++			no-map;
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(2) |
++			      IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(2) |
++			      IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(2) |
++			      IRQ_TYPE_LEVEL_HIGH)>,
++			     <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(2) |
++			      IRQ_TYPE_LEVEL_HIGH)>;
++	};
++
++	sysirq: interrupt-controller@10200620 {
++		compatible = "mediatek,mt7622-sysirq",
++			     "mediatek,mt6577-sysirq";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10200620 0 0x20>;
++	};
++
++	gic: interrupt-controller@10300000 {
++		compatible = "arm,gic-400";
++		interrupt-controller;
++		#interrupt-cells = <3>;
++		interrupt-parent = <&gic>;
++		reg = <0 0x10310000 0 0x1000>,
++		      <0 0x10320000 0 0x1000>,
++		      <0 0x10340000 0 0x2000>,
++		      <0 0x10360000 0 0x2000>;
++	};
++
++	uart0: serial@11002000 {
++		compatible = "mediatek,mt7622-uart",
++			     "mediatek,mt6577-uart";
++		reg = <0 0x11002000 0 0x400>;
++		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&uart_clk>, <&bus_clk>;
++		clock-names = "baud", "bus";
++		status = "disabled";
++	};
++};
+-- 
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
