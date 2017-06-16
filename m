@@ -1,59 +1,42 @@
-From: Paolo Pisati <p.pisati@gmail.com>
-Subject: Re: [PATCH v3 2/2] fpga: lattice machxo2: Add Lattice MachXO2 support
-Date: Fri, 16 Jun 2017 11:04:36 +0200
-Message-ID: <20170616090436.GA5037@harukaze>
-References: <1497525185-30232-1-git-send-email-p.pisati@gmail.com>
- <1497525185-30232-3-git-send-email-p.pisati@gmail.com>
- <CAAtXAHfv75VC=J+J5Xd7xeAoPtu1k97XRp2FSOS0ttwnrvWurg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] gpio: mvebu: change compatible string for PWM support
+Date: Fri, 16 Jun 2017 11:13:40 +0200
+Message-ID: <CACRpkdZErh0PKy6+D7a23Js5d9n+eN_HVXhuatOFHGJRfObogA@mail.gmail.com>
+References: <20170601200820.22396-1-ralph.sennhauser@gmail.com>
+ <CACRpkdY7yy=U1DgFHXGd06UXg0hh5eC7mBKHLr7hq01hR__q8g@mail.gmail.com> <CACQ1gAht7kPysPofvyykYrfcRgJ_i_FFC8NqyN+J2L9WXwHfcg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAtXAHfv75VC=J+J5Xd7xeAoPtu1k97XRp2FSOS0ttwnrvWurg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Moritz Fischer <moritz.fischer@ettus.com>
-Cc: Paolo Pisati <p.pisati@gmail.com>, Alan Tull <atull@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-fpga@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <CACQ1gAht7kPysPofvyykYrfcRgJ_i_FFC8NqyN+J2L9WXwHfcg@mail.gmail.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Ralph Sennhauser <ralph.sennhauser@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Russell King <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 01:03:41PM -0700, Moritz Fischer wrote:
-> > +static int machxo2_write(struct fpga_manager *mgr, const char *buf,
-> > +                        size_t count)
-> > +{
-> > +       struct spi_device *spi = mgr->priv;
-> > +       struct spi_message msg;
-> > +       struct spi_transfer tx;
-> > +       u32 progincr = LSC_PROGINCRNV;
-> > +       u8 payload[MACHXO2_BUF_SIZE];
-> > +       int i, ret;
-> > +
-> > +       if (count % MACHXO2_PAGE_SIZE != 0) {
-> > +               dev_err(&mgr->dev, "Malformed payload.\n");
-> > +               return -EINVAL;
-> > +       }
-> > +
-> > +       memcpy(payload, &progincr, MACHXO2_OP_SIZE);
-> > +       for (i = 0; i < count; i += MACHXO2_PAGE_SIZE) {
-> > +               memcpy(&payload[MACHXO2_OP_SIZE], &buf[i], MACHXO2_PAGE_SIZE);
-> > +               memset(&tx, 0, sizeof(tx));
-> > +               spi_message_init(&msg);
-> > +               tx.tx_buf = payload;
-> > +               tx.len = MACHXO2_BUF_SIZE;
-> > +               tx.delay_usecs = MACHXO2_HIGH_DELAY;
-> > +               spi_message_add_tail(&tx, &msg);
-> > +               ret = spi_sync(spi, &msg);
-> > +               if (ret) {
-> > +                       dev_err(&mgr->dev, "Error loading the bitstream.\n");
-> > +                       return ret;
-> > +               }
-> > +       }
-> 
-> Can't you chain them together and submit it as one? Instead of calling
-> spi_sync in a loop?
-> You don't seem to wait for _wait_until_not_busy, so wouldn't that work?
+On Fri, Jun 9, 2017 at 9:45 AM, Richard Genoud <richard.genoud@gmail.com> wrote:
+> 2017-06-09 9:42 GMT+02:00 Linus Walleij <linus.walleij@linaro.org>:
+>> On Thu, Jun 1, 2017 at 10:08 PM, Ralph Sennhauser
+>> <ralph.sennhauser@gmail.com> wrote:
+>>
+>>> As it turns out more than just Armada 370 and XP support using GPIO
+>>> lines as PWM lines. For example the Armada 38x family has the same
+>>> hardware support. As such "marvell,armada-370-xp-gpio" for the
+>>> compatible string is a misnomer.
+>>>
+>>> Change the compatible string to "marvell,armada-370-gpio" before the
+>>> driver makes it out of the -rc stage. This also follows the practice of
+>>> using only the first device family supported as part of the name.
+>>>
+>>> Also update the documentation and comments in the code accordingly.
+>>>
+>>> Fixes: 757642f9a584 ("gpio: mvebu: Add limited PWM support")
+>>> Signed-off-by: Ralph Sennhauser <ralph.sennhauser@gmail.com>
+>>
+>> Patch applied for next with the tags.
+> You mean for fixes right ?
+> The goal was to correct "marvell,armada-370-xp-gpio" before 4.12 is out.
 
-I could unroll the loop, or i could move from a static delay
-(MACHXO2_HIGH_DELAY) to checking the busy flag if we want to make it faster, not
-sure which one i prefer, or if it's worth though.
--- 
-bye,
-p.
+OK I moved it to fixes.
+
+Yours,
+Linus Walleij
