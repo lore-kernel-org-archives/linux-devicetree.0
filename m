@@ -1,68 +1,38 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 6/9] pinctrl: mvebu: add driver for Armada CP110 pinctrl
-Date: Fri, 16 Jun 2017 11:26:08 +0200
-Message-ID: <CACRpkdb+D+a9S4UCjex_P1YEATj9RhSu4i0fy50AopAJ1MOzXA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 8/9] gpio: mvebu: Add support for the Armada 7K/8K SoCs
+Date: Fri, 16 Jun 2017 11:29:22 +0200
+Message-ID: <CACRpkdYm7OYJ6ufzUtYqb6dJFEOMLdiw8zJ2Et1uEhxe7ARH9A@mail.gmail.com>
 References: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
- <2d71d93a22ed24c45b7ce7b52fa066cc0a14a69f.1497281623.git-series.gregory.clement@free-electrons.com>
+ <b6357b8b179d66aab45548e693193054942e7dcc.1497281623.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2d71d93a22ed24c45b7ce7b52fa066cc0a14a69f.1497281623.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah@marvell>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <b6357b8b179d66aab45548e693193054942e7dcc.1497281623.git-series.gregory.clement@free-electrons.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Jun 12, 2017 at 5:34 PM, Gregory CLEMENT
-<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+<gregory.clement@free-electrons.com> wrote:
 
-> From: Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> The Armada 7K and 8K SoCs use the same gpio controller as most of the
+> other mvebu SoCs. However, the main difference is that the GPIO
+> controller is part of a bigger system controller, and a syscon is used to
+> control the overall system controller. Therefore, the driver needs to be
+> adjusted to retrieve the regmap of the syscon to access registers, and
+> account for the fact that registers are located at a certain offset
+> within the regmap.
 >
-> This commit adds a pinctrl driver for the CP110 part of the Marvell
-> Armada 7K and 8K SoCs. The Armada 7K has a single CP110, where almost all
-> the MPP pins are available. On the other side, the Armada 8K has two
-> CP110, and the available MPPs are split between the master CP110 (MPPs 32
-> to 62) and the slave CP110 (MPPs 0 to 31).
+> This commit add the support of the syscon and introduce a new variant for
+> this case.
 >
-> The register interface to control the MPPs is however the same as all
-> other mvebu SoCs, so we can reuse the common pinctrl-mvebu.c logic.
+> It was based on the preliminary work of Thomas Petazzoni.
 >
-> Signed-off-by: Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->
-> [updated for mvebu pinctrl and 4.9 changes:
->  - converted to simple_mmio
->  - converted to syscon/regmap
->  - removed unimplemented .remove function
->  - dropped DTS changes
->  - defered gpio ranges to DT
->  - fixed warning
->  - properly set soc->nmodes
->  -- rmk]
-> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
->
-> [ add missing MPP[61:56] function 14 (SDIO)
-> -- Konstantin Porotchkin]
-> Signed-off-by: Konstantin Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->
-> [ allow to properly register more then one instance of this driver
-> -- Grzegorz Jaszczyk]
-> Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
->
-> [ - rebased on 4.12-rc1
->   - fixed the 80 character limit for mvebu_mpp_mode array
->   - aligned the compatible name on the ones already used
->   - fixed the MPP table for CP110: some MPP are not available on Armada 7K
-> -- Gregory CLEMENT]
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> Tested-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
 Patch applied.
 
 Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
