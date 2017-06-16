@@ -1,43 +1,81 @@
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: [PATCH v2 3/4] MAINTAINERS: Add entry for Synopsys Designware HDMI drivers
-Date: Fri, 16 Jun 2017 11:07:42 +0100
-Message-ID: <b18489ee02691d5c3d398ca533a0be1a00293c55.1497607315.git.joabreu@synopsys.com>
-References: <cover.1497607315.git.joabreu@synopsys.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1497607315.git.joabreu@synopsys.com>
-In-Reply-To: <cover.1497607315.git.joabreu@synopsys.com>
-References: <cover.1497607315.git.joabreu@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>
+From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] irqchip: meson: add support for the gpio
+ interrupt controller
+Date: Fri, 16 Jun 2017 12:23:07 +0200
+Message-ID: <1497608587.3086.42.camel@baylibre.com>
+References: <20170615161804.32658-1-jbrunet@baylibre.com>
+         <8742df56-42ef-bf70-0ec1-9e8418ec0063@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8742df56-42ef-bf70-0ec1-9e8418ec0063-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a entry for Synopsys Designware HDMI Receivers drivers
-and phys.
+On Fri, 2017-06-16 at 09:46 +0100, Marc Zyngier wrote:
+> On 15/06/17 17:17, Jerome Brunet wrote:
+> > This patch series adds support for the GPIO interrupt controller found on
+> > Amlogic's meson SoC families.
+> > 
+> > Unlike what the name suggests, this controller is not part of the SoC
+> > GPIO subsystem. It is a separate controller from which can watch almost
+> > all pads of the SoC and generate and interrupt from it. Some pins, which
+> > are not part of the public datasheet, don't seem to have this capability
+> > though.
+> > 
+> > Hardware wise, the controller is a 256 to 8 router with filtering block
+> > to select edge or level input and the polarity of the signal.  As there
+> > we can't setup the filtring to generate a signal on both the high and low
+> > polarity, there is no easy way to support IRQ_TYPE_EDGE_BOTH at the
+> > moment
+> > 
+> > The number of interrupt line routed to the controller depends on the SoC,
+> > and essentially the number of GPIO available on the SoC.
+> > 
+> > This series has been tested on Amlogic S905-P200 board with the front
+> > panel power button.
+> > 
+> > This work is derived from the previous work of Carlo Caione [1].
+> 
+> [...]
+> 
+> So we have two competing series, all based on the same stuff. I must say
+> this is rather disappointing that people can't manage to collaborate and
+> work towards a common goal.
+> 
+> I'm going to review the irqchip part, because I've done that on Heiner's
+> series as well, but that's where I'm going to stop.
+> 
+> Heiner, Jerome: please sort this out between yourselves *BEFORE* sending
+> any other patch series. This is wasting everybody's time, both yours and
+> mine (and frankly, this a rather rare commodity these days).
 
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Carlos Palminha <palminha@synopsys.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+I really don't enjoy doing things that way, and I understand the feeling.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 053c3bd..e798040 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11294,6 +11294,13 @@ L:	netdev@vger.kernel.org
- S:	Supported
- F:	drivers/net/ethernet/synopsys/
- 
-+SYNOPSYS DESIGNWARE HDMI RECEIVERS AND PHY DRIVERS
-+M:	Jose Abreu <joabreu@synopsys.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	drivers/media/platform/dwc/*
-+F:	include/media/dwc/*
-+
- SYNOPSYS DESIGNWARE I2C DRIVER
- M:	Jarkko Nikula <jarkko.nikula@linux.intel.com>
- R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
--- 
-1.9.1
+I also spent a lot of time reviewing Heiner's patches, only to see comments
+repeatedly ignored. You know well how time consuming those reviews are. 
+
+After 7 versions, some comments have been taken into account, some are still
+completely ignored, even with Kevin and Neil's warnings. I wouldn't have posted
+a competing if things were not stuck.
+
+Like you, I have things far more interesting to do than duplicating efforts, and
+I sincerely hope better collaboration can be achieved.
+
+Anyway, thanks for your time and sorry for the mess. 
+
+Cheers
+Jerome
+
+> 
+> Thanks,
+> 
+> 	M.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
