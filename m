@@ -1,107 +1,39 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: stm32: sai: manage master clock" to the
-	asoc tree
-Date: Fri, 16 Jun 2017 18:49:51 +0100
-Message-ID: <E1dLvNX-0005bY-5x@debutante>
-References: <1497615334-7156-8-git-send-email-olivier.moysan@st.com>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: meson8: fix the IR receiver pins
+Date: Fri, 16 Jun 2017 11:40:34 -0700
+Message-ID: <m2k24bg4il.fsf@baylibre.com>
+References: <20170609222039.25191-1-martin.blumenstingl@googlemail.com>
+        <e4347b01-e221-2242-9bb9-bc1e93da06fb@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1497615334-7156-8-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, olivier.moysan@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e4347b01-e221-2242-9bb9-bc1e93da06fb-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> (Neil
+        Armstrong's message of "Mon, 12 Jun 2017 09:38:55 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org> writes:
 
-   ASoC: stm32: sai: manage master clock
+> On 06/10/2017 12:20 AM, Martin Blumenstingl wrote:
+>> The IR receiver pins are currently defined in the CBUS pin-controller.
+>> However the pins are in the AO region, which is controlled by the AOBUS
+>> pin-controller. Move the pins to pinctrl_aobus so they can actually be
+>> used.
+>> 
+>> Fixes: b60e1157d8fa ("ARM: dts: amlogic: Split pinctrl device for Meson8 / Meson8b")
+>> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 
-has been applied to the asoc tree at
+[..]
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+> Reviewed-by: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+Applied to v4.13/dt with Neil's ack, will go in round 2 of pull requests
+to arm-soc.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 12093366981de5060379ad7fa173a1d459c49572 Mon Sep 17 00:00:00 2001
-From: olivier moysan <olivier.moysan@st.com>
-Date: Fri, 16 Jun 2017 14:15:34 +0200
-Subject: [PATCH] ASoC: stm32: sai: manage master clock
-
-Disable master clock by default, and activate
-it only when requested.
-
-Signed-off-by: olivier moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/stm/stm32_sai_sub.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index 2466af0343db..ce48c02db051 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -220,8 +220,15 @@ static int stm32_sai_set_sysclk(struct snd_soc_dai *cpu_dai,
- 				int clk_id, unsigned int freq, int dir)
- {
- 	struct stm32_sai_sub_data *sai = snd_soc_dai_get_drvdata(cpu_dai);
-+	int ret;
- 
- 	if ((dir == SND_SOC_CLOCK_OUT) && sai->master) {
-+		ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX,
-+					 SAI_XCR1_NODIV,
-+					 (unsigned int)~SAI_XCR1_NODIV);
-+		if (ret < 0)
-+			return ret;
-+
- 		sai->mclk_rate = freq;
- 		dev_dbg(cpu_dai->dev, "SAI MCLK frequency is %uHz\n", freq);
- 	}
-@@ -356,6 +363,10 @@ static int stm32_sai_set_dai_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
- 	}
- 	cr1_mask |= SAI_XCR1_SLAVE;
- 
-+	/* do not generate master by default */
-+	cr1 |= SAI_XCR1_NODIV;
-+	cr1_mask |= SAI_XCR1_NODIV;
-+
- 	ret = regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, cr1_mask, cr1);
- 	if (ret < 0) {
- 		dev_err(cpu_dai->dev, "Failed to update CR1 register\n");
-@@ -652,6 +663,9 @@ static void stm32_sai_shutdown(struct snd_pcm_substream *substream,
- 
- 	regmap_update_bits(sai->regmap, STM_SAI_IMR_REGX, SAI_XIMR_MASK, 0);
- 
-+	regmap_update_bits(sai->regmap, STM_SAI_CR1_REGX, SAI_XCR1_NODIV,
-+			   SAI_XCR1_NODIV);
-+
- 	clk_disable_unprepare(sai->sai_ck);
- 	sai->substream = NULL;
- }
--- 
-2.11.0
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
