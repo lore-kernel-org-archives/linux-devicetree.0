@@ -1,34 +1,53 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 Subject: Re: [PATCH 2/2 v4] clk: Add Gemini SoC clock controller
-Date: Fri, 16 Jun 2017 10:35:00 +0200
-Message-ID: <CACRpkdbKzsQvo-GHkSc6YpQzLMmFy_z10p=_02_zmUj7XDpicA@mail.gmail.com>
+Date: Fri, 16 Jun 2017 10:38:14 +0200
+Message-ID: <CACRpkdbBOnzw5Ww-2TesvDzSV6eiV2y0WyJW-wtLeAszZE-2HQ@mail.gmail.com>
 References: <20170524082044.8473-1-linus.walleij@linaro.org>
  <20170601070208.GO20170@codeaurora.org> <CACRpkdZv8MzXVecEXVdJ+P0MxVscYSy=MxC-yQAR0S4yQ6-rwQ@mail.gmail.com>
  <20170605195812.GH20170@codeaurora.org> <CACRpkdbya9xaN-i7AkG0bTyuFYfZc59sSTYhWB43=9btSKfPpQ@mail.gmail.com>
  <CACRpkdapAgHix2vw-woDFi4sh+H3_EX7w-5q=opBGMyegFrXbA@mail.gmail.com>
  <20170612210248.GP20170@codeaurora.org> <CACRpkdaZJbzC0-xg_go=-o+0cQ-JOY3mUe27HUnwQ+DnZYbyMA@mail.gmail.com>
  <CAMuHMdXdYNTLCUfQ9rdj8Fffff5G6fGREcHs5-E5LbwPU9yyLw@mail.gmail.com>
- <CACRpkdY+aSyec9PZaoXErzsRefWg2zzw1xihQt_whmote-jBBw@mail.gmail.com> <20170615210020.GG20170@codeaurora.org>
+ <CACRpkdY+aSyec9PZaoXErzsRefWg2zzw1xihQt_whmote-jBBw@mail.gmail.com> <20170615215550.z4ypeh345gopd2pg@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170615210020.GG20170-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Janos Laube <janos.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paulius Zaleckas <paulius.zaleckas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hans Ulli Kroll <ulli.kroll-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170615215550.z4ypeh345gopd2pg@pengutronix.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Philipp Zabel <pza@pengutronix.de>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>, Janos Laube <janos.dev@gmail.com>, Paulius Zaleckas <paulius.zaleckas@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 11:00 PM, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+On Thu, Jun 15, 2017 at 11:55 PM, Philipp Zabel <pza@pengutronix.de> wrote:
+> On Thu, Jun 15, 2017 at 02:57:53PM +0200, Linus Walleij wrote:
 
-> We have quite a few clock and reset controllers that put their
-> drivers into the clk directory. I don't see any problem with that
-> approach.
+>> So I would say, clk & reset maintainers: would you prefer that I merge the
+>> reset control into the clock driver as well, ask Philipp to drop the pending
+>> reset control patches from his subsystem tree and have you manage the
+>> combined driver and bindings?
+>
+> The reset/next pull requests are not merged into the arm-soc tree yet.
+> I suppose I could retract the pull requests and drop the Gemini reset
+> patches,
 
-OK I'll proceed like this!
+There is no need. You can simply revert the patches, it's OK that the
+drivers bounce in and out of the kernel.
 
-Thanks,
+The clock driver will just probe instead of the reset driver (due to being
+earlier in the link order... OK fragile but it works), so there
+will not even be a runtime conflict.
+
+> if the patches in arm-soc/gemeni/dts are also dropped from
+> arm-soc/for-next.
+
+There is no need for that, the bindings do not change with this approach.
+
+> I have a slight preference for keeping the DT bindings simple, even if
+> that means merging the reset controller into the clock driver.
+
+OK then that is what we're gonna do.
+
+I'm onto it!
+
+Yours,
 Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
