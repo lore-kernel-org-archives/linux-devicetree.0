@@ -1,7 +1,7 @@
 From: Jose Abreu <Jose.Abreu@synopsys.com>
-Subject: [PATCH v3 3/4] MAINTAINERS: Add entry for Synopsys Designware HDMI drivers
-Date: Fri, 16 Jun 2017 17:38:32 +0100
-Message-ID: <c8a09ab2f541cd29bd3322beffbfc5e1b6732b62.1497630695.git.joabreu@synopsys.com>
+Subject: [PATCH v3 4/4] dt-bindings: media: Document Synopsys Designware HDMI RX
+Date: Fri, 16 Jun 2017 17:38:33 +0100
+Message-ID: <51851d7b2335cc8a10fba17056314d7fa8ce88d1.1497630695.git.joabreu@synopsys.com>
 References: <cover.1497630695.git.joabreu@synopsys.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1497630695.git.joabreu@synopsys.com>
@@ -9,35 +9,75 @@ In-Reply-To: <cover.1497630695.git.joabreu@synopsys.com>
 References: <cover.1497630695.git.joabreu@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>
+Cc: Jose Abreu <Jose.Abreu@synopsys.com>, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Add a entry for Synopsys Designware HDMI Receivers drivers
-and phys.
+Document the bindings for the Synopsys Designware HDMI RX.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Carlos Palminha <palminha@synopsys.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 053c3bd..e798040 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -11294,6 +11294,13 @@ L:	netdev@vger.kernel.org
- S:	Supported
- F:	drivers/net/ethernet/synopsys/
- 
-+SYNOPSYS DESIGNWARE HDMI RECEIVERS AND PHY DRIVERS
-+M:	Jose Abreu <joabreu@synopsys.com>
-+L:	linux-media@vger.kernel.org
-+S:	Maintained
-+F:	drivers/media/platform/dwc/*
-+F:	include/media/dwc/*
+Changes from v2:
+	- Document edid-phandle property
+---
+ .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 45 ++++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+
+diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+new file mode 100644
+index 0000000..d30cc1e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+@@ -0,0 +1,45 @@
++Synopsys DesignWare HDMI RX Decoder
++===================================
 +
- SYNOPSYS DESIGNWARE I2C DRIVER
- M:	Jarkko Nikula <jarkko.nikula@linux.intel.com>
- R:	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
++This document defines device tree properties for the Synopsys DesignWare HDMI
++RX Decoder (DWC HDMI RX). It doesn't constitute a device tree binding
++specification by itself but is meant to be referenced by platform-specific
++device tree bindings.
++
++When referenced from platform device tree bindings the properties defined in
++this document are defined as follows.
++
++- reg: Memory mapped base address and length of the DWC HDMI RX registers.
++
++- interrupts: Reference to the DWC HDMI RX interrupt and 5v sense interrupt.
++
++- snps,hdmi-phy-jtag-addr: JTAG address of the phy to be used.
++
++- snps,hdmi-phy-version: Version of the phy to be used.
++
++- snps,hdmi-phy-cfg-clk: Value of the cfg clk that is delivered to phy.
++
++- snps,hdmi-phy-driver: *Exact* name of the phy driver to be used.
++
++- snps,hdmi-ctl-cfg-clk: Value of the cfg clk that is delivered to the
++controller.
++
++- edid-phandle: phandle to the EDID driver. It can be, for example, the main
++wrapper driver.
++
++A sample binding is now provided. The compatible string is for a wrapper driver
++which then instantiates the Synopsys Designware HDMI RX decoder driver.
++
++Example:
++
++dw_hdmi_wrapper: dw-hdmi-wrapper@0 {
++	compatible = "snps,dw-hdmi-rx-wrapper";
++	reg = <0x0 0x10000>; /* controller regbank */
++	interrupts = <1 3>; /* controller interrupt + 5v sense interrupt */
++	snps,hdmi-phy-driver = "dw-hdmi-phy-e405";
++	snps,hdmi-phy-version = <405>;
++	snps,hdmi-phy-cfg-clk = <25>; /* MHz */
++	snps,hdmi-ctl-cfg-clk = <25>; /* MHz */
++	snps,hdmi-phy-jtag-addr = /bits/ 8 <0xfc>;
++	edid-phandle = <&dw_hdmi_wrapper>;
++};
 -- 
 1.9.1
