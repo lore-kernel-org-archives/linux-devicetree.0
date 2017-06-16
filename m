@@ -1,189 +1,269 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [RFC 1/2] [media] dt-bindings: Document BCM283x CSI2/CCP2
- receiver
-Date: Fri, 16 Jun 2017 23:57:34 +0300
-Message-ID: <20170616205734.GU12407@valkosipuli.retiisi.org.uk>
-References: <cover.1497452006.git.dave.stevenson@raspberrypi.org>
- <888a28269a8a7c22feb2a126db699b1259d1b457.1497452006.git.dave.stevenson@raspberrypi.org>
- <20170615125958.GE12407@valkosipuli.retiisi.org.uk>
- <CAAoAYcOKD=Bd8_yDuoT8g+g1JYJO1fEoY83YWjPY38sru8Cvdw@mail.gmail.com>
- <20170616095722.GN12407@valkosipuli.retiisi.org.uk>
- <CAAoAYcPAriU44WuPWOuj_s6ijd3SBSamjRDaFA_8NdjAE=EqwA@mail.gmail.com>
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v9 2/4] arm64: dts: hisi: add kirin pcie node
+Date: Fri, 16 Jun 2017 16:11:06 -0500
+Message-ID: <20170616211106.GF11129@bhelgaas-glaptop.roam.corp.google.com>
+References: <20170531070109.81569-3-songxiaowei@hisilicon.com>
+ <201706040735.pu1PIspV%fengguang.wu@intel.com>
+ <CAK8P3a0K2jwiSQUVQWwebBEwXPVa04egcS_7q7gLgs-qt+J-sw@mail.gmail.com>
+ <CAFGCpxxuboZJJS=zExmhDBLbb86zyN7me=dfnGKaf+LAPvCRGg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAAoAYcPAriU44WuPWOuj_s6ijd3SBSamjRDaFA_8NdjAE=EqwA@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-rpi-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <CAFGCpxxuboZJJS=zExmhDBLbb86zyN7me=dfnGKaf+LAPvCRGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Kishon <kishon-l0cyMroinI0@public.gmane.org>, Jingoo Han <jingoohan1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomasz Nowicki <tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Keith Busch <keith.busch-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Niklas Cassel <niklas.cassel-VrBV9hrLPhE@public.gmane.org>, Duc Dang <dhdang-qTEPVZfXA3Y@public.gmane.org>, "liudongdong (C)" <liudongdong3-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Gabriele Paoloni <gabriele.paoloni-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, chenyao11-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Wangbinghui <wangbinghui-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Suzhuangluan <suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>linux-pci <lin>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave,
-
-(Cc the devicetree list, I missed that earlier. It's DT binding
-documentation so that list should be cc'd.)
-
-On Fri, Jun 16, 2017 at 03:40:02PM +0100, Dave Stevenson wrote:
-> Hi Sakari
+On Tue, Jun 06, 2017 at 07:19:53PM +0800, Guodong Xu wrote:
+> Hi, Arnd
 > 
-> On 16 June 2017 at 10:57, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> > Hi Dave,
+> On Tue, Jun 6, 2017 at 5:23 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Sun, Jun 4, 2017 at 2:03 AM, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> >> Hi Xiaowei,
+> >>
+> >> [auto build test ERROR on pci/next]
+> >> [also build test ERROR on v4.12-rc3 next-20170602]
+> >> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> >>
+> >> url:    https://github.com/0day-ci/linux/commits/Xiaowei-Song/add-PCIe-driver-for-Kirin-PCIe/20170531-182118
+> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+> >> config: arm64-allnoconfig (attached as .config)
+> >> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> >> reproduce:
+> >>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> >>         chmod +x ~/bin/make.cross
+> >>         # save the attached .config to linux build tree
+> >>         make.cross ARCH=arm64
+> >>
+> >> All errors (new ones prefixed by >>):
+> >>
+> >>>> Error: arch/arm64/boot/dts/hisilicon/hi3660.dtsi:180.24-25 syntax error
+> >>>> FATAL ERROR: Unable to parse input tree
 > >
-> > On Thu, Jun 15, 2017 at 05:15:04PM +0100, Dave Stevenson wrote:
-> >> Hi Sakari.
-> >>
-> >> Thanks for the review.
-> >>
-> >> On 15 June 2017 at 13:59, Sakari Ailus <sakari.ailus@iki.fi> wrote:
-> >> > Hi Dave,
-> >> >
-> >> > Thanks for the set!
-> >> >
-> >> > On Wed, Jun 14, 2017 at 04:15:46PM +0100, Dave Stevenson wrote:
-> >> >> Document the DT bindings for the CSI2/CCP2 receiver peripheral
-> >> >> (known as Unicam) on BCM283x SoCs.
-> >> >>
-> >> >> Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-> >> >> ---
-> >> >>  .../devicetree/bindings/media/bcm2835-unicam.txt   | 76 ++++++++++++++++++++++
-> >> >>  1 file changed, 76 insertions(+)
-> >> >>  create mode 100644 Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/media/bcm2835-unicam.txt b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >> >> new file mode 100644
-> >> >> index 0000000..cc5a451
-> >> >> --- /dev/null
-> >> >> +++ b/Documentation/devicetree/bindings/media/bcm2835-unicam.txt
-> >> >> @@ -0,0 +1,76 @@
-> >> >> +Broadcom BCM283x Camera Interface (Unicam)
-> >> >> +------------------------------------------
-> >> >> +
-> >> >> +The Unicam block on BCM283x SoCs is the receiver for either
-> >> >> +CSI-2 or CCP2 data from image sensors or similar devices.
-> >> >> +
-> >> >> +Required properties:
-> >> >> +===================
-> >> >> +- compatible : must be "brcm,bcm2835-unicam".
-> >> >> +- reg                : physical base address and length of the register sets for the
-> >> >> +               device.
-> >> >> +- interrupts : should contain the IRQ line for this Unicam instance.
-> >> >> +- clocks     : list of clock specifiers, corresponding to entries in
-> >> >> +               clock-names property.
-> >> >> +- clock-names        : must contain an "lp_clock" entry, matching entries
-> >> >> +               in the clocks property.
-> >> >> +
-> >> >> +Optional properties
-> >> >> +===================
-> >> >> +- max-data-lanes: the hardware can support varying numbers of clock lanes.
-> >> >> +               This value is the maximum number supported by this instance.
-> >> >> +               Known values of 2 or 4. Default is 2.
-> >> >
-> >> > Please use "data-lanes" endpoint property instead. This is the number of
-> >> > connected physical lanes and specific to the hardware.
-> >>
-> >> I'll rethink/test, but to explain what I was intending to achieve:
-> >>
-> >> Registers UNICAM_DAT2 and UNICAM_DAT3 are not valid for instances of
-> >> the hardware that only have two lanes instantiated in silicon.
-> >> In the case of the whole BCM283x family, Unicam0 ony has 2 lanes
-> >> instantiated, whilst Unicam1 has the maximum 4 lanes. (Lower
-> >> resolution front cameras would connect to Unicam0, whilst the higher
-> >> resolution back cameras would go to Unicam1).
-> >>
-> >> To further confuse matters, on the Pi platforms (other than the
-> >> Compute Module), it is Unicam1 that is brought out to the camera
-> >> connector but with only 2 lanes wired up.
+> > We keep getting the build errors for patch submissions. Obviously the patch is
+> > still broken and can't be merged as-is. What is the plan for merging the series?
 > >
-> > This information should be present in the DT. I.e. the data-lanes property.
-> >
-> > v4l2_fwnode_endpoint_alloc_parse() can obtain that from DT, among other
-> > things (I haven't checked the second patch yet).
 > 
-> I was interpreting data-lanes as being a function of the CSI-2 source
-> only, not the CSI-2 sink.
-> I haven't seen any examples where it has been it has been set on a
-> sink, but if that is valid then it sounds like a sensible thing to do.
-> ...
-> OK, I'd missed it in video_interfaces.txt where it has been set for
-> the sh-mobile-csi2 endpoint (not that there appears to be a driver
-> advertising sh-mobile-csi2 as a compatible string anymore - it was
-> removed in 4.9).
+> This dts patch can be applied to dts series [1]. For upstream review
+> purpose, hi3660-hikey960 dts patches, which don't have a related
+> driver changes, are sent in [1]. Other patches, which need driver
+> changes, like this one, are sent together with driver.
 > 
-> It sounds like adopting a sink endpoint property of "data-lanes"  is
-> reasonable. Make it optional with the driver adopting a default "<1
-> 2>" and you'll cover 99% of the cases.
-> On Compute Modules it can be overridden to "<1 2 3 4>" for Unicam1.
-> Selecting more lanes on Unicam0 is just an error that the DT author
-> has to sort out.
-
-Sounds good. There are relevant examples in e.g. here:
-
-Documentation/devicetree/bindings/media/ti,omap3isp.txt
-Documentation/devicetree/bindings/media/i2c/nokia,smia.txt
-
-
-> >>
-> >> I was intending to make it possible for the driver to avoid writing to
-> >> invalid registers, and also describe the platform limitations to allow
-> >> sanity checking.
-> >> I haven't tested against Unicam0 as yet to see what actually happens
-> >> if we try to write UNICAM_DAT2 or UNICAM_DAT3. If the hardware
-> >> silently swallows it then that requirement is null and void. I'll do
-> >> some testing tomorrow.
-> >> The second bit comes down to how friendly an error you want should
-> >> someone write an invalid DT with 'data-lanes' greater than can be
-> >> supported by the platform.
-> >
-> > I'd expect things not to work if there's a grave error in DT. I guess you
-> > could assume something but the fact is that you know you don't know.
-> >>
-> >> > Could you also document which endpoint properties are mandatory and which
-> >> > ones optional?
-> >>
-> >> Will do, although I'm not sure there are any required properties.
-> >
-> > data-lanes, among other things?
+> Patchset [1] is now at its v2 review. Rob Herring already gave his ACK
+> for some of them in v1. Hopefully I can get more ACK for remaining
+> ones, and make them ready for v4.13 merging window.
 > 
-> Looking through struct v4l2_fwnode_bus_mipi_csi2 for the parsed result
-> of v4l2_fwnode_endpoint_parse_csi_bus:
-> - V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK  /
-> V4L2_MBUS_CSI2_CONTINUOUS_CLOCK are the only flags set. The clock is
-> generated by the CSI2 source, so not relevant to configure it on the
-> sink.
-> - data_lane has been discussed above. Lane reordering is not supported
-> on the hardware so only the number of entries is of any importance,
-> although consecutive lanes can be checked. If a default is adopted by
-> the driver, then it is not mandatory.
+> [1], http://www.spinics.net/lists/devicetree/msg178303.html
 
-I think it'd be good to make that explicit albeit not all drivers do. AFAIK
-all of them are sensor drivers though, which in practice means there's only
-a single configuration (all lanes in use).
+I don't know how you want to deal with the DTS build failure.  From a
+PCI perspective, I think I could apply patches 1 and 3 pretty easily
+by themselves.
 
-> - the clock lane is on a dedicated pair of pins, so it will always be
-> <0>. Little point in checking it.
+If/when you post these again, please incorporate the following
+incremental diff to clean up various whitespace and capitalization
+nits (these are spread across several of your patches).
 
-Ack.
 
-> - num_data_lanes comes out of data-lane. Let the driver adopt a default.
-> - lane polarity inversion is not supported by the hardware, so it will
-> always be an array of 0's. Little point in checking.
-
-Ack.
-
-> 
-> "data-lanes" can be mandatory if you think that is of any benefit, but
-> personally I don't see it. The other properties give no benefit, so I
-> think I am correct with only remote-endpoint being present.
-
-The DT should describe hardware. You can have defaults, but in case when the
-parameter is a numerical value (such as the number of lanes), omitting the
-property for one particular value is a bit odd IMO.
-
-I wonder what others think.
-
--- 
-Kind regards,
-
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+index 68ffa0fbcd73..20357d840af1 100644
+--- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+@@ -24,8 +24,8 @@ Example based on kirin960:
+ 
+ 	pcie@f4000000 {
+ 		compatible = "hisilicon,kirin-pcie";
+-		reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
+-		      <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
++		reg = <0x0 0xf4000000 0x0  0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
++		      <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xf4000000 0x0 0x2000>;
+ 		reg-names = "dbi","apb","phy", "config";
+ 		bus-range = <0x0  0x1>;
+ 		#address-cells = <3>;
+@@ -46,5 +46,5 @@ Example based on kirin960:
+ 			 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+ 		clock-names = "pcie_phy_ref", "pcie_aux",
+ 			      "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
+-		reset-gpios = <&gpio11 1 0 >;
++		reset-gpios = <&gpio11 1 0>;
+ 	};
+diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+index e8feb2fb4d53..7bc89baa40ba 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+@@ -159,12 +159,12 @@
+ 
+ 		pcie@f4000000 {
+ 			compatible = "hisilicon,kirin960-pcie";
+-			reg = <0x0 0xf4000000 0x0 0x1000>,
+-			      <0x0 0xff3fe000 0x0 0x1000>,
++			reg = <0x0 0xf4000000 0x0  0x1000>,
++			      <0x0 0xff3fe000 0x0  0x1000>,
+ 			      <0x0 0xf3f20000 0x0 0x40000>,
+-			      <0x0 0xF5000000 0x0 0x2000>;
++			      <0x0 0xf5000000 0x0  0x2000>;
+ 			reg-names = "dbi", "apb", "phy", "config";
+-			bus-range = <0x0  0x1>;
++			bus-range = <0x0 0x1>;
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			device_type = "pci";
+@@ -173,7 +173,7 @@
+ 			num-lanes = <1>;
+ 			#interrupt-cells = <1>;
+ 			interrupt-map-mask = <0xf800 0 0 7>;
+-			interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
++			interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
+ 					<0x0 0 0 2 &gic 0 0 0  283 4>,
+ 					<0x0 0 0 3 &gic 0 0 0  284 4>,
+ 					<0x0 0 0 4 &gic 0 0 0  285 4>;
+@@ -183,8 +183,9 @@
+ 				 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
+ 				 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+ 			clock-names = "pcie_phy_ref", "pcie_aux",
+-				      "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
+-			reset-gpios = <&gpio11 1 0 >;
++				      "pcie_apb_phy", "pcie_apb_sys",
++				      "pcie_aclk";
++			reset-gpios = <&gpio11 1 0>;
+ 			status = "ok";
+ 		};
+ 	};
+diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+index f63e6548efae..41520dd1d5e5 100644
+--- a/drivers/pci/dwc/pcie-kirin.c
++++ b/drivers/pci/dwc/pcie-kirin.c
+@@ -35,8 +35,8 @@
+ #define REF_CLK_FREQ			100000000
+ 
+ /* PCIe ELBI registers */
+-#define SOC_PCIECTRL_CTRL0_ADDR	0x000
+-#define SOC_PCIECTRL_CTRL1_ADDR	0x004
++#define SOC_PCIECTRL_CTRL0_ADDR		0x000
++#define SOC_PCIECTRL_CTRL1_ADDR		0x004
+ #define SOC_PCIEPHY_CTRL2_ADDR		0x008
+ #define SOC_PCIEPHY_CTRL3_ADDR		0x00c
+ #define PCIE_ELBI_SLV_DBI_ENABLE	(0x1 << 21)
+@@ -48,30 +48,30 @@
+ #define PCIE_APB_PHY_STATUS0		0x400
+ #define PCIE_LINKUP_ENABLE		(0x8020)
+ #define PCIE_LTSSM_ENABLE_BIT		(0x1 << 11)
+-#define PIPE_CLK_STABLE		(0x1 << 19)
++#define PIPE_CLK_STABLE			(0x1 << 19)
+ #define PIPE_CLK_MAX_TRY_TIMES		10
+-#define PHY_REF_PAD_BIT		(0x1 << 8)
++#define PHY_REF_PAD_BIT			(0x1 << 8)
+ #define PHY_PWR_DOWN_BIT		(0x1 << 22)
+-#define PHY_RST_ACK_BIT		(0x1 << 16)
++#define PHY_RST_ACK_BIT			(0x1 << 16)
+ 
+ /* info located in sysctrl */
+ #define SCTRL_PCIE_CMOS_OFFSET		0x60
+ #define SCTRL_PCIE_CMOS_BIT		0x10
+ #define SCTRL_PCIE_ISO_OFFSET		0x44
+ #define SCTRL_PCIE_ISO_BIT		0x30
+-#define SCTRL_PCIE_HPCLK_OFFSET	0x190
++#define SCTRL_PCIE_HPCLK_OFFSET		0x190
+ #define SCTRL_PCIE_HPCLK_BIT		0x184000
+ #define SCTRL_PCIE_OE_OFFSET		0x14a
+-#define PCIE_DEBOUNCE_PARAM		0xF0F400
++#define PCIE_DEBOUNCE_PARAM		0xf0f400
+ #define PCIE_OE_BYPASS			(0x3 << 28)
+ 
+ /* peri_crg ctrl */
+ #define CRGCTRL_PCIE_ASSERT_OFFSET	0x88
+-#define CRGCTRL_PCIE_ASSERT_BIT	0x8c000000
++#define CRGCTRL_PCIE_ASSERT_BIT		0x8c000000
+ 
+ /* Time for delay */
+-#define REF_2_PERST_MIN		20000
+-#define REF_2_PERST_MAX		25000
++#define REF_2_PERST_MIN			20000
++#define REF_2_PERST_MAX			25000
+ #define PERST_2_ACCESS_MIN		10000
+ #define PERST_2_ACCESS_MAX		12000
+ #define LINK_WAIT_MIN			900
+@@ -80,22 +80,22 @@
+ #define PIPE_CLK_WAIT_MAX		600
+ 
+ struct kirin_pcie {
+-	struct dw_pcie		*pci;
+-	void __iomem		*apb_base;
+-	void __iomem		*phy_base;
+-	struct regmap		*crgctrl;
+-	struct regmap 		*sysctrl;
+-	struct clk		*apb_sys_clk;
+-	struct clk		*apb_phy_clk;
+-	struct clk		*phy_ref_clk;
+-	struct clk		*pcie_aclk;
+-	struct clk		*pcie_aux_clk;
+-	int			gpio_id_reset;
++	struct dw_pcie	*pci;
++	void __iomem	*apb_base;
++	void __iomem	*phy_base;
++	struct regmap	*crgctrl;
++	struct regmap 	*sysctrl;
++	struct clk	*apb_sys_clk;
++	struct clk	*apb_phy_clk;
++	struct clk	*phy_ref_clk;
++	struct clk	*pcie_aclk;
++	struct clk	*pcie_aux_clk;
++	int		gpio_id_reset;
+ };
+ 
+ /* Registers in PCIeCTRL */
+ static inline void kirin_apb_ctrl_writel(struct kirin_pcie *kirin_pcie,
+-		u32 val, u32 reg)
++					 u32 val, u32 reg)
+ {
+ 	writel(val, kirin_pcie->apb_base + reg);
+ }
+@@ -107,7 +107,7 @@ static inline u32 kirin_apb_ctrl_readl(struct kirin_pcie *kirin_pcie, u32 reg)
+ 
+ /* Registers in PCIePHY */
+ static inline void kirin_apb_phy_writel(struct kirin_pcie *kirin_pcie,
+-		u32 val, u32 reg)
++					u32 val, u32 reg)
+ {
+ 	writel(val, kirin_pcie->phy_base + reg);
+ }
+@@ -118,7 +118,7 @@ static inline u32 kirin_apb_phy_readl(struct kirin_pcie *kirin_pcie, u32 reg)
+ }
+ 
+ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+-		struct platform_device *pdev)
++			       struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 
+@@ -146,7 +146,7 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+ }
+ 
+ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+-		struct platform_device *pdev)
++				    struct platform_device *pdev)
+ {
+ 	struct resource *apb;
+ 	struct resource *phy;
+@@ -184,7 +184,6 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+ static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
+ {
+ 	u32 reg_val;
+-	u32 time = PIPE_CLK_MAX_TRY_TIMES;
+ 
+ 	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
+ 	reg_val &= ~PHY_REF_PAD_BIT;
+@@ -459,7 +458,7 @@ static int kirin_pcie_probe(struct platform_device *pdev)
+ 	int ret;
+ 
+ 	if (!dev->of_node) {
+-		dev_err(&pdev->dev, "NULL node\n");
++		dev_err(dev, "NULL node\n");
+ 		return -EINVAL;
+ 	}
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
