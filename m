@@ -1,103 +1,56 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] fdtdump: Prettify output of properties
-Date: Fri, 16 Jun 2017 12:01:35 -0700
-Message-ID: <59442B0F.4010706@gmail.com>
-References: <1497452030-15588-1-git-send-email-pantelis.antoniou@konsulko.com>
- <1497452030-15588-3-git-send-email-pantelis.antoniou@konsulko.com>
- <20170614150639.GF2614@umbus> <20170615235230.GP10782@bill-the-cat>
- <594331A0.6050305@gmail.com> <20170616154017.GW10782@bill-the-cat>
+From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 00/10] add support for more devices on Meson8 and Meson8b
+Date: Fri, 16 Jun 2017 12:10:40 -0700
+Message-ID: <m2d1a3g34f.fsf@baylibre.com>
+References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
+        <20170615213352.25134-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170616154017.GW10782@bill-the-cat>
+In-Reply-To: <20170615213352.25134-1-martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+        (Martin Blumenstingl's message of "Thu, 15 Jun 2017 23:33:42 +0200")
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/17 08:40, Tom Rini wrote:
-> On Thu, Jun 15, 2017 at 06:17:20PM -0700, Frank Rowand wrote:
->> Hi Tom,
->>
->> On 06/15/17 16:52, Tom Rini wrote:
->>> On Wed, Jun 14, 2017 at 11:06:39PM +0800, David Gibson wrote:
->>>> On Wed, Jun 14, 2017 at 05:53:49PM +0300, Pantelis Antoniou wrote:
->>>>> Dumping files with large properties results in output with
->>>>> arbitrary long lines.
->>>>>
->>>>> Original (manual line breaks inserted; it's a single long line):
->>>>>
->>>>> / {
->>>>>     int = <0x00000001 0x00000024 0x00000004 0x00000000 \
->>>>> 0x000502a4 0x000000df 0x00000003 0x13885783 0x13885783 \
->>>>> 0x00000002 0x62797465 0x00000000 0x00000000 0x00000000 \
->>>>> 0x00000000 0x00000000 0x00000000 0x00000000 0x00000000 \
->>>>> 0x00000000 0x00000000 0x00000000 0x00000000 0x00000000>;
->>>>> };
->>>>>
->>>>> After prettification:
->>>>>
->>>>> / {
->>>>>     int = <0x00000001 0x00000002 0x00000008 0x00000010 0x00000024 0x000000ab>,
->>>>>           <0x00000001 0x00000017 0x00000004 0x00000038 0x00000007 0x00000009>,
->>>>>           <0x00000000 0x00000068 0x00000214 0x0000b8d9 0x000502a4 0x00000001>,
->>>>>           <0x00000004 0x0000002b 0x000000df 0x00000003 0x00000002 0x00000001>;
->>>>> };
->>>>>
->>>>> There are two new options (-w/--width) and (-S/--shift).
->>>>>
->>>>> Width is the terminal width, shift is the amount of spaces each nest level
->>>>> increases by.
->>>>>
->>>>> Width by default is set to 80, and shift to 4.
->>>>
->>>> Nack.
->>>>
->>>> fdtdump is supposed to be a trivial debug tool.   If you want to
->>>> decompile dtbs "for real" use dtc -I dtb -O dts.
->>>
->>> There's been times, entirely unrelated to what Pantelis is doing, where
->>> I've used fdtdump in production cases because I needed to whack a few
->>> things around.  If it's just supposed to be a trivial debug tool, we've
->>> likely moved well beyond the point where we need to keep trivial tools
->>> around if they shouldn't be more widely used, IMHO.
->>
->> Let me paraphrase what I think that said:
->>
->>    If a trivial debug tool is used by a wide audience then we should get
->>    rid of the tool.
->>
->> I suspect I misunderstood.  Can you clarify?
-> 
-> Sure.  Pantelis wants to improve a trivial debug tool to be slightly
-> more useful.  The maintainer says no, we shouldn't touch the tool, you
-> can use dtc -I dtb -O dts instead.  As that would also cover fdtdump
-> itself, it sounds like fdtdump is deprecated and should be removed, as
-> it's being used outside of the trivial debug use case.
+Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> writes:
 
-fdtdump is useful for debugging and provides several features that aren't
-available in 'dtc -I dtb -O dts'.
+> This series adds:
+> - USB support on Meson8 and Meson8b (it seems that some boards show an
+>   error when trying to initialize one of the USB2 PHYs, but we have the
+>   same problem on some GXBB boards. it is working fine for me - on a board
+>   which is not supported upstream yet)
+> - hardware random number generator support (Meson8 and Meson8b seem to
+>   have two 32-bit hardware random number generator registers, while the
+>   GX SoCs only have one. This is not handled by the meson-rng driver yet,
+>   but that can still be improved later on)
+> - SAR ADC support
+> - add reserved memory zones to fix random hangs when filling the memory
+>   (currently only on Meson8 until I have a Meson8b device to test if the
+>   same problem appears there as well)
+> - use the real ethernet clock on Meson8 and Meson8b to fix ethernet when
+>   the bootloader does not enable the gate clock
+> - add the SCU (Snoop Control Unit) which is needed for SMP support
+> - minor preparations for further .dts updates as this already exports the
+>   SDIO clocks (a driver for this MMC controller is work-in-progress) as
+>   well as the corresponding pin definitions in meson8.dtsi
+> - this adds the pwm_e (typically used for the 32.768 kHz LPO clock for the
+>   SDIO wifi chip) and pwm_f (used on some boards for the dimmable power
+>   LED) pins to meson8.dtsi
+>
+> NOTE: the .dts changes from this series depend on my previous patch from
+> [0]: "ARM: dts: meson8: fix the IR receiver pins"
 
-The maintainer wants to keep the debug tool simple.  Another tool (dtc)
-already exists to do what the proposed patch would add.
+Thanks for the reminder, I had missed that one.
 
-Somehow Pantelis and you then jumped to the conclusion that fdtdump
-should be removed.  This is the part that I don't get.  It is a useful
-tool that has features that are not otherwise available.  Why would
-you get rid of it?
+This series now applied to v4.13/dt (after merging in the clock headers
+deps from Jerome) and will go in the 2nd round of pull requests to
+arm-soc, probably early next week.
 
+Thanks for the continued great work Martin!
 
-> Or, can we talk about improving fdtdump as being a valid tool working
-> with dtb files when 'dtc -I dtb -O dts' is not desired?
-
-That conflicts with the purpose (debug) and design goals (trivial)
-stated by the maintainer.
-
--Frank
-
-
-
+Kevin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
