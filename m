@@ -1,75 +1,83 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: [PATCH v5 15/20] arm64: dts: hisi: add kirin pcie node
-Date: Fri, 16 Jun 2017 22:13:22 +0800
-Message-ID: <20170616141322.30466-1-guodong.xu@linaro.org>
-References: <20170615030417.14059-16-guodong.xu@linaro.org>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170615030417.14059-16-guodong.xu@linaro.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, ulf.hansson@linaro.org, bhelgaas@google.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, arnd@arndb.de, xuejiancheng@hisilicon.com, puck.chen@hisilicon.com
-Cc: zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org, Xiaowei Song <songxiaowei@hisilicon.com>, Guodong Xu <guodong.xu@linaro.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v3 2/6] dt-bindings: interrupt-controller: add DT binding for the Marvell ICU
+Date: Fri, 16 Jun 2017 16:19:19 +0200
+Message-ID: <20170616141923.31226-3-thomas.petazzoni@free-electrons.com>
+References: <20170616141923.31226-1-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170616141923.31226-1-thomas.petazzoni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Xiaowei Song <songxiaowei@hisilicon.com>
+This commit adds the Device Tree binding documentation for the Marvell
+ICU interrupt controller, which collects wired interrupts from the
+devices located into the CP110 hardware block of Marvell Armada 7K/8K,
+and converts them into SPI interrupts in the GIC located in the AP
+hardware block, using the GICP extension.
 
-Add PCIe node for hi3660
-
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-
-Changes in v5:
- * fix interrupt-map, to conform to gic's #address-cells = <0>
- * remove redundant status = "ok"
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 36 +++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ .../bindings/interrupt-controller/marvell,icu.txt  | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index e138973..8183d71 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -754,5 +754,41 @@
- 			cs-gpios = <&gpio18 5 0>;
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+new file mode 100644
+index 0000000..aa8bf2e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+@@ -0,0 +1,51 @@
++Marvell ICU Interrupt Controller
++--------------------------------
 +
-+		pcie@f4000000 {
-+			compatible = "hisilicon,kirin960-pcie";
-+			reg = <0x0 0xf4000000 0x0 0x1000>,
-+			      <0x0 0xff3fe000 0x0 0x1000>,
-+			      <0x0 0xf3f20000 0x0 0x40000>,
-+			      <0x0 0xf5000000 0x0 0x2000>;
-+			reg-names = "dbi", "apb", "phy", "config";
-+			bus-range = <0x0  0x1>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			ranges = <0x02000000 0x0 0x00000000
-+				  0x0 0xf6000000
-+				  0x0 0x02000000>;
-+			num-lanes = <1>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0xf800 0 0 7>;
-+			interrupt-map = <0x0 0 0 1
-+					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x0 0 0 2
-+					 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x0 0 0 3
-+					 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-+					<0x0 0 0 4
-+					 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
-+				 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
-+				 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
-+				 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
-+				 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
-+			clock-names = "pcie_phy_ref", "pcie_aux",
-+				      "pcie_apb_phy", "pcie_apb_sys",
-+				      "pcie_aclk";
-+			reset-gpios = <&gpio11 1 0 >;
-+		};
- 	};
- };
++The Marvell ICU (Interrupt Consolidation Unit) controller is
++responsible for collecting all wired-interrupt sources in the CP and
++communicating them to the GIC in the AP, the unit translates interrupt
++requests on input wires to MSG memory mapped transactions to the GIC.
++
++Required properties:
++
++- compatible: Should be "marvell,cp110-icu"
++
++- reg: Should contain ICU registers location and length.
++
++- #interrupt-cells: Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 3.
++
++  The 1st cell is the group type of the ICU interrupt. Possible group
++  types are:
++
++   ICU_GRP_NSR (0x0) : Shared peripheral interrupt, non-secure
++   ICU_GRP_SR  (0x1) : Shared peripheral interrupt, secure
++   ICU_GRP_SEI (0x4) : System error interrupt
++   ICU_GRP_REI (0x5) : RAM error interrupt
++
++  The 2nd cell is the index of the interrupt in the ICU unit.
++
++  The 3rd cell is the type of the interrupt. See arm,gic.txt for
++  details.
++
++- interrupt-controller: Identifies the node as an interrupt
++  controller.
++
++- msi-parent: Should point to the GICP controller, the GIC extension
++  that allows to trigger interrupts using MSG memory mapped
++  transactions.
++
++Example:
++
++icu: interrupt-controller@1e0000 {
++	compatible = "marvell,cp110-icu";
++	reg = <0x1e0000 0x10>;
++	#interrupt-cells = <3>;
++	interrupt-controller;
++	msi-parent = <&gicp>;
++};
++
++usb3h0: usb3@500000 {
++	interrupt-parent = <&icu>;
++	interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
++};
 -- 
-2.10.2
+2.9.4
