@@ -1,51 +1,78 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
-Subject: Re: [PATCH V2 0/5] phy: bcm-ns-usb3: add MDIO driver
-Date: Fri, 16 Jun 2017 09:14:36 +0200
-Message-ID: <30100fc8-7538-fd30-0a6a-665019b38c38@milecki.pl>
-References: <20170511132925.14564-1-zajec5@gmail.com>
- <20170608200428.9187-1-zajec5@gmail.com>
- <a28bd799-abc2-8f4e-c3db-b9f82f35295a@ti.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 3/7] drm/vc4: Mimic drm_atomic_helper_commit() behavior
+Date: Fri, 16 Jun 2017 09:19:48 +0200
+Message-ID: <20170616091948.7ef27162@bbrezillon>
+References: <1496392332-8722-1-git-send-email-boris.brezillon@free-electrons.com>
+        <1496392332-8722-4-git-send-email-boris.brezillon@free-electrons.com>
+        <87k24orheq.fsf@eliezer.anholt.net>
+        <20170606224817.7244d0e0@bbrezillon>
+        <87o9tzg06z.fsf@eliezer.anholt.net>
+        <87d1a4u8qw.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <a28bd799-abc2-8f4e-c3db-b9f82f35295a@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Jon Mason <jonmason@broadcom.com>, linux-kernel@vger.kernel.org, Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87d1a4u8qw.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Gerd Hoffmann <kraxel-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mark Yao <mark.yao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Lee Jones <lee-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eben Upton <eben-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Hollingwort
 List-Id: devicetree@vger.kernel.org
 
-T24gMDYvMTYvMjAxNyAwODozNiBBTSwgS2lzaG9uIFZpamF5IEFicmFoYW0gSSB3cm90ZToKPiBP
-biBGcmlkYXkgMDkgSnVuZSAyMDE3IDAxOjM0IEFNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+
-IEZyb206IFJhZmHFgiBNacWCZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KPj4KPj4gQXMgZXhwbGFp
-bmVkIGluIHRoZSBjb21taXQgOTIwMGM2ZjE3NzYzOCAoIlJldmVydCAicGh5OiBBZGQgVVNCMyBQ
-SFkgc3VwcG9ydAo+PiBmb3IgQnJvYWRjb20gTlNQIFNvQyIiKSB0aGlzIG1vZHVsZSBzaG91bGQg
-YmUgbW9kaWZpZWQgdG8gdXNlIE1ESU8gYnVzIGFzCj4+IHRoaXMgaXMgaG93IFBIWSBpcyByZWFs
-bHkgYXR0YWNoZWQuCj4+Cj4+IFRoaXMgc2hvdWxkIGFsbG93IHJldXNpbmcgdGhpcyBkcml2ZXIg
-b24gTlNQIGFuZCBhbnkgb3RoZXIgcGxhdGZvcm0gd2l0aAo+PiBNRElPIGJ1cyBhbmQgdGhpcyBw
-YXJ0aWN1bGFyIFBIWS4KPgo+IGNhbiB5b3UgcnVuIGNoZWNrcGF0Y2ggYW5kIGZpeCBhbGwgd2Fy
-bmluZ3MgaW4gdGhpcyBzZXJpZXM/CgpJIGFsd2F5cyBjaGVjayBteSBwYXRjaGVzIGJlZm9yZSBz
-ZW5kaW5nLiBGb3IgdGhpcyBzZXQgdGhlIG9ubHkgd2FybmluZyBJCmdldCBpczoKCldBUk5JTkc6
-IGxpbmUgb3ZlciA4MCBjaGFyYWN0ZXJzCiMxMTc6IEZJTEU6IGRyaXZlcnMvcGh5L2Jyb2FkY29t
-L3BoeS1iY20tbnMtdXNiMy5jOjIyNDoKKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgdXNlY3NfdG9famlmZmllcyhCQ01fTlNfVVNCM19NSUlfTU5HX1RJTUVPVVRfVVMpKTsKCkkn
-dmUgcHJvYmxlbSBmaW5kaW5nIGEgbmljZSB3YXkgb2YgZml4aW5nIHRoaXMuCjEpIEkgY2FuJ3Qg
-YnJlYWsgdGhlIGxpbmUgYmV0d2VlbiBhcmd1bWVudHMgYXMgdGhlcmUgaXMgb25seSAxIGFyZ3Vt
-ZW50CjIpIEkgc2hvdWxkbid0IHVzZSBzbWFsbCBpbmRlbnRpb24gYXMgaXQgd291bGQgbWlzYWxp
-Z24gdGhpcyBsaW5lCjMpIFVzaW5nIHRtcCB2YXIgZm9yIEJDTV9OU19VU0IzX01JSV9NTkdfVElN
-RU9VVF9VUyBzb3VuZHMgYSBiaXQgcG9pbnRsZXNzCgpBY2NvcmRpbmcgdG8gdGhlIGNvZGluZy1z
-dHlsZS5yc3QgaGF2aW5nIDgwKyBjaGFycyBsaW5lcyBpcyBhY2NlcHRhYmxlIGlmIGl0CiJzaWdu
-aWZpY2FudGx5IGluY3JlYXNlcyByZWFkYWJpbGl0eSBhbmQgZG9lcyBub3QgaGlkZSBpbmZvcm1h
-dGlvbiIuIE1heWJlCndlIGNhbiBqdXN0IGxpdmUgd2l0aCB0aGlzIHNpbmdsZSBsaW5lIGxpa2Ug
-dGhhdD8gSXNuJ3QgdGhpcyBhIGJpdCBiaWtlCnNoZWRkaW5nIGluIHRoaXMgY2FzZT8KCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
-ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Thu, 15 Jun 2017 16:33:11 -0700
+Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+
+> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> writes:
+> 
+> > [ Unknown signature status ]
+> > Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+> >  
+> >> On Tue, 06 Jun 2017 13:27:09 -0700
+> >> Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org> wrote:
+> >>  
+> >>> Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> writes:
+> >>>   
+> >>> > The VC4 KMS driver is implementing its own ->atomic_commit() but there
+> >>> > are a few generic helpers we can use instead of open-coding the logic.
+> >>> >
+> >>> > Signed-off-by: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >>> > ---
+> >>> >  drivers/gpu/drm/vc4/vc4_kms.c | 38 ++++++++++++--------------------------
+> >>> >  1 file changed, 12 insertions(+), 26 deletions(-)
+> >>> >
+> >>> > diff --git a/drivers/gpu/drm/vc4/vc4_kms.c b/drivers/gpu/drm/vc4/vc4_kms.c
+> >>> > index ad7925a9e0ea..f229abc0991b 100644
+> >>> > --- a/drivers/gpu/drm/vc4/vc4_kms.c
+> >>> > +++ b/drivers/gpu/drm/vc4/vc4_kms.c
+> >>> > @@ -42,6 +42,10 @@ vc4_atomic_complete_commit(struct vc4_commit *c)
+> >>> >  	struct drm_device *dev = state->dev;
+> >>> >  	struct vc4_dev *vc4 = to_vc4_dev(dev);
+> >>> >  
+> >>> > +	drm_atomic_helper_wait_for_fences(dev, state, false);
+> >>> > +
+> >>> > +	drm_atomic_helper_wait_for_dependencies(state);    
+> >>> 
+> >>> With this wait_for_fences() addition and the reservation stuff that
+> >>> landed, I think we can rip out the "seqno cb" in vc4, and just use
+> >>> drm_atomic_helper_commit() and drm_atomic_hepler_commit_tail().  Do you
+> >>> see anything missing, with that?  
+> >>
+> >> I can't tell. I haven't dig enough to understand what this seqno cb was
+> >> used for :-), but Daniel was suggesting the same thing. I'll try to
+> >> better understand what seqno cb does and if it's all safe to get rid of
+> >> it and use the standard helpers.  
+> >
+> > The seqno cb was the thing for stalling the modeset until V3D was done
+> > rendering to the planes.  The wait_for_fences() does the same thing
+> > using generic dmabuf reservations, so the seqno cb isn't needed any
+> > more.  
+> 
+> Oh, we've got another user of the seqno cb (async flips), anyway, so we
+> can't delete it quite yet.  I've pushed this patch since it's a clear
+> improvement (less code, waits for fences from other devices if any).
+
+Ok. Did you fix the leak before applying?
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
