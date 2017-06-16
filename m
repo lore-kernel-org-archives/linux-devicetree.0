@@ -1,62 +1,53 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 0/6] irqchip: meson: add support for the gpio interrupt
- controller
-Date: Fri, 16 Jun 2017 09:46:11 +0100
-Message-ID: <8742df56-42ef-bf70-0ec1-9e8418ec0063@arm.com>
-References: <20170615161804.32658-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170615161804.32658-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH 00/15] spi: qup: Fixes and add support for >64k transfers
+Date: Fri, 16 Jun 2017 14:28:43 +0530
+Message-ID: <1497603538-12750-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/06/17 17:17, Jerome Brunet wrote:
-> This patch series adds support for the GPIO interrupt controller found on
-> Amlogic's meson SoC families.
-> 
-> Unlike what the name suggests, this controller is not part of the SoC
-> GPIO subsystem. It is a separate controller from which can watch almost
-> all pads of the SoC and generate and interrupt from it. Some pins, which
-> are not part of the public datasheet, don't seem to have this capability
-> though.
-> 
-> Hardware wise, the controller is a 256 to 8 router with filtering block
-> to select edge or level input and the polarity of the signal.  As there
-> we can't setup the filtring to generate a signal on both the high and low
-> polarity, there is no easy way to support IRQ_TYPE_EDGE_BOTH at the
-> moment
-> 
-> The number of interrupt line routed to the controller depends on the SoC,
-> and essentially the number of GPIO available on the SoC.
-> 
-> This series has been tested on Amlogic S905-P200 board with the front
-> panel power button.
-> 
-> This work is derived from the previous work of Carlo Caione [1].
+v2:
+	Incorporate feedback from Andy Gross, Sricharan, Stanimir Varbanov
 
-[...]
+	Modified the QUP-v1 dma completion sequence to QUP-v2 as per feedback.
 
-So we have two competing series, all based on the same stuff. I must say
-this is rather disappointing that people can't manage to collaborate and
-work towards a common goal.
+	Removed code that used controller->xfer to identify extra interrupts,
+	since with the fixes done to handle i/o completion we don't see
+	extra interrupts.
 
-I'm going to review the irqchip part, because I've done that on Heiner's
-series as well, but that's where I'm going to stop.
+v1:
+	This series fixes some existing issues in the code for both
+	interrupt and dma mode. Patches 1 - 11 are the fixes.
+	Random failures/timeout are observed without these fixes.
+	Also, the current driver does not support block transfers > 64K
+	and the driver quietly fails. Patches 12 - 18 add support for this
+	in both interrupt and dma mode.
 
-Heiner, Jerome: please sort this out between yourselves *BEFORE* sending
-any other patch series. This is wasting everybody's time, both yours and
-mine (and frankly, this a rather rare commodity these days).
+	The entire series has been tested on ipq4019 with
+	SPI-NOR flash for block sizes > 64k.
 
-Thanks,
+Varadarajan Narayanan (15):
+  spi: qup: Enable chip select support
+  spi: qup: Setup DMA mode correctly
+  spi: qup: Add completion timeout for dma mode
+  spi: qup: Add completion timeout for fifo/block mode
+  spi: qup: Place the QUP in run mode before DMA transactions
+  spi: qup: Fix error handling in spi_qup_prep_sg
+  spi: qup: Fix transaction done signaling
+  spi: qup: Do block sized read/write in block mode
+  spi: qup: refactor spi_qup_io_config into two functions
+  spi: qup: call io_config in mode specific function
+  spi: qup: allow block mode to generate multiple transactions
+  spi: qup: refactor spi_qup_prep_sg
+  spi: qup: allow multiple DMA transactions per spi xfer
+  spi: qup: Ensure done detection
+  spi: qup: support for qup v1 dma
 
-	M.
+ .../devicetree/bindings/spi/qcom,spi-qup.txt       |   6 +
+ drivers/spi/spi-qup.c                              | 629 ++++++++++++++-------
+ 2 files changed, 440 insertions(+), 195 deletions(-)
+
 -- 
-Jazz is not dead. It just smells funny...
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
