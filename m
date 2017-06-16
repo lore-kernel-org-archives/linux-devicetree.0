@@ -1,154 +1,98 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH 13/15] spi: qup: allow multiple DMA transactions per spi xfer
-Date: Fri, 16 Jun 2017 14:28:56 +0530
-Message-ID: <1497603538-12750-14-git-send-email-varada@codeaurora.org>
-References: <1497603538-12750-1-git-send-email-varada@codeaurora.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v1] pinctrl: generic: Add output-enable property
+Date: Fri, 16 Jun 2017 10:59:41 +0200
+Message-ID: <1497603581-9632-1-git-send-email-jacopo+renesas@jmondi.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497603538-12750-1-git-send-email-varada@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>, Matthew McClintock <mmcclint@codeaurora.org>
+To: linus.walleij@linaro.org, andy.shevchenko@gmail.com, dongas86@gmail.com, geert+renesas@glider.be, Chris.Brandt@renesas.com, laurent.pinchart@ideasonboard.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Much like the block mode changes, we are breaking up DMA transactions
-into 64K chunks so we can reset the QUP engine.
+Add output-enable generic pin configuration property.
+This properties allows enabling/disabling pin's output capabilities
+without actually driving any value on the line.
 
-Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
 ---
- drivers/spi/spi-qup.c | 104 ++++++++++++++++++++++++++++++++++++--------------
- 1 file changed, 76 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index adf16e4..fb8e77a 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -417,50 +417,98 @@ static void spi_qup_dma_terminate(struct spi_master *master,
- 		dmaengine_terminate_all(master->dma_rx);
- }
- 
-+static u32 spi_qup_sgl_get_nents_len(struct scatterlist *sgl, u32 max,
-+				     u32 *nents)
-+{
-+	struct scatterlist *sg;
-+	u32 total = 0;
-+
-+	*nents = 0;
-+
-+	for (sg = sgl; sg; sg = sg_next(sg)) {
-+		unsigned int len = sg_dma_len(sg);
-+
-+		/* check for overflow as well as limit */
-+		if (((total + len) < total) || ((total + len) > max))
-+			break;
-+
-+		total += len;
-+		(*nents)++;
-+	}
-+
-+	return total;
-+}
-+
- static int spi_qup_do_dma(struct spi_device *spi, struct spi_transfer *xfer,
- 			  unsigned long timeout)
- {
- 	struct spi_master *master = spi->master;
- 	struct spi_qup *qup = spi_master_get_devdata(master);
-+	struct scatterlist *tx_sgl, *rx_sgl;
- 	int ret;
- 
--	ret = spi_qup_io_config(spi, xfer);
--	if (ret)
--		return ret;
-+	rx_sgl = xfer->rx_sg.sgl;
-+	tx_sgl = xfer->tx_sg.sgl;
- 
--	/* before issuing the descriptors, set the QUP to run */
--	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
--	if (ret) {
--		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
--				__func__, __LINE__);
--		return ret;
--	}
-+	do {
-+		u32 rx_nents, tx_nents;
-+
-+		if (rx_sgl)
-+			qup->n_words = spi_qup_sgl_get_nents_len(rx_sgl,
-+					SPI_MAX_XFER, &rx_nents) / qup->w_size;
-+		if (tx_sgl)
-+			qup->n_words = spi_qup_sgl_get_nents_len(tx_sgl,
-+					SPI_MAX_XFER, &tx_nents) / qup->w_size;
-+		if (!qup->n_words)
-+			return -EIO;
- 
--	if (xfer->rx_buf) {
--		ret = spi_qup_prep_sg(master, xfer->rx_sg.sgl,
--				      xfer->rx_sg.nents, DMA_DEV_TO_MEM,
--				      spi_qup_dma_done, &qup->rxc);
-+		ret = spi_qup_io_config(spi, xfer);
- 		if (ret)
- 			return ret;
- 
--		dma_async_issue_pending(master->dma_rx);
--	}
--
--	if (xfer->tx_buf) {
--		ret = spi_qup_prep_sg(master, xfer->tx_sg.sgl,
--				      xfer->tx_sg.nents, DMA_MEM_TO_DEV,
--				      spi_qup_dma_done, &qup->txc);
--		if (ret)
-+		/* before issuing the descriptors, set the QUP to run */
-+		ret = spi_qup_set_state(qup, QUP_STATE_RUN);
-+		if (ret) {
-+			dev_warn(qup->dev, "cannot set RUN state\n");
- 			return ret;
-+		}
-+		if (rx_sgl) {
-+			ret = spi_qup_prep_sg(master, rx_sgl, rx_nents,
-+					      DMA_DEV_TO_MEM,
-+					      spi_qup_dma_done, &qup->rxc);
-+			if (ret)
-+				return ret;
-+			dma_async_issue_pending(master->dma_rx);
-+		}
- 
--		dma_async_issue_pending(master->dma_tx);
--	}
-+		if (tx_sgl) {
-+			ret = spi_qup_prep_sg(master, tx_sgl, tx_nents,
-+					      DMA_MEM_TO_DEV,
-+					      spi_qup_dma_done, &qup->txc);
-+			if (ret)
-+				return ret;
-+
-+			dma_async_issue_pending(master->dma_tx);
-+		}
-+
-+		if (rx_sgl &&
-+		    !wait_for_completion_timeout(&qup->rxc, timeout)) {
-+			pr_emerg(" rx timed out\n");
-+			return -ETIMEDOUT;
-+		}
-+
-+		if (tx_sgl &&
-+		    !wait_for_completion_timeout(&qup->txc, timeout)) {
-+			pr_emerg(" tx timed out\n");
-+			return -ETIMEDOUT;
-+		}
- 
--	if (xfer->rx_buf && !wait_for_completion_timeout(&qup->rxc, timeout))
--		return -ETIMEDOUT;
-+		for (; rx_sgl && rx_nents--; rx_sgl = sg_next(rx_sgl))
-+			;
-+		for (; tx_sgl && tx_nents--; tx_sgl = sg_next(tx_sgl))
-+			;
- 
--	if (xfer->tx_buf && !wait_for_completion_timeout(&qup->txc, timeout))
--		return -ETIMEDOUT;
-+	} while (rx_sgl || tx_sgl);
- 
- 	return 0;
- }
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+So, after that many discussions I'm now sending this, that only adds a new
+flag used to enable or disable a pin's output capabilities.
+I intentionally avoided naming the output buffer explicitly because if and how
+it has to be enabled/disabled is a platform specific details each driver
+has to take care of.
+
+Dong: this is similar to what you recently proposed, without mentioning the
+output buffer directly. Can I have your Reviewed-by or your Acked-by here?
+
+Linus, Andy: I initially proposed to add "output-buffer-enable" in place of this
+one, so not to confuse the property's semantic with its real world effect.
+While I'm still partially convinced output-enable is not the most accurate choice
+possible, it certainly is the best balance with bindings clearness, and the one
+where more consensus has been collected on. Hope this flies for you too and we
+can have this merged so me and Dong can send our updated series on top of this.
+
+Thanks
+   j
+
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 2 ++
+ drivers/pinctrl/pinconf-generic.c                              | 3 +++
+ include/linux/pinctrl/pinconf-generic.h                        | 3 +++
+ 3 files changed, 8 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index f01d154..f8af190 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -259,6 +259,8 @@ input-debounce		- debounce mode with debound time X
+ power-source		- select between different power supplies
+ low-power-enable	- enable low power mode
+ low-power-disable	- disable low power mode
++output-disable		- disable output on a pin
++output-enable		- enable output on a pin
+ output-low		- set the pin to output mode with low level
+ output-high		- set the pin to output mode with high level
+ slew-rate		- set the slew rate
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 720a19f..fc0c230 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -44,6 +44,7 @@ static const struct pin_config_item conf_items[] = {
+ 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT_ENABLE, "input schmitt enabled", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_LOW_POWER_MODE, "pin low power", "mode", true),
++	PCONFDUMP(PIN_CONFIG_OUTPUT_ENABLE, "output enabled", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_OUTPUT, "pin output", "level", true),
+ 	PCONFDUMP(PIN_CONFIG_POWER_SOURCE, "pin power source", "selector", true),
+ 	PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL, true),
+@@ -172,6 +173,8 @@ static const struct pinconf_generic_params dt_params[] = {
+ 	{ "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
+ 	{ "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
+ 	{ "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
++	{ "output-disable", PIN_CONFIG_OUTPUT_ENABLE, 0 },
++	{ "output-enable", PIN_CONFIG_OUTPUT_ENABLE, 1 },
+ 	{ "output-high", PIN_CONFIG_OUTPUT, 1, },
+ 	{ "output-low", PIN_CONFIG_OUTPUT, 0, },
+ 	{ "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 7620eb1..5761958 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -73,6 +73,8 @@
+  *	operation, if several modes of operation are supported these can be
+  *	passed in the argument on a custom form, else just use argument 1
+  *	to indicate low power mode, argument 0 turns low power mode off.
++ * @PIN_CONFIG_OUTPUT_ENABLE: this will enable the pin's output mode
++ * 	without driving a value there. 1 enables output mode, 0 disables it.
+  * @PIN_CONFIG_OUTPUT: this will configure the pin as an output. Use argument
+  *	1 to indicate high level, argument 0 to indicate low level. (Please
+  *	see Documentation/pinctrl.txt, section "GPIO mode pitfalls" for a
+@@ -105,6 +107,7 @@ enum pin_config_param {
+ 	PIN_CONFIG_INPUT_SCHMITT,
+ 	PIN_CONFIG_INPUT_SCHMITT_ENABLE,
+ 	PIN_CONFIG_LOW_POWER_MODE,
++	PIN_CONFIG_OUTPUT_ENABLE,
+ 	PIN_CONFIG_OUTPUT,
+ 	PIN_CONFIG_POWER_SOURCE,
+ 	PIN_CONFIG_SLEW_RATE,
+--
+2.7.4
