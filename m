@@ -1,26 +1,68 @@
-From: olivier moysan <olivier.moysan@st.com>
-Subject: [PATCH 0/2] ASoC: stm32: sai: Add H7 support
-Date: Fri, 16 Jun 2017 14:16:22 +0200
-Message-ID: <1497615384-7407-1-git-send-email-olivier.moysan@st.com>
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH 7/8] smiapp: Add support for flash, lens and EEPROM
+ devices
+Date: Fri, 16 Jun 2017 15:26:29 +0300
+Message-ID: <20170616122629.GL15419@paasikivi.fi.intel.com>
+References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1497433639-13101-8-git-send-email-sakari.ailus@linux.intel.com>
+ <20170616120712.GA5774@amd>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, alsa-devel@alsa-project.org, robh@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, olivier.moysan@st.com
-Cc: arnaud.pouliquen@st.com, benjamin.gaignard@st.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-leds-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170616120712.GA5774@amd>
+Sender: linux-leds-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, sebastian.reichel@collabora.co.uk, robh@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch-set adds support of the Serial Audio Interface (SAI) IP on H7 STM32 platform family.
+Hi Pavel,
 
-olivier moysan (2):
-  dt-bindings: stm32: add h7 support for sai
-  ASoC: stm32: sai: add h7 support
+On Fri, Jun 16, 2017 at 02:07:13PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > These types devices aren't directly related to the sensor, but are
+> > nevertheless handled by the smiapp driver due to the relationship of these
+> > component to the main part of the camera module --- the sensor.
+> > 
+> > Additionally, for the async sub-device registration to work, the notifier
+> > containing matching fwnodes will need to be registered. This is natural to
+> > perform in a sensor driver as well.
+> > 
+> > This does not yet address providing the user space with information on how
+> > to associate the sensor, lens or EEPROM devices but the kernel now has the
+> > necessary information to do that.
+> 
+> Let me see... I guess this is going to be quite interesting for me,
+> too, because I'll be able to remove similar code in omap3 isp driver.
 
- .../devicetree/bindings/sound/st,stm32-sai.txt     | 18 ++---
- sound/soc/stm/stm32_sai.c                          | 13 ++-
- sound/soc/stm/stm32_sai.h                          | 72 +++++++++++++++--
- sound/soc/stm/stm32_sai_sub.c                      | 92 ++++++++++++++++++----
- 4 files changed, 164 insertions(+), 31 deletions(-)
+Yes, indeed. And with this, we have the lens - sensor association
+information as a bonus.
+
+I'll drop EEPROM support in v2, I guess you wouldn't have needed it? I guess
+we'll need to see examples that can be found in the wild. My current
+understanding is that EEPROM could be a separate chip in the module as well
+as integrated to the sensor.
+
+SMIA++ supports EEPROM as well (it's accessible through the sensor) but not
+all (more or less) compliant sensors implement it (instead it's a separate
+I²C device).
+
+> 
+> I'm getting same error as the build bot... which is expected as you
+> did mention it depends on some other series.
+
+Yes, I missed half of the change. I'm pushing it again now... this will take
+time until my server has SSDs.
+
+> 
+> (I'll take a look if I can test it easily.)
+> 
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+
+Thanks!
 
 -- 
-1.9.1
+Sakari Ailus
+sakari.ailus@linux.intel.com
