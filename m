@@ -1,81 +1,68 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: Re: [PATCH 6/6] ARM: dts: rockchip: add efuse device node for rk3228
-Date: Fri, 16 Jun 2017 17:24:23 +0800
-Message-ID: <da5fbd76-c9a1-a16f-3ed8-adfd2b1c346f@rock-chips.com>
-References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com>
- <1497511396-23308-1-git-send-email-frank.wang@rock-chips.com>
- <2537345.MJmYY2BcSn@phil>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/9] pinctrl: mvebu: add driver for Armada CP110 pinctrl
+Date: Fri, 16 Jun 2017 11:26:08 +0200
+Message-ID: <CACRpkdb+D+a9S4UCjex_P1YEATj9RhSu4i0fy50AopAJ1MOzXA@mail.gmail.com>
+References: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
+ <2d71d93a22ed24c45b7ce7b52fa066cc0a14a69f.1497281623.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2537345.MJmYY2BcSn@phil>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>, gregkh@linuxfoundation.org
-Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, finley.xiao@rock-chips.com, david.wu@rock-chips.com, shawn.lin@rock-chips.com, wmc@rock-chips.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2d71d93a22ed24c45b7ce7b52fa066cc0a14a69f.1497281623.git-series.gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah@marvell>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+On Mon, Jun 12, 2017 at 5:34 PM, Gregory CLEMENT
+<gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-On 2017/6/15 23:10, Heiko Stuebner wrote:
-> Hi Frank,
+> From: Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 >
-> Am Donnerstag, 15. Juni 2017, 15:23:16 CEST schrieb Frank Wang:
->> From: Finley Xiao <finley.xiao@rock-chips.com>
->>
->> Add a efuse node in the device tree for the rk3228 SoC.
->>
->> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
->> ---
->>   arch/arm/boot/dts/rk322x.dtsi | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
->> index c2a78f4..dad195e 100644
->> --- a/arch/arm/boot/dts/rk322x.dtsi
->> +++ b/arch/arm/boot/dts/rk322x.dtsi
->> @@ -314,6 +314,23 @@
->>   		status = "disabled";
->>   	};
->>   
->> +	efuse: efuse@11040000 {
->> +		compatible = "rockchip,rk322x-efuse";
-> was this binding included already? Simply because compatibles should
-> not contain placeholders, so rockchip,rk3228-efuse please - same for
-> the driver side.
-
-Actually, I always remember it should be without placeholders from the 
-first time you commented :-)
-but I saw that the binding and driver (rockchip,rk322x-efuse) have 
-already been applied, so I send this one keep the same with driver side.
-Shall I resend a new patch to correct both of them to 
-'rockchip,rk3228-efuse' ?
-
-
-BR.
-Frank
-
+> This commit adds a pinctrl driver for the CP110 part of the Marvell
+> Armada 7K and 8K SoCs. The Armada 7K has a single CP110, where almost all
+> the MPP pins are available. On the other side, the Armada 8K has two
+> CP110, and the available MPPs are split between the master CP110 (MPPs 32
+> to 62) and the slave CP110 (MPPs 0 to 31).
 >
-> Heiko
+> The register interface to control the MPPs is however the same as all
+> other mvebu SoCs, so we can reuse the common pinctrl-mvebu.c logic.
 >
+> Signed-off-by: Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Reviewed-by: Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 >
->> +		reg = <0x11040000 0x20>;
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		clocks = <&cru PCLK_EFUSE_256>;
->> +		clock-names = "pclk_efuse";
->> +
->> +		/* Data cells */
->> +		efuse_id: id@7 {
->> +			reg = <0x7 0x10>;
->> +		};
->> +		cpu_leakage: cpu_leakage@17 {
->> +			reg = <0x17 0x1>;
->> +		};
->> +	};
->> +
->>   	i2c0: i2c@11050000 {
->>   		compatible = "rockchip,rk3228-i2c";
->>   		reg = <0x11050000 0x1000>;
->>
+> [updated for mvebu pinctrl and 4.9 changes:
+>  - converted to simple_mmio
+>  - converted to syscon/regmap
+>  - removed unimplemented .remove function
+>  - dropped DTS changes
+>  - defered gpio ranges to DT
+>  - fixed warning
+>  - properly set soc->nmodes
+>  -- rmk]
+> Signed-off-by: Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
+>
+> [ add missing MPP[61:56] function 14 (SDIO)
+> -- Konstantin Porotchkin]
+> Signed-off-by: Konstantin Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>
+> [ allow to properly register more then one instance of this driver
+> -- Grzegorz Jaszczyk]
+> Signed-off-by: Grzegorz Jaszczyk <jaz-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>
+>
+> [ - rebased on 4.12-rc1
+>   - fixed the 80 character limit for mvebu_mpp_mode array
+>   - aligned the compatible name on the ones already used
+>   - fixed the MPP table for CP110: some MPP are not available on Armada 7K
+> -- Gregory CLEMENT]
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> Tested-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Patch applied.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
