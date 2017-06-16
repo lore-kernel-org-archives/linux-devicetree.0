@@ -1,7 +1,7 @@
 From: Jagan Teki <jagannadh.teki@gmail.com>
-Subject: [PATCH v4 4/4] ARM: dts: imx6ul-geam: Add Sound card with codec node
-Date: Fri, 16 Jun 2017 12:34:40 +0530
-Message-ID: <1497596680-3186-4-git-send-email-jteki@openedev.com>
+Subject: [PATCH v4 3/4] ARM: dts: imx6ul-geam: Skip suffix -kit from dts name
+Date: Fri, 16 Jun 2017 12:34:39 +0530
+Message-ID: <1497596680-3186-3-git-send-email-jteki@openedev.com>
 References: <1497596680-3186-1-git-send-email-jteki@openedev.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1497596680-3186-1-git-send-email-jteki@openedev.com>
@@ -12,76 +12,49 @@ List-Id: devicetree@vger.kernel.org
 
 From: Jagan Teki <jagan@amarulasolutions.com>
 
-Add support for Sound card and related codec(via i2c1) nodes
-on Engicam GEAM6UL variant module boards.
+Engicam SOM's with mounted on starter kits like icorem6(rqs), isiot
+usually not explicitly named with -kit in dts file names and
+instead Model has mentioned 'Starter kit' So apply the same rule
+for geam SOM as well.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
 Changes for v4:
-- keep sound and related i2c1 on dts
-Changes for v3:
-- Replace fsl,imx-audio-sgtl5000 and use simple-audio-card
-Changes for v2:
-- Use proper [label:] node-name[@unit-address] for codec
-- Remove incorrect codec property 'wlf,shared-lrclk'
-- Remove 'gpr' from sound card node
+- New patch
 
- arch/arm/boot/dts/imx6ul-geam.dts | 36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm/boot/dts/Makefile                                 | 2 +-
+ arch/arm/boot/dts/{imx6ul-geam-kit.dts => imx6ul-geam.dts} | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+ rename arch/arm/boot/dts/{imx6ul-geam-kit.dts => imx6ul-geam.dts} (99%)
 
-diff --git a/arch/arm/boot/dts/imx6ul-geam.dts b/arch/arm/boot/dts/imx6ul-geam.dts
-index e251ad2..571eea7 100644
---- a/arch/arm/boot/dts/imx6ul-geam.dts
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 9449493..824db0e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -466,7 +466,7 @@ dtb-$(CONFIG_SOC_IMX6SX) += \
+ 	imx6sx-udoo-neo-full.dtb
+ dtb-$(CONFIG_SOC_IMX6UL) += \
+ 	imx6ul-14x14-evk.dtb \
+-	imx6ul-geam-kit.dtb \
++	imx6ul-geam.dtb \
+ 	imx6ul-isiot-emmc.dtb \
+ 	imx6ul-isiot-nand.dtb \
+ 	imx6ul-liteboard.dtb \
+diff --git a/arch/arm/boot/dts/imx6ul-geam-kit.dts b/arch/arm/boot/dts/imx6ul-geam.dts
+similarity index 99%
+rename from arch/arm/boot/dts/imx6ul-geam-kit.dts
+rename to arch/arm/boot/dts/imx6ul-geam.dts
+index d709252..e251ad2 100644
+--- a/arch/arm/boot/dts/imx6ul-geam-kit.dts
 +++ b/arch/arm/boot/dts/imx6ul-geam.dts
-@@ -92,6 +92,32 @@
- 		regulator-always-on;
- 		regulator-boot-on;
- 	};
-+
-+	sound {
-+		compatible = "simple-audio-card";
-+		simple-audio-card,name = "imx6ul-geam-sgtl5000";
-+		simple-audio-card,format = "i2s";
-+		simple-audio-card,bitclock-master = <&dailink_master>;
-+		simple-audio-card,frame-master = <&dailink_master>;
-+		simple-audio-card,widgets =
-+			"Microphone", "Mic Jack",
-+			"Line", "Line In",
-+			"Line", "Line Out",
-+			"Headphone", "Headphone Jack";
-+		simple-audio-card,routing =
-+			"MIC_IN", "Mic Jack",
-+			"Mic Jack", "Mic Bias",
-+			"Headphone Jack", "HP_OUT";
-+
-+		simple-audio-card,cpu {
-+			sound-dai = <&sai2>;
-+		};
-+
-+		dailink_master: simple-audio-card,codec {
-+			sound-dai = <&sgtl5000>;
-+			clocks = <&clks IMX6UL_CLK_SAI2>;
-+		};
-+	};
- };
+@@ -47,7 +47,7 @@
+ #include "imx6ul.dtsi"
  
- &can1 {
-@@ -151,6 +177,16 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c1>;
- 	status = "okay";
-+
-+	sgtl5000: codec@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+		clocks = <&clks IMX6UL_CLK_OSC>;
-+		clock-names = "mclk";
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		VDDD-supply = <&reg_1p8v>;
-+	};
- };
+ / {
+-	model = "Engicam GEAM6UL";
++	model = "Engicam GEAM6UL Starter Kit";
+ 	compatible = "engicam,imx6ul-geam", "fsl,imx6ul";
  
- &i2c2 {
+ 	memory {
 -- 
 2.7.4
