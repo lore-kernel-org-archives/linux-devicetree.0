@@ -1,346 +1,130 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v3 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell GICP
-Date: Fri, 16 Jun 2017 16:19:20 +0200
-Message-ID: <20170616141923.31226-4-thomas.petazzoni@free-electrons.com>
-References: <20170616141923.31226-1-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170616141923.31226-1-thomas.petazzoni@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] arm64: dts: Add Mediatek SoC MT2712 and evaluation
+ board dts and Makefile
+Date: Fri, 16 Jun 2017 16:33:08 +0200
+Message-ID: <d5509532-7ab6-c9ce-d951-4bcdcc1399ff@gmail.com>
+References: <1497620721-61444-1-git-send-email-yt.shen@mediatek.com>
+ <1497620721-61444-3-git-send-email-yt.shen@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497620721-61444-3-git-send-email-yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a simple driver for the Marvell GICP, a hardware unit
-that converts memory writes into GIC SPI interrupts. The driver provides
-a number of functions to the ICU driver to allocate GICP interrupts, and
-get the physical addresses that the ICUs should write to to set/clear
-interrupts.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
----
- drivers/irqchip/Kconfig          |   3 +
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-mvebu-gicp.c | 268 +++++++++++++++++++++++++++++++++++++++
- drivers/irqchip/irq-mvebu-gicp.h |  10 ++
- 4 files changed, 282 insertions(+)
- create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
- create mode 100644 drivers/irqchip/irq-mvebu-gicp.h
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 478f8ac..e527ee5 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -268,6 +268,9 @@ config IRQ_MXS
- 	select IRQ_DOMAIN
- 	select STMP_DEVICE
- 
-+config MVEBU_GICP
-+	bool
-+
- config MVEBU_ODMI
- 	bool
- 	select GENERIC_MSI_IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b64c59b..11eb858 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_SA1100)		+= irq-sa11x0.o
- obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
- obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
- obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
-+obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
-diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
-new file mode 100644
-index 0000000..18ef728
---- /dev/null
-+++ b/drivers/irqchip/irq-mvebu-gicp.c
-@@ -0,0 +1,268 @@
-+/*
-+ * Copyright (C) 2017 Marvell
-+ *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/msi.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/platform_device.h>
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+#include "irq-mvebu-gicp.h"
-+
-+#define GICP_SETSPI_NSR_OFFSET	0x0
-+#define GICP_CLRSPI_NSR_OFFSET	0x8
-+
-+struct mvebu_gicp_spi_range {
-+	unsigned int start;
-+	unsigned int count;
-+};
-+
-+struct mvebu_gicp {
-+	struct mvebu_gicp_spi_range *spi_ranges;
-+	unsigned int spi_ranges_cnt;
-+	unsigned int spi_cnt;
-+	unsigned long *spi_bitmap;
-+	spinlock_t spi_lock;
-+	struct resource *res;
-+	struct device *dev;
-+};
-+
-+static int gicp_idx_to_spi(struct mvebu_gicp *gicp, int idx)
-+{
-+	int i;
-+
-+	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
-+		struct mvebu_gicp_spi_range *r = &gicp->spi_ranges[i];
-+
-+		if (idx < r->count)
-+			return r->start + idx;
-+
-+		idx -= r->count;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+phys_addr_t mvebu_gicp_setspi_phys_addr(struct mvebu_gicp *gicp)
-+{
-+	return gicp->res->start + GICP_SETSPI_NSR_OFFSET;
-+}
-+
-+phys_addr_t mvebu_gicp_clrspi_phys_addr(struct mvebu_gicp *gicp)
-+{
-+	return gicp->res->start + GICP_CLRSPI_NSR_OFFSET;
-+}
-+
-+static void gicp_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	struct mvebu_gicp *gicp = data->chip_data;
-+	phys_addr_t setspi = gicp->res->start + GICP_SETSPI_NSR_OFFSET;
-+
-+	msg->data = data->hwirq;
-+	msg->address_lo = lower_32_bits(setspi);
-+	msg->address_hi = upper_32_bits(setspi);
-+}
-+
-+static struct irq_chip gicp_irq_chip = {
-+	.name			= "GICP",
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_set_type		= irq_chip_set_type_parent,
-+	.irq_compose_msi_msg	= gicp_compose_msi_msg,
-+};
-+
-+static int gicp_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs, void *args)
-+{
-+	struct mvebu_gicp *gicp = domain->host_data;
-+	struct irq_fwspec fwspec;
-+	unsigned int hwirq;
-+	int ret;
-+
-+	spin_lock(&gicp->spi_lock);
-+	hwirq = find_first_zero_bit(gicp->spi_bitmap, gicp->spi_cnt);
-+	if (hwirq == gicp->spi_cnt) {
-+		spin_unlock(&gicp->spi_lock);
-+		return -ENOSPC;
-+	}
-+	__set_bit(hwirq, gicp->spi_bitmap);
-+	spin_unlock(&gicp->spi_lock);
-+
-+	fwspec.fwnode = domain->parent->fwnode;
-+	fwspec.param_count = 3;
-+	fwspec.param[0] = GIC_SPI;
-+	fwspec.param[1] = gicp_idx_to_spi(gicp, hwirq) - 32;
-+	/*
-+	 * Assume edge rising for now, it will be properly set when
-+	 * ->set_type() is called
-+	 */
-+	fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+	if (ret) {
-+		dev_err(gicp->dev, "Cannot allocate parent IRQ\n");
-+		goto free_hwirq;
-+	}
-+
-+	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-+					    &gicp_irq_chip, gicp);
-+	if (ret)
-+		goto free_irqs_parent;
-+
-+	return 0;
-+
-+free_irqs_parent:
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+free_hwirq:
-+	spin_lock(&gicp->spi_lock);
-+	__clear_bit(hwirq, gicp->spi_bitmap);
-+	spin_unlock(&gicp->spi_lock);
-+	return ret;
-+}
-+
-+static void gicp_irq_domain_free(struct irq_domain *domain,
-+				 unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct mvebu_gicp *gicp = domain->host_data;
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+
-+	if (d->hwirq >= gicp->spi_cnt) {
-+		dev_err(gicp->dev, "Invalid hwirq %lu\n", d->hwirq);
-+		return;
-+	}
-+
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+
-+	spin_lock(&gicp->spi_lock);
-+	__clear_bit(d->hwirq, gicp->spi_bitmap);
-+	spin_unlock(&gicp->spi_lock);
-+}
-+
-+static const struct irq_domain_ops gicp_domain_ops = {
-+	.alloc	= gicp_irq_domain_alloc,
-+	.free	= gicp_irq_domain_free,
-+};
-+
-+static struct irq_chip gicp_msi_irq_chip = {
-+	.name		= "GICP",
-+	.irq_set_type	= irq_chip_set_type_parent,
-+};
-+
-+static struct msi_domain_ops gicp_msi_ops = {
-+};
-+
-+static struct msi_domain_info gicp_msi_domain_info = {
-+	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
-+	.ops	= &gicp_msi_ops,
-+	.chip	= &gicp_msi_irq_chip,
-+};
-+
-+static int mvebu_gicp_probe(struct platform_device *pdev)
-+{
-+	struct mvebu_gicp *gicp;
-+	struct irq_domain *inner_domain, *plat_domain, *parent_domain;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *irq_parent_dn;
-+	int ret, i;
-+
-+	gicp = devm_kzalloc(&pdev->dev, sizeof(*gicp), GFP_KERNEL);
-+	if (!gicp)
-+		return -ENOMEM;
-+
-+	gicp->dev = &pdev->dev;
-+
-+	gicp->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!gicp->res)
-+		return -ENODEV;
-+
-+	ret = of_property_count_u32_elems(node, "marvell,spi-ranges");
-+	if (ret < 0)
-+		return ret;
-+
-+	gicp->spi_ranges_cnt = ret / 2;
-+
-+	gicp->spi_ranges =
-+		devm_kzalloc(&pdev->dev,
-+			     gicp->spi_ranges_cnt *
-+			     sizeof(struct mvebu_gicp_spi_range),
-+			     GFP_KERNEL);
-+	if (!gicp->spi_ranges)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
-+		of_property_read_u32_index(node, "marvell,spi-ranges",
-+					   i * 2,
-+					   &gicp->spi_ranges[i].start);
-+
-+		of_property_read_u32_index(node, "marvell,spi-ranges",
-+					   i * 2 + 1,
-+					   &gicp->spi_ranges[i].count);
-+
-+		gicp->spi_cnt += gicp->spi_ranges[i].count;
-+	}
-+
-+	gicp->spi_bitmap = devm_kzalloc(&pdev->dev,
-+					BITS_TO_LONGS(gicp->spi_cnt),
-+					GFP_KERNEL);
-+	if (!gicp->spi_bitmap)
-+		return -ENOMEM;
-+
-+	irq_parent_dn = of_irq_find_parent(node);
-+	if (!irq_parent_dn) {
-+		dev_err(&pdev->dev, "failed to find parent IRQ node\n");
-+		return -ENODEV;
-+	}
-+
-+	parent_domain = irq_find_host(irq_parent_dn);
-+	if (!parent_domain) {
-+		dev_err(&pdev->dev, "failed to find parent IRQ domain\n");
-+		return -ENODEV;
-+	}
-+
-+	inner_domain = irq_domain_create_hierarchy(parent_domain, 0,
-+						   gicp->spi_cnt,
-+						   of_node_to_fwnode(node),
-+						   &gicp_domain_ops, gicp);
-+	if (!inner_domain)
-+		return -ENOMEM;
-+
-+
-+	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(node),
-+						     &gicp_msi_domain_info,
-+						     inner_domain);
-+	if (!plat_domain) {
-+		irq_domain_remove(inner_domain);
-+		return -ENOMEM;
-+	}
-+
-+	platform_set_drvdata(pdev, gicp);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mvebu_gicp_of_match[] = {
-+	{ .compatible = "marvell,ap806-gicp", },
-+	{},
-+};
-+
-+static struct platform_driver mvebu_gicp_driver = {
-+	.probe  = mvebu_gicp_probe,
-+	.driver = {
-+		.name = "mvebu-gicp",
-+		.of_match_table = mvebu_gicp_of_match,
-+	},
-+};
-+builtin_platform_driver(mvebu_gicp_driver);
-diff --git a/drivers/irqchip/irq-mvebu-gicp.h b/drivers/irqchip/irq-mvebu-gicp.h
-new file mode 100644
-index 0000000..f4adc30
---- /dev/null
-+++ b/drivers/irqchip/irq-mvebu-gicp.h
-@@ -0,0 +1,10 @@
-+#ifndef __MVEBU_GICP_H__
-+#define __MVEBU_GICP_H__
-+
-+struct mvebu_gicp;
-+
-+phys_addr_t mvebu_gicp_setspi_phys_addr(struct mvebu_gicp *gicp);
-+phys_addr_t mvebu_gicp_clrspi_phys_addr(struct mvebu_gicp *gicp);
-+
-+#endif /* __MVEBU_GICP_H__ */
-+
--- 
-2.9.4
+On 16/06/17 15:45, YT Shen wrote:
+> This adds basic chip support for Mediatek 2712
+> 
+> Signed-off-by: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>   arch/arm64/boot/dts/mediatek/Makefile       |   1 +
+>   arch/arm64/boot/dts/mediatek/mt2712-evb.dts |  32 ++++++
+>   arch/arm64/boot/dts/mediatek/mt2712e.dtsi   | 166 ++++++++++++++++++++++++++++
+>   3 files changed, 199 insertions(+)
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+>   create mode 100644 arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/Makefile b/arch/arm64/boot/dts/mediatek/Makefile
+> index 9fbfd32..fcc0604 100644
+> --- a/arch/arm64/boot/dts/mediatek/Makefile
+> +++ b/arch/arm64/boot/dts/mediatek/Makefile
+> @@ -1,3 +1,4 @@
+> +dtb-$(CONFIG_ARCH_MEDIATEK) += mt2712-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6755-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt6795-evb.dtb
+>   dtb-$(CONFIG_ARCH_MEDIATEK) += mt8173-evb.dtb
+> diff --git a/arch/arm64/boot/dts/mediatek/mt2712-evb.dts b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+> new file mode 100644
+> index 0000000..8c804df
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt2712-evb.dts
+> @@ -0,0 +1,32 @@
+> +/*
+> + * Copyright (c) 2017 MediaTek Inc.
+> + * Author: YT Shen <yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> + *
+> + * SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> + */
+> +
+> +/dts-v1/;
+> +#include "mt2712e.dtsi"
+> +
+> +/ {
+> +	model = "MediaTek MT2712 evaluation board";
+> +	compatible = "mediatek,mt2712-evb", "mediatek,mt2712";
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +
+> +	memory@40000000 {
+> +		device_type = "memory";
+> +		reg = <0 0x40000000 0 0x80000000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:921600n8";
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+> diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> new file mode 100644
+> index 0000000..65cdd4a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+> @@ -0,0 +1,166 @@
+[...]
+> +
+> +	uart_clk: dummy26m {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <26000000>;
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <GIC_PPI 13
+> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14
+> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11
+> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10
+> +			      (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_LOW)>;
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		compatible = "simple-bus";
+> +		ranges;
+> +
+> +		uart5: serial@1000f000 {
+> +			compatible = "mediatek,mt2712-uart",
+> +				     "mediatek,mt6577-uart";
+> +			reg = <0 0x1000f000 0 0x400>;
+> +			interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+> +			clocks = <&uart_clk>;
+
+uart has two clocks, baud and bus clock. Please refer to the bindings 
+descrption for more information, that's what they are for.
+
+Please define the two dummy clocks with the correct frequency and use them.
+
+Regards,
+Matthias
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
