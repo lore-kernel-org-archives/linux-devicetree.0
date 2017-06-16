@@ -1,38 +1,137 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH 1/3] dt-bindings: add Imprecision Systems vendor prefix
-Date: Fri, 16 Jun 2017 14:06:46 +0200
-Message-ID: <20170616120648.23320-2-jbrunet@baylibre.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 3/3] ARM64: dts: meson-gxl: Add Libre Computer support
+Date: Fri, 16 Jun 2017 14:06:48 +0200
+Message-ID: <20170616120648.23320-4-jbrunet@baylibre.com>
 References: <20170616120648.23320-1-jbrunet@baylibre.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170616120648.23320-1-jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170616120648.23320-1-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Imprecision System LLC is a single board computer manufacturer
+Add support for the Libre Computer board from Imprecision Systems
+More information about the board are available here:
 
-Signed-off-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+https://libre.computer/blog/
+
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/amlogic/Makefile               |  1 +
+ .../dts/amlogic/meson-gxl-s905x-librecomputer.dts  | 92 ++++++++++++++++++++++
+ 2 files changed, 93 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-gxl-s905x-librecomputer.dts
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index ee2e10f2ae41..0c1083990b7f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -145,6 +145,7 @@ ibm	International Business Machines (IBM)
- idt	Integrated Device Technologies, Inc.
- ifi	Ingenieurburo Fur Ic-Technologie (I/F/I)
- img	Imagination Technologies Ltd.
-+imprecision	Imprecision Systems LLC
- infineon Infineon Technologies
- inforce	Inforce Computing
- ingenic	Ingenic Semiconductor
+diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
+index 8a0e09250978..e8bea895f125 100644
+--- a/arch/arm64/boot/dts/amlogic/Makefile
++++ b/arch/arm64/boot/dts/amlogic/Makefile
+@@ -10,6 +10,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-hub.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxbb-wetek-play2.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-hwacom-amazetv.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-khadas-vim.dtb
++dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-librecomputer.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-nexbox-a95x.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905x-p212.dtb
+ dtb-$(CONFIG_ARCH_MESON) += meson-gxl-s905d-p230.dtb
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-librecomputer.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-librecomputer.dts
+new file mode 100644
+index 000000000000..60d14b8a64b4
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-librecomputer.dts
+@@ -0,0 +1,92 @@
++/*
++ * Copyright (c) 2017 BayLibre, SAS.
++ * Author: Neil Armstrong <narmstrong@baylibre.com>
++ * Author: Jerome Brunet <jbrunet@baylibre.com>
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++
++#include <dt-bindings/input/input.h>
++
++#include "meson-gxl-s905x-p212.dtsi"
++
++/ {
++	compatible = "imprecision,librecomputer", "amlogic,s905x", "amlogic,meson-gxl";
++	model = "Libre Computer Board";
++
++	cvbs-connector {
++		compatible = "composite-video-connector";
++
++		port {
++			cvbs_connector_in: endpoint {
++				remote-endpoint = <&cvbs_vdac_out>;
++			};
++		};
++	};
++
++	hdmi-connector {
++		compatible = "hdmi-connector";
++		type = "a";
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint = <&hdmi_tx_tmds_out>;
++			};
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		system {
++			label = "librecomputer:system-status";
++			gpios = <&gpio GPIODV_24 GPIO_ACTIVE_HIGH>;
++			default-state = "on";
++			panic-indicator;
++		};
++
++		blue {
++			label = "librecomputer:blue";
++			gpios = <&gpio_ao GPIOAO_2 GPIO_ACTIVE_HIGH>;
++			linux,default-trigger = "heartbeat";
++		};
++	};
++};
++
++&cvbs_vdac_port {
++	cvbs_vdac_out: endpoint {
++		remote-endpoint = <&cvbs_connector_in>;
++	};
++};
++
++&hdmi_tx {
++	status = "okay";
++	pinctrl-0 = <&hdmi_hpd_pins>, <&hdmi_i2c_pins>;
++	pinctrl-names = "default";
++};
++
++&hdmi_tx_tmds_port {
++	hdmi_tx_tmds_out: endpoint {
++		remote-endpoint = <&hdmi_connector_in>;
++	};
++};
++
++/*
++ * The following devices exists but are exposed on the general
++ * purpose GPIO header. End user may well decide to use those pins
++ * for another purpose
++ */
++
++&sd_emmc_a {
++	status = "disabled";
++};
++
++&uart_A {
++	status = "disabled";
++};
++
++&wifi32k {
++	status = "disabled";
++};
 -- 
 2.9.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
