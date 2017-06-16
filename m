@@ -1,88 +1,89 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Fri, 16 Jun 2017 07:43:52 -0700
-Message-ID: <871sqkouvr.fsf@eliezer.anholt.net>
-References: <20170615204130.19255-1-eric@anholt.net>
- <20170615204130.19255-2-eric@anholt.net>
- <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v5 15/20] arm64: dts: hisi: add kirin pcie node
+Date: Fri, 16 Jun 2017 15:43:05 +0100
+Message-ID: <5943EE79.1050505@hisilicon.com>
+References: <20170615030417.14059-16-guodong.xu@linaro.org>
+ <20170616141322.30466-1-guodong.xu@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0173012243=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170616141322.30466-1-guodong.xu@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, lee.jones@linaro.org, ulf.hansson@linaro.org, bhelgaas@google.com, catalin.marinas@arm.com, will.deacon@arm.com, wangkefeng.wang@huawei.com, arnd@arndb.de, xuejiancheng@hisilicon.com, puck.chen@hisilicon.com
+Cc: zhangfei.gao@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-pci@vger.kernel.org, Xiaowei Song <songxiaowei@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
---===============0173012243==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+Hi Guodong,
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On 2017/6/16 15:13, Guodong Xu wrote:
+> From: Xiaowei Song <songxiaowei@hisilicon.com>
+> 
+> Add PCIe node for hi3660
+> 
+> Cc: Guodong Xu <guodong.xu@linaro.org>
+> Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> Changes in v5:
+>  * fix interrupt-map, to conform to gic's #address-cells = <0>
+>  * remove redundant status = "ok"
+> ---
 
-Archit Taneja <architt@codeaurora.org> writes:
+Thanks!
+Applied v5 and dropped the v4 in the hisilicon arm64 dt tree.
 
-> On 06/16/2017 02:11 AM, Eric Anholt wrote:
->> If the panel-bridge is being set up after the drm_mode_config_reset(),
->> then the connector's state would never get initialized, and we'd
->> dereference the NULL in the hotplug path.  We also need to register
->> the connector, so that userspace can get at it.
->>=20
->
-> Shouldn't the KMS driver make sure the panel-bridge is set up before
-> drm_mode_config_reset? Is it the case when we're inserting the
-> panel-bridge driver as a module?
->
->
-> All the connectors that have been added are registered automatically
-> when drm_dev_register() is called by the KMS driver. Registering a
-> connector in the middle of setting up our driver is prone to race
-> conditions if the userspace decides to use them immediately.
+BR,
+Wei
 
-Yeah, this is fixing initializing panel_bridge at DSI host_attach time,
-which in the case of a panel module that creates the DSI device
-(adv7533-style, like you said I should use as a reference) will be after
-drm_mode_config_reset() and drm_dev_register().
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAllD7qgACgkQtdYpNtH8
-nuh12hAAtxtxVUCKAiczE4dENEjJAiemAFSkWhvTsOQOi12aUHBOvMn/jojekhSL
-P+XDg8uBd9ryGQh7hNo0uMkzWD6ps75C0mZpykkuz7Fho6b48VCKv0cFCxVHJu5o
-3s7kmxth/v73Qedn98XIMgnfqBJv8xSodii4J1HTBBvOTXTVy28Vzm4QCfZ+Ow5M
-qGcgdT0u/zlI+Q21VZdk4wpLEmsyp9RNyrzFjGrb+uX4Mv46eLnBdw29NZbqOODU
-8LAvMSPWmttfbN8NHFjojffFpiEKld3QWuoG1Xa7LeC4MT7HNfjoQzj98r0mw1zX
-QP2FY+v8HYBvuyUrbWtS9GMPcqW/TXtBIWN+0YZ1IX4HpY5RinyZufPzL7rR8aWo
-o6fsa+OAgKjXz8QJbqEcL1hZOaOUKTopWiKpXFgBaYYXoFdgrmCWOL0mh9LQYKMc
-1+UZovu/RepCIO1Qq5vUz3TDKsl48WQVG+v8qEHVKh7MdfSVWhLt0urYvo5NXCmX
-uOZ2pRzqOO5Zxhumm1OCyv+G6uQlVXcP2655U6sq1uaHdiIYw0qqEgZk3lo56Xjk
-B6EHR9TrPUs/CCRFAoSz+0QVCJ0PkQ5GH+qoaayxE8vLJeGhIUD6KZdbNqJYDADm
-H+0WGm/qbxJDzQtXbc1nceuKjZLutboDw7fEkwEaxfEnuZlaAxE=
-=M+WK
------END PGP SIGNATURE-----
---=-=-=--
-
---===============0173012243==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============0173012243==--
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 36 +++++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index e138973..8183d71 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -754,5 +754,41 @@
+>  			cs-gpios = <&gpio18 5 0>;
+>  			status = "disabled";
+>  		};
+> +
+> +		pcie@f4000000 {
+> +			compatible = "hisilicon,kirin960-pcie";
+> +			reg = <0x0 0xf4000000 0x0 0x1000>,
+> +			      <0x0 0xff3fe000 0x0 0x1000>,
+> +			      <0x0 0xf3f20000 0x0 0x40000>,
+> +			      <0x0 0xf5000000 0x0 0x2000>;
+> +			reg-names = "dbi", "apb", "phy", "config";
+> +			bus-range = <0x0  0x1>;
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +			device_type = "pci";
+> +			ranges = <0x02000000 0x0 0x00000000
+> +				  0x0 0xf6000000
+> +				  0x0 0x02000000>;
+> +			num-lanes = <1>;
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0xf800 0 0 7>;
+> +			interrupt-map = <0x0 0 0 1
+> +					 &gic GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x0 0 0 2
+> +					 &gic GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x0 0 0 3
+> +					 &gic GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x0 0 0 4
+> +					 &gic GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
+> +				 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
+> +				 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
+> +				 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
+> +				 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+> +			clock-names = "pcie_phy_ref", "pcie_aux",
+> +				      "pcie_apb_phy", "pcie_apb_sys",
+> +				      "pcie_aclk";
+> +			reset-gpios = <&gpio11 1 0 >;
+> +		};
+>  	};
+>  };
+> 
