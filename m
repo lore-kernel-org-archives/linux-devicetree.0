@@ -1,7 +1,7 @@
 From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 Subject: Re: [PATCH v2 00/10] add support for more devices on Meson8 and Meson8b
-Date: Fri, 16 Jun 2017 12:10:40 -0700
-Message-ID: <m2d1a3g34f.fsf@baylibre.com>
+Date: Fri, 16 Jun 2017 12:12:11 -0700
+Message-ID: <m260fvg31w.fsf@baylibre.com>
 References: <20170611101644.28581-1-martin.blumenstingl@googlemail.com>
         <20170615213352.25134-1-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
@@ -38,19 +38,15 @@ Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org
 > - this adds the pwm_e (typically used for the 32.768 kHz LPO clock for the
 >   SDIO wifi chip) and pwm_f (used on some boards for the dimmable power
 >   LED) pins to meson8.dtsi
->
-> NOTE: the .dts changes from this series depend on my previous patch from
-> [0]: "ARM: dts: meson8: fix the IR receiver pins"
 
-Thanks for the reminder, I had missed that one.
+Oh, one minor nit... When you send a v2 of a series, please start a new
+thread.  You sent this one in-reply-to the original series.  When you do
+that, it risks getting missed when I mark the previous series as read.
 
-This series now applied to v4.13/dt (after merging in the clock headers
-deps from Jerome) and will go in the 2nd round of pull requests to
-arm-soc, probably early next week.
-
-Thanks for the continued great work Martin!
+Thanks,
 
 Kevin
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
