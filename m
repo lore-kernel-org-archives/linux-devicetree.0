@@ -1,81 +1,277 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for hi3660-ufs
-Date: Fri, 16 Jun 2017 23:51:29 +0200
-Message-ID: <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
-References: <20170616065119.10704-1-butao@hisilicon.com> <20170616065119.10704-3-butao@hisilicon.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH v9 2/4] arm64: dts: hisi: add kirin pcie node
+Date: Sat, 17 Jun 2017 06:31:59 +0800
+Message-ID: <CAFGCpxyY7qgiviK7zSEomL-bZRG=MXMC=04WphTWfx1L82=wpA@mail.gmail.com>
+References: <20170531070109.81569-3-songxiaowei@hisilicon.com>
+ <201706040735.pu1PIspV%fengguang.wu@intel.com> <CAK8P3a0K2jwiSQUVQWwebBEwXPVa04egcS_7q7gLgs-qt+J-sw@mail.gmail.com>
+ <CAFGCpxxuboZJJS=zExmhDBLbb86zyN7me=dfnGKaf+LAPvCRGg@mail.gmail.com> <20170616211106.GF11129@bhelgaas-glaptop.roam.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170616065119.10704-3-butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bu Tao <butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20170616211106.GF11129@bhelgaas-glaptop.roam.corp.google.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>, "xuwei (O)" <xuwei5@hisilicon.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, kbuild test robot <lkp@intel.com>, Xiaowei Song <songxiaowei@hisilicon.com>, kbuild-all@01.org, Bjorn Helgaas <bhelgaas@google.com>, Kishon <kishon@ti.com>, Jingoo Han <jingoohan1@gmail.com>, Tomasz Nowicki <tn@semihalf.com>, Keith Busch <keith.busch@intel.com>, Niklas Cassel <niklas.cassel@axis.com>, Duc Dang <dhdang@apm.com>, "liudongdong (C)" <liudongdong3@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, chenyao11@huawei.com, Chen Feng <puck.chen@hisilicon.com>, Wangbinghui <wangbinghui@hisilicon.com>, Suzhuangluan <suzhuangluan@hisilicon.com>linux-pci <lin>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 16, 2017 at 8:51 AM, Bu Tao <butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
-> add ufs node document for hi3660
+Hi, Bjorn
+
+On Sat, Jun 17, 2017 at 5:11 AM, Bjorn Helgaas <helgaas@kernel.org> wrote:
+> On Tue, Jun 06, 2017 at 07:19:53PM +0800, Guodong Xu wrote:
+>> Hi, Arnd
+>>
+>> On Tue, Jun 6, 2017 at 5:23 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Sun, Jun 4, 2017 at 2:03 AM, kbuild test robot <lkp@intel.com> wrote:
+>> >> Hi Xiaowei,
+>> >>
+>> >> [auto build test ERROR on pci/next]
+>> >> [also build test ERROR on v4.12-rc3 next-20170602]
+>> >> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>> >>
+>> >> url:    https://github.com/0day-ci/linux/commits/Xiaowei-Song/add-PCIe-driver-for-Kirin-PCIe/20170531-182118
+>> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+>> >> config: arm64-allnoconfig (attached as .config)
+>> >> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+>> >> reproduce:
+>> >>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>> >>         chmod +x ~/bin/make.cross
+>> >>         # save the attached .config to linux build tree
+>> >>         make.cross ARCH=arm64
+>> >>
+>> >> All errors (new ones prefixed by >>):
+>> >>
+>> >>>> Error: arch/arm64/boot/dts/hisilicon/hi3660.dtsi:180.24-25 syntax error
+>> >>>> FATAL ERROR: Unable to parse input tree
+>> >
+>> > We keep getting the build errors for patch submissions. Obviously the patch is
+>> > still broken and can't be merged as-is. What is the plan for merging the series?
+>> >
+>>
+>> This dts patch can be applied to dts series [1]. For upstream review
+>> purpose, hi3660-hikey960 dts patches, which don't have a related
+>> driver changes, are sent in [1]. Other patches, which need driver
+>> changes, like this one, are sent together with driver.
+>>
+>> Patchset [1] is now at its v2 review. Rob Herring already gave his ACK
+>> for some of them in v1. Hopefully I can get more ACK for remaining
+>> ones, and make them ready for v4.13 merging window.
+>>
+>> [1], http://www.spinics.net/lists/devicetree/msg178303.html
 >
-> Signed-off-by: Bu Tao <butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  .../devicetree/bindings/ufs/hi3660-ufs.txt         | 58 ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ufs/hi3660-ufs.txt
+> I don't know how you want to deal with the DTS build failure.
+
+DTS part of this is also included in a broader Hi3660 dts patchset [1], and
+was ACK'ed [2] today by HiSilicon SoC maintainer Xu Wei. Hopefully
+they can land in next merge window.
+
+[1] https://www.spinics.net/lists/arm-kernel/msg588232.html
+[2] https://www.spinics.net/lists/arm-kernel/msg588686.html
+
+-Guodong
+
+> From a
+> PCI perspective, I think I could apply patches 1 and 3 pretty easily
+> by themselves.
 >
-> diff --git a/Documentation/devicetree/bindings/ufs/hi3660-ufs.txt b/Documentation/devicetree/bindings/ufs/hi3660-ufs.txt
-> new file mode 100644
-> index 000000000000..461afc8ef017
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ufs/hi3660-ufs.txt
-> @@ -0,0 +1,58 @@
-> +* Hisilicon Universal Flash Storage (UFS) Host Controller
-> +
-> +UFS nodes are defined to describe on-chip UFS hardware macro.
-> +Each UFS Host Controller should have its own node.
-> +
-> +Required properties:
-> +- compatible        : compatible list, contains one of the following -
-> +                       "hisilicon,hi3660-ufs" for hisi ufs host controller
-> +                        present on Hi3660 chipset.
-> +- reg               : should contain UFS register address space & UFS SYS CTRL register address,
-> +- interrupt-parent  : interrupt device
-> +- interrupts        : interrupt number
-> +- clocks               : List of phandle and clock specifier pairs
-> +- clock-names       : List of clock input name strings sorted in the same
-> +                     order as the clocks property. "clk_ref", "clk_phy" is optional
-> +- resets            : reset node register, one reset the clk and the other reset the controller
-> +- reset-names       : describe reset node register
-> +
-> +Optional properties for board device:
-> +- ufs-hi3660-use-rate-B                : specifies UFS rate-B
-> +- ufs-hi3660-broken-fastauto   : specifies no fastauto
-> +- ufs-hi3660-use-HS-GEAR3      : specifies UFS HS-GEAR3
-> +- ufs-hi3660-use-HS-GEAR2      : specifies UFS HS-GEAR2
-> +- ufs-hi3660-use-HS-GEAR1      : specifies UFS HS-GEAR1
-> +- ufs-hi3660-broken-clk-gate-bypass    : specifies no clk-gate
-> +- ufs-hi3660-use-one-line      : specifies UFS use one line work
-> +- reset-gpio                   : specifies to reset devices
-
-Some of these sound rather generic and might apply to UFS implementations
-other than hi3660, so I'd suggest adding them to the base ufs binding with
-a generic name instead.
-
-Any DT properties that might be useful across multiple implementations
-should be parsed in generic code that gets called by the individual drivers,
-and then the properties that are specific to the integration work done by
-hisilicon should be prefixed with "hisilicon,", but not normally with the
-SoC name: it is quite possible that another SoC will be derived from this
-chip and it should reuse the properties.
-
-(note: this is different from the value of the "compatible" property that
-is meant to be as specific as possible".
-
-Also, please clarify how your binding relates to the ufshcd binding
-in Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt: does
-hi3660 implement any registers that are shared with ufshcd, or does
-it use the same physical interface with a different register set?
-
-       Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> If/when you post these again, please incorporate the following
+> incremental diff to clean up various whitespace and capitalization
+> nits (these are spread across several of your patches).
+>
+>
+> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> index 68ffa0fbcd73..20357d840af1 100644
+> --- a/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> @@ -24,8 +24,8 @@ Example based on kirin960:
+>
+>         pcie@f4000000 {
+>                 compatible = "hisilicon,kirin-pcie";
+> -               reg = <0x0 0xf4000000 0x0 0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
+> -                     <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xF4000000 0 0x2000>;
+> +               reg = <0x0 0xf4000000 0x0  0x1000>, <0x0 0xff3fe000 0x0 0x1000>,
+> +                     <0x0 0xf3f20000 0x0 0x40000>, <0x0 0xf4000000 0x0 0x2000>;
+>                 reg-names = "dbi","apb","phy", "config";
+>                 bus-range = <0x0  0x1>;
+>                 #address-cells = <3>;
+> @@ -46,5 +46,5 @@ Example based on kirin960:
+>                          <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+>                 clock-names = "pcie_phy_ref", "pcie_aux",
+>                               "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
+> -               reset-gpios = <&gpio11 1 0 >;
+> +               reset-gpios = <&gpio11 1 0>;
+>         };
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index e8feb2fb4d53..7bc89baa40ba 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -159,12 +159,12 @@
+>
+>                 pcie@f4000000 {
+>                         compatible = "hisilicon,kirin960-pcie";
+> -                       reg = <0x0 0xf4000000 0x0 0x1000>,
+> -                             <0x0 0xff3fe000 0x0 0x1000>,
+> +                       reg = <0x0 0xf4000000 0x0  0x1000>,
+> +                             <0x0 0xff3fe000 0x0  0x1000>,
+>                               <0x0 0xf3f20000 0x0 0x40000>,
+> -                             <0x0 0xF5000000 0x0 0x2000>;
+> +                             <0x0 0xf5000000 0x0  0x2000>;
+>                         reg-names = "dbi", "apb", "phy", "config";
+> -                       bus-range = <0x0  0x1>;
+> +                       bus-range = <0x0 0x1>;
+>                         #address-cells = <3>;
+>                         #size-cells = <2>;
+>                         device_type = "pci";
+> @@ -173,7 +173,7 @@
+>                         num-lanes = <1>;
+>                         #interrupt-cells = <1>;
+>                         interrupt-map-mask = <0xf800 0 0 7>;
+> -                       interrupt-map = <0x0 0 0 1 &gic 0 0 0 282 4>,
+> +                       interrupt-map = <0x0 0 0 1 &gic 0 0 0  282 4>,
+>                                         <0x0 0 0 2 &gic 0 0 0  283 4>,
+>                                         <0x0 0 0 3 &gic 0 0 0  284 4>,
+>                                         <0x0 0 0 4 &gic 0 0 0  285 4>;
+> @@ -183,8 +183,9 @@
+>                                  <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
+>                                  <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+>                         clock-names = "pcie_phy_ref", "pcie_aux",
+> -                                     "pcie_apb_phy", "pcie_apb_sys", "pcie_aclk";
+> -                       reset-gpios = <&gpio11 1 0 >;
+> +                                     "pcie_apb_phy", "pcie_apb_sys",
+> +                                     "pcie_aclk";
+> +                       reset-gpios = <&gpio11 1 0>;
+>                         status = "ok";
+>                 };
+>         };
+> diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
+> index f63e6548efae..41520dd1d5e5 100644
+> --- a/drivers/pci/dwc/pcie-kirin.c
+> +++ b/drivers/pci/dwc/pcie-kirin.c
+> @@ -35,8 +35,8 @@
+>  #define REF_CLK_FREQ                   100000000
+>
+>  /* PCIe ELBI registers */
+> -#define SOC_PCIECTRL_CTRL0_ADDR        0x000
+> -#define SOC_PCIECTRL_CTRL1_ADDR        0x004
+> +#define SOC_PCIECTRL_CTRL0_ADDR                0x000
+> +#define SOC_PCIECTRL_CTRL1_ADDR                0x004
+>  #define SOC_PCIEPHY_CTRL2_ADDR         0x008
+>  #define SOC_PCIEPHY_CTRL3_ADDR         0x00c
+>  #define PCIE_ELBI_SLV_DBI_ENABLE       (0x1 << 21)
+> @@ -48,30 +48,30 @@
+>  #define PCIE_APB_PHY_STATUS0           0x400
+>  #define PCIE_LINKUP_ENABLE             (0x8020)
+>  #define PCIE_LTSSM_ENABLE_BIT          (0x1 << 11)
+> -#define PIPE_CLK_STABLE                (0x1 << 19)
+> +#define PIPE_CLK_STABLE                        (0x1 << 19)
+>  #define PIPE_CLK_MAX_TRY_TIMES         10
+> -#define PHY_REF_PAD_BIT                (0x1 << 8)
+> +#define PHY_REF_PAD_BIT                        (0x1 << 8)
+>  #define PHY_PWR_DOWN_BIT               (0x1 << 22)
+> -#define PHY_RST_ACK_BIT                (0x1 << 16)
+> +#define PHY_RST_ACK_BIT                        (0x1 << 16)
+>
+>  /* info located in sysctrl */
+>  #define SCTRL_PCIE_CMOS_OFFSET         0x60
+>  #define SCTRL_PCIE_CMOS_BIT            0x10
+>  #define SCTRL_PCIE_ISO_OFFSET          0x44
+>  #define SCTRL_PCIE_ISO_BIT             0x30
+> -#define SCTRL_PCIE_HPCLK_OFFSET        0x190
+> +#define SCTRL_PCIE_HPCLK_OFFSET                0x190
+>  #define SCTRL_PCIE_HPCLK_BIT           0x184000
+>  #define SCTRL_PCIE_OE_OFFSET           0x14a
+> -#define PCIE_DEBOUNCE_PARAM            0xF0F400
+> +#define PCIE_DEBOUNCE_PARAM            0xf0f400
+>  #define PCIE_OE_BYPASS                 (0x3 << 28)
+>
+>  /* peri_crg ctrl */
+>  #define CRGCTRL_PCIE_ASSERT_OFFSET     0x88
+> -#define CRGCTRL_PCIE_ASSERT_BIT        0x8c000000
+> +#define CRGCTRL_PCIE_ASSERT_BIT                0x8c000000
+>
+>  /* Time for delay */
+> -#define REF_2_PERST_MIN                20000
+> -#define REF_2_PERST_MAX                25000
+> +#define REF_2_PERST_MIN                        20000
+> +#define REF_2_PERST_MAX                        25000
+>  #define PERST_2_ACCESS_MIN             10000
+>  #define PERST_2_ACCESS_MAX             12000
+>  #define LINK_WAIT_MIN                  900
+> @@ -80,22 +80,22 @@
+>  #define PIPE_CLK_WAIT_MAX              600
+>
+>  struct kirin_pcie {
+> -       struct dw_pcie          *pci;
+> -       void __iomem            *apb_base;
+> -       void __iomem            *phy_base;
+> -       struct regmap           *crgctrl;
+> -       struct regmap           *sysctrl;
+> -       struct clk              *apb_sys_clk;
+> -       struct clk              *apb_phy_clk;
+> -       struct clk              *phy_ref_clk;
+> -       struct clk              *pcie_aclk;
+> -       struct clk              *pcie_aux_clk;
+> -       int                     gpio_id_reset;
+> +       struct dw_pcie  *pci;
+> +       void __iomem    *apb_base;
+> +       void __iomem    *phy_base;
+> +       struct regmap   *crgctrl;
+> +       struct regmap   *sysctrl;
+> +       struct clk      *apb_sys_clk;
+> +       struct clk      *apb_phy_clk;
+> +       struct clk      *phy_ref_clk;
+> +       struct clk      *pcie_aclk;
+> +       struct clk      *pcie_aux_clk;
+> +       int             gpio_id_reset;
+>  };
+>
+>  /* Registers in PCIeCTRL */
+>  static inline void kirin_apb_ctrl_writel(struct kirin_pcie *kirin_pcie,
+> -               u32 val, u32 reg)
+> +                                        u32 val, u32 reg)
+>  {
+>         writel(val, kirin_pcie->apb_base + reg);
+>  }
+> @@ -107,7 +107,7 @@ static inline u32 kirin_apb_ctrl_readl(struct kirin_pcie *kirin_pcie, u32 reg)
+>
+>  /* Registers in PCIePHY */
+>  static inline void kirin_apb_phy_writel(struct kirin_pcie *kirin_pcie,
+> -               u32 val, u32 reg)
+> +                                       u32 val, u32 reg)
+>  {
+>         writel(val, kirin_pcie->phy_base + reg);
+>  }
+> @@ -118,7 +118,7 @@ static inline u32 kirin_apb_phy_readl(struct kirin_pcie *kirin_pcie, u32 reg)
+>  }
+>
+>  static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+> -               struct platform_device *pdev)
+> +                              struct platform_device *pdev)
+>  {
+>         struct device *dev = &pdev->dev;
+>
+> @@ -146,7 +146,7 @@ static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
+>  }
+>
+>  static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+> -               struct platform_device *pdev)
+> +                                   struct platform_device *pdev)
+>  {
+>         struct resource *apb;
+>         struct resource *phy;
+> @@ -184,7 +184,6 @@ static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
+>  static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
+>  {
+>         u32 reg_val;
+> -       u32 time = PIPE_CLK_MAX_TRY_TIMES;
+>
+>         reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
+>         reg_val &= ~PHY_REF_PAD_BIT;
+> @@ -459,7 +458,7 @@ static int kirin_pcie_probe(struct platform_device *pdev)
+>         int ret;
+>
+>         if (!dev->of_node) {
+> -               dev_err(&pdev->dev, "NULL node\n");
+> +               dev_err(dev, "NULL node\n");
+>                 return -EINVAL;
+>         }
+>
