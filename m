@@ -1,89 +1,28 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] of: use kbasename instead of open coding
-Date: Sat, 17 Jun 2017 20:30:17 +0300
-Message-ID: <CAHp75VfE_74KDj3UyBL06PuD5qziS+NELhvW-wL-i_UtEacuZA@mail.gmail.com>
-References: <20170614203025.7581-1-robh@kernel.org> <20170614203025.7581-2-robh@kernel.org>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v1 2/2] ARM: dts: rk322x: add spdif node
+Date: Sat, 17 Jun 2017 19:56:29 +0200
+Message-ID: <2530167.bvmFb2R02b@phil>
+References: <1496995173-63532-1-git-send-email-sugar.zhang@rock-chips.com> <1496995173-63532-3-git-send-email-sugar.zhang@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170614203025.7581-2-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1496995173-63532-3-git-send-email-sugar.zhang@rock-chips.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sugar Zhang <sugar.zhang@rock-chips.com>
+Cc: broonie@kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 11:30 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> Several places in DT code open code the equivalent of kbasename.
-> Replace them.
->
-> The behavior for root nodes in node_name_cmp will be slightly different.
-> Instead of comparing "/", "" will be compared. The comparison will be
-> the same.
+Am Freitag, 9. Juni 2017, 15:59:33 CEST schrieb Sugar Zhang:
+> This patch add spdif node for rk322x.
+> 
+> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
 
-Reviewed-by: Andy Shevchenko <andy.shevhchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+applied, after adapting the subject to
+	ARM: dts: rockchip: add rk322x spdif node
 
->
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/of/base.c     | 5 +----
->  drivers/of/platform.c | 2 +-
->  drivers/of/resolver.c | 4 ++--
->  3 files changed, 4 insertions(+), 7 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 28d5f53bc631..054159ccd5f8 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -773,10 +773,7 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
->                 return NULL;
->
->         __for_each_child_of_node(parent, child) {
-> -               const char *name = strrchr(child->full_name, '/');
-> -               if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> -                       continue;
-> -               name++;
-> +               const char *name = kbasename(child->full_name);
->                 if (strncmp(path, name, len) == 0 && (strlen(name) == len))
->                         return child;
->         }
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 71fecc2debfc..8f73413fa243 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -99,7 +99,7 @@ static void of_device_make_bus_id(struct device *dev)
->
->                 /* format arguments only used if dev_name() resolves to NULL */
->                 dev_set_name(dev, dev_name(dev) ? "%s:%s" : "%s",
-> -                            strrchr(node->full_name, '/') + 1, dev_name(dev));
-> +                            kbasename(node->full_name), dev_name(dev));
->                 node = node->parent;
->         }
->  }
-> diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
-> index 771f4844c781..63626d7d9adb 100644
-> --- a/drivers/of/resolver.c
-> +++ b/drivers/of/resolver.c
-> @@ -165,8 +165,8 @@ static int update_usages_of_a_phandle_reference(struct device_node *overlay,
->  static int node_name_cmp(const struct device_node *dn1,
->                 const struct device_node *dn2)
->  {
-> -       const char *n1 = strrchr(dn1->full_name, '/') ? : "/";
-> -       const char *n2 = strrchr(dn2->full_name, '/') ? : "/";
-> +       const char *n1 = kbasename(dn1->full_name);
-> +       const char *n2 = kbasename(dn2->full_name);
->
->         return of_node_cmp(n1, n2);
->  }
-> --
-> 2.11.0
->
+and dropping the #dma-cells property.
+#dma-cells is a property of dma-controllers not dma-clients.
 
 
-
--- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Heiko
