@@ -1,186 +1,127 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND] i2c: add sc18is600 driver
-Date: Sat, 17 Jun 2017 21:13:32 +0300
-Message-ID: <CAHp75VexRjTZ+kbrPvD=RWy+_OBSnKAYj1-TX8aO5QgyOsn7nA@mail.gmail.com>
-References: <20170613154748.7018-1-sre@kernel.org>
+From: Paul Burton <paul.burton@imgtec.com>
+Subject: [PATCH v5 1/4] dt-bindings: Document img,boston-clock binding
+Date: Sat, 17 Jun 2017 13:52:46 -0700
+Message-ID: <20170617205249.1391-2-paul.burton@imgtec.com>
+References: <20170617205249.1391-1-paul.burton@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170613154748.7018-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170617205249.1391-1-paul.burton@imgtec.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: linux-mips@linux-mips.org
+Cc: Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@imgtec.com>, Frank Rowand <frowand.list@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 6:47 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> This adds an I=C2=B2C master driver for SPI -> I=C2=B2C bus bridge chips.
-> It currently supports NXP's SC18IS600 and SC18IS601, as well as
-> Silicon Labs' CP2120. The driver was only tested on SC18IS600.
+Add device tree binding documentation for the clocks provided by the
+MIPS Boston development board from Imagination Technologies, and a
+header file describing the available clocks for use by device trees &
+driver.
 
-> +static void sc18is600_setup_clock_frequency(struct sc18is600dev *dev)
-> +{
-> +       int reg =3D DIV_ROUND_UP(dev->clock_base, dev->i2c_clock_frequenc=
-y);
-> +
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: linux-mips@linux-mips.org
 
-> +       if (reg < 5)
-> +               reg =3D 5;
-> +       if (reg > 255)
-> +               reg =3D 255;
+---
 
-clamp_t()
+Changes in v5: None
 
-> +
-> +       dev_dbg(&dev->spi->dev, "i2c clock frequency: %08x", reg);
-> +       regmap_write(dev->regmap, SC18IS600_REG_I2C_CLOCK, reg);
-> +}
+Changes in v4:
+- Move img,boston-clock node under platform register syscon node.
+- Add MAINTAINERS entry.
 
-> +static void sc18is600_setup_timeout(struct sc18is600dev *dev,
-> +                                   bool enable, int timeout_ms)
-> +{
-> +       int timeout =3D DIV_ROUND_UP(timeout_ms * dev->chip->timeout_base=
-, 10000);
-> +       u8 reg;
-> +
+Changes in v3: None
 
-> +       if (timeout <=3D 0)
-> +               timeout =3D 1;
-> +       if (timeout > 255)
-> +               timeout =3D 255;
+Changes in v2:
+- Add BOSTON_CLK_INPUT to expose the input clock.
 
-Ditto.
+ .../devicetree/bindings/clock/img,boston-clock.txt | 31 ++++++++++++++++++++++
+ MAINTAINERS                                        |  7 +++++
+ include/dt-bindings/clock/boston-clock.h           | 14 ++++++++++
+ 3 files changed, 52 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/img,boston-clock.txt
+ create mode 100644 include/dt-bindings/clock/boston-clock.h
 
-> +
-> +       reg =3D (timeout & 0x7F) << 1;
-> +       reg |=3D (!!enable);
+diff --git a/Documentation/devicetree/bindings/clock/img,boston-clock.txt b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
+new file mode 100644
+index 000000000000..7bc5e9ffb624
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/img,boston-clock.txt
+@@ -0,0 +1,31 @@
++Binding for Imagination Technologies MIPS Boston clock sources.
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++The device node must be a child node of the syscon node corresponding to the
++Boston system's platform registers.
++
++Required properties:
++- compatible : Should be "img,boston-clock".
++- #clock-cells : Should be set to 1.
++  Values available for clock consumers can be found in the header file:
++    <dt-bindings/clock/boston-clock.h>
++
++Example:
++
++	system-controller@17ffd000 {
++		compatible = "img,boston-platform-regs", "syscon";
++		reg = <0x17ffd000 0x1000>;
++
++		clk_boston: clock {
++			compatible = "img,boston-clock";
++			#clock-cells = <1>;
++		};
++	};
++
++	uart0: uart@17ffe000 {
++		/* ... */
++		clocks = <&clk_boston BOSTON_CLK_SYS>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 09b5ab6a8a5c..6a341862f5d6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8498,6 +8498,13 @@ F:	arch/mips/include/asm/mach-loongson32/
+ F:	drivers/*/*loongson1*
+ F:	drivers/*/*/*loongson1*
+ 
++MIPS BOSTON DEVELOPMENT BOARD
++M:	Paul Burton <paul.burton@imgtec.com>
++L:	linux-mips@linux-mips.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/clock/img,boston-clock.txt
++F:	include/dt-bindings/clock/boston-clock.h
++
+ MIROSOUND PCM20 FM RADIO RECEIVER DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
+ L:	linux-media@vger.kernel.org
+diff --git a/include/dt-bindings/clock/boston-clock.h b/include/dt-bindings/clock/boston-clock.h
+new file mode 100644
+index 000000000000..a6f009821137
+--- /dev/null
++++ b/include/dt-bindings/clock/boston-clock.h
+@@ -0,0 +1,14 @@
++/*
++ * Copyright (C) 2016 Imagination Technologies
++ *
++ * SPDX-License-Identifier:	GPL-2.0
++ */
++
++#ifndef __DT_BINDINGS_CLOCK_BOSTON_CLOCK_H__
++#define __DT_BINDINGS_CLOCK_BOSTON_CLOCK_H__
++
++#define BOSTON_CLK_INPUT 0
++#define BOSTON_CLK_SYS 1
++#define BOSTON_CLK_CPU 2
++
++#endif /* __DT_BINDINGS_CLOCK_BOSTON_CLOCK_H__ */
+-- 
+2.13.1
 
-Redundant parens.
-Might be one line.
-
-> +
-> +       dev_dbg(&dev->spi->dev, "i2c timeout: %08x", reg);
-> +       regmap_write(dev->regmap, SC18IS600_REG_I2C_TIMEOUT, reg);
-> +}
-
-
-> +static int sc18is600_xfer(struct i2c_adapter *adapter,
-> +                         struct i2c_msg *msgs, int num)
-> +{
-
-> +       if (num =3D=3D 1 && read_operations =3D=3D 1)
-> +               err =3D sc18is600_read(dev, &msgs[0]);
-> +       else if (num =3D=3D 1)
-> +               err =3D sc18is600_write(dev, &msgs[0]);
-> +       else if (num =3D=3D 2 && read_operations =3D=3D 1)
-> +               err =3D sc18is600_read_after_write(dev, &msgs[0], &msgs[1=
-]);
-> +       else if (num =3D=3D 2)
-> +               err =3D sc18is600_write_after_write(dev, &msgs[0], &msgs[=
-1]);
-> +       else
-> +               return -EOPNOTSUPP;
-
-It will look better
-if (x =3D=3D 1) {
- if (y)
- else
-} else if (x =3D=3D 2) {
- if (y)
- else
-}
-
-> +       switch (dev->state) {
-> +       case SC18IS600_STAT_OK:
-> +               break;
-> +       case SC18IS600_STAT_NAK_ADDR:
-> +               return -EIO;
-> +       case SC18IS600_STAT_NAK_DATA:
-> +               return -EREMOTEIO;
-> +       case SC18IS600_STAT_SIZE:
-> +               return -EINVAL;
-
-> +       case SC18IS600_STAT_TIMEOUT:
-> +               return -ETIMEDOUT;
-> +       case SC18IS600_STAT_TIMEOUT2:
-> +               return -ETIMEDOUT;
-> +       case SC18IS600_STAT_BLOCKED:
-> +               return -ETIMEDOUT;
-
-You may use
-case X:
-case Y:
- return Z;
-
-> +       default:
-> +       case SC18IS600_STAT_BUSY:
-> +               dev_err(&dev->spi->dev, "device hangup detected, reset!")=
-;
-> +               sc18is600_reset(dev);
-> +               return -EAGAIN;
-> +       }
-
-> +static int sc18is600_probe(struct spi_device *spi)
-> +{
-> +       const struct of_device_id *of_id;
-> +       struct sc18is600dev *dev;
-> +       int err;
-> +
-
-> +       of_id =3D of_match_device(sc18is600_of_match, &spi->dev);
-> +       if (!of_id)
-> +               return -ENODEV;
-
-of_device_get_match_data() ?
-
-
-> +       dev =3D devm_kzalloc(&spi->dev, sizeof(*dev), GFP_KERNEL);
-> +       if (dev =3D=3D NULL)
-
-if (!dev)
-
-...and better to use s600dev or alike to avoid confusion.
-
-> +               return -ENOMEM;
-
-> +       snprintf(dev->adapter.name, sizeof(dev->adapter.name),
-
-> +                "SC18IS600 at SPI %02d device %02d",
-
-Isn't too much for adapter name?
-I don't remember if it's part of ABI, in that case it's even worse.
-
-> +                spi->master->bus_num, spi->chip_select);
-
-> +       if (!dev->chip->clock_base) {
-> +               dev->clk =3D devm_clk_get(&spi->dev, "clkin");
-> +               if (IS_ERR(dev->clk)) {
-> +                       err =3D PTR_ERR(dev->clk);
-> +                       dev_err(&spi->dev, "could not acquire vdd: %d\n",=
- err);
-
-vdd-> Vdd ?
-
-> +                       return err;
-> +               }
-> +
-
-> +               clk_prepare_enable(dev->clk);
-
-This might fail.
-
-> +               dev->clock_base =3D clk_get_rate(dev->clk) / 4;
-
-Magic.
-
-> +       } else {
-> +               dev->clock_base =3D dev->chip->clock_base;
-> +       }
-
---=20
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
