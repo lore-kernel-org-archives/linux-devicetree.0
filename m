@@ -1,34 +1,163 @@
-From: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6q-cm-fx6: add sdio wifi/bt nodes
-Date: Sat, 17 Jun 2017 22:32:06 +0800
-Message-ID: <20170617143205.GF5902@dragon>
-References: <1a13681b84564bc18937eb54b8345957@rwthex-s1-b.rwth-ad.de>
- <3c63d7014b0b4bb596f328ea8018a4cb@rwthex-w1-a.rwth-ad.de>
- <5c93344d-392e-1c2a-4605-11b57fa3f1c4@rwth-aachen.de>
- <20170617132329.GE5902@dragon>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Sat, 17 Jun 2017 20:18:49 +0300
+Message-ID: <CAHp75Vf+qPa6i84yctSz+rAkim2owhX=zAsHsTF1EQRnouBwxg@mail.gmail.com>
+References: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1497525667.git.baolin.wang@spreadtrum.com>
+ <f3cdd27dcfa2ca6347502608928081fb9271c0b5.1497525667.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170617132329.GE5902@dragon>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Spinrath <christopher.spinrath-vA1bhqPz9FBZXbeN9DUtxg@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Valentin Raevsky <valentin-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Igor Grinberg <grinberg-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, fabio.estevam-3arQi8VN3Tc@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <f3cdd27dcfa2ca6347502608928081fb9271c0b5.1497525667.git.baolin.wang@spreadtrum.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 17, 2017 at 09:23:31PM +0800, Shawn Guo wrote:
-> On Thu, Jun 15, 2017 at 11:23:46PM +0200, Christopher Spinrath wrote:
-> > > Hi Valentin, Igor,
-> > > 
-> > > Are you guys fine with the patch?
-> > 
-> > Do you have a specific question here?
-> 
-> No, I don't.  I just wanted to hear the voice of Compulab people.  Okay,
-> we haven't waited for time enough, so I just applied patch.
+On Thu, Jun 15, 2017 at 2:30 PM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+> This patch adds the I2C controller driver for Spreadtrum platform.
 
-s/haven't/have
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +       i2c_dev->irq = platform_get_irq(pdev, 0);
+> +       if (i2c_dev->irq < 0) {
+> +               dev_err(&pdev->dev, "failed to get irq resource\n");
+
+> +               return -ENXIO;
+
+Why shadow actual error?
+
+> +       }
+
+
+> +       if (!of_property_read_u32(dev->of_node, "clock-frequency", &prop))
+> +               i2c_dev->bus_freq = prop;
+> +
+> +       sprd_i2c_clk_init(i2c_dev);
+> +       platform_set_drvdata(pdev, i2c_dev);
+> +
+> +       pm_runtime_set_autosuspend_delay(i2c_dev->dev, SPRD_I2C_PM_TIMEOUT);
+> +       pm_runtime_use_autosuspend(i2c_dev->dev);
+> +       pm_runtime_set_active(i2c_dev->dev);
+> +       pm_runtime_enable(i2c_dev->dev);
+> +
+> +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> +       if (ret < 0) {
+> +               dev_err(&pdev->dev, "i2c%d pm runtime resume failed!\n",
+> +                       pdev->id);
+
+> +               return ret;
+
+goto error;
+
+> +       }
+> +
+> +       ret = devm_request_threaded_irq(dev, i2c_dev->irq,
+> +               sprd_i2c_isr, sprd_i2c_isr_thread,
+> +               IRQF_NO_SUSPEND | IRQF_ONESHOT,
+> +               pdev->name, i2c_dev);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "failed to request irq %d\n", i2c_dev->irq);
+> +               goto error;
+> +       }
+> +
+> +       ret = i2c_add_numbered_adapter(&i2c_dev->adap);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "add adapter failed\n");
+> +               goto error;
+> +       }
+> +
+> +       pm_runtime_mark_last_busy(i2c_dev->dev);
+> +       pm_runtime_put_autosuspend(i2c_dev->dev);
+> +       return 0;
+> +
+> +error:
+> +       pm_runtime_put_noidle(i2c_dev->dev);
+> +       pm_runtime_disable(i2c_dev->dev);
+> +       return ret;
+> +}
+> +
+> +static int sprd_i2c_remove(struct platform_device *pdev)
+> +{
+> +       struct sprd_i2c *i2c_dev = platform_get_drvdata(pdev);
+> +       int ret;
+> +
+
+> +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> +       if (ret < 0)
+> +               return ret;
+
+Does it make any sense? Doesn't device core power on the device before
+calling ->remove() ?
+
+> +
+> +       i2c_del_adapter(&i2c_dev->adap);
+> +
+> +       if (!IS_ERR_OR_NULL(i2c_dev->clk))
+
+_OR_NULL looks suspicious.
+
+> +               clk_unprepare(i2c_dev->clk);
+> +
+> +       pm_runtime_put_noidle(i2c_dev->dev);
+> +       pm_runtime_disable(i2c_dev->dev);
+> +
+> +       return 0;
+> +}
+> +
+
+> +#ifdef CONFIG_PM_SLEEP
+
+__maybe_unused instead?
+
+> +static int sprd_i2c_suspend_noirq(struct device *pdev)
+
+> +static int sprd_i2c_resume_noirq(struct device *pdev)
+
+> +#endif  /* CONFIG_PM_SLEEP */
+
+> +#ifdef CONFIG_PM
+
+Ditto.
+
+> +static int sprd_i2c_runtime_suspend(struct device *pdev)
+
+> +}
+
+> +static int sprd_i2c_runtime_resume(struct device *pdev)
+> +{
+
+> +       clk_prepare_enable(i2c_dev->clk);
+
+This might fail.
+
+
+> +}
+> +#endif  /* CONFIG_PM */
+
+
+> +static struct platform_driver sprd_i2c_driver = {
+> +       .probe = sprd_i2c_probe,
+> +       .remove = sprd_i2c_remove,
+> +       .driver = {
+> +                  .name = "sprd-i2c",
+
+> +                  .of_match_table = of_match_ptr(sprd_i2c_of_match),
+
+of_match_ptr seems redundant.
+
+> +                  .pm = &sprd_i2c_pm_ops,
+> +       },
+> +};
+> +
+
+> +static int __init sprd_i2c_init(void)
+> +{
+> +       return platform_driver_register(&sprd_i2c_driver);
+> +}
+
+> +arch_initcall_sync(sprd_i2c_init);
+
+Why?
+
+-- 
+With Best Regards,
+Andy Shevchenko
