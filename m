@@ -1,171 +1,186 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH 1/6] ARM: dts: rockchip: add basic dtsi file for RK3229 SoC
-Date: Sat, 17 Jun 2017 20:12:19 +0200
-Message-ID: <18070472.si2qlgbqtt@phil>
-References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com> <1497510980-23207-2-git-send-email-frank.wang@rock-chips.com>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND] i2c: add sc18is600 driver
+Date: Sat, 17 Jun 2017 21:13:32 +0300
+Message-ID: <CAHp75VexRjTZ+kbrPvD=RWy+_OBSnKAYj1-TX8aO5QgyOsn7nA@mail.gmail.com>
+References: <20170613154748.7018-1-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497510980-23207-2-git-send-email-frank.wang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Wang <frank.wang@rock-chips.com>
-Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, finley.xiao@rock-chips.com, david.wu@rock-chips.com, shawn.lin@rock-chips.com, wmc@rock-chips.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170613154748.7018-1-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 15. Juni 2017, 15:16:15 CEST schrieb Frank Wang:
-> Due to some tiny differences between RK3228 and RK3229, this patch
-> adds a basic dtsi file which includes a new CPU opp table and PSCI
-> brought up support for RK3229.
-> 
-> Signed-off-by: Frank Wang <frank.wang@rock-chips.com>
-> ---
->  arch/arm/boot/dts/rk3229-evb.dts |   2 +-
->  arch/arm/boot/dts/rk3229.dtsi    | 110 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 111 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/rk3229.dtsi
-> 
-> diff --git a/arch/arm/boot/dts/rk3229-evb.dts b/arch/arm/boot/dts/rk3229-evb.dts
-> index 1b55192..82e8a53 100644
-> --- a/arch/arm/boot/dts/rk3229-evb.dts
-> +++ b/arch/arm/boot/dts/rk3229-evb.dts
-> @@ -40,7 +40,7 @@
->  
->  /dts-v1/;
->  
-> -#include "rk322x.dtsi"
-> +#include "rk3229.dtsi"
->  
->  / {
->  	model = "Rockchip RK3229 Evaluation board";
-> diff --git a/arch/arm/boot/dts/rk3229.dtsi b/arch/arm/boot/dts/rk3229.dtsi
-> new file mode 100644
-> index 0000000..d43d133
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/rk3229.dtsi
-> @@ -0,0 +1,110 @@
-> +/*
-> + * Copyright (c) 2017 Fuzhou Rockchip Electronics Co., Ltd
-> + *
-> + * This file is dual-licensed: you can use it either under the terms
-> + * of the GPL or the X11 license, at your option. Note that this dual
-> + * licensing only applies to this file, and not this project as a
-> + * whole.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *  Or, alternatively,
-> + *
-> + *  b) Permission is hereby granted, free of charge, to any person
-> + *     obtaining a copy of this software and associated documentation
-> + *     files (the "Software"), to deal in the Software without
-> + *     restriction, including without limitation the rights to use,
-> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> + *     sell copies of the Software, and to permit persons to whom the
-> + *     Software is furnished to do so, subject to the following
-> + *     conditions:
-> + *
-> + *     The above copyright notice and this permission notice shall be
-> + *     included in all copies or substantial portions of the Software.
-> + *
-> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> + *     OTHER DEALINGS IN THE SOFTWARE.
-> + */
-> +
-> +#include "rk322x.dtsi"
-> +
-> +/ {
-> +	compatible = "rockchip,rk3229";
-> +
-> +	/delete-node/ opp-table0;
-> +
-> +	cpu0_opp_table: opp_table0 {
-> +		compatible = "operating-points-v2";
-> +		opp-shared;
-> +
-> +		opp-408000000 {
-> +			opp-hz = /bits/ 64 <408000000>;
-> +			opp-microvolt = <950000>;
-> +			clock-latency-ns = <40000>;
-> +			opp-suspend;
-> +		};
-> +		opp-600000000 {
-> +			opp-hz = /bits/ 64 <600000000>;
-> +			opp-microvolt = <975000>;
-> +		};
-> +		opp-816000000 {
-> +			opp-hz = /bits/ 64 <816000000>;
-> +			opp-microvolt = <1000000>;
-> +		};
-> +		opp-1008000000 {
-> +			opp-hz = /bits/ 64 <1008000000>;
-> +			opp-microvolt = <1175000>;
-> +		};
-> +		opp-1200000000 {
-> +			opp-hz = /bits/ 64 <1200000000>;
-> +			opp-microvolt = <1275000>;
-> +		};
-> +		opp-1296000000 {
-> +			opp-hz = /bits/ 64 <1296000000>;
-> +			opp-microvolt = <1325000>;
-> +		};
-> +		opp-1392000000 {
-> +			opp-hz = /bits/ 64 <1392000000>;
-> +			opp-microvolt = <1375000>;
-> +		};
-> +		opp-1464000000 {
-> +			opp-hz = /bits/ 64 <1464000000>;
-> +			opp-microvolt = <1400000>;
-> +		};
-> +	};
-> +
-> +	psci {
-> +		compatible = "arm,psci-1.0", "arm,psci-0.2";
-> +		method = "smc";
-> +	};
-> +};
-> +
-> +&cpu0 {
-> +	enable-method = "psci";
-> +};
+On Tue, Jun 13, 2017 at 6:47 PM, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> This adds an I=C2=B2C master driver for SPI -> I=C2=B2C bus bridge chips.
+> It currently supports NXP's SC18IS600 and SC18IS601, as well as
+> Silicon Labs' CP2120. The driver was only tested on SC18IS600.
 
-Hmm, I don't really understand this.
-What method of core-bringup does the rk3228 use? In the current
-rk322x.dtsi there is no enable-method at all defined.
+> +static void sc18is600_setup_clock_frequency(struct sc18is600dev *dev)
+> +{
+> +       int reg =3D DIV_ROUND_UP(dev->clock_base, dev->i2c_clock_frequenc=
+y);
+> +
 
-So is the rk3228 firmware using a different method than the rk3229?
+> +       if (reg < 5)
+> +               reg =3D 5;
+> +       if (reg > 255)
+> +               reg =3D 255;
 
-And out of curiosity as this is a arm32 without atf, is the psci
-implementation (for uboot?) you're using available somewhere?
-
-
-Thanks
-Heiko
+clamp_t()
 
 > +
-> +&cpu1 {
-> +	enable-method = "psci";
-> +};
+> +       dev_dbg(&dev->spi->dev, "i2c clock frequency: %08x", reg);
+> +       regmap_write(dev->regmap, SC18IS600_REG_I2C_CLOCK, reg);
+> +}
+
+> +static void sc18is600_setup_timeout(struct sc18is600dev *dev,
+> +                                   bool enable, int timeout_ms)
+> +{
+> +       int timeout =3D DIV_ROUND_UP(timeout_ms * dev->chip->timeout_base=
+, 10000);
+> +       u8 reg;
 > +
-> +&cpu2 {
-> +	enable-method = "psci";
-> +};
+
+> +       if (timeout <=3D 0)
+> +               timeout =3D 1;
+> +       if (timeout > 255)
+> +               timeout =3D 255;
+
+Ditto.
+
 > +
-> +&cpu3 {
-> +	enable-method = "psci";
-> +};
-> 
+> +       reg =3D (timeout & 0x7F) << 1;
+> +       reg |=3D (!!enable);
+
+Redundant parens.
+Might be one line.
+
+> +
+> +       dev_dbg(&dev->spi->dev, "i2c timeout: %08x", reg);
+> +       regmap_write(dev->regmap, SC18IS600_REG_I2C_TIMEOUT, reg);
+> +}
+
+
+> +static int sc18is600_xfer(struct i2c_adapter *adapter,
+> +                         struct i2c_msg *msgs, int num)
+> +{
+
+> +       if (num =3D=3D 1 && read_operations =3D=3D 1)
+> +               err =3D sc18is600_read(dev, &msgs[0]);
+> +       else if (num =3D=3D 1)
+> +               err =3D sc18is600_write(dev, &msgs[0]);
+> +       else if (num =3D=3D 2 && read_operations =3D=3D 1)
+> +               err =3D sc18is600_read_after_write(dev, &msgs[0], &msgs[1=
+]);
+> +       else if (num =3D=3D 2)
+> +               err =3D sc18is600_write_after_write(dev, &msgs[0], &msgs[=
+1]);
+> +       else
+> +               return -EOPNOTSUPP;
+
+It will look better
+if (x =3D=3D 1) {
+ if (y)
+ else
+} else if (x =3D=3D 2) {
+ if (y)
+ else
+}
+
+> +       switch (dev->state) {
+> +       case SC18IS600_STAT_OK:
+> +               break;
+> +       case SC18IS600_STAT_NAK_ADDR:
+> +               return -EIO;
+> +       case SC18IS600_STAT_NAK_DATA:
+> +               return -EREMOTEIO;
+> +       case SC18IS600_STAT_SIZE:
+> +               return -EINVAL;
+
+> +       case SC18IS600_STAT_TIMEOUT:
+> +               return -ETIMEDOUT;
+> +       case SC18IS600_STAT_TIMEOUT2:
+> +               return -ETIMEDOUT;
+> +       case SC18IS600_STAT_BLOCKED:
+> +               return -ETIMEDOUT;
+
+You may use
+case X:
+case Y:
+ return Z;
+
+> +       default:
+> +       case SC18IS600_STAT_BUSY:
+> +               dev_err(&dev->spi->dev, "device hangup detected, reset!")=
+;
+> +               sc18is600_reset(dev);
+> +               return -EAGAIN;
+> +       }
+
+> +static int sc18is600_probe(struct spi_device *spi)
+> +{
+> +       const struct of_device_id *of_id;
+> +       struct sc18is600dev *dev;
+> +       int err;
+> +
+
+> +       of_id =3D of_match_device(sc18is600_of_match, &spi->dev);
+> +       if (!of_id)
+> +               return -ENODEV;
+
+of_device_get_match_data() ?
+
+
+> +       dev =3D devm_kzalloc(&spi->dev, sizeof(*dev), GFP_KERNEL);
+> +       if (dev =3D=3D NULL)
+
+if (!dev)
+
+...and better to use s600dev or alike to avoid confusion.
+
+> +               return -ENOMEM;
+
+> +       snprintf(dev->adapter.name, sizeof(dev->adapter.name),
+
+> +                "SC18IS600 at SPI %02d device %02d",
+
+Isn't too much for adapter name?
+I don't remember if it's part of ABI, in that case it's even worse.
+
+> +                spi->master->bus_num, spi->chip_select);
+
+> +       if (!dev->chip->clock_base) {
+> +               dev->clk =3D devm_clk_get(&spi->dev, "clkin");
+> +               if (IS_ERR(dev->clk)) {
+> +                       err =3D PTR_ERR(dev->clk);
+> +                       dev_err(&spi->dev, "could not acquire vdd: %d\n",=
+ err);
+
+vdd-> Vdd ?
+
+> +                       return err;
+> +               }
+> +
+
+> +               clk_prepare_enable(dev->clk);
+
+This might fail.
+
+> +               dev->clock_base =3D clk_get_rate(dev->clk) / 4;
+
+Magic.
+
+> +       } else {
+> +               dev->clock_base =3D dev->chip->clock_base;
+> +       }
+
+--=20
+With Best Regards,
+Andy Shevchenko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
