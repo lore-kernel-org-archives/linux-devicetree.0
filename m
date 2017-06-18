@@ -1,36 +1,73 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/8] dt: bindings: Add a binding for referencing EEPROM
- from camera sensors
-Date: Sun, 18 Jun 2017 09:05:53 -0500
-Message-ID: <20170617003949.uq4qldmbzx227cj3@rob-hp-laptop>
-References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497433639-13101-4-git-send-email-sakari.ailus@linux.intel.com>
+Subject: Re: [PATCH v2] Documentation: clock: address more for clock-cells
+ property
+Date: Sun, 18 Jun 2017 09:05:46 -0500
+Message-ID: <20170618140546.kbeeix3ckzshznmq@rob-hp-laptop>
+References: <1497432104-22609-1-git-send-email-zhang.chunyan@linaro.org>
+ <CAMuHMdU6ZsqbRhG7=dYE=B_7To=ioWrwWwdoRYGdEQJwB4wW6A@mail.gmail.com>
+ <CAG2=9p-8YtSt50HnXs2xeS53RTEjHdLw9Z09HPSZ9oEOgCi4uQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1497433639-13101-4-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, sebastian.reichel@collabora.co.uk, pavel@ucw.cz
+In-Reply-To: <CAG2=9p-8YtSt50HnXs2xeS53RTEjHdLw9Z09HPSZ9oEOgCi4uQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chunyan Zhang <zhang.chunyan@linaro.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lyra Zhang <zhang.lyra@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 12:47:14PM +0300, Sakari Ailus wrote:
-> Many camera sensor devices contain EEPROM chips that describe the
-> properties of a given unit --- the data is specific to a given unit can
-> thus is not stored e.g. in user space or the driver.
+On Wed, Jun 14, 2017 at 06:11:37PM +0800, Chunyan Zhang wrote:
+> Hi Geert,
 > 
-> Some sensors embed the EEPROM chip and it can be accessed through the
-> sensor's I2C interface. This property is to be used for devices where the
-> EEPROM chip is accessed through a different I2C address than the sensor.
+> On 14 June 2017 at 17:42, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > Hi Chunyan,
+> >
+> > On Wed, Jun 14, 2017 at 11:21 AM, Chunyan Zhang
+> > <zhang.chunyan@linaro.org> wrote:
+> >> The value of property 'clock-cells' is not determined only by the number
+> >> of clock outputs in one clock node, it is determined by whether the clock
+> >> output in this node can be referenced directly without index. If the
+> >> output clock has to be referenced by a index, the clock-cell of this
+> >> clock node can't be defined 0.
+> >>
+> >> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+> >> ---
+> >>  Documentation/devicetree/bindings/clock/clock-bindings.txt | 10 ++++++++++
+> >>  1 file changed, 10 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> index 2ec489e..e2b76b4 100644
+> >> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> >> @@ -18,6 +18,9 @@ Required properties:
+> >>                    with a single clock output and 1 for nodes with multiple
+> >>                    clock outputs.
+> >>
+> >> +                  There's one exception, please see the description for
+> >> +                  clock-indices below.
+> >> +
+> >>  Optional properties:
+> >>  clock-output-names: Recommended to be a list of strings of clock output signal
+> >>                     names indexed by the first cell in the clock specifier.
+> >> @@ -48,6 +51,13 @@ clock-indices:          If the identifying number for the clocks in the node
+> >>                    is not linear from zero, then this allows the mapping of
+> >>                    identifiers into the clock-output-names array.
+> >>
+> >> +                  This property not only servers for clocks with multiple
+> >
+> > serves
 > 
-> The intent is to later provide this information to the user space.
+> Thanks, I will fix that.
 > 
-> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> ---
->  Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
->  1 file changed, 3 insertions(+)
+> >
+> >> +                  clock outputs, but also for clocks with a single clock
+> >> +                  output whose identifying number is not zero.
+> >
+> > Why would you want a single clock and a non-zero identifying number?
+> 
+> Because of the probably weird hardwire design :)
+> There indeed some clocks like that on the platform I'm working on.
 
-Acked-by: Rob Herring <robh@kernel.org>
+But still, why do you care what the ID# is?
+
+Rob
