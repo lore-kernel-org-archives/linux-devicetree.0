@@ -1,44 +1,58 @@
 From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4 13/28] dt-bindings: arm: Document Actions Semi S900
-Date: Mon, 19 Jun 2017 00:29:23 +0200
-Message-ID: <423ef831-329c-0b26-015d-0ad242bc7ec0@suse.de>
+Subject: Re: [PATCH v4 14/28] ARM64: dts: Add Actions Semi S900 and
+ Bubblegum-96
+Date: Mon, 19 Jun 2017 00:40:20 +0200
+Message-ID: <ad4b07e9-bafe-80bc-fc68-3541c914dabf@suse.de>
 References: <20170606005426.26446-1-afaerber@suse.de>
- <20170606005426.26446-14-afaerber@suse.de>
+ <20170606005426.26446-15-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606005426.26446-14-afaerber-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20170606005426.26446-15-afaerber-l3A5Bk7waGM@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Am 06.06.2017 um 02:54 schrieb Andreas Färber:
-> The Actions Semi S900 is a quad-core ARM Cortex-A53 SoC.
-> The Bubblegum-96 is a 96Boards Consumer Edition compliant board (4/96).
+> UART0/1/4/6 interrupts are guesses.
 > 
 > Cc: 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 > ---
->  v2 -> v3 -> v4: unchanged
+>  v3 -> v4:
+>  * Adopted lower-case timer interrupt-names (Mark)
+>  
+>  v2 -> v3:
+>  * Added remaining UART nodes -- some interrupts are guesses
+>  * Added timer node -- only TIMER1 interrupt known
 >  
 >  v1 -> v2:
+>  * Reworded subject
+>  * Added memory@0 node for Bubblegum-96 (Mark)
+>  * Filled in reserved-memory sub-node for Bubblegum-96 (Mark)
+>  * Added arm-pmu interrupt-affinity property (Mark)
+>  * Changed second GIC reg size 0x1000 -> 0x2000 for Bubblegum-96 (Mark)
+>  * Updated ARCH_OWL to ARCH_ACTIONS (Arnd)
+>  * Renamed s900-bubblegum96.dts to s900-bubblegum-96.dts
 >  * Adopted "actions" vendor prefix
->  * Extended text
+>  * Dropped irq.h include
+>  * Adopted SPDX-License-Identifier (Rob)
 >  
->  Documentation/devicetree/bindings/arm/actions.txt | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  arch/arm64/boot/dts/Makefile                      |   1 +
+>  arch/arm64/boot/dts/actions/Makefile              |   5 +
+>  arch/arm64/boot/dts/actions/s900-bubblegum-96.dts |  35 +++++
+>  arch/arm64/boot/dts/actions/s900.dtsi             | 164 ++++++++++++++++++++++
+>  4 files changed, 205 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/actions/Makefile
+>  create mode 100644 arch/arm64/boot/dts/actions/s900-bubblegum-96.dts
+>  create mode 100644 arch/arm64/boot/dts/actions/s900.dtsi
 
-Still no comments from uCRobotics received...
+Applying (with extended commit message) to linux-actions.git v4.13/dt64:
 
-Due to S500 dependency applying to linux-actions.git v4.13/dt branch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.13/dt
-
-Let me know if we need a topic branch for dt+dt64 instead.
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.13/dt64
 
 Regards,
 Andreas
