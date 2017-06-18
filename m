@@ -1,30 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: serial: Add bindings for the Amlogic
- Meson UARTs
-Date: Sun, 18 Jun 2017 09:05:44 -0500
-Message-ID: <20170618140544.elrzdxg6utvhaeht@rob-hp-laptop>
-References: <1497428957-19942-1-git-send-email-narmstrong@baylibre.com>
- <1497428957-19942-2-git-send-email-narmstrong@baylibre.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: Add Broadcom STB USB PHY binding
+ document
+Date: Sun, 18 Jun 2017 09:05:04 -0500
+Message-ID: <20170618140504.3cpg3suehdkzroy5@rob-hp-laptop>
+References: <1497365721-31188-1-git-send-email-al.cooper@broadcom.com>
+ <1497365721-31188-3-git-send-email-al.cooper@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1497428957-19942-2-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>
-Cc: gregkh@linuxfoundation.org, khilman@baylibre.com, Helmut Klein <hgkr.klein@gmail.com>, linux-serial@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1497365721-31188-3-git-send-email-al.cooper@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Al Cooper <al.cooper@broadcom.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Al Cooper <alcooperx@gmail.com>, linux-kernel@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 10:29:14AM +0200, Neil Armstrong wrote:
-> From: Helmut Klein <hgkr.klein@gmail.com>
+On Tue, Jun 13, 2017 at 10:55:19AM -0400, Al Cooper wrote:
+> From: Al Cooper <alcooperx@gmail.com>
 > 
-> Add the documentation for the device tree binding of Amlogic Meson Serial UART.
+> Add DT bindings document for Broadcom STB USB PHYs
 > 
-> Signed-off-by: Helmut Klein <hgkr.klein@gmail.com>
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Al Cooper <alcooperx@gmail.com>
 > ---
->  .../bindings/serial/amlogic,meson-uart.txt         | 38 ++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/serial/amlogic,meson-uart.txt
+>  .../bindings/phy/brcm,brcmstb-usb-phy.txt          | 42 ++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/brcm,brcmstb-usb-phy.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
