@@ -1,84 +1,40 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] ASoC: rockchip: add support for pdm controller
-Date: Sun, 18 Jun 2017 09:05:27 -0500
-Message-ID: <20170618140527.fqaoc55qisd5n36b@rob-hp-laptop>
-References: <1497338867-52684-1-git-send-email-sugar.zhang@rock-chips.com>
- <1497338867-52684-2-git-send-email-sugar.zhang@rock-chips.com>
+Subject: Re: [PATCH] dt-bindings: display: sunxi: Improve endpoint ID scheme
+ readability
+Date: Sun, 18 Jun 2017 09:05:36 -0500
+Message-ID: <20170618140536.dr6ck3chaglfgz6t@rob-hp-laptop>
+References: <20170614063016.22069-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1497338867-52684-2-git-send-email-sugar.zhang@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sugar Zhang <sugar.zhang@rock-chips.com>
-Cc: heiko@sntech.de, broonie@kernel.org, linux-rockchip@lists.infradead.org, Liam Girdwood <lgirdwood@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20170614063016.22069-1-wens@csie.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Maxime Ripard <maxime.ripard@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 03:27:46PM +0800, Sugar Zhang wrote:
-> The Pulse Density Modulation Interface Controller (PDMC) is
-> a PDM interface controller and decoder that support PDM format.
-> It integrates a clock generator driving the PDM microphone
-> and embeds filters which decimate the incoming bit stream to
-> obtain most common audio rates.
-> 
-> Signed-off-by: Sugar Zhang <sugar.zhang@rock-chips.com>
-> ---
-> 
->  .../devicetree/bindings/sound/rockchip,pdm.txt     |  39 ++
->  sound/soc/rockchip/Kconfig                         |   9 +
->  sound/soc/rockchip/Makefile                        |   2 +
->  sound/soc/rockchip/rockchip_pdm.c                  | 516 +++++++++++++++++++++
->  sound/soc/rockchip/rockchip_pdm.h                  |  83 ++++
->  5 files changed, 649 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/rockchip,pdm.txt
->  create mode 100644 sound/soc/rockchip/rockchip_pdm.c
->  create mode 100644 sound/soc/rockchip/rockchip_pdm.h
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/rockchip,pdm.txt b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
-> new file mode 100644
-> index 0000000..921729d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/rockchip,pdm.txt
-> @@ -0,0 +1,39 @@
-> +* Rockchip PDM controller
-> +
-> +Required properties:
-> +
-> +- compatible: "rockchip,pdm"
-
-Too generic. This should be SoC specific.
-
-> +- reg: physical base address of the controller and length of memory mapped
-> +  region.
-> +- dmas: DMA specifiers for rx dma. See the DMA client binding,
-> +	Documentation/devicetree/bindings/dma/dma.txt
-> +- dma-names: should include "rx".
-> +- clocks: a list of phandle + clock-specifer pairs, one for each entry in clock-names.
-> +- clock-names: should contain following:
-> +   - "pdm_hclk": clock for PDM BUS
-> +   - "pdm_clk" : clock for PDM controller
-> +- pinctrl-names: Must contain a "default" entry.
-> +- pinctrl-N: One property must exist for each entry in
-> +	     pinctrl-names. See ../pinctrl/pinctrl-bindings.txt
-> +	     for details of the property values.
-> +
-> +Example for rk3328 PDM controller:
-> +
-> +pdm: pdm@ff040000 {
-> +	compatible = "rockchip,pdm";
-> +	reg = <0x0 0xff040000 0x0 0x1000>;
-> +	clocks = <&clk_pdm>, <&clk_gates28 0>;
-> +	clock-names = "pdm_clk", "pdm_hclk";
-> +	dmas = <&pdma 16>;
-> +	#dma-cells = <1>;
-> +	dma-names = "rx";
-> +	pinctrl-names = "default", "sleep";
-> +	pinctrl-0 = <&pdmm0_clk
-> +		     &pdmm0_fsync
-> +		     &pdmm0_sdi0
-> +		     &pdmm0_sdi1
-> +		     &pdmm0_sdi2
-> +		     &pdmm0_sdi3>;
-> +	pinctrl-1 = <&pdmm0_sleep>;
-> +	status = "disabled";
-> +};
+T24gV2VkLCBKdW4gMTQsIDIwMTcgYXQgMDI6MzA6MTZQTSArMDgwMCwgQ2hlbi1ZdSBUc2FpIHdy
+b3RlOgo+IFRoZSBleHBsYW5hdGlvbiBmb3IgdGhlIGVuZHBvaW50IElEIG51bWJlcmluZyBzY2hl
+bWUgaXMgY29udm9sdXRlZAo+IGFuZCBoYXJkIHRvIHVuZGVyc3RhbmQuCj4gCj4gVGhpcyBwYXRj
+aCBhaW1zIHRvIGltcHJvdmUgdGhlIHJlYWRhYmlsaXR5IG9mIGl0IGJ5IGNvbWJpbmluZyB0aGUK
+PiBleGlzdGluZyB0d28gcGFyYWdyYXBocywgd2hpbGUgYWxzbyBwcm92aWRpbmcgYSBkaWFncmFt
+IGV4YW1wbGUsCj4gYW5kIGhvdyBlbmRwb2ludHMgc2hvdWxkIGJlIG51bWJlcmVkIGJhc2VkIG9u
+IHRoYXQgZXhhbXBsZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBDaGVuLVl1IFRzYWkgPHdlbnNAY3Np
+ZS5vcmc+Cj4gLS0tCj4gCj4gSG9wZSB0aGlzIGhlbHBzLiBJJ20gbm90IHN1cmUgSSBjYW4gaW1w
+cm92ZSB0aGlzIGV2ZW4gbW9yZSB3aXRob3V0Cj4gc3BlbGxpbmcgb3V0IGFsbCBjYXNlcy4KPiAK
+PiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvc3VueGkvc3VuNGktZHJtLnR4dCAgICAgICAg
+ICAgfCAzNiArKysrKysrKysrKysrKysrLS0tLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNyBpbnNl
+cnRpb25zKCspLCA5IGRlbGV0aW9ucygtKQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtl
+cm5lbC5vcmc+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
