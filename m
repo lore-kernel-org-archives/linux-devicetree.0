@@ -1,72 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 01/12] coresight replicator: Cleanup programmable
- replicator naming
-Date: Sun, 18 Jun 2017 09:04:41 -0500
-Message-ID: <20170616180820.enc3hxpju2tfu3fg@rob-hp-laptop>
-References: <1497278211-5001-1-git-send-email-suzuki.poulose@arm.com>
- <1497278211-5001-2-git-send-email-suzuki.poulose@arm.com>
- <20170613165528.GA6392@xps15>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: power: supply: cpcap-battery: Add
+ power-supplies property
+Date: Sun, 18 Jun 2017 09:04:47 -0500
+Message-ID: <20170618140447.b3yrfpjpdl3lzy4r@rob-hp-laptop>
+References: <20170612072025.30033-1-tony@atomide.com>
+ <20170612142217.tg7gidqg63uagwm4@earth>
+ <20170612160400.GY3730@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170613165528.GA6392@xps15>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pratik Patel <pratikp@codeaurora.org>, "Ivan T . Ivanov" <ivan.ivanov@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+In-Reply-To: <20170612160400.GY3730-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>, Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 10:55:28AM -0600, Mathieu Poirier wrote:
-> On Mon, Jun 12, 2017 at 03:36:40PM +0100, Suzuki K Poulose wrote:
-> > The Linux coresight drivers define the programmable ATB replicator as
-> > Qualcom replicator, while this is designed by ARM. This can cause confusion
-> > to a user selecting the driver. Cleanup all references to make it
-> >  explicitly clear. This patch :
+On Mon, Jun 12, 2017 at 09:04:00AM -0700, Tony Lindgren wrote:
+> * Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org> [170612 07:26]:
+> > On Mon, Jun 12, 2017 at 12:20:25AM -0700, Tony Lindgren wrote:
+> > > +- power-supplies: List of devices that supply power, typically cpcap_charger
 > > 
-> >  1) Adds a new compatible string for the same, retaining the old one for
-> >     compatibility.
-> >  2) Changes the Kconfig symbol (since this is not part of any defconfigs)
-> > 	 CORESIGHT_QCOM_REPLICATOR => CORESIGHT_DYNAMIC_REPLICATOR
-> >  3) Improves the help message in the Kconfig.
-> >  4) Changes the name of the driver :
-> > 	coresight-replicator-qcom => coresight-dynamic-replicator
+> > This is missing the info, that its about phandles. Maybe:
 > > 
-> > Cc: Pratik Patel <pratikp@codeaurora.org>
-> > Cc: Ivan T. Ivanov <ivan.ivanov@linaro.org>
-> > Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > - power-supplies: List of phandles for power-supplying devices, as
+> >                   described in power_supply.txt. Typically a reference
+> >                   to cpcap_charger.
 > 
-> Hi Suzuki,
+> Sure, updated patch below.
 > 
-> > ---
-> >  Documentation/devicetree/bindings/arm/coresight.txt     |  4 +++-
-> >  drivers/hwtracing/coresight/Kconfig                     | 10 +++++-----
-> >  drivers/hwtracing/coresight/Makefile                    |  2 +-
-> >  drivers/hwtracing/coresight/coresight-replicator-qcom.c |  2 +-
-> >  4 files changed, 10 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
-> > index fcbae6a..f77329f 100644
-> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
-> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
-> > @@ -34,7 +34,9 @@ its hardware characteristcs.
-> >  		- Embedded Trace Macrocell (version 4.x):
-> >  			"arm,coresight-etm4x", "arm,primecell";
-> >  
-> > -		- Qualcomm Configurable Replicator (version 1.x):
-> > +		- Coresight programmable Replicator (version 1.x):
-> > +			"arm,coresight-dynamic-replicator", "arm,primecell";
-> > +				OR
-> >  			"qcom,coresight-replicator1x", "arm,primecell";
+> Regards,
 > 
-> Rob, what's your view on keeping the old binding around?  We could simply change
-> the two occurences we find in the DTs (Juno and 410c) to the new name and be
-> done with the old one.
+> Tony
+> 
+> 8< ------
+> From tony Mon Sep 17 00:00:00 2001
+> From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> Date: Mon, 12 Jun 2017 00:13:45 -0700
+> Subject: [PATCH] dt-bindings: power: supply: cpcap-battery: Add
+>  power-supplies property
+> 
+> The binding for cpcap-battery is missing the standard power-supplies
+> property as noted by Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>.
+> 
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Marcel Partap <mpartap-hi6Y0CQ0nG0@public.gmane.org>
+> Cc: Michael Scott <michael.scott-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/power/supply/cpcap-battery.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-Juno uses the Qcom string? We should keep the old string. You can switch 
-the dts files, but the driver should support the old name.
-
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
