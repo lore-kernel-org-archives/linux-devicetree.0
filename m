@@ -1,64 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V1 1/3] pinctrl: qcom: spmi-gpio: Add support for GPIO
- LV/MV subtype
-Date: Sun, 18 Jun 2017 09:04:56 -0500
-Message-ID: <20170618140456.orzknmxg4fpce4tk@rob-hp-laptop>
-References: <20170613061707.13892-1-fenglinw@codeaurora.org>
- <20170613061707.13892-2-fenglinw@codeaurora.org>
+Subject: Re: [PATCH 1/4] i2c: pca-platform: add devicetree awareness
+Date: Sun, 18 Jun 2017 09:04:53 -0500
+Message-ID: <20170618140453.3qrud7fuqe36uvud@rob-hp-laptop>
+References: <20170613015641.29373-1-chris.packham@alliedtelesis.co.nz>
+ <20170613015641.29373-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170613061707.13892-2-fenglinw@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: fenglinw@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, collinsd@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
+In-Reply-To: <20170613015641.29373-2-chris.packham@alliedtelesis.co.nz>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 02:16:03PM +0800, fenglinw@codeaurora.org wrote:
-> From: Fenglin Wu <fenglinw@codeaurora.org>
+On Tue, Jun 13, 2017 at 01:56:38PM +1200, Chris Packham wrote:
+> Allow devices that use this driver to be registered via a
+> devicetree.
 > 
-> GPIO LV (low voltage)/MV (medium voltage) subtypes have different
-> features and register mappings than 4CH/8CH subtypes. Add support
-> for LV and MV subtypes.
-> 
-> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 > ---
->  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |  28 ++-
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 269 ++++++++++++++++++---
->  include/dt-bindings/pinctrl/qcom,pmic-gpio.h       |   9 +
->  3 files changed, 264 insertions(+), 42 deletions(-)
+>  .../devicetree/bindings/i2c/i2c-pca-platform.txt    | 18 ++++++++++++++++++
 
-[...]
+It's preferred to split bindings to separate patch.
 
-> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> index d33f17c..85d8809 100644
-> --- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
-> @@ -93,15 +93,24 @@
->  #define PM8994_GPIO_S4			2
->  #define PM8994_GPIO_L12			3
->  
-> +/* ATEST MUX selection for analog-pass-through mode */
-> +#define PMIC_GPIO_AOUT_ATEST1		0
-> +#define PMIC_GPIO_AOUT_ATEST2		1
-> +#define PMIC_GPIO_AOUT_ATEST3		2
-> +#define PMIC_GPIO_AOUT_ATEST4		3
+>  drivers/i2c/busses/i2c-pca-platform.c               | 21 +++++++++++++++++++++
+>  2 files changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt b/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
+> new file mode 100644
+> index 000000000000..47410bda3f37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
+> @@ -0,0 +1,18 @@
+> +* NXP PCA PCA9564/PCA9665 I2C controller
 > +
->  /* To be used with "function" */
->  #define PMIC_GPIO_FUNC_NORMAL		"normal"
->  #define PMIC_GPIO_FUNC_PAIRED		"paired"
->  #define PMIC_GPIO_FUNC_FUNC1		"func1"
->  #define PMIC_GPIO_FUNC_FUNC2		"func2"
-> +#define PMIC_GPIO_FUNC_FUNC3		"func3"
-> +#define PMIC_GPIO_FUNC_FUNC4		"func4"
->  #define PMIC_GPIO_FUNC_DTEST1		"dtest1"
->  #define PMIC_GPIO_FUNC_DTEST2		"dtest2"
->  #define PMIC_GPIO_FUNC_DTEST3		"dtest3"
->  #define PMIC_GPIO_FUNC_DTEST4		"dtest4"
-> +#define PMIC_GPIO_FUNC_ANALOG		"analog"
+> +The PCA9564/PCA9665 serves as an interface between most standard
+> +parallel-bus microcontrollers/microprocessors and the serial I2C-bus
+> +and allows the parallel bus system to communicate bi-directionally
+> +with the I2C-bus.
+> +
+> +Required properties :
+> +
+> + - reg : Offset and length of the register set for the device
+> + - compatible : one of "nxp,pca9564" or "nxp,pca9665"
+> +
+> +Optional properties
+> + - interrupts : the interrupt number
+> + - interrupt-parent : the phandle for the interrupt controller.
+> +   If an interrupt is not specified polling will be used.
+> + - gpios : gpio phandle to control device reset.
 
-defines for strings? That's really pointless. I'd prefer you drop using 
-them than add more.
+reset-gpios and state the active state.
 
-Rob
+> + - clock-frequency : I2C bus frequency.
+> \ No newline at end of file
+
+^^^
