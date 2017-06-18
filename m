@@ -1,27 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 1/3] dt-bindings: watchdog: add description for
- UniPhier WDT controller
-Date: Sun, 18 Jun 2017 09:05:38 -0500
-Message-ID: <20170617002642.rzo2bvm22ko3q22a@rob-hp-laptop>
-References: <1497426825-25450-1-git-send-email-hayashibara.keiji@socionext.com>
- <1497426825-25450-2-git-send-email-hayashibara.keiji@socionext.com>
+Subject: Re: [PATCH 3/8] dt: bindings: Add a binding for referencing EEPROM
+ from camera sensors
+Date: Sun, 18 Jun 2017 09:05:53 -0500
+Message-ID: <20170617003949.uq4qldmbzx227cj3@rob-hp-laptop>
+References: <1497433639-13101-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1497433639-13101-4-git-send-email-sakari.ailus@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-leds-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1497426825-25450-2-git-send-email-hayashibara.keiji@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
-Cc: wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, yamada.masahiro@socionext.com, hayashi.kunihiko@socionext.com, owada.kiyoshi@socionext.com
+In-Reply-To: <1497433639-13101-4-git-send-email-sakari.ailus@linux.intel.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, sebastian.reichel@collabora.co.uk, pavel@ucw.cz
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 04:53:43PM +0900, Keiji Hayashibara wrote:
-> Add uniphier-wdt dt-bindings documentation.
+On Wed, Jun 14, 2017 at 12:47:14PM +0300, Sakari Ailus wrote:
+> Many camera sensor devices contain EEPROM chips that describe the
+> properties of a given unit --- the data is specific to a given unit can
+> thus is not stored e.g. in user space or the driver.
 > 
-> Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+> Some sensors embed the EEPROM chip and it can be accessed through the
+> sensor's I2C interface. This property is to be used for devices where the
+> EEPROM chip is accessed through a different I2C address than the sensor.
+> 
+> The intent is to later provide this information to the user space.
+> 
+> Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
 > ---
->  .../devicetree/bindings/watchdog/uniphier-wdt.txt    | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
+>  Documentation/devicetree/bindings/media/video-interfaces.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
