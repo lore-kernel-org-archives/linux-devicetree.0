@@ -1,103 +1,43 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH RESEND] i2c: add sc18is600 driver
-Date: Sun, 18 Jun 2017 16:02:28 +0200
-Message-ID: <20170618140228.lmrvlgmp5vwnbblv@earth>
-References: <20170613154748.7018-1-sre@kernel.org>
- <CAHp75VexRjTZ+kbrPvD=RWy+_OBSnKAYj1-TX8aO5QgyOsn7nA@mail.gmail.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: Add vendor prefix for Linksys
+Date: Sun, 18 Jun 2017 09:04:29 -0500
+Message-ID: <20170618140429.zsywalnyjf7h74pc@rob-hp-laptop>
+References: <20170609090421.4984-1-ralph.sennhauser@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wgpwq6l365pphdml"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAHp75VexRjTZ+kbrPvD=RWy+_OBSnKAYj1-TX8aO5QgyOsn7nA@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20170609090421.4984-1-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 09, 2017 at 11:04:21AM +0200, Ralph Sennhauser wrote:
+> Linksys (http://www.linksys.com/us/) is a vendor of networking products
+> mostly for use by home and small business user. The brand is currently
+> owned by Belkin International, Inc. (http://www.belkin.com/us/).
+> 
+> The vendor prefix linksys is already used by various supported boards.
+> 
+> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> Hi,
+> 
+> Two weeks ago I asked for a vendor comment via Imre Kaloz but haven't heard
+> back, so sending this one out for inclusion as-is.
+> 
+> Ralph
+> 
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
---wgpwq6l365pphdml
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied, thanks.
 
-Hi Andy,
-
-Thanks for your feedback.
-
-On Sat, Jun 17, 2017 at 09:13:32PM +0300, Andy Shevchenko wrote:
-> On Tue, Jun 13, 2017 at 6:47 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> > This adds an I=B2C master driver for SPI -> I=B2C bus bridge chips.
-> > It currently supports NXP's SC18IS600 and SC18IS601, as well as
-> > Silicon Labs' CP2120. The driver was only tested on SC18IS600.
->=20
-> > +static void sc18is600_setup_clock_frequency(struct sc18is600dev *dev)
-> > +{
-> > +       int reg =3D DIV_ROUND_UP(dev->clock_base, dev->i2c_clock_freque=
-ncy);
-> > +
->=20
-> > +       if (reg < 5)
-> > +               reg =3D 5;
-> > +       if (reg > 255)
-> > +               reg =3D 255;
->=20
-> clamp_t()
-
-I will use clamp_val()
-
-> [...]
-> lot's of suggestions for improvements.
-> [...]
-
-Ack.
-
-> ...and better to use s600dev or alike to avoid confusion.
->=20
-> > +               return -ENOMEM;
->=20
-> > +       snprintf(dev->adapter.name, sizeof(dev->adapter.name),
->=20
-> > +                "SC18IS600 at SPI %02d device %02d",
->=20
-> Isn't too much for adapter name?
-> I don't remember if it's part of ABI, in that case it's even worse.
-
-Well, it's displayed by "i2cdetect -l". Here are the names from some
-other drivers, which I used as reference:
-
-i2c-tiny-usb at bus %03d device %03d
-i2c-diolan-u2c at bus %03d device %03d
-OSIF at bus %03d device %03d
-SMBus Via Pro adapter at %04x
-SMBus SIS5595 adapter at %04x
-
-> [...]
-> lot's of suggestions for improvements.
-> [...]
-
-Ack.
-
--- Sebastian
-
---wgpwq6l365pphdml
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllGh/EACgkQ2O7X88g7
-+prJgRAAnZF4WwDKXjplHgqm3ybfq78f2XOe7EOpvuK4196YIfpjdClGZTdmwHcM
-Cr8g9rgNgAc9SX8P74IAEcXfs7EGGSkbN1rU88stjUaz6ZfWOU69HAn3Wbgvx0X5
-qc+MKfB58L95DZJgKiZ+3ChcwILHuIjRonTjfyfynySrPhfAk+Y54tXLEa0auk3F
-vZdhBV7FS2XPnZ+YDPd0D8XmxqAMb0k59YCyFVwjEqUy4HIUHMUP/YA28KVj6wrP
-y1YloOeCFL+iJvneRb68Nq0tt0qVpfXmxtH4bFzlVjhNKE8JCSFoKZXx144IGHGY
-v12PJu6+F7Jol7lP7J7vGA9X2KhHHk/h/IKxPTvoLFGW5Z6v7lA5GGTLDRXPp2ZN
-uyqO+b4b8f0PIk3UzQ3k9NyJIpqNaAG3s1QxaM/8AXnyZfCxFot/ncOIaCATxcrg
-8ZS0O+bxWftL8uA9e9JTF64226bh5L4g/QG/vfbUWZdaFGnMx2YfMAjs5l77wwel
-GISRbsnJ64QiTC/PnMBkAH1CzpcyZFxhWLZnYqsOdYv51UtPgoa2kuFVwcEPFDJB
-gPDWAvtUS4W2fLObBUmNmKhpTIoaHOAFWRhr3LFAwbGtGMTA3fIXjRWZVr6Aw1Pa
-vQ/c+BMNUDX3/Qwzolp8G9LR8eQO3pXtr9k8eRnYc21pzlfvA1g=
-=8/PG
------END PGP SIGNATURE-----
-
---wgpwq6l365pphdml--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
