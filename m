@@ -1,62 +1,64 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Sun, 18 Jun 2017 09:04:49 -0500
-Message-ID: <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V1 1/3] pinctrl: qcom: spmi-gpio: Add support for GPIO
+ LV/MV subtype
+Date: Sun, 18 Jun 2017 09:04:56 -0500
+Message-ID: <20170618140456.orzknmxg4fpce4tk@rob-hp-laptop>
+References: <20170613061707.13892-1-fenglinw@codeaurora.org>
+ <20170613061707.13892-2-fenglinw@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1497299161-6458-2-git-send-email-arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+In-Reply-To: <20170613061707.13892-2-fenglinw@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: fenglinw@codeaurora.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, collinsd@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
-> Add device tree binding documentation for the Broadcom DTE
-> PTP clock driver.
+On Tue, Jun 13, 2017 at 02:16:03PM +0800, fenglinw@codeaurora.org wrote:
+> From: Fenglin Wu <fenglinw@codeaurora.org>
 > 
-> Signed-off-by: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> GPIO LV (low voltage)/MV (medium voltage) subtypes have different
+> features and register mappings than 4CH/8CH subtypes. Add support
+> for LV and MV subtypes.
+> 
+> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
-> new file mode 100644
-> index 0000000..07590bc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
-> @@ -0,0 +1,13 @@
-> +* Broadcom Digital Timing Engine(DTE) based PTP clock driver
+>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |  28 ++-
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 269 ++++++++++++++++++---
+>  include/dt-bindings/pinctrl/qcom,pmic-gpio.h       |   9 +
+>  3 files changed, 264 insertions(+), 42 deletions(-)
 
-Bindings describe h/w, not drivers.
+[...]
 
+> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+> index d33f17c..85d8809 100644
+> --- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
+> @@ -93,15 +93,24 @@
+>  #define PM8994_GPIO_S4			2
+>  #define PM8994_GPIO_L12			3
+>  
+> +/* ATEST MUX selection for analog-pass-through mode */
+> +#define PMIC_GPIO_AOUT_ATEST1		0
+> +#define PMIC_GPIO_AOUT_ATEST2		1
+> +#define PMIC_GPIO_AOUT_ATEST3		2
+> +#define PMIC_GPIO_AOUT_ATEST4		3
 > +
-> +Required properties:
-> +- compatible: should be "brcm,ptp-dte"
+>  /* To be used with "function" */
+>  #define PMIC_GPIO_FUNC_NORMAL		"normal"
+>  #define PMIC_GPIO_FUNC_PAIRED		"paired"
+>  #define PMIC_GPIO_FUNC_FUNC1		"func1"
+>  #define PMIC_GPIO_FUNC_FUNC2		"func2"
+> +#define PMIC_GPIO_FUNC_FUNC3		"func3"
+> +#define PMIC_GPIO_FUNC_FUNC4		"func4"
+>  #define PMIC_GPIO_FUNC_DTEST1		"dtest1"
+>  #define PMIC_GPIO_FUNC_DTEST2		"dtest2"
+>  #define PMIC_GPIO_FUNC_DTEST3		"dtest3"
+>  #define PMIC_GPIO_FUNC_DTEST4		"dtest4"
+> +#define PMIC_GPIO_FUNC_ANALOG		"analog"
 
-Looks too generic. You need SoC specific compatible strings.
+defines for strings? That's really pointless. I'd prefer you drop using 
+them than add more.
 
-> +- reg: address and length of the DTE block's NCO registers
-> +
-> +Example:
-> +
-> +ptp_dte: ptp_dte@180af650 {
-
-Don't use '_' in node names.
-
-> +	compatible = "brcm,ptp-dte";
-> +	reg = <0x180af650 0x10>;
-> +	status = "okay";
-> +};
-> -- 
-> 1.9.1
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
