@@ -1,44 +1,63 @@
 From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4 03/28] dt-bindings: timer: Document Owl timer
-Date: Sun, 18 Jun 2017 22:18:39 +0200
-Message-ID: <ec380c22-c902-80e7-3672-f4a11ceecc3a@suse.de>
+Subject: Re: [PATCH v4 11/28] ARM: dts: Add Actions Semi S500 and LeMaker
+ Guitar
+Date: Mon, 19 Jun 2017 00:10:04 +0200
+Message-ID: <3a132688-07d9-cc3f-b4d1-85a95199ec93@suse.de>
 References: <20170606005426.26446-1-afaerber@suse.de>
- <20170606005426.26446-4-afaerber@suse.de>
+ <20170606005426.26446-12-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606005426.26446-4-afaerber-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20170606005426.26446-12-afaerber-l3A5Bk7waGM@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Am 06.06.2017 um 02:54 schrieb Andreas Färber:
-> The Actions Semi S500 SoC contains a timer block with two 2 Hz and two
-> 32-bit timers. The S900 SoC timer block has four 32-bit timers.
-> 
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
 > ---
 >  v3 -> v4:
->  * Changed interrupt names to lower-case (Mark)
+>  * Adopted lower-case timer interrupt-names (Mark)
 >  
 >  v2 -> v3:
->  * Adopted interrupt-names
->  * Changed compatible for S500
->  * Added S900 compatible and interrupt names
+>  * Fixed uart2 reg offset
+>  * Enlarged timer reg size
+>  * Added 2 Hz timer interrupts, interrupt-names
+>  * Disabled CPUs 1-3 for now (cf. later patches)
+>  * Added Cortex-A9 SCU, global timer, TWD timer/wdt nodes
+>  * Added HOSC clock for timer
 >  
->  v2: new
+>  v1 -> v2:
+>  * Reworded subject
+>  * Updated ARCH_OWL to ARCH_ACTIONS (Arnd)
+>  * Adopted "actions" vendor prefix
+>  * Dropped irq.h include
+>  * Added memory@0 node for Guitar SoM
+>  * Dropped bogus uart3 clock-frequency
+>  * Added device_type for CPU nodes
+>  * Fixed UART reg size
+>  * Adopted SPDX-License-Identifier (Rob)
+>  * Added remaining UART nodes
+>  * Added timer node
 >  
->  .../devicetree/bindings/timer/actions,owl-timer.txt  | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/actions,owl-timer.txt
+>  arch/arm/boot/dts/Makefile                 |   2 +
+>  arch/arm/boot/dts/s500-guitar-bb-rev-b.dts |  26 +++++
+>  arch/arm/boot/dts/s500-guitar.dtsi         |  22 ++++
+>  arch/arm/boot/dts/s500.dtsi                | 176 +++++++++++++++++++++++++++++
+>  4 files changed, 226 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/s500-guitar-bb-rev-b.dts
+>  create mode 100644 arch/arm/boot/dts/s500-guitar.dtsi
+>  create mode 100644 arch/arm/boot/dts/s500.dtsi
 
-Thanks, applied to linux-actions.git v4.13/dt branch:
+Following a previous discussion with Thomas (that Actions unfortunately
+didn't follow-up to with replies here...), I am planning to respin with
+s500*.dts[i] renamed to owl-s500*. That will avoid name clashes and will
+future-proof the file pattern in MAINTAINERS.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.13/dt
+For S900 I don't think we need owl-, as we have actions/* there.
 
 Regards,
 Andreas
