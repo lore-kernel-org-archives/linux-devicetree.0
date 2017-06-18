@@ -1,29 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: rng: add MediaTek MT7622 Hardware
- Random Generator bindings
-Date: Sun, 18 Jun 2017 09:04:45 -0500
-Message-ID: <20170618140445.54uxdqtgi4mlsrpr@rob-hp-laptop>
-References: <cover.1497280813.git.sean.wang@mediatek.com>
- <89b9b682ff9e294df7cda75787c1439c95ffc992.1497280813.git.sean.wang@mediatek.com>
+Subject: Re: [PATCH V1 2/3] pinctrl: qcom: spmi-gpio: Add dtest route for
+ digital input
+Date: Sun, 18 Jun 2017 09:04:59 -0500
+Message-ID: <20170618140459.qfwpiacuha34jmv5@rob-hp-laptop>
+References: <20170613061707.13892-1-fenglinw@codeaurora.org>
+ <20170613061707.13892-3-fenglinw@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <89b9b682ff9e294df7cda75787c1439c95ffc992.1497280813.git.sean.wang@mediatek.com>
+In-Reply-To: <20170613061707.13892-3-fenglinw@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: herbert@gondor.apana.org.au, mpm@selenic.com, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com, weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
+To: fenglinw@codeaurora.org
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, collinsd@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 11:56:54PM +0800, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
+On Tue, Jun 13, 2017 at 02:16:04PM +0800, fenglinw@codeaurora.org wrote:
+> From: Fenglin Wu <fenglinw@codeaurora.org>
 > 
-> Document the bindings used by MediaTek MT7622 SoC hardware random number
-> generator.
+> Add property "qcom,dtest-buffer" to specify which dtest rail to feed
+> when the pin is configured as a digital input.
 > 
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/rng/mtk-rng.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 15 ++++++++
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 45 ++++++++++++++++++++++
+>  include/dt-bindings/pinctrl/qcom,pmic-gpio.h       |  6 +++
+>  3 files changed, 66 insertions(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
