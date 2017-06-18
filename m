@@ -1,43 +1,58 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for Linksys
-Date: Sun, 18 Jun 2017 09:04:29 -0500
-Message-ID: <20170618140429.zsywalnyjf7h74pc@rob-hp-laptop>
-References: <20170609090421.4984-1-ralph.sennhauser@gmail.com>
+Subject: Re: [PATCH] watchdog: meson-wdt: add support for the watchdog on
+ Meson8 and Meson8m2
+Date: Sun, 18 Jun 2017 09:04:39 -0500
+Message-ID: <20170616180009.h66dwnnhfwrjpui6@rob-hp-laptop>
+References: <20170611095219.22095-1-martin.blumenstingl@googlemail.com>
+ <20170615172510.GA7549@roeck-us.net>
+ <CAFBinCCyqX=TGwTyhxXZPP2noUvJ1v=xNs+Vs17Gg4z2uDgjEA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170609090421.4984-1-ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Imre Kaloz <kaloz-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CAFBinCCyqX=TGwTyhxXZPP2noUvJ1v=xNs+Vs17Gg4z2uDgjEA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org, khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 09, 2017 at 11:04:21AM +0200, Ralph Sennhauser wrote:
-> Linksys (http://www.linksys.com/us/) is a vendor of networking products
-> mostly for use by home and small business user. The brand is currently
-> owned by Belkin International, Inc. (http://www.belkin.com/us/).
+On Thu, Jun 15, 2017 at 11:13:07PM +0200, Martin Blumenstingl wrote:
+> On Thu, Jun 15, 2017 at 7:25 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> > On Sun, Jun 11, 2017 at 11:52:19AM +0200, Martin Blumenstingl wrote:
+> >> The watchdog IP block on Meson8 and Meson8m2 is already supported by the
+> >> existing meson-wdt driver. Meson8 uses the same register bits as Meson6,
+> >> while the newer Meson8m2 SoC uses the same register bits as Meson8b.
+> >>
+> >> Currently watchdog support on Meson8 SoC already works because
+> >> meson8.dtsi simply uses the "amlogic,meson6-wdt" compatible. Adding a
+> >> separate compatible for Meson8 makes this more explicit though.
+> >>
+> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+> >
+> > Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> thank you!
+> is there anything holding you up from taking this patch (for example:
+> are you still missing any specific Signed-off-by / Acked-by)?
 > 
-> The vendor prefix linksys is already used by various supported boards.
+> > In general, changes like this are not necessary, though. The dts file
+> > is supposed to reference both generic and specific compatible strings.
+> I thought about skipping this patch, but I find that it looks strange without.
 > 
-> Signed-off-by: Ralph Sennhauser <ralph.sennhauser-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
+> the hierarchy and the corresponding compatible strings would be:
+> meson.dtsi / compatible = "amlogic,meson6-wdt";
+> |- meson8.dtsi / compatible = "amlogic,meson8-wdt", "amlogic,meson6-wdt";
+>    |- meson8m2.dtsi (upcoming) / compatible = "amlogic,meson8m2-wdt",
+> "amlogic,meson8b-wdt";
+> |- meson8b.dtsi / compatible = "amlogic,meson8b-wdt";
 > 
-> Hi,
-> 
-> Two weeks ago I asked for a vendor comment via Imre Kaloz but haven't heard
-> back, so sending this one out for inclusion as-is.
-> 
-> Ralph
-> 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> instead of this seemingly random mixup of compatible strings I decided
+> to introduce separate ones for each SoC.
 
-Applied, thanks.
+But if the block is backwards compatible, you should also provide a 
+fallback compatible string.
 
 Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
