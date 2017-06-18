@@ -1,30 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: spi/rockchip: add "cs-gpios"
- optional property
-Date: Sun, 18 Jun 2017 09:05:35 -0500
-Message-ID: <20170617001205.kddjsznkj7niomhj@rob-hp-laptop>
-References: <1497411483-23377-1-git-send-email-jeffy.chen@rock-chips.com>
- <1497411483-23377-2-git-send-email-jeffy.chen@rock-chips.com>
+Subject: Re: [PATCH V4 1/3] dt-bindings: watchdog: add description for
+ UniPhier WDT controller
+Date: Sun, 18 Jun 2017 09:05:38 -0500
+Message-ID: <20170617002642.rzo2bvm22ko3q22a@rob-hp-laptop>
+References: <1497426825-25450-1-git-send-email-hayashibara.keiji@socionext.com>
+ <1497426825-25450-2-git-send-email-hayashibara.keiji@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1497411483-23377-2-git-send-email-jeffy.chen@rock-chips.com>
+In-Reply-To: <1497426825-25450-2-git-send-email-hayashibara.keiji@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jeffy Chen <jeffy.chen@rock-chips.com>
-Cc: linux-kernel@vger.kernel.org, broonie@kernel.org, briannorris@chromium.org, dianders@chromium.org, heiko@sntech.de, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Keiji Hayashibara <hayashibara.keiji@socionext.com>
+Cc: wim@iguana.be, linux@roeck-us.net, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, yamada.masahiro@socionext.com, hayashi.kunihiko@socionext.com, owada.kiyoshi@socionext.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 11:38:02AM +0800, Jeffy Chen wrote:
-> Update document devicetree bindings to support "cs-gpios" property.
+On Wed, Jun 14, 2017 at 04:53:43PM +0900, Keiji Hayashibara wrote:
+> Add uniphier-wdt dt-bindings documentation.
 > 
-> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+> Signed-off-by: Keiji Hayashibara <hayashibara.keiji@socionext.com>
 > ---
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/spi/spi-rockchip.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  .../devicetree/bindings/watchdog/uniphier-wdt.txt    | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/uniphier-wdt.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
