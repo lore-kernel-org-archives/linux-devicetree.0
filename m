@@ -1,31 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V1 2/3] pinctrl: qcom: spmi-gpio: Add dtest route for
- digital input
-Date: Sun, 18 Jun 2017 09:04:59 -0500
-Message-ID: <20170618140459.qfwpiacuha34jmv5@rob-hp-laptop>
-References: <20170613061707.13892-1-fenglinw@codeaurora.org>
- <20170613061707.13892-3-fenglinw@codeaurora.org>
+Subject: Re: [PATCH v6 1/3] PCI: Add DT binding for tango PCIe controller
+Date: Sun, 18 Jun 2017 09:05:01 -0500
+Message-ID: <20170618140501.mu3zrr5dw4fstshd@rob-hp-laptop>
+References: <741766e5-cff2-db5f-d40b-6866e08fd966@sigmadesigns.com>
+ <69f3ffe7-3c39-fa94-71f8-91744a869cc9@sigmadesigns.com>
+ <20170607212907.2wr3hqbokjb74kj3@rob-hp-laptop>
+ <3790db8d-6a4c-5c74-9ca2-431715a712a7@sigmadesigns.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170613061707.13892-3-fenglinw@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: fenglinw@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-soc@vger.kernel.org, collinsd@quicinc.com, aghayal@qti.qualcomm.com, wruan@quicinc.com, kgunda@qti.qualcomm.com
+In-Reply-To: <3790db8d-6a4c-5c74-9ca2-431715a712a7@sigmadesigns.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Mason <slash.tmp@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 02:16:04PM +0800, fenglinw@codeaurora.org wrote:
-> From: Fenglin Wu <fenglinw@codeaurora.org>
+On Tue, Jun 13, 2017 at 03:51:32PM +0200, Marc Gonzalez wrote:
+> Binding for the Sigma Designs SMP8759 SoC.
 > 
-> Add property "qcom,dtest-buffer" to specify which dtest rail to feed
-> when the pin is configured as a digital input.
-> 
-> Signed-off-by: Fenglin Wu <fenglinw@codeaurora.org>
+> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
 > ---
->  .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 15 ++++++++
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 45 ++++++++++++++++++++++
->  include/dt-bindings/pinctrl/qcom,pmic-gpio.h       |  6 +++
->  3 files changed, 66 insertions(+)
+> Changes from v5 to v6
+> o Delete links to elinux.org
+> o Use explicit hex numbers instead of symbolic constants for sizes (in the example)
+> o Add bus-range to "Required properties"
+> ---
+>  .../devicetree/bindings/pci/tango-pcie.txt         | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/tango-pcie.txt
 
 Acked-by: Rob Herring <robh@kernel.org>
