@@ -1,53 +1,45 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: iio: humidity: add bindings for HDC100x
- sensors
-Date: Sun, 18 Jun 2017 09:04:43 -0500
-Message-ID: <20170618140443.5nstmwkbaibprg2l@rob-hp-laptop>
-References: <1497278950-12973-1-git-send-email-m-stecklein@ti.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH RESEND] i2c: add sc18is600 driver
+Date: Sun, 18 Jun 2017 17:17:27 +0300
+Message-ID: <CAHp75Vd_eHdkXk23HFwOK_3ciZaSKZAFrPtYzKgnBpuGaCo2-g@mail.gmail.com>
+References: <20170613154748.7018-1-sre@kernel.org> <CAHp75VexRjTZ+kbrPvD=RWy+_OBSnKAYj1-TX8aO5QgyOsn7nA@mail.gmail.com>
+ <20170618140228.lmrvlgmp5vwnbblv@earth>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1497278950-12973-1-git-send-email-m-stecklein@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Stecklein <m-stecklein@ti.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170618140228.lmrvlgmp5vwnbblv@earth>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 12, 2017 at 09:49:08AM -0500, Michael Stecklein wrote:
-> Add the bindings for the family of HDC100x sensors.
-> 
-> Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
-> ---
->  .../devicetree/bindings/iio/humidity/hdc100x.txt         | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
-> new file mode 100644
-> index 0000000..6f272fa
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
-> @@ -0,0 +1,16 @@
-> +* HDC100x temperature + humidity sensors
-> +
-> +Required properties:
-> +  - compatible: Should contain one of the following:
-> +	ti,hdc100x
+On Sun, Jun 18, 2017 at 5:02 PM, Sebastian Reichel <sre@kernel.org> wrote:
 
-No wildcards in compatible strings please.
+> Thanks for your feedback.
 
-> +	ti,hdc1010
-> +	ti,hdc1050
-> +	ti,hdc1080
-> +  - reg: i2c address of the sensor
-> +
-> +Example:
-> +
-> +hdc100x@40 {
-> +	compatible = "ti,hdc100x";
-> +	reg = <0x40>;
-> +};
-> -- 
-> 2.7.4
-> 
+You're welcome!
+
+> On Sat, Jun 17, 2017 at 09:13:32PM +0300, Andy Shevchenko wrote:
+>> On Tue, Jun 13, 2017 at 6:47 PM, Sebastian Reichel <sre@kernel.org> wrote:
+
+>> > +       snprintf(dev->adapter.name, sizeof(dev->adapter.name),
+>>
+>> > +                "SC18IS600 at SPI %02d device %02d",
+>>
+>> Isn't too much for adapter name?
+>> I don't remember if it's part of ABI, in that case it's even worse.
+>
+> Well, it's displayed by "i2cdetect -l". Here are the names from some
+> other drivers, which I used as reference:
+>
+> i2c-tiny-usb at bus %03d device %03d
+> i2c-diolan-u2c at bus %03d device %03d
+> OSIF at bus %03d device %03d
+> SMBus Via Pro adapter at %04x
+> SMBus SIS5595 adapter at %04x
+
+Ah, okay.
+
+-- 
+With Best Regards,
+Andy Shevchenko
