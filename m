@@ -1,7 +1,7 @@
 From: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Subject: [PATCH V1 2/9] clk: sprd: Add common infrastructure
-Date: Sun, 18 Jun 2017 09:58:48 +0800
-Message-ID: <20170618015855.27738-3-chunyan.zhang@spreadtrum.com>
+Subject: [PATCH V1 1/9] dt-bindings: Add Spreadtrum CCU binding documentation
+Date: Sun, 18 Jun 2017 09:58:47 +0800
+Message-ID: <20170618015855.27738-2-chunyan.zhang@spreadtrum.com>
 References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,219 +12,66 @@ To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.
 Cc: linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-Added Spreadtrum's clock driver common structure and registration code.
+Introduce a new binding with its documentation for Spreadtrum clock
+sub-framework.
 
 Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
 ---
- drivers/clk/Makefile          |  1 +
- drivers/clk/sprd/Makefile     |  3 ++
- drivers/clk/sprd/ccu_common.c | 78 +++++++++++++++++++++++++++++++++++++
- drivers/clk/sprd/ccu_common.h | 90 +++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 172 insertions(+)
- create mode 100644 drivers/clk/sprd/Makefile
- create mode 100644 drivers/clk/sprd/ccu_common.c
- create mode 100644 drivers/clk/sprd/ccu_common.h
+ .../devicetree/bindings/clock/sprd-ccu.txt         | 46 ++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/sprd-ccu.txt
 
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index c19983a..1d62721 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -81,6 +81,7 @@ obj-$(CONFIG_COMMON_CLK_SAMSUNG)	+= samsung/
- obj-$(CONFIG_ARCH_SIRF)			+= sirf/
- obj-$(CONFIG_ARCH_SOCFPGA)		+= socfpga/
- obj-$(CONFIG_PLAT_SPEAR)		+= spear/
-+obj-$(CONFIG_ARCH_SPRD)			+= sprd/
- obj-$(CONFIG_ARCH_STI)			+= st/
- obj-$(CONFIG_ARCH_SUNXI)		+= sunxi/
- obj-$(CONFIG_ARCH_SUNXI)		+= sunxi-ng/
-diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
+diff --git a/Documentation/devicetree/bindings/clock/sprd-ccu.txt b/Documentation/devicetree/bindings/clock/sprd-ccu.txt
 new file mode 100644
-index 0000000..8f802b2
+index 0000000..7a1aa4c
 --- /dev/null
-+++ b/drivers/clk/sprd/Makefile
-@@ -0,0 +1,3 @@
-+ifneq ($(CONFIG_OF),)
-+obj-y	+= ccu_common.o
-+endif
-diff --git a/drivers/clk/sprd/ccu_common.c b/drivers/clk/sprd/ccu_common.c
-new file mode 100644
-index 0000000..911f4ba
---- /dev/null
-+++ b/drivers/clk/sprd/ccu_common.c
-@@ -0,0 +1,78 @@
-+/*
-+ * Spreadtrum clock infrastructure
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
++++ b/Documentation/devicetree/bindings/clock/sprd-ccu.txt
+@@ -0,0 +1,46 @@
++Spreadtrum Clock Control Unit Binding
++------------------------------------
 +
-+#include "ccu_common.h"
++This binding uses the common clock binding[1].
 +
-+static inline void __iomem *ccu_find_base(struct ccu_addr_map *maps,
-+					  unsigned int num, unsigned int reg)
-+{
-+	int i;
++Required properties:
++- compatible: must contain the following compatible:
++                - "sprd,sc9860-ccu" (only support SC9860 for the time being)
 +
-+	for (i = 0; i < num; i++)
-+		if ((reg & 0xffff0000) == maps[i].phy)
-+			return maps[i].virt;
++- reg:	Must contain the registers base address and length.
++	Clocks on most of Spreadtrum's SoCs were designed to locate in a few
++	different address areas, so there would be more than one items under
++	this property.
 +
-+	return 0;
-+}
++- clock-names:	Must contain the following clock names:
++		- "ext-26m", "ext-rco-100m", "ext-32k"
++- #clock-cells: must be 1
 +
-+int sprd_ccu_probe(struct device_node *node, struct ccu_addr_map *maps,
-+		   unsigned int count, const struct sprd_ccu_desc *desc)
-+{
-+	int i, ret = 0;
-+	struct ccu_common *cclk;
-+	struct clk_hw *hw;
++Example:
 +
-+	for (i = 0; i < desc->num_ccu_clks; i++) {
-+		cclk = desc->ccu_clks[i];
-+		if (!cclk)
-+			continue;
-+
-+		cclk->base = ccu_find_base(maps, count, cclk->reg);
-+		if (!cclk->base) {
-+			pr_err("%s: No mapped address found for clock(0x%x)\n",
-+				__func__, cclk->reg);
-+			return -EINVAL;
-+		}
-+		cclk->reg = cclk->reg & 0xffff;
-+	}
-+
-+	for (i = 0; i < desc->hw_clks->num; i++) {
-+
-+		hw = desc->hw_clks->hws[i];
-+
-+		if (!hw)
-+			continue;
-+
-+		ret = clk_hw_register(NULL, hw);
-+		if (ret) {
-+			pr_err("Couldn't register clock %d - %s\n",
-+			       i, hw->init->name);
-+			goto err_clk_unreg;
-+		}
-+	}
-+
-+	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
-+				     desc->hw_clks);
-+	if (ret) {
-+		pr_err("Failed to add clock provider.\n");
-+		goto err_clk_unreg;
-+	}
-+
-+	return 0;
-+
-+err_clk_unreg:
-+	while (--i >= 0) {
-+		hw = desc->hw_clks->hws[i];
-+		if (!hw)
-+			continue;
-+
-+		clk_hw_unregister(hw);
-+	}
-+
-+	return ret;
-+}
-diff --git a/drivers/clk/sprd/ccu_common.h b/drivers/clk/sprd/ccu_common.h
-new file mode 100644
-index 0000000..ff07772
---- /dev/null
-+++ b/drivers/clk/sprd/ccu_common.h
-@@ -0,0 +1,90 @@
-+/*
-+ * Spreadtrum clock infrastructure
-+ *
-+ * Copyright (C) 2017 Spreadtrum, Inc.
-+ *
-+ * SPDX-License-Identifier: GPL-2.0
-+ */
-+
-+#ifndef _CCU_COMMON_H_
-+#define _CCU_COMMON_H_
-+
-+#include <linux/clk-provider.h>
-+
-+struct device_node;
-+
-+#define CLK_HW_INIT_NO_PARENT(_name, _ops, _flags)	\
-+	(&(struct clk_init_data) {			\
-+		.flags		= _flags,		\
-+		.name		= _name,		\
-+		.parent_names	= NULL,			\
-+		.num_parents	= 0,			\
-+		.ops		= _ops,			\
-+	})
-+
-+#define CLK_HW_INIT(_name, _parent, _ops, _flags)		\
-+	(&(struct clk_init_data) {				\
-+		.flags		= _flags,			\
-+		.name		= _name,			\
-+		.parent_names	= (const char *[]) { _parent },	\
-+		.num_parents	= 1,				\
-+		.ops		= _ops,				\
-+	})
-+
-+#define CLK_HW_INIT_PARENTS(_name, _parents, _ops, _flags)	\
-+	(&(struct clk_init_data) {				\
-+		.flags		= _flags,			\
-+		.name		= _name,			\
-+		.parent_names	= _parents,			\
-+		.num_parents	= ARRAY_SIZE(_parents),		\
-+		.ops		= _ops,				\
-+	})
-+
-+#define CLK_FIXED_FACTOR(_struct, _name, _parent,			\
-+			_div, _mult, _flags)				\
-+	struct clk_fixed_factor _struct = {				\
-+		.div		= _div,					\
-+		.mult		= _mult,				\
-+		.hw.init	= CLK_HW_INIT(_name,			\
-+					      _parent,			\
-+					      &clk_fixed_factor_ops,	\
-+					      _flags),			\
-+	}
-+
-+struct ccu_common {
-+	void __iomem	*base;
-+	u32		reg;
-+	spinlock_t	*lock;
-+	struct clk_hw	hw;
++ccu: clk {
++	compatible = "sprd,sc9860-ccu";
++	#clock-cells = <1>;
++	reg = <0 0x20000000 0 0x400>,
++	      <0 0x20210000 0 0x3000>,
++	      <0 0x402b0000 0 0x4000>,
++	      <0 0x402d0000 0 0x400>,
++	      <0 0x402e0000 0 0x4000>,
++	      <0 0x40400000 0 0x400>,
++	      <0 0x40880000 0 0x400>,
++	      <0 0x415e0000 0 0x400>,
++	      <0 0x60200000 0 0x400>,
++	      <0 0x61000000 0 0x400>,
++	      <0 0x61100000 0 0x3000>,
++	      <0 0x62000000 0 0x4000>,
++	      <0 0x62100000 0 0x4000>,
++	      <0 0x63000000 0 0x400>,
++	      <0 0x63100000 0 0x3000>,
++	      <0 0x70b00000 0 0x3000>;
++	clocks = <&ext_26m>, <&ext_rco_100m>, <&ext_32k>;
++	clock-names = "ext-26m", "ext-rco-100m", "ext-32k";
 +};
 +
-+struct ccu_addr_map {
-+	phys_addr_t phy;
-+	void __iomem *virt;
-+};
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
 +
-+static inline u32 ccu_readl(struct ccu_common *common)
-+{
-+	return readl(common->base + common->reg);
-+}
 +
-+static inline void ccu_writel(u32 val, struct ccu_common *common)
-+{
-+	writel(val, common->base + common->reg);
-+}
-+
-+static inline struct ccu_common *hw_to_ccu_common(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct ccu_common, hw);
-+}
-+
-+struct sprd_ccu_desc {
-+	struct ccu_common		**ccu_clks;
-+	unsigned long			num_ccu_clks;
-+	struct clk_hw_onecell_data	*hw_clks;
-+};
-+
-+int sprd_ccu_probe(struct device_node *node, struct ccu_addr_map *maps,
-+		   unsigned int count, const struct sprd_ccu_desc *desc);
-+
-+#endif /* _CCU_COMMON_H_ */
 -- 
 2.7.4
