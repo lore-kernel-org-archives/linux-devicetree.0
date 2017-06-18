@@ -1,60 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] i2c: pca-platform: add devicetree awareness
-Date: Sun, 18 Jun 2017 09:04:53 -0500
-Message-ID: <20170618140453.3qrud7fuqe36uvud@rob-hp-laptop>
-References: <20170613015641.29373-1-chris.packham@alliedtelesis.co.nz>
- <20170613015641.29373-2-chris.packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH 1/3] dt-bindings: iio: humidity: add bindings for HDC100x
+ sensors
+Date: Sun, 18 Jun 2017 09:04:43 -0500
+Message-ID: <20170618140443.5nstmwkbaibprg2l@rob-hp-laptop>
+References: <1497278950-12973-1-git-send-email-m-stecklein@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170613015641.29373-2-chris.packham@alliedtelesis.co.nz>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <1497278950-12973-1-git-send-email-m-stecklein@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Stecklein <m-stecklein@ti.com>
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Davis <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 01:56:38PM +1200, Chris Packham wrote:
-> Allow devices that use this driver to be registered via a
-> devicetree.
+On Mon, Jun 12, 2017 at 09:49:08AM -0500, Michael Stecklein wrote:
+> Add the bindings for the family of HDC100x sensors.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
 > ---
->  .../devicetree/bindings/i2c/i2c-pca-platform.txt    | 18 ++++++++++++++++++
-
-It's preferred to split bindings to separate patch.
-
->  drivers/i2c/busses/i2c-pca-platform.c               | 21 +++++++++++++++++++++
->  2 files changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
+>  .../devicetree/bindings/iio/humidity/hdc100x.txt         | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt b/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
+> diff --git a/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
 > new file mode 100644
-> index 000000000000..47410bda3f37
+> index 0000000..6f272fa
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
-> @@ -0,0 +1,18 @@
-> +* NXP PCA PCA9564/PCA9665 I2C controller
+> +++ b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
+> @@ -0,0 +1,16 @@
+> +* HDC100x temperature + humidity sensors
 > +
-> +The PCA9564/PCA9665 serves as an interface between most standard
-> +parallel-bus microcontrollers/microprocessors and the serial I2C-bus
-> +and allows the parallel bus system to communicate bi-directionally
-> +with the I2C-bus.
-> +
-> +Required properties :
-> +
-> + - reg : Offset and length of the register set for the device
-> + - compatible : one of "nxp,pca9564" or "nxp,pca9665"
-> +
-> +Optional properties
-> + - interrupts : the interrupt number
-> + - interrupt-parent : the phandle for the interrupt controller.
-> +   If an interrupt is not specified polling will be used.
-> + - gpios : gpio phandle to control device reset.
+> +Required properties:
+> +  - compatible: Should contain one of the following:
+> +	ti,hdc100x
 
-reset-gpios and state the active state.
+No wildcards in compatible strings please.
 
-> + - clock-frequency : I2C bus frequency.
-> \ No newline at end of file
-
-^^^
+> +	ti,hdc1010
+> +	ti,hdc1050
+> +	ti,hdc1080
+> +  - reg: i2c address of the sensor
+> +
+> +Example:
+> +
+> +hdc100x@40 {
+> +	compatible = "ti,hdc100x";
+> +	reg = <0x40>;
+> +};
+> -- 
+> 2.7.4
+> 
