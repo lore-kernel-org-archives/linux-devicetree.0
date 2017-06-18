@@ -1,203 +1,103 @@
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: sunxi: Add support for Sinlinx SinA83T board
-Date: Sun, 18 Jun 2017 21:00:18 +0800
-Message-ID: <20170618130018.10684-3-techping.chan@gmail.com>
-References: <20170618130018.10684-1-techping.chan@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170618130018.10684-1-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH RESEND] i2c: add sc18is600 driver
+Date: Sun, 18 Jun 2017 16:02:28 +0200
+Message-ID: <20170618140228.lmrvlgmp5vwnbblv@earth>
+References: <20170613154748.7018-1-sre@kernel.org>
+ <CAHp75VexRjTZ+kbrPvD=RWy+_OBSnKAYj1-TX8aO5QgyOsn7nA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wgpwq6l365pphdml"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75VexRjTZ+kbrPvD=RWy+_OBSnKAYj1-TX8aO5QgyOsn7nA@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-The Sinlinx SinA83T is an A83T core/daughter borad combo
-from Sinlinx.
-The board's wiki page: http://linux-sunxi.org/Sinlinx_SinA83T
+--wgpwq6l365pphdml
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Add support for it.
+Hi Andy,
 
-Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/Makefile                       |   1 +
- arch/arm/boot/dts/sun8i-a83t-sinlinx-sina83t.dts | 151 +++++++++++++++++++++++
- 2 files changed, 152 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a83t-sinlinx-sina83t.dts
+Thanks for your feedback.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e81d87db22cc..77e2efe1068f 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -899,6 +899,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
- 	sun8i-a33-sinlinx-sina33.dtb \
- 	sun8i-a83t-allwinner-h8homlet-v2.dtb \
- 	sun8i-a83t-cubietruck-plus.dtb \
-+	sun8i-a83t-sinlinx-sina83t.dtb \
- 	sun8i-h2-plus-orangepi-zero.dtb \
- 	sun8i-h3-bananapi-m2-plus.dtb \
- 	sun8i-h3-beelink-x2.dtb \
-diff --git a/arch/arm/boot/dts/sun8i-a83t-sinlinx-sina83t.dts b/arch/arm/boot/dts/sun8i-a83t-sinlinx-sina83t.dts
-new file mode 100644
-index 000000000000..4a059422f820
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a83t-sinlinx-sina83t.dts
-@@ -0,0 +1,151 @@
-+/*
-+ * Copyright 2017 Ziping Chen
-+ * Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-+ *
-+ * This file is dual-licensed: you can use it either under the terms
-+ * of the GPL or the X11 license, at your option. Note that this dual
-+ * licensing only applies to this file, and not this project as a
-+ * whole.
-+ *
-+ *  a) This file is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This file is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ * Or, alternatively,
-+ *
-+ *  b) Permission is hereby granted, free of charge, to any person
-+ *     obtaining a copy of this software and associated documentation
-+ *     files (the "Software"), to deal in the Software without
-+ *     restriction, including without limitation the rights to use,
-+ *     copy, modify, merge, publish, distribute, sublicense, and/or
-+ *     sell copies of the Software, and to permit persons to whom the
-+ *     Software is furnished to do so, subject to the following
-+ *     conditions:
-+ *
-+ *     The above copyright notice and this permission notice shall be
-+ *     included in all copies or substantial portions of the Software.
-+ *
-+ *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-+ *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-+ *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-+ *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-+ *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-+ *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-+ *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-+ *     OTHER DEALINGS IN THE SOFTWARE.
-+ */
-+
-+/dts-v1/;
-+#include "sun8i-a83t.dtsi"
-+#include "sunxi-common-regulators.dtsi"
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/pinctrl/sun4i-a10.h>
-+
-+/ {
-+	model = "Sinlinx SinA83T";
-+	compatible = "sinlinx,sina83t", "allwinner,sun8i-a83t";
-+
-+	aliases {
-+		serial0 = &uart0;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		usr_led {
-+			label = "sinlinx:blue:usr";
-+			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>; /* PL10 */
-+			default-state = "on";
-+		};
-+	};
-+
-+	reg_vcc1v8: vcc1v8 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+	};
-+};
-+
-+&r_lradc {
-+	vref-supply = <&reg_vcc1v8>;
-+	status = "okay";
-+
-+	button@0 {
-+		label = "Volume Up";
-+		linux,code = <KEY_VOLUMEUP>;
-+		channel = <0>;
-+		voltage = <171428>;
-+	};
-+
-+	button@1 {
-+		label = "Volume Down";
-+		linux,code = <KEY_VOLUMEDOWN>;
-+		channel = <0>;
-+		voltage = <342857>;
-+	};
-+
-+	button@2 {
-+		label = "Menu";
-+		linux,code = <KEY_MENU>;
-+		channel = <0>;
-+		voltage = <514285>;
-+	};
-+
-+	button@3 {
-+		label = "Enter";
-+		linux,code = <KEY_ENTER>;
-+		channel = <0>;
-+		voltage = <647619>;
-+	};
-+
-+	button@4 {
-+		label = "Home";
-+		linux,code = <KEY_HOME>;
-+		channel = <0>;
-+		voltage = <780952>;
-+	};
-+};
-+
-+&mmc0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc0_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	cd-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>; /* PF6 */
-+	cd-inverted;
-+	status = "okay";
-+};
-+
-+&mmc2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mmc2_8bit_pins>;
-+	vmmc-supply = <&reg_vcc3v3>;
-+	bus-width = <4>;
-+	non-removable;
-+	cap-mmc-hw-reset;
-+	status = "okay";
-+};
-+
-+&mmc2_8bit_pins {
-+	allwinner,drive = <SUN4I_PINCTRL_40_MA>;
-+	allwinner,pull = <SUN4I_PINCTRL_PULL_UP>;
-+};
-+
-+&uart0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart0_pb_pins>;
-+	status = "okay";
-+};
--- 
-2.11.0
+On Sat, Jun 17, 2017 at 09:13:32PM +0300, Andy Shevchenko wrote:
+> On Tue, Jun 13, 2017 at 6:47 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> > This adds an I=B2C master driver for SPI -> I=B2C bus bridge chips.
+> > It currently supports NXP's SC18IS600 and SC18IS601, as well as
+> > Silicon Labs' CP2120. The driver was only tested on SC18IS600.
+>=20
+> > +static void sc18is600_setup_clock_frequency(struct sc18is600dev *dev)
+> > +{
+> > +       int reg =3D DIV_ROUND_UP(dev->clock_base, dev->i2c_clock_freque=
+ncy);
+> > +
+>=20
+> > +       if (reg < 5)
+> > +               reg =3D 5;
+> > +       if (reg > 255)
+> > +               reg =3D 255;
+>=20
+> clamp_t()
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will use clamp_val()
+
+> [...]
+> lot's of suggestions for improvements.
+> [...]
+
+Ack.
+
+> ...and better to use s600dev or alike to avoid confusion.
+>=20
+> > +               return -ENOMEM;
+>=20
+> > +       snprintf(dev->adapter.name, sizeof(dev->adapter.name),
+>=20
+> > +                "SC18IS600 at SPI %02d device %02d",
+>=20
+> Isn't too much for adapter name?
+> I don't remember if it's part of ABI, in that case it's even worse.
+
+Well, it's displayed by "i2cdetect -l". Here are the names from some
+other drivers, which I used as reference:
+
+i2c-tiny-usb at bus %03d device %03d
+i2c-diolan-u2c at bus %03d device %03d
+OSIF at bus %03d device %03d
+SMBus Via Pro adapter at %04x
+SMBus SIS5595 adapter at %04x
+
+> [...]
+> lot's of suggestions for improvements.
+> [...]
+
+Ack.
+
+-- Sebastian
+
+--wgpwq6l365pphdml
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllGh/EACgkQ2O7X88g7
++prJgRAAnZF4WwDKXjplHgqm3ybfq78f2XOe7EOpvuK4196YIfpjdClGZTdmwHcM
+Cr8g9rgNgAc9SX8P74IAEcXfs7EGGSkbN1rU88stjUaz6ZfWOU69HAn3Wbgvx0X5
+qc+MKfB58L95DZJgKiZ+3ChcwILHuIjRonTjfyfynySrPhfAk+Y54tXLEa0auk3F
+vZdhBV7FS2XPnZ+YDPd0D8XmxqAMb0k59YCyFVwjEqUy4HIUHMUP/YA28KVj6wrP
+y1YloOeCFL+iJvneRb68Nq0tt0qVpfXmxtH4bFzlVjhNKE8JCSFoKZXx144IGHGY
+v12PJu6+F7Jol7lP7J7vGA9X2KhHHk/h/IKxPTvoLFGW5Z6v7lA5GGTLDRXPp2ZN
+uyqO+b4b8f0PIk3UzQ3k9NyJIpqNaAG3s1QxaM/8AXnyZfCxFot/ncOIaCATxcrg
+8ZS0O+bxWftL8uA9e9JTF64226bh5L4g/QG/vfbUWZdaFGnMx2YfMAjs5l77wwel
+GISRbsnJ64QiTC/PnMBkAH1CzpcyZFxhWLZnYqsOdYv51UtPgoa2kuFVwcEPFDJB
+gPDWAvtUS4W2fLObBUmNmKhpTIoaHOAFWRhr3LFAwbGtGMTA3fIXjRWZVr6Aw1Pa
+vQ/c+BMNUDX3/Qwzolp8G9LR8eQO3pXtr9k8eRnYc21pzlfvA1g=
+=8/PG
+-----END PGP SIGNATURE-----
+
+--wgpwq6l365pphdml--
