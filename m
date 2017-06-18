@@ -1,33 +1,71 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v6 1/3] PCI: Add DT binding for tango PCIe controller
-Date: Sun, 18 Jun 2017 09:05:01 -0500
-Message-ID: <20170618140501.mu3zrr5dw4fstshd@rob-hp-laptop>
-References: <741766e5-cff2-db5f-d40b-6866e08fd966@sigmadesigns.com>
- <69f3ffe7-3c39-fa94-71f8-91744a869cc9@sigmadesigns.com>
- <20170607212907.2wr3hqbokjb74kj3@rob-hp-laptop>
- <3790db8d-6a4c-5c74-9ca2-431715a712a7@sigmadesigns.com>
+Subject: Re: [PATCH v2] mfd: Add driver for RAVE Supervisory Processor
+Date: Sun, 18 Jun 2017 09:04:51 -0500
+Message-ID: <20170616182904.hc44mu7qsf2po4qt@rob-hp-laptop>
+References: <20170613012358.15084-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3790db8d-6a4c-5c74-9ca2-431715a712a7@sigmadesigns.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Robin Murphy <robin.murphy@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, David Laight <david.laight@aculab.com>, linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Mason <slash.tmp@free.fr>
+In-Reply-To: <20170613012358.15084-1-andrew.smirnov@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, cphealy@gmail.com, Lucas Stach <l.stach@pengutronix.de>, Nikita Yushchenko <nikita.yoush@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 03:51:32PM +0200, Marc Gonzalez wrote:
-> Binding for the Sigma Designs SMP8759 SoC.
+On Mon, Jun 12, 2017 at 06:23:58PM -0700, Andrey Smirnov wrote:
+> Add a driver for RAVE Supervisory Processor, an MCU implementing
+> varoius bits of housekeeping functionality (watchdoging, backlight
+> control, LED control, etc) on RAVE family of products by Zodiac
+> Inflight Innovations.
 > 
-> Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
+> This driver implementes core MFD/serdev device as well as
+> communication subroutines necessary for commanding the device.
+> 
+> Cc: cphealy@gmail.com
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > ---
-> Changes from v5 to v6
-> o Delete links to elinux.org
-> o Use explicit hex numbers instead of symbolic constants for sizes (in the example)
-> o Add bus-range to "Required properties"
-> ---
->  .../devicetree/bindings/pci/tango-pcie.txt         | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/tango-pcie.txt
+> 
+> Changes since [v1]:
+> 
+>  - Fix MODULE_LICENSE to specify "GPL v2"
+> 
+>  - Fix a bug in rave_sp_get_status()
+> 
+>  - Use %zu to fix warning repored by kbuild test robot
+> 
+>  - Remove "status" properties from examples zii,rave-sp.txt as well as
+>    clarify the fact that device node is expected to be a child of a
+>    serial device node
+> 
+> NOTE:
+> 
+>  * The driver for "zii,rave-sp-watchdog" exists, but I haven't
+>    submitted it yet, becuase I wanted to make sure that API exposed by
+>    this MFD is acceptable and doesn't need drastic changes
+> 
+>  * This driver is dependent on crc_ccitt_false() introduced in
+>    2da9378d531f8cc6670c7497f20d936b706ab80b in 'linux-next'
+> 
+> 
+> [v1] lkml.kernel.org/r/20170606180643.14258-1-andrew.smirnov@gmail.com
+> 
+> 
+>  .../devicetree/bindings/mfd/zii,rave-sp.txt        |   36 +
 
 Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/mfd/Kconfig                                |    9 +
+>  drivers/mfd/Makefile                               |    1 +
+>  drivers/mfd/rave-sp.c                              | 1009 ++++++++++++++++++++
+>  include/linux/rave-sp.h                            |   54 ++
+>  5 files changed, 1109 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/zii,rave-sp.txt
+>  create mode 100644 drivers/mfd/rave-sp.c
+>  create mode 100644 include/linux/rave-sp.h
