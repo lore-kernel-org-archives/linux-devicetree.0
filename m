@@ -1,46 +1,61 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v7.1 7/7] device property: Get rid of struct
- fwnode_handle type field
-Date: Sun, 18 Jun 2017 09:58:53 +0300
-Message-ID: <20170618065853.GO629@lahna.fi.intel.com>
-References: <1496741861-8240-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497354548-17502-1-git-send-email-sakari.ailus@linux.intel.com>
+From: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/5] arm64: dts: Add ufs dts node
+Date: Sun, 18 Jun 2017 15:06:01 +0800
+Message-ID: <CAFGCpxwKjvNAj1yVqstBmtxBexwpRrcPo+F3XJP9j-CZhuH0MQ@mail.gmail.com>
+References: <20170616065119.10704-4-butao@hisilicon.com> <201706180814.Kte2462z%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1497354548-17502-1-git-send-email-sakari.ailus@linux.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, kieran.bingham@ideasonboard.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201706180814.Kte2462z%fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Bu Tao <butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, kbuild-all-JC7UmRfGjtg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "xuwei (O)" <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TasMV2rI37PzA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 02:49:08PM +0300, Sakari Ailus wrote:
-> +#define DECLARE_ACPI_FWNODE_OPS(ops) \
-> +	const struct fwnode_operations ops = { \
-> +		.device_is_available = acpi_fwnode_device_is_available, \
-> +		.property_present = acpi_fwnode_property_present, \
-> +		.property_read_int_array = \
-> +			acpi_fwnode_property_read_int_array, \
-> +		.property_read_string_array = \
-> +			acpi_fwnode_property_read_string_array, \
-> +		.get_parent = acpi_node_get_parent, \
-> +		.get_next_child_node = acpi_get_next_subnode, \
-> +		.get_named_child_node = acpi_fwnode_get_named_child_node, \
-> +		.graph_get_next_endpoint = \
-> +			acpi_fwnode_graph_get_next_endpoint, \
-> +		.graph_get_remote_endpoint = \
-> +			acpi_fwnode_graph_get_remote_endpoint, \
-> +		.graph_get_port_parent = acpi_node_get_parent, \
-> +		.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint, \
-> +	}; \
-> +	EXPORT_SYMBOL_GPL(ops)
+On Sun, Jun 18, 2017 at 8:31 AM, kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Bu,
+>
+> [auto build test ERROR on mkp-scsi/for-next]
+> [also build test ERROR on v4.12-rc5 next-20170616]
+> [cannot apply to robh/for-next]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
 
-Can you align those backslashes, like
+It applies to:
+ git://github.com/hisilicon/linux-hisi.git tags/hisi-arm64-dt-for-4.13-v2
 
-	const struct fwnode_operations ops = { 				\
-		.device_is_available = acpi_fwnode_device_is_available, \
-		.property_present = acpi_fwnode_property_present,	\
-		...
+> url:    https://github.com/0day-ci/linux/commits/Bu-Tao/scsi-ufs-add-ufs-driver-code-for-Hi3660-SoC/20170618-045141
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/mkp/scsi.git for-next
+> config: arm64-defconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm64
+>
+> All errors (new ones prefixed by >>):
+>
+>>> Error: arch/arm64/boot/dts/hisilicon/hi3660.dtsi:152.24-25 syntax error
+>    FATAL ERROR: Unable to parse input tree
 
-other than that the patch looks good.
+UFS node has a dependency on clock node <&crg_ctrl ...>, which is
+submitted in another patchset [1]. [1] has been Ack'ed by platform
+maintainer Wei Xu, and is available in the git repository at:
+
+  git://github.com/hisilicon/linux-hisi.git tags/hisi-arm64-dt-for-4.13-v2
+
+[1] hi3660-hikey960 dts base:
+https://www.spinics.net/lists/kernel/msg2533737.html
+
+-Guodong
+
+
+>
+> ---
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
