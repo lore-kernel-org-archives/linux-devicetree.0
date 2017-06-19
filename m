@@ -1,74 +1,96 @@
-From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Mon, 19 Jun 2017 09:50:27 -0700
-Message-ID: <8a45ea64-5a0e-6ecf-1e1d-ab8e85aa3115@broadcom.com>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
- <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop>
+From: Philippe CORNU <philippe.cornu@st.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add Synopsys DW MIPI DSI DRM
+ bridge driver
+Date: Mon, 19 Jun 2017 16:51:56 +0000
+Message-ID: <c939ea5e-1c45-72af-0a0b-1f89fffa8c87@st.com>
+References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
+ <1496414235-20098-3-git-send-email-philippe.cornu@st.com>
+ <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
+Content-ID: <ABAECA057032414EA19BB54477EC2D0C@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Eric Anholt <eric@anholt.net>, Thierry Reding <thierry.reding@gmail.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Chris Zhong <zyw@rock-chips.com>, Mickael REULIER <mickael.reulier@st.com>, Archit Taneja <architt@codeaurora.org>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Xinliang Liu <xinliang.liu@linaro.org>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, Vincent ABRIOU <vincent.abriou@st.com>, Ludov
 List-Id: devicetree@vger.kernel.org
 
-Hi David, Rob,
-I will address all of Rob's comments below.
-
-Since a part of the patch was applied to 'net-next', would you like me to
-send a new patch (based on the applied one), or a 'V2' of this patch ?
-
-Thanks
-Arun
-
-On 17-06-18 07:04 AM, Rob Herring wrote:
-> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
->> Add device tree binding documentation for the Broadcom DTE
->> PTP clock driver.
+On 06/08/2017 05:40 PM, Rob Herring wrote:
+> On Fri, Jun 02, 2017 at 04:37:11PM +0200, Philippe CORNU wrote:
+>> This patch adds documentation of device tree bindings for the
+>> Synopsys DesignWare MIPI DSI host DRM bridge driver.
 >>
->> Signed-off-by: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> Signed-off-by: Philippe CORNU <philippe.cornu@st.com>
 >> ---
->>  Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 13 +++++++++++++
->>  1 file changed, 13 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+>>   .../bindings/display/bridge/dw_mipi_dsi.txt        | 30 ++++++++++++++++++++++
+>>   1 file changed, 30 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
 >>
->> diff --git a/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+>> diff --git a/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
 >> new file mode 100644
->> index 0000000..07590bc
+>> index 0000000..1d7c438
 >> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->> @@ -0,0 +1,13 @@
->> +* Broadcom Digital Timing Engine(DTE) based PTP clock driver
-> 
-> Bindings describe h/w, not drivers.
-> 
+>> +++ b/Documentation/devicetree/bindings/display/bridge/dw_mipi_dsi.txt
+>> @@ -0,0 +1,30 @@
+>> +Synopsys DesignWare MIPI DSI host controller
+>> +============================================
 >> +
->> +Required properties:
->> +- compatible: should be "brcm,ptp-dte"
-> 
-> Looks too generic. You need SoC specific compatible strings.
-> 
->> +- reg: address and length of the DTE block's NCO registers
+>> +This document defines device tree properties for the Synopsys DesignWare MIPI
+>> +DSI host controller. It doesn't constitue a device tree binding specification
+>> +by itself but is meant to be referenced by platform-specific device tree
+>> +bindings.
 >> +
->> +Example:
+>> +When referenced from platform device tree bindings the properties defined in
+>> +this document are defined as follows. The platform device tree bindings are
+>> +responsible for defining whether each property is required or optional.
 >> +
->> +ptp_dte: ptp_dte@180af650 {
+>> +- reg: Memory mapped base address and length of the DWC MIPI DSI
+>> +  registers. (mandatory)
+>> +
+>> +- clocks: References to all the clocks specified in the clock-names property
+>> +  as specified in [1]. (mandatory)
+>> +
+>> +- clock-names: "pclk" is peripheral clock for either AHB and APB. (mandatory)
 > 
-> Don't use '_' in node names.
+> Seems strange there's not also a pixel or bit clock? Or this gets driven
+> from the phy?
 > 
->> +	compatible = "brcm,ptp-dte";
->> +	reg = <0x180af650 0x10>;
->> +	status = "okay";
->> +};
+Hi Rob,
+And many thanks for your comments :)
+
+There is a "physical" pixel clock entering into the "DSI controller IP" 
+but the "DSI controller driver" does not need to control (or read) it 
+with the dt because this clock information (the frequency) is also 
+available in panel timings and the drm/kms framework will propagate the 
+panel timings in the drm/kms "crtc/encoder/bridge&panel/connector..." 
+chain. Then, the DSI controller driver will compute phy parameters 
+according to these panel timings.
+Adding a pixel clock dependency in the dt here is then not necessary as 
+the frequency information comes through the panel timings.
+
+Philippe
+>> +
+>> +- resets: References to all the resets specified in the reset-names property
+>> +  as specified in [2]. (optional)
+>> +
+>> +- reset-names: string reset name, must be "apb" if used. (optional)
+>> +
+>> +- panel or bridge node: see [3]. (mandatory)
+>> +
+>> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +[2] Documentation/devicetree/bindings/reset/reset.txt
+>> +[3] Documentation/devicetree/bindings/display/mipi-dsi-bus.txt
 >> -- 
 >> 1.9.1
 >>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
