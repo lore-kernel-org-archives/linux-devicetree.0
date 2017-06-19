@@ -1,45 +1,44 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4 25/28] ARM: dts: s500: Add SPS node
-Date: Mon, 19 Jun 2017 06:01:32 +0200
-Message-ID: <304a35b8-825f-878b-6e14-9662ab9ad8ca@suse.de>
-References: <20170606005426.26446-1-afaerber@suse.de>
- <20170606005426.26446-26-afaerber@suse.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v5 4/6] regulator: pfuze100: add fsl,pmic-stby-poweroff property
+Date: Mon, 19 Jun 2017 07:02:43 +0200
+Message-ID: <20170619050245.2632-5-o.rempel@pengutronix.de>
+References: <20170619050245.2632-1-o.rempel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606005426.26446-26-afaerber-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170619050245.2632-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
+To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leonard Crestez <leonard.crestez-3arQi8VN3Tc@public.gmane.org>
+Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 06.06.2017 um 02:54 schrieb Andreas Färber:
-> Add Smart Power System node for PM domains.
-> 
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  v3 -> v4:
->  * Extended commit message
->  * Split off association of power-domains (avoids include/dt-bindings/ dependency)
->  
->  v3: new
->  
->  arch/arm/boot/dts/s500.dtsi | 6 ++++++
->  1 file changed, 6 insertions(+)
+Document the new optional "fsl,pmic-stby-poweroff" property.
 
-Applied to linux-actions.git v4.13/dt branch:
+Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/regulator/pfuze100.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.13/dt
-
-Regards,
-Andreas
-
+diff --git a/Documentation/devicetree/bindings/regulator/pfuze100.txt b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+index 444c47831a40..197f1a52e960 100644
+--- a/Documentation/devicetree/bindings/regulator/pfuze100.txt
++++ b/Documentation/devicetree/bindings/regulator/pfuze100.txt
+@@ -4,6 +4,13 @@ Required properties:
+ - compatible: "fsl,pfuze100", "fsl,pfuze200", "fsl,pfuze3000"
+ - reg: I2C slave address
+ 
++Optional properties:
++- fsl,pmic-stby-poweroff: if present, configure the PMIC to shutdown all
++  power rails when PMIC_STBY_REQ line is asserted during the power off sequence.
++  Use this option if the SoC should be powered off by external power
++  management IC (PMIC) on PMIC_STBY_REQ signal.
++  As opposite to PMIC_STBY_REQ boards can implement PMIC_ON_REQ signal.
++
+ Required child node:
+ - regulators: This is the list of child nodes that specify the regulator
+   initialization data for defined regulators. Please refer to below doc
 -- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
