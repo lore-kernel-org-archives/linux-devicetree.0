@@ -1,138 +1,241 @@
-Return-Path: <SRS0=cDgn=5Z=linaro.org=guodong.xu@kernel.org>
-MIME-Version: 1.0
-In-Reply-To: <1497930035-60894-3-git-send-email-kevin.wangtao@hisilicon.com>
-References: <1497930035-60894-1-git-send-email-kevin.wangtao@hisilicon.com> <1497930035-60894-3-git-send-email-kevin.wangtao@hisilicon.com>
-From: Guodong Xu <guodong.xu@linaro.org>
-Date: Tue, 20 Jun 2017 15:38:58 +0800
-Message-ID: <CAFGCpxwmN3jAZn2chK+QQ-YKg7TwWJOTHSi1VzwcSQ7Mm3gQng@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: dts: register Hi3660's thermal sensor
-Content-Type: multipart/alternative; boundary="94eb2c07947037d50405525f5819"
-To: Tao Wang <kevin.wangtao@hisilicon.com>
-Cc: edubezval@gmail.com, Leo Yan <leo.yan@linaro.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, sunzhaosheng@hisilicon.com, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org
+Return-Path: <SRS0=2DMd=5Y=goldelico.com=hns@kernel.org>
+Content-Type: multipart/alternative; boundary="Apple-Mail=_D1F0C594-E136-46B9-AA39-5ACC45F541B9"
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH v6 3/4] power: supply: twl4030-charger: move irq allocation to just before irqs are enabled
+From: H. Nikolaus Schaller <hns@goldelico.com>
+In-Reply-To: <20170615114704.odpislk5a4nsigtv@earth>
+Date: Mon, 19 Jun 2017 10:41:14 +0200
+Message-Id: <BFA9DCA4-7AB7-455C-B496-7033B083DE56@goldelico.com>
+References: <cover.1497432355.git.hns@goldelico.com> <0eeffa7a6ab8e4213f518e2caf6982d2b77dc0b2.1497432355.git.hns@goldelico.com> <20170615114704.odpislk5a4nsigtv@earth>
+To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>, NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Marek Belisko <marek@goldelico.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
---94eb2c07947037d50405525f5819
-Content-Type: text/plain; charset="UTF-8"
+
+--Apple-Mail=_D1F0C594-E136-46B9-AA39-5ACC45F541B9
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
 
-2017=E5=B9=B46=E6=9C=8820=E6=97=A5 =E4=B8=8A=E5=8D=8811:49=EF=BC=8C"Tao Wan=
-g" <kevin.wangtao@hisilicon.com>=E5=86=99=E9=81=93=EF=BC=9A
+Hi Sebastian,
 
-Bind thermal sensor driver for Hi3660.
+> Am 15.06.2017 um 13:47 schrieb Sebastian Reichel =
+<sebastian.reichel@collabora.co.uk>:
+>=20
+> Hi,
+>=20
+> On Wed, Jun 14, 2017 at 11:25:55AM +0200, H. Nikolaus Schaller wrote:
+>> This avoids a potential race if irqs are enabled and triggered too =
+early
+>> before the worker is properly set up.
+>>=20
+>> Suggested-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+>> ---
+>> drivers/power/supply/twl4030_charger.c | 28 =
+++++++++++++++--------------
+>> 1 file changed, 14 insertions(+), 14 deletions(-)
+>>=20
+>> diff --git a/drivers/power/supply/twl4030_charger.c =
+b/drivers/power/supply/twl4030_charger.c
+>> index 1fbbe0cc216a..3bebeecb4a1f 100644
+>> --- a/drivers/power/supply/twl4030_charger.c
+>> +++ b/drivers/power/supply/twl4030_charger.c
+>> @@ -984,6 +984,16 @@ static int twl4030_bci_probe(struct =
+platform_device *pdev)
+>>=20
+>> 	platform_set_drvdata(pdev, bci);
+>>=20
+>> +	if (bci->dev->of_node) {
+>> +		struct device_node *phynode;
+>> +
+>> +		phynode =3D =
+of_find_compatible_node(bci->dev->of_node->parent,
+>> +						  NULL, =
+"ti,twl4030-usb");
+>> +		if (phynode)
+>> +			bci->transceiver =3D devm_usb_get_phy_by_node(
+>> +				bci->dev, phynode, &bci->usb_nb);
+>> +	}
+>> +
+>=20
+> The notifier is not that much different from an irq. I see
+> the call can access at least the iio channel (so iio channel
+> should be registered first).
 
-Signed-off-by: Tao Wang <kevin.wangtao@hisilicon.com>
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi |    7 +++++++
- 1 file changed, 7 insertions(+)
+Hm. I only see that it can schedule the worker (which means the worker =
+should be
+initialized first) but does not access iio by itself.
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 3983086..cc67958 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -156,5 +156,12 @@
+Can the worker run before probe() succeeds?
+
+> I suspect worker and power-supply
+> should also be initialized/registered first. Best location seems
+> to be directly before requesting the irqs.
+
+I think they should be initialized even before =
+devm_usb_get_phy_by_node().
+
+>=20
+>> 	bci->channel_vac =3D devm_iio_channel_get(&pdev->dev, "vac");
+>> 	if (IS_ERR(bci->channel_vac)) {
+>> 		bci->channel_vac =3D NULL;
+>> @@ -1006,6 +1016,10 @@ static int twl4030_bci_probe(struct =
+platform_device *pdev)
+>> 		return ret;
+>> 	}
+>>=20
+>> +	INIT_WORK(&bci->work, twl4030_bci_usb_work);
+>> +	INIT_DELAYED_WORK(&bci->current_worker, twl4030_current_worker);
+>> +
+>> +	bci->usb_nb.notifier_call =3D twl4030_bci_usb_ncb;
+>=20
+> You should configure the notifier block *before* registering it.
+
+Isn't the notifier block already configured by =
+devm_usb_get_phy_by_node() - except for the pointer to the =
+notifier_call?
+
+So the only harmful thing I can see is that a notifier arrives with =
+usb_nb.notifier_call still being uninitialized as NULL.
+
+Is this harmful or not? I don't know.
+
+I can only guess that it could equally well be set right after =
+devm_usb_get_phy_by_node()
+and I have reworked it that way.
+
+It still works on GTA04 and OpenPandora with neither observing a =
+regression nor an improvement.
+
+So I will send a v7 with what I think should be most robust.
+
+BR and thanks,
+Nikolaus
 
 
-i am wondering which tree this patch should be applied to. Actually Olof
-Johansson olof@lixom.net just merged hi3660 dts into his tree. You should
-better rebase you dts patch onto that.
-
-
-                        clock-names =3D "uartclk", "apb_pclk";
-                        status =3D "disabled";
-                };
-+
-+               tsensor: tsensor {
-+                       compatible =3D "hisilicon,thermal-hi3660";
-+                       reg =3D <0x0 0xfff30000 0x0 0x1000>;
-+                       #thermal-sensor-cells =3D <1>;
-+                       status =3D "ok";
-
-
-please remove status ok. that's default. redundant.
-
-+               };
-        };
- };
---
-1.7.9.5
-
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---94eb2c07947037d50405525f5819
-Content-Type: text/html; charset="UTF-8"
+--Apple-Mail=_D1F0C594-E136-46B9-AA39-5ACC45F541B9
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/html;
+	charset=us-ascii
 
-<div dir=3D"auto"><div><br><div class=3D"gmail_extra"><br><div class=3D"gma=
-il_quote">2017=E5=B9=B46=E6=9C=8820=E6=97=A5 =E4=B8=8A=E5=8D=8811:49=EF=BC=
-=8C&quot;Tao Wang&quot; &lt;<a href=3D"mailto:kevin.wangtao@hisilicon.com">=
-kevin.wangtao@hisilicon.com</a>&gt;=E5=86=99=E9=81=93=EF=BC=9A<br type=3D"a=
-ttribution"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;border-l=
-eft:1px #ccc solid;padding-left:1ex">Bind thermal sensor driver for Hi3660.=
-<br>
-<br>
-Signed-off-by: Tao Wang &lt;<a href=3D"mailto:kevin.wangtao@hisilicon.com">=
-kevin.wangtao@hisilicon.com</a>&gt;<br>
-Signed-off-by: Leo Yan &lt;<a href=3D"mailto:leo.yan@linaro.org">leo.yan@li=
-naro.org</a>&gt;<br>
----<br>
-=C2=A0arch/arm64/boot/dts/hisilicon/<wbr>hi3660.dtsi |=C2=A0 =C2=A0 7 +++++=
-++<br>
-=C2=A01 file changed, 7 insertions(+)<br>
-<br>
-diff --git a/arch/arm64/boot/dts/<wbr>hisilicon/hi3660.dtsi b/arch/arm64/bo=
-ot/dts/<wbr>hisilicon/hi3660.dtsi<br>
-index 3983086..cc67958 100644<br>
---- a/arch/arm64/boot/dts/<wbr>hisilicon/hi3660.dtsi<br>
-+++ b/arch/arm64/boot/dts/<wbr>hisilicon/hi3660.dtsi<br>
-@@ -156,5 +156,12 @@<br></blockquote></div></div></div><div dir=3D"auto"><b=
-r></div><div dir=3D"auto">i am wondering which tree this patch should be ap=
-plied to. Actually Olof Johansson <a href=3D"mailto:olof@lixom.net">olof@li=
-xom.net</a>=C2=A0just merged hi3660 dts into his tree. You should better re=
-base you dts patch onto that.</div><div dir=3D"auto"><br></div><div dir=3D"=
-auto"><br></div><div dir=3D"auto"><div class=3D"gmail_extra"><div class=3D"=
-gmail_quote"><blockquote class=3D"quote" style=3D"margin:0 0 0 .8ex;border-=
-left:1px #ccc solid;padding-left:1ex">
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 clock-names =3D &quot;uartclk&quot;, &quot;apb_pclk&quot;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 status =3D &quot;disabled&quot;;<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
-+<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0tsensor: tsensor {<=
-br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0compatible =3D &quot;hisilicon,thermal-hi3660&quot;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0reg =3D &lt;0x0 0xfff30000 0x0 0x1000&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0#thermal-sensor-cells =3D &lt;1&gt;;<br>
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0status =3D &quot;ok&quot;;<br></blockquote></div></div></div><div=
- dir=3D"auto"><br></div><div dir=3D"auto">please remove status ok. that&#39=
-;s default. redundant.</div><div dir=3D"auto"><br></div><div dir=3D"auto"><=
-div class=3D"gmail_extra"><div class=3D"gmail_quote"><blockquote class=3D"q=
-uote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1e=
-x">
-+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0};<br>
-=C2=A0 =C2=A0 =C2=A0 =C2=A0 };<br>
-=C2=A0};<br>
-<font color=3D"#888888">--<br>
-1.7.9.5<br>
-<br>
-<br>
-______________________________<wbr>_________________<br>
-linux-arm-kernel mailing list<br>
-<a href=3D"mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@li=
-sts.<wbr>infradead.org</a><br>
-<a href=3D"http://lists.infradead.org/mailman/listinfo/linux-arm-kernel" re=
-l=3D"noreferrer" target=3D"_blank">http://lists.infradead.org/<wbr>mailman/=
-listinfo/linux-arm-<wbr>kernel</a><br>
-</font></blockquote></div><br></div></div></div>
+<html><head><meta http-equiv=3D"Content-Type" content=3D"text/html =
+charset=3Dus-ascii"></head><body style=3D"word-wrap: break-word; =
+-webkit-nbsp-mode: space; -webkit-line-break: after-white-space;" =
+class=3D"">Hi Sebastian,<div class=3D""><br class=3D""><blockquote =
+type=3D"cite" class=3D"">Am 15.06.2017 um 13:47 schrieb Sebastian =
+Reichel &lt;<a href=3D"mailto:sebastian.reichel@collabora.co.uk" =
+class=3D"">sebastian.reichel@collabora.co.uk</a>&gt;:<br class=3D""><br =
+class=3D"">Hi,<br class=3D""><br class=3D"">On Wed, Jun 14, 2017 at =
+11:25:55AM +0200, H. Nikolaus Schaller wrote:<br class=3D""><blockquote =
+type=3D"cite" style=3D"font-family: Menlo-Regular; font-size: 11px; =
+font-style: normal; font-variant-caps: normal; font-weight: normal; =
+letter-spacing: normal; orphans: auto; text-align: start; text-indent: =
+0px; text-transform: none; white-space: normal; widows: auto; =
+word-spacing: 0px; -webkit-text-stroke-width: 0px;" class=3D"">This =
+avoids a potential race if irqs are enabled and triggered too early<br =
+class=3D"">before the worker is properly set up.<br class=3D""><br =
+class=3D"">Suggested-by: Grygorii Strashko &lt;<a =
+href=3D"mailto:grygorii.strashko@ti.com" =
+class=3D"">grygorii.strashko@ti.com</a>&gt;<br class=3D"">Signed-off-by: =
+H. Nikolaus Schaller &lt;<a href=3D"mailto:hns@goldelico.com" =
+class=3D"">hns@goldelico.com</a>&gt;<br class=3D"">---<br =
+class=3D"">drivers/power/supply/twl4030_charger.c | 28 =
+++++++++++++++--------------<br class=3D"">1 file changed, 14 =
+insertions(+), 14 deletions(-)<br class=3D""><br class=3D"">diff --git =
+a/drivers/power/supply/twl4030_charger.c =
+b/drivers/power/supply/twl4030_charger.c<br class=3D"">index =
+1fbbe0cc216a..3bebeecb4a1f 100644<br class=3D"">--- =
+a/drivers/power/supply/twl4030_charger.c<br class=3D"">+++ =
+b/drivers/power/supply/twl4030_charger.c<br class=3D"">@@ -984,6 +984,16 =
+@@ static int twl4030_bci_probe(struct platform_device *pdev)<br =
+class=3D""><br class=3D""><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span>platform_set_drvdata(pdev, =
+bci);<br class=3D""><br class=3D"">+<span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span>if (bci-&gt;dev-&gt;of_node) {<br =
+class=3D"">+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>struct device_node *phynode;<br class=3D"">+<br class=3D"">+<span =
+class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span =
+class=3D"Apple-tab-span" style=3D"white-space:pre">	</span>phynode =3D=
+ of_find_compatible_node(bci-&gt;dev-&gt;of_node-&gt;parent,<br =
+class=3D"">+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>&nbsp;&nbsp;NULL, "ti,twl4030-usb");<br class=3D"">+<span =
+class=3D"Apple-tab-span" style=3D"white-space:pre">	</span><span =
+class=3D"Apple-tab-span" style=3D"white-space:pre">	</span>if =
+(phynode)<br class=3D"">+<span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span>bci-&gt;transceiver =3D =
+devm_usb_get_phy_by_node(<br class=3D"">+<span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span>bci-&gt;dev, phynode, =
+&amp;bci-&gt;usb_nb);<br class=3D"">+<span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span>}<br class=3D"">+<br =
+class=3D""></blockquote><br class=3D"">The notifier is not that much =
+different from an irq. I see<br class=3D"">the call can access at least =
+the iio channel (so iio channel<br class=3D"">should be registered =
+first).</blockquote><div class=3D""><br class=3D""></div>Hm. I only see =
+that it can schedule the worker (which means the worker should =
+be</div><div class=3D"">initialized first) but does not access iio by =
+itself.</div><div class=3D""><br class=3D""></div><div class=3D"">Can =
+the worker run before probe() succeeds?</div><div class=3D""><br =
+class=3D""><blockquote type=3D"cite" class=3D""> I suspect worker and =
+power-supply<br class=3D"">should also be initialized/registered first. =
+Best location seems<br class=3D"">to be directly before requesting the =
+irqs.<br class=3D""></blockquote><div class=3D""><br class=3D""></div>I =
+think they should be initialized even before =
+devm_usb_get_phy_by_node().</div><div class=3D""><br =
+class=3D""><blockquote type=3D"cite" class=3D""><br class=3D""><blockquote=
+ type=3D"cite" style=3D"font-family: Menlo-Regular; font-size: 11px; =
+font-style: normal; font-variant-caps: normal; font-weight: normal; =
+letter-spacing: normal; orphans: auto; text-align: start; text-indent: =
+0px; text-transform: none; white-space: normal; widows: auto; =
+word-spacing: 0px; -webkit-text-stroke-width: 0px;" class=3D""><span =
+class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>bci-&gt;channel_vac =3D devm_iio_channel_get(&amp;pdev-&gt;dev, =
+"vac");<br class=3D""><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span>if (IS_ERR(bci-&gt;channel_vac)) =
+{<br class=3D""><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>bci-&gt;channel_vac =3D NULL;<br class=3D"">@@ -1006,6 +1016,10 =
+@@ static int twl4030_bci_probe(struct platform_device *pdev)<br =
+class=3D""><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span><span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>return ret;<br class=3D""><span class=3D"Apple-tab-span" =
+style=3D"white-space:pre">	</span>}<br class=3D""><br =
+class=3D"">+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>INIT_WORK(&amp;bci-&gt;work, twl4030_bci_usb_work);<br =
+class=3D"">+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>INIT_DELAYED_WORK(&amp;bci-&gt;current_worker, =
+twl4030_current_worker);<br class=3D"">+<br class=3D"">+<span =
+class=3D"Apple-tab-span" style=3D"white-space:pre">	=
+</span>bci-&gt;usb_nb.notifier_call =3D twl4030_bci_usb_ncb;<br =
+class=3D""></blockquote><br class=3D"">You should configure the notifier =
+block *before* registering it.<br class=3D""></blockquote><div =
+class=3D""><br class=3D""></div>Isn't the notifier block already =
+configured by devm_usb_get_phy_by_node() - except for the pointer to the =
+notifier_call?</div><div class=3D""><br class=3D""></div><div =
+class=3D"">So the only harmful thing I can see is that a notifier =
+arrives with usb_nb.notifier_call still being uninitialized as =
+NULL.</div><div class=3D""><br class=3D""></div><div class=3D"">Is this =
+harmful or not? I don't know.</div><div class=3D""><br =
+class=3D""></div><div class=3D"">I can only guess that it could equally =
+well be set right after devm_usb_get_phy_by_node()</div><div =
+class=3D"">and I have reworked it that way.</div><div class=3D""><br =
+class=3D""></div><div class=3D"">It still works on GTA04 and OpenPandora =
+with neither observing a regression nor an improvement.</div><div =
+class=3D""><br class=3D""></div><div class=3D"">So I will send a v7 with =
+what I think should be most robust.</div><div class=3D""><br =
+class=3D""></div><div class=3D"">BR and thanks,</div><div =
+class=3D"">Nikolaus</div><div class=3D""><br =
+class=3D""></div></body></html>=
 
---94eb2c07947037d50405525f5819--
+--Apple-Mail=_D1F0C594-E136-46B9-AA39-5ACC45F541B9--
