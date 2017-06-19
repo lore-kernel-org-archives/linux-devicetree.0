@@ -1,57 +1,69 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 12/16] mmc: host: omap_hsmmc: Add support to set IODELAY
- values
-Date: Mon, 19 Jun 2017 00:25:23 -0700
-Message-ID: <20170619072523.GL3730@atomide.com>
-References: <20170616124544.15046-1-kishon@ti.com>
- <20170616124544.15046-13-kishon@ti.com>
- <20170619060256.GK3730@atomide.com>
- <810fba3e-a488-fa0d-5639-47f1c76ea2b6@ti.com>
+From: Oleksij Rempel <ore@pengutronix.de>
+Subject: Re: [RFC PATCH 0/3] provide imx rproc driver
+Date: Mon, 19 Jun 2017 09:31:03 +0200
+Message-ID: <544aa538-b9b6-1ed5-ffea-919fa4ebd644@pengutronix.de>
+References: <20170614204855.18347-1-o.rempel@pengutronix.de>
+ <20170619051338.GA3064@Sanchayan-Arch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <810fba3e-a488-fa0d-5639-47f1c76ea2b6-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, nsekhar-l0cyMroinI0@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Ravikumar Kattekola <rk-l0cyMroinI0@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170619051338.GA3064@Sanchayan-Arch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sanchayan <maitysanchayan@gmail.com>, Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170618 23:37]:
-> Hi Tony,
-> 
-> On Monday 19 June 2017 11:32 AM, Tony Lindgren wrote:
-> > * Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> [170616 05:47]:
-> >> The data manual of J6/J6 Eco recommends to set different IODELAY values
-> >> depending on the mode in which the MMC/SD is enumerated in order to
-> >> ensure IO timings are met.
-> >>
-> >> Add support to set the IODELAY values depending on the various MMC
-> >> modes using the pinctrl APIs.
-> > 
-> > This does not seem to apply against Linux next for me for
-> > the binding. Fixing that, compile fails for me with:
-> > 
-> > drivers/mmc/host/omap_hsmmc.c:2384:13: error:
-> > 'struct omap_hsmmc_platform_data' has no member named 'version'
-> 
-> This series has a dependency with
-> https://www.spinics.net/lists/arm-kernel/msg586215.html series
-> 
-> *version* member is added in patch with $subject
-> "ARM: OMAP2+: Add pdata-quirks for MMC/SD on DRA74x EVM"
+Hi Sanchayan,
 
-Ah sorry I keep forgetting that. Looks like the only thing
-pending with that series is that you were going to send
-an update for omap3-overo-base.
+On 19.06.2017 07:13, Sanchayan wrote:
+> Hello Oleksij,
+>
+> On 17-06-14 22:48:52, Oleksij Rempel wrote:
+>> Hallo all,
+>>
+>> this is RFC patchset to provide remoteproc functionality on
+>> imx7d SoC.
+>> Since current kernel do not have devicetrees for board which
+>> I used for testing, this RFC patchset includes this too.
+>>
+>> For testing I used this simple counter written in ASM:
+>> ======================================
+>>         .syntax unified
+>>         .text
+>>         .thumb
+>>         .int 0x10020000                 @ Initial SP value
+>>         .int reset + 1
+>>
+>> reset:
+>>
+>>         mov     r0, #0x55
+>>         ldr     r1, =(0x40)
+>> 1:
+>>         str     r0, [r1]
+>>         add     r0, 1
+>>         b       1b
+>>
+>>         /* Dummy data, required by remoteproc loader */
+>>         /* Please FIXME, this part seem to be incorrect */
+>>         .data
+>>         .section .resource_table, "aw"
+>>         .word   1, 0, 0, 0      /* struct resource_table base */
+>>         .word   0               /* uint32_t offset[1] */
+>> ============================================================
+>> compiled with:
+>> ${CROSS}as -o imx7m4.o imx7m4.S
+>> ${CROSS}ld -Ttext=0x0 -o imx7m4.elf imx7m4.o
+>> cp imx7m4.elf /srv/nfs/sid-armhf/lib/firmware/rproc-imx_rproc-fw
+>>
+>> Functionality was confirmed with current OpenOCD master.
+>> OpenOCD cfg file can be found here:
+>> https://github.com/olerem/openocd/blob/imx7-2017.06.14/tcl/target/imx7.cfg
+>>
+>> Comment and suggestions are welcome.
+>
+> Have you by chance also tried testing this with FreeRTOS code running on the
+> M4 side?
 
-BTW, we really should get rid of the mach-omap2/hsmmc.c,
-I think overo is the only user for it now.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+no, currently my priority is to provide basic functionality with easy 
+understandable target code and dependencies.
