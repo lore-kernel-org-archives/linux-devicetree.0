@@ -1,38 +1,33 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v11 5/6] i2c: designware: add SLAVE mode functions
-Date: Mon, 19 Jun 2017 19:05:03 +0300
-Message-ID: <CAHp75VfpgOZ72=5F3aN_tfau3TnyGLsdKt=sdx_ZJ04wtxMtJg@mail.gmail.com>
-References: <cover.1497025304.git.lolivei@synopsys.com> <bef9f237bed23f0ea05499b085103f7eea9058a1.1497025304.git.lolivei@synopsys.com>
- <CAHp75VeHoUrq-PfayNZYGP0f-bbnKQQEN4uMBg6ZASJs46b_PQ@mail.gmail.com>
- <6e332d71-1891-21aa-4479-b91a7550f8af@synopsys.com> <20170619155858.xjs5nvdkg42b73vg@ninjato>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH] dt-bindings: net: sms911x: Add missing optional VDD regulators
+Date: Mon, 19 Jun 2017 18:05:41 +0200
+Message-ID: <20170619160541.5155-1-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170619155858.xjs5nvdkg42b73vg@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Luis Oliveira <Luis.Oliveira@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, "David S. Miller" <davem@davemloft.net>, Arnd Bergmann <arnd@arndb.de>, Krzysztof Kozlowski <krzk@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 19, 2017 at 6:58 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
->> Believe me I've looked for mistakes like this but I've read the code so many
->> times I don't think I can see the obvious anymore.
->
-> Yes, I know this. And you worked hard on this slave feature,
-> acknowledged.
->
-> Patches 1-4 look good to me from what I glimpsed. I largely trust here
-> the *much* appreciated review from Jarkko and Andy. Thanks a lot, guys!
->
-> I wonder if we haven't reached a state where Luis just could fix the
-> buildbot error (missing 'select I2C_SLAVE') and the thing pointed out by
-> Andy and we handle further small fixes incrementally during the v4.13
-> cycle? AFAICS there is no major show-stopper, or am I wrong?
+The lan911x family of devices require supplying from 3.3 V power
+supplies (connected to VDD_IO, VDD_A and VREG_3.3 pins).  The existing
+driver however obtains only VDD_IO and VDD_A regulators in an optional
+way so document this in bindings.
 
-I would go with the following plan:
-1. Push 1-4
-2. Resend 5-6 with addressed pointed issues for one more (fast) round
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ Documentation/devicetree/bindings/net/smsc911x.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/Documentation/devicetree/bindings/net/smsc911x.txt b/Documentation/devicetree/bindings/net/smsc911x.txt
+index 16c3a9501f5d..acfafc8e143c 100644
+--- a/Documentation/devicetree/bindings/net/smsc911x.txt
++++ b/Documentation/devicetree/bindings/net/smsc911x.txt
+@@ -27,6 +27,7 @@ Optional properties:
+   of the device. On many systems this is wired high so the device goes
+   out of reset at power-on, but if it is under program control, this
+   optional GPIO can wake up in response to it.
++- vdd33a-supply, vddvario-supply : 3.3V analog and IO logic power supplies
+ 
+ Examples:
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.9.3
