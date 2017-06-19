@@ -1,588 +1,117 @@
-From: Xiaowei Song <songxiaowei@hisilicon.com>
-Subject: [PATCH v10 2/3] PCI: dwc: kirin: add PCIe Driver for HiSilicon Kirin SoC
-Date: Mon, 19 Jun 2017 18:08:33 +0800
-Message-ID: <20170619100834.43321-3-songxiaowei@hisilicon.com>
-References: <20170619100834.43321-1-songxiaowei@hisilicon.com>
+From: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Subject: Re: [PATCH v2] [media] mtk-mdp: Fix g_/s_selection capture/compose
+ logic
+Date: Mon, 19 Jun 2017 12:10:52 +0200
+Message-ID: <74fa6870-fc5e-13b2-a111-cf9f2e83034c@xs4all.nl>
+References: <1494556970-12278-1-git-send-email-minghsiu.tsai@mediatek.com>
+ <a180f2fc-1dce-3630-ed48-25c247eff79a@xs4all.nl>
+ <1497866607.25194.14.camel@mtksdaap41>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20170619100834.43321-1-songxiaowei@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: guodong.xu@linaro.org, bhelgaas@google.com, robh+dt@kernel.org
-Cc: songxiaowei@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497866607.25194.14.camel@mtksdaap41>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Minghsiu Tsai <minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mauro Carvalho Chehab <mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Pawel Osciak <posciak-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Houlong Wei <houlong.wei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Eddie Huang <eddie.huang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Wu-Cheng Li <wuchengli-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hisilicon PCIe Driver shares the common functions for PCIe dw-host
+On 06/19/2017 12:03 PM, Minghsiu Tsai wrote:
+> Hi, Hans,
+> 
+> On Fri, 2017-06-16 at 12:42 +0200, Hans Verkuil wrote:
+>> On 05/12/17 04:42, Minghsiu Tsai wrote:
+>>> From: Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>>>
+>>> Experiments show that the:
+>>>   (1) mtk-mdp uses the _MPLANE form of CAPTURE/OUTPUT
+>>
+>> Please drop this, since this no longer applies to this patch.
+>>
+> 
+> I will remove it next version
+> 
+> 
+>>>   (2) CAPTURE types use CROP targets, and OUTPUT types use COMPOSE targets
+>>
+>> Are you really certain about this?
+>>
+>> For m2m devices the output (i.e. memory to hardware) typically crops from memory
+>> and the capture side (hardware to memory) composes into memory.
+>>
+>> I.e.: for the output side you crop the part of the memory buffer that you want
+>> to process and on the capture side you compose the result into a memory buffer:
+>> i.e. the memory buffer might be 1920x1080, but you compose the decoder output
+>> into a rectangle of 640x480 at offset 128x128 within that buffer (just an example).
+>>
+>> CAPTURE using crop would be if, before the data is DMAed, the hardware decoder
+>> output is cropped. E.g. if the stream fed to the decoder is 1920x1080, but you
+>> want to only DMA a subselection of that, then that would be cropping, and it
+>> would go to a memory buffer of the size of the crop selection.
+>>
+>> OUTPUT using compose is highly unlikely: that means that the frame you give
+>> is composed in a larger internal buffer with generated border data around it.
+>> Very rare and really only something that a compositor of some sort would do.
+>>
+> 
+> That's strange. In v4l2-ioctl.c, v4l_g_crop()
+> OUTPUT is using COMPOSE
+> CAPTURE is using CROP
 
-The poweron functions is developed on hi3660 SoC,
-while Others Functions are common for Kirin series SoCs.
+The old crop API can't be used with most (all?) codec drivers. Codec drivers do
+exactly the opposite of what the old crop API did.
 
-Low power mode (L1 sub-state and Suspend/Resume), hotplug
-and MSI feature are not supported currently.
+It is the reason the selection API was created.
 
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
-Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
----
- drivers/pci/dwc/Kconfig      |  10 +
- drivers/pci/dwc/Makefile     |   1 +
- drivers/pci/dwc/pcie-kirin.c | 517 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 528 insertions(+)
- create mode 100644 drivers/pci/dwc/pcie-kirin.c
+The old crop API was written for SDTV receivers where the hardware would crop
+the received video. For output (rarely used) the hardware would compose the
+image into a larger (PAL or NTSC sizes) frame.
 
-diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-index d2d2ba5b8a68..afecfb2b6ff4 100644
---- a/drivers/pci/dwc/Kconfig
-+++ b/drivers/pci/dwc/Kconfig
-@@ -130,4 +130,14 @@ config PCIE_ARTPEC6
- 	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
- 	  SoCs.  This PCIe controller uses the DesignWare core.
- 
-+config PCIE_KIRIN
-+	depends on OF && ARM64
-+	bool "HiSilicon Kirin series SoCs PCIe controllers"
-+	depends on PCI
-+	select PCIEPORTBUS
-+	select PCIE_DW_HOST
-+	help
-+	  Say Y here if you want PCIe controller support
-+	  on HiSilicon Kirin series SoCs.
-+
- endmenu
-diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
-index a2df13c28798..4bd69bacd4ab 100644
---- a/drivers/pci/dwc/Makefile
-+++ b/drivers/pci/dwc/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-+obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
- 
- # The following drivers are for devices that use the generic ACPI
- # pci_root.c driver but don't support standard ECAM config access.
-diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
-new file mode 100644
-index 000000000000..96aa097e0ceb
---- /dev/null
-+++ b/drivers/pci/dwc/pcie-kirin.c
-@@ -0,0 +1,517 @@
-+/*
-+ * PCIe host controller driver for Kirin Phone SoCs
-+ *
-+ * Copyright (C) 2017 Hilisicon Electronics Co., Ltd.
-+ *		http://www.huawei.com
-+ *
-+ * Author: Xiaowei Song <songxiaowei@huawei.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <asm/compiler.h>
-+#include <linux/compiler.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/pci_regs.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/resource.h>
-+#include <linux/types.h>
-+#include "pcie-designware.h"
-+
-+#define to_kirin_pcie(x) dev_get_drvdata((x)->dev)
-+
-+#define REF_CLK_FREQ			100000000
-+
-+/* PCIe ELBI registers */
-+#define SOC_PCIECTRL_CTRL0_ADDR		0x000
-+#define SOC_PCIECTRL_CTRL1_ADDR		0x004
-+#define SOC_PCIEPHY_CTRL2_ADDR		0x008
-+#define SOC_PCIEPHY_CTRL3_ADDR		0x00c
-+#define PCIE_ELBI_SLV_DBI_ENABLE	(0x1 << 21)
-+
-+/* info located in APB */
-+#define PCIE_APP_LTSSM_ENABLE	0x01c
-+#define PCIE_APB_PHY_CTRL0	0x0
-+#define PCIE_APB_PHY_CTRL1	0x4
-+#define PCIE_APB_PHY_STATUS0	0x400
-+#define PCIE_LINKUP_ENABLE	(0x8020)
-+#define PCIE_LTSSM_ENABLE_BIT	(0x1 << 11)
-+#define PIPE_CLK_STABLE		(0x1 << 19)
-+#define PHY_REF_PAD_BIT		(0x1 << 8)
-+#define PHY_PWR_DOWN_BIT	(0x1 << 22)
-+#define PHY_RST_ACK_BIT		(0x1 << 16)
-+
-+/* info located in sysctrl */
-+#define SCTRL_PCIE_CMOS_OFFSET	0x60
-+#define SCTRL_PCIE_CMOS_BIT	0x10
-+#define SCTRL_PCIE_ISO_OFFSET	0x44
-+#define SCTRL_PCIE_ISO_BIT	0x30
-+#define SCTRL_PCIE_HPCLK_OFFSET	0x190
-+#define SCTRL_PCIE_HPCLK_BIT	0x184000
-+#define SCTRL_PCIE_OE_OFFSET	0x14a
-+#define PCIE_DEBOUNCE_PARAM	0xF0F400
-+#define PCIE_OE_BYPASS		(0x3 << 28)
-+
-+/* peri_crg ctrl */
-+#define CRGCTRL_PCIE_ASSERT_OFFSET	0x88
-+#define CRGCTRL_PCIE_ASSERT_BIT		0x8c000000
-+
-+/* Time for delay */
-+#define REF_2_PERST_MIN		20000
-+#define REF_2_PERST_MAX		25000
-+#define PERST_2_ACCESS_MIN	10000
-+#define PERST_2_ACCESS_MAX	12000
-+#define LINK_WAIT_MIN		900
-+#define LINK_WAIT_MAX		1000
-+#define PIPE_CLK_WAIT_MIN	550
-+#define PIPE_CLK_WAIT_MAX	600
-+#define TIME_CMOS_MIN		100
-+#define TIME_CMOS_MAX		105
-+#define TIME_PHY_PD_MIN		10
-+#define TIME_PHY_PD_MAX		11
-+
-+struct kirin_pcie {
-+	struct dw_pcie	*pci;
-+	void __iomem	*apb_base;
-+	void __iomem	*phy_base;
-+	struct regmap	*crgctrl;
-+	struct regmap	*sysctrl;
-+	struct clk	*apb_sys_clk;
-+	struct clk	*apb_phy_clk;
-+	struct clk	*phy_ref_clk;
-+	struct clk	*pcie_aclk;
-+	struct clk	*pcie_aux_clk;
-+	int		gpio_id_reset;
-+};
-+
-+/* Registers in PCIeCTRL */
-+static inline void kirin_apb_ctrl_writel(struct kirin_pcie *kirin_pcie,
-+					 u32 val, u32 reg)
-+{
-+	writel(val, kirin_pcie->apb_base + reg);
-+}
-+
-+static inline u32 kirin_apb_ctrl_readl(struct kirin_pcie *kirin_pcie, u32 reg)
-+{
-+	return readl(kirin_pcie->apb_base + reg);
-+}
-+
-+/* Registers in PCIePHY */
-+static inline void kirin_apb_phy_writel(struct kirin_pcie *kirin_pcie,
-+					u32 val, u32 reg)
-+{
-+	writel(val, kirin_pcie->phy_base + reg);
-+}
-+
-+static inline u32 kirin_apb_phy_readl(struct kirin_pcie *kirin_pcie, u32 reg)
-+{
-+	return readl(kirin_pcie->phy_base + reg);
-+}
-+
-+static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
-+			       struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	kirin_pcie->phy_ref_clk = devm_clk_get(dev, "pcie_phy_ref");
-+	if (IS_ERR(kirin_pcie->phy_ref_clk))
-+		return PTR_ERR(kirin_pcie->phy_ref_clk);
-+
-+	kirin_pcie->pcie_aux_clk = devm_clk_get(dev, "pcie_aux");
-+	if (IS_ERR(kirin_pcie->pcie_aux_clk))
-+		return PTR_ERR(kirin_pcie->pcie_aux_clk);
-+
-+	kirin_pcie->apb_phy_clk = devm_clk_get(dev, "pcie_apb_phy");
-+	if (IS_ERR(kirin_pcie->apb_phy_clk))
-+		return PTR_ERR(kirin_pcie->apb_phy_clk);
-+
-+	kirin_pcie->apb_sys_clk = devm_clk_get(dev, "pcie_apb_sys");
-+	if (IS_ERR(kirin_pcie->apb_sys_clk))
-+		return PTR_ERR(kirin_pcie->apb_sys_clk);
-+
-+	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
-+	if (IS_ERR(kirin_pcie->pcie_aclk))
-+		return PTR_ERR(kirin_pcie->pcie_aclk);
-+
-+	return 0;
-+}
-+
-+static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-+				    struct platform_device *pdev)
-+{
-+	struct resource *apb;
-+	struct resource *phy;
-+	struct resource *dbi;
-+	struct device *dev = &pdev->dev;
-+
-+	apb = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
-+	kirin_pcie->apb_base = devm_ioremap_resource(dev, apb);
-+	if (IS_ERR(kirin_pcie->apb_base))
-+		return PTR_ERR(kirin_pcie->apb_base);
-+
-+	phy = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
-+	kirin_pcie->phy_base = devm_ioremap_resource(dev, phy);
-+	if (IS_ERR(kirin_pcie->phy_base))
-+		return PTR_ERR(kirin_pcie->phy_base);
-+
-+	dbi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-+	kirin_pcie->pci->dbi_base = devm_ioremap_resource(dev, dbi);
-+	if (IS_ERR(kirin_pcie->pci->dbi_base))
-+		return PTR_ERR(kirin_pcie->pci->dbi_base);
-+
-+	kirin_pcie->crgctrl =
-+		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-crgctrl");
-+	if (IS_ERR(kirin_pcie->crgctrl))
-+		return PTR_ERR(kirin_pcie->crgctrl);
-+
-+	kirin_pcie->sysctrl =
-+		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
-+	if (IS_ERR(kirin_pcie->sysctrl))
-+		return PTR_ERR(kirin_pcie->sysctrl);
-+
-+	return 0;
-+}
-+
-+static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
-+{
-+	u32 reg_val;
-+	struct device *dev = kirin_pcie->pci->dev;
-+
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
-+	reg_val &= ~PHY_REF_PAD_BIT;
-+	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
-+
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL0);
-+	reg_val &= ~PHY_PWR_DOWN_BIT;
-+	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL0);
-+	usleep_range(TIME_PHY_PD_MIN, TIME_PHY_PD_MAX);
-+
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
-+	reg_val &= ~PHY_RST_ACK_BIT;
-+	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
-+
-+	usleep_range(PIPE_CLK_WAIT_MIN, PIPE_CLK_WAIT_MAX);
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
-+	if (reg_val & PIPE_CLK_STABLE) {
-+		dev_err(dev, "PIPE clk is not stable\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void kirin_pcie_oe_enable(struct kirin_pcie *kirin_pcie)
-+{
-+	u32 val;
-+
-+	regmap_read(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, &val);
-+	val |= PCIE_DEBOUNCE_PARAM;
-+	val &= ~PCIE_OE_BYPASS;
-+	regmap_write(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, val);
-+}
-+
-+static int kirin_pcie_clk_ctrl(struct kirin_pcie *kirin_pcie, bool enable)
-+{
-+	int ret = 0;
-+
-+	if (!enable)
-+		goto close_clk;
-+
-+	ret = clk_set_rate(kirin_pcie->phy_ref_clk, REF_CLK_FREQ);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(kirin_pcie->phy_ref_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(kirin_pcie->apb_sys_clk);
-+	if (ret)
-+		goto apb_sys_fail;
-+
-+	ret = clk_prepare_enable(kirin_pcie->apb_phy_clk);
-+	if (ret)
-+		goto apb_phy_fail;
-+
-+	ret = clk_prepare_enable(kirin_pcie->pcie_aclk);
-+	if (ret)
-+		goto aclk_fail;
-+
-+	ret = clk_prepare_enable(kirin_pcie->pcie_aux_clk);
-+	if (ret)
-+		goto aux_clk_fail;
-+
-+	return 0;
-+
-+close_clk:
-+	clk_disable_unprepare(kirin_pcie->pcie_aux_clk);
-+aux_clk_fail:
-+	clk_disable_unprepare(kirin_pcie->pcie_aclk);
-+aclk_fail:
-+	clk_disable_unprepare(kirin_pcie->apb_phy_clk);
-+apb_phy_fail:
-+	clk_disable_unprepare(kirin_pcie->apb_sys_clk);
-+apb_sys_fail:
-+	clk_disable_unprepare(kirin_pcie->phy_ref_clk);
-+
-+	return ret;
-+}
-+
-+static int kirin_pcie_power_on(struct kirin_pcie *kirin_pcie)
-+{
-+	int ret;
-+
-+	/* Power supply for Host */
-+	regmap_write(kirin_pcie->sysctrl,
-+		     SCTRL_PCIE_CMOS_OFFSET, SCTRL_PCIE_CMOS_BIT);
-+	usleep_range(TIME_CMOS_MIN, TIME_CMOS_MAX);
-+	kirin_pcie_oe_enable(kirin_pcie);
-+
-+	ret = kirin_pcie_clk_ctrl(kirin_pcie, true);
-+	if (ret)
-+		return ret;
-+
-+	/* ISO disable, PCIeCtrl, PHY assert and clk gate clear */
-+	regmap_write(kirin_pcie->sysctrl,
-+		     SCTRL_PCIE_ISO_OFFSET, SCTRL_PCIE_ISO_BIT);
-+	regmap_write(kirin_pcie->crgctrl,
-+		     CRGCTRL_PCIE_ASSERT_OFFSET, CRGCTRL_PCIE_ASSERT_BIT);
-+	regmap_write(kirin_pcie->sysctrl,
-+		     SCTRL_PCIE_HPCLK_OFFSET, SCTRL_PCIE_HPCLK_BIT);
-+
-+	ret = kirin_pcie_phy_init(kirin_pcie);
-+	if (ret)
-+		goto close_clk;
-+
-+	/* perst assert Endpoint */
-+	if (!gpio_request(kirin_pcie->gpio_id_reset, "pcie_perst")) {
-+		usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
-+		ret = gpio_direction_output(kirin_pcie->gpio_id_reset, 1);
-+		if (ret)
-+			goto close_clk;
-+		usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
-+
-+		return 0;
-+	}
-+
-+close_clk:
-+	kirin_pcie_clk_ctrl(kirin_pcie, false);
-+	return ret;
-+}
-+
-+static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
-+					   bool on)
-+{
-+	u32 val;
-+
-+	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL0_ADDR);
-+	if (on)
-+		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
-+	else
-+		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
-+
-+	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL0_ADDR);
-+}
-+
-+static void kirin_pcie_sideband_dbi_r_mode(struct kirin_pcie *kirin_pcie,
-+					   bool on)
-+{
-+	u32 val;
-+
-+	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL1_ADDR);
-+	if (on)
-+		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
-+	else
-+		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
-+
-+	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL1_ADDR);
-+}
-+
-+static int kirin_pcie_rd_own_conf(struct pcie_port *pp,
-+				  int where, int size, u32 *val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	int ret;
-+
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
-+	ret = dw_pcie_read(pci->dbi_base + where, size, val);
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
-+
-+	return ret;
-+}
-+
-+static int kirin_pcie_wr_own_conf(struct pcie_port *pp,
-+				  int where, int size, u32 val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	int ret;
-+
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
-+	ret = dw_pcie_write(pci->dbi_base + where, size, val);
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
-+
-+	return ret;
-+}
-+
-+static u32 kirin_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-+			       u32 reg, size_t size)
-+{
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	u32 ret;
-+
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
-+	dw_pcie_read(base + reg, size, &ret);
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
-+
-+	return ret;
-+}
-+
-+static void kirin_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-+				 u32 reg, size_t size, u32 val)
-+{
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
-+	dw_pcie_write(base + reg, size, val);
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
-+}
-+
-+static int kirin_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	u32 val = kirin_apb_ctrl_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
-+
-+	if ((val & PCIE_LINKUP_ENABLE) == PCIE_LINKUP_ENABLE)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int kirin_pcie_establish_link(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	int count = 0;
-+
-+	if (kirin_pcie_link_up(pci))
-+		return 0;
-+
-+	dw_pcie_setup_rc(pp);
-+
-+	/* assert LTSSM enable */
-+	kirin_apb_ctrl_writel(kirin_pcie, PCIE_LTSSM_ENABLE_BIT,
-+			      PCIE_APP_LTSSM_ENABLE);
-+
-+	/* check if the link is up or not */
-+	while (!kirin_pcie_link_up(pci)) {
-+		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
-+		count++;
-+		if (count == 1000) {
-+			dev_err(dev, "Link Fail\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void kirin_pcie_host_init(struct pcie_port *pp)
-+{
-+	kirin_pcie_establish_link(pp);
-+}
-+
-+static struct dw_pcie_ops kirin_dw_pcie_ops = {
-+	.read_dbi = kirin_pcie_read_dbi,
-+	.write_dbi = kirin_pcie_write_dbi,
-+	.link_up = kirin_pcie_link_up,
-+};
-+
-+static struct dw_pcie_host_ops kirin_pcie_host_ops = {
-+	.rd_own_conf = kirin_pcie_rd_own_conf,
-+	.wr_own_conf = kirin_pcie_wr_own_conf,
-+	.host_init = kirin_pcie_host_init,
-+};
-+
-+static int __init kirin_add_pcie_port(struct dw_pcie *pci,
-+				      struct platform_device *pdev)
-+{
-+	pci->pp.ops = &kirin_pcie_host_ops;
-+
-+	return dw_pcie_host_init(&pci->pp);
-+}
-+
-+static int kirin_pcie_probe(struct platform_device *pdev)
-+{
-+	struct kirin_pcie *kirin_pcie;
-+	struct dw_pcie *pci;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	if (!dev->of_node) {
-+		dev_err(dev, "NULL node\n");
-+		return -EINVAL;
-+	}
-+
-+	kirin_pcie = devm_kzalloc(dev, sizeof(struct kirin_pcie), GFP_KERNEL);
-+	if (!kirin_pcie)
-+		return -ENOMEM;
-+
-+	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-+	if (!pci)
-+		return -ENOMEM;
-+
-+	pci->dev = dev;
-+	pci->ops = &kirin_dw_pcie_ops;
-+	kirin_pcie->pci = pci;
-+
-+	ret = kirin_pcie_get_clk(kirin_pcie, pdev);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin_pcie_get_resource(kirin_pcie, pdev);
-+	if (ret)
-+		return ret;
-+
-+	kirin_pcie->gpio_id_reset = of_get_named_gpio(dev->of_node,
-+						      "reset-gpio", 0);
-+	if (kirin_pcie->gpio_id_reset < 0)
-+		return -ENODEV;
-+
-+	ret = kirin_pcie_power_on(kirin_pcie);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, kirin_pcie);
-+
-+	return kirin_add_pcie_port(pci, pdev);
-+}
-+
-+static const struct of_device_id kirin_pcie_match[] = {
-+	{ .compatible = "hisilicon,kirin960-pcie" },
-+	{},
-+};
-+
-+struct platform_driver kirin_pcie_driver = {
-+	.probe			= kirin_pcie_probe,
-+	.driver			= {
-+		.name			= "kirin-pcie",
-+		.of_match_table = kirin_pcie_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+
-+builtin_platform_driver(kirin_pcie_driver);
--- 
-2.11.GIT
+Applications have to use the selection API to work with codec drivers. Just
+ignore the old crop ioctls, they are not suitable for such hardware.
+
+> 
+> static int v4l_g_crop(const struct v4l2_ioctl_ops *ops,
+> 				struct file *file, void *fh, void *arg)
+> ...
+> 	/* crop means compose for output devices */
+> 	if (V4L2_TYPE_IS_OUTPUT(p->type))
+> 		s.target = V4L2_SEL_TGT_COMPOSE_ACTIVE;
+> 	else
+> 		s.target = V4L2_SEL_TGT_CROP_ACTIVE;
+> 
+> 	ret = ops->vidioc_g_selection(file, fh, &s);
+> 
+> 
+>> What exactly does the hardware do? Both for the encoder and for the decoder
+>> case. Perhaps if I knew exactly what that is, then I can advise.
+>>
+> 
+> NV12M/YUV420M/MT21 -> MDP -> NV12M/YUV420M
+> 
+> The usage would be like this:
+> For decoder:
+> decoder -> MT21 -> MDP -> NV12M/YUV420M
+> 
+> For encoder:
+> NV12M/YUV420M -> MDP -> NV12M/YUV420M -> encoder
+
+That doesn't help. Where in these two chains does the cropping (encoder) or
+composing (decoder) take place? I assume it is the DMA engine that read from
+a rectangle in the source buffer (encoder) or writes to a rectangle in the
+destination buffer (decoder).
+
+And in that case the current driver is correct.
+
+I wonder if the g/s_crop description in the V4L2 Specification should get a
+big fat warning that it doesn't apply to codec drivers and that the selection
+API should be used instead. A patch for that is welcome!
+
+Regards,
+
+	Hans
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
