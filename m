@@ -1,400 +1,130 @@
-From: Oleksij Rempel <ore@pengutronix.de>
-Subject: Re: [RFC PATCH 2/3] remoteproc: imx_rproc: add a NXP/Freescale imx
- rproc driver
-Date: Mon, 19 Jun 2017 09:43:51 +0200
-Message-ID: <f146c11f-1cca-68db-325b-036b0f614963@pengutronix.de>
-References: <20170614204855.18347-1-o.rempel@pengutronix.de>
- <20170614204855.18347-3-o.rempel@pengutronix.de>
- <96edc898-ad2b-c781-b7eb-0645902837df@ti.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v1] pinctrl: generic: Add output-enable property
+Date: Mon, 19 Jun 2017 10:55:12 +0300
+Message-ID: <8308055.PJrIDk1Zue@avalon>
+References: <1497603581-9632-1-git-send-email-jacopo+renesas@jmondi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <96edc898-ad2b-c781-b7eb-0645902837df@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>, Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-remoteproc@vger.kernel.org
-Cc: Oleksij Rempel <linux@rempel-privat.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497603581-9632-1-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dongas86-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Chris.Brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Jacopo,
 
-Thank you for your review!
+Thank you for the patch.
 
-On 15.06.2017 21:01, Suman Anna wrote:
-> Hi Oleksij,
->
-> On 06/14/2017 03:48 PM, Oleksij Rempel wrote:
->> From: Oleksij Rempel <linux@rempel-privat.de>
->>
->> this driver was tested on NXP imx7d but should work on
->> imx6sx as well.
->> It will upload firmware to OCRAM, which shared memory between
->> Cortex A7 and Cortex M4, then turn M4 on.
->
-> Mostly looks fine, need to address few comments. I take it that you
-> haven't added the binding since this is just an RFC.
->
->>
->> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
->> ---
->>   drivers/remoteproc/Kconfig     |   8 ++
->>   drivers/remoteproc/Makefile    |   1 +
->>   drivers/remoteproc/imx_rproc.c | 264
->> +++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 273 insertions(+)
->>   create mode 100644 drivers/remoteproc/imx_rproc.c
->>
->> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
->> index faad69a1a597..8d33bff4f530 100644
->> --- a/drivers/remoteproc/Kconfig
->> +++ b/drivers/remoteproc/Kconfig
->> @@ -130,6 +130,14 @@ config ST_SLIM_REMOTEPROC
->>       tristate
->>       depends on REMOTEPROC
->>   +config IMX_REMOTEPROC
->> +    tristate "IMX6/7 remoteproc support"
->> +    depends on SOC_IMX6SX || SOC_IMX7D
->> +    depends on REMOTEPROC
->> +    help
->> +      TODO, write some thing here
->> +      This can be either built-in or a loadable module.
->> +
->>   endif # REMOTEPROC
->>     endmenu
->> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
->> index ffc5e430df27..d351c25cdb4e 100644
->> --- a/drivers/remoteproc/Makefile
->> +++ b/drivers/remoteproc/Makefile
->> @@ -19,3 +19,4 @@ qcom_wcnss_pil-y            += qcom_wcnss.o
->>   qcom_wcnss_pil-y            += qcom_wcnss_iris.o
->>   obj-$(CONFIG_ST_REMOTEPROC)        += st_remoteproc.o
->>   obj-$(CONFIG_ST_SLIM_REMOTEPROC)    += st_slim_rproc.o
->> +obj-$(CONFIG_IMX_REMOTEPROC)        += imx_rproc.o
->> diff --git a/drivers/remoteproc/imx_rproc.c
->> b/drivers/remoteproc/imx_rproc.c
->> new file mode 100644
->> index 000000000000..6bef85237a27
->> --- /dev/null
->> +++ b/drivers/remoteproc/imx_rproc.c
->> @@ -0,0 +1,264 @@
->> +/*
->> + * Oleksij Rempel <o.rempel@pengutronix.de>
->
-> Please add a blank line here.
->
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License
->> + * version 2 as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/err.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_address.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/remoteproc.h>
->> +#include <linux/regmap.h>
->> +#include <linux/mfd/syscon.h>
->> +
->> +#define IMX7D_ENABLE_M4            BIT(3)
->> +#define IMX7D_SW_M4P_RST        BIT(2)
->> +#define IMX7D_SW_M4C_RST        BIT(1)
->> +#define IMX7D_SW_M4C_NON_SCLR_RST    BIT(0)
->> +
->> +#define IMX7D_M4_RST_MASK        0xf
->> +
->> +
->> +#define IMX7D_RPROC_MEM_MAX        2
->> +enum {
->> +    IMX7D_RPROC_IMEM,
->> +    IMX7D_RPROC_DMEM,
->> +};
->> +
->> +static const char *mem_names[IMX7D_RPROC_MEM_MAX] = {
->> +    [IMX7D_RPROC_IMEM]    = "imem",
->> +    [IMX7D_RPROC_DMEM]    = "dmem",
->> +};
->
-> Do you really need these to be globally defined? You only need them in
-> the addr_init function, they can be made local to that function.
+On Friday 16 Jun 2017 10:59:41 Jacopo Mondi wrote:
+> Add output-enable generic pin configuration property.
+> This properties allows enabling/disabling pin's output capabilities
+> without actually driving any value on the line.
+> 
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> ---
+> 
+> So, after that many discussions I'm now sending this, that only adds a new
+> flag used to enable or disable a pin's output capabilities.
+> I intentionally avoided naming the output buffer explicitly because if and
+> how it has to be enabled/disabled is a platform specific details each
+> driver has to take care of.
+> 
+> Dong: this is similar to what you recently proposed, without mentioning the
+> output buffer directly. Can I have your Reviewed-by or your Acked-by here?
+> 
+> Linus, Andy: I initially proposed to add "output-buffer-enable" in place of
+> this one, so not to confuse the property's semantic with its real world
+> effect. While I'm still partially convinced output-enable is not the most
+> accurate choice possible, it certainly is the best balance with bindings
+> clearness, and the one where more consensus has been collected on. Hope
+> this flies for you too and we can have this merged so me and Dong can send
+> our updated series on top of this.
+> 
+> Thanks
+>    j
+> 
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 2 ++
+>  drivers/pinctrl/pinconf-generic.c                              | 3 +++
+>  include/linux/pinctrl/pinconf-generic.h                        | 3 +++
+>  3 files changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt index
+> f01d154..f8af190 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+> @@ -259,6 +259,8 @@ input-debounce		- debounce mode with debound 
+time X
+>  power-source		- select between different power supplies
+>  low-power-enable	- enable low power mode
+>  low-power-disable	- disable low power mode
+> +output-disable		- disable output on a pin
+> +output-enable		- enable output on a pin
+>  output-low		- set the pin to output mode with low level
+>  output-high		- set the pin to output mode with high level
+>  slew-rate		- set the slew rate
+> diff --git a/drivers/pinctrl/pinconf-generic.c
+> b/drivers/pinctrl/pinconf-generic.c index 720a19f..fc0c230 100644
+> --- a/drivers/pinctrl/pinconf-generic.c
+> +++ b/drivers/pinctrl/pinconf-generic.c
+> @@ -44,6 +44,7 @@ static const struct pin_config_item conf_items[] = {
+>  	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, 
+false),
+> PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT_ENABLE, "input schmitt enabled", NULL,
+> false), PCONFDUMP(PIN_CONFIG_LOW_POWER_MODE, "pin low power", "mode",
+> true), +	PCONFDUMP(PIN_CONFIG_OUTPUT_ENABLE, "output enabled", NULL,
+> false), PCONFDUMP(PIN_CONFIG_OUTPUT, "pin output", "level", true),
+>  	PCONFDUMP(PIN_CONFIG_POWER_SOURCE, "pin power source", "selector", 
+true),
+>  	PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL, true),
+> @@ -172,6 +173,8 @@ static const struct pinconf_generic_params dt_params[] =
+> { { "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
+>  	{ "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
+>  	{ "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
+> +	{ "output-disable", PIN_CONFIG_OUTPUT_ENABLE, 0 },
+> +	{ "output-enable", PIN_CONFIG_OUTPUT_ENABLE, 1 },
+>  	{ "output-high", PIN_CONFIG_OUTPUT, 1, },
+>  	{ "output-low", PIN_CONFIG_OUTPUT, 0, },
+>  	{ "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+> diff --git a/include/linux/pinctrl/pinconf-generic.h
+> b/include/linux/pinctrl/pinconf-generic.h index 7620eb1..5761958 100644
+> --- a/include/linux/pinctrl/pinconf-generic.h
+> +++ b/include/linux/pinctrl/pinconf-generic.h
+> @@ -73,6 +73,8 @@
+>   *	operation, if several modes of operation are supported these can be
+>   *	passed in the argument on a custom form, else just use argument 1
+>   *	to indicate low power mode, argument 0 turns low power mode off.
+> + * @PIN_CONFIG_OUTPUT_ENABLE: this will enable the pin's output mode
+> + * 	without driving a value there. 1 enables output mode, 0 disables it.
 
-I don't needed. At least not with my testing remote code.
-It is mostly copy/paste from existing drivers.
+I think you need to elaborate a bit more here. It will be very difficult for a 
+developer to understand the rationale behind PIN_CONFIG_OUTPUT_ENABLE and when 
+it should be used instead of PIN_CONFIG_OUTPUT with just those two lines of 
+documentation if he/she hasn't followed the discussion that led to this patch.
 
-But according to this page, there are multiple memory regions, with 
-different mapping for data and code.
-http://developer.toradex.com/knowledge-base/freertos-on-the-cortex-m4-of-a-colibri-imx7#Memory_areas
+>   * @PIN_CONFIG_OUTPUT: this will configure the pin as an output. Use
+> argument
+>   *	1 to indicate high level, argument 0 to indicate low level. (Please
+>   *	see Documentation/pinctrl.txt, section "GPIO mode pitfalls" for a
+> @@ -105,6 +107,7 @@ enum pin_config_param {
+>  	PIN_CONFIG_INPUT_SCHMITT,
+>  	PIN_CONFIG_INPUT_SCHMITT_ENABLE,
+>  	PIN_CONFIG_LOW_POWER_MODE,
+> +	PIN_CONFIG_OUTPUT_ENABLE,
+>  	PIN_CONFIG_OUTPUT,
+>  	PIN_CONFIG_POWER_SOURCE,
+>  	PIN_CONFIG_SLEW_RATE,
+> --
+> 2.7.4
 
-"The Cortex-M4 CPU has two buses connected to the main interconnect 
-(modified Harvard architecture). One bus is meant to fetch data (system 
-bus) whereas the other bus is meant to fetch instructions (code bus). To 
-get optimal performance, the program code should be located and linked 
-for a region which is going to be fetched through the code bus, while 
-the data area (e.g. bss or data section) should be located in a region 
-which is fetched through the system bus. There are multiple example 
-linker files in the platform/devices/MCIMX7D/linker/ sub directory which 
-can be used and/or modified. All example firmware below use the 
-MCIMX7D_M4_tcm.ld linker file (TCML region for code, and the TCMU region 
-for data)."
+-- 
+Regards,
 
-What is the proper way to implement it with remoteproc?
+Laurent Pinchart
 
->> +
->> +/**
->> + * struct imx_rproc_mem - slim internal memory structure
->> + * @cpu_addr: MPU virtual address of the memory region
->> + * @bus_addr: Bus address used to access the memory region
->> + * @size: Size of the memory region
->> + */
->> +struct imx_rproc_mem {
->> +    void __iomem *cpu_addr;
->> +    phys_addr_t bus_addr;
->
-> Are the rproc-view of these regions same as the bus addresses or
-> do they have their own local addresses? If latter, images that are built
-> for those will be using those addresses in which case you need some
-> offset calculation in the da_to_va ops?
->
->> +    size_t size;
->> +};
->> +
->> +struct imx_rproc_dcfg {
->> +    int offset;
->> +};
->> +
->> +struct imx_rproc {
->> +    struct device            *dev;
->> +    struct regmap            *regmap;
->> +    struct rproc            *rproc;
->> +    const struct imx_rproc_dcfg    *dcfg;
->
-> No need of aligning the variables, you can get rid of the additional
-> whitespaces and maintain consistent style.
->
->> +    struct imx_rproc_mem mem[IMX7D_RPROC_MEM_MAX];
->> +    struct clk        *clk;
->> +};
->> +
->> +static const struct imx_rproc_dcfg imx_rproc_cfg_imx7d = {
->> +    .offset = 0xc,
->> +};
->> +
->> +static int imx_rproc_start(struct rproc *rproc)
->> +{
->> +    struct imx_rproc *priv = rproc->priv;
->> +    const struct imx_rproc_dcfg *dcfg = priv->dcfg;
->> +    struct device *dev = priv->dev;
->> +    int ret;
->> +
->> +    ret = clk_enable(priv->clk);
->> +    if (ret) {
->> +        dev_err(&rproc->dev, "Failed to enable clock\n");
->> +        return ret;
->> +    }
->> +
->> +    ret = regmap_update_bits(priv->regmap, dcfg->offset,
->> +                 IMX7D_M4_RST_MASK,
->> +                 IMX7D_SW_M4C_RST | IMX7D_SW_M4P_RST | IMX7D_ENABLE_M4);
->> +    if (ret) {
->> +        dev_err(dev, "Filed to enable M4!\n");
->> +        clk_disable(priv->clk);
->> +    }
->> +
->> +    return ret;
->> +}
->> +
->> +static int imx_rproc_stop(struct rproc *rproc)
->> +{
->> +    struct imx_rproc *priv = rproc->priv;
->> +    const struct imx_rproc_dcfg *dcfg = priv->dcfg;
->> +    struct device *dev = priv->dev;
->> +    int ret;
->> +
->> +    ret = regmap_update_bits(priv->regmap, dcfg->offset,
->> +                 IMX7D_M4_RST_MASK,
->> +                 IMX7D_SW_M4C_NON_SCLR_RST);
->> +    if (ret)
->> +        dev_err(dev, "Filed to stop M4!\n");
->> +
->> +    clk_disable(priv->clk);
->> +
->> +    return ret;
->> +}
->> +
->> +static void *imx_rproc_da_to_va(struct rproc *rproc, u64 da, int len)
->> +{
->> +    struct imx_rproc *priv = rproc->priv;
->> +    void *va = NULL;
->> +    int i;
->> +
->> +    for (i = 0; i < IMX7D_RPROC_MEM_MAX; i++) {
->> +        if (da != priv->mem[i].bus_addr)
->> +            continue;
->> +
->> +        if (len <= priv->mem[i].size) {
->> +            /* __force to make sparse happy with type conversion */
->> +            va = (__force void *)priv->mem[i].cpu_addr;
->> +            break;
->> +        }
->> +    }
->> +
->> +    dev_dbg(&rproc->dev, "da = 0x%llx len = 0x%x va = 0x%p\n", da,
->> len, va);
->> +
->> +    return va;
->> +}
->> +
->> +static const struct rproc_ops imx_rproc_ops = {
->> +    .start        = imx_rproc_start,
->> +    .stop        = imx_rproc_stop,
->> +    .da_to_va       = imx_rproc_da_to_va,
->> +};
->> +
->> +static const struct of_device_id imx_rproc_of_match[] = {
->> +    { .compatible = "fsl,imx7d-rproc", .data = &imx_rproc_cfg_imx7d },
->> +    {},
->> +};
->> +MODULE_DEVICE_TABLE(of, imx_rproc_of_match);
->> +
->> +static int imx_rproc_addr_init(struct imx_rproc *priv,
->> +                   struct platform_device *pdev)
->> +{
->> +    int i, err;
->> +    struct resource *res;
->> +
->> +    /* get imem and dmem */
->> +    for (i = 0; i < ARRAY_SIZE(mem_names); i++) {
->> +        res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +                        mem_names[i]);
->> +        if (!res)
->> +            continue;
->> +
->> +        priv->mem[i].cpu_addr = devm_ioremap_resource(&pdev->dev, res);
->> +        if (IS_ERR(priv->mem[i].cpu_addr)) {
->> +            dev_err(&pdev->dev, "devm_ioremap_resource failed\n");
->> +            err = PTR_ERR(priv->mem[i].cpu_addr);
->> +            return err;
->> +        }
->> +        priv->mem[i].bus_addr = res->start & 0xffff;
->> +        priv->mem[i].size = resource_size(res);
->> +    }
->> +
->> +    return 0;
->> +}
->> +
->> +static int imx_rproc_probe(struct platform_device *pdev)
->> +{
->> +    struct device *dev = &pdev->dev;
->> +    struct device_node *np = dev->of_node;
->> +    struct imx_rproc *priv;
->> +    struct rproc *rproc;
->> +    struct regmap_config config = { .name = "imx_rproc" };
->> +    const struct imx_rproc_dcfg *dcfg;
->> +    struct regmap *regmap;
->> +    int ret;
->> +
->> +    regmap = syscon_regmap_lookup_by_phandle(np, "syscon");
->> +    if (IS_ERR(regmap)) {
->> +        dev_err(dev, "failed to find syscon\n");
->> +        return PTR_ERR(regmap);
->> +    }
->> +        regmap_attach_dev(dev, regmap, &config);
->> +
->> +    /* set some other name then imx */
->> +    rproc = rproc_alloc(dev, "imx_rproc", &imx_rproc_ops, NULL,
->> sizeof(*priv));
->> +    if (!rproc) {
->> +        ret = -ENOMEM;
->> +        goto err;
->> +    }
->> +
->> +    dcfg = of_device_get_match_data(dev);
->> +    if (!dcfg)
->> +        return -EINVAL;
->
-> move this up to the beginning of the function. You can avoid the cleanup
-> (you are missing an rproc_free() here)
->
->> +
->> +    priv = rproc->priv;
->> +    priv->rproc = rproc;
->> +    priv->regmap = regmap;
->> +    priv->dcfg = dcfg;
->> +
->> +    dev_set_drvdata(dev, rproc);
->> +
->> +    ret = imx_rproc_addr_init(priv, pdev);
->> +    if (ret) {
->> +        dev_err(dev, "filed on imx_rproc_addr_init\n");
->> +        goto err_put_rproc;
->> +    }
->> +
->> +    priv->clk = devm_clk_get(dev, NULL);
->> +    if (IS_ERR(priv->clk)) {
->> +        dev_err(dev, "Failed to get clock\n");
->> +        return PTR_ERR(priv->clk);
->> +    }
->> +
->> +    ret = rproc_add(rproc);
->> +    if (ret) {
->> +        dev_err(dev, "rproc_add failed\n");
->> +        goto err_put_rproc;
->> +    }
->> +
->> +    ret = clk_prepare(priv->clk);
->> +    if (ret)
->> +        dev_err(dev, "failed to get clock\n");
->
-> How are your internal memories clocked? If they need the same clock,
-> rproc_add() would need the clock to be enabled for loading section data
-> into those regions as part of rproc_boot(), and your current enable in
-> imx_rproc_start() will be too late. Also, do not see a balancing
-> clk_unprepare() call in remove, and a missing rproc_del() on failure here.
->
-> regards
-> Suman
->
->> +
->> +    return ret;
->> +
->> +err_put_rproc:
->> +    rproc_free(rproc);
->> +err:
->> +    return ret;
->> +}
->> +
->> +static int imx_rproc_remove(struct platform_device *pdev)
->> +{
->> +    struct rproc *rproc = platform_get_drvdata(pdev);
->> +
->> +    rproc_del(rproc);
->> +    rproc_free(rproc);
->> +
->> +    return 0;
->> +}
->> +
->> +static struct platform_driver imx_rproc_driver = {
->> +    .probe = imx_rproc_probe,
->> +    .remove = imx_rproc_remove,
->> +    .driver = {
->> +        .name = "imx_rproc",
->> +        .of_match_table = imx_rproc_of_match,
->> +    },
->> +};
->> +
->> +module_platform_driver(imx_rproc_driver);
->> +
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_DESCRIPTION("IMX6/7 remote processor control driver");
->> +MODULE_AUTHOR("Oleksij Rempel <o.rempel@pengutronix.de>");
->>
->
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
