@@ -1,83 +1,317 @@
-From: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH V1 1/3] pinctrl: qcom: spmi-gpio: Add support for GPIO
- LV/MV subtype
-Date: Mon, 19 Jun 2017 09:00:55 +0800
-Message-ID: <11ad6f89-6805-a09f-eee4-21279b096e8b@codeaurora.org>
-References: <20170613061707.13892-1-fenglinw@codeaurora.org>
- <20170613061707.13892-2-fenglinw@codeaurora.org>
- <20170618140456.orzknmxg4fpce4tk@rob-hp-laptop>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH v5 10/27] ARM: dts: Add Actions Semi S500 and LeMaker Guitar
+Date: Mon, 19 Jun 2017 03:08:28 +0200
+Message-ID: <20170619010828.3401-1-afaerber@suse.de>
+References: <3a132688-07d9-cc3f-b4d1-85a95199ec93@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170618140456.orzknmxg4fpce4tk@rob-hp-laptop>
-Content-Language: en-US
+In-Reply-To: <3a132688-07d9-cc3f-b4d1-85a95199ec93-l3A5Bk7waGM@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, collinsd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, aghayal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, wruan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kgunda-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/18/2017 10:04 PM, Rob Herring wrote:
-> On Tue, Jun 13, 2017 at 02:16:03PM +0800, fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
->> From: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>
->> GPIO LV (low voltage)/MV (medium voltage) subtypes have different
->> features and register mappings than 4CH/8CH subtypes. Add support
->> for LV and MV subtypes.
->>
->> Signed-off-by: Fenglin Wu <fenglinw-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>   .../devicetree/bindings/pinctrl/qcom,pmic-gpio.txt |  28 ++-
->>   drivers/pinctrl/qcom/pinctrl-spmi-gpio.c           | 269 ++++++++++++++++++---
->>   include/dt-bindings/pinctrl/qcom,pmic-gpio.h       |   9 +
->>   3 files changed, 264 insertions(+), 42 deletions(-)
-> 
-> [...]
-> 
->> diff --git a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
->> index d33f17c..85d8809 100644
->> --- a/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
->> +++ b/include/dt-bindings/pinctrl/qcom,pmic-gpio.h
->> @@ -93,15 +93,24 @@
->>   #define PM8994_GPIO_S4			2
->>   #define PM8994_GPIO_L12			3
->>   
->> +/* ATEST MUX selection for analog-pass-through mode */
->> +#define PMIC_GPIO_AOUT_ATEST1		0
->> +#define PMIC_GPIO_AOUT_ATEST2		1
->> +#define PMIC_GPIO_AOUT_ATEST3		2
->> +#define PMIC_GPIO_AOUT_ATEST4		3
->> +
->>   /* To be used with "function" */
->>   #define PMIC_GPIO_FUNC_NORMAL		"normal"
->>   #define PMIC_GPIO_FUNC_PAIRED		"paired"
->>   #define PMIC_GPIO_FUNC_FUNC1		"func1"
->>   #define PMIC_GPIO_FUNC_FUNC2		"func2"
->> +#define PMIC_GPIO_FUNC_FUNC3		"func3"
->> +#define PMIC_GPIO_FUNC_FUNC4		"func4"
->>   #define PMIC_GPIO_FUNC_DTEST1		"dtest1"
->>   #define PMIC_GPIO_FUNC_DTEST2		"dtest2"
->>   #define PMIC_GPIO_FUNC_DTEST3		"dtest3"
->>   #define PMIC_GPIO_FUNC_DTEST4		"dtest4"
->> +#define PMIC_GPIO_FUNC_ANALOG		"analog"
-> 
-> defines for strings? That's really pointless. I'd prefer you drop using
-> them than add more.
-> 
-Thanks for the suggestion, I will remove these string definitions in 
-next patch.
-Does other part look good? I would post a new patch if no other comments.
+Add Device Trees for Actions Semiconductor S500 SoC and LeMaker Guitar SoM
+and base board.
 
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+---
+ v4 -> v5:
+ * Renamed files from s500* to owl-s500*
 
+ v3 -> v4:
+ * Adopted lower-case timer interrupt-names (Mark)
+ 
+ v2 -> v3:
+ * Fixed uart2 reg offset
+ * Enlarged timer reg size
+ * Added 2 Hz timer interrupts, interrupt-names
+ * Disabled CPUs 1-3 for now (cf. later patches)
+ * Added Cortex-A9 SCU, global timer, TWD timer/wdt nodes
+ * Added HOSC clock for timer
+ 
+ v1 -> v2:
+ * Reworded subject
+ * Updated ARCH_OWL to ARCH_ACTIONS (Arnd)
+ * Adopted "actions" vendor prefix
+ * Dropped irq.h include
+ * Added memory@0 node for Guitar SoM
+ * Dropped bogus uart3 clock-frequency
+ * Added device_type for CPU nodes
+ * Fixed UART reg size
+ * Adopted SPDX-License-Identifier (Rob)
+ * Added remaining UART nodes
+ * Added timer node
+ 
+ arch/arm/boot/dts/Makefile                     |   2 +
+ arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts |  26 ++++
+ arch/arm/boot/dts/owl-s500-guitar.dtsi         |  22 ++++
+ arch/arm/boot/dts/owl-s500.dtsi                | 176 +++++++++++++++++++++++++
+ 4 files changed, 226 insertions(+)
+ create mode 100644 arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
+ create mode 100644 arch/arm/boot/dts/owl-s500-guitar.dtsi
+ create mode 100644 arch/arm/boot/dts/owl-s500.dtsi
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e81d87db22cc..ff9671c27fc8 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -669,6 +669,8 @@ dtb-$(CONFIG_ARCH_ORION5X) += \
+ 	orion5x-maxtor-shared-storage-2.dtb \
+ 	orion5x-netgear-wnr854t.dtb \
+ 	orion5x-rd88f5182-nas.dtb
++dtb-$(CONFIG_ARCH_ACTIONS) += \
++	owl-s500-guitar-bb-rev-b.dtb
+ dtb-$(CONFIG_ARCH_PRIMA2) += \
+ 	prima2-evb.dtb
+ dtb-$(CONFIG_ARCH_OXNAS) += \
+diff --git a/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts b/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
+new file mode 100644
+index 000000000000..521463d4cac6
+--- /dev/null
++++ b/arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
+@@ -0,0 +1,26 @@
++/*
++ * Copyright (c) 2016-2017 Andreas Färber
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++/dts-v1/;
++
++#include "owl-s500-guitar.dtsi"
++
++/ {
++	compatible = "lemaker,guitar-bb-rev-b", "lemaker,guitar", "actions,s500";
++	model = "LeMaker Guitar Base Board rev. B";
++
++	aliases {
++		serial3 = &uart3;
++	};
++
++	chosen {
++		stdout-path = "serial3:115200n8";
++	};
++};
++
++&uart3 {
++	status = "okay";
++};
+diff --git a/arch/arm/boot/dts/owl-s500-guitar.dtsi b/arch/arm/boot/dts/owl-s500-guitar.dtsi
+new file mode 100644
+index 000000000000..079b2c02cc13
+--- /dev/null
++++ b/arch/arm/boot/dts/owl-s500-guitar.dtsi
+@@ -0,0 +1,22 @@
++/*
++ * LeMaker Guitar SoM
++ *
++ * Copyright (c) 2016-2017 Andreas Färber
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++#include "owl-s500.dtsi"
++
++/ {
++	compatible = "lemaker,guitar", "actions,s500";
++
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x40000000>;
++	};
++};
++
++&timer {
++	clocks = <&hosc>;
++};
+diff --git a/arch/arm/boot/dts/owl-s500.dtsi b/arch/arm/boot/dts/owl-s500.dtsi
+new file mode 100644
+index 000000000000..fc9f71a4106a
+--- /dev/null
++++ b/arch/arm/boot/dts/owl-s500.dtsi
+@@ -0,0 +1,176 @@
++/*
++ * Actions Semi S500 SoC
++ *
++ * Copyright (c) 2016-2017 Andreas Färber
++ *
++ * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++ */
++
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++
++/ {
++	compatible = "actions,s500";
++	interrupt-parent = <&gic>;
++	#address-cells = <1>;
++	#size-cells = <1>;
++
++	aliases {
++	};
++
++	chosen {
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x0>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x1>;
++		};
++
++		cpu2: cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x2>;
++		};
++
++		cpu3: cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0x3>;
++		};
++	};
++
++	arm-pmu {
++		compatible = "arm,cortex-a9-pmu";
++		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++		             <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++		             <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++		             <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
++		interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>;
++	};
++
++	hosc: hosc {
++		compatible = "fixed-clock";
++		clock-frequency = <24000000>;
++		#clock-cells = <0>;
++	};
++
++	soc {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		scu: scu@b0020000 {
++			compatible = "arm,cortex-a9-scu";
++			reg = <0xb0020000 0x100>;
++		};
++
++		global_timer: timer@b0020200 {
++			compatible = "arm,cortex-a9-global-timer";
++			reg = <0xb0020200 0x100>;
++			interrupts = <GIC_PPI 0 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++			status = "disabled";
++		};
++
++		twd_timer: timer@b0020600 {
++			compatible = "arm,cortex-a9-twd-timer";
++			reg = <0xb0020600 0x20>;
++			interrupts = <GIC_PPI 2 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++			status = "disabled";
++		};
++
++		twd_wdt: wdt@b0020620 {
++			compatible = "arm,cortex-a9-twd-wdt";
++			reg = <0xb0020620 0xe0>;
++			interrupts = <GIC_PPI 3 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_EDGE_RISING)>;
++			status = "disabled";
++		};
++
++		gic: interrupt-controller@b0021000 {
++			compatible = "arm,cortex-a9-gic";
++			reg = <0xb0021000 0x1000>,
++			      <0xb0020100 0x0100>;
++			interrupt-controller;
++			#interrupt-cells = <3>;
++		};
++
++		l2: cache-controller@b0022000 {
++			compatible = "arm,pl310-cache";
++			reg = <0xb0022000 0x1000>;
++			cache-unified;
++			cache-level = <2>;
++			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++			arm,tag-latency = <3 3 2>;
++			arm,data-latency = <5 3 3>;
++		};
++
++		uart0: serial@b0120000 {
++			compatible = "actions,s500-uart", "actions,owl-uart";
++			reg = <0xb0120000 0x2000>;
++			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		uart1: serial@b0122000 {
++			compatible = "actions,s500-uart", "actions,owl-uart";
++			reg = <0xb0122000 0x2000>;
++			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		uart2: serial@b0124000 {
++			compatible = "actions,s500-uart", "actions,owl-uart";
++			reg = <0xb0124000 0x2000>;
++			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		uart3: serial@b0126000 {
++			compatible = "actions,s500-uart", "actions,owl-uart";
++			reg = <0xb0126000 0x2000>;
++			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		uart4: serial@b0128000 {
++			compatible = "actions,s500-uart", "actions,owl-uart";
++			reg = <0xb0128000 0x2000>;
++			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		uart5: serial@b012a000 {
++			compatible = "actions,s500-uart", "actions,owl-uart";
++			reg = <0xb012a000 0x2000>;
++			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		uart6: serial@b012c000 {
++			compatible = "actions,s500-uart", "actions,owl-uart";
++			reg = <0xb012c000 0x2000>;
++			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
++
++		timer: timer@b0168000 {
++			compatible = "actions,s500-timer";
++			reg = <0xb0168000 0x8000>;
++			interrupts = <GIC_SPI  8 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI  9 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "2hz0", "2hz1", "timer0", "timer1";
++		};
++	};
++};
 -- 
-Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,\n 
-a Linux Foundation Collaborative Project.
+2.12.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
