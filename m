@@ -1,115 +1,78 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v11 1/3] PCI: hisi: Add DT binding for PCIe of Kirin SoC
- series
-Date: Mon, 19 Jun 2017 11:50:09 +0100
-Message-ID: <5947AC61.1030600@hisilicon.com>
-References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
- <20170619102349.50652-2-songxiaowei@hisilicon.com>
- <5947AB23.20402@hisilicon.com>
+From: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
+Subject: Re: [PATCH v5 1/3] nvmem: dt: document SNVS LPGPR binding
+Date: Mon, 19 Jun 2017 12:58:51 +0200
+Message-ID: <b8d7d65c-93c8-8b62-abb4-09d60c32bf84@i2se.com>
+References: <20170609125730.25502-1-o.rempel@pengutronix.de>
+ <20170609125730.25502-2-o.rempel@pengutronix.de>
+ <8e50ff3d-d1f0-2795-5dc9-302979ca9694@i2se.com>
+ <20170619060629.du3qmihhkkyym44h@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5947AB23.20402@hisilicon.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Xiaowei Song <songxiaowei@hisilicon.com>, guodong.xu@linaro.org, bhelgaas@google.com, robh+dt@kernel.org
-Cc: suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170619060629.du3qmihhkkyym44h-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Language: de-DE
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Oleksij Rempel <ore-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Xiaowei,
+Hi Fabio,
 
-On 2017/6/19 11:44, Wei Xu wrote:
-> Hi Xiaowei,
-> 
-> On 2017/6/19 11:23, Xiaowei Song wrote:
-> 
-> Please add some commit message.
-> 
->> Cc: Guodong Xu <guodong.xu@linaro.org>
->> Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
->> Acked-by: Rob Herring <robh@kernel.org>
->> ---
-> 
-> I have picked up the patch from [1] and
-> the pull request has been merged into ARM SoC tree.
-> Please do not resend the same patch.
-> Thanks!
-> 
-> [1]:https://lkml.org/lkml/2017/6/14/1055
-
-Sorry, the above link is wrong.
-It should be https://lkml.org/lkml/2017/6/14/1056
-
-BR,
-Wei
-
-> 
-> Best Regards,
-> Wei
-> 
->>  .../devicetree/bindings/pci/kirin-pcie.txt         | 55 ++++++++++++++++++++++
->>  1 file changed, 55 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+Am 19.06.2017 um 08:06 schrieb Oleksij Rempel:
+> On Fri, Jun 09, 2017 at 04:59:00PM +0200, Stefan Wahren wrote:
+> Hi Stefan,
+>
+>> Hi Oleksij,
 >>
->> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
->> new file mode 100644
->> index 000000000000..c2be01270ec5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
->> @@ -0,0 +1,55 @@
->> +HiSilicon Kirin SoCs PCIe host DT description
->> +
->> +Kirin PCIe host controller is based on Designware PCI core.
->> +It shares common functions with PCIe Designware core driver
->> +and inherits common properties defined in
->> +Documentation/devicetree/bindings/pci/designware-pci.txt.
->> +
->> +Additional properties are described here:
->> +
->> +Required properties
->> +- compatible:
->> +	"hisilicon,kirin960-pcie" for PCIe of Kirin960 SoC
->> +- reg: Should contain rc_dbi, apb, phy, config registers location and length.
->> +- reg-names: Must include the following entries:
->> +  "dbi": controller configuration registers;
->> +  "apb": apb Ctrl register defined by Kirin;
->> +  "phy": apb PHY register defined by Kirin;
->> +  "config": PCIe configuration space registers.
->> +- reset-gpios: The gpio to generate PCIe perst assert and deassert signal.
->> +
->> +Optional properties:
->> +
->> +Example based on kirin960:
->> +
->> +	pcie@f4000000 {
->> +		compatible = "hisilicon,kirin960-pcie";
->> +		reg = <0x0 0xf4000000 0x0 0x1000>,
->> +		      <0x0 0xff3fe000 0x0 0x1000>,
->> +		      <0x0 0xf3f20000 0x0 0x40000>,
->> +		      <0x0 0xf4000000 0x0  0x2000>;
->> +		reg-names = "dbi","apb","phy", "config";
->> +		bus-range = <0x0  0x1>;
->> +		#address-cells = <3>;
->> +		#size-cells = <2>;
->> +		device_type = "pci";
->> +		ranges = <0x02000000 0x0 0x0
->> +			  0x0 0xf5000000
->> +			  0x0 0x2000000>;
->> +		num-lanes = <1>;
->> +		#interrupt-cells = <1>;
->> +		interrupt-map-mask = <0xf800 0 0 7>;
->> +		interrupt-map = <0x0 0 0 1 &gic 0 282 4>,
->> +				<0x0 0 0 2 &gic 0 283 4>,
->> +				<0x0 0 0 3 &gic 0 284 4>,
->> +				<0x0 0 0 4 &gic 0 285 4>;
->> +		clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
->> +			 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
->> +			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
->> +			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
->> +			 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
->> +		clock-names = "pcie_phy_ref", "pcie_aux",
->> +			      "pcie_apb_phy", "pcie_apb_sys",
->> +			      "pcie_aclk";
->> +		reset-gpios = <&gpio11 1 0>;
->> +	};
->>
+>> Am 09.06.2017 um 14:57 schrieb Oleksij Rempel:
+>>> Documentation bindings for the Low Power General Purpose Register
+>>> available on i.MX6 SoCs in the Secure Non-Volatile Storage.
+>>>
+>>> Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/nvmem/snvs-lpgpr.txt          | 19 +++++++++++++++++++
+>>>  1 file changed, 19 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>> new file mode 100644
+>>> index 000000000000..21910fb3159f
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+>>> @@ -0,0 +1,19 @@
+>>> +Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
+>>> +Secure Non-Volatile Storage.
+>>> +
+>>> +This DT node should be represented as a sub-node of a "syscon",
+>>> +"simple-mfd" node.
+>>> +
+>>> +Required properties:
+>>> +- compatible: should be:
+>>> +	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
+>>> +
+>>> +Example:
+>>> +snvs: snvs@020cc000 {
+>>> +	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
+>>> +	reg = <0x020cc000 0x4000>;
+>>> +
+>>> +	snvs_lpgpr: snvs-lpgpr {
+>>> +		compatible = "fsl,imx6q-snvs-lpgpr";
+>> according to the reference manual at least the clock "lp_ipg_clk_s" is
+>> required for register R/W access.
+>> So it should be added to the binding and enabled by the driver.
+> Hm...
+> Non of current SNVS drives use, set or defines *_ipg_clk_s. I can't find
+> in the docs how can I control this clocks.
+> lp_ipg_clk_s and hp_ipg_clk_s depend on ipg_clk_root, which seems to be
+> not gated. So, it is always on. Or do I miss something.
+>
+do you know how the clock "lp_ipg_clk_s" should be handled?
+
+Thanks
+Stefan
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
