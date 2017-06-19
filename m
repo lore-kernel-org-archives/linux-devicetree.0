@@ -1,81 +1,45 @@
-From: thor.thayer@linux.intel.com
-Subject: [PATCHv4 2/3] dt-bindings: i2c: Add Altera I2C Controller
-Date: Mon, 19 Jun 2017 15:36:57 -0500
-Message-ID: <1497904618-27010-3-git-send-email-thor.thayer@linux.intel.com>
-References: <1497904618-27010-1-git-send-email-thor.thayer@linux.intel.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497904618-27010-1-git-send-email-thor.thayer@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, thor.thayer@linux.intel.com
-Cc: davem@davemloft.net, gregkh@linuxfoundation.org, mchehab@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 3/4] irqchip: Add BCM2835 AUX interrupt controller
+Date: Mon, 19 Jun 2017 14:13:52 -0700
+Message-ID: <f68eed56-35b8-737e-008d-a8e993c7f6f1@gmail.com>
+References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
+ <1497457750-35585-1-git-send-email-phil@raspberrypi.org>
+ <1497457750-35585-4-git-send-email-phil@raspberrypi.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <1497457750-35585-4-git-send-email-phil@raspberrypi.org>
+Content-Language: en-US
+Sender: linux-clk-owner@vger.kernel.org
+To: Phil Elwell <phil@raspberrypi.org>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+On 06/14/2017 09:29 AM, Phil Elwell wrote:
+> Devices in the BCM2835 AUX block share a common interrupt line, with a
+> register indicating which devices have active IRQs. Expose this as a
+> nested interrupt controller to avoid IRQ sharing problems (easily
+> observed if UART1 and SPI1/2 are enabled simultaneously).
+> 
+> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+> ---
 
-Add the documentation to support the Altera synthesizable
-logic I2C Controller in FPGA.
+> +/*
+> + * The irq_mask and irq_unmask function pointers are used without
+> + * validity checks, so they must not be NULL. Create a dummy function
+> + * with the expected type for use as a no-op.
+> + */
+> +static void bcm2835_aux_irq_dummy(struct irq_data *data)
+> +{
+> +}
+> +
+> +static struct irq_chip bcm2835_aux_irq_chip = {
+> +	.name = "bcm2835-aux_irq",
+> +	.irq_mask = bcm2835_aux_irq_dummy,
+> +	.irq_unmask = bcm2835_aux_irq_dummy,
+> +};
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-v2  Change the subject to identify dt-bindings
-    Add synthesizable logic to description.
-    Change compatible string to "altr,softip-i2c"
-    Make description of clock phandle singular since 1 clock.
-    Remove altr, from fifo-size
-    Specify fifo-size is in bytes.
-v3  Add version to compatible string "altr,softip-i2c-v1.0"
-    Add for use in FPGA in description.
-v4  No Change - Add Acked-by
----
- .../devicetree/bindings/i2c/i2c-altera.txt         | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-altera.txt b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
-new file mode 100644
-index 0000000..767664f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/i2c-altera.txt
-@@ -0,0 +1,39 @@
-+* Altera I2C Controller
-+* This is Altera's synthesizable logic block I2C Controller for use
-+* in Altera's FPGAs.
-+
-+Required properties :
-+ - compatible : should be "altr,softip-i2c-v1.0"
-+ - reg        : Offset and length of the register set for the device
-+ - interrupts : <IRQ> where IRQ is the interrupt number.
-+ - clocks     : phandle to input clock.
-+ - #address-cells = <1>;
-+ - #size-cells = <0>;
-+
-+Recommended properties :
-+ - clock-frequency : desired I2C bus clock frequency in Hz.
-+
-+Optional properties :
-+ - fifo-size : Size of the RX and TX FIFOs in bytes.
-+ - Child nodes conforming to i2c bus binding
-+
-+Example :
-+
-+	i2c@100080000 {
-+		compatible = "altr,softip-i2c-v1.0";
-+		reg = <0x00000001 0x00080000 0x00000040>;
-+		interrupt-parent = <&intc>;
-+		interrupts = <0 43 4>;
-+		clocks = <&clk_0>;
-+		clock-frequency = <100000>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		fifo-size = <4>;
-+
-+		eeprom@51 {
-+			compatible = "atmel,24c32";
-+			reg = <0x51>;
-+			pagesize = <32>;
-+		};
-+	};
-+
+So how are the interrupt enabled/disabled if this interrupt controller
+just returns their pending state?
 -- 
-2.7.4
+Florian
