@@ -1,65 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: stm32: Add SPDIFRX support
-Date: Mon, 19 Jun 2017 17:46:48 +0100
-Message-ID: <20170619164648.r7cuzcliszyfzsex@sirena.org.uk>
-References: <1497621452-615-1-git-send-email-olivier.moysan@st.com>
- <1497621452-615-3-git-send-email-olivier.moysan@st.com>
+From: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
+ based ptp clock
+Date: Mon, 19 Jun 2017 09:50:27 -0700
+Message-ID: <8a45ea64-5a0e-6ecf-1e1d-ab8e85aa3115@broadcom.com>
+References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
+ <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
+ <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3124090038306533341=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1497621452-615-3-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: olivier moysan <olivier.moysan@st.com>
-Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi David, Rob,
+I will address all of Rob's comments below.
 
---===============3124090038306533341==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="dg3zotjdlhubmbmx"
-Content-Disposition: inline
+Since a part of the patch was applied to 'net-next', would you like me to
+send a new patch (based on the applied one), or a 'V2' of this patch ?
 
+Thanks
+Arun
 
---dg3zotjdlhubmbmx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jun 16, 2017 at 03:57:32PM +0200, olivier moysan wrote:
-> Add SPDIFRX support to STM32.
-
-This doesn't apply against current code, please check and resend.  Looks
-good code wise.
-
---dg3zotjdlhubmbmx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllH//gACgkQJNaLcl1U
-h9CaOAf+JOzFe+dm3Eiti1jmWVBV5PJH4O0PWp9aB3DZ2PuTIJuGzVgdEG7ZtUgw
-5Rp7ioGVJlOZlYadb2MWThlROylWxhDJqzmh0pnwLBMmR0KHZ8iEMACoxjthzWkD
-3FkaU692+JS05jM99NyS/ON3HTnNQ0X/hul61x4BwpXFUkxYaur4CT9OPVl+1X9r
-wumi+mE/75tsa5josZoD00dNUEQe4Oz03heMtUX+VOwqx4gTG4u0b7adyyYScWs2
-oxXO3heUtRbK5ETlALYEQcCMmtcvo+2g96mOA2HpRXEF3z6jpFK8HhUT2F7xrlfN
-Z06MW9SCLE/L6KvWzN6LG+oNZ5jrOA==
-=T8pU
------END PGP SIGNATURE-----
-
---dg3zotjdlhubmbmx--
-
---===============3124090038306533341==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3124090038306533341==--
+On 17-06-18 07:04 AM, Rob Herring wrote:
+> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
+>> Add device tree binding documentation for the Broadcom DTE
+>> PTP clock driver.
+>>
+>> Signed-off-by: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 13 +++++++++++++
+>>  1 file changed, 13 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+>> new file mode 100644
+>> index 0000000..07590bc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+>> @@ -0,0 +1,13 @@
+>> +* Broadcom Digital Timing Engine(DTE) based PTP clock driver
+> 
+> Bindings describe h/w, not drivers.
+> 
+>> +
+>> +Required properties:
+>> +- compatible: should be "brcm,ptp-dte"
+> 
+> Looks too generic. You need SoC specific compatible strings.
+> 
+>> +- reg: address and length of the DTE block's NCO registers
+>> +
+>> +Example:
+>> +
+>> +ptp_dte: ptp_dte@180af650 {
+> 
+> Don't use '_' in node names.
+> 
+>> +	compatible = "brcm,ptp-dte";
+>> +	reg = <0x180af650 0x10>;
+>> +	status = "okay";
+>> +};
+>> -- 
+>> 1.9.1
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
