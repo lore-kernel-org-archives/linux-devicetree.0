@@ -1,365 +1,491 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] drm/panel: Add support for s6e63j0x03 panel driver
-Date: Mon, 19 Jun 2017 11:14:40 +0200
-Message-ID: <3b0f0616-b2e2-8dab-af38-f4d0bae696e8@samsung.com>
-References: <1497521010-8429-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170615100342epcas1p4b15ffce9ea2018e2bc90bb04061aded5@epcas1p4.samsung.com>
- <1497521010-8429-3-git-send-email-hoegeun.kwon@samsung.com>
+From: Jose Abreu <Jose.Abreu@synopsys.com>
+Subject: Re: [PATCH v3 2/4] [media] platform: Add Synopsys Designware HDMI RX
+ Controller Driver
+Date: Mon, 19 Jun 2017 10:33:53 +0100
+Message-ID: <b4b49f3c-3b07-5638-62b9-26a1fe68af98@synopsys.com>
+References: <cover.1497630695.git.joabreu@synopsys.com>
+ <d7f507ccec6f25f9be457c1c3f2f802b55377a1f.1497630695.git.joabreu@synopsys.com>
+ <fd65183f-b577-9ac6-a56e-689121e82e73@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1497521010-8429-3-git-send-email-hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <fd65183f-b577-9ac6-a56e-689121e82e73@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sylwester Nawrocki <snawrocki@kernel.org>, Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15.06.2017 12:03, Hoegeun Kwon wrote:
-> This patch adds MIPI-DSI based S6E63J0X03 AMOLED LCD panel driver
-> which uses mipi_dsi bus to communicate with panel. The panel has
-> 320×320 resolution in 1.63" physical panel. This panel is used in
-> Samsung Galaxy Gear 2.
+Hi Sylwester,
+
+
+Thanks again for the feedback!
+
+
+On 18-06-2017 19:04, Sylwester Nawrocki wrote:
+> On 06/16/2017 06:38 PM, Jose Abreu wrote:
+>> This is an initial submission for the Synopsys Designware HDMI RX
+>> Controller Driver. This driver interacts with a phy driver so that
+>> a communication between them is created and a video pipeline is
+>> configured.
+>>
+>> The controller + phy pipeline can then be integrated into a fully
+>> featured system that can be able to receive video up to 4k@60Hz
+>> with deep color 48bit RGB, depending on the platform. Although,
+>> this initial version does not yet handle deep color modes.
+>> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+>> +static int dw_hdmi_phy_init(struct dw_hdmi_dev *dw_dev)
+>> +{
+>> +	struct dw_phy_pdata *phy = &dw_dev->phy_config;
+>> +	struct platform_device_info pdevinfo;
+>> +
+>> +	memset(&pdevinfo, 0, sizeof(pdevinfo));
+>> +
+>> +	phy->funcs = &dw_hdmi_phy_funcs;
+>> +	phy->funcs_arg = dw_dev;
+>> +
+>> +	pdevinfo.parent = dw_dev->dev;
+>> +	pdevinfo.id = PLATFORM_DEVID_NONE;
+>> +	pdevinfo.name = dw_dev->phy_drv;
+>> +	pdevinfo.data = phy;
+>> +	pdevinfo.size_data = sizeof(*phy);
+>> +	pdevinfo.dma_mask = DMA_BIT_MASK(32);
+>> +
+>> +	request_module(pdevinfo.name);
+>> +
+>> +	dw_dev->phy_pdev = platform_device_register_full(&pdevinfo);
+>> +	if (IS_ERR(dw_dev->phy_pdev)) {
+>> +		dev_err(dw_dev->dev, "failed to register phy device\n");
+>> +		return PTR_ERR(dw_dev->phy_pdev);
+>> +	}
+>> +
+>> +	if (!dw_dev->phy_pdev->dev.driver) {
+>> +		dev_err(dw_dev->dev, "failed to initialize phy driver\n");
+>> +		goto err;
+>> +	}
+> I think this is not safe because there is nothing preventing unbinding 
+> or unloading the driver at this point.
 >
-> Signed-off-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Hyungwon Hwang <human.hwang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/gpu/drm/panel/Kconfig                    |   7 +
->  drivers/gpu/drm/panel/Makefile                   |   1 +
->  drivers/gpu/drm/panel/panel-samsung-s6e63j0x03.c | 476 +++++++++++++++++++++++
->  3 files changed, 484 insertions(+)
->  create mode 100644 drivers/gpu/drm/panel/panel-samsung-s6e63j0x03.c
+>> +	if (!try_module_get(dw_dev->phy_pdev->dev.driver->owner)) {
+> So dw_dev->phy_pdev->dev.driver may be already NULL here.
+
+How can I make sure it wont be NULL? Because I've seen other
+media drivers do this and I don't think they do any kind of
+locking, but they do this mainly for I2C subdevs.
+
 >
-> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-> index 3e29a99..3f4afde 100644
-> --- a/drivers/gpu/drm/panel/Kconfig
-> +++ b/drivers/gpu/drm/panel/Kconfig
-> @@ -68,6 +68,13 @@ config DRM_PANEL_SAMSUNG_S6E3HA2
->  	depends on DRM_MIPI_DSI
->  	select VIDEOMODE_HELPERS
+>> +		dev_err(dw_dev->dev, "failed to get phy module\n");
+>> +		goto err;
+>> +	}
+>> +
+>> +	dw_dev->phy_sd = dev_get_drvdata(&dw_dev->phy_pdev->dev);
+>> +	if (!dw_dev->phy_sd) {
+>> +		dev_err(dw_dev->dev, "failed to get phy subdev\n");
+>> +		goto err_put;
+>> +	}
+>> +
+>> +	if (v4l2_device_register_subdev(&dw_dev->v4l2_dev, dw_dev->phy_sd)) {
+>> +		dev_err(dw_dev->dev, "failed to register phy subdev\n");
+>> +		goto err_put;
+>> +	}
+> I'd suggest usign v4l2-async API, so we use a common pattern for sub-device
+> registration.  And with recent change [1] you could handle this PHY subdev
+> in a standard way.  That might be more complicated than it is now but should 
+> make any future platform integration easier.
+>
+> [1] https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.linuxtv.org_patch_41834&d=DwICaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=WHDsc6kcWAl4i96Vm5hJ_19IJiuxx_p_Rzo2g-uHDKw&m=uHTyp6WsEj6vN19Zc09HqSNUhCx62OI8u-tAgi-EVts&s=WjyPjIwN1uGvPoV7ZlcmzOgdptakzluHywuKRA8ZG8M&e= 
+
+So I will instantiate phy driver and then wait for phy driver to
+register into v4l2 core?
+
+>
+>> +	module_put(dw_dev->phy_pdev->dev.driver->owner);
+>> +	return 0;
+>> +
+>> +err_put:
+>> +	module_put(dw_dev->phy_pdev->dev.driver->owner);
+>> +err:
+>> +	platform_device_unregister(dw_dev->phy_pdev);
+>> +	return -EINVAL;
+>> +}
+>> +
+>> +static void dw_hdmi_phy_exit(struct dw_hdmi_dev *dw_dev)
+>> +{
+>> +	if (!IS_ERR(dw_dev->phy_pdev))
+>> +		platform_device_unregister(dw_dev->phy_pdev);
+>> +}
+>> +static int dw_hdmi_config_hdcp(struct dw_hdmi_dev *dw_dev)
+>> +{
+>> +	for (i = 0; i < DW_HDMI_HDCP14_KEYS_SIZE; i += 2) {
+>> +		for (j = 0; j < key_write_tries; j++) {
+>> +			if (is_hdcp14_key_write_allowed(dw_dev))
+>> +				break;
+>> +			mdelay(10);
+> usleep_range()? I've seen more (busy waiting) mdelay() calls in this
+> patch series.
+
+I will change.
+
+>
+>
+>> +static int __dw_hdmi_power_on(struct dw_hdmi_dev *dw_dev, u32 input)
+>> +{
+>> +	unsigned long flags;
+>> +	int ret;
+>> +
+>> +	ret = dw_hdmi_config(dw_dev, input);
+>> +
+>> +	spin_lock_irqsave(&dw_dev->lock, flags);
+>> +	dw_dev->pending_config = false;
+>> +	spin_unlock_irqrestore(&dw_dev->lock, flags);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +struct dw_hdmi_work_data {
+>> +	struct dw_hdmi_dev *dw_dev;
+>> +	struct work_struct work;
+>> +	u32 input;
+>> +};
+>> +
+>> +static void dw_hdmi_work_handler(struct work_struct *work)
+>> +{
+>> +	struct dw_hdmi_work_data *data = container_of(work,
+>> +			struct dw_hdmi_work_data, work);
+>> +
+>> +	__dw_hdmi_power_on(data->dw_dev, data->input);
+>> +	devm_kfree(data->dw_dev->dev, data);
+>> +}
+>> +
+>> +static int dw_hdmi_power_on(struct dw_hdmi_dev *dw_dev, u32 input)
+>> +{
+>> +	struct dw_hdmi_work_data *data;
+>> +	unsigned long flags;
+>> +
+>> +	data = devm_kzalloc(dw_dev->dev, sizeof(*data), GFP_KERNEL);
+> Why use devm_{kzalloc, kfree} when dw_hdmi_power_on() is not only called
+> in the device's probe() callback, but in other places, including interrupt 
+> handler?  devm_* API is normally used when life time of a resource is more 
+> or less equal to life time of struct device or its matched driver.  Were 
+> there any specific reasons to not just use kzalloc()/kfree() ?
+
+No specific reason, I just thought it would be safer because if I
+cancel a work before it started then memory will remain
+allocated. But I will change to kzalloc().
+
+>
+>> +	if (!data)
+>> +		return -ENOMEM;
+>> +
+>> +	INIT_WORK(&data->work, dw_hdmi_work_handler);
+>> +	data->dw_dev = dw_dev;
+>> +	data->input = input;
+>> +
+>> +	spin_lock_irqsave(&dw_dev->lock, flags);
+>> +	if (dw_dev->pending_config) {
+>> +		devm_kfree(dw_dev->dev, data);
+>> +		spin_unlock_irqrestore(&dw_dev->lock, flags);
+>> +		return 0;
+>> +	}
+>> +
+>> +	queue_work(dw_dev->wq, &data->work);
+>> +	dw_dev->pending_config = true;
+>> +	spin_unlock_irqrestore(&dw_dev->lock, flags);
+>> +	return 0;
+>> +}
+>> +static irqreturn_t dw_hdmi_irq_handler(int irq, void *dev_data)
+>> +{
+>> +	struct dw_hdmi_dev *dw_dev = dev_data;
+>> +	u32 hdmi_ists = dw_hdmi_get_int_val(dw_dev, HDMI_ISTS, HDMI_IEN);
+>> +	u32 md_ists = dw_hdmi_get_int_val(dw_dev, HDMI_MD_ISTS, HDMI_MD_IEN);
+>> +
+>> +	dw_hdmi_clear_ints(dw_dev);
+>> +
+>> +	if ((hdmi_ists & HDMI_ISTS_CLK_CHANGE) ||
+>> +	    (hdmi_ists & HDMI_ISTS_PLL_LCK_CHG) || md_ists) {
+>> +		dw_hdmi_power_off(dw_dev);
+>> +		if (has_signal(dw_dev, dw_dev->configured_input))
+>> +			dw_hdmi_power_on(dw_dev, dw_dev->configured_input);
+>> +	}
+>> +	return IRQ_HANDLED;
+>> +}
+>> +static int dw_hdmi_registered(struct v4l2_subdev *sd)
+>> +{
+>> +	struct dw_hdmi_dev *dw_dev = to_dw_dev(sd);
+>> +	int ret;
+>> +
+>> +	ret = cec_register_adapter(dw_dev->cec_adap, dw_dev->dev);
+>> +	if (ret) {
+>> +		dev_err(dw_dev->dev, "failed to register CEC adapter\n");
+>> +		cec_delete_adapter(dw_dev->cec_adap);
+>> +		return ret;
+>> +	}
+>> +
+>> +	cec_register_cec_notifier(dw_dev->cec_adap, dw_dev->cec_notifier);
+>> +	dw_dev->registered = true;
+>> +	return ret;
+>> +}
+>> +
+>> +static void dw_hdmi_unregistered(struct v4l2_subdev *sd)
+>> +{
+>> +	struct dw_hdmi_dev *dw_dev = to_dw_dev(sd);
+>> +
+>> +	cec_unregister_adapter(dw_dev->cec_adap);
+>> +	cec_notifier_put(dw_dev->cec_notifier);
+>> +}
+>> +
+>> +static const struct v4l2_subdev_core_ops dw_hdmi_sd_core_ops = {
+>> +	.log_status = dw_hdmi_log_status,
+>> +	.subscribe_event = dw_hdmi_subscribe_event,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_video_ops dw_hdmi_sd_video_ops = {
+>> +	.s_routing = dw_hdmi_s_routing,
+>> +	.g_input_status = dw_hdmi_g_input_status,
+>> +	.g_parm = dw_hdmi_g_parm,
+>> +	.g_dv_timings = dw_hdmi_g_dv_timings,
+>> +	.query_dv_timings = dw_hdmi_query_dv_timings,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_pad_ops dw_hdmi_sd_pad_ops = {
+>> +	.enum_mbus_code = dw_hdmi_enum_mbus_code,
+>> +	.get_fmt = dw_hdmi_get_fmt,
+>> +	.set_fmt = dw_hdmi_set_fmt,
+>> +	.dv_timings_cap = dw_hdmi_dv_timings_cap,
+>> +	.enum_dv_timings = dw_hdmi_enum_dv_timings,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_ops dw_hdmi_sd_ops = {
+>> +	.core = &dw_hdmi_sd_core_ops,
+>> +	.video = &dw_hdmi_sd_video_ops,
+>> +	.pad = &dw_hdmi_sd_pad_ops,
+>> +};
+>> +
+>> +static const struct v4l2_subdev_internal_ops dw_hdmi_internal_ops = {
+>> +	.registered = dw_hdmi_registered,
+>> +	.unregistered = dw_hdmi_unregistered,
+>> +};
+>> +
+>> +static int dw_hdmi_parse_dt(struct dw_hdmi_dev *dw_dev)
+>> +{
+>> +	struct device_node *notifier, *np = dw_dev->of_node;
+>> +	struct dw_phy_pdata *phy = &dw_dev->phy_config;
+>> +
+>> +	if (!np) {
+>> +		dev_err(dw_dev->dev, "missing DT node\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* PHY properties parsing */
+>> +	of_property_read_u8(np, "snps,hdmi-phy-jtag-addr",
+>> +			&dw_dev->phy_jtag_addr);
+>> +	if (!dw_dev->phy_jtag_addr) {
+>> +		dev_err(dw_dev->dev, "missing hdmi-phy-jtag-addr in DT\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	of_property_read_u32(np, "snps,hdmi-phy-version", &phy->version);
+>> +	if (!phy->version) {
+>> +		dev_err(dw_dev->dev, "missing hdmi-phy-version in DT\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	of_property_read_u32(np, "snps,hdmi-phy-cfg-clk", &phy->cfg_clk);
+>> +	if (!phy->cfg_clk) {
+>> +		dev_err(dw_dev->dev, "missing hdmi-phy-cfg-clk in DT\n");
+>> +		return -EINVAL;
+>> +	}
+> With changes as proposed in comments to patch "4/4 dt-bindings: ..." 
+> you could use the common clk API for retrieving the clock rate, e.g. 
+> devm_clk_get(), clk_get_rate().
+>
+> When the HDMI RX IP block gets integrated within some SoC I'd expect 
+> the system clock controller to be already using the common clk DT 
+> bindings. Unless for some reason the platform doesn't support CCF.
+
+Yes, I will change.
+
+>
+>
+>> +	if (of_property_read_string_index(np, "snps,hdmi-phy-driver", 0,
+>> +				&dw_dev->phy_drv) < 0) {
+>> +		dev_err(dw_dev->dev, "missing hdmi-phy-driver in DT\n");
+> I don't think we can put Linux driver names in DT like this, it seems rather 
+> a serious abuse.  With proposed changes to the DT binding you could reference 
+> the PHY device by DT phandle or child node.
+>
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* Controller properties parsing */
+>> +	of_property_read_u32(np, "snps,hdmi-ctl-cfg-clk", &dw_dev->cfg_clk);
+>> +	if (!dw_dev->cfg_clk) {
+>> +		dev_err(dw_dev->dev, "missing hdmi-ctl-cfg-clk in DT\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +#if IS_ENABLED(CONFIG_VIDEO_DWC_HDMI_RX_CEC)
+>> +	/* Notifier device parsing */
+>> +	notifier = of_parse_phandle(np, "edid-phandle", 0);
+>> +	if (!notifier) {
+>> +		dev_err(dw_dev->dev, "missing edid-phandle in DT\n");
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	dw_dev->notifier_pdev = of_find_device_by_node(np);
+> Shouldn't this be:
+> 	dw_dev->notifier_pdev = of_find_device_by_node(notifier);
+> ?
+>
+> The caller of dw_hdmi_parse_dt() already knows about the device 
+> associated with np.
+
+Yeah, its a typo, it works by luck because in my setup np ==
+notifier.
+
+>
+>> +	if (!dw_dev->notifier_pdev)
+>> +		return -EPROBE_DEFER;
+>> +#endif
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int dw_hdmi_rx_probe(struct platform_device *pdev)
+>> +{
+>> +	/* Deferred work */
+>> +	dw_dev->wq = create_workqueue(DW_HDMI_RX_DRVNAME);
+> Have you considered using create_singlethread_workqueue() ? create_workqueue() 
+> will spawn one thread per CPU.
+
+Ok, will change.
+
+>
+>> +	if (!dw_dev->wq)
+>> +		return -ENOMEM;
+>> +
+>> +	/* Registers mapping */
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	if (!res) {
+>> +		ret = -ENXIO;
+>> +		goto err_wq;
+>> +	}
+> You can drop res testing here, devm_ioremap_resource() verifies internally 
+> if res is valid and returns proper error code.
+
+Ok.
+
+>
+>> +	dw_dev->regs = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(dw_dev->regs)) {
+>> +		ret = PTR_ERR(dw_dev->regs);
+>> +		goto err_wq;
+>> +	}
+>
+>> +	/* V4L2 initialization */
+>> +	sd = &dw_dev->sd;
+>> +	v4l2_subdev_init(sd, &dw_hdmi_sd_ops);
+>> +	strlcpy(sd->name, DW_HDMI_RX_DRVNAME, sizeof(sd->name));
+> sd->name should be unique, you could, for instance, do something like
+>
+> 	strlcpy(sd->name, dev_name(&pdev->dev), sizeof(sd->name));
+
+Ok.
+
+>
+>> +	sd->internal_ops = &dw_hdmi_internal_ops;
+>> +	sd->flags |= V4L2_SUBDEV_FL_HAS_EVENTS;
+>> +}
+>> +
+>> +static int dw_hdmi_rx_remove(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct v4l2_subdev *sd = dev_get_drvdata(dev);
+>> +	struct dw_hdmi_dev *dw_dev = to_dw_dev(sd);
+>> +
+>> +	dev_dbg(dev, "%s\n", __func__);
+>> +
+>> +	dw_hdmi_disable_ints(dw_dev);
+>> +	dw_hdmi_disable_hpd(dw_dev);
+>> +	dw_hdmi_disable_scdc(dw_dev);
+>> +	dw_hdmi_power_off(dw_dev);
+>> +	dw_hdmi_phy_s_power(dw_dev, false);
+>> +	flush_workqueue(dw_dev->wq);
+>> +	destroy_workqueue(dw_dev->wq);
+>> +	v4l2_device_unregister(&dw_dev->v4l2_dev);
+>> +	dw_hdmi_phy_exit(dw_dev);> +	dev_info(dev, "driver removed\n");
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver dw_hdmi_rx_driver = {
+>> +	.probe = dw_hdmi_rx_probe,
+>> +	.remove = dw_hdmi_rx_remove,
+> I think we need also .of_match_table here.
+>
+>> +	.driver = {
+>> +		.name = DW_HDMI_RX_DRVNAME,
+>> +	}
+>> +};
+>> +module_platform_driver(dw_hdmi_rx_driver);
+>> +#endif /* __DW_HDMI_RX_H__ */
+>> diff --git a/include/media/dwc/dw-hdmi-rx-pdata.h b/include/media/dwc/dw-hdmi-rx-pdata.h
+>> new file mode 100644
+>> index 0000000..ff8554d
+>> --- /dev/null
+>> +++ b/include/media/dwc/dw-hdmi-rx-pdata.h
+>> @@ -0,0 +1,63 @@
+>> +#ifndef __DW_HDMI_RX_PDATA_H__
+>> +#define __DW_HDMI_RX_PDATA_H__
+>> +
+>> +#define DW_HDMI_RX_DRVNAME			"dw-hdmi-rx"
+>> +
+>> +/* Notify events */
+>> +#define DW_HDMI_NOTIFY_IS_OFF		1
+>> +#define DW_HDMI_NOTIFY_INPUT_CHANGED	2
+>> +#define DW_HDMI_NOTIFY_AUDIO_CHANGED	3
+>> +#define DW_HDMI_NOTIFY_IS_STABLE	4
+>> +
+>> +/* HDCP 1.4 */
+>> +#define DW_HDMI_HDCP14_BKSV_SIZE	2
+>> +#define DW_HDMI_HDCP14_KEYS_SIZE	(2 * 40)
+>> +
+>> +struct dw_hdmi_hdcp14_key {
+>> +	u32 seed;
+>> +	u32 bksv[DW_HDMI_HDCP14_BKSV_SIZE];
+>> +	u32 keys[DW_HDMI_HDCP14_KEYS_SIZE];
+>> +	bool keys_valid;
+>> +};
+>> +
+>> +struct dw_hdmi_rx_pdata {
+>> +	/* Controller configuration */
+>> +	unsigned int iref_clk; /* MHz */
+> Is this field unused?
+
+Yes, left overs from previous versions.
+
+>
+>> +	struct dw_hdmi_hdcp14_key hdcp14_keys;
+>> +	/* 5V sense interface */
+>> +	bool (*dw_5v_status)(void __iomem *regs, int input);
+>> +	void (*dw_5v_clear)(void __iomem *regs);
+>> +	void __iomem *dw_5v_arg;> +	/* Zcal interface */
+>> +	void (*dw_zcal_reset)(void __iomem *regs);
+>> +	bool (*dw_zcal_done)(void __iomem *regs);
+>> +	void __iomem *dw_zcal_arg;
+> I'm just wondering if these operations could be modeled with the regmap,
+> so we could avoid callbacks in the platform data structure.
+
+Hmm, I don't think that is safe because registers may not be
+adjacent to each other. And maybe I was a little generous in
+passing a __iomem argument, maybe it should be just void instead
+because this can be not a regmap at all.
+
+Best regards,
+Jose Miguel Abreu
+
 >  
-> +config DRM_PANEL_SAMSUNG_S6E63J0X03
-> +	tristate "Samsung S6E63J0X03 DSI command mode panel"
-> +	depends on OF
-> +	depends on DRM_MIPI_DSI
-> +	depends on BACKLIGHT_CLASS_DEVICE
-> +	select VIDEOMODE_HELPERS
-> +
->  config DRM_PANEL_SAMSUNG_S6E8AA0
->  	tristate "Samsung S6E8AA0 DSI video mode panel"
->  	depends on OF
-> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-> index 292b3c7..f028269 100644
-> --- a/drivers/gpu/drm/panel/Makefile
-> +++ b/drivers/gpu/drm/panel/Makefile
-> @@ -5,6 +5,7 @@ obj-$(CONFIG_DRM_PANEL_LG_LG4573) += panel-lg-lg4573.o
->  obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
->  obj-$(CONFIG_DRM_PANEL_SAMSUNG_LD9040) += panel-samsung-ld9040.o
->  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E3HA2) += panel-samsung-s6e3ha2.o
-> +obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E63J0X03) += panel-samsung-s6e63j0x03.o
->  obj-$(CONFIG_DRM_PANEL_SAMSUNG_S6E8AA0) += panel-samsung-s6e8aa0.o
->  obj-$(CONFIG_DRM_PANEL_SHARP_LQ101R1SX01) += panel-sharp-lq101r1sx01.o
->  obj-$(CONFIG_DRM_PANEL_SHARP_LS043T1LE01) += panel-sharp-ls043t1le01.o
-> diff --git a/drivers/gpu/drm/panel/panel-samsung-s6e63j0x03.c b/drivers/gpu/drm/panel/panel-samsung-s6e63j0x03.c
-> new file mode 100644
-> index 0000000..dd038bc
-> --- /dev/null
-> +++ b/drivers/gpu/drm/panel/panel-samsung-s6e63j0x03.c
-> @@ -0,0 +1,476 @@
-> +/*
-> + * MIPI-DSI based S6E63J0X03 AMOLED lcd 1.63 inch panel driver.
-> + *
-> + * Copyright (c) 2014-2017 Samsung Electronics Co., Ltd
-> + *
-> + * Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + * Hoegeun Kwon <hoegeun.kwon-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <drm/drmP.h>
-> +#include <drm/drm_mipi_dsi.h>
-> +#include <drm/drm_panel.h>
-> +#include <linux/backlight.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <video/mipi_display.h>
-> +
-> +#define MCS_LEVEL2_KEY		0xf0
-> +#define MCS_MTP_KEY		0xf1
-> +#define MCS_MTP_SET3		0xd4
-> +
-> +#define MIN_BRIGHTNESS		0
-
-This macro is not used at all and according to API it must be 0, so it
-can be removed.
-
-> +#define MAX_BRIGHTNESS		100
-> +#define DEFAULT_BRIGHTNESS	80
-> +
-> +#define NUM_GAMMA_STEPS		9
-> +#define GAMMA_CMD_CNT		28
-> +
-> +struct s6e63j0x03 {
-> +	struct device *dev;
-> +	struct drm_panel panel;
-> +	struct backlight_device *bl_dev;
-> +
-> +	struct regulator_bulk_data supplies[2];
-> +	struct gpio_desc *reset_gpio;
-> +};
-> +
-> +static const unsigned char gamma_tbl[NUM_GAMMA_STEPS][GAMMA_CMD_CNT] = {
-> +	{	/* Gamma 10 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x7f, 0x7f, 0x7f, 0x52, 0x6b, 0x6f, 0x26,
-> +		0x28, 0x2d, 0x28, 0x26, 0x27, 0x33, 0x34, 0x32, 0x36, 0x36,
-> +		0x35, 0x00, 0xab, 0x00, 0xae, 0x00, 0xbf
-> +	},
-> +	{	/* gamma 30 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x70, 0x7f, 0x7f, 0x4e, 0x64, 0x69, 0x26,
-> +		0x27, 0x2a, 0x28, 0x29, 0x27, 0x31, 0x32, 0x31, 0x35, 0x34,
-> +		0x35, 0x00, 0xc4, 0x00, 0xca, 0x00, 0xdc
-> +	},
-> +	{	/* gamma 60 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x65, 0x7b, 0x7d, 0x5f, 0x67, 0x68, 0x2a,
-> +		0x28, 0x29, 0x28, 0x2a, 0x27, 0x31, 0x2f, 0x30, 0x34, 0x33,
-> +		0x34, 0x00, 0xd9, 0x00, 0xe4, 0x00, 0xf5
-> +	},
-> +	{	/* gamma 90 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x4d, 0x6f, 0x71, 0x67, 0x6a, 0x6c, 0x29,
-> +		0x28, 0x28, 0x28, 0x29, 0x27, 0x30, 0x2e, 0x30, 0x32, 0x31,
-> +		0x31, 0x00, 0xea, 0x00, 0xf6, 0x01, 0x09
-> +	},
-> +	{	/* gamma 120 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x3d, 0x66, 0x68, 0x69, 0x69, 0x69, 0x28,
-> +		0x28, 0x27, 0x28, 0x28, 0x27, 0x30, 0x2e, 0x2f, 0x31, 0x31,
-> +		0x30, 0x00, 0xf9, 0x01, 0x05, 0x01, 0x1b
-> +	},
-> +	{	/* gamma 150 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x31, 0x51, 0x53, 0x66, 0x66, 0x67, 0x28,
-> +		0x29, 0x27, 0x28, 0x27, 0x27, 0x2e, 0x2d, 0x2e, 0x31, 0x31,
-> +		0x30, 0x01, 0x04, 0x01, 0x11, 0x01, 0x29
-> +	},
-> +	{	/* gamma 200 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x2f, 0x4f, 0x51, 0x67, 0x65, 0x65, 0x29,
-> +		0x2a, 0x28, 0x27, 0x25, 0x26, 0x2d, 0x2c, 0x2c, 0x30, 0x30,
-> +		0x30, 0x01, 0x14, 0x01, 0x23, 0x01, 0x3b
-> +	},
-> +	{	/* gamma 240 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x2c, 0x4d, 0x50, 0x65, 0x63, 0x64, 0x2a,
-> +		0x2c, 0x29, 0x26, 0x24, 0x25, 0x2c, 0x2b, 0x2b, 0x30, 0x30,
-> +		0x30, 0x01, 0x1e, 0x01, 0x2f, 0x01, 0x47
-> +	},
-> +	{	/* gamma 300 */
-> +		MCS_MTP_SET3,
-> +		0x00, 0x00, 0x00, 0x38, 0x61, 0x64, 0x65, 0x63, 0x64, 0x28,
-> +		0x2a, 0x27, 0x26, 0x23, 0x25, 0x2b, 0x2b, 0x2a, 0x30, 0x2f,
-> +		0x30, 0x01, 0x2d, 0x01, 0x3f, 0x01, 0x57
-> +	}
-> +};
-> +
-> +static inline struct s6e63j0x03 *panel_to_s6e63j0x03(struct drm_panel *panel)
-> +{
-> +	return container_of(panel, struct s6e63j0x03, panel);
-> +}
-> +
-> +static inline ssize_t s6e63j0x03_dcs_write_seq(struct s6e63j0x03 *ctx,
-> +					const void *seq, size_t len)
-> +{
-> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-> +
-> +	return mipi_dsi_dcs_write_buffer(dsi, seq, len);
-> +}
-> +
-> +#define s6e63j0x03_dcs_write_seq_static(ctx, seq...) do {	\
-> +	static const u8 d[] = { seq };				\
-> +	int ret;						\
-> +	ret = s6e63j0x03_dcs_write_seq(ctx, d, ARRAY_SIZE(d));	\
-> +	if (ret < 0)						\
-> +		return ret;					\
-> +} while (0)
-> +
-> +#define s6e63j0x03_call_write_func(ret, func) do {	\
-> +	ret = (func);					\
-> +	if (ret < 0)					\
-> +		return ret;				\
-> +} while (0)
-
-Both above macros violate kernel coding style: macros that affect
-control flow are the 1st thing to avoid, see relevant chapter in the
-kernel docs [1].
-I know similar macros have been already merged with two latest panel
-drivers, so I suspect you have just followed current practice. So this
-question
-is rather to Thierry, is it the method you want to use to avoid 'if
-(ret) return ret' plague? What about explicit violation of kernel coding
-style?
-
-[1]:
-https://www.kernel.org/doc/html/v4.10/process/coding-style.html#macros-enums-and-rtl
-
-> +
-> +static inline int s6e63j0x03_enable_lv2_command(struct s6e63j0x03 *ctx)
-> +{
-> +	s6e63j0x03_dcs_write_seq_static(ctx, MCS_LEVEL2_KEY, 0x5a, 0x5a);
-> +	return 0;
-> +}
-> +
-> +static inline int s6e63j0x03_apply_mtp_key(struct s6e63j0x03 *ctx, bool on)
-> +{
-> +	if (on)
-> +		s6e63j0x03_dcs_write_seq_static(ctx, MCS_MTP_KEY, 0x5a, 0x5a);
-> +	else
-> +		s6e63j0x03_dcs_write_seq_static(ctx, MCS_MTP_KEY, 0xa5, 0xa5);
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e63j0x03_power_on(struct s6e63j0x03 *ctx)
-> +{
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	msleep(30);
-> +
-> +	gpiod_set_value(ctx->reset_gpio, 1);
-> +	usleep_range(1000, 2000);
-> +	gpiod_set_value(ctx->reset_gpio, 0);
-> +	usleep_range(5000, 6000);
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e63j0x03_power_off(struct s6e63j0x03 *ctx)
-> +{
-> +	return regulator_bulk_disable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
-> +}
-> +
-> +static unsigned int s6e63j0x03_get_brightness_index(unsigned int brightness)
-> +{
-> +	unsigned int index;
-> +
-> +	index = brightness / (MAX_BRIGHTNESS / NUM_GAMMA_STEPS);
-> +
-> +	if (index >= NUM_GAMMA_STEPS)
-> +		index = NUM_GAMMA_STEPS - 1;
-> +
-> +	return index;
-> +}
-> +
-> +static int s6e63j0x03_update_gamma(struct s6e63j0x03 *ctx,
-> +					unsigned int brightness)
-> +{
-> +	struct backlight_device *bl_dev = ctx->bl_dev;
-> +	unsigned int index = s6e63j0x03_get_brightness_index(brightness);
-> +	int ret;
-> +
-> +	s6e63j0x03_call_write_func(ret, s6e63j0x03_apply_mtp_key(ctx, true));
-> +	s6e63j0x03_call_write_func(ret,
-> +		s6e63j0x03_dcs_write_seq(ctx, gamma_tbl[index], GAMMA_CMD_CNT));
-> +	s6e63j0x03_call_write_func(ret, s6e63j0x03_apply_mtp_key(ctx, false));
-> +
-> +	bl_dev->props.brightness = brightness;
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e63j0x03_set_brightness(struct backlight_device *bl_dev)
-> +{
-> +	struct s6e63j0x03 *ctx = (struct s6e63j0x03 *)bl_get_data(bl_dev);
-
-Explicit casting can be removed.
-
-> +	unsigned int brightness = bl_dev->props.brightness;
-> +	int ret;
-> +
-> +	s6e63j0x03_call_write_func(ret,
-> +		s6e63j0x03_update_gamma(ctx, brightness));
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct backlight_ops s6e63j0x03_bl_ops = {
-> +	.update_status = s6e63j0x03_set_brightness,
-> +};
-> +
-> +static int s6e63j0x03_disable(struct drm_panel *panel)
-> +{
-> +	struct s6e63j0x03 *ctx = panel_to_s6e63j0x03(panel);
-> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-> +	int ret;
-> +
-> +	s6e63j0x03_call_write_func(ret, mipi_dsi_dcs_set_display_off(dsi));
-> +	ctx->bl_dev->props.power = FB_BLANK_NORMAL;
-> +
-> +	s6e63j0x03_call_write_func(ret, mipi_dsi_dcs_enter_sleep_mode(dsi));
-> +	msleep(120);
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e63j0x03_unprepare(struct drm_panel *panel)
-> +{
-> +	struct s6e63j0x03 *ctx = panel_to_s6e63j0x03(panel);
-> +	int ret;
-> +
-> +	ret = s6e63j0x03_power_off(ctx);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ctx->bl_dev->props.power = FB_BLANK_POWERDOWN;
-> +
-> +	return 0;
-> +}
-> +
-> +static int s6e63j0x03_panel_init(struct s6e63j0x03 *ctx)
-> +{
-> +	struct mipi_dsi_device *dsi = to_mipi_dsi_device(ctx->dev);
-> +	int ret;
-> +
-> +	s6e63j0x03_call_write_func(ret, s6e63j0x03_enable_lv2_command(ctx));
-> +	s6e63j0x03_call_write_func(ret, s6e63j0x03_apply_mtp_key(ctx, true));
-> +
-> +	/* set porch adjustment */
-> +	s6e63j0x03_dcs_write_seq_static(ctx, 0xf2, 0x1c, 0x28);
-> +	/* set frame freq */
-> +	s6e63j0x03_dcs_write_seq_static(ctx, 0xb5, 0x00, 0x02, 0x00);
-> +	/* set caset, paset */
-> +	s6e63j0x03_call_write_func(ret,
-> +		mipi_dsi_dcs_set_column_address(dsi, 0x0014, 0x0153));
-> +	s6e63j0x03_call_write_func(ret,
-> +		mipi_dsi_dcs_set_page_address(dsi, 0x0000, 0x013f));
-
-For two calls above arguments are line or column number, you should use
-decimals here, sth like below:
-
-    #define FIRST_COLUMN 20
-    mipi_dsi_dcs_set_column_address(dsi, FIRST_COLUMN,
-default_mode.hdisplay - 1 + FIRST_COLUMN );
-    mipi_dsi_dcs_set_page_address(dsi, 0, default_mode.hdisplay - 1);
-
-This way it will be easier to understand what is going on here.
-
-Regards
-Andrzej
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +};
+>> +#endif /* __DW_HDMI_RX_PDATA_H__ */
+> --
+> Regards,
+> Sylwester
