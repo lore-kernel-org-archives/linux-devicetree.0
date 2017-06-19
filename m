@@ -1,80 +1,39 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v7 1/2] power: supply: twl4030-charger: move irq allocation to just before irqs are enabled
-Date: Mon, 19 Jun 2017 10:41:45 +0200
-Message-ID: <2b919bea97f23c952e0141ed63d04dbbcea5c695.1497861705.git.hns@goldelico.com>
-References: <cover.1497861705.git.hns@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1497861705.git.hns@goldelico.com>
-In-Reply-To: <cover.1497861705.git.hns@goldelico.com>
-References: <cover.1497861705.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grygorii Strashko <grygorii.strashko@ti.com>, NeilBrown <neil@brown.name>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sebastian Reichel <sre@kernel.org>, Marek Belisko <marek@goldelico.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, letux-kernel@openphoenux.org, notasas@gmail.com, linux-omap@vger.kernel.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] ARM: dts: iwg20d-q7: Add pinctl support for scif0
+Date: Mon, 19 Jun 2017 10:42:18 +0200
+Message-ID: <CAMuHMdVe7sRcGohSPvSUrryNMetddomoMbN7ffOtq9Y3DBt=zQ@mail.gmail.com>
+References: <1497625049-46802-1-git-send-email-biju.das@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <1497625049-46802-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-And initialize workers and notifiers as soon as possible.
+Hi Biju,
 
-This avoids a potential race if irqs are enabled and triggered too early
-before the worker is properly set up.
+On Fri, Jun 16, 2017 at 4:57 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> Adding pinctrl support for scif0 interface.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
 
-Suggested-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
----
- drivers/power/supply/twl4030_charger.c | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+The patch looks good to me, but without schematics, we cannot verify the
+actual pins used.
 
-diff --git a/drivers/power/supply/twl4030_charger.c b/drivers/power/supply/twl4030_charger.c
-index 1fbbe0cc216a..9d974f1e3957 100644
---- a/drivers/power/supply/twl4030_charger.c
-+++ b/drivers/power/supply/twl4030_charger.c
-@@ -984,12 +984,27 @@ static int twl4030_bci_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, bci);
- 
-+	INIT_WORK(&bci->work, twl4030_bci_usb_work);
-+	INIT_DELAYED_WORK(&bci->current_worker, twl4030_current_worker);
-+
- 	bci->channel_vac = devm_iio_channel_get(&pdev->dev, "vac");
- 	if (IS_ERR(bci->channel_vac)) {
- 		bci->channel_vac = NULL;
- 		dev_warn(&pdev->dev, "could not request vac iio channel");
- 	}
- 
-+	if (bci->dev->of_node) {
-+		struct device_node *phynode;
-+
-+		phynode = of_find_compatible_node(bci->dev->of_node->parent,
-+						  NULL, "ti,twl4030-usb");
-+		if (phynode) {
-+			bci->transceiver = devm_usb_get_phy_by_node(
-+				bci->dev, phynode, &bci->usb_nb);
-+			bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
-+		}
-+	}
-+
- 	bci->ac = devm_power_supply_register(&pdev->dev, &twl4030_bci_ac_desc,
- 					     NULL);
- 	if (IS_ERR(bci->ac)) {
-@@ -1023,20 +1038,6 @@ static int twl4030_bci_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	INIT_WORK(&bci->work, twl4030_bci_usb_work);
--	INIT_DELAYED_WORK(&bci->current_worker, twl4030_current_worker);
--
--	bci->usb_nb.notifier_call = twl4030_bci_usb_ncb;
--	if (bci->dev->of_node) {
--		struct device_node *phynode;
--
--		phynode = of_find_compatible_node(bci->dev->of_node->parent,
--						  NULL, "ti,twl4030-usb");
--		if (phynode)
--			bci->transceiver = devm_usb_get_phy_by_node(
--				bci->dev, phynode, &bci->usb_nb);
--	}
--
- 	/* Enable interrupts now. */
- 	reg = ~(u32)(TWL4030_ICHGLOW | TWL4030_ICHGEOC | TWL4030_TBATOR2 |
- 		TWL4030_TBATOR1 | TWL4030_BATSTS);
--- 
-2.12.2
+Are the schematics somewhere available? Having access to them would allow us
+doing a better job reviewing your DTS patches.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
