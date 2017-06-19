@@ -1,44 +1,63 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: Re: [PATCH v4 21/28] ARM: dts: s500: Set CPU enable-method
-Date: Mon, 19 Jun 2017 04:09:49 +0200
-Message-ID: <f5904acc-7d23-39c0-d6bc-8077e9884915@suse.de>
-References: <20170606005426.26446-1-afaerber@suse.de>
- <20170606005426.26446-22-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH v5 20/26] dt-bindings: power: Add Owl SPS power domains
+Date: Mon, 19 Jun 2017 05:36:25 +0200
+Message-ID: <20170619033626.5583-1-afaerber@suse.de>
+References: <20170606005426.26446-23-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170606005426.26446-22-afaerber-l3A5Bk7waGM@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170606005426.26446-23-afaerber@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, support@lemaker.org, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang@actions-semi.com>, devicetree@vger.kernel.org, 96boards@ucrobotics.com, linux-kernel@vger.kernel.org, Thomas Liau <thomas.liau@actions-semi.com>, Rob Herring <robh+dt@kernel.org>, mp-cs@actions-semi.com, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei@actions-semi.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf@actions-semi.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 06.06.2017 um 02:54 schrieb Andreas Färber:
-> Use a custom S500 enable-method for all CPUs.
-> 
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
-> ---
->  v3 -> v4: Unchanged
->  
->  v3: new
->  
->  arch/arm/boot/dts/s500.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
-
-Applied to linux-actions.git v4.13/dt branch:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.13/dt
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+RGVmaW5lIHBvd2VyIGRvbWFpbnMgZm9yIGFsbCBub24tcmVzZXJ2ZWQgUzUwMCBwb3dlciBnYXRl
+cy4KCkFja2VkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgpTaWduZWQtb2ZmLWJ5
+OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ci0tLQogdjQgLT4gdjU6CiAqIFJl
+bmFtZWQgaGVhZGVyIGZpbGUgd2l0aCBvd2wtIHByZWZpeCBmb3IgdW5pcXVlbmVzcwogCiB2MyAt
+PiB2NDogVW5jaGFuZ2VkCiAKIHYzOiBuZXcKIAogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93
+ZXIvYWN0aW9ucyxvd2wtc3BzLnR4dCAgICAgfCAxNyArKysrKysrKysrKysrKysrKwogaW5jbHVk
+ZS9kdC1iaW5kaW5ncy9wb3dlci9vd2wtczUwMC1wb3dlcmdhdGUuaCAgICAgICAgfCAxOSArKysr
+KysrKysrKysrKysrKysrCiAyIGZpbGVzIGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykKIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXIvYWN0
+aW9ucyxvd2wtc3BzLnR4dAogY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3Mv
+cG93ZXIvb3dsLXM1MDAtcG93ZXJnYXRlLmgKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvcG93ZXIvYWN0aW9ucyxvd2wtc3BzLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlci9hY3Rpb25zLG93bC1zcHMudHh0Cm5ldyBmaWxl
+IG1vZGUgMTAwNjQ0CmluZGV4IDAwMDAwMDAwMDAwMC4uMDA3YjlhN2FlNzIzCi0tLSAvZGV2L251
+bGwKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VyL2FjdGlvbnMs
+b3dsLXNwcy50eHQKQEAgLTAsMCArMSwxNyBAQAorQWN0aW9ucyBTZW1pIE93bCBTbWFydCBQb3dl
+ciBTeXN0ZW0gKFNQUykKKworUmVxdWlyZWQgcHJvcGVydGllczoKKy0gY29tcGF0aWJsZSAgICAg
+ICAgICA6ICAiYWN0aW9ucyxzNTAwLXNwcyIgZm9yIFM1MDAKKy0gcmVnICAgICAgICAgICAgICAg
+ICA6ICBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0ZXIgc2V0IGZvciB0aGUgZGV2aWNl
+LgorLSAjcG93ZXItZG9tYWluLWNlbGxzIDogIE11c3QgYmUgMS4KKyAgICAgICAgICAgICAgICAg
+ICAgICAgICBTZWUgbWFjcm9zIGluOgorICAgICAgICAgICAgICAgICAgICAgICAgICBpbmNsdWRl
+L2R0LWJpbmRpbmdzL3Bvd2VyL293bC1zNTAwLXBvd2VyZ2F0ZS5oIGZvciBTNTAwCisKKworRXhh
+bXBsZToKKworCQlzcHM6IHBvd2VyLWNvbnRyb2xsZXJAYjAxYjAxMDAgeworCQkJY29tcGF0aWJs
+ZSA9ICJhY3Rpb25zLHM1MDAtc3BzIjsKKwkJCXJlZyA9IDwweGIwMWIwMTAwIDB4MTAwPjsKKwkJ
+CSNwb3dlci1kb21haW4tY2VsbHMgPSA8MT47CisJCX07CmRpZmYgLS1naXQgYS9pbmNsdWRlL2R0
+LWJpbmRpbmdzL3Bvd2VyL293bC1zNTAwLXBvd2VyZ2F0ZS5oIGIvaW5jbHVkZS9kdC1iaW5kaW5n
+cy9wb3dlci9vd2wtczUwMC1wb3dlcmdhdGUuaApuZXcgZmlsZSBtb2RlIDEwMDY0NAppbmRleCAw
+MDAwMDAwMDAwMDAuLjBhMWM0NTE4NjVlYQotLS0gL2Rldi9udWxsCisrKyBiL2luY2x1ZGUvZHQt
+YmluZGluZ3MvcG93ZXIvb3dsLXM1MDAtcG93ZXJnYXRlLmgKQEAgLTAsMCArMSwxOSBAQAorLyoK
+KyAqIENvcHlyaWdodCAoYykgMjAxNyBBbmRyZWFzIEbDpHJiZXIKKyAqCisgKiBTUERYLUxpY2Vu
+c2UtSWRlbnRpZmllcjogKEdQTC0yLjArIE9SIE1JVCkKKyAqLworI2lmbmRlZiBEVF9CSU5ESU5H
+U19QT1dFUl9PV0xfUzUwMF9QT1dFUkdBVEVfSAorI2RlZmluZSBEVF9CSU5ESU5HU19QT1dFUl9P
+V0xfUzUwMF9QT1dFUkdBVEVfSAorCisjZGVmaW5lIFM1MDBfUERfVkRFCTAKKyNkZWZpbmUgUzUw
+MF9QRF9WQ0VfU0kJMQorI2RlZmluZSBTNTAwX1BEX1VTQjJfMQkyCisjZGVmaW5lIFM1MDBfUERf
+Q1BVMgkzCisjZGVmaW5lIFM1MDBfUERfQ1BVMwk0CisjZGVmaW5lIFM1MDBfUERfRE1BCTUKKyNk
+ZWZpbmUgUzUwMF9QRF9EUwk2CisjZGVmaW5lIFM1MDBfUERfVVNCMwk3CisjZGVmaW5lIFM1MDBf
+UERfVVNCMl8wCTgKKworI2VuZGlmCi0tIAoyLjEyLjMKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdAps
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
