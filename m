@@ -1,49 +1,45 @@
 From: Michael Stecklein <m-stecklein@ti.com>
-Subject: [PATCH v2 3/3] iio: humidity: hdc100x: add match table and device id's
-Date: Mon, 19 Jun 2017 11:01:06 -0500
-Message-ID: <1497888066-12652-3-git-send-email-m-stecklein@ti.com>
-References: <1497888066-12652-1-git-send-email-m-stecklein@ti.com>
+Subject: [PATCH v2 1/3] dt-bindings: iio: humidity: add bindings for HDC100x sensors
+Date: Mon, 19 Jun 2017 11:01:04 -0500
+Message-ID: <1497888066-12652-1-git-send-email-m-stecklein@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497888066-12652-1-git-send-email-m-stecklein@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 Cc: "Andrew F . Davis" <afd@ti.com>, Michael Stecklein <m-stecklein@ti.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add of_match_table and point it to a list of compatible device tree
-device id's.
+Add the bindings for the family of HDC100x sensors.
 
 Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
 ---
- drivers/iio/humidity/hdc100x.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ .../devicetree/bindings/iio/humidity/hdc100x.txt        | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
 
-diff --git a/drivers/iio/humidity/hdc100x.c b/drivers/iio/humidity/hdc100x.c
-index 6778bc7..7851bd9 100644
---- a/drivers/iio/humidity/hdc100x.c
-+++ b/drivers/iio/humidity/hdc100x.c
-@@ -429,9 +429,20 @@ static const struct i2c_device_id hdc100x_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, hdc100x_id);
- 
-+static const struct of_device_id hdc100x_dt_ids[] = {
-+	{ .compatible = "ti,hdc1000" },
-+	{ .compatible = "ti,hdc1008" },
-+	{ .compatible = "ti,hdc1010" },
-+	{ .compatible = "ti,hdc1050" },
-+	{ .compatible = "ti,hdc1080" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, hdc100x_dt_ids);
+diff --git a/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
+new file mode 100644
+index 0000000..c52333b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
+@@ -0,0 +1,17 @@
++* HDC100x temperature + humidity sensors
 +
- static struct i2c_driver hdc100x_driver = {
- 	.driver = {
- 		.name	= "hdc100x",
-+		.of_match_table = of_match_ptr(hdc100x_dt_ids),
- 	},
- 	.probe = hdc100x_probe,
- 	.remove = hdc100x_remove,
++Required properties:
++  - compatible: Should contain one of the following:
++	ti,hdc1000
++	ti,hdc1008
++	ti,hdc1010
++	ti,hdc1050
++	ti,hdc1080
++  - reg: i2c address of the sensor
++
++Example:
++
++hdc100x@40 {
++	compatible = "ti,hdc1000";
++	reg = <0x40>;
++};
 -- 
 2.7.4
