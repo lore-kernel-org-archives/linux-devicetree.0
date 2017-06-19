@@ -1,45 +1,38 @@
-From: Michael Stecklein <m-stecklein@ti.com>
-Subject: [PATCH v2 1/3] dt-bindings: iio: humidity: add bindings for HDC100x sensors
-Date: Mon, 19 Jun 2017 11:01:04 -0500
-Message-ID: <1497888066-12652-1-git-send-email-m-stecklein@ti.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v11 5/6] i2c: designware: add SLAVE mode functions
+Date: Mon, 19 Jun 2017 19:05:03 +0300
+Message-ID: <CAHp75VfpgOZ72=5F3aN_tfau3TnyGLsdKt=sdx_ZJ04wtxMtJg@mail.gmail.com>
+References: <cover.1497025304.git.lolivei@synopsys.com> <bef9f237bed23f0ea05499b085103f7eea9058a1.1497025304.git.lolivei@synopsys.com>
+ <CAHp75VeHoUrq-PfayNZYGP0f-bbnKQQEN4uMBg6ZASJs46b_PQ@mail.gmail.com>
+ <6e332d71-1891-21aa-4479-b91a7550f8af@synopsys.com> <20170619155858.xjs5nvdkg42b73vg@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170619155858.xjs5nvdkg42b73vg@ninjato>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "Andrew F . Davis" <afd@ti.com>, Michael Stecklein <m-stecklein@ti.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Luis Oliveira <Luis.Oliveira@synopsys.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jarkko Nikula <jarkko.nikula@linux.intel.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Joao Pinto <Joao.Pinto@synopsys.com>, CARLOS.PALMINHA@synopsys.com
 List-Id: devicetree@vger.kernel.org
 
-Add the bindings for the family of HDC100x sensors.
+On Mon, Jun 19, 2017 at 6:58 PM, Wolfram Sang <wsa@the-dreams.de> wrote:
+>> Believe me I've looked for mistakes like this but I've read the code so many
+>> times I don't think I can see the obvious anymore.
+>
+> Yes, I know this. And you worked hard on this slave feature,
+> acknowledged.
+>
+> Patches 1-4 look good to me from what I glimpsed. I largely trust here
+> the *much* appreciated review from Jarkko and Andy. Thanks a lot, guys!
+>
+> I wonder if we haven't reached a state where Luis just could fix the
+> buildbot error (missing 'select I2C_SLAVE') and the thing pointed out by
+> Andy and we handle further small fixes incrementally during the v4.13
+> cycle? AFAICS there is no major show-stopper, or am I wrong?
 
-Signed-off-by: Michael Stecklein <m-stecklein@ti.com>
----
- .../devicetree/bindings/iio/humidity/hdc100x.txt        | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
+I would go with the following plan:
+1. Push 1-4
+2. Resend 5-6 with addressed pointed issues for one more (fast) round
 
-diff --git a/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
-new file mode 100644
-index 0000000..c52333b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/humidity/hdc100x.txt
-@@ -0,0 +1,17 @@
-+* HDC100x temperature + humidity sensors
-+
-+Required properties:
-+  - compatible: Should contain one of the following:
-+	ti,hdc1000
-+	ti,hdc1008
-+	ti,hdc1010
-+	ti,hdc1050
-+	ti,hdc1080
-+  - reg: i2c address of the sensor
-+
-+Example:
-+
-+hdc100x@40 {
-+	compatible = "ti,hdc1000";
-+	reg = <0x40>;
-+};
 -- 
-2.7.4
+With Best Regards,
+Andy Shevchenko
