@@ -1,54 +1,48 @@
 From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v10 5/5] i2c: aspeed: added slave support for Aspeed I2C
- driver
-Date: Mon, 19 Jun 2017 16:14:17 +0200
-Message-ID: <20170619141417.fs7bnc6esz4uksmg@ninjato>
+Subject: Re: [PATCH v10 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Mon, 19 Jun 2017 16:21:05 +0200
+Message-ID: <20170619142105.kynebk74y7nbvmfx@ninjato>
 References: <20170603012952.2192-1-brendanhiggins@google.com>
- <20170603012952.2192-6-brendanhiggins@google.com>
+ <20170603012952.2192-5-brendanhiggins@google.com>
+ <20170619141322.devvmcbjaeq4jnv5@ninjato>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7robew4ddhcjv54q"
+        protocol="application/pgp-signature"; boundary="f7cbmbwsi4rrz3yo"
 Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170603012952.2192-6-brendanhiggins@google.com>
+In-Reply-To: <20170619141322.devvmcbjaeq4jnv5@ninjato>
 Sender: linux-i2c-owner@vger.kernel.org
 To: Brendan Higgins <brendanhiggins@google.com>
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, joel@jms.id.au, vz@mleia.com, mouse@mayc.ru, clg@kaod.org, benh@kernel.crashing.org, ryan_chen@aspeedtech.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---7robew4ddhcjv54q
+--f7cbmbwsi4rrz3yo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 02, 2017 at 06:29:52PM -0700, Brendan Higgins wrote:
-> Added slave support for Aspeed I2C controller. Supports fourteen busses
-> present in AST24XX and AST25XX BMC SoCs by Aspeed.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-
-Nice, looks good to me!
 
 
---7robew4ddhcjv54q
+And any chance for a MAINTAINERS entry?
+
+
+--f7cbmbwsi4rrz3yo
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllH3DkACgkQFA3kzBSg
-KbZt0hAAg4JI+HCvsP78ONTmLQNGuBk4S3XgDjHqqM3hR6neNwfCUsB2fHao4xlL
-bjqlXHKXNUMmiOyy9ybt1TShVwOeowVPDBa84YOZHLzxqfltrmyHrWVu7FlPPejl
-rP6SzHPq1ir+ZxvC6Ez79wdrjSLvxP4B1BR17zm8dP5Z6bY65x2IOQkX/jAu4B0S
-9DFzq9Pi+7pGaRht+JPaxg1OprqWJOa8j+5CZR6h2csckKSai81vsmWXnGbGObHg
-5KXwoQtq5jJyvFpKOF+aQgdeL+pbRbkhH2IIP7z7eah5b5P5RHsvkAObaDP0e5Wn
-1QKccgH47IDFEYfkjLSskAscxHba9oPZwd7OCfr0ESld1ipSbxmUfRCesCVoKCJA
-KDqKEpU49jdIS4XUcU59SGqVwLoh0a2Gyd4zVLFcVBi5XG3Ae3aJKoS7+AMrw5iZ
-oEgZ/pwEIE36R+uvWA9GYzCTxGP44wAaks4KsExAPv+oFzmAHVfQbHx4GSP6ut8a
-664M/sZJ1WNi3pShJLfe/Movn0B7xZsTLbCvU0/YLUPEyEKC/QKKzhtJwjyd7mSG
-aadNkDGQlCiTetXdK6LhW4qnGiEtLAt3apHCCtrwHysuv+tTv3F/g8FG88Ce4+dR
-sqUSEDyjQ4uArDiigKPT/Jwym/DeNYXWiWR2caGj4+ZAG+KDTj4=
-=r9Dm
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllH3dEACgkQFA3kzBSg
+KbYMJRAAjEq4u6f83agNfj1kqSPUQt4/J1i2H8TRrHLkacQSt5vs41n4nFkMJZHq
+og1HnO2UgGlbqRENdJOSnOAHubtenVYk5ZhsMNH36vhGrMIl4Zq7qWIDNcjnmguC
+gk8jMfRSdi/EsPbKGvjDBTh2WUwiz4YKTP/GU1phFCOnuohQC0okkIgVmZS7fIrb
+gIbUUv3bcHzD/uhpBZr/wTWvTsmwNR3mfU9oA05DSGHRiqoVOM5zNOU5AAJtkHCm
+GI5jiBhTh3XJKFI/eoM8zt3TubrNGk6++EjM3KSuUdUzFHtaTbANqKEBoeNunQaj
+tI3UlTT0FqxWyVbZmsKcaDwlu279++DIQnAdXSIBq2QSxLCi1T/OHyty7Cx1FK75
+dVejXCLqyD3W2pCfkzUWw0w70MUzvEC/HKcCi/gMVotinxGUJracogaMt4R6fiRQ
+FeGsUZu/bY7lQKR5SDuq9Rx9J/W7YOpRu8PF9bBVbULXER9p8ru0SGrCvQxuh+lr
+rWOqccbgIqeLxgSuGeOc05NCzjvRQpA2eDXyIC12DrdWH1C3GztbhfcnT9XlysZU
+V3Has8zDCVoL4cMFVTmrT8A0zKcQXOIZWHz/I2LdU+DTTIm9lFMBxZZVcpa1VEkK
+flS+PrHMNYJ4g2CxDMKeZeaUQDWwmCmlQp67CjgN1quG8wzbKTU=
+=dILI
 -----END PGP SIGNATURE-----
 
---7robew4ddhcjv54q--
+--f7cbmbwsi4rrz3yo--
