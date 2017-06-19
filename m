@@ -1,87 +1,101 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 2/2] mmc: meson-mx-sdio: Add a driver for the Amlogic Meson8
- and Meson8b SoCs
-Date: Mon, 19 Jun 2017 13:50:39 +0200
-Message-ID: <CAPDyKFrbxMpgDrZXKmrN4fyJWJ_ZML3jPxBs+YDEz=L1kA-BaA@mail.gmail.com>
-References: <20170506171857.16492-1-martin.blumenstingl@googlemail.com>
- <20170506171857.16492-3-martin.blumenstingl@googlemail.com>
- <CAPDyKFrrSLCjbXO9R4VqPpabiFsbE6_RqR=U7otVF4Ncv0jHjQ@mail.gmail.com>
- <CAFBinCD3modyyOpi3OY5XLhjX0UCuV+WPY2Z=mdvwdMCyeGoqg@mail.gmail.com>
- <CAPDyKFptXRPk7mVUiRHf=hECDbeyhTxuf3K1M6NkZcVEF0Enww@mail.gmail.com> <CAFBinCD=uH=oQmWAcsMpxtbJCnJZernZx3XoNaPixUUQ7pk76w@mail.gmail.com>
+From: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/10] doc: DT: camss: Binding document for Qualcomm
+ Camera subsystem driver
+Date: Mon, 19 Jun 2017 14:56:13 +0300
+Message-ID: <c60a52a5-d4ce-ba77-4455-220021df0dd2@linaro.org>
+References: <1480085813-28235-1-git-send-email-todor.tomov@linaro.org>
+ <20161130220350.q37rbo2biaeg2sad@rob-hp-laptop> <58739F2D.5020607@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCD=uH=oQmWAcsMpxtbJCnJZernZx3XoNaPixUUQ7pk76w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <58739F2D.5020607-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Carlo Caione <carlo-6IF/jdPJHihWk0Htik3J/w@public.gmane.org>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->
->> [...]
+Hi Rob,
+
+On 01/09/2017 04:33 PM, Todor Tomov wrote:
+> Hi Rob,
+> 
+> Happy new year,
+> And thank you for the review.
+> 
+> On 12/01/2016 12:03 AM, Rob Herring wrote:
+>> On Fri, Nov 25, 2016 at 04:56:53PM +0200, Todor Tomov wrote:
+>>> Add DT binding document for Qualcomm Camera subsystem driver.
+>>>
+>>> Signed-off-by: Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/media/qcom,camss.txt       | 196 +++++++++++++++++++++
+>>>  1 file changed, 196 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
+>>> new file mode 100644
+>>> index 0000000..76ad89a
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
+>>> @@ -0,0 +1,196 @@
+>>> +Qualcomm Camera Subsystem
+>>> +
+>>> +* Properties
+>>> +
+>>> +- compatible:
+>>> +	Usage: required
+>>> +	Value type: <stringlist>
+>>> +	Definition: Should contain:
+>>> +		- "qcom,8x16-camss"
 >>
->>>>> +       if (!(cmd->flags & MMC_RSP_CRC))
->>>>> +               send |= MESON_MX_SDIO_SEND_RESP_WITHOUT_CRC7;
->>>>> +
->>>>> +       if (cmd->flags & MMC_RSP_BUSY)
->>>>> +               send |= MESON_MX_SDIO_SEND_CHECK_DAT0_BUSY;
->>>>
->>>> In case the controller has HW support of busy detection, please
->>>> consider to enable MMC_CAP_WAIT_WHILE_BUSY for this driver. Then also
->>>> assign host->max_busy_timeout a good value.
->>> the IRQS register has bit 4 (CMD_BUSY) - but apart from that there is
->>> no other documentation (about timeout values, etc.). the vendor driver
->>> also neither uses MMC_CAP_WAIT_WHILE_BUSY nor host->max_busy_timeout
->>> should I leave this as it is?
+>> Don't use wildcards in compatible strings. One string per SoC.
+> 
+> Ok, I'll fix this.
+> 
 >>
->> Please don't just leave it as is. This is an important thing to get right.
+>>> +- reg:
+>>> +	Usage: required
+>>> +	Value type: <prop-encoded-array>
+>>> +	Definition: Register ranges as listed in the reg-names property.
+>>> +- reg-names:
+>>> +	Usage: required
+>>> +	Value type: <stringlist>
+>>> +	Definition: Should contain the following entries:
+>>> +		- "csiphy0"
+>>> +		- "csiphy0_clk_mux"
+>>> +		- "csiphy1"
+>>> +		- "csiphy1_clk_mux"
+>>> +		- "csid0"
+>>> +		- "csid1"
+>>> +		- "ispif"
+>>> +		- "csi_clk_mux"
+>>> +		- "vfe0"
 >>
->> You should be able to explore this area and see how the controller
->> behaves without too much of documentation. Regarding timeouts, it may
->> very well be that the controller don't have a timeout, which is why
->> you need a software timeout. That's not so uncommon actually.
-> during my experiments I've never seen an interrupt when a command
-> timed out (nor could I find information about a timeout register in
-> the documentation). do you have any pointers (like a previous mail
-> where you've explained) how I can "explore the controller's timeout
-> behavior"?
+>> Kind of looks like the phy's should be separate nodes since each phy has 
+>> its own register range, irq, clocks, etc.
+> 
+> Yes, there are a lot of hardware resources here.
+> I have decided to keep everything into a single platform device as this
+> represents it better from system point of view.
+> 
 
-Sorry, I don't have an pointers.
+Following this patch,
+- following the short discussion which we had on Linaro Connect,
+- following some evaluation of the possibilities,
+I'd like to try to keep it as a single node. Some of the resources are separate
+and so appear to be the clocks too but actually there are dependencies across the
+hardware modules for clocks of their adjacent modules. In addition there
+are configuration dependencies across the hardware modules - e.g. on a CSID module
+a CSIPHY module's id needs to be set (and vice-versa), on a CSID module the
+csi lane positions need to be set and so on. So I think a single driver to
+handle this (and thus a single dt node) makes more sense. I'm preparing a
+v2 of the patch set and will send it shortly.
 
-Anyway. If you do a big erase operation on an SD card, the card should
-signal busy on DAT0 for a rather long time.
-
-You could probably explore how long it takes for the card to respond
-under those circumstances, and try both with and without
-MESON_MX_SDIO_SEND_CHECK_DAT0_BUSY.
-
-Of course you also need to try with and without
-MMC_CAP_WAIT_WHILE_BUSY, as the core may sometimes convert R1B to R1
-responses depending on that cap.
-
-[...]
-
->>
->> It shouldn't be that hard to implement, although I strongly recommend
->> you to address this in a second step. In other words, I suggest you to
->> drop the entire multiple slot support in the first step, then we can
->> deal with that on top instead.
-> many thanks for the detailed explanation again!
-> I would be fine with dropping multiple slot support for the moment
-> *if* we can agree on the fact that the devicetree binding can support
-> multiple slots in theory (my idea here is: keep the child-nodes with
-> compatible = "mmc-slot" mandatory - but only allow one such child node
-> for now). I don't want to break DT compatibility after a few
-> weeks/months for a new driver. is that OK for you as well?
-
-That's fine! We already have such a binding available for some other
-mmc controllers. We could even consider to make that binding a generic
-mmc binding.
-
-[...]
-
-Kind regards
-Uffe
+-- 
+Best regards,
+Todor Tomov
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
