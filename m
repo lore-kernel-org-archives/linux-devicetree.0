@@ -1,57 +1,74 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH v5 07/26] dt-bindings: serial: Document Actions Semi Owl UARTs
-Date: Mon, 19 Jun 2017 03:46:39 +0200
-Message-ID: <20170619014640.6829-1-afaerber@suse.de>
-References: <7fff8813-cea4-0530-bf7b-3d0ad50d6e93@suse.de>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v5 10/27] ARM: dts: Add Actions Semi S500 and LeMaker
+ Guitar
+Date: Mon, 19 Jun 2017 04:01:52 +0200
+Message-ID: <db4b8f3a-197c-ae39-0c42-765cea228ae1@suse.de>
+References: <3a132688-07d9-cc3f-b4d1-85a95199ec93@suse.de>
+ <20170619010828.3401-1-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7fff8813-cea4-0530-bf7b-3d0ad50d6e93-l3A5Bk7waGM@public.gmane.org>
+In-Reply-To: <20170619010828.3401-1-afaerber-l3A5Bk7waGM@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E4=B8=9C=E9=A3=8E?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=88=98=E7=82=9C?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?q?=E5=BC=A0=E5=A4=A9=E7=9B=8A?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, support-8Vy/tIz7429AfugRpC6u6w@public.gmane.org, =?UTF-8?B?5byg5aSp55uK?= <tyzhang-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 96boards-Ty1hIZOCd2XuufBYgWm87A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Liau <thomas.liau-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mp-cs-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org, =?UTF-8?B?5YiY54Kc?= <liuwei-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>, =?UTF-8?B?5byg5Lic6aOO?= <zhangdf-/sSyCTpAT0ql5r2w9Jh5Rg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This UART is found on S500 and S900 SoCs.
+Am 19.06.2017 um 03:08 schrieb Andreas Färber:
+> Add Device Trees for Actions Semiconductor S500 SoC and LeMaker Guitar SoM
+> and base board.
+> 
+> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> ---
+>  v4 -> v5:
+>  * Renamed files from s500* to owl-s500*
+> 
+>  v3 -> v4:
+>  * Adopted lower-case timer interrupt-names (Mark)
+>  
+>  v2 -> v3:
+>  * Fixed uart2 reg offset
+>  * Enlarged timer reg size
+>  * Added 2 Hz timer interrupts, interrupt-names
+>  * Disabled CPUs 1-3 for now (cf. later patches)
+>  * Added Cortex-A9 SCU, global timer, TWD timer/wdt nodes
+>  * Added HOSC clock for timer
+>  
+>  v1 -> v2:
+>  * Reworded subject
+>  * Updated ARCH_OWL to ARCH_ACTIONS (Arnd)
+>  * Adopted "actions" vendor prefix
+>  * Dropped irq.h include
+>  * Added memory@0 node for Guitar SoM
+>  * Dropped bogus uart3 clock-frequency
+>  * Added device_type for CPU nodes
+>  * Fixed UART reg size
+>  * Adopted SPDX-License-Identifier (Rob)
+>  * Added remaining UART nodes
+>  * Added timer node
+>  
+>  arch/arm/boot/dts/Makefile                     |   2 +
+>  arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts |  26 ++++
+>  arch/arm/boot/dts/owl-s500-guitar.dtsi         |  22 ++++
+>  arch/arm/boot/dts/owl-s500.dtsi                | 176 +++++++++++++++++++++++++
+>  4 files changed, 226 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/owl-s500-guitar-bb-rev-b.dts
+>  create mode 100644 arch/arm/boot/dts/owl-s500-guitar.dtsi
+>  create mode 100644 arch/arm/boot/dts/owl-s500.dtsi
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
----
- v2 -> v3 -> v4 -> v5: Unchanged
- 
- v1 -> v2:
- * Adopted "actions" vendor prefix
- 
- .../devicetree/bindings/serial/actions,owl-uart.txt      | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/serial/actions,owl-uart.txt
+Applying to linux-actions.git v4.13/dt branch:
 
-diff --git a/Documentation/devicetree/bindings/serial/actions,owl-uart.txt b/Documentation/devicetree/bindings/serial/actions,owl-uart.txt
-new file mode 100644
-index 000000000000..aa873eada02d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/actions,owl-uart.txt
-@@ -0,0 +1,16 @@
-+Actions Semi Owl UART
-+
-+Required properties:
-+- compatible :  "actions,s500-uart", "actions,owl-uart" for S500
-+                "actions,s900-uart", "actions,owl-uart" for S900
-+- reg        :  Offset and length of the register set for the device.
-+- interrupts :  Should contain UART interrupt.
-+
-+
-+Example:
-+
-+		uart3: serial@b0126000 {
-+			compatible = "actions,s500-uart", "actions,owl-uart";
-+			reg = <0xb0126000 0x1000>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+		};
+https://git.kernel.org/pub/scm/linux/kernel/git/afaerber/linux-actions.git/log/?h=v4.13/dt
+
+Regards,
+Andreas
+
 -- 
-2.12.3
-
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
