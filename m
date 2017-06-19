@@ -1,105 +1,109 @@
-From: Wang Yafei <wangyafei@goodix.com>
-Subject: [PATCH] dt-bindings: input: Add the Goodix GTx5 series Touchscreen
- devicetree bindings
-Date: Mon, 19 Jun 2017 18:40:32 +0800
-Message-ID: <22592d94-f482-3e4f-3860-1dce83472d4f@goodix.com>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH v11 1/3] PCI: hisi: Add DT binding for PCIe of Kirin SoC
+ series
+Date: Mon, 19 Jun 2017 11:44:51 +0100
+Message-ID: <5947AB23.20402@hisilicon.com>
+References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
+ <20170619102349.50652-2-songxiaowei@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, andrew@goodix.com, mouse@goodix.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170619102349.50652-2-songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: suzhuangluan-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Wang Yafei <wangyafei@goodix.com>
----
- .../bindings/input/touchscreen/goodix-gtx5.txt     | 75 ++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100755 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+Hi Xiaowei,
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
-new file mode 100755
-index 0000000..116c3ec
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
-@@ -0,0 +1,75 @@
-+Device tree bindings for Goodix GTx5 series touchscreen controller
-+
-+Required properties:
-+
-+- compatible	: should be "goodix,gtx5" or "goodix,gsx" 
-+
-+- reg	: I2C address of the chip. Should be 0x5d or 0x14
-+- interrupt-parent	: Inerrupt controller to which the chip is connected
-+- interrupts	: Interrrupt to which the chip is connected
-+- touchscreen-size-x	: horizontal resolution of touchscreen          
-+                                  (in pixels)                                   
-+- touchscreen-size-y	: vertical resolution of touchscreen            
-+                                  (in pixels)                                  
-+- touchscreen-max-id	: panel supported max touch number.
-+- touchscreen-max-w	: panel max width value.
-+
-+
-+Optional properties:
-+- reset-gpios	: reset gpio.
-+- irq-gpios	: interrupt gpio. 
-+- irq-flags	: irq trigger type config, value should be:
-+                       1 - rising edge,
-+                       2 - falling edge,
-+                       4 - high level,
-+                       5 - low level.
-+- touchscreen-swapped-x-y: swap  x/y axis coordinates.
-+- touchscreen-key-map: keycode value map  /*KEY_HOMEPAGE, KEY_BACK*/
-+- power-on-delay-us: delay after power on.
-+- power-off-delay-us: delay after power off.
-+- normal-cfg: touch device normal config data.
-+- vtouch-supply	: power supply for the touch device.
-+Example:
-+i2c@00000000 {
-+	/* ... */
-+
-+	goodix-ts-i2c@14 {
-+		compatible = "goodix,gtx5";
-+		reg = <0x14>;
-+		interrupt-parent = <&msm_gpio>;
-+		interrupts = <13 0x2800>;
-+		vtouch-supply = <&pm8916_l15>;
-+		reset-gpios = <&msm_gpio 12 0x0>;
-+		irq-gpios = <&msm_gpio 13 0x2800>;
-+		irq-flags = <1>; /* 1:trigger rising, 2:trigger falling;*/
-+		touchscreen-max-id = <10>;
-+		touchscreen-size-x = <400>;
-+		touchscreen-size-y = <400>;
-+		touchscreen-max-w = <400>;
-+		touchscreen-max-pressure = <255>;
-+		touchscreen-swapped-x-y;
-+		touchscreen-key-map = <172 158>; /*KEY_HOMEPAGE, KEY_BACK*/
-+		sensor0 {
-+			normal-cfg = [
-+				02 00 00 09 09 01 07 02 00 00 00 00 01 00 3C 00 07 07
-+				00 00 00 00 00 00 40 01 40 01 C8 00 96 00 F4 01 F4 01
-+				F4 01 20 01 11 0A 0A 03 14 14 14 14 0A 0C 01 01 11 11
-+				11 00 14 14 14 14 14 14 14 14 14 00 00 0F 00 00 00 00
-+				00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-+				00 00 00 00 00 00 00 00 00 00 11 09 10 00 31 32 33 34
-+				00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 CA 64 00
-+				00 00 00 00 00 00 09 00 13 00 00 00 00 00 00 00 00 00
-+				50 B0 19 00 19 00 05 00 00 00 00 0A 05 00 00 00 00 00
-+				01 00 FF 00 0B 06 0D 02 FF 04 05 03 07 01 08 0A 0E 11
-+				0F 10 09 13 0C 16 17 14 18 12 19 15 1D 1E 1C 1F 1B 20
-+				1A 2A 29 28 25 2B 27 21 FF 24 22 2C 26 23 FF 00 00 00
-+				00 00 00 00 00 00 00 00 00 00 00 00 80 80 80 80 80 80
-+				80 80 80 80 80 80 80 80 80 80 9F 22 01 AE];
-+		};
-+		sensor1 {
-+			normal-cfg = [ ];
-+		};
-+	};
-+}
-+
-+
--- 
-2.7.4
+On 2017/6/19 11:23, Xiaowei Song wrote:
 
+Please add some commit message.
+
+> Cc: Guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Xiaowei Song <songxiaowei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+
+I have picked up the patch from [1] and
+the pull request has been merged into ARM SoC tree.
+Please do not resend the same patch.
+Thanks!
+
+[1]:https://lkml.org/lkml/2017/6/14/1055
+
+Best Regards,
+Wei
+
+>  .../devicetree/bindings/pci/kirin-pcie.txt         | 55 ++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/kirin-pcie.txt b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> new file mode 100644
+> index 000000000000..c2be01270ec5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/kirin-pcie.txt
+> @@ -0,0 +1,55 @@
+> +HiSilicon Kirin SoCs PCIe host DT description
+> +
+> +Kirin PCIe host controller is based on Designware PCI core.
+> +It shares common functions with PCIe Designware core driver
+> +and inherits common properties defined in
+> +Documentation/devicetree/bindings/pci/designware-pci.txt.
+> +
+> +Additional properties are described here:
+> +
+> +Required properties
+> +- compatible:
+> +	"hisilicon,kirin960-pcie" for PCIe of Kirin960 SoC
+> +- reg: Should contain rc_dbi, apb, phy, config registers location and length.
+> +- reg-names: Must include the following entries:
+> +  "dbi": controller configuration registers;
+> +  "apb": apb Ctrl register defined by Kirin;
+> +  "phy": apb PHY register defined by Kirin;
+> +  "config": PCIe configuration space registers.
+> +- reset-gpios: The gpio to generate PCIe perst assert and deassert signal.
+> +
+> +Optional properties:
+> +
+> +Example based on kirin960:
+> +
+> +	pcie@f4000000 {
+> +		compatible = "hisilicon,kirin960-pcie";
+> +		reg = <0x0 0xf4000000 0x0 0x1000>,
+> +		      <0x0 0xff3fe000 0x0 0x1000>,
+> +		      <0x0 0xf3f20000 0x0 0x40000>,
+> +		      <0x0 0xf4000000 0x0  0x2000>;
+> +		reg-names = "dbi","apb","phy", "config";
+> +		bus-range = <0x0  0x1>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		device_type = "pci";
+> +		ranges = <0x02000000 0x0 0x0
+> +			  0x0 0xf5000000
+> +			  0x0 0x2000000>;
+> +		num-lanes = <1>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0xf800 0 0 7>;
+> +		interrupt-map = <0x0 0 0 1 &gic 0 282 4>,
+> +				<0x0 0 0 2 &gic 0 283 4>,
+> +				<0x0 0 0 3 &gic 0 284 4>,
+> +				<0x0 0 0 4 &gic 0 285 4>;
+> +		clocks = <&crg_ctrl HI3660_PCIEPHY_REF>,
+> +			 <&crg_ctrl HI3660_CLK_GATE_PCIEAUX>,
+> +			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_PHY>,
+> +			 <&crg_ctrl HI3660_PCLK_GATE_PCIE_SYS>,
+> +			 <&crg_ctrl HI3660_ACLK_GATE_PCIE>;
+> +		clock-names = "pcie_phy_ref", "pcie_aux",
+> +			      "pcie_apb_phy", "pcie_apb_sys",
+> +			      "pcie_aclk";
+> +		reset-gpios = <&gpio11 1 0>;
+> +	};
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
