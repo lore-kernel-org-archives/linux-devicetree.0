@@ -1,589 +1,416 @@
-From: Xiaowei Song <songxiaowei@hisilicon.com>
-Subject: [PATCH v11 2/3] PCI: dwc: kirin: add PCIe Driver for HiSilicon Kirin SoC
-Date: Mon, 19 Jun 2017 18:23:48 +0800
-Message-ID: <20170619102349.50652-3-songxiaowei@hisilicon.com>
-References: <20170619102349.50652-1-songxiaowei@hisilicon.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH] of: update ePAPR references to point to Devicetree
+ Specification
+Date: Mon, 19 Jun 2017 03:23:41 -0700
+Message-ID: <5947A62D.6050504@gmail.com>
+References: <1497408544-7383-1-git-send-email-frowand.list@gmail.com>
+ <20170618140531.jvmnttawom4ns55b@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170619102349.50652-1-songxiaowei@hisilicon.com>
+In-Reply-To: <20170618140531.jvmnttawom4ns55b@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: guodong.xu@linaro.org, bhelgaas@google.com, robh+dt@kernel.org
-Cc: songxiaowei@hisilicon.com, suzhuangluan@hisilicon.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, =?UTF-8?Q?Horia_Geant=c4=83?= <horia.geanta@nxp.com>, Dan Douglass <dan.douglass@nxp.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hisilicon PCIe Driver shares the common functions for PCIe dw-host
+On 06/18/17 07:05, Rob Herring wrote:
+> On Tue, Jun 13, 2017 at 07:49:04PM -0700, frowand.list@gmail.com wrote:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> The Devicetree Specification has superseded the ePAPR as the
+>> base specification for bindings.  Update files in Documentation
+>> to reference the new document.
+>>
+>> Some files are not updated because there is no hypervisor chapter
+>> in the Devicetree Specification:
+>>    Documentation/devicetree/bindings/powerpc/fsl/msi-pic.txt
+>>    Documenation/virtual/kvm/api.txt
+>>    Documenation/virtual/kvm/ppc-pv.txt
+>>
+>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> ---
+>>  Documentation/devicetree/bindings/arm/cci.txt               | 12 ++++++------
+>>  Documentation/devicetree/bindings/arm/cpus.txt              | 13 +++++++------
+>>  Documentation/devicetree/bindings/arm/idle-states.txt       |  4 ++--
+>>  Documentation/devicetree/bindings/arm/l2c2x0.txt            |  4 ++--
+>>  Documentation/devicetree/bindings/arm/topology.txt          |  4 ++--
+>>  Documentation/devicetree/bindings/bus/simple-pm-bus.txt     |  2 +-
+>>  Documentation/devicetree/bindings/chosen.txt                |  3 ++-
+>>  Documentation/devicetree/bindings/common-properties.txt     |  2 +-
+>>  Documentation/devicetree/bindings/crypto/fsl-sec4.txt       |  4 ++--
+>>  Documentation/devicetree/bindings/crypto/fsl-sec6.txt       |  4 ++--
+>>  .../devicetree/bindings/interrupt-controller/open-pic.txt   |  5 ++---
+>>  Documentation/devicetree/bindings/net/ethernet.txt          |  9 ++++++---
+>>  Documentation/devicetree/bindings/powerpc/fsl/cpus.txt      |  6 +++---
+>>  Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt   |  2 +-
+>>  Documentation/devicetree/bindings/powerpc/fsl/srio-rmu.txt  |  4 ++--
+>>  Documentation/devicetree/bindings/powerpc/fsl/srio.txt      |  3 ++-
+>>  Documentation/devicetree/booting-without-of.txt             |  2 +-
+>>  Documentation/devicetree/usage-model.txt                    |  2 +-
+>>  Documentation/xtensa/mmu.txt                                |  6 +++---
+>>  19 files changed, 48 insertions(+), 43 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/cci.txt b/Documentation/devicetree/bindings/arm/cci.txt
+>> index 0f2153e8fa7e..cc7621b204f4 100644
+>> --- a/Documentation/devicetree/bindings/arm/cci.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cci.txt
+>> @@ -11,9 +11,9 @@ clusters, through memory mapped interface, with a global control register
+>>  space and multiple sets of interface control registers, one per slave
+>>  interface.
+>>  
+>> -Bindings for the CCI node follow the ePAPR standard, available from:
+>> +Bindings for the CCI node follow the Devicetree Specification, available from:
+>>  
+>> -www.power.org/documentation/epapr-version-1-1/
+>> +https://www.devicetree.org/specifications/
+> 
+> Actually, I find this meaningless other than in the sense that *every* 
+> binding follows the spec. This looks like cut-n-paste from the ARM cpus 
+> binding which did follow the spec for cpus to some extent.
 
-The poweron functions is developed on hi3660 SoC,
-while Others Functions are common for Kirin series SoCs.
+Good point.  I can remove the reference to the ePAPR from this file.
 
-Low power mode (L1 sub-state and Suspend/Resume), hotplug
-and MSI feature are not supported currently.
 
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Signed-off-by: Xiaowei Song <songxiaowei@hisilicon.com>
-Reviewed-by: Jingoo Han <jingoohan1@gmail.com>
----
- drivers/pci/dwc/Kconfig      |  10 +
- drivers/pci/dwc/Makefile     |   1 +
- drivers/pci/dwc/pcie-kirin.c | 518 +++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 529 insertions(+)
- create mode 100644 drivers/pci/dwc/pcie-kirin.c
+>>  
+>>  with the addition of the bindings described in this document which are
+>>  specific to ARM.
+>> @@ -50,10 +50,10 @@ specific to ARM.
+>>  			    as a tuple of cells, containing child address,
+>>  			    parent address and the size of the region in the
+>>  			    child address space.
+>> -		Definition: A standard property. Follow rules in the ePAPR for
+>> -			    hierarchical bus addressing. CCI interfaces
+>> -			    addresses refer to the parent node addressing
+>> -			    scheme to declare their register bases.
+>> +		Definition: A standard property. Follow rules in the Devicetree
+>> +			    Specification for hierarchical bus addressing. CCI
+>> +			    interfaces addresses refer to the parent node
+>> +			    addressing scheme to declare their register bases.
+>>  
+>>  	CCI interconnect node can define the following child nodes:
+>>  
+>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>> index 1030f5f50207..283c520a2224 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>> @@ -6,9 +6,9 @@ The device tree allows to describe the layout of CPUs in a system through
+>>  the "cpus" node, which in turn contains a number of subnodes (ie "cpu")
+>>  defining properties for every cpu.
+>>  
+>> -Bindings for CPU nodes follow the ePAPR v1.1 standard, available from:
+>> +Bindings for CPU nodes follow the Devicetree Specification, available from:
+>>  
+>> -https://www.power.org/documentation/epapr-version-1-1/
+>> +https://www.devicetree.org/specifications/
+>>  
+>>  with updates for 32-bit and 64-bit ARM systems provided in this document.
+>>  
+>> @@ -16,8 +16,8 @@ with updates for 32-bit and 64-bit ARM systems provided in this document.
+>>  Convention used in this document
+>>  ================================
+>>  
+>> -This document follows the conventions described in the ePAPR v1.1, with
+>> -the addition:
+>> +This document follows the conventions described in the Devicetree
+>> +Specification, with the addition:
+>>  
+>>  - square brackets define bitfields, eg reg[7:0] value of the bitfield in
+>>    the reg property contained in bits 7 down to 0
+>> @@ -26,8 +26,9 @@ the addition:
+>>  cpus and cpu node bindings definition
+>>  =====================================
+>>  
+>> -The ARM architecture, in accordance with the ePAPR, requires the cpus and cpu
+>> -nodes to be present and contain the properties described below.
+>> +The ARM architecture, in accordance with the Devicetree Specification,
+>> +requires the cpus and cpu nodes to be present and contain the properties
+>> +described below.
+>>  
+>>  - cpus node
+>>  
+>> diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
+>> index b8e41c148a3c..7a591333f2b1 100644
+>> --- a/Documentation/devicetree/bindings/arm/idle-states.txt
+>> +++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+>> @@ -695,5 +695,5 @@ cpus {
+>>  [4] ARM Architecture Reference Manuals
+>>      http://infocenter.arm.com/help/index.jsp
+>>  
+>> -[5] ePAPR standard
+>> -    https://www.power.org/documentation/epapr-version-1-1/
+>> +[5] Devicetree Specification
+>> +    https://www.devicetree.org/specifications/
+>> diff --git a/Documentation/devicetree/bindings/arm/l2c2x0.txt b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+>> index d9650c1788f4..fbe6cb21f4cf 100644
+>> --- a/Documentation/devicetree/bindings/arm/l2c2x0.txt
+>> +++ b/Documentation/devicetree/bindings/arm/l2c2x0.txt
+>> @@ -4,8 +4,8 @@ ARM cores often have a separate L2C210/L2C220/L2C310 (also known as PL210/PL220/
+>>  PL310 and variants) based level 2 cache controller. All these various implementations
+>>  of the L2 cache controller have compatible programming models (Note 1).
+>>  Some of the properties that are just prefixed "cache-*" are taken from section
+>> -3.7.3 of the ePAPR v1.1 specification which can be found at:
+>> -https://www.power.org/wp-content/uploads/2012/06/Power_ePAPR_APPROVED_v1.1.pdf
+>> +3.7.3 of the Devicetree Specification which can be found at:
+>> +https://www.devicetree.org/specifications/
+>>  
+>>  The ARM L2 cache representation in the device tree should be done as follows:
+>>  
+>> diff --git a/Documentation/devicetree/bindings/arm/topology.txt b/Documentation/devicetree/bindings/arm/topology.txt
+>> index 1061faf5f602..de9eb0486630 100644
+>> --- a/Documentation/devicetree/bindings/arm/topology.txt
+>> +++ b/Documentation/devicetree/bindings/arm/topology.txt
+>> @@ -29,9 +29,9 @@ corresponding to the system hierarchy; syntactically they are defined as device
+>>  tree nodes.
+>>  
+>>  The remainder of this document provides the topology bindings for ARM, based
+>> -on the ePAPR standard, available from:
+>> +on the Devicetree Specification, available from:
+>>  
+>> -http://www.power.org/documentation/epapr-version-1-1/
+>> +https://www.devicetree.org/specifications/
+>>  
+>>  If not stated otherwise, whenever a reference to a cpu node phandle is made its
+>>  value must point to a cpu node compliant with the cpu node bindings as
+>> diff --git a/Documentation/devicetree/bindings/bus/simple-pm-bus.txt b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+>> index d032237512c2..6f15037131ed 100644
+>> --- a/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+>> +++ b/Documentation/devicetree/bindings/bus/simple-pm-bus.txt
+>> @@ -10,7 +10,7 @@ enabled for child devices connected to the bus (either on-SoC or externally)
+>>  to function.
+>>  
+>>  While "simple-pm-bus" follows the "simple-bus" set of properties, as specified
+>> -in ePAPR, it is not an extension of "simple-bus".
+>> +in the Devicetree Specification, it is not an extension of "simple-bus".
+>>  
+>>  
+>>  Required properties:
+>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>> index b5e39af4ddc0..dee3f5d9df26 100644
+>> --- a/Documentation/devicetree/bindings/chosen.txt
+>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>> @@ -10,7 +10,8 @@ stdout-path property
+>>  --------------------
+>>  
+>>  Device trees may specify the device to be used for boot console output
+>> -with a stdout-path property under /chosen, as described in ePAPR, e.g.
+>> +with a stdout-path property under /chosen, as described in the Devicetree
+>> +Specification, e.g.
+>>  
+>>  / {
+>>  	chosen {
+>> diff --git a/Documentation/devicetree/bindings/common-properties.txt b/Documentation/devicetree/bindings/common-properties.txt
+>> index 3193979b1d05..697714f8d75c 100644
+>> --- a/Documentation/devicetree/bindings/common-properties.txt
+>> +++ b/Documentation/devicetree/bindings/common-properties.txt
+>> @@ -1,6 +1,6 @@
+>>  Common properties
+>>  
+>> -The ePAPR specification does not define any properties related to hardware
+>> +The Devicetree Specification does not define any properties related to hardware
+>>  byteswapping, but endianness issues show up frequently in porting Linux to
+>>  different machine types.  This document attempts to provide a consistent
+>>  way of handling byteswapping across drivers.
+>> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> index 10a425f451fc..7aef0eae58d4 100644
+>> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+>> @@ -118,8 +118,8 @@ PROPERTIES
+>>        Definition: A list of clock name strings in the same order as the
+>>            clocks property.
+>>  
+>> -   Note: All other standard properties (see the ePAPR) are allowed
+>> -   but are optional.
+>> +   Note: All other standard properties (see the Devicetree Specification)
+>> +   are allowed but are optional.
+>>  
+>>  
+>>  EXAMPLE
+>> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec6.txt b/Documentation/devicetree/bindings/crypto/fsl-sec6.txt
+>> index baf8a3c1b469..73b0eb950bb3 100644
+>> --- a/Documentation/devicetree/bindings/crypto/fsl-sec6.txt
+>> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec6.txt
+>> @@ -55,8 +55,8 @@ PROPERTIES
+>>             triplet that includes the child address, parent address, &
+>>             length.
+>>  
+>> -   Note: All other standard properties (see the ePAPR) are allowed
+>> -   but are optional.
+>> +   Note: All other standard properties (see the Devicetree Specification)
+>> +   are allowed but are optional.
+>>  
+>>  EXAMPLE
+>>  	crypto@a0000 {
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/open-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/open-pic.txt
+>> index 909a902dff85..ccbbfdc53c72 100644
+>> --- a/Documentation/devicetree/bindings/interrupt-controller/open-pic.txt
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/open-pic.txt
+>> @@ -92,7 +92,6 @@ Example 2:
+>>  
+>>  * References
+>>  
+>> -[1] Power.org (TM) Standard for Embedded Power Architecture (TM) Platform
+>> -    Requirements (ePAPR), Version 1.0, July 2008.
+>> -    (http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf)
+>> +[1] Devicetree Specification
+>> +    (https://www.devicetree.org/specifications/)
+>>  
+>> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+>> index 3a6916909d90..08dd263beeb9 100644
+>> --- a/Documentation/devicetree/bindings/net/ethernet.txt
+>> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
+>> @@ -8,7 +8,8 @@ The following properties are common to the Ethernet controllers:
+>>    property;
+>>  - max-speed: number, specifies maximum speed in Mbit/s supported by the device;
+>>  - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+>> -  the maximum frame size (there's contradiction in ePAPR).
+>> +  the maximum frame size (there's contradiction in the Devicetree
+>> +  Specification).
+>>  - phy-mode: string, operation mode of the PHY interface. This is now a de-facto
+>>    standard property; supported values are:
+>>    * "mii"
+>> @@ -32,9 +33,11 @@ The following properties are common to the Ethernet controllers:
+>>    * "2000base-x",
+>>    * "2500base-x",
+>>    * "rxaui"
+>> -- phy-connection-type: the same as "phy-mode" property but described in ePAPR;
+>> +- phy-connection-type: the same as "phy-mode" property but described in the
+>> +  Devicetree Specification;
+>>  - phy-handle: phandle, specifies a reference to a node representing a PHY
+>> -  device; this property is described in ePAPR and so preferred;
+>> +  device; this property is described in the Devicetree Specification and so
+>> +  preferred;
+>>  - phy: the same as "phy-handle" property, not recommended for new bindings.
+>>  - phy-device: the same as "phy-handle" property, not recommended for new
+>>    bindings.
+>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+>> index f8cd2397aa04..d63ab1dec16d 100644
+>> --- a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+>> @@ -3,10 +3,10 @@ Power Architecture CPU Binding
+>>  Copyright 2013 Freescale Semiconductor Inc.
+>>  
+>>  Power Architecture CPUs in Freescale SOCs are represented in device trees as
+>> -per the definition in ePAPR.
+>> +per the definition in the Devicetree Specification.
+> 
+> Are we sure we didn't remove any PPC specifics that apply here?
 
-diff --git a/drivers/pci/dwc/Kconfig b/drivers/pci/dwc/Kconfig
-index d2d2ba5b8a68..afecfb2b6ff4 100644
---- a/drivers/pci/dwc/Kconfig
-+++ b/drivers/pci/dwc/Kconfig
-@@ -130,4 +130,14 @@ config PCIE_ARTPEC6
- 	  Say Y here to enable PCIe controller support on Axis ARTPEC-6
- 	  SoCs.  This PCIe controller uses the DesignWare core.
- 
-+config PCIE_KIRIN
-+	depends on OF && ARM64
-+	bool "HiSilicon Kirin series SoCs PCIe controllers"
-+	depends on PCI
-+	select PCIEPORTBUS
-+	select PCIE_DW_HOST
-+	help
-+	  Say Y here if you want PCIe controller support
-+	  on HiSilicon Kirin series SoCs.
-+
- endmenu
-diff --git a/drivers/pci/dwc/Makefile b/drivers/pci/dwc/Makefile
-index a2df13c28798..4bd69bacd4ab 100644
---- a/drivers/pci/dwc/Makefile
-+++ b/drivers/pci/dwc/Makefile
-@@ -10,6 +10,7 @@ obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-+obj-$(CONFIG_PCIE_KIRIN) += pcie-kirin.o
- 
- # The following drivers are for devices that use the generic ACPI
- # pci_root.c driver but don't support standard ECAM config access.
-diff --git a/drivers/pci/dwc/pcie-kirin.c b/drivers/pci/dwc/pcie-kirin.c
-new file mode 100644
-index 000000000000..c5f35df8cced
---- /dev/null
-+++ b/drivers/pci/dwc/pcie-kirin.c
-@@ -0,0 +1,518 @@
-+/*
-+ * PCIe host controller driver for Kirin Phone SoCs
-+ *
-+ * Copyright (C) 2017 Hilisicon Electronics Co., Ltd.
-+ *		http://www.huawei.com
-+ *
-+ * Author: Xiaowei Song <songxiaowei@huawei.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <asm/compiler.h>
-+#include <linux/compiler.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/of_address.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_pci.h>
-+#include <linux/pci.h>
-+#include <linux/pci_regs.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/resource.h>
-+#include <linux/types.h>
-+#include "pcie-designware.h"
-+
-+#define to_kirin_pcie(x) dev_get_drvdata((x)->dev)
-+
-+#define REF_CLK_FREQ			100000000
-+
-+/* PCIe ELBI registers */
-+#define SOC_PCIECTRL_CTRL0_ADDR		0x000
-+#define SOC_PCIECTRL_CTRL1_ADDR		0x004
-+#define SOC_PCIEPHY_CTRL2_ADDR		0x008
-+#define SOC_PCIEPHY_CTRL3_ADDR		0x00c
-+#define PCIE_ELBI_SLV_DBI_ENABLE	(0x1 << 21)
-+
-+/* info located in APB */
-+#define PCIE_APP_LTSSM_ENABLE	0x01c
-+#define PCIE_APB_PHY_CTRL0	0x0
-+#define PCIE_APB_PHY_CTRL1	0x4
-+#define PCIE_APB_PHY_STATUS0	0x400
-+#define PCIE_LINKUP_ENABLE	(0x8020)
-+#define PCIE_LTSSM_ENABLE_BIT	(0x1 << 11)
-+#define PIPE_CLK_STABLE		(0x1 << 19)
-+#define PHY_REF_PAD_BIT		(0x1 << 8)
-+#define PHY_PWR_DOWN_BIT	(0x1 << 22)
-+#define PHY_RST_ACK_BIT		(0x1 << 16)
-+
-+/* info located in sysctrl */
-+#define SCTRL_PCIE_CMOS_OFFSET	0x60
-+#define SCTRL_PCIE_CMOS_BIT	0x10
-+#define SCTRL_PCIE_ISO_OFFSET	0x44
-+#define SCTRL_PCIE_ISO_BIT	0x30
-+#define SCTRL_PCIE_HPCLK_OFFSET	0x190
-+#define SCTRL_PCIE_HPCLK_BIT	0x184000
-+#define SCTRL_PCIE_OE_OFFSET	0x14a
-+#define PCIE_DEBOUNCE_PARAM	0xF0F400
-+#define PCIE_OE_BYPASS		(0x3 << 28)
-+
-+/* peri_crg ctrl */
-+#define CRGCTRL_PCIE_ASSERT_OFFSET	0x88
-+#define CRGCTRL_PCIE_ASSERT_BIT		0x8c000000
-+
-+/* Time for delay */
-+#define REF_2_PERST_MIN		20000
-+#define REF_2_PERST_MAX		25000
-+#define PERST_2_ACCESS_MIN	10000
-+#define PERST_2_ACCESS_MAX	12000
-+#define LINK_WAIT_MIN		900
-+#define LINK_WAIT_MAX		1000
-+#define PIPE_CLK_WAIT_MIN	550
-+#define PIPE_CLK_WAIT_MAX	600
-+#define TIME_CMOS_MIN		100
-+#define TIME_CMOS_MAX		105
-+#define TIME_PHY_PD_MIN		10
-+#define TIME_PHY_PD_MAX		11
-+
-+struct kirin_pcie {
-+	struct dw_pcie	*pci;
-+	void __iomem	*apb_base;
-+	void __iomem	*phy_base;
-+	struct regmap	*crgctrl;
-+	struct regmap	*sysctrl;
-+	struct clk	*apb_sys_clk;
-+	struct clk	*apb_phy_clk;
-+	struct clk	*phy_ref_clk;
-+	struct clk	*pcie_aclk;
-+	struct clk	*pcie_aux_clk;
-+	int		gpio_id_reset;
-+};
-+
-+/* Registers in PCIeCTRL */
-+static inline void kirin_apb_ctrl_writel(struct kirin_pcie *kirin_pcie,
-+					 u32 val, u32 reg)
-+{
-+	writel(val, kirin_pcie->apb_base + reg);
-+}
-+
-+static inline u32 kirin_apb_ctrl_readl(struct kirin_pcie *kirin_pcie, u32 reg)
-+{
-+	return readl(kirin_pcie->apb_base + reg);
-+}
-+
-+/* Registers in PCIePHY */
-+static inline void kirin_apb_phy_writel(struct kirin_pcie *kirin_pcie,
-+					u32 val, u32 reg)
-+{
-+	writel(val, kirin_pcie->phy_base + reg);
-+}
-+
-+static inline u32 kirin_apb_phy_readl(struct kirin_pcie *kirin_pcie, u32 reg)
-+{
-+	return readl(kirin_pcie->phy_base + reg);
-+}
-+
-+static long kirin_pcie_get_clk(struct kirin_pcie *kirin_pcie,
-+			       struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+
-+	kirin_pcie->phy_ref_clk = devm_clk_get(dev, "pcie_phy_ref");
-+	if (IS_ERR(kirin_pcie->phy_ref_clk))
-+		return PTR_ERR(kirin_pcie->phy_ref_clk);
-+
-+	kirin_pcie->pcie_aux_clk = devm_clk_get(dev, "pcie_aux");
-+	if (IS_ERR(kirin_pcie->pcie_aux_clk))
-+		return PTR_ERR(kirin_pcie->pcie_aux_clk);
-+
-+	kirin_pcie->apb_phy_clk = devm_clk_get(dev, "pcie_apb_phy");
-+	if (IS_ERR(kirin_pcie->apb_phy_clk))
-+		return PTR_ERR(kirin_pcie->apb_phy_clk);
-+
-+	kirin_pcie->apb_sys_clk = devm_clk_get(dev, "pcie_apb_sys");
-+	if (IS_ERR(kirin_pcie->apb_sys_clk))
-+		return PTR_ERR(kirin_pcie->apb_sys_clk);
-+
-+	kirin_pcie->pcie_aclk = devm_clk_get(dev, "pcie_aclk");
-+	if (IS_ERR(kirin_pcie->pcie_aclk))
-+		return PTR_ERR(kirin_pcie->pcie_aclk);
-+
-+	return 0;
-+}
-+
-+static long kirin_pcie_get_resource(struct kirin_pcie *kirin_pcie,
-+				    struct platform_device *pdev)
-+{
-+	struct resource *apb;
-+	struct resource *phy;
-+	struct resource *dbi;
-+	struct device *dev = &pdev->dev;
-+
-+	apb = platform_get_resource_byname(pdev, IORESOURCE_MEM, "apb");
-+	kirin_pcie->apb_base = devm_ioremap_resource(dev, apb);
-+	if (IS_ERR(kirin_pcie->apb_base))
-+		return PTR_ERR(kirin_pcie->apb_base);
-+
-+	phy = platform_get_resource_byname(pdev, IORESOURCE_MEM, "phy");
-+	kirin_pcie->phy_base = devm_ioremap_resource(dev, phy);
-+	if (IS_ERR(kirin_pcie->phy_base))
-+		return PTR_ERR(kirin_pcie->phy_base);
-+
-+	dbi = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dbi");
-+	kirin_pcie->pci->dbi_base = devm_ioremap_resource(dev, dbi);
-+	if (IS_ERR(kirin_pcie->pci->dbi_base))
-+		return PTR_ERR(kirin_pcie->pci->dbi_base);
-+
-+	kirin_pcie->crgctrl =
-+		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-crgctrl");
-+	if (IS_ERR(kirin_pcie->crgctrl))
-+		return PTR_ERR(kirin_pcie->crgctrl);
-+
-+	kirin_pcie->sysctrl =
-+		syscon_regmap_lookup_by_compatible("hisilicon,hi3660-sctrl");
-+	if (IS_ERR(kirin_pcie->sysctrl))
-+		return PTR_ERR(kirin_pcie->sysctrl);
-+
-+	return 0;
-+}
-+
-+static int kirin_pcie_phy_init(struct kirin_pcie *kirin_pcie)
-+{
-+	u32 reg_val;
-+	struct device *dev = kirin_pcie->pci->dev;
-+
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
-+	reg_val &= ~PHY_REF_PAD_BIT;
-+	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
-+
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL0);
-+	reg_val &= ~PHY_PWR_DOWN_BIT;
-+	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL0);
-+	usleep_range(TIME_PHY_PD_MIN, TIME_PHY_PD_MAX);
-+
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_CTRL1);
-+	reg_val &= ~PHY_RST_ACK_BIT;
-+	kirin_apb_phy_writel(kirin_pcie, reg_val, PCIE_APB_PHY_CTRL1);
-+
-+	usleep_range(PIPE_CLK_WAIT_MIN, PIPE_CLK_WAIT_MAX);
-+	reg_val = kirin_apb_phy_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
-+	if (reg_val & PIPE_CLK_STABLE) {
-+		dev_err(dev, "PIPE clk is not stable\n");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void kirin_pcie_oe_enable(struct kirin_pcie *kirin_pcie)
-+{
-+	u32 val;
-+
-+	regmap_read(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, &val);
-+	val |= PCIE_DEBOUNCE_PARAM;
-+	val &= ~PCIE_OE_BYPASS;
-+	regmap_write(kirin_pcie->sysctrl, SCTRL_PCIE_OE_OFFSET, val);
-+}
-+
-+static int kirin_pcie_clk_ctrl(struct kirin_pcie *kirin_pcie, bool enable)
-+{
-+	int ret = 0;
-+
-+	if (!enable)
-+		goto close_clk;
-+
-+	ret = clk_set_rate(kirin_pcie->phy_ref_clk, REF_CLK_FREQ);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(kirin_pcie->phy_ref_clk);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_prepare_enable(kirin_pcie->apb_sys_clk);
-+	if (ret)
-+		goto apb_sys_fail;
-+
-+	ret = clk_prepare_enable(kirin_pcie->apb_phy_clk);
-+	if (ret)
-+		goto apb_phy_fail;
-+
-+	ret = clk_prepare_enable(kirin_pcie->pcie_aclk);
-+	if (ret)
-+		goto aclk_fail;
-+
-+	ret = clk_prepare_enable(kirin_pcie->pcie_aux_clk);
-+	if (ret)
-+		goto aux_clk_fail;
-+
-+	return 0;
-+
-+close_clk:
-+	clk_disable_unprepare(kirin_pcie->pcie_aux_clk);
-+aux_clk_fail:
-+	clk_disable_unprepare(kirin_pcie->pcie_aclk);
-+aclk_fail:
-+	clk_disable_unprepare(kirin_pcie->apb_phy_clk);
-+apb_phy_fail:
-+	clk_disable_unprepare(kirin_pcie->apb_sys_clk);
-+apb_sys_fail:
-+	clk_disable_unprepare(kirin_pcie->phy_ref_clk);
-+
-+	return ret;
-+}
-+
-+static int kirin_pcie_power_on(struct kirin_pcie *kirin_pcie)
-+{
-+	int ret;
-+
-+	/* Power supply for Host */
-+	regmap_write(kirin_pcie->sysctrl,
-+		     SCTRL_PCIE_CMOS_OFFSET, SCTRL_PCIE_CMOS_BIT);
-+	usleep_range(TIME_CMOS_MIN, TIME_CMOS_MAX);
-+	kirin_pcie_oe_enable(kirin_pcie);
-+
-+	ret = kirin_pcie_clk_ctrl(kirin_pcie, true);
-+	if (ret)
-+		return ret;
-+
-+	/* ISO disable, PCIeCtrl, PHY assert and clk gate clear */
-+	regmap_write(kirin_pcie->sysctrl,
-+		     SCTRL_PCIE_ISO_OFFSET, SCTRL_PCIE_ISO_BIT);
-+	regmap_write(kirin_pcie->crgctrl,
-+		     CRGCTRL_PCIE_ASSERT_OFFSET, CRGCTRL_PCIE_ASSERT_BIT);
-+	regmap_write(kirin_pcie->sysctrl,
-+		     SCTRL_PCIE_HPCLK_OFFSET, SCTRL_PCIE_HPCLK_BIT);
-+
-+	ret = kirin_pcie_phy_init(kirin_pcie);
-+	if (ret)
-+		goto close_clk;
-+
-+	/* perst assert Endpoint */
-+	if (!gpio_request(kirin_pcie->gpio_id_reset, "pcie_perst")) {
-+		usleep_range(REF_2_PERST_MIN, REF_2_PERST_MAX);
-+		ret = gpio_direction_output(kirin_pcie->gpio_id_reset, 1);
-+		if (ret)
-+			goto close_clk;
-+		usleep_range(PERST_2_ACCESS_MIN, PERST_2_ACCESS_MAX);
-+
-+		return 0;
-+	}
-+
-+close_clk:
-+	kirin_pcie_clk_ctrl(kirin_pcie, false);
-+	return ret;
-+}
-+
-+static void kirin_pcie_sideband_dbi_w_mode(struct kirin_pcie *kirin_pcie,
-+					   bool on)
-+{
-+	u32 val;
-+
-+	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL0_ADDR);
-+	if (on)
-+		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
-+	else
-+		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
-+
-+	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL0_ADDR);
-+}
-+
-+static void kirin_pcie_sideband_dbi_r_mode(struct kirin_pcie *kirin_pcie,
-+					   bool on)
-+{
-+	u32 val;
-+
-+	val = kirin_apb_ctrl_readl(kirin_pcie, SOC_PCIECTRL_CTRL1_ADDR);
-+	if (on)
-+		val = val | PCIE_ELBI_SLV_DBI_ENABLE;
-+	else
-+		val = val & ~PCIE_ELBI_SLV_DBI_ENABLE;
-+
-+	kirin_apb_ctrl_writel(kirin_pcie, val, SOC_PCIECTRL_CTRL1_ADDR);
-+}
-+
-+static int kirin_pcie_rd_own_conf(struct pcie_port *pp,
-+				  int where, int size, u32 *val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	int ret;
-+
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
-+	ret = dw_pcie_read(pci->dbi_base + where, size, val);
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
-+
-+	return ret;
-+}
-+
-+static int kirin_pcie_wr_own_conf(struct pcie_port *pp,
-+				  int where, int size, u32 val)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	int ret;
-+
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
-+	ret = dw_pcie_write(pci->dbi_base + where, size, val);
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
-+
-+	return ret;
-+}
-+
-+static u32 kirin_pcie_read_dbi(struct dw_pcie *pci, void __iomem *base,
-+			       u32 reg, size_t size)
-+{
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	u32 ret;
-+
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, true);
-+	dw_pcie_read(base + reg, size, &ret);
-+	kirin_pcie_sideband_dbi_r_mode(kirin_pcie, false);
-+
-+	return ret;
-+}
-+
-+static void kirin_pcie_write_dbi(struct dw_pcie *pci, void __iomem *base,
-+				 u32 reg, size_t size, u32 val)
-+{
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, true);
-+	dw_pcie_write(base + reg, size, val);
-+	kirin_pcie_sideband_dbi_w_mode(kirin_pcie, false);
-+}
-+
-+static int kirin_pcie_link_up(struct dw_pcie *pci)
-+{
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	u32 val = kirin_apb_ctrl_readl(kirin_pcie, PCIE_APB_PHY_STATUS0);
-+
-+	if ((val & PCIE_LINKUP_ENABLE) == PCIE_LINKUP_ENABLE)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int kirin_pcie_establish_link(struct pcie_port *pp)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
-+	struct kirin_pcie *kirin_pcie = to_kirin_pcie(pci);
-+	struct device *dev = kirin_pcie->pci->dev;
-+	int count = 0;
-+
-+	if (kirin_pcie_link_up(pci))
-+		return 0;
-+
-+	dw_pcie_setup_rc(pp);
-+
-+	/* assert LTSSM enable */
-+	kirin_apb_ctrl_writel(kirin_pcie, PCIE_LTSSM_ENABLE_BIT,
-+			      PCIE_APP_LTSSM_ENABLE);
-+
-+	/* check if the link is up or not */
-+	while (!kirin_pcie_link_up(pci)) {
-+		usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
-+		count++;
-+		if (count == 1000) {
-+			dev_err(dev, "Link Fail\n");
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void kirin_pcie_host_init(struct pcie_port *pp)
-+{
-+	kirin_pcie_establish_link(pp);
-+}
-+
-+static struct dw_pcie_ops kirin_dw_pcie_ops = {
-+	.read_dbi = kirin_pcie_read_dbi,
-+	.write_dbi = kirin_pcie_write_dbi,
-+	.link_up = kirin_pcie_link_up,
-+};
-+
-+static struct dw_pcie_host_ops kirin_pcie_host_ops = {
-+	.rd_own_conf = kirin_pcie_rd_own_conf,
-+	.wr_own_conf = kirin_pcie_wr_own_conf,
-+	.host_init = kirin_pcie_host_init,
-+};
-+
-+static int __init kirin_add_pcie_port(struct dw_pcie *pci,
-+				      struct platform_device *pdev)
-+{
-+	pci->pp.ops = &kirin_pcie_host_ops;
-+
-+	return dw_pcie_host_init(&pci->pp);
-+}
-+
-+static int kirin_pcie_probe(struct platform_device *pdev)
-+{
-+	struct kirin_pcie *kirin_pcie;
-+	struct dw_pcie *pci;
-+	struct device *dev = &pdev->dev;
-+	int ret;
-+
-+	if (!dev->of_node) {
-+		dev_err(dev, "NULL node\n");
-+		return -EINVAL;
-+	}
-+
-+	kirin_pcie = devm_kzalloc(dev, sizeof(struct kirin_pcie), GFP_KERNEL);
-+	if (!kirin_pcie)
-+		return -ENOMEM;
-+
-+	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-+	if (!pci)
-+		return -ENOMEM;
-+
-+	pci->dev = dev;
-+	pci->ops = &kirin_dw_pcie_ops;
-+	kirin_pcie->pci = pci;
-+
-+	ret = kirin_pcie_get_clk(kirin_pcie, pdev);
-+	if (ret)
-+		return ret;
-+
-+	ret = kirin_pcie_get_resource(kirin_pcie, pdev);
-+	if (ret)
-+		return ret;
-+
-+	kirin_pcie->gpio_id_reset = of_get_named_gpio(dev->of_node,
-+						      "reset-gpio", 0);
-+	if (kirin_pcie->gpio_id_reset < 0)
-+		return -ENODEV;
-+
-+	ret = kirin_pcie_power_on(kirin_pcie);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, kirin_pcie);
-+
-+	return kirin_add_pcie_port(pci, pdev);
-+}
-+
-+static const struct of_device_id kirin_pcie_match[] = {
-+	{ .compatible = "hisilicon,kirin960-pcie" },
-+	{},
-+};
-+
-+struct platform_driver kirin_pcie_driver = {
-+	.probe			= kirin_pcie_probe,
-+	.driver			= {
-+		.name			= "kirin-pcie",
-+		.of_match_table = kirin_pcie_match,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+
-+builtin_platform_driver(kirin_pcie_driver);
--- 
-2.11.GIT
+I don't see any.
+
+Table 3.7.1 "General Properties of CPU nodes" was slightly
+re-ordered, but the same properties are listed in both documents.
+
+I don't think that the boot requirements removal impacts this
+file.
+
+Am I missing something?
+
+
+>>  
+>> -In addition to the ePAPR definitions, the properties defined below may be
+>> -present on CPU nodes.
+>> +In addition to the the Devicetree Specification definitions, the properties
+>> +defined below may be present on CPU nodes.
+>>  
+>>  PROPERTIES
+>>  
+>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
+>> index dc9bb3182525..8a70696395a7 100644
+>> --- a/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
+>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt
+>> @@ -1,7 +1,7 @@
+>>  Freescale L2 Cache Controller
+>>  
+>>  L2 cache is present in Freescale's QorIQ and QorIQ Qonverge platforms.
+>> -The cache bindings explained below are ePAPR compliant
+>> +The cache bindings explained below are Devicetree Specification compliant
+> 
+> ditto
+
+No changes to Table 3.8 Multi-level and Shared Caches between the
+documents.
+
+-Frank
+
+> 
+>>  
+>>  Required Properties:
+>>  
+>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/srio-rmu.txt b/Documentation/devicetree/bindings/powerpc/fsl/srio-rmu.txt
+>> index b9a8a2bcfae7..0496ada4bba4 100644
+>> --- a/Documentation/devicetree/bindings/powerpc/fsl/srio-rmu.txt
+>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/srio-rmu.txt
+>> @@ -124,8 +124,8 @@ Port-Write Unit:
+>>  		A single IRQ that handles port-write conditions is
+>>  		specified by this property.  (Typically shared with error).
+>>  
+>> -   Note: All other standard properties (see the ePAPR) are allowed
+>> -   but are optional.
+>> +   Note: All other standard properties (see the Devicetree Specification)
+>> +   are allowed but are optional.
+>>  
+>>  Example:
+>>  	rmu: rmu@d3000 {
+>> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/srio.txt b/Documentation/devicetree/bindings/powerpc/fsl/srio.txt
+>> index 07abf0f2f440..86ee6ea73754 100644
+>> --- a/Documentation/devicetree/bindings/powerpc/fsl/srio.txt
+>> +++ b/Documentation/devicetree/bindings/powerpc/fsl/srio.txt
+>> @@ -72,7 +72,8 @@ the following properties:
+>>  		represents the LIODN associated with maintenance transactions
+>>  		for the port.
+>>  
+>> -Note: All other standard properties (see ePAPR) are allowed but are optional.
+>> +Note: All other standard properties (see the Devicetree Specification)
+>> +are allowed but are optional.
+>>  
+>>  Example:
+>>  
+>> diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+>> index 280d283304bb..fb740445199f 100644
+>> --- a/Documentation/devicetree/booting-without-of.txt
+>> +++ b/Documentation/devicetree/booting-without-of.txt
+>> @@ -1413,7 +1413,7 @@ Optional property:
+>>  	from DMA operations originating from the bus. It provides a means of
+>>  	defining a mapping or translation between the physical address space of
+>>  	the bus and the physical address space of the parent of the bus.
+>> -	(for more information see ePAPR specification)
+>> +	(for more information see the Devicetree Specification)
+>>  
+>>  * DMA Bus child
+>>  Optional property:
+>> diff --git a/Documentation/devicetree/usage-model.txt b/Documentation/devicetree/usage-model.txt
+>> index 2b6b3d3f0388..33a8aaac02a8 100644
+>> --- a/Documentation/devicetree/usage-model.txt
+>> +++ b/Documentation/devicetree/usage-model.txt
+>> @@ -387,7 +387,7 @@ static void __init harmony_init_machine(void)
+>>  	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+>>  }
+>>  
+>> -"simple-bus" is defined in the ePAPR 1.0 specification as a property
+>> +"simple-bus" is defined in the Devicetree Specification as a property
+>>  meaning a simple memory mapped bus, so the of_platform_populate() code
+>>  could be written to just assume simple-bus compatible nodes will
+>>  always be traversed.  However, we pass it in as an argument so that
+>> diff --git a/Documentation/xtensa/mmu.txt b/Documentation/xtensa/mmu.txt
+>> index 222a2c6748e6..5de8715d5bec 100644
+>> --- a/Documentation/xtensa/mmu.txt
+>> +++ b/Documentation/xtensa/mmu.txt
+>> @@ -41,9 +41,9 @@ The scheme below assumes that the kernel is loaded below 0x40000000.
+>>   00..1F -> 00  -> 00  -> 00
+>>  
+>>  The default location of IO peripherals is above 0xf0000000. This may be changed
+>> -using a "ranges" property in a device tree simple-bus node. See ePAPR 1.1, §6.5
+>> -for details on the syntax and semantic of simple-bus nodes. The following
+>> -limitations apply:
+>> +using a "ranges" property in a device tree simple-bus node. See the Devicetree
+>> +Specification, section 4.5 for details on the syntax and semantics of
+>> +simple-bus nodes. The following limitations apply:
+>>  
+>>  1. Only top level simple-bus nodes are considered
+>>  
+>> -- 
+>> Frank Rowand <frank.rowand@sony.com>
+>>
+> 
