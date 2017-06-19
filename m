@@ -1,36 +1,32 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] dt-bindings: iio: gyro: add L3GD20H sensor device binding
-Date: Mon, 19 Jun 2017 22:04:31 +0200
-Message-ID: <20170619200431.9615-3-lorenzo.bianconi@st.com>
-References: <20170619200431.9615-1-lorenzo.bianconi@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170619200431.9615-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: robert.dolca-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv4 0/3] Add Altera I2C Controller Driver
+Date: Mon, 19 Jun 2017 15:36:55 -0500
+Message-ID: <1497904618-27010-1-git-send-email-thor.thayer@linux.intel.com>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, thor.thayer@linux.intel.com
+Cc: davem@davemloft.net, gregkh@linuxfoundation.org, mchehab@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
- 1 file changed, 1 insertion(+)
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-index eaa8fbba34e2..e31457ae6f50 100644
---- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -52,6 +52,7 @@ Gyroscopes:
- - st,lsm330dl-gyro
- - st,lsm330dlc-gyro
- - st,l3gd20-gyro
-+- st,l3gd20h-gyro
- - st,l3g4is-gyro
- - st,lsm330-gyro
- - st,lsm9ds0-gyro
+This patch series adds the Altera I2C Controller driver for use in FPGAs.
+The device tree patch was removed in this version because this I2C is not
+the default I2C master.
+
+Thor Thayer (3):
+  MAINTAINERS: Add Altera I2C Controller Driver
+  dt-bindings: i2c: Add Altera I2C Controller
+  i2c: altera: Add Altera I2C Controller driver
+
+ .../devicetree/bindings/i2c/i2c-altera.txt         |  39 ++
+ MAINTAINERS                                        |   5 +
+ drivers/i2c/busses/Kconfig                         |  10 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-altera.c                    | 511 +++++++++++++++++++++
+ 5 files changed, 566 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-altera.txt
+ create mode 100644 drivers/i2c/busses/i2c-altera.c
+
 -- 
-2.13.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
