@@ -1,108 +1,599 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v6 2/8] mfd: retu: Drop -mfd suffix from I2C
- device ID name
-Date: Mon, 19 Jun 2017 15:54:23 +0100
-Message-ID: <20170619145423.w7zaeboy7iq2usmt@dell>
-References: <20170615184928.12007-1-javier@dowhile0.org>
- <20170615184928.12007-3-javier@dowhile0.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx: ventana: add ADV1780 analog video decoder
+Date: Mon, 19 Jun 2017 08:00:10 -0700
+Message-ID: <1497884410-7198-1-git-send-email-tharvey@gateworks.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170615184928.12007-3-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 Jun 2017, Javier Martinez Canillas wrote:
+Enables the ADV7180 analog video decoder sensor connected to the
+IMX6 IPU on various Gateworks Ventana boards.
 
-> It's not correct to encode the subsystem in the I2C device name, so
-> drop the -mfd suffix. To maintain bisect-ability, change driver and
-> platform code / DTS users in the same patch.
-> 
-> Suggested-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Acked-by: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> 
-> ---
-> 
-> Changes in v6:
-> - Add Wolfram Sang's Reviewed-by tag.
-> 
-> Changes in v5:
-> - Add Rob Herring's Acked-by tag.
-> - Add Aaro Koskinen's Acked-by tag.
-> - Add Tony Lindgren's Acked-by tag.
-> 
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/omap2420-n8x0-common.dtsi | 4 ++--
->  arch/arm/mach-omap1/board-nokia770.c        | 4 ++--
->  drivers/mfd/retu-mfd.c                      | 4 ++--
->  3 files changed, 6 insertions(+), 6 deletions(-)
+Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6dl-gw52xx.dts   | 59 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6dl-gw53xx.dts   | 59 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6dl-gw54xx.dts   | 59 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-gw52xx.dts    | 58 ++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-gw53xx.dts    | 59 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6q-gw54xx.dts    | 59 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw51xx.dtsi | 54 ++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx6qdl-gw553x.dtsi | 54 ++++++++++++++++++++++++++++++++
+ 8 files changed, 461 insertions(+)
 
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-> diff --git a/arch/arm/boot/dts/omap2420-n8x0-common.dtsi b/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
-> index 7e5ffc583c90..1b06430c8013 100644
-> --- a/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
-> +++ b/arch/arm/boot/dts/omap2420-n8x0-common.dtsi
-> @@ -15,8 +15,8 @@
->  				>;
->  			#address-cells = <1>;
->  			#size-cells = <0>;
-> -			retu_mfd: retu@1 {
-> -				compatible = "retu-mfd";
-> +			retu: retu@1 {
-> +				compatible = "retu";
->  				interrupt-parent = <&gpio4>;
->  				interrupts = <12 IRQ_TYPE_EDGE_RISING>;
->  				reg = <0x1>;
-> diff --git a/arch/arm/mach-omap1/board-nokia770.c b/arch/arm/mach-omap1/board-nokia770.c
-> index ee8d9f553db4..06243c0b12d2 100644
-> --- a/arch/arm/mach-omap1/board-nokia770.c
-> +++ b/arch/arm/mach-omap1/board-nokia770.c
-> @@ -233,10 +233,10 @@ static struct platform_device nokia770_cbus_device = {
->  
->  static struct i2c_board_info nokia770_i2c_board_info_2[] __initdata = {
->  	{
-> -		I2C_BOARD_INFO("retu-mfd", 0x01),
-> +		I2C_BOARD_INFO("retu", 0x01),
->  	},
->  	{
-> -		I2C_BOARD_INFO("tahvo-mfd", 0x02),
-> +		I2C_BOARD_INFO("tahvo", 0x02),
->  	},
->  };
->  
-> diff --git a/drivers/mfd/retu-mfd.c b/drivers/mfd/retu-mfd.c
-> index d4c114abeb75..53e1d386d2c0 100644
-> --- a/drivers/mfd/retu-mfd.c
-> +++ b/drivers/mfd/retu-mfd.c
-> @@ -302,8 +302,8 @@ static int retu_remove(struct i2c_client *i2c)
->  }
->  
->  static const struct i2c_device_id retu_id[] = {
-> -	{ "retu-mfd", 0 },
-> -	{ "tahvo-mfd", 0 },
-> +	{ "retu", 0 },
-> +	{ "tahvo", 0 },
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(i2c, retu_id);
-
+diff --git a/arch/arm/boot/dts/imx6dl-gw52xx.dts b/arch/arm/boot/dts/imx6dl-gw52xx.dts
+index a2e0b73..f334410 100644
+--- a/arch/arm/boot/dts/imx6dl-gw52xx.dts
++++ b/arch/arm/boot/dts/imx6dl-gw52xx.dts
+@@ -17,3 +17,62 @@
+ 	model = "Gateworks Ventana i.MX6 DualLite/Solo GW52XX";
+ 	compatible = "gw,imx6dl-gw52xx", "gw,ventana", "fsl,imx6dl";
+ };
++
++&i2c3 {
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu1_csi1_mux: endpoint {
++				remote-endpoint = <&ipu1_csi1_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu1_csi1_from_ipu1_csi1_mux {
++	bus-width = <8>;
++};
++
++&ipu1_csi1_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu1_csi1_mux>;
++	bus-width = <8>;
++};
++
++&ipu1_csi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi1>;
++};
++
++&iomuxc {
++	pinctrl_adv7180: adv7180grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D30__GPIO3_IO30          0x0001b0b0
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31          0x4001b0b0
++		>;
++	};
++
++	pinctrl_ipu1_csi1: ipu1_csi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__IPU1_CSI1_DATA19    0x1b0b0
++			MX6QDL_PAD_EIM_D16__IPU1_CSI1_DATA18    0x1b0b0
++			MX6QDL_PAD_EIM_D18__IPU1_CSI1_DATA17    0x1b0b0
++			MX6QDL_PAD_EIM_D19__IPU1_CSI1_DATA16    0x1b0b0
++			MX6QDL_PAD_EIM_D20__IPU1_CSI1_DATA15    0x1b0b0
++			MX6QDL_PAD_EIM_D26__IPU1_CSI1_DATA14    0x1b0b0
++			MX6QDL_PAD_EIM_D27__IPU1_CSI1_DATA13    0x1b0b0
++			MX6QDL_PAD_EIM_A17__IPU1_CSI1_DATA12    0x1b0b0
++			MX6QDL_PAD_EIM_D29__IPU1_CSI1_VSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_EB3__IPU1_CSI1_HSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_A16__IPU1_CSI1_PIXCLK    0x1b0b0
++		>;
++	};
++};
++
+diff --git a/arch/arm/boot/dts/imx6dl-gw53xx.dts b/arch/arm/boot/dts/imx6dl-gw53xx.dts
+index 6844b70..75eb358 100644
+--- a/arch/arm/boot/dts/imx6dl-gw53xx.dts
++++ b/arch/arm/boot/dts/imx6dl-gw53xx.dts
+@@ -17,3 +17,62 @@
+ 	model = "Gateworks Ventana i.MX6 DualLite/Solo GW53XX";
+ 	compatible = "gw,imx6dl-gw53xx", "gw,ventana", "fsl,imx6dl";
+ };
++
++&i2c3 {
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu1_csi1_mux: endpoint {
++				remote-endpoint = <&ipu1_csi1_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu1_csi1_from_ipu1_csi1_mux {
++	bus-width = <8>;
++};
++
++&ipu1_csi1_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu1_csi1_mux>;
++	bus-width = <8>;
++};
++
++&ipu1_csi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi1>;
++};
++
++&iomuxc {
++	pinctrl_adv7180: adv7180grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D30__GPIO3_IO30          0x0001b0b0
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31          0x4001b0b0
++		>;
++	};
++
++	pinctrl_ipu1_csi1: ipu1_csi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__IPU1_CSI1_DATA19    0x1b0b0
++			MX6QDL_PAD_EIM_D16__IPU1_CSI1_DATA18    0x1b0b0
++			MX6QDL_PAD_EIM_D18__IPU1_CSI1_DATA17    0x1b0b0
++			MX6QDL_PAD_EIM_D19__IPU1_CSI1_DATA16    0x1b0b0
++			MX6QDL_PAD_EIM_D20__IPU1_CSI1_DATA15    0x1b0b0
++			MX6QDL_PAD_EIM_D26__IPU1_CSI1_DATA14    0x1b0b0
++			MX6QDL_PAD_EIM_D27__IPU1_CSI1_DATA13    0x1b0b0
++			MX6QDL_PAD_EIM_A17__IPU1_CSI1_DATA12    0x1b0b0
++			MX6QDL_PAD_EIM_D29__IPU1_CSI1_VSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_EB3__IPU1_CSI1_HSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_A16__IPU1_CSI1_PIXCLK    0x1b0b0
++		>;
++	};
++};
++
+diff --git a/arch/arm/boot/dts/imx6dl-gw54xx.dts b/arch/arm/boot/dts/imx6dl-gw54xx.dts
+index be91541..8ecbaa0 100644
+--- a/arch/arm/boot/dts/imx6dl-gw54xx.dts
++++ b/arch/arm/boot/dts/imx6dl-gw54xx.dts
+@@ -17,3 +17,62 @@
+ 	model = "Gateworks Ventana i.MX6 DualLite/Solo GW54XX";
+ 	compatible = "gw,imx6dl-gw54xx", "gw,ventana", "fsl,imx6dl";
+ };
++
++&i2c3 {
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu1_csi1_mux: endpoint {
++				remote-endpoint = <&ipu1_csi1_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu1_csi1_from_ipu1_csi1_mux {
++	bus-width = <8>;
++};
++
++&ipu1_csi1_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu1_csi1_mux>;
++	bus-width = <8>;
++};
++
++&ipu1_csi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi1>;
++};
++
++&iomuxc {
++	pinctrl_adv7180: adv7180grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D30__GPIO3_IO30          0x0001b0b0
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31          0x4001b0b0
++		>;
++	};
++
++	pinctrl_ipu1_csi1: ipu1_csi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__IPU1_CSI1_DATA19    0x1b0b0
++			MX6QDL_PAD_EIM_D16__IPU1_CSI1_DATA18    0x1b0b0
++			MX6QDL_PAD_EIM_D18__IPU1_CSI1_DATA17    0x1b0b0
++			MX6QDL_PAD_EIM_D19__IPU1_CSI1_DATA16    0x1b0b0
++			MX6QDL_PAD_EIM_D20__IPU1_CSI1_DATA15    0x1b0b0
++			MX6QDL_PAD_EIM_D26__IPU1_CSI1_DATA14    0x1b0b0
++			MX6QDL_PAD_EIM_D27__IPU1_CSI1_DATA13    0x1b0b0
++			MX6QDL_PAD_EIM_A17__IPU1_CSI1_DATA12    0x1b0b0
++			MX6QDL_PAD_EIM_D29__IPU1_CSI1_VSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_EB3__IPU1_CSI1_HSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_A16__IPU1_CSI1_PIXCLK    0x1b0b0
++		>;
++	};
++};
++
+diff --git a/arch/arm/boot/dts/imx6q-gw52xx.dts b/arch/arm/boot/dts/imx6q-gw52xx.dts
+index a12c47e..0b8ae00 100644
+--- a/arch/arm/boot/dts/imx6q-gw52xx.dts
++++ b/arch/arm/boot/dts/imx6q-gw52xx.dts
+@@ -18,6 +18,64 @@
+ 	compatible = "gw,imx6q-gw52xx", "gw,ventana", "fsl,imx6q";
+ };
+ 
++&i2c3 {
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu2_csi1_mux: endpoint {
++				remote-endpoint = <&ipu2_csi1_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu2_csi1_from_ipu2_csi1_mux {
++	bus-width = <8>;
++};
++
++&ipu2_csi1_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu2_csi1_mux>;
++	bus-width = <8>;
++};
++
++&ipu2_csi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu2_csi1>;
++};
++
++&iomuxc {
++	pinctrl_adv7180: adv7180grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D30__GPIO3_IO30          0x0001b0b0
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31          0x4001b0b0
++		>;
++	};
++
++	pinctrl_ipu2_csi1: ipu2_csi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__IPU2_CSI1_DATA19    0x1b0b0
++			MX6QDL_PAD_EIM_D16__IPU2_CSI1_DATA18    0x1b0b0
++			MX6QDL_PAD_EIM_D18__IPU2_CSI1_DATA17    0x1b0b0
++			MX6QDL_PAD_EIM_D19__IPU2_CSI1_DATA16    0x1b0b0
++			MX6QDL_PAD_EIM_D20__IPU2_CSI1_DATA15    0x1b0b0
++			MX6QDL_PAD_EIM_D26__IPU2_CSI1_DATA14    0x1b0b0
++			MX6QDL_PAD_EIM_D27__IPU2_CSI1_DATA13    0x1b0b0
++			MX6QDL_PAD_EIM_A17__IPU2_CSI1_DATA12    0x1b0b0
++			MX6QDL_PAD_EIM_D29__IPU2_CSI1_VSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_EB3__IPU2_CSI1_HSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_A16__IPU2_CSI1_PIXCLK    0x1b0b0
++		>;
++	};
++};
++
+ &sata {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/imx6q-gw53xx.dts b/arch/arm/boot/dts/imx6q-gw53xx.dts
+index d76aaa8..53a4910 100644
+--- a/arch/arm/boot/dts/imx6q-gw53xx.dts
++++ b/arch/arm/boot/dts/imx6q-gw53xx.dts
+@@ -18,6 +18,65 @@
+ 	compatible = "gw,imx6q-gw53xx", "gw,ventana", "fsl,imx6q";
+ };
+ 
++&i2c3 {
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu2_csi1_mux: endpoint {
++				remote-endpoint = <&ipu2_csi1_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu2_csi1_from_ipu2_csi1_mux {
++	bus-width = <8>;
++};
++
++&ipu2_csi1_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu2_csi1_mux>;
++	bus-width = <8>;
++};
++
++&ipu2_csi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu2_csi1>;
++};
++
+ &sata {
+ 	status = "okay";
+ };
++
++&iomuxc {
++	pinctrl_adv7180: adv7180grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D30__GPIO3_IO30          0x0001b0b0
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31          0x4001b0b0
++		>;
++	};
++
++	pinctrl_ipu2_csi1: ipu2_csi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__IPU2_CSI1_DATA19    0x1b0b0
++			MX6QDL_PAD_EIM_D16__IPU2_CSI1_DATA18    0x1b0b0
++			MX6QDL_PAD_EIM_D18__IPU2_CSI1_DATA17    0x1b0b0
++			MX6QDL_PAD_EIM_D19__IPU2_CSI1_DATA16    0x1b0b0
++			MX6QDL_PAD_EIM_D20__IPU2_CSI1_DATA15    0x1b0b0
++			MX6QDL_PAD_EIM_D26__IPU2_CSI1_DATA14    0x1b0b0
++			MX6QDL_PAD_EIM_D27__IPU2_CSI1_DATA13    0x1b0b0
++			MX6QDL_PAD_EIM_A17__IPU2_CSI1_DATA12    0x1b0b0
++			MX6QDL_PAD_EIM_D29__IPU2_CSI1_VSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_EB3__IPU2_CSI1_HSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_A16__IPU2_CSI1_PIXCLK    0x1b0b0
++		>;
++	};
++};
++
+diff --git a/arch/arm/boot/dts/imx6q-gw54xx.dts b/arch/arm/boot/dts/imx6q-gw54xx.dts
+index 6e8f53e..928b14c 100644
+--- a/arch/arm/boot/dts/imx6q-gw54xx.dts
++++ b/arch/arm/boot/dts/imx6q-gw54xx.dts
+@@ -18,6 +18,65 @@
+ 	compatible = "gw,imx6q-gw54xx", "gw,ventana", "fsl,imx6q";
+ };
+ 
++&i2c3 {
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio3 31 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <30 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu2_csi1_mux: endpoint {
++				remote-endpoint = <&ipu2_csi1_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu2_csi1_from_ipu2_csi1_mux {
++	bus-width = <8>;
++};
++
++&ipu2_csi1_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu2_csi1_mux>;
++	bus-width = <8>;
++};
++
++&ipu2_csi1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu2_csi1>;
++};
++
+ &sata {
+ 	status = "okay";
+ };
++
++&iomuxc {
++	pinctrl_adv7180: adv7180grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_D30__GPIO3_IO30          0x0001b0b0
++			MX6QDL_PAD_EIM_D31__GPIO3_IO31          0x4001b0b0
++		>;
++	};
++
++	pinctrl_ipu2_csi1: ipu2_csi1grp {
++		fsl,pins = <
++			MX6QDL_PAD_EIM_EB2__IPU2_CSI1_DATA19    0x1b0b0
++			MX6QDL_PAD_EIM_D16__IPU2_CSI1_DATA18    0x1b0b0
++			MX6QDL_PAD_EIM_D18__IPU2_CSI1_DATA17    0x1b0b0
++			MX6QDL_PAD_EIM_D19__IPU2_CSI1_DATA16    0x1b0b0
++			MX6QDL_PAD_EIM_D20__IPU2_CSI1_DATA15    0x1b0b0
++			MX6QDL_PAD_EIM_D26__IPU2_CSI1_DATA14    0x1b0b0
++			MX6QDL_PAD_EIM_D27__IPU2_CSI1_DATA13    0x1b0b0
++			MX6QDL_PAD_EIM_A17__IPU2_CSI1_DATA12    0x1b0b0
++			MX6QDL_PAD_EIM_D29__IPU2_CSI1_VSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_EB3__IPU2_CSI1_HSYNC     0x1b0b0
++			MX6QDL_PAD_EIM_A16__IPU2_CSI1_PIXCLK    0x1b0b0
++		>;
++	};
++};
++
+diff --git a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
+index e8c1edc..8855562 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw51xx.dtsi
+@@ -231,6 +231,37 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
++
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu1_csi0_mux: endpoint {
++				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu1_csi0_from_ipu1_csi0_mux {
++	bus-width = <8>;
++};
++
++&ipu1_csi0_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu1_csi0_mux>;
++	bus-width = <8>;
++};
++
++&ipu1_csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi0>;
+ };
+ 
+ &pcie {
+@@ -302,6 +333,13 @@
+ 
+ &iomuxc {
+ 	imx6qdl-gw51xx {
++		pinctrl_adv7180: adv7180grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23        0x0001b0b0
++				MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20     0x4001b0b0
++			>;
++		};
++
+ 		pinctrl_enet: enetgrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_RGMII_RXC__RGMII_RXC		0x1b030
+@@ -372,6 +410,22 @@
+ 			>;
+ 		};
+ 
++		pinctrl_ipu1_csi0: ipu1csi0grp {
++			fsl,pins = <
++				MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18    0x1b0b0
++				MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19    0x1b0b0
++				MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x1b0b0
++				MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x1b0b0
++				MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x1b0b0
++			>;
++		};
++
+ 		pinctrl_pcie: pciegrp {
+ 			fsl,pins = <
+ 				MX6QDL_PAD_GPIO_0__GPIO1_IO00		0x1b0b0
+diff --git a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+index 57374dd..1a0faa1 100644
+--- a/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-gw553x.dtsi
+@@ -261,6 +261,37 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_i2c3>;
+ 	status = "okay";
++
++	adv7180: camera@20 {
++		compatible = "adi,adv7180";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_adv7180>;
++		reg = <0x20>;
++		powerdown-gpios = <&gpio5 20 GPIO_ACTIVE_LOW>;
++		interrupt-parent = <&gpio5>;
++		interrupts = <23 IRQ_TYPE_LEVEL_LOW>;
++
++		port {
++			adv7180_to_ipu1_csi0_mux: endpoint {
++				remote-endpoint = <&ipu1_csi0_mux_from_parallel_sensor>;
++				bus-width = <8>;
++			};
++		};
++	};
++};
++
++&ipu1_csi0_from_ipu1_csi0_mux {
++	bus-width = <8>;
++};
++
++&ipu1_csi0_mux_from_parallel_sensor {
++	remote-endpoint = <&adv7180_to_ipu1_csi0_mux>;
++	bus-width = <8>;
++};
++
++&ipu1_csi0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_ipu1_csi0>;
+ };
+ 
+ &pcie {
+@@ -340,6 +371,13 @@
+ };
+ 
+ &iomuxc {
++	pinctrl_adv7180: adv7180grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT5__GPIO5_IO23        0x0001b0b0
++			MX6QDL_PAD_CSI0_DATA_EN__GPIO5_IO20     0x4001b0b0
++		>;
++	};
++
+ 	pinctrl_gpmi_nand: gpminandgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_NANDF_CLE__NAND_CLE		0xb0b1
+@@ -387,6 +425,22 @@
+ 		>;
+ 	};
+ 
++	pinctrl_ipu1_csi0: ipu1csi0grp {
++		fsl,pins = <
++			MX6QDL_PAD_CSI0_DAT12__IPU1_CSI0_DATA12    0x1b0b0
++			MX6QDL_PAD_CSI0_DAT13__IPU1_CSI0_DATA13    0x1b0b0
++			MX6QDL_PAD_CSI0_DAT14__IPU1_CSI0_DATA14    0x1b0b0
++			MX6QDL_PAD_CSI0_DAT15__IPU1_CSI0_DATA15    0x1b0b0
++			MX6QDL_PAD_CSI0_DAT16__IPU1_CSI0_DATA16    0x1b0b0
++			MX6QDL_PAD_CSI0_DAT17__IPU1_CSI0_DATA17    0x1b0b0
++			MX6QDL_PAD_CSI0_DAT18__IPU1_CSI0_DATA18    0x1b0b0
++			MX6QDL_PAD_CSI0_DAT19__IPU1_CSI0_DATA19    0x1b0b0
++			MX6QDL_PAD_CSI0_MCLK__IPU1_CSI0_HSYNC      0x1b0b0
++			MX6QDL_PAD_CSI0_VSYNC__IPU1_CSI0_VSYNC     0x1b0b0
++			MX6QDL_PAD_CSI0_PIXCLK__IPU1_CSI0_PIXCLK   0x1b0b0
++		>;
++	};
++
+ 	pinctrl_gpio_leds: gpioledsgrp {
+ 		fsl,pins = <
+ 			MX6QDL_PAD_KEY_COL2__GPIO4_IO10		0x1b0b0
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
