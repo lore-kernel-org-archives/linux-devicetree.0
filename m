@@ -1,84 +1,157 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 05/10] i2c: core: call of_i2c_setup_smbus_alert in
- i2c_register_adapter
-Date: Mon, 19 Jun 2017 17:28:11 +0200
-Message-ID: <20170619152811.svoxmxybyoy6l4hc@ninjato>
-References: <1497535178-12001-1-git-send-email-preid@electromag.com.au>
- <1497535178-12001-6-git-send-email-preid@electromag.com.au>
+From: Dong Aisheng <dongas86@gmail.com>
+Subject: Re: [PATCH v5 01/10] pinctrl: generic: Add bi-directional and output-enable
+Date: Mon, 19 Jun 2017 23:43:33 +0800
+Message-ID: <CAA+hA=SKfgW3N6MbZbRvXD__na1Ts3Dpam=m0z78jj7FsRFESg@mail.gmail.com>
+References: <CACRpkdY1h+yfFuk2y9=nZqqvW9=G33_eHCisvuMkJ5b3zizY7Q@mail.gmail.com>
+ <CAA+hA=Q9hwe7_xL440Reoi7z7m8-SScZ5E057419KSA7dQK=tQ@mail.gmail.com>
+ <20170523183735.GC13664@w540> <CACRpkdYcaGzSvAN2Trqwer+8GbqXyfpE=VqiYcQvCOqhDO9MMw@mail.gmail.com>
+ <20170529104229.GB21347@w540> <CAA+hA=T56WHugmA+5V5ZC6TTxeSUVt1hr0v53YuDsUYgBcvKTw@mail.gmail.com>
+ <20170609075028.GE15739@w540> <CACRpkdZ=hNJLyV94FyRBSR3Dk8NLe-jEo3qbUKDya6ruqG3KNQ@mail.gmail.com>
+ <20170612094424.GG15739@w540> <CAA+hA=RmDEybOkbimtyQBq+vK=6T9GYJn9Jw-GcDy7XxR0b0AA@mail.gmail.com>
+ <20170615111124.GD22030@w540>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="vnowmshfru3jtffk"
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1497535178-12001-6-git-send-email-preid@electromag.com.au>
-Sender: linux-pm-owner@vger.kernel.org
-To: Phil Reid <preid@electromag.com.au>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615111124.GD22030@w540>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jmondi <jacopo@jmondi.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy.shevchenko@gmail.com>, Jacopo Mondi <jacopo+renesas@jmondi.org>, Chris Brandt <Chris.Brandt@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King - ARM Linux <linux@armlinux.org.uk>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Jmondi,
 
---vnowmshfru3jtffk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 15, 2017 at 7:11 PM, jmondi <jacopo@jmondi.org> wrote:
+> Hi Dong,
+>
+> On Tue, Jun 13, 2017 at 02:25:08PM +0800, Dong Aisheng wrote:
+>> On Mon, Jun 12, 2017 at 5:44 PM, jmondi <jacopo@jmondi.org> wrote:
+>> > Fair enough :)
+>> >
+>> > I'll try to keep this short: I don't like "output-enable", and at the
+>> > same time I don't think "output-high" and "output-low" fit well for
+>> > this purpose, as they electrically means something different from what
+>> > our (and IMX) use case is: enabling/disabling input/output
+>> > buffers internal to pin controller/gpio block HW and not driving a value
+>> > there.
+>> >
+>> > This seems clear to me from the "GPIO mode pitfalls" section of
+>> > pinctrl.txt documentation examples and from the fact that generic bindings
+>> > did not expose an "output" flag because if you drive an output line, you
+>> > reasonably either drive it high or low.
+>> >
+>> > Unfortunately I cannot convince myself that the same reasons apply
+>> > to the input use case.  Enabling input on a pin implies the pinctrl/gpio driver
+>> > has to enable any input buffer required to use that pin as a properly
+>> > working input line, and enabling an input buffer implies being able to sense
+>> > the line value from there, so I don't see that much use for "input-buffer-enable"
+>> > alone.
+>> >
+>> > So, even if bindings could look a bit weird as there won't be a direct
+>> > matching between properties names used to enable input/output buffers,
+>> > my vote is to add "output-buffer-enable" only, and keep using the
+>> > already there "input-enable" properties for the input use case.
+>> >
+>>
+>> Yes, it may be a bit weird.
+>> I'm not pad internal details expert and can't tell much difference between
+>> output-enable and output-buffer-enable.
+>> I just feel a bit confuse if only using output-buffer-enable.
+>
+> Yes it is, and I actually like your proposal, I was just trying to
+> make sure I was not confusing the property semantic with its
+> real-world effect.
+>
+> If no one as different opinions on this, I can send a patch later to
+> add output-enable only, or since you have almost done it down here you
+> can do the same resusing what you have proposed below.
 
-On Thu, Jun 15, 2017 at 09:59:33PM +0800, Phil Reid wrote:
-> Add a call to of_i2c_setup_smbus_alert when a i2c adapter is registered
-> so the the smbalert driver can be registered.
->=20
-> Signed-off-by: Phil Reid <preid@electromag.com.au>
+Please feel free to do it.
+Just one thing, may be we could also add PIN_CONFIG_OUTPUT_ENABLE
+as well.
 
-CCing Benjamin
+>>
+>> If enable both input and output, it becomes:
+>> pinctrl_xxx: gpios_xxx_grp {
+>>         pins = <
+>>                 ULP1_PAD_PTD0__PTD0
+>>         >;
+>>         input-enable;
+>>         output-buffer-enable;
+>>         bias-pull-up;
+>> };
+>>
+>> How about still use output-enable in pairs to input-enable but explain more
+>> in comments?
+>> Aslo update 'input-enable' comment to 'enable input buffer'.
+>> e.g.
+>> diff --git a/drivers/pinctrl/pinconf-generic.c
+>> b/drivers/pinctrl/pinconf-generic.c
+>> index 720a19f..96c83a4 100644
+>> --- a/drivers/pinctrl/pinconf-generic.c
+>> +++ b/drivers/pinctrl/pinconf-generic.c
+>> @@ -172,6 +172,7 @@ static const struct pinconf_generic_params dt_params[] = {
+>>         { "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
+>>         { "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
+>>         { "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
+>> +       { "output-enable", PIN_CONFIG_OUTPUT_ENABLE, 1 },
+>>         { "output-high", PIN_CONFIG_OUTPUT, 1, },
+>>         { "output-low", PIN_CONFIG_OUTPUT, 0, },
+>>         { "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+>> diff --git a/include/linux/pinctrl/pinconf-generic.h
+>> b/include/linux/pinctrl/pinconf-generic.h
+>> index 7620eb1..d30f4fe 100644
+>> --- a/include/linux/pinctrl/pinconf-generic.h
+>> +++ b/include/linux/pinctrl/pinconf-generic.h
+>> @@ -59,9 +59,9 @@
+>>   *     which means it will wait for signals to settle when reading inputs. The
+>>   *     argument gives the debounce time in usecs. Setting the
+>>   *     argument to zero turns debouncing off.
+>> - * @PIN_CONFIG_INPUT_ENABLE: enable the pin's input.  Note that this does not
+>> - *     affect the pin's ability to drive output.  1 enables input, 0 disables
+>> - *     input.
+>> + * @PIN_CONFIG_INPUT_ENABLE: enable the pin's input buffer.  Note
+>> that this does
+>> + *     not affect the pin's ability to drive output.
+>> + *     1 enables input, 0 disables input.
+>
+> I would not mention the "input buffer" here, as enabling input implies enabling
+> the buffer if you want to read values from there. Actually I guess
+> there may be platforms where buffer enabling may be implicit, so I
+> would leave this out and let drivers handle it internally.
+>
 
-> ---
->  drivers/i2c/i2c-core.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-> index d2402bb..626471b 100644
-> --- a/drivers/i2c/i2c-core.c
-> +++ b/drivers/i2c/i2c-core.c
-> @@ -40,6 +40,7 @@
->  #include <linux/gpio.h>
->  #include <linux/hardirq.h>
->  #include <linux/i2c.h>
-> +#include <linux/i2c-smbus.h>
->  #include <linux/idr.h>
->  #include <linux/init.h>
->  #include <linux/irqflags.h>
-> @@ -2045,6 +2046,9 @@ static int i2c_register_adapter(struct i2c_adapter =
-*adap)
->  		dev_warn(&adap->dev,
->  			 "Failed to create compatibility class link\n");
->  #endif
-> +	res =3D of_i2c_setup_smbus_alert(adap);
-> +	if (res)
-> +		goto out_list;
-> =20
->  	i2c_init_recovery(adap);
-> =20
-> --=20
-> 1.8.3.1
->=20
+I'm fine with it.
 
---vnowmshfru3jtffk
-Content-Type: application/pgp-signature; name="signature.asc"
+Regards
+Dong Aisheng
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllH7YsACgkQFA3kzBSg
-Kba4QhAAkmrmp/tUJpOFlGU3XMCXnLq6Syf4LIG6lqb3uLeEekbHu8quJBq7PvcP
-U2uSLJ6gh1zgrI4jIij/ow/pAKJYOqWWZM5vywraY6+dOmUltW3JHuTXzIwiZx28
-cATEZRzBTOyq3mESSY3kpV0lPi5+P0Yw1Ab1sCIm3n56KaV9U8oLqZZqFCLjIElO
-BwSPYLRipro4P9KQwHjHOkAa6uE89gi2egMYNudMoTVld05k60riyaBKa+/fcvM9
-B/3h1R+cr0C7/Vg2KkWLVK3LmVkwI+NpQ7aElAIUGpT6WRdj8+0gJr66N3ZCMTLy
-SQQ5HatT23uDTA0fqIQoimFITsdUyeKgE2Gf3VjWT05d25RegFTKgaM2+MC91TUF
-adI0y/mm0WCnYSH9IvJ93BK53Ue2FnJX4JZya1u4EO89gDQnLGwAhGOJ81TyAJOG
-FJCMIRvpol8N+wnSZ41RAeVktSG+MpEwBd5AEc3Q6UfhvSiQwPPLohQx2pPC3G62
-OB6BbAIsHTeke/pX5L1K3eM84mZGF6E4oG2OWl/6MTnPoSGNyoZNpJztPUKe6Z5w
-LS+dOH6MH/uzyz23anT4XWp7gczXsPf2ha9j/LN4eUZ2ozrt/3QvGqJrlY0sxtae
-G7uwg4aIZ3Qnrye68pBEMOL4ZhNvqDI8mSuN2JI/uMngAM14t9U=
-=ZKr3
------END PGP SIGNATURE-----
-
---vnowmshfru3jtffk--
+>>   * @PIN_CONFIG_INPUT_SCHMITT: this will configure an input pin to run in
+>>   *     schmitt-trigger mode. If the schmitt-trigger has adjustable hysteresis,
+>>   *     the threshold value is given on a custom format as argument when
+>> @@ -73,6 +73,9 @@
+>>   *     operation, if several modes of operation are supported these can be
+>>   *     passed in the argument on a custom form, else just use argument 1
+>>   *     to indicate low power mode, argument 0 turns low power mode off.
+>> + * @PIN_CONFIG_OUTPUT_ENABLE: only enable the pin's output buffer, not driving
+>> + *     a value.
+>> + *     1 enables output buffer, 0 disables output buffer.
+>>   * @PIN_CONFIG_OUTPUT: this will configure the pin as an output. Use argument
+>>   *     1 to indicate high level, argument 0 to indicate low level. (Please
+>>   *     see Documentation/pinctrl.txt, section "GPIO mode pitfalls" for a
+>>
+>> Or
+>> invent both input-buffer-enable and output-buffer-enable and
+>> deprecated input-enable?
+>>
+>> Andy,
+>> how about your comments?
+>>
+>> Regards
+>> Dong Aisheng
+>>
+>> > Thanks
+>> >    j
+>> >
+>> >>
+>> >> Yours,
+>> >> Linus Walleij
