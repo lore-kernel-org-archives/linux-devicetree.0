@@ -1,50 +1,93 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sunxi: add MMC support for A83T
-Date: Tue, 20 Jun 2017 11:49:06 +0200
-Message-ID: <20170620094906.7bwg6zvth6oqkasd@flea.lan>
-References: <20170618130018.10684-1-techping.chan@gmail.com>
- <20170618130018.10684-2-techping.chan@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v3 19/21] dt-bindings: mmc: dw_mmc-k3: add document of
+ hi3660 mmc
+Date: Tue, 20 Jun 2017 10:59:21 +0100
+Message-ID: <5948F1F9.90903@hisilicon.com>
+References: <20170614082338.15673-1-guodong.xu@linaro.org>
+ <20170614082338.15673-20-guodong.xu@linaro.org>
+ <CAPDyKFpvJu8_TETWr0Vy4ubDC7NYvi7TxmSLYZyw33qHFsoNaQ@mail.gmail.com>
+ <5947CAD8.4040607@hisilicon.com>
+ <CAPDyKFo=hqp=j=nWpO8uf_0pGTSKjN0T-ZKqD8cuKp1C3Q2_hA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="syweihn35sptcjqd"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE67UPFAKGQE65UUWKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170618130018.10684-2-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFo=hqp=j=nWpO8uf_0pGTSKjN0T-ZKqD8cuKp1C3Q2_hA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wangkefeng.wang@huawei.com, Arnd Bergmann <arnd@arndb.de>, Guodong Xu <guodong.xu@linaro.org>, Linux PCI <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Griffin <peter.griffin@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Li Wei <liwei213@huawei.com>, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, zhangfei <zhangfei.gao@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Uffe,
 
---syweihn35sptcjqd
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-Hi,
-
-On Sun, Jun 18, 2017 at 09:00:17PM +0800, Ziping Chen wrote:
-> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 2017/6/20 9:36, Ulf Hansson wrote:
+> Hi Wei,
 > 
-> The Allwinner A83T's MMC can work with
-> compatible "allwinner,sun7i-a20-mmc".
+> On 19 June 2017 at 15:00, Wei Xu <xuwei5@hisilicon.com> wrote:
+>> Hi Ulf,
+>>
+>> On 2017/6/19 13:43, Ulf Hansson wrote:
+>>> On 14 June 2017 at 10:23, Guodong Xu <guodong.xu@linaro.org> wrote:
+>>>> Add bindings for hi3660 mmc support
+>>>>
+>>>> Signed-off-by: Li Wei <liwei213@huawei.com>
+>>>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt | 1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>> index df37058..8af1afc 100644
+>>>> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>> @@ -12,6 +12,7 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
+>>>>  Required Properties:
+>>>>
+>>>>  * compatible: should be one of the following.
+>>>> +  - "hisilicon,hi3660-dw-mshc": for controllers with hi3660 specific extensions.
+>>>>    - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extensions.
+>>>>    - "hisilicon,hi6220-dw-mshc": for controllers with hi6220 specific extensions.
+>>>>
+>>>> --
+>>>> 2.10.2
+>>>>
+>>>
+>>> Thanks, applied for next!
+>>
+>> Thanks!
+>> Last week I had applied the v4 patch set[1]
+>> and this patch is included.
+>> But it should be fine for the upper gatekeeper to merge
+>> since these 2 patch are same.
 > 
-> Add support for it.
+> No, that's not how git works.
+> 
+> If the patch has the same hash, that would be fine, but that isn't the
+> case here as we have two different hashes for the same change.
 
-This has been proven not to be the case already.
+Got it. Thanks for your explaining!
 
-Please use an A83T compatible only.
+> 
+> To deal with this, I have just dropped the change from my tree and
+> leave it to you to carry the patch. Feel free to add my ack for it.
 
-Maxime
+Thanks!
+But the pull request I sent last week has been merged.
 
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---syweihn35sptcjqd--
+Best Regards,
+Wei
+
+> 
+> Kind regards
+> Uffe
+> 
+> .
+> 
