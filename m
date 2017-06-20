@@ -1,34 +1,51 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH v3 06/15] spi: qup: Fix error handling in spi_qup_prep_sg
-Date: Tue, 20 Jun 2017 14:40:48 +0530
-Message-ID: <1497949857-1852-7-git-send-email-varada@codeaurora.org>
-References: <1497949857-1852-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497949857-1852-1-git-send-email-varada@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>
+From: Phil Elwell <phil@raspberrypi.org>
+Subject: Re: [PATCH v3 3/4] irqchip: Add BCM2835 AUX interrupt controller
+Date: Tue, 20 Jun 2017 10:19:06 +0100
+Message-ID: <9e8dcada-2000-e899-2a2c-ab54ae19e3db@raspberrypi.org>
+References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
+ <1497457750-35585-1-git-send-email-phil@raspberrypi.org>
+ <1497457750-35585-4-git-send-email-phil@raspberrypi.org>
+ <f68eed56-35b8-737e-008d-a8e993c7f6f1@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <f68eed56-35b8-737e-008d-a8e993c7f6f1@gmail.com>
+Content-Language: en-GB
+Sender: linux-clk-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- drivers/spi/spi-qup.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 19/06/2017 22:13, Florian Fainelli wrote:
+> On 06/14/2017 09:29 AM, Phil Elwell wrote:
+>> Devices in the BCM2835 AUX block share a common interrupt line, with a
+>> register indicating which devices have active IRQs. Expose this as a
+>> nested interrupt controller to avoid IRQ sharing problems (easily
+>> observed if UART1 and SPI1/2 are enabled simultaneously).
+>>
+>> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
+>> ---
+> 
+>> +/*
+>> + * The irq_mask and irq_unmask function pointers are used without
+>> + * validity checks, so they must not be NULL. Create a dummy function
+>> + * with the expected type for use as a no-op.
+>> + */
+>> +static void bcm2835_aux_irq_dummy(struct irq_data *data)
+>> +{
+>> +}
+>> +
+>> +static struct irq_chip bcm2835_aux_irq_chip = {
+>> +	.name = "bcm2835-aux_irq",
+>> +	.irq_mask = bcm2835_aux_irq_dummy,
+>> +	.irq_unmask = bcm2835_aux_irq_dummy,
+>> +};
+> 
+> So how are the interrupt enabled/disabled if this interrupt controller
+> just returns their pending state?
 
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 0683e47..e2b4a50 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -310,8 +310,8 @@ static int spi_qup_prep_sg(struct spi_master *master, struct spi_transfer *xfer,
- 	}
- 
- 	desc = dmaengine_prep_slave_sg(chan, sgl, nents, dir, flags);
--	if (!desc)
--		return -EINVAL;
-+	if (IS_ERR_OR_NULL(desc))
-+		return desc ? PTR_ERR(desc) : -EINVAL;
- 
- 	desc->callback = callback;
- 	desc->callback_param = data;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Interrupts must be enabled, disabled and acknowledged on the blocks in the
+AUX domain - UART1, SPI1 and SPI2. There is no additional masking -
+AUXIRQ is essentially an interrupt sharing accelerator.
+
+Phil
