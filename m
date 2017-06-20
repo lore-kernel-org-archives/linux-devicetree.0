@@ -1,31 +1,76 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [EXT] Re: [PATCH v2] mmc: core: add mmc-card hardware reset
- enable support
-Date: Tue, 20 Jun 2017 18:10:53 +0200
-Message-ID: <CACRpkdak6ffeN0D4eTJV3cUeJ+T92rg9Pt6AnFMW=VzQ=59XVw@mail.gmail.com>
-References: <1491895862-7952-1-git-send-email-richard.leitner@skidata.com>
- <CACRpkdaBrk91hh3JGZ0vcD3aXO+OHD41xwRKn9prPSOX_SXuWg@mail.gmail.com>
- <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
- <0a29de1a-2635-2bb8-808a-7b9a0197921a@skidata.com> <6b92d0af00024549a0d22dda039780dd@bowex36d.micron.com>
- <CACRpkdb92scfO=tghucfC3RqQpi9K6YSuavte_b-AxH4hS87rQ@mail.gmail.com> <dd844df4-ac50-daab-bc31-a636718227f5@skidata.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: gyro: st_gyro: fix L3GD20H support
+Date: Tue, 20 Jun 2017 17:40:37 +0100
+Message-ID: <20170620174037.657b47e4@kernel.org>
+References: <20170619200431.9615-1-lorenzo.bianconi@st.com>
+        <20170619200431.9615-2-lorenzo.bianconi@st.com>
+        <CACRpkdaH0E9XbP5_TgENXxffPEg9fAf_UNpu8tkObZ9enm0DXA@mail.gmail.com>
+        <CAA2SeNKKQM-zsg_8ieaiJbCCsjnPYgQMAds9tafiQHTyrO4fww@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <dd844df4-ac50-daab-bc31-a636718227f5@skidata.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Richard Leitner <richard.leitner@skidata.com>
-Cc: "Luca Porzio (lporzio)" <lporzio@micron.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bart Van Assche <bart.vanassche@sandisk.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Leitner <dev@g0hl1n.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA2SeNKKQM-zsg_8ieaiJbCCsjnPYgQMAds9tafiQHTyrO4fww-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Robert Dolca <robert.dolca-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 20, 2017 at 12:24 PM, Richard Leitner
-<richard.leitner@skidata.com> wrote:
+On Tue, 20 Jun 2017 13:54:30 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-> Should we then add a warning/info message to the kernel if we have a
-> reset gpio configured in the DT, but the eMMC hasn't this OTP bit set?
+> > On Mon, Jun 19, 2017 at 10:04 PM, Lorenzo Bianconi
+> > <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >  
+> >> Add proper support for L3GD20H gyroscope sensor. In particular:
+> >> - use L3GD20H as device name instead of L3GD20
+> >> - fix available full scales
+> >> - fix available sample frequencies
+> >>
+> >> Fixes: 9444a300c2be (IIO: Add support for L3GD20H gyroscope)
+> >> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>  
+> >  
+> 
+> Hi Linus,
+> 
+> > Is this then fixing the issue papered over by
+> > commit a0657716416f834ef7710a9044614d50a36c3bdc
+> > "iio:gyro: bug on L3GD20H gyroscope support"
+> > ?
+> >
+> > Then we should probably state that as a Fixes: too.  
+> 
+> The sensor support was introduce in 496822c78236 (iio:gyro: Add
+> STMicroelectronics gyroscopes driver).
+> Commit a0657716416 just removes the support since it was not properly done.
+> So what do you think?
+> We can add Fixes: 496822c78236 (iio:gyro: Add STMicroelectronics
+> gyroscopes driver).
+> Jonathan should I send a v2?
+Don't worry.  I've added the fixes tag and applied it.
 
-That makes a lot of sense. Because the situation is ambigous.
-We provide the hardware to reset the card, but the card says it
-does not accept a reset.
+I've also added a paragraph explaining what is going on with the two fixes
+tags.  
 
-Yours,
-Linus Walleij
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
+
+Thanks,
+
+Jonathan
+> 
+> Regards,
+> Lorenzo
+> 
+> 
+> >
+> > Yours,
+> > Linus Walleij  
+> 
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
