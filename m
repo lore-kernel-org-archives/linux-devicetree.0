@@ -1,27 +1,31 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2 3/3] clk: hi3660: Set PPLL2 to 2880M
-Date: Mon, 19 Jun 2017 18:00:59 -0700
-Message-ID: <20170620010059.GH20170@codeaurora.org>
-References: <20170526073821.25971-1-guodong.xu@linaro.org>
- <20170526073821.25971-4-guodong.xu@linaro.org>
+Subject: Re: [PATCH v6 1/3] clk: imx7d: create clocks behind rawnand clock
+ gate
+Date: Mon, 19 Jun 2017 18:01:25 -0700
+Message-ID: <20170620010125.GI20170@codeaurora.org>
+References: <cover.9fab78eaa869dbad4c9ad7e8578c9cef3e49daa8.1496961128.git-series.stefan@agner.ch>
+ <8b9edf13938e3166081e72ba8fa4ac822035079c.1496961128.git-series.stefan@agner.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170526073821.25971-4-guodong.xu@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guodong Xu <guodong.xu@linaro.org>
-Cc: mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, chenjun14@huawei.com, zhongkaihua@huawei.com, zhangfei.gao@linaro.org, leo.yan@linaro.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zheng Shaobo <zhengshaobo1@huawei.com>
+In-Reply-To: <8b9edf13938e3166081e72ba8fa4ac822035079c.1496961128.git-series.stefan@agner.ch>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stefan Agner <stefan@agner.ch>
+Cc: shawnguo@kernel.org, kernel@pengutronix.de, aisheng.dong@nxp.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, robh+dt@kernel.org, mark.rutland@arm.com, han.xu@nxp.com, fabio.estevam@freescale.com, LW@KARO-electronics.de, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/26, Guodong Xu wrote:
-> From: Zhong Kaihua <zhongkaihua@huawei.com>
+On 06/08, Stefan Agner wrote:
+> The rawnand clock gate gates two clocks, NAND_USDHC_BUS_CLK_ROOT
+> and NAND_CLK_ROOT. However, the gate has been in the chain of the
+> latter only. This does not allow to use the NAND_USDHC_BUS_CLK_ROOT
+> only, e.g. as required by APBH-Bridge-DMA.
 > 
-> Set PPLL2 to 2880M. With this patch, we saw better compatibility
-> on various 1080p HDMI monitors.
+> Add new clocks which represent the clock after the gate, and use a
+> shared clock gate to correctly model the hardware.
 > 
-> Signed-off-by: Zhong Kaihua <zhongkaihua@huawei.com>
-> Signed-off-by: Zheng Shaobo <zhengshaobo1@huawei.com>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Tested-by: Fabio Estevam <fabio.estevam@nxp.com>
 > ---
 
 Applied to clk-next
