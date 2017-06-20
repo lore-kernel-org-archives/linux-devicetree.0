@@ -1,27 +1,28 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] iio: humidity: hdc100x: add match table and
- device id's
-Date: Tue, 20 Jun 2017 17:48:49 +0100
-Message-ID: <20170620174849.34cd0252@kernel.org>
-References: <1497888066-12652-1-git-send-email-m-stecklein@ti.com>
-        <1497888066-12652-3-git-send-email-m-stecklein@ti.com>
+Subject: Re: [PATCH v5 2/4] Documentation: dt: iio: at91-sama5d2_adc: add hw
+ trigger edge binding
+Date: Tue, 20 Jun 2017 17:53:48 +0100
+Message-ID: <20170620175348.300155bb@kernel.org>
+References: <1497533097-12052-1-git-send-email-eugen.hristev@microchip.com>
+        <1497533097-12052-3-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497888066-12652-3-git-send-email-m-stecklein-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org>
-Cc: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Peter Meerwald-Stadler <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "Andrew F . Davis" <afd-l0cyMroinI0@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497533097-12052-3-git-send-email-eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 Jun 2017 11:01:06 -0500
-Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org> wrote:
+On Thu, 15 Jun 2017 16:24:55 +0300
+Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org> wrote:
 
-> Add of_match_table and point it to a list of compatible device tree
-> device id's.
+> Add property for the edge type of the hardware trigger pin ADTRG
 > 
-> Signed-off-by: Michael Stecklein <m-stecklein-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Eugen Hristev <eugen.hristev-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Acked-by: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 Applied to the togreg branch of iio.git and pushed out as testing
 for the autobuilders to play with it.
 
@@ -29,36 +30,31 @@ Thanks,
 
 Jonathan
 > ---
->  drivers/iio/humidity/hdc100x.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
+>   Changes in v4:
+>  - Modified bindings to be similar with interrupts
 > 
-> diff --git a/drivers/iio/humidity/hdc100x.c b/drivers/iio/humidity/hdc100x.c
-> index 6778bc7..7851bd9 100644
-> --- a/drivers/iio/humidity/hdc100x.c
-> +++ b/drivers/iio/humidity/hdc100x.c
-> @@ -429,9 +429,20 @@ static const struct i2c_device_id hdc100x_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, hdc100x_id);
+>  Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> index 3223684..552e7a8 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> +++ b/Documentation/devicetree/bindings/iio/adc/at91-sama5d2_adc.txt
+> @@ -11,6 +11,11 @@ Required properties:
+>    - atmel,min-sample-rate-hz: Minimum sampling rate, it depends on SoC.
+>    - atmel,max-sample-rate-hz: Maximum sampling rate, it depends on SoC.
+>    - atmel,startup-time-ms: Startup time expressed in ms, it depends on SoC.
+> +  - atmel,trigger-edge-type: One of possible edge types for the ADTRG hardware
+> +  trigger pin. When the specific edge type is detected, the conversion will
+> +  start. Possible values are rising, falling, or both.
+> +  This property uses the IRQ edge types values: IRQ_TYPE_EDGE_RISING ,
+> +  IRQ_TYPE_EDGE_FALLING or IRQ_TYPE_EDGE_BOTH
 >  
-> +static const struct of_device_id hdc100x_dt_ids[] = {
-> +	{ .compatible = "ti,hdc1000" },
-> +	{ .compatible = "ti,hdc1008" },
-> +	{ .compatible = "ti,hdc1010" },
-> +	{ .compatible = "ti,hdc1050" },
-> +	{ .compatible = "ti,hdc1080" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, hdc100x_dt_ids);
-> +
->  static struct i2c_driver hdc100x_driver = {
->  	.driver = {
->  		.name	= "hdc100x",
-> +		.of_match_table = of_match_ptr(hdc100x_dt_ids),
->  	},
->  	.probe = hdc100x_probe,
->  	.remove = hdc100x_remove,
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  Example:
+>  
+> @@ -25,4 +30,5 @@ adc: adc@fc030000 {
+>  	atmel,startup-time-ms = <4>;
+>  	vddana-supply = <&vdd_3v3_lp_reg>;
+>  	vref-supply = <&vdd_3v3_lp_reg>;
+> +	atmel,trigger-edge-type = <IRQ_TYPE_EDGE_BOTH>;
+>  }
