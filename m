@@ -1,54 +1,70 @@
-From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v7 1/3] nvmem: dt: document SNVS LPGPR binding
-Date: Tue, 20 Jun 2017 09:09:30 +0200
-Message-ID: <20170620070932.10353-2-o.rempel@pengutronix.de>
-References: <20170620070932.10353-1-o.rempel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170620070932.10353-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Dongwoo Lee <dwoo08.lee@samsung.com>
+Subject: [PATCH 1/2] arm64: dts: exynos: Fix wrong label for USB 3.0
+ controller node
+Date: Tue, 20 Jun 2017 16:12:23 +0900
+Message-ID: <1497942745-8607-2-git-send-email-dwoo08.lee@samsung.com>
+References: <1497942745-8607-1-git-send-email-dwoo08.lee@samsung.com>
+        <CGME20170620071230epcas5p497144c7ccd8485da9109b8905a5ea36e@epcas5p4.samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1497942745-8607-1-git-send-email-dwoo08.lee@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT
+        AARCH64 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/SAMSUNG EXYNOS
+        ARM ARCHITECTURES" <linux-samsung-soc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: cw00.choi@samsung.com, andi.shyti@samsung.com, Dongwoo Lee <dwoo08.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Documentation bindings for the Low Power General Purpose Register
-available on i.MX6 SoCs in the Secure Non-Volatile Storage.
+Exynos5433 has two usb 3.0 controllers: usbhost and usbdrd. usbhost
+is host-only controller whereas usbdrd supports both peripheral and
+host mode. "drd" means dual-role device, so usbhost cannot be labeled
+with the name contains "drd". Howerver, the label usbdrd_dwc3_0 was
+used for usbhost's dwc3 node. It seems it obviously fault because TM2
+and TM2E doesn't use usbhost but dr_mode property is assigned to it.
 
-Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+This patch assigns the proper label for two dwc3 nodes, and apply
+changes to the related reference.
+
+Signed-off-by: Dongwoo Lee <dwoo08.lee@samsung.com>
 ---
- .../devicetree/bindings/nvmem/snvs-lpgpr.txt         | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+ arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi | 2 +-
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi            | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-new file mode 100644
-index 000000000000..20bc49b49799
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-@@ -0,0 +1,20 @@
-+Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
-+Secure Non-Volatile Storage.
-+
-+This DT node should be represented as a sub-node of a "syscon",
-+"simple-mfd" node.
-+
-+Required properties:
-+- compatible: should be one of the fallowing variants:
-+	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
-+	"fsl,imx6ul-snvs-lpgpr" for Freescale i.MX6UL
-+
-+Example:
-+snvs: snvs@020cc000 {
-+	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
-+	reg = <0x020cc000 0x4000>;
-+
-+	snvs_lpgpr: snvs-lpgpr {
-+		compatible = "fsl,imx6q-snvs-lpgpr";
-+	};
-+};
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+index 804a270..477c3bc 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433-tm2-common.dtsi
+@@ -1202,7 +1202,7 @@
+ 	status = "okay";
+ };
+ 
+-&usbdrd_dwc3_0 {
++&usbdrd_dwc3 {
+ 	dr_mode = "otg";
+ };
+ 
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index 727f36a..7fe994b 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -1367,7 +1367,7 @@
+ 			ranges;
+ 			status = "disabled";
+ 
+-			dwc3@15400000 {
++			usbdrd_dwc3: dwc3@15400000 {
+ 				compatible = "snps,dwc3";
+ 				reg = <0x15400000 0x10000>;
+ 				interrupts = <GIC_SPI 231 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1414,7 +1414,7 @@
+ 			ranges;
+ 			status = "disabled";
+ 
+-			usbdrd_dwc3_0: dwc3@15a00000 {
++			usbhost_dwc3: dwc3@15a00000 {
+ 				compatible = "snps,dwc3";
+ 				reg = <0x15a00000 0x10000>;
+ 				interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
