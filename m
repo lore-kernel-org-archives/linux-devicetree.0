@@ -1,109 +1,103 @@
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: sunxi: add MMC support for A83T
-Date: Tue, 20 Jun 2017 18:50:32 +0800
-Message-ID: <CAAST=9zhF0-JDNTPyBeZxUP5ukdWG6HusRYhJd+B-6jX3gMm7w@mail.gmail.com>
-References: <20170618130018.10684-1-techping.chan@gmail.com>
- <20170618130018.10684-2-techping.chan@gmail.com> <20170620094906.7bwg6zvth6oqkasd@flea.lan>
-Reply-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Wei Xu <xuwei5@hisilicon.com>
+Subject: Re: [PATCH v3 19/21] dt-bindings: mmc: dw_mmc-k3: add document of
+ hi3660 mmc
+Date: Tue, 20 Jun 2017 11:49:11 +0100
+Message-ID: <5948FDA7.1040100@hisilicon.com>
+References: <20170614082338.15673-1-guodong.xu@linaro.org>
+ <20170614082338.15673-20-guodong.xu@linaro.org>
+ <CAPDyKFpvJu8_TETWr0Vy4ubDC7NYvi7TxmSLYZyw33qHFsoNaQ@mail.gmail.com>
+ <5947CAD8.4040607@hisilicon.com>
+ <CAPDyKFo=hqp=j=nWpO8uf_0pGTSKjN0T-ZKqD8cuKp1C3Q2_hA@mail.gmail.com>
+ <5948F1F9.90903@hisilicon.com>
+ <CAPDyKFozmMED7ytofXTgHhWH=Ro_38r4iCCdoO6+rq-AznrSDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/alternative; boundary="f403043eecd851ac1f05526205fe"
-Return-path: <linux-sunxi+bncBCJ6PAPY4MPBB6P3UPFAKGQEMB5KSTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170620094906.7bwg6zvth6oqkasd-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAPDyKFozmMED7ytofXTgHhWH=Ro_38r4iCCdoO6+rq-AznrSDQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wangkefeng.wang@huawei.com, Arnd Bergmann <arnd@arndb.de>, Guodong Xu <guodong.xu@linaro.org>, Linux PCI <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Griffin <peter.griffin@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Li Wei <liwei213@huawei.com>, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, zhangfei <zhangfei.gao@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---f403043eecd851ac1f05526205fe
-Content-Type: text/plain; charset="UTF-8"
+Hi Uffe,
 
-2017-06-20 17:49 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+On 2017/6/20 11:28, Ulf Hansson wrote:
+> On 20 June 2017 at 11:59, Wei Xu <xuwei5@hisilicon.com> wrote:
+>> Hi Uffe,
+>>
+>> On 2017/6/20 9:36, Ulf Hansson wrote:
+>>> Hi Wei,
+>>>
+>>> On 19 June 2017 at 15:00, Wei Xu <xuwei5@hisilicon.com> wrote:
+>>>> Hi Ulf,
+>>>>
+>>>> On 2017/6/19 13:43, Ulf Hansson wrote:
+>>>>> On 14 June 2017 at 10:23, Guodong Xu <guodong.xu@linaro.org> wrote:
+>>>>>> Add bindings for hi3660 mmc support
+>>>>>>
+>>>>>> Signed-off-by: Li Wei <liwei213@huawei.com>
+>>>>>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
+>>>>>> ---
+>>>>>>  Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt | 1 +
+>>>>>>  1 file changed, 1 insertion(+)
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>>>> index df37058..8af1afc 100644
+>>>>>> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>>>> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>>>> @@ -12,6 +12,7 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
+>>>>>>  Required Properties:
+>>>>>>
+>>>>>>  * compatible: should be one of the following.
+>>>>>> +  - "hisilicon,hi3660-dw-mshc": for controllers with hi3660 specific extensions.
+>>>>>>    - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extensions.
+>>>>>>    - "hisilicon,hi6220-dw-mshc": for controllers with hi6220 specific extensions.
+>>>>>>
+>>>>>> --
+>>>>>> 2.10.2
+>>>>>>
+>>>>>
+>>>>> Thanks, applied for next!
+>>>>
+>>>> Thanks!
+>>>> Last week I had applied the v4 patch set[1]
+>>>> and this patch is included.
+>>>> But it should be fine for the upper gatekeeper to merge
+>>>> since these 2 patch are same.
+>>>
+>>> No, that's not how git works.
+>>>
+>>> If the patch has the same hash, that would be fine, but that isn't the
+>>> case here as we have two different hashes for the same change.
+>>
+>> Got it. Thanks for your explaining!
+>>
+>>>
+>>> To deal with this, I have just dropped the change from my tree and
+>>> leave it to you to carry the patch. Feel free to add my ack for it.
+>>
+>> Thanks!
+>> But the pull request I sent last week has been merged.
+> 
+> No worries, it's fine even without my ack this time.
 
-> Hi,
->
-> On Sun, Jun 18, 2017 at 09:00:17PM +0800, Ziping Chen wrote:
-> > From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> > The Allwinner A83T's MMC can work with
-> > compatible "allwinner,sun7i-a20-mmc".
-> >
-> > Add support for it.
->
-> This has been proven not to be the case already.
->
-> Please use an A83T compatible only.
->
+Thanks for your kindness!
 
-OK!
+Best Regards,
+Wei
 
-Thanks,
-Ziping
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
->
-
--- 
-You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
-
---f403043eecd851ac1f05526205fe
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
-te">2017-06-20 17:49 GMT+08:00 Maxime Ripard <span dir=3D"ltr">&lt;<a href=
-=3D"mailto:maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" target=3D"_blank">maxime.ripar=
-d@free-electrons.com</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" s=
-tyle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi,<=
-br>
-<span class=3D""><br>
-On Sun, Jun 18, 2017 at 09:00:17PM +0800, Ziping Chen wrote:<br>
-&gt; From: Ziping Chen &lt;<a href=3D"mailto:techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">techp=
-ing.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt;<br>
-&gt;<br>
-&gt; The Allwinner A83T&#39;s MMC can work with<br>
-&gt; compatible &quot;allwinner,sun7i-a20-mmc&quot;.<br>
-&gt;<br>
-&gt; Add support for it.<br>
-<br>
-</span>This has been proven not to be the case already.<br>
-<br>
-Please use an A83T compatible only.<br></blockquote><div><br></div><div>OK!=
-</div><div><br></div><div>Thanks,</div><div>Ziping=C2=A0</div><blockquote c=
-lass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;=
-padding-left:1ex">
-<span class=3D"HOEnZb"><font color=3D"#888888"><br>
-Maxime<br>
-<br>
---<br>
-Maxime Ripard, Free Electrons<br>
-Embedded Linux and Kernel engineering<br>
-<a href=3D"http://free-electrons.com" rel=3D"noreferrer" target=3D"_blank">=
-http://free-electrons.com</a><br>
-</font></span></blockquote></div><br></div></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
---f403043eecd851ac1f05526205fe--
+> 
+> Kind regards
+> Uffe
+> 
+> .
+> 
