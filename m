@@ -1,274 +1,184 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 13/17] MIPS: ingenic: Initial JZ4770 support
-Date: Tue, 20 Jun 2017 17:18:51 +0200
-Message-ID: <20170620151855.19399-13-paul@crapouillou.net>
+Subject: [PATCH v2 04/17] clk: ingenic: Add code to enable/disable PLLs
+Date: Tue, 20 Jun 2017 17:18:42 +0200
+Message-ID: <20170620151855.19399-4-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170620151855.19399-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <20170620151855.19399-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Provide just enough bits (clocks, clocksource, uart) to allow a kernel
-to boot on the JZ4770 SoC to a initramfs userspace.
+This commit permits the PLLs to be dynamically enabled and disabled when
+their children clocks are enabled and disabled.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/boot/dts/ingenic/jz4770.dtsi | 210 +++++++++++++++++++++++++++++++++
- arch/mips/jz4740/Kconfig               |   6 +
- arch/mips/jz4740/time.c                |   2 +-
- 3 files changed, 217 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips/boot/dts/ingenic/jz4770.dtsi
+ drivers/clk/ingenic/cgu.c | 89 +++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 74 insertions(+), 15 deletions(-)
 
  v2: No change
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4770.dtsi b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-new file mode 100644
-index 000000000000..d8d0a741ff5d
---- /dev/null
-+++ b/arch/mips/boot/dts/ingenic/jz4770.dtsi
-@@ -0,0 +1,210 @@
-+#include <dt-bindings/clock/jz4770-cgu.h>
-+
-+/ {
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	compatible = "ingenic,jz4770";
-+
-+	cpuintc: interrupt-controller {
-+		#address-cells = <0>;
-+		#interrupt-cells = <1>;
-+		interrupt-controller;
-+		compatible = "mti,cpu-interrupt-controller";
-+	};
-+
-+	intc: interrupt-controller@10001000 {
-+		compatible = "ingenic,jz4770-intc";
-+		reg = <0x10001000 0x40>;
-+
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+
-+		interrupt-parent = <&cpuintc>;
-+		interrupts = <2>;
-+	};
-+
-+	ext: ext {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+	};
-+
-+	osc32k: osc32k {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+	};
-+
-+	cgu: jz4770-cgu@10000000 {
-+		compatible = "ingenic,jz4770-cgu";
-+		reg = <0x10000000 0x100>;
-+
-+		clocks = <&ext>, <&osc32k>;
-+		clock-names = "ext", "osc32k";
-+
-+		#clock-cells = <1>;
-+	};
-+
-+	pinctrl: pin-controller@10010000 {
-+		compatible = "ingenic,jz4770-pinctrl";
-+		reg = <0x10010000 0x600>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		gpa: gpio@0 {
-+			compatible = "ingenic,jz4770-gpio";
-+			reg = <0>;
-+
-+			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 0 32>;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <17>;
-+		};
-+
-+		gpb: gpio@1 {
-+			compatible = "ingenic,jz4770-gpio";
-+			reg = <1>;
-+
-+			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 32 32>;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <16>;
-+		};
-+
-+		gpc: gpio@2 {
-+			compatible = "ingenic,jz4770-gpio";
-+			reg = <2>;
-+
-+			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 64 32>;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <15>;
-+		};
-+
-+		gpd: gpio@3 {
-+			compatible = "ingenic,jz4770-gpio";
-+			reg = <3>;
-+
-+			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 96 32>;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <14>;
-+		};
-+
-+		gpe: gpio@4 {
-+			compatible = "ingenic,jz4770-gpio";
-+			reg = <4>;
-+
-+			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 128 32>;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <13>;
-+		};
-+
-+		gpf: gpio@5 {
-+			compatible = "ingenic,jz4770-gpio";
-+			reg = <5>;
-+
-+			gpio-controller;
-+			gpio-ranges = <&pinctrl 0 160 32>;
-+			#gpio-cells = <2>;
-+
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
-+
-+			interrupt-parent = <&intc>;
-+			interrupts = <12>;
-+		};
-+	};
-+
-+	uart0: serial@10030000 {
-+		compatible = "ingenic,jz4770-uart";
-+		reg = <0x10030000 0x100>;
-+
-+		clocks = <&ext>, <&cgu JZ4770_CLK_UART0>;
-+		clock-names = "baud", "module";
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <5>;
-+
-+		status = "disabled";
-+	};
-+
-+	uart1: serial@10031000 {
-+		compatible = "ingenic,jz4770-uart";
-+		reg = <0x10031000 0x100>;
-+
-+		clocks = <&ext>, <&cgu JZ4770_CLK_UART1>;
-+		clock-names = "baud", "module";
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <4>;
-+
-+		status = "disabled";
-+	};
-+
-+	uart2: serial@10032000 {
-+		compatible = "ingenic,jz4770-uart";
-+		reg = <0x10032000 0x100>;
-+
-+		clocks = <&ext>, <&cgu JZ4770_CLK_UART2>;
-+		clock-names = "baud", "module";
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <3>;
-+
-+		status = "disabled";
-+	};
-+
-+	uart3: serial@10033000 {
-+		compatible = "ingenic,jz4770-uart";
-+		reg = <0x10033000 0x100>;
-+
-+		clocks = <&ext>, <&cgu JZ4770_CLK_UART3>;
-+		clock-names = "baud", "module";
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <2>;
-+
-+		status = "disabled";
-+	};
-+
-+	uhc: uhc@13430000 {
-+		compatible = "generic-ohci";
-+		reg = <0x13430000 0x1000>;
-+
-+		clocks = <&cgu JZ4770_CLK_UHC>, <&cgu JZ4770_CLK_UHC_PHY>;
-+		assigned-clocks = <&cgu JZ4770_CLK_UHC>;
-+		assigned-clock-rates = <48000000>;
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <20>;
-+
-+		status = "disabled";
-+	};
-+};
-diff --git a/arch/mips/jz4740/Kconfig b/arch/mips/jz4740/Kconfig
-index 36f82017695d..922850503271 100644
---- a/arch/mips/jz4740/Kconfig
-+++ b/arch/mips/jz4740/Kconfig
-@@ -17,6 +17,12 @@ config MACH_JZ4740
- 	bool
- 	select SYS_HAS_CPU_MIPS32_R1
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index 75b083ba294c..08613b803b14 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -107,9 +107,6 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	if (bypass)
+ 		return parent_rate;
  
-+config MACH_JZ4770
-+	bool
-+	select MIPS_CPU_SCACHE
-+	select SYS_HAS_CPU_MIPS32_R2
-+	select SYS_SUPPORTS_HIGHMEM
+-	if (!enable)
+-		return 0;
+-
+ 	for (od = 0; od < pll_info->od_max; od++) {
+ 		if (pll_info->od_encoding[od] == od_enc)
+ 			break;
+@@ -153,17 +150,25 @@ ingenic_pll_calc(const struct ingenic_cgu_clk_info *clk_info,
+ 	return div_u64((u64)parent_rate * m, n * od);
+ }
+ 
+-static long
+-ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
+-		       unsigned long *prate)
++static inline const struct ingenic_cgu_clk_info *to_clk_info(
++		struct ingenic_clk *ingenic_clk)
+ {
+-	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+ 	const struct ingenic_cgu_clk_info *clk_info;
+ 
+ 	clk_info = &cgu->clock_info[ingenic_clk->idx];
+ 	BUG_ON(clk_info->type != CGU_CLK_PLL);
+ 
++	return clk_info;
++}
 +
- config MACH_JZ4780
- 	bool
- 	select MIPS_CPU_SCACHE
-diff --git a/arch/mips/jz4740/time.c b/arch/mips/jz4740/time.c
-index bb1ad5119da4..2ca9160f642a 100644
---- a/arch/mips/jz4740/time.c
-+++ b/arch/mips/jz4740/time.c
-@@ -113,7 +113,7 @@ static struct clock_event_device jz4740_clockevent = {
- #ifdef CONFIG_MACH_JZ4740
- 	.irq = JZ4740_IRQ_TCU0,
- #endif
--#ifdef CONFIG_MACH_JZ4780
-+#if defined(CONFIG_MACH_JZ4770) || defined(CONFIG_MACH_JZ4780)
- 	.irq = JZ4780_IRQ_TCU2,
- #endif
++static long
++ingenic_pll_round_rate(struct clk_hw *hw, unsigned long req_rate,
++		       unsigned long *prate)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++
+ 	return ingenic_pll_calc(clk_info, req_rate, *prate, NULL, NULL, NULL);
+ }
+ 
+@@ -171,19 +176,14 @@ static int
+ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 		     unsigned long parent_rate)
+ {
+-	const unsigned timeout = 100;
+ 	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
+ 	struct ingenic_cgu *cgu = ingenic_clk->cgu;
+-	const struct ingenic_cgu_clk_info *clk_info;
+-	const struct ingenic_cgu_pll_info *pll_info;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
+ 	unsigned long rate, flags;
+-	unsigned m, n, od, i;
++	unsigned int m, n, od;
+ 	u32 ctl;
+ 
+-	clk_info = &cgu->clock_info[ingenic_clk->idx];
+-	BUG_ON(clk_info->type != CGU_CLK_PLL);
+-	pll_info = &clk_info->pll;
+-
+ 	rate = ingenic_pll_calc(clk_info, req_rate, parent_rate,
+ 			       &m, &n, &od);
+ 	if (rate != req_rate)
+@@ -202,6 +202,26 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	ctl &= ~(GENMASK(pll_info->od_bits - 1, 0) << pll_info->od_shift);
+ 	ctl |= pll_info->od_encoding[od - 1] << pll_info->od_shift;
+ 
++	writel(ctl, cgu->base + pll_info->reg);
++	spin_unlock_irqrestore(&cgu->lock, flags);
++
++	return 0;
++}
++
++static int ingenic_pll_enable(struct clk_hw *hw)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	struct ingenic_cgu *cgu = ingenic_clk->cgu;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
++	const unsigned int timeout = 100;
++	unsigned long flags;
++	unsigned int i;
++	u32 ctl;
++
++	spin_lock_irqsave(&cgu->lock, flags);
++	ctl = readl(cgu->base + pll_info->reg);
++
+ 	ctl &= ~BIT(pll_info->bypass_bit);
+ 	ctl |= BIT(pll_info->enable_bit);
+ 
+@@ -223,10 +243,48 @@ ingenic_pll_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	return 0;
+ }
+ 
++static void ingenic_pll_disable(struct clk_hw *hw)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	struct ingenic_cgu *cgu = ingenic_clk->cgu;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
++	unsigned long flags;
++	u32 ctl;
++
++	spin_lock_irqsave(&cgu->lock, flags);
++	ctl = readl(cgu->base + pll_info->reg);
++
++	ctl &= ~BIT(pll_info->enable_bit);
++
++	writel(ctl, cgu->base + pll_info->reg);
++	spin_unlock_irqrestore(&cgu->lock, flags);
++}
++
++static int ingenic_pll_is_enabled(struct clk_hw *hw)
++{
++	struct ingenic_clk *ingenic_clk = to_ingenic_clk(hw);
++	struct ingenic_cgu *cgu = ingenic_clk->cgu;
++	const struct ingenic_cgu_clk_info *clk_info = to_clk_info(ingenic_clk);
++	const struct ingenic_cgu_pll_info *pll_info = &clk_info->pll;
++	unsigned long flags;
++	u32 ctl;
++
++	spin_lock_irqsave(&cgu->lock, flags);
++	ctl = readl(cgu->base + pll_info->reg);
++	spin_unlock_irqrestore(&cgu->lock, flags);
++
++	return !!(ctl & BIT(pll_info->enable_bit));
++}
++
+ static const struct clk_ops ingenic_pll_ops = {
+ 	.recalc_rate = ingenic_pll_recalc_rate,
+ 	.round_rate = ingenic_pll_round_rate,
+ 	.set_rate = ingenic_pll_set_rate,
++
++	.enable = ingenic_pll_enable,
++	.disable = ingenic_pll_disable,
++	.is_enabled = ingenic_pll_is_enabled,
  };
+ 
+ /*
+@@ -601,6 +659,7 @@ static int ingenic_register_clock(struct ingenic_cgu *cgu, unsigned idx)
+ 		}
+ 	} else if (caps & CGU_CLK_PLL) {
+ 		clk_init.ops = &ingenic_pll_ops;
++		clk_init.flags |= CLK_SET_RATE_GATE;
+ 
+ 		caps &= ~CGU_CLK_PLL;
+ 
 -- 
 2.11.0
