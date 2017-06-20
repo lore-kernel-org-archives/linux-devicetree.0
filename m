@@ -1,7 +1,7 @@
 From: Ziping Chen <techping.chan@gmail.com>
-Subject: [PATCH v2 1/3] input: sun4i-a10-lradc-keys: Add support for A83T
-Date: Tue, 20 Jun 2017 21:44:43 +0800
-Message-ID: <20170620134445.23097-2-techping.chan@gmail.com>
+Subject: [PATCH v2 2/3] dt-bindings: input: Add DT bindings documentation for Allwinner A83T R_LRADC
+Date: Tue, 20 Jun 2017 21:44:44 +0800
+Message-ID: <20170620134445.23097-3-techping.chan@gmail.com>
 References: <20170620134445.23097-1-techping.chan@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170620134445.23097-1-techping.chan@gmail.com>
@@ -13,107 +13,35 @@ List-Id: devicetree@vger.kernel.org
 From: Ziping Chen <techping.chan@gmail.com>
 
 Allwinner A83T SoC has a low res adc like the one
-in Allwinner A10 SoC, however, the A10 SoC's vref
-of lradc internally is divided by 2/3 and the A83T
-SoC's isn't, thus add a hardware variant for it to
-be compatible with various devices.
+in Allwinner A10 SoC.
+
+Add binding for it.
 
 Signed-off-by: Ziping Chen <techping.chan@gmail.com>
 ---
- drivers/input/keyboard/sun4i-lradc-keys.c | 39 +++++++++++++++++++++++++++----
- 1 file changed, 35 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/keyboard/sun4i-lradc-keys.c b/drivers/input/keyboard/sun4i-lradc-keys.c
-index a37c172452e6..3cd981138efc 100644
---- a/drivers/input/keyboard/sun4i-lradc-keys.c
-+++ b/drivers/input/keyboard/sun4i-lradc-keys.c
-@@ -46,6 +46,7 @@
- #define CONTINUE_TIME_SEL(x)	((x) << 16) /* 4 bits */
- #define KEY_MODE_SEL(x)		((x) << 12) /* 2 bits */
- #define LEVELA_B_CNT(x)		((x) << 8)  /* 4 bits */
-+#define HOLD_KEY_EN(x)		((x) << 7)
- #define HOLD_EN(x)		((x) << 6)
- #define LEVELB_VOL(x)		((x) << 4)  /* 2 bits */
- #define SAMPLE_RATE(x)		((x) << 2)  /* 2 bits */
-@@ -63,6 +64,25 @@
- #define	CHAN0_KEYDOWN_IRQ	BIT(1)
- #define CHAN0_DATA_IRQ		BIT(0)
+diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+index 4357e498ef04..525d85e3043f 100644
+--- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
++++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+@@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
+ ------------------------------------------------
  
-+/* struct lradc_variant - Describe sun4i-a10-lradc-keys hardware variant
-+ * @divisor_numerator:		The numerator of lradc Vref internally divisor
-+ * @divisor_denominator:	The denominator of lradc Vref internally divisor
-+ */
-+struct lradc_variant {
-+	u8 divisor_numerator;
-+	u8 divisor_denominator;
-+};
-+
-+static const struct lradc_variant lradc_variant_a10 = {
-+	.divisor_numerator = 2,
-+	.divisor_denominator = 3
-+};
-+
-+static const struct lradc_variant r_lradc_variant_a83t = {
-+	.divisor_numerator = 1,
-+	.divisor_denominator = 1
-+};
-+
- struct sun4i_lradc_keymap {
- 	u32 voltage;
- 	u32 keycode;
-@@ -74,6 +94,7 @@ struct sun4i_lradc_data {
- 	void __iomem *base;
- 	struct regulator *vref_supply;
- 	struct sun4i_lradc_keymap *chan0_map;
-+	const struct lradc_variant *variant;
- 	u32 chan0_map_count;
- 	u32 chan0_keycode;
- 	u32 vref;
-@@ -99,6 +120,7 @@ static irqreturn_t sun4i_lradc_irq(int irq, void *dev_id)
- 	if ((ints & CHAN0_KEYDOWN_IRQ) && lradc->chan0_keycode == 0) {
- 		val = readl(lradc->base + LRADC_DATA0) & 0x3f;
- 		voltage = val * lradc->vref / 63;
-+		printk("voltage %d\n", voltage);
+ Required properties:
+- - compatible: "allwinner,sun4i-a10-lradc-keys"
++ - compatible: should be one of the following string:
++		"allwinner,sun4i-a10-lradc-keys"
++		"allwinner,sun8i-a83t-r-lradc-keys"
+  - reg: mmio address range of the chip
+  - interrupts: interrupt to which the chip is connected
+  - vref-supply: powersupply for the lradc reference voltage
  
- 		for (i = 0; i < lradc->chan0_map_count; i++) {
- 			diff = abs(lradc->chan0_map[i].voltage - voltage);
-@@ -128,9 +150,9 @@ static int sun4i_lradc_open(struct input_dev *dev)
- 	if (error)
- 		return error;
+-Each key is represented as a sub-node of "allwinner,sun4i-a10-lradc-keys":
++Each key is represented as a sub-node of the compatible mentioned above:
  
--	/* lradc Vref internally is divided by 2/3 */
--	lradc->vref = regulator_get_voltage(lradc->vref_supply) * 2 / 3;
--
-+	lradc->vref = regulator_get_voltage(lradc->vref_supply) *
-+		      lradc->variant->divisor_numerator /
-+		      lradc->variant->divisor_denominator;
- 	/*
- 	 * Set sample time to 4 ms / 250 Hz. Wait 2 * 4 ms for key to
- 	 * stabilize on press, wait (1 + 1) * 4 ms for key release
-@@ -222,6 +244,12 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
- 	if (error)
- 		return error;
- 
-+	lradc->variant = of_device_get_match_data(&pdev->dev);
-+	if (!lradc->variant) {
-+		dev_err(&pdev->dev, "Missing sun4i-a10-lradc-keys variant\n");
-+		return -EINVAL;
-+	}
-+
- 	lradc->vref_supply = devm_regulator_get(dev, "vref");
- 	if (IS_ERR(lradc->vref_supply))
- 		return PTR_ERR(lradc->vref_supply);
-@@ -265,7 +293,10 @@ static int sun4i_lradc_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id sun4i_lradc_of_match[] = {
--	{ .compatible = "allwinner,sun4i-a10-lradc-keys", },
-+	{ .compatible = "allwinner,sun4i-a10-lradc-keys",
-+		.data = &lradc_variant_a10 },
-+	{ .compatible = "allwinner,sun8i-a83t-r-lradc-keys",
-+		.data = &r_lradc_variant_a83t },
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, sun4i_lradc_of_match);
+ Required subnode-properties:
+ 	- label: Descriptive name of the key.
 -- 
 2.11.0
