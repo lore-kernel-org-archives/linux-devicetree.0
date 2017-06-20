@@ -1,77 +1,61 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 08/17] serial: 8250_ingenic: Parse earlycon options
-Date: Tue, 20 Jun 2017 17:18:46 +0200
-Message-ID: <20170620151855.19399-8-paul@crapouillou.net>
+Subject: [PATCH v2 03/17] clk: ingenic: support PLLs with no bypass bit
+Date: Tue, 20 Jun 2017 17:18:41 +0200
+Message-ID: <20170620151855.19399-3-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170620151855.19399-1-paul@crapouillou.net>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170620151855.19399-1-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
 Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-In the devicetree, it is possible to specify the baudrate, parity,
-bits, flow of the early console, by passing a configuration string like
-this:
-
-aliases {
-	serial0 = &uart0;
-};
-
-chosen {
-	stdout-path = "serial0:57600n8";
-};
-
-This, for instance, will configure the early console for a baudrate of
-57600 bps, no parity, and 8 bits per baud.
-
-This patches implements parsing of this configuration string in the
-8250_ingenic driver, which previously just ignored it.
+The second PLL of the JZ4770 does not have a bypass bit.
+This commit makes it possible to support it with the current common CGU
+code.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- drivers/tty/serial/8250/8250_ingenic.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/clk/ingenic/cgu.c | 3 ++-
+ drivers/clk/ingenic/cgu.h | 2 ++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
- v2: Don't create temp. buffer, now that uart_parse_options takes a const char*
+ v2: No change
 
-diff --git a/drivers/tty/serial/8250/8250_ingenic.c b/drivers/tty/serial/8250/8250_ingenic.c
-index b31b2ca552d1..be4a07a24342 100644
---- a/drivers/tty/serial/8250/8250_ingenic.c
-+++ b/drivers/tty/serial/8250/8250_ingenic.c
-@@ -99,14 +99,22 @@ static int __init ingenic_early_console_setup(struct earlycon_device *dev,
- 					      const char *opt)
- {
- 	struct uart_port *port = &dev->port;
--	unsigned int baud, divisor;
-+	unsigned int divisor;
-+	int baud = 115200;
+diff --git a/drivers/clk/ingenic/cgu.c b/drivers/clk/ingenic/cgu.c
+index eb9002ccf3fc..75b083ba294c 100644
+--- a/drivers/clk/ingenic/cgu.c
++++ b/drivers/clk/ingenic/cgu.c
+@@ -100,7 +100,8 @@ ingenic_pll_recalc_rate(struct clk_hw *hw, unsigned long parent_rate)
+ 	n += pll_info->n_offset;
+ 	od_enc = ctl >> pll_info->od_shift;
+ 	od_enc &= GENMASK(pll_info->od_bits - 1, 0);
+-	bypass = !!(ctl & BIT(pll_info->bypass_bit));
++	bypass = !pll_info->no_bypass_bit &&
++		 !!(ctl & BIT(pll_info->bypass_bit));
+ 	enable = !!(ctl & BIT(pll_info->enable_bit));
  
- 	if (!dev->port.membase)
- 		return -ENODEV;
+ 	if (bypass)
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index da448b0cac18..21420b455985 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -48,6 +48,7 @@
+  * @bypass_bit: the index of the bypass bit in the PLL control register
+  * @enable_bit: the index of the enable bit in the PLL control register
+  * @stable_bit: the index of the stable bit in the PLL control register
++ * @no_bypass_bit: if set, the PLL has no bypass functionality
+  */
+ struct ingenic_cgu_pll_info {
+ 	unsigned reg;
+@@ -58,6 +59,7 @@ struct ingenic_cgu_pll_info {
+ 	u8 bypass_bit;
+ 	u8 enable_bit;
+ 	u8 stable_bit;
++	bool no_bypass_bit;
+ };
  
-+	if (opt) {
-+		unsigned int parity, bits, flow; /* unused for now */
-+
-+		uart_parse_options(opt, &baud, &parity, &bits, &flow);
-+	}
-+
- 	ingenic_early_console_setup_clock(dev);
- 
--	baud = dev->baud ?: 115200;
-+	if (dev->baud)
-+		baud = dev->baud;
- 	divisor = DIV_ROUND_CLOSEST(port->uartclk, 16 * baud);
- 
- 	early_out(port, UART_IER, 0);
+ /**
 -- 
 2.11.0
