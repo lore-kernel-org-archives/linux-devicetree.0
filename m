@@ -1,96 +1,65 @@
-From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v1 1/1] ARM: dts: imx6: RIoTboard provide gpio-line-names
-Date: Tue, 20 Jun 2017 16:28:30 +0200
-Message-ID: <20170620142830.5119-1-o.rempel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v5 2/6] ARM: imx6: register pm_power_off handler if
+ "fsl,pmic-stby-poweroff" is set
+Date: Tue, 20 Jun 2017 17:32:16 +0300
+Message-ID: <1497969136.3177.10.camel@nxp.com>
+References: <20170619050245.2632-1-o.rempel@pengutronix.de>
+         <20170619050245.2632-3-o.rempel@pengutronix.de>
+         <1497872133.5380.11.camel@nxp.com>
+         <7f2db0a8-a316-5ecb-24bf-46bcb625e123@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <7f2db0a8-a316-5ecb-24bf-46bcb625e123@pengutronix.de>
+Sender: linux-clk-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-for each gpio controller
+On Tue, 2017-06-20 at 06:55 +0200, Oleksij Rempel wrote:
+> On 19.06.2017 13:35, Leonard Crestez wrote:
+> > On Mon, 2017-06-19 at 07:02 +0200, Oleksij Rempel wrote:
+> > > 
+> > > One of the Freescale recommended sequences for power off with
+> > > external
+> > > PMIC is the following:
+> > > ...
+> > > 3.  SoC is programming PMIC for power off when standby is asserted.
+> > > 4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
+> > > 
+> > > This patch implements step 4. of this sequence.
+> > > 
+> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> > > ---
+> > >  arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
+> > >  1 file changed, 25 insertions(+)
+> > > 
+> > > diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-
+> > > imx6.c
+> > > index e61b1d1027e1..cb76832935f0 100644
+> > > --- a/arch/arm/mach-imx/pm-imx6.c
+> > > +++ b/arch/arm/mach-imx/pm-imx6.c
+> > > @@ -602,6 +602,28 @@ static void __init imx6_pm_common_init(const
+> > > struct imx6_pm_socdata
+> > >  				   IMX6Q_GPR1_GINT);
+> > >  }
+> > > 
+> > > +static void imx6_pm_poweroff(void)
+> > > +{
+> > > +	imx6_set_lpm(STOP_POWER_OFF);
+> > > +	cpu_suspend(0, imx6q_suspend_finish);
+> > It's a bit strange that you're using parts of the suspend code for
+> > this. Perhaps you could just write your bits to CLPCR and then execute
+> > a WFI?
+> Well, every thing in this patch set, yell about using standby/suspend 
+> path in HW for power off. Even iMX code use STOP_POWER_OFF for 
+> configuring this regs. How can it be more strange? :) Should i really 
+> duplicate code to hide this?
+> 
+This code is used to set the power state the soc enters on WFI. These
+function try to ensure that it is possible to come back up when woken
+by an interrupt later. That part you don't want, right?
 
-Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl-riotboard.dts | 61 ++++++++++++++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx6dl-riotboard.dts b/arch/arm/boot/dts/imx6dl-riotboard.dts
-index 2cb72824e800..b9ecb3b3792a 100644
---- a/arch/arm/boot/dts/imx6dl-riotboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-riotboard.dts
-@@ -84,6 +84,67 @@
- 	};
- };
- 
-+&gpio1 {
-+	gpio-line-names =
-+		"", "", "[SD2_WP]", "", "[SD2_CD]", "I2C3_SCL",
-+			"I2C3_SDA", "I2C4_SCL",
-+		"I2C4_SDA", "", "", "", "", "", "", "",
-+		"", "PWM3", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
-+&gpio2 {
-+	gpio-line-names =
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
-+&gpio3 {
-+	gpio-line-names =
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "[USB_OTG_VBUS]", "",
-+		"UART3_TXD", "UART3_RXD", "", "", "[EIM_D28]", "", "", "";
-+};
-+
-+&gpio4 {
-+	gpio-line-names =
-+		"", "", "", "", "", "", "UART4_TXD", "UART4_RXD",
-+		"UART5_TXD", "UART5_RXD", "", "", "", "", "", "",
-+		"GPIO4_16", "GPIO4_17", "GPIO4_18", "GPIO4_19", "",
-+			"CSPI3_CLK", "CSPI3_MOSI", "CSPI3_MISO",
-+		"CSPI3_CS0", "CSPI3_CS1", "GPIO4_26", "GPIO4_27",
-+			"CSPI3_RDY", "PWM1", "PWM2", "GPIO4_31";
-+};
-+
-+&gpio5 {
-+	gpio-line-names =
-+		"", "", "[EIM_A25]", "", "", "GPIO5_05", "GPIO5_06",
-+			"GPIO5_07",
-+		"GPIO5_08", "CSPI2_CS1", "CSPI2_MOSI", "CSPI2_MISO",
-+			"CSPI2_CS0", "CSPI2_CLK", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
-+&gpio6 {
-+	gpio-line-names =
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
-+&gpio7 {
-+	gpio-line-names =
-+		"[SD3_CD]", "[SD3_WP]", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "",
-+		"", "", "", "", "", "", "", "";
-+};
-+
- &audmux {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_audmux>;
--- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+However I can't think of any obvious way this could misbehave so I
+guess it's fine.
