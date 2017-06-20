@@ -1,96 +1,38 @@
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 2/5] i2c: pca-platform: add devicetree awareness
-Date: Tue, 20 Jun 2017 13:18:34 +1200
-Message-ID: <20170620011837.14010-3-chris.packham@alliedtelesis.co.nz>
-References: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
-Sender: linux-i2c-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v7 1/1] clk: bcm: Add clocks for Stingray SOC
+Date: Mon, 19 Jun 2017 18:20:27 -0700
+Message-ID: <20170620012027.GE4493@codeaurora.org>
+References: <1496723038-4693-1-git-send-email-anup.patel@broadcom.com>
+ <1496723038-4693-2-git-send-email-anup.patel@broadcom.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1496723038-4693-2-git-send-email-anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Scott Branden <sbranden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Jon Mason <jonmason-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Oza Pawandeep <oza.oza-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Srinath Mannam <srinath.mannam-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Pramod Kumar <pramod.kumar-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Allow devices that use this driver to be registered via a
-devicetree.
+On 06/06, Anup Patel wrote:
+> From: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> 
+> This patch adds support for Stingray clocks in iproc
+> ccf. The Stingray SOC has various plls based on iproc
+> pll architecture.
+> 
+> Signed-off-by: Sandeep Tripathy <sandeep.tripathy-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Anup Patel <anup.patel-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Ray Jui <ray.jui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> ---
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-Changes in v2:
-- Set i2c->adap.dev.of_node so that child nodes are automatically probed
-- Split dt-binding to separate patch, use "reset-gpios" instead of "gpios".
+Applied to clk-next
 
- drivers/i2c/busses/i2c-pca-platform.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/drivers/i2c/busses/i2c-pca-platform.c b/drivers/i2c/busses/i2c-pca-platform.c
-index 3bd2e7d06e4b..87ca2f02f607 100644
---- a/drivers/i2c/busses/i2c-pca-platform.c
-+++ b/drivers/i2c/busses/i2c-pca-platform.c
-@@ -23,6 +23,9 @@
- #include <linux/i2c-pca-platform.h>
- #include <linux/gpio.h>
- #include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <asm/irq.h>
- 
-@@ -136,12 +139,15 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
- 	struct resource *res;
- 	struct i2c_pca9564_pf_platform_data *platform_data =
- 				dev_get_platdata(&pdev->dev);
-+	struct device_node *np = pdev->dev.of_node;
- 	int ret = 0;
- 	int irq;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	irq = platform_get_irq(pdev, 0);
- 	/* If irq is 0, we do polling. */
-+	if (irq < 0)
-+		irq = 0;
- 
- 	if (res == NULL) {
- 		ret = -ENODEV;
-@@ -177,11 +183,17 @@ static int i2c_pca_pf_probe(struct platform_device *pdev)
- 		 (unsigned long) res->start);
- 	i2c->adap.algo_data = &i2c->algo_data;
- 	i2c->adap.dev.parent = &pdev->dev;
-+	i2c->adap.dev.of_node = np;
- 
- 	if (platform_data) {
- 		i2c->adap.timeout = platform_data->timeout;
- 		i2c->algo_data.i2c_clock = platform_data->i2c_clock_speed;
- 		i2c->gpio = platform_data->gpio;
-+	} else if (np) {
-+		i2c->adap.timeout = HZ;
-+		i2c->gpio = of_get_named_gpio(np, "reset-gpios", 0);
-+		of_property_read_u32_index(np, "clock-frequency", 0,
-+					   &i2c->algo_data.i2c_clock);
- 	} else {
- 		i2c->adap.timeout = HZ;
- 		i2c->algo_data.i2c_clock = 59000;
-@@ -275,11 +287,21 @@ static int i2c_pca_pf_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id i2c_pca_of_match_table[] = {
-+	{ .compatible = "nxp,pca9564" },
-+	{ .compatible = "nxp,pca9665" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, i2c_pca_of_match_table);
-+#endif
-+
- static struct platform_driver i2c_pca_pf_driver = {
- 	.probe = i2c_pca_pf_probe,
- 	.remove = i2c_pca_pf_remove,
- 	.driver = {
- 		.name = "i2c-pca-platform",
-+		.of_match_table = of_match_ptr(i2c_pca_of_match_table),
- 	},
- };
- 
 -- 
-2.13.0
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
