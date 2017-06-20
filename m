@@ -1,60 +1,72 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] Documentation: remove overlay-notes reference to non-existent file
-Date: Tue, 20 Jun 2017 15:40:53 -0700
-Message-ID: <1497998453-1585-1-git-send-email-frowand.list@gmail.com>
+From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V6 1/5] mtd: partitions: add helper for deleting partition
+Date: Tue, 20 Jun 2017 15:50:07 -0700
+Message-ID: <20170620225007.GB14148@google.com>
+References: <20170526131415.27186-1-zajec5@gmail.com>
+ <20170526131415.27186-2-zajec5@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170526131415.27186-2-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: afaerber-l3A5Bk7waGM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On Fri, May 26, 2017 at 03:14:11PM +0200, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+> 
+> There are two similar functions handling deletion. One handles single
+> partition and another whole MTD flash device. They share (duplicate)
+> some code so it makes sense to add a small helper for that part.
+> 
+> Function del_mtd_partitions has been moved a bit to keep all deleting
+> stuff together.
+> 
+> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-File dt-object-internal.txt does not exist.  Remove a reference to it
-and fix up tags for references to other files.
+> +/**
+> + * __mtd_del_partition - delete MTD partition
+> + *
+> + * @priv: internal MTD struct for partition to be deleted
+> + *
+> + * This function must be called with the partitions mutex locked.
+> + */
+> +static int __mtd_del_partition(struct mtd_part *priv)
+> +{
+> +	int err;
+> +
+> +	sysfs_remove_files(&priv->mtd.dev.kobj, mtd_partition_attrs);
 
-Reported-by: afaerber-l3A5Bk7waGM@public.gmane.org
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
----
- Documentation/devicetree/overlay-notes.txt | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+Notably, the above wasn't called in del_mtd_partitions() previously. Is
+that intentional?
 
-diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
-index d418a6ce9812..eb7f2685fda1 100644
---- a/Documentation/devicetree/overlay-notes.txt
-+++ b/Documentation/devicetree/overlay-notes.txt
-@@ -3,8 +3,7 @@ Device Tree Overlay Notes
- 
- This document describes the implementation of the in-kernel
- device tree overlay functionality residing in drivers/of/overlay.c and is a
--companion document to Documentation/devicetree/dt-object-internal.txt[1] &
--Documentation/devicetree/dynamic-resolution-notes.txt[2]
-+companion document to Documentation/devicetree/dynamic-resolution-notes.txt[1]
- 
- How overlays work
- -----------------
-@@ -16,8 +15,7 @@ Since the kernel mainly deals with devices, any new device node that result
- in an active device should have it created while if the device node is either
- disabled or removed all together, the affected device should be deregistered.
- 
--Lets take an example where we have a foo board with the following base tree
--which is taken from [1].
-+Lets take an example where we have a foo board with the following base tree:
- 
- ---- foo.dts -----------------------------------------------------------------
- 	/* FOO platform */
-@@ -36,7 +34,7 @@ which is taken from [1].
- 	};
- ---- foo.dts -----------------------------------------------------------------
- 
--The overlay bar.dts, when loaded (and resolved as described in [2]) should
-+The overlay bar.dts, when loaded (and resolved as described in [1]) should
- 
- ---- bar.dts -----------------------------------------------------------------
- /plugin/;	/* allow undefined label references and record them */
--- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+As I read the code, we were actually missing this before; either in
+error handling, or on device removal. But in either case, the entire
+device was going to disappear, so the sysfs files would have been
+cleaned up anyway?
 
+Also, is there any chance of double-calling this? I think not, but even
+if there is, it looks like the low-level routines are reslient to
+non-existent files.
+
+I'm mostly thinking out loud here. I think this is a positive change,
+even if it wasn't noted explicitly.
+
+> +
+> +	err = del_mtd_device(&priv->mtd);
+> +	if (err)
+> +		return err;
+> +
+> +	list_del(&priv->list);
+> +	free_partition(priv);
+> +
+> +	return 0;
+> +}
+
+Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
