@@ -1,120 +1,110 @@
-From: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Subject: [PATCH v2 2/5] i2c: i2c-stm32f4: use generic definition of speed enum
-Date: Tue, 20 Jun 2017 13:41:27 +0200
-Message-ID: <1497958890-5530-3-git-send-email-pierre-yves.mordret@st.com>
-References: <1497958890-5530-1-git-send-email-pierre-yves.mordret@st.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/8] dt-bindings: mfd: Add STM32 LPTimer binding
+Date: Tue, 20 Jun 2017 12:50:40 +0100
+Message-ID: <20170620115040.xyaivbtcuufhxlv7@dell>
+References: <1497628726-7563-1-git-send-email-fabrice.gasnier@st.com>
+ <1497628726-7563-2-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497958890-5530-1-git-send-email-pierre-yves.mordret@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: pierre-yves.mordret@st.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1497628726-7563-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+Cc: benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch uses a more generic definition of speed enum for i2c-stm32f4
-driver.
+On Fri, 16 Jun 2017, Fabrice Gasnier wrote:
 
-Signed-off-by: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret@st.com>
-Reviewed-by: Ludovic BARRE <ludovic.barre@st.com>
----
- drivers/i2c/busses/i2c-stm32.h   | 20 ++++++++++++++++++++
- drivers/i2c/busses/i2c-stm32f4.c | 18 +++++++-----------
- 2 files changed, 27 insertions(+), 11 deletions(-)
- create mode 100644 drivers/i2c/busses/i2c-stm32.h
+> Add documentation for STMicroelectronics STM32 Low Power Timer binding.
+> 
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/stm32-lptimer.txt      | 51 ++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+> new file mode 100644
+> index 0000000..237b7d6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+> @@ -0,0 +1,51 @@
+> +STMicroelectronics STM32 Low Power Timer
+> +
+> +The STM32 Low Power Timer (LPTIM) is a 16-bit timer that provides several
+> +functionalities:
 
-diff --git a/drivers/i2c/busses/i2c-stm32.h b/drivers/i2c/busses/i2c-stm32.h
-new file mode 100644
-index 0000000..dab5176
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-stm32.h
-@@ -0,0 +1,20 @@
-+/*
-+ * i2c-stm32.h
-+ *
-+ * Copyright (C) M'boumba Cedric Madianga 2017
-+ * Author: M'boumba Cedric Madianga <cedric.madianga@gmail.com>
-+ *
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#ifndef _I2C_STM32_H
-+#define _I2C_STM32_H
-+
-+enum stm32_i2c_speed {
-+	STM32_I2C_SPEED_STANDARD, /* 100 kHz */
-+	STM32_I2C_SPEED_FAST, /* 400 kHz */
-+	STM32_I2C_SPEED_FAST_PLUS, /* 1 MHz */
-+	STM32_I2C_SPEED_END,
-+};
-+
-+#endif /* _I2C_STM32_H */
-diff --git a/drivers/i2c/busses/i2c-stm32f4.c b/drivers/i2c/busses/i2c-stm32f4.c
-index f9dd7e8..b81557d 100644
---- a/drivers/i2c/busses/i2c-stm32f4.c
-+++ b/drivers/i2c/busses/i2c-stm32f4.c
-@@ -27,6 +27,8 @@
- #include <linux/platform_device.h>
- #include <linux/reset.h>
- 
-+#include "i2c-stm32.h"
-+
- /* STM32F4 I2C offset registers */
- #define STM32F4_I2C_CR1			0x00
- #define STM32F4_I2C_CR2			0x04
-@@ -90,12 +92,6 @@
- #define STM32F4_I2C_MAX_FREQ		46U
- #define HZ_TO_MHZ			1000000
- 
--enum stm32f4_i2c_speed {
--	STM32F4_I2C_SPEED_STANDARD, /* 100 kHz */
--	STM32F4_I2C_SPEED_FAST, /* 400 kHz */
--	STM32F4_I2C_SPEED_END,
--};
--
- /**
-  * struct stm32f4_i2c_msg - client specific data
-  * @addr: 8-bit slave addr, including r/w bit
-@@ -159,7 +155,7 @@ static int stm32f4_i2c_set_periph_clk_freq(struct stm32f4_i2c_dev *i2c_dev)
- 	i2c_dev->parent_rate = clk_get_rate(i2c_dev->clk);
- 	freq = DIV_ROUND_UP(i2c_dev->parent_rate, HZ_TO_MHZ);
- 
--	if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD) {
-+	if (i2c_dev->speed == STM32_I2C_SPEED_STANDARD) {
- 		/*
- 		 * To reach 100 kHz, the parent clk frequency should be between
- 		 * a minimum value of 2 MHz and a maximum value of 46 MHz due
-@@ -216,7 +212,7 @@ static void stm32f4_i2c_set_rise_time(struct stm32f4_i2c_dev *i2c_dev)
- 	 * is not higher than 46 MHz . As a result trise is at most 4 bits wide
- 	 * and so fits into the TRISE bits [5:0].
- 	 */
--	if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD)
-+	if (i2c_dev->speed == STM32_I2C_SPEED_STANDARD)
- 		trise = freq + 1;
- 	else
- 		trise = freq * 3 / 10 + 1;
-@@ -230,7 +226,7 @@ static void stm32f4_i2c_set_speed_mode(struct stm32f4_i2c_dev *i2c_dev)
- 	u32 val;
- 	u32 ccr = 0;
- 
--	if (i2c_dev->speed == STM32F4_I2C_SPEED_STANDARD) {
-+	if (i2c_dev->speed == STM32_I2C_SPEED_STANDARD) {
- 		/*
- 		 * In standard mode:
- 		 * t_scl_high = t_scl_low = CCR * I2C parent clk period
-@@ -808,10 +804,10 @@ static int stm32f4_i2c_probe(struct platform_device *pdev)
- 	udelay(2);
- 	reset_control_deassert(rst);
- 
--	i2c_dev->speed = STM32F4_I2C_SPEED_STANDARD;
-+	i2c_dev->speed = STM32_I2C_SPEED_STANDARD;
- 	ret = of_property_read_u32(np, "clock-frequency", &clk_rate);
- 	if (!ret && clk_rate >= 400000)
--		i2c_dev->speed = STM32F4_I2C_SPEED_FAST;
-+		i2c_dev->speed = STM32_I2C_SPEED_FAST;
- 
- 	i2c_dev->dev = &pdev->dev;
- 
+"functions".
+
+> +- PWM output (with programmable prescaler, configurable polarity)
+> +- Quadrature encoder, counter
+> +- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
+> +
+> +Required properties:
+> +- compatible: Must be "st,stm32-lptimer".
+> +- reg: Offset and length of the device's register set.
+> +- clocks: Phandle to the clock used by the LP Timer module.
+> +- clock-names: Must be "int".
+
+These look better when padded:
+
+- compatible:		Must be "st,stm32-lptimer".
+- reg:			Offset and length of the device's register set.
+- clocks:		Phandle to the clock used by the LP Timer module.
+- clock-names:		Must be "int".
+
+> +- #address-cells = <1>;
+> +- #size-cells = <0>;
+
+Please use the same format as you did for the other properties.
+
+> +Optional properties:
+> +- resets: Must contain the phandle to the reset controller.
+> +
+> +Optional subnodes:
+> +- pwm: See ../pwm/pwm-stm32-lp.txt
+> +- counter: See ../iio/timer/stm32-lptimer-cnt.txt
+> +- trigger: See ../iio/timer/stm32-lptimer-trigger.txt
+> +
+> +Example:
+> +
+> +	lptimer1: lptimer@0x40002400 {
+
+Remove '0x'
+
+> +		compatible = "st,stm32-lptimer";
+> +		reg = <0x40002400 0x400>;
+> +		clocks = <&timer_clk>;
+> +		clock-names = "int";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pwm {
+> +			compatible = "st,stm32-pwm-lp";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&lppwm1_pins>;
+> +		};
+> +
+> +		trigger@0 {
+
+Why is this @0 and no reg properties are provided for the other 2
+nodes?
+
+> +			compatible = "st,stm32-lptimer-trigger";
+> +			reg = <0>;
+> +		};
+> +
+> +		counter {
+> +			compatible = "st,stm32-lptimer-counter";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&lptim1_in_pins>;
+> +		};
+> +	};
+
 -- 
-1.9.1
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
