@@ -1,49 +1,49 @@
 From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 1/4] nvmem: dt: document SNVS LPGPR binding
-Date: Tue, 20 Jun 2017 06:40:56 +0200
-Message-ID: <20170620044059.16113-2-o.rempel@pengutronix.de>
-References: <20170620044059.16113-1-o.rempel@pengutronix.de>
+Subject: [PATCH v6 0/4] nvmem: upstream snvs_lpgpr driver
+Date: Tue, 20 Jun 2017 06:40:55 +0200
+Message-ID: <20170620044059.16113-1-o.rempel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170620044059.16113-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guy Shapiro <guy.shapiro-2HKgp+mgmS5l57MIdRCFDg@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>
 Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Documentation bindings for the Low Power General Purpose Register
-available on i.MX6 SoCs in the Secure Non-Volatile Storage.
+changes v6:
+ - check if device is writable by reading GPR_SL and GPR_HL bits
+ - use regmap_bulk_* functions instead of while() { regmap_read/write }
+ - add patch for imx6ul
 
-Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- .../devicetree/bindings/nvmem/snvs-lpgpr.txt          | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+changes v5:
+ - use dcfg->offset instead of priv->offset.
+
+changes v4:
+ - change dependencies in Kconfig
+ - remove unused includes and order them alphabetically
+ - set MODULE_LICENSE = GPL v2
+ - remove unused int err variable
+
+changes v3:
+ - remove regmap and offset properties.
+
+changes v2:
+ - correct typos: Registe, parrent...
+
+Oleksij Rempel (4):
+  nvmem: dt: document SNVS LPGPR binding
+  nvmem: add snvs_lpgpr driver
+  ARM: dts: imx6qdl.dtsi: add "fsl,imx6q-snvs-lpgpr" node
+  ARM: imx6ul: add "fsl,imx6ul-snvs-lpgpr" node
+
+ .../devicetree/bindings/nvmem/snvs-lpgpr.txt       |  20 +++
+ arch/arm/boot/dts/imx6qdl.dtsi                     |   4 +
+ arch/arm/boot/dts/imx6ul.dtsi                      |   4 +
+ drivers/nvmem/Kconfig                              |  10 ++
+ drivers/nvmem/Makefile                             |   2 +
+ drivers/nvmem/snvs_lpgpr.c                         | 156 +++++++++++++++++++++
+ 6 files changed, 196 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+ create mode 100644 drivers/nvmem/snvs_lpgpr.c
 
-diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-new file mode 100644
-index 000000000000..21910fb3159f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-@@ -0,0 +1,19 @@
-+Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
-+Secure Non-Volatile Storage.
-+
-+This DT node should be represented as a sub-node of a "syscon",
-+"simple-mfd" node.
-+
-+Required properties:
-+- compatible: should be:
-+	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
-+
-+Example:
-+snvs: snvs@020cc000 {
-+	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
-+	reg = <0x020cc000 0x4000>;
-+
-+	snvs_lpgpr: snvs-lpgpr {
-+		compatible = "fsl,imx6q-snvs-lpgpr";
-+	};
-+};
 -- 
 2.11.0
 
