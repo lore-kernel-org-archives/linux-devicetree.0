@@ -1,247 +1,59 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V1 2/9] clk: sprd: Add common infrastructure
-Date: Mon, 19 Jun 2017 18:29:10 -0700
-Message-ID: <20170620012910.GH4493@codeaurora.org>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH V1 3/9] clk: sprd: add gate clock support
+Date: Mon, 19 Jun 2017 18:31:30 -0700
+Message-ID: <20170620013130.GI4493@codeaurora.org>
 References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
- <20170618015855.27738-3-chunyan.zhang@spreadtrum.com>
+ <20170618015855.27738-4-chunyan.zhang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170618015855.27738-3-chunyan.zhang@spreadtrum.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
+In-Reply-To: <20170618015855.27738-4-chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chunyan Zhang <chunyan.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Xiaolong Zhang <xiaolong.zhang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Orson Zhai <orson.zhai-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Geng Ren <geng.ren-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>, Chunyan Zhang <zhang.lyra-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 06/18, Chunyan Zhang wrote:
-> Added Spreadtrum's clock driver common structure and registration code.
-> 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-> ---
->  drivers/clk/Makefile          |  1 +
->  drivers/clk/sprd/Makefile     |  3 ++
->  drivers/clk/sprd/ccu_common.c | 78 +++++++++++++++++++++++++++++++++++++
->  drivers/clk/sprd/ccu_common.h | 90 +++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 172 insertions(+)
->  create mode 100644 drivers/clk/sprd/Makefile
->  create mode 100644 drivers/clk/sprd/ccu_common.c
->  create mode 100644 drivers/clk/sprd/ccu_common.h
-> 
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index c19983a..1d62721 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -81,6 +81,7 @@ obj-$(CONFIG_COMMON_CLK_SAMSUNG)	+= samsung/
->  obj-$(CONFIG_ARCH_SIRF)			+= sirf/
->  obj-$(CONFIG_ARCH_SOCFPGA)		+= socfpga/
->  obj-$(CONFIG_PLAT_SPEAR)		+= spear/
-> +obj-$(CONFIG_ARCH_SPRD)			+= sprd/
->  obj-$(CONFIG_ARCH_STI)			+= st/
->  obj-$(CONFIG_ARCH_SUNXI)		+= sunxi/
->  obj-$(CONFIG_ARCH_SUNXI)		+= sunxi-ng/
 > diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
-> new file mode 100644
-> index 0000000..8f802b2
-> --- /dev/null
+> index 8f802b2..333e2b2 100644
+> --- a/drivers/clk/sprd/Makefile
 > +++ b/drivers/clk/sprd/Makefile
-> @@ -0,0 +1,3 @@
-> +ifneq ($(CONFIG_OF),)
-> +obj-y	+= ccu_common.o
-> +endif
+> @@ -1,3 +1,3 @@
+>  ifneq ($(CONFIG_OF),)
+> -obj-y	+= ccu_common.o
+> +obj-y	+= ccu_common.o ccu_gate.o
 
-I'd prefer a Kconfig for SPRD clk drivers instead of this
-CONFIG_OF check. Then we can compile test the sprd code in
-configurations that don't have CONFIG_ARCH_SPRD set too.
+Can this be built as a module?
 
-> diff --git a/drivers/clk/sprd/ccu_common.c b/drivers/clk/sprd/ccu_common.c
+>  endif
+> diff --git a/drivers/clk/sprd/ccu_gate.c b/drivers/clk/sprd/ccu_gate.c
 > new file mode 100644
-> index 0000000..911f4ba
+> index 0000000..3d27615
 > --- /dev/null
-> +++ b/drivers/clk/sprd/ccu_common.c
-> @@ -0,0 +1,78 @@
+> +++ b/drivers/clk/sprd/ccu_gate.c
+> @@ -0,0 +1,102 @@
 > +/*
-> + * Spreadtrum clock infrastructure
+> + * Spreadtrum gate clock driver
 > + *
 > + * Copyright (C) 2017 Spreadtrum, Inc.
 > + *
 > + * SPDX-License-Identifier: GPL-2.0
 > + */
-> +
-> +#include "ccu_common.h"
-> +
-> +static inline void __iomem *ccu_find_base(struct ccu_addr_map *maps,
-> +					  unsigned int num, unsigned int reg)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < num; i++)
-> +		if ((reg & 0xffff0000) == maps[i].phy)
-
-What is this?
-
-> +			return maps[i].virt;
-> +
-> +	return 0;
-> +}
-> +
-> +int sprd_ccu_probe(struct device_node *node, struct ccu_addr_map *maps,
-> +		   unsigned int count, const struct sprd_ccu_desc *desc)
-> +{
-> +	int i, ret = 0;
-> +	struct ccu_common *cclk;
-> +	struct clk_hw *hw;
-> +
-> +	for (i = 0; i < desc->num_ccu_clks; i++) {
-> +		cclk = desc->ccu_clks[i];
-> +		if (!cclk)
-> +			continue;
-> +
-> +		cclk->base = ccu_find_base(maps, count, cclk->reg);
-> +		if (!cclk->base) {
-> +			pr_err("%s: No mapped address found for clock(0x%x)\n",
-> +				__func__, cclk->reg);
-> +			return -EINVAL;
-> +		}
-> +		cclk->reg = cclk->reg & 0xffff;
-> +	}
-> +
-> +	for (i = 0; i < desc->hw_clks->num; i++) {
-> +
-> +		hw = desc->hw_clks->hws[i];
-> +
-> +		if (!hw)
-> +			continue;
-> +
-> +		ret = clk_hw_register(NULL, hw);
-> +		if (ret) {
-> +			pr_err("Couldn't register clock %d - %s\n",
-> +			       i, hw->init->name);
-> +			goto err_clk_unreg;
-> +		}
-> +	}
-> +
-> +	ret = of_clk_add_hw_provider(node, of_clk_hw_onecell_get,
-> +				     desc->hw_clks);
-> +	if (ret) {
-> +		pr_err("Failed to add clock provider.\n");
-> +		goto err_clk_unreg;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_clk_unreg:
-> +	while (--i >= 0) {
-> +		hw = desc->hw_clks->hws[i];
-> +		if (!hw)
-> +			continue;
-> +
-> +		clk_hw_unregister(hw);
-> +	}
-> +
-> +	return ret;
-> +}
-> diff --git a/drivers/clk/sprd/ccu_common.h b/drivers/clk/sprd/ccu_common.h
-> new file mode 100644
-> index 0000000..ff07772
-> --- /dev/null
-> +++ b/drivers/clk/sprd/ccu_common.h
-> @@ -0,0 +1,90 @@
-> +/*
-> + * Spreadtrum clock infrastructure
-> + *
-> + * Copyright (C) 2017 Spreadtrum, Inc.
-> + *
-> + * SPDX-License-Identifier: GPL-2.0
-> + */
-> +
-> +#ifndef _CCU_COMMON_H_
-> +#define _CCU_COMMON_H_
 > +
 > +#include <linux/clk-provider.h>
 > +
-> +struct device_node;
+> +#include "ccu_gate.h"
 > +
-> +#define CLK_HW_INIT_NO_PARENT(_name, _ops, _flags)	\
-> +	(&(struct clk_init_data) {			\
-> +		.flags		= _flags,		\
-> +		.name		= _name,		\
-> +		.parent_names	= NULL,			\
-> +		.num_parents	= 0,			\
-> +		.ops		= _ops,			\
-> +	})
-> +
-> +#define CLK_HW_INIT(_name, _parent, _ops, _flags)		\
-> +	(&(struct clk_init_data) {				\
-> +		.flags		= _flags,			\
-> +		.name		= _name,			\
-> +		.parent_names	= (const char *[]) { _parent },	\
-> +		.num_parents	= 1,				\
-> +		.ops		= _ops,				\
-> +	})
-> +
-> +#define CLK_HW_INIT_PARENTS(_name, _parents, _ops, _flags)	\
-> +	(&(struct clk_init_data) {				\
-> +		.flags		= _flags,			\
-> +		.name		= _name,			\
-> +		.parent_names	= _parents,			\
-> +		.num_parents	= ARRAY_SIZE(_parents),		\
-> +		.ops		= _ops,				\
-> +	})
-> +
-> +#define CLK_FIXED_FACTOR(_struct, _name, _parent,			\
-> +			_div, _mult, _flags)				\
-> +	struct clk_fixed_factor _struct = {				\
-> +		.div		= _div,					\
-> +		.mult		= _mult,				\
-> +		.hw.init	= CLK_HW_INIT(_name,			\
-> +					      _parent,			\
-> +					      &clk_fixed_factor_ops,	\
-> +					      _flags),			\
-> +	}
-> +
-> +struct ccu_common {
-> +	void __iomem	*base;
-> +	u32		reg;
-> +	spinlock_t	*lock;
-> +	struct clk_hw	hw;
-> +};
-> +
-> +struct ccu_addr_map {
-> +	phys_addr_t phy;
-> +	void __iomem *virt;
-> +};
-> +
-> +static inline u32 ccu_readl(struct ccu_common *common)
-> +{
-> +	return readl(common->base + common->reg);
-> +}
-> +
-> +static inline void ccu_writel(u32 val, struct ccu_common *common)
-> +{
-> +	writel(val, common->base + common->reg);
-> +}
-> +
-> +static inline struct ccu_common *hw_to_ccu_common(struct clk_hw *hw)
-> +{
-> +	return container_of(hw, struct ccu_common, hw);
-> +}
-> +
-> +struct sprd_ccu_desc {
-> +	struct ccu_common		**ccu_clks;
-> +	unsigned long			num_ccu_clks;
-> +	struct clk_hw_onecell_data	*hw_clks;
-> +};
-> +
-> +int sprd_ccu_probe(struct device_node *node, struct ccu_addr_map *maps,
-> +		   unsigned int count, const struct sprd_ccu_desc *desc);
-> +
-> +#endif /* _CCU_COMMON_H_ */
+> +DEFINE_SPINLOCK(gate_lock);
 
-Do you call them CCUs internally? I thought CCU was a sunxi
-thing, so it may make more sense to call it whatever you call the
-clock controller on your hardware.
+This variable name is not very unique for debugging lockdep
+reports. Probably needs 'sprd' in the name.
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
