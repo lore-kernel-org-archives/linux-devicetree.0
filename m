@@ -1,56 +1,44 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v7.1 7/7] device property: Get rid of struct
- fwnode_handle type field
-Date: Tue, 20 Jun 2017 11:51:51 +0300
-Message-ID: <20170620085150.GZ12407@valkosipuli.retiisi.org.uk>
-References: <1496741861-8240-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497354548-17502-1-git-send-email-sakari.ailus@linux.intel.com>
- <20170618065853.GO629@lahna.fi.intel.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7 5/9] gpiolib: export gpiochip_irq_reqres and gpiochip_irq_relres
+Date: Tue, 20 Jun 2017 10:47:54 +0200
+Message-ID: <CACRpkdaS2emkbWP6Rq=i_8obSqieecK7Sq80symcCcfw3mXoaA@mail.gmail.com>
+References: <5b352c8d-a426-fa73-58b7-0c935979492b@gmail.com> <e6618077-a362-86cf-7cd3-f46de39396e4@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170618065853.GO629@lahna.fi.intel.com>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, lorenzo.pieralisi@arm.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, kieran.bingham@ideasonboard.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <e6618077-a362-86cf-7cd3-f46de39396e4-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/Amlogic Meson..." <linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 18, 2017 at 09:58:53AM +0300, Mika Westerberg wrote:
-> On Tue, Jun 13, 2017 at 02:49:08PM +0300, Sakari Ailus wrote:
-> > +#define DECLARE_ACPI_FWNODE_OPS(ops) \
-> > +	const struct fwnode_operations ops = { \
-> > +		.device_is_available = acpi_fwnode_device_is_available, \
-> > +		.property_present = acpi_fwnode_property_present, \
-> > +		.property_read_int_array = \
-> > +			acpi_fwnode_property_read_int_array, \
-> > +		.property_read_string_array = \
-> > +			acpi_fwnode_property_read_string_array, \
-> > +		.get_parent = acpi_node_get_parent, \
-> > +		.get_next_child_node = acpi_get_next_subnode, \
-> > +		.get_named_child_node = acpi_fwnode_get_named_child_node, \
-> > +		.graph_get_next_endpoint = \
-> > +			acpi_fwnode_graph_get_next_endpoint, \
-> > +		.graph_get_remote_endpoint = \
-> > +			acpi_fwnode_graph_get_remote_endpoint, \
-> > +		.graph_get_port_parent = acpi_node_get_parent, \
-> > +		.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint, \
-> > +	}; \
-> > +	EXPORT_SYMBOL_GPL(ops)
-> 
-> Can you align those backslashes, like
-> 
-> 	const struct fwnode_operations ops = { 				\
-> 		.device_is_available = acpi_fwnode_device_is_available, \
-> 		.property_present = acpi_fwnode_property_present,	\
-> 		...
-> 
-> other than that the patch looks good.
+On Sat, Jun 10, 2017 at 11:57 PM, Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Thanks for the review.
+> Customized versions of the request_resources and release_resources
+> callbacks usually just extend what is available in gpiochip_irq_reqres
+> and gpiochip_irq_relres. Therefore export them to make them available
+> to gpio drivers.
+>
+> Signed-off-by: Heiner Kallweit <hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Fixed in v7.2.
+I'm not happy with this patch.
 
--- 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+The gpiolib IRQchip abstraction was created to pull common
+code into the gpiolib library so I get less mess of GPIO IRQ drivers
+spread out all over the place.
+
+This does the reverse and start to spread it all over the place again.
+
+Can you think about a way to try to centralize what you are trying to
+do into the gpiolib with a flag or special registration call or
+similar?
+
+I guess I don't understand the context, I guess this is part of the
+problem Jerome is discussing with me in another thread.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
