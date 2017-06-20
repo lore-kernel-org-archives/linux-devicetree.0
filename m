@@ -1,39 +1,71 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 0/4] net-next: stmmac: dwmac-sun8i: add
- support for V3s
-Date: Tue, 20 Jun 2017 13:23:23 -0400 (EDT)
-Message-ID: <20170620.132323.46663908524667004.davem@davemloft.net>
-References: <20170617140737.41951-1-icenowy@aosc.io>
-Reply-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sunxi+bncBCFPF2XH6UDBBDVUUXFAKGQE3TES7AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170617140737.41951-1-icenowy-h8G6r0blFSE@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: icenowy-h8G6r0blFSE@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v4 0/4] Synopsys Designware HDMI Video Capture Controller + PHY
+Date: Tue, 20 Jun 2017 18:26:08 +0100
+Message-ID: <cover.1497978962.git.joabreu@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
-Date: Sat, 17 Jun 2017 22:07:33 +0800
+The Synopsys Designware HDMI RX controller is an HDMI receiver controller that
+is responsible to process digital data that comes from a phy. The final result
+is a stream of raw video data that can then be connected to a video DMA, for
+example, and transfered into RAM so that it can be displayed.
 
-> Allwinner V3s features an EMAC like the on in H3, but without external MII
-> interfaces, so being not able really to use RMII/RGMII.
-> 
-> And it has a different default value of syscon (0x38000 instead of 0x58000
-> on H3), which shows a problem that the EMAC clock freq should be 24MHz.
-> (Both H3 and V3s SoCs doesn't have extra xtal input for EPHY, and the
-> main xtal is 24MHz. The default value of H3 is set to 24MHz, but the V3s
-> default value is set to 25MHz).
-> 
-> First two patches are device tree binding patches, the third forces
-> the frequency to 24MHz and the fourth really add the V3s support.
+The controller + phy available in this series natively support all HDMI 1.4 and
+HDMI 2.0 modes, including deep color. Although, the driver is quite in its
+initial stage and unfortunatelly only non deep color modes are supported. Also,
+audio is not yet supported in the driver (the controller has several audio
+output interfaces).
 
-Series applied to net-next, thanks!
+Version 4 addresses review comments from Sylwester Nawrocki that were mainly
+regarding the phy initialization and bindings in the DT. We switched to V4L2
+async API so that we don't have to wait for phy to be initialized.
+
+This series was tested in a FPGA platform.
+
+Jose Abreu (4):
+  [media] platform: Add Synopsys Designware HDMI RX PHY e405 Driver
+  [media] platform: Add Synopsys Designware HDMI RX Controller Driver
+  MAINTAINERS: Add entry for Synopsys Designware HDMI drivers
+  dt-bindings: media: Document Synopsys Designware HDMI RX
+
+Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+ .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  |   70 +
+ MAINTAINERS                                        |    7 +
+ drivers/media/platform/Kconfig                     |    2 +
+ drivers/media/platform/Makefile                    |    2 +
+ drivers/media/platform/dwc/Kconfig                 |   23 +
+ drivers/media/platform/dwc/Makefile                |    2 +
+ drivers/media/platform/dwc/dw-hdmi-phy-e405.c      |  832 +++++++++
+ drivers/media/platform/dwc/dw-hdmi-phy-e405.h      |   63 +
+ drivers/media/platform/dwc/dw-hdmi-rx.c            | 1862 ++++++++++++++++++++
+ drivers/media/platform/dwc/dw-hdmi-rx.h            |  441 +++++
+ include/media/dwc/dw-hdmi-phy-pdata.h              |  128 ++
+ include/media/dwc/dw-hdmi-rx-pdata.h               |   97 +
+ 12 files changed, 3529 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+ create mode 100644 drivers/media/platform/dwc/Kconfig
+ create mode 100644 drivers/media/platform/dwc/Makefile
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-phy-e405.c
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-phy-e405.h
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-rx.c
+ create mode 100644 drivers/media/platform/dwc/dw-hdmi-rx.h
+ create mode 100644 include/media/dwc/dw-hdmi-phy-pdata.h
+ create mode 100644 include/media/dwc/dw-hdmi-rx-pdata.h
+
+-- 
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
