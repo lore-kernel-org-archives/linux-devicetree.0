@@ -1,132 +1,64 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH 1/8] dt-bindings: mfd: Add STM32 LPTimer binding
-Date: Tue, 20 Jun 2017 18:06:46 +0200
-Message-ID: <b6e64096-db0a-afea-ca4e-b21e86e1aa29@st.com>
-References: <1497628726-7563-1-git-send-email-fabrice.gasnier@st.com>
- <1497628726-7563-2-git-send-email-fabrice.gasnier@st.com>
- <20170620115040.xyaivbtcuufhxlv7@dell>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 0/3] add support of hardware random generator on
+ MediaTek MT7622
+Date: Wed, 21 Jun 2017 00:08:14 +0800
+Message-ID: <1497974894.31931.8.camel@mtkswgap22>
+References: <cover.1497280813.git.sean.wang@mediatek.com>
+         <20170620034009.GD17764@gondor.apana.org.au>
+         <1497968477.27946.5.camel@mtkswgap22> <20170620145933.GA4177@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20170620115040.xyaivbtcuufhxlv7@dell>
-Content-Language: en-US
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20170620145933.GA4177@suse.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Torsten Duwe <duwe@suse.de>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com, weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2017 01:50 PM, Lee Jones wrote:
-> On Fri, 16 Jun 2017, Fabrice Gasnier wrote:
+On Tue, 2017-06-20 at 16:59 +0200, Torsten Duwe wrote:
+> On Tue, Jun 20, 2017 at 10:21:17PM +0800, Sean Wang wrote:
+> > Hi Herbert,
+> > 
+> > thanks for effort reviewing on those patches.
+> > 
+> > By the way, also loop in Torsten
+> > 
+> > Could you kindly guide me how to determine appropriate 
+> > rng->ops.quality value used by the driver?
+> > 
+> > I have tested with rngtest on mtk-cir and the result is got as
+> > the below log shown.  If the rngtest always gives the result for
+> > success rate over 99.8%, can I set the rng->ops.quality 998?
+> > 
+> > rngtest: starting FIPS tests...
+> > rngtest: bits received from input: 20000032
+> > rngtest: FIPS 140-2 successes: 998
+> > rngtest: FIPS 140-2 failures: 2
 > 
->> Add documentation for STMicroelectronics STM32 Low Power Timer binding.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->>  .../devicetree/bindings/mfd/stm32-lptimer.txt      | 51 ++++++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
->> new file mode 100644
->> index 0000000..237b7d6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
->> @@ -0,0 +1,51 @@
->> +STMicroelectronics STM32 Low Power Timer
->> +
->> +The STM32 Low Power Timer (LPTIM) is a 16-bit timer that provides several
->> +functionalities:
+> No! You'd have to determine the failure threshold of the test and
+> apply some math to find a lower boundary of your RNG's entropy.
 > 
-> "functions".
+> What the quality is for: your RNG produces bits, but not all of them
+> are completely independent of each other i.e. not completely random.
+> So you simply lower the quality rating to express the net entropy
+> contained in the data stream.
+> 
+> 	Torsten
+> 
 
-Hi Lee,
 
-I'll fix it in v2.
-> 
->> +- PWM output (with programmable prescaler, configurable polarity)
->> +- Quadrature encoder, counter
->> +- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
->> +
->> +Required properties:
->> +- compatible: Must be "st,stm32-lptimer".
->> +- reg: Offset and length of the device's register set.
->> +- clocks: Phandle to the clock used by the LP Timer module.
->> +- clock-names: Must be "int".
-> 
-> These look better when padded:
-> 
-> - compatible:		Must be "st,stm32-lptimer".
-> - reg:			Offset and length of the device's register set.
-> - clocks:		Phandle to the clock used by the LP Timer module.
-> - clock-names:		Must be "int".
-> 
->> +- #address-cells = <1>;
->> +- #size-cells = <0>;
-> 
-> Please use the same format as you did for the other properties.
+Hi Torsten,
 
-I'll fix it in v2.
+Understood, appreciate your quick and clear explanation.
+ 
+For the math, is there existing any well-known or recommended
+open source software assisting identify the lower boundary of
+RNG entropy? I think the logic should be common for all RNGs.
 
-> 
->> +Optional properties:
->> +- resets: Must contain the phandle to the reset controller.
->> +
->> +Optional subnodes:
->> +- pwm: See ../pwm/pwm-stm32-lp.txt
->> +- counter: See ../iio/timer/stm32-lptimer-cnt.txt
->> +- trigger: See ../iio/timer/stm32-lptimer-trigger.txt
->> +
->> +Example:
->> +
->> +	lptimer1: lptimer@0x40002400 {
-> 
-> Remove '0x'
-nice shot :-)
+thanks again
 
-> 
->> +		compatible = "st,stm32-lptimer";
->> +		reg = <0x40002400 0x400>;
->> +		clocks = <&timer_clk>;
->> +		clock-names = "int";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		pwm {
->> +			compatible = "st,stm32-pwm-lp";
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&lppwm1_pins>;
->> +		};
->> +
->> +		trigger@0 {
-> 
-> Why is this @0 and no reg properties are provided for the other 2
-> nodes?
+	Sean
 
-This is to select each LPTimer configuration (similar to stm32-timers).
-All LPTimers that provide output as trigger for ADC and/or DAC are the
-same, except for which hardware signals they're connected to, and send
-to ADC and/or DAC.
-"reg" is used as index for trigger table in trigger driver code (PATCH
-6): it must be 0 for lptimer1 output, 1 for lptimer2 output or 2 for
-lptimer3 output.
-I should probably document it in stm32-lptimer-trigger dt-bindings ?
 
-This is not needed for other two nodes.
-
-Thanks for reviewing,
-Best Regards,
-Fabrice
-
-> 
->> +			compatible = "st,stm32-lptimer-trigger";
->> +			reg = <0>;
->> +		};
->> +
->> +		counter {
->> +			compatible = "st,stm32-lptimer-counter";
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&lptim1_in_pins>;
->> +		};
->> +	};
-> 
+	Sean
