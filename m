@@ -1,46 +1,52 @@
-From: Torsten Duwe <duwe@suse.de>
-Subject: Re: [PATCH v2 0/3] add support of hardware random generator on
- MediaTek MT7622
-Date: Tue, 20 Jun 2017 16:59:33 +0200
-Message-ID: <20170620145933.GA4177@suse.de>
-References: <cover.1497280813.git.sean.wang@mediatek.com>
- <20170620034009.GD17764@gondor.apana.org.au>
- <1497968477.27946.5.camel@mtkswgap22>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1497968477.27946.5.camel@mtkswgap22>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Sean Wang <sean.wang@mediatek.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com, weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v2 01/17] clk: ingenic: Use const pointer to clk_ops in struct
+Date: Tue, 20 Jun 2017 17:18:39 +0200
+Message-ID: <20170620151855.19399-1-paul@crapouillou.net>
+References: <20170607200439.24450-2-paul@crapouillou.net>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170607200439.24450-2-paul@crapouillou.net>
+Sender: linux-clk-owner@vger.kernel.org
+To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 20, 2017 at 10:21:17PM +0800, Sean Wang wrote:
-> Hi Herbert,
-> 
-> thanks for effort reviewing on those patches.
-> 
-> By the way, also loop in Torsten
-> 
-> Could you kindly guide me how to determine appropriate 
-> rng->ops.quality value used by the driver?
-> 
-> I have tested with rngtest on mtk-cir and the result is got as
-> the below log shown.  If the rngtest always gives the result for
-> success rate over 99.8%, can I set the rng->ops.quality 998?
-> 
-> rngtest: starting FIPS tests...
-> rngtest: bits received from input: 20000032
-> rngtest: FIPS 140-2 successes: 998
-> rngtest: FIPS 140-2 failures: 2
+The CGU common code does not modify the pointed clk_ops structure, so it
+should be marked as const.
 
-No! You'd have to determine the failure threshold of the test and
-apply some math to find a lower boundary of your RNG's entropy.
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/clk/ingenic/cgu.h        | 2 +-
+ drivers/clk/ingenic/jz4780-cgu.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-What the quality is for: your RNG produces bits, but not all of them
-are completely independent of each other i.e. not completely random.
-So you simply lower the quality rating to express the net entropy
-contained in the data stream.
+ v2: New patch in this series
 
-	Torsten
+diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
+index 09700b2c555d..da448b0cac18 100644
+--- a/drivers/clk/ingenic/cgu.h
++++ b/drivers/clk/ingenic/cgu.h
+@@ -120,7 +120,7 @@ struct ingenic_cgu_gate_info {
+  * @clk_ops: custom clock operation callbacks
+  */
+ struct ingenic_cgu_custom_info {
+-	struct clk_ops *clk_ops;
++	const struct clk_ops *clk_ops;
+ };
+ 
+ /**
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index b35d6d9dd5aa..a21698fb202c 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -203,7 +203,7 @@ static int jz4780_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
+ 	return 0;
+ }
+ 
+-static struct clk_ops jz4780_otg_phy_ops = {
++static const struct clk_ops jz4780_otg_phy_ops = {
+ 	.get_parent = jz4780_otg_phy_get_parent,
+ 	.set_parent = jz4780_otg_phy_set_parent,
+ 
+-- 
+2.11.0
+
