@@ -1,103 +1,32 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v3 19/21] dt-bindings: mmc: dw_mmc-k3: add document of
- hi3660 mmc
-Date: Tue, 20 Jun 2017 11:49:11 +0100
-Message-ID: <5948FDA7.1040100@hisilicon.com>
-References: <20170614082338.15673-1-guodong.xu@linaro.org>
- <20170614082338.15673-20-guodong.xu@linaro.org>
- <CAPDyKFpvJu8_TETWr0Vy4ubDC7NYvi7TxmSLYZyw33qHFsoNaQ@mail.gmail.com>
- <5947CAD8.4040607@hisilicon.com>
- <CAPDyKFo=hqp=j=nWpO8uf_0pGTSKjN0T-ZKqD8cuKp1C3Q2_hA@mail.gmail.com>
- <5948F1F9.90903@hisilicon.com>
- <CAPDyKFozmMED7ytofXTgHhWH=Ro_38r4iCCdoO6+rq-AznrSDQ@mail.gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: Shawn Guo: your attetion is needed here Re: [PATCH v8 00/34] i.MX
+ Media Driver
+Date: Tue, 20 Jun 2017 08:05:05 -0300
+Message-ID: <CAOMZO5A_LjYzzDTG9KmEHxb2F0=1Pj2Wm8s5maKS8pxce-HX3A@mail.gmail.com>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl> <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
+ <e4f152de-6e75-7654-178e-e6dcf9ad12f3@xs4all.nl> <43887f25-bb73-9020-0909-d275c319aaad@mentor.com>
+ <20170620082933.GA31799@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFozmMED7ytofXTgHhWH=Ro_38r4iCCdoO6+rq-AznrSDQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wangkefeng.wang@huawei.com, Arnd Bergmann <arnd@arndb.de>, Guodong Xu <guodong.xu@linaro.org>, Linux PCI <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Griffin <peter.griffin@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Li Wei <liwei213@huawei.com>, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, zhangfei <zhangfei.gao@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170620082933.GA31799@amd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, Mark Rutland <mark.rutland@arm.com>, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, Nick Dyer <nick@shmanahar.org>, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, Robert Jarzmik <robert.jarzmik@free.fr>, devel@driverdev.osuosl.org, markus.heiser@darmarit.de, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, shuah@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>, Geert Uytterhoeven <geert@linux-m68k.org>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Arnd
 List-Id: devicetree@vger.kernel.org
 
-Hi Uffe,
+On Tue, Jun 20, 2017 at 5:29 AM, Pavel Machek <pavel@ucw.cz> wrote:
 
-On 2017/6/20 11:28, Ulf Hansson wrote:
-> On 20 June 2017 at 11:59, Wei Xu <xuwei5@hisilicon.com> wrote:
->> Hi Uffe,
->>
->> On 2017/6/20 9:36, Ulf Hansson wrote:
->>> Hi Wei,
->>>
->>> On 19 June 2017 at 15:00, Wei Xu <xuwei5@hisilicon.com> wrote:
->>>> Hi Ulf,
->>>>
->>>> On 2017/6/19 13:43, Ulf Hansson wrote:
->>>>> On 14 June 2017 at 10:23, Guodong Xu <guodong.xu@linaro.org> wrote:
->>>>>> Add bindings for hi3660 mmc support
->>>>>>
->>>>>> Signed-off-by: Li Wei <liwei213@huawei.com>
->>>>>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt | 1 +
->>>>>>  1 file changed, 1 insertion(+)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->>>>>> index df37058..8af1afc 100644
->>>>>> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->>>>>> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->>>>>> @@ -12,6 +12,7 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
->>>>>>  Required Properties:
->>>>>>
->>>>>>  * compatible: should be one of the following.
->>>>>> +  - "hisilicon,hi3660-dw-mshc": for controllers with hi3660 specific extensions.
->>>>>>    - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extensions.
->>>>>>    - "hisilicon,hi6220-dw-mshc": for controllers with hi6220 specific extensions.
->>>>>>
->>>>>> --
->>>>>> 2.10.2
->>>>>>
->>>>>
->>>>> Thanks, applied for next!
->>>>
->>>> Thanks!
->>>> Last week I had applied the v4 patch set[1]
->>>> and this patch is included.
->>>> But it should be fine for the upper gatekeeper to merge
->>>> since these 2 patch are same.
->>>
->>> No, that's not how git works.
->>>
->>> If the patch has the same hash, that would be fine, but that isn't the
->>> case here as we have two different hashes for the same change.
->>
->> Got it. Thanks for your explaining!
->>
->>>
->>> To deal with this, I have just dropped the change from my tree and
->>> leave it to you to carry the patch. Feel free to add my ack for it.
->>
->> Thanks!
->> But the pull request I sent last week has been merged.
-> 
-> No worries, it's fine even without my ack this time.
+> Hmm. I changed the subject to grab Shawn's attetion.
+>
+> But his acks should not be needed for forward progress. Yes, it would
+> be good, but he does not react -- so just reorder the series so that
+> dts changes come last, then apply the parts you can apply: driver can
+> go in.
+>
+> And actually... if maintainer does not respond at all, there are ways
+> to deal with that, too...
 
-Thanks for your kindness!
-
-Best Regards,
-Wei
-
-> 
-> Kind regards
-> Uffe
-> 
-> .
-> 
+Shawn has already applied the dts part of the series and they show up
+in linux-next.
