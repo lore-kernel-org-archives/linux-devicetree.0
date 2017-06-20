@@ -1,33 +1,28 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 2/6] clk: mediatek: export cpu multiplexer clock for
- MT2701/MT7623 SoCs
-Date: Mon, 19 Jun 2017 18:07:40 -0700
-Message-ID: <20170620010740.GC4493@codeaurora.org>
-References: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
- <1493997974-17699-3-git-send-email-sean.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1493997974-17699-3-git-send-email-sean.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sean.wang@mediatek.com
-Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/5] i2c: pca-platform: updates
+Date: Tue, 20 Jun 2017 13:18:32 +1200
+Message-ID: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Sender: linux-i2c-owner@vger.kernel.org
+To: wsa@the-dreams.de, robh+dt@kernel.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Chris Packham <chris.packham@alliedtelesis.co.nz>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05, sean.wang@mediatek.com wrote:
-> From: Sean Wang <sean.wang@mediatek.com>
-> 
-> The patch enables CPU multiplexer clock on MT2701/MT7623 SoC which fixes
-> up cpufreq driver fails at acquiring intermediate clock source when driver
-> probe is called.
-> 
-> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
-> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
-> ---
+We're using a PCA9564 on an embedded platform to provide an i2c
+controller. This adds devicetree support and I've included some
+cleanups for the driver while I was at it.
 
-Applied to clk-next
+Chris Packham (5):
+  dt-bindings: add bindings for i2c-pca-platform
+  i2c: pca-platform: add devicetree awareness
+  i2c: pca-platform: use gpio_is_valid
+  i2c: pca-platform: use device managed allocations
+  i2c: pca-platform: use dev_warn/dev_info instead of printk
+
+ .../devicetree/bindings/i2c/i2c-pca-platform.txt   | 18 ++++
+ drivers/i2c/busses/i2c-pca-platform.c              | 97 +++++++++-------------
+ 2 files changed, 57 insertions(+), 58 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-pca-platform.txt
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.13.0
