@@ -1,63 +1,97 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Tue, 20 Jun 2017 10:31:19 +0300
-Message-ID: <1625582.5PxmiBkabx@avalon>
-References: <20170615204130.19255-1-eric@anholt.net>
- <871sqkouvr.fsf@eliezer.anholt.net>
- <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [GIT PULL] Improve cp110 clk support on Marvell Armada 7K/8K
+Date: Tue, 20 Jun 2017 09:32:16 +0200
+Message-ID: <87shiv3yin.fsf@free-electrons.com>
+References: <pull.28a1be390fb082d60e88c3234dd7d76fb61438b6.1497886602.git-series.gregory.clement@free-electrons.com>
+        <20170620001853.GT20170@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170620001853.GT20170@codeaurora.org> (Stephen Boyd's message
+        of "Mon, 19 Jun 2017 17:18:53 -0700")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgQXJjaGl0LAoKT24gVHVlc2RheSAyMCBKdW4gMjAxNyAwOToxODowMCBBcmNoaXQgVGFuZWph
-IHdyb3RlOgo+IE9uIDA2LzE2LzIwMTcgMDg6MTMgUE0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4g
-QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4gd3JpdGVzOgo+ID4+IE9uIDA2
-LzE2LzIwMTcgMDI6MTEgQU0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4+PiBJZiB0aGUgcGFuZWwt
-YnJpZGdlIGlzIGJlaW5nIHNldCB1cCBhZnRlciB0aGUgZHJtX21vZGVfY29uZmlnX3Jlc2V0KCks
-Cj4gPj4+IHRoZW4gdGhlIGNvbm5lY3RvcidzIHN0YXRlIHdvdWxkIG5ldmVyIGdldCBpbml0aWFs
-aXplZCwgYW5kIHdlJ2QKPiA+Pj4gZGVyZWZlcmVuY2UgdGhlIE5VTEwgaW4gdGhlIGhvdHBsdWcg
-cGF0aC4gIFdlIGFsc28gbmVlZCB0byByZWdpc3Rlcgo+ID4+PiB0aGUgY29ubmVjdG9yLCBzbyB0
-aGF0IHVzZXJzcGFjZSBjYW4gZ2V0IGF0IGl0Lgo+ID4+IAo+ID4+IFNob3VsZG4ndCB0aGUgS01T
-IGRyaXZlciBtYWtlIHN1cmUgdGhlIHBhbmVsLWJyaWRnZSBpcyBzZXQgdXAgYmVmb3JlCj4gPj4g
-ZHJtX21vZGVfY29uZmlnX3Jlc2V0PyBJcyBpdCB0aGUgY2FzZSB3aGVuIHdlJ3JlIGluc2VydGlu
-ZyB0aGUKPiA+PiBwYW5lbC1icmlkZ2UgZHJpdmVyIGFzIGEgbW9kdWxlPwo+ID4+IAo+ID4+IAo+
-ID4+IEFsbCB0aGUgY29ubmVjdG9ycyB0aGF0IGhhdmUgYmVlbiBhZGRlZCBhcmUgcmVnaXN0ZXJl
-ZCBhdXRvbWF0aWNhbGx5Cj4gPj4gd2hlbiBkcm1fZGV2X3JlZ2lzdGVyKCkgaXMgY2FsbGVkIGJ5
-IHRoZSBLTVMgZHJpdmVyLiBSZWdpc3RlcmluZyBhCj4gPj4gY29ubmVjdG9yIGluIHRoZSBtaWRk
-bGUgb2Ygc2V0dGluZyB1cCBvdXIgZHJpdmVyIGlzIHByb25lIHRvIHJhY2UKPiA+PiBjb25kaXRp
-b25zIGlmIHRoZSB1c2Vyc3BhY2UgZGVjaWRlcyB0byB1c2UgdGhlbSBpbW1lZGlhdGVseS4KPiA+
-IAo+ID4gWWVhaCwgdGhpcyBpcyBmaXhpbmcgaW5pdGlhbGl6aW5nIHBhbmVsX2JyaWRnZSBhdCBE
-U0kgaG9zdF9hdHRhY2ggdGltZSwKPiA+IHdoaWNoIGluIHRoZSBjYXNlIG9mIGEgcGFuZWwgbW9k
-dWxlIHRoYXQgY3JlYXRlcyB0aGUgRFNJIGRldmljZQo+ID4gKGFkdjc1MzMtc3R5bGUsIGxpa2Ug
-eW91IHNhaWQgSSBzaG91bGQgdXNlIGFzIGEgcmVmZXJlbmNlKSB3aWxsIGJlIGFmdGVyCj4gPiBk
-cm1fbW9kZV9jb25maWdfcmVzZXQoKSBhbmQgZHJtX2Rldl9yZWdpc3RlcigpLgo+IAo+IE9rYXku
-IEluIHRoZSBjYXNlIG9mIHRoZSBtc20ga21zIGRyaXZlciwgd2UgZGVmZXIgcHJvYmUgdW50aWwg
-dGhlCj4gYWR2NzUzMyBtb2R1bGUgaXMgaW5zZXJ0ZWQsIG9ubHkgdGhlbiB3ZSBwcm9jZWVkIHRv
-IGRybV9tb2RlX2NvbmZpZ19yZXNldCgpCj4gYW5kIGRybV9kZXZfcmVnaXN0ZXIoKS4gSSBhc3N1
-bWVkIHRoaXMgd2FzIHRoZSBnZW5lcmFsIHByYWN0aWNlIGZvbGxvd2VkIGJ5Cj4gbW9zdCBrbXMg
-ZHJpdmVycy4gSS4sZSB0aGUga21zIGRyaXZlciBkZWZlcnMgcHJvYmUgdW50aWwgYWxsIGNvbm5l
-Y3Rvcgo+IHJlbGF0ZWQgbW9kdWxlcyBhcmUgaW5zZXJ0ZWQsIGFuZCBvbmx5IHRoZW4gcHJvY2Vl
-ZCB0byBjcmVhdGUgYSBkcm0gZGV2aWNlLgoKSSdkIGxvdmUgdG8gc2VlIHN1cHBvcnQgZm9yIGEg
-bW9yZSBkeW5hbWljIGFwcHJvYWNoIHRoYXQgd291bGQgYWxsb3cgCnJlZ2lzdGVyaW5nIG91dHB1
-dHMgYXQgcnVudGltZS4gVW50aWwgdGhhdCdzIGltcGxlbWVudGVkLCBob3dldmVyLCBJIGFncmVl
-IAp3aXRoIHlvdXIgc3RhdGVtZW50LCBkcml2ZXJzIHNob3VsZCB3YWl0IHVudGlsIGFsbCBjb21w
-b25lbnRzIGFyZSBhdmFpbGFibGUgCmJlZm9yZSByZWdpc3RlcmluZyB0aGUgRFJNIGRldmljZS4K
-Cj4gRmVlZGJhY2sgZnJvbSBvdGhlcnMgb24gdGhpcyB3b3VsZCBiZSBhcHByZWNpYXRlZCwgdGhv
-dWdoLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Stephen,
+ 
+ On mar., juin 20 2017, Stephen Boyd <sboyd@codeaurora.org> wrote:
+
+> On 06/19, Gregory CLEMENT wrote:
+>> 
+>> Hi Mike, Stephen,
+>> 
+>> This time I turned the series in a pull request so I removed the
+>> device tree binding part which will be in an other series for Rob
+>> Herring and I also removed the dt part that I will take care of once
+>> you will have pulled this one.
+>> 
+>> I hope this will be easier for you to apply this way.
+>> 
+>
+> Ok. It wasn't clear what was going on and I forgot to ask in the
+> lastest patch series. Pulled into clk-next, but I had to apply
+> this patch on top:
+
+Thanks for the pull and the fix patch!
+
+Gregory
+
+>
+> ---8<----
+> From: Stephen Boyd <sboyd@codeaurora.org>
+> Subject: [PATCH] clk: mvebu: cp110: Minor cleanups
+>
+> Mark an array of strings static const and remove the dereference
+> of a function pointer when assigning to the platform driver probe
+> struct member.
+>
+> drivers/clk/mvebu/cp110-system-controller.c:89:12:
+> warning: symbol 'gate_base_names' was not declared. Should it be static?
+> drivers/clk/mvebu/cp110-system-controller.c:447:18:
+> error: cannot dereference this type
+>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  drivers/clk/mvebu/cp110-system-controller.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
+> index b034b79345ec..ca9a0a536174 100644
+> --- a/drivers/clk/mvebu/cp110-system-controller.c
+> +++ b/drivers/clk/mvebu/cp110-system-controller.c
+> @@ -86,7 +86,7 @@ enum {
+>  #define CP110_GATE_EIP150		25
+>  #define CP110_GATE_EIP197		26
+>  
+> -const char *gate_base_names[] = {
+> +static const char * const gate_base_names[] = {
+>  	[CP110_GATE_AUDIO]	= "audio",
+>  	[CP110_GATE_COMM_UNIT]	= "communit",
+>  	[CP110_GATE_NAND]	= "nand",
+> @@ -437,14 +437,13 @@ static int cp110_clk_probe(struct platform_device *pdev)
+>  	return cp110_syscon_common_probe(pdev, pdev->dev.of_node->parent);
+>  }
+>  
+> -
+>  static const struct of_device_id cp110_syscon_legacy_of_match[] = {
+>  	{ .compatible = "marvell,cp110-system-controller0", },
+>  	{ }
+>  };
+>  
+>  static struct platform_driver cp110_syscon_legacy_driver = {
+> -	.probe = *cp110_syscon_legacy_clk_probe,
+> +	.probe = cp110_syscon_legacy_clk_probe,
+>  	.driver		= {
+>  		.name	= "marvell-cp110-system-controller0",
+>  		.of_match_table = cp110_syscon_legacy_of_match,
+> -- 
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
