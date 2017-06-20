@@ -1,52 +1,93 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 01/17] clk: ingenic: Use const pointer to clk_ops in struct
-Date: Tue, 20 Jun 2017 17:18:39 +0200
-Message-ID: <20170620151855.19399-1-paul@crapouillou.net>
+Subject: [PATCH v2 09/17] MIPS: Setup boot_command_line before plat_mem_setup
+Date: Tue, 20 Jun 2017 17:18:47 +0200
+Message-ID: <20170620151855.19399-9-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170607200439.24450-2-paul@crapouillou.net>
-Sender: linux-clk-owner@vger.kernel.org
+ <20170620151855.19399-1-paul@crapouillou.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170620151855.19399-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CGU common code does not modify the pointed clk_ops structure, so it
-should be marked as const.
+From: Paul Burton <paul.burton@imgtec.com>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Platforms using DT will typically call __dt_setup_arch from
+plat_mem_setup. This in turn calls early_init_dt_scan. When
+CONFIG_CMDLINE is set, this leads to its value being copied into
+boot_command_line by early_init_dt_scan_chosen. If this happens before
+the code setting up boot_command_line in arch_mem_init runs, that code
+will go on to append CONFIG_CMDLINE (via builtin_cmdline) to
+boot_command_line again, duplicating it. For some command line
+parameters (eg. earlycon) this can be a problem. Set up
+boot_command_line before early_init_dt_scan_chosen gets called such that
+it will not write CONFIG_CMDLINE in this scenario & the arguments aren't
+duplicated.
+
+Signed-off-by: Paul Burton <paul.burton@imgtec.com>
 ---
- drivers/clk/ingenic/cgu.h        | 2 +-
- drivers/clk/ingenic/jz4780-cgu.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/kernel/setup.c | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
- v2: New patch in this series
+ v2: No change
 
-diff --git a/drivers/clk/ingenic/cgu.h b/drivers/clk/ingenic/cgu.h
-index 09700b2c555d..da448b0cac18 100644
---- a/drivers/clk/ingenic/cgu.h
-+++ b/drivers/clk/ingenic/cgu.h
-@@ -120,7 +120,7 @@ struct ingenic_cgu_gate_info {
-  * @clk_ops: custom clock operation callbacks
-  */
- struct ingenic_cgu_custom_info {
--	struct clk_ops *clk_ops;
-+	const struct clk_ops *clk_ops;
- };
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index 01d1dbde5fbf..89785600fde4 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -785,25 +785,6 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	struct memblock_region *reg;
+ 	extern void plat_mem_setup(void);
  
- /**
-diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
-index b35d6d9dd5aa..a21698fb202c 100644
---- a/drivers/clk/ingenic/jz4780-cgu.c
-+++ b/drivers/clk/ingenic/jz4780-cgu.c
-@@ -203,7 +203,7 @@ static int jz4780_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
- 	return 0;
- }
+-	/* call board setup routine */
+-	plat_mem_setup();
+-
+-	/*
+-	 * Make sure all kernel memory is in the maps.  The "UP" and
+-	 * "DOWN" are opposite for initdata since if it crosses over
+-	 * into another memory section you don't want that to be
+-	 * freed when the initdata is freed.
+-	 */
+-	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
+-			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
+-			 BOOT_MEM_RAM);
+-	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
+-			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
+-			 BOOT_MEM_INIT_RAM);
+-
+-	pr_info("Determined physical RAM map:\n");
+-	print_memory_map();
+-
+ #if defined(CONFIG_CMDLINE_BOOL) && defined(CONFIG_CMDLINE_OVERRIDE)
+ 	strlcpy(boot_command_line, builtin_cmdline, COMMAND_LINE_SIZE);
+ #else
+@@ -831,6 +812,26 @@ static void __init arch_mem_init(char **cmdline_p)
+ 	}
+ #endif
+ #endif
++
++	/* call board setup routine */
++	plat_mem_setup();
++
++	/*
++	 * Make sure all kernel memory is in the maps.  The "UP" and
++	 * "DOWN" are opposite for initdata since if it crosses over
++	 * into another memory section you don't want that to be
++	 * freed when the initdata is freed.
++	 */
++	arch_mem_addpart(PFN_DOWN(__pa_symbol(&_text)) << PAGE_SHIFT,
++			 PFN_UP(__pa_symbol(&_edata)) << PAGE_SHIFT,
++			 BOOT_MEM_RAM);
++	arch_mem_addpart(PFN_UP(__pa_symbol(&__init_begin)) << PAGE_SHIFT,
++			 PFN_DOWN(__pa_symbol(&__init_end)) << PAGE_SHIFT,
++			 BOOT_MEM_INIT_RAM);
++
++	pr_info("Determined physical RAM map:\n");
++	print_memory_map();
++
+ 	strlcpy(command_line, boot_command_line, COMMAND_LINE_SIZE);
  
--static struct clk_ops jz4780_otg_phy_ops = {
-+static const struct clk_ops jz4780_otg_phy_ops = {
- 	.get_parent = jz4780_otg_phy_get_parent,
- 	.set_parent = jz4780_otg_phy_set_parent,
- 
+ 	*cmdline_p = command_line;
 -- 
 2.11.0
-
