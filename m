@@ -1,94 +1,74 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v3 8/9] arm64: dts: marvell: remove *-clock-output-names on cp110
-Date: Tue, 20 Jun 2017 16:10:36 +0200
-Message-ID: <87efue4un7.fsf@free-electrons.com>
-References: <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-        <cover.6bb422e6a233460049bb63792b32a5ba851dcddd.1496328934.git-series.gregory.clement@free-electrons.com>
-        <99492ad5e3026e12a57623bdcf0cc33d4935eb66.1496328934.git-series.gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Oleksij Rempel <o.rempel@pengutronix.de>
+Subject: [PATCH v6 2/6] ARM: imx6: register pm_power_off handler if "fsl,pmic-stby-poweroff" is set
+Date: Tue, 20 Jun 2017 16:09:06 +0200
+Message-ID: <20170620140910.7568-3-o.rempel@pengutronix.de>
+References: <20170620140910.7568-1-o.rempel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <99492ad5e3026e12a57623bdcf0cc33d4935eb66.1496328934.git-series.gregory.clement@free-electrons.com>
-        (Gregory CLEMENT's message of "Thu, 1 Jun 2017 16:55:41 +0200")
+In-Reply-To: <20170620140910.7568-1-o.rempel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+To: Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Oleksij Rempel <o.rempel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+One of the Freescale recommended sequences for power off with external
+PMIC is the following:
+...
+3.  SoC is programming PMIC for power off when standby is asserted.
+4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
+
+See:
+http://www.nxp.com/assets/documents/data/en/reference-manuals/IMX6DQRM.pdf
+page 5083
+
+This patch implements step 4. of this sequence.
+
+Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+---
+ arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-imx6.c
+index e61b1d1027e1..0f141caa71f6 100644
+--- a/arch/arm/mach-imx/pm-imx6.c
++++ b/arch/arm/mach-imx/pm-imx6.c
+@@ -602,6 +602,28 @@ static void __init imx6_pm_common_init(const struct imx6_pm_socdata
+ 				   IMX6Q_GPR1_GINT);
+ }
  
- On jeu., juin 01 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
-
-> The *-clock-output-names of the cp110-system-controller0 node are not
-> used anymore, so remove them.
->
-> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-
-Applied on mvebu/dt64
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi | 13 +-------------
->  arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi  | 13 +-------------
->  2 files changed, 26 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> index ac8df5201cd6..a0f57a8e5dcb 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> @@ -101,19 +101,6 @@
->  					     "syscon";
->  				reg = <0x440000 0x1000>;
->  				#clock-cells = <2>;
-> -				core-clock-output-names =
-> -					"cpm-apll", "cpm-ppv2-core", "cpm-eip",
-> -					"cpm-core", "cpm-nand-core";
-> -				gate-clock-output-names =
-> -					"cpm-audio", "cpm-communit", "cpm-nand",
-> -					"cpm-ppv2", "cpm-sdio", "cpm-mg-domain",
-> -					"cpm-mg-core", "cpm-xor1", "cpm-xor0",
-> -					"cpm-gop-dp", "none", "cpm-pcie_x10",
-> -					"cpm-pcie_x11", "cpm-pcie_x4", "cpm-pcie-xor",
-> -					"cpm-sata", "cpm-sata-usb", "cpm-main",
-> -					"cpm-sd-mmc-gop", "none", "none",
-> -					"cpm-slow-io", "cpm-usb3h0", "cpm-usb3h1",
-> -					"cpm-usb3dev", "cpm-eip150", "cpm-eip197";
->  			};
->  
->  			cpm_rtc: rtc@284000 {
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> index 7740a75a8230..9584bc8d8b3f 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> @@ -108,19 +108,6 @@
->  					     "syscon";
->  				reg = <0x440000 0x1000>;
->  				#clock-cells = <2>;
-> -				core-clock-output-names =
-> -					"cps-apll", "cps-ppv2-core", "cps-eip",
-> -					"cps-core", "cps-nand-core";
-> -				gate-clock-output-names =
-> -					"cps-audio", "cps-communit", "cps-nand",
-> -					"cps-ppv2", "cps-sdio", "cps-mg-domain",
-> -					"cps-mg-core", "cps-xor1", "cps-xor0",
-> -					"cps-gop-dp", "none", "cps-pcie_x10",
-> -					"cps-pcie_x11", "cps-pcie_x4", "cps-pcie-xor",
-> -					"cps-sata", "cps-sata-usb", "cps-main",
-> -					"cps-sd-mmc-gop", "none", "none",
-> -					"cps-slow-io", "cps-usb3h0", "cps-usb3h1",
-> -					"cps-usb3dev", "cps-eip150", "cps-eip197";
->  			};
->  
->  			cps_sata0: sata@540000 {
-> -- 
-> git-series 0.9.1
-
++static void imx6_pm_stby_poweroff(void)
++{
++	imx6_set_lpm(STOP_POWER_OFF);
++	cpu_suspend(0, imx6q_suspend_finish);
++
++	mdelay(1000);
++
++	pr_emerg("Unable to poweroff system\n");
++}
++
++static int imx6_pm_stby_poweroff_probe(void)
++{
++	if (pm_power_off) {
++		pr_warn("%s: pm_power_off already claimed  %p %pf!\n",
++			__func__, pm_power_off, pm_power_off);
++		return -EBUSY;
++	}
++
++	pm_power_off = imx6_pm_stby_poweroff;
++	return 0;
++}
++
+ void __init imx6_pm_ccm_init(const char *ccm_compat)
+ {
+ 	struct device_node *np;
+@@ -618,6 +640,9 @@ void __init imx6_pm_ccm_init(const char *ccm_compat)
+ 	val = readl_relaxed(ccm_base + CLPCR);
+ 	val &= ~BM_CLPCR_LPM;
+ 	writel_relaxed(val, ccm_base + CLPCR);
++
++	if (of_property_read_bool(np, "fsl,pmic-stby-poweroff"))
++		imx6_pm_stby_poweroff_probe();
+ }
+ 
+ void __init imx6q_pm_init(void)
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.11.0
