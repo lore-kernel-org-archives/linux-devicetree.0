@@ -1,91 +1,32 @@
-From: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v3 04/15] spi: qup: Add completion timeout
-Date: Tue, 20 Jun 2017 14:40:46 +0530
-Message-ID: <1497949857-1852-5-git-send-email-varada@codeaurora.org>
-References: <1497949857-1852-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497949857-1852-1-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Wang Yafei <wangyafei@goodix.com>
+Subject: Re: [PATCH] dt-bindings: input: Add the Goodix GTx5 series
+ Touchscreen devicetree bindings
+Date: Tue, 20 Jun 2017 16:53:46 +0800
+Message-ID: <20170620085346.GA9345@andrew-dell>
+References: <22592d94-f482-3e4f-3860-1dce83472d4f@goodix.com>
+ <1497911109.2559.2.camel@hadess.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1497911109.2559.2.camel@hadess.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Bastien Nocera <hadess@hadess.net>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, andrew@goodix.com, mouse@goodix.com
 List-Id: devicetree@vger.kernel.org
 
-Add i/o completion timeout for DMA and PIO modes.
+On Tue, Jun 20, 2017 at 12:25:09AM +0200, Bastien Nocera wrote:
+> On Mon, 2017-06-19 at 18:40 +0800, Wang Yafei wrote:
+> > Signed-off-by: Wang Yafei <wangyafei@goodix.com>
+> > ---
+> >  .../bindings/input/touchscreen/goodix-gtx5.txt     | 75
+> > ++++++++++++++++++++++
+> 
+> Where was the driver sent? I didn't see it on linux-input. Why wasn't
+> this support added to the goodix driver instead?
 
-Signed-off-by: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/spi/spi-qup.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
-index 59e799f..d3ccf53 100644
---- a/drivers/spi/spi-qup.c
-+++ b/drivers/spi/spi-qup.c
-@@ -330,7 +330,8 @@ static void spi_qup_dma_terminate(struct spi_master *master,
- 		dmaengine_terminate_all(master->dma_rx);
- }
- 
--static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer)
-+static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
-+			  unsigned long timeout)
- {
- 	struct spi_qup *qup = spi_master_get_devdata(master);
- 	int ret;
-@@ -353,10 +354,17 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer)
- 		dma_async_issue_pending(master->dma_tx);
- 	}
- 
-+	if (xfer->rx_buf && !wait_for_completion_timeout(&qup->rxc, timeout))
-+		return -ETIMEDOUT;
-+
-+	if (xfer->tx_buf && !wait_for_completion_timeout(&qup->txc, timeout))
-+		return -ETIMEDOUT;
-+
- 	return 0;
- }
- 
--static int spi_qup_do_pio(struct spi_master *master, struct spi_transfer *xfer)
-+static int spi_qup_do_pio(struct spi_master *master, struct spi_transfer *xfer,
-+			  unsigned long timeout)
- {
- 	struct spi_qup *qup = spi_master_get_devdata(master);
- 	int ret;
-@@ -375,6 +383,9 @@ static int spi_qup_do_pio(struct spi_master *master, struct spi_transfer *xfer)
- 
- 	spi_qup_fifo_write(qup, xfer);
- 
-+	if (!wait_for_completion_timeout(&qup->done, timeout))
-+		return -ETIMEDOUT;
-+
- 	return 0;
- }
- 
-@@ -618,7 +629,6 @@ static int spi_qup_transfer_one(struct spi_master *master,
- 	timeout = DIV_ROUND_UP(xfer->len * 8, timeout);
- 	timeout = 100 * msecs_to_jiffies(timeout);
- 
--
- 	spin_lock_irqsave(&controller->lock, flags);
- 	controller->xfer     = xfer;
- 	controller->error    = 0;
-@@ -629,10 +639,10 @@ static int spi_qup_transfer_one(struct spi_master *master,
- 	if (spi_qup_is_dma_xfer(controller->mode)) {
- 		reinit_completion(&controller->rxc);
- 		reinit_completion(&controller->txc);
--		ret = spi_qup_do_dma(master, xfer);
-+		ret = spi_qup_do_dma(master, xfer, timeout);
- 	} else {
- 		reinit_completion(&controller->done);
--		ret = spi_qup_do_pio(master, xfer);
-+		ret = spi_qup_do_pio(master, xfer, timeout);
- 	}
- 
- 	if (ret)
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi, Bastien,
+I'm sorry for confused you. I have posted two patches one is touchscreen
+driver another is this dt-bindings. The driver is under reviewing and hasn't
+been applied to linux-input. Finally thanks for you advice I'll try add a
+patch in ./bindings/input/touchscreen/goodix.txt rather than add a new file.
