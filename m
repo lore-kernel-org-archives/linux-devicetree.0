@@ -1,24 +1,30 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [Resend PATCH 1/2] clk: hi6220: add acpu clock
-Date: Mon, 19 Jun 2017 18:05:09 -0700
-Message-ID: <20170620010509.GK20170@codeaurora.org>
-References: <1496195139-16687-1-git-send-email-zhangfei.gao@linaro.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH 1/6] clk: mediatek: add missing cpu mux causing Mediatek
+ cpufreq can't work
+Date: Mon, 19 Jun 2017 18:07:37 -0700
+Message-ID: <20170620010737.GB4493@codeaurora.org>
+References: <1493997974-17699-1-git-send-email-sean.wang@mediatek.com>
+ <1493997974-17699-2-git-send-email-sean.wang@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1496195139-16687-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, guodong Xu <guodong.xu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1493997974-17699-2-git-send-email-sean.wang@mediatek.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: sean.wang@mediatek.com
+Cc: rjw@rjwysocki.net, viresh.kumar@linaro.org, robh+dt@kernel.org, matthias.bgg@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, jamesjj.liao@mediatek.com, p.zabel@pengutronix.de, shunli.wang@mediatek.com, erin.lo@mediatek.com, jdelvare@suse.de, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Pi-Cheng Chen <pi-cheng.chen@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/31, Zhangfei Gao wrote:
-> Add acpu clock, including sft clock controlling hi6220 coresight module
+On 05/05, sean.wang@mediatek.com wrote:
+> From: Sean Wang <sean.wang@mediatek.com>
 > 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Li Pengcheng <lipengcheng8-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> This patch adds CPU multiplexer clocks which are essential for Mediatek
+> cpufreq driver. It would use the CPU clock multiplexer to switch to the
+> intermediate clock source temporarily and then wait for the primary clock
+> changing getting stable.
+> 
+> Signed-off-by: Pi-Cheng Chen <pi-cheng.chen@linaro.org>
+> Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 > ---
 
 Applied to clk-next
@@ -26,7 +32,3 @@ Applied to clk-next
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
 a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
