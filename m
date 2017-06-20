@@ -1,150 +1,186 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 4/6] irqchip: irq-mvebu-icu: new driver for Marvell ICU
-Date: Tue, 20 Jun 2017 15:00:19 +0100
-Message-ID: <7c5d8d75-1319-a9ae-856d-67813ad2e1c5@arm.com>
-References: <20170616141923.31226-1-thomas.petazzoni@free-electrons.com>
- <20170616141923.31226-5-thomas.petazzoni@free-electrons.com>
- <2934dbf3-e1f0-3997-ba70-3b6a7a2973d9@arm.com>
- <20170620154631.77a1f192@windsurf.lan>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/6] Add support for the ICU unit in Marvell Armada 7K/8K
+Date: Tue, 20 Jun 2017 16:07:16 +0200
+Message-ID: <20170620140722.31646-1-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170620154631.77a1f192-dFHcqWZE4nf+AlalS6MPSg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/06/17 14:46, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Mon, 19 Jun 2017 18:40:53 +0100, Marc Zyngier wrote:
-> 
->>> +	if (msg->address_lo) {  
->>
->> This should probably test both _lo and _hi.
-> 
-> Not sure what test you want to do on _hi. Since the physical address
-> I'm using is below the 4 GB boundary, the high bits are all zeroes,
-> even for a valid address. So to distinguish whether we're configuring
-> or de-configuring the MSI, I don't see how the address_hi value is
-> useful.
-> 
-> Am I missing something obvious here?
+Hello,
 
-There is a few things: this driver could (mostly) work with a GICv3
-distributor (located way above 4GB) instead of the GICP, and I'd rather
-make no assumption of where GICP is located in the memory map.
+The Marvell Armada 7K/8K SoCs are composed of two parts: the AP (which
+contains the CPU cores) and the CP (which contains most
+peripherals). The 7K SoCs have one CP, while the 8K SoCs have two CPs,
+doubling the number of available peripherals.
 
-So I'd rather see:
+In terms of interrupt handling, all devices in the CPs are connected
+through wired interrupt to a unit called ICU located in each CP. This
+unit converts the wired interrupts from the devices into memory
+transactions.
 
-	if (msg->address_lo || msg->address_hi) {
-		[...]
-	} else {
-		/* deconfiguration case */
-	}
+Inside the AP, there is a GIC extension called GICP, which allows a
+memory write transaction to trigger a GIC SPI interrupt. The ICUs in
+each CP are therefore configured to trigger a memory write into the
+appropriate GICP register so that a wired interrupt from a CP device
+is converted into a memory write, itself converted into a regular GIC
+SPI interrupt.
 
-[...]
+Until now, the configuration of the ICU was done statically by the
+firmware, and therefore the Device Tree files in Linux were specifying
+directly GIC interrupts for the interrupts of CP devices. However,
+with the growing number of devices in the CP, a static allocation
+scheme doesn't work for the long term.
 
->> I think you may want to issue a irq_set_type here, because it is not
->> completely clear to me if the core code will be doing it by default for
->> you...
-> 
-> It's not needed I believe. I've added some trace in gic_set_type(), and
-> it's really called for every ICU interrupt as expected, as soon as the
-> interrupt is configured. And indeed, if you look at __setup_irq(), it
-> calls __irq_set_trigger(), see
-> http://elixir.free-electrons.com/linux/latest/source/kernel/irq/manage.c#L1309.
-> I've added a dump_stack() in git_set_type() to make sure when I was
-> getting called for the SPI interrupts corresponding to the GICP/ICU
-> stuff. Here is one example, from the XHCI driver:
-> 
-> [    1.815712] CPU: 2 PID: 1 Comm: swapper/0 Not tainted 4.12.0-rc1 #613
-> [    1.822180] Hardware name: Marvell Armada 8040 DB board (DT)
-> [    1.827863] Call trace:
-> [    1.830329] [<ffff000008088528>] dump_backtrace+0x0/0x228
-> [    1.835752] [<ffff00000808881c>] show_stack+0x14/0x20
-> [    1.840828] [<ffff00000838fd80>] dump_stack+0x90/0xb0
-> [    1.845903] [<ffff0000083bf13c>] gic_set_type+0x94/0x98
-> [    1.851154] [<ffff00000810e734>] irq_chip_set_type_parent+0x1c/0x30
-> [    1.857449] [<ffff00000810e734>] irq_chip_set_type_parent+0x1c/0x30
-> [    1.863743] [<ffff00000810e734>] irq_chip_set_type_parent+0x1c/0x30
-> [    1.870037] [<ffff00000810d0a0>] __irq_set_trigger+0x60/0x178
-> [    1.875808] [<ffff00000810d764>] __setup_irq+0x5ac/0x690
-> [    1.881143] [<ffff00000810da1c>] request_threaded_irq+0xec/0x1c0
-> [    1.887177] [<ffff0000086a84dc>] usb_add_hcd+0x50c/0x800
-> [    1.892513] [<ffff0000087052ec>] xhci_plat_probe+0x584/0x768
-> [    1.898199] [<ffff00000854cc28>] platform_drv_probe+0x58/0xc0
-> [    1.903969] [<ffff00000854ad74>] driver_probe_device+0x214/0x2d0
-> [    1.910002] [<ffff00000854aedc>] __driver_attach+0xac/0xb0
-> [    1.915511] [<ffff000008548ef8>] bus_for_each_dev+0x60/0xa0
-> [    1.921107] [<ffff00000854a690>] driver_attach+0x20/0x28
-> [    1.926442] [<ffff00000854a1e0>] bus_add_driver+0x110/0x230
-> [    1.932038] [<ffff00000854b858>] driver_register+0x60/0xf8
-> [    1.937547] [<ffff00000854cb5c>] __platform_driver_register+0x44/0x50
-> [    1.944019] [<ffff000008d41a60>] xhci_plat_init+0x2c/0x34
-> [    1.949441] [<ffff0000080830f8>] do_one_initcall+0x38/0x120
-> [    1.955038] [<ffff000008d00ce8>] kernel_init_freeable+0x198/0x238
-> [    1.961159] [<ffff0000088fe470>] kernel_init+0x10/0x100
-> [    1.966406] [<ffff000008082ec0>] ret_from_fork+0x10/0x50
-> 
-> So, whenever you do the request_irq(), __setup_irq() calls
-> __irq_set_trigger(), which ends in the ICU ->irq_set_type(), calling
-> the GICP MSI domain ->irq_set_type(), calling the GICP inner domain
-> ->irq_set_type(), itself calling the GIC ->irq_set_type().
+This patch series therefore makes Linux aware of the ICU: GIC SPI
+interrupts are dynamically allocated, and the ICU is configured
+accordingly to route a CP wired interrupt to the allocated GIC SPI
+interrupt.
 
-Fair enough.
+In detail:
 
-> 
->>> +	icu->gicp = platform_get_drvdata(gicp_pdev);
->>> +
->>> +	/* Set Clear/Set ICU SPI message address in AP */
->>> +	setspi = mvebu_gicp_setspi_phys_addr(icu->gicp);  
->>
->>
->> I must say that I find this quite horrible. The idea of digging into the
->> internals of another driver and forcing it to blindly dereference a
->> pointer feels just wrong.
->>
->> Instead, why don't you directly pass the device node, and kindly ask the
->> GICP driver to give you the two addresses? Something along the lines of:
->>
->> 	err = mvebu_gicp_get_doorbells(gicp_dn, &setspi, &clrspi);
->> 	if (err)
->> 		[...]
->>
->> which at least gives a the GICP driver chance to check that this is
->> something it knows about. And you can then drop the icu->gicp field.
-> 
-> ACK, fixed for the next version.
-> 
->>> +	/*
->>> +	 * Clean all ICU interrupts with type SPI_NSR, required to
->>> +	 * avoid unpredictable SPI assignments done by firmware.
->>> +	 */
->>> +	for (i = 0 ; i < ICU_MAX_IRQS ; i++) {
->>> +		icu_int = readl(icu->base + ICU_INT_CFG(i));
->>> +		if ((icu_int >> ICU_GROUP_SHIFT) == ICU_GRP_NSR)
->>> +			writel_relaxed(0x0, icu->base + ICU_INT_CFG(i));
->>> +	}  
->>
->> I had questions about the safety of this in a previous review. Do you
->> have any update? Also, shouldn't you check that same thing in the
->> translate callback (so that you detect clashes between firmware and DT)?
-> 
-> I'm still waiting for feedback from Hannah and Yehuda in Cc on this
-> question. They should answer soon, hopefully.
-> 
->> Otherwise looking pretty neat.
-> 
-> Thanks again for the review. You can expect v4 today.
+ - The first two patches are the Device Tree binding patches
 
-OK, thanks.
+ - The third patch adds a driver for the GICP.
 
-	M.
+ - The fourth patch adds the driver for the ICU.
+
+ - The fifth patch adjust Kconfig.platforms to select the GICP and ICU
+   drivers.
+
+ - The last patch adjusts the Device Tree files of the Armada 7K/8K to
+   describe and use the GICP/ICU.
+
+Changes since v3:
+
+ - Change the API between the ICU and the GICP driver to a single
+   function "int mvebu_gicp_get_doorbells(struct device_node *dn,
+   phys_addr_t *setspi, phys_addr_t *clrspi). This allows the ICU
+   driver to retrieve the physical addresses of the doorbell registers
+   of the GICP. This API was suggested by Marc Zyngier.
+
+ - Remove a useless "*hwirq < 0" check, since hwirq is an unsigned
+   long pointer. Pointed by Marc Zyngier.
+
+ - Remove a bogus "put_device()" in the ICU error path. This is no
+   longer needed, since we are no longer doing a get_device() on the
+   GICP. It was a bug already present in the v3.
+
+Changes since v2:
+
+ - Major rework of the GICP/ICU interaction, as suggested by Marc
+   Zyngier. Now the GICP acts as a proper MSI controller, and the ICU
+   driver is a consumer of MSIs provided by the GICP.
+
+   Therefore, the GICP now has a "msi-controller" property in the
+   Device Tree, stating it is a provider of MSIs, while the ICUs have
+   a "msi-parent" property pointing to the GICP, so that they allocate
+   MSIs from the GICP.
+
+   The only remaining non-standard interaction between ICU and GICP is
+   transmitting the SETSPI/CLRSPI addresses from the GICP to the
+   ICU. Unfortunately, the "struct msi_msg" is only designed to carry
+   a single address, while we need two. So we still have two function
+   calls from ICU to the GICP to retrieve those addresses.
+
+Changes since v1:
+
+ - Fix the #interrupt-cells value in the ICU DT binding
+   example. Pointed by Marc Zyngier.
+
+ - Add details about the possible group types in the ICU DT binding
+   documentation, as requested by Marc Zyngier. This allowed to
+   discover that the list of types listed was not matching the macros
+   provided in <dt-bindings/interrupt-controller/mvebu-icu.h>, so this
+   was fixed as well.
+
+ - Changed the "gicp" property of the ICU to "marvell,gicp", as
+   suggested by Marc Zyngier.
+
+ - Add a marvell,spi-ranges property to the gicp node, which defines
+   which ranges of GIC SPI interrupts are available for us by the
+   GICP.
+
+ - Move more GICP logic into the gicp driver. Indeed, it was confusing
+   to have in the ICU driver some global logic mixed with per-ICU
+   logic: there is only one GICP per system, but one ICU per CP (so in
+   an Armada 8K we have one GICP but two ICUs). So it makes more sense
+   to handle the GICP aspects in one driver (which has only one
+   device) and the ICU aspects in another driver (which has one device
+   per ICU).
+
+ - Use writel_relaxed() as suggested by Marc Zyngier.
+
+ - Use irq_set_irqchip_state() in the ICU driver to clear any pending
+   interrupt when allocating an interrupt. This ensures we don't get
+   bothered by an interrupt left pending by the firmware. This
+   replaces a more manual pending interrupt clearing done in the GICP
+   driver, which wasn't suitable for edge triggered
+   interrupts. Suggested by Marc Zyngier.
+
+ - Use devm_kstrdup() instead of kstrdup() to fix a potential memory
+   leak in the error path of ICU's ->probe() function. Noticed by Marc
+   Zyngier.
+
+ - Change compatible strings from "marvell,gicp" to
+   "marvell,ap806-gicp" and "marvell,icu" to "marvell,cp110-icu", as
+   future versions of those IP blocks may be different. Suggested by
+   Yehuda Yitschak.
+
+ - Use a shorter name for the irqchip domain, suggested by Grégory
+   Clement.
+
+ - Rename ICU_{SATA0,SATA1}_IRQ_INT to ICU_{SATA0,SATA1}_ICU_ID to
+   clarify we're talking about ICU identifiers and not interrupt
+   numbers. Suggested by Yehuda Yitschak.
+
+ - Fix bogus message when checking the ICU group type, make sure the
+   message says "wrong ICU group type" and not "wrong ICU
+   type". Suggested by Yehuda Yitschak.
+
+ - Add a check that the ICU identifier used in the DT is not higher
+   than ICU_MAX_IRQS. Suggested by Yehuda Yitschak.
+
+Best regards,
+
+Thomas
+
+
+Thomas Petazzoni (6):
+  dt-bindings: interrupt-controller: add DT binding for the Marvell GICP
+  dt-bindings: interrupt-controller: add DT binding for the Marvell ICU
+  irqchip: irq-mvebu-gicp: new driver for Marvell GICP
+  irqchip: irq-mvebu-icu: new driver for Marvell ICU
+  arm64: marvell: enable ICU and GICP drivers
+  arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K
+
+ .../bindings/interrupt-controller/marvell,gicp.txt |  27 ++
+ .../bindings/interrupt-controller/marvell,icu.txt  |  51 ++++
+ arch/arm64/Kconfig.platforms                       |   2 +
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |   7 +
+ .../boot/dts/marvell/armada-cp110-master.dtsi      |  59 +++--
+ .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi |  53 ++--
+ drivers/irqchip/Kconfig                            |   6 +
+ drivers/irqchip/Makefile                           |   2 +
+ drivers/irqchip/irq-mvebu-gicp.c                   | 279 ++++++++++++++++++++
+ drivers/irqchip/irq-mvebu-gicp.h                   |  12 +
+ drivers/irqchip/irq-mvebu-icu.c                    | 291 +++++++++++++++++++++
+ .../dt-bindings/interrupt-controller/mvebu-icu.h   |  15 ++
+ 12 files changed, 756 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+ create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
+ create mode 100644 drivers/irqchip/irq-mvebu-gicp.h
+ create mode 100644 drivers/irqchip/irq-mvebu-icu.c
+ create mode 100644 include/dt-bindings/interrupt-controller/mvebu-icu.h
+
 -- 
-Jazz is not dead. It just smells funny...
+2.9.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
