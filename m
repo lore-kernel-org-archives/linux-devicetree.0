@@ -1,93 +1,159 @@
-From: Wei Xu <xuwei5@hisilicon.com>
-Subject: Re: [PATCH v3 19/21] dt-bindings: mmc: dw_mmc-k3: add document of
- hi3660 mmc
-Date: Tue, 20 Jun 2017 10:59:21 +0100
-Message-ID: <5948F1F9.90903@hisilicon.com>
-References: <20170614082338.15673-1-guodong.xu@linaro.org>
- <20170614082338.15673-20-guodong.xu@linaro.org>
- <CAPDyKFpvJu8_TETWr0Vy4ubDC7NYvi7TxmSLYZyw33qHFsoNaQ@mail.gmail.com>
- <5947CAD8.4040607@hisilicon.com>
- <CAPDyKFo=hqp=j=nWpO8uf_0pGTSKjN0T-ZKqD8cuKp1C3Q2_hA@mail.gmail.com>
+From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] dt-bindings: media: Document Synopsys Designware
+ HDMI RX
+Date: Tue, 20 Jun 2017 11:10:48 +0100
+Message-ID: <4ad986c2-b814-4e30-fb7e-1e5063e0d298@synopsys.com>
+References: <cover.1497630695.git.joabreu@synopsys.com>
+ <51851d7b2335cc8a10fba17056314d7fa8ce88d1.1497630695.git.joabreu@synopsys.com>
+ <f58aaeaa-3e49-3cbc-0ed8-8c3a6ebd3907@gmail.com>
+ <28d2ca0e-d9bc-816a-313c-e367aaed166e@synopsys.com>
+ <4c75eb0d-04a6-571d-f4a2-5887ff57695f@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAPDyKFo=hqp=j=nWpO8uf_0pGTSKjN0T-ZKqD8cuKp1C3Q2_hA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, wangkefeng.wang@huawei.com, Arnd Bergmann <arnd@arndb.de>, Guodong Xu <guodong.xu@linaro.org>, Linux PCI <linux-pci@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Will Deacon <will.deacon@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Peter Griffin <peter.griffin@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Li Wei <liwei213@huawei.com>, puck.chen@hisilicon.com, xuejiancheng@hisilicon.com, zhangfei <zhangfei.gao@linaro.org>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4c75eb0d-04a6-571d-f4a2-5887ff57695f-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uffe,
+Hi Sylwester,
 
-On 2017/6/20 9:36, Ulf Hansson wrote:
-> Hi Wei,
-> 
-> On 19 June 2017 at 15:00, Wei Xu <xuwei5@hisilicon.com> wrote:
->> Hi Ulf,
+
+On 19-06-2017 22:18, Sylwester Nawrocki wrote:
+> On 06/19/2017 11:01 AM, Jose Abreu wrote:
+>> Using fixed-clock was already in my todo list. Regarding phy I
+>> need to pass pdata so that the callbacks between controller and
+>> phy are established. I also need to make sure that phy driver
+>> will be loaded by the controller driver. Hmm, and also address of
+>> the phy on th JTAG bus is fed to the controller driver not to the
+>> phy driver. Maybe leave the property as is (the
+>> "snps,hdmi-phy-jtag-addr") or parse it from the phy node?
+> I think the RX controller can parse it's child phy node to retrieve JTAG 
+> address from the reg property.  That seems better than creating custom 
+> property for device address on the bus.
+
+Ok, will do that.
+
+>
+> Does the PHY support any other type of control bus, e.g. I2C or SPI?
+
+It supports I2C but its all done by controller regbank.
+
+>
+>> I also need to pass pdata to the controller driver (the callbacks
+>> for 5v handling) which are agnostic of the controller. These
+> Is this about detecting +5V coming from the HDMI connector? Or some
+> other voltage supply?
+
+Yes, 5v signal from HDMI source.
+
+>
+>> reasons prevented me from adding compatible strings to both
+>> drivers and just use a wrapper driver instead. This way i do
+> If you add struct of_device_id instance to your module and define
+> MODULE_DEVICE_ALIAS(of, ...) there, it will allow the module to be loaded 
+> when device with matching compatible string is created in the kernel. 
+> User space is notified with uevent about device creation.
+
+Hmm, I used another approach. I have a list of supported phys in
+the controller driver and the corresponding driver name, then I
+just match the node, get the driver name and do a request module
+the of_platform_populate. Maybe its not the best option?
+ 
+>
+>> "modprobe wrapper_driver" and I get all the drivers loaded via
+>> request_module(). Still, I like your approach much better. I saw
+>> that I can pass pdata using of_platform_populate, could you
+>> please confirm if I can still maintain this architecture (i.e.
+>> prevent modules from loading until I get all the chain setup)?
+> You could try to pass platform data this way, that should work. But 
+> I doubt it's the right directions, I would rather see things done 
+> in the V4L2 layer. 
+
+But this doesn't exist right? We would need something similar to
+v4l2_i2c_new_subdev_board() but for platform devices.
+
+>
+>> Following your approach I could get something like this:
 >>
->> On 2017/6/19 13:43, Ulf Hansson wrote:
->>> On 14 June 2017 at 10:23, Guodong Xu <guodong.xu@linaro.org> wrote:
->>>> Add bindings for hi3660 mmc support
->>>>
->>>> Signed-off-by: Li Wei <liwei213@huawei.com>
->>>> Signed-off-by: Guodong Xu <guodong.xu@linaro.org>
->>>> ---
->>>>  Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt | 1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->>>> index df37058..8af1afc 100644
->>>> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->>>> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->>>> @@ -12,6 +12,7 @@ extensions to the Synopsys Designware Mobile Storage Host Controller.
->>>>  Required Properties:
->>>>
->>>>  * compatible: should be one of the following.
->>>> +  - "hisilicon,hi3660-dw-mshc": for controllers with hi3660 specific extensions.
->>>>    - "hisilicon,hi4511-dw-mshc": for controllers with hi4511 specific extensions.
->>>>    - "hisilicon,hi6220-dw-mshc": for controllers with hi6220 specific extensions.
->>>>
->>>> --
->>>> 2.10.2
->>>>
->>>
->>> Thanks, applied for next!
+>> hdmi_system@YYYY {
+>>      compatible = "snps,dw-hdmi-rx-wrapper";
+> This would need to refer to some hardware block, we should avoid virtual 
+> device nodes in DT.
+
+By wrapper I mean the SoC, i.e. the whole integration of the
+controller + phy + EDID + 5v + ...
+
+>
+>>      reg = <0xYYYY 0xZZZZ>;
+>>      interrupts = <3>;
+>>      #address-cells = <1>;
+>>      #size-cells = <1>;
+> You would need also an (empty) 'ranges' property here.
+
+Yes, I already added it here locally.
+
+>
+>>      hdmi_controller@0 {
+>>          compatible = "snps,dw-hdmi-rx-controller";
+>>          reg = <0x0 0x10000>;
+>>          interrupts = <1>;
+>>          edid-phandle = <&hdmi_system>;
+>>          clocks = <&refclk>;
+>>          clock-names = "ref-clk";
+>>          #address-cells = <1>;
+>>          #size-cells = <0>;
 >>
->> Thanks!
->> Last week I had applied the v4 patch set[1]
->> and this patch is included.
->> But it should be fine for the upper gatekeeper to merge
->> since these 2 patch are same.
-> 
-> No, that's not how git works.
-> 
-> If the patch has the same hash, that would be fine, but that isn't the
-> case here as we have two different hashes for the same change.
+>>          hdmi_phy@f3 {
+>>              compatible = "snps,dw-hdmi-phy-e405";
+>>              reg = <0xf3>;
+>>              clocks = <&cfgclk>;
+>>              clock-names = "cfg-clk";
+>>          }
+>>      }
+>> };
+>>
+>> And then snps,dw-hdmi-rx-wrapper would call of_platform_populate
+>> for controller which would instead call of_platform_populate for
+>> phy. Is this possible, and maintainable? Isn't the controller
+>> driver get auto loaded because of the compatible string match?
+> As I mentioned above, auto loading should work if you have instance 
+> of MODULE_DEVICE_TABLE() defined in the module, but the module might
+> not be available immediately after creating devices with 
+> of_platform_populate().  You may want to have a look at the v4l2-async 
+> API (drivers/media/v4l2-core/v4l2-async.c). It allows one driver
+> to register a notifier for its sub-devices. And the parent driver
+> can complete initialization when it gets all its v4l2 subdevs
+> registered.
+>
+> But I'm not sure about calls from the PHY back to the RX controller, 
+> possibly v4l2_set_subdev_hostdata()/v4l2_get_subdev_hostdata() could 
+> be used for passing the ops.
 
-Got it. Thanks for your explaining!
+Ok, I will move to the async API then.
 
-> 
-> To deal with this, I have just dropped the change from my tree and
-> leave it to you to carry the patch. Feel free to add my ack for it.
+>
+>> And one more thing: The reg address of the hdmi_controller: Isn't
+>> this relative to the parent node? I mean isn't this going to be
+>> 0xYYYY + 0x0? Because I don't want that :/
+> Address space of child nodes doesn't need to be relative to 'reg' range 
+> of parent node, these can be entirely distinct address ranges. See for 
+> example I2C bus controllers, the I2C addresses of slave devices are not 
+> much related to the memory mapped IO registers region of the bus controller.
 
-Thanks!
-But the pull request I sent last week has been merged.
+Yes, I already managed to get it working :)
 
-Best Regards,
-Wei
+Best regards,
+Jose Miguel Abreu
 
-> 
-> Kind regards
-> Uffe
-> 
-> .
-> 
+>
+> --
+> Regards,
+> Sylwester
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
