@@ -1,97 +1,38 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [GIT PULL] Improve cp110 clk support on Marvell Armada 7K/8K
-Date: Tue, 20 Jun 2017 09:32:16 +0200
-Message-ID: <87shiv3yin.fsf@free-electrons.com>
-References: <pull.28a1be390fb082d60e88c3234dd7d76fb61438b6.1497886602.git-series.gregory.clement@free-electrons.com>
-        <20170620001853.GT20170@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170620001853.GT20170@codeaurora.org> (Stephen Boyd's message
-        of "Mon, 19 Jun 2017 17:18:53 -0700")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
+From: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+Subject: [PATCH] nios2: add earlycon support to 3c120 devboard DTS
+Date: Tue, 20 Jun 2017 09:43:18 +0200
+Message-ID: <20170620074318.29069-1-tklauser@distanz.ch>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ley Foon Tan <lftan-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: nios2-dev-g9ZBwUv/Ih/yUk5EbOjzuce+I+R0W71w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+Allow earlycon to be used on the JTAG UART present in the 3c120 GHRD.
+
+Signed-off-by: Tobias Klauser <tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org>
+---
+ arch/nios2/boot/dts/3c120_devboard.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/arch/nios2/boot/dts/3c120_devboard.dts b/arch/nios2/boot/dts/3c120_devboard.dts
+index 31c51f9a2f09..36ccdf05837d 100644
+--- a/arch/nios2/boot/dts/3c120_devboard.dts
++++ b/arch/nios2/boot/dts/3c120_devboard.dts
+@@ -159,6 +159,7 @@
+ 	};
  
- On mar., juin 20 2017, Stephen Boyd <sboyd@codeaurora.org> wrote:
-
-> On 06/19, Gregory CLEMENT wrote:
->> 
->> Hi Mike, Stephen,
->> 
->> This time I turned the series in a pull request so I removed the
->> device tree binding part which will be in an other series for Rob
->> Herring and I also removed the dt part that I will take care of once
->> you will have pulled this one.
->> 
->> I hope this will be easier for you to apply this way.
->> 
->
-> Ok. It wasn't clear what was going on and I forgot to ask in the
-> lastest patch series. Pulled into clk-next, but I had to apply
-> this patch on top:
-
-Thanks for the pull and the fix patch!
-
-Gregory
-
->
-> ---8<----
-> From: Stephen Boyd <sboyd@codeaurora.org>
-> Subject: [PATCH] clk: mvebu: cp110: Minor cleanups
->
-> Mark an array of strings static const and remove the dereference
-> of a function pointer when assigning to the platform driver probe
-> struct member.
->
-> drivers/clk/mvebu/cp110-system-controller.c:89:12:
-> warning: symbol 'gate_base_names' was not declared. Should it be static?
-> drivers/clk/mvebu/cp110-system-controller.c:447:18:
-> error: cannot dereference this type
->
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  drivers/clk/mvebu/cp110-system-controller.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-> index b034b79345ec..ca9a0a536174 100644
-> --- a/drivers/clk/mvebu/cp110-system-controller.c
-> +++ b/drivers/clk/mvebu/cp110-system-controller.c
-> @@ -86,7 +86,7 @@ enum {
->  #define CP110_GATE_EIP150		25
->  #define CP110_GATE_EIP197		26
->  
-> -const char *gate_base_names[] = {
-> +static const char * const gate_base_names[] = {
->  	[CP110_GATE_AUDIO]	= "audio",
->  	[CP110_GATE_COMM_UNIT]	= "communit",
->  	[CP110_GATE_NAND]	= "nand",
-> @@ -437,14 +437,13 @@ static int cp110_clk_probe(struct platform_device *pdev)
->  	return cp110_syscon_common_probe(pdev, pdev->dev.of_node->parent);
->  }
->  
-> -
->  static const struct of_device_id cp110_syscon_legacy_of_match[] = {
->  	{ .compatible = "marvell,cp110-system-controller0", },
->  	{ }
->  };
->  
->  static struct platform_driver cp110_syscon_legacy_driver = {
-> -	.probe = *cp110_syscon_legacy_clk_probe,
-> +	.probe = cp110_syscon_legacy_clk_probe,
->  	.driver		= {
->  		.name	= "marvell-cp110-system-controller0",
->  		.of_match_table = cp110_syscon_legacy_of_match,
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-
+ 	chosen {
+-		bootargs = "debug console=ttyJ0,115200";
++		bootargs = "debug earlycon console=ttyJ0,115200";
++		stdout-path = &jtag_uart;
+ 	};
+ };
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.13.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
