@@ -1,312 +1,82 @@
-From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v11 4/4] i2c: aspeed: added slave support for Aspeed I2C driver
-Date: Tue, 20 Jun 2017 14:15:16 -0700
-Message-ID: <20170620211516.13095-5-brendanhiggins@google.com>
-References: <20170620211516.13095-1-brendanhiggins@google.com>
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v6 0/4] of: remove *phandle properties from expanded device tree
+Date: Tue, 20 Jun 2017 15:02:48 -0700
+Message-ID: <1497996172-821-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170620211516.13095-1-brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added slave support for Aspeed I2C controller. Supports fourteen busses
-present in AST24XX and AST25XX BMC SoCs by Aspeed.
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Signed-off-by: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
----
-Added in v6:
-  - Pulled slave support out of initial driver commit into its own commit.
-  - No longer arbitrarily restrict bus to be slave xor master.
-Changes for v7:
-  - Added hardware reset function
-  - Marked functions that need to be called with the lock held as "unlocked"
-  - Did some cleanup
-Changes for v8:
-  - None
-Changes for v9:
-  - None
-Changes for v10:
-  - None
-Changes for v11:
-  - Use i2c_{get|set}_adapdata instead of adapter->algo_data
----
- drivers/i2c/busses/i2c-aspeed.c | 201 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 201 insertions(+)
+Remove "phandle" and "linux,phandle" properties from the internal
+device tree.  The phandle will still be in the struct device_node
+phandle field and will still be displayed as if it is a property
+in /proc/device_tree.
 
-diff --git a/drivers/i2c/busses/i2c-aspeed.c b/drivers/i2c/busses/i2c-aspeed.c
-index 55f241f2cfcc..f19348328a71 100644
---- a/drivers/i2c/busses/i2c-aspeed.c
-+++ b/drivers/i2c/busses/i2c-aspeed.c
-@@ -49,6 +49,7 @@
- #define ASPEED_I2CD_SDA_DRIVE_1T_EN			BIT(8)
- #define ASPEED_I2CD_M_SDA_DRIVE_1T_EN			BIT(7)
- #define ASPEED_I2CD_M_HIGH_SPEED_EN			BIT(6)
-+#define ASPEED_I2CD_SLAVE_EN				BIT(1)
- #define ASPEED_I2CD_MASTER_EN				BIT(0)
- 
- /* 0x04 : I2CD Clock and AC Timing Control Register #1 */
-@@ -69,6 +70,7 @@
-  */
- #define ASPEED_I2CD_INTR_SDA_DL_TIMEOUT			BIT(14)
- #define ASPEED_I2CD_INTR_BUS_RECOVER_DONE		BIT(13)
-+#define ASPEED_I2CD_INTR_SLAVE_MATCH			BIT(7)
- #define ASPEED_I2CD_INTR_SCL_TIMEOUT			BIT(6)
- #define ASPEED_I2CD_INTR_ABNORMAL			BIT(5)
- #define ASPEED_I2CD_INTR_NORMAL_STOP			BIT(4)
-@@ -101,6 +103,9 @@
- #define ASPEED_I2CD_M_TX_CMD				BIT(1)
- #define ASPEED_I2CD_M_START_CMD				BIT(0)
- 
-+/* 0x18 : I2CD Slave Device Address Register   */
-+#define ASPEED_I2CD_DEV_ADDR_MASK			GENMASK(6, 0)
-+
- enum aspeed_i2c_master_state {
- 	ASPEED_I2C_MASTER_START,
- 	ASPEED_I2C_MASTER_TX_FIRST,
-@@ -111,6 +116,15 @@ enum aspeed_i2c_master_state {
- 	ASPEED_I2C_MASTER_INACTIVE,
- };
- 
-+enum aspeed_i2c_slave_state {
-+	ASPEED_I2C_SLAVE_START,
-+	ASPEED_I2C_SLAVE_READ_REQUESTED,
-+	ASPEED_I2C_SLAVE_READ_PROCESSED,
-+	ASPEED_I2C_SLAVE_WRITE_REQUESTED,
-+	ASPEED_I2C_SLAVE_WRITE_RECEIVED,
-+	ASPEED_I2C_SLAVE_STOP,
-+};
-+
- struct aspeed_i2c_bus {
- 	struct i2c_adapter		adap;
- 	struct device			*dev;
-@@ -130,6 +144,10 @@ struct aspeed_i2c_bus {
- 	int				cmd_err;
- 	/* Protected only by i2c_lock_bus */
- 	int				master_xfer_result;
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	struct i2c_client		*slave;
-+	enum aspeed_i2c_slave_state	slave_state;
-+#endif /* CONFIG_I2C_SLAVE */
- };
- 
- static int aspeed_i2c_reset(struct aspeed_i2c_bus *bus);
-@@ -202,6 +220,110 @@ static int aspeed_i2c_recover_bus(struct aspeed_i2c_bus *bus)
- 	return aspeed_i2c_reset(bus);
- }
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+static bool aspeed_i2c_slave_irq(struct aspeed_i2c_bus *bus)
-+{
-+	u32 command, irq_status, status_ack = 0;
-+	struct i2c_client *slave = bus->slave;
-+	bool irq_handled = true;
-+	u8 value;
-+
-+	spin_lock(&bus->lock);
-+	if (!slave) {
-+		irq_handled = false;
-+		goto out;
-+	}
-+
-+	command = readl(bus->base + ASPEED_I2C_CMD_REG);
-+	irq_status = readl(bus->base + ASPEED_I2C_INTR_STS_REG);
-+
-+	/* Slave was requested, restart state machine. */
-+	if (irq_status & ASPEED_I2CD_INTR_SLAVE_MATCH) {
-+		status_ack |= ASPEED_I2CD_INTR_SLAVE_MATCH;
-+		bus->slave_state = ASPEED_I2C_SLAVE_START;
-+	}
-+
-+	/* Slave is not currently active, irq was for someone else. */
-+	if (bus->slave_state == ASPEED_I2C_SLAVE_STOP) {
-+		irq_handled = false;
-+		goto out;
-+	}
-+
-+	dev_dbg(bus->dev, "slave irq status 0x%08x, cmd 0x%08x\n",
-+		irq_status, command);
-+
-+	/* Slave was sent something. */
-+	if (irq_status & ASPEED_I2CD_INTR_RX_DONE) {
-+		value = readl(bus->base + ASPEED_I2C_BYTE_BUF_REG) >> 8;
-+		/* Handle address frame. */
-+		if (bus->slave_state == ASPEED_I2C_SLAVE_START) {
-+			if (value & 0x1)
-+				bus->slave_state =
-+						ASPEED_I2C_SLAVE_READ_REQUESTED;
-+			else
-+				bus->slave_state =
-+						ASPEED_I2C_SLAVE_WRITE_REQUESTED;
-+		}
-+		status_ack |= ASPEED_I2CD_INTR_RX_DONE;
-+	}
-+
-+	/* Slave was asked to stop. */
-+	if (irq_status & ASPEED_I2CD_INTR_NORMAL_STOP) {
-+		status_ack |= ASPEED_I2CD_INTR_NORMAL_STOP;
-+		bus->slave_state = ASPEED_I2C_SLAVE_STOP;
-+	}
-+	if (irq_status & ASPEED_I2CD_INTR_TX_NAK) {
-+		status_ack |= ASPEED_I2CD_INTR_TX_NAK;
-+		bus->slave_state = ASPEED_I2C_SLAVE_STOP;
-+	}
-+
-+	switch (bus->slave_state) {
-+	case ASPEED_I2C_SLAVE_READ_REQUESTED:
-+		if (irq_status & ASPEED_I2CD_INTR_TX_ACK)
-+			dev_err(bus->dev, "Unexpected ACK on read request.\n");
-+		bus->slave_state = ASPEED_I2C_SLAVE_READ_PROCESSED;
-+
-+		i2c_slave_event(slave, I2C_SLAVE_READ_REQUESTED, &value);
-+		writel(value, bus->base + ASPEED_I2C_BYTE_BUF_REG);
-+		writel(ASPEED_I2CD_S_TX_CMD, bus->base + ASPEED_I2C_CMD_REG);
-+		break;
-+	case ASPEED_I2C_SLAVE_READ_PROCESSED:
-+		status_ack |= ASPEED_I2CD_INTR_TX_ACK;
-+		if (!(irq_status & ASPEED_I2CD_INTR_TX_ACK))
-+			dev_err(bus->dev,
-+				"Expected ACK after processed read.\n");
-+		i2c_slave_event(slave, I2C_SLAVE_READ_PROCESSED, &value);
-+		writel(value, bus->base + ASPEED_I2C_BYTE_BUF_REG);
-+		writel(ASPEED_I2CD_S_TX_CMD, bus->base + ASPEED_I2C_CMD_REG);
-+		break;
-+	case ASPEED_I2C_SLAVE_WRITE_REQUESTED:
-+		bus->slave_state = ASPEED_I2C_SLAVE_WRITE_RECEIVED;
-+		i2c_slave_event(slave, I2C_SLAVE_WRITE_REQUESTED, &value);
-+		break;
-+	case ASPEED_I2C_SLAVE_WRITE_RECEIVED:
-+		i2c_slave_event(slave, I2C_SLAVE_WRITE_RECEIVED, &value);
-+		break;
-+	case ASPEED_I2C_SLAVE_STOP:
-+		i2c_slave_event(slave, I2C_SLAVE_STOP, &value);
-+		break;
-+	default:
-+		dev_err(bus->dev, "unhandled slave_state: %d\n",
-+			bus->slave_state);
-+		break;
-+	}
-+
-+	if (status_ack != irq_status)
-+		dev_err(bus->dev,
-+			"irq handled != irq. expected %x, but was %x\n",
-+			irq_status, status_ack);
-+	writel(status_ack, bus->base + ASPEED_I2C_INTR_STS_REG);
-+
-+out:
-+	spin_unlock(&bus->lock);
-+	return irq_handled;
-+}
-+#endif /* CONFIG_I2C_SLAVE */
-+
- /* precondition: bus.lock has been acquired. */
- static void aspeed_i2c_do_start(struct aspeed_i2c_bus *bus)
- {
-@@ -427,6 +549,13 @@ static irqreturn_t aspeed_i2c_bus_irq(int irq, void *dev_id)
- {
- 	struct aspeed_i2c_bus *bus = dev_id;
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	if (aspeed_i2c_slave_irq(bus)) {
-+		dev_dbg(bus->dev, "irq handled by slave.\n");
-+		return IRQ_HANDLED;
-+	}
-+#endif /* CONFIG_I2C_SLAVE */
-+
- 	return aspeed_i2c_master_irq(bus) ? IRQ_HANDLED : IRQ_NONE;
- }
- 
-@@ -474,9 +603,75 @@ static u32 aspeed_i2c_functionality(struct i2c_adapter *adap)
- 	return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL | I2C_FUNC_SMBUS_BLOCK_DATA;
- }
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+/* precondition: bus.lock has been acquired. */
-+static void __aspeed_i2c_reg_slave(struct aspeed_i2c_bus *bus, u16 slave_addr)
-+{
-+	u32 addr_reg_val, func_ctrl_reg_val;
-+
-+	/* Set slave addr. */
-+	addr_reg_val = readl(bus->base + ASPEED_I2C_DEV_ADDR_REG);
-+	addr_reg_val &= ~ASPEED_I2CD_DEV_ADDR_MASK;
-+	addr_reg_val |= slave_addr & ASPEED_I2CD_DEV_ADDR_MASK;
-+	writel(addr_reg_val, bus->base + ASPEED_I2C_DEV_ADDR_REG);
-+
-+	/* Turn on slave mode. */
-+	func_ctrl_reg_val = readl(bus->base + ASPEED_I2C_FUN_CTRL_REG);
-+	func_ctrl_reg_val |= ASPEED_I2CD_SLAVE_EN;
-+	writel(func_ctrl_reg_val, bus->base + ASPEED_I2C_FUN_CTRL_REG);
-+}
-+
-+static int aspeed_i2c_reg_slave(struct i2c_client *client)
-+{
-+	struct aspeed_i2c_bus *bus = i2c_get_adapdata(client->adapter);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bus->lock, flags);
-+	if (bus->slave) {
-+		spin_unlock_irqrestore(&bus->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	__aspeed_i2c_reg_slave(bus, client->addr);
-+
-+	bus->slave = client;
-+	bus->slave_state = ASPEED_I2C_SLAVE_STOP;
-+	spin_unlock_irqrestore(&bus->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int aspeed_i2c_unreg_slave(struct i2c_client *client)
-+{
-+	struct aspeed_i2c_bus *bus = i2c_get_adapdata(client->adapter);
-+	u32 func_ctrl_reg_val;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bus->lock, flags);
-+	if (!bus->slave) {
-+		spin_unlock_irqrestore(&bus->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	/* Turn off slave mode. */
-+	func_ctrl_reg_val = readl(bus->base + ASPEED_I2C_FUN_CTRL_REG);
-+	func_ctrl_reg_val &= ~ASPEED_I2CD_SLAVE_EN;
-+	writel(func_ctrl_reg_val, bus->base + ASPEED_I2C_FUN_CTRL_REG);
-+
-+	bus->slave = NULL;
-+	spin_unlock_irqrestore(&bus->lock, flags);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_I2C_SLAVE */
-+
- static const struct i2c_algorithm aspeed_i2c_algo = {
- 	.master_xfer	= aspeed_i2c_master_xfer,
- 	.functionality	= aspeed_i2c_functionality,
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	.reg_slave	= aspeed_i2c_reg_slave,
-+	.unreg_slave	= aspeed_i2c_unreg_slave,
-+#endif /* CONFIG_I2C_SLAVE */
- };
- 
- static u32 aspeed_i2c_get_clk_reg_val(u32 divisor)
-@@ -551,6 +746,12 @@ static int aspeed_i2c_init(struct aspeed_i2c_bus *bus,
- 	writel(readl(bus->base + ASPEED_I2C_FUN_CTRL_REG) | fun_ctrl_reg,
- 	       bus->base + ASPEED_I2C_FUN_CTRL_REG);
- 
-+#if IS_ENABLED(CONFIG_I2C_SLAVE)
-+	/* If slave has already been registered, re-enable it. */
-+	if (bus->slave)
-+		__aspeed_i2c_reg_slave(bus, bus->slave->addr);
-+#endif /* CONFIG_I2C_SLAVE */
-+
- 	/* Set interrupt generation of I2C controller */
- 	writel(ASPEED_I2CD_INTR_ALL, bus->base + ASPEED_I2C_INTR_CTRL_REG);
- 
+This is to resolve the issue found by Stephen Boyd [1] when he changed
+the type of struct property.value from void * to const void *.  As
+a result of the type change, the overlay code had compile errors
+where the resolver updates phandle values.
+
+  [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+
+Patch 1 is the phandle related changes.
+
+Patches 2 - 4 are minor fixups for issues that became visible
+while implementing patch 1.
+
+Changes from v5:
+   - patch 1: populate_properties(), prop_is_phandle was declared
+     at the wrong scope and thus was initialized before the for
+     loop instead of each time through the loop.  This resulted
+     in any property in a node after the phandle property not
+     being unflattened.
+
+Changes from v4:
+   - rebase on 4.12-rc1
+   - Add reason for "<NULL>" in of_attach_node()
+   - Simplify and consolidate phandle detection logic in
+     populate_properties().  This results in a change of behaviour,
+     the value of property "ibm,phandle" will no longer override the
+     value of properties "phandle" and "linux,phandle".
+
+Changes from v3:
+   - patch 1: fix incorrect variable name in __of_add_phandle_sysfs().
+     Problem was reported by the kbuild test robot
+
+Changes from v2:
+   - patch 1: Remove check in __of_add_phandle_sysfs() that would not
+     add a sysfs entry if IS_ENABLED(CONFIG_PPC_PSERIES)
+
+Changes from v1:
+   - Remove phandle properties in of_attach_node(), before attaching
+     the node to the live tree.
+   - Add the phandle sysfs entry for the node in of_attach_node().
+   - When creating an overlay changeset, duplicate the node phandle in
+     __of_node_dup().
+
+
+*** BLURB HERE ***
+
+Frank Rowand (4):
+  of: remove *phandle properties from expanded device tree
+  of: make __of_attach_node() static
+  of: be consistent in form of file mode
+  of: detect invalid phandle in overlay
+
+ drivers/of/base.c       | 50 +++++++++++++++++++++++++++++++++++++++----
+ drivers/of/dynamic.c    | 57 +++++++++++++++++++++++++++++++++++++------------
+ drivers/of/fdt.c        | 43 ++++++++++++++++++-------------------
+ drivers/of/of_private.h |  2 +-
+ drivers/of/overlay.c    |  8 ++++---
+ drivers/of/resolver.c   | 23 +-------------------
+ include/linux/of.h      |  1 +
+ 7 files changed, 118 insertions(+), 66 deletions(-)
+
 -- 
-2.13.1.611.g7e3b11ae1-goog
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
