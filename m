@@ -1,64 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [EXT] Re: [PATCH v2] mmc: core: add mmc-card hardware reset
- enable support
-Date: Tue, 20 Jun 2017 11:45:16 +0200
-Message-ID: <CACRpkdb92scfO=tghucfC3RqQpi9K6YSuavte_b-AxH4hS87rQ@mail.gmail.com>
-References: <1491895862-7952-1-git-send-email-richard.leitner@skidata.com>
- <CACRpkdaBrk91hh3JGZ0vcD3aXO+OHD41xwRKn9prPSOX_SXuWg@mail.gmail.com>
- <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
- <0a29de1a-2635-2bb8-808a-7b9a0197921a@skidata.com> <6b92d0af00024549a0d22dda039780dd@bowex36d.micron.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sunxi: add MMC support for A83T
+Date: Tue, 20 Jun 2017 11:49:06 +0200
+Message-ID: <20170620094906.7bwg6zvth6oqkasd@flea.lan>
+References: <20170618130018.10684-1-techping.chan@gmail.com>
+ <20170618130018.10684-2-techping.chan@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6b92d0af00024549a0d22dda039780dd@bowex36d.micron.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Luca Porzio (lporzio)" <lporzio@micron.com>
-Cc: Richard Leitner <richard.leitner@skidata.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bart Van Assche <bart.vanassche@sandisk.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Leitner <dev@g0hl1n.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="syweihn35sptcjqd"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBE67UPFAKGQE65UUWKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170618130018.10684-2-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Luca,
 
-thanks for joining!
+--syweihn35sptcjqd
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-On Wed, Jun 14, 2017 at 6:12 PM, Luca Porzio (lporzio)
-<lporzio@micron.com> wrote:
+Hi,
 
-> This behavior is not Micron specific but instead it is enforced by the Jedec
-> Specification. All eMMC must have HW reset disabled by default.
+On Sun, Jun 18, 2017 at 09:00:17PM +0800, Ziping Chen wrote:
+> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> 
+> The Allwinner A83T's MMC can work with
+> compatible "allwinner,sun7i-a20-mmc".
+> 
+> Add support for it.
 
-That's very good to know.
+This has been proven not to be the case already.
 
-> This specification (as Ulf correctly hinted) originated from badly connected
-> HW Reset pins which caused unnecessary eMMC reset glitches.
-> Disabling this feature is a good option to contain glitches and avoid
-> system level bugs.
+Please use an A83T compatible only.
 
-Ah, makes sense.
+Maxime
 
-> IMHO mmc-util is where the patch really stands: the enabling is OTP,
-> the programmer have to use mmc-util only once and the kernel
-> will behave accordingly.
-
-So we should not add it to the device tree.
-
-> Any platform vendor must check that the HW Reset pin is actually
-> Connected BEFORE enabling this feature otherwise the system may be
-> unstable. A DT Binding may be dangerous if this condition is not met
-> as well as the code execution at each MMC init is honestly redundant
-> for an OTP location of the extCSD.
-
-I agree. So the device should be configured during production, or
-a user who know exactly what they are doing may reconfigure it
-using the mmc-utils.
-
-Thus the kernel should just read what the device says and stay with
-that, no DT props or anything.
-
-This makes a lot of sense.
-
-When say ethernet devices need MAC addresses written to their OTP
-we do not put that into the device tree to be programmed either, we assume
-production tools to do that job.
-
-Yours,
-Linus Walleij
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--syweihn35sptcjqd--
