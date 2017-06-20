@@ -1,101 +1,70 @@
-From: Mauro Carvalho Chehab <mchehab-JsYNTwtnfakRB7SZvlqPiA@public.gmane.org>
-Subject: [git:media_tree/master] [media] doc: DT: venus: binding document for
- Qualcomm video driver
-Date: Tue, 20 Jun 2017 11:53:39 +0000
-Message-ID: <E1dNHpR-0005v5-Rv@www.linuxtv.org>
-Reply-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: Shawn Guo: your attetion is needed here Re: [PATCH v8 00/34]
+ i.MX Media Driver
+Date: Tue, 20 Jun 2017 14:03:02 +0200
+Message-ID: <20170620120302.GA12948@amd>
+References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
+ <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
+ <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
+ <e4f152de-6e75-7654-178e-e6dcf9ad12f3@xs4all.nl>
+ <43887f25-bb73-9020-0909-d275c319aaad@mentor.com>
+ <20170620082933.GA31799@amd>
+ <CAOMZO5A_LjYzzDTG9KmEHxb2F0=1Pj2Wm8s5maKS8pxce-HX3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Unsubscribe: <https://www.linuxtv.org/cgi-bin/mailman/options/linuxtv-commits>,
- <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=unsubscribe>
-List-Post: <mailto:linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-List-Help: <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=help>
-List-Subscribe: <https://www.linuxtv.org/cgi-bin/mailman/listinfo/linuxtv-commits>,
- <mailto:linuxtv-commits-request-dJidKbW2IEtAfugRpC6u6w@public.gmane.org?subject=subscribe>
-Sender: "linuxtv-commits" <linuxtv-commits-bounces-dJidKbW2IEtAfugRpC6u6w@public.gmane.org>
-Errors-To: linuxtv-commits-bounces+gcvl-linuxtv-commits=m.gmane.org-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-To: linuxtv-commits-dJidKbW2IEtAfugRpC6u6w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Stanimir Varbanov <stanimir.varbanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="3V7upXqbjpZ4EhLz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAOMZO5A_LjYzzDTG9KmEHxb2F0=1Pj2Wm8s5maKS8pxce-HX3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, minghsiu.tsai-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Nick Dyer <nick-gcszYUEDH4VrovVCs/uTlw@public.gmane.org>, songjun.wu-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Steve Longerbeam <steve_longerbeam-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devel-gWbeCf7V1WCQmaza687I9mD2FQJk+8+b@public.gmane.org, markus.heiser-m1Uo1GnMJf0b1SvskN2V4Q@public.gmane.org, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, shuah-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Russell King - ARM Linux <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Steve Longerbeam <slongerbeam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Arnd
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBpcyBhbiBhdXRvbWF0aWMgZ2VuZXJhdGVkIGVtYWlsIHRvIGxldCB5b3Uga25vdyB0aGF0
-IHRoZSBmb2xsb3dpbmcgcGF0Y2ggd2VyZSBxdWV1ZWQ6CgpTdWJqZWN0OiBbbWVkaWFdIGRvYzog
-RFQ6IHZlbnVzOiBiaW5kaW5nIGRvY3VtZW50IGZvciBRdWFsY29tbSB2aWRlbyBkcml2ZXIKQXV0
-aG9yOiAgU3RhbmltaXIgVmFyYmFub3YgPHN0YW5pbWlyLnZhcmJhbm92QGxpbmFyby5vcmc+CkRh
-dGU6ICAgIFRodSBKdW4gMTUgMTM6MzE6NDMgMjAxNyAtMDMwMAoKQWRkIGJpbmRpbmcgZG9jdW1l
-bnQgZm9yIFZlbnVzIHZpZGVvIGVuY29kZXIvZGVjb2RlciBkcml2ZXIKCkNjOiBSb2IgSGVycmlu
-ZyA8cm9iaCtkdEBrZXJuZWwub3JnPgpDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcKQWNr
-ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+ClNpZ25lZC1vZmYtYnk6IFN0YW5p
-bWlyIFZhcmJhbm92IDxzdGFuaW1pci52YXJiYW5vdkBsaW5hcm8ub3JnPgpTaWduZWQtb2ZmLWJ5
-OiBIYW5zIFZlcmt1aWwgPGhhbnMudmVya3VpbEBjaXNjby5jb20+ClNpZ25lZC1vZmYtYnk6IE1h
-dXJvIENhcnZhbGhvIENoZWhhYiA8bWNoZWhhYkBzLW9wZW5zb3VyY2UuY29tPgoKIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL21lZGlhL3Fjb20sdmVudXMudHh0ICAgICAgIHwgMTA3ICsrKysrKysr
-KysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDEwNyBpbnNlcnRpb25zKCspCgotLS0KCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvcWNvbSx2
-ZW51cy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvcWNvbSx2
-ZW51cy50eHQKbmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi4yNjkzNDQ5
-ZGFmNzMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvcWNvbSx2ZW51cy50eHQKQEAgLTAsMCArMSwxMDcgQEAKKyogUXVhbGNvbW0gVmVu
-dXMgdmlkZW8gZW5jb2Rlci9kZWNvZGVyIGFjY2VsZXJhdG9ycworCistIGNvbXBhdGlibGU6CisJ
-VXNhZ2U6IHJlcXVpcmVkCisJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+CisJRGVmaW5pdGlvbjog
-VmFsdWUgc2hvdWxkIGNvbnRhaW4gb25lIG9mOgorCQktICJxY29tLG1zbTg5MTYtdmVudXMiCisJ
-CS0gInFjb20sbXNtODk5Ni12ZW51cyIKKy0gcmVnOgorCVVzYWdlOiByZXF1aXJlZAorCVZhbHVl
-IHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJRGVmaW5pdGlvbjogUmVnaXN0ZXIgYmFzZSBh
-ZGRyZXNzIGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVyIG1hcC4KKy0gaW50ZXJydXB0czoKKwlV
-c2FnZTogcmVxdWlyZWQKKwlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5PgorCURlZmlu
-aXRpb246IFNob3VsZCBjb250YWluIGludGVycnVwdCBsaW5lIG51bWJlci4KKy0gY2xvY2tzOgor
-CVVzYWdlOiByZXF1aXJlZAorCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJRGVm
-aW5pdGlvbjogQSBMaXN0IG9mIHBoYW5kbGUgYW5kIGNsb2NrIHNwZWNpZmllciBwYWlycyBhcyBs
-aXN0ZWQKKwkJICAgIGluIGNsb2NrLW5hbWVzIHByb3BlcnR5LgorLSBjbG9jay1uYW1lczoKKwlV
-c2FnZTogcmVxdWlyZWQgZm9yIG1zbTg5MTYKKwlWYWx1ZSB0eXBlOiA8c3RyaW5nbGlzdD4KKwlE
-ZWZpbml0aW9uOiBTaG91bGQgY29udGFpbiB0aGUgZm9sbG93aW5nIGVudHJpZXM6CisJCS0gImNv
-cmUiCUNvcmUgdmlkZW8gYWNjZWxlcmF0b3IgY2xvY2sKKwkJLSAiaWZhY2UiCVZpZGVvIGFjY2Vs
-ZXJhdG9yIEFIQiBjbG9jaworCQktICJidXMiCQlWaWRlbyBhY2NlbGVyYXRvciBBWEkgY2xvY2sK
-Ky0gY2xvY2stbmFtZXM6CisJVXNhZ2U6IHJlcXVpcmVkIGZvciBtc204OTk2CisJVmFsdWUgdHlw
-ZTogPHN0cmluZ2xpc3Q+CisJRGVmaW5pdGlvbjogU2hvdWxkIGNvbnRhaW4gdGhlIGZvbGxvd2lu
-ZyBlbnRyaWVzOgorCQktICJjb3JlIglDb3JlIHZpZGVvIGFjY2VsZXJhdG9yIGNsb2NrCisJCS0g
-ImlmYWNlIglWaWRlbyBhY2NlbGVyYXRvciBBSEIgY2xvY2sKKwkJLSAiYnVzIgkJVmlkZW8gYWNj
-ZWxlcmF0b3IgQVhJIGNsb2NrCisJCS0gIm1idXMiCVZpZGVvIE1BWEkgY2xvY2sKKy0gcG93ZXIt
-ZG9tYWluczoKKwlVc2FnZTogcmVxdWlyZWQKKwlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFy
-cmF5PgorCURlZmluaXRpb246IEEgcGhhbmRsZSBhbmQgcG93ZXIgZG9tYWluIHNwZWNpZmllciBw
-YWlycyB0byB0aGUKKwkJICAgIHBvd2VyIGRvbWFpbiB3aGljaCBpcyByZXNwb25zaWJsZSBmb3Ig
-Y29sbGFwc2luZworCQkgICAgYW5kIHJlc3RvcmluZyBwb3dlciB0byB0aGUgcGVyaXBoZXJhbC4K
-Ky0gaW9tbXVzOgorCVVzYWdlOiByZXF1aXJlZAorCVZhbHVlIHR5cGU6IDxwcm9wLWVuY29kZWQt
-YXJyYXk+CisJRGVmaW5pdGlvbjogQSBsaXN0IG9mIHBoYW5kbGUgYW5kIElPTU1VIHNwZWNpZmll
-ciBwYWlycy4KKy0gbWVtb3J5LXJlZ2lvbjoKKwlVc2FnZTogcmVxdWlyZWQKKwlWYWx1ZSB0eXBl
-OiA8cGhhbmRsZT4KKwlEZWZpbml0aW9uOiByZWZlcmVuY2UgdG8gdGhlIHJlc2VydmVkLW1lbW9y
-eSBmb3IgdGhlIGZpcm13YXJlCisJCSAgICBtZW1vcnkgcmVnaW9uLgorCisqIFN1Ym5vZGVzCitU
-aGUgVmVudXMgdmlkZW8tY29kZWMgbm9kZSBtdXN0IGNvbnRhaW4gdHdvIHN1Ym5vZGVzIHJlcHJl
-c2VudGluZwordmlkZW8tZGVjb2RlciBhbmQgdmlkZW8tZW5jb2Rlci4KKworRXZlcnkgb2Ygdmlk
-ZW8tZW5jb2RlciBvciB2aWRlby1kZWNvZGVyIHN1Ym5vZGUgc2hvdWxkIGhhdmU6CisKKy0gY29t
-cGF0aWJsZToKKwlVc2FnZTogcmVxdWlyZWQKKwlWYWx1ZSB0eXBlOiA8c3RyaW5nbGlzdD4KKwlE
-ZWZpbml0aW9uOiBWYWx1ZSBzaG91bGQgY29udGFpbiAidmVudXMtZGVjb2RlciIgb3IgInZlbnVz
-LWVuY29kZXIiCistIGNsb2NrczoKKwlVc2FnZTogcmVxdWlyZWQgZm9yIG1zbTg5OTYKKwlWYWx1
-ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5PgorCURlZmluaXRpb246IEEgTGlzdCBvZiBwaGFu
-ZGxlIGFuZCBjbG9jayBzcGVjaWZpZXIgcGFpcnMgYXMgbGlzdGVkCisJCSAgICBpbiBjbG9jay1u
-YW1lcyBwcm9wZXJ0eS4KKy0gY2xvY2stbmFtZXM6CisJVXNhZ2U6IHJlcXVpcmVkIGZvciBtc204
-OTk2CisJVmFsdWUgdHlwZTogPHN0cmluZ2xpc3Q+CisJRGVmaW5pdGlvbjogU2hvdWxkIGNvbnRh
-aW4gdGhlIGZvbGxvd2luZyBlbnRyaWVzOgorCQktICJjb3JlIglTdWJjb3JlIHZpZGVvIGFjY2Vs
-ZXJhdG9yIGNsb2NrCisKKy0gcG93ZXItZG9tYWluczoKKwlVc2FnZTogcmVxdWlyZWQgZm9yIG1z
-bTg5OTYKKwlWYWx1ZSB0eXBlOiA8cHJvcC1lbmNvZGVkLWFycmF5PgorCURlZmluaXRpb246IEEg
-cGhhbmRsZSBhbmQgcG93ZXIgZG9tYWluIHNwZWNpZmllciBwYWlycyB0byB0aGUKKwkJICAgIHBv
-d2VyIGRvbWFpbiB3aGljaCBpcyByZXNwb25zaWJsZSBmb3IgY29sbGFwc2luZworCQkgICAgYW5k
-IHJlc3RvcmluZyBwb3dlciB0byB0aGUgc3ViY29yZS4KKworKiBBbiBFeGFtcGxlCisJdmlkZW8t
-Y29kZWNAMWQwMDAwMCB7CisJCWNvbXBhdGlibGUgPSAicWNvbSxtc204OTE2LXZlbnVzIjsKKwkJ
-cmVnID0gPDB4MDFkMDAwMDAgMHhmZjAwMD47CisJCWludGVycnVwdHMgPSA8R0lDX1NQSSA0NCBJ
-UlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJY2xvY2tzID0gPCZnY2MgR0NDX1ZFTlVTMF9WQ09ERUMw
-X0NMSz4sCisJCQkgPCZnY2MgR0NDX1ZFTlVTMF9BSEJfQ0xLPiwKKwkJCSA8JmdjYyBHQ0NfVkVO
-VVMwX0FYSV9DTEs+OworCQljbG9jay1uYW1lcyA9ICJjb3JlIiwgImlmYWNlIiwgImJ1cyI7CisJ
-CXBvd2VyLWRvbWFpbnMgPSA8JmdjYyBWRU5VU19HRFNDPjsKKwkJaW9tbXVzID0gPCZhcHBzX2lv
-bW11IDU+OworCQltZW1vcnktcmVnaW9uID0gPCZ2ZW51c19tZW0+OworCisJCXZpZGVvLWRlY29k
-ZXIgeworCQkJY29tcGF0aWJsZSA9ICJ2ZW51cy1kZWNvZGVyIjsKKwkJCWNsb2NrcyA9IDwmbW1j
-YyBWSURFT19TVUJDT1JFMF9DTEs+OworCQkJY2xvY2stbmFtZXMgPSAiY29yZSI7CisJCQlwb3dl
-ci1kb21haW5zID0gPCZtbWNjIFZFTlVTX0NPUkUwX0dEU0M+OworCQl9OworCisJCXZpZGVvLWVu
-Y29kZXIgeworCQkJY29tcGF0aWJsZSA9ICJ2ZW51cy1lbmNvZGVyIjsKKwkJCWNsb2NrcyA9IDwm
-bW1jYyBWSURFT19TVUJDT1JFMV9DTEs+OworCQkJY2xvY2stbmFtZXMgPSAiY29yZSI7CisJCQlw
-b3dlci1kb21haW5zID0gPCZtbWNjIFZFTlVTX0NPUkUxX0dEU0M+OworCQl9OworCX07CgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eHR2LWNvbW1p
-dHMgbWFpbGluZyBsaXN0CmxpbnV4dHYtY29tbWl0c0BsaW51eHR2Lm9yZwpodHRwczovL3d3dy5s
-aW51eHR2Lm9yZy9jZ2ktYmluL21haWxtYW4vbGlzdGluZm8vbGludXh0di1jb21taXRz
+
+--3V7upXqbjpZ4EhLz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue 2017-06-20 08:05:05, Fabio Estevam wrote:
+> On Tue, Jun 20, 2017 at 5:29 AM, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> wrote:
+>=20
+> > Hmm. I changed the subject to grab Shawn's attetion.
+> >
+> > But his acks should not be needed for forward progress. Yes, it would
+> > be good, but he does not react -- so just reorder the series so that
+> > dts changes come last, then apply the parts you can apply: driver can
+> > go in.
+> >
+> > And actually... if maintainer does not respond at all, there are ways
+> > to deal with that, too...
+>=20
+> Shawn has already applied the dts part of the series and they show up
+> in linux-next.
+
+Aha, sorry about the noise. I see videomux parts being merged by
+Mauro. Good :-).
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--3V7upXqbjpZ4EhLz
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAllJDvYACgkQMOfwapXb+vIMJwCeOO8NrCm0dwZEl20Frwwc7JQb
+tXsAn2J65ZwNrU0Jg+qLr1nNVg59KNzr
+=I8wH
+-----END PGP SIGNATURE-----
+
+--3V7upXqbjpZ4EhLz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
