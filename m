@@ -1,40 +1,44 @@
-From: frowand.list@gmail.com
-Subject: [PATCH v6 4/4] of: detect invalid phandle in overlay
-Date: Tue, 20 Jun 2017 15:02:52 -0700
-Message-ID: <1497996172-821-5-git-send-email-frowand.list@gmail.com>
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v6 3/4] of: be consistent in form of file mode
+Date: Tue, 20 Jun 2017 15:02:51 -0700
+Message-ID: <1497996172-821-4-git-send-email-frowand.list@gmail.com>
 References: <1497996172-821-1-git-send-email-frowand.list@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1497996172-821-1-git-send-email-frowand.list@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497996172-821-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-Overlays are not allowed to modify phandle values of previously existing
-nodes because there is no information available to allow fixup up
-properties that use the previously existing phandle.
+checkpatch whined about using S_IRUGO instead of octal equivalent
+when adding phandle sysfs code, so used octal in that patch.
+Change other instances of the S_* constants in the same file to
+the octal form.
 
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 ---
- drivers/of/overlay.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/of/base.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index ca0b85f5deb1..20ab49d2f7a4 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -130,6 +130,10 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
- 	/* NOTE: Multiple mods of created nodes not supported */
- 	tchild = of_get_child_by_name(target, cname);
- 	if (tchild != NULL) {
-+		/* new overlay phandle value conflicts with existing value */
-+		if (child->phandle)
-+			return -EINVAL;
-+
- 		/* apply overlay recursively */
- 		ret = of_overlay_apply_one(ov, tchild, child);
- 		of_node_put(tchild);
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 941c9a03471d..a4e2159c8671 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -168,7 +168,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
+ 
+ 	sysfs_bin_attr_init(&pp->attr);
+ 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
+-	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
++	pp->attr.attr.mode = secure ? 0400 : 0444;
+ 	pp->attr.size = secure ? 0 : pp->length;
+ 	pp->attr.read = of_node_property_read;
+ 
 -- 
-Frank Rowand <frank.rowand@sony.com>
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
