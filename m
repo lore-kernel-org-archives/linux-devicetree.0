@@ -1,49 +1,39 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] iio: temperature: tsys01: Add OF match table
-Date: Tue, 20 Jun 2017 18:14:59 +0100
-Message-ID: <20170620181459.444e14c3@kernel.org>
-References: <1497369142-32473-1-git-send-email-manivannan.sadhasivam@linaro.org>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 0/4] net-next: stmmac: dwmac-sun8i: add
+ support for V3s
+Date: Tue, 20 Jun 2017 13:23:23 -0400 (EDT)
+Message-ID: <20170620.132323.46663908524667004.davem@davemloft.net>
+References: <20170617140737.41951-1-icenowy@aosc.io>
+Reply-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497369142-32473-1-git-send-email-manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, william.markezana-ya7vCgA9bt58UrSeD/g0lQ@public.gmane.org, ludovic.tancerel-sbt5i+FMW2pmsedzY7GhzwC/G2K4zDHf@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBCFPF2XH6UDBBDVUUXFAKGQE3TES7AI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170617140737.41951-1-icenowy-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 Jun 2017 21:22:22 +0530
-Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+From: Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>
+Date: Sat, 17 Jun 2017 22:07:33 +0800
 
-> Add of_match_table for Measurement Specialties TSYS01 temperature sensor
+> Allwinner V3s features an EMAC like the on in H3, but without external MII
+> interfaces, so being not able really to use RMII/RGMII.
 > 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Applied.  Thanks,
-> ---
->  drivers/iio/temperature/tsys01.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+> And it has a different default value of syscon (0x38000 instead of 0x58000
+> on H3), which shows a problem that the EMAC clock freq should be 24MHz.
+> (Both H3 and V3s SoCs doesn't have extra xtal input for EPHY, and the
+> main xtal is 24MHz. The default value of H3 is set to 24MHz, but the V3s
+> default value is set to 25MHz).
 > 
-> diff --git a/drivers/iio/temperature/tsys01.c b/drivers/iio/temperature/tsys01.c
-> index 3e60c61..d8aa211 100644
-> --- a/drivers/iio/temperature/tsys01.c
-> +++ b/drivers/iio/temperature/tsys01.c
-> @@ -214,11 +214,18 @@ static const struct i2c_device_id tsys01_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, tsys01_id);
->  
-> +static const struct of_device_id tsys01_of_match[] = {
-> +	{ .compatible = "meas,tsys01", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, tsys01_of_match);
-> +
->  static struct i2c_driver tsys01_driver = {
->  	.probe = tsys01_i2c_probe,
->  	.id_table = tsys01_id,
->  	.driver = {
->  		   .name = "tsys01",
-> +		   .of_match_table = of_match_ptr(tsys01_of_match),
->  		   },
->  };
->  
+> First two patches are device tree binding patches, the third forces
+> the frequency to 24MHz and the fourth really add the V3s support.
+
+Series applied to net-next, thanks!
