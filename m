@@ -1,51 +1,53 @@
-From: Phil Elwell <phil@raspberrypi.org>
-Subject: Re: [PATCH v3 3/4] irqchip: Add BCM2835 AUX interrupt controller
-Date: Tue, 20 Jun 2017 10:19:06 +0100
-Message-ID: <9e8dcada-2000-e899-2a2c-ab54ae19e3db@raspberrypi.org>
-References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
- <1497457750-35585-1-git-send-email-phil@raspberrypi.org>
- <1497457750-35585-4-git-send-email-phil@raspberrypi.org>
- <f68eed56-35b8-737e-008d-a8e993c7f6f1@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <f68eed56-35b8-737e-008d-a8e993c7f6f1@gmail.com>
-Content-Language: en-GB
-Sender: linux-clk-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stefan Wahren <stefan.wahren@i2se.com>, Eric Anholt <eric@anholt.net>, Russell King <linux@armlinux.org.uk>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v3 05/15] spi: qup: Place the QUP in run mode before DMA
+Date: Tue, 20 Jun 2017 14:40:47 +0530
+Message-ID: <1497949857-1852-6-git-send-email-varada@codeaurora.org>
+References: <1497949857-1852-1-git-send-email-varada@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1497949857-1852-1-git-send-email-varada@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/06/2017 22:13, Florian Fainelli wrote:
-> On 06/14/2017 09:29 AM, Phil Elwell wrote:
->> Devices in the BCM2835 AUX block share a common interrupt line, with a
->> register indicating which devices have active IRQs. Expose this as a
->> nested interrupt controller to avoid IRQ sharing problems (easily
->> observed if UART1 and SPI1/2 are enabled simultaneously).
->>
->> Signed-off-by: Phil Elwell <phil@raspberrypi.org>
->> ---
-> 
->> +/*
->> + * The irq_mask and irq_unmask function pointers are used without
->> + * validity checks, so they must not be NULL. Create a dummy function
->> + * with the expected type for use as a no-op.
->> + */
->> +static void bcm2835_aux_irq_dummy(struct irq_data *data)
->> +{
->> +}
->> +
->> +static struct irq_chip bcm2835_aux_irq_chip = {
->> +	.name = "bcm2835-aux_irq",
->> +	.irq_mask = bcm2835_aux_irq_dummy,
->> +	.irq_unmask = bcm2835_aux_irq_dummy,
->> +};
-> 
-> So how are the interrupt enabled/disabled if this interrupt controller
-> just returns their pending state?
+Signed-off-by: Andy Gross <andy.gross@linaro.org>
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+---
+ drivers/spi/spi-qup.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-Interrupts must be enabled, disabled and acknowledged on the blocks in the
-AUX domain - UART1, SPI1 and SPI2. There is no additional masking -
-AUXIRQ is essentially an interrupt sharing accelerator.
-
-Phil
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index d3ccf53..0683e47 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -336,6 +336,14 @@ static int spi_qup_do_dma(struct spi_master *master, struct spi_transfer *xfer,
+ 	struct spi_qup *qup = spi_master_get_devdata(master);
+ 	int ret;
+ 
++	/* before issuing the descriptors, set the QUP to run */
++	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
++	if (ret) {
++		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
++				__func__, __LINE__);
++		return ret;
++	}
++
+ 	if (xfer->rx_buf) {
+ 		ret = spi_qup_prep_sg(master, xfer, DMA_DEV_TO_MEM,
+ 					spi_qup_dma_done, &qup->rxc);
+@@ -383,6 +391,13 @@ static int spi_qup_do_pio(struct spi_master *master, struct spi_transfer *xfer,
+ 
+ 	spi_qup_fifo_write(qup, xfer);
+ 
++	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
++	if (ret) {
++		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
++				__func__, __LINE__);
++		return ret;
++	}
++
+ 	if (!wait_for_completion_timeout(&qup->done, timeout))
+ 		return -ETIMEDOUT;
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
