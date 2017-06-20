@@ -1,206 +1,63 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: drm/bridge: Document Cadence DSI
- bridge bindings
-Date: Tue, 20 Jun 2017 09:22:19 +0200
-Message-ID: <0c04a677-391b-ab2c-8ef9-09e87d75addf@samsung.com>
-References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
- <1496405096-18275-2-git-send-email-boris.brezillon@free-electrons.com>
- <60f8b8ec-c83b-0609-c5e5-44b3f9302808@codeaurora.org>
- <20170606113545.3a9ab2d0@bbrezillon>
- <902ba6cf-4125-fac6-62dd-6b6198f541f3@ti.com>
- <20170606144810.1efa0c79@bbrezillon>
- <CGME20170606125931epcas4p38f171f2d25914513894121ca95012510@epcas4p3.samsung.com>
- <9ca829e6-4696-7c3a-aed3-6a2af3161557@ti.com>
- <cb4c3bc1-5c61-25dd-a229-64753de68af4@samsung.com>
- <20170619121231.5ac1fc95@bbrezillon>
- <44b693f5-152e-cb0c-4a99-c8d1b0d8e3d9@codeaurora.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
+Date: Tue, 20 Jun 2017 10:31:19 +0300
+Message-ID: <1625582.5PxmiBkabx@avalon>
+References: <20170615204130.19255-1-eric@anholt.net>
+ <871sqkouvr.fsf@eliezer.anholt.net>
+ <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <44b693f5-152e-cb0c-4a99-c8d1b0d8e3d9-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Archit Taneja <architt@codeaurora.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On 20.06.2017 08:56, Archit Taneja wrote:
->
-> On 06/19/2017 03:42 PM, Boris Brezillon wrote:
->> On Tue, 13 Jun 2017 11:02:47 +0200
->> Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>
->>> Hi,
->>>
->>> Just spotted this thread.
->>>
->>> On 06.06.2017 14:58, Tomi Valkeinen wrote:
->>>> On 06/06/17 15:48, Boris Brezillon wrote:
->>>>   
->>>>> Okay. Thanks for the clarification. Can you confirm that this version
->>>>> is correct?
->>>>>
->>>>>   	dsi@xxx {
->>>>>   		#address-cells = <1>;
->>>>>   		#size-cells = <0>;
->>>>>   
->>>>>   		ports {
->>>>>   			#address-cells = <1>;
->>>>>   			#size-cells = <0>;
->>>>> 			dpi_in: port@0 {
->>>>>   				reg = <0>;
->>>>>   				#address-cells = <1>;
->>>>>   				#size-cells = <0>;
->>>>>   
->>>>>   				endpoint@0 {
->>>>>   					remote-endpoint = <&dpi_out>;
->>>>>   				};
->>>>>   			};
->>>>>   
->>>>>   			dsi_out: port@1 {
->>>>>   				reg = <1>;
->>>>> 				#address-cells = <1>;
->>>>>   				#size-cells = <0>;
->>>>>   
->>>>>   				dsi_out_vc0: endpoint@0 {
->>>>> 					reg = <0>;
->>>>>   					remote-endpoint = <&dsi_panel0_in>;
->>>>> 				};
->>>>>
->>>>>   				dsi_out_vc1: endpoint@1 {
->>>>> 					reg = <1>;
->>>>>   					remote-endpoint = <&dsi_panel1_in>;
->>>>>   				};
->>>>>   			};
->>>>>   		};
->>>>>   
->>>>>   		panel@0 {
->>>>>   			compatible = "...";
->>>>>   			reg = <0>;
->>>>>   			#address-cells = <1>;
->>>>>   			#size-cells = <0>;
->>>>>   
->>>>>   			port@0 {
->>>>>   				#address-cells = <1>;
->>>>>   		                #size-cells = <0>;
->>>>>   				reg = <0>;
->>>>>   
->>>>>   				dsi_panel0_in: endpoint@0 {
->>>>> 					reg = <0>;
->>>>>   					remote-endpoint = <&dsi_out_vc0>;
->>>>>   				};
->>>>>   			};
->>>>>   		};
->>>>>   
->>>>>   		panel@1 {
->>>>>   			compatible = "...";
->>>>>   			reg = <1>;
->>>>>   			#address-cells = <1>;
->>>>>   			#size-cells = <0>;
->>>>>   
->>>>>   			port@0 {
->>>>>   				#address-cells = <1>;
->>>>>   		                #size-cells = <0>;
->>>>>   				reg = <0>;
->>>>>   
->>>>>   				dsi_panel1_in: endpoint@0 {
->>>>> 					reg = <0>;
->>>>>   					remote-endpoint = <&dsi_out_vc1>;
->>>>>   				};
->>>>>   			};
->>>>>   		};
->>>>>   	};
->>>>>   
->>>> Looks correct to me. I think it can be a bit shorter though:
->>>>
->>>> - You don't need #address-cells and #size-cells for all. I think those
->>>> are inherited from the parent.
->>>> - If there's just one port and one endpoint, you can leave the 'reg'
->>>> out, as it's considered to be 0 by default.
->>>>
->>>> So for the panel, you can have just:
->>>>
->>>> port {
->>>> 	dsi_panel1_in: endpoint {
->>>> 		remote-endpoint = <&dsi_out_vc1>;
->>>> 	};
->>>> };
->>> In case DSI bus is used to both control and sending video signal you can
->>> skip video links from dsi-host to dsi-child, so nodes can look like:
->>>
->>>
->>>   	dsi@xxx {
->>>   		#address-cells = <1>;
->>>   		#size-cells = <0>;
->>>   
->>>   		ports {
->>>   			#address-cells = <1>;
->>>   			#size-cells = <0>;
->>> 			dpi_in: port@0 {
->>>   				reg = <0>;
->>>   				#address-cells = <1>;
->>>   				#size-cells = <0>;
->>>   
->>>   				endpoint@0 {
->>>   					remote-endpoint = <&dpi_out>;
->>>   				};
->>>   			};
->>>   
->>>   		};
->>>   
->>>   		panel@0 {
->>>   			compatible = "...";
->>>   			reg = <0>;
->>>   		};
->>>   
->>>   		panel@1 {
->>>   			compatible = "...";
->>>   			reg = <1>;
->>>   		};
->>>   	};
->>>
->> Does that mean I should make port1 (AKA DSI ouput port) optional?
->> IMHO, it's clearer when these links are explicitly described in the DT,
->> but maybe there are good reasons to keep it implicit for the "control
->> through DSI" case.
->>
->> Tomi, Archit, any opinion on this?
-> I guess there isn't any harm in having the links explicitly described. It's
-> just that those ports won't be used by the driver in the "control through DSI"
-> case.
->
-> For the MSM DSI host bindings, we actually keep the DSI 'data-lanes' param in the
-> DSI output port, so it's mandatory even if the panel/bridge is controlled via
-> the host DSI bus.
->
-> Andrzej,
->
-> Are there any reasons why keeping the host-to-child links in the "control through
-> DSI" case could be harmful?
-
-They are redundant - DSI bus already describes the 'link', so there are
-classical potential issues connected with redundancy:
-- which info should be parsed by the driver,
-- what to do if links provide different information than DSI bus.
-And as I understand current device-tree policy is to avoid them in such
-case, see [1].
-
-[1]: http://marc.info/?l=dri-devel&m=148354108702517&w=2
-
-Regards
-Andrzej
-
-
->
-> Archit
->
->> Regards,
->>
->> Boris
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGkgQXJjaGl0LAoKT24gVHVlc2RheSAyMCBKdW4gMjAxNyAwOToxODowMCBBcmNoaXQgVGFuZWph
+IHdyb3RlOgo+IE9uIDA2LzE2LzIwMTcgMDg6MTMgUE0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4g
+QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4gd3JpdGVzOgo+ID4+IE9uIDA2
+LzE2LzIwMTcgMDI6MTEgQU0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+ID4+PiBJZiB0aGUgcGFuZWwt
+YnJpZGdlIGlzIGJlaW5nIHNldCB1cCBhZnRlciB0aGUgZHJtX21vZGVfY29uZmlnX3Jlc2V0KCks
+Cj4gPj4+IHRoZW4gdGhlIGNvbm5lY3RvcidzIHN0YXRlIHdvdWxkIG5ldmVyIGdldCBpbml0aWFs
+aXplZCwgYW5kIHdlJ2QKPiA+Pj4gZGVyZWZlcmVuY2UgdGhlIE5VTEwgaW4gdGhlIGhvdHBsdWcg
+cGF0aC4gIFdlIGFsc28gbmVlZCB0byByZWdpc3Rlcgo+ID4+PiB0aGUgY29ubmVjdG9yLCBzbyB0
+aGF0IHVzZXJzcGFjZSBjYW4gZ2V0IGF0IGl0Lgo+ID4+IAo+ID4+IFNob3VsZG4ndCB0aGUgS01T
+IGRyaXZlciBtYWtlIHN1cmUgdGhlIHBhbmVsLWJyaWRnZSBpcyBzZXQgdXAgYmVmb3JlCj4gPj4g
+ZHJtX21vZGVfY29uZmlnX3Jlc2V0PyBJcyBpdCB0aGUgY2FzZSB3aGVuIHdlJ3JlIGluc2VydGlu
+ZyB0aGUKPiA+PiBwYW5lbC1icmlkZ2UgZHJpdmVyIGFzIGEgbW9kdWxlPwo+ID4+IAo+ID4+IAo+
+ID4+IEFsbCB0aGUgY29ubmVjdG9ycyB0aGF0IGhhdmUgYmVlbiBhZGRlZCBhcmUgcmVnaXN0ZXJl
+ZCBhdXRvbWF0aWNhbGx5Cj4gPj4gd2hlbiBkcm1fZGV2X3JlZ2lzdGVyKCkgaXMgY2FsbGVkIGJ5
+IHRoZSBLTVMgZHJpdmVyLiBSZWdpc3RlcmluZyBhCj4gPj4gY29ubmVjdG9yIGluIHRoZSBtaWRk
+bGUgb2Ygc2V0dGluZyB1cCBvdXIgZHJpdmVyIGlzIHByb25lIHRvIHJhY2UKPiA+PiBjb25kaXRp
+b25zIGlmIHRoZSB1c2Vyc3BhY2UgZGVjaWRlcyB0byB1c2UgdGhlbSBpbW1lZGlhdGVseS4KPiA+
+IAo+ID4gWWVhaCwgdGhpcyBpcyBmaXhpbmcgaW5pdGlhbGl6aW5nIHBhbmVsX2JyaWRnZSBhdCBE
+U0kgaG9zdF9hdHRhY2ggdGltZSwKPiA+IHdoaWNoIGluIHRoZSBjYXNlIG9mIGEgcGFuZWwgbW9k
+dWxlIHRoYXQgY3JlYXRlcyB0aGUgRFNJIGRldmljZQo+ID4gKGFkdjc1MzMtc3R5bGUsIGxpa2Ug
+eW91IHNhaWQgSSBzaG91bGQgdXNlIGFzIGEgcmVmZXJlbmNlKSB3aWxsIGJlIGFmdGVyCj4gPiBk
+cm1fbW9kZV9jb25maWdfcmVzZXQoKSBhbmQgZHJtX2Rldl9yZWdpc3RlcigpLgo+IAo+IE9rYXku
+IEluIHRoZSBjYXNlIG9mIHRoZSBtc20ga21zIGRyaXZlciwgd2UgZGVmZXIgcHJvYmUgdW50aWwg
+dGhlCj4gYWR2NzUzMyBtb2R1bGUgaXMgaW5zZXJ0ZWQsIG9ubHkgdGhlbiB3ZSBwcm9jZWVkIHRv
+IGRybV9tb2RlX2NvbmZpZ19yZXNldCgpCj4gYW5kIGRybV9kZXZfcmVnaXN0ZXIoKS4gSSBhc3N1
+bWVkIHRoaXMgd2FzIHRoZSBnZW5lcmFsIHByYWN0aWNlIGZvbGxvd2VkIGJ5Cj4gbW9zdCBrbXMg
+ZHJpdmVycy4gSS4sZSB0aGUga21zIGRyaXZlciBkZWZlcnMgcHJvYmUgdW50aWwgYWxsIGNvbm5l
+Y3Rvcgo+IHJlbGF0ZWQgbW9kdWxlcyBhcmUgaW5zZXJ0ZWQsIGFuZCBvbmx5IHRoZW4gcHJvY2Vl
+ZCB0byBjcmVhdGUgYSBkcm0gZGV2aWNlLgoKSSdkIGxvdmUgdG8gc2VlIHN1cHBvcnQgZm9yIGEg
+bW9yZSBkeW5hbWljIGFwcHJvYWNoIHRoYXQgd291bGQgYWxsb3cgCnJlZ2lzdGVyaW5nIG91dHB1
+dHMgYXQgcnVudGltZS4gVW50aWwgdGhhdCdzIGltcGxlbWVudGVkLCBob3dldmVyLCBJIGFncmVl
+IAp3aXRoIHlvdXIgc3RhdGVtZW50LCBkcml2ZXJzIHNob3VsZCB3YWl0IHVudGlsIGFsbCBjb21w
+b25lbnRzIGFyZSBhdmFpbGFibGUgCmJlZm9yZSByZWdpc3RlcmluZyB0aGUgRFJNIGRldmljZS4K
+Cj4gRmVlZGJhY2sgZnJvbSBvdGhlcnMgb24gdGhpcyB3b3VsZCBiZSBhcHByZWNpYXRlZCwgdGhv
+dWdoLgoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
