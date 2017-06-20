@@ -1,7 +1,7 @@
 From: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v6 3/4] ARM: dts: imx6qdl.dtsi: add "fsl,imx6q-snvs-lpgpr" node
-Date: Tue, 20 Jun 2017 06:40:58 +0200
-Message-ID: <20170620044059.16113-4-o.rempel@pengutronix.de>
+Subject: [PATCH v6 1/4] nvmem: dt: document SNVS LPGPR binding
+Date: Tue, 20 Jun 2017 06:40:56 +0200
+Message-ID: <20170620044059.16113-2-o.rempel@pengutronix.de>
 References: <20170620044059.16113-1-o.rempel@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170620044059.16113-1-o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -10,29 +10,40 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C
 Cc: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This node is for Low Power General Purpose Register which can
-be used as Non-Volatile Storage.
+Documentation bindings for the Low Power General Purpose Register
+available on i.MX6 SoCs in the Secure Non-Volatile Storage.
 
 Signed-off-by: Oleksij Rempel <o.rempel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx6qdl.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../devicetree/bindings/nvmem/snvs-lpgpr.txt          | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index e426faa9c243..94e992558238 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -769,6 +769,10 @@
- 					mask = <0x60>;
- 					status = "disabled";
- 				};
+diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+new file mode 100644
+index 000000000000..21910fb3159f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
+@@ -0,0 +1,19 @@
++Device tree bindings for Low Power General Purpose Register found in i.MX6Q/D
++Secure Non-Volatile Storage.
 +
-+				snvs_lpgpr: snvs-lpgpr {
-+					compatible = "fsl,imx6q-snvs-lpgpr";
-+				};
- 			};
- 
- 			epit1: epit@020d0000 { /* EPIT1 */
++This DT node should be represented as a sub-node of a "syscon",
++"simple-mfd" node.
++
++Required properties:
++- compatible: should be:
++	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
++
++Example:
++snvs: snvs@020cc000 {
++	compatible = "fsl,sec-v4.0-mon", "syscon", "simple-mfd";
++	reg = <0x020cc000 0x4000>;
++
++	snvs_lpgpr: snvs-lpgpr {
++		compatible = "fsl,imx6q-snvs-lpgpr";
++	};
++};
 -- 
 2.11.0
 
