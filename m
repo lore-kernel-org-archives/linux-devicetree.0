@@ -1,60 +1,29 @@
-From: Brian Norris <briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] arm64: dts: rockchip: use cs-gpios for cros_ec_spi
-Date: Mon, 19 Jun 2017 17:47:40 -0700
-Message-ID: <20170620004739.GA67314@google.com>
-References: <1497331543-8565-1-git-send-email-jeffy.chen@rock-chips.com>
- <1497331543-8565-4-git-send-email-jeffy.chen@rock-chips.com>
- <20170613175043.GC9026@google.com>
- <20170613182225.smahsf3jzvbc7w7z@sirena.org.uk>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v10 4/5] i2c: aspeed: added driver for Aspeed I2C
+Date: Mon, 19 Jun 2017 17:58:19 -0700
+Message-ID: <CAFd5g47D0zJax1X8MeV_OwMJvzd2Ba-hZc+8_X_Ks1ibH8ipeg@mail.gmail.com>
+References: <20170603012952.2192-1-brendanhiggins@google.com>
+ <20170603012952.2192-5-brendanhiggins@google.com> <20170619141322.devvmcbjaeq4jnv5@ninjato>
+ <20170619142105.kynebk74y7nbvmfx@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170613182225.smahsf3jzvbc7w7z-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <20170619142105.kynebk74y7nbvmfx@ninjato>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Vladimir Zapolskiy <vz-ChpfBGZJDbMAvxtiuMwx3w@public.gmane.org>, Kachalov Anton <mouse-Pma6HLj0uuo@public.gmane.org>, =?UTF-8?Q?C=C3=A9dric_Le_Goater?= <clg-Bxea+6Xhats@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Mon, Jun 19, 2017 at 7:21 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>
+> And any chance for a MAINTAINERS entry?
+>
 
-Forgot to follow up here:
+We already have one:
+http://elixir.free-electrons.com/linux/v4.11.5/source/MAINTAINERS#L1090
 
-On Tue, Jun 13, 2017 at 07:22:25PM +0100, Mark Brown wrote:
-> On Tue, Jun 13, 2017 at 10:50:44AM -0700, Brian Norris wrote:
-> > On Tue, Jun 13, 2017 at 01:25:43PM +0800, Jeffy Chen wrote:
-> > > The cros_ec requires CS line to be active after last message. But the CS
-> > > would be toggled when powering off/on rockchip spi, which breaks ec xfer.
-> > > Use GPIO CS to prevent that.
-> 
-> > I suppose this change is fine. (At least, I don't have a good reason not
-> > to do this.)
-> 
-> > But I still wonder whether this is something that the SPI core can be
-> > expected to handle. drivers/mfd/cros_ec_spi.c already sets the
-> > appropriate trans->cs_change bits, to ensure CS remains active in
-> > between certain messages (all under spi_bus_lock()). But you're
-> > suggesting that your bus controller may deassert CS if you runtime
-> > suspend the device (e.g., in between messages).
-> 
-> > So, is your controller just peculiar? Or should the SPI core avoid
-> > autosuspending the bus controller when it's been instructed to keep CS
-> > active? Any thoughts Mark?
-> 
-> This sounds like the controller being unusual - though frankly the
-> ChromeOS chip select usage is also odd so it's fairly rare for something
-> like this to come up.  I'd not expect a runtime suspend to loose the pin
-> state, though possibly through use of pinctrl rather than the
-> controller.
-
-I haven't personally verified this behavior (it probably wouldn't be too
-hard to rig up a test driver to hold CS low while allowing the
-controller to autosuspend? spidev can do this?), but Rockchip folks seem
-to have concluded this.
-
-I suppose I'm fine with relying on cs-gpios as a workaround.
-
-Brian
+However, if you would like me to own this driver, I could add an entry
+for myself.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
