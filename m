@@ -1,110 +1,62 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] dt-bindings: mfd: Add STM32 LPTimer binding
-Date: Tue, 20 Jun 2017 12:50:40 +0100
-Message-ID: <20170620115040.xyaivbtcuufhxlv7@dell>
-References: <1497628726-7563-1-git-send-email-fabrice.gasnier@st.com>
- <1497628726-7563-2-git-send-email-fabrice.gasnier@st.com>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: gyro: st_gyro: fix L3GD20H support
+Date: Tue, 20 Jun 2017 13:54:30 +0200
+Message-ID: <CAA2SeNKKQM-zsg_8ieaiJbCCsjnPYgQMAds9tafiQHTyrO4fww@mail.gmail.com>
+References: <20170619200431.9615-1-lorenzo.bianconi@st.com>
+ <20170619200431.9615-2-lorenzo.bianconi@st.com> <CACRpkdaH0E9XbP5_TgENXxffPEg9fAf_UNpu8tkObZ9enm0DXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1497628726-7563-2-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdaH0E9XbP5_TgENXxffPEg9fAf_UNpu8tkObZ9enm0DXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Robert Dolca <robert.dolca-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 Jun 2017, Fabrice Gasnier wrote:
+> On Mon, Jun 19, 2017 at 10:04 PM, Lorenzo Bianconi
+> <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> Add proper support for L3GD20H gyroscope sensor. In particular:
+>> - use L3GD20H as device name instead of L3GD20
+>> - fix available full scales
+>> - fix available sample frequencies
+>>
+>> Fixes: 9444a300c2be (IIO: Add support for L3GD20H gyroscope)
+>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>
 
-> Add documentation for STMicroelectronics STM32 Low Power Timer binding.
-> 
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-> ---
->  .../devicetree/bindings/mfd/stm32-lptimer.txt      | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
-> new file mode 100644
-> index 0000000..237b7d6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
-> @@ -0,0 +1,51 @@
-> +STMicroelectronics STM32 Low Power Timer
-> +
-> +The STM32 Low Power Timer (LPTIM) is a 16-bit timer that provides several
-> +functionalities:
+Hi Linus,
 
-"functions".
+> Is this then fixing the issue papered over by
+> commit a0657716416f834ef7710a9044614d50a36c3bdc
+> "iio:gyro: bug on L3GD20H gyroscope support"
+> ?
+>
+> Then we should probably state that as a Fixes: too.
 
-> +- PWM output (with programmable prescaler, configurable polarity)
-> +- Quadrature encoder, counter
-> +- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
-> +
-> +Required properties:
-> +- compatible: Must be "st,stm32-lptimer".
-> +- reg: Offset and length of the device's register set.
-> +- clocks: Phandle to the clock used by the LP Timer module.
-> +- clock-names: Must be "int".
+The sensor support was introduce in 496822c78236 (iio:gyro: Add
+STMicroelectronics gyroscopes driver).
+Commit a0657716416 just removes the support since it was not properly done.
+So what do you think?
+We can add Fixes: 496822c78236 (iio:gyro: Add STMicroelectronics
+gyroscopes driver).
+Jonathan should I send a v2?
 
-These look better when padded:
+Regards,
+Lorenzo
 
-- compatible:		Must be "st,stm32-lptimer".
-- reg:			Offset and length of the device's register set.
-- clocks:		Phandle to the clock used by the LP Timer module.
-- clock-names:		Must be "int".
 
-> +- #address-cells = <1>;
-> +- #size-cells = <0>;
+>
+> Yours,
+> Linus Walleij
 
-Please use the same format as you did for the other properties.
 
-> +Optional properties:
-> +- resets: Must contain the phandle to the reset controller.
-> +
-> +Optional subnodes:
-> +- pwm: See ../pwm/pwm-stm32-lp.txt
-> +- counter: See ../iio/timer/stm32-lptimer-cnt.txt
-> +- trigger: See ../iio/timer/stm32-lptimer-trigger.txt
-> +
-> +Example:
-> +
-> +	lptimer1: lptimer@0x40002400 {
-
-Remove '0x'
-
-> +		compatible = "st,stm32-lptimer";
-> +		reg = <0x40002400 0x400>;
-> +		clocks = <&timer_clk>;
-> +		clock-names = "int";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		pwm {
-> +			compatible = "st,stm32-pwm-lp";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&lppwm1_pins>;
-> +		};
-> +
-> +		trigger@0 {
-
-Why is this @0 and no reg properties are provided for the other 2
-nodes?
-
-> +			compatible = "st,stm32-lptimer-trigger";
-> +			reg = <0>;
-> +		};
-> +
-> +		counter {
-> +			compatible = "st,stm32-lptimer-counter";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&lptim1_in_pins>;
-> +		};
-> +	};
 
 -- 
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
