@@ -1,66 +1,35 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: sunxi: add R_LRADC support
- for A83T
-Date: Tue, 20 Jun 2017 10:57:48 +0200
-Message-ID: <20170620085748.apv3wlehyllecb5q@flea.lan>
-References: <20170618130018.10684-1-techping.chan@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 1/2] DT: pinctrl: Add binding documentation for
+ Spreadtrum pin controller
+Date: Tue, 20 Jun 2017 11:10:41 +0200
+Message-ID: <CACRpkdZMdKPwMt0hQ+5k731pJEnsgyzqYULbD=S7iXbOyai7CQ@mail.gmail.com>
+References: <359d62c1f2f7ef61c6160df9b60c1af4bfcea89a.1496664241.git.baolin.wang@spreadtrum.com>
+ <CACRpkdbtuPKr=tWGoJC-sg2Oj47rYMpo6fs_Us=Nynew1Wkz=w@mail.gmail.com> <20170612060718.GA8566@spreadtrum.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tinytkk5wdhgbroz"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF6HUPFAKGQEGRY73II-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170618130018.10684-1-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170612060718.GA8566@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 12, 2017 at 8:07 AM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
 
---tinytkk5wdhgbroz
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+> I agree we should add these into core code, something like:
+> static const struct pinconf_generic_params dt_params[] = {
+(...)
+>         { "slew-rate", PIN_CONFIG_SLEW_RATE, 0 },
+> +       { "sleep-bias-pull-up", PIN_CONFIG_SLEEP_BIAS_PULL_UP, 1},
+> +       { "sleep-bias-pull-down", PIN_CONFIG_SLEEP_BIAS_PULL_DOWN 1},
+>         ......
+> };
+>
+> If you agree that, I can help to add these configuration.
 
-On Sun, Jun 18, 2017 at 09:00:16PM +0800, Ziping Chen wrote:
-> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> The Allwinner A83T's R_LRADC is similiar with the
-> Allwinner A10's LRADC, they can use the same driver.
+Actually, yes indeed, that is a nice thing. Very nice. I think my Nomadik
+driver could use this too.
 
-There's a typo in similar above.
+Just need to hear what the DT maintainers have to say about it.
 
-> Add support for it.
-> 
-> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun8i-a83t.dtsi | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> index 8923ba625b76..ecc75bf6780e 100644
-> --- a/arch/arm/boot/dts/sun8i-a83t.dtsi
-> +++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
-> @@ -301,5 +301,12 @@
->  			interrupt-controller;
->  			#interrupt-cells = <3>;
->  		};
-> +
-> +		r_lradc: lradc@01f03c00 {
-> +			compatible = "allwinner,sun4i-a10-lradc-keys";
-
-Could you add an A83T specific compatible here?
-
-Thanks,
-Maxime
-
--- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---tinytkk5wdhgbroz--
+Yours,
+Linus Walleij
