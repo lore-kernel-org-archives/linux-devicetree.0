@@ -1,93 +1,198 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH v6 4/4] ARM: imx6ul: add "fsl,imx6ul-snvs-lpgpr" node
-Date: Tue, 20 Jun 2017 08:33:18 +0200
-Message-ID: <254a7dc7-f532-97ac-6e76-8649b7ad2f37@i2se.com>
-References: <20170620044059.16113-1-o.rempel@pengutronix.de>
- <20170620044059.16113-5-o.rempel@pengutronix.de>
+From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: drm/bridge: Document Cadence DSI
+ bridge bindings
+Date: Tue, 20 Jun 2017 12:26:02 +0530
+Message-ID: <44b693f5-152e-cb0c-4a99-c8d1b0d8e3d9@codeaurora.org>
+References: <1496405096-18275-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1496405096-18275-2-git-send-email-boris.brezillon@free-electrons.com>
+ <60f8b8ec-c83b-0609-c5e5-44b3f9302808@codeaurora.org>
+ <20170606113545.3a9ab2d0@bbrezillon>
+ <902ba6cf-4125-fac6-62dd-6b6198f541f3@ti.com>
+ <20170606144810.1efa0c79@bbrezillon>
+ <CGME20170606125931epcas4p38f171f2d25914513894121ca95012510@epcas4p3.samsung.com>
+ <9ca829e6-4696-7c3a-aed3-6a2af3161557@ti.com>
+ <cb4c3bc1-5c61-25dd-a229-64753de68af4@samsung.com>
+ <20170619121231.5ac1fc95@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170620044059.16113-5-o.rempel@pengutronix.de>
-Content-Language: de-DE
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Guy Shapiro <guy.shapiro@mobi-wize.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170619121231.5ac1fc95@bbrezillon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cyprian Wronka <cwronka-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Simon Hatliff <hatliff-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Richard Sproul <sproul-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Alan Douglas <adouglas-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Neil Webb <neilw-vna1KIf7WgpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 20.06.2017 um 06:40 schrieb Oleksij Rempel:
-> snvs_lpgpr confirmed to work with imx6ul as well.
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> Tested-by: Guy Shapiro <guy.shapiro@mobi-wize.com>
-> ---
->  Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt | 3 ++-
->  arch/arm/boot/dts/imx6ul.dtsi                          | 4 ++++
->  drivers/nvmem/snvs_lpgpr.c                             | 1 +
->  3 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> index 21910fb3159f..d2a811f92d7f 100644
-> --- a/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> +++ b/Documentation/devicetree/bindings/nvmem/snvs-lpgpr.txt
-> @@ -5,8 +5,9 @@ This DT node should be represented as a sub-node of a "syscon",
->  "simple-mfd" node.
->  
->  Required properties:
-> -- compatible: should be:
-> +- compatible: should be one of fallowing variants:
 
-of the following
 
->  	"fsl,imx6q-snvs-lpgpr" for Freescale i.MX6Q/D/DL/S
-> +	"fsl,imx6ul-snvs-lpgpr" for Freescale i.MX6UL
+On 06/19/2017 03:42 PM, Boris Brezillon wrote:
+> On Tue, 13 Jun 2017 11:02:47 +0200
+> Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> 
+>> Hi,
+>>
+>> Just spotted this thread.
+>>
+>> On 06.06.2017 14:58, Tomi Valkeinen wrote:
+>>> On 06/06/17 15:48, Boris Brezillon wrote:
+>>>   
+>>>> Okay. Thanks for the clarification. Can you confirm that this version
+>>>> is correct?
+>>>>
+>>>>   	dsi@xxx {
+>>>>   		#address-cells = <1>;
+>>>>   		#size-cells = <0>;
+>>>>   
+>>>>   		ports {
+>>>>   			#address-cells = <1>;
+>>>>   			#size-cells = <0>;
+>>>> 			dpi_in: port@0 {
+>>>>   				reg = <0>;
+>>>>   				#address-cells = <1>;
+>>>>   				#size-cells = <0>;
+>>>>   
+>>>>   				endpoint@0 {
+>>>>   					remote-endpoint = <&dpi_out>;
+>>>>   				};
+>>>>   			};
+>>>>   
+>>>>   			dsi_out: port@1 {
+>>>>   				reg = <1>;
+>>>> 				#address-cells = <1>;
+>>>>   				#size-cells = <0>;
+>>>>   
+>>>>   				dsi_out_vc0: endpoint@0 {
+>>>> 					reg = <0>;
+>>>>   					remote-endpoint = <&dsi_panel0_in>;
+>>>> 				};
+>>>>
+>>>>   				dsi_out_vc1: endpoint@1 {
+>>>> 					reg = <1>;
+>>>>   					remote-endpoint = <&dsi_panel1_in>;
+>>>>   				};
+>>>>   			};
+>>>>   		};
+>>>>   
+>>>>   		panel@0 {
+>>>>   			compatible = "...";
+>>>>   			reg = <0>;
+>>>>   			#address-cells = <1>;
+>>>>   			#size-cells = <0>;
+>>>>   
+>>>>   			port@0 {
+>>>>   				#address-cells = <1>;
+>>>>   		                #size-cells = <0>;
+>>>>   				reg = <0>;
+>>>>   
+>>>>   				dsi_panel0_in: endpoint@0 {
+>>>> 					reg = <0>;
+>>>>   					remote-endpoint = <&dsi_out_vc0>;
+>>>>   				};
+>>>>   			};
+>>>>   		};
+>>>>   
+>>>>   		panel@1 {
+>>>>   			compatible = "...";
+>>>>   			reg = <1>;
+>>>>   			#address-cells = <1>;
+>>>>   			#size-cells = <0>;
+>>>>   
+>>>>   			port@0 {
+>>>>   				#address-cells = <1>;
+>>>>   		                #size-cells = <0>;
+>>>>   				reg = <0>;
+>>>>   
+>>>>   				dsi_panel1_in: endpoint@0 {
+>>>> 					reg = <0>;
+>>>>   					remote-endpoint = <&dsi_out_vc1>;
+>>>>   				};
+>>>>   			};
+>>>>   		};
+>>>>   	};
+>>>>   
+>>> Looks correct to me. I think it can be a bit shorter though:
+>>>
+>>> - You don't need #address-cells and #size-cells for all. I think those
+>>> are inherited from the parent.
+>>> - If there's just one port and one endpoint, you can leave the 'reg'
+>>> out, as it's considered to be 0 by default.
+>>>
+>>> So for the panel, you can have just:
+>>>
+>>> port {
+>>> 	dsi_panel1_in: endpoint {
+>>> 		remote-endpoint = <&dsi_out_vc1>;
+>>> 	};
+>>> };
+>>
+>> In case DSI bus is used to both control and sending video signal you can
+>> skip video links from dsi-host to dsi-child, so nodes can look like:
+>>
+>>
+>>   	dsi@xxx {
+>>   		#address-cells = <1>;
+>>   		#size-cells = <0>;
+>>   
+>>   		ports {
+>>   			#address-cells = <1>;
+>>   			#size-cells = <0>;
+>> 			dpi_in: port@0 {
+>>   				reg = <0>;
+>>   				#address-cells = <1>;
+>>   				#size-cells = <0>;
+>>   
+>>   				endpoint@0 {
+>>   					remote-endpoint = <&dpi_out>;
+>>   				};
+>>   			};
+>>   
+>>   		};
+>>   
+>>   		panel@0 {
+>>   			compatible = "...";
+>>   			reg = <0>;
+>>   		};
+>>   
+>>   		panel@1 {
+>>   			compatible = "...";
+>>   			reg = <1>;
+>>   		};
+>>   	};
+>>
+> 
+> Does that mean I should make port1 (AKA DSI ouput port) optional?
+> IMHO, it's clearer when these links are explicitly described in the DT,
+> but maybe there are good reasons to keep it implicit for the "control
+> through DSI" case.
+> 
+> Tomi, Archit, any opinion on this?
 
-Please fold this change into patch #1. This makes review and merging easier.
+I guess there isn't any harm in having the links explicitly described. It's
+just that those ports won't be used by the driver in the "control through DSI"
+case.
 
->  
->  Example:
->  snvs: snvs@020cc000 {
-> diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-> index b9d7d2d09402..df870abc28f5 100644
-> --- a/arch/arm/boot/dts/imx6ul.dtsi
-> +++ b/arch/arm/boot/dts/imx6ul.dtsi
-> @@ -624,6 +624,10 @@
->  					linux,keycode = <KEY_POWER>;
->  					wakeup-source;
->  				};
-> +
-> +				snvs_lpgpr: snvs-lpgpr {
-> +					compatible = "fsl,imx6ul-snvs-lpgpr";
-> +				};
+For the MSM DSI host bindings, we actually keep the DSI 'data-lanes' param in the
+DSI output port, so it's mandatory even if the panel/bridge is controlled via
+the host DSI bus.
 
-AFAIK the imx6ull.dtsi also includes the imx6ul.dtsi. Does this
-compatible driver also fit for imx6ull?
+Andrzej,
 
-If yes, please extend the devicetree binding in patch #1.
-If no, this change would have unwanted side effects.
+Are there any reasons why keeping the host-to-child links in the "control through
+DSI" case could be harmful?
 
-Regards
-Stefan
+Archit
 
->  			};
->  
->  			epit1: epit@020d0000 {
-> diff --git a/drivers/nvmem/snvs_lpgpr.c b/drivers/nvmem/snvs_lpgpr.c
-> index eb3369363e44..2b20a12918d8 100644
-> --- a/drivers/nvmem/snvs_lpgpr.c
-> +++ b/drivers/nvmem/snvs_lpgpr.c
-> @@ -136,6 +136,7 @@ static int snvs_lpgpr_remove(struct platform_device *pdev)
->  
->  static const struct of_device_id snvs_lpgpr_dt_ids[] = {
->  	{ .compatible = "fsl,imx6q-snvs-lpgpr", .data = &snvs_lpgpr_cfg_imx6q },
-> +	{ .compatible = "fsl,imx6ul-snvs-lpgpr", .data = &snvs_lpgpr_cfg_imx6q },
->  	{ },
->  };
->  MODULE_DEVICE_TABLE(of, snvs_lpgpr_dt_ids);
+> 
+> Regards,
+> 
+> Boris
+> 
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
