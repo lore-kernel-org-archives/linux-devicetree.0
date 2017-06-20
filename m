@@ -1,303 +1,294 @@
 Return-Path: <SRS0=SQ0U=5Z=mediatek.com=zhi.mao@kernel.org>
 From: Zhi Mao <zhi.mao@mediatek.com>
-Subject: [PATCH 2/4] pwm: mediatek: fix clk issue
-Date: Tue, 20 Jun 2017 14:54:14 +0800
-Message-ID: <1497941657-23876-3-git-send-email-zhi.mao@mediatek.com>
+Subject: [PATCH 4/4] pwm: mediatek: add MT2712/MT7622 support
+Date: Tue, 20 Jun 2017 14:54:16 +0800
+Message-ID: <1497941657-23876-5-git-send-email-zhi.mao@mediatek.com>
 In-Reply-To: <1497941657-23876-1-git-send-email-zhi.mao@mediatek.com>
 References: <1497941657-23876-1-git-send-email-zhi.mao@mediatek.com>
 MIME-Version: 1.0
 Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_007_1689701418.2082826669"
+	boundary="__=_Part_Boundary_003_1444852209.1441050253"
 To: john@phrozen.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org
 Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, zhi.mao@mediatek.com, yingjoe.chen@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, zhenbao.liu@mediatek.com
 List-ID: <devicetree@vger.kernel.org>
 
---__=_Part_Boundary_007_1689701418.2082826669
+--__=_Part_Boundary_003_1444852209.1441050253
 Content-Transfer-Encoding: base64
 Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_008_1159267317.1878223427"
+	boundary="__=_Part_Boundary_004_2109115591.1605424124"
 
---__=_Part_Boundary_008_1159267317.1878223427
+--__=_Part_Boundary_004_2109115591.1605424124
 Content-Type: text/html
 Content-Transfer-Encoding: base64
 
-PHByZT4NCjEuZml4IGNsb2NrIGNvbnRyb2wNCiAtIHByZXBhcmUgdG9wL21haW4gY2xrIGluIG10
-a19wd21fcHJvYmUoKSBmdW5jdGlvbiwNCiAgIGl0IHdpbGwgaW5jcmVhc2UgcG93ZXIgY29uc3Vt
-cHRpb24NCiAgIGFuZCBpbiBvcmlnaW5hbCBjb2RlIHRoZXNlIGNsb2NrcyBpcyBvbmx5IHByZXBl
-YXJlIGJ1dCBuZXZlciBlbmFibGVkDQogLSBwd20gY2xvY2sgc2hvdWxkIGJlIGVuYWJsZWQgYmVm
-b3JlIHNldHRpbmcgcHdtIHJlZ2lzdGVycw0KICAgaW4gZnVuY3Rpb246IG10a19wd21fY29uZmln
-KCkNCg0KMi5maXggcHdtIHNvdXJjZSBjbG9jayBzZWxlY3Rpb24NCiAtIGluIG9yaWdpbmFsIGNv
-ZGUsIHRoZSBwd20gb3V0cHV0IGZyZXF1ZW5jeSBpcyBub3QgY29ycmVjdA0KICAgd2hlbiBzZXQg
-Yml0Jmx0OzMmZ3Q7PTEgdG8gUFdNQ09OIHJlZ2lzdGVyLg0KDQpTaWduZWQtb2ZmLWJ5OiBaaGkg
-TWFvICZsdDt6aGkubWFvQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0KIGRyaXZlcnMvcHdtL3B3bS1t
-ZWRpYXRlay5jIHwgICA2OSArKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0t
-LS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA0MyBpbnNlcnRpb25zKCspLCAyNiBkZWxldGlvbnMoLSkN
-Cg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1tZWRpYXRlay5jIGIvZHJpdmVycy9wd20v
-cHdtLW1lZGlhdGVrLmMNCmluZGV4IDVjMTFiYzcuLmM4MDNmZjYgMTAwNjQ0DQotLS0gYS9kcml2
-ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9wd20vcHdtLW1lZGlhdGVrLmMN
-CkBAIC0yLDYgKzIsNyBAQA0KICAqIE1lZGlhdGVrIFB1bHNlIFdpZHRoIE1vZHVsYXRvciBkcml2
-ZXINCiAgKg0KICAqIENvcHlyaWdodCAoQykgMjAxNSBKb2huIENyaXNwaW4gJmx0O2Jsb2dpY0Bv
-cGVud3J0Lm9yZyZndDsNCisgKiBDb3B5cmlnaHQgKEMpIDIwMTcgWmhpIE1hbyAmbHQ7emhpLm1h
-b0BtZWRpYXRlay5jb20mZ3Q7DQogICoNCiAgKiBUaGlzIGZpbGUgaXMgbGljZW5zZWQgdW5kZXIg
-dGhlIHRlcm1zIG9mIHRoZSBHTlUgR2VuZXJhbCBQdWJsaWMNCiAgKiBMaWNlbnNlIHZlcnNpb24g
-Mi4gVGhpcyBwcm9ncmFtIGlzIGxpY2Vuc2VkICZxdW90O2FzIGlzJnF1b3Q7IHdpdGhvdXQgYW55
-DQpAQCAtNjEsNiArNjIsNDAgQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgbXRrX3B3bV9jaGlwICp0
-b19tdGtfcHdtX2NoaXAoc3RydWN0IHB3bV9jaGlwICpjaGlwKQ0KIAlyZXR1cm4gY29udGFpbmVy
-X29mKGNoaXAsIHN0cnVjdCBtdGtfcHdtX2NoaXAsIGNoaXApOw0KIH0NCiANCitzdGF0aWMgaW50
-IG10a19wd21fY2xrX2VuYWJsZShzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21fZGV2
-aWNlICpwd20pDQorew0KKwlzdHJ1Y3QgbXRrX3B3bV9jaGlwICpwYyA9IHRvX210a19wd21fY2hp
-cChjaGlwKTsNCisJaW50IHJldCA9IDA7DQorDQorCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShw
-Yy0mZ3Q7Y2xrc1tNVEtfQ0xLX1RPUF0pOw0KKwlpZiAocmV0ICZsdDsgMCkNCisJCXJldHVybiBy
-ZXQ7DQorDQorCXJldCA9IGNsa19wcmVwYXJlX2VuYWJsZShwYy0mZ3Q7Y2xrc1tNVEtfQ0xLX01B
-SU5dKTsNCisJaWYgKHJldCAmbHQ7IDApIHsNCisJCWNsa19kaXNhYmxlX3VucHJlcGFyZShwYy0m
-Z3Q7Y2xrc1tNVEtfQ0xLX1RPUF0pOw0KKwkJcmV0dXJuIHJldDsNCisJfQ0KKw0KKwlyZXQgPSBj
-bGtfcHJlcGFyZV9lbmFibGUocGMtJmd0O2Nsa3NbTVRLX0NMS19QV00xICsgcHdtLSZndDtod3B3
-bV0pOw0KKwlpZiAocmV0ICZsdDsgMCkgew0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHBjLSZn
-dDtjbGtzW01US19DTEtfTUFJTl0pOw0KKwkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHBjLSZndDtj
-bGtzW01US19DTEtfVE9QXSk7DQorCQlyZXR1cm4gcmV0Ow0KKwl9DQorDQorCXJldHVybiByZXQ7
-DQorfQ0KKw0KK3N0YXRpYyB2b2lkIG10a19wd21fY2xrX2Rpc2FibGUoc3RydWN0IHB3bV9jaGlw
-ICpjaGlwLCBzdHJ1Y3QgcHdtX2RldmljZSAqcHdtKQ0KK3sNCisJc3RydWN0IG10a19wd21fY2hp
-cCAqcGMgPSB0b19tdGtfcHdtX2NoaXAoY2hpcCk7DQorDQorCWNsa19kaXNhYmxlX3VucHJlcGFy
-ZShwYy0mZ3Q7Y2xrc1tNVEtfQ0xLX1BXTTEgKyBwd20tJmd0O2h3cHdtXSk7DQorCWNsa19kaXNh
-YmxlX3VucHJlcGFyZShwYy0mZ3Q7Y2xrc1tNVEtfQ0xLX01BSU5dKTsNCisJY2xrX2Rpc2FibGVf
-dW5wcmVwYXJlKHBjLSZndDtjbGtzW01US19DTEtfVE9QXSk7DQorfQ0KKw0KIHN0YXRpYyBpbmxp
-bmUgdTMyIG10a19wd21fcmVhZGwoc3RydWN0IG10a19wd21fY2hpcCAqY2hpcCwgdW5zaWduZWQg
-aW50IG51bSwNCiAJCQkJdW5zaWduZWQgaW50IG9mZnNldCkNCiB7DQpAQCAtODEsNiArMTE2LDgg
-QEAgc3RhdGljIGludCBtdGtfcHdtX2NvbmZpZyhzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVj
-dCBwd21fZGV2aWNlICpwd20sDQogCXN0cnVjdCBjbGsgKmNsayA9IHBjLSZndDtjbGtzW01US19D
-TEtfUFdNMSArIHB3bS0mZ3Q7aHdwd21dOw0KIAl1MzIgcmVzb2x1dGlvbiwgY2xrZGl2ID0gMDsN
-CiANCisJbXRrX3B3bV9jbGtfZW5hYmxlKGNoaXAsIHB3bSk7DQorDQogCXJlc29sdXRpb24gPSBO
-U0VDX1BFUl9TRUMgLyBjbGtfZ2V0X3JhdGUoY2xrKTsNCiANCiAJd2hpbGUgKHBlcmlvZF9ucyAv
-IHJlc29sdXRpb24gJmd0OyA4MTkxKSB7DQpAQCAtOTEsMTAgKzEyOCwxMiBAQCBzdGF0aWMgaW50
-IG10a19wd21fY29uZmlnKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2Ug
-KnB3bSwNCiAJaWYgKGNsa2RpdiAmZ3Q7IDcpDQogCQlyZXR1cm4gLUVJTlZBTDsNCiANCi0JbXRr
-X3B3bV93cml0ZWwocGMsIHB3bS0mZ3Q7aHdwd20sIFBXTUNPTiwgQklUKDE1KSB8IEJJVCgzKSB8
-IGNsa2Rpdik7DQorCW10a19wd21fd3JpdGVsKHBjLCBwd20tJmd0O2h3cHdtLCBQV01DT04sIEJJ
-VCgxNSkgfCBjbGtkaXYpOw0KIAltdGtfcHdtX3dyaXRlbChwYywgcHdtLSZndDtod3B3bSwgUFdN
-RFdJRFRILCBwZXJpb2RfbnMgLyByZXNvbHV0aW9uKTsNCiAJbXRrX3B3bV93cml0ZWwocGMsIHB3
-bS0mZ3Q7aHdwd20sIFBXTVRIUkVTLCBkdXR5X25zIC8gcmVzb2x1dGlvbik7DQogDQorCW10a19w
-d21fY2xrX2Rpc2FibGUoY2hpcCwgcHdtKTsNCisNCiAJcmV0dXJuIDA7DQogfQ0KIA0KQEAgLTEw
-MiwxMSArMTQxLDggQEAgc3RhdGljIGludCBtdGtfcHdtX2VuYWJsZShzdHJ1Y3QgcHdtX2NoaXAg
-KmNoaXAsIHN0cnVjdCBwd21fZGV2aWNlICpwd20pDQogew0KIAlzdHJ1Y3QgbXRrX3B3bV9jaGlw
-ICpwYyA9IHRvX210a19wd21fY2hpcChjaGlwKTsNCiAJdTMyIHZhbHVlOw0KLQlpbnQgcmV0Ow0K
-IA0KLQlyZXQgPSBjbGtfcHJlcGFyZShwYy0mZ3Q7Y2xrc1tNVEtfQ0xLX1BXTTEgKyBwd20tJmd0
-O2h3cHdtXSk7DQotCWlmIChyZXQgJmx0OyAwKQ0KLQkJcmV0dXJuIHJldDsNCisJbXRrX3B3bV9j
-bGtfZW5hYmxlKGNoaXAsIHB3bSk7DQogDQogCXZhbHVlID0gcmVhZGwocGMtJmd0O3JlZ3MpOw0K
-IAl2YWx1ZSB8PSBCSVQocHdtLSZndDtod3B3bSk7DQpAQCAtMTI0LDcgKzE2MCw3IEBAIHN0YXRp
-YyB2b2lkIG10a19wd21fZGlzYWJsZShzdHJ1Y3QgcHdtX2NoaXAgKmNoaXAsIHN0cnVjdCBwd21f
-ZGV2aWNlICpwd20pDQogCXZhbHVlICZhbXA7PSB+QklUKHB3bS0mZ3Q7aHdwd20pOw0KIAl3cml0
-ZWwodmFsdWUsIHBjLSZndDtyZWdzKTsNCiANCi0JY2xrX3VucHJlcGFyZShwYy0mZ3Q7Y2xrc1tN
-VEtfQ0xLX1BXTTEgKyBwd20tJmd0O2h3cHdtXSk7DQorCW10a19wd21fY2xrX2Rpc2FibGUoY2hp
-cCwgcHdtKTsNCiB9DQogDQogc3RhdGljIGNvbnN0IHN0cnVjdCBwd21fb3BzIG10a19wd21fb3Bz
-ID0gew0KQEAgLTE1NiwxNCArMTkyLDYgQEAgc3RhdGljIGludCBtdGtfcHdtX3Byb2JlKHN0cnVj
-dCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCQkJcmV0dXJuIFBUUl9FUlIocGMtJmd0O2Nsa3Nb
-aV0pOw0KIAl9DQogDQotCXJldCA9IGNsa19wcmVwYXJlKHBjLSZndDtjbGtzW01US19DTEtfVE9Q
-XSk7DQotCWlmIChyZXQgJmx0OyAwKQ0KLQkJcmV0dXJuIHJldDsNCi0NCi0JcmV0ID0gY2xrX3By
-ZXBhcmUocGMtJmd0O2Nsa3NbTVRLX0NMS19NQUlOXSk7DQotCWlmIChyZXQgJmx0OyAwKQ0KLQkJ
-Z290byBkaXNhYmxlX2Nsa190b3A7DQotDQogCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYsIHBj
-KTsNCiANCiAJcGMtJmd0O2NoaXAuZGV2ID0gJmFtcDtwZGV2LSZndDtkZXY7DQpAQCAtMTc0LDI2
-ICsyMDIsMTUgQEAgc3RhdGljIGludCBtdGtfcHdtX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZp
-Y2UgKnBkZXYpDQogCXJldCA9IHB3bWNoaXBfYWRkKCZhbXA7cGMtJmd0O2NoaXApOw0KIAlpZiAo
-cmV0ICZsdDsgMCkgew0KIAkJZGV2X2VycigmYW1wO3BkZXYtJmd0O2RldiwgJnF1b3Q7cHdtY2hp
-cF9hZGQoKSBmYWlsZWQ6ICVkXG4mcXVvdDssIHJldCk7DQotCQlnb3RvIGRpc2FibGVfY2xrX21h
-aW47DQorCQlyZXR1cm4gcmV0Ow0KIAl9DQogDQogCXJldHVybiAwOw0KLQ0KLWRpc2FibGVfY2xr
-X21haW46DQotCWNsa191bnByZXBhcmUocGMtJmd0O2Nsa3NbTVRLX0NMS19NQUlOXSk7DQotZGlz
-YWJsZV9jbGtfdG9wOg0KLQljbGtfdW5wcmVwYXJlKHBjLSZndDtjbGtzW01US19DTEtfVE9QXSk7
-DQotDQotCXJldHVybiByZXQ7DQogfQ0KIA0KIHN0YXRpYyBpbnQgbXRrX3B3bV9yZW1vdmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCiB7DQogCXN0cnVjdCBtdGtfcHdtX2NoaXAgKnBj
-ID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQotCXVuc2lnbmVkIGludCBpOw0KLQ0KLQlm
-b3IgKGkgPSAwOyBpICZsdDsgcGMtJmd0O2NoaXAubnB3bTsgaSsrKQ0KLQkJcHdtX2Rpc2FibGUo
-JmFtcDtwYy0mZ3Q7Y2hpcC5wd21zW2ldKTsNCiANCiAJcmV0dXJuIHB3bWNoaXBfcmVtb3ZlKCZh
-bXA7cGMtJmd0O2NoaXApOw0KIH0NCi0tIA0KMS43LjkuNQ0KDQo8L3ByZT48IS0tdHlwZTp0ZXh0
-LS0+PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29uZmlkZW50aWFsaXR5IE5vdGlj
-ZQ0KICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRpb24gY29udGFpbmVkIGluIHRo
-aXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRhY2htZW50cykgbWF5IGJlIGNv
-bmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9yIG90aGVyd2lzZQ0KZXhlbXB0
-IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3MuIEl0IGlzIGludGVuZGVkIHRv
-IGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCByZWNpcGllbnQocykuIEFueSB1
-c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmludGluZywgcmV0YWluaW5nIG9y
-IGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMgDQphdHRhY2htZW50cykgYnkg
-dW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJvaGliaXRlZCBhbmQgbWF5IA0K
-YmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVkIHJlY2lwaWVudCBvZiB0aGlz
-IGUtbWFpbCwgb3IgYmVsaWV2ZQ0KIA0KdGhhdCB5b3UgaGF2ZSByZWNlaXZlZCB0aGlzIGUtbWFp
-bCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0KaW1tZWRpYXRlbHkgKGJ5IHJl
-cGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQgYWxsIGNvcGllcyBvZiANCnRo
-aXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBmcm9tIHlvdXIgc3lzdGVtLCBh
-bmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlzIGUtbWFpbCB0byBhbnkgb3Ro
-ZXIgcGVyc29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
+PHByZT4NCnN1cHBvcnQgbXVsdGlwbGUgY2hpcChNVDI3MTIsIE1UNzYyMiwgTVQ3NjIzKQ0KDQpT
+aWduZWQtb2ZmLWJ5OiBaaGkgTWFvICZsdDt6aGkubWFvQG1lZGlhdGVrLmNvbSZndDsNCi0tLQ0K
+IGRyaXZlcnMvcHdtL3B3bS1tZWRpYXRlay5jIHwgICA2MyArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKy0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCA1MSBpbnNlcnRpb25zKCsp
+LCAxMiBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1tZWRpYXRl
+ay5jIGIvZHJpdmVycy9wd20vcHdtLW1lZGlhdGVrLmMNCmluZGV4IGM4MDNmZjYuLmQ1MjAzNTYg
+MTAwNjQ0DQotLS0gYS9kcml2ZXJzL3B3bS9wd20tbWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9w
+d20vcHdtLW1lZGlhdGVrLmMNCkBAIC0xNiw2ICsxNiw3IEBADQogI2luY2x1ZGUgJmx0O2xpbnV4
+L21vZHVsZS5oJmd0Ow0KICNpbmNsdWRlICZsdDtsaW51eC9jbGsuaCZndDsNCiAjaW5jbHVkZSAm
+bHQ7bGludXgvb2YuaCZndDsNCisjaW5jbHVkZSAmbHQ7bGludXgvb2ZfZGV2aWNlLmgmZ3Q7DQog
+I2luY2x1ZGUgJmx0O2xpbnV4L3BsYXRmb3JtX2RldmljZS5oJmd0Ow0KICNpbmNsdWRlICZsdDts
+aW51eC9wd20uaCZndDsNCiAjaW5jbHVkZSAmbHQ7bGludXgvc2xhYi5oJmd0Ow0KQEAgLTMwLDYg
+KzMxLDggQEANCiAjZGVmaW5lIFBXTURXSURUSAkJMHgyYw0KICNkZWZpbmUgUFdNVEhSRVMJCTB4
+MzANCiANCisjZGVmaW5lIFBXTV9DTEtfRElWX01BWAkJNw0KKw0KIGVudW0gew0KIAlNVEtfQ0xL
+X01BSU4gPSAwLA0KIAlNVEtfQ0xLX1RPUCwNCkBAIC0zOCwxMSArNDEsMTkgQEAgZW51bSB7DQog
+CU1US19DTEtfUFdNMywNCiAJTVRLX0NMS19QV000LA0KIAlNVEtfQ0xLX1BXTTUsDQorCU1US19D
+TEtfUFdNNiwNCisJTVRLX0NMS19QV003LA0KKwlNVEtfQ0xLX1BXTTgsDQogCU1US19DTEtfTUFY
+LA0KIH07DQogDQotc3RhdGljIGNvbnN0IGNoYXIgKiBjb25zdCBtdGtfcHdtX2Nsa19uYW1lW10g
+PSB7DQotCSZxdW90O21haW4mcXVvdDssICZxdW90O3RvcCZxdW90OywgJnF1b3Q7cHdtMSZxdW90
+OywgJnF1b3Q7cHdtMiZxdW90OywgJnF1b3Q7cHdtMyZxdW90OywgJnF1b3Q7cHdtNCZxdW90Oywg
+JnF1b3Q7cHdtNSZxdW90Ow0KK3N0YXRpYyBjb25zdCBjaGFyICogY29uc3QgbXRrX3B3bV9jbGtf
+bmFtZVtNVEtfQ0xLX01BWF0gPSB7DQorCSZxdW90O21haW4mcXVvdDssICZxdW90O3RvcCZxdW90
+OywgJnF1b3Q7cHdtMSZxdW90OywgJnF1b3Q7cHdtMiZxdW90OywgJnF1b3Q7cHdtMyZxdW90Oywg
+JnF1b3Q7cHdtNCZxdW90OywNCisJJnF1b3Q7cHdtNSZxdW90OywgJnF1b3Q7cHdtNiZxdW90Oywg
+JnF1b3Q7cHdtNyZxdW90OywgJnF1b3Q7cHdtOCZxdW90Ow0KK307DQorDQorc3RydWN0IG10a19j
+b21fcHdtX2RhdGEgew0KKwl1bnNpZ25lZCBpbnQgcHdtX251bXM7DQogfTsNCiANCiAvKioNCkBA
+IC01NSw2ICs2NiwxMSBAQCBzdHJ1Y3QgbXRrX3B3bV9jaGlwIHsNCiAJc3RydWN0IHB3bV9jaGlw
+IGNoaXA7DQogCXZvaWQgX19pb21lbSAqcmVnczsNCiAJc3RydWN0IGNsayAqY2xrc1tNVEtfQ0xL
+X01BWF07DQorCWNvbnN0IHN0cnVjdCBtdGtfY29tX3B3bV9kYXRhICpkYXRhOw0KK307DQorDQor
+c3RhdGljIGNvbnN0IHVuc2lnbmVkIGxvbmcgbXRrX3B3bV9jb21fcmVnW10gPSB7DQorCTB4MDAx
+MCwgMHgwMDUwLCAweDAwOTAsIDB4MDBkMCwgMHgwMTEwLCAweDAxNTAsIDB4MDE5MCwgMHgwMjIw
+DQogfTsNCiANCiBzdGF0aWMgaW5saW5lIHN0cnVjdCBtdGtfcHdtX2NoaXAgKnRvX210a19wd21f
+Y2hpcChzdHJ1Y3QgcHdtX2NoaXAgKmNoaXApDQpAQCAtOTksMTQgKzExNSwxNCBAQCBzdGF0aWMg
+dm9pZCBtdGtfcHdtX2Nsa19kaXNhYmxlKHN0cnVjdCBwd21fY2hpcCAqY2hpcCwgc3RydWN0IHB3
+bV9kZXZpY2UgKnB3bSkNCiBzdGF0aWMgaW5saW5lIHUzMiBtdGtfcHdtX3JlYWRsKHN0cnVjdCBt
+dGtfcHdtX2NoaXAgKmNoaXAsIHVuc2lnbmVkIGludCBudW0sDQogCQkJCXVuc2lnbmVkIGludCBv
+ZmZzZXQpDQogew0KLQlyZXR1cm4gcmVhZGwoY2hpcC0mZ3Q7cmVncyArIDB4MTAgKyAobnVtICog
+MHg0MCkgKyBvZmZzZXQpOw0KKwlyZXR1cm4gcmVhZGwoY2hpcC0mZ3Q7cmVncyArIG10a19wd21f
+Y29tX3JlZ1tudW1dICsgb2Zmc2V0KTsNCiB9DQogDQogc3RhdGljIGlubGluZSB2b2lkIG10a19w
+d21fd3JpdGVsKHN0cnVjdCBtdGtfcHdtX2NoaXAgKmNoaXAsDQogCQkJCSAgdW5zaWduZWQgaW50
+IG51bSwgdW5zaWduZWQgaW50IG9mZnNldCwNCiAJCQkJICB1MzIgdmFsdWUpDQogew0KLQl3cml0
+ZWwodmFsdWUsIGNoaXAtJmd0O3JlZ3MgKyAweDEwICsgKG51bSAqIDB4NDApICsgb2Zmc2V0KTsN
+CisJd3JpdGVsKHZhbHVlLCBjaGlwLSZndDtyZWdzICsgbXRrX3B3bV9jb21fcmVnW251bV0gKyBv
+ZmZzZXQpOw0KIH0NCiANCiBzdGF0aWMgaW50IG10a19wd21fY29uZmlnKHN0cnVjdCBwd21fY2hp
+cCAqY2hpcCwgc3RydWN0IHB3bV9kZXZpY2UgKnB3bSwNCkBAIC0xMjUsOCArMTQxLDEwIEBAIHN0
+YXRpYyBpbnQgbXRrX3B3bV9jb25maWcoc3RydWN0IHB3bV9jaGlwICpjaGlwLCBzdHJ1Y3QgcHdt
+X2RldmljZSAqcHdtLA0KIAkJY2xrZGl2Kys7DQogCX0NCiANCi0JaWYgKGNsa2RpdiAmZ3Q7IDcp
+DQorCWlmIChjbGtkaXYgJmd0OyBQV01fQ0xLX0RJVl9NQVgpIHsNCisJCWRldl9lcnIoY2hpcC0m
+Z3Q7ZGV2LCAmcXVvdDtwZXJpb2QgJWQgbm90IHN1cHBvcnRlZFxuJnF1b3Q7LCBwZXJpb2RfbnMp
+Ow0KIAkJcmV0dXJuIC1FSU5WQUw7DQorCX0NCiANCiAJbXRrX3B3bV93cml0ZWwocGMsIHB3bS0m
+Z3Q7aHdwd20sIFBXTUNPTiwgQklUKDE1KSB8IGNsa2Rpdik7DQogCW10a19wd21fd3JpdGVsKHBj
+LCBwd20tJmd0O2h3cHdtLCBQV01EV0lEVEgsIHBlcmlvZF9ucyAvIHJlc29sdXRpb24pOw0KQEAg
+LTE4MSwyMyArMTk5LDI4IEBAIHN0YXRpYyBpbnQgbXRrX3B3bV9wcm9iZShzdHJ1Y3QgcGxhdGZv
+cm1fZGV2aWNlICpwZGV2KQ0KIAlpZiAoIXBjKQ0KIAkJcmV0dXJuIC1FTk9NRU07DQogDQorCXBj
+LSZndDtkYXRhID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCZhbXA7cGRldi0mZ3Q7ZGV2KTsN
+CisNCiAJcmVzID0gcGxhdGZvcm1fZ2V0X3Jlc291cmNlKHBkZXYsIElPUkVTT1VSQ0VfTUVNLCAw
+KTsNCiAJcGMtJmd0O3JlZ3MgPSBkZXZtX2lvcmVtYXBfcmVzb3VyY2UoJmFtcDtwZGV2LSZndDtk
+ZXYsIHJlcyk7DQogCWlmIChJU19FUlIocGMtJmd0O3JlZ3MpKQ0KIAkJcmV0dXJuIFBUUl9FUlIo
+cGMtJmd0O3JlZ3MpOw0KIA0KLQlmb3IgKGkgPSAwOyBpICZsdDsgTVRLX0NMS19NQVg7IGkrKykg
+ew0KKwlmb3IgKGkgPSAwOyBpICZsdDsgcGMtJmd0O2RhdGEtJmd0O3B3bV9udW1zICsgMjsgaSsr
+KSB7DQogCQlwYy0mZ3Q7Y2xrc1tpXSA9IGRldm1fY2xrX2dldCgmYW1wO3BkZXYtJmd0O2Rldiwg
+bXRrX3B3bV9jbGtfbmFtZVtpXSk7DQotCQlpZiAoSVNfRVJSKHBjLSZndDtjbGtzW2ldKSkNCisJ
+CWlmIChJU19FUlIocGMtJmd0O2Nsa3NbaV0pKSB7DQorCQkJZGV2X2VycigmYW1wO3BkZXYtJmd0
+O2RldiwgJnF1b3Q7W1BXTV0gY2xvY2s6ICVzIGZhaWw6ICVsZFxuJnF1b3Q7LA0KKwkJCQltdGtf
+cHdtX2Nsa19uYW1lW2ldLCBQVFJfRVJSKHBjLSZndDtjbGtzW2ldKSk7DQogCQkJcmV0dXJuIFBU
+Ul9FUlIocGMtJmd0O2Nsa3NbaV0pOw0KKwkJfQ0KIAl9DQogDQotCXBsYXRmb3JtX3NldF9kcnZk
+YXRhKHBkZXYsIHBjKTsNCi0NCiAJcGMtJmd0O2NoaXAuZGV2ID0gJmFtcDtwZGV2LSZndDtkZXY7
+DQogCXBjLSZndDtjaGlwLm9wcyA9ICZhbXA7bXRrX3B3bV9vcHM7DQogCXBjLSZndDtjaGlwLmJh
+c2UgPSAtMTsNCi0JcGMtJmd0O2NoaXAubnB3bSA9IDU7DQorCXBjLSZndDtjaGlwLm5wd20gPSBw
+Yy0mZ3Q7ZGF0YS0mZ3Q7cHdtX251bXM7DQorDQorCXBsYXRmb3JtX3NldF9kcnZkYXRhKHBkZXYs
+IHBjKTsNCiANCiAJcmV0ID0gcHdtY2hpcF9hZGQoJmFtcDtwYy0mZ3Q7Y2hpcCk7DQogCWlmIChy
+ZXQgJmx0OyAwKSB7DQpAQCAtMjE1LDkgKzIzOCwyNSBAQCBzdGF0aWMgaW50IG10a19wd21fcmVt
+b3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQogCXJldHVybiBwd21jaGlwX3JlbW92
+ZSgmYW1wO3BjLSZndDtjaGlwKTsNCiB9DQogDQorLyo9PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT0qLw0KK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2NvbV9wd21fZGF0
+YSBtdDI3MTJfcHdtX2RhdGEgPSB7DQorCS5wd21fbnVtcyA9IDgsDQorfTsNCisNCitzdGF0aWMg
+Y29uc3Qgc3RydWN0IG10a19jb21fcHdtX2RhdGEgbXQ3NjIyX3B3bV9kYXRhID0gew0KKwkucHdt
+X251bXMgPSA2LA0KK307DQorDQorc3RhdGljIGNvbnN0IHN0cnVjdCBtdGtfY29tX3B3bV9kYXRh
+IG10NzYyM19wd21fZGF0YSA9IHsNCisJLnB3bV9udW1zID0gNSwNCit9Ow0KKy8qPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ki8NCisNCiBzdGF0aWMgY29uc3Qgc3Ry
+dWN0IG9mX2RldmljZV9pZCBtdGtfcHdtX29mX21hdGNoW10gPSB7DQotCXsgLmNvbXBhdGlibGUg
+PSAmcXVvdDttZWRpYXRlayxtdDc2MjMtcHdtJnF1b3Q7IH0sDQotCXsgfQ0KKwl7LmNvbXBhdGli
+bGUgPSAmcXVvdDttZWRpYXRlayxtdDI3MTItcHdtJnF1b3Q7LCAuZGF0YSA9ICZhbXA7bXQyNzEy
+X3B3bV9kYXRhfSwNCisJey5jb21wYXRpYmxlID0gJnF1b3Q7bWVkaWF0ZWssbXQ3NjIyLXB3bSZx
+dW90OywgLmRhdGEgPSAmYW1wO210NzYyMl9wd21fZGF0YX0sDQorCXsuY29tcGF0aWJsZSA9ICZx
+dW90O21lZGlhdGVrLG10NzYyMy1wd20mcXVvdDssIC5kYXRhID0gJmFtcDttdDc2MjNfcHdtX2Rh
+dGF9LA0KKwl7fSwNCiB9Ow0KIE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIG10a19wd21fb2ZfbWF0
+Y2gpOw0KIA0KLS0gDQoxLjcuOS41DQoNCjwvcHJlPjwhLS10eXBlOnRleHQtLT48IS0tey0tPjxw
+cmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRpYWxpdHkgTm90aWNlDQogKioqKioqKioq
+KioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250YWluZWQgaW4gdGhpcyBlLW1haWwgbWVz
+c2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRzKSBtYXkgYmUgY29uZmlkZW50aWFsLCBw
+cm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9z
+dXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMgaW50ZW5kZWQgdG8gYmUgDQpjb252ZXll
+ZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVudChzKS4gQW55IHVzZSwgZGlzc2VtaW5h
+dGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCByZXRhaW5pbmcgb3IgY29weWluZyBvZiB0
+aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFjaG1lbnRzKSBieSB1bmludGVuZGVkIHJl
+Y2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVkIGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4g
+SWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBpZW50IG9mIHRoaXMgZS1tYWlsLCBvciBi
+ZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVkIHRoaXMgZS1tYWlsIGluIGVycm9yLCBw
+bGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlhdGVseSAoYnkgcmVwbHlpbmcgdG8gdGhp
+cyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29waWVzIG9mIA0KdGhpcyBlLW1haWwgKGlu
+Y2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91ciBzeXN0ZW0sIGFuZCBkbyBub3QNCmRp
+c2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWlsIHRvIGFueSBvdGhlciBwZXJzb24uIFRo
+YW5rDQogeW91ITwvcHJlPjwhLS19LS0+
 
---__=_Part_Boundary_008_1159267317.1878223427
+--__=_Part_Boundary_004_2109115591.1605424124
 Content-Type: text/plain
 
-1.fix clock control
- - prepare top/main clk in mtk_pwm_probe() function,
-   it will increase power consumption
-   and in original code these clocks is only prepeare but never enabled
- - pwm clock should be enabled before setting pwm registers
-   in function: mtk_pwm_config()
-
-2.fix pwm source clock selection
- - in original code, the pwm output frequency is not correct
-   when set bit<3>=1 to PWMCON register.
+support multiple chip(MT2712, MT7622, MT7623)
 
 Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
 ---
- drivers/pwm/pwm-mediatek.c |   69
- +++++++++++++++++++++++++++-----------------
- 1 file changed, 43 insertions(+), 26 deletions(-)
+ drivers/pwm/pwm-mediatek.c |   63
+ +++++++++++++++++++++++++++++++++++---------
+ 1 file changed, 51 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index 5c11bc7..c803ff6 100644
+index c803ff6..d520356 100644
 --- a/drivers/pwm/pwm-mediatek.c
 +++ b/drivers/pwm/pwm-mediatek.c
-@@ -2,6 +2,7 @@
-  * Mediatek Pulse Width Modulator driver
-  *
-  * Copyright (C) 2015 John Crispin <blogic@openwrt.org>
-+ * Copyright (C) 2017 Zhi Mao <zhi.mao@mediatek.com>
-  *
-  * This file is licensed under the terms of the GNU General Public
-  * License version 2. This program is licensed "as is" without any
-@@ -61,6 +62,40 @@ static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct
- pwm_chip *chip)
- 	return container_of(chip, struct mtk_pwm_chip, chip);
- }
+@@ -16,6 +16,7 @@
+ #include <linux/module.h>
+ #include <linux/clk.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ #include <linux/pwm.h>
+ #include <linux/slab.h>
+@@ -30,6 +31,8 @@
+ #define PWMDWIDTH		0x2c
+ #define PWMTHRES		0x30
  
-+static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device
- *pwm)
-+{
-+	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+	int ret = 0;
++#define PWM_CLK_DIV_MAX		7
 +
-+	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
-+	if (ret < 0)
-+		return ret;
+ enum {
+ 	MTK_CLK_MAIN = 0,
+ 	MTK_CLK_TOP,
+@@ -38,11 +41,19 @@ enum {
+ 	MTK_CLK_PWM3,
+ 	MTK_CLK_PWM4,
+ 	MTK_CLK_PWM5,
++	MTK_CLK_PWM6,
++	MTK_CLK_PWM7,
++	MTK_CLK_PWM8,
+ 	MTK_CLK_MAX,
+ };
+ 
+-static const char * const mtk_pwm_clk_name[] = {
+-	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4", "pwm5"
++static const char * const mtk_pwm_clk_name[MTK_CLK_MAX] = {
++	"main", "top", "pwm1", "pwm2", "pwm3", "pwm4",
++	"pwm5", "pwm6", "pwm7", "pwm8"
++};
 +
-+	ret = clk_prepare_enable(pc->clks[MTK_CLK_MAIN]);
-+	if (ret < 0) {
-+		clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-+		return ret;
-+	}
++struct mtk_com_pwm_data {
++	unsigned int pwm_nums;
+ };
+ 
+ /**
+@@ -55,6 +66,11 @@ struct mtk_pwm_chip {
+ 	struct pwm_chip chip;
+ 	void __iomem *regs;
+ 	struct clk *clks[MTK_CLK_MAX];
++	const struct mtk_com_pwm_data *data;
++};
 +
-+	ret = clk_prepare_enable(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	if (ret < 0) {
-+		clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
-+		clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-+		return ret;
-+	}
-+
-+	return ret;
-+}
-+
-+static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device
- *pwm)
-+{
-+	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+
-+	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
-+	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-+}
-+
++static const unsigned long mtk_pwm_com_reg[] = {
++	0x0010, 0x0050, 0x0090, 0x00d0, 0x0110, 0x0150, 0x0190, 0x0220
+ };
+ 
+ static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
+@@ -99,14 +115,14 @@ static void mtk_pwm_clk_disable(struct pwm_chip *chip,
+ struct pwm_device *pwm)
  static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int
  num,
  				unsigned int offset)
  {
-@@ -81,6 +116,8 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct
- pwm_device *pwm,
- 	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
- 	u32 resolution, clkdiv = 0;
- 
-+	mtk_pwm_clk_enable(chip, pwm);
-+
- 	resolution = NSEC_PER_SEC / clk_get_rate(clk);
- 
- 	while (period_ns / resolution > 8191) {
-@@ -91,10 +128,12 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct
- pwm_device *pwm,
- 	if (clkdiv > 7)
- 		return -EINVAL;
- 
--	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | BIT(3) | clkdiv);
-+	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
- 	mtk_pwm_writel(pc, pwm->hwpwm, PWMDWIDTH, period_ns / resolution);
- 	mtk_pwm_writel(pc, pwm->hwpwm, PWMTHRES, duty_ns / resolution);
- 
-+	mtk_pwm_clk_disable(chip, pwm);
-+
- 	return 0;
+-	return readl(chip->regs + 0x10 + (num * 0x40) + offset);
++	return readl(chip->regs + mtk_pwm_com_reg[num] + offset);
  }
  
-@@ -102,11 +141,8 @@ static int mtk_pwm_enable(struct pwm_chip *chip, struct
- pwm_device *pwm)
+ static inline void mtk_pwm_writel(struct mtk_pwm_chip *chip,
+ 				  unsigned int num, unsigned int offset,
+ 				  u32 value)
  {
- 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
- 	u32 value;
--	int ret;
- 
--	ret = clk_prepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
--	if (ret < 0)
--		return ret;
-+	mtk_pwm_clk_enable(chip, pwm);
- 
- 	value = readl(pc->regs);
- 	value |= BIT(pwm->hwpwm);
-@@ -124,7 +160,7 @@ static void mtk_pwm_disable(struct pwm_chip *chip,
- struct pwm_device *pwm)
- 	value &= ~BIT(pwm->hwpwm);
- 	writel(value, pc->regs);
- 
--	clk_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	mtk_pwm_clk_disable(chip, pwm);
+-	writel(value, chip->regs + 0x10 + (num * 0x40) + offset);
++	writel(value, chip->regs + mtk_pwm_com_reg[num] + offset);
  }
  
- static const struct pwm_ops mtk_pwm_ops = {
-@@ -156,14 +192,6 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 			return PTR_ERR(pc->clks[i]);
+ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -125,8 +141,10 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct
+ pwm_device *pwm,
+ 		clkdiv++;
  	}
  
--	ret = clk_prepare(pc->clks[MTK_CLK_TOP]);
--	if (ret < 0)
--		return ret;
--
--	ret = clk_prepare(pc->clks[MTK_CLK_MAIN]);
--	if (ret < 0)
--		goto disable_clk_top;
--
- 	platform_set_drvdata(pdev, pc);
+-	if (clkdiv > 7)
++	if (clkdiv > PWM_CLK_DIV_MAX) {
++		dev_err(chip->dev, "period %d not supported\n", period_ns);
+ 		return -EINVAL;
++	}
  
+ 	mtk_pwm_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
+ 	mtk_pwm_writel(pc, pwm->hwpwm, PWMDWIDTH, period_ns / resolution);
+@@ -181,23 +199,28 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	if (!pc)
+ 		return -ENOMEM;
+ 
++	pc->data = of_device_get_match_data(&pdev->dev);
++
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	pc->regs = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(pc->regs))
+ 		return PTR_ERR(pc->regs);
+ 
+-	for (i = 0; i < MTK_CLK_MAX; i++) {
++	for (i = 0; i < pc->data->pwm_nums + 2; i++) {
+ 		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+-		if (IS_ERR(pc->clks[i]))
++		if (IS_ERR(pc->clks[i])) {
++			dev_err(&pdev->dev, "[PWM] clock: %s fail: %ld\n",
++				mtk_pwm_clk_name[i], PTR_ERR(pc->clks[i]));
+ 			return PTR_ERR(pc->clks[i]);
++		}
+ 	}
+ 
+-	platform_set_drvdata(pdev, pc);
+-
  	pc->chip.dev = &pdev->dev;
-@@ -174,26 +202,15 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+ 	pc->chip.ops = &mtk_pwm_ops;
+ 	pc->chip.base = -1;
+-	pc->chip.npwm = 5;
++	pc->chip.npwm = pc->data->pwm_nums;
++
++	platform_set_drvdata(pdev, pc);
+ 
  	ret = pwmchip_add(&pc->chip);
  	if (ret < 0) {
- 		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
--		goto disable_clk_main;
-+		return ret;
- 	}
- 
- 	return 0;
--
--disable_clk_main:
--	clk_unprepare(pc->clks[MTK_CLK_MAIN]);
--disable_clk_top:
--	clk_unprepare(pc->clks[MTK_CLK_TOP]);
--
--	return ret;
- }
- 
- static int mtk_pwm_remove(struct platform_device *pdev)
- {
- 	struct mtk_pwm_chip *pc = platform_get_drvdata(pdev);
--	unsigned int i;
--
--	for (i = 0; i < pc->chip.npwm; i++)
--		pwm_disable(&pc->chip.pwms[i]);
- 
+@@ -215,9 +238,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
  	return pwmchip_remove(&pc->chip);
  }
+ 
++/*==========================================*/
++static const struct mtk_com_pwm_data mt2712_pwm_data = {
++	.pwm_nums = 8,
++};
++
++static const struct mtk_com_pwm_data mt7622_pwm_data = {
++	.pwm_nums = 6,
++};
++
++static const struct mtk_com_pwm_data mt7623_pwm_data = {
++	.pwm_nums = 5,
++};
++/*==========================================*/
++
+ static const struct of_device_id mtk_pwm_of_match[] = {
+-	{ .compatible = "mediatek,mt7623-pwm" },
+-	{ }
++	{.compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data},
++	{.compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data},
++	{.compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data},
++	{},
+ };
+ MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+ 
 -- 
 1.7.9.5
 
---__=_Part_Boundary_008_1159267317.1878223427--
+--__=_Part_Boundary_004_2109115591.1605424124--
 
---__=_Part_Boundary_007_1689701418.2082826669--
+--__=_Part_Boundary_003_1444852209.1441050253--
