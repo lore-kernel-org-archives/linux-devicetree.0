@@ -1,48 +1,84 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/7] dt-bindings: PCI: Describe ATS property for root
-	complex nodes
-Date: Tue, 20 Jun 2017 12:38:26 +0100
-Message-ID: <1754b317-767e-7afd-5608-6ef6ea80a162@arm.com>
-References: <20170524180143.19855-1-jean-philippe.brucker@arm.com>
-	<20170524180143.19855-3-jean-philippe.brucker@arm.com>
-	<20170531172320.3u6bdctv44aqighy@rob-hp-laptop>
-	<cd63a2dc-8259-482d-19e9-9db60be866f7@arm.com>
-	<20170605172025.qgnocl5ytexnklue@rob-hp-laptop>
-	<65aea93f-d516-f045-f216-3f56e96bdeb6@arm.com>
+From: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 1/5] dt-bindings: i2c-stm32: Document the STM32F7 I2C bindings
+Date: Tue, 20 Jun 2017 13:41:26 +0200
+Message-ID: <1497958890-5530-2-git-send-email-pierre-yves.mordret@st.com>
+References: <1497958890-5530-1-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <65aea93f-d516-f045-f216-3f56e96bdeb6-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, sudeep.holla-5wv7dgnIgG8@public.gmane.org, rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org, okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, thunder.leizhen-hv44wF8Li93QT0dZR+AlfA@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, tn-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org, sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, lenb-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497958890-5530-1-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: pierre-yves.mordret-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/06/2017 12:11 PM, Jean-Philippe Brucker wrote:
-> On 05/06/17 18:20, Rob Herring wrote:
->> pci-host-{e,}cam-generic is a special case. I'm okay with having a 
->> property for that I suppose. We should not require this property though 
->> and allow for it to be implied by the SoC specific compatible as well.
-> 
-> The property isn't useful for host-generic since a host like Qemu can
-> easily disable ATS in the IOMMU. It would only be here for consistency.
-> Changing IOMMU registers wouldn't be as simple for a firmware running on
-> real hardware.
+This patch adds the documentation of device tree bindings for STM32F7 I2C
 
-Sorry I was mistaken here. AMD Seattle hardware, for instance, implements
-a pure host-ecam-generic. So it's not exclusively used by Qemu. A quick
-search in the kernel also brings up alpine and thunder2. So I guess I'll
-move ats-supported documentation to host-generic-pci.txt.
+Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+---
+Change in V2
+  * Remove i2c-timing binding in order to use generic bindings SCL Rising
+    and Falling time instead
+---
+ .../devicetree/bindings/i2c/i2c-stm32.txt          | 29 +++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
 
-Thanks,
-Jean
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+index 78eaf7b..3b54899 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-stm32.txt
+@@ -1,7 +1,9 @@
+ * I2C controller embedded in STMicroelectronics STM32 I2C platform
+ 
+ Required properties :
+-- compatible : Must be "st,stm32f4-i2c"
++- compatible : Must be one of the following
++  - "st,stm32f4-i2c"
++  - "st,stm32f7-i2c"
+ - reg : Offset and length of the register set for the device
+ - interrupts : Must contain the interrupt id for I2C event and then the
+   interrupt id for I2C error.
+@@ -14,8 +16,16 @@ Required properties :
+ 
+ Optional properties :
+ - clock-frequency : Desired I2C bus clock frequency in Hz. If not specified,
+-  the default 100 kHz frequency will be used. As only Normal and Fast modes
+-  are supported, possible values are 100000 and 400000.
++  the default 100 kHz frequency will be used.
++  For STM32F4 SoC Standard-mode and Fast-mode are supported, possible values are
++  100000 and 400000.
++  For STM32F7 SoC, Standard-mode, Fast-mode and Fast-mode Plus are supported,
++  possible values are 100000, 400000 and 1000000.
++- i2c-scl-rising-time-ns : Only for STM32F7, I2C SCL Rising time for the board
++  (default: 25)
++- i2c-scl-falling-time-ns : Only for STM32F7, I2C SCL Falling time for the board
++  (default: 10)
++  I2C Timings are derived from these 2 values
+ 
+ Example :
+ 
+@@ -31,3 +41,16 @@ Example :
+ 		pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
+ 		pinctrl-names = "default";
+ 	};
++
++	i2c@40005400 {
++		compatible = "st,stm32f7-i2c";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		reg = <0x40005400 0x400>;
++		interrupts = <31>,
++			     <32>;
++		resets = <&rcc STM32F7_APB1_RESET(I2C1)>;
++		clocks = <&rcc 1 CLK_I2C1>;
++		pinctrl-0 = <&i2c1_sda_pin>, <&i2c1_scl_pin>;
++		pinctrl-names = "default";
++	};
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
