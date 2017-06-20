@@ -1,80 +1,42 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v4 0/3] watchdog: dw_wdt: add reset lines
-Date: Tue, 20 Jun 2017 09:55:22 +0200
-Message-ID: <738tknf5zp.fsf@pengutronix.de>
-References: <cover.50aaf23e8fbe9028f711a67e39b96910c986e8b0.1495443015.git-series.s.trumtrar@pengutronix.de>
+From: Jarkko Nikula <jarkko.nikula-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH v11 5/6] i2c: designware: add SLAVE mode functions
+Date: Tue, 20 Jun 2017 11:03:27 +0300
+Message-ID: <b6346c22-7078-13f3-dc0e-d3f8b452aee6@linux.intel.com>
+References: <cover.1497025304.git.lolivei@synopsys.com>
+ <bef9f237bed23f0ea05499b085103f7eea9058a1.1497025304.git.lolivei@synopsys.com>
+ <CAHp75VeHoUrq-PfayNZYGP0f-bbnKQQEN4uMBg6ZASJs46b_PQ@mail.gmail.com>
+ <6e332d71-1891-21aa-4479-b91a7550f8af@synopsys.com>
+ <20170619155858.xjs5nvdkg42b73vg@ninjato>
+ <CAHp75VfpgOZ72=5F3aN_tfau3TnyGLsdKt=sdx_ZJ04wtxMtJg@mail.gmail.com>
+ <20170619162235.o2i4wzuyvcyoguwk@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <cover.50aaf23e8fbe9028f711a67e39b96910c986e8b0.1495443015.git-series.s.trumtrar@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-watchdog@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, Guenter Roeck <linux@roeck-us.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170619162235.o2i4wzuyvcyoguwk@ninjato>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Luis Oliveira <Luis.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ramiro Oliveira <Ramiro.Oliveira-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Joao Pinto <Joao.Pinto-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-Steffen Trumtrar <s.trumtrar@pengutronix.de> writes:
-
-> Hi!
+On 06/19/2017 07:22 PM, Wolfram Sang wrote:
 >
-> This series adds support for the reset line that is (potentially) holding
-> the watchdog in reset.
+>>> I wonder if we haven't reached a state where Luis just could fix the
+>>> buildbot error (missing 'select I2C_SLAVE') and the thing pointed out by
+>>> Andy and we handle further small fixes incrementally during the v4.13
+>>> cycle? AFAICS there is no major show-stopper, or am I wrong?
+>>
+>> I would go with the following plan:
+>> 1. Push 1-4
+>> 2. Resend 5-6 with addressed pointed issues for one more (fast) round
 >
-> As the watchdog is useless if this happens, it needs to be deasserted in
-> the probe function.
+> Good, so I'll pick up 1-4 now. Thanks!
 >
-> Tested on a Socrates board.
->
-> Regards,
-> Steffen
->
->
-> Changes since v3:
->
->   - goto out_disable_clk
->   - add Reviewed-by
->
-> Changes since v2:
->
->   - use optional reset functions
->   - add Acked-by to devictree bindings
->
-> Changes since v1:
->
->   - remove reset-names property
->   - remove warning if reset property is missing
->
-> Steffen Trumtrar (3):
->   watchdog: bindings: dw_wdt: add reset lines
->   watchdog: dw_wdt: get reset lines from dt
->   ARM: socfpga: dtsi: add dw-wdt reset lines
->
->  Documentation/devicetree/bindings/watchdog/dw_wdt.txt |  3 +++
->  arch/arm/boot/dts/socfpga.dtsi                        |  2 ++
->  drivers/watchdog/dw_wdt.c                             | 11 +++++++++++
->  3 files changed, 16 insertions(+)
->
-> base-commit: 2ea659a9ef488125eb46da6eb571de5eae5c43f6
-
-Gentle Ping!
-
-Is this series already applied somewhere I didn't look?
-
-
-Best regards,
-Steffen
+Yep, that's easier for everyone.
 
 -- 
-Pengutronix e.K.                           | Steffen Trumtrar            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Jarkko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
