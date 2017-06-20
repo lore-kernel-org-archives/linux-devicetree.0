@@ -1,64 +1,31 @@
-From: Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH v2 0/3] add support of hardware random generator on
- MediaTek MT7622
-Date: Wed, 21 Jun 2017 00:08:14 +0800
-Message-ID: <1497974894.31931.8.camel@mtkswgap22>
-References: <cover.1497280813.git.sean.wang@mediatek.com>
-         <20170620034009.GD17764@gondor.apana.org.au>
-         <1497968477.27946.5.camel@mtkswgap22> <20170620145933.GA4177@suse.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [EXT] Re: [PATCH v2] mmc: core: add mmc-card hardware reset
+ enable support
+Date: Tue, 20 Jun 2017 18:10:53 +0200
+Message-ID: <CACRpkdak6ffeN0D4eTJV3cUeJ+T92rg9Pt6AnFMW=VzQ=59XVw@mail.gmail.com>
+References: <1491895862-7952-1-git-send-email-richard.leitner@skidata.com>
+ <CACRpkdaBrk91hh3JGZ0vcD3aXO+OHD41xwRKn9prPSOX_SXuWg@mail.gmail.com>
+ <CAPDyKFoL5dbs_xKxaBGk2bqd2tOXrhG_SVcBoUpMetsKDdNXxQ@mail.gmail.com>
+ <0a29de1a-2635-2bb8-808a-7b9a0197921a@skidata.com> <6b92d0af00024549a0d22dda039780dd@bowex36d.micron.com>
+ <CACRpkdb92scfO=tghucfC3RqQpi9K6YSuavte_b-AxH4hS87rQ@mail.gmail.com> <dd844df4-ac50-daab-bc31-a636718227f5@skidata.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <20170620145933.GA4177@suse.de>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Torsten Duwe <duwe@suse.de>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, mpm@selenic.com, robh+dt@kernel.org, mark.rutland@arm.com, clabbe.montjoie@gmail.com, prasannatsmkumar@gmail.com, romain.perier@free-electrons.com, shannon.nelson@oracle.com, weiyongjun1@huawei.com, devicetree@vger.kernel.org, linux-crypto@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, keyhaede@gmail.com
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <dd844df4-ac50-daab-bc31-a636718227f5@skidata.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Richard Leitner <richard.leitner@skidata.com>
+Cc: "Luca Porzio (lporzio)" <lporzio@micron.com>, Ulf Hansson <ulf.hansson@linaro.org>, Bart Van Assche <bart.vanassche@sandisk.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Lin <shawn.lin@rock-chips.com>, Adrian Hunter <adrian.hunter@intel.com>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Richard Leitner <dev@g0hl1n.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-06-20 at 16:59 +0200, Torsten Duwe wrote:
-> On Tue, Jun 20, 2017 at 10:21:17PM +0800, Sean Wang wrote:
-> > Hi Herbert,
-> > 
-> > thanks for effort reviewing on those patches.
-> > 
-> > By the way, also loop in Torsten
-> > 
-> > Could you kindly guide me how to determine appropriate 
-> > rng->ops.quality value used by the driver?
-> > 
-> > I have tested with rngtest on mtk-cir and the result is got as
-> > the below log shown.  If the rngtest always gives the result for
-> > success rate over 99.8%, can I set the rng->ops.quality 998?
-> > 
-> > rngtest: starting FIPS tests...
-> > rngtest: bits received from input: 20000032
-> > rngtest: FIPS 140-2 successes: 998
-> > rngtest: FIPS 140-2 failures: 2
-> 
-> No! You'd have to determine the failure threshold of the test and
-> apply some math to find a lower boundary of your RNG's entropy.
-> 
-> What the quality is for: your RNG produces bits, but not all of them
-> are completely independent of each other i.e. not completely random.
-> So you simply lower the quality rating to express the net entropy
-> contained in the data stream.
-> 
-> 	Torsten
-> 
+On Tue, Jun 20, 2017 at 12:24 PM, Richard Leitner
+<richard.leitner@skidata.com> wrote:
 
+> Should we then add a warning/info message to the kernel if we have a
+> reset gpio configured in the DT, but the eMMC hasn't this OTP bit set?
 
-Hi Torsten,
+That makes a lot of sense. Because the situation is ambigous.
+We provide the hardware to reset the card, but the card says it
+does not accept a reset.
 
-Understood, appreciate your quick and clear explanation.
- 
-For the math, is there existing any well-known or recommended
-open source software assisting identify the lower boundary of
-RNG entropy? I think the logic should be common for all RNGs.
-
-thanks again
-
-	Sean
-
-
-	Sean
+Yours,
+Linus Walleij
