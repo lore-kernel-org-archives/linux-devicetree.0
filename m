@@ -1,65 +1,80 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v10 4/5] i2c: aspeed: added driver for Aspeed I2C
-Date: Tue, 20 Jun 2017 09:49:40 +0200
-Message-ID: <20170620074940.GB1541@katana>
-References: <20170603012952.2192-1-brendanhiggins@google.com>
- <20170603012952.2192-5-brendanhiggins@google.com>
- <20170619141322.devvmcbjaeq4jnv5@ninjato>
- <20170619142105.kynebk74y7nbvmfx@ninjato>
- <CAFd5g47D0zJax1X8MeV_OwMJvzd2Ba-hZc+8_X_Ks1ibH8ipeg@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v4 0/3] watchdog: dw_wdt: add reset lines
+Date: Tue, 20 Jun 2017 09:55:22 +0200
+Message-ID: <738tknf5zp.fsf@pengutronix.de>
+References: <cover.50aaf23e8fbe9028f711a67e39b96910c986e8b0.1495443015.git-series.s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3lcZGd9BuhuYXNfi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFd5g47D0zJax1X8MeV_OwMJvzd2Ba-hZc+8_X_Ks1ibH8ipeg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Joel Stanley <joel@jms.id.au>, Vladimir Zapolskiy <vz@mleia.com>, Kachalov Anton <mouse@mayc.ru>, =?utf-8?Q?C=C3=A9dric?= Le Goater <clg@kaod.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Ryan Chen <ryan_chen@aspeedtech.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <cover.50aaf23e8fbe9028f711a67e39b96910c986e8b0.1495443015.git-series.s.trumtrar@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-watchdog@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, kernel@pengutronix.de, Wim Van Sebroeck <wim@iguana.be>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Philipp Zabel <p.zabel@pengutronix.de>, Dinh Nguyen <dinguyen@opensource.altera.com>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
 
---3lcZGd9BuhuYXNfi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Steffen Trumtrar <s.trumtrar@pengutronix.de> writes:
 
-On Mon, Jun 19, 2017 at 05:58:19PM -0700, Brendan Higgins wrote:
-> On Mon, Jun 19, 2017 at 7:21 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> >
-> > And any chance for a MAINTAINERS entry?
-> >
->=20
-> We already have one:
-> http://elixir.free-electrons.com/linux/v4.11.5/source/MAINTAINERS#L1090
->=20
-> However, if you would like me to own this driver, I could add an entry
-> for myself.
+> Hi!
+>
+> This series adds support for the reset line that is (potentially) holding
+> the watchdog in reset.
+>
+> As the watchdog is useless if this happens, it needs to be deasserted in
+> the probe function.
+>
+> Tested on a Socrates board.
+>
+> Regards,
+> Steffen
+>
+>
+> Changes since v3:
+>
+>   - goto out_disable_clk
+>   - add Reviewed-by
+>
+> Changes since v2:
+>
+>   - use optional reset functions
+>   - add Acked-by to devictree bindings
+>
+> Changes since v1:
+>
+>   - remove reset-names property
+>   - remove warning if reset property is missing
+>
+> Steffen Trumtrar (3):
+>   watchdog: bindings: dw_wdt: add reset lines
+>   watchdog: dw_wdt: get reset lines from dt
+>   ARM: socfpga: dtsi: add dw-wdt reset lines
+>
+>  Documentation/devicetree/bindings/watchdog/dw_wdt.txt |  3 +++
+>  arch/arm/boot/dts/socfpga.dtsi                        |  2 ++
+>  drivers/watchdog/dw_wdt.c                             | 11 +++++++++++
+>  3 files changed, 16 insertions(+)
+>
+> base-commit: 2ea659a9ef488125eb46da6eb571de5eae5c43f6
 
-As far as get_maintainers.pl prints out someone responsibe, I am very
-happy. The above line won't work for I2C (and maybe some other
-subsystems), though,  because we are one directory level deeper
-(drivers/i2c/busses/*aspeed*). That might want fixing.
+Gentle Ping!
+
+Is this series already applied somewhere I didn't look?
 
 
---3lcZGd9BuhuYXNfi
-Content-Type: application/pgp-signature; name="signature.asc"
+Best regards,
+Steffen
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllI05QACgkQFA3kzBSg
-KbbNMBAAn/W1J+PtOGC7KB2IylKR79ve8dDiQcJUlqByR8CZ42UoyStLtXtyP+ew
-oSg8q8eiQjpLxrL1zB0MZecKOvMH+JhdLsmXt0q7S7nT8Z1KvqyHgMTZxSYLgINL
-PX43QGCBXdI502w4nPZH2Il1W4+CnYSV6Q46hmF8ZEytqoyIiAbfkrIipBPhIZXl
-/hIqX2QoTLVZsLrz0eAID6GzN6YxVDaKdi4bVIkUHAvqyOrBJ+zO12/G/yygiic+
-NrZmoylPPfJWJ2HMojOWud92e+zDnrnpQDlqwtTFdej1f9RjsJ6gFTPT2aLQt3p4
-1uRtTSd5kBWnBYUPP2UnQW/i9/M/G95BnHcjl4/jJe1Ff4hUqfaR0ndYuAa7eEQy
-ghYEhDB/63O9CH4E4cCbLbChp+8xqYLjqKz+XzP1Ep+xxUhddnXOC+BUb6XMgV9R
-nYwzbDVsr0lmhX8CyBhDkRnlx+KtbDlPHviSaRTeZH6MiCPWmj9DXxUqxqPHaBai
-DJKyduB8fhIEe7xclwwFqHrayXfQV7q4JD8Wx6QTnzEK49ss98fsK5ENvF2pCjBf
-Cuk/zaHKljolHQF+Q+oM0prrRFgheHoHV8au8UCeOZwC355RpL/O0fZ6PWszzge+
-3jGvwi4t5MVD+aeX32+ZmYi4szFM1TIMCj4PVLzhbvgEg5md12M=
-=wg8i
------END PGP SIGNATURE-----
-
---3lcZGd9BuhuYXNfi--
+-- 
+Pengutronix e.K.                           | Steffen Trumtrar            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
