@@ -1,61 +1,134 @@
-From: Phil Reid <preid@electromag.com.au>
-Subject: Re: [PATCH v7 03/10] i2c: i2c-smbus: Use threaded irq for smbalert
-Date: Tue, 20 Jun 2017 10:30:42 +0800
-Message-ID: <2345c629-6b81-720d-eb0a-b36e6e80228a@electromag.com.au>
-References: <1497535178-12001-1-git-send-email-preid@electromag.com.au>
- <1497535178-12001-4-git-send-email-preid@electromag.com.au>
- <20170619152718.3xjksam7ns4ms6xk@ninjato>
+From: Peter Chen <hzpeterchen@gmail.com>
+Subject: Re: [PATCH v15 2/7] power: add power sequence library
+Date: Tue, 20 Jun 2017 10:37:46 +0800
+Message-ID: <20170620023746.GB23731@b29397-desktop>
+References: <20170614015338.GA4635@b29397-desktop>
+ <CAPDyKFrLL10TY1JZAhF44_0+qGETLNtFc6ujKVUu7Ay=O8+M5A@mail.gmail.com>
+ <20170615065854.GA24157@b29397-desktop>
+ <CAPDyKFpc8GRKK8bafMU_HPaqWNrger3grPSd5rWWCTYhUGHZLA@mail.gmail.com>
+ <20170615091131.GB24157@b29397-desktop>
+ <CAPDyKFrZoyoYCQA1rnRbz9tmT9vJigzSb+xyTZpJjhd=5eFA5A@mail.gmail.com>
+ <20170615100604.GC24157@b29397-desktop>
+ <CAPDyKFrSQ7m+yUvKqB9yAMakk8pHZooboZMFdXGU6Xb=TZSGNA@mail.gmail.com>
+ <20170619090259.GA23731@b29397-desktop>
+ <CAPDyKFo0d2FD1U-MgWTExz_cKC8BjB6QQFu1StTyPN1TGBG9eA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20170619152718.3xjksam7ns4ms6xk@ninjato>
-Content-Language: en-AU
-Sender: linux-pm-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFo0d2FD1U-MgWTExz_cKC8BjB6QQFu1StTyPN1TGBG9eA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Peter Chen <peter.chen@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, Stephen Boyd <stephen.boyd@linaro.org>, frank.li@nxp.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Gary Bisson <gary.bisson@boundarydevices.com>, Fabio Estevam <festevam@gmail.com>, Joshua Clayton <stillcompiling@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Vaibhav Hiremath <vaibhav.hiremath@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, mka@chromium.org, Alan Stern <stern@rowland.harvard.edu>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.ker>
 List-Id: devicetree@vger.kernel.org
 
-On 19/06/2017 23:27, Wolfram Sang wrote:
-> On Thu, Jun 15, 2017 at 09:59:31PM +0800, Phil Reid wrote:
->> Prior to this commit the smbalert_irq was handling in the hard irq
->> context. This change switch to using a thread irq which avoids the need
->> for the work thread. Using threaded irq also removes the need for the
->> edge_triggered flag as the enabling / disabling of the hard irq for level
->> triggered interrupts will be handled by the irq core.
->>
->> Without this change have an irq connected to something like an i2c gpio
->> resulted in a null ptr deferences. Specifically handle_nested_irq calls
->> the threaded irq handler.
->>
->> There are currently 3 in tree drivers affected by this change.
->>
->> i2c-parport driver calls i2c_handle_smbus_alert in a hard irq context.
->> This driver use edge trigger interrupts which skip the enable / disable
->> calls. But it still need to handle the smbus transaction on a thread. So
->> the work thread is kept for this driver.
->>
->> i2c-parport-light & i2c-thunderx-pcidrv provide the irq number in the
->> setup which will result in the thread irq being used.
->>
->> i2c-parport-light is edge trigger so the enable / disable call was
->> skipped as well.
->>
->> i2c-thunderx-pcidrv is getting the edge / level trigger setting from of
->> data and was setting the flag as required. However the irq core should
->> handle this automatically.
->>
->> Signed-off-by: Phil Reid <preid@electromag.com.au>
+On Mon, Jun 19, 2017 at 11:48:05AM +0200, Ulf Hansson wrote:
+> [...]
 > 
-> CCing Benjamin for smbus changes (like last time). Please CC him in the
-> future in case we need another revision of this series.
->
+> >> >
+> >> > Unlike the MMC design, there is no dts entry to indicate whether this
+> >> > device needs pwrseq or not at this design, it will only carry out power
+> >> > on sequence after matching. So, return -EPROBE_DEFER may not work since
+> >> > this device may never need pwrseq.
+> >>
+> >> Then, how will you really be able to fetch the correct pwrseq library
+> >> instance for the device node?
+> >>
+> >> Suppose their is a *list* of pwrseq library instances available. In
+> >> pwrseq_find_available_instance() you call of_match_node(table, np).
+> >> The "table" there corresponds to the compatible for the pwrseq library
+> >> and the np is the device node provided by the caller of
+> >> of_pwrseq_on().
+> >>
+> >> Why is this match done?
+> >
+> > The compatible in table is from the source code, and the compatible in
+> > np is from the dts. This is the current match way, I comment your
+> > suggestion below.
+> >
+> >>
+> >> Why can't the match be done before trying to fetch a library instance
+> >
+> > How? If there is no pwrseq instance, how can we do match?
+> >
+> >> and then in a second step, really try to fetch the instance? If only
+> >> the second step fails, returning -EPROBE_DEFER can be done, no?
+> >>
+> >> BTW, I didn't compatible for the generic pwrseq library being
+> >> documented in this series.
+> 
+> Seems like you need to update the DT documentation for the below
+> compatible, which is used for the generic pwrseq library. Perhaps this
+> is what puzzles me a bit on *why* the match is done.
+> 
+> +static const struct of_device_id generic_id_table[] = {
+> +       { .compatible = "generic",},
+> +       { /* sentinel */ }
+> +};
 
-Sorry forgot he was added manually.
-I just used the get maintainers script to get the list.
-And he wasn't listed against the i2c / smbus paths.
+Sorry, I should update this "generic" compatible at 1st binding-doc
+patch.
 
+> 
+> [...]
+> 
+> >> >
+> >> > This additional instance is used to store compatible information for
+> >> > this pwrseq library, it is used for the next matching between device
+> >> > and pwrseq library, it just likes we need the first pwrseq instance
+> >> > registered at boot stage.
+> >>
+> >> Why can't the compatible information be a static table, known by the
+> >> pwrseq core library?
+> >>
+> >> Then when of_pwrseq_on() is called, that static table is parsed and
+> >> matched, then a corresponding pwrseq library instance tries to be
+> >> fetched.
+> >>
+> >
+> > So, you suggest allocating and registering pwrseq instance on the
+> > demand? Eg, we maintain a power sequence static table, including
+> > compatible and allocate function.
+> 
+> Yes, something like that.
+> 
+> >
+> > static const struct pwrseq_match_table pwrseq_match_table_list[] = {
+> >         { PWRSEQ_DEV(0x0204, 0x6025), .alloc_instance = pwrseq_AA_alloc_instance },
+> >         { PWRSEQ_DEV(0x0204, 0x6026), .alloc_instance = pwrseq_BB_alloc_instance },
+> >         { PWRSEQ_DEV(0xffff, 0xffff), .alloc_instance = pwrseq_generic_alloc_instance },
+> 
+> What does the  PWRSEQ_DEV() macro do?
+
+In fact, this should be compatible string, I exampled it as USB vid,pid
+wrongly.
+
+> > Since the pwrseq_match_table_list is static, we can always do match, and
+> > will not return -EPROBE_DEFER anymore, one problem for this is we need
+> > always compile all pwrseq libraries. Any good suggestions?
+> 
+> You never returned -EPROBE_DEFER in the first case. That's why I complained. :-)
+> 
+> So, in case the OF match doesn't succeed, there are no reason to
+> propagate an error, but instead just bail out and returning 0 to the
+> caller.
+> 
+> If the OF match succeeds, it means the device requires a pwrseq
+> library to be used. Then, pwrseq_XX_alloc_instance() will be called,
+> on demand and which tries to fetch the resources (clocks, gpios etc).
+> If any of those attempts fetching a resource fails, its corresponding
+> error code should be propagated to the caller - including
+> -EPROBE_DEFER.
+> 
+> Regarding the "always compile all pwrseq libraries"; no we don't need
+> to do that. Instead we only need a to have a stub function for
+> pwrseq_XX_alloc_instance, in case its corresponding Kconfig option is
+> unset. That stub, should of course return an error code.
+> 
+
+I will have a updated version for your suggestion, thanks.
 
 -- 
-Regards
-Phil Reid
+
+Best Regards,
+Peter Chen
