@@ -1,61 +1,28 @@
-From: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
-Subject: [PATCH v9 1/3] PCI: Add DT binding for tango PCIe controller
-Date: Tue, 20 Jun 2017 10:14:33 +0200
-Message-ID: <0e6ef385-7634-cde5-198f-ea16267bf5c2@sigmadesigns.com>
-References: <987fac41-80dc-f1d0-ec0b-91ae57b91bfd@sigmadesigns.com>
+From: Leilk Liu <leilk.liu@mediatek.com>
+Subject: [PATCH 0/2] add mt2712 spi support
+Date: Tue, 20 Jun 2017 16:21:05 +0800
+Message-ID: <1497946867-25708-1-git-send-email-leilk.liu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <987fac41-80dc-f1d0-ec0b-91ae57b91bfd@sigmadesigns.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>, Marc Zyngier <marc.zyngier@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DT <devicetree@vger.kernel.org>, Mason <slash.tmp@free.fr>, Thibaud Cornic <thibaud_cornic@sigmadesigns.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Binding for the Sigma Designs SMP8759 SoC.
+This series are based on 4.12-rc1 and provide 2 patches to support mt2712 IC.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Marc Gonzalez <marc_gonzalez@sigmadesigns.com>
----
- .../devicetree/bindings/pci/tango-pcie.txt         | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/tango-pcie.txt
+Change in this series:
+1. update document to add mt2712;
+2. add mt7622_compat.
 
-diff --git a/Documentation/devicetree/bindings/pci/tango-pcie.txt b/Documentation/devicetree/bindings/pci/tango-pcie.txt
-new file mode 100644
-index 000000000000..244683836a79
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/tango-pcie.txt
-@@ -0,0 +1,29 @@
-+Sigma Designs Tango PCIe controller
-+
-+Required properties:
-+
-+- compatible: "sigma,smp8759-pcie"
-+- reg: address/size of PCI configuration space, address/size of register area
-+- bus-range: defined by size of PCI configuration space
-+- device_type: "pci"
-+- #size-cells: <2>
-+- #address-cells: <3>
-+- msi-controller
-+- ranges: translation from system to bus addresses
-+- interrupts: spec for misc interrupts, spec for MSI
-+
-+Example:
-+
-+	pcie@2e000 {
-+		compatible = "sigma,smp8759-pcie";
-+		reg = <0x50000000 0x400000>, <0x2e000 0x100>;
-+		bus-range = <0 3>;
-+		device_type = "pci";
-+		#size-cells = <2>;
-+		#address-cells = <3>;
-+		msi-controller;
-+		ranges = <0x02000000 0x0 0x00400000  0x50400000  0x0 0x3c00000>;
-+		interrupts =
-+			<54 IRQ_TYPE_LEVEL_HIGH>, /* misc interrupts */
-+			<55 IRQ_TYPE_LEVEL_HIGH>; /* MSI */
-+	};
--- 
-2.11.0
+Leilk Liu (2):
+  spi: mediatek: Add bindings for mediatek MT2712 soc platform
+  spi: mediatek: add spi support for mt2712 IC
+
+ .../devicetree/bindings/spi/spi-mt65xx.txt         |    1 +
+ drivers/spi/spi-mt65xx.c                           |    7 +++++++
+ 2 files changed, 8 insertions(+)
+
+--
+1.7.9.5
