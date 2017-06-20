@@ -1,65 +1,258 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v5 2/6] ARM: imx6: register pm_power_off handler if
- "fsl,pmic-stby-poweroff" is set
-Date: Tue, 20 Jun 2017 17:32:16 +0300
-Message-ID: <1497969136.3177.10.camel@nxp.com>
-References: <20170619050245.2632-1-o.rempel@pengutronix.de>
-         <20170619050245.2632-3-o.rempel@pengutronix.de>
-         <1497872133.5380.11.camel@nxp.com>
-         <7f2db0a8-a316-5ecb-24bf-46bcb625e123@pengutronix.de>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v3 7/9] arm64: dts: marvell: add pinctrl support for Armada 7K/8K
+Date: Tue, 20 Jun 2017 16:34:06 +0200
+Message-ID: <8760fq4tk1.fsf@free-electrons.com>
+References: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
+        <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
+        <f8504294967e4cbda36963c9754a6703b769e99d.1497281623.git-series.gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <7f2db0a8-a316-5ecb-24bf-46bcb625e123@pengutronix.de>
-Sender: linux-clk-owner@vger.kernel.org
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, Fabio Estevam <fabio.estevam@nxp.com>, kernel@pengutronix.de, Liam Girdwood <lgirdwood@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f8504294967e4cbda36963c9754a6703b769e99d.1497281623.git-series.gregory.clement@free-electrons.com>
+        (Gregory CLEMENT's message of "Mon, 12 Jun 2017 17:34:58 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Omri Itach <omrii@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Russell King <rmk+kernel@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Neta Zur Hershkovits <neta@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Marcin Wojtas <mw@semihalf.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-06-20 at 06:55 +0200, Oleksij Rempel wrote:
-> On 19.06.2017 13:35, Leonard Crestez wrote:
-> > On Mon, 2017-06-19 at 07:02 +0200, Oleksij Rempel wrote:
-> > > 
-> > > One of the Freescale recommended sequences for power off with
-> > > external
-> > > PMIC is the following:
-> > > ...
-> > > 3.  SoC is programming PMIC for power off when standby is asserted.
-> > > 4.  In CCM STOP mode, Standby is asserted, PMIC gates SoC supplies.
-> > > 
-> > > This patch implements step 4. of this sequence.
-> > > 
-> > > Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> > > ---
-> > >  arch/arm/mach-imx/pm-imx6.c | 25 +++++++++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/mach-imx/pm-imx6.c b/arch/arm/mach-imx/pm-
-> > > imx6.c
-> > > index e61b1d1027e1..cb76832935f0 100644
-> > > --- a/arch/arm/mach-imx/pm-imx6.c
-> > > +++ b/arch/arm/mach-imx/pm-imx6.c
-> > > @@ -602,6 +602,28 @@ static void __init imx6_pm_common_init(const
-> > > struct imx6_pm_socdata
-> > >  				   IMX6Q_GPR1_GINT);
-> > >  }
-> > > 
-> > > +static void imx6_pm_poweroff(void)
-> > > +{
-> > > +	imx6_set_lpm(STOP_POWER_OFF);
-> > > +	cpu_suspend(0, imx6q_suspend_finish);
-> > It's a bit strange that you're using parts of the suspend code for
-> > this. Perhaps you could just write your bits to CLPCR and then execute
-> > a WFI?
-> Well, every thing in this patch set, yell about using standby/suspend 
-> path in HW for power off. Even iMX code use STOP_POWER_OFF for 
-> configuring this regs. How can it be more strange? :) Should i really 
-> duplicate code to hide this?
-> 
-This code is used to set the power state the soc enters on WFI. These
-function try to ensure that it is possible to come back up when woken
-by an interrupt later. That part you don't want, right?
+Hi,
+ 
+ On lun., juin 12 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
 
-However I can't think of any obvious way this could misbehave so I
-guess it's fine.
+> Enable pinctrl support for CP and AP on the Armada 7K/8K SoCs.
+>
+> The CP master being different between Armada 7k and Armada 8k. This
+> commit introduces the intermediates files armada-70x0.dtsi and
+> armada-80x0.dtsi.
+>
+> These new files will provide different compatible strings depending of
+> the SoC family. They will also be the location for the pinmux
+> configuration at the SoC level.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+
+Applied on mvebu/dt64
+
+Thanks,
+
+Gregory
+
+> ---
+>  arch/arm64/boot/dts/marvell/armada-7020.dtsi  |  2 +-
+>  arch/arm64/boot/dts/marvell/armada-7040.dtsi  |  2 +-
+>  arch/arm64/boot/dts/marvell/armada-70x0.dtsi  | 53 ++++++++++++++++++-
+>  arch/arm64/boot/dts/marvell/armada-8020.dtsi  |  3 +-
+>  arch/arm64/boot/dts/marvell/armada-8040.dtsi  |  3 +-
+>  arch/arm64/boot/dts/marvell/armada-80x0.dtsi  | 60 ++++++++++++++++++++-
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi |  4 +-
+>  7 files changed, 121 insertions(+), 6 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-70x0.dtsi
+>  create mode 100644 arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-7020.dtsi b/arch/arm64/boot/dts/marvell/armada-7020.dtsi
+> index 975e73302753..4ab012991d9d 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-7020.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-7020.dtsi
+> @@ -46,7 +46,7 @@
+>   */
+>  
+>  #include "armada-ap806-dual.dtsi"
+> -#include "armada-cp110-master.dtsi"
+> +#include "armada-70x0.dtsi"
+>  
+>  / {
+>  	model = "Marvell Armada 7020";
+> diff --git a/arch/arm64/boot/dts/marvell/armada-7040.dtsi b/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+> index 78d995d62707..cbe460b8fc00 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-7040.dtsi
+> @@ -46,7 +46,7 @@
+>   */
+>  
+>  #include "armada-ap806-quad.dtsi"
+> -#include "armada-cp110-master.dtsi"
+> +#include "armada-70x0.dtsi"
+>  
+>  / {
+>  	model = "Marvell Armada 7040";
+> diff --git a/arch/arm64/boot/dts/marvell/armada-70x0.dtsi b/arch/arm64/boot/dts/marvell/armada-70x0.dtsi
+> new file mode 100644
+> index 000000000000..f6c22665d091
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-70x0.dtsi
+> @@ -0,0 +1,53 @@
+> +/*
+> + * Copyright (C) 2017 Marvell Technology Group Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPLv2 or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/*
+> + * Device Tree file for the Armada 70x0 SoC
+> + */
+> +
+> +#include "armada-cp110-master.dtsi"
+> +
+> +&cpm_syscon0 {
+> +	cpm_pinctrl: pinctrl {
+> +		compatible = "marvell,armada-7k-pinctrl";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8020.dtsi b/arch/arm64/boot/dts/marvell/armada-8020.dtsi
+> index 7c08f1f28d9e..0ba0bc942598 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8020.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-8020.dtsi
+> @@ -46,8 +46,7 @@
+>   */
+>  
+>  #include "armada-ap806-dual.dtsi"
+> -#include "armada-cp110-master.dtsi"
+> -#include "armada-cp110-slave.dtsi"
+> +#include "armada-80x0.dtsi"
+>  
+>  / {
+>  	model = "Marvell Armada 8020";
+> diff --git a/arch/arm64/boot/dts/marvell/armada-8040.dtsi b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+> index 33813a75bc30..60fe84f5cbcc 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-8040.dtsi
+> @@ -46,8 +46,7 @@
+>   */
+>  
+>  #include "armada-ap806-quad.dtsi"
+> -#include "armada-cp110-master.dtsi"
+> -#include "armada-cp110-slave.dtsi"
+> +#include "armada-80x0.dtsi"
+>  
+>  / {
+>  	model = "Marvell Armada 8040";
+> diff --git a/arch/arm64/boot/dts/marvell/armada-80x0.dtsi b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+> new file mode 100644
+> index 000000000000..93d1de03b39a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-80x0.dtsi
+> @@ -0,0 +1,60 @@
+> +/*
+> + * Copyright (C) 2017 Marvell Technology Group Ltd.
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPLv2 or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +
+> +/*
+> + * Device Tree file for the Armada 80x0 SoC family
+> + */
+> +
+> +#include "armada-cp110-master.dtsi"
+> +#include "armada-cp110-slave.dtsi"
+> +
+> +&cpm_syscon0 {
+> +	cpm_pinctrl: pinctrl {
+> +		compatible = "marvell,armada-8k-cpm-pinctrl";
+> +	};
+> +};
+> +
+> +&cps_syscon0 {
+> +	cps_pinctrl: pinctrl {
+> +		compatible = "marvell,armada-8k-cps-pinctrl";
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> index 205037e3e7dc..4a1b6e0a604a 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> @@ -248,6 +248,10 @@
+>  					compatible = "marvell,ap806-clock";
+>  					#clock-cells = <1>;
+>  				};
+> +
+> +				ap_pinctrl: pinctrl {
+> +					compatible = "marvell,ap806-pinctrl";
+> +				};
+>  			};
+>  		};
+>  	};
+> -- 
+> git-series 0.9.1
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
