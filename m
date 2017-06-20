@@ -1,90 +1,64 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 15/17] MIPS: JZ4770: Workaround for corrupted DMA transfers
-Date: Tue, 20 Jun 2017 17:18:53 +0200
-Message-ID: <20170620151855.19399-15-paul@crapouillou.net>
+Subject: [PATCH v2 06/17] serial: core: Make uart_parse_options take const char* argument
+Date: Tue, 20 Jun 2017 17:18:44 +0200
+Message-ID: <20170620151855.19399-6-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170620151855.19399-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <20170620151855.19399-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-From: Maarten ter Huurne <maarten@treewalker.org>
+The pointed string is never modified from within uart_parse_options, so
+it should be marked as const in the function prototype.
 
-We have seen MMC DMA transfers read corrupted data from SDRAM when
-a burst interval ends at physical address 0x10000000. To avoid this
-problem, we remove the final page of low memory from the memory map.
-
-Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- arch/mips/jz4740/setup.c | 24 ++++++++++++++++++++++++
- arch/mips/kernel/setup.c |  8 ++++++++
- 2 files changed, 32 insertions(+)
+ drivers/tty/serial/serial_core.c | 5 +++--
+ include/linux/serial_core.h      | 2 +-
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
- v2: No change
+ v2: New patch in this series
 
-diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
-index afd84ee966e8..6948b133a15d 100644
---- a/arch/mips/jz4740/setup.c
-+++ b/arch/mips/jz4740/setup.c
-@@ -23,6 +23,7 @@
- 
- #include <asm/bootinfo.h>
- #include <asm/mips_machine.h>
-+#include <asm/page.h>
- #include <asm/prom.h>
- 
- #include <asm/mach-jz4740/base.h>
-@@ -102,6 +103,29 @@ void __init arch_init_irq(void)
- 	irqchip_init();
- }
- 
-+/*
-+ * We have seen MMC DMA transfers read corrupted data from SDRAM when a burst
-+ * interval ends at physical address 0x10000000. To avoid this problem, we
-+ * remove the final page of low memory from the memory map.
-+ */
-+void __init jz4770_reserve_unsafe_for_dma(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < boot_mem_map.nr_map; i++) {
-+		struct boot_mem_map_entry *entry = boot_mem_map.map + i;
-+
-+		if (entry->type != BOOT_MEM_RAM)
-+			continue;
-+
-+		if (entry->addr + entry->size != 0x10000000)
-+			continue;
-+
-+		entry->size -= PAGE_SIZE;
-+		break;
-+	}
-+}
-+
- static int __init jz4740_machine_setup(void)
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index 13bfd5dcffce..95d3770bdb37 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1954,9 +1954,10 @@ EXPORT_SYMBOL_GPL(uart_parse_earlycon);
+  *	eg: 115200n8r
+  */
+ void
+-uart_parse_options(char *options, int *baud, int *parity, int *bits, int *flow)
++uart_parse_options(const char *options, int *baud, int *parity,
++		   int *bits, int *flow)
  {
- 	mips_machine_setup();
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index 89785600fde4..cccfd7ba89fe 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -838,6 +838,14 @@ static void __init arch_mem_init(char **cmdline_p)
+-	char *s = options;
++	const char *s = options;
  
- 	parse_early_param();
- 
-+#ifdef CONFIG_MACH_JZ4770
-+	if (current_cpu_type() == CPU_JZRISC &&
-+				mips_machtype == MACH_INGENIC_JZ4770) {
-+		extern void __init jz4770_reserve_unsafe_for_dma(void);
-+		jz4770_reserve_unsafe_for_dma();
-+	}
-+#endif
-+
- 	if (usermem) {
- 		pr_info("User-defined physical RAM map:\n");
- 		print_memory_map();
+ 	*baud = simple_strtoul(s, NULL, 10);
+ 	while (*s >= '0' && *s <= '9')
+diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
+index 64d892f1e5cd..67f88fb53195 100644
+--- a/include/linux/serial_core.h
++++ b/include/linux/serial_core.h
+@@ -386,7 +386,7 @@ struct uart_port *uart_get_console(struct uart_port *ports, int nr,
+ 				   struct console *c);
+ int uart_parse_earlycon(char *p, unsigned char *iotype, resource_size_t *addr,
+ 			char **options);
+-void uart_parse_options(char *options, int *baud, int *parity, int *bits,
++void uart_parse_options(const char *options, int *baud, int *parity, int *bits,
+ 			int *flow);
+ int uart_set_options(struct uart_port *port, struct console *co, int baud,
+ 		     int parity, int bits, int flow);
 -- 
 2.11.0
