@@ -1,114 +1,109 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: dts: rockchip: add basic dtsi file for RK3229 SoC
-Date: Tue, 20 Jun 2017 12:48:44 +0200
-Message-ID: <1880551.X2BOMRmHZh@diego>
-References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com> <25831201.s5BUplWuV7@diego> <354e6995-cc80-660b-41c4-535be85564c4@rock-chips.com>
+From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: sunxi: add MMC support for A83T
+Date: Tue, 20 Jun 2017 18:50:32 +0800
+Message-ID: <CAAST=9zhF0-JDNTPyBeZxUP5ukdWG6HusRYhJd+B-6jX3gMm7w@mail.gmail.com>
+References: <20170618130018.10684-1-techping.chan@gmail.com>
+ <20170618130018.10684-2-techping.chan@gmail.com> <20170620094906.7bwg6zvth6oqkasd@flea.lan>
+Reply-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <354e6995-cc80-660b-41c4-535be85564c4-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org, =?utf-8?B?6ZmI5YGl5rSq?= <chenjh-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Type: multipart/alternative; boundary="f403043eecd851ac1f05526205fe"
+Return-path: <linux-sunxi+bncBCJ6PAPY4MPBB6P3UPFAKGQEMB5KSTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170620094906.7bwg6zvth6oqkasd-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+--f403043eecd851ac1f05526205fe
+Content-Type: text/plain; charset="UTF-8"
 
-Am Dienstag, 20. Juni 2017, 15:13:00 CEST schrieb Frank Wang:
-> Hi Heiko,
-> 
-> On 2017/6/19 20:30, Heiko Stübner wrote:
-> > Hi Frank,
-> > 
-> > Am Montag, 19. Juni 2017, 18:34:27 CEST schrieb Frank Wang:
-> >> On 2017/6/18 2:12, Heiko Stuebner wrote:
-> >>> Am Donnerstag, 15. Juni 2017, 15:16:15 CEST schrieb Frank Wang:
-> >>>> Due to some tiny differences between RK3228 and RK3229, this patch
-> >>>> adds a basic dtsi file which includes a new CPU opp table and PSCI
-> >>>> brought up support for RK3229.
-> >>>> 
-> >>>> Signed-off-by: Frank Wang<frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> > 
-> > [...]
-> > 
-> >>>> +	psci {
-> >>>> +		compatible = "arm,psci-1.0", "arm,psci-0.2";
-> >>>> +		method = "smc";
-> >>>> +	};
-> >>>> +};
-> >>>> +
-> >>>> +&cpu0 {
-> >>>> +	enable-method = "psci";
-> >>>> +};
-> >>> 
-> >>> Hmm, I don't really understand this.
-> >>> What method of core-bringup does the rk3228 use? In the current
-> >>> rk322x.dtsi there is no enable-method at all defined.
-> >> 
-> >> For non-security, the same with rk3036 SoC, we use rk3036-smp method to
-> >> bring-up cores, and for security, we use arm-psci method.
-> >> As security become more and more important and required, we would prefer
-> >> using arm-psci method, and it is also an easy way to use.
-> >> 
-> >>> So is the rk3228 firmware using a different method than the rk3229?
-> >> 
-> >> No, they are the same. How about I move these changes to rk322x.dtsi?
-> > 
-> > yep, that is what I was getting at with my question ;-)
-> > 
-> >>> And out of curiosity as this is a arm32 without atf, is the psci
-> >>> implementation (for uboot?) you're using available somewhere?
-> >> 
-> >> Ah, it is included in op-tee :-)
-> > 
-> > Is that super secret or will this be part of the official op-tee [0]
-> > at some point (Similar to the ATF stuff on arm64)?
-> 
-> Hmm, the op-tee itself must keep secure, but the psci part in it can be
-> extracted to public, although it may have a bit of secure risk.
-> Due to Rockchip have amended the frame of op-tee to support psci, we can
-> try to upstream these changes to official op-tee or push them to source
-> codes of Rockchip in git-hub.
+2017-06-20 17:49 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
 
-I just want to make sure, people can actually create a working system
-with this, as there is mainline u-boot support for the rk3228/rk3229 in
-the works - hopefully also with SPL support later on.
-So I'm wondering how this is supposed to be setup?
+> Hi,
+>
+> On Sun, Jun 18, 2017 at 09:00:17PM +0800, Ziping Chen wrote:
+> > From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> > The Allwinner A83T's MMC can work with
+> > compatible "allwinner,sun7i-a20-mmc".
+> >
+> > Add support for it.
+>
+> This has been proven not to be the case already.
+>
+> Please use an A83T compatible only.
+>
 
-On arm64 we now have the SPL load the ATF, which in turn loads uboot, so I 
-guess the mechanism for the op-tee would be somehow similar? And there all 
-necessary components are available to build everything from source.
+OK!
 
-I really don't care about all the other super-secret stuff happening in
-that op-tee thingy, but I really want people to be able to build a complete
-firmware on their machine, without having to rely on arbitary binary blobs.
+Thanks,
+Ziping
 
-Which is something companies adopting Rockchip socs seem to rely on
-a lot these days ;-) .
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+>
 
+-- 
+You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-One alternative I can think of, would be to also create a u-boot psci 
-implementation for arm32, like sunxi [0] and others use for example.
-That way people could choose where their psci should come from (u-boot
-itself or the op-tee).
+--f403043eecd851ac1f05526205fe
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+<div dir=3D"ltr"><br><div class=3D"gmail_extra"><br><div class=3D"gmail_quo=
+te">2017-06-20 17:49 GMT+08:00 Maxime Ripard <span dir=3D"ltr">&lt;<a href=
+=3D"mailto:maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" target=3D"_blank">maxime.ripar=
+d@free-electrons.com</a>&gt;</span>:<br><blockquote class=3D"gmail_quote" s=
+tyle=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">Hi,<=
+br>
+<span class=3D""><br>
+On Sun, Jun 18, 2017 at 09:00:17PM +0800, Ziping Chen wrote:<br>
+&gt; From: Ziping Chen &lt;<a href=3D"mailto:techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">techp=
+ing.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt;<br>
+&gt;<br>
+&gt; The Allwinner A83T&#39;s MMC can work with<br>
+&gt; compatible &quot;allwinner,sun7i-a20-mmc&quot;.<br>
+&gt;<br>
+&gt; Add support for it.<br>
+<br>
+</span>This has been proven not to be the case already.<br>
+<br>
+Please use an A83T compatible only.<br></blockquote><div><br></div><div>OK!=
+</div><div><br></div><div>Thanks,</div><div>Ziping=C2=A0</div><blockquote c=
+lass=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;=
+padding-left:1ex">
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+Maxime<br>
+<br>
+--<br>
+Maxime Ripard, Free Electrons<br>
+Embedded Linux and Kernel engineering<br>
+<a href=3D"http://free-electrons.com" rel=3D"noreferrer" target=3D"_blank">=
+http://free-electrons.com</a><br>
+</font></span></blockquote></div><br></div></div>
 
-Heiko
+<p></p>
 
-[0] http://git.denx.de/?p=u-boot.git;a=blob;f=arch/arm/cpu/armv7/sunxi/psci.c
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
 
-> 
-> 
-> BR.
-> Frank
-> 
-> > Heiko
-> > 
-> > [0]https://github.com/OP-TEE/optee_os/tree/master/core/arch/arm
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--f403043eecd851ac1f05526205fe--
