@@ -1,98 +1,70 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Shawn Guo: your attetion is needed here Re: [PATCH v8 00/34] i.MX
- Media Driver
-Date: Tue, 20 Jun 2017 10:29:33 +0200
-Message-ID: <20170620082933.GA31799@amd>
-References: <1496860453-6282-1-git-send-email-steve_longerbeam@mentor.com>
- <e7e4669c-2963-b9e1-edd7-02731a6e0f9c@xs4all.nl>
- <c0b69c93-b9cd-25e8-ea36-fc0600efdb69@gmail.com>
- <e4f152de-6e75-7654-178e-e6dcf9ad12f3@xs4all.nl>
- <43887f25-bb73-9020-0909-d275c319aaad@mentor.com>
+From: "Wangtao (Kevin, Kirin)" <kevin.wangtao@hisilicon.com>
+Subject: Re: [PATCH 3/3] arm64: dts: register Hi3660's thermal sensor
+Date: Tue, 20 Jun 2017 16:32:09 +0800
+Message-ID: <7abe5b01-c728-accd-d6bb-05d9ceee2176@hisilicon.com>
+References: <1497930035-60894-1-git-send-email-kevin.wangtao@hisilicon.com>
+ <1497930035-60894-3-git-send-email-kevin.wangtao@hisilicon.com>
+ <CAFGCpxwmN3jAZn2chK+QQ-YKg7TwWJOTHSi1VzwcSQ7Mm3gQng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6482425484587664972=="
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <43887f25-bb73-9020-0909-d275c319aaad@mentor.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>
-Cc: mark.rutland@arm.com, andrew-ct.chen@mediatek.com, minghsiu.tsai@mediatek.com, sakari.ailus@linux.intel.com, nick@shmanahar.org, songjun.wu@microchip.com, Hans Verkuil <hverkuil@xs4all.nl>, Steve Longerbeam <steve_longerbeam@mentor.com>, robert.jarzmik@free.fr, devel@driverdev.osuosl.org, markus.heiser@darmarIT.de, laurent.pinchart+renesas@ideasonboard.com, shuah@kernel.org, linux@armlinux.org.uk, geert@linux-m68k.org, Steve Longerbeam <slongerbeam@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, arnd@arndb.de, mchehab@kernel.org, bparrot@ti.com, robh+dt@kernel.org, horms+renesas@verge.net.au, tiffany.lin@mediatek.com, linux-arm-kernel@lists.infradead.org, niklas.soderlund+renesas@ragnatech.se, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, jean-christophe.trotin@st.com, p.zabel@pengutronix.de, fabio.estevam@nxp.com
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAFGCpxwmN3jAZn2chK+QQ-YKg7TwWJOTHSi1VzwcSQ7Mm3gQng@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Guodong Xu <guodong.xu@linaro.org>
+Cc: edubezval@gmail.com, Leo Yan <leo.yan@linaro.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, will.deacon@arm.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, sunzhaosheng@hisilicon.com, rui.zhang@intel.com, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============6482425484587664972==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
-Content-Disposition: inline
 
-
---9amGYk9869ThD9tj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-> >> But as Pavel pointed out, in fact we are missing many
-> >> Acks still, for all of the dts source changes (patches
-> >> 4-14), as well as really everything else (imx-media staging
-> >> driver patches).
-> >=20
-> > No Acks needed for the staging part. It's staging, so not held
-> > to the same standards as non-staging parts. That doesn't mean
-> > Acks aren't welcome, of course.
->=20
-> Acks are wanted for particular i.MX DTS changes including device
-> tree binding descriptions.
->=20
-> Shawn, please bless the series.
-
-Hmm. I changed the subject to grab Shawn's attetion.
-
-But his acks should not be needed for forward progress. Yes, it would
-be good, but he does not react -- so just reorder the series so that
-dts changes come last, then apply the parts you can apply: driver can
-go in.
-
-And actually... if maintainer does not respond at all, there are ways
-to deal with that, too...
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---9amGYk9869ThD9tj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAllI3OwACgkQMOfwapXb+vJsUwCeN0FaxtsVSviD6RVvAtcJrxe/
-1e0An1zHdVdNIngiC+NTdrKsV/VOnJeu
-=g3WY
------END PGP SIGNATURE-----
-
---9amGYk9869ThD9tj--
-
---===============6482425484587664972==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devel mailing list
-devel@linuxdriverproject.org
-http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel
-
---===============6482425484587664972==--
+在 2017/6/20 15:38, Guodong Xu 写道:
+> 
+> 
+> 2017年6月20日 上午11:49，"Tao Wang" <kevin.wangtao@hisilicon.com <mailto:kevin.wangtao@hisilicon.com>>写道：
+> 
+>     Bind thermal sensor driver for Hi3660.
+> 
+>     Signed-off-by: Tao Wang <kevin.wangtao@hisilicon.com <mailto:kevin.wangtao@hisilicon.com>>
+>     Signed-off-by: Leo Yan <leo.yan@linaro.org <mailto:leo.yan@linaro.org>>
+>     ---
+>       arch/arm64/boot/dts/hisilicon/hi3660.dtsi |    7 +++++++
+>       1 file changed, 7 insertions(+)
+> 
+>     diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>     index 3983086..cc67958 100644
+>     --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>     +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+>     @@ -156,5 +156,12 @@
+> 
+> 
+> i am wondering which tree this patch should be applied to. Actually Olof Johansson olof@lixom.net <mailto:olof@lixom.net> just merged hi3660 dts into his tree. You should better rebase you dts patch onto that.
+Can you share me the git path?
+> 
+> 
+>                              clock-names = "uartclk", "apb_pclk";
+>                              status = "disabled";
+>                      };
+>     +
+>     +               tsensor: tsensor {
+>     +                       compatible = "hisilicon,thermal-hi3660";
+>     +                       reg = <0x0 0xfff30000 0x0 0x1000>;
+>     +                       #thermal-sensor-cells = <1>;
+>     +                       status = "ok";
+> 
+> 
+> please remove status ok. that's default. redundant.
+ok
+> 
+>     +               };
+>              };
+>       };
+>     --
+>     1.7.9.5
+> 
+> 
+>     _______________________________________________
+>     linux-arm-kernel mailing list
+>     linux-arm-kernel@lists.infradead.org <mailto:linux-arm-kernel@lists.infradead.org>
+>     http://lists.infradead.org/mailman/listinfo/linux-arm-kernel <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>
+> 
+> 
