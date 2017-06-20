@@ -1,64 +1,56 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 06/17] serial: core: Make uart_parse_options take const char* argument
-Date: Tue, 20 Jun 2017 17:18:44 +0200
-Message-ID: <20170620151855.19399-6-paul@crapouillou.net>
+Subject: [PATCH v2 14/17] MIPS: JZ4770: Work around config2 misreporting associativity
+Date: Tue, 20 Jun 2017 17:18:52 +0200
+Message-ID: <20170620151855.19399-14-paul@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170620151855.19399-1-paul@crapouillou.net>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
 In-Reply-To: <20170620151855.19399-1-paul@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-clk-owner@vger.kernel.org
 To: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Cc: Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The pointed string is never modified from within uart_parse_options, so
-it should be marked as const in the function prototype.
+From: Maarten ter Huurne <maarten@treewalker.org>
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+According to config2, the associativity would be 5-ways, but the
+documentation states 4-ways, which also matches the documented
+L2 cache size of 256 kB.
+
+Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
 ---
- drivers/tty/serial/serial_core.c | 5 +++--
- include/linux/serial_core.h      | 2 +-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ arch/mips/mm/sc-mips.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
- v2: New patch in this series
+ v2: No change
 
-diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
-index 13bfd5dcffce..95d3770bdb37 100644
---- a/drivers/tty/serial/serial_core.c
-+++ b/drivers/tty/serial/serial_core.c
-@@ -1954,9 +1954,10 @@ EXPORT_SYMBOL_GPL(uart_parse_earlycon);
-  *	eg: 115200n8r
-  */
- void
--uart_parse_options(char *options, int *baud, int *parity, int *bits, int *flow)
-+uart_parse_options(const char *options, int *baud, int *parity,
-+		   int *bits, int *flow)
- {
--	char *s = options;
-+	const char *s = options;
+diff --git a/arch/mips/mm/sc-mips.c b/arch/mips/mm/sc-mips.c
+index c909c3342729..67a3b4d88580 100644
+--- a/arch/mips/mm/sc-mips.c
++++ b/arch/mips/mm/sc-mips.c
+@@ -15,6 +15,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/r4kcache.h>
+ #include <asm/mips-cm.h>
++#include <asm/bootinfo.h>
  
- 	*baud = simple_strtoul(s, NULL, 10);
- 	while (*s >= '0' && *s <= '9')
-diff --git a/include/linux/serial_core.h b/include/linux/serial_core.h
-index 64d892f1e5cd..67f88fb53195 100644
---- a/include/linux/serial_core.h
-+++ b/include/linux/serial_core.h
-@@ -386,7 +386,7 @@ struct uart_port *uart_get_console(struct uart_port *ports, int nr,
- 				   struct console *c);
- int uart_parse_earlycon(char *p, unsigned char *iotype, resource_size_t *addr,
- 			char **options);
--void uart_parse_options(char *options, int *baud, int *parity, int *bits,
-+void uart_parse_options(const char *options, int *baud, int *parity, int *bits,
- 			int *flow);
- int uart_set_options(struct uart_port *port, struct console *co, int baud,
- 		     int parity, int bits, int flow);
+ /*
+  * MIPS32/MIPS64 L2 cache handling
+@@ -228,6 +229,14 @@ static inline int __init mips_sc_probe(void)
+ 	else
+ 		return 0;
+ 
++	/*
++	 * According to config2 it would be 5-ways, but that is contradicted
++	 * by all documentation.
++	 */
++	if (current_cpu_type() == CPU_JZRISC &&
++				mips_machtype == MACH_INGENIC_JZ4770)
++		c->scache.ways = 4;
++
+ 	c->scache.waysize = c->scache.sets * c->scache.linesz;
+ 	c->scache.waybit = __ffs(c->scache.waysize);
+ 
 -- 
 2.11.0
+
