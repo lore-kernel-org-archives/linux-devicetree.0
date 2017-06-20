@@ -1,55 +1,34 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] of: make of_fdt_is_compatible() static
-Date: Tue, 20 Jun 2017 16:38:28 -0700
-Message-ID: <1498001908-12795-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: frowand.list@gmail.com
+Subject: [PATCH] of: fdt.c header comment typo
+Date: Tue, 20 Jun 2017 16:46:28 -0700
+Message-ID: <1498002388-12908-1-git-send-email-frowand.list@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+From: Frank Rowand <frank.rowand@sony.com>
 
-The callers of of_fdt_is_compatible() are all in fdt.c so
-make it static.
+Fix typo in header comment for early_init_dt_scan_memory()
 
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 ---
- drivers/of/fdt.c       | 2 +-
- include/linux/of_fdt.h | 3 ---
- 2 files changed, 1 insertion(+), 4 deletions(-)
+ drivers/of/fdt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3080d9dd031d..5c71cb933426 100644
+index 3080d9dd031d..c053b4f4fbc1 100644
 --- a/drivers/of/fdt.c
 +++ b/drivers/of/fdt.c
-@@ -91,7 +91,7 @@ void of_fdt_limit_memory(int limit)
-  * On match, returns a non-zero value with smaller values returned for more
-  * specific compatible values.
+@@ -1050,7 +1050,7 @@ u64 __init dt_mem_next_cell(int s, const __be32 **cellp)
+ }
+ 
+ /**
+- * early_init_dt_scan_memory - Look for an parse memory nodes
++ * early_init_dt_scan_memory - Look for and parse memory nodes
   */
--int of_fdt_is_compatible(const void *blob,
-+static int of_fdt_is_compatible(const void *blob,
- 		      unsigned long node, const char *compat)
- {
- 	const char *cp;
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 1dfbfd0d8040..013c5418aeec 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -31,9 +31,6 @@ extern void *of_fdt_get_property(const void *blob,
- 				 unsigned long node,
- 				 const char *name,
- 				 int *size);
--extern int of_fdt_is_compatible(const void *blob,
--				unsigned long node,
--				const char *compat);
- extern bool of_fdt_is_big_endian(const void *blob,
- 				 unsigned long node);
- extern int of_fdt_match(const void *blob, unsigned long node,
+ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+ 				     int depth, void *data)
 -- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Frank Rowand <frank.rowand@sony.com>
