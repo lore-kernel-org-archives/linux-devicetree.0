@@ -1,129 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: stm32: Add DT bindings for SPDIFRX interface" to the
- asoc tree
-Date: Wed, 21 Jun 2017 12:16:38 +0100
-Message-ID: <E1dNdck-0004E4-6T@debutante>
-References: <1497621452-615-2-git-send-email-olivier.moysan@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: iwg20d-q7: Add pinctl support for scif0
+Date: Wed, 21 Jun 2017 13:33:56 +0200
+Message-ID: <20170621113354.GC17965@verge.net.au>
+References: <1497625049-46802-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVe7sRcGohSPvSUrryNMetddomoMbN7ffOtq9Y3DBt=zQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1497621452-615-2-git-send-email-olivier.moysan@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, robh@kernel.org, alsa-devel@alsa-project.org, olivier.moysan@st.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, arnaud.pouliquen@st.com, tiwai@suse.com, lgirdwood@gmail.com, broonie@kernel.org, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, perex@perex.cz, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVe7sRcGohSPvSUrryNMetddomoMbN7ffOtq9Y3DBt=zQ@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Mon, Jun 19, 2017 at 10:42:18AM +0200, Geert Uytterhoeven wrote:
+> Hi Biju,
+> 
+> On Fri, Jun 16, 2017 at 4:57 PM, Biju Das <biju.das@bp.renesas.com> wrote:
+> > Adding pinctrl support for scif0 interface.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> 
+> The patch looks good to me, but without schematics, we cannot verify the
+> actual pins used.
+> 
+> Are the schematics somewhere available? Having access to them would allow us
+> doing a better job reviewing your DTS patches.
 
-   ASoC: stm32: Add DT bindings for SPDIFRX interface
+Echoing Geert's request, it would be great to be able to compare the
+DT description against some documentation.
 
-has been applied to the asoc tree at
+My understanding is that this patch depends on "[PATCH v2 0/3] Add
+R8A7743/SK-RZG1M PFC support" which in turn depends on pfc driver support
+which is on target to be included in v4.13-rc1.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 0507cb0226acfd7ba114c59f6a76fdc7a1c6b01e Mon Sep 17 00:00:00 2001
-From: olivier moysan <olivier.moysan@st.com>
-Date: Tue, 20 Jun 2017 11:58:46 +0200
-Subject: [PATCH] ASoC: stm32: Add DT bindings for SPDIFRX interface
-
-Add documentation of device tree bindings for the
-STM32 SPDIFRX interface.
-
-Signed-off-by: olivier moysan <olivier.moysan@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/st,stm32-spdifrx.txt | 56 ++++++++++++++++++++++
- 1 file changed, 56 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-new file mode 100644
-index 000000000000..33826f2459fa
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
-@@ -0,0 +1,56 @@
-+STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
-+
-+The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
-+IEC-60958 and IEC-61937.
-+
-+Required properties:
-+  - compatible: should be "st,stm32h7-spdifrx"
-+  - reg: cpu DAI IP base address and size
-+  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
-+  - clock-names: must contain "kclk"
-+  - interrupts: cpu DAI interrupt line
-+  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
-+    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
-+  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
-+
-+Optional properties:
-+  - resets: Reference to a reset controller asserting the SPDIFRX
-+
-+The device node should contain one 'port' child node with one child 'endpoint'
-+node, according to the bindings defined in Documentation/devicetree/bindings/
-+graph.txt.
-+
-+Example:
-+spdifrx: spdifrx@40004000 {
-+	compatible = "st,stm32h7-spdifrx";
-+	reg = <0x40004000 0x400>;
-+	clocks = <&rcc SPDIFRX_CK>;
-+	clock-names = "kclk";
-+	interrupts = <97>;
-+	dmas = <&dmamux1 2 93 0x400 0x0>,
-+	       <&dmamux1 3 94 0x400 0x0>;
-+	dma-names = "rx", "rx-ctrl";
-+	pinctrl-0 = <&spdifrx_pins>;
-+	pinctrl-names = "default";
-+
-+	spdifrx_port: port {
-+		cpu_endpoint: endpoint {
-+			remote-endpoint = <&codec_endpoint>;
-+		};
-+	};
-+};
-+
-+spdif_in: spdif-in {
-+	compatible = "linux,spdif-dir";
-+
-+	codec_port: port {
-+		codec_endpoint: endpoint {
-+			remote-endpoint = <&cpu_endpoint>;
-+		};
-+	};
-+};
-+
-+soundcard {
-+	compatible = "audio-graph-card";
-+	dais = <&spdifrx_port>;
-+};
--- 
-2.11.0
+Accordingly I have marked this patch as deferred. Please repost
+or otherwise ping me once the driver dependency is present in an rc release.
+Thanks.
