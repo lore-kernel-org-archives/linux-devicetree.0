@@ -1,93 +1,91 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: add driver for STM32 SPI controller
-Date: Wed, 21 Jun 2017 16:13:00 +0100
-Message-ID: <20170621151300.s74lbymyisvde2zo@sirena.org.uk>
-References: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
- <1498055526-6918-3-git-send-email-amelie.delaunay@st.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v5 0/6] Add support for the ICU unit in Marvell Armada
+ 7K/8K
+Date: Wed, 21 Jun 2017 16:14:21 +0100
+Message-ID: <e87dc80c-f85c-1b20-c2e8-cd03922dacd9@arm.com>
+References: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="pu757pfxejkkr2dv"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498055526-6918-3-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <20170621132917.14187-1-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Miqu=c3=a8l_Raynal?= <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 21/06/17 14:29, Thomas Petazzoni wrote:
+> Hello,
+> 
+> The Marvell Armada 7K/8K SoCs are composed of two parts: the AP (which
+> contains the CPU cores) and the CP (which contains most
+> peripherals). The 7K SoCs have one CP, while the 8K SoCs have two CPs,
+> doubling the number of available peripherals.
+> 
+> In terms of interrupt handling, all devices in the CPs are connected
+> through wired interrupt to a unit called ICU located in each CP. This
+> unit converts the wired interrupts from the devices into memory
+> transactions.
+> 
+> Inside the AP, there is a GIC extension called GICP, which allows a
+> memory write transaction to trigger a GIC SPI interrupt. The ICUs in
+> each CP are therefore configured to trigger a memory write into the
+> appropriate GICP register so that a wired interrupt from a CP device
+> is converted into a memory write, itself converted into a regular GIC
+> SPI interrupt.
+> 
+> Until now, the configuration of the ICU was done statically by the
+> firmware, and therefore the Device Tree files in Linux were specifying
+> directly GIC interrupts for the interrupts of CP devices. However,
+> with the growing number of devices in the CP, a static allocation
+> scheme doesn't work for the long term.
+> 
+> This patch series therefore makes Linux aware of the ICU: GIC SPI
+> interrupts are dynamically allocated, and the ICU is configured
+> accordingly to route a CP wired interrupt to the allocated GIC SPI
+> interrupt.
+> 
+> In detail:
 
---pu757pfxejkkr2dv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
 
-On Wed, Jun 21, 2017 at 04:32:06PM +0200, Amelie Delaunay wrote:
+> Thomas Petazzoni (6):
+>   dt-bindings: interrupt-controller: add DT binding for the Marvell GICP
+>   dt-bindings: interrupt-controller: add DT binding for the Marvell ICU
+>   irqchip: irq-mvebu-gicp: new driver for Marvell GICP
+>   irqchip: irq-mvebu-icu: new driver for Marvell ICU
+>   arm64: marvell: enable ICU and GICP drivers
+>   arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K
+> 
+>  .../bindings/interrupt-controller/marvell,gicp.txt |  27 ++
+>  .../bindings/interrupt-controller/marvell,icu.txt  |  51 ++++
+>  arch/arm64/Kconfig.platforms                       |   2 +
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |   7 +
+>  .../boot/dts/marvell/armada-cp110-master.dtsi      |  59 +++--
+>  .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi |  55 ++--
+>  drivers/irqchip/Kconfig                            |   6 +
+>  drivers/irqchip/Makefile                           |   2 +
+>  drivers/irqchip/irq-mvebu-gicp.c                   | 279 ++++++++++++++++++++
+>  drivers/irqchip/irq-mvebu-gicp.h                   |  12 +
+>  drivers/irqchip/irq-mvebu-icu.c                    | 289 +++++++++++++++++++++
+>  .../dt-bindings/interrupt-controller/mvebu-icu.h   |  15 ++
+>  12 files changed, 756 insertions(+), 48 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,icu.txt
+>  create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
+>  create mode 100644 drivers/irqchip/irq-mvebu-gicp.h
+>  create mode 100644 drivers/irqchip/irq-mvebu-icu.c
+>  create mode 100644 include/dt-bindings/interrupt-controller/mvebu-icu.h
+> 
 
-A few minor stylistic things but overall this looks really nice, please
-send followup patches fixing these style things.
+It all looks good to me. How do we merge this? I take the first five
+patches and Gregory takes the last one?
 
-> +	/* Determine the first power of 2 greater than or equal to div */
-> +	mbrdiv = (div & (div - 1)) ? fls(div) : fls(div) - 1;
+Thanks,
 
-Please write normal conditional statements, it makes things much easier
-to read.
-
-> +static bool stm32_spi_can_dma(struct spi_master *master,
-> +			      struct spi_device *spi_dev,
-> +			      struct spi_transfer *transfer)
-> +{
-> +	struct stm32_spi *spi = spi_master_get_devdata(master);
-> +
-> +	dev_dbg(spi->dev, "%s: %s\n", __func__,
-> +		(!!(transfer->len > spi->fifo_size)) ? "true" : "false");
-> +
-> +	return !!(transfer->len > spi->fifo_size);
-
-This !! is redundant, you're converting a boolean value into a boolean
-value.
-
-> +	buswidth = (spi->cur_bpw <= 8) ? DMA_SLAVE_BUSWIDTH_1_BYTE :
-> +		   (spi->cur_bpw <= 16) ? DMA_SLAVE_BUSWIDTH_2_BYTES :
-> +		   DMA_SLAVE_BUSWIDTH_4_BYTES;
-> +
-> +	/* Valid for DMA Half or Full Fifo threshold */
-> +	maxburst = (spi->cur_fthlv == 2) ? 1 : spi->cur_fthlv;
-
-Again, please use normal conditional statements - people have to read
-things.
-
-> +static int stm32_spi_suspend(struct device *dev)
-> +{
-> +	struct spi_master *master = dev_get_drvdata(dev);
-> +	struct stm32_spi *spi = spi_master_get_devdata(master);
-> +	int ret;
-> +
-> +	ret = spi_master_suspend(master);
-> +	if (ret)
-> +		return ret;
-> +
-> +	clk_disable_unprepare(spi->clk);
-
-It'd be good to also have the clock disabled by runtime PM, that will
-save a little more power.  There's support for enabling and disabling
-the device in the core so it should just be adding callbacks.  Not
-essential though.
-
---pu757pfxejkkr2dv
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllKjPsACgkQJNaLcl1U
-h9CThgf/UdEv1dJpadMX6f7mFIWstIkH/wJwRbCTqlz+mmsb9FJfSUo1Pm0hwKFa
-1qfHz21uYEtx5/3R41Pd9QC0rH1irKb3wwEVswReL1cy1CeKHPnKYZ13NnabD3oe
-fqf7/lLU0SEhZ3O7RwLA4ApZmuKgCj1e2PzLQf6AZcwv6T+wo/1qNgEVPjOL/Ou/
-5ZAsm5uRdRWA3HLKQ4FHm2/pJrzOdpY9sBJdOjyD6KwRrGvzMq5CN08g+kTK8pv1
-y94j2gTsVZYX8/XnbBO8P48TFDNlLufln67lcx7sDz1NO29tbjtJQ4o9Tvxbypcg
-e1b5E4YIdOtO3ok+Mem0DgBDlI71vw==
-=nU2U
------END PGP SIGNATURE-----
-
---pu757pfxejkkr2dv--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
