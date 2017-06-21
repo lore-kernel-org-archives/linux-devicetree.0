@@ -1,19 +1,15 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v5 0/6] Add support for the ICU unit in Marvell Armada
- 7K/8K
-Date: Wed, 21 Jun 2017 17:50:20 +0200
-Message-ID: <87k2451gsj.fsf@free-electrons.com>
+Subject: Re: [PATCH v5 5/6] arm64: marvell: enable ICU and GICP drivers
+Date: Wed, 21 Jun 2017 17:50:47 +0200
+Message-ID: <87injp1grs.fsf@free-electrons.com>
 References: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
- <e87dc80c-f85c-1b20-c2e8-cd03922dacd9@arm.com>
- <20170621171809.34bcce1e@windsurf.home>
- <87r2yd1h5x.fsf@free-electrons.com>
- <245df82c-60b1-bc4b-e343-5435713c453c@arm.com>
+ <20170621132917.14187-6-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <245df82c-60b1-bc4b-e343-5435713c453c@arm.com> (Marc Zyngier's
- message of "Wed, 21 Jun 2017 16:47:20 +0100")
+In-Reply-To: <20170621132917.14187-6-thomas.petazzoni@free-electrons.com>
+ (Thomas Petazzoni's message of "Wed, 21 Jun 2017 15:29:16 +0200")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,60 +19,50 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hanna Hawa <hannah@marvell.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, =?utf-8?Q?Miqu?= =?utf-8?Q?=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Hanna Hawa <hannah@marvell.com>, =?utf-8?Q?Miqu?= =?utf-8?Q?=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyYywKIAogT24gbWVyLiwganVpbiAyMSAyMDE3LCBNYXJjIFp5bmdpZXIgPG1hcmMuenlu
-Z2llckBhcm0uY29tPiB3cm90ZToKCj4gT24gMjEvMDYvMTcgMTY6NDIsIEdyZWdvcnkgQ0xFTUVO
-VCB3cm90ZToKPj4gSGkgTWFyYyBhbmQgVGhvbWFzLAo+PiAgCj4+ICBPbiBtZXIuLCBqdWluIDIx
-IDIwMTcsIFRob21hcyBQZXRhenpvbmkgPHRob21hcy5wZXRhenpvbmlAZnJlZS1lbGVjdHJvbnMu
-Y29tPiB3cm90ZToKPj4gCj4+PiBIZWxsbywKPj4+Cj4+PiBPbiBXZWQsIDIxIEp1biAyMDE3IDE2
-OjE0OjIxICswMTAwLCBNYXJjIFp5bmdpZXIgd3JvdGU6Cj4+Pgo+Pj4+PiBUaG9tYXMgUGV0YXp6
-b25pICg2KToKPj4+Pj4gICBkdC1iaW5kaW5nczogaW50ZXJydXB0LWNvbnRyb2xsZXI6IGFkZCBE
-VCBiaW5kaW5nIGZvciB0aGUgTWFydmVsbCBHSUNQCj4+Pj4+ICAgZHQtYmluZGluZ3M6IGludGVy
-cnVwdC1jb250cm9sbGVyOiBhZGQgRFQgYmluZGluZyBmb3IgdGhlIE1hcnZlbGwgSUNVCj4+Pj4+
-ICAgaXJxY2hpcDogaXJxLW12ZWJ1LWdpY3A6IG5ldyBkcml2ZXIgZm9yIE1hcnZlbGwgR0lDUAo+
-Pj4+PiAgIGlycWNoaXA6IGlycS1tdmVidS1pY3U6IG5ldyBkcml2ZXIgZm9yIE1hcnZlbGwgSUNV
-Cj4+Pj4+ICAgYXJtNjQ6IG1hcnZlbGw6IGVuYWJsZSBJQ1UgYW5kIEdJQ1AgZHJpdmVycwo+Pj4+
-PiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IGVuYWJsZSBHSUNQIGFuZCBJQ1Ugb24gQXJtYWRhIDdL
-LzhLCj4+Pj4+Cj4+Pj4+ICAuLi4vYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbWFydmVs
-bCxnaWNwLnR4dCB8ICAyNyArKwo+Pj4+PiAgLi4uL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9s
-bGVyL21hcnZlbGwsaWN1LnR4dCAgfCAgNTEgKysrKwo+Pj4+PiAgYXJjaC9hcm02NC9LY29uZmln
-LnBsYXRmb3JtcyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+Pj4+PiAgYXJjaC9hcm02
-NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1hcDgwNi5kdHNpICAgICAgfCAgIDcgKwo+Pj4+PiAg
-Li4uL2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWNwMTEwLW1hc3Rlci5kdHNpICAgICAgfCAgNTkg
-KysrLS0KPj4+Pj4gIC4uLi9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExMC1zbGF2
-ZS5kdHNpIHwgIDU1ICsrLS0KPj4+Pj4gIGRyaXZlcnMvaXJxY2hpcC9LY29uZmlnICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHwgICA2ICsKPj4+Pj4gIGRyaXZlcnMvaXJxY2hpcC9NYWtlZmls
-ZSAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKPj4+Pj4gIGRyaXZlcnMvaXJxY2hp
-cC9pcnEtbXZlYnUtZ2ljcC5jICAgICAgICAgICAgICAgICAgIHwgMjc5ICsrKysrKysrKysrKysr
-KysrKysrCj4+Pj4+ICBkcml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LWdpY3AuaCAgICAgICAgICAg
-ICAgICAgICB8ICAxMiArCj4+Pj4+ICBkcml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LWljdS5jICAg
-ICAgICAgICAgICAgICAgICB8IDI4OSArKysrKysrKysrKysrKysrKysrKysKPj4+Pj4gIC4uLi9k
-dC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tdmVidS1pY3UuaCAgIHwgIDE1ICsrCj4+
-Pj4+ICAxMiBmaWxlcyBjaGFuZ2VkLCA3NTYgaW5zZXJ0aW9ucygrKSwgNDggZGVsZXRpb25zKC0p
-Cj4+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL2ludGVycnVwdC1jb250cm9sbGVyL21hcnZlbGwsZ2ljcC50eHQKPj4+Pj4gIGNyZWF0ZSBt
-b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNv
-bnRyb2xsZXIvbWFydmVsbCxpY3UudHh0Cj4+Pj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
-cy9pcnFjaGlwL2lycS1tdmVidS1naWNwLmMKPj4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2
-ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LWdpY3AuaAo+Pj4+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRy
-aXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPj4+Pj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBp
-bmNsdWRlL2R0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL212ZWJ1LWljdS5oCj4+Pj4+
-ICAgCj4+Pj4KPj4+PiBJdCBhbGwgbG9va3MgZ29vZCB0byBtZS4gSG93IGRvIHdlIG1lcmdlIHRo
-aXM/IEkgdGFrZSB0aGUgZmlyc3QgZml2ZQo+Pj4+IHBhdGNoZXMgYW5kIEdyZWdvcnkgdGFrZXMg
-dGhlIGxhc3Qgb25lPwo+Pj4KPj4+IEkgdGhpbmsgeW91IHNob3VsZCB0YWtlIHRoZSBmaXJzdCBm
-b3VyIHBhdGNoZXMsIGFuZCBHcsOpZ29yeSB0YWtlcyB0aGUKPj4+IGxhc3QgdHdvIG9uZXMuIEJ1
-dCBJJ2xsIGxldCBHcsOpZ29yeSBjb25maXJtLgo+PiAKPj4gSW5kZWVkIGl0IG1ha2VzIG1vcmUg
-c2VucyB0byBtZXJnZSB0aGUgcGF0Y2ggNCB0aHJvdWdoIHRoZSBhcm0tc29jCj4+IHN1YnN5c3Rl
-bS4KPgo+IEhtbW0uIFlvdSBtZWFuIHBhdGNoZXMgNSBhbmQgNiwgcmlnaHQ/IEFuZCBJIHF1ZXVl
-IDEgdG8gND8KClllcyB0aGF0IHdhcyB3aGF0IEkgbWVhbnQhCgooaXQncyB0b28gaG90IGhlcmUg
-YW5kIG15IGJyYWluIGlzIG1lbHRpbmcuLi4pCgpUaGFua3MsCgpHcmVnb3J5Cgo+Cj4gVGhhbmtz
-LAo+Cj4gCU0uCj4gLS0gCj4gSmF6eiBpcyBub3QgZGVhZC4gSXQganVzdCBzbWVsbHMgZnVubnku
-Li4KCi0tIApHcmVnb3J5IENsZW1lbnQsIEZyZWUgRWxlY3Ryb25zCktlcm5lbCwgZHJpdmVycywg
-cmVhbC10aW1lIGFuZCBlbWJlZGRlZCBMaW51eApkZXZlbG9wbWVudCwgY29uc3VsdGluZywgdHJh
-aW5pbmcgYW5kIHN1cHBvcnQuCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hi Thomas,
+ 
+ On mer., juin 21 2017, Thomas Petazzoni <thomas.petazzoni@free-electrons.com> wrote:
+
+> This commit enables the newly introduced Marvell GICP and ICUs driver
+> for the 64-bit Marvell EBU platforms.
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+
+Applied on mvebu/arm64
+
+Thanks,
+
+Gregory
+
+
+> ---
+>  arch/arm64/Kconfig.platforms | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
+> index 4afcffc..bf3b505 100644
+> --- a/arch/arm64/Kconfig.platforms
+> +++ b/arch/arm64/Kconfig.platforms
+> @@ -106,6 +106,8 @@ config ARCH_MVEBU
+>  	select ARMADA_AP806_SYSCON
+>  	select ARMADA_CP110_SYSCON
+>  	select ARMADA_37XX_CLK
+> +	select MVEBU_GICP
+> +	select MVEBU_ICU
+>  	select MVEBU_ODMI
+>  	select MVEBU_PIC
+>  	help
+> -- 
+> 2.9.4
+>
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
