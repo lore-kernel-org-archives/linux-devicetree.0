@@ -1,69 +1,205 @@
-From: Mars Cheng <mars.cheng-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Delete unused dummy clocks
-Date: Wed, 21 Jun 2017 11:01:32 +0800
-Message-ID: <1498014092.810.3.camel@mtkswgap22>
-References: <20170620102854.9346-1-matthias.bgg@gmail.com>
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: Re: [PATCH 2/2] i2c: Add Spreadtrum I2C controller driver
+Date: Wed, 21 Jun 2017 11:25:30 +0800
+Message-ID: <20170621032529.GA1142@spreadtrum.com>
+References: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1497525667.git.baolin.wang@spreadtrum.com>
+ <f3cdd27dcfa2ca6347502608928081fb9271c0b5.1497525667.git.baolin.wang@spreadtrum.com>
+ <CAHp75Vf+qPa6i84yctSz+rAkim2owhX=zAsHsTF1EQRnouBwxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170620102854.9346-1-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf+qPa6i84yctSz+rAkim2owhX=zAsHsTF1EQRnouBwxg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kevin-cw-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias
+Hi Andy,
 
-On Tue, 2017-06-20 at 12:28 +0200, Matthias Brugger wrote:
-> After adding the clock subsystem to the SOC, the dummy
-> clocks clk26m and clk32k are not longer needed. Delete them.
+Sorry for late reply due to my business trip.
+
+On 六,  6月 17, 2017 at 08:18:49下午 +0300, Andy Shevchenko wrote:
+> On Thu, Jun 15, 2017 at 2:30 PM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> > This patch adds the I2C controller driver for Spreadtrum platform.
 > 
-> Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm64/boot/dts/mediatek/mt6797.dtsi | 14 --------------
->  1 file changed, 14 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6797.dtsi b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> index 3512c8e6dc65..09d46befa86b 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6797.dtsi
-> @@ -102,20 +102,6 @@
->  		};
->  	};
->  
-> -	clk26m: oscillator@0 {
-> -		compatible = "fixed-clock";
-> -		#clock-cells = <0>;
-> -		clock-frequency = <26000000>;
-> -		clock-output-names = "clk26m";
-> -	};
+> > +       i2c_dev->irq = platform_get_irq(pdev, 0);
+> > +       if (i2c_dev->irq < 0) {
+> > +               dev_err(&pdev->dev, "failed to get irq resource\n");
+> 
+> > +               return -ENXIO;
+> 
+> Why shadow actual error?
 
-clk26m is referenced by drivers/clk/mediatek/clk-mt6797.c:
-static const char * const axi_parents[] = {
-	"clk26m",
-	"syspll_d7",
-	"ulposc_axi_ck_mux",
-};
+Sorry for missing this and will fix in next version.
 
-Please just delete clk32k which is dummy, and keep clk26m. Or might get
-PLL wrongly.
+> 
+> > +       }
+> 
+> 
+> > +       if (!of_property_read_u32(dev->of_node, "clock-frequency", &prop))
+> > +               i2c_dev->bus_freq = prop;
+> > +
+> > +       sprd_i2c_clk_init(i2c_dev);
+> > +       platform_set_drvdata(pdev, i2c_dev);
+> > +
+> > +       pm_runtime_set_autosuspend_delay(i2c_dev->dev, SPRD_I2C_PM_TIMEOUT);
+> > +       pm_runtime_use_autosuspend(i2c_dev->dev);
+> > +       pm_runtime_set_active(i2c_dev->dev);
+> > +       pm_runtime_enable(i2c_dev->dev);
+> > +
+> > +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> > +       if (ret < 0) {
+> > +               dev_err(&pdev->dev, "i2c%d pm runtime resume failed!\n",
+> > +                       pdev->id);
+> 
+> > +               return ret;
+> 
+> goto error;
 
-Thanks.
+Yes, will fix it.
 
-> -
-> -	clk32k: oscillator@1 {
-> -		compatible = "fixed-clock";
-> -		#clock-cells = <0>;
-> -		clock-frequency = <32000>;
-> -		clock-output-names = "clk32k";
-> -	};
-> -
->  	timer {
->  		compatible = "arm,armv8-timer";
->  		interrupt-parent = <&gic>;
+> 
+> > +       }
+> > +
+> > +       ret = devm_request_threaded_irq(dev, i2c_dev->irq,
+> > +               sprd_i2c_isr, sprd_i2c_isr_thread,
+> > +               IRQF_NO_SUSPEND | IRQF_ONESHOT,
+> > +               pdev->name, i2c_dev);
+> > +       if (ret) {
+> > +               dev_err(&pdev->dev, "failed to request irq %d\n", i2c_dev->irq);
+> > +               goto error;
+> > +       }
+> > +
+> > +       ret = i2c_add_numbered_adapter(&i2c_dev->adap);
+> > +       if (ret) {
+> > +               dev_err(&pdev->dev, "add adapter failed\n");
+> > +               goto error;
+> > +       }
+> > +
+> > +       pm_runtime_mark_last_busy(i2c_dev->dev);
+> > +       pm_runtime_put_autosuspend(i2c_dev->dev);
+> > +       return 0;
+> > +
+> > +error:
+> > +       pm_runtime_put_noidle(i2c_dev->dev);
+> > +       pm_runtime_disable(i2c_dev->dev);
+> > +       return ret;
+> > +}
+> > +
+> > +static int sprd_i2c_remove(struct platform_device *pdev)
+> > +{
+> > +       struct sprd_i2c *i2c_dev = platform_get_drvdata(pdev);
+> > +       int ret;
+> > +
+> 
+> > +       ret = pm_runtime_get_sync(i2c_dev->dev);
+> > +       if (ret < 0)
+> > +               return ret;
+> 
+> Does it make any sense? Doesn't device core power on the device before
+> calling ->remove() ?
 
+Yes, you are right. We need power on device in probe() function.
 
+> 
+> > +
+> > +       i2c_del_adapter(&i2c_dev->adap);
+> > +
+> > +       if (!IS_ERR_OR_NULL(i2c_dev->clk))
+> 
+> _OR_NULL looks suspicious.
+
+Since our ->clk can be NULL as one optional connfig in case we test I2C
+driver on FPGA platform which does not support clock operation.
+
+> 
+> > +               clk_unprepare(i2c_dev->clk);
+> > +
+> > +       pm_runtime_put_noidle(i2c_dev->dev);
+> > +       pm_runtime_disable(i2c_dev->dev);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> 
+> > +#ifdef CONFIG_PM_SLEEP
+> 
+> __maybe_unused instead?
+
+OK.
+
+> 
+> > +static int sprd_i2c_suspend_noirq(struct device *pdev)
+> 
+> > +static int sprd_i2c_resume_noirq(struct device *pdev)
+> 
+> > +#endif  /* CONFIG_PM_SLEEP */
+> 
+> > +#ifdef CONFIG_PM
+> 
+> Ditto.
+
+OK.
+
+> 
+> > +static int sprd_i2c_runtime_suspend(struct device *pdev)
+> 
+> > +}
+> 
+> > +static int sprd_i2c_runtime_resume(struct device *pdev)
+> > +{
+> 
+> > +       clk_prepare_enable(i2c_dev->clk);
+> 
+> This might fail.
+
+Yes, will check return value.
+
+> 
+> 
+> > +}
+> > +#endif  /* CONFIG_PM */
+> 
+> 
+> > +static struct platform_driver sprd_i2c_driver = {
+> > +       .probe = sprd_i2c_probe,
+> > +       .remove = sprd_i2c_remove,
+> > +       .driver = {
+> > +                  .name = "sprd-i2c",
+> 
+> > +                  .of_match_table = of_match_ptr(sprd_i2c_of_match),
+> 
+> of_match_ptr seems redundant.
+
+OK.
+
+> 
+> > +                  .pm = &sprd_i2c_pm_ops,
+> > +       },
+> > +};
+> > +
+> 
+> > +static int __init sprd_i2c_init(void)
+> > +{
+> > +       return platform_driver_register(&sprd_i2c_driver);
+> > +}
+> 
+> > +arch_initcall_sync(sprd_i2c_init);
+> 
+> Why?
+
+IN our Spreadtrum platform, our regulator driver will depend on I2C driver
+and the regulator driver uses subsys_initcall() level to initialize. Moreover
+some other drivers like GPU, they will depend on regulator to set voltage and
+they also need initialization much earlier. Thanks for your comments.
+
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
