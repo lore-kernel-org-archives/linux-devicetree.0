@@ -1,67 +1,100 @@
-From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 1/5] mtd: partitions: add helper for deleting partition
-Date: Wed, 21 Jun 2017 07:33:19 +0200
-Message-ID: <CACna6rwsFBFmrdvumBa9H6C0uJuaY=cS-Q+akXsQmgo2dqTFVQ@mail.gmail.com>
-References: <20170526131415.27186-1-zajec5@gmail.com> <20170526131415.27186-2-zajec5@gmail.com>
- <20170620225007.GB14148@google.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v6 1/4] of: remove *phandle properties from expanded
+ device tree
+Date: Tue, 20 Jun 2017 23:18:30 -0700
+Message-ID: <594A0FB6.2000102@gmail.com>
+References: <1497996172-821-1-git-send-email-frowand.list@gmail.com>
+ <1497996172-821-2-git-send-email-frowand.list@gmail.com>
+ <87mv92szsw.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170620225007.GB14148-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87mv92szsw.fsf@concordia.ellerman.id.au>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21 June 2017 at 00:50, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, May 26, 2017 at 03:14:11PM +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
->> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->>
->> There are two similar functions handling deletion. One handles single
->> partition and another whole MTD flash device. They share (duplicate)
->> some code so it makes sense to add a small helper for that part.
->>
->> Function del_mtd_partitions has been moved a bit to keep all deleting
->> stuff together.
->>
->> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
->
->> +/**
->> + * __mtd_del_partition - delete MTD partition
->> + *
->> + * @priv: internal MTD struct for partition to be deleted
->> + *
->> + * This function must be called with the partitions mutex locked.
->> + */
->> +static int __mtd_del_partition(struct mtd_part *priv)
->> +{
->> +     int err;
->> +
->> +     sysfs_remove_files(&priv->mtd.dev.kobj, mtd_partition_attrs);
->
-> Notably, the above wasn't called in del_mtd_partitions() previously. Is
-> that intentional?
->
-> As I read the code, we were actually missing this before; either in
-> error handling, or on device removal. But in either case, the entire
-> device was going to disappear, so the sysfs files would have been
-> cleaned up anyway?
->
-> Also, is there any chance of double-calling this? I think not, but even
-> if there is, it looks like the low-level routines are reslient to
-> non-existent files.
->
-> I'm mostly thinking out loud here. I think this is a positive change,
-> even if it wasn't noted explicitly.
+Hi Rob,
 
-I think that call was missing, however I could make it more clear I'm
-adding it. I'll try splitting this change out V7 and add a proper
-description.
+Michael has an issue that means this patch series is not OK in the
+current form.  I will work on a v7 to see if I can resolve the
+issue.
 
---=20
-Rafa=C5=82
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Frank
+
+
+On 06/20/17 21:57, Michael Ellerman wrote:
+> Hi Frank,
+> 
+> frowand.list@gmail.com writes:
+>> From: Frank Rowand <frank.rowand@sony.com>
+>>
+>> Remove "phandle", "linux,phandle", and "ibm,phandle" properties from
+>> the internal device tree.  The phandle will still be in the struct
+>> device_node phandle field and will still be displayed as if it is
+>> a property in /proc/device_tree.
+>>
+>> This is to resolve the issue found by Stephen Boyd [1] when he changed
+>> the type of struct property.value from void * to const void *.  As
+>> a result of the type change, the overlay code had compile errors
+>> where the resolver updates phandle values.
+>>
+>>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+>>
+>> - Add sysfs infrastructure to report np->phandle, as if it was a property.
+>> - Do not create "phandle" "ibm,phandle", and "linux,phandle" properties
+>>   in the expanded device tree.
+>> - Remove phandle properties in of_attach_node(), for nodes dynamically
+>>   attached to the live tree.  Add the phandle sysfs entry for these nodes.
+>> - When creating an overlay changeset, duplicate the node phandle in
+>>   __of_node_dup().
+>> - Remove no longer needed checks to exclude "phandle" and "linux,phandle"
+>>   properties in several locations.
+>> - A side effect of these changes is that the obsolete "linux,phandle" and
+>>   "ibm,phandle" properties will no longer appear in /proc/device-tree (they
+>>   will appear as "phandle").
+> 
+> Sorry but I don't think that can work for us.
+> 
+> Our DLPAR (ie. CPU/memory/device hotplug) stuff on PowerVM uses
+> "ibm,phandle", and it's not the same thing as "phandle" /
+> "linux,phandle".
+> 
+> I don't know the code well myself, but the spec (PAPR) says:
+> 
+>   Note: If the “ibm,phandle” property exists, there are two “phandle”
+>   namespaces which must be kept separate. One is that actually used by
+>   the OF client interface, the other is properties in the device tree
+>   making reference to device tree nodes. These requirements are written
+>   to maintain backward compatibility with older FW versions predating
+>   these requirements; if the “ibm,phandle” property is not present, the
+>   OS may assume that any device tree properties which refer to this node
+>   will have a phandle value matching that returned by client interface
+>   services.
+> 
+> I have systems here that still use "ibm,phandle". I also see at least
+> some of the userspace code that looks for "ibm,phandle", and nothing
+> else.
+> 
+> The note above actually implies that the current Linux code is wrong,
+> when it uses "ibm,phandle" as the value of np->phandle.
+> 
+> So sorry that's a big mess, but we can't just rip out those properties.
+> 
+> I think the minimal change would be to treat "ibm,phandle" like a normal
+> property, I think that would allow our tools to keep working?
+> 
+> 
+> The other thing that worries me is that by renaming (effectively)
+> "linux,phandle" to "phandle", we lose the ability to accurately
+> regenerate the device tree from /proc/device-tree. In theory it
+> shouldn't matter, but I worry that in practice something will break.
+> 
+> What if we just kept a single bit flag somewhere indicating if the name of
+> the phandle property we found was "phandle" or "linux,phandle", and
+> create the sysfs phandle using that name?
+> 
+> cheers
+> 
