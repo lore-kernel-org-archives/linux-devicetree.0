@@ -1,48 +1,53 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/2] clk: samsung: audss: Fix silent hang on Exynos4412 due to disabled EPLL
-Date: Wed, 21 Jun 2017 21:08:06 +0200
-Message-ID: <20170621190807.14850-2-krzk@kernel.org>
-References: <20170621190807.14850-1-krzk@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170621190807.14850-1-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH] of: make __of_attach_node() static
+Date: Wed, 21 Jun 2017 12:16:38 -0700
+Message-ID: <1498072598-4366-1-git-send-email-frowand.list@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Similarly to commit f1e9203e2366 ("clk: samsung: Fix Exynos 5420 pinctrl
-setup and clock disable failure due to domain being gated") for
-Exynos5420, the Exynos4412 also requires that EPLL is not disabled.
-Otherwise any access to MAUDIO block will silently halt.
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-This was not visible before because EPLL on Exynos4 could not be
-disabled before commit 6edfa11cb396 ("clk: samsung:
-Add enable/disable operation for PLL36XX clocks").  After this commit,
-on Odroid U3 board one can see silent hang, usually with last (but
-unrelated) messages:
+__of_attach_node() is not used outside of drivers/of/dynamic.c.  Make
+it static and remove it from drivers/of/of_private.h.
 
-	[    2.382741] input: gpio_keys as /devices/platform/gpio_keys/input/input0
-	[    2.405686] usb 1-3: new high-speed USB device number 3 using exynos-ehci
-	[    2.419843] max77686-rtc max77686-rtc: setting system clock to 2017-06-21 17:04:13 UTC (1498064653)
-
-Mark Exynos4 variant as also needed EPLL to be enabled all the time.
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 ---
- drivers/clk/samsung/clk-exynos-audss.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/of/dynamic.c    | 2 +-
+ drivers/of/of_private.h | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
-index 85edeb738853..1fab56f396d4 100644
---- a/drivers/clk/samsung/clk-exynos-audss.c
-+++ b/drivers/clk/samsung/clk-exynos-audss.c
-@@ -73,6 +73,7 @@ struct exynos_audss_clk_drvdata {
+diff --git a/drivers/of/dynamic.c b/drivers/of/dynamic.c
+index 888fdbc09992..0542cf8b6e3d 100644
+--- a/drivers/of/dynamic.c
++++ b/drivers/of/dynamic.c
+@@ -216,7 +216,7 @@ int of_property_notify(int action, struct device_node *np,
+ 	return of_reconfig_notify(action, &pr);
+ }
  
- static const struct exynos_audss_clk_drvdata exynos4210_drvdata = {
- 	.num_clks	= EXYNOS_AUDSS_MAX_CLKS - 1,
-+	.enable_epll	= 1,
- };
+-void __of_attach_node(struct device_node *np)
++static void __of_attach_node(struct device_node *np)
+ {
+ 	const __be32 *phandle;
+ 	int sz;
+diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+index 4ebb0149d118..dd535365b5d2 100644
+--- a/drivers/of/of_private.h
++++ b/drivers/of/of_private.h
+@@ -90,7 +90,6 @@ extern int __of_update_property(struct device_node *np,
+ extern void __of_update_property_sysfs(struct device_node *np,
+ 		struct property *newprop, struct property *oldprop);
  
- static const struct exynos_audss_clk_drvdata exynos5410_drvdata = {
+-extern void __of_attach_node(struct device_node *np);
+ extern int __of_attach_node_sysfs(struct device_node *np);
+ extern void __of_detach_node(struct device_node *np);
+ extern void __of_detach_node_sysfs(struct device_node *np);
 -- 
-2.9.3
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
