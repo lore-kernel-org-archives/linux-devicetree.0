@@ -1,91 +1,94 @@
 From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [PATCH 5/5] arm64: defconfig: enable some drivers and configs for hi3798cv200-poplar board.
-Date: Wed, 21 Jun 2017 17:00:45 +0800
-Message-ID: <1498035645-22804-6-git-send-email-xuejiancheng@hisilicon.com>
+Subject: [PATCH 1/5] clk: hisilicon: add usb2 clocks for hi3798cv200 SoC
+Date: Wed, 21 Jun 2017 17:00:41 +0800
+Message-ID: <1498035645-22804-2-git-send-email-xuejiancheng@hisilicon.com>
 References: <1498035645-22804-1-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1498035645-22804-1-git-send-email-xuejiancheng@hisilicon.com>
-Sender: linux-clk-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: sboyd@codeaurora.org, robh+dt@kernel.org, kishon@ti.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, balbi@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, project-aspen-dev@linaro.org, yanhaifeng@hisilicon.com, Jiancheng Xue <xuejiancheng@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable GMAC,I2C,IR,USB2-PHY for hi3798cv200-poplar board.
+Add usb2 clocks for hi3798cv200 SoC.
 
 Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
 ---
- arch/arm64/configs/defconfig | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ drivers/clk/hisilicon/crg-hi3798cv200.c | 21 +++++++++++++++++++++
+ include/dt-bindings/clock/histb-clock.h |  9 ++++++++-
+ 2 files changed, 29 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index 97c123e..b45d760 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -31,6 +31,8 @@ CONFIG_JUMP_LABEL=y
- CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_IOSCHED_DEADLINE is not set
-+CONFIG_PARTITION_ADVANCED=y
-+CONFIG_CMDLINE_PARTITION=y
- CONFIG_ARCH_SUNXI=y
- CONFIG_ARCH_ALPINE=y
- CONFIG_ARCH_BCM2835=y
-@@ -179,6 +181,7 @@ CONFIG_VIRTIO_NET=y
- CONFIG_AMD_XGBE=y
- CONFIG_NET_XGENE=y
- CONFIG_MACB=y
-+CONFIG_HIX5HD2_GMAC=y
- CONFIG_HNS_DSAF=y
- CONFIG_HNS_ENET=y
- CONFIG_E1000E=y
-@@ -259,6 +262,7 @@ CONFIG_I2C_TEGRA=y
- CONFIG_I2C_UNIPHIER_F=y
- CONFIG_I2C_RCAR=y
- CONFIG_I2C_CROS_EC_TUNNEL=y
-+CONFIG_I2C_HIX5HD2=y
- CONFIG_SPI=y
- CONFIG_SPI_BCM2835=m
- CONFIG_SPI_BCM2835AUX=m
-@@ -277,6 +281,7 @@ CONFIG_PINCTRL_MSM8994=y
- CONFIG_PINCTRL_MSM8996=y
- CONFIG_PINCTRL_QDF2XXX=y
- CONFIG_PINCTRL_QCOM_SPMI_PMIC=y
-+CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_DWAPB=y
- CONFIG_GPIO_PL061=y
- CONFIG_GPIO_RCAR=y
-@@ -322,7 +327,7 @@ CONFIG_REGULATOR_QCOM_SMD_RPM=y
- CONFIG_REGULATOR_QCOM_SPMI=y
- CONFIG_REGULATOR_RK808=y
- CONFIG_REGULATOR_S2MPS11=y
--CONFIG_MEDIA_SUPPORT=m
-+CONFIG_MEDIA_SUPPORT=y
- CONFIG_MEDIA_CAMERA_SUPPORT=y
- CONFIG_MEDIA_ANALOG_TV_SUPPORT=y
- CONFIG_MEDIA_DIGITAL_TV_SUPPORT=y
-@@ -359,6 +364,10 @@ CONFIG_BACKLIGHT_GENERIC=m
- CONFIG_BACKLIGHT_LP855X=m
- CONFIG_FRAMEBUFFER_CONSOLE=y
- CONFIG_LOGO=y
-+CONFIG_MEDIA_RC_SUPPORT=y
-+CONFIG_RC_DEVICES=y
-+CONFIG_IR_HIX5HD2=y
-+CONFIG_LIRC=y
- # CONFIG_LOGO_LINUX_MONO is not set
- # CONFIG_LOGO_LINUX_VGA16 is not set
- CONFIG_SOUND=y
-@@ -488,7 +497,9 @@ CONFIG_PWM_MESON=m
- CONFIG_PWM_ROCKCHIP=y
- CONFIG_PWM_SAMSUNG=y
- CONFIG_PWM_TEGRA=m
-+CONFIG_TI_SYSCON_RESET=y
- CONFIG_PHY_RCAR_GEN3_USB2=y
-+CONFIG_PHY_HISI_INNO_USB2=y
- CONFIG_PHY_HI6220_USB=y
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_PHY_ROCKCHIP_INNO_USB2=y
+diff --git a/drivers/clk/hisilicon/crg-hi3798cv200.c b/drivers/clk/hisilicon/crg-hi3798cv200.c
+index fc8b5bc..ed8bb5f 100644
+--- a/drivers/clk/hisilicon/crg-hi3798cv200.c
++++ b/drivers/clk/hisilicon/crg-hi3798cv200.c
+@@ -44,6 +44,9 @@
+ #define HI3798CV200_ETH_BUS0_CLK	78
+ #define HI3798CV200_ETH_BUS1_CLK	79
+ #define HI3798CV200_COMBPHY1_MUX	80
++#define HI3798CV200_FIXED_12M	81
++#define HI3798CV200_FIXED_48M	82
++#define HI3798CV200_FIXED_60M	83
+ 
+ #define HI3798CV200_CRG_NR_CLKS		128
+ 
+@@ -51,9 +54,12 @@
+ 	{ HISTB_OSC_CLK, "clk_osc", NULL, 0, 24000000, },
+ 	{ HISTB_APB_CLK, "clk_apb", NULL, 0, 100000000, },
+ 	{ HISTB_AHB_CLK, "clk_ahb", NULL, 0, 200000000, },
++	{ HI3798CV200_FIXED_12M, "12m", NULL, 0, 12000000, },
+ 	{ HI3798CV200_FIXED_24M, "24m", NULL, 0, 24000000, },
+ 	{ HI3798CV200_FIXED_25M, "25m", NULL, 0, 25000000, },
++	{ HI3798CV200_FIXED_48M, "48m", NULL, 0, 48000000, },
+ 	{ HI3798CV200_FIXED_50M, "50m", NULL, 0, 50000000, },
++	{ HI3798CV200_FIXED_60M, "60m", NULL, 0, 60000000, },
+ 	{ HI3798CV200_FIXED_75M, "75m", NULL, 0, 75000000, },
+ 	{ HI3798CV200_FIXED_100M, "100m", NULL, 0, 100000000, },
+ 	{ HI3798CV200_FIXED_150M, "150m", NULL, 0, 150000000, },
+@@ -134,6 +140,21 @@
+ 	/* COMBPHY1 */
+ 	{ HISTB_COMBPHY1_CLK, "clk_combphy1", "combphy1_mux",
+ 		CLK_SET_RATE_PARENT, 0x188, 8, 0, },
++	/* USB2 */
++	{ HISTB_USB2_BUS_CLK, "clk_u2_bus", "clk_ahb",
++		CLK_SET_RATE_PARENT, 0xb8, 0, 0, },
++	{ HISTB_USB2_PHY_CLK, "clk_u2_phy", "60m",
++		CLK_SET_RATE_PARENT, 0xb8, 4, 0, },
++	{ HISTB_USB2_12M_CLK, "clk_u2_12m", "12m",
++		CLK_SET_RATE_PARENT, 0xb8, 2, 0 },
++	{ HISTB_USB2_48M_CLK, "clk_u2_48m", "48m",
++		CLK_SET_RATE_PARENT, 0xb8, 1, 0 },
++	{ HISTB_USB2_UTMI_CLK, "clk_u2_utmi", "60m",
++		CLK_SET_RATE_PARENT, 0xb8, 5, 0 },
++	{ HISTB_USB2_PHY1_REF_CLK, "clk_u2_phy1_ref", "24m",
++		CLK_SET_RATE_PARENT, 0xbc, 0, 0 },
++	{ HISTB_USB2_PHY2_REF_CLK, "clk_u2_phy2_ref", "24m",
++		CLK_SET_RATE_PARENT, 0xbc, 2, 0 },
+ };
+ 
+ static struct hisi_clock_data *hi3798cv200_clk_register(
+diff --git a/include/dt-bindings/clock/histb-clock.h b/include/dt-bindings/clock/histb-clock.h
+index 181c0f0..067f5e5 100644
+--- a/include/dt-bindings/clock/histb-clock.h
++++ b/include/dt-bindings/clock/histb-clock.h
+@@ -53,7 +53,14 @@
+ #define HISTB_ETH1_MAC_CLK		31
+ #define HISTB_ETH1_MACIF_CLK		32
+ #define HISTB_COMBPHY1_CLK		33
+-
++#define HISTB_USB2_BUS_CLK	34
++#define HISTB_USB2_PHY_CLK	35
++#define HISTB_USB2_UTMI_CLK	36
++#define HISTB_USB2_12M_CLK	37
++#define HISTB_USB2_48M_CLK	38
++#define HISTB_USB2_OTG_UTMI_CLK	39
++#define HISTB_USB2_PHY1_REF_CLK	40
++#define HISTB_USB2_PHY2_REF_CLK	41
+ 
+ /* clocks provided by mcu CRG */
+ #define HISTB_MCE_CLK	1
 -- 
 1.9.1
-
