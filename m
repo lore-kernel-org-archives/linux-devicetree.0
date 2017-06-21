@@ -1,55 +1,73 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2] gpio: rcar: Add R8A7743 (RZ/G1M) support
-Date: Wed, 21 Jun 2017 15:27:09 +0100
-Message-ID: <1498055229-42052-1-git-send-email-biju.das@bp.renesas.com>
-References: <1497619944-61410-1-git-send-email-biju.das@bp.renesas.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1497619944-61410-1-git-send-email-biju.das@bp.renesas.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
+From: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v5.1 0/2] tty/serial: meson_uart: add support for core clock handling
+Date: Wed, 21 Jun 2017 16:42:10 +0200
+Message-ID: <1498056132-18508-1-git-send-email-narmstrong@baylibre.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Renesas RZ/G1M (R8A7743) SoC GPIO blocks are identical to the R-Car Gen2
-family. Add support for its GPIO controllers.
+This patchset is a re-spin of Helmut Klein's v3 patchset at [0] and the v4/v5 patchset at [1] & [2].
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
----
-v1->v2
-* Modified the text "RZ-G1M" to "RZ/G1M"
+Initially, the original patchset was made to enable usage on the non-AO UARTS
+not enabled by the Bootloader (uart_B and uart_C), but the patchset needed
+an overall change to have clean and stable DT bindings.
 
- Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
- drivers/gpio/gpio-rcar.c                                     | 4 ++++
- 2 files changed, 5 insertions(+)
+The Amlogic Meson UART Driver did not have stable DT bindings and mismatched
+clock handling on non-AO UARTs since these "EE" UARTs needs a clock gate to
+be ungated to works correctly.
+In the same way, the AO UARTs does not need gating and can be used as
+Early Consoles.
 
-diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-index 7c1ab3b..6826a37 100644
---- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-@@ -3,6 +3,7 @@
- Required Properties:
- 
-   - compatible: should contain one of the following.
-+    - "renesas,gpio-r8a7743": for R8A7743 (RZ/G1M) compatible GPIO controller.
-     - "renesas,gpio-r8a7778": for R8A7778 (R-Mobile M1) compatible GPIO controller.
-     - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
-     - "renesas,gpio-r8a7790": for R8A7790 (R-Car H2) compatible GPIO controller.
-diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
-index 31ad288..4a1536a 100644
---- a/drivers/gpio/gpio-rcar.c
-+++ b/drivers/gpio/gpio-rcar.c
-@@ -344,6 +344,10 @@ struct gpio_rcar_info {
- 
- static const struct of_device_id gpio_rcar_of_table[] = {
- 	{
-+		.compatible = "renesas,gpio-r8a7743",
-+		/* RZ/G1 GPIO is identical to R-Car Gen2. */
-+		.data = &gpio_rcar_info_gen2,
-+	}, {
- 		.compatible = "renesas,gpio-r8a7790",
- 		.data = &gpio_rcar_info_gen2,
- 	}, {
+In the same time, the UART Interfaces can take clock input for the baudrate
+generate from either the external Xtal or the internal Bus Clock (clk81).
+
+So new bindings was necessary to meet these requirements and the DT
+maintainers requirements.
+
+The "legacy" binding actually used in the driver is left until all the DT
+files are switched to the new bindings.
+
+The GX DT has been tested, but the last 4 Meson6/Meson8/b are only
+compile-tested, and testing is welcome.
+Thus only the first 3 patches can be merged until the Meson6/Meson8/b are
+formally tested.
+
+It must be noted that the meson6 cannot work today except using an early
+console since the UART driver could not probe without a clocks property.
+
+Changes since v5 at [2]:
+ - Dropped bindings and tty patch since merged by greg kh into tty next branch
+ - Keep old bindings in DT files for retro-compatibility
+
+Changes since v4 at [1]:
+ - Droped meson8/meson8b DT patches
+ - Fixes copy/paste error in patch 2
+ - Refactored clock probing in patch 2
+ - merged meson6 patches together to avoid breaking bisect
+
+[0] http://lkml.kernel.org/r/20170331165437.26227-1-hgkr.klein-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+[1] http://lkml.kernel.org/r/1497001756-942-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+[2] http://lkml.kernel.org/r/1497428957-19942-1-git-send-email-narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+
+Helmut Klein (1):
+  ARM64: dts: meson-gx: use stable UART bindings with correct gate clock
+
+Neil Armstrong (1):
+  ARM: dts: meson6: use stable UART bindings
+
+ arch/arm/boot/dts/meson.dtsi                |  8 ++++----
+ arch/arm/boot/dts/meson6.dtsi               | 28 ++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 12 +++++-------
+ arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 25 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 25 +++++++++++++++++++++++++
+ 5 files changed, 87 insertions(+), 11 deletions(-)
+
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
