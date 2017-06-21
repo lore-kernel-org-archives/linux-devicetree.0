@@ -1,181 +1,2117 @@
-From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: [PATCH v4 2/3] dt-bindings: pinctrl: Add Spreadtrum SC9860 pin controller
-Date: Wed, 21 Jun 2017 19:55:38 +0800
-Message-ID: <09b72098c8fcce703b0ae7f757130ab1b0700f50.1498045588.git.baolin.wang@spreadtrum.com>
+From: Baolin Wang <baolin.wang@spreadtrum.com>
+Subject: [PATCH v4 3/3] pinctrl: sprd: Add Spreadtrum pin control driver
+Date: Wed, 21 Jun 2017 19:55:39 +0800
+Message-ID: <fac8c9ae08fb42bab47d5349720ee097b25222cb.1498045588.git.baolin.wang@spreadtrum.com>
 References: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org, baolin.wang@spreadtrum.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the binding documentation for Spreadtrum SC9860 pin
-controller device.
+This patch adds the pin control driver for Spreadtrum SC9860 platform.
 
-Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
 ---
 Changes since v3:
- - Use generic "bias-pull-up" instead of "sprd,pull-up".
- - Change subject name.
- - Use generic sleep related config.
- - Add more explanation for sleep related configuration and sleep mode.
+ - Use the generic "bia-pull-up" config.
+ - Use some generic sleep related config.
 
 Changes since v2:
- - No updates.
+ - Fix some compile warnings.
+ - Reimplement the pin_config_get() callback and add debug function.
 
 Changes since v1:
- - Remove magic numbers and get to use the standard bindings.
- - Fix some typos.
+ - Remove magic numbers and use generic pin control bindings.
 ---
- .../devicetree/bindings/pinctrl/sprd,pinctrl.txt   |   90 ++++++++++++++++++++
- .../bindings/pinctrl/sprd,sc9860-pinctrl.txt       |   69 +++++++++++++++
- 2 files changed, 159 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
- create mode 100644 Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
+ drivers/pinctrl/Kconfig                    |    1 +
+ drivers/pinctrl/Makefile                   |    1 +
+ drivers/pinctrl/sprd/Kconfig               |   17 +
+ drivers/pinctrl/sprd/Makefile              |    2 +
+ drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c |  972 +++++++++++++++++++++++++++
+ drivers/pinctrl/sprd/pinctrl-sprd.c        |  986 ++++++++++++++++++++++++++++
+ drivers/pinctrl/sprd/pinctrl-sprd.h        |   82 +++
+ 7 files changed, 2061 insertions(+)
+ create mode 100644 drivers/pinctrl/sprd/Kconfig
+ create mode 100644 drivers/pinctrl/sprd/Makefile
+ create mode 100644 drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+ create mode 100644 drivers/pinctrl/sprd/pinctrl-sprd.c
+ create mode 100644 drivers/pinctrl/sprd/pinctrl-sprd.h
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 8f8c2af..681e593 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -304,6 +304,7 @@ source "drivers/pinctrl/ti/Kconfig"
+ source "drivers/pinctrl/uniphier/Kconfig"
+ source "drivers/pinctrl/vt8500/Kconfig"
+ source "drivers/pinctrl/mediatek/Kconfig"
++source "drivers/pinctrl/sprd/Kconfig"
+ 
+ config PINCTRL_XWAY
+ 	bool
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index a251f43..006e352 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -57,3 +57,4 @@ obj-y				+= ti/
+ obj-$(CONFIG_PINCTRL_UNIPHIER)	+= uniphier/
+ obj-$(CONFIG_ARCH_VT8500)	+= vt8500/
+ obj-$(CONFIG_PINCTRL_MTK)	+= mediatek/
++obj-y				+= sprd/
+diff --git a/drivers/pinctrl/sprd/Kconfig b/drivers/pinctrl/sprd/Kconfig
 new file mode 100644
-index 0000000..e33fb46
+index 0000000..6f4a7f9
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/sprd,pinctrl.txt
-@@ -0,0 +1,90 @@
-+* Spreadtrum Pin Controller
++++ b/drivers/pinctrl/sprd/Kconfig
+@@ -0,0 +1,17 @@
++#
++# Spreadtrum pin control drivers
++#
 +
-+The Spreadtrum pin controller are organized in 3 blocks (types).
++config PINCTRL_SPRD
++	bool "Spreadtrum pinctrl driver"
++	select PINMUX
++	select PINCONF
++	select GENERIC_PINCONF
++	select GENERIC_PINMUX_FUNCTIONS
++	help
++	  Say Y here to enable Spreadtrum pinctrl driver
 +
-+The first block comprises some global control registers, and each
-+register contains several bit fields with one bit or several bits
-+to configure for some global common configuration, such as domain
-+pad driving level, system control select and so on ("domain pad
-+driving level": One pin can output 3.0v or 1.8v, depending on the
-+related domain pad driving selection, if the related domain pad
-+slect 3.0v, then the pin can output 3.0v. "system control" is used
-+to choose one function (like: UART0) for which system, since we
-+have several systems (AP/CP/CM4) on one SoC.).
-+
-+There are too much various configuration that we can not list all
-+of them, so we can not make every Spreadtrum-special configuration
-+as one generic configuration, and maybe it will add more strange
-+global configuration in future. Then we add one "sprd,control" to
-+set these various global control configuration, and we need use
-+magic number for this property.
-+
-+Moreover we recognise every fields comprising one bit or several
-+bits in one global control register as one pin, thus we should
-+record every pin's bit offset, bit width and register offset to
-+configure this field (pin).
-+
-+The second block comprises some common registers which have unified
-+register definition, and each register described one pin is used
-+to configure the pin sleep mode, function select and sleep related
-+configuration.
-+
-+Now we have 4 systems for sleep mode on SC9860 SoC: AP system,
-+PUBCP system, TGLDSP system and AGDSP system. And the pin sleep
-+related configuration are:
-+- sleep-input-enable
-+- sleep-input-disable
-+- sleep-output-high
-+- sleep-output-low
-+- sleep-bias-pull-up
-+- sleep-bias-pull-down
-+
-+In some situation we need set the pin sleep mode and pin sleep related
-+configuration, to set the pin sleep related configuration automatically
-+by hardware when the system specified by sleep mode goes into deep
-+sleep mode. For example, if we set the pin sleep mode as PUBCP_SLEEP
-+and set the pin sleep related configuration as "sleep-input-enable",
-+which means when PUBCP system goes into deep sleep mode, this pin will
-+be set input enable automatically.
-+
-+Moreover we can not use the "sleep" state, since some systems (like:
-+PUBCP system) do not run linux kernel OS (only AP system run linux
-+kernel on SC9860 platform), then we can not select "sleep" state
-+when the PUBCP system goes into deep sleep mode. Thus we introduce
-+"sprd,sleep-mode" property to set pin sleep mode.
-+
-+The last block comprises some misc registers which also have unified
-+register definition, and each register described one pin is used to
-+configure drive strength, pull up/down and so on. Especially for pull
-+up, we have two kind pull up resistor: 20K and 4.7K.
-+
-+Required properties for Spreadtrum pin controller:
-+- compatible: "sprd,<soc>-pinctrl"
-+  Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported SoCs.
-+- reg: The register address of pin controller device.
-+- pins : An array of pin names.
-+
-+Optional properties:
-+- function: Specified the function name.
-+- drive-strength: Drive strength in mA.
-+- input-schmitt-disable: Enable schmitt-trigger mode.
-+- input-schmitt-enable: Disable schmitt-trigger mode.
-+- bias-disable: Disable pin bias.
-+- bias-pull-down: Pull down on pin.
-+- bias-pull-up: Pull up on pin.
-+- sleep-input-enable: Input enable when the system specified by sleep
-+		      mode goes into deep sleep mode.
-+- sleep-input-disable: Input disable when the system specified by sleep
-+		       mode goes into deep sleep mode.
-+- sleep-output-high: Output high enable when the system specified by
-+		     sleep mode goes into deep sleep mode.
-+- sleep-output-low: Output low enable when the system specified by sleep
-+		    mode goes into deep sleep mode.
-+- sleep-bias-pull-up: Pull up enable when the system specified by sleep
-+		      mode goes into deep sleep mode.
-+- sleep-bias-pull-down: Pull down enable when the system specified by
-+			sleep mode goes into deep sleep mode.
-+- sprd,control: Control values referring to databook for global control pins.
-+- sprd,sleep-mode: Sleep mode selection.
-+
-+Please refer to each sprd,<soc>-pinctrl.txt binding doc for supported values.
-diff --git a/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
++config PINCTRL_SPRD_SC9860
++	bool "Spreadtrum SC9860 pinctrl driver"
++	help
++	  Say Y here to enable Spreadtrum SC9860 pinctrl driver
+diff --git a/drivers/pinctrl/sprd/Makefile b/drivers/pinctrl/sprd/Makefile
 new file mode 100644
-index 0000000..067b7e0
+index 0000000..b6caa8c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/sprd,sc9860-pinctrl.txt
-@@ -0,0 +1,69 @@
-+* Spreadtrum SC9860 Pin Controller
++++ b/drivers/pinctrl/sprd/Makefile
+@@ -0,0 +1,2 @@
++obj-$(CONFIG_PINCTRL_SPRD)		+= pinctrl-sprd.o
++obj-$(CONFIG_PINCTRL_SPRD_SC9860)	+= pinctrl-sprd-sc9860.o
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c b/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+new file mode 100644
+index 0000000..3cdad8b
+--- /dev/null
++++ b/drivers/pinctrl/sprd/pinctrl-sprd-sc9860.c
+@@ -0,0 +1,972 @@
++/*
++ * Spreadtrum pin controller driver
++ * Copyright (C) 2017 Spreadtrum  - http://www.spreadtrum.com
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ */
 +
-+Please refer to sprd,pinctrl.txt in this directory for common binding part
-+and usage.
++#include <linux/module.h>
++#include <linux/platform_device.h>
 +
-+Required properties:
-+- compatible: Must be "sprd,sc9860-pinctrl".
-+- reg: The register address of pin controller device.
-+- pins : An array of strings, each string containing the name of a pin.
++#include "pinctrl-sprd.h"
 +
-+Optional properties:
-+- function: A string containing the name of the function, values must be
-+  one of: "func1", "func2", "func3" and "func4".
-+- drive-strength: Drive strength in mA. Supported values: 2, 4, 6, 8, 10,
-+  12, 14, 16, 20, 21, 24, 25, 27, 29, 31 and 33.
-+- input-schmitt-disable: Enable schmitt-trigger mode.
-+- input-schmitt-enable: Disable schmitt-trigger mode.
-+- bias-disable: Disable pin bias.
-+- bias-pull-down: Pull down on pin.
-+- bias-pull-up: Pull up on pin. Supported values: 20000 for pull-up resistor
-+  is 20K and 4700 for pull-up resistor is 4.7K.
-+- sleep-input-enable: Input enable when the system specified by sleep mode
-+  goes into deep sleep mode.
-+- sleep-input-disable: Input disable when the system specified by sleep mode
-+  goes into deep sleep mode.
-+- sleep-output-high: Output high enable when the system specified by sleep
-+  mode goes into deep sleep mode.
-+- sleep-output-low: Output low enable when the system specified by sleep mode
-+  goes into deep sleep mode.
-+- sleep-bias-pull-up: Pull up enable when the system specified by sleep mode
-+  goes into deep sleep mode.
-+- sleep-bias-pull-down: Pull down enable when the system specified by sleep
-+  mode goes into deep sleep mode.
-+- sprd,control: Control values referring to databook for global control pins.
-+- sprd,sleep-mode: Choose the pin sleep mode, and supported values are:
-+  AP_SLEEP, PUBCP_SLEEP, TGLDSP_SLEEP and AGDSP_SLEEP.
++enum sprd_sc9860_pins {
++	/* pin global control register 0 */
++	SC9860_VIO28_0_IRTE = SPRD_PIN_INFO(0, GLOBAL_CTRL_PIN, 11, 1, 0),
++	SC9860_VIO_SD2_IRTE = SPRD_PIN_INFO(1, GLOBAL_CTRL_PIN, 10, 1, 0),
++	SC9860_VIO_SD0_IRTE = SPRD_PIN_INFO(2, GLOBAL_CTRL_PIN, 9, 1, 0),
++	SC9860_VIO_SIM2_IRTE = SPRD_PIN_INFO(3, GLOBAL_CTRL_PIN, 8, 1, 0),
++	SC9860_VIO_SIM1_IRTE = SPRD_PIN_INFO(4, GLOBAL_CTRL_PIN, 7, 1, 0),
++	SC9860_VIO_SIM0_IRTE = SPRD_PIN_INFO(5, GLOBAL_CTRL_PIN, 6, 1, 0),
++	SC9860_VIO28_0_MS = SPRD_PIN_INFO(6, GLOBAL_CTRL_PIN, 5, 1, 0),
++	SC9860_VIO_SD2_MS = SPRD_PIN_INFO(7, GLOBAL_CTRL_PIN, 4, 1, 0),
++	SC9860_VIO_SD0_MS = SPRD_PIN_INFO(8, GLOBAL_CTRL_PIN, 3, 1, 0),
++	SC9860_VIO_SIM2_MS = SPRD_PIN_INFO(9, GLOBAL_CTRL_PIN, 2, 1, 0),
++	SC9860_VIO_SIM1_MS = SPRD_PIN_INFO(10, GLOBAL_CTRL_PIN, 1, 1, 0),
++	SC9860_VIO_SIM0_MS = SPRD_PIN_INFO(11, GLOBAL_CTRL_PIN, 0, 1, 0),
 +
-+Pin sleep mode definition:
++	/* pin global control register 2 */
++	SC9860_SPSPI_PIN_IN_SEL = SPRD_PIN_INFO(12, GLOBAL_CTRL_PIN, 31, 1, 2),
++	SC9860_UART1_USB30_PHY_SEL = SPRD_PIN_INFO(13, GLOBAL_CTRL_PIN, 30, 1, 2),
++	SC9860_USB30_PHY_DM_OE = SPRD_PIN_INFO(14, GLOBAL_CTRL_PIN, 29, 1, 2),
++	SC9860_USB30_PHY_DP_OE = SPRD_PIN_INFO(15, GLOBAL_CTRL_PIN, 28, 1, 2),
++	SC9860_UART5_SYS_SEL = SPRD_PIN_INFO(16, GLOBAL_CTRL_PIN, 25, 3, 2),
++	SC9860_ORP_URXD_PIN_IN_SEL = SPRD_PIN_INFO(17, GLOBAL_CTRL_PIN, 24, 1, 2),
++	SC9860_SIM2_SYS_SEL = SPRD_PIN_INFO(18, GLOBAL_CTRL_PIN, 23, 1, 2),
++	SC9860_SIM1_SYS_SEL = SPRD_PIN_INFO(19, GLOBAL_CTRL_PIN, 22, 1, 2),
++	SC9860_SIM0_SYS_SEL = SPRD_PIN_INFO(20, GLOBAL_CTRL_PIN, 21, 1, 2),
++	SC9860_CLK26MHZ_BUF_OUT_SEL = SPRD_PIN_INFO(21, GLOBAL_CTRL_PIN, 20, 1, 2),
++	SC9860_UART4_SYS_SEL = SPRD_PIN_INFO(22, GLOBAL_CTRL_PIN, 16, 3, 2),
++	SC9860_UART3_SYS_SEL = SPRD_PIN_INFO(23, GLOBAL_CTRL_PIN, 13, 3, 2),
++	SC9860_UART2_SYS_SEL = SPRD_PIN_INFO(24, GLOBAL_CTRL_PIN, 10, 3, 2),
++	SC9860_UART1_SYS_SEL = SPRD_PIN_INFO(25, GLOBAL_CTRL_PIN, 7, 3, 2),
++	SC9860_UART0_SYS_SEL = SPRD_PIN_INFO(26, GLOBAL_CTRL_PIN, 4, 3, 2),
++	SC9860_UART24_LOOP_SEL = SPRD_PIN_INFO(27, GLOBAL_CTRL_PIN, 3, 1, 2),
++	SC9860_UART23_LOOP_SEL = SPRD_PIN_INFO(28, GLOBAL_CTRL_PIN, 2, 1, 2),
++	SC9860_UART14_LOOP_SEL = SPRD_PIN_INFO(29, GLOBAL_CTRL_PIN, 1, 1, 2),
++	SC9860_UART13_LOOP_SEL = SPRD_PIN_INFO(30, GLOBAL_CTRL_PIN, 0, 1, 2),
++
++	/* pin global control register 3 */
++	SC9860_IIS3_SYS_SEL = SPRD_PIN_INFO(31, GLOBAL_CTRL_PIN, 18, 4, 3),
++	SC9860_IIS2_SYS_SEL = SPRD_PIN_INFO(32, GLOBAL_CTRL_PIN, 14, 4, 3),
++	SC9860_IIS1_SYS_SEL = SPRD_PIN_INFO(33, GLOBAL_CTRL_PIN, 10, 4, 3),
++	SC9860_IIS0_SYS_SEL = SPRD_PIN_INFO(34, GLOBAL_CTRL_PIN, 6, 4, 3),
++	SC9860_IIS23_LOOP_SEL = SPRD_PIN_INFO(35, GLOBAL_CTRL_PIN, 5, 1, 3),
++	SC9860_IIS13_LOOP_SEL = SPRD_PIN_INFO(36, GLOBAL_CTRL_PIN, 4, 1, 3),
++	SC9860_IIS12_LOOP_SEL = SPRD_PIN_INFO(37, GLOBAL_CTRL_PIN, 3, 1, 3),
++	SC9860_IIS03_LOOP_SEL = SPRD_PIN_INFO(38, GLOBAL_CTRL_PIN, 2, 1, 3),
++	SC9860_IIS02_LOOP_SEL = SPRD_PIN_INFO(39, GLOBAL_CTRL_PIN, 1, 1, 3),
++	SC9860_IIS01_LOOP_SEL = SPRD_PIN_INFO(40, GLOBAL_CTRL_PIN, 0, 1, 3),
++
++	/* pin global control register 4 */
++	SC9860_IIS6_SYS_SEL = SPRD_PIN_INFO(41, GLOBAL_CTRL_PIN, 27, 4, 4),
++	SC9860_IIS5_SYS_SEL = SPRD_PIN_INFO(42, GLOBAL_CTRL_PIN, 23, 4, 4),
++	SC9860_IIS4_SYS_SEL = SPRD_PIN_INFO(43, GLOBAL_CTRL_PIN, 19, 4, 4),
++	SC9860_I2C_INF6_SYS_SEL = SPRD_PIN_INFO(44, GLOBAL_CTRL_PIN, 8, 2, 4),
++	SC9860_I2C_INF4_SYS_SEL = SPRD_PIN_INFO(45, GLOBAL_CTRL_PIN, 6, 2, 4),
++	SC9860_I2C_INF2_SYS_SEL = SPRD_PIN_INFO(46, GLOBAL_CTRL_PIN, 4, 2, 4),
++	SC9860_I2C_INF1_SYS_SEL = SPRD_PIN_INFO(47, GLOBAL_CTRL_PIN, 2, 2, 4),
++	SC9860_I2C_INF0_SYS_SEL = SPRD_PIN_INFO(48, GLOBAL_CTRL_PIN, 0, 2, 4),
++
++	/* pin global control register 5 */
++	SC9860_GPIO_INF7_SYS_SEL = SPRD_PIN_INFO(49, GLOBAL_CTRL_PIN, 27, 1, 5),
++	SC9860_GPIO_INF6_SYS_SEL = SPRD_PIN_INFO(50, GLOBAL_CTRL_PIN, 26, 1, 5),
++	SC9860_GPIO_INF5_SYS_SEL = SPRD_PIN_INFO(51, GLOBAL_CTRL_PIN, 25, 1, 5),
++	SC9860_GPIO_INF4_SYS_SEL = SPRD_PIN_INFO(52, GLOBAL_CTRL_PIN, 24, 1, 5),
++	SC9860_GPIO_INF3_SYS_SEL = SPRD_PIN_INFO(53, GLOBAL_CTRL_PIN, 23, 1, 5),
++	SC9860_GPIO_INF2_SYS_SEL = SPRD_PIN_INFO(54, GLOBAL_CTRL_PIN, 22, 1, 5),
++	SC9860_GPIO_INF1_SYS_SEL = SPRD_PIN_INFO(55, GLOBAL_CTRL_PIN, 21, 1, 5),
++	SC9860_GPIO_INF0_SYS_SEL = SPRD_PIN_INFO(56, GLOBAL_CTRL_PIN, 20, 1, 5),
++	SC9860_WDRST_OUT_SEL = SPRD_PIN_INFO(57, GLOBAL_CTRL_PIN, 16, 3, 5),
++	SC9860_ADI_SYNC_PIN_OUT_SEL = SPRD_PIN_INFO(58, GLOBAL_CTRL_PIN, 14, 1, 5),
++	SC9860_CMRST_SEL = SPRD_PIN_INFO(59, GLOBAL_CTRL_PIN, 13, 1, 5),
++	SC9860_CMPD_SEL = SPRD_PIN_INFO(60, GLOBAL_CTRL_PIN, 12, 1, 5),
++	SC9860_TEST_DBG_MODE11 = SPRD_PIN_INFO(61, GLOBAL_CTRL_PIN, 11, 1, 5),
++	SC9860_TEST_DBG_MODE10 = SPRD_PIN_INFO(62, GLOBAL_CTRL_PIN, 10, 1, 5),
++	SC9860_TEST_DBG_MODE9 = SPRD_PIN_INFO(63, GLOBAL_CTRL_PIN, 9, 1, 5),
++	SC9860_TEST_DBG_MODE8 = SPRD_PIN_INFO(64, GLOBAL_CTRL_PIN, 8, 1, 5),
++	SC9860_TEST_DBG_MODE7 = SPRD_PIN_INFO(65, GLOBAL_CTRL_PIN, 7, 1, 5),
++	SC9860_TEST_DBG_MODE6 = SPRD_PIN_INFO(66, GLOBAL_CTRL_PIN, 6, 1, 5),
++	SC9860_TEST_DBG_MODE5 = SPRD_PIN_INFO(67, GLOBAL_CTRL_PIN, 5, 1, 5),
++	SC9860_TEST_DBG_MODE4 = SPRD_PIN_INFO(68, GLOBAL_CTRL_PIN, 4, 1, 5),
++	SC9860_TEST_DBG_MODE3 = SPRD_PIN_INFO(69, GLOBAL_CTRL_PIN, 3, 1, 5),
++	SC9860_TEST_DBG_MODE2 = SPRD_PIN_INFO(70, GLOBAL_CTRL_PIN, 2, 1, 5),
++	SC9860_TEST_DBG_MODE1 = SPRD_PIN_INFO(71, GLOBAL_CTRL_PIN, 1, 1, 5),
++	SC9860_TEST_DBG_MODE0 = SPRD_PIN_INFO(72, GLOBAL_CTRL_PIN, 0, 1, 5),
++
++	/* pin global control register 6 */
++	SC9860_SP_EIC_DPAD3_SEL = SPRD_PIN_INFO(73, GLOBAL_CTRL_PIN, 24, 8, 6),
++	SC9860_SP_EIC_DPAD2_SEL = SPRD_PIN_INFO(74, GLOBAL_CTRL_PIN, 16, 8, 6),
++	SC9860_SP_EIC_DPAD1_SEL = SPRD_PIN_INFO(75, GLOBAL_CTRL_PIN, 8, 8, 6),
++	SC9860_SP_EIC_DPAD0_SEL = SPRD_PIN_INFO(76, GLOBAL_CTRL_PIN, 0, 8, 6),
++
++	/* pin global control register 7 */
++	SC9860_SP_EIC_DPAD7_SEL = SPRD_PIN_INFO(77, GLOBAL_CTRL_PIN, 24, 8, 7),
++	SC9860_SP_EIC_DPAD6_SEL = SPRD_PIN_INFO(78, GLOBAL_CTRL_PIN, 16, 8, 7),
++	SC9860_SP_EIC_DPAD5_SEL = SPRD_PIN_INFO(79, GLOBAL_CTRL_PIN, 8, 8, 7),
++	SC9860_SP_EIC_DPAD4_SEL = SPRD_PIN_INFO(80, GLOBAL_CTRL_PIN, 0, 8, 7),
++
++	/* common pin registers definitions */
++	SC9860_RFCTL20 = SPRD_PIN_INFO(81, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL21 = SPRD_PIN_INFO(83, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL30 = SPRD_PIN_INFO(85, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL31 = SPRD_PIN_INFO(87, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL32 = SPRD_PIN_INFO(89, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL33 = SPRD_PIN_INFO(91, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL34 = SPRD_PIN_INFO(93, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL35 = SPRD_PIN_INFO(95, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL36 = SPRD_PIN_INFO(97, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL37 = SPRD_PIN_INFO(99, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL22 = SPRD_PIN_INFO(101, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL23 = SPRD_PIN_INFO(103, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL24 = SPRD_PIN_INFO(105, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL25 = SPRD_PIN_INFO(107, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL26 = SPRD_PIN_INFO(109, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL27 = SPRD_PIN_INFO(111, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL28 = SPRD_PIN_INFO(113, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL29 = SPRD_PIN_INFO(115, COMMON_PIN, 0, 0, 0),
++	SC9860_SCL2 = SPRD_PIN_INFO(117, COMMON_PIN, 0, 0, 0),
++	SC9860_SDA2 = SPRD_PIN_INFO(119, COMMON_PIN, 0, 0, 0),
++	SC9860_MTCK_ARM = SPRD_PIN_INFO(121, COMMON_PIN, 0, 0, 0),
++	SC9860_MTMS_ARM = SPRD_PIN_INFO(123, COMMON_PIN, 0, 0, 0),
++	SC9860_XTL_EN0 = SPRD_PIN_INFO(125, COMMON_PIN, 0, 0, 0),
++	SC9860_PTEST = SPRD_PIN_INFO(127, COMMON_PIN, 0, 0, 0),
++	SC9860_AUD_DAD1 = SPRD_PIN_INFO(129, COMMON_PIN, 0, 0, 0),
++	SC9860_AUD_ADD0 = SPRD_PIN_INFO(131, COMMON_PIN, 0, 0, 0),
++	SC9860_AUD_ADSYNC = SPRD_PIN_INFO(133, COMMON_PIN, 0, 0, 0),
++	SC9860_AUD_SCLK = SPRD_PIN_INFO(135, COMMON_PIN, 0, 0, 0),
++	SC9860_CHIP_SLEEP = SPRD_PIN_INFO(137, COMMON_PIN, 0, 0, 0),
++	SC9860_CLK_32K = SPRD_PIN_INFO(139, COMMON_PIN, 0, 0, 0),
++	SC9860_DCDC_ARM_EN = SPRD_PIN_INFO(141, COMMON_PIN, 0, 0, 0),
++	SC9860_EXT_RST_B = SPRD_PIN_INFO(143, COMMON_PIN, 0, 0, 0),
++	SC9860_ADI_D = SPRD_PIN_INFO(145, COMMON_PIN, 0, 0, 0),
++	SC9860_ADI_SCLK = SPRD_PIN_INFO(147, COMMON_PIN, 0, 0, 0),
++	SC9860_XTL_EN1 = SPRD_PIN_INFO(149, COMMON_PIN, 0, 0, 0),
++	SC9860_ANA_INT = SPRD_PIN_INFO(151, COMMON_PIN, 0, 0, 0),
++	SC9860_AUD_DAD0 = SPRD_PIN_INFO(153, COMMON_PIN, 0, 0, 0),
++	SC9860_AUD_DASYNC = SPRD_PIN_INFO(155, COMMON_PIN, 0, 0, 0),
++	SC9860_LCM_RSTN = SPRD_PIN_INFO(157, COMMON_PIN, 0, 0, 0),
++	SC9860_DSI_TE = SPRD_PIN_INFO(159, COMMON_PIN, 0, 0, 0),
++	SC9860_PWMA = SPRD_PIN_INFO(161, COMMON_PIN, 0, 0, 0),
++	SC9860_EXTINT0 = SPRD_PIN_INFO(163, COMMON_PIN, 0, 0, 0),
++	SC9860_EXTINT1 = SPRD_PIN_INFO(165, COMMON_PIN, 0, 0, 0),
++	SC9860_SDA1 = SPRD_PIN_INFO(167, COMMON_PIN, 0, 0, 0),
++	SC9860_SCL1 = SPRD_PIN_INFO(169, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMCLK2 = SPRD_PIN_INFO(171, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMDA2 = SPRD_PIN_INFO(173, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMRST2 = SPRD_PIN_INFO(175, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMCLK1 = SPRD_PIN_INFO(177, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMDA1 = SPRD_PIN_INFO(179, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMRST1 = SPRD_PIN_INFO(181, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMCLK0 = SPRD_PIN_INFO(183, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMDA0 = SPRD_PIN_INFO(185, COMMON_PIN, 0, 0, 0),
++	SC9860_SIMRST0 = SPRD_PIN_INFO(187, COMMON_PIN, 0, 0, 0),
++	SC9860_SD2_CMD = SPRD_PIN_INFO(189, COMMON_PIN, 0, 0, 0),
++	SC9860_SD2_D0 = SPRD_PIN_INFO(191, COMMON_PIN, 0, 0, 0),
++	SC9860_SD2_D1 = SPRD_PIN_INFO(193, COMMON_PIN, 0, 0, 0),
++	SC9860_SD2_CLK = SPRD_PIN_INFO(195, COMMON_PIN, 0, 0, 0),
++	SC9860_SD2_D2 = SPRD_PIN_INFO(197, COMMON_PIN, 0, 0, 0),
++	SC9860_SD2_D3 = SPRD_PIN_INFO(199, COMMON_PIN, 0, 0, 0),
++	SC9860_SD0_D3 = SPRD_PIN_INFO(201, COMMON_PIN, 0, 0, 0),
++	SC9860_SD0_D2 = SPRD_PIN_INFO(203, COMMON_PIN, 0, 0, 0),
++	SC9860_SD0_CMD = SPRD_PIN_INFO(205, COMMON_PIN, 0, 0, 0),
++	SC9860_SD0_D0 = SPRD_PIN_INFO(207, COMMON_PIN, 0, 0, 0),
++	SC9860_SD0_D1 = SPRD_PIN_INFO(209, COMMON_PIN, 0, 0, 0),
++	SC9860_SD0_CLK = SPRD_PIN_INFO(211, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_CMD_reserved = SPRD_PIN_INFO(213, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_CMD = SPRD_PIN_INFO(215, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D6 = SPRD_PIN_INFO(217, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D7 = SPRD_PIN_INFO(219, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_CLK = SPRD_PIN_INFO(221, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D5 = SPRD_PIN_INFO(223, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D4 = SPRD_PIN_INFO(225, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_DS = SPRD_PIN_INFO(227, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D3_reserved = SPRD_PIN_INFO(229, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D3 = SPRD_PIN_INFO(231, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_RST = SPRD_PIN_INFO(233, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D1 = SPRD_PIN_INFO(235, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D2 = SPRD_PIN_INFO(237, COMMON_PIN, 0, 0, 0),
++	SC9860_EMMC_D0 = SPRD_PIN_INFO(239, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS0DI = SPRD_PIN_INFO(241, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS0DO = SPRD_PIN_INFO(243, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS0CLK = SPRD_PIN_INFO(245, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS0LRCK = SPRD_PIN_INFO(247, COMMON_PIN, 0, 0, 0),
++	SC9860_SD1_CLK = SPRD_PIN_INFO(249, COMMON_PIN, 0, 0, 0),
++	SC9860_SD1_CMD = SPRD_PIN_INFO(251, COMMON_PIN, 0, 0, 0),
++	SC9860_SD1_D0 = SPRD_PIN_INFO(253, COMMON_PIN, 0, 0, 0),
++	SC9860_SD1_D1 = SPRD_PIN_INFO(255, COMMON_PIN, 0, 0, 0),
++	SC9860_SD1_D2 = SPRD_PIN_INFO(257, COMMON_PIN, 0, 0, 0),
++	SC9860_SD1_D3 = SPRD_PIN_INFO(259, COMMON_PIN, 0, 0, 0),
++	SC9860_CLK_AUX0 = SPRD_PIN_INFO(261, COMMON_PIN, 0, 0, 0),
++	SC9860_WIFI_COEXIST = SPRD_PIN_INFO(263, COMMON_PIN, 0, 0, 0),
++	SC9860_BEIDOU_COEXIST = SPRD_PIN_INFO(265, COMMON_PIN, 0, 0, 0),
++	SC9860_U3TXD = SPRD_PIN_INFO(267, COMMON_PIN, 0, 0, 0),
++	SC9860_U3RXD = SPRD_PIN_INFO(269, COMMON_PIN, 0, 0, 0),
++	SC9860_U3CTS = SPRD_PIN_INFO(271, COMMON_PIN, 0, 0, 0),
++	SC9860_U3RTS = SPRD_PIN_INFO(273, COMMON_PIN, 0, 0, 0),
++	SC9860_U0TXD = SPRD_PIN_INFO(275, COMMON_PIN, 0, 0, 0),
++	SC9860_U0RXD = SPRD_PIN_INFO(277, COMMON_PIN, 0, 0, 0),
++	SC9860_U0CTS = SPRD_PIN_INFO(279, COMMON_PIN, 0, 0, 0),
++	SC9860_U0RTS = SPRD_PIN_INFO(281, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS1DI = SPRD_PIN_INFO(283, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS1DO = SPRD_PIN_INFO(285, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS1CLK = SPRD_PIN_INFO(287, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS1LRCK = SPRD_PIN_INFO(289, COMMON_PIN, 0, 0, 0),
++	SC9860_SPI0_CSN = SPRD_PIN_INFO(291, COMMON_PIN, 0, 0, 0),
++	SC9860_SPI0_DO = SPRD_PIN_INFO(293, COMMON_PIN, 0, 0, 0),
++	SC9860_SPI0_DI = SPRD_PIN_INFO(295, COMMON_PIN, 0, 0, 0),
++	SC9860_SPI0_CLK = SPRD_PIN_INFO(297, COMMON_PIN, 0, 0, 0),
++	SC9860_U2TXD = SPRD_PIN_INFO(299, COMMON_PIN, 0, 0, 0),
++	SC9860_U2RXD = SPRD_PIN_INFO(301, COMMON_PIN, 0, 0, 0),
++	SC9860_U4TXD = SPRD_PIN_INFO(303, COMMON_PIN, 0, 0, 0),
++	SC9860_U4RXD = SPRD_PIN_INFO(305, COMMON_PIN, 0, 0, 0),
++	SC9860_CMMCLK1 = SPRD_PIN_INFO(307, COMMON_PIN, 0, 0, 0),
++	SC9860_CMRST1 = SPRD_PIN_INFO(309, COMMON_PIN, 0, 0, 0),
++	SC9860_CMMCLK0 = SPRD_PIN_INFO(311, COMMON_PIN, 0, 0, 0),
++	SC9860_CMRST0 = SPRD_PIN_INFO(313, COMMON_PIN, 0, 0, 0),
++	SC9860_CMPD0 = SPRD_PIN_INFO(315, COMMON_PIN, 0, 0, 0),
++	SC9860_CMPD1 = SPRD_PIN_INFO(317, COMMON_PIN, 0, 0, 0),
++	SC9860_SCL0 = SPRD_PIN_INFO(319, COMMON_PIN, 0, 0, 0),
++	SC9860_SDA0 = SPRD_PIN_INFO(321, COMMON_PIN, 0, 0, 0),
++	SC9860_SDA6 = SPRD_PIN_INFO(323, COMMON_PIN, 0, 0, 0),
++	SC9860_SCL6 = SPRD_PIN_INFO(325, COMMON_PIN, 0, 0, 0),
++	SC9860_U1TXD = SPRD_PIN_INFO(327, COMMON_PIN, 0, 0, 0),
++	SC9860_U1RXD = SPRD_PIN_INFO(329, COMMON_PIN, 0, 0, 0),
++	SC9860_KEYOUT0 = SPRD_PIN_INFO(331, COMMON_PIN, 0, 0, 0),
++	SC9860_KEYOUT1 = SPRD_PIN_INFO(333, COMMON_PIN, 0, 0, 0),
++	SC9860_KEYOUT2 = SPRD_PIN_INFO(335, COMMON_PIN, 0, 0, 0),
++	SC9860_KEYIN0 = SPRD_PIN_INFO(337, COMMON_PIN, 0, 0, 0),
++	SC9860_KEYIN1 = SPRD_PIN_INFO(339, COMMON_PIN, 0, 0, 0),
++	SC9860_KEYIN2 = SPRD_PIN_INFO(341, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS3DI = SPRD_PIN_INFO(343, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS3DO = SPRD_PIN_INFO(345, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS3CLK = SPRD_PIN_INFO(347, COMMON_PIN, 0, 0, 0),
++	SC9860_IIS3LRCK = SPRD_PIN_INFO(349, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL0 = SPRD_PIN_INFO(351, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL1 = SPRD_PIN_INFO(353, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL10 = SPRD_PIN_INFO(355, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL11 = SPRD_PIN_INFO(357, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL12 = SPRD_PIN_INFO(359, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL13 = SPRD_PIN_INFO(361, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL14 = SPRD_PIN_INFO(363, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL15 = SPRD_PIN_INFO(365, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL16 = SPRD_PIN_INFO(367, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL17 = SPRD_PIN_INFO(369, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL18 = SPRD_PIN_INFO(371, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL19 = SPRD_PIN_INFO(373, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL2 = SPRD_PIN_INFO(375, COMMON_PIN, 0, 0, 0),
++	SC9860_EXTINT5 = SPRD_PIN_INFO(377, COMMON_PIN, 0, 0, 0),
++	SC9860_EXTINT6 = SPRD_PIN_INFO(379, COMMON_PIN, 0, 0, 0),
++	SC9860_EXTINT7 = SPRD_PIN_INFO(381, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO30 = SPRD_PIN_INFO(383, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO31 = SPRD_PIN_INFO(385, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO32 = SPRD_PIN_INFO(387, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO33 = SPRD_PIN_INFO(389, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO34 = SPRD_PIN_INFO(391, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL3 = SPRD_PIN_INFO(393, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL4 = SPRD_PIN_INFO(395, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL5 = SPRD_PIN_INFO(397, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL6 = SPRD_PIN_INFO(399, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL7 = SPRD_PIN_INFO(401, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL8 = SPRD_PIN_INFO(403, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL9 = SPRD_PIN_INFO(405, COMMON_PIN, 0, 0, 0),
++	SC9860_RFFE0_SCK0 = SPRD_PIN_INFO(407, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO38 = SPRD_PIN_INFO(409, COMMON_PIN, 0, 0, 0),
++	SC9860_RFFE0_SDA0 = SPRD_PIN_INFO(411, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO39 = SPRD_PIN_INFO(413, COMMON_PIN, 0, 0, 0),
++	SC9860_RFFE1_SCK0 = SPRD_PIN_INFO(415, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO181 = SPRD_PIN_INFO(417, COMMON_PIN, 0, 0, 0),
++	SC9860_RFFE1_SDA0 = SPRD_PIN_INFO(419, COMMON_PIN, 0, 0, 0),
++	SC9860_GPIO182 = SPRD_PIN_INFO(421, COMMON_PIN, 0, 0, 0),
++	SC9860_RF_LVDS0_ADC_ON = SPRD_PIN_INFO(423, COMMON_PIN, 0, 0, 0),
++	SC9860_RF_LVDS0_DAC_ON = SPRD_PIN_INFO(425, COMMON_PIN, 0, 0, 0),
++	SC9860_RFSCK0 = SPRD_PIN_INFO(427, COMMON_PIN, 0, 0, 0),
++	SC9860_RFSDA0 = SPRD_PIN_INFO(429, COMMON_PIN, 0, 0, 0),
++	SC9860_RFSEN0 = SPRD_PIN_INFO(431, COMMON_PIN, 0, 0, 0),
++	SC9860_RF_LVDS1_ADC_ON = SPRD_PIN_INFO(433, COMMON_PIN, 0, 0, 0),
++	SC9860_RF_LVDS1_DAC_ON = SPRD_PIN_INFO(435, COMMON_PIN, 0, 0, 0),
++	SC9860_RFSCK1 = SPRD_PIN_INFO(437, COMMON_PIN, 0, 0, 0),
++	SC9860_RFSDA1 = SPRD_PIN_INFO(439, COMMON_PIN, 0, 0, 0),
++	SC9860_RFSEN1 = SPRD_PIN_INFO(441, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL38 = SPRD_PIN_INFO(443, COMMON_PIN, 0, 0, 0),
++	SC9860_RFCTL39 = SPRD_PIN_INFO(445, COMMON_PIN, 0, 0, 0),
++
++	/* MSIC pin registers definitions */
++	SC9860_RFCTL20_MISC = SPRD_PIN_INFO(82, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL21_MISC = SPRD_PIN_INFO(84, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL30_MISC = SPRD_PIN_INFO(86, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL31_MISC = SPRD_PIN_INFO(88, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL32_MISC = SPRD_PIN_INFO(90, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL33_MISC = SPRD_PIN_INFO(92, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL34_MISC = SPRD_PIN_INFO(94, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL35_MISC = SPRD_PIN_INFO(96, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL36_MISC = SPRD_PIN_INFO(98, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL37_MISC = SPRD_PIN_INFO(100, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL22_MISC = SPRD_PIN_INFO(102, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL23_MISC = SPRD_PIN_INFO(104, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL24_MISC = SPRD_PIN_INFO(106, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL25_MISC = SPRD_PIN_INFO(108, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL26_MISC = SPRD_PIN_INFO(110, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL27_MISC = SPRD_PIN_INFO(112, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL28_MISC = SPRD_PIN_INFO(114, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL29_MISC = SPRD_PIN_INFO(116, MISC_PIN, 0, 0, 0),
++	SC9860_SCL2_MISC = SPRD_PIN_INFO(118, MISC_PIN, 0, 0, 0),
++	SC9860_SDA2_MISC = SPRD_PIN_INFO(120, MISC_PIN, 0, 0, 0),
++	SC9860_MTCK_ARM_MISC = SPRD_PIN_INFO(122, MISC_PIN, 0, 0, 0),
++	SC9860_MTMS_ARM_MISC = SPRD_PIN_INFO(124, MISC_PIN, 0, 0, 0),
++	SC9860_XTL_EN0_MISC = SPRD_PIN_INFO(126, MISC_PIN, 0, 0, 0),
++	SC9860_PTEST_MISC = SPRD_PIN_INFO(128, MISC_PIN, 0, 0, 0),
++	SC9860_AUD_DAD1_MISC = SPRD_PIN_INFO(130, MISC_PIN, 0, 0, 0),
++	SC9860_AUD_ADD0_MISC = SPRD_PIN_INFO(132, MISC_PIN, 0, 0, 0),
++	SC9860_AUD_ADSYNC_MISC = SPRD_PIN_INFO(134, MISC_PIN, 0, 0, 0),
++	SC9860_AUD_SCLK_MISC = SPRD_PIN_INFO(136, MISC_PIN, 0, 0, 0),
++	SC9860_CHIP_SLEEP_MISC = SPRD_PIN_INFO(138, MISC_PIN, 0, 0, 0),
++	SC9860_CLK_32K_MISC = SPRD_PIN_INFO(140, MISC_PIN, 0, 0, 0),
++	SC9860_DCDC_ARM_EN_MISC = SPRD_PIN_INFO(142, MISC_PIN, 0, 0, 0),
++	SC9860_EXT_RST_B_MISC = SPRD_PIN_INFO(144, MISC_PIN, 0, 0, 0),
++	SC9860_ADI_D_MISC = SPRD_PIN_INFO(146, MISC_PIN, 0, 0, 0),
++	SC9860_ADI_SCLK_MISC = SPRD_PIN_INFO(148, MISC_PIN, 0, 0, 0),
++	SC9860_XTL_EN1_MISC = SPRD_PIN_INFO(150, MISC_PIN, 0, 0, 0),
++	SC9860_ANA_INT_MISC = SPRD_PIN_INFO(152, MISC_PIN, 0, 0, 0),
++	SC9860_AUD_DAD0_MISC = SPRD_PIN_INFO(154, MISC_PIN, 0, 0, 0),
++	SC9860_AUD_DASYNC_MISC = SPRD_PIN_INFO(156, MISC_PIN, 0, 0, 0),
++	SC9860_LCM_RSTN_MISC = SPRD_PIN_INFO(158, MISC_PIN, 0, 0, 0),
++	SC9860_DSI_TE_MISC = SPRD_PIN_INFO(160, MISC_PIN, 0, 0, 0),
++	SC9860_PWMA_MISC = SPRD_PIN_INFO(162, MISC_PIN, 0, 0, 0),
++	SC9860_EXTINT0_MISC = SPRD_PIN_INFO(164, MISC_PIN, 0, 0, 0),
++	SC9860_EXTINT1_MISC = SPRD_PIN_INFO(166, MISC_PIN, 0, 0, 0),
++	SC9860_SDA1_MISC = SPRD_PIN_INFO(168, MISC_PIN, 0, 0, 0),
++	SC9860_SCL1_MISC = SPRD_PIN_INFO(170, MISC_PIN, 0, 0, 0),
++	SC9860_SIMCLK2_MISC = SPRD_PIN_INFO(172, MISC_PIN, 0, 0, 0),
++	SC9860_SIMDA2_MISC = SPRD_PIN_INFO(174, MISC_PIN, 0, 0, 0),
++	SC9860_SIMRST2_MISC = SPRD_PIN_INFO(176, MISC_PIN, 0, 0, 0),
++	SC9860_SIMCLK1_MISC = SPRD_PIN_INFO(178, MISC_PIN, 0, 0, 0),
++	SC9860_SIMDA1_MISC = SPRD_PIN_INFO(180, MISC_PIN, 0, 0, 0),
++	SC9860_SIMRST1_MISC = SPRD_PIN_INFO(182, MISC_PIN, 0, 0, 0),
++	SC9860_SIMCLK0_MISC = SPRD_PIN_INFO(184, MISC_PIN, 0, 0, 0),
++	SC9860_SIMDA0_MISC = SPRD_PIN_INFO(186, MISC_PIN, 0, 0, 0),
++	SC9860_SIMRST0_MISC = SPRD_PIN_INFO(188, MISC_PIN, 0, 0, 0),
++	SC9860_SD2_CMD_MISC = SPRD_PIN_INFO(190, MISC_PIN, 0, 0, 0),
++	SC9860_SD2_D0_MISC = SPRD_PIN_INFO(192, MISC_PIN, 0, 0, 0),
++	SC9860_SD2_D1_MISC = SPRD_PIN_INFO(194, MISC_PIN, 0, 0, 0),
++	SC9860_SD2_CLK_MISC = SPRD_PIN_INFO(196, MISC_PIN, 0, 0, 0),
++	SC9860_SD2_D2_MISC = SPRD_PIN_INFO(198, MISC_PIN, 0, 0, 0),
++	SC9860_SD2_D3_MISC = SPRD_PIN_INFO(200, MISC_PIN, 0, 0, 0),
++	SC9860_SD0_D3_MISC = SPRD_PIN_INFO(202, MISC_PIN, 0, 0, 0),
++	SC9860_SD0_D2_MISC = SPRD_PIN_INFO(204, MISC_PIN, 0, 0, 0),
++	SC9860_SD0_CMD_MISC = SPRD_PIN_INFO(206, MISC_PIN, 0, 0, 0),
++	SC9860_SD0_D0_MISC = SPRD_PIN_INFO(208, MISC_PIN, 0, 0, 0),
++	SC9860_SD0_D1_MISC = SPRD_PIN_INFO(210, MISC_PIN, 0, 0, 0),
++	SC9860_SD0_CLK_MISC = SPRD_PIN_INFO(212, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_CMD_reserved_MISC = SPRD_PIN_INFO(214, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_CMD_MISC = SPRD_PIN_INFO(216, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D6_MISC = SPRD_PIN_INFO(218, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D7_MISC = SPRD_PIN_INFO(220, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_CLK_MISC = SPRD_PIN_INFO(222, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D5_MISC = SPRD_PIN_INFO(224, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D4_MISC = SPRD_PIN_INFO(226, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_DS_MISC = SPRD_PIN_INFO(228, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D3_reserved_MISC = SPRD_PIN_INFO(230, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D3_MISC = SPRD_PIN_INFO(232, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_RST_MISC = SPRD_PIN_INFO(234, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D1_MISC = SPRD_PIN_INFO(236, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D2_MISC = SPRD_PIN_INFO(238, MISC_PIN, 0, 0, 0),
++	SC9860_EMMC_D0_MISC = SPRD_PIN_INFO(240, MISC_PIN, 0, 0, 0),
++	SC9860_IIS0DI_MISC = SPRD_PIN_INFO(242, MISC_PIN, 0, 0, 0),
++	SC9860_IIS0DO_MISC = SPRD_PIN_INFO(244, MISC_PIN, 0, 0, 0),
++	SC9860_IIS0CLK_MISC = SPRD_PIN_INFO(246, MISC_PIN, 0, 0, 0),
++	SC9860_IIS0LRCK_MISC = SPRD_PIN_INFO(248, MISC_PIN, 0, 0, 0),
++	SC9860_SD1_CLK_MISC = SPRD_PIN_INFO(250, MISC_PIN, 0, 0, 0),
++	SC9860_SD1_CMD_MISC = SPRD_PIN_INFO(252, MISC_PIN, 0, 0, 0),
++	SC9860_SD1_D0_MISC = SPRD_PIN_INFO(254, MISC_PIN, 0, 0, 0),
++	SC9860_SD1_D1_MISC = SPRD_PIN_INFO(256, MISC_PIN, 0, 0, 0),
++	SC9860_SD1_D2_MISC = SPRD_PIN_INFO(258, MISC_PIN, 0, 0, 0),
++	SC9860_SD1_D3_MISC = SPRD_PIN_INFO(260, MISC_PIN, 0, 0, 0),
++	SC9860_CLK_AUX0_MISC = SPRD_PIN_INFO(262, MISC_PIN, 0, 0, 0),
++	SC9860_WIFI_COEXIST_MISC = SPRD_PIN_INFO(264, MISC_PIN, 0, 0, 0),
++	SC9860_BEIDOU_COEXIST_MISC = SPRD_PIN_INFO(266, MISC_PIN, 0, 0, 0),
++	SC9860_U3TXD_MISC = SPRD_PIN_INFO(268, MISC_PIN, 0, 0, 0),
++	SC9860_U3RXD_MISC = SPRD_PIN_INFO(270, MISC_PIN, 0, 0, 0),
++	SC9860_U3CTS_MISC = SPRD_PIN_INFO(272, MISC_PIN, 0, 0, 0),
++	SC9860_U3RTS_MISC = SPRD_PIN_INFO(274, MISC_PIN, 0, 0, 0),
++	SC9860_U0TXD_MISC = SPRD_PIN_INFO(276, MISC_PIN, 0, 0, 0),
++	SC9860_U0RXD_MISC = SPRD_PIN_INFO(278, MISC_PIN, 0, 0, 0),
++	SC9860_U0CTS_MISC = SPRD_PIN_INFO(280, MISC_PIN, 0, 0, 0),
++	SC9860_U0RTS_MISC = SPRD_PIN_INFO(282, MISC_PIN, 0, 0, 0),
++	SC9860_IIS1DI_MISC = SPRD_PIN_INFO(284, MISC_PIN, 0, 0, 0),
++	SC9860_IIS1DO_MISC = SPRD_PIN_INFO(286, MISC_PIN, 0, 0, 0),
++	SC9860_IIS1CLK_MISC = SPRD_PIN_INFO(288, MISC_PIN, 0, 0, 0),
++	SC9860_IIS1LRCK_MISC = SPRD_PIN_INFO(290, MISC_PIN, 0, 0, 0),
++	SC9860_SPI0_CSN_MISC = SPRD_PIN_INFO(292, MISC_PIN, 0, 0, 0),
++	SC9860_SPI0_DO_MISC = SPRD_PIN_INFO(294, MISC_PIN, 0, 0, 0),
++	SC9860_SPI0_DI_MISC = SPRD_PIN_INFO(296, MISC_PIN, 0, 0, 0),
++	SC9860_SPI0_CLK_MISC = SPRD_PIN_INFO(298, MISC_PIN, 0, 0, 0),
++	SC9860_U2TXD_MISC = SPRD_PIN_INFO(300, MISC_PIN, 0, 0, 0),
++	SC9860_U2RXD_MISC = SPRD_PIN_INFO(302, MISC_PIN, 0, 0, 0),
++	SC9860_U4TXD_MISC = SPRD_PIN_INFO(304, MISC_PIN, 0, 0, 0),
++	SC9860_U4RXD_MISC = SPRD_PIN_INFO(306, MISC_PIN, 0, 0, 0),
++	SC9860_CMMCLK1_MISC = SPRD_PIN_INFO(308, MISC_PIN, 0, 0, 0),
++	SC9860_CMRST1_MISC = SPRD_PIN_INFO(310, MISC_PIN, 0, 0, 0),
++	SC9860_CMMCLK0_MISC = SPRD_PIN_INFO(312, MISC_PIN, 0, 0, 0),
++	SC9860_CMRST0_MISC = SPRD_PIN_INFO(314, MISC_PIN, 0, 0, 0),
++	SC9860_CMPD0_MISC = SPRD_PIN_INFO(316, MISC_PIN, 0, 0, 0),
++	SC9860_CMPD1_MISC = SPRD_PIN_INFO(318, MISC_PIN, 0, 0, 0),
++	SC9860_SCL0_MISC = SPRD_PIN_INFO(320, MISC_PIN, 0, 0, 0),
++	SC9860_SDA0_MISC = SPRD_PIN_INFO(322, MISC_PIN, 0, 0, 0),
++	SC9860_SDA6_MISC = SPRD_PIN_INFO(324, MISC_PIN, 0, 0, 0),
++	SC9860_SCL6_MISC = SPRD_PIN_INFO(326, MISC_PIN, 0, 0, 0),
++	SC9860_U1TXD_MISC = SPRD_PIN_INFO(328, MISC_PIN, 0, 0, 0),
++	SC9860_U1RXD_MISC = SPRD_PIN_INFO(330, MISC_PIN, 0, 0, 0),
++	SC9860_KEYOUT0_MISC = SPRD_PIN_INFO(332, MISC_PIN, 0, 0, 0),
++	SC9860_KEYOUT1_MISC = SPRD_PIN_INFO(334, MISC_PIN, 0, 0, 0),
++	SC9860_KEYOUT2_MISC = SPRD_PIN_INFO(336, MISC_PIN, 0, 0, 0),
++	SC9860_KEYIN0_MISC = SPRD_PIN_INFO(338, MISC_PIN, 0, 0, 0),
++	SC9860_KEYIN1_MISC = SPRD_PIN_INFO(340, MISC_PIN, 0, 0, 0),
++	SC9860_KEYIN2_MISC = SPRD_PIN_INFO(342, MISC_PIN, 0, 0, 0),
++	SC9860_IIS3DI_MISC = SPRD_PIN_INFO(344, MISC_PIN, 0, 0, 0),
++	SC9860_IIS3DO_MISC = SPRD_PIN_INFO(346, MISC_PIN, 0, 0, 0),
++	SC9860_IIS3CLK_MISC = SPRD_PIN_INFO(348, MISC_PIN, 0, 0, 0),
++	SC9860_IIS3LRCK_MISC = SPRD_PIN_INFO(350, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL0_MISC = SPRD_PIN_INFO(352, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL1_MISC = SPRD_PIN_INFO(354, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL10_MISC = SPRD_PIN_INFO(356, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL11_MISC = SPRD_PIN_INFO(358, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL12_MISC = SPRD_PIN_INFO(360, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL13_MISC = SPRD_PIN_INFO(362, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL14_MISC = SPRD_PIN_INFO(364, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL15_MISC = SPRD_PIN_INFO(366, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL16_MISC = SPRD_PIN_INFO(368, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL17_MISC = SPRD_PIN_INFO(370, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL18_MISC = SPRD_PIN_INFO(372, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL19_MISC = SPRD_PIN_INFO(374, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL2_MISC = SPRD_PIN_INFO(376, MISC_PIN, 0, 0, 0),
++	SC9860_EXTINT5_MISC = SPRD_PIN_INFO(378, MISC_PIN, 0, 0, 0),
++	SC9860_EXTINT6_MISC = SPRD_PIN_INFO(380, MISC_PIN, 0, 0, 0),
++	SC9860_EXTINT7_MISC = SPRD_PIN_INFO(382, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO30_MISC = SPRD_PIN_INFO(384, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO31_MISC = SPRD_PIN_INFO(386, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO32_MISC = SPRD_PIN_INFO(388, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO33_MISC = SPRD_PIN_INFO(390, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO34_MISC = SPRD_PIN_INFO(392, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL3_MISC = SPRD_PIN_INFO(394, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL4_MISC = SPRD_PIN_INFO(396, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL5_MISC = SPRD_PIN_INFO(398, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL6_MISC = SPRD_PIN_INFO(400, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL7_MISC = SPRD_PIN_INFO(402, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL8_MISC = SPRD_PIN_INFO(404, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL9_MISC = SPRD_PIN_INFO(406, MISC_PIN, 0, 0, 0),
++	SC9860_RFFE0_SCK0_MISC = SPRD_PIN_INFO(408, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO38_MISC = SPRD_PIN_INFO(410, MISC_PIN, 0, 0, 0),
++	SC9860_RFFE0_SDA0_MISC = SPRD_PIN_INFO(412, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO39_MISC = SPRD_PIN_INFO(414, MISC_PIN, 0, 0, 0),
++	SC9860_RFFE1_SCK0_MISC = SPRD_PIN_INFO(416, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO181_MISC = SPRD_PIN_INFO(418, MISC_PIN, 0, 0, 0),
++	SC9860_RFFE1_SDA0_MISC = SPRD_PIN_INFO(420, MISC_PIN, 0, 0, 0),
++	SC9860_GPIO182_MISC = SPRD_PIN_INFO(422, MISC_PIN, 0, 0, 0),
++	SC9860_RF_LVDS0_ADC_ON_MISC = SPRD_PIN_INFO(424, MISC_PIN, 0, 0, 0),
++	SC9860_RF_LVDS0_DAC_ON_MISC = SPRD_PIN_INFO(426, MISC_PIN, 0, 0, 0),
++	SC9860_RFSCK0_MISC = SPRD_PIN_INFO(428, MISC_PIN, 0, 0, 0),
++	SC9860_RFSDA0_MISC = SPRD_PIN_INFO(430, MISC_PIN, 0, 0, 0),
++	SC9860_RFSEN0_MISC = SPRD_PIN_INFO(432, MISC_PIN, 0, 0, 0),
++	SC9860_RF_LVDS1_ADC_ON_MISC = SPRD_PIN_INFO(434, MISC_PIN, 0, 0, 0),
++	SC9860_RF_LVDS1_DAC_ON_MISC = SPRD_PIN_INFO(436, MISC_PIN, 0, 0, 0),
++	SC9860_RFSCK1_MISC = SPRD_PIN_INFO(438, MISC_PIN, 0, 0, 0),
++	SC9860_RFSDA1_MISC = SPRD_PIN_INFO(440, MISC_PIN, 0, 0, 0),
++	SC9860_RFSEN1_MISC = SPRD_PIN_INFO(442, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL38_MISC = SPRD_PIN_INFO(444, MISC_PIN, 0, 0, 0),
++	SC9860_RFCTL39_MISC = SPRD_PIN_INFO(446, MISC_PIN, 0, 0, 0),
++};
++
++static struct sprd_pins_info sprd_sc9860_pins_info[] = {
++	SPRD_PINCTRL_PIN(SC9860_VIO28_0_IRTE),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SD2_IRTE),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SD0_IRTE),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SIM2_IRTE),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SIM1_IRTE),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SIM0_IRTE),
++	SPRD_PINCTRL_PIN(SC9860_VIO28_0_MS),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SD2_MS),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SD0_MS),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SIM2_MS),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SIM1_MS),
++	SPRD_PINCTRL_PIN(SC9860_VIO_SIM0_MS),
++	SPRD_PINCTRL_PIN(SC9860_SPSPI_PIN_IN_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART1_USB30_PHY_SEL),
++	SPRD_PINCTRL_PIN(SC9860_USB30_PHY_DM_OE),
++	SPRD_PINCTRL_PIN(SC9860_USB30_PHY_DP_OE),
++	SPRD_PINCTRL_PIN(SC9860_UART5_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_ORP_URXD_PIN_IN_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SIM2_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SIM1_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SIM0_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_CLK26MHZ_BUF_OUT_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART4_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART3_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART2_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART1_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART0_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART24_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART23_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART14_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_UART13_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS3_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS2_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS1_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS0_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS23_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS13_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS12_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS03_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS02_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS01_LOOP_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS6_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS5_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_IIS4_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_I2C_INF6_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_I2C_INF4_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_I2C_INF2_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_I2C_INF1_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_I2C_INF0_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF7_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF6_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF5_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF4_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF3_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF2_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF1_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_GPIO_INF0_SYS_SEL),
++	SPRD_PINCTRL_PIN(SC9860_WDRST_OUT_SEL),
++	SPRD_PINCTRL_PIN(SC9860_ADI_SYNC_PIN_OUT_SEL),
++	SPRD_PINCTRL_PIN(SC9860_CMRST_SEL),
++	SPRD_PINCTRL_PIN(SC9860_CMPD_SEL),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE11),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE10),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE9),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE8),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE7),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE6),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE5),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE4),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE3),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE2),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE1),
++	SPRD_PINCTRL_PIN(SC9860_TEST_DBG_MODE0),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD3_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD2_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD1_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD0_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD7_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD6_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD5_SEL),
++	SPRD_PINCTRL_PIN(SC9860_SP_EIC_DPAD4_SEL),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL20),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL21),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL30),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL31),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL32),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL33),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL34),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL35),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL36),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL37),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL22),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL23),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL24),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL25),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL26),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL27),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL28),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL29),
++	SPRD_PINCTRL_PIN(SC9860_SCL2),
++	SPRD_PINCTRL_PIN(SC9860_SDA2),
++	SPRD_PINCTRL_PIN(SC9860_MTCK_ARM),
++	SPRD_PINCTRL_PIN(SC9860_MTMS_ARM),
++	SPRD_PINCTRL_PIN(SC9860_XTL_EN0),
++	SPRD_PINCTRL_PIN(SC9860_PTEST),
++	SPRD_PINCTRL_PIN(SC9860_AUD_DAD1),
++	SPRD_PINCTRL_PIN(SC9860_AUD_ADD0),
++	SPRD_PINCTRL_PIN(SC9860_AUD_ADSYNC),
++	SPRD_PINCTRL_PIN(SC9860_AUD_SCLK),
++	SPRD_PINCTRL_PIN(SC9860_CHIP_SLEEP),
++	SPRD_PINCTRL_PIN(SC9860_CLK_32K),
++	SPRD_PINCTRL_PIN(SC9860_DCDC_ARM_EN),
++	SPRD_PINCTRL_PIN(SC9860_EXT_RST_B),
++	SPRD_PINCTRL_PIN(SC9860_ADI_D),
++	SPRD_PINCTRL_PIN(SC9860_ADI_SCLK),
++	SPRD_PINCTRL_PIN(SC9860_XTL_EN1),
++	SPRD_PINCTRL_PIN(SC9860_ANA_INT),
++	SPRD_PINCTRL_PIN(SC9860_AUD_DAD0),
++	SPRD_PINCTRL_PIN(SC9860_AUD_DASYNC),
++	SPRD_PINCTRL_PIN(SC9860_LCM_RSTN),
++	SPRD_PINCTRL_PIN(SC9860_DSI_TE),
++	SPRD_PINCTRL_PIN(SC9860_PWMA),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT0),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT1),
++	SPRD_PINCTRL_PIN(SC9860_SDA1),
++	SPRD_PINCTRL_PIN(SC9860_SCL1),
++	SPRD_PINCTRL_PIN(SC9860_SIMCLK2),
++	SPRD_PINCTRL_PIN(SC9860_SIMDA2),
++	SPRD_PINCTRL_PIN(SC9860_SIMRST2),
++	SPRD_PINCTRL_PIN(SC9860_SIMCLK1),
++	SPRD_PINCTRL_PIN(SC9860_SIMDA1),
++	SPRD_PINCTRL_PIN(SC9860_SIMRST1),
++	SPRD_PINCTRL_PIN(SC9860_SIMCLK0),
++	SPRD_PINCTRL_PIN(SC9860_SIMDA0),
++	SPRD_PINCTRL_PIN(SC9860_SIMRST0),
++	SPRD_PINCTRL_PIN(SC9860_SD2_CMD),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D0),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D1),
++	SPRD_PINCTRL_PIN(SC9860_SD2_CLK),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D2),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D3),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D3),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D2),
++	SPRD_PINCTRL_PIN(SC9860_SD0_CMD),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D0),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D1),
++	SPRD_PINCTRL_PIN(SC9860_SD0_CLK),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_CMD),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D6),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D7),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_CLK),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D5),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D4),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_DS),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D3),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_RST),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D1),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D2),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D0),
++	SPRD_PINCTRL_PIN(SC9860_IIS0DI),
++	SPRD_PINCTRL_PIN(SC9860_IIS0DO),
++	SPRD_PINCTRL_PIN(SC9860_IIS0CLK),
++	SPRD_PINCTRL_PIN(SC9860_IIS0LRCK),
++	SPRD_PINCTRL_PIN(SC9860_SD1_CLK),
++	SPRD_PINCTRL_PIN(SC9860_SD1_CMD),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D0),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D1),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D2),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D3),
++	SPRD_PINCTRL_PIN(SC9860_CLK_AUX0),
++	SPRD_PINCTRL_PIN(SC9860_WIFI_COEXIST),
++	SPRD_PINCTRL_PIN(SC9860_BEIDOU_COEXIST),
++	SPRD_PINCTRL_PIN(SC9860_U3TXD),
++	SPRD_PINCTRL_PIN(SC9860_U3RXD),
++	SPRD_PINCTRL_PIN(SC9860_U3CTS),
++	SPRD_PINCTRL_PIN(SC9860_U3RTS),
++	SPRD_PINCTRL_PIN(SC9860_U0TXD),
++	SPRD_PINCTRL_PIN(SC9860_U0RXD),
++	SPRD_PINCTRL_PIN(SC9860_U0CTS),
++	SPRD_PINCTRL_PIN(SC9860_U0RTS),
++	SPRD_PINCTRL_PIN(SC9860_IIS1DI),
++	SPRD_PINCTRL_PIN(SC9860_IIS1DO),
++	SPRD_PINCTRL_PIN(SC9860_IIS1CLK),
++	SPRD_PINCTRL_PIN(SC9860_IIS1LRCK),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_CSN),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_DO),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_DI),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_CLK),
++	SPRD_PINCTRL_PIN(SC9860_U2TXD),
++	SPRD_PINCTRL_PIN(SC9860_U2RXD),
++	SPRD_PINCTRL_PIN(SC9860_U4TXD),
++	SPRD_PINCTRL_PIN(SC9860_U4RXD),
++	SPRD_PINCTRL_PIN(SC9860_CMMCLK1),
++	SPRD_PINCTRL_PIN(SC9860_CMRST1),
++	SPRD_PINCTRL_PIN(SC9860_CMMCLK0),
++	SPRD_PINCTRL_PIN(SC9860_CMRST0),
++	SPRD_PINCTRL_PIN(SC9860_CMPD0),
++	SPRD_PINCTRL_PIN(SC9860_CMPD1),
++	SPRD_PINCTRL_PIN(SC9860_SCL0),
++	SPRD_PINCTRL_PIN(SC9860_SDA0),
++	SPRD_PINCTRL_PIN(SC9860_SDA6),
++	SPRD_PINCTRL_PIN(SC9860_SCL6),
++	SPRD_PINCTRL_PIN(SC9860_U1TXD),
++	SPRD_PINCTRL_PIN(SC9860_U1RXD),
++	SPRD_PINCTRL_PIN(SC9860_KEYOUT0),
++	SPRD_PINCTRL_PIN(SC9860_KEYOUT1),
++	SPRD_PINCTRL_PIN(SC9860_KEYOUT2),
++	SPRD_PINCTRL_PIN(SC9860_KEYIN0),
++	SPRD_PINCTRL_PIN(SC9860_KEYIN1),
++	SPRD_PINCTRL_PIN(SC9860_KEYIN2),
++	SPRD_PINCTRL_PIN(SC9860_IIS3DI),
++	SPRD_PINCTRL_PIN(SC9860_IIS3DO),
++	SPRD_PINCTRL_PIN(SC9860_IIS3CLK),
++	SPRD_PINCTRL_PIN(SC9860_IIS3LRCK),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL0),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL1),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL10),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL11),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL12),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL13),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL14),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL15),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL16),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL17),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL18),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL19),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL2),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT5),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT6),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT7),
++	SPRD_PINCTRL_PIN(SC9860_GPIO30),
++	SPRD_PINCTRL_PIN(SC9860_GPIO31),
++	SPRD_PINCTRL_PIN(SC9860_GPIO32),
++	SPRD_PINCTRL_PIN(SC9860_GPIO33),
++	SPRD_PINCTRL_PIN(SC9860_GPIO34),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL3),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL4),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL5),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL6),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL7),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL8),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL9),
++	SPRD_PINCTRL_PIN(SC9860_RFFE0_SCK0),
++	SPRD_PINCTRL_PIN(SC9860_GPIO38),
++	SPRD_PINCTRL_PIN(SC9860_RFFE0_SDA0),
++	SPRD_PINCTRL_PIN(SC9860_GPIO39),
++	SPRD_PINCTRL_PIN(SC9860_RFFE1_SCK0),
++	SPRD_PINCTRL_PIN(SC9860_GPIO181),
++	SPRD_PINCTRL_PIN(SC9860_RFFE1_SDA0),
++	SPRD_PINCTRL_PIN(SC9860_GPIO182),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS0_ADC_ON),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS0_DAC_ON),
++	SPRD_PINCTRL_PIN(SC9860_RFSCK0),
++	SPRD_PINCTRL_PIN(SC9860_RFSDA0),
++	SPRD_PINCTRL_PIN(SC9860_RFSEN0),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS1_ADC_ON),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS1_DAC_ON),
++	SPRD_PINCTRL_PIN(SC9860_RFSCK1),
++	SPRD_PINCTRL_PIN(SC9860_RFSDA1),
++	SPRD_PINCTRL_PIN(SC9860_RFSEN1),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL38),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL39),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL20_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL21_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL30_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL31_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL32_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL33_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL34_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL35_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL36_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL37_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL22_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL23_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL24_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL25_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL26_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL27_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL28_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL29_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SCL2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SDA2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_MTCK_ARM_MISC),
++	SPRD_PINCTRL_PIN(SC9860_MTMS_ARM_MISC),
++	SPRD_PINCTRL_PIN(SC9860_XTL_EN0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_PTEST_MISC),
++	SPRD_PINCTRL_PIN(SC9860_AUD_DAD1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_AUD_ADD0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_AUD_ADSYNC_MISC),
++	SPRD_PINCTRL_PIN(SC9860_AUD_SCLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CHIP_SLEEP_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CLK_32K_MISC),
++	SPRD_PINCTRL_PIN(SC9860_DCDC_ARM_EN_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EXT_RST_B_MISC),
++	SPRD_PINCTRL_PIN(SC9860_ADI_D_MISC),
++	SPRD_PINCTRL_PIN(SC9860_ADI_SCLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_XTL_EN1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_ANA_INT_MISC),
++	SPRD_PINCTRL_PIN(SC9860_AUD_DAD0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_AUD_DASYNC_MISC),
++	SPRD_PINCTRL_PIN(SC9860_LCM_RSTN_MISC),
++	SPRD_PINCTRL_PIN(SC9860_DSI_TE_MISC),
++	SPRD_PINCTRL_PIN(SC9860_PWMA_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SDA1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SCL1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMCLK2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMDA2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMRST2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMCLK1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMDA1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMRST1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMCLK0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMDA0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SIMRST0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD2_CMD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD2_CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD2_D3_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D3_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD0_CMD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD0_D1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD0_CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_CMD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D6_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D7_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D5_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D4_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_DS_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D3_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_RST_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EMMC_D0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS0DI_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS0DO_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS0CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS0LRCK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD1_CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD1_CMD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SD1_D3_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CLK_AUX0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_WIFI_COEXIST_MISC),
++	SPRD_PINCTRL_PIN(SC9860_BEIDOU_COEXIST_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U3TXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U3RXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U3CTS_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U3RTS_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U0TXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U0RXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U0CTS_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U0RTS_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS1DI_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS1DO_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS1CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS1LRCK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_CSN_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_DO_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_DI_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SPI0_CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U2TXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U2RXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U4TXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U4RXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CMMCLK1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CMRST1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CMMCLK0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CMRST0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CMPD0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_CMPD1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SCL0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SDA0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SDA6_MISC),
++	SPRD_PINCTRL_PIN(SC9860_SCL6_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U1TXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_U1RXD_MISC),
++	SPRD_PINCTRL_PIN(SC9860_KEYOUT0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_KEYOUT1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_KEYOUT2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_KEYIN0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_KEYIN1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_KEYIN2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS3DI_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS3DO_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS3CLK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_IIS3LRCK_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL10_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL11_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL12_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL13_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL14_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL15_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL16_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL17_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL18_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL19_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL2_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT5_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT6_MISC),
++	SPRD_PINCTRL_PIN(SC9860_EXTINT7_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO30_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO31_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO32_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO33_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO34_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL3_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL4_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL5_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL6_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL7_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL8_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL9_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFFE0_SCK0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO38_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFFE0_SDA0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO39_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFFE1_SCK0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO181_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFFE1_SDA0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_GPIO182_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS0_ADC_ON_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS0_DAC_ON_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFSCK0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFSDA0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFSEN0_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS1_ADC_ON_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RF_LVDS1_DAC_ON_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFSCK1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFSDA1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFSEN1_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL38_MISC),
++	SPRD_PINCTRL_PIN(SC9860_RFCTL39_MISC),
++};
++
++static int sprd_pinctrl_probe(struct platform_device *pdev)
++{
++	return sprd_pinctrl_core_probe(pdev, sprd_sc9860_pins_info,
++				       ARRAY_SIZE(sprd_sc9860_pins_info));
++}
++
++static const struct of_device_id sprd_pinctrl_of_match[] = {
++	{
++		.compatible = "sprd,sc9860-pinctrl",
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, sprd_pinctrl_of_match);
++
++static struct platform_driver sprd_pinctrl_driver = {
++	.driver = {
++		.name = "sprd-pinctrl",
++		.owner = THIS_MODULE,
++		.of_match_table = sprd_pinctrl_of_match,
++	},
++	.probe = sprd_pinctrl_probe,
++	.remove = sprd_pinctrl_remove,
++	.shutdown = sprd_pinctrl_shutdown,
++};
++
++static int sprd_pinctrl_init(void)
++{
++	return platform_driver_register(&sprd_pinctrl_driver);
++}
++module_init(sprd_pinctrl_init);
++
++static void sprd_pinctrl_exit(void)
++{
++	platform_driver_unregister(&sprd_pinctrl_driver);
++}
++module_exit(sprd_pinctrl_exit);
++
++MODULE_DESCRIPTION("SPREADTRUM Pin Controller Driver");
++MODULE_AUTHOR("Baolin Wang <baolin.wang@spreadtrum.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.c b/drivers/pinctrl/sprd/pinctrl-sprd.c
+new file mode 100644
+index 0000000..dfd793f
+--- /dev/null
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.c
+@@ -0,0 +1,986 @@
++/*
++ * Spreadtrum pin controller driver
++ * Copyright (C) 2017 Spreadtrum  - http://www.spreadtrum.com
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ */
++
++#include <linux/debugfs.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pinctrl/machine.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/slab.h>
++
++#include "../core.h"
++#include "../pinmux.h"
++#include "../pinconf.h"
++#include "../pinctrl-utils.h"
++#include "pinctrl-sprd.h"
++
++#define PINCTRL_BIT_MASK(width)		(~(~0UL << (width)))
++#define PINCTRL_REG_OFFSET		0x20
++#define PINCTRL_REG_MISC_OFFSET		0x4020
++
++/**
++ * struct sprd_pin: represent one pin's description
++ * @name: pin name
++ * @number: pin number
++ * @type: pin type, can be GLOBAL_CTRL_PIN/COMMON_PIN/MISC_PIN
++ * @reg: pin register address
++ * @bit_offset: bit offset in pin register
++ * @bit_width: bit width in pin register
++ */
++struct sprd_pin {
++	const char *name;
++	unsigned int number;
++	enum pin_type type;
++	unsigned long reg;
++	unsigned long bit_offset;
++	unsigned long bit_width;
++};
++
++/**
++ * struct sprd_pin_group: represent one group's description
++ * @name: group name
++ * @npins: pin numbers of this group
++ * @pins: pointer to pins array
++ */
++struct sprd_pin_group {
++	const char *name;
++	unsigned int npins;
++	unsigned int *pins;
++};
++
++/**
++ * struct sprd_pinctrl_soc_info: represent the SoC's pins description
++ * @groups: pointer to groups of pins
++ * @ngroups: group numbers of the whole SoC
++ * @pins: pointer to pins description
++ * @npins: pin numbers of the whole SoC
++ * @grp_names: pointer to group names array
++ */
++struct sprd_pinctrl_soc_info {
++	struct sprd_pin_group *groups;
++	unsigned int ngroups;
++	struct sprd_pin *pins;
++	unsigned int npins;
++	const char **grp_names;
++};
++
++/**
++ * struct sprd_pinctrl: represent the pin controller device
++ * @dev: pointer to the device structure
++ * @pctl: pointer to the pinctrl handle
++ * @base: base address of the controller
++ * @info: pointer to SoC's pins description information
++ */
++struct sprd_pinctrl {
++	struct device *dev;
++	struct pinctrl_dev *pctl;
++	void __iomem *base;
++	struct sprd_pinctrl_soc_info *info;
++};
++
++enum sprd_pinconf_params {
++	SPRD_PIN_CONFIG_CONTROL = PIN_CONFIG_END + 1,
++	SPRD_PIN_CONFIG_SLEEP_MODE = PIN_CONFIG_END + 2,
++};
++
++static int sprd_pinctrl_get_id_by_name(struct sprd_pinctrl *sprd_pctl,
++				       const char *name)
++{
++	struct sprd_pinctrl_soc_info *info = sprd_pctl->info;
++	int i;
++
++	for (i = 0; i < info->npins; i++) {
++		if (!strcmp(info->pins[i].name, name))
++			return info->pins[i].number;
++	}
++
++	return -ENODEV;
++}
++
++static struct sprd_pin *
++sprd_pinctrl_get_pin_by_id(struct sprd_pinctrl *sprd_pctl, unsigned int id)
++{
++	struct sprd_pinctrl_soc_info *info = sprd_pctl->info;
++	struct sprd_pin *pin = NULL;
++	int i;
++
++	for (i = 0; i < info->npins; i++) {
++		if (info->pins[i].number == id) {
++			pin = &info->pins[i];
++			break;
++		}
++	}
++
++	return pin;
++}
++
++static const struct sprd_pin_group *
++sprd_pinctrl_find_group_by_name(struct sprd_pinctrl *sprd_pctl,
++				const char *name)
++{
++	struct sprd_pinctrl_soc_info *info = sprd_pctl->info;
++	const struct sprd_pin_group *grp = NULL;
++	int i;
++
++	for (i = 0; i < info->ngroups; i++) {
++		if (!strcmp(info->groups[i].name, name)) {
++			grp = &info->groups[i];
++			break;
++		}
++	}
++
++	return grp;
++}
++
++static int sprd_pctrl_group_count(struct pinctrl_dev *pctldev)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++
++	return info->ngroups;
++}
++
++static const char *sprd_pctrl_group_name(struct pinctrl_dev *pctldev,
++					 unsigned int selector)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++
++	return info->groups[selector].name;
++}
++
++static int sprd_pctrl_group_pins(struct pinctrl_dev *pctldev,
++				 unsigned int selector,
++				 const unsigned int **pins,
++				 unsigned int *npins)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++
++	if (selector >= info->ngroups)
++		return -EINVAL;
++
++	*pins = info->groups[selector].pins;
++	*npins = info->groups[selector].npins;
++
++	return 0;
++}
++
++static int sprd_dt_node_to_map(struct pinctrl_dev *pctldev,
++			       struct device_node *np,
++			       struct pinctrl_map **map,
++			       unsigned int *num_maps)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	const struct sprd_pin_group *grp;
++	unsigned long *configs = NULL;
++	unsigned int num_configs = 0;
++	unsigned int reserved_maps = 0;
++	unsigned int reserve = 0;
++	const char *function;
++	enum pinctrl_map_type type;
++	int ret;
++
++	grp = sprd_pinctrl_find_group_by_name(pctl, np->name);
++	if (!grp) {
++		dev_err(pctl->dev, "unable to find group for node %s\n",
++			of_node_full_name(np));
++		return -EINVAL;
++	}
++
++	ret = of_property_count_strings(np, "pins");
++	if (ret < 0)
++		return ret;
++
++	if (ret == 1)
++		type = PIN_MAP_TYPE_CONFIGS_PIN;
++	else
++		type = PIN_MAP_TYPE_CONFIGS_GROUP;
++
++	ret = of_property_read_string(np, "function", &function);
++	if (ret < 0) {
++		if (ret != -EINVAL)
++			dev_err(pctl->dev,
++				"%s: could not parse property function\n",
++				of_node_full_name(np));
++		function = NULL;
++	}
++
++	ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
++					      &num_configs);
++	if (ret < 0) {
++		dev_err(pctl->dev, "%s: could not parse node property\n",
++			of_node_full_name(np));
++		return ret;
++	}
++
++	*map = NULL;
++	*num_maps = 0;
++
++	if (function != NULL)
++		reserve++;
++	if (num_configs)
++		reserve++;
++
++	ret = pinctrl_utils_reserve_map(pctldev, map, &reserved_maps,
++					num_maps, reserve);
++	if (ret < 0)
++		goto out;
++
++	if (function) {
++		ret = pinctrl_utils_add_map_mux(pctldev, map,
++						&reserved_maps, num_maps,
++						grp->name, function);
++		if (ret < 0)
++			goto out;
++	}
++
++	if (num_configs) {
++		const char *group_or_pin;
++		unsigned int pin_id;
++
++		if (type == PIN_MAP_TYPE_CONFIGS_PIN) {
++			pin_id = grp->pins[0];
++			group_or_pin = pin_get_name(pctldev, pin_id);
++		} else {
++			group_or_pin = grp->name;
++		}
++
++		ret = pinctrl_utils_add_map_configs(pctldev, map,
++						    &reserved_maps, num_maps,
++						    group_or_pin, configs,
++						    num_configs, type);
++	}
++
++out:
++	kfree(configs);
++	return ret;
++}
++
++static void sprd_pctrl_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
++				unsigned int offset)
++{
++	seq_printf(s, "%s", dev_name(pctldev->dev));
++}
++
++static const struct pinctrl_ops sprd_pctrl_ops = {
++	.get_groups_count = sprd_pctrl_group_count,
++	.get_group_name = sprd_pctrl_group_name,
++	.get_group_pins = sprd_pctrl_group_pins,
++	.pin_dbg_show = sprd_pctrl_dbg_show,
++	.dt_node_to_map = sprd_dt_node_to_map,
++	.dt_free_map = pinctrl_utils_free_map,
++};
++
++int sprd_pmx_get_function_count(struct pinctrl_dev *pctldev)
++{
++	return PIN_FUNC_MAX;
++}
++
++const char *sprd_pmx_get_function_name(struct pinctrl_dev *pctldev,
++				       unsigned int selector)
++{
++	switch (selector) {
++	case PIN_FUNC_1:
++		return "func1";
++	case PIN_FUNC_2:
++		return "func2";
++	case PIN_FUNC_3:
++		return "func3";
++	case PIN_FUNC_4:
++		return "func4";
++	default:
++		return "null";
++	}
++}
++
++int sprd_pmx_get_function_groups(struct pinctrl_dev *pctldev,
++				 unsigned int selector,
++				 const char * const **groups,
++				 unsigned int * const num_groups)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++
++	*groups = info->grp_names;
++	*num_groups = info->ngroups;
++
++	return 0;
++}
++
++static int sprd_pmx_set_mux(struct pinctrl_dev *pctldev,
++			    unsigned int func_selector,
++			    unsigned int group_selector)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++	struct sprd_pin_group *grp = &info->groups[group_selector];
++	unsigned int i, grp_pins = grp->npins;
++	unsigned long reg;
++	unsigned int val = 0;
++
++	if (group_selector > info->ngroups)
++		return -EINVAL;
++
++	switch (func_selector) {
++	case PIN_FUNC_1:
++		val &= ~(BIT(4) | BIT(5));
++		break;
++	case PIN_FUNC_2:
++		val |= BIT(4);
++		break;
++	case PIN_FUNC_3:
++		val |= BIT(5);
++		break;
++	case PIN_FUNC_4:
++		val |= BIT(4) | BIT(5);
++		break;
++	default:
++		break;
++	}
++
++	for (i = 0; i < grp_pins; i++) {
++		unsigned int pin_id = grp->pins[i];
++		struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
++
++		if (!pin || pin->type != COMMON_PIN)
++			continue;
++
++		reg = readl((void __iomem *)pin->reg);
++		reg &= ~(BIT(4) | BIT(5));
++		reg |= val;
++		writel(reg, (void __iomem *)pin->reg);
++	}
++
++	return 0;
++}
++
++static const struct pinmux_ops sprd_pmx_ops = {
++	.get_functions_count = sprd_pmx_get_function_count,
++	.get_function_name = sprd_pmx_get_function_name,
++	.get_function_groups = sprd_pmx_get_function_groups,
++	.set_mux = sprd_pmx_set_mux,
++};
++
++static int sprd_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			    unsigned long *config)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
++	unsigned int param = pinconf_to_config_param(*config);
++	unsigned int reg, arg;
++
++	if (!pin)
++		return -EINVAL;
++
++	if (pin->type == GLOBAL_CTRL_PIN) {
++		reg = (readl((void __iomem *)pin->reg) >>
++			   pin->bit_offset) & PINCTRL_BIT_MASK(pin->bit_width);
++	} else {
++		reg = readl((void __iomem *)pin->reg);
++	}
++
++	if (pin->type == GLOBAL_CTRL_PIN &&
++	    param == SPRD_PIN_CONFIG_CONTROL) {
++		arg = reg;
++	} else if (pin->type == COMMON_PIN) {
++		switch (param) {
++		case SPRD_PIN_CONFIG_SLEEP_MODE:
++			arg = (reg >> 13) & 0xf;
++			break;
++		case PIN_CONFIG_SLEEP_INPUT_ENABLE:
++			arg = (reg >> 1) & 0x1;
++			break;
++		case PIN_CONFIG_SLEEP_OUTPUT:
++			arg = reg & 0x1;
++			break;
++		default:
++			return -ENOTSUPP;
++		}
++	} else if (pin->type == MISC_PIN) {
++		switch (param) {
++		case PIN_CONFIG_DRIVE_STRENGTH:
++			arg = (reg >> 19) & 0xf;
++			break;
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++			arg = (reg >> 6) & 0x1;
++			break;
++		case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++			arg = (reg >> 11) & 0x1;
++			break;
++		case PIN_CONFIG_BIAS_PULL_UP:
++			arg = (reg >> 7) & 0x21;
++			break;
++		case PIN_CONFIG_SLEEP_BIAS_PULL_UP:
++			arg = (reg >> 3) & 0x1;
++			break;
++		case PIN_CONFIG_SLEEP_BIAS_PULL_DOWN:
++			arg = (reg >> 2) & 0x1;
++			break;
++		default:
++			return -ENOTSUPP;
++		}
++	} else {
++		return -ENOTSUPP;
++	}
++
++	*config = pinconf_to_config_packed(param, arg);
++	return 0;
++}
++
++static unsigned int sprd_pinconf_drive(unsigned int arg)
++{
++	unsigned int val = 0;
++
++	switch (arg) {
++	case 2:
++		break;
++	case 4:
++		val |= BIT(19);
++		break;
++	case 6:
++		val |= BIT(20);
++		break;
++	case 8:
++		val |= BIT(19) | BIT(20);
++		break;
++	case 10:
++		val |= BIT(21);
++		break;
++	case 12:
++		val |= BIT(21) | BIT(19);
++		break;
++	case 14:
++		val |= BIT(21) | BIT(20);
++		break;
++	case 16:
++		val |= BIT(19) | BIT(20) | BIT(21);
++		break;
++	case 20:
++		val |= BIT(22);
++		break;
++	case 21:
++		val |= BIT(22) | BIT(19);
++		break;
++	case 24:
++		val |= BIT(22) | BIT(20);
++		break;
++	case 25:
++		val |= BIT(22) | BIT(20) | BIT(19);
++		break;
++	case 27:
++		val |= BIT(22) | BIT(21);
++		break;
++	case 29:
++		val |= BIT(22) | BIT(21) | BIT(19);
++		break;
++	case 31:
++		val |= BIT(22) | BIT(21) | BIT(20);
++		break;
++	case 33:
++		val |= BIT(22) | BIT(21) | BIT(20) | BIT(19);
++		break;
++	default:
++		break;
++	}
++
++	return val;
++}
++
++static int sprd_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin_id,
++			    unsigned long *configs, unsigned int num_configs)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
++	unsigned long reg;
++	int i;
++
++	if (!pin)
++		return -EINVAL;
++
++	for (i = 0; i < num_configs; i++) {
++		unsigned int param, arg, shift, mask, val;
++
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++
++		val = 0;
++		shift = 0;
++		mask = 0;
++		if (pin->type == GLOBAL_CTRL_PIN &&
++		    param == SPRD_PIN_CONFIG_CONTROL) {
++			val = arg;
++		} else if (pin->type == COMMON_PIN) {
++			switch (param) {
++			case SPRD_PIN_CONFIG_SLEEP_MODE:
++				if (arg & AP_SLEEP)
++					val |= BIT(13);
++				if (arg & PUBCP_SLEEP)
++					val |= BIT(14);
++				if (arg & TGLDSP_SLEEP)
++					val |= BIT(15);
++				if (arg & AGDSP_SLEEP)
++					val |= BIT(16);
++
++				mask = 0xf;
++				shift = 13;
++				break;
++			case PIN_CONFIG_SLEEP_INPUT_ENABLE:
++				if (arg > 0)
++					val |= BIT(1);
++				else
++					val &= ~BIT(1);
++
++				mask = 0x1;
++				shift = 1;
++				break;
++			case PIN_CONFIG_SLEEP_OUTPUT:
++				val |= BIT(0);
++				mask = 0x1;
++				shift = 0;
++				break;
++			default:
++				return -ENOTSUPP;
++			}
++		} else if (pin->type == MISC_PIN) {
++			switch (param) {
++			case PIN_CONFIG_DRIVE_STRENGTH:
++				if (arg < 2 || arg > 60)
++					return -EINVAL;
++
++				val = sprd_pinconf_drive(arg);
++				mask = 0xf;
++				shift = 19;
++				break;
++			case PIN_CONFIG_BIAS_PULL_DOWN:
++				val |= BIT(6);
++				mask = 0x1;
++				shift = 6;
++				break;
++			case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
++				if (arg > 0)
++					val |= BIT(11);
++				else
++					val &= ~BIT(11);
++
++				mask = 0x1;
++				shift = 11;
++				break;
++			case PIN_CONFIG_BIAS_PULL_UP:
++				if (arg == 20000)
++					val |= BIT(12) | BIT(7);
++				else if (arg == 4700)
++					val |= BIT(12);
++
++				mask = 0x21;
++				shift = 7;
++				break;
++			case PIN_CONFIG_SLEEP_BIAS_PULL_UP:
++				val |= BIT(3);
++				mask = 0x1;
++				shift = 3;
++				break;
++			case PIN_CONFIG_SLEEP_BIAS_PULL_DOWN:
++				val |= BIT(2);
++				mask = 0x1;
++				shift = 2;
++				break;
++			default:
++				return -ENOTSUPP;
++			}
++		} else {
++			return -ENOTSUPP;
++		}
++
++		if (pin->type == GLOBAL_CTRL_PIN) {
++			reg = readl((void __iomem *)pin->reg);
++			reg &= ~(PINCTRL_BIT_MASK(pin->bit_width)
++				<< pin->bit_offset);
++			reg |= (val & PINCTRL_BIT_MASK(pin->bit_width))
++				<< pin->bit_offset;
++			writel(reg, (void __iomem *)pin->reg);
++		} else {
++			reg = readl((void __iomem *)pin->reg);
++			reg &= ~(mask << shift);
++			reg |= val;
++			writel(reg, (void __iomem *)pin->reg);
++		}
++	}
++
++	return 0;
++}
++
++static int sprd_pinconf_group_get(struct pinctrl_dev *pctldev,
++				  unsigned int selector, unsigned long *config)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++	struct sprd_pin_group *grp;
++	unsigned int pin_id;
++
++	if (selector > info->ngroups)
++		return -EINVAL;
++
++	grp = &info->groups[selector];
++	pin_id = grp->pins[0];
++
++	return sprd_pinconf_get(pctldev, pin_id, config);
++}
++
++static int sprd_pinconf_group_set(struct pinctrl_dev *pctldev,
++				  unsigned int selector,
++				  unsigned long *configs,
++				  unsigned int num_configs)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++	struct sprd_pin_group *grp;
++	int ret, i;
++
++	if (selector > info->ngroups)
++		return -EINVAL;
++
++	grp = &info->groups[selector];
++
++	for (i = 0; i < grp->npins; i++) {
++		unsigned int pin_id = grp->pins[i];
++
++		ret = sprd_pinconf_set(pctldev, pin_id, configs, num_configs);
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++static int sprd_pinconf_get_config(struct pinctrl_dev *pctldev,
++				   unsigned int pin_id,
++				   unsigned long *config)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pin *pin = sprd_pinctrl_get_pin_by_id(pctl, pin_id);
++
++	if (!pin)
++		return -EINVAL;
++
++	if (pin->type == GLOBAL_CTRL_PIN) {
++		*config = (readl((void __iomem *)pin->reg) >>
++			   pin->bit_offset) & PINCTRL_BIT_MASK(pin->bit_width);
++	} else {
++		*config = readl((void __iomem *)pin->reg);
++	}
++
++	return 0;
++}
++
++static void sprd_pinconf_dbg_show(struct pinctrl_dev *pctldev,
++				  struct seq_file *s, unsigned int pin_id)
++{
++	unsigned long config;
++	int ret;
++
++	ret = sprd_pinconf_get_config(pctldev, pin_id, &config);
++	if (ret)
++		return;
++
++	seq_printf(s, "0x%lx", config);
++}
++
++static void sprd_pinconf_group_dbg_show(struct pinctrl_dev *pctldev,
++					struct seq_file *s,
++					unsigned int selector)
++{
++	struct sprd_pinctrl *pctl = pinctrl_dev_get_drvdata(pctldev);
++	struct sprd_pinctrl_soc_info *info = pctl->info;
++	struct sprd_pin_group *grp;
++	unsigned long config;
++	const char *name;
++	int i, ret;
++
++	if (selector > info->ngroups)
++		return;
++
++	grp = &info->groups[selector];
++
++	seq_printf(s, "\n");
++	for (i = 0; i < grp->npins; i++, config++) {
++		unsigned int pin_id = grp->pins[i];
++
++		name = pin_get_name(pctldev, pin_id);
++		ret = sprd_pinconf_get_config(pctldev, pin_id, &config);
++		if (ret)
++			return;
++
++		seq_printf(s, "%s: 0x%lx ", name, config);
++	}
++}
++
++static const struct pinconf_ops sprd_pinconf_ops = {
++	.is_generic = true,
++	.pin_config_get = sprd_pinconf_get,
++	.pin_config_set = sprd_pinconf_set,
++	.pin_config_group_get = sprd_pinconf_group_get,
++	.pin_config_group_set = sprd_pinconf_group_set,
++	.pin_config_dbg_show = sprd_pinconf_dbg_show,
++	.pin_config_group_dbg_show = sprd_pinconf_group_dbg_show,
++};
++
++static const struct pinconf_generic_params sprd_dt_params[] = {
++	{"sprd,control", SPRD_PIN_CONFIG_CONTROL, 0},
++	{"sprd,sleep-mode", SPRD_PIN_CONFIG_SLEEP_MODE, 0},
++};
++
++#ifdef CONFIG_DEBUG_FS
++static const struct pin_config_item sprd_conf_items[] = {
++	PCONFDUMP(SPRD_PIN_CONFIG_CONTROL, "global control", NULL, true),
++	PCONFDUMP(SPRD_PIN_CONFIG_SLEEP_MODE, "sleep mode", NULL, true),
++};
++#endif
++
++static struct pinctrl_desc sprd_pinctrl_desc = {
++	.pctlops = &sprd_pctrl_ops,
++	.pmxops = &sprd_pmx_ops,
++	.confops = &sprd_pinconf_ops,
++	.num_custom_params = ARRAY_SIZE(sprd_dt_params),
++	.custom_params = sprd_dt_params,
++#ifdef CONFIG_DEBUG_FS
++	.custom_conf_items = sprd_conf_items,
++#endif
++	.owner = THIS_MODULE,
++};
++
++static int sprd_pinctrl_parse_groups(struct device_node *np,
++				     struct sprd_pinctrl *sprd_pctl,
++				     struct sprd_pin_group *grp)
++{
++	struct property *prop;
++	const char *pin_name;
++	int ret, i = 0;
++
++	ret = of_property_count_strings(np, "pins");
++	if (ret < 0)
++		return ret;
++
++	grp->name = np->name;
++	grp->npins = ret;
++	grp->pins = devm_kzalloc(sprd_pctl->dev, grp->npins *
++				 sizeof(unsigned int), GFP_KERNEL);
++	if (!grp->pins)
++		return -ENOMEM;
++
++	of_property_for_each_string(np, "pins", prop, pin_name) {
++		ret = sprd_pinctrl_get_id_by_name(sprd_pctl, pin_name);
++		if (ret >= 0)
++			grp->pins[i++] = ret;
++	}
++
++	for (i = 0; i < grp->npins; i++) {
++		dev_dbg(sprd_pctl->dev,
++			"Group[%s] contains [%d] pins: id = %d\n",
++			grp->name, grp->npins, grp->pins[i]);
++	}
++
++	return 0;
++}
++
++static int sprd_pinctrl_parse_dt(struct sprd_pinctrl *sprd_pctl)
++{
++	struct sprd_pinctrl_soc_info *info = sprd_pctl->info;
++	struct device_node *np = sprd_pctl->dev->of_node;
++	struct device_node *child;
++	struct sprd_pin_group *grp;
++	const char **temp;
++	int ret;
++
++	if (!np)
++		return -ENODEV;
++
++	info->ngroups = of_get_child_count(np);
++	if (!info->ngroups)
++		return 0;
++
++	info->groups = devm_kzalloc(sprd_pctl->dev, info->ngroups *
++				    sizeof(struct sprd_pin_group),
++				    GFP_KERNEL);
++	if (!info->groups)
++		return -ENOMEM;
++
++	info->grp_names = devm_kzalloc(sprd_pctl->dev,
++				       info->ngroups * sizeof(char *),
++				       GFP_KERNEL);
++	if (!info->grp_names)
++		return -ENOMEM;
++
++	temp = info->grp_names;
++	grp = info->groups;
++	for_each_child_of_node(np, child) {
++		ret = sprd_pinctrl_parse_groups(child, sprd_pctl, grp);
++		if (ret)
++			return ret;
++
++		*temp++ = grp->name;
++		grp++;
++	}
++
++	return 0;
++}
++
++static int sprd_pinctrl_add_pins(struct sprd_pinctrl *sprd_pctl,
++				 struct sprd_pins_info *sprd_soc_pin_info,
++				 int pins_cnt)
++{
++	struct sprd_pinctrl_soc_info *info = sprd_pctl->info;
++	unsigned int ctrl_pin = 0, com_pin = 0;
++	struct sprd_pin *pin;
++	int i;
++
++	info->npins = pins_cnt;
++	info->pins = devm_kzalloc(sprd_pctl->dev,
++				  info->npins * sizeof(struct sprd_pin),
++				  GFP_KERNEL);
++	if (!info->pins)
++		return -ENOMEM;
++
++	for (i = 0, pin = info->pins; i < info->npins; i++, pin++) {
++		unsigned int reg;
++
++		pin->name = sprd_soc_pin_info[i].name;
++		pin->type = sprd_soc_pin_info[i].type;
++		pin->number = sprd_soc_pin_info[i].num;
++		reg = sprd_soc_pin_info[i].reg;
++		if (pin->type == GLOBAL_CTRL_PIN) {
++			pin->reg = (unsigned long)sprd_pctl->base + 0x4 * reg;
++			pin->bit_offset = sprd_soc_pin_info[i].bit_offset;
++			pin->bit_width = sprd_soc_pin_info[i].bit_width;
++			ctrl_pin++;
++		} else if (pin->type == COMMON_PIN) {
++			pin->reg = (unsigned long)sprd_pctl->base +
++				PINCTRL_REG_OFFSET + 0x4 * (i - ctrl_pin);
++			com_pin++;
++		} else if (pin->type == MISC_PIN) {
++			pin->reg = (unsigned long)sprd_pctl->base +
++				PINCTRL_REG_MISC_OFFSET +
++					0x4 * (i - ctrl_pin - com_pin);
++		}
++	}
++
++	for (i = 0, pin = info->pins; i < info->npins; pin++, i++) {
++		dev_dbg(sprd_pctl->dev, "pin name[%s-%d], type = %d, "
++			"bit offset = %ld, bit width = %ld, reg = 0x%lx\n",
++			pin->name, pin->number, pin->type,
++			pin->bit_offset, pin->bit_width, pin->reg);
++	}
++
++	return 0;
++}
++
++int sprd_pinctrl_core_probe(struct platform_device *pdev,
++			    struct sprd_pins_info *sprd_soc_pin_info,
++			    int pins_cnt)
++{
++	struct sprd_pinctrl *sprd_pctl;
++	struct sprd_pinctrl_soc_info *pinctrl_info;
++	struct pinctrl_pin_desc *pin_desc;
++	struct resource *res;
++	int ret, i;
++
++	sprd_pctl = devm_kzalloc(&pdev->dev, sizeof(struct sprd_pinctrl),
++				 GFP_KERNEL);
++	if (!sprd_pctl)
++		return -ENOMEM;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	sprd_pctl->base = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(sprd_pctl->base))
++		return PTR_ERR(sprd_pctl->base);
++
++	pinctrl_info = devm_kzalloc(&pdev->dev,
++				    sizeof(struct sprd_pinctrl_soc_info),
++				    GFP_KERNEL);
++	if (!pinctrl_info)
++		return -ENOMEM;
++
++	sprd_pctl->info = pinctrl_info;
++	sprd_pctl->dev = &pdev->dev;
++	platform_set_drvdata(pdev, sprd_pctl);
++
++	ret = sprd_pinctrl_add_pins(sprd_pctl, sprd_soc_pin_info, pins_cnt);
++	if (ret) {
++		dev_err(&pdev->dev, "fail to add pins information\n");
++		return ret;
++	}
++
++	pin_desc = devm_kzalloc(&pdev->dev, pinctrl_info->npins *
++				sizeof(struct pinctrl_pin_desc),
++				GFP_KERNEL);
++	if (!pin_desc)
++		return -ENOMEM;
++
++	for (i = 0; i < pinctrl_info->npins; i++) {
++		pin_desc[i].number = pinctrl_info->pins[i].number;
++		pin_desc[i].name = pinctrl_info->pins[i].name;
++		pin_desc[i].drv_data = pinctrl_info;
++	}
++
++	sprd_pinctrl_desc.pins = pin_desc;
++	sprd_pinctrl_desc.name = dev_name(&pdev->dev);
++	sprd_pinctrl_desc.npins = pinctrl_info->npins;
++
++	sprd_pctl->pctl = pinctrl_register(&sprd_pinctrl_desc,
++					   &pdev->dev, (void *)sprd_pctl);
++	if (IS_ERR(sprd_pctl->pctl)) {
++		dev_err(&pdev->dev, "could not register pinctrl driver\n");
++		return PTR_ERR(sprd_pctl->pctl);
++	}
++
++	ret = sprd_pinctrl_parse_dt(sprd_pctl);
++	if (ret) {
++		dev_err(&pdev->dev, "fail to parse dt properties\n");
++		pinctrl_unregister(sprd_pctl->pctl);
++		return ret;
++	}
++
++	return 0;
++}
++
++int sprd_pinctrl_remove(struct platform_device *pdev)
++{
++	struct sprd_pinctrl *sprd_pctl = platform_get_drvdata(pdev);
++
++	pinctrl_unregister(sprd_pctl->pctl);
++	return 0;
++}
++
++void sprd_pinctrl_shutdown(struct platform_device *pdev)
++{
++	struct pinctrl *pinctl = devm_pinctrl_get(&pdev->dev);
++	struct pinctrl_state *state;
++
++	state = pinctrl_lookup_state(pinctl, "shutdown");
++	if (!IS_ERR(state))
++		pinctrl_select_state(pinctl, state);
++}
++
++MODULE_DESCRIPTION("SPREADTRUM Pin Controller Driver");
++MODULE_AUTHOR("Baolin Wang <baolin.wang@spreadtrum.com>");
++MODULE_LICENSE("GPL v2");
+diff --git a/drivers/pinctrl/sprd/pinctrl-sprd.h b/drivers/pinctrl/sprd/pinctrl-sprd.h
+new file mode 100644
+index 0000000..b8408e3
+--- /dev/null
++++ b/drivers/pinctrl/sprd/pinctrl-sprd.h
+@@ -0,0 +1,82 @@
++/*
++ * Driver header file for pin controller driver
++ * Copyright (C) 2017 Spreadtrum  - http://www.spreadtrum.com
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * General Public License for more details.
++ */
++
++#ifndef __PINCTRL_SPRD_H__
++#define __PINCTRL_SPRD_H__
++
++struct platform_device;
++
++#define NUM_OFFSET	(20)
++#define TYPE_OFFSET	(16)
++#define BIT_OFFSET	(8)
++#define WIDTH_OFFSET	(4)
++
++#define SPRD_PIN_INFO(num, type, offset, width, reg)	\
++		(((num) & 0xFFF) << NUM_OFFSET |	\
++		 ((type) & 0xF) << TYPE_OFFSET |	\
++		 ((offset) & 0xFF) << BIT_OFFSET |	\
++		 ((width) & 0xF) << WIDTH_OFFSET |	\
++		 ((reg) & 0xF))
++
++#define SPRD_PINCTRL_PIN(pin)	SPRD_PINCTRL_PIN_DATA(pin, #pin)
++
++#define SPRD_PINCTRL_PIN_DATA(a, b)				\
++	{							\
++		.name = b,					\
++		.num = (((a) >> NUM_OFFSET) & 0xfff),		\
++		.type = (((a) >> TYPE_OFFSET) & 0xf),		\
++		.bit_offset = (((a) >> BIT_OFFSET) & 0xff),	\
++		.bit_width = ((a) >> WIDTH_OFFSET & 0xf),	\
++		.reg = ((a) & 0xf)				\
++	}
++
 +enum pin_sleep_mode {
 +	AP_SLEEP = BIT(0),
 +	PUBCP_SLEEP = BIT(1),
@@ -183,34 +2119,37 @@ index 0000000..067b7e0
 +	AGDSP_SLEEP = BIT(3),
 +};
 +
-+Example:
-+pin_controller: pinctrl@402a0000 {
-+	compatible = "sprd,sc9860-pinctrl";
-+	reg = <0x402a0000 0x10000>;
-+
-+	grp1: sd0 {
-+		pins = "SC9860_VIO_SD2_IRTE", "SC9860_VIO_SD0_IRTE";
-+		sprd,control = <0x1>;
-+	};
-+
-+	grp2: rfctl_33 {
-+		pins = "SC9860_RFCTL33";
-+		function = "func2";
-+		sprd,sleep-mode = <AP_SLEEP | PUBCP_SLEEP>;
-+		sleep-output-low;
-+	};
-+
-+	grp3: rfctl_misc_20 {
-+		pins = "SC9860_RFCTL20_MISC";
-+		drive-strength = <10>;
-+		bias-pull-up = <4700>;
-+		sleep-bias-pull-up;
-+	};
++enum pin_func_sel {
++	PIN_FUNC_1,
++	PIN_FUNC_2,
++	PIN_FUNC_3,
++	PIN_FUNC_4,
++	PIN_FUNC_MAX,
 +};
++
++enum pin_type {
++	GLOBAL_CTRL_PIN,
++	COMMON_PIN,
++	MISC_PIN,
++};
++
++struct sprd_pins_info {
++	const char *name;
++	unsigned int num;
++	enum pin_type type;
++
++	/* for global control pins configuration */
++	unsigned long bit_offset;
++	unsigned long bit_width;
++	unsigned int reg;
++};
++
++int sprd_pinctrl_core_probe(struct platform_device *pdev,
++			    struct sprd_pins_info *sprd_soc_pin_info,
++			    int pins_cnt);
++int sprd_pinctrl_remove(struct platform_device *pdev);
++void sprd_pinctrl_shutdown(struct platform_device *pdev);
++
++#endif /* __PINCTRL_SPRD_H__ */
 -- 
 1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
