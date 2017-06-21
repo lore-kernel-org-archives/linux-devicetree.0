@@ -1,440 +1,52 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v5 6/6] arm64: dts: marvell: enable GICP and ICU on Armada
- 7K/8K
-Date: Wed, 21 Jun 2017 17:50:57 +0200
-Message-ID: <87h8z91gri.fsf@free-electrons.com>
-References: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
- <20170621132917.14187-7-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170621132917.14187-7-thomas.petazzoni@free-electrons.com>
- (Thomas Petazzoni's message of "Wed, 21 Jun 2017 15:29:17 +0200")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Hanna Hawa <hannah@marvell.com>, =?utf-8?Q?Miqu?= =?utf-8?Q?=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Subject: [PATCH v1] ARM: dts: sun7i: provide ramoops region on BananaPi
+Date: Wed, 21 Jun 2017 19:10:17 +0200
+Message-ID: <1498065017-30556-1-git-send-email-linux@rempel-privat.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+This should help provide useful debug information on remote
+targets without UART.
+
+Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+---
+ arch/arm/boot/dts/sun7i-a20-bananapi.dts | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+index ed2f35a..38923bf 100644
+--- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
++++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+@@ -63,6 +63,22 @@
+ 		stdout-path = "serial0:115200n8";
+ 	};
  
- On mer., juin 21 2017, Thomas Petazzoni <thomas.petazzoni@free-electrons.com> wrote:
-
-> This commit modifies the Marvell EBU Armada 7K and 8K Device Tree files
-> to describe the ICU and GICP units, and use ICU interrupts for all
-> devices in the CP110 blocks.
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-
-Applied on mvebu/dt64
-
-Thanks,
-
-Gregory
-
-> ---
->  arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |  7 +++
->  .../boot/dts/marvell/armada-cp110-master.dtsi      | 59 +++++++++++++---------
->  .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi | 55 +++++++++++---------
->  3 files changed, 73 insertions(+), 48 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> index fe41bf9..e0a9198 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> @@ -146,6 +146,13 @@
->  				marvell,spi-base = <128>, <136>, <144>, <152>;
->  			};
->  
-> +			gicp: gicp@3f0040 {
-> +				compatible = "marvell,ap806-gicp";
-> +				reg = <0x3f0040 0x10>;
-> +				marvell,spi-ranges = <64 64>, <288 64>;
-> +				msi-controller;
-> +			};
-> +
->  			pic: interrupt-controller@3f0100 {
->  				compatible = "marvell,armada-8k-pic";
->  				reg = <0x3f0100 0x10>;
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> index ac8df52..cd33129 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
-> @@ -44,19 +44,20 @@
->   * Device Tree file for Marvell Armada CP110 Master.
->   */
->  
-> +#define ICU_GRP_NSR 0x0
-> +
->  / {
->  	cp110-master {
->  		#address-cells = <2>;
->  		#size-cells = <2>;
->  		compatible = "simple-bus";
-> -		interrupt-parent = <&gic>;
-> +		interrupt-parent = <&cpm_icu>;
->  		ranges;
->  
->  		config-space@f2000000 {
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			compatible = "simple-bus";
-> -			interrupt-parent = <&gic>;
->  			ranges = <0x0 0x0 0xf2000000 0x2000000>;
->  
->  			cpm_ethernet: ethernet@0 {
-> @@ -68,21 +69,21 @@
->  				dma-coherent;
->  
->  				cpm_eth0: eth0 {
-> -					interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-> +					interrupts = <ICU_GRP_NSR 39 IRQ_TYPE_LEVEL_HIGH>;
->  					port-id = <0>;
->  					gop-port-id = <0>;
->  					status = "disabled";
->  				};
->  
->  				cpm_eth1: eth1 {
-> -					interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-> +					interrupts = <ICU_GRP_NSR 40 IRQ_TYPE_LEVEL_HIGH>;
->  					port-id = <1>;
->  					gop-port-id = <2>;
->  					status = "disabled";
->  				};
->  
->  				cpm_eth2: eth2 {
-> -					interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-> +					interrupts = <ICU_GRP_NSR 41 IRQ_TYPE_LEVEL_HIGH>;
->  					port-id = <2>;
->  					gop-port-id = <3>;
->  					status = "disabled";
-> @@ -96,6 +97,14 @@
->  				reg = <0x12a200 0x10>;
->  			};
->  
-> +			cpm_icu: interrupt-controller@1e0000 {
-> +				compatible = "marvell,cp110-icu";
-> +				reg = <0x1e0000 0x10>;
-> +				#interrupt-cells = <3>;
-> +				interrupt-controller;
-> +				msi-parent = <&gicp>;
-> +			};
-> +
->  			cpm_syscon0: system-controller@440000 {
->  				compatible = "marvell,cp110-system-controller0",
->  					     "syscon";
-> @@ -120,14 +129,14 @@
->  				compatible = "marvell,armada-8k-rtc";
->  				reg = <0x284000 0x20>, <0x284080 0x24>;
->  				reg-names = "rtc", "rtc-soc";
-> -				interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 77 IRQ_TYPE_LEVEL_HIGH>;
->  			};
->  
->  			cpm_sata0: sata@540000 {
->  				compatible = "marvell,armada-8k-ahci",
->  					     "generic-ahci";
->  				reg = <0x540000 0x30000>;
-> -				interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cpm_syscon0 1 15>;
->  				status = "disabled";
->  			};
-> @@ -137,7 +146,7 @@
->  					     "generic-xhci";
->  				reg = <0x500000 0x4000>;
->  				dma-coherent;
-> -				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cpm_syscon0 1 22>;
->  				status = "disabled";
->  			};
-> @@ -147,7 +156,7 @@
->  					     "generic-xhci";
->  				reg = <0x510000 0x4000>;
->  				dma-coherent;
-> -				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 105 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cpm_syscon0 1 23>;
->  				status = "disabled";
->  			};
-> @@ -195,7 +204,7 @@
->  				reg = <0x701000 0x20>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> -				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 120 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cpm_syscon0 1 21>;
->  				status = "disabled";
->  			};
-> @@ -205,7 +214,7 @@
->  				reg = <0x701100 0x20>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> -				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 121 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cpm_syscon0 1 21>;
->  				status = "disabled";
->  			};
-> @@ -213,7 +222,7 @@
->  			cpm_trng: trng@760000 {
->  				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
->  				reg = <0x760000 0x7d>;
-> -				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 95 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cpm_syscon0 1 25>;
->  				status = "okay";
->  			};
-> @@ -221,7 +230,7 @@
->  			cpm_sdhci0: sdhci@780000 {
->  				compatible = "marvell,armada-cp110-sdhci";
->  				reg = <0x780000 0x300>;
-> -				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 27 IRQ_TYPE_LEVEL_HIGH>;
->  				clock-names = "core";
->  				clocks = <&cpm_syscon0 1 4>;
->  				dma-coherent;
-> @@ -231,13 +240,13 @@
->  			cpm_crypto: crypto@800000 {
->  				compatible = "inside-secure,safexcel-eip197";
->  				reg = <0x800000 0x200000>;
-> -				interrupts = <GIC_SPI 34 (IRQ_TYPE_EDGE_RISING
-> +				interrupts = <ICU_GRP_NSR 87 (IRQ_TYPE_EDGE_RISING
->  				| IRQ_TYPE_LEVEL_HIGH)>,
-> -					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
-> +					     <ICU_GRP_NSR 88 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 89 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 90 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 91 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 92 IRQ_TYPE_LEVEL_HIGH>;
->  				interrupt-names = "mem", "ring0", "ring1",
->  				"ring2", "ring3", "eip";
->  				clocks = <&cpm_syscon0 1 26>;
-> @@ -264,8 +273,8 @@
->  				/* non-prefetchable memory */
->  				0x82000000 0 0xf6000000 0  0xf6000000 0 0xf00000>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-map = <0 0 0 0 &cpm_icu 0 ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
->  			num-lanes = <1>;
->  			clocks = <&cpm_syscon0 1 13>;
->  			status = "disabled";
-> @@ -290,8 +299,8 @@
->  				/* non-prefetchable memory */
->  				0x82000000 0 0xf7000000 0  0xf7000000 0 0xf00000>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-map = <0 0 0 0 &cpm_icu 0 ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
->  
->  			num-lanes = <1>;
->  			clocks = <&cpm_syscon0 1 11>;
-> @@ -317,8 +326,8 @@
->  				/* non-prefetchable memory */
->  				0x82000000 0 0xf8000000 0  0xf8000000 0 0xf00000>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-map = <0 0 0 0 &cpm_icu 0 ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
->  
->  			num-lanes = <1>;
->  			clocks = <&cpm_syscon0 1 12>;
-> diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> index 7740a75..75a677b 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
-> @@ -44,19 +44,20 @@
->   * Device Tree file for Marvell Armada CP110 Slave.
->   */
->  
-> +#define ICU_GRP_NSR 0x0
-> +
->  / {
->  	cp110-slave {
->  		#address-cells = <2>;
->  		#size-cells = <2>;
->  		compatible = "simple-bus";
-> -		interrupt-parent = <&gic>;
-> +		interrupt-parent = <&cps_icu>;
->  		ranges;
->  
->  		config-space@f4000000 {
->  			#address-cells = <1>;
->  			#size-cells = <1>;
->  			compatible = "simple-bus";
-> -			interrupt-parent = <&gic>;
->  			ranges = <0x0 0x0 0xf4000000 0x2000000>;
->  
->  			cps_rtc: rtc@284000 {
-> @@ -75,21 +76,21 @@
->  				dma-coherent;
->  
->  				cps_eth0: eth0 {
-> -					interrupts = <GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>;
-> +					interrupts = <ICU_GRP_NSR 39 IRQ_TYPE_LEVEL_HIGH>;
->  					port-id = <0>;
->  					gop-port-id = <0>;
->  					status = "disabled";
->  				};
->  
->  				cps_eth1: eth1 {
-> -					interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
-> +					interrupts = <ICU_GRP_NSR 40 IRQ_TYPE_LEVEL_HIGH>;
->  					port-id = <1>;
->  					gop-port-id = <2>;
->  					status = "disabled";
->  				};
->  
->  				cps_eth2: eth2 {
-> -					interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
-> +					interrupts = <ICU_GRP_NSR 41 IRQ_TYPE_LEVEL_HIGH>;
->  					port-id = <2>;
->  					gop-port-id = <3>;
->  					status = "disabled";
-> @@ -103,6 +104,14 @@
->  				reg = <0x12a200 0x10>;
->  			};
->  
-> +			cps_icu: interrupt-controller@1e0000 {
-> +				compatible = "marvell,cp110-icu";
-> +				reg = <0x1e0000 0x10>;
-> +				#interrupt-cells = <3>;
-> +				interrupt-controller;
-> +				msi-parent = <&gicp>;
-> +			};
-> +
->  			cps_syscon0: system-controller@440000 {
->  				compatible = "marvell,cp110-system-controller0",
->  					     "syscon";
-> @@ -127,7 +136,7 @@
->  				compatible = "marvell,armada-8k-ahci",
->  					     "generic-ahci";
->  				reg = <0x540000 0x30000>;
-> -				interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cps_syscon0 1 15>;
->  				status = "disabled";
->  			};
-> @@ -137,7 +146,7 @@
->  					     "generic-xhci";
->  				reg = <0x500000 0x4000>;
->  				dma-coherent;
-> -				interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cps_syscon0 1 22>;
->  				status = "disabled";
->  			};
-> @@ -147,7 +156,7 @@
->  					     "generic-xhci";
->  				reg = <0x510000 0x4000>;
->  				dma-coherent;
-> -				interrupts = <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 105 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cps_syscon0 1 23>;
->  				status = "disabled";
->  			};
-> @@ -195,7 +204,7 @@
->  				reg = <0x701000 0x20>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> -				interrupts = <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 120 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cps_syscon0 1 21>;
->  				status = "disabled";
->  			};
-> @@ -205,7 +214,7 @@
->  				reg = <0x701100 0x20>;
->  				#address-cells = <1>;
->  				#size-cells = <0>;
-> -				interrupts = <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 121 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cps_syscon0 1 21>;
->  				status = "disabled";
->  			};
-> @@ -213,7 +222,7 @@
->  			cps_trng: trng@760000 {
->  				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
->  				reg = <0x760000 0x7d>;
-> -				interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
-> +				interrupts = <ICU_GRP_NSR 95 IRQ_TYPE_LEVEL_HIGH>;
->  				clocks = <&cps_syscon0 1 25>;
->  				status = "okay";
->  			};
-> @@ -221,13 +230,13 @@
->  			cps_crypto: crypto@800000 {
->  				compatible = "inside-secure,safexcel-eip197";
->  				reg = <0x800000 0x200000>;
-> -				interrupts = <GIC_SPI 34 (IRQ_TYPE_EDGE_RISING
-> +				interrupts = <ICU_GRP_NSR 87 (IRQ_TYPE_EDGE_RISING
->  				| IRQ_TYPE_LEVEL_HIGH)>,
-> -					     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
-> -					     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>;
-> +					     <ICU_GRP_NSR 88 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 89 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 90 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 91 IRQ_TYPE_LEVEL_HIGH>,
-> +					     <ICU_GRP_NSR 92 IRQ_TYPE_LEVEL_HIGH>;
->  				interrupt-names = "mem", "ring0", "ring1",
->  						  "ring2", "ring3", "eip";
->  				clocks = <&cps_syscon0 1 26>;
-> @@ -254,8 +263,8 @@
->  				/* non-prefetchable memory */
->  				0x82000000 0 0xfa000000 0  0xfa000000 0 0xf00000>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-map = <0 0 0 0 &cps_icu 0 ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
->  			num-lanes = <1>;
->  			clocks = <&cps_syscon0 1 13>;
->  			status = "disabled";
-> @@ -280,8 +289,8 @@
->  				/* non-prefetchable memory */
->  				0x82000000 0 0xfb000000 0  0xfb000000 0 0xf00000>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-map = <0 0 0 0 &cps_icu 0 ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
->  
->  			num-lanes = <1>;
->  			clocks = <&cps_syscon0 1 11>;
-> @@ -307,8 +316,8 @@
->  				/* non-prefetchable memory */
->  				0x82000000 0 0xfc000000 0  0xfc000000 0 0xf00000>;
->  			interrupt-map-mask = <0 0 0 0>;
-> -			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-map = <0 0 0 0 &cps_icu 0 ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupts = <ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
->  
->  			num-lanes = <1>;
->  			clocks = <&cps_syscon0 1 12>;
-> -- 
-> 2.9.4
->
-
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++
++		ramoops@7fb6a000 {
++			compatible = "ramoops";
++			reg = <0x7fb6a000 0x100000>;
++			ecc-size	= <16>;
++			record-size	= <0x00020000>;
++			console-size	= <0x00020000>;
++			ftrace-size	= <0x00020000>;
++			pmsg-size	= <0x00020000>;
++		};
++	};
++
+ 	leds {
+ 		compatible = "gpio-leds";
+ 		pinctrl-names = "default";
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
