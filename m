@@ -1,142 +1,198 @@
-Return-Path: <SRS0=zNVt=5U=sirena.org.uk=broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-In-Reply-To: <efc798c2a1140c545cc210a29ed2791495956510.1497442770.git.mirq-linux@rere.qmqm.pl>
-Message-Id: <E1dLYUj-0002Mk-SH@debutante>
-Date: Thu, 15 Jun 2017 18:23:45 +0100
-Subject: Applied "regulator: tps65910: wire up sleep control configuration" to the regulator tree
-Cc: Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.orgMarkBrownbroonie@kernel.org, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Keerthy <j-keerthy@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>linux-kernel@vger.kernel.org
+Return-Path: <SRS0=CCsS=52=rock-chips.com=huangtao@kernel.org>
+Subject: Re: [PATCH 1/6] ARM: dts: rockchip: add basic dtsi file for RK3229
+ SoC
+References: <1497510980-23207-1-git-send-email-frank.wang@rock-chips.com>
+ <25831201.s5BUplWuV7@diego>
+ <354e6995-cc80-660b-41c4-535be85564c4@rock-chips.com>
+ <1880551.X2BOMRmHZh@diego>
+ <CAFLEztTZPeqbE++uRS-jXYUb7KzSik7=5v8+p07L788HWvwQqg@mail.gmail.com>
+From: "Huang, Tao" <huangtao@rock-chips.com>
+Message-ID: <e2f33dbc-d62a-a059-6ffa-3e3f5920b984@rock-chips.com>
+Date: Wed, 21 Jun 2017 15:05:46 +0800
+MIME-Version: 1.0
+In-Reply-To: <CAFLEztTZPeqbE++uRS-jXYUb7KzSik7=5v8+p07L788HWvwQqg@mail.gmail.com>
+Content-Type: text/html; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+To: Jacob Chen <jacobchen110@gmail.com>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
+Cc: Frank Wang <frank.wang@rock-chips.com>, robh+dt@kernel.org, Ulf Hansson <ulf.hansson@linaro.org>, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, wmc@rock-chips.com, =?UTF-8?B?6ZmI5YGl5rSq?= <chenjh@rock-chips.com>, Kever Yang <kever.yang@rock-chips.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The patch
-
-   regulator: tps65910: wire up sleep control configuration
-
-has been applied to the regulator tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From a9bc67de0c5713a8675bfe33bfe9cb36c7934589 Mon Sep 17 00:00:00 2001
-From: =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Date: Wed, 14 Jun 2017 21:04:14 +0200
-Subject: [PATCH] regulator: tps65910: wire up sleep control configuration
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-
-This enables configuring the PMIC's sleep mode via device-tree.
-
-A pointer indirection to sleep mode data is removed, as it simplifies
-the implementation slightly. In current kernel tree, platform data
-structure is not used outside MFD cell drivers.
-
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- Documentation/devicetree/bindings/mfd/tps65910.txt |  4 ++++
- drivers/mfd/tps65910.c                             | 22 +++++++++++++++-------
- include/linux/mfd/tps65910.h                       |  2 +-
- 3 files changed, 20 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/tps65910.txt b/Documentation/devicetree/bindings/mfd/tps65910.txt
-index 38833e63a59f..8af1202b381d 100644
---- a/Documentation/devicetree/bindings/mfd/tps65910.txt
-+++ b/Documentation/devicetree/bindings/mfd/tps65910.txt
-@@ -61,6 +61,10 @@ Optional properties:
-   There should be 9 entries here, one for each gpio.
- - ti,system-power-controller: Telling whether or not this pmic is controlling
-   the system power.
-+- ti,sleep-enable: Enable SLEEP state.
-+- ti,sleep-keep-therm: Keep thermal monitoring on in sleep state.
-+- ti,sleep-keep-ck32k: Keep the 32KHz clock output on in sleep state.
-+- ti,sleep-keep-hsclk: Keep high speed internal clock on in sleep state.
- 
- Regulator Optional properties:
- - ti,regulator-ext-sleep-control: enable external sleep
-diff --git a/drivers/mfd/tps65910.c b/drivers/mfd/tps65910.c
-index 11cab1582f2f..8263605f6d2f 100644
---- a/drivers/mfd/tps65910.c
-+++ b/drivers/mfd/tps65910.c
-@@ -328,11 +328,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
- 		goto err_sleep_init;
- 	}
- 
--	/* Return if there is no sleep keepon data. */
--	if (!pmic_pdata->slp_keepon)
--		return 0;
--
--	if (pmic_pdata->slp_keepon->therm_keepon) {
-+	if (pmic_pdata->slp_keepon.therm_keepon) {
- 		ret = tps65910_reg_set_bits(tps65910,
- 				TPS65910_SLEEP_KEEP_RES_ON,
- 				SLEEP_KEEP_RES_ON_THERM_KEEPON_MASK);
-@@ -342,7 +338,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
- 		}
- 	}
- 
--	if (pmic_pdata->slp_keepon->clkout32k_keepon) {
-+	if (pmic_pdata->slp_keepon.clkout32k_keepon) {
- 		ret = tps65910_reg_set_bits(tps65910,
- 				TPS65910_SLEEP_KEEP_RES_ON,
- 				SLEEP_KEEP_RES_ON_CLKOUT32K_KEEPON_MASK);
-@@ -352,7 +348,7 @@ static int tps65910_sleepinit(struct tps65910 *tps65910,
- 		}
- 	}
- 
--	if (pmic_pdata->slp_keepon->i2chs_keepon) {
-+	if (pmic_pdata->slp_keepon.i2chs_keepon) {
- 		ret = tps65910_reg_set_bits(tps65910,
- 				TPS65910_SLEEP_KEEP_RES_ON,
- 				SLEEP_KEEP_RES_ON_I2CHS_KEEPON_MASK);
-@@ -415,6 +411,18 @@ static struct tps65910_board *tps65910_parse_dt(struct i2c_client *client,
- 	prop = of_property_read_bool(np, "ti,en-ck32k-xtal");
- 	board_info->en_ck32k_xtal = prop;
- 
-+	prop = of_property_read_bool(np, "ti,sleep-enable");
-+	board_info->en_dev_slp = prop;
-+
-+	prop = of_property_read_bool(np, "ti,sleep-keep-therm");
-+	board_info->slp_keepon.therm_keepon = prop;
-+
-+	prop = of_property_read_bool(np, "ti,sleep-keep-ck32k");
-+	board_info->slp_keepon.clkout32k_keepon = prop;
-+
-+	prop = of_property_read_bool(np, "ti,sleep-keep-hsclk");
-+	board_info->slp_keepon.i2chs_keepon = prop;
-+
- 	board_info->irq = client->irq;
- 	board_info->irq_base = -1;
- 	board_info->pm_off = of_property_read_bool(np,
-diff --git a/include/linux/mfd/tps65910.h b/include/linux/mfd/tps65910.h
-index ffb21e79204d..deffdcd0236f 100644
---- a/include/linux/mfd/tps65910.h
-+++ b/include/linux/mfd/tps65910.h
-@@ -879,7 +879,7 @@ struct tps65910_board {
- 	bool en_ck32k_xtal;
- 	bool en_dev_slp;
- 	bool pm_off;
--	struct tps65910_sleep_keepon_data *slp_keepon;
-+	struct tps65910_sleep_keepon_data slp_keepon;
- 	bool en_gpio_sleep[TPS6591X_MAX_NUM_GPIO];
- 	unsigned long regulator_ext_sleep_control[TPS65910_NUM_REGS];
- 	struct regulator_init_data *tps65910_pmic_init_data[TPS65910_NUM_REGS];
--- 
-2.11.0
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  </head>
+  <body text="#000000" bgcolor="#FFFFFF">
+    Hi Jacob and Heiko:<br>
+    <div class="moz-cite-prefix">On 2017年06月21日 12:11, Jacob Chen wrote:<br>
+    </div>
+    <blockquote type="cite"
+cite="mid:CAFLEztTZPeqbE++uRS-jXYUb7KzSik7=5v8+p07L788HWvwQqg@mail.gmail.com">
+      <div dir="ltr">Hi,<br>
+        <br>
+        2017-06-20 18:48 GMT+08:00 Heiko Stübner &lt;<a
+          href="mailto:heiko@sntech.de" moz-do-not-send="true">heiko@sntech.de</a>&gt;:<br>
+        &gt; Hi Frank,<br>
+        &gt;<br>
+        &gt; Am Dienstag, 20. Juni 2017, 15:13:00 CEST schrieb Frank
+        Wang:<br>
+        &gt;&gt; Hi Heiko,<br>
+        &gt;&gt;<br>
+        &gt;&gt; On 2017/6/19 20:30, Heiko Stübner wrote:<br>
+        &gt;&gt; &gt; Hi Frank,<br>
+        &gt;&gt; &gt;<br>
+        &gt;&gt; &gt; Am Montag, 19. Juni 2017, 18:34:27 CEST schrieb
+        Frank Wang:<br>
+        &gt;&gt; &gt;&gt; On 2017/6/18 2:12, Heiko Stuebner wrote:<br>
+        &gt;&gt; &gt;&gt;&gt; Am Donnerstag, 15. Juni 2017, 15:16:15
+        CEST schrieb Frank Wang:<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; Due to some tiny differences between
+        RK3228 and RK3229, this patch<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; adds a basic dtsi file which includes
+        a new CPU opp table and PSCI<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; brought up support for RK3229.<br>
+        &gt;&gt; &gt;&gt;&gt;&gt;<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; Signed-off-by: Frank Wang&lt;<a
+          href="mailto:frank.wang@rock-chips.com" moz-do-not-send="true">frank.wang@rock-chips.com</a>&gt;<br>
+        &gt;&gt; &gt;<br>
+        &gt;&gt; &gt; [...]<br>
+        &gt;&gt; &gt;<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +        psci {<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +                compatible =
+        "arm,psci-1.0", "arm,psci-0.2";<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +                method = "smc";<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +        };<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +};<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +&amp;cpu0 {<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +        enable-method = "psci";<br>
+        &gt;&gt; &gt;&gt;&gt;&gt; +};<br>
+        &gt;&gt; &gt;&gt;&gt;<br>
+        &gt;&gt; &gt;&gt;&gt; Hmm, I don't really understand this.<br>
+        &gt;&gt; &gt;&gt;&gt; What method of core-bringup does the
+        rk3228 use? In the current<br>
+        &gt;&gt; &gt;&gt;&gt; rk322x.dtsi there is no enable-method at
+        all defined.<br>
+        &gt;&gt; &gt;&gt;<br>
+        &gt;&gt; &gt;&gt; For non-security, the same with rk3036 SoC, we
+        use rk3036-smp method to<br>
+        &gt;&gt; &gt;&gt; bring-up cores, and for security, we use
+        arm-psci method.<br>
+        &gt;&gt; &gt;&gt; As security become more and more important and
+        required, we would prefer<br>
+        &gt;&gt; &gt;&gt; using arm-psci method, and it is also an easy
+        way to use.<br>
+        &gt;&gt; &gt;&gt;<br>
+        &gt;&gt; &gt;&gt;&gt; So is the rk3228 firmware using a
+        different method than the rk3229?<br>
+        &gt;&gt; &gt;&gt;<br>
+        &gt;&gt; &gt;&gt; No, they are the same. How about I move these
+        changes to rk322x.dtsi?<br>
+        &gt;&gt; &gt;<br>
+        &gt;&gt; &gt; yep, that is what I was getting at with my
+        question ;-)<br>
+        &gt;&gt; &gt;<br>
+        &gt;&gt; &gt;&gt;&gt; And out of curiosity as this is a arm32
+        without atf, is the psci<br>
+        &gt;&gt; &gt;&gt;&gt; implementation (for uboot?) you're using
+        available somewhere?<br>
+        &gt;&gt; &gt;&gt;<br>
+        &gt;&gt; &gt;&gt; Ah, it is included in op-tee :-)<br>
+        &gt;&gt; &gt;<br>
+        &gt;&gt; &gt; Is that super secret or will this be part of the
+        official op-tee [0]<br>
+        &gt;&gt; &gt; at some point (Similar to the ATF stuff on arm64)?<br>
+        &gt;&gt;<br>
+        &gt;&gt; Hmm, the op-tee itself must keep secure, but the psci
+        part in it can be<br>
+        &gt;&gt; extracted to public, although it may have a bit of
+        secure risk.<br>
+        &gt;&gt; Due to Rockchip have amended the frame of op-tee to
+        support psci, we can<br>
+        &gt;&gt; try to upstream these changes to official op-tee or
+        push them to source<br>
+        &gt;&gt; codes of Rockchip in git-hub.<br>
+        &gt;<br>
+        &gt; I just want to make sure, people can actually create a
+        working system<br>
+        &gt; with this, as there is mainline u-boot support for the
+        rk3228/rk3229 in<br>
+        &gt; the works - hopefully also with SPL support later on.<br>
+        &gt; So I'm wondering how this is supposed to be setup?<br>
+        &gt;<br>
+        &gt; On arm64 we now have the SPL load the ATF, which in turn
+        loads uboot, so I<br>
+        &gt; guess the mechanism for the op-tee would be somehow
+        similar? And there all<br>
+        &gt; necessary components are available to build everything from
+        source.<br>
+        &gt;<br>
+        &gt; I really don't care about all the other super-secret stuff
+        happening in<br>
+        &gt; that op-tee thingy, but I really want people to be able to
+        build a complete<br>
+        &gt; firmware on their machine, without having to rely on
+        arbitary binary blobs.<br>
+        &gt;<br>
+        &gt; Which is something companies adopting Rockchip socs seem to
+        rely on<br>
+        &gt; a lot these days ;-) .<br>
+        &gt;<br>
+        &gt;<br>
+        &gt; One alternative I can think of, would be to also create a
+        u-boot psci<br>
+        &gt; implementation for arm32, like sunxi [0] and others use for
+        example.<br>
+        &gt; That way people could choose where their psci should come
+        from (u-boot<br>
+        &gt; itself or the op-tee).<br>
+        &gt;<br>
+        &gt;<br>
+        &gt; Heiko<br>
+        &gt;<br>
+        &gt; [0] <a
+href="http://git.denx.de/?p=u-boot.git;a=blob;f=arch/arm/cpu/armv7/sunxi/psci.c"
+          moz-do-not-send="true">http://git.denx.de/?p=u-boot.git;a=blob;f=arch/arm/cpu/armv7/sunxi/psci.c</a><br>
+        &gt;<br>
+        &gt;&gt;<br>
+        &gt;&gt;<br>
+        &gt;&gt; BR.<br>
+        &gt;&gt; Frank<br>
+        &gt;&gt;<br>
+        &gt;&gt; &gt; Heiko<br>
+        &gt;&gt; &gt;<br>
+        &gt;&gt; &gt; [0]<a
+          href="https://github.com/OP-TEE/optee_os/tree/master/core/arch/arm"
+          moz-do-not-send="true">https://github.com/OP-TEE/optee_os/tree/master/core/arch/arm</a><br>
+        &gt;<br>
+        &gt;<br>
+        <div><br>
+        </div>
+        <div>😀 Implement psci in upstream u-boot  sounds a good idea. </div>
+        <div><br>
+        </div>
+        <div>I don't like the bundled solution, like if I want  to
+          enable <span
+            style="color:rgb(0,0,0);font-family:sans-serif;font-size:12.8px"> </span><span
+style="color:rgb(0,0,0);font-family:sans-serif;font-size:12.8px">power
+            management in my board,  i have to use OP-TEE, then i have
+            to use vendor u-boot, then vendor kernel, </span><span
+            style="color:rgb(0,0,0);font-family:sans-serif;font-size:12.8px">rootfs,
+            tools......</span></div>
+        <div><br>
+        </div>
+      </div>
+    </blockquote>
+    No. The kernel only depends on PSCI. Anyone can implement PSCI
+    firmware through<br>
+    OPTEE/Trusty/U-Boot/UEFI or other open source implementation. We
+    don't limit<br>
+    people use vendor software or not. As Frank said, we will open
+    source OPTEE which<br>
+    support PSCI for our chips.<br>
+    BTW people can implement SMP/suspend function builtin in kernel as
+    usual. We just<br>
+    hope use PSCI by default, so we can support TEE more easy as arm64.<br>
+    <br>
+  </body>
+</html>
