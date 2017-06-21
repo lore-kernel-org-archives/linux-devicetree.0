@@ -1,53 +1,77 @@
-From: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] dt-bindings: mtd: elm: Correct compatible string requirement
-Date: Wed, 21 Jun 2017 08:22:06 -0400
-Message-ID: <1498047726-31398-1-git-send-email-trini@konsulko.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: John Crispin <john@phrozen.org>
+Subject: Re: [PATCH RESEND 4/4] pwm: mediatek: add MT2712/MT7622 support
+Date: Wed, 21 Jun 2017 14:22:31 +0200
+Message-ID: <4600cf23-5e59-df02-37dc-056cb4a9744c@phrozen.org>
+References: <1498032672-7172-1-git-send-email-zhi.mao@mediatek.com>
+ <1498032672-7172-5-git-send-email-zhi.mao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1498032672-7172-5-git-send-email-zhi.mao@mediatek.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Zhi Mao <zhi.mao@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org
+Cc: zhenbao.liu@mediatek.com, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The binding says that the compatible string must be "ti,am33xx-elm"
-but the code checks only for, and all functioning users set, this as
-"ti,am3352-elm" so correct the binding.
 
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
-Cc: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
----
-I have submitted a separate patch that correct the dm816x.dtsi to set
-the compatible string there for the elm from ti,816-elm to ti,am3352-elm
-and tested it on the hardware, where it works.  It is quite likely that
-dm814x.dtsi can be trivially corrected as it came after dm816x and
-before am335x but as I cannot test the hardware, I did not update that.
----
- Documentation/devicetree/bindings/mtd/elm.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mtd/elm.txt b/Documentation/devicetree/bindings/mtd/elm.txt
-index 8c1528c421d4..59ddc61c1076 100644
---- a/Documentation/devicetree/bindings/mtd/elm.txt
-+++ b/Documentation/devicetree/bindings/mtd/elm.txt
-@@ -1,7 +1,7 @@
- Error location module
- 
- Required properties:
--- compatible: Must be "ti,am33xx-elm"
-+- compatible: Must be "ti,am3352-elm"
- - reg: physical base address and size of the registers map.
- - interrupts: Interrupt number for the elm.
- 
--- 
-1.9.1
+On 21/06/17 10:11, Zhi Mao wrote:
+> support multiple chip(MT2712, MT7622, MT7623)
+This patch does more than add extra SoC support. It also
+* adds PWM_CLK_DIV_MAX which really should go into its own patch
+* adds mtk_pwm_com_reg which should also go into its own patch
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+more comments inline
+
+>
+> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+> ---
+>   drivers/pwm/pwm-mediatek.c |   63 +++++++++++++++++++++++++++++++++++---------
+>   1 file changed, 51 insertions(+), 12 deletions(-)
+>
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index c803ff6..d520356 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -16,6 +16,7 @@
+>   #include <linux/module.h>
+>   #include <linux/clk.h>
+>   #include <linux/of.h>
+> +#include <linux/of_device.h>
+>   #include <linux/platform_device.h>
+>   #include <linux/pwm.h>
+>   #include <linux/slab.h>
+[...]
+> @@ -215,9 +238,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+>   	return pwmchip_remove(&pc->chip);
+>   }
+>   
+> +/*==========================================*/
+
+please remove these comment lines
+
+     John
+> +static const struct mtk_com_pwm_data mt2712_pwm_data = {
+> +	.pwm_nums = 8,
+> +};
+> +
+> +static const struct mtk_com_pwm_data mt7622_pwm_data = {
+> +	.pwm_nums = 6,
+> +};
+> +
+> +static const struct mtk_com_pwm_data mt7623_pwm_data = {
+> +	.pwm_nums = 5,
+> +};
+> +/*==========================================*/
+> +
+>   static const struct of_device_id mtk_pwm_of_match[] = {
+> -	{ .compatible = "mediatek,mt7623-pwm" },
+> -	{ }
+> +	{.compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data},
+> +	{.compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data},
+> +	{.compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data},
+> +	{},
+>   };
+>   MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+>   
