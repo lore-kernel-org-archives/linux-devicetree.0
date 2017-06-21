@@ -1,50 +1,41 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 4/9] serial: fsl_lpuart: Use common rs485 device tree parsing function
-Date: Wed, 21 Jun 2017 12:21:25 +0200
-Message-ID: <20170621102130.21024-5-u.kleine-koenig@pengutronix.de>
-References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
+From: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v3 3/6] ARM/arm64: dts: enable wakeup for cros-ec-spi devices
+Date: Wed, 21 Jun 2017 12:45:22 +0200
+Message-ID: <CAJKOXPdL2CB9VWNo=it0dos-4hJYrgHUSZwcG1DS=9c+YxXzhQ@mail.gmail.com>
+References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com> <1498039313-24220-4-git-send-email-jeffy.chen@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170621102130.21024-1-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498039313-24220-4-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Wed, Jun 21, 2017 at 12:01 PM, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
+> We used to enable wakeup for cros-ec-spi devices unconditionally.
+> Now we are using the more generic wakeup-source property to enable it.
 
-We just got a common helper for parsing the rs485 specific
-device tree properties. Use it and drop the open coded parser.
+Using wakeup-source property is still enabling this unconditionally.
+What  do you exactly mean here?
 
-Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- drivers/tty/serial/fsl_lpuart.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+>
+> Changes in v3: None
+>
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts      | 1 +
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts       | 1 +
+>  arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 1 +
+>  arch/arm/boot/dts/tegra124-nyan.dtsi            | 1 +
+>  arch/arm/boot/dts/tegra124-venice2.dts          | 1 +
+>  arch/arm64/boot/dts/nvidia/tegra132-norrin.dts  | 1 +
+>  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi    | 1 +
+>  7 files changed, 7 insertions(+)
 
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 15df1ba78095..7988a8a981d1 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -2054,8 +2054,9 @@ static int lpuart_probe(struct platform_device *pdev)
- 		dev_info(sport->port.dev, "DMA rx channel request failed, "
- 				"operating without rx DMA\n");
- 
--	if (of_property_read_bool(np, "linux,rs485-enabled-at-boot-time")) {
--		sport->port.rs485.flags |= SER_RS485_ENABLED;
-+	of_get_rs485_mode(np, &sport->port.rs485);
-+
-+	if (sport->port.rs485.flags & SER_RS485_ENABLED) {
- 		sport->port.rs485.flags |= SER_RS485_RTS_ON_SEND;
- 		writeb(UARTMODEM_TXRTSE, sport->port.membase + UARTMODEM);
- 	}
--- 
-2.11.0
+Please split it per arch (arm and arm64) and per machine. I'll take
+exynos after splitting.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Krzysztof
