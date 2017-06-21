@@ -1,77 +1,64 @@
-From: John Crispin <john@phrozen.org>
-Subject: Re: [PATCH RESEND 4/4] pwm: mediatek: add MT2712/MT7622 support
-Date: Wed, 21 Jun 2017 14:22:31 +0200
-Message-ID: <4600cf23-5e59-df02-37dc-056cb4a9744c@phrozen.org>
-References: <1498032672-7172-1-git-send-email-zhi.mao@mediatek.com>
- <1498032672-7172-5-git-send-email-zhi.mao@mediatek.com>
+From: Guodong Xu <guodong.xu@linaro.org>
+Subject: Re: [PATCH v10 2/3] PCI: dwc: kirin: add PCIe Driver for HiSilicon
+ Kirin SoC
+Date: Wed, 21 Jun 2017 20:47:45 +0800
+Message-ID: <CAFGCpxzJJGyhJWFe9J5f34e-etsF=0AC4+y9sKeVxWRD8L0tPw@mail.gmail.com>
+References: <20170619100834.43321-3-songxiaowei@hisilicon.com> <201706192108.j0gmKdUJ%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1498032672-7172-5-git-send-email-zhi.mao@mediatek.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Zhi Mao <zhi.mao@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org
-Cc: zhenbao.liu@mediatek.com, devicetree@vger.kernel.org, srv_heupstream@mediatek.com, sean.wang@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, yt.shen@mediatek.com, yingjoe.chen@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201706192108.j0gmKdUJ%fengguang.wu@intel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: Xiaowei Song <songxiaowei@hisilicon.com>, kbuild-all@01.org, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 19, 2017 at 10:02 PM, kbuild test robot <lkp@intel.com> wrote:
+> Hi Xiaowei,
+>
+> [auto build test ERROR on pci/next]
+> [also build test ERROR on v4.12-rc5 next-20170619]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>
+> url:    https://github.com/0day-ci/linux/commits/Xiaowei-Song/PCI-hisi-Add-DT-binding-for-PCIe-of-Kirin-SoC-series/20170619-194535
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
+> config: arm64-defconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
+> reproduce:
+>         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         make.cross ARCH=arm64
+>
+> All errors (new ones prefixed by >>):
 
 
-On 21/06/17 10:11, Zhi Mao wrote:
-> support multiple chip(MT2712, MT7622, MT7623)
-This patch does more than add extra SoC support. It also
-* adds PWM_CLK_DIV_MAX which really should go into its own patch
-* adds mtk_pwm_com_reg which should also go into its own patch
+Thanks for the finding. Sorry about this.
 
-more comments inline
+v10 patchset should be ignored. Xiaowei sent v11 yesterday.
+
+-Guodong
 
 >
-> Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
+>    drivers/pci/dwc/pcie-kirin.c: In function 'kirin_pcie_establish_link':
+>>> drivers/pci/dwc/pcie-kirin.c:424:12: error: 'dev' undeclared (first use in this function)
+>        dev_err(dev, "Link Fail\n");
+>                ^~~
+>    drivers/pci/dwc/pcie-kirin.c:424:12: note: each undeclared identifier is reported only once for each function it appears in
+>
+> vim +/dev +424 drivers/pci/dwc/pcie-kirin.c
+>
+>    418
+>    419          /* check if the link is up or not */
+>    420          while (!kirin_pcie_link_up(pci)) {
+>    421                  usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
+>    422                  count++;
+>    423                  if (count == 1000) {
+>  > 424                          dev_err(dev, "Link Fail\n");
+>    425                          return -EINVAL;
+>    426                  }
+>    427          }
+>
 > ---
->   drivers/pwm/pwm-mediatek.c |   63 +++++++++++++++++++++++++++++++++++---------
->   1 file changed, 51 insertions(+), 12 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> index c803ff6..d520356 100644
-> --- a/drivers/pwm/pwm-mediatek.c
-> +++ b/drivers/pwm/pwm-mediatek.c
-> @@ -16,6 +16,7 @@
->   #include <linux/module.h>
->   #include <linux/clk.h>
->   #include <linux/of.h>
-> +#include <linux/of_device.h>
->   #include <linux/platform_device.h>
->   #include <linux/pwm.h>
->   #include <linux/slab.h>
-[...]
-> @@ -215,9 +238,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
->   	return pwmchip_remove(&pc->chip);
->   }
->   
-> +/*==========================================*/
-
-please remove these comment lines
-
-     John
-> +static const struct mtk_com_pwm_data mt2712_pwm_data = {
-> +	.pwm_nums = 8,
-> +};
-> +
-> +static const struct mtk_com_pwm_data mt7622_pwm_data = {
-> +	.pwm_nums = 6,
-> +};
-> +
-> +static const struct mtk_com_pwm_data mt7623_pwm_data = {
-> +	.pwm_nums = 5,
-> +};
-> +/*==========================================*/
-> +
->   static const struct of_device_id mtk_pwm_of_match[] = {
-> -	{ .compatible = "mediatek,mt7623-pwm" },
-> -	{ }
-> +	{.compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data},
-> +	{.compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data},
-> +	{.compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data},
-> +	{},
->   };
->   MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
->   
+> 0-DAY kernel test infrastructure                Open Source Technology Center
+> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
