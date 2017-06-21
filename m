@@ -1,15 +1,16 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Document the STM32 SPI bindings
-Date: Wed, 21 Jun 2017 17:20:58 +0200
-Message-ID: <5df6d07a-59b7-6460-75c5-c3b239067616@baylibre.com>
-References: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
- <1498055526-6918-2-git-send-email-amelie.delaunay@st.com>
+From: jeffy <jeffy.chen@rock-chips.com>
+Subject: Re: [RFC PATCH v3 3/6] ARM/arm64: dts: enable wakeup for cros-ec-spi
+ devices
+Date: Wed, 21 Jun 2017 23:33:29 +0800
+Message-ID: <594A91C9.1090906@rock-chips.com>
+References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com>
+ <1498039313-24220-4-git-send-email-jeffy.chen@rock-chips.com>
+ <CAJKOXPdL2CB9VWNo=it0dos-4hJYrgHUSZwcG1DS=9c+YxXzhQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1498055526-6918-2-git-send-email-amelie.delaunay@st.com>
-Content-Language: en-US
+In-Reply-To: <CAJKOXPdL2CB9VWNo=it0dos-4hJYrgHUSZwcG1DS=9c+YxXzhQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,93 +20,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, briannorris@chromium.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Jonathan Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2017 04:32 PM, Amelie Delaunay wrote:
-> This patch adds the documentation of device tree bindings
-> for the STM32 SPI controller.
-> 
-> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-> ---
->  .../devicetree/bindings/spi/spi-stm32.txt          | 60 ++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-> new file mode 100644
-> index 0000000..3958bf6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-> @@ -0,0 +1,60 @@
-> +STMicroelectronics STM32 SPI Controller
-> +
-> +The STM32 SPI controller is used to communicate with external devices using
-> +the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-> +simplex synchronous serial communication with external devices. It supports
-> +from 4 to 32-bit data size. Although it can be configured as master or slave,
-> +only master is supported by the driver.
-> +
-> +Required properties:
-> +- compatible: Must be "st,stm32-spi".
+Hi Krzysztof,
 
-Hi Amelie,
+thanx for your comment.
 
-What about the gen1 SPI devices like the F4 ?
+On 06/21/2017 06:45 PM, Krzysztof Kozlowski wrote:
+> On Wed, Jun 21, 2017 at 12:01 PM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
+>> We used to enable wakeup for cros-ec-spi devices unconditionally.
+>> Now we are using the more generic wakeup-source property to enable it.
+>
+> Using wakeup-source property is still enabling this unconditionally.
+> What  do you exactly mean here?
+i mean the wakeup-source is an optional property, we can disable wakeup 
+by not adding it.
 
-It should have been better to use SoC specific compatible, or specify the SPI HW gen like gen1 or gen2.
-
-Neil
-
-> +- reg: Offset and length of the device's register set.
-> +- interrupts: Must contain the interrupt id.
-> +- clocks: Must contain an entry for spiclk (which feeds the internal clock
-> +	  generator).
-> +- #address-cells:  Number of cells required to define a chip select address.
-> +- #size-cells: Should be zero.
-> +
-> +Optional properties:
-> +- resets: Must contain the phandle to the reset controller.
-> +- A pinctrl state named "default" may be defined to set pins in mode of
-> +  operation for SPI transfer.
-> +- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
-> +  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
-> +- dma-names: DMA request names should include "tx" and "rx" if present.
-> +- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
-> +  Documentation/devicetree/bindings/spi/spi-bus.txt
-> +
-> +
-> +Child nodes represent devices on the SPI bus
-> +  See ../spi/spi-bus.txt
-> +
-> +Optional properties:
-> +- st,spi-midi-ns: (Master Inter-Data Idleness) minimum time delay in
-> +		  nanoseconds inserted between two consecutive data frames.
-> +
-> +
-> +Example:
-> +	spi2: spi@40003800 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "st,stm32-spi";
-> +		reg = <0x40003800 0x400>;
-> +		interrupts = <36>;
-> +		clocks = <&rcc SPI2_CK>;
-> +		resets = <&rcc 1166>;
-> +		dmas = <&dmamux1 0 39 0x400 0x01>,
-> +		       <&dmamux1 1 40 0x400 0x01>;
-> +		dma-names = "rx", "tx";
-> +		pinctrl-0 = <&spi2_pins_b>;
-> +		pinctrl-names = "default";
-> +		status = "okay";
-> +		cs-gpios = <&gpioa 11 0>;
-> +
-> +		spidev@0 {
-> +			compatible = "spidev";
-> +			reg = <0>;
-> +			spi-max-frequency = <4000000>;
-> +			st,spi-midi = <4000>;
-> +		};
-> +	};
-> 
+but now i enable it to all exist cros-ec-spi devices for not breaking 
+current stuffs :)
+>
+>>
+>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
+>> ---
+>>
+>> Changes in v3: None
+>>
+>>   arch/arm/boot/dts/exynos5420-peach-pit.dts      | 1 +
+>>   arch/arm/boot/dts/exynos5800-peach-pi.dts       | 1 +
+>>   arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi | 1 +
+>>   arch/arm/boot/dts/tegra124-nyan.dtsi            | 1 +
+>>   arch/arm/boot/dts/tegra124-venice2.dts          | 1 +
+>>   arch/arm64/boot/dts/nvidia/tegra132-norrin.dts  | 1 +
+>>   arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi    | 1 +
+>>   7 files changed, 7 insertions(+)
+>
+> Please split it per arch (arm and arm64) and per machine. I'll take
+> exynos after splitting.
+ok, sounds good, will do it in next version, thanx~
+>
+> Best regards,
+> Krzysztof
+>
+>
+>
