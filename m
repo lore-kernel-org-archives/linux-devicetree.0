@@ -1,124 +1,38 @@
-From: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Subject: [PATCH 4/5] arm64: dts: hisilicon: add usb2 controller and phy nodes for poplar board.
-Date: Wed, 21 Jun 2017 17:00:44 +0800
-Message-ID: <1498035645-22804-5-git-send-email-xuejiancheng@hisilicon.com>
-References: <1498035645-22804-1-git-send-email-xuejiancheng@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498035645-22804-1-git-send-email-xuejiancheng@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@codeaurora.org, robh+dt@kernel.org, kishon@ti.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, balbi@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, project-aspen-dev@linaro.org, yanhaifeng@hisilicon.com, Jiancheng Xue <xuejiancheng@hisilicon.com>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 1/7] dt-bindings: display: renesas: Add R-Car M3-W HDMI TX DT bindings
+Date: Wed, 21 Jun 2017 12:31:27 +0300
+Message-ID: <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
+References: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: linux-renesas-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Add usb2 controller and phy nodes for poplar board.
+The M3-W HDMI TX controller seems to be compatible for the H3. No
+extension to the DT bindings are needed, add an SoC-specific compatible
+string in case differences between the IP versions are found later and
+require model-specific handling.
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 ---
- .../boot/dts/hisilicon/hi3798cv200-poplar.dts      | 13 ++++++
- arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi     | 47 ++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-index 684fa09..40db803 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200-poplar.dts
-@@ -64,6 +64,10 @@
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt b/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
+index f6b3f36d422b..c93a3858a98a 100644
+--- a/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
++++ b/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
+@@ -13,6 +13,7 @@ Required properties:
  
-+&ehci {
-+	status = "okay";
-+};
-+
- &gmac1 {
- 	status = "okay";
- 	#address-cells = <1>;
-@@ -147,6 +151,10 @@
- 	status = "okay";
- };
+ - compatible : Shall contain one or more of
+   - "renesas,r8a7795-hdmi" for R8A7795 (R-Car H3) compatible HDMI TX
++  - "renesas,r8a7796-hdmi" for R8A7796 (R-Car M3-W) compatible HDMI TX
+   - "renesas,rcar-gen3-hdmi" for the generic R-Car Gen3 compatible HDMI TX
  
-+&ohci {
-+	status = "okay";
-+};
-+
- &spi0 {
- 	status = "okay";
- 	label = "LS-SPI0";
-@@ -161,3 +169,8 @@
- 	label = "LS-UART0";
- };
- /* No optional LS-UART1 on Low Speed Expansion Connector. */
-+
-+&usb2_phy1 {
-+	status = "okay";
-+};
-+
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-index 75865f8a..422aeaf 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3798cv200.dtsi
-@@ -106,6 +106,11 @@
- 			#reset-cells = <2>;
- 		};
- 
-+		peri_ctrl: system-controller@8a20000 {
-+			compatible = "syscon";
-+			reg = <0x8a20000 0x1000>;
-+		};
-+
- 		uart0: serial@8b00000 {
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x8b00000 0x1000>;
-@@ -407,5 +412,47 @@
- 			clocks = <&sysctrl HISTB_IR_CLK>;
- 			status = "disabled";
- 		};
-+
-+		ehci: ehci@0x9890000 {
-+			compatible = "generic-ehci";
-+			reg = <0x9890000 0x10000>;
-+			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_USB2_BUS_CLK>,
-+				 <&crg HISTB_USB2_PHY_CLK>;
-+			clock-names = "ehci_system", "phy";
-+			resets = <&crg 0xb8 12>,
-+				 <&crg 0xb8 16>;
-+			reset-names = "bus", "phy";
-+			status = "disabled";
-+		};
-+
-+		ohci: ohci@0x9880000 {
-+			compatible = "generic-ohci";
-+			reg = <0x9880000 0x10000>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&crg HISTB_USB2_BUS_CLK>,
-+				 <&crg HISTB_USB2_12M_CLK>,
-+				 <&crg HISTB_USB2_48M_CLK>;
-+			clock-names = "ahb_biu", "clk12", "clk48";
-+			resets = <&crg 0xb8 12>;
-+			reset-names = "bus";
-+			status = "disabled";
-+		};
-+
-+		usb2_phy1: usb-phy@1 {
-+			compatible = "hisilicon,hi3798cv200-usb2-phy";
-+			#phy-cells = <0>;
-+			hisilicon,peripheral-syscon = <&peri_ctrl>;
-+			clocks = <&crg HISTB_USB2_PHY1_REF_CLK>;
-+			resets = <&crg 0xbc 4>;
-+			reset-names = "por_rst";
-+			status = "disabled";
-+
-+			usb2_port1: port@1 {
-+				clocks = <&crg HISTB_USB2_UTMI_CLK>;
-+				resets = <&crg 0xbc 9>, <&crg 0xb8 13>;
-+				reset-names = "port_rst", "utmi_rst";
-+			};
-+		};
- 	};
- };
+     When compatible with generic versions, nodes must list the SoC-specific
 -- 
-1.9.1
+Regards,
+
+Laurent Pinchart
