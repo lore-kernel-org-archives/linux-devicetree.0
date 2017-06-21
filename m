@@ -1,28 +1,35 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/5] clk: hisilicon: add usb2 clocks for hi3798cv200 SoC
-Date: Wed, 21 Jun 2017 10:46:51 -0700
-Message-ID: <20170621174651.GC4493@codeaurora.org>
-References: <1498035645-22804-1-git-send-email-xuejiancheng@hisilicon.com>
- <1498035645-22804-2-git-send-email-xuejiancheng@hisilicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1498035645-22804-2-git-send-email-xuejiancheng@hisilicon.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiancheng Xue <xuejiancheng@hisilicon.com>
-Cc: robh+dt@kernel.org, kishon@ti.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, balbi@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, project-aspen-dev@linaro.org, yanhaifeng@hisilicon.com
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 0/2] clk: ARM: dts: exynos: Fix hang on Odroid U3
+Date: Wed, 21 Jun 2017 21:08:05 +0200
+Message-ID: <20170621190807.14850-1-krzk@kernel.org>
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chanwoo Choi <cw00.choi@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/21, Jiancheng Xue wrote:
-> Add usb2 clocks for hi3798cv200 SoC.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
-> Reviewed-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
+Recent linux-next fails to boot on Odroid U3 (Exynos4412) because
+of commit 6edfa11cb396 ("clk: samsung: Add enable/disable operation
+for PLL36XX clocks").
 
-Applied to clk-next
+Patchset fixes it. Patches are independent although both are required
+to fix the issue.
+
+I will be taking DTS change.
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (2):
+  clk: samsung: audss: Fix silent hang on Exynos4412 due to disabled
+    EPLL
+  ARM: dts: exynos: Add clocks to audss block to fix silent hang on
+    Exynos4412
+
+ arch/arm/boot/dts/exynos4.dtsi         | 3 +++
+ drivers/clk/samsung/clk-exynos-audss.c | 1 +
+ 2 files changed, 4 insertions(+)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.9.3
+
