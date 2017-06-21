@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V7 4/6] mtd: partitions: add support for subpartitions
-Date: Wed, 21 Jun 2017 08:26:45 +0200
-Message-ID: <20170621062647.6072-5-zajec5@gmail.com>
+Subject: [PATCH V7 5/6] mtd: partitions: add support for partition parsers
+Date: Wed, 21 Jun 2017 08:26:46 +0200
+Message-ID: <20170621062647.6072-6-zajec5@gmail.com>
 References: <20170526131415.27186-1-zajec5@gmail.com>
  <20170621062647.6072-1-zajec5@gmail.com>
 Mime-Version: 1.0
@@ -16,99 +16,118 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-Some flash device partitions can be containers with extra subpartitions
-(volumes). All callbacks are already capable of this additional level of
-indirection.
+Some devices have partitions that are kind of containers with extra
+subpartitions / volumes instead of e.g. a simple filesystem data. To
+support such cases we need to first create normal flash device
+partitions and then take care of these special ones.
 
-This patch makes sure we always display subpartitions using a tree
-structure and takes care of deleting subpartitions when parent gets
-removed.
+It's very common case for home routers. Depending on the vendor there
+are formats like TRX, Seama, TP-Link, WRGG & more. All of them are used
+to embed few partitions into a single one / single firmware file.
+
+Ideally all vendors would use some well documented / standardized format
+like UBI (and some probably start doing so), but there are still
+countless devices on the market using these poor vendor specific
+formats.
+
+This patch extends MTD subsystem by allowing to specify list of parsers
+that should be tried for a given partition. Supporting such poor formats
+is highly unlikely to be the top priority so these changes try to
+minimize maintenance cost to the minimum. It reuses existing code for
+these new parsers and just adds a one property and one new function.
+
+This implementation requires setting partition parsers in a flash
+parser. A proper change of bcm47xxpart will follow and in the future we
+will hopefully also find a solution for doing it with ofpart
+("fixed-partitions").
 
 Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 ---
-V5: Introduction of this patch to handle offset in allocate_partition
-    and avoid casting const to non-const in mtd_parse_part.
-V6: Rework patch to support tree structure.
+V2: A totally rebased & refreshed version.
+V3: Don't mention uImage in commit message, it was a mistake.
+V4: Document mtd_parse_part parameters
+V5: Make documentation more clear as pointed by Brian
+    Let offset be handled in add_mtd_partitions / allocate_partition
+    Switch "format" to "types"
 ---
- drivers/mtd/mtdpart.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+ drivers/mtd/mtdpart.c          | 31 +++++++++++++++++++++++++++++++
+ include/linux/mtd/partitions.h |  7 +++++++
+ 2 files changed, 38 insertions(+)
 
 diff --git a/drivers/mtd/mtdpart.c b/drivers/mtd/mtdpart.c
-index 208822040735..c0d464d192ee 100644
+index c0d464d192ee..2ad9493703f9 100644
 --- a/drivers/mtd/mtdpart.c
 +++ b/drivers/mtd/mtdpart.c
-@@ -413,7 +413,7 @@ static struct mtd_part *allocate_partition(struct mtd_info *parent,
- 	 * parent conditional on that option. Note, this is a way to
- 	 * distinguish between the master and the partition in sysfs.
- 	 */
--	slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) ?
-+	slave->mtd.dev.parent = IS_ENABLED(CONFIG_MTD_PARTITIONED_MASTER) || mtd_is_partition(parent) ?
- 				&parent->dev :
- 				parent->dev.parent;
- 	slave->mtd.dev.of_node = part->of_node;
-@@ -664,8 +664,17 @@ EXPORT_SYMBOL_GPL(mtd_add_partition);
-  */
- static int __mtd_del_partition(struct mtd_part *priv)
- {
-+	struct mtd_part *child, *next;
- 	int err;
+@@ -369,6 +369,35 @@ static inline void free_partition(struct mtd_part *p)
+ 	kfree(p);
+ }
  
-+	list_for_each_entry_safe(child, next, &mtd_partitions, list) {
-+		if (child->parent == &priv->mtd) {
-+			err = __mtd_del_partition(child);
-+			if (err)
-+				return err;
-+		}
-+	}
++/**
++ * mtd_parse_part - parse MTD partition looking for subpartitions
++ *
++ * @slave: part that is supposed to be a container and should be parsed
++ * @types: NULL-terminated array with names of partition parsers to try
++ *
++ * Some partitions are kind of containers with extra subpartitions (volumes).
++ * There can be various formats of such containers. This function tries to use
++ * specified parsers to analyze given partition and registers found
++ * subpartitions on success.
++ */
++static int mtd_parse_part(struct mtd_part *slave, const char *const *types)
++{
++	struct mtd_partitions parsed;
++	int err;
 +
- 	sysfs_remove_files(&priv->mtd.dev.kobj, mtd_partition_attrs);
++	err = parse_mtd_partitions(&slave->mtd, types, &parsed, NULL);
++	if (err)
++		return err;
++	else if (!parsed.nr_parts)
++		return -ENOENT;
++
++	err = add_mtd_partitions(&slave->mtd, parsed.parts, parsed.nr_parts);
++
++	mtd_part_parser_cleanup(&parsed);
++
++	return err;
++}
++
+ static struct mtd_part *allocate_partition(struct mtd_info *parent,
+ 			const struct mtd_partition *part, int partno,
+ 			uint64_t cur_offset)
+@@ -758,6 +787,8 @@ int add_mtd_partitions(struct mtd_info *master,
  
- 	err = del_mtd_device(&priv->mtd);
-@@ -680,16 +689,16 @@ static int __mtd_del_partition(struct mtd_part *priv)
+ 		add_mtd_device(&slave->mtd);
+ 		mtd_add_partition_attrs(slave);
++		if (parts[i].types)
++			mtd_parse_part(slave, parts[i].types);
  
- /*
-  * This function unregisters and destroy all slave MTD objects which are
-- * attached to the given master MTD object.
-+ * attached to the given MTD object.
-  */
--int del_mtd_partitions(struct mtd_info *master)
-+int del_mtd_partitions(struct mtd_info *mtd)
- {
- 	struct mtd_part *slave, *next;
- 	int ret, err = 0;
+ 		cur_offset = slave->offset + slave->mtd.size;
+ 	}
+diff --git a/include/linux/mtd/partitions.h b/include/linux/mtd/partitions.h
+index 06df1e06b6e0..c4beb70dacbd 100644
+--- a/include/linux/mtd/partitions.h
++++ b/include/linux/mtd/partitions.h
+@@ -20,6 +20,12 @@
+  *
+  * For each partition, these fields are available:
+  * name: string that will be used to label the partition's MTD device.
++ * types: some partitions can be containers using specific format to describe
++ *	embedded subpartitions / volumes. E.g. many home routers use "firmware"
++ *	partition that contains at least kernel and rootfs. In such case an
++ *	extra parser is needed that will detect these dynamic partitions and
++ *	report them to the MTD subsystem. If set this property stores an array
++ *	of parser names to use when looking for subpartitions.
+  * size: the partition size; if defined as MTDPART_SIZ_FULL, the partition
+  * 	will extend to the end of the master MTD device.
+  * offset: absolute starting position within the master MTD device; if
+@@ -38,6 +44,7 @@
  
- 	mutex_lock(&mtd_partitions_mutex);
- 	list_for_each_entry_safe(slave, next, &mtd_partitions, list)
--		if (slave->parent == master) {
-+		if (slave->parent == mtd) {
- 			ret = __mtd_del_partition(slave);
- 			if (ret < 0)
- 				err = ret;
-@@ -699,14 +708,14 @@ int del_mtd_partitions(struct mtd_info *master)
- 	return err;
- }
- 
--int mtd_del_partition(struct mtd_info *master, int partno)
-+int mtd_del_partition(struct mtd_info *mtd, int partno)
- {
- 	struct mtd_part *slave, *next;
- 	int ret = -EINVAL;
- 
- 	mutex_lock(&mtd_partitions_mutex);
- 	list_for_each_entry_safe(slave, next, &mtd_partitions, list)
--		if ((slave->parent == master) &&
-+		if ((slave->parent == mtd) &&
- 		    (slave->mtd.index == partno)) {
- 			ret = __mtd_del_partition(slave);
- 			break;
-@@ -939,6 +948,6 @@ uint64_t mtd_get_device_size(const struct mtd_info *mtd)
- 	if (!mtd_is_partition(mtd))
- 		return mtd->size;
- 
--	return mtd_to_part(mtd)->parent->size;
-+	return mtd_get_device_size(mtd_to_part(mtd)->parent);
- }
- EXPORT_SYMBOL_GPL(mtd_get_device_size);
+ struct mtd_partition {
+ 	const char *name;		/* identifier string */
++	const char *const *types;	/* names of parsers to use if any */
+ 	uint64_t size;			/* partition size */
+ 	uint64_t offset;		/* offset within the master MTD space */
+ 	uint32_t mask_flags;		/* master MTD flags to mask out for this partition */
 -- 
 2.11.0
 
