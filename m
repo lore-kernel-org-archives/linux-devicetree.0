@@ -1,64 +1,50 @@
-From: Guodong Xu <guodong.xu@linaro.org>
-Subject: Re: [PATCH v10 2/3] PCI: dwc: kirin: add PCIe Driver for HiSilicon
- Kirin SoC
-Date: Wed, 21 Jun 2017 20:47:45 +0800
-Message-ID: <CAFGCpxzJJGyhJWFe9J5f34e-etsF=0AC4+y9sKeVxWRD8L0tPw@mail.gmail.com>
-References: <20170619100834.43321-3-songxiaowei@hisilicon.com> <201706192108.j0gmKdUJ%fengguang.wu@intel.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v3 4/9] arm64: marvell: enable the Armada 7K/8K pinctrl driver
+Date: Wed, 21 Jun 2017 14:53:03 +0200
+Message-ID: <8737at33kg.fsf@free-electrons.com>
+References: <cover.d003a5e862e6d732d901a61d1765a349c9a89eef.1497281623.git-series.gregory.clement@free-electrons.com>
+        <30ebac2a9f20c05d354eb3f41ad21cdda8a45ae9.1497281623.git-series.gregory.clement@free-electrons.com>
+        <CACRpkdbbL+QaQ7rAKdq4ZVTzkNab=o3h78hE1Zb+c7ivNRaQKw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201706192108.j0gmKdUJ%fengguang.wu@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kbuild test robot <lkp@intel.com>
-Cc: Xiaowei Song <songxiaowei@hisilicon.com>, kbuild-all@01.org, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, linux-pci <linux-pci@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbbL+QaQ7rAKdq4ZVTzkNab=o3h78hE1Zb+c7ivNRaQKw@mail.gmail.com>
+        (Linus Walleij's message of "Fri, 16 Jun 2017 11:22:01 +0200")
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <rmk+kernel@armlinux.org.uk>, Nadav Haklai <nadavh@marvell.com>, Kostya Porotchkin <kostap@marvell.com>, Neta Zur Hershkovits <neta@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Omri Itach <omrii@marvell.com>, Shadi Ammouri <shadi@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 19, 2017 at 10:02 PM, kbuild test robot <lkp@intel.com> wrote:
-> Hi Xiaowei,
+Hi Linus,
+ 
+ On ven., juin 16 2017, Linus Walleij <linus.walleij@linaro.org> wrote:
+
+> On Mon, Jun 12, 2017 at 5:34 PM, Gregory CLEMENT
+> <gregory.clement@free-electrons.com> wrote:
 >
-> [auto build test ERROR on pci/next]
-> [also build test ERROR on v4.12-rc5 next-20170619]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>> This commit makes sure the drivers for the Armada 7K/8K pin controllers
+>> are enabled.
+>>
+>> Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 >
-> url:    https://github.com/0day-ci/linux/commits/Xiaowei-Song/PCI-hisi-Add-DT-binding-for-PCIe-of-Kirin-SoC-series/20170619-194535
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/helgaas/pci.git next
-> config: arm64-defconfig (attached as .config)
-> compiler: aarch64-linux-gnu-gcc (Debian 6.1.1-9) 6.1.1 20160705
-> reproduce:
->         wget https://raw.githubusercontent.com/01org/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         make.cross ARCH=arm64
+> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 >
-> All errors (new ones prefixed by >>):
+> Please merge this through ARM SoC.
 
 
-Thanks for the finding. Sorry about this.
+Applied on mvebu/arm64
 
-v10 patchset should be ignored. Xiaowei sent v11 yesterday.
+Thanks,
 
--Guodong
+Gregory
 
 >
->    drivers/pci/dwc/pcie-kirin.c: In function 'kirin_pcie_establish_link':
->>> drivers/pci/dwc/pcie-kirin.c:424:12: error: 'dev' undeclared (first use in this function)
->        dev_err(dev, "Link Fail\n");
->                ^~~
->    drivers/pci/dwc/pcie-kirin.c:424:12: note: each undeclared identifier is reported only once for each function it appears in
->
-> vim +/dev +424 drivers/pci/dwc/pcie-kirin.c
->
->    418
->    419          /* check if the link is up or not */
->    420          while (!kirin_pcie_link_up(pci)) {
->    421                  usleep_range(LINK_WAIT_MIN, LINK_WAIT_MAX);
->    422                  count++;
->    423                  if (count == 1000) {
->  > 424                          dev_err(dev, "Link Fail\n");
->    425                          return -EINVAL;
->    426                  }
->    427          }
->
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> Yours,
+> Linus Walleij
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
