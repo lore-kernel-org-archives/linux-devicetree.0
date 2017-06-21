@@ -1,205 +1,89 @@
-From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: Re: [PATCH 2/2] i2c: Add Spreadtrum I2C controller driver
-Date: Wed, 21 Jun 2017 11:25:30 +0800
-Message-ID: <20170621032529.GA1142@spreadtrum.com>
-References: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1497525667.git.baolin.wang@spreadtrum.com>
- <f3cdd27dcfa2ca6347502608928081fb9271c0b5.1497525667.git.baolin.wang@spreadtrum.com>
- <CAHp75Vf+qPa6i84yctSz+rAkim2owhX=zAsHsTF1EQRnouBwxg@mail.gmail.com>
+From: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [PATCH v6 1/4] of: remove *phandle properties from expanded device tree
+Date: Wed, 21 Jun 2017 14:57:35 +1000
+Message-ID: <87mv92szsw.fsf@concordia.ellerman.id.au>
+References: <1497996172-821-1-git-send-email-frowand.list@gmail.com> <1497996172-821-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vf+qPa6i84yctSz+rAkim2owhX=zAsHsTF1EQRnouBwxg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1497996172-821-2-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nathan Fontenot <nfont-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Hi Frank,
 
-Sorry for late reply due to my business trip.
+frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org writes:
+> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+>
+> Remove "phandle", "linux,phandle", and "ibm,phandle" properties from
+> the internal device tree.  The phandle will still be in the struct
+> device_node phandle field and will still be displayed as if it is
+> a property in /proc/device_tree.
+>
+> This is to resolve the issue found by Stephen Boyd [1] when he changed
+> the type of struct property.value from void * to const void *.  As
+> a result of the type change, the overlay code had compile errors
+> where the resolver updates phandle values.
+>
+>   [1] http://lkml.iu.edu/hypermail/linux/kernel/1702.1/04160.html
+>
+> - Add sysfs infrastructure to report np->phandle, as if it was a property.
+> - Do not create "phandle" "ibm,phandle", and "linux,phandle" properties
+>   in the expanded device tree.
+> - Remove phandle properties in of_attach_node(), for nodes dynamically
+>   attached to the live tree.  Add the phandle sysfs entry for these nodes.
+> - When creating an overlay changeset, duplicate the node phandle in
+>   __of_node_dup().
+> - Remove no longer needed checks to exclude "phandle" and "linux,phandle"
+>   properties in several locations.
+> - A side effect of these changes is that the obsolete "linux,phandle" and
+>   "ibm,phandle" properties will no longer appear in /proc/device-tree (they
+>   will appear as "phandle").
 
-On 六,  6月 17, 2017 at 08:18:49下午 +0300, Andy Shevchenko wrote:
-> On Thu, Jun 15, 2017 at 2:30 PM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
-> > This patch adds the I2C controller driver for Spreadtrum platform.
-> 
-> 
-> > +       i2c_dev->irq = platform_get_irq(pdev, 0);
-> > +       if (i2c_dev->irq < 0) {
-> > +               dev_err(&pdev->dev, "failed to get irq resource\n");
-> 
-> > +               return -ENXIO;
-> 
-> Why shadow actual error?
+Sorry but I don't think that can work for us.
 
-Sorry for missing this and will fix in next version.
+Our DLPAR (ie. CPU/memory/device hotplug) stuff on PowerVM uses
+"ibm,phandle", and it's not the same thing as "phandle" /
+"linux,phandle".
 
-> 
-> > +       }
-> 
-> 
-> > +       if (!of_property_read_u32(dev->of_node, "clock-frequency", &prop))
-> > +               i2c_dev->bus_freq = prop;
-> > +
-> > +       sprd_i2c_clk_init(i2c_dev);
-> > +       platform_set_drvdata(pdev, i2c_dev);
-> > +
-> > +       pm_runtime_set_autosuspend_delay(i2c_dev->dev, SPRD_I2C_PM_TIMEOUT);
-> > +       pm_runtime_use_autosuspend(i2c_dev->dev);
-> > +       pm_runtime_set_active(i2c_dev->dev);
-> > +       pm_runtime_enable(i2c_dev->dev);
-> > +
-> > +       ret = pm_runtime_get_sync(i2c_dev->dev);
-> > +       if (ret < 0) {
-> > +               dev_err(&pdev->dev, "i2c%d pm runtime resume failed!\n",
-> > +                       pdev->id);
-> 
-> > +               return ret;
-> 
-> goto error;
+I don't know the code well myself, but the spec (PAPR) says:
 
-Yes, will fix it.
+  Note: If the “ibm,phandle” property exists, there are two “phandle”
+  namespaces which must be kept separate. One is that actually used by
+  the OF client interface, the other is properties in the device tree
+  making reference to device tree nodes. These requirements are written
+  to maintain backward compatibility with older FW versions predating
+  these requirements; if the “ibm,phandle” property is not present, the
+  OS may assume that any device tree properties which refer to this node
+  will have a phandle value matching that returned by client interface
+  services.
 
-> 
-> > +       }
-> > +
-> > +       ret = devm_request_threaded_irq(dev, i2c_dev->irq,
-> > +               sprd_i2c_isr, sprd_i2c_isr_thread,
-> > +               IRQF_NO_SUSPEND | IRQF_ONESHOT,
-> > +               pdev->name, i2c_dev);
-> > +       if (ret) {
-> > +               dev_err(&pdev->dev, "failed to request irq %d\n", i2c_dev->irq);
-> > +               goto error;
-> > +       }
-> > +
-> > +       ret = i2c_add_numbered_adapter(&i2c_dev->adap);
-> > +       if (ret) {
-> > +               dev_err(&pdev->dev, "add adapter failed\n");
-> > +               goto error;
-> > +       }
-> > +
-> > +       pm_runtime_mark_last_busy(i2c_dev->dev);
-> > +       pm_runtime_put_autosuspend(i2c_dev->dev);
-> > +       return 0;
-> > +
-> > +error:
-> > +       pm_runtime_put_noidle(i2c_dev->dev);
-> > +       pm_runtime_disable(i2c_dev->dev);
-> > +       return ret;
-> > +}
-> > +
-> > +static int sprd_i2c_remove(struct platform_device *pdev)
-> > +{
-> > +       struct sprd_i2c *i2c_dev = platform_get_drvdata(pdev);
-> > +       int ret;
-> > +
-> 
-> > +       ret = pm_runtime_get_sync(i2c_dev->dev);
-> > +       if (ret < 0)
-> > +               return ret;
-> 
-> Does it make any sense? Doesn't device core power on the device before
-> calling ->remove() ?
+I have systems here that still use "ibm,phandle". I also see at least
+some of the userspace code that looks for "ibm,phandle", and nothing
+else.
 
-Yes, you are right. We need power on device in probe() function.
+The note above actually implies that the current Linux code is wrong,
+when it uses "ibm,phandle" as the value of np->phandle.
 
-> 
-> > +
-> > +       i2c_del_adapter(&i2c_dev->adap);
-> > +
-> > +       if (!IS_ERR_OR_NULL(i2c_dev->clk))
-> 
-> _OR_NULL looks suspicious.
+So sorry that's a big mess, but we can't just rip out those properties.
 
-Since our ->clk can be NULL as one optional connfig in case we test I2C
-driver on FPGA platform which does not support clock operation.
+I think the minimal change would be to treat "ibm,phandle" like a normal
+property, I think that would allow our tools to keep working?
 
-> 
-> > +               clk_unprepare(i2c_dev->clk);
-> > +
-> > +       pm_runtime_put_noidle(i2c_dev->dev);
-> > +       pm_runtime_disable(i2c_dev->dev);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> 
-> > +#ifdef CONFIG_PM_SLEEP
-> 
-> __maybe_unused instead?
 
-OK.
+The other thing that worries me is that by renaming (effectively)
+"linux,phandle" to "phandle", we lose the ability to accurately
+regenerate the device tree from /proc/device-tree. In theory it
+shouldn't matter, but I worry that in practice something will break.
 
-> 
-> > +static int sprd_i2c_suspend_noirq(struct device *pdev)
-> 
-> > +static int sprd_i2c_resume_noirq(struct device *pdev)
-> 
-> > +#endif  /* CONFIG_PM_SLEEP */
-> 
-> > +#ifdef CONFIG_PM
-> 
-> Ditto.
+What if we just kept a single bit flag somewhere indicating if the name of
+the phandle property we found was "phandle" or "linux,phandle", and
+create the sysfs phandle using that name?
 
-OK.
-
-> 
-> > +static int sprd_i2c_runtime_suspend(struct device *pdev)
-> 
-> > +}
-> 
-> > +static int sprd_i2c_runtime_resume(struct device *pdev)
-> > +{
-> 
-> > +       clk_prepare_enable(i2c_dev->clk);
-> 
-> This might fail.
-
-Yes, will check return value.
-
-> 
-> 
-> > +}
-> > +#endif  /* CONFIG_PM */
-> 
-> 
-> > +static struct platform_driver sprd_i2c_driver = {
-> > +       .probe = sprd_i2c_probe,
-> > +       .remove = sprd_i2c_remove,
-> > +       .driver = {
-> > +                  .name = "sprd-i2c",
-> 
-> > +                  .of_match_table = of_match_ptr(sprd_i2c_of_match),
-> 
-> of_match_ptr seems redundant.
-
-OK.
-
-> 
-> > +                  .pm = &sprd_i2c_pm_ops,
-> > +       },
-> > +};
-> > +
-> 
-> > +static int __init sprd_i2c_init(void)
-> > +{
-> > +       return platform_driver_register(&sprd_i2c_driver);
-> > +}
-> 
-> > +arch_initcall_sync(sprd_i2c_init);
-> 
-> Why?
-
-IN our Spreadtrum platform, our regulator driver will depend on I2C driver
-and the regulator driver uses subsys_initcall() level to initialize. Moreover
-some other drivers like GPU, they will depend on regulator to set voltage and
-they also need initialization much earlier. Thanks for your comments.
-
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+cheers
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
