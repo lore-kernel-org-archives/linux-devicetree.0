@@ -1,51 +1,53 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] input: sun4i-a10-lradc-keys: Add
- support for A83T
-Date: Wed, 21 Jun 2017 22:35:02 +0200
-Message-ID: <20170621203502.ng7auh6vfmibobwo@flea.lan>
-References: <20170620134445.23097-1-techping.chan@gmail.com>
- <20170620134445.23097-2-techping.chan@gmail.com>
-Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt/bindings: Add bindings for Broadcom STB DRAM
+ Sensors
+Date: Wed, 21 Jun 2017 13:44:53 -0700
+Message-ID: <7128c063-1b3d-9cfb-71c6-f4590dac5e09@gmail.com>
+References: <20170613223710.31719-1-code@mmayer.net>
+ <20170613223710.31719-2-code@mmayer.net>
+ <20170618140529.wtqffjuilrkarzvd@rob-hp-laptop>
+ <CANEuBv6YEoTBBzPA5fkrveD05RZNtTBTak-qmxz7BvnrED5pbg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="idqur4o72v5fvqq7"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB55QVPFAKGQEOWF7E2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170620134445.23097-2-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CANEuBv6YEoTBBzPA5fkrveD05RZNtTBTak-qmxz7BvnrED5pbg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Broadcom Kernel List <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---idqur4o72v5fvqq7
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Jun 20, 2017 at 09:44:43PM +0800, Ziping Chen wrote:
-> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On 06/19/2017 10:26 AM, Markus Mayer wrote:
+> On 18 June 2017 at 07:05, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, Jun 13, 2017 at 03:37:09PM -0700, Markus Mayer wrote:
+>>> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>
+>>> Provide bindings for the Broadcom STB DDR PHY Front End (DPFE).
+>>>
+>>> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> ---
+>>>  .../devicetree/bindings/soc/bcm/brcm,dpfe-cpu.txt  | 27 ++++++++++++++++++++++
+>>>  1 file changed, 27 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/soc/bcm/brcm,dpfe-cpu.txt
+>>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> Allwinner A83T SoC has a low res adc like the one
-> in Allwinner A10 SoC, however, the A10 SoC's vref
-> of lradc internally is divided by 2/3 and the A83T
-> SoC's isn't, thus add a hardware variant for it to
-> be compatible with various devices.
+> Thanks, Rob.
+> 
+> To bring up the previous discussion regarding enumerating multiple
+> nodes (so far we need two dpfe nodes for some platforms), how should
+> we go about this? We were originally proposing to use "cell-index",
+> but you said this was OpenFirmware only and couldn't be used in device
+> tree. See https://lkml.org/lkml/2017/4/27/574.
+> 
+> We do need to use something, because the driver needs to know if it
+> should be accessing dpfe0 or dpfe1. What should we use?
 
-Where did you get that info from?
-
-Judging from the user manual, the threshold is actually set to 3/4,
-and not 2/3, but there's still one.
-
-Maxime
-
+Would aliases work for instance for that purpose?
 -- 
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
---idqur4o72v5fvqq7--
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
