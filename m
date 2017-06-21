@@ -1,263 +1,91 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH v2 2/8] mfd: Add STM32 LPTimer driver
-Date: Wed, 21 Jun 2017 16:30:09 +0200
-Message-ID: <1498055415-31513-3-git-send-email-fabrice.gasnier@st.com>
-References: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com>
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Subject: [PATCH 1/2] dt-bindings: spi: Document the STM32 SPI bindings
+Date: Wed, 21 Jun 2017 16:32:05 +0200
+Message-ID: <1498055526-6918-2-git-send-email-amelie.delaunay@st.com>
+References: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
 List-Id: devicetree@vger.kernel.org
 
-STM32 Low-Power Timer hardware block can be used for:
-- PWM generation
-- IIO trigger (in sync with PWM)
-- IIO quadrature encoder counter
-PWM and IIO timer configuration are mixed in the same registers so
-we need a multi fonction driver to be able to share those registers.
+This patch adds the documentation of device tree bindings
+for the STM32 SPI controller.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
 ---
-Changes in v2:
-- Lee's remarks: various comments, max register define, s/Low Power/Low-Power,
-  clock name, removed reset, add kernel doc for stm32_lptimer struct
----
- drivers/mfd/Kconfig               |  14 +++++
- drivers/mfd/Makefile              |   1 +
- drivers/mfd/stm32-lptimer.c       | 107 ++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/stm32-lptimer.h |  62 ++++++++++++++++++++++
- 4 files changed, 184 insertions(+)
- create mode 100644 drivers/mfd/stm32-lptimer.c
- create mode 100644 include/linux/mfd/stm32-lptimer.h
+ .../devicetree/bindings/spi/spi-stm32.txt          | 60 ++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 3eb5c93..8e1ca44 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1683,6 +1683,20 @@ config MFD_STW481X
- 	  in various ST Microelectronics and ST-Ericsson embedded
- 	  Nomadik series.
- 
-+config MFD_STM32_LPTIMER
-+	tristate "Support for STM32 Low-Power Timer"
-+	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-+	select MFD_CORE
-+	select REGMAP
-+	select REGMAP_MMIO
-+	help
-+	  Select this option to enable STM32 Low-Power Timer driver
-+	  used for PWM, IIO Trigger, IIO Encoder and Counter. Shared
-+	  resources are also dealt with here.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called stm32-lptimer.
-+
- config MFD_STM32_TIMERS
- 	tristate "Support for STM32 Timers"
- 	depends on (ARCH_STM32 && OF) || COMPILE_TEST
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index c16bf1e..a5308d8 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -219,5 +219,6 @@ obj-$(CONFIG_MFD_MT6397)	+= mt6397-core.o
- obj-$(CONFIG_MFD_ALTERA_A10SR)	+= altera-a10sr.o
- obj-$(CONFIG_MFD_SUN4I_GPADC)	+= sun4i-gpadc.o
- 
-+obj-$(CONFIG_MFD_STM32_LPTIMER)	+= stm32-lptimer.o
- obj-$(CONFIG_MFD_STM32_TIMERS) 	+= stm32-timers.o
- obj-$(CONFIG_MFD_MXS_LRADC)     += mxs-lradc.o
-diff --git a/drivers/mfd/stm32-lptimer.c b/drivers/mfd/stm32-lptimer.c
+diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
 new file mode 100644
-index 0000000..075330a
+index 0000000..3958bf6
 --- /dev/null
-+++ b/drivers/mfd/stm32-lptimer.c
-@@ -0,0 +1,107 @@
-+/*
-+ * STM32 Low-Power Timer parent driver.
-+ *
-+ * Copyright (C) STMicroelectronics 2017
-+ *
-+ * Author: Fabrice Gasnier <fabrice.gasnier@st.com>
-+ *
-+ * Inspired by Benjamin Gaignard's stm32-timers driver
-+ *
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
++++ b/Documentation/devicetree/bindings/spi/spi-stm32.txt
+@@ -0,0 +1,60 @@
++STMicroelectronics STM32 SPI Controller
 +
-+#include <linux/mfd/stm32-lptimer.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
++The STM32 SPI controller is used to communicate with external devices using
++the Serial Peripheral Interface. It supports full-duplex, half-duplex and
++simplex synchronous serial communication with external devices. It supports
++from 4 to 32-bit data size. Although it can be configured as master or slave,
++only master is supported by the driver.
 +
-+#define STM32_LPTIM_MAX_REGISTER	0x3fc
++Required properties:
++- compatible: Must be "st,stm32-spi".
++- reg: Offset and length of the device's register set.
++- interrupts: Must contain the interrupt id.
++- clocks: Must contain an entry for spiclk (which feeds the internal clock
++	  generator).
++- #address-cells:  Number of cells required to define a chip select address.
++- #size-cells: Should be zero.
 +
-+static const struct regmap_config stm32_lptimer_regmap_cfg = {
-+	.reg_bits = 32,
-+	.val_bits = 32,
-+	.reg_stride = sizeof(u32),
-+	.max_register = STM32_LPTIM_MAX_REGISTER,
-+};
++Optional properties:
++- resets: Must contain the phandle to the reset controller.
++- A pinctrl state named "default" may be defined to set pins in mode of
++  operation for SPI transfer.
++- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
++  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
++- dma-names: DMA request names should include "tx" and "rx" if present.
++- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
++  Documentation/devicetree/bindings/spi/spi-bus.txt
 +
-+static int stm32_lptimer_detect_encoder(struct stm32_lptimer *ddata)
-+{
-+	u32 val;
-+	int ret;
 +
-+	/*
-+	 * Quadrature encoder mode bit can only be written and read back when
-+	 * Low-Power Timer supports it.
-+	 */
-+	ret = regmap_update_bits(ddata->regmap, STM32_LPTIM_CFGR,
-+				 STM32_LPTIM_ENC, STM32_LPTIM_ENC);
-+	if (ret)
-+		return ret;
++Child nodes represent devices on the SPI bus
++  See ../spi/spi-bus.txt
 +
-+	ret = regmap_read(ddata->regmap, STM32_LPTIM_CFGR, &val);
-+	if (ret)
-+		return ret;
++Optional properties:
++- st,spi-midi-ns: (Master Inter-Data Idleness) minimum time delay in
++		  nanoseconds inserted between two consecutive data frames.
 +
-+	ret = regmap_update_bits(ddata->regmap, STM32_LPTIM_CFGR,
-+				 STM32_LPTIM_ENC, 0);
-+	if (ret)
-+		return ret;
 +
-+	ddata->has_encoder = !!(val & STM32_LPTIM_ENC);
++Example:
++	spi2: spi@40003800 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "st,stm32-spi";
++		reg = <0x40003800 0x400>;
++		interrupts = <36>;
++		clocks = <&rcc SPI2_CK>;
++		resets = <&rcc 1166>;
++		dmas = <&dmamux1 0 39 0x400 0x01>,
++		       <&dmamux1 1 40 0x400 0x01>;
++		dma-names = "rx", "tx";
++		pinctrl-0 = <&spi2_pins_b>;
++		pinctrl-names = "default";
++		status = "okay";
++		cs-gpios = <&gpioa 11 0>;
 +
-+	return 0;
-+}
-+
-+static int stm32_lptimer_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct stm32_lptimer *ddata;
-+	struct resource *res;
-+	void __iomem *mmio;
-+	int ret;
-+
-+	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
-+	if (!ddata)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	mmio = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(mmio))
-+		return PTR_ERR(mmio);
-+
-+	ddata->regmap = devm_regmap_init_mmio_clk(dev, "mux", mmio,
-+						  &stm32_lptimer_regmap_cfg);
-+	if (IS_ERR(ddata->regmap))
-+		return PTR_ERR(ddata->regmap);
-+
-+	ddata->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(ddata->clk))
-+		return PTR_ERR(ddata->clk);
-+
-+	ret = stm32_lptimer_detect_encoder(ddata);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, ddata);
-+
-+	return devm_of_platform_populate(&pdev->dev);
-+}
-+
-+static const struct of_device_id stm32_lptimer_of_match[] = {
-+	{ .compatible = "st,stm32-lptimer", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, stm32_lptimer_of_match);
-+
-+static struct platform_driver stm32_lptimer_driver = {
-+	.probe = stm32_lptimer_probe,
-+	.driver = {
-+		.name = "stm32-lptimer",
-+		.of_match_table = stm32_lptimer_of_match,
-+	},
-+};
-+module_platform_driver(stm32_lptimer_driver);
-+
-+MODULE_AUTHOR("Fabrice Gasnier <fabrice.gasnier@st.com>");
-+MODULE_DESCRIPTION("STMicroelectronics STM32 Low-Power Timer");
-+MODULE_ALIAS("platform:stm32-lptimer");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mfd/stm32-lptimer.h b/include/linux/mfd/stm32-lptimer.h
-new file mode 100644
-index 0000000..77c7cf4
---- /dev/null
-+++ b/include/linux/mfd/stm32-lptimer.h
-@@ -0,0 +1,62 @@
-+/*
-+ * STM32 Low-Power Timer parent driver.
-+ *
-+ * Copyright (C) STMicroelectronics 2017
-+ *
-+ * Author: Fabrice Gasnier <fabrice.gasnier@st.com>
-+ *
-+ * Inspired by Benjamin Gaignard's stm32-timers driver
-+ *
-+ * License terms:  GNU General Public License (GPL), version 2
-+ */
-+
-+#ifndef _LINUX_STM32_LPTIMER_H_
-+#define _LINUX_STM32_LPTIMER_H_
-+
-+#include <linux/clk.h>
-+#include <linux/regmap.h>
-+
-+#define STM32_LPTIM_ISR		0x00	/* Interrupt and Status Reg  */
-+#define STM32_LPTIM_ICR		0x04	/* Interrupt Clear Reg       */
-+#define STM32_LPTIM_IER		0x08	/* Interrupt Enable Reg      */
-+#define STM32_LPTIM_CFGR	0x0C	/* Configuration Reg         */
-+#define STM32_LPTIM_CR		0x10	/* Control Reg               */
-+#define STM32_LPTIM_CMP		0x14	/* Compare Reg               */
-+#define STM32_LPTIM_ARR		0x18	/* Autoreload Reg            */
-+#define STM32_LPTIM_CNT		0x1C	/* Counter Reg               */
-+
-+/* STM32_LPTIM_ISR - bit fields */
-+#define STM32_LPTIM_CMPOK_ARROK		GENMASK(4, 3)
-+#define STM32_LPTIM_ARROK		BIT(4)
-+#define STM32_LPTIM_CMPOK		BIT(3)
-+
-+/* STM32_LPTIM_ICR - bit fields */
-+#define STM32_LPTIM_CMPOKCF_ARROKCF	GENMASK(4, 3)
-+
-+/* STM32_LPTIM_CR - bit fields */
-+#define STM32_LPTIM_CNTSTRT	BIT(2)
-+#define STM32_LPTIM_ENABLE	BIT(0)
-+
-+/* STM32_LPTIM_CFGR - bit fields */
-+#define STM32_LPTIM_ENC		BIT(24)
-+#define STM32_LPTIM_COUNTMODE	BIT(23)
-+#define STM32_LPTIM_WAVPOL	BIT(21)
-+#define STM32_LPTIM_PRESC	GENMASK(11, 9)
-+#define STM32_LPTIM_CKPOL	GENMASK(2, 1)
-+
-+/* STM32_LPTIM_ARR */
-+#define STM32_LPTIM_MAX_ARR	0xFFFF
-+
-+/**
-+ * struct stm32_lptimer - STM32 Low-Power Timer data assigned by parent device
-+ * @clk: clock reference for this instance
-+ * @regmap: register map reference for this instance
-+ * @has_encoder: indicates this Low-Power Timer supports encoder mode
-+ */
-+struct stm32_lptimer {
-+	struct clk *clk;
-+	struct regmap *regmap;
-+	bool has_encoder;
-+};
-+
-+#endif
++		spidev@0 {
++			compatible = "spidev";
++			reg = <0>;
++			spi-max-frequency = <4000000>;
++			st,spi-midi = <4000>;
++		};
++	};
 -- 
 1.9.1
