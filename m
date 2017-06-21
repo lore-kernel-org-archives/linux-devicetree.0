@@ -1,42 +1,20 @@
-From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] of: be consistent in form of file mode
-Date: Wed, 21 Jun 2017 12:20:03 -0700
-Message-ID: <1498072803-4521-1-git-send-email-frowand.list@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] Add open drain support to st_lsm6dsx
+Date: Wed, 21 Jun 2017 21:21:27 +0200
+Message-ID: <20170621192129.10226-1-lorenzo.bianconi@st.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+Lorenzo Bianconi (2):
+  iio: imu: st_lsm6dsx: support open drain mode
+  dt-bindings: iio: imu: st_lsm6dsx: support open drain mode
 
-checkpatch whined about using S_IRUGO instead of octal equivalent
-when adding phandle sysfs code, so used octal in that pending patch.
-Change other instances of the S_* constants in the same file to
-the octal form.
+ .../devicetree/bindings/iio/imu/st_lsm6dsx.txt          |  8 ++++++++
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c          | 17 +++++++++++++++++
+ 2 files changed, 25 insertions(+)
 
-Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
----
- drivers/of/base.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 28d5f53bc631..974d51269a02 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -155,7 +155,7 @@ int __of_add_property_sysfs(struct device_node *np, struct property *pp)
- 
- 	sysfs_bin_attr_init(&pp->attr);
- 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
--	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-+	pp->attr.attr.mode = secure ? 0400 : 0444;
- 	pp->attr.size = secure ? 0 : pp->length;
- 	pp->attr.read = of_node_property_read;
- 
 -- 
-Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.13.1
