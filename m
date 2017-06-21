@@ -1,38 +1,40 @@
-From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v2 1/7] dt-bindings: display: renesas: Add R-Car M3-W HDMI TX DT bindings
-Date: Wed, 21 Jun 2017 12:31:27 +0300
-Message-ID: <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
-References: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: linux-renesas-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: display: renesas: Add R-Car M3-W HDMI
+ TX DT bindings
+Date: Wed, 21 Jun 2017 11:35:36 +0200
+Message-ID: <CAMuHMdUHbehqMgy26_4WUF7dtZKbX52To2kfLKre+YTszsJkzA@mail.gmail.com>
+References: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com> <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170621093133.5677-2-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DRI Development <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The M3-W HDMI TX controller seems to be compatible for the H3. No
-extension to the DT bindings are needed, add an SoC-specific compatible
-string in case differences between the IP versions are found later and
-require model-specific handling.
+On Wed, Jun 21, 2017 at 11:31 AM, Laurent Pinchart
+<laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org> wrote:
+> The M3-W HDMI TX controller seems to be compatible for the H3. No
+> extension to the DT bindings are needed, add an SoC-specific compatible
+> string in case differences between the IP versions are found later and
+> require model-specific handling.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
----
- Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt | 1 +
- 1 file changed, 1 insertion(+)
+Acked-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt b/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
-index f6b3f36d422b..c93a3858a98a 100644
---- a/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
-+++ b/Documentation/devicetree/bindings/display/bridge/renesas,dw-hdmi.txt
-@@ -13,6 +13,7 @@ Required properties:
- 
- - compatible : Shall contain one or more of
-   - "renesas,r8a7795-hdmi" for R8A7795 (R-Car H3) compatible HDMI TX
-+  - "renesas,r8a7796-hdmi" for R8A7796 (R-Car M3-W) compatible HDMI TX
-   - "renesas,rcar-gen3-hdmi" for the generic R-Car Gen3 compatible HDMI TX
- 
-     When compatible with generic versions, nodes must list the SoC-specific
--- 
-Regards,
+Gr{oetje,eeting}s,
 
-Laurent Pinchart
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
