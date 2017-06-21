@@ -1,18 +1,17 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [RFC PATCH v3 3/6] ARM/arm64: dts: enable wakeup for cros-ec-spi
- devices
-Date: Wed, 21 Jun 2017 17:36:32 +0200
-Message-ID: <20170621153632.7cajs5xwdmhdm2fg@kozik-lap>
-References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com>
- <1498039313-24220-4-git-send-email-jeffy.chen@rock-chips.com>
- <CAJKOXPdL2CB9VWNo=it0dos-4hJYrgHUSZwcG1DS=9c+YxXzhQ@mail.gmail.com>
- <594A91C9.1090906@rock-chips.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v5 0/6] Add support for the ICU unit in Marvell Armada
+ 7K/8K
+Date: Wed, 21 Jun 2017 17:42:18 +0200
+Message-ID: <87r2yd1h5x.fsf@free-electrons.com>
+References: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
+ <e87dc80c-f85c-1b20-c2e8-cd03922dacd9@arm.com>
+ <20170621171809.34bcce1e@windsurf.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <594A91C9.1090906@rock-chips.com>
+In-Reply-To: <20170621171809.34bcce1e@windsurf.home> (Thomas Petazzoni's
+ message of "Wed, 21 Jun 2017 17:18:09 +0200")
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,28 +21,58 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jeffy <jeffy.chen@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, briannorris@chromium.org, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, dianders@chromium.org, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, Russell King <linux@armlinux.org.uk>, Jonathan Hunter <jonathanh@nvidia.com>, linux-arm-kernel@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hanna Hawa <hannah@marvell.com>, =?utf-8?Q?Miqu?= =?utf-8?Q?=C3=A8l?= Raynal <miquel.raynal@free-electrons.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 11:33:29PM +0800, jeffy wrote:
-> Hi Krzysztof,
-> 
-> thanx for your comment.
-> 
-> On 06/21/2017 06:45 PM, Krzysztof Kozlowski wrote:
-> > On Wed, Jun 21, 2017 at 12:01 PM, Jeffy Chen <jeffy.chen@rock-chips.com> wrote:
-> > > We used to enable wakeup for cros-ec-spi devices unconditionally.
-> > > Now we are using the more generic wakeup-source property to enable it.
-> > 
-> > Using wakeup-source property is still enabling this unconditionally.
-> > What  do you exactly mean here?
-> i mean the wakeup-source is an optional property, we can disable wakeup by
-> not adding it.
-
-Maybe mention this in commit msg? This removes any confusion. "Till now
-the driver always enabled wakeup but now it supports wakeup property so
-add it to keep same functionality."
-
-Best regards,
-Krzysztof
+SGkgTWFyYyBhbmQgVGhvbWFzLAogCiBPbiBtZXIuLCBqdWluIDIxIDIwMTcsIFRob21hcyBQZXRh
+enpvbmkgPHRob21hcy5wZXRhenpvbmlAZnJlZS1lbGVjdHJvbnMuY29tPiB3cm90ZToKCj4gSGVs
+bG8sCj4KPiBPbiBXZWQsIDIxIEp1biAyMDE3IDE2OjE0OjIxICswMTAwLCBNYXJjIFp5bmdpZXIg
+d3JvdGU6Cj4KPj4gPiBUaG9tYXMgUGV0YXp6b25pICg2KToKPj4gPiAgIGR0LWJpbmRpbmdzOiBp
+bnRlcnJ1cHQtY29udHJvbGxlcjogYWRkIERUIGJpbmRpbmcgZm9yIHRoZSBNYXJ2ZWxsIEdJQ1AK
+Pj4gPiAgIGR0LWJpbmRpbmdzOiBpbnRlcnJ1cHQtY29udHJvbGxlcjogYWRkIERUIGJpbmRpbmcg
+Zm9yIHRoZSBNYXJ2ZWxsIElDVQo+PiA+ICAgaXJxY2hpcDogaXJxLW12ZWJ1LWdpY3A6IG5ldyBk
+cml2ZXIgZm9yIE1hcnZlbGwgR0lDUAo+PiA+ICAgaXJxY2hpcDogaXJxLW12ZWJ1LWljdTogbmV3
+IGRyaXZlciBmb3IgTWFydmVsbCBJQ1UKPj4gPiAgIGFybTY0OiBtYXJ2ZWxsOiBlbmFibGUgSUNV
+IGFuZCBHSUNQIGRyaXZlcnMKPj4gPiAgIGFybTY0OiBkdHM6IG1hcnZlbGw6IGVuYWJsZSBHSUNQ
+IGFuZCBJQ1Ugb24gQXJtYWRhIDdLLzhLCj4+ID4gCj4+ID4gIC4uLi9iaW5kaW5ncy9pbnRlcnJ1
+cHQtY29udHJvbGxlci9tYXJ2ZWxsLGdpY3AudHh0IHwgIDI3ICsrCj4+ID4gIC4uLi9iaW5kaW5n
+cy9pbnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLGljdS50eHQgIHwgIDUxICsrKysKPj4gPiAg
+YXJjaC9hcm02NC9LY29uZmlnLnBsYXRmb3JtcyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIg
+Kwo+PiA+ICBhcmNoL2FybTY0L2Jvb3QvZHRzL21hcnZlbGwvYXJtYWRhLWFwODA2LmR0c2kgICAg
+ICB8ICAgNyArCj4+ID4gIC4uLi9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExMC1tYXN0ZXIu
+ZHRzaSAgICAgIHwgIDU5ICsrKy0tCj4+ID4gIC4uLi9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2Fy
+bWFkYS1jcDExMC1zbGF2ZS5kdHNpIHwgIDU1ICsrLS0KPj4gPiAgZHJpdmVycy9pcnFjaGlwL0tj
+b25maWcgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDYgKwo+PiA+ICBkcml2ZXJzL2ly
+cWNoaXAvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMiArCj4+ID4gIGRy
+aXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtZ2ljcC5jICAgICAgICAgICAgICAgICAgIHwgMjc5ICsr
+KysrKysrKysrKysrKysrKysrCj4+ID4gIGRyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtZ2ljcC5o
+ICAgICAgICAgICAgICAgICAgIHwgIDEyICsKPj4gPiAgZHJpdmVycy9pcnFjaGlwL2lycS1tdmVi
+dS1pY3UuYyAgICAgICAgICAgICAgICAgICAgfCAyODkgKysrKysrKysrKysrKysrKysrKysrCj4+
+ID4gIC4uLi9kdC1iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tdmVidS1pY3UuaCAgIHwg
+IDE1ICsrCj4+ID4gIDEyIGZpbGVzIGNoYW5nZWQsIDc1NiBpbnNlcnRpb25zKCspLCA0OCBkZWxl
+dGlvbnMoLSkKPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9pbnRlcnJ1cHQtY29udHJvbGxlci9tYXJ2ZWxsLGdpY3AudHh0Cj4+ID4gIGNy
+ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJy
+dXB0LWNvbnRyb2xsZXIvbWFydmVsbCxpY3UudHh0Cj4+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2lycWNoaXAvaXJxLW12ZWJ1LWdpY3AuYwo+PiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQg
+ZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1naWNwLmgKPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMKPj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IGluY2x1ZGUvZHQtYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbXZlYnUtaWN1LmgKPj4g
+PiAgIAo+PiAKPj4gSXQgYWxsIGxvb2tzIGdvb2QgdG8gbWUuIEhvdyBkbyB3ZSBtZXJnZSB0aGlz
+PyBJIHRha2UgdGhlIGZpcnN0IGZpdmUKPj4gcGF0Y2hlcyBhbmQgR3JlZ29yeSB0YWtlcyB0aGUg
+bGFzdCBvbmU/Cj4KPiBJIHRoaW5rIHlvdSBzaG91bGQgdGFrZSB0aGUgZmlyc3QgZm91ciBwYXRj
+aGVzLCBhbmQgR3LDqWdvcnkgdGFrZXMgdGhlCj4gbGFzdCB0d28gb25lcy4gQnV0IEknbGwgbGV0
+IEdyw6lnb3J5IGNvbmZpcm0uCgpJbmRlZWQgaXQgbWFrZXMgbW9yZSBzZW5zIHRvIG1lcmdlIHRo
+ZSBwYXRjaCA0IHRocm91Z2ggdGhlIGFybS1zb2MKc3Vic3lzdGVtLgoKVGhhbmtzLAoKR3JlZ29y
+eQo+Cj4gT25jZSBhZ2FpbiwgdGhhbmtzIGEgbG90IGZvciB5b3VyIGhlbHAgb24gdGhpcyBzZXJp
+ZXMsIGl0J3MgaW4gYSBtdWNoCj4gYmV0dGVyIHNoYXBlIG5vdyBjb21wYXJlZCB0byB3aGF0IHRo
+ZSBvcmlnaW5hbCBzdWJtaXNzaW9uIHdhcyEKPgo+IEJlc3QgcmVnYXJkcywKPgo+IFRob21hcwo+
+IC0tIAo+IFRob21hcyBQZXRhenpvbmksIENUTywgRnJlZSBFbGVjdHJvbnMKPiBFbWJlZGRlZCBM
+aW51eCBhbmQgS2VybmVsIGVuZ2luZWVyaW5nCj4gaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoK
+LS0gCkdyZWdvcnkgQ2xlbWVudCwgRnJlZSBFbGVjdHJvbnMKS2VybmVsLCBkcml2ZXJzLCByZWFs
+LXRpbWUgYW5kIGVtYmVkZGVkIExpbnV4CmRldmVsb3BtZW50LCBjb25zdWx0aW5nLCB0cmFpbmlu
+ZyBhbmQgc3VwcG9ydC4KaHR0cDovL2ZyZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5n
+IGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
