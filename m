@@ -1,42 +1,55 @@
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 0/2] Add support for STM32 SPI
-Date: Wed, 21 Jun 2017 16:32:04 +0200
-Message-ID: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v2] gpio: rcar: Add R8A7743 (RZ/G1M) support
+Date: Wed, 21 Jun 2017 15:27:09 +0100
+Message-ID: <1498055229-42052-1-git-send-email-biju.das@bp.renesas.com>
+References: <1497619944-61410-1-git-send-email-biju.das@bp.renesas.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1497619944-61410-1-git-send-email-biju.das@bp.renesas.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <chris.paterson2@renesas.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Biju Das <biju.das@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds support for the STM32 Serial Peripheral Interface (SPI).
+Renesas RZ/G1M (R8A7743) SoC GPIO blocks are identical to the R-Car Gen2
+family. Add support for its GPIO controllers.
 
-It applies to STM32 platforms implementing version 2 of SPI/I2S interface
-like STM32H7 series.
+Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Reviewed-by: Chris Paterson <chris.paterson2@renesas.com>
+---
+v1->v2
+* Modified the text "RZ-G1M" to "RZ/G1M"
 
-It supports a half-duplex, full-duplex and simplex synchronous serial
-communication with external devices with 4-bit to 16/32-bit per word.
-It has two 8x/16x 8-bit embedded Rx and TxFIFOs with DMA capability.
-It can operate in master or slave mode, but here, only master mode is
-supported.
+ Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt | 1 +
+ drivers/gpio/gpio-rcar.c                                     | 4 ++++
+ 2 files changed, 5 insertions(+)
 
-Amelie Delaunay (2):
-  dt-bindings: spi: Document the STM32 SPI bindings
-  spi: add driver for STM32 SPI controller
-
- .../devicetree/bindings/spi/spi-stm32.txt          |   60 +
- drivers/spi/Kconfig                                |   10 +
- drivers/spi/Makefile                               |    1 +
- drivers/spi/spi-stm32.c                            | 1266 ++++++++++++++++++++
- 4 files changed, 1337 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
- create mode 100644 drivers/spi/spi-stm32.c
-
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+index 7c1ab3b..6826a37 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
++++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+@@ -3,6 +3,7 @@
+ Required Properties:
+ 
+   - compatible: should contain one of the following.
++    - "renesas,gpio-r8a7743": for R8A7743 (RZ/G1M) compatible GPIO controller.
+     - "renesas,gpio-r8a7778": for R8A7778 (R-Mobile M1) compatible GPIO controller.
+     - "renesas,gpio-r8a7779": for R8A7779 (R-Car H1) compatible GPIO controller.
+     - "renesas,gpio-r8a7790": for R8A7790 (R-Car H2) compatible GPIO controller.
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 31ad288..4a1536a 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -344,6 +344,10 @@ struct gpio_rcar_info {
+ 
+ static const struct of_device_id gpio_rcar_of_table[] = {
+ 	{
++		.compatible = "renesas,gpio-r8a7743",
++		/* RZ/G1 GPIO is identical to R-Car Gen2. */
++		.data = &gpio_rcar_info_gen2,
++	}, {
+ 		.compatible = "renesas,gpio-r8a7790",
+ 		.data = &gpio_rcar_info_gen2,
+ 	}, {
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
