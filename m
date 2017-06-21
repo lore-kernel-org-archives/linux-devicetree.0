@@ -1,152 +1,94 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH v5.1 1/2] ARM64: dts: meson-gx: use stable UART bindings with correct gate clock
-Date: Wed, 21 Jun 2017 16:42:11 +0200
-Message-ID: <1498056132-18508-2-git-send-email-narmstrong@baylibre.com>
-References: <1498056132-18508-1-git-send-email-narmstrong@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498056132-18508-1-git-send-email-narmstrong@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: khilman@baylibre.com
-Cc: Helmut Klein <hgkr.klein@gmail.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: add driver for STM32 SPI controller
+Date: Wed, 21 Jun 2017 16:13:00 +0100
+Message-ID: <20170621151300.s74lbymyisvde2zo@sirena.org.uk>
+References: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
+ <1498055526-6918-3-git-send-email-amelie.delaunay@st.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="pu757pfxejkkr2dv"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1498055526-6918-3-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Helmut Klein <hgkr.klein@gmail.com>
 
-This patch switches to the stable UART bindings but also add the correct
-gate clock to the non-AO UART nodes for GXBB and GXL SoCs.
+--pu757pfxejkkr2dv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Jerome Brunet <jbrunet@baylibre.com>
-Signed-off-by: Helmut Klein <hgkr.klein@gmail.com>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 12 +++++-------
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi | 25 +++++++++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  | 25 +++++++++++++++++++++++++
- 3 files changed, 55 insertions(+), 7 deletions(-)
+On Wed, Jun 21, 2017 at 04:32:06PM +0200, Amelie Delaunay wrote:
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 35b8c88..1c6e4ed 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -225,7 +225,7 @@
- 			};
- 
- 			uart_A: serial@84c0 {
--				compatible = "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
- 				reg = <0x0 0x84c0 0x0 0x14>;
- 				interrupts = <GIC_SPI 26 IRQ_TYPE_EDGE_RISING>;
- 				clocks = <&xtal>;
-@@ -233,7 +233,7 @@
- 			};
- 
- 			uart_B: serial@84dc {
--				compatible = "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
- 				reg = <0x0 0x84dc 0x0 0x14>;
- 				interrupts = <GIC_SPI 75 IRQ_TYPE_EDGE_RISING>;
- 				clocks = <&xtal>;
-@@ -279,7 +279,7 @@
- 			};
- 
- 			uart_C: serial@8700 {
--				compatible = "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-uart";
- 				reg = <0x0 0x8700 0x0 0x14>;
- 				interrupts = <GIC_SPI 93 IRQ_TYPE_EDGE_RISING>;
- 				clocks = <&xtal>;
-@@ -375,18 +375,16 @@
- 			};
- 
- 			uart_AO: serial@4c0 {
--				compatible = "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart", "amlogic,meson-uart";
- 				reg = <0x0 0x004c0 0x0 0x14>;
- 				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>;
- 				status = "disabled";
- 			};
- 
- 			uart_AO_B: serial@4e0 {
--				compatible = "amlogic,meson-uart";
-+				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart", "amlogic,meson-uart";
- 				reg = <0x0 0x004e0 0x0 0x14>;
- 				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>;
- 				status = "disabled";
- 			};
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index 17d3efd..ea53cc2 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -682,6 +682,31 @@
- 	clocks = <&clkc CLKID_SPI>;
- };
- 
-+&uart_A {
-+	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-+	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_AO {
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_AO_B {
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_B {
-+	clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-+	clock-names = "xtal", "core", "baud";
-+};
-+
-+&uart_C {
-+	clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
-+	clock-names = "xtal", "core", "baud";
-+};
-+
- &vpu {
- 	compatible = "amlogic,meson-gxbb-vpu", "amlogic,meson-gx-vpu";
- };
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index 8d4f316..9e67444 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -623,6 +623,31 @@
- 	clocks = <&clkc CLKID_SPI>;
- };
- 
-+&uart_A {
-+	clocks = <&xtal>, <&clkc CLKID_UART0>, <&xtal>;
-+	clock-names = "xtal", "core", "baud";
-+};
-+
-+&uart_AO {
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_AO_B {
-+	clocks = <&xtal>, <&clkc CLKID_CLK81>, <&xtal>;
-+	clock-names = "xtal", "pclk", "baud";
-+};
-+
-+&uart_B {
-+	clocks = <&xtal>, <&clkc CLKID_UART1>, <&xtal>;
-+	clock-names = "xtal", "core", "baud";
-+};
-+
-+&uart_C {
-+	clocks = <&xtal>, <&clkc CLKID_UART2>, <&xtal>;
-+	clock-names = "xtal", "core", "baud";
-+};
-+
- &vpu {
- 	compatible = "amlogic,meson-gxl-vpu", "amlogic,meson-gx-vpu";
- };
--- 
-1.9.1
+A few minor stylistic things but overall this looks really nice, please
+send followup patches fixing these style things.
+
+> +	/* Determine the first power of 2 greater than or equal to div */
+> +	mbrdiv = (div & (div - 1)) ? fls(div) : fls(div) - 1;
+
+Please write normal conditional statements, it makes things much easier
+to read.
+
+> +static bool stm32_spi_can_dma(struct spi_master *master,
+> +			      struct spi_device *spi_dev,
+> +			      struct spi_transfer *transfer)
+> +{
+> +	struct stm32_spi *spi = spi_master_get_devdata(master);
+> +
+> +	dev_dbg(spi->dev, "%s: %s\n", __func__,
+> +		(!!(transfer->len > spi->fifo_size)) ? "true" : "false");
+> +
+> +	return !!(transfer->len > spi->fifo_size);
+
+This !! is redundant, you're converting a boolean value into a boolean
+value.
+
+> +	buswidth = (spi->cur_bpw <= 8) ? DMA_SLAVE_BUSWIDTH_1_BYTE :
+> +		   (spi->cur_bpw <= 16) ? DMA_SLAVE_BUSWIDTH_2_BYTES :
+> +		   DMA_SLAVE_BUSWIDTH_4_BYTES;
+> +
+> +	/* Valid for DMA Half or Full Fifo threshold */
+> +	maxburst = (spi->cur_fthlv == 2) ? 1 : spi->cur_fthlv;
+
+Again, please use normal conditional statements - people have to read
+things.
+
+> +static int stm32_spi_suspend(struct device *dev)
+> +{
+> +	struct spi_master *master = dev_get_drvdata(dev);
+> +	struct stm32_spi *spi = spi_master_get_devdata(master);
+> +	int ret;
+> +
+> +	ret = spi_master_suspend(master);
+> +	if (ret)
+> +		return ret;
+> +
+> +	clk_disable_unprepare(spi->clk);
+
+It'd be good to also have the clock disabled by runtime PM, that will
+save a little more power.  There's support for enabling and disabling
+the device in the core so it should just be adding callbacks.  Not
+essential though.
+
+--pu757pfxejkkr2dv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllKjPsACgkQJNaLcl1U
+h9CThgf/UdEv1dJpadMX6f7mFIWstIkH/wJwRbCTqlz+mmsb9FJfSUo1Pm0hwKFa
+1qfHz21uYEtx5/3R41Pd9QC0rH1irKb3wwEVswReL1cy1CeKHPnKYZ13NnabD3oe
+fqf7/lLU0SEhZ3O7RwLA4ApZmuKgCj1e2PzLQf6AZcwv6T+wo/1qNgEVPjOL/Ou/
+5ZAsm5uRdRWA3HLKQ4FHm2/pJrzOdpY9sBJdOjyD6KwRrGvzMq5CN08g+kTK8pv1
+y94j2gTsVZYX8/XnbBO8P48TFDNlLufln67lcx7sDz1NO29tbjtJQ4o9Tvxbypcg
+e1b5E4YIdOtO3ok+Mem0DgBDlI71vw==
+=nU2U
+-----END PGP SIGNATURE-----
+
+--pu757pfxejkkr2dv--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
