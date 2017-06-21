@@ -1,47 +1,63 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V6 2/5] mtd: partitions: rename "master" to the "parent"
- where appropriate
-Date: Tue, 20 Jun 2017 18:22:47 -0700
-Message-ID: <20170621012247.GC14148@google.com>
-References: <20170526131415.27186-1-zajec5@gmail.com>
- <20170526131415.27186-3-zajec5@gmail.com>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] powerpc: dts: use #include "..." to include local DT
+Date: Wed, 21 Jun 2017 10:39:50 +0900
+Message-ID: <CAK7LNAQ2Ek3VEou_adaH3g8efSnJ7JgvHynzqR9Br4M+q8Mccw@mail.gmail.com>
+References: <1495602744-18874-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNARnkHTyAMXjPZnOxOkP_b8vc6qvYOv-wf_Fn0eaPSdpeA@mail.gmail.com>
+ <87r2yogpc6.fsf@concordia.ellerman.id.au> <CAK7LNAS0tkpCuCjjCe=P_Qc2Q12B-+7YgAipko5n+AoeASpQnQ@mail.gmail.com>
+ <87y3sv2hky.fsf@concordia.ellerman.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170526131415.27186-3-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <87y3sv2hky.fsf-W0DJWXSxmBNbyGPkN3NxC2scP1bn1w/D@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 26, 2017 at 03:14:12PM +0200, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> 
-> This prepares mtd subsystem for the new feature: subpartitions. In some
-> cases flash device partition can be a container with extra subpartitions
-> (volumes).
-> 
-> So far there was a flat structure implemented. One master (flash device)
-> could be partitioned into few partitions. Every partition got its master
-> and it was enough to get things running.
-> 
-> To support subpartitions we need to store pointer to the parent for each
-> partition. This is required to implement more natural tree structure and
-> handle all recursion and offsets calculation.
-> 
-> To make code consistent this patch renamed "master" to the "parent" in
-> places where we can be dealing with subpartitions.
-> 
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
-> V5: Introduction of this patch to prepare allocate_partition for further
->     modification.
-> V6: Rename "master" in more places including callback functions
+2017-06-14 15:45 GMT+09:00 Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>:
+> Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> writes:
+>> 2017-06-13 19:21 GMT+09:00 Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>:
+>>> Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> writes:
+>>>>
+>>>> (+Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>)
+>>>>
+>>>> Ping.
+>>>> I am not 100% sure who is responsible for this,
+>>>> but somebody, could take a look at this patch, please?
+>>>
+>>> Have you tested it actually works?
+>>>
+>>> It sounds reasonable, and if it behaves as you describe there is no
+>>> change in behaviour, right?
+>>
+>> I do not have access to hardware,
+>> but it is pretty easy to test this patch.
+>>
+>> $ make O=foo ARCH=powerpc CROSS_COMPILE=powerpc-linux-  dts/ac14xx.dtb
+>>
+>> gave me the DTB output.
+>>
+>> The binary comparison matched with/without this patch,
+>> so I am sure there is no change in behavior.
+>>
+>> Likewise for mpc5121ads and pdm360ng.
+>
+> Thanks.
+>
+> Acked-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+>
+>
 
-This patch has some conflicts with l2-mtd.git now. I might end up
-working them out, but it'd be easier if you'd rebase.
+I have not seen it in linux-next yet.
+
+Who will pick it up?
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
