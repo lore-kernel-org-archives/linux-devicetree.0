@@ -1,73 +1,57 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v4 4/6] irqchip: irq-mvebu-icu: new driver for Marvell
- ICU
-Date: Wed, 21 Jun 2017 15:30:42 +0200
-Message-ID: <20170621153042.05237000@windsurf.home>
-References: <20170620140722.31646-1-thomas.petazzoni@free-electrons.com>
-        <20170620140722.31646-5-thomas.petazzoni@free-electrons.com>
-        <8c085bb8-9bfa-90f7-1dd1-f4f5eb852402@arm.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH] ARM: dts: iwg20d-q7: Add pinctl support for scif0
+Date: Wed, 21 Jun 2017 13:58:28 +0000
+Message-ID: <KL1PR06MB170212437975F886787AAB09B8DA0@KL1PR06MB1702.apcprd06.prod.outlook.com>
+References: <1497625049-46802-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdVe7sRcGohSPvSUrryNMetddomoMbN7ffOtq9Y3DBt=zQ@mail.gmail.com>
+ <20170621113354.GC17965@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8c085bb8-9bfa-90f7-1dd1-f4f5eb852402@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, =?UTF-8?B?TWlxdcOobA==?= Raynal <miquel.raynal@free-electrons.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170621113354.GC17965@verge.net.au>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hello Simon,
 
-On Wed, 21 Jun 2017 08:56:24 +0100, Marc Zyngier wrote:
+> On Mon, Jun 19, 2017 at 10:42:18AM +0200, Geert Uytterhoeven wrote:
+> > Hi Biju,
+> >
+> > On Fri, Jun 16, 2017 at 4:57 PM, Biju Das <biju.das@bp.renesas.com>
+> wrote:
+> > > Adding pinctrl support for scif0 interface.
+> > >
+> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> >
+> > The patch looks good to me, but without schematics, we cannot verify
+> > the actual pins used.
+> >
+> > Are the schematics somewhere available? Having access to them would
+> > allow us doing a better job reviewing your DTS patches.
+>
+> Echoing Geert's request, it would be great to be able to compare the DT
+> description against some documentation.
+>
+> My understanding is that this patch depends on "[PATCH v2 0/3] Add
+> R8A7743/SK-RZG1M PFC support" which in turn depends on pfc driver
+> support which is on target to be included in v4.13-rc1.
+>
+> Accordingly I have marked this patch as deferred. Please repost or otherw=
+ise
+> ping me once the driver dependency is present in an rc release.
 
-> > +static void mvebu_icu_write_msg(struct msi_desc *desc, struct msi_msg *msg)
-> > +{
-> > +	struct irq_data *d = irq_get_irq_data(desc->irq);
-> > +	struct mvebu_icu_irq_data *icu_irqd = d->chip_data;
-> > +	struct mvebu_icu *icu = icu_irqd->icu;
-> > +	unsigned int icu_int;
-> > +
-> > +	if (msg->address_lo) {  
-> 
-> As mention in the previous thread, this needs to check address_hi as well.
+Thanks. I will repost/ping you once the pfc driver dependency is present in=
+ an rc release.
 
-Fixed in v5.
-
-> > +	gicp_dn = of_parse_phandle(node, "msi-parent", 0);
-> > +	if (!gicp_dn) {
-> > +		dev_err(&pdev->dev, "Missing marvell,gicp property.\n");  
-> 
-> The property name doesn't match here. But overall, there is little point
-> in reparsing the msi-parent, since that's what of_msi_get_domain does.
-> Instead, consider using:
-> 
-> 	gicp_dn = irq_domain_get_of_node(pdev->dev.msi_domain);
-> 
-> which will do the right thing.
-
-Fixed in v5.
+Regards,
+Biju
 
 
-> With the two minor changes above, and for patch #3 as well:
-> 
-> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 
-Thanks! Tags added in v5.
-
-> I can either perform the changes when applying the patches, or let you
-> do it so that you can test it first (and solve the issue with the DT
-> include fine with Gregory).
-
-I've sent a v5 that fixes the different issues you pointed out, and
-also fixes the DT include problem. Tested on HW, it still works as
-expected.
-
-Thanks again for the review!
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
