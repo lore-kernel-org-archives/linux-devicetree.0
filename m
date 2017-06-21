@@ -1,57 +1,91 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH] ARM: dts: iwg20d-q7: Add pinctl support for scif0
-Date: Wed, 21 Jun 2017 13:58:28 +0000
-Message-ID: <KL1PR06MB170212437975F886787AAB09B8DA0@KL1PR06MB1702.apcprd06.prod.outlook.com>
-References: <1497625049-46802-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdVe7sRcGohSPvSUrryNMetddomoMbN7ffOtq9Y3DBt=zQ@mail.gmail.com>
- <20170621113354.GC17965@verge.net.au>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [PATCH v2 1/8] dt-bindings: mfd: Add STM32 LPTimer binding
+Date: Wed, 21 Jun 2017 16:30:08 +0200
+Message-ID: <1498055415-31513-2-git-send-email-fabrice.gasnier@st.com>
+References: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170621113354.GC17965@verge.net.au>
-Content-Language: en-US
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Russell King <linux@armlinux.org.uk>, Chris Paterson <Chris.Paterson2@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alexandre.torgue@st.com, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@st.com
 List-Id: devicetree@vger.kernel.org
 
-Hello Simon,
+Add documentation for STMicroelectronics STM32 Low-Power Timer binding.
 
-> On Mon, Jun 19, 2017 at 10:42:18AM +0200, Geert Uytterhoeven wrote:
-> > Hi Biju,
-> >
-> > On Fri, Jun 16, 2017 at 4:57 PM, Biju Das <biju.das@bp.renesas.com>
-> wrote:
-> > > Adding pinctrl support for scif0 interface.
-> > >
-> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> >
-> > The patch looks good to me, but without schematics, we cannot verify
-> > the actual pins used.
-> >
-> > Are the schematics somewhere available? Having access to them would
-> > allow us doing a better job reviewing your DTS patches.
->
-> Echoing Geert's request, it would be great to be able to compare the DT
-> description against some documentation.
->
-> My understanding is that this patch depends on "[PATCH v2 0/3] Add
-> R8A7743/SK-RZG1M PFC support" which in turn depends on pfc driver
-> support which is on target to be included in v4.13-rc1.
->
-> Accordingly I have marked this patch as deferred. Please repost or otherw=
-ise
-> ping me once the driver dependency is present in an rc release.
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+Changes in v2:
+- Lee's comments: s/Low Power/Low-Power/, remove 0x in example, improve
+  properties descriptions
+---
+ .../devicetree/bindings/mfd/stm32-lptimer.txt      | 48 ++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
 
-Thanks. I will repost/ping you once the pfc driver dependency is present in=
- an rc release.
-
-Regards,
-Biju
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+new file mode 100644
+index 0000000..af859c8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+@@ -0,0 +1,48 @@
++STMicroelectronics STM32 Low-Power Timer
++
++The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
++functions:
++- PWM output (with programmable prescaler, configurable polarity)
++- Quadrature encoder, counter
++- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
++
++Required properties:
++- compatible:		Must be "st,stm32-lptimer".
++- reg:			Offset and length of the device's register set.
++- clocks:		Phandle to the clock used by the LP Timer module.
++- clock-names:		Must be "mux".
++- #address-cells:	Should be '<1>'.
++- #size-cells:		Should be '<0>'.
++
++Optional subnodes:
++- pwm:			See ../pwm/pwm-stm32-lp.txt
++- counter:		See ../iio/timer/stm32-lptimer-cnt.txt
++- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
++
++Example:
++
++	lptimer1: lptimer@40002400 {
++		compatible = "st,stm32-lptimer";
++		reg = <0x40002400 0x400>;
++		clocks = <&timer_clk>;
++		clock-names = "mux";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		pwm {
++			compatible = "st,stm32-pwm-lp";
++			pinctrl-names = "default";
++			pinctrl-0 = <&lppwm1_pins>;
++		};
++
++		trigger@0 {
++			compatible = "st,stm32-lptimer-trigger";
++			reg = <0>;
++		};
++
++		counter {
++			compatible = "st,stm32-lptimer-counter";
++			pinctrl-names = "default";
++			pinctrl-0 = <&lptim1_in_pins>;
++		};
++	};
+-- 
+1.9.1
