@@ -1,122 +1,69 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: Document the STM32 SPI bindings" to the spi tree
-Date: Wed, 21 Jun 2017 16:16:21 +0100
-Message-ID: <E1dNhMj-0001FC-Ay@debutante>
-References: <1498055526-6918-2-git-send-email-amelie.delaunay@st.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498055526-6918-2-git-send-email-amelie.delaunay@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v5 0/6] Add support for the ICU unit in Marvell Armada
+ 7K/8K
+Date: Wed, 21 Jun 2017 17:18:09 +0200
+Message-ID: <20170621171809.34bcce1e@windsurf.home>
+References: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
+ <e87dc80c-f85c-1b20-c2e8-cd03922dacd9@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <e87dc80c-f85c-1b20-c2e8-cd03922dacd9@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Hanna Hawa <hannah@marvell.com>, =?UTF-8?B?TWlxdcOobA==?= Raynal <miquel.raynal@free-electrons.com>, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch
-
-   spi: Document the STM32 SPI bindings
-
-has been applied to the spi tree at
-
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 82a29bf9952acd1be7e76783604686abeb4e5b1d Mon Sep 17 00:00:00 2001
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Date: Wed, 21 Jun 2017 16:32:05 +0200
-Subject: [PATCH] spi: Document the STM32 SPI bindings
-
-This patch adds the documentation of device tree bindings
-for the STM32 SPI controller.
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/spi/spi-stm32.txt          | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-new file mode 100644
-index 000000000000..3958bf6e8b37
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/spi-stm32.txt
-@@ -0,0 +1,60 @@
-+STMicroelectronics STM32 SPI Controller
-+
-+The STM32 SPI controller is used to communicate with external devices using
-+the Serial Peripheral Interface. It supports full-duplex, half-duplex and
-+simplex synchronous serial communication with external devices. It supports
-+from 4 to 32-bit data size. Although it can be configured as master or slave,
-+only master is supported by the driver.
-+
-+Required properties:
-+- compatible: Must be "st,stm32-spi".
-+- reg: Offset and length of the device's register set.
-+- interrupts: Must contain the interrupt id.
-+- clocks: Must contain an entry for spiclk (which feeds the internal clock
-+	  generator).
-+- #address-cells:  Number of cells required to define a chip select address.
-+- #size-cells: Should be zero.
-+
-+Optional properties:
-+- resets: Must contain the phandle to the reset controller.
-+- A pinctrl state named "default" may be defined to set pins in mode of
-+  operation for SPI transfer.
-+- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
-+  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
-+- dma-names: DMA request names should include "tx" and "rx" if present.
-+- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
-+  Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+
-+Child nodes represent devices on the SPI bus
-+  See ../spi/spi-bus.txt
-+
-+Optional properties:
-+- st,spi-midi-ns: (Master Inter-Data Idleness) minimum time delay in
-+		  nanoseconds inserted between two consecutive data frames.
-+
-+
-+Example:
-+	spi2: spi@40003800 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "st,stm32-spi";
-+		reg = <0x40003800 0x400>;
-+		interrupts = <36>;
-+		clocks = <&rcc SPI2_CK>;
-+		resets = <&rcc 1166>;
-+		dmas = <&dmamux1 0 39 0x400 0x01>,
-+		       <&dmamux1 1 40 0x400 0x01>;
-+		dma-names = "rx", "tx";
-+		pinctrl-0 = <&spi2_pins_b>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+		cs-gpios = <&gpioa 11 0>;
-+
-+		spidev@0 {
-+			compatible = "spidev";
-+			reg = <0>;
-+			spi-max-frequency = <4000000>;
-+			st,spi-midi = <4000>;
-+		};
-+	};
--- 
-2.11.0
+SGVsbG8sCgpPbiBXZWQsIDIxIEp1biAyMDE3IDE2OjE0OjIxICswMTAwLCBNYXJjIFp5bmdpZXIg
+d3JvdGU6Cgo+ID4gVGhvbWFzIFBldGF6em9uaSAoNik6Cj4gPiAgIGR0LWJpbmRpbmdzOiBpbnRl
+cnJ1cHQtY29udHJvbGxlcjogYWRkIERUIGJpbmRpbmcgZm9yIHRoZSBNYXJ2ZWxsIEdJQ1AKPiA+
+ICAgZHQtYmluZGluZ3M6IGludGVycnVwdC1jb250cm9sbGVyOiBhZGQgRFQgYmluZGluZyBmb3Ig
+dGhlIE1hcnZlbGwgSUNVCj4gPiAgIGlycWNoaXA6IGlycS1tdmVidS1naWNwOiBuZXcgZHJpdmVy
+IGZvciBNYXJ2ZWxsIEdJQ1AKPiA+ICAgaXJxY2hpcDogaXJxLW12ZWJ1LWljdTogbmV3IGRyaXZl
+ciBmb3IgTWFydmVsbCBJQ1UKPiA+ICAgYXJtNjQ6IG1hcnZlbGw6IGVuYWJsZSBJQ1UgYW5kIEdJ
+Q1AgZHJpdmVycwo+ID4gICBhcm02NDogZHRzOiBtYXJ2ZWxsOiBlbmFibGUgR0lDUCBhbmQgSUNV
+IG9uIEFybWFkYSA3Sy84Swo+ID4gCj4gPiAgLi4uL2JpbmRpbmdzL2ludGVycnVwdC1jb250cm9s
+bGVyL21hcnZlbGwsZ2ljcC50eHQgfCAgMjcgKysKPiA+ICAuLi4vYmluZGluZ3MvaW50ZXJydXB0
+LWNvbnRyb2xsZXIvbWFydmVsbCxpY3UudHh0ICB8ICA1MSArKysrCj4gPiAgYXJjaC9hcm02NC9L
+Y29uZmlnLnBsYXRmb3JtcyAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+ID4gIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtYXA4MDYuZHRzaSAgICAgIHwgICA3ICsKPiA+
+ICAuLi4vYm9vdC9kdHMvbWFydmVsbC9hcm1hZGEtY3AxMTAtbWFzdGVyLmR0c2kgICAgICB8ICA1
+OSArKystLQo+ID4gIC4uLi9hcm02NC9ib290L2R0cy9tYXJ2ZWxsL2FybWFkYS1jcDExMC1zbGF2
+ZS5kdHNpIHwgIDU1ICsrLS0KPiA+ICBkcml2ZXJzL2lycWNoaXAvS2NvbmZpZyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAgNiArCj4gPiAgZHJpdmVycy9pcnFjaGlwL01ha2VmaWxlICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwo+ID4gIGRyaXZlcnMvaXJxY2hpcC9pcnEt
+bXZlYnUtZ2ljcC5jICAgICAgICAgICAgICAgICAgIHwgMjc5ICsrKysrKysrKysrKysrKysrKysr
+Cj4gPiAgZHJpdmVycy9pcnFjaGlwL2lycS1tdmVidS1naWNwLmggICAgICAgICAgICAgICAgICAg
+fCAgMTIgKwo+ID4gIGRyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUtaWN1LmMgICAgICAgICAgICAg
+ICAgICAgIHwgMjg5ICsrKysrKysrKysrKysrKysrKysrKwo+ID4gIC4uLi9kdC1iaW5kaW5ncy9p
+bnRlcnJ1cHQtY29udHJvbGxlci9tdmVidS1pY3UuaCAgIHwgIDE1ICsrCj4gPiAgMTIgZmlsZXMg
+Y2hhbmdlZCwgNzU2IGluc2VydGlvbnMoKyksIDQ4IGRlbGV0aW9ucygtKQo+ID4gIGNyZWF0ZSBt
+b2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNv
+bnRyb2xsZXIvbWFydmVsbCxnaWNwLnR4dAo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW50ZXJydXB0LWNvbnRyb2xsZXIvbWFydmVsbCxp
+Y3UudHh0Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUt
+Z2ljcC5jCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUt
+Z2ljcC5oCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvaXJxY2hpcC9pcnEtbXZlYnUt
+aWN1LmMKPiA+ICBjcmVhdGUgbW9kZSAxMDA2NDQgaW5jbHVkZS9kdC1iaW5kaW5ncy9pbnRlcnJ1
+cHQtY29udHJvbGxlci9tdmVidS1pY3UuaAo+ID4gICAKPiAKPiBJdCBhbGwgbG9va3MgZ29vZCB0
+byBtZS4gSG93IGRvIHdlIG1lcmdlIHRoaXM/IEkgdGFrZSB0aGUgZmlyc3QgZml2ZQo+IHBhdGNo
+ZXMgYW5kIEdyZWdvcnkgdGFrZXMgdGhlIGxhc3Qgb25lPwoKSSB0aGluayB5b3Ugc2hvdWxkIHRh
+a2UgdGhlIGZpcnN0IGZvdXIgcGF0Y2hlcywgYW5kIEdyw6lnb3J5IHRha2VzIHRoZQpsYXN0IHR3
+byBvbmVzLiBCdXQgSSdsbCBsZXQgR3LDqWdvcnkgY29uZmlybS4KCk9uY2UgYWdhaW4sIHRoYW5r
+cyBhIGxvdCBmb3IgeW91ciBoZWxwIG9uIHRoaXMgc2VyaWVzLCBpdCdzIGluIGEgbXVjaApiZXR0
+ZXIgc2hhcGUgbm93IGNvbXBhcmVkIHRvIHdoYXQgdGhlIG9yaWdpbmFsIHN1Ym1pc3Npb24gd2Fz
+IQoKQmVzdCByZWdhcmRzLAoKVGhvbWFzCi0tIApUaG9tYXMgUGV0YXp6b25pLCBDVE8sIEZyZWUg
+RWxlY3Ryb25zCkVtYmVkZGVkIExpbnV4IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcKaHR0cDovL2Zy
+ZWUtZWxlY3Ryb25zLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
