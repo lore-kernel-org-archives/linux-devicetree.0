@@ -1,38 +1,36 @@
-From: frowand.list@gmail.com
-Subject: [PATCH] of: detect invalid phandle in overlay
-Date: Wed, 21 Jun 2017 12:21:56 -0700
-Message-ID: <1498072916-4664-1-git-send-email-frowand.list@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH v6 1/4] of: remove *phandle properties from expanded
+ device tree
+Date: Wed, 21 Jun 2017 12:25:44 -0700
+Message-ID: <594AC838.5010901@gmail.com>
+References: <1497996172-821-1-git-send-email-frowand.list@gmail.com>
+ <1497996172-821-2-git-send-email-frowand.list@gmail.com>
+ <87mv92szsw.fsf@concordia.ellerman.id.au> <594A0FB6.2000102@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <594A0FB6.2000102@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Rob Herring <robh+dt@kernel.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+On 06/20/17 23:18, Frank Rowand wrote:
+> Hi Rob,
+> 
+> Michael has an issue that means this patch series is not OK in the
+> current form.  I will work on a v7 to see if I can resolve the
+> issue.
+> 
+> -Frank
 
-Overlays are not allowed to modify phandle values of previously existing
-nodes because there is no information available to allow fixup up
-properties that use the previously existing phandle.
+< snip >
 
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
- drivers/of/overlay.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi Rob,
 
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 7827786718d8..c0e4ee1cd1ba 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -132,6 +132,10 @@ static int of_overlay_apply_single_device_node(struct of_overlay *ov,
- 	/* NOTE: Multiple mods of created nodes not supported */
- 	tchild = of_get_child_by_name(target, cname);
- 	if (tchild != NULL) {
-+		/* new overlay phandle value conflicts with existing value */
-+		if (child->phandle)
-+			return -EINVAL;
-+
- 		/* apply overlay recursively */
- 		ret = of_overlay_apply_one(ov, tchild, child);
- 		of_node_put(tchild);
--- 
-Frank Rowand <frank.rowand@sony.com>
+The issue is in patch 1.  Patches 2 - 4 are small independent patches
+that are not dependent on patch 1, so I just sent them as individual
+patches.  Version 7 of this series will be just patch 1.
+
+-Frank
