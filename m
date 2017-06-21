@@ -1,371 +1,408 @@
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCH v5 3/6] irqchip: irq-mvebu-gicp: new driver for Marvell GICP
-Date: Wed, 21 Jun 2017 15:29:14 +0200
-Message-ID: <20170621132917.14187-4-thomas.petazzoni@free-electrons.com>
+Subject: [PATCH v5 6/6] arm64: dts: marvell: enable GICP and ICU on Armada 7K/8K
+Date: Wed, 21 Jun 2017 15:29:17 +0200
+Message-ID: <20170621132917.14187-7-thomas.petazzoni@free-electrons.com>
 References: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@free-electrons.com>, Hanna Hawa <hannah@marvell.com>, linux-arm-kernel@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org, Nadav Haklai <nadavh@marvell.com>, Hanna Hawa <hannah@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Antoine Tenart <antoine.tenart@free-electrons.com>, =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a simple driver for the Marvell GICP, a hardware unit
-that converts memory writes into GIC SPI interrupts. The driver provides
-a number of functions to the ICU driver to allocate GICP interrupts, and
-get the physical addresses that the ICUs should write to to set/clear
-interrupts.
+This commit modifies the Marvell EBU Armada 7K and 8K Device Tree files
+to describe the ICU and GICP units, and use ICU interrupts for all
+devices in the CP110 blocks.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 ---
- drivers/irqchip/Kconfig          |   3 +
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-mvebu-gicp.c | 279 +++++++++++++++++++++++++++++++++++++++
- drivers/irqchip/irq-mvebu-gicp.h |  12 ++
- 4 files changed, 295 insertions(+)
- create mode 100644 drivers/irqchip/irq-mvebu-gicp.c
- create mode 100644 drivers/irqchip/irq-mvebu-gicp.h
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi      |  7 +++
+ .../boot/dts/marvell/armada-cp110-master.dtsi      | 59 +++++++++++++---------
+ .../arm64/boot/dts/marvell/armada-cp110-slave.dtsi | 55 +++++++++++---------
+ 3 files changed, 73 insertions(+), 48 deletions(-)
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index 478f8ac..e527ee5 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -268,6 +268,9 @@ config IRQ_MXS
- 	select IRQ_DOMAIN
- 	select STMP_DEVICE
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index fe41bf9..e0a9198 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -146,6 +146,13 @@
+ 				marvell,spi-base = <128>, <136>, <144>, <152>;
+ 			};
  
-+config MVEBU_GICP
-+	bool
++			gicp: gicp@3f0040 {
++				compatible = "marvell,ap806-gicp";
++				reg = <0x3f0040 0x10>;
++				marvell,spi-ranges = <64 64>, <288 64>;
++				msi-controller;
++			};
 +
- config MVEBU_ODMI
- 	bool
- 	select GENERIC_MSI_IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index b64c59b..11eb858 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -69,6 +69,7 @@ obj-$(CONFIG_ARCH_SA1100)		+= irq-sa11x0.o
- obj-$(CONFIG_INGENIC_IRQ)		+= irq-ingenic.o
- obj-$(CONFIG_IMX_GPCV2)			+= irq-imx-gpcv2.o
- obj-$(CONFIG_PIC32_EVIC)		+= irq-pic32-evic.o
-+obj-$(CONFIG_MVEBU_GICP)		+= irq-mvebu-gicp.o
- obj-$(CONFIG_MVEBU_ODMI)		+= irq-mvebu-odmi.o
- obj-$(CONFIG_MVEBU_PIC)			+= irq-mvebu-pic.o
- obj-$(CONFIG_LS_SCFG_MSI)		+= irq-ls-scfg-msi.o
-diff --git a/drivers/irqchip/irq-mvebu-gicp.c b/drivers/irqchip/irq-mvebu-gicp.c
-new file mode 100644
-index 0000000..45358ac
---- /dev/null
-+++ b/drivers/irqchip/irq-mvebu-gicp.c
-@@ -0,0 +1,279 @@
-+/*
-+ * Copyright (C) 2017 Marvell
-+ *
-+ * Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2. This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
+ 			pic: interrupt-controller@3f0100 {
+ 				compatible = "marvell,armada-8k-pic";
+ 				reg = <0x3f0100 0x10>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
+index ac8df52..cd33129 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110-master.dtsi
+@@ -44,19 +44,20 @@
+  * Device Tree file for Marvell Armada CP110 Master.
+  */
+ 
++#define ICU_GRP_NSR 0x0
 +
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/irqdomain.h>
-+#include <linux/msi.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
+ / {
+ 	cp110-master {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		compatible = "simple-bus";
+-		interrupt-parent = <&gic>;
++		interrupt-parent = <&cpm_icu>;
+ 		ranges;
+ 
+ 		config-space@f2000000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "simple-bus";
+-			interrupt-parent = <&gic>;
+ 			ranges = <0x0 0x0 0xf2000000 0x2000000>;
+ 
+ 			cpm_ethernet: ethernet@0 {
+@@ -68,21 +69,21 @@
+ 				dma-coherent;
+ 
+ 				cpm_eth0: eth0 {
+-					interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
++					interrupts = <ICU_GRP_NSR 39 IRQ_TYPE_LEVEL_HIGH>;
+ 					port-id = <0>;
+ 					gop-port-id = <0>;
+ 					status = "disabled";
+ 				};
+ 
+ 				cpm_eth1: eth1 {
+-					interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
++					interrupts = <ICU_GRP_NSR 40 IRQ_TYPE_LEVEL_HIGH>;
+ 					port-id = <1>;
+ 					gop-port-id = <2>;
+ 					status = "disabled";
+ 				};
+ 
+ 				cpm_eth2: eth2 {
+-					interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
++					interrupts = <ICU_GRP_NSR 41 IRQ_TYPE_LEVEL_HIGH>;
+ 					port-id = <2>;
+ 					gop-port-id = <3>;
+ 					status = "disabled";
+@@ -96,6 +97,14 @@
+ 				reg = <0x12a200 0x10>;
+ 			};
+ 
++			cpm_icu: interrupt-controller@1e0000 {
++				compatible = "marvell,cp110-icu";
++				reg = <0x1e0000 0x10>;
++				#interrupt-cells = <3>;
++				interrupt-controller;
++				msi-parent = <&gicp>;
++			};
 +
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
+ 			cpm_syscon0: system-controller@440000 {
+ 				compatible = "marvell,cp110-system-controller0",
+ 					     "syscon";
+@@ -120,14 +129,14 @@
+ 				compatible = "marvell,armada-8k-rtc";
+ 				reg = <0x284000 0x20>, <0x284080 0x24>;
+ 				reg-names = "rtc", "rtc-soc";
+-				interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 77 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
+ 
+ 			cpm_sata0: sata@540000 {
+ 				compatible = "marvell,armada-8k-ahci",
+ 					     "generic-ahci";
+ 				reg = <0x540000 0x30000>;
+-				interrupts = <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cpm_syscon0 1 15>;
+ 				status = "disabled";
+ 			};
+@@ -137,7 +146,7 @@
+ 					     "generic-xhci";
+ 				reg = <0x500000 0x4000>;
+ 				dma-coherent;
+-				interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cpm_syscon0 1 22>;
+ 				status = "disabled";
+ 			};
+@@ -147,7 +156,7 @@
+ 					     "generic-xhci";
+ 				reg = <0x510000 0x4000>;
+ 				dma-coherent;
+-				interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 105 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cpm_syscon0 1 23>;
+ 				status = "disabled";
+ 			};
+@@ -195,7 +204,7 @@
+ 				reg = <0x701000 0x20>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 120 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cpm_syscon0 1 21>;
+ 				status = "disabled";
+ 			};
+@@ -205,7 +214,7 @@
+ 				reg = <0x701100 0x20>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 121 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cpm_syscon0 1 21>;
+ 				status = "disabled";
+ 			};
+@@ -213,7 +222,7 @@
+ 			cpm_trng: trng@760000 {
+ 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
+ 				reg = <0x760000 0x7d>;
+-				interrupts = <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 95 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cpm_syscon0 1 25>;
+ 				status = "okay";
+ 			};
+@@ -221,7 +230,7 @@
+ 			cpm_sdhci0: sdhci@780000 {
+ 				compatible = "marvell,armada-cp110-sdhci";
+ 				reg = <0x780000 0x300>;
+-				interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 27 IRQ_TYPE_LEVEL_HIGH>;
+ 				clock-names = "core";
+ 				clocks = <&cpm_syscon0 1 4>;
+ 				dma-coherent;
+@@ -231,13 +240,13 @@
+ 			cpm_crypto: crypto@800000 {
+ 				compatible = "inside-secure,safexcel-eip197";
+ 				reg = <0x800000 0x200000>;
+-				interrupts = <GIC_SPI 34 (IRQ_TYPE_EDGE_RISING
++				interrupts = <ICU_GRP_NSR 87 (IRQ_TYPE_EDGE_RISING
+ 				| IRQ_TYPE_LEVEL_HIGH)>,
+-					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>;
++					     <ICU_GRP_NSR 88 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 89 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 90 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 91 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 92 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "mem", "ring0", "ring1",
+ 				"ring2", "ring3", "eip";
+ 				clocks = <&cpm_syscon0 1 26>;
+@@ -264,8 +273,8 @@
+ 				/* non-prefetchable memory */
+ 				0x82000000 0 0xf6000000 0  0xf6000000 0 0xf00000>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 0 &cpm_icu 0 ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
+ 			num-lanes = <1>;
+ 			clocks = <&cpm_syscon0 1 13>;
+ 			status = "disabled";
+@@ -290,8 +299,8 @@
+ 				/* non-prefetchable memory */
+ 				0x82000000 0 0xf7000000 0  0xf7000000 0 0xf00000>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 0 &cpm_icu 0 ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+ 			clocks = <&cpm_syscon0 1 11>;
+@@ -317,8 +326,8 @@
+ 				/* non-prefetchable memory */
+ 				0x82000000 0 0xf8000000 0  0xf8000000 0 0xf00000>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 0 &cpm_icu 0 ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+ 			clocks = <&cpm_syscon0 1 12>;
+diff --git a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+index 7740a75..75a677b 100644
+--- a/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-cp110-slave.dtsi
+@@ -44,19 +44,20 @@
+  * Device Tree file for Marvell Armada CP110 Slave.
+  */
+ 
++#define ICU_GRP_NSR 0x0
 +
-+#include "irq-mvebu-gicp.h"
+ / {
+ 	cp110-slave {
+ 		#address-cells = <2>;
+ 		#size-cells = <2>;
+ 		compatible = "simple-bus";
+-		interrupt-parent = <&gic>;
++		interrupt-parent = <&cps_icu>;
+ 		ranges;
+ 
+ 		config-space@f4000000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 			compatible = "simple-bus";
+-			interrupt-parent = <&gic>;
+ 			ranges = <0x0 0x0 0xf4000000 0x2000000>;
+ 
+ 			cps_rtc: rtc@284000 {
+@@ -75,21 +76,21 @@
+ 				dma-coherent;
+ 
+ 				cps_eth0: eth0 {
+-					interrupts = <GIC_SPI 261 IRQ_TYPE_LEVEL_HIGH>;
++					interrupts = <ICU_GRP_NSR 39 IRQ_TYPE_LEVEL_HIGH>;
+ 					port-id = <0>;
+ 					gop-port-id = <0>;
+ 					status = "disabled";
+ 				};
+ 
+ 				cps_eth1: eth1 {
+-					interrupts = <GIC_SPI 262 IRQ_TYPE_LEVEL_HIGH>;
++					interrupts = <ICU_GRP_NSR 40 IRQ_TYPE_LEVEL_HIGH>;
+ 					port-id = <1>;
+ 					gop-port-id = <2>;
+ 					status = "disabled";
+ 				};
+ 
+ 				cps_eth2: eth2 {
+-					interrupts = <GIC_SPI 263 IRQ_TYPE_LEVEL_HIGH>;
++					interrupts = <ICU_GRP_NSR 41 IRQ_TYPE_LEVEL_HIGH>;
+ 					port-id = <2>;
+ 					gop-port-id = <3>;
+ 					status = "disabled";
+@@ -103,6 +104,14 @@
+ 				reg = <0x12a200 0x10>;
+ 			};
+ 
++			cps_icu: interrupt-controller@1e0000 {
++				compatible = "marvell,cp110-icu";
++				reg = <0x1e0000 0x10>;
++				#interrupt-cells = <3>;
++				interrupt-controller;
++				msi-parent = <&gicp>;
++			};
 +
-+#define GICP_SETSPI_NSR_OFFSET	0x0
-+#define GICP_CLRSPI_NSR_OFFSET	0x8
-+
-+struct mvebu_gicp_spi_range {
-+	unsigned int start;
-+	unsigned int count;
-+};
-+
-+struct mvebu_gicp {
-+	struct mvebu_gicp_spi_range *spi_ranges;
-+	unsigned int spi_ranges_cnt;
-+	unsigned int spi_cnt;
-+	unsigned long *spi_bitmap;
-+	spinlock_t spi_lock;
-+	struct resource *res;
-+	struct device *dev;
-+};
-+
-+static int gicp_idx_to_spi(struct mvebu_gicp *gicp, int idx)
-+{
-+	int i;
-+
-+	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
-+		struct mvebu_gicp_spi_range *r = &gicp->spi_ranges[i];
-+
-+		if (idx < r->count)
-+			return r->start + idx;
-+
-+		idx -= r->count;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+int mvebu_gicp_get_doorbells(struct device_node *dn, phys_addr_t *setspi,
-+			     phys_addr_t *clrspi)
-+{
-+	struct platform_device *pdev;
-+	struct mvebu_gicp *gicp;
-+
-+	pdev = of_find_device_by_node(dn);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	gicp = platform_get_drvdata(pdev);
-+	if (!gicp)
-+		return -ENODEV;
-+
-+	*setspi = gicp->res->start + GICP_SETSPI_NSR_OFFSET;
-+	*clrspi = gicp->res->start + GICP_CLRSPI_NSR_OFFSET;
-+
-+	return 0;
-+}
-+
-+static void gicp_compose_msi_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	struct mvebu_gicp *gicp = data->chip_data;
-+	phys_addr_t setspi = gicp->res->start + GICP_SETSPI_NSR_OFFSET;
-+
-+	msg->data = data->hwirq;
-+	msg->address_lo = lower_32_bits(setspi);
-+	msg->address_hi = upper_32_bits(setspi);
-+}
-+
-+static struct irq_chip gicp_irq_chip = {
-+	.name			= "GICP",
-+	.irq_mask		= irq_chip_mask_parent,
-+	.irq_unmask		= irq_chip_unmask_parent,
-+	.irq_eoi		= irq_chip_eoi_parent,
-+	.irq_set_affinity	= irq_chip_set_affinity_parent,
-+	.irq_set_type		= irq_chip_set_type_parent,
-+	.irq_compose_msi_msg	= gicp_compose_msi_msg,
-+};
-+
-+static int gicp_irq_domain_alloc(struct irq_domain *domain, unsigned int virq,
-+				 unsigned int nr_irqs, void *args)
-+{
-+	struct mvebu_gicp *gicp = domain->host_data;
-+	struct irq_fwspec fwspec;
-+	unsigned int hwirq;
-+	int ret;
-+
-+	spin_lock(&gicp->spi_lock);
-+	hwirq = find_first_zero_bit(gicp->spi_bitmap, gicp->spi_cnt);
-+	if (hwirq == gicp->spi_cnt) {
-+		spin_unlock(&gicp->spi_lock);
-+		return -ENOSPC;
-+	}
-+	__set_bit(hwirq, gicp->spi_bitmap);
-+	spin_unlock(&gicp->spi_lock);
-+
-+	fwspec.fwnode = domain->parent->fwnode;
-+	fwspec.param_count = 3;
-+	fwspec.param[0] = GIC_SPI;
-+	fwspec.param[1] = gicp_idx_to_spi(gicp, hwirq) - 32;
-+	/*
-+	 * Assume edge rising for now, it will be properly set when
-+	 * ->set_type() is called
-+	 */
-+	fwspec.param[2] = IRQ_TYPE_EDGE_RISING;
-+
-+	ret = irq_domain_alloc_irqs_parent(domain, virq, 1, &fwspec);
-+	if (ret) {
-+		dev_err(gicp->dev, "Cannot allocate parent IRQ\n");
-+		goto free_hwirq;
-+	}
-+
-+	ret = irq_domain_set_hwirq_and_chip(domain, virq, hwirq,
-+					    &gicp_irq_chip, gicp);
-+	if (ret)
-+		goto free_irqs_parent;
-+
-+	return 0;
-+
-+free_irqs_parent:
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+free_hwirq:
-+	spin_lock(&gicp->spi_lock);
-+	__clear_bit(hwirq, gicp->spi_bitmap);
-+	spin_unlock(&gicp->spi_lock);
-+	return ret;
-+}
-+
-+static void gicp_irq_domain_free(struct irq_domain *domain,
-+				 unsigned int virq, unsigned int nr_irqs)
-+{
-+	struct mvebu_gicp *gicp = domain->host_data;
-+	struct irq_data *d = irq_domain_get_irq_data(domain, virq);
-+
-+	if (d->hwirq >= gicp->spi_cnt) {
-+		dev_err(gicp->dev, "Invalid hwirq %lu\n", d->hwirq);
-+		return;
-+	}
-+
-+	irq_domain_free_irqs_parent(domain, virq, nr_irqs);
-+
-+	spin_lock(&gicp->spi_lock);
-+	__clear_bit(d->hwirq, gicp->spi_bitmap);
-+	spin_unlock(&gicp->spi_lock);
-+}
-+
-+static const struct irq_domain_ops gicp_domain_ops = {
-+	.alloc	= gicp_irq_domain_alloc,
-+	.free	= gicp_irq_domain_free,
-+};
-+
-+static struct irq_chip gicp_msi_irq_chip = {
-+	.name		= "GICP",
-+	.irq_set_type	= irq_chip_set_type_parent,
-+};
-+
-+static struct msi_domain_ops gicp_msi_ops = {
-+};
-+
-+static struct msi_domain_info gicp_msi_domain_info = {
-+	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS | MSI_FLAG_USE_DEF_CHIP_OPS),
-+	.ops	= &gicp_msi_ops,
-+	.chip	= &gicp_msi_irq_chip,
-+};
-+
-+static int mvebu_gicp_probe(struct platform_device *pdev)
-+{
-+	struct mvebu_gicp *gicp;
-+	struct irq_domain *inner_domain, *plat_domain, *parent_domain;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *irq_parent_dn;
-+	int ret, i;
-+
-+	gicp = devm_kzalloc(&pdev->dev, sizeof(*gicp), GFP_KERNEL);
-+	if (!gicp)
-+		return -ENOMEM;
-+
-+	gicp->dev = &pdev->dev;
-+
-+	gicp->res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!gicp->res)
-+		return -ENODEV;
-+
-+	ret = of_property_count_u32_elems(node, "marvell,spi-ranges");
-+	if (ret < 0)
-+		return ret;
-+
-+	gicp->spi_ranges_cnt = ret / 2;
-+
-+	gicp->spi_ranges =
-+		devm_kzalloc(&pdev->dev,
-+			     gicp->spi_ranges_cnt *
-+			     sizeof(struct mvebu_gicp_spi_range),
-+			     GFP_KERNEL);
-+	if (!gicp->spi_ranges)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < gicp->spi_ranges_cnt; i++) {
-+		of_property_read_u32_index(node, "marvell,spi-ranges",
-+					   i * 2,
-+					   &gicp->spi_ranges[i].start);
-+
-+		of_property_read_u32_index(node, "marvell,spi-ranges",
-+					   i * 2 + 1,
-+					   &gicp->spi_ranges[i].count);
-+
-+		gicp->spi_cnt += gicp->spi_ranges[i].count;
-+	}
-+
-+	gicp->spi_bitmap = devm_kzalloc(&pdev->dev,
-+					BITS_TO_LONGS(gicp->spi_cnt),
-+					GFP_KERNEL);
-+	if (!gicp->spi_bitmap)
-+		return -ENOMEM;
-+
-+	irq_parent_dn = of_irq_find_parent(node);
-+	if (!irq_parent_dn) {
-+		dev_err(&pdev->dev, "failed to find parent IRQ node\n");
-+		return -ENODEV;
-+	}
-+
-+	parent_domain = irq_find_host(irq_parent_dn);
-+	if (!parent_domain) {
-+		dev_err(&pdev->dev, "failed to find parent IRQ domain\n");
-+		return -ENODEV;
-+	}
-+
-+	inner_domain = irq_domain_create_hierarchy(parent_domain, 0,
-+						   gicp->spi_cnt,
-+						   of_node_to_fwnode(node),
-+						   &gicp_domain_ops, gicp);
-+	if (!inner_domain)
-+		return -ENOMEM;
-+
-+
-+	plat_domain = platform_msi_create_irq_domain(of_node_to_fwnode(node),
-+						     &gicp_msi_domain_info,
-+						     inner_domain);
-+	if (!plat_domain) {
-+		irq_domain_remove(inner_domain);
-+		return -ENOMEM;
-+	}
-+
-+	platform_set_drvdata(pdev, gicp);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id mvebu_gicp_of_match[] = {
-+	{ .compatible = "marvell,ap806-gicp", },
-+	{},
-+};
-+
-+static struct platform_driver mvebu_gicp_driver = {
-+	.probe  = mvebu_gicp_probe,
-+	.driver = {
-+		.name = "mvebu-gicp",
-+		.of_match_table = mvebu_gicp_of_match,
-+	},
-+};
-+builtin_platform_driver(mvebu_gicp_driver);
-diff --git a/drivers/irqchip/irq-mvebu-gicp.h b/drivers/irqchip/irq-mvebu-gicp.h
-new file mode 100644
-index 0000000..89a8dc2
---- /dev/null
-+++ b/drivers/irqchip/irq-mvebu-gicp.h
-@@ -0,0 +1,12 @@
-+#ifndef __MVEBU_GICP_H__
-+#define __MVEBU_GICP_H__
-+
-+#include <linux/types.h>
-+
-+struct device_node;
-+
-+int mvebu_gicp_get_doorbells(struct device_node *dn, phys_addr_t *setspi,
-+			     phys_addr_t *clrspi);
-+
-+#endif /* __MVEBU_GICP_H__ */
-+
+ 			cps_syscon0: system-controller@440000 {
+ 				compatible = "marvell,cp110-system-controller0",
+ 					     "syscon";
+@@ -127,7 +136,7 @@
+ 				compatible = "marvell,armada-8k-ahci",
+ 					     "generic-ahci";
+ 				reg = <0x540000 0x30000>;
+-				interrupts = <GIC_SPI 287 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 107 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cps_syscon0 1 15>;
+ 				status = "disabled";
+ 			};
+@@ -137,7 +146,7 @@
+ 					     "generic-xhci";
+ 				reg = <0x500000 0x4000>;
+ 				dma-coherent;
+-				interrupts = <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 106 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cps_syscon0 1 22>;
+ 				status = "disabled";
+ 			};
+@@ -147,7 +156,7 @@
+ 					     "generic-xhci";
+ 				reg = <0x510000 0x4000>;
+ 				dma-coherent;
+-				interrupts = <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 105 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cps_syscon0 1 23>;
+ 				status = "disabled";
+ 			};
+@@ -195,7 +204,7 @@
+ 				reg = <0x701000 0x20>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interrupts = <GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 120 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cps_syscon0 1 21>;
+ 				status = "disabled";
+ 			};
+@@ -205,7 +214,7 @@
+ 				reg = <0x701100 0x20>;
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
+-				interrupts = <GIC_SPI 311 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 121 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cps_syscon0 1 21>;
+ 				status = "disabled";
+ 			};
+@@ -213,7 +222,7 @@
+ 			cps_trng: trng@760000 {
+ 				compatible = "marvell,armada-8k-rng", "inside-secure,safexcel-eip76";
+ 				reg = <0x760000 0x7d>;
+-				interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <ICU_GRP_NSR 95 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&cps_syscon0 1 25>;
+ 				status = "okay";
+ 			};
+@@ -221,13 +230,13 @@
+ 			cps_crypto: crypto@800000 {
+ 				compatible = "inside-secure,safexcel-eip197";
+ 				reg = <0x800000 0x200000>;
+-				interrupts = <GIC_SPI 34 (IRQ_TYPE_EDGE_RISING
++				interrupts = <ICU_GRP_NSR 87 (IRQ_TYPE_EDGE_RISING
+ 				| IRQ_TYPE_LEVEL_HIGH)>,
+-					     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 281 IRQ_TYPE_LEVEL_HIGH>,
+-					     <GIC_SPI 282 IRQ_TYPE_LEVEL_HIGH>;
++					     <ICU_GRP_NSR 88 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 89 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 90 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 91 IRQ_TYPE_LEVEL_HIGH>,
++					     <ICU_GRP_NSR 92 IRQ_TYPE_LEVEL_HIGH>;
+ 				interrupt-names = "mem", "ring0", "ring1",
+ 						  "ring2", "ring3", "eip";
+ 				clocks = <&cps_syscon0 1 26>;
+@@ -254,8 +263,8 @@
+ 				/* non-prefetchable memory */
+ 				0x82000000 0 0xfa000000 0  0xfa000000 0 0xf00000>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 0 &cps_icu 0 ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <ICU_GRP_NSR 22 IRQ_TYPE_LEVEL_HIGH>;
+ 			num-lanes = <1>;
+ 			clocks = <&cps_syscon0 1 13>;
+ 			status = "disabled";
+@@ -280,8 +289,8 @@
+ 				/* non-prefetchable memory */
+ 				0x82000000 0 0xfb000000 0  0xfb000000 0 0xf00000>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 258 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 0 &cps_icu 0 ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <ICU_GRP_NSR 24 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+ 			clocks = <&cps_syscon0 1 11>;
+@@ -307,8 +316,8 @@
+ 				/* non-prefetchable memory */
+ 				0x82000000 0 0xfc000000 0  0xfc000000 0 0xf00000>;
+ 			interrupt-map-mask = <0 0 0 0>;
+-			interrupt-map = <0 0 0 0 &gic 0 GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-map = <0 0 0 0 &cps_icu 0 ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <ICU_GRP_NSR 23 IRQ_TYPE_LEVEL_HIGH>;
+ 
+ 			num-lanes = <1>;
+ 			clocks = <&cps_syscon0 1 12>;
 -- 
 2.9.4
