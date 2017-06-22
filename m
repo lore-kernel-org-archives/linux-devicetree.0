@@ -1,64 +1,81 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 3/4] ARM: l2x0: add arm,ecc-enable property for
- aurora
-Date: Thu, 22 Jun 2017 16:46:30 +0200
-Message-ID: <1498142790.2533.80.camel@pengutronix.de>
-References: <20170608041124.4624-1-chris.packham@alliedtelesis.co.nz>
-         <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
-         <1496998692.3536.24.camel@pengutronix.de>
-         <220533aeb8f64e829f483e38e209cdc8@svr-chch-ex1.atlnz.lc>
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V5 1/1] dt-bindings: pinctrl: extend the pinmux property to support integers array
+Date: Thu, 22 Jun 2017 22:49:00 +0800
+Message-ID: <1498142940-7982-1-git-send-email-aisheng.dong@nxp.com>
+References: <1498046395-30001-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <220533aeb8f64e829f483e38e209cdc8-5g7mGxlPNYb6GjIOKuZY+ItlCAj8ZROq@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1498046395-30001-2-git-send-email-aisheng.dong@nxp.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: linux-gpio@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org, shawnguo@kernel.org, stefan@agner.ch, ping.bai@nxp.com, fugang.duan@nxp.com, kernel@pengutronix.de, jacopo+renesas@jmondi.org, Dong Aisheng <aisheng.dong@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Chris,
+Some platforms may need more than one integer to represent a complete
+pinmux binding, so let's extend the pinmux property to allow to accept
+integer array instead of only a single integer.
 
-On So, 2017-06-11 at 22:55 +0000, Chris Packham wrote:
-> On 09/06/17 20:58, Jan Lübbe wrote:
-> > On Do, 2017-06-08 at 16:11 +1200, Chris Packham wrote:
-> >> +       if (of_property_read_bool(np, "arm,ecc-enable")) {
-> >> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
-> >> +               val |= L2C_AUX_CTRL_EVTMON_ENABLE;
-> >> +       } else if (of_property_read_bool(np, "arm,ecc-disable")) {
-> >> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
-> >> +       }
-> > 
-> > Unless I misunderstand the code in __l2c_init(), the mask is used to
-> > specify the bits to preserve:
-> >          old_aux = aux = readl_relaxed(l2x0_base + L2X0_AUX_CTRL);
-> >          aux &= aux_mask;
-> >          aux |= aux_val;
-> > 
-> >          if (old_aux != aux)
-> >                  pr_warn("L2C: DT/platform modifies aux control register: 0x%08x -> 0x%08x\n",
-> >                          old_aux, aux);
-> > 
-> > So the arm,ecc-disable property will have no effect. This probably also
-> > applies to patch 2/4. The existing property *-disable code removes the
-> > corresponding bit from the mask.
-> 
-> Indeed the disable version should be mask &= ~L2C_AUX_CTRL_EVTMON_ENABLE 
-> and I was probably a little lazy to have used the L2C EVTMON instead of 
-> adding AURORA specific ones like you have in your series.
-> 
-> I'll rebase my series on top of yours and send it direct to you so you 
-> can include it in the overall submission.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-While picking up your arm,parity-enable and arm,ecc-enable patches for
-my series, I noticed that the mask variable is inverted when merging the
-local changes into aux_val/aux_mask at the end of aurora_of_parse. So I
-now believe your code is correct. ;) I'd appreciate a close look,
-nevertheless.
+---
+ChangeLog:
+v4->v5:
+ * doc improvement
+v4:
+ * new patch
+---
+ .../devicetree/bindings/pinctrl/pinctrl-bindings.txt      | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-Regards,
-Jan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index f01d154..30f1d9e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -204,21 +204,22 @@ each single pin the number of required sub-nodes containing "pin" and
+ maintain.
+ 
+ For cases like this, the pin controller driver may use the pinmux helper
+-property, where the pin identifier is packed with mux configuration settings
+-in a single integer.
++property, where the pin identifier is provided with mux configuration settings
++in a pinmux group. A pinmux group consists of the pin identifier and mux
++settings represented as a single integer or an array of integers.
+ 
+-The pinmux property accepts an array of integers, each of them describing
++The pinmux property accepts an array of pinmux groups, each of them describing
+ a single pin multiplexing configuration.
+ 
+ pincontroller {
+ 	state_0_node_a {
+-		pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ...;
++		pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
+ 	};
+ };
+ 
+ Each individual pin controller driver bindings documentation shall specify
+-how those values (pin IDs and pin multiplexing configuration) are defined and
+-assembled together.
++how pin IDs and pin multiplexing configuration are defined and assembled
++together in a pinmux group.
+ 
+ == Generic pin configuration node content ==
+ 
+@@ -300,7 +301,7 @@ arguments are described below.
+ - pinmux takes a list of pin IDs and mux settings as required argument. The
+   specific bindings for the hardware defines:
+   - How pin IDs and mux settings are defined and assembled together in a single
+-    integer.
++    integer or an array of integers.
+ 
+ - bias-pull-up, -down and -pin-default take as optional argument on hardware
+   supporting it the pull strength in Ohm. bias-disable will disable the pull.
+-- 
+2.7.4
+
