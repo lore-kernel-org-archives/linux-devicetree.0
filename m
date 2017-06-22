@@ -1,48 +1,66 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: thermal: add file extension to
- brcm,ns-thermal
-Date: Thu, 22 Jun 2017 12:08:38 -0500
-Message-ID: <20170622170838.nsodxcsp5mk5kb3j@rob-hp-laptop>
-References: <20170602173139.71901-1-code@mmayer.net>
- <20170613221738.7qfnzcy55ybzseul@rob-hp-laptop>
- <CANEuBv7riK2fMtdMkGxm_aTe5XOyu1bJjMZDyh7LwkRO6QAx1A@mail.gmail.com>
+From: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: mtd: elm: Correct compatible string
+ requirement
+Date: Thu, 22 Jun 2017 21:14:12 +0200
+Message-ID: <20170622211412.2c9729ab@bbrezillon>
+References: <1498047726-31398-1-git-send-email-trini@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CANEuBv7riK2fMtdMkGxm_aTe5XOyu1bJjMZDyh7LwkRO6QAx1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1498047726-31398-1-git-send-email-trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Mayer <code-7CzEARzsJhSsTnJN9+BGXg@public.gmane.org>
-Cc: Zhang Rui <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Power Management List <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Device Tree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 13, 2017 at 03:26:29PM -0700, Markus Mayer wrote:
-> On 13 June 2017 at 15:17, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Fri, Jun 02, 2017 at 10:31:39AM -0700, Markus Mayer wrote:
-> >> From: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >>
-> >> Add the missing .txt extension to the Broadcom Northstar binding document.
-> >>
-> >> Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>
-> >> I noticed the missing .txt extension while preparing another patch series.
-> >
-> > I can take this, but if you have another series it should go thru the
-> > thermal tree.
-> >
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> The other series is unrelated to Northstar:
-> https://www.spinics.net/lists/kernel/msg2525115.html
-> 
-> An updated version for that will be coming soon.
-> 
-> Not sure if that'll influence what happens to this patch.
+On Wed, 21 Jun 2017 08:22:06 -0400
+Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
 
-That sounds like a no, so I've applied this.
+> The binding says that the compatible string must be "ti,am33xx-elm"
+> but the code checks only for, and all functioning users set, this as
+> "ti,am3352-elm" so correct the binding.
+> 
+> Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>
+> Cc: Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 
-Rob
+Applied.
+
+Thanks,
+
+Boris
+
+> ---
+> I have submitted a separate patch that correct the dm816x.dtsi to set
+> the compatible string there for the elm from ti,816-elm to ti,am3352-elm
+> and tested it on the hardware, where it works.  It is quite likely that
+> dm814x.dtsi can be trivially corrected as it came after dm816x and
+> before am335x but as I cannot test the hardware, I did not update that.
+> ---
+>  Documentation/devicetree/bindings/mtd/elm.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/elm.txt b/Documentation/devicetree/bindings/mtd/elm.txt
+> index 8c1528c421d4..59ddc61c1076 100644
+> --- a/Documentation/devicetree/bindings/mtd/elm.txt
+> +++ b/Documentation/devicetree/bindings/mtd/elm.txt
+> @@ -1,7 +1,7 @@
+>  Error location module
+>  
+>  Required properties:
+> -- compatible: Must be "ti,am33xx-elm"
+> +- compatible: Must be "ti,am3352-elm"
+>  - reg: physical base address and size of the registers map.
+>  - interrupts: Interrupt number for the elm.
+>  
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
