@@ -1,66 +1,71 @@
 From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v1 0/6] Add support of OV9655 camera
-Date: Thu, 22 Jun 2017 17:05:36 +0200
-Message-ID: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
+Date: Thu, 22 Jun 2017 17:05:37 +0200
+Message-ID: <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, " H. Nikolaus Schaller" <hns@goldelico.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset enables OV9655 camera support.
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
 
-OV9655 support has been tested using STM32F4DIS-CAM extension board
-plugged on connector P1 of STM32F746G-DISCO board.
-Due to lack of OV9650/52 hardware support, the modified related code
-could not have been checked for non-regression.
+This adds documentation of device tree bindings
+for the OV965X family camera sensor module.
 
-First patches upgrade current support of OV9650/52 to prepare then
-introduction of OV9655 variant patch.
-Because of OV9655 register set slightly different from OV9650/9652,
-not all of the driver features are supported (controls). Supported
-resolutions are limited to VGA, QVGA, QQVGA.
-Supported format is limited to RGB565.
-Controls are limited to color bar test pattern for test purpose.
-
-OV9655 initial support is based on a driver written by H. Nikolaus Schaller [1].
-OV9655 registers sequences come from STM32CubeF7 embedded software [2].
-
-[1] http://git.goldelico.com/?p=gta04-kernel.git;a=shortlog;h=refs/heads/work/hns/video/ov9655
-[2] https://developer.mbed.org/teams/ST/code/BSP_DISCO_F746NG/file/e1d9da7fe856/Drivers/BSP/Components/ov9655/ov9655.c
-
-===========
-= history =
-===========
-version 1:
-  - Initial submission.
-
-H. Nikolaus Schaller (1):
-  DT bindings: add bindings for ov965x camera module
-
-Hugues Fruchet (5):
-  [media] ov9650: add device tree support
-  [media] ov9650: select the nearest higher resolution
-  [media] ov9650: use write_array() for resolution sequences
-  [media] ov9650: add multiple variant support
-  [media] ov9650: add support of OV9655 variant
-
- .../devicetree/bindings/media/i2c/ov965x.txt       |  37 +
- drivers/media/i2c/Kconfig                          |   6 +-
- drivers/media/i2c/ov9650.c                         | 792 +++++++++++++++++----
- 3 files changed, 704 insertions(+), 131 deletions(-)
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+---
+ .../devicetree/bindings/media/i2c/ov965x.txt       | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ov965x.txt b/Documentation/devicetree/bindings/media/i2c/ov965x.txt
+new file mode 100644
+index 0000000..0e0de1f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ov965x.txt
+@@ -0,0 +1,37 @@
++* Omnivision OV9650/9652/9655 CMOS sensor
++
++The Omnivision OV965x sensor support multiple resolutions output, such as
++CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
++output format.
++
++Required Properties:
++- compatible: should be one of
++	"ovti,ov9650"
++	"ovti,ov9652"
++	"ovti,ov9655"
++- clocks: reference to the mclk input clock.
++
++Optional Properties:
++- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
++- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
++
++The device node must contain one 'port' child node for its digital output
++video port, in accordance with the video interface bindings defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++&i2c2 {
++	ov9655: camera@30 {
++		compatible = "ovti,ov9655";
++		reg = <0x30>;
++		pwdn-gpios = <&gpioh 13 GPIO_ACTIVE_HIGH>;
++		clocks = <&clk_ext_camera>;
++
++		port {
++			ov9655: endpoint {
++				remote-endpoint = <&dcmi_0>;
++			};
++		};
++	};
++};
 -- 
 1.9.1
