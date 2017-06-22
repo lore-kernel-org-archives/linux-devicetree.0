@@ -1,98 +1,108 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v1] ARM: dts: sun7i: provide ramoops region on BananaPi
-Date: Thu, 22 Jun 2017 08:16:17 +0200
-Message-ID: <20170622061617.5guhcyxdthvmiq7j@flea.lan>
-References: <1498065017-30556-1-git-send-email-linux@rempel-privat.de>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
+Date: Thu, 22 Jun 2017 08:31:57 +0200
+Message-ID: <20170622063157.qih2mriprczpj7zn@pengutronix.de>
+References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
+ <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="zlgqqimsx2g5o662"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1498065017-30556-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+In-Reply-To: <20170621102130.21024-2-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
---zlgqqimsx2g5o662
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi Oleksij,
-
-On Wed, Jun 21, 2017 at 07:10:17PM +0200, Oleksij Rempel wrote:
-> This should help provide useful debug information on remote
-> targets without UART.
->=20
-> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> Several drivers have the same device tree parsing code. Create
+> a common helper function for it.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts=
-/sun7i-a20-bananapi.dts
-> index ed2f35a..38923bf 100644
-> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-> @@ -63,6 +63,22 @@
->  		stdout-path =3D "serial0:115200n8";
->  	};
-> =20
-> +	reserved-memory {
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <1>;
-> +		ranges;
+>  drivers/tty/serial/Kconfig  |  4 ++++
+>  drivers/tty/serial/Makefile |  2 ++
+>  drivers/tty/serial/of.c     | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/serial_core.h | 12 ++++++++++++
+>  4 files changed, 63 insertions(+)
+>  create mode 100644 drivers/tty/serial/of.c
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 5c8850f7a2a0..8baef5b95bed 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -14,6 +14,10 @@ config SERIAL_EARLYCON
+>  	  the console before standard serial driver is probed. The console is
+>  	  enabled when early_param is processed.
+>  
+> +config OF_SERIAL
+> +	depends on SERIAL_CORE
+> +	def_bool y
 > +
-> +		ramoops@7fb6a000 {
-> +			compatible =3D "ramoops";
-> +			reg =3D <0x7fb6a000 0x100000>;
-> +			ecc-size	=3D <16>;
-> +			record-size	=3D <0x00020000>;
-> +			console-size	=3D <0x00020000>;
-> +			ftrace-size	=3D <0x00020000>;
-> +			pmsg-size	=3D <0x00020000>;
-> +		};
-> +	};
+>  source "drivers/tty/serial/8250/Kconfig"
+>  
+>  comment "Non-8250 serial port support"
+> diff --git a/drivers/tty/serial/Makefile b/drivers/tty/serial/Makefile
+> index 53c03e005132..0fee8f4e36cb 100644
+> --- a/drivers/tty/serial/Makefile
+> +++ b/drivers/tty/serial/Makefile
+> @@ -7,6 +7,8 @@ obj-$(CONFIG_SERIAL_CORE) += serial_core.o
+>  obj-$(CONFIG_SERIAL_EARLYCON) += earlycon.o
+>  obj-$(CONFIG_SERIAL_EARLYCON_ARM_SEMIHOST) += earlycon-arm-semihost.o
+>  
+> +obj-$(CONFIG_OF_SERIAL) += of.o
 > +
+>  # These Sparc drivers have to appear before others such as 8250
+>  # which share ttySx minor node space.  Otherwise console device
+>  # names change and other unplesantries.
+> diff --git a/drivers/tty/serial/of.c b/drivers/tty/serial/of.c
+> new file mode 100644
+> index 000000000000..660a8cb09b44
+> --- /dev/null
+> +++ b/drivers/tty/serial/of.c
+> @@ -0,0 +1,45 @@
+> +#include <linux/kernel.h>
+> +#include <linux/export.h>
+> +#include <linux/of.h>
+> +#include <linux/serial_core.h>
+> +
+> +/**
+> + * of_get_rs485_mode() - Implement parsing rs485 properties
+> + * @np: uart node
+> + * @rs485conf: output parameter
+> + *
+> + * This function implements the device tree binding described in
+> + * Documentation/devicetree/bindings/serial/rs485.txt.
+> + *
+> + * Return: 0 on success, 1 if the node doesn't contain rs485 stuff, or a
+> + * negative error code.
+> + */
+> +int of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf)
+> +{
+> +	u32 rs485_delay[2];
+> +	int ret;
+> +
+> +	ret = of_property_read_u32_array(np, "rs485-rts-delay" rs485_delay, 2);
+> +	if (ret == -EINVAL) /* property does not exist */
+> +		return 1;
 
-I'm a bit skeptical about this one.
+As the de-facto standard for the drivers implementing the rs485 bindings
+is to make the properties optional, despite the documentation. Wouldn't
+it be better to make this property optional in the binding instead? This
+wouldn't unnecessarily break old device trees and 0/0 seems a sane
+default we can use when the property doesn't exist.
 
-First, there's nothing specific to the bananapi, but every one will
-want to have different sizes here, or different parameters.
+Sascha
 
-Since using the kernel parameters is also an option, I'd rather
-document how to do that with the parameters.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---zlgqqimsx2g5o662
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZS2CwAAoJEBx+YmzsjxAgIPEQAKk9JaWGfUqCR7g0xigBW1re
-OrcybzmI/Nl9+h3H8SQQS5dETBYGYzfwoGM4QUTvVODi4YSibf76PsENkpdw9vDG
-qgxQFxs9Nc9c2fOaisgQpUGG1WHiGUU1qy9Wsj1oQT0wUqGWWG6ejsgVSGsUc302
-RNMWa6AHseI6efSY1z2RF0FHP2YmKkCtVkAO+GjEaWCx8FHiMyBmGTZxnXx/ziuk
-bsMShCcDa7v6/s/sY+gu/3Vro5i5ChZYpuQ0h9rQhQcDcm1CROv6K38o4SNdK18z
-3eveQYE8HESN/Hii3iXMTcDTk6NBGTZtNQUi4ptFfNyPO+4Idk8gp6nWbE0fTQ/N
-zv81475gwGbJyIFv3H1lRSQN6Hq4iK/WKYDS3gOzmcZqLOdVZE+khMtWOTgMR48X
-ZVN19AYCe4bfHyOUJ2UcDoDgdsPfMKYQJPbMxZT4IuHwfLFjHDlwGBjh2VknCLM4
-A2tJqMRQQYSb93AVPSndgMXkYpi7XiNeODAW0+2nzqE4EmyntEXGEiR0AEAPpWqF
-bEHTsLquljLZT6wbF5xw1IgzK79C5TBqhhCWEQC0dE8tYRZaZtDriTD5WyL2b/UV
-WIM1VWKHxpKlbNFWTKhgPVQimf4JLJGcVPKUMA3fbfSCLAUYgj0GDCxkJcHZrDJ5
-oBCFYt2rur7cUByGdli2
-=whId
------END PGP SIGNATURE-----
-
---zlgqqimsx2g5o662--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
