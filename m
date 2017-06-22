@@ -1,54 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 1/4] dt-bindings: Document img,boston-clock binding
-Date: Thu, 22 Jun 2017 15:56:55 -0500
-Message-ID: <20170622205655.2sp2v3hva3jtsuay@rob-hp-laptop>
-References: <20170617205249.1391-1-paul.burton@imgtec.com>
- <20170617205249.1391-2-paul.burton@imgtec.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: i2c-stm32: Document the STM32F7 I2C
+ bindings
+Date: Thu, 22 Jun 2017 16:04:14 -0500
+Message-ID: <20170622210414.n6vdsc2ga2dwdvyd@rob-hp-laptop>
+References: <1497958890-5530-1-git-send-email-pierre-yves.mordret@st.com>
+ <1497958890-5530-2-git-send-email-pierre-yves.mordret@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170617205249.1391-2-paul.burton@imgtec.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Paul Burton <paul.burton@imgtec.com>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Frank Rowand <frowand.list@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+In-Reply-To: <1497958890-5530-2-git-send-email-pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 17, 2017 at 01:52:46PM -0700, Paul Burton wrote:
-> Add device tree binding documentation for the clocks provided by the
-> MIPS Boston development board from Imagination Technologies, and a
-> header file describing the available clocks for use by device trees &
-> driver.
+On Tue, Jun 20, 2017 at 01:41:26PM +0200, Pierre-Yves MORDRET wrote:
+> This patch adds the documentation of device tree bindings for STM32F7 I2C
 > 
-> Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-clk@vger.kernel.org
-> Cc: linux-mips@linux-mips.org
-> 
+> Signed-off-by: M'boumba Cedric Madianga <cedric.madianga-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Pierre-Yves MORDRET <pierre-yves.mordret-qxv4g6HH51o@public.gmane.org>
 > ---
-> 
-> Changes in v5: None
+> Change in V2
+>   * Remove i2c-timing binding in order to use generic bindings SCL Rising
+>     and Falling time instead
+> ---
+>  .../devicetree/bindings/i2c/i2c-stm32.txt          | 29 +++++++++++++++++++---
+>  1 file changed, 26 insertions(+), 3 deletions(-)
 
-I reviewed v4. Please add acks/reviewed-by when posting new versions.
-
-> 
-> Changes in v4:
-> - Move img,boston-clock node under platform register syscon node.
-> - Add MAINTAINERS entry.
-> 
-> Changes in v3: None
-> 
-> Changes in v2:
-> - Add BOSTON_CLK_INPUT to expose the input clock.
-> 
->  .../devicetree/bindings/clock/img,boston-clock.txt | 31 ++++++++++++++++++++++
->  MAINTAINERS                                        |  7 +++++
->  include/dt-bindings/clock/boston-clock.h           | 14 ++++++++++
->  3 files changed, 52 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/img,boston-clock.txt
->  create mode 100644 include/dt-bindings/clock/boston-clock.h
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
