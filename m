@@ -1,47 +1,79 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3.1 1/3] drm/rockchip: dw_hdmi: add RK3399 HDMI support
-Date: Thu, 22 Jun 2017 10:25:49 +0200
-Message-ID: <2895576.2l0uxY0YQ7@phil>
-References: <1496992236-10634-1-git-send-email-mark.yao@rock-chips.com>
- <1751555.73cFbViMXZ@phil> <594B79A4.1000509@rock-chips.com>
+From: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Subject: Re: [PATCH 2/5] dt-bindings: phy-hisi-inno-usb2: add support for
+ hisi-inno-usb2 phy
+Date: Thu, 22 Jun 2017 16:23:05 +0800
+Message-ID: <4134ff2a-4be7-4e32-5d2c-2dc0eb19ea86@hisilicon.com>
+References: <1498035645-22804-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1498035645-22804-3-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <594B79A4.1000509@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark yao <mark.yao@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498035645-22804-3-git-send-email-xuejiancheng@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, kishon@ti.com, balbi@kernel.org
+Cc: yanhaifeng@hisilicon.com, hermit.wangheming@hisilicon.com, gaofei@hisilicon.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, project-aspen-dev@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gRG9ubmVyc3RhZywgMjIuIEp1bmkgMjAxNywgMTY6MDI6NDQgQ0VTVCBzY2hyaWViIE1hcmsg
-eWFvOgo+IE9uIDIwMTflubQwNuaciDIy5pelIDE1OjMxLCBIZWlrbyBTdHVlYm5lciB3cm90ZToK
-PiA+PiArCj4gPj4gPisvKioKPiA+PiA+KyAqIHN0cnVjdCByb2NrY2hpcF9oZG1pX2NoaXBfZGF0
-YSAtIHNwbGl0ZSB0aGUgZ3JmIHNldHRpbmcgb2Yga2luZCBvZiBjaGlwcwo+ID4+ID4rICogQGxj
-ZHNlbF9ncmZfcmVnOiBncmYgcmVnaXN0ZXIgb2Zmc2V0IG9mIGxjZGMgc2VsZWN0Cj4gPj4gPisg
-KiBAbGNkc2VsX2JpZzogcmVnIHZhbHVlIG9mIHNlbGVjdGluZyB2b3AgYmlnIGZvciBIRE1JCj4g
-Pj4gPisgKiBAbGNkc2VsX2xpdDogcmVnIHZhbHVlIG9mIHNlbGVjdGluZyB2b3AgbGl0dGxlIGZv
-ciBIRE1JCj4gPj4gPisgKi8KPiA+PiA+K3N0cnVjdCByb2NrY2hpcF9oZG1pX2NoaXBfZGF0YSB7
-Cj4gPj4gPisJdTMyCWxjZHNlbF9ncmZfcmVnOwo+ID4gSG93IGRvIHlvdSBwbGFuIG9uIGhhbmRs
-aW5nIHRoZSByazMzNjggKHdpdGggb25seSBvbmUgVk9QIGFuZCB0aHVzCj4gPiBubyBzZWxlY3Rp
-b24gaGFwcGVuaW5nKT8gSSdkIGp1c3QgbWFrZSB0aGUgYWJvdmUgYW4gaW50LCBzbyB3ZSBjb3Vs
-ZAo+ID4gc2V0IGl0IHRvIC0xIGZvciB0aGF0IGNhc2UuICh2YWx1ZSAwIGlzIGFmdGVyIGFsbCBh
-IHZhbGlkIHJlZykuCj4gCj4gSXQncyBhIHByb2JsZW0gaGFuZGxpbmcgb24gcmszMzY4LCB1c2lu
-ZyAtMSB0byBqdWRnZSBtZWFucyB0aGF0IHdlIG5lZWQKPiBpbml0aWFsIHRoZSBsY2RzZWxfZ3Jm
-X3JlZyB0byAtMSBvbiByazMzNjggcGxhdGZvcm0sIHdlIG5lZWQgYWx3YXlzIGFkZCBhIHBsYXRm
-b3JtCj4gZGF0YSB0byBoYW5kbGUgaXQsIHNlZW1zIG5vdCBnb29kIGVub3VnaC4KPiAKPiBTaW5j
-ZSB0aGUgaGRtaSBjaGlwIGRhdGEgb25seSB1c2UgZm9yIHZvcCBzZWxlY3Rpb24sIG1heWJlIHdl
-IGNhbiBqdWRnZSB3aXRoCj4gY2hlY2tpbmcgaGRtaS0+Y2hpcF9kYXRhID09IE5VTEwgZm9yIHRo
-ZSBjYXNlLgoKeWVhaCwgdGhhdCBjb3VsZCB3b3JrIGFzIHdlbGwgLi4uIGFzIGxvbmcgYXMgdGhl
-IGdyZi12b3Atc2VsZWN0IGlzIHRoZSBvbmx5IGNoaXAtZGF0YQpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi,
+
+On 2017/6/21 17:00, Jiancheng Xue wrote:
+> Add support for hisi-inno-usb2 phy.
+> 
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> ---
+>  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> new file mode 100644
+> index 0000000..21f8208
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> @@ -0,0 +1,36 @@
+> +HiSilicon INNO USB2 PHY
+> +-----------------------
+> +Required properties:
+> +- compatible: Should be one of the following strings:
+> +		"hisilicon,inno-usb2-phy",
+> +		"hisilicon,hi3798cv200-usb2-phy",
+> +- #phy-cells: Must be 0
+> +- hisilicon,peripheral-syscon: Phandle of syscon used to control phy.
+
+Here a property should be added to supply offsets of phy specific registers
+in the above peripheral syscon.  I will modify this in the next version.
+
+---
+Regards,
+Jiancheng
+
+> +- clocks: Phandle and clock specifier pair for reference clock utmi_refclk.
+> +- resets: List of phandle and reset specifier pairs for each reset signal in
+> +reset-names.
+> +- reset-names: Should be "por_rst" and "test_rst". The test_rst only
+> +exists in some of SOCs, so it is optional.
+> +
+> +Phy node can include up to four subnodes. Each subnode represents one port.
+> +The required properties of port node are as follows:
+> +- clocks: Phandle and clock specifier pair for utmi_clock.
+> +- resets: List of phandle and reset specifier pairs for port reset and utmi reset.
+> +- reset-names: List of reset signal names. Should be "port_rst" and "utmi_rst"
+> +
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +
+> +Example:
+> +usb_phy: phy {
+> +		 compatible = "hisilicon,inno_usb2_phy";
+> +		 #phy-cells = <0>;
+> +		 hisilicon,peripheral-syscon = <&peri_ctrl>;
+> +		 clocks = <&crg USB2_REF_CLK>;
+> +		 resets = <&crg 0xb4 2>;
+> +		 reset-names = "por_rst";
+> +		 port0 {
+> +			 clocks = <&crg USB2_UTMI0_CLK>;
+> +			 resets = <&crg 0xb4 5>, <&crg 0xb4 1>;
+> +			 reset-names = "port_rst", "utmi_rst";
+> +		 };
+> +	 };
+> 
