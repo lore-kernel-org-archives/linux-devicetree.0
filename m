@@ -1,121 +1,98 @@
-From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH RESEND 4/4] pwm: mediatek: add MT2712/MT7622 support
-Date: Thu, 22 Jun 2017 08:12:47 +0200
-Message-ID: <05b53007-44de-a236-f592-aea8e75ced44@phrozen.org>
-References: <1498032672-7172-1-git-send-email-zhi.mao@mediatek.com>
- <1498032672-7172-5-git-send-email-zhi.mao@mediatek.com>
- <4600cf23-5e59-df02-37dc-056cb4a9744c@phrozen.org>
- <1498111776.18841.10.camel@mhfsdcap03>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v1] ARM: dts: sun7i: provide ramoops region on BananaPi
+Date: Thu, 22 Jun 2017 08:16:17 +0200
+Message-ID: <20170622061617.5guhcyxdthvmiq7j@flea.lan>
+References: <1498065017-30556-1-git-send-email-linux@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zlgqqimsx2g5o662"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498111776.18841.10.camel@mhfsdcap03>
+Content-Disposition: inline
+In-Reply-To: <1498065017-30556-1-git-send-email-linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?WmhlbmJhbyBMaXUgKOWImOaMr+WunSk=?= <Zhenbao.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?U2VhbiBXYW5nICjnjovlv5fkupgp?= <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?WVQgU2hlbiAo5rKI5bKz6ZyGKQ==?= <Yt.Shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?WWluZ2pvZSBDaGVuICg/P+iLsea0sik=?= <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWMMKQXVYFwzLw@public.gmane.org
+To: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kees Cook <keescook-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Colin Cross <ccross-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, Tony Luck <tony.luck-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--zlgqqimsx2g5o662
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 22/06/17 08:09, Zhi Mao wrote:
-> Hi John,
->
-> Thanks for your review the code and feedback.
-> There are 3 issues in this patch:
-> 1.adds PWM_CLK_DIV_MAX which really should go into its own patch
-> 2.adds mtk_pwm_com_reg which should also go into its own patch
-> 3.remove comments inline /*===*/
->
-> for #1 and #3, I will modify them in the next release.
-> but for #2, I want to discuss with you,
-> adding the structure  "mtk_pwm_com_reg" is only for the registers of 
-> MT2712 PWM8,
-> so we want to keep this modification in this patch.
->
-> what's your opinion about it?
-> Any reply is welcome.
->
->
-> Regards
-> Zhi
->
->
->
->
+Hi Oleksij,
 
-Hi Zhi,
+On Wed, Jun 21, 2017 at 07:10:17PM +0200, Oleksij Rempel wrote:
+> This should help provide useful debug information on remote
+> targets without UART.
+>=20
+> Signed-off-by: Oleksij Rempel <linux-YEK0n+YFykbzxQdaRaTXBw@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts=
+/sun7i-a20-bananapi.dts
+> index ed2f35a..38923bf 100644
+> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> @@ -63,6 +63,22 @@
+>  		stdout-path =3D "serial0:115200n8";
+>  	};
+> =20
+> +	reserved-memory {
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <1>;
+> +		ranges;
+> +
+> +		ramoops@7fb6a000 {
+> +			compatible =3D "ramoops";
+> +			reg =3D <0x7fb6a000 0x100000>;
+> +			ecc-size	=3D <16>;
+> +			record-size	=3D <0x00020000>;
+> +			console-size	=3D <0x00020000>;
+> +			ftrace-size	=3D <0x00020000>;
+> +			pmsg-size	=3D <0x00020000>;
+> +		};
+> +	};
+> +
 
-I just had another look and noticed that the CON registers are not at a 
-fixed offset of 0x40 for the new pwm8 register so having 2) inside this 
-patch makes sense. please explain in the description that this is the case
+I'm a bit skeptical about this one.
 
-     John
+First, there's nothing specific to the bananapi, but every one will
+want to have different sizes here, or different parameters.
 
->
-> On Wed, 2017-06-21 at 20:22 +0800, John Crispin wrote:
->> On 21/06/17 10:11, Zhi Mao wrote:
->> > support multiple chip(MT2712, MT7622, MT7623)
->> This patch does more than add extra SoC support. It also
->> * adds PWM_CLK_DIV_MAX which really should go into its own patch
->> * adds mtk_pwm_com_reg which should also go into its own patch
->>
->> more comments inline
->>
->> >
->> > Signed-off-by: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org <mailto:zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>>
->> > ---
->> >   drivers/pwm/pwm-mediatek.c |   63 +++++++++++++++++++++++++++++++++++---------
->> >   1 file changed, 51 insertions(+), 12 deletions(-)
->> >
->> > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
->> > index c803ff6..d520356 100644
->> > --- a/drivers/pwm/pwm-mediatek.c
->> > +++ b/drivers/pwm/pwm-mediatek.c
->> > @@ -16,6 +16,7 @@
->> >   #include <linux/module.h>
->> >   #include <linux/clk.h>
->> >   #include <linux/of.h>
->> > +#include <linux/of_device.h>
->> >   #include <linux/platform_device.h>
->> >   #include <linux/pwm.h>
->> >   #include <linux/slab.h>
->> [...]
->> > @@ -215,9 +238,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
->> >   	return pwmchip_remove(&pc->chip);
->> >   }
->> >
->> > +/*==========================================*/
->>
->> please remove these comment lines
->>
->>       John
->> > +static const struct mtk_com_pwm_data mt2712_pwm_data = {
->> > +	.pwm_nums = 8,
->> > +};
->> > +
->> > +static const struct mtk_com_pwm_data mt7622_pwm_data = {
->> > +	.pwm_nums = 6,
->> > +};
->> > +
->> > +static const struct mtk_com_pwm_data mt7623_pwm_data = {
->> > +	.pwm_nums = 5,
->> > +};
->> > +/*==========================================*/
->> > +
->> >   static const struct of_device_id mtk_pwm_of_match[] = {
->> > -	{ .compatible = "mediatek,mt7623-pwm" },
->> > -	{ }
->> > +	{.compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data},
->> > +	{.compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data},
->> > +	{.compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data},
->> > +	{},
->> >   };
->> >   MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
->> >
->>
->
+Since using the kernel parameters is also an option, I'd rather
+document how to do that with the parameters.
 
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--zlgqqimsx2g5o662
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZS2CwAAoJEBx+YmzsjxAgIPEQAKk9JaWGfUqCR7g0xigBW1re
+OrcybzmI/Nl9+h3H8SQQS5dETBYGYzfwoGM4QUTvVODi4YSibf76PsENkpdw9vDG
+qgxQFxs9Nc9c2fOaisgQpUGG1WHiGUU1qy9Wsj1oQT0wUqGWWG6ejsgVSGsUc302
+RNMWa6AHseI6efSY1z2RF0FHP2YmKkCtVkAO+GjEaWCx8FHiMyBmGTZxnXx/ziuk
+bsMShCcDa7v6/s/sY+gu/3Vro5i5ChZYpuQ0h9rQhQcDcm1CROv6K38o4SNdK18z
+3eveQYE8HESN/Hii3iXMTcDTk6NBGTZtNQUi4ptFfNyPO+4Idk8gp6nWbE0fTQ/N
+zv81475gwGbJyIFv3H1lRSQN6Hq4iK/WKYDS3gOzmcZqLOdVZE+khMtWOTgMR48X
+ZVN19AYCe4bfHyOUJ2UcDoDgdsPfMKYQJPbMxZT4IuHwfLFjHDlwGBjh2VknCLM4
+A2tJqMRQQYSb93AVPSndgMXkYpi7XiNeODAW0+2nzqE4EmyntEXGEiR0AEAPpWqF
+bEHTsLquljLZT6wbF5xw1IgzK79C5TBqhhCWEQC0dE8tYRZaZtDriTD5WyL2b/UV
+WIM1VWKHxpKlbNFWTKhgPVQimf4JLJGcVPKUMA3fbfSCLAUYgj0GDCxkJcHZrDJ5
+oBCFYt2rur7cUByGdli2
+=whId
+-----END PGP SIGNATURE-----
+
+--zlgqqimsx2g5o662--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
