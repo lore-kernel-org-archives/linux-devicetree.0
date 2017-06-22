@@ -1,56 +1,38 @@
 From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH V7 2/6] mtd: partitions: remove sysfs files when deleting
- all master's partitions
-Date: Thu, 22 Jun 2017 14:05:33 -0700
-Message-ID: <20170622210533.GD14148@google.com>
+Subject: Re: [PATCH V7 0/6] mtd: add support for subpartitions
+Date: Thu, 22 Jun 2017 14:06:41 -0700
+Message-ID: <20170622210641.GE14148@google.com>
 References: <20170526131415.27186-1-zajec5@gmail.com>
  <20170621062647.6072-1-zajec5@gmail.com>
- <20170621062647.6072-3-zajec5@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170621062647.6072-3-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170621062647.6072-1-zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 08:26:43AM +0200, Rafał Miłecki wrote:
+On Wed, Jun 21, 2017 at 08:26:41AM +0200, Rafał Miłecki wrote:
 > From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 > 
-> When support for sysfs "offset" file was added it missed to update the
-> del_mtd_partitions function. It deletes partitions just like
-> mtd_del_partition does so both should also take care of removing sysfs
-> files.
+> This patchset adds support for subpartitions. This feature means support
+> for partitions that are containers with extra subpartitions / volumes.
 > 
-> This change moves sysfs_remove_files call to the shared function to fix
-> this issue.
+> V7 splits the first patch into two separated ones (see 1/6 and 2/6). It
+> also rebases 3/6 on top of l2-mtd.git and its recent changes.
 > 
-> Fixes: a62c24d755291 ("mtd: part: Add sysfs variable for offset of partition")
-> Cc: Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
-> ---
-> V7: Introduction of this patch, it was separated from the 1/6. It should
->     be clear now that this change is introduced. If something goes wrong
->     it should also be easier to revert it this way.
+> I hope this is acceptable & clean & clear enough.
+> 
+> Please let me know if you think further improvements should be added.
 
-Thanks, splitting this out is nice actually. And thanks for looking up
-the background on this oversight.
+Applied the series to l2-mtd.git. There's still an open question about
+the "offset" sysfs file, but I don't think it's a blocker for merging.
+(We should figure it out before this makes into a release though.)
 
-I'm not really sure what the actual effect of that omission would be;
-the file won't be left dangling in sysfs (the device is removed
-entirely), but I'm not sure if that'd trigger some kind of internal
-kobject memory leak.
-
-Anyway, looks good to me.
-
-Side note: this patch series sort of massages the definition of this
-"offset" file. Now, IIUC, subpartitions will have an "offset" file
-relative to their parent partition, not the master flash device. I'm not
-sure which way is expected.
-
+Thanks,
 Brian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
