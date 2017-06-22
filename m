@@ -1,69 +1,87 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for hi3660-ufs
-Date: Thu, 22 Jun 2017 13:51:28 +0200
-Message-ID: <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw@mail.gmail.com>
-References: <20170616065119.10704-1-butao@hisilicon.com> <20170616065119.10704-3-butao@hisilicon.com>
- <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com> <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com>
+From: Amelie DELAUNAY <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: add driver for STM32 SPI controller
+Date: Thu, 22 Jun 2017 13:51:56 +0200
+Message-ID: <f27456b6-8abc-8e72-0fbb-bb0829adb7b0@st.com>
+References: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
+ <1498055526-6918-3-git-send-email-amelie.delaunay@st.com>
+ <20170621151300.s74lbymyisvde2zo@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bu Tao <butao@huawei.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wei Xu <xuwei5@hisilicon.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Kevin Hilman <khilman@baylibre.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Thierry Reding <treding@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>, Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>Linux
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170621151300.s74lbymyisvde2zo-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 1:44 PM, Bu Tao <butao@huawei.com> wrote:
-> =E5=9C=A8 2017/6/17 5:51, Arnd Bergmann =E5=86=99=E9=81=93:
->> On Fri, Jun 16, 2017 at 8:51 AM, Bu Tao <butao@hisilicon.com> wrote:
->>> +Optional properties for board device:
->>> +- ufs-hi3660-use-rate-B                : specifies UFS rate-B
->>> +- ufs-hi3660-broken-fastauto   : specifies no fastauto
->>> +- ufs-hi3660-use-HS-GEAR3      : specifies UFS HS-GEAR3
->>> +- ufs-hi3660-use-HS-GEAR2      : specifies UFS HS-GEAR2
->>> +- ufs-hi3660-use-HS-GEAR1      : specifies UFS HS-GEAR1
->>> +- ufs-hi3660-broken-clk-gate-bypass    : specifies no clk-gate
->>> +- ufs-hi3660-use-one-line      : specifies UFS use one line work
->>> +- reset-gpio                   : specifies to reset devices
->>
->>
->> Some of these sound rather generic and might apply to UFS implementation=
-s
->> other than hi3660, so I'd suggest adding them to the base ufs binding wi=
-th
->> a generic name instead.
->>
->> Any DT properties that might be useful across multiple implementations
->> should be parsed in generic code that gets called by the individual
->> drivers,
->> and then the properties that are specific to the integration work done b=
-y
->> hisilicon should be prefixed with "hisilicon,", but not normally with th=
-e
->> SoC name: it is quite possible that another SoC will be derived from thi=
-s
->> chip and it should reuse the properties.
->
->
-> I do not know wheher other SoC need to use the optional properties as
-> abover. So here the name of the optional properties has "hi3660".
+Hi Mark,
 
-They should not have "hi3660" in their names either way, independent
-of where they are used.
+Thanks for your review.
 
->> (note: this is different from the value of the "compatible" property tha=
-t
->> is meant to be as specific as possible".
->>
->> Also, please clarify how your binding relates to the ufshcd binding
->> in Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt: does
->> hi3660 implement any registers that are shared with ufshcd, or does
->> it use the same physical interface with a different register set?
->
-> No, only show how to use the dt-binding for hi3660 SoC
+On 06/21/2017 05:13 PM, Mark Brown wrote:
+> On Wed, Jun 21, 2017 at 04:32:06PM +0200, Amelie Delaunay wrote:
+> 
+> A few minor stylistic things but overall this looks really nice, please
+> send followup patches fixing these style things.
+> 
+>> +	/* Determine the first power of 2 greater than or equal to div */
+>> +	mbrdiv = (div & (div - 1)) ? fls(div) : fls(div) - 1;
+> 
+> Please write normal conditional statements, it makes things much easier
+> to read.
+> OK, I'll fix it in v2.
 
-My question was about the hardware: does hi3660 implement ufshcd
-or not?
+>> +static bool stm32_spi_can_dma(struct spi_master *master,
+>> +			      struct spi_device *spi_dev,
+>> +			      struct spi_transfer *transfer)
+>> +{
+>> +	struct stm32_spi *spi = spi_master_get_devdata(master);
+>> +
+>> +	dev_dbg(spi->dev, "%s: %s\n", __func__,
+>> +		(!!(transfer->len > spi->fifo_size)) ? "true" : "false");
+>> +
+>> +	return !!(transfer->len > spi->fifo_size);
+> 
+> This !! is redundant, you're converting a boolean value into a boolean
+> value.
+> 
+You're right.
 
-      Arnd
+>> +	buswidth = (spi->cur_bpw <= 8) ? DMA_SLAVE_BUSWIDTH_1_BYTE :
+>> +		   (spi->cur_bpw <= 16) ? DMA_SLAVE_BUSWIDTH_2_BYTES :
+>> +		   DMA_SLAVE_BUSWIDTH_4_BYTES;
+>> +
+>> +	/* Valid for DMA Half or Full Fifo threshold */
+>> +	maxburst = (spi->cur_fthlv == 2) ? 1 : spi->cur_fthlv;
+> 
+> Again, please use normal conditional statements - people have to read
+> things.
+> 
+OK.
+>> +static int stm32_spi_suspend(struct device *dev)
+>> +{
+>> +	struct spi_master *master = dev_get_drvdata(dev);
+>> +	struct stm32_spi *spi = spi_master_get_devdata(master);
+>> +	int ret;
+>> +
+>> +	ret = spi_master_suspend(master);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	clk_disable_unprepare(spi->clk);
+> 
+> It'd be good to also have the clock disabled by runtime PM, that will
+> save a little more power.  There's support for enabling and disabling
+> the device in the core so it should just be adding callbacks.  Not
+> essential though.
+> 
+OK I'll have a look.
+
+Regards,
+Amelie
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
