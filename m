@@ -1,63 +1,66 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH V1 7/9] clk: sprd: add adjustable pll support
-Date: Thu, 22 Jun 2017 20:06:29 +0800
-Message-ID: <CAAfSe-vtAqmiJ-ZuxQde4i7FEo76kkbk-mev_S31i3g3GHwrcQ@mail.gmail.com>
-References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
- <20170618015855.27738-8-chunyan.zhang@spreadtrum.com> <20170620013710.GJ4493@codeaurora.org>
- <CAAfSe-sMy3aM9=LwpVivvHKy4hVw3GEd3U-hZe17pXM5fJRxPg@mail.gmail.com> <CAK8P3a1ELg1XcY-QOZn-f6kR9yt-Q6LNLUYEY-BNW-2BaBy6EQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for hi3660-ufs
+Date: Thu, 22 Jun 2017 14:15:54 +0200
+Message-ID: <CAK8P3a1MRx5zRp5-7iDY32+6PGsyHFaOom-bkWmftpLUS=8gBA@mail.gmail.com>
+References: <20170616065119.10704-1-butao@hisilicon.com> <20170616065119.10704-3-butao@hisilicon.com>
+ <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
+ <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com> <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw@mail.gmail.com>
+ <24438c4d-21c8-6302-acd4-4f0e223232ce@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAK8P3a1ELg1XcY-QOZn-f6kR9yt-Q6LNLUYEY-BNW-2BaBy6EQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <24438c4d-21c8-6302-acd4-4f0e223232ce-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>Linux
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On 22 June 2017 at 19:15, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thu, Jun 22, 2017 at 12:17 PM, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
->> On 20 June 2017 at 09:37, Stephen Boyd <sboyd@codeaurora.org> wrote:
->>> On 06/18, Chunyan Zhang wrote:
->
->>>> +     kint = DIV_ROUND_CLOSEST(((fvco - refin * nint * CCU_PLL_1M)/10000) *
->>>> +     ((mask >> (shift + i)) + 1), refin * 100) << i;
->>>> +     cfg[index].val |= (kint << shift) & mask;
->>>> +     cfg[index].msk |= mask;
->>>> +
->>>> +     ibias_val = pll_get_ibias(fvco, pll->itable);
->>>> +
->>>> +     mask = pmask(pll, PLL_IBIAS);
->>>> +     index = pindex(pll, PLL_IBIAS);
->>>> +     shift = pshift(pll, PLL_IBIAS);
->>>> +     cfg[index].val |= ibias_val << shift & mask;
->>>> +     cfg[index].msk |= mask;
->>>> +
->>>> +     for (i = 0; i < reg_num; i++) {
->>>> +             if (cfg[i].msk)
->>>> +                     ccu_pll_writel(pll, i, cfg[i].val, cfg[i].msk);
->>>> +     }
->>>> +
+On Thu, Jun 22, 2017 at 1:58 PM, Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+> =E5=9C=A8 2017/6/22 19:51, Arnd Bergmann =E5=86=99=E9=81=93:
+>> On Thu, Jun 22, 2017 at 1:44 PM, Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>>> =E5=9C=A8 2017/6/17 5:51, Arnd Bergmann =E5=86=99=E9=81=93:
+>>>> On Fri, Jun 16, 2017 at 8:51 AM, Bu Tao <butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
 >>>
->>> Are we waiting for the writel() to go through above? If so we
->>> need a readl() of the same register to make sure the write has
->>> completed before delaying.
+>>> I do not know wheher other SoC need to use the optional properties as
+>>> abover. So here the name of the optional properties has "hi3660".
 >>
->> After writing these configuration registers, we have to wait a certain
->> time to make sure the pll has worked as we configured.  This depends
->> on other circuit part, so we use udelay rather than reading the same
->> register.
+>>
+>> They should not have "hi3660" in their names either way, independent
+>> of where they are used.
 >
-> I think you have to do both: normally the writel() is not guaranteed
-> to arrive at the device until you read back from an address in the
-> same device, so the delay must happen after the readl(), or you won't
-> know how long to wait for.
-
-I got it, will add the readl() in the next iterator.
-
-Thanks,
-Chunyan
-
 >
->        Arnd
+> Oh, change the "hi3660" to "hisilicon"?
+> e.g. ufs-hi3660-use-rate-B  -->  ufs-hisilicon-use-rate-B
+
+No, just 'use-rate-B', no prefix for this.
+
+>>>> (note: this is different from the value of the "compatible" property
+>>>> that
+>>>> is meant to be as specific as possible".
+>>>>
+>>>> Also, please clarify how your binding relates to the ufshcd binding
+>>>> in Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt: does
+>>>> hi3660 implement any registers that are shared with ufshcd, or does
+>>>> it use the same physical interface with a different register set?
+>>>
+>>>
+>>> No, only show how to use the dt-binding for hi3660 SoC
+>>
+>>
+>> My question was about the hardware: does hi3660 implement ufshcd
+>> or not?
+>
+>
+> YES
+
+Ok, then the properties should be documented as optional in the
+Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt file for anything
+that has a proper interpretation in the context of the generic ufshcd
+driver.
+
+      Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
