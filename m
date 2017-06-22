@@ -1,103 +1,62 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Thu, 22 Jun 2017 14:29:07 +0200
-Message-ID: <7ce4f741-309a-2eaa-381c-8033f089651a@samsung.com>
-References: <20170615204130.19255-1-eric@anholt.net>
- <20170615204130.19255-2-eric@anholt.net>
- <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
- <871sqkouvr.fsf@eliezer.anholt.net>
- <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
- <871sqe7ei0.fsf@eliezer.anholt.net>
- <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
- <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
- <CGME20170622092354epcas1p2eb523cbfb64a4da2dc0b188df760d493@epcas1p2.samsung.com>
- <20170622112332.7ec7b65c@bbrezillon>
+From: Bu Tao <butao@huawei.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for hi3660-ufs
+Date: Thu, 22 Jun 2017 20:23:33 +0800
+Message-ID: <f63c5e13-74d2-280c-af80-22ee55d71282@huawei.com>
+References: <20170616065119.10704-1-butao@hisilicon.com>
+ <20170616065119.10704-3-butao@hisilicon.com>
+ <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
+ <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com>
+ <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw@mail.gmail.com>
+ <24438c4d-21c8-6302-acd4-4f0e223232ce@huawei.com>
+ <CAK8P3a1MRx5zRp5-7iDY32+6PGsyHFaOom-bkWmftpLUS=8gBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20170622112332.7ec7b65c@bbrezillon>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAK8P3a1MRx5zRp5-7iDY32+6PGsyHFaOom-bkWmftpLUS=8gBA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Eric Anholt <eric@anholt.net>, Krzysztof Kozlowski <krzk@kernel.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Wei Xu <xuwei5@hisilicon.com>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Guodong Xu <guodong.xu@linaro.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>Linux
 List-Id: devicetree@vger.kernel.org
 
-On 22.06.2017 11:23, Boris Brezillon wrote:
-> On Thu, 22 Jun 2017 13:47:43 +0530
-> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->
->> On 06/22/2017 01:20 PM, Benjamin Gaignard wrote:
->>> 2017-06-20 19:31 GMT+02:00 Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>:  
->>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>>>  
->>>>> On 06/16/2017 08:13 PM, Eric Anholt wrote:  
->>>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>>>>>  
->>>>>>> On 06/16/2017 02:11 AM, Eric Anholt wrote:  
->>>>>>>> If the panel-bridge is being set up after the drm_mode_config_reset(),
->>>>>>>> then the connector's state would never get initialized, and we'd
->>>>>>>> dereference the NULL in the hotplug path.  We also need to register
->>>>>>>> the connector, so that userspace can get at it.
->>>>>>>>  
->>>>>>> Shouldn't the KMS driver make sure the panel-bridge is set up before
->>>>>>> drm_mode_config_reset? Is it the case when we're inserting the
->>>>>>> panel-bridge driver as a module?
->>>>>>>
->>>>>>>
->>>>>>> All the connectors that have been added are registered automatically
->>>>>>> when drm_dev_register() is called by the KMS driver. Registering a
->>>>>>> connector in the middle of setting up our driver is prone to race
->>>>>>> conditions if the userspace decides to use them immediately.  
->>>>>> Yeah, this is fixing initializing panel_bridge at DSI host_attach time,
->>>>>> which in the case of a panel module that creates the DSI device
->>>>>> (adv7533-style, like you said I should use as a reference) will be after
->>>>>> drm_mode_config_reset() and drm_dev_register().  
->>>>> Okay. In the case of the msm kms driver, we defer probe until the
->>>>> adv7533 module is inserted, only then we proceed to drm_mode_config_reset()
->>>>> and drm_dev_register(). I assumed this was the general practice followed by
->>>>> most kms drivers. I.,e the kms driver defers probe until all connector
->>>>> related modules are inserted, and only then proceed to create a drm device.  
->>>> The problem, though, is the panel driver needs the MIPI DSI host to
->>>> exist to call mipi_dsi_device_register_full() during the probe process.
->>>> The adv7533 driver gets around this by registering the DSI device in the
->>>> bridge attach step, but drm_panel doesn't have an attach step.  
->> I'm not sure how we can get around this. We had discussion about this on irc
->> recently, but couldn't come up with a good conclusion. We could come up with a
->> panel_attach() callback to make it similar to bridges, but that's just us avoiding
->> the real issue.
-> How about making DSI dev registration fully asynchronous, that is, DSI
-> devs declared in the DT under the DSI host node will be
-> registered/attached at probe time, and devs using another control bus
-> (like the adv7533 controller over i2c) will be registered afterwards.
->
-> That implies moving the drm_brige registration logic outside of the DSI
-> host ->probe() path. The idea would be to check if all devs connected
-> to the DSI bus are ready at dsi_host->attach() time. If they are, we
-> can finally register the XXX -> DSI bridge. If they're not (because
-> some devs connected to the DSI bus have not been probed yet), then we
-> do not register the drm_bridge and wait for the next dsi_host->attach()
-> event.
-
-I guess you assumes that dsi-host knows all devs connected to it, thanks to:
-- subnodes of the host - ie. devices controlled via dsi bus,
-- graph links from host ports/endpoints - ie. devices controlled by
-other buses, for example adv7533.
-
-I would separate both abstractions to make it more clear:
-1. MIPI bus should be registered early - to allow create/bind devices on it,
-2. drm_bridge should be registered only if all required sinks
-(bridges/panels) are registered.
-
-First point seems OK, I am not sure about the 2nd one - if used
-consistently, it would require building pipeline from sink to source.
-By the way is there any pipeline with two consecutive external bridges
-in the mainline?
-
-Regards
-Andrzej
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+CgrlnKggMjAxNy82LzIyIDIwOjE1LCBBcm5kIEJlcmdtYW5uIOWGmemBkzoKPiBPbiBUaHUsIEp1
+biAyMiwgMjAxNyBhdCAxOjU4IFBNLCBCdSBUYW8gPGJ1dGFvQGh1YXdlaS5jb20+IHdyb3RlOgo+
+PiDlnKggMjAxNy82LzIyIDE5OjUxLCBBcm5kIEJlcmdtYW5uIOWGmemBkzoKPj4+IE9uIFRodSwg
+SnVuIDIyLCAyMDE3IGF0IDE6NDQgUE0sIEJ1IFRhbyA8YnV0YW9AaHVhd2VpLmNvbT4gd3JvdGU6
+Cj4+Pj4g5ZyoIDIwMTcvNi8xNyA1OjUxLCBBcm5kIEJlcmdtYW5uIOWGmemBkzoKPj4+Pj4gT24g
+RnJpLCBKdW4gMTYsIDIwMTcgYXQgODo1MSBBTSwgQnUgVGFvIDxidXRhb0BoaXNpbGljb24uY29t
+PiB3cm90ZToKPj4+Pgo+Pj4+IEkgZG8gbm90IGtub3cgd2hlaGVyIG90aGVyIFNvQyBuZWVkIHRv
+IHVzZSB0aGUgb3B0aW9uYWwgcHJvcGVydGllcyBhcwo+Pj4+IGFib3Zlci4gU28gaGVyZSB0aGUg
+bmFtZSBvZiB0aGUgb3B0aW9uYWwgcHJvcGVydGllcyBoYXMgImhpMzY2MCIuCj4+Pgo+Pj4KPj4+
+IFRoZXkgc2hvdWxkIG5vdCBoYXZlICJoaTM2NjAiIGluIHRoZWlyIG5hbWVzIGVpdGhlciB3YXks
+IGluZGVwZW5kZW50Cj4+PiBvZiB3aGVyZSB0aGV5IGFyZSB1c2VkLgo+Pgo+Pgo+PiBPaCwgY2hh
+bmdlIHRoZSAiaGkzNjYwIiB0byAiaGlzaWxpY29uIj8KPj4gZS5nLiB1ZnMtaGkzNjYwLXVzZS1y
+YXRlLUIgIC0tPiAgdWZzLWhpc2lsaWNvbi11c2UtcmF0ZS1CCj4KPiBObywganVzdCAndXNlLXJh
+dGUtQicsIG5vIHByZWZpeCBmb3IgdGhpcy4KPgo+Pj4+PiAobm90ZTogdGhpcyBpcyBkaWZmZXJl
+bnQgZnJvbSB0aGUgdmFsdWUgb2YgdGhlICJjb21wYXRpYmxlIiBwcm9wZXJ0eQo+Pj4+PiB0aGF0
+Cj4+Pj4+IGlzIG1lYW50IHRvIGJlIGFzIHNwZWNpZmljIGFzIHBvc3NpYmxlIi4KPj4+Pj4KPj4+
+Pj4gQWxzbywgcGxlYXNlIGNsYXJpZnkgaG93IHlvdXIgYmluZGluZyByZWxhdGVzIHRvIHRoZSB1
+ZnNoY2QgYmluZGluZwo+Pj4+PiBpbiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dWZzL3Vmc2hjZC1wbHRmcm0udHh0OiBkb2VzCj4+Pj4+IGhpMzY2MCBpbXBsZW1lbnQgYW55IHJl
+Z2lzdGVycyB0aGF0IGFyZSBzaGFyZWQgd2l0aCB1ZnNoY2QsIG9yIGRvZXMKPj4+Pj4gaXQgdXNl
+IHRoZSBzYW1lIHBoeXNpY2FsIGludGVyZmFjZSB3aXRoIGEgZGlmZmVyZW50IHJlZ2lzdGVyIHNl
+dD8KPj4+Pgo+Pj4+Cj4+Pj4gTm8sIG9ubHkgc2hvdyBob3cgdG8gdXNlIHRoZSBkdC1iaW5kaW5n
+IGZvciBoaTM2NjAgU29DCj4+Pgo+Pj4KPj4+IE15IHF1ZXN0aW9uIHdhcyBhYm91dCB0aGUgaGFy
+ZHdhcmU6IGRvZXMgaGkzNjYwIGltcGxlbWVudCB1ZnNoY2QKPj4+IG9yIG5vdD8KPj4KPj4KPj4g
+WUVTCj4KPiBPaywgdGhlbiB0aGUgcHJvcGVydGllcyBzaG91bGQgYmUgZG9jdW1lbnRlZCBhcyBv
+cHRpb25hbCBpbiB0aGUKPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL3Vm
+c2hjZC1wbHRmcm0udHh0IGZpbGUgZm9yIGFueXRoaW5nCj4gdGhhdCBoYXMgYSBwcm9wZXIgaW50
+ZXJwcmV0YXRpb24gaW4gdGhlIGNvbnRleHQgb2YgdGhlIGdlbmVyaWMgdWZzaGNkCj4gZHJpdmVy
+Lgo+Cj4gICAgICAgQXJuZAo+CgpPSyBJIHdpbGwgbW9kaWZ5IHRoaXMgYW5kIHVwZGF0ZSB0aGUg
+cGF0Y2ggc29vbi4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9saW51eC1hcm0ta2VybmVsCg==
