@@ -1,78 +1,90 @@
-From: Frank Wang <frank.wang@rock-chips.com>
-Subject: Re: [PATCH v2 7/7] ARM: dts: rockchip: add efuse device node for
- rk3228
-Date: Thu, 22 Jun 2017 16:06:08 +0800
-Message-ID: <af1c004a-1031-25ae-4d8f-9945520b3ed1@rock-chips.com>
-References: <1498116055-20977-1-git-send-email-frank.wang@rock-chips.com>
- <1498116278-3791-1-git-send-email-frank.wang@rock-chips.com>
- <37478525.gTCCky7JDB@phil>
+From: Archit Taneja <architt@codeaurora.org>
+Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
+Date: Thu, 22 Jun 2017 13:47:43 +0530
+Message-ID: <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
+References: <20170615204130.19255-1-eric@anholt.net>
+ <20170615204130.19255-2-eric@anholt.net>
+ <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
+ <871sqkouvr.fsf@eliezer.anholt.net>
+ <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
+ <871sqe7ei0.fsf@eliezer.anholt.net>
+ <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <37478525.gTCCky7JDB@phil>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, finley.xiao@rock-chips.com, david.wu@rock-chips.com, shawn.lin@rock-chips.com, chenjh@rock-chips.com, wmc@rock-chips.com
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
-
-On 2017/6/22 15:27, Heiko Stuebner wrote:
-> Hi Frank,
->
-> Am Donnerstag, 22. Juni 2017, 15:24:38 CEST schrieb Frank Wang:
->> From: Finley Xiao <finley.xiao@rock-chips.com>
->>
->> Add a efuse node in the device tree for the rk3228 SoC.
->>
->> Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
->> ---
->>   arch/arm/boot/dts/rk322x.dtsi | 17 +++++++++++++++++
->>   1 file changed, 17 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
->> index bd7ef53..a8697fe 100644
->> --- a/arch/arm/boot/dts/rk322x.dtsi
->> +++ b/arch/arm/boot/dts/rk322x.dtsi
->> @@ -336,6 +336,23 @@
->>   		status = "disabled";
->>   	};
->>   
->> +	efuse: efuse@11040000 {
->> +		compatible = "rockchip,rk322x-efuse";
-> you wanted to update the compatible in the efuse driver + binding txt
-> and then here as well (aka rk3228-efuse).
-
-Sorry, I will fix it and resend these series soon.
-
-BR.
-Frank
-
->
-> Heiko
->
->> +		reg = <0x11040000 0x20>;
->> +		#address-cells = <1>;
->> +		#size-cells = <1>;
->> +		clocks = <&cru PCLK_EFUSE_256>;
->> +		clock-names = "pclk_efuse";
->> +
->> +		/* Data cells */
->> +		efuse_id: id@7 {
->> +			reg = <0x7 0x10>;
->> +		};
->> +		cpu_leakage: cpu_leakage@17 {
->> +			reg = <0x17 0x1>;
->> +		};
->> +	};
->> +
->>   	i2c0: i2c@11050000 {
->>   		compatible = "rockchip,rk3228-i2c";
->>   		reg = <0x11050000 0x1000>;
->>
->
->
->
->
+CgpPbiAwNi8yMi8yMDE3IDAxOjIwIFBNLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToKPiAyMDE3
+LTA2LTIwIDE5OjMxIEdNVCswMjowMCBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PjoKPj4g
+QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4gd3JpdGVzOgo+Pgo+Pj4gT24g
+MDYvMTYvMjAxNyAwODoxMyBQTSwgRXJpYyBBbmhvbHQgd3JvdGU6Cj4+Pj4gQXJjaGl0IFRhbmVq
+YSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4gd3JpdGVzOgo+Pj4+Cj4+Pj4+IE9uIDA2LzE2LzIw
+MTcgMDI6MTEgQU0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+Pj4+Pj4gSWYgdGhlIHBhbmVsLWJyaWRn
+ZSBpcyBiZWluZyBzZXQgdXAgYWZ0ZXIgdGhlIGRybV9tb2RlX2NvbmZpZ19yZXNldCgpLAo+Pj4+
+Pj4gdGhlbiB0aGUgY29ubmVjdG9yJ3Mgc3RhdGUgd291bGQgbmV2ZXIgZ2V0IGluaXRpYWxpemVk
+LCBhbmQgd2UnZAo+Pj4+Pj4gZGVyZWZlcmVuY2UgdGhlIE5VTEwgaW4gdGhlIGhvdHBsdWcgcGF0
+aC4gIFdlIGFsc28gbmVlZCB0byByZWdpc3Rlcgo+Pj4+Pj4gdGhlIGNvbm5lY3Rvciwgc28gdGhh
+dCB1c2Vyc3BhY2UgY2FuIGdldCBhdCBpdC4KPj4+Pj4+Cj4+Pj4+Cj4+Pj4+IFNob3VsZG4ndCB0
+aGUgS01TIGRyaXZlciBtYWtlIHN1cmUgdGhlIHBhbmVsLWJyaWRnZSBpcyBzZXQgdXAgYmVmb3Jl
+Cj4+Pj4+IGRybV9tb2RlX2NvbmZpZ19yZXNldD8gSXMgaXQgdGhlIGNhc2Ugd2hlbiB3ZSdyZSBp
+bnNlcnRpbmcgdGhlCj4+Pj4+IHBhbmVsLWJyaWRnZSBkcml2ZXIgYXMgYSBtb2R1bGU/Cj4+Pj4+
+Cj4+Pj4+Cj4+Pj4+IEFsbCB0aGUgY29ubmVjdG9ycyB0aGF0IGhhdmUgYmVlbiBhZGRlZCBhcmUg
+cmVnaXN0ZXJlZCBhdXRvbWF0aWNhbGx5Cj4+Pj4+IHdoZW4gZHJtX2Rldl9yZWdpc3RlcigpIGlz
+IGNhbGxlZCBieSB0aGUgS01TIGRyaXZlci4gUmVnaXN0ZXJpbmcgYQo+Pj4+PiBjb25uZWN0b3Ig
+aW4gdGhlIG1pZGRsZSBvZiBzZXR0aW5nIHVwIG91ciBkcml2ZXIgaXMgcHJvbmUgdG8gcmFjZQo+
+Pj4+PiBjb25kaXRpb25zIGlmIHRoZSB1c2Vyc3BhY2UgZGVjaWRlcyB0byB1c2UgdGhlbSBpbW1l
+ZGlhdGVseS4KPj4+Pgo+Pj4+IFllYWgsIHRoaXMgaXMgZml4aW5nIGluaXRpYWxpemluZyBwYW5l
+bF9icmlkZ2UgYXQgRFNJIGhvc3RfYXR0YWNoIHRpbWUsCj4+Pj4gd2hpY2ggaW4gdGhlIGNhc2Ug
+b2YgYSBwYW5lbCBtb2R1bGUgdGhhdCBjcmVhdGVzIHRoZSBEU0kgZGV2aWNlCj4+Pj4gKGFkdjc1
+MzMtc3R5bGUsIGxpa2UgeW91IHNhaWQgSSBzaG91bGQgdXNlIGFzIGEgcmVmZXJlbmNlKSB3aWxs
+IGJlIGFmdGVyCj4+Pj4gZHJtX21vZGVfY29uZmlnX3Jlc2V0KCkgYW5kIGRybV9kZXZfcmVnaXN0
+ZXIoKS4KPj4+Cj4+PiBPa2F5LiBJbiB0aGUgY2FzZSBvZiB0aGUgbXNtIGttcyBkcml2ZXIsIHdl
+IGRlZmVyIHByb2JlIHVudGlsIHRoZQo+Pj4gYWR2NzUzMyBtb2R1bGUgaXMgaW5zZXJ0ZWQsIG9u
+bHkgdGhlbiB3ZSBwcm9jZWVkIHRvIGRybV9tb2RlX2NvbmZpZ19yZXNldCgpCj4+PiBhbmQgZHJt
+X2Rldl9yZWdpc3RlcigpLiBJIGFzc3VtZWQgdGhpcyB3YXMgdGhlIGdlbmVyYWwgcHJhY3RpY2Ug
+Zm9sbG93ZWQgYnkKPj4+IG1vc3Qga21zIGRyaXZlcnMuIEkuLGUgdGhlIGttcyBkcml2ZXIgZGVm
+ZXJzIHByb2JlIHVudGlsIGFsbCBjb25uZWN0b3IKPj4+IHJlbGF0ZWQgbW9kdWxlcyBhcmUgaW5z
+ZXJ0ZWQsIGFuZCBvbmx5IHRoZW4gcHJvY2VlZCB0byBjcmVhdGUgYSBkcm0gZGV2aWNlLgo+Pgo+
+PiBUaGUgcHJvYmxlbSwgdGhvdWdoLCBpcyB0aGUgcGFuZWwgZHJpdmVyIG5lZWRzIHRoZSBNSVBJ
+IERTSSBob3N0IHRvCj4+IGV4aXN0IHRvIGNhbGwgbWlwaV9kc2lfZGV2aWNlX3JlZ2lzdGVyX2Z1
+bGwoKSBkdXJpbmcgdGhlIHByb2JlIHByb2Nlc3MuCj4+IFRoZSBhZHY3NTMzIGRyaXZlciBnZXRz
+IGFyb3VuZCB0aGlzIGJ5IHJlZ2lzdGVyaW5nIHRoZSBEU0kgZGV2aWNlIGluIHRoZQo+PiBicmlk
+Z2UgYXR0YWNoIHN0ZXAsIGJ1dCBkcm1fcGFuZWwgZG9lc24ndCBoYXZlIGFuIGF0dGFjaCBzdGVw
+LgoKSSdtIG5vdCBzdXJlIGhvdyB3ZSBjYW4gZ2V0IGFyb3VuZCB0aGlzLiBXZSBoYWQgZGlzY3Vz
+c2lvbiBhYm91dCB0aGlzIG9uIGlyYwpyZWNlbnRseSwgYnV0IGNvdWxkbid0IGNvbWUgdXAgd2l0
+aCBhIGdvb2QgY29uY2x1c2lvbi4gV2UgY291bGQgY29tZSB1cCB3aXRoIGEKcGFuZWxfYXR0YWNo
+KCkgY2FsbGJhY2sgdG8gbWFrZSBpdCBzaW1pbGFyIHRvIGJyaWRnZXMsIGJ1dCB0aGF0J3MganVz
+dCB1cyBhdm9pZGluZwp0aGUgcmVhbCBpc3N1ZS4KCj4+Cj4+IEFub3RoZXIgYWx0ZXJuYXRpdmUg
+aXMgbXkgb3JpZ2luYWwgdmVyc2lvbiBvZiB0aGUgcGFuZWwgZHJpdmVyIHRoYXQgd2FzCj4+IGEg
+bWlwaV9kc2lfZGV2aWNlIGRyaXZlciB0aGF0IHJlZ2lzdGVyZWQgdGhlIHBhbmVsIGR1cmluZyB0
+aGUgRFNJIGRldmljZQo+PiBwcm9iZS4gIFRoYXQncyB3aHkgdmM0J3MgcGFuZWwgbG9va3VwIGlz
+IGR1cmluZyB0aGUgTUlQSSBEU0kgYXR0YWNoCj4+IHBoYXNlLCBjdXJyZW50bHkuCj4gCgpUaGlz
+IHdvdWxkIHJlcXVpcmUgeW91IHRvIGhhdmUgYSBEU0kgZGV2aWNlIG5vZGUgaW4gRFQsIHJhdGhl
+ciB0aGFuIGFuIGkyYwpub2RlLCByaWdodD8gSSBkb24ndCBrbm93IGlmIHdlIHNob3VsZCBkbyB0
+aGF0IGJlY2F1c2Ugb2YgYSBsaW1pdGF0aW9uIGluCm91ciBkcm1fbWlwaV9kc2kgYW5kIGRybV9w
+YW5lbCBmcmFtZXdvcmtzLgoKRG9lcyBhbnlvbmUgaGF2ZSBiZXR0ZXIgaWRlYXM/CgpUaGFua3Ms
+CkFyY2hpdAoKPiArIFBoaWxpcHBlIGluIGNvcHkgYmVjYXVzZSB3ZSBoYXZlIHRoZSBzYW1lIHBy
+b2JpbmcgaXNzdWUgd2hlbiBhZGRpbmcKPiBwYW5lbC1icmlkZ2UKPiB3aXRoIHRoZSBkc2kgYnJp
+ZGdlCj4gCj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwo+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo+PgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
+bWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3Jh
+dGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
+ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
+bAo=
