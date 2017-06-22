@@ -1,66 +1,52 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
-Date: Thu, 22 Jun 2017 10:22:21 +0200
-Message-ID: <20170622082221.v4jf2u5bdw6oyjxw@pengutronix.de>
-References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
- <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
- <20170622063157.qih2mriprczpj7zn@pengutronix.de>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: add bindings for i2c-pca-platform
+Date: Thu, 22 Jun 2017 10:22:31 +0200
+Message-ID: <20170622082230.wf4r2ylyevidizkd@ninjato>
+References: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
+ <20170620011837.14010-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="inxsyrub7gourdbp"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170622063157.qih2mriprczpj7zn-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20170620011837.14010-2-chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Chris Packham <chris.packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Sascha,
 
-On Thu, Jun 22, 2017 at 08:31:57AM +0200, Sascha Hauer wrote:
-> On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
-> > +/**
-> > + * of_get_rs485_mode() - Implement parsing rs485 properties
-> > + * @np: uart node
-> > + * @rs485conf: output parameter
-> > + *
-> > + * This function implements the device tree binding described in
-> > + * Documentation/devicetree/bindings/serial/rs485.txt.
-> > + *
-> > + * Return: 0 on success, 1 if the node doesn't contain rs485 stuff, or a
-> > + * negative error code.
-> > + */
-> > +int of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf)
-> > +{
-> > +	u32 rs485_delay[2];
-> > +	int ret;
-> > +
-> > +	ret = of_property_read_u32_array(np, "rs485-rts-delay" rs485_delay, 2);
-> > +	if (ret == -EINVAL) /* property does not exist */
-> > +		return 1;
-> 
-> As the de-facto standard for the drivers implementing the rs485 bindings
-> is to make the properties optional, despite the documentation. Wouldn't
+--inxsyrub7gourdbp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I must admit that I failed to mention in the commit log that being
-strict here was added by me even though I'm not the author.
 
-> it be better to make this property optional in the binding instead? This
-> wouldn't unnecessarily break old device trees and 0/0 seems a sane
-> default we can use when the property doesn't exist.
+> + - reset-gpios : gpio specifier for gpio connected to RESET_N pin.
 
-Would be fine for me, too. It was Nicolas Ferre who specified this as
-being required in 0331bbf3c6fd9. Added people who discussed the patch
-back then (but without questioning rs485-rts-delay being mandatory).
+What about the 'active' state that Rob mentioned in his last review?
 
-Best regards
-Uwe
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--inxsyrub7gourdbp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllLfkYACgkQFA3kzBSg
+KbZBvA//ZeTKXw5pMWR0nql2GfOBU8ITD/NPP8L3SV7CYlaueRC/suNQ1Cw/kOnH
+GDQ+Di1RZf1AfzKxMb8/2PF2MTbWKIIpMFBa6ntE6a/5mTuGQ0evc25TFOGSp5iC
+hwt+AiiA4GBbwyCX1NfO+LsSrXMkzjTcm4WuRjVIGGZOPnU3oz38xHDVMBQzV6gV
+CHZfkR6S1V2jpSnVQrmr9iQux8+3uvpZ0RkLBgWC05AMJ9HjAqnDgtJZcEDOmEgu
+zN7egN0pf6OiocoKrc254tYAvnHrvGeURJCw5GJXT0ug/iUczTnHIwduY+Kr0vCi
+kIjtLOR9GiAoJrRU70ZZ1lggg5oRdojZDFG0VrnW5DgIK0xErpYlbvp8ZiJozAsP
+5p3Bh5b1qdIBejr8kjdJkFZ4KPAPZpUZ8ykNfQfWYeQpPxRwaGlZWNi/Q+YT4iKq
+K2GPYgpofOa5R3ihS+LeZV89xLv5rmV9WR97vqraovDVGAZC4oAT6Ymeh3C0DUyz
+DcEISNs7AUpdTxDJQdKUTVZ5LlRIVXEX9enUQGhWLHUjcPK8uFWug/fLdktwCxHi
+MA+v8uPGKP3yCZN3lwXo3Pr/OldDoFlPTA3oCu0s2cEtvKkpK9oCJnh/vgUWuUzR
+Et4IV19pVUBcRYF4l7gc+c2vgGrfcr1qtvatu5x1Pj9iSh4RxEg=
+=5qD1
+-----END PGP SIGNATURE-----
+
+--inxsyrub7gourdbp--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
