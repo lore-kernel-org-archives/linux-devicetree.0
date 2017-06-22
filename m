@@ -1,147 +1,124 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Thu, 22 Jun 2017 15:34:35 +0200
-Message-ID: <20170622153435.556fdaef@bbrezillon>
-References: <20170615204130.19255-1-eric@anholt.net>
- <20170615204130.19255-2-eric@anholt.net>
- <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
- <871sqkouvr.fsf@eliezer.anholt.net>
- <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
- <871sqe7ei0.fsf@eliezer.anholt.net>
- <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
- <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
- <CGME20170622092354epcas1p2eb523cbfb64a4da2dc0b188df760d493@epcas1p2.samsung.com>
- <20170622112332.7ec7b65c@bbrezillon>
- <7ce4f741-309a-2eaa-381c-8033f089651a@samsung.com>
- <20170622144150.1663f649@bbrezillon>
- <004fe335-3f36-38e6-7a3e-0ad0623b29cf@samsung.com>
+From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 3/4] irqchip: Add BCM2835 AUX interrupt controller
+Date: Thu, 22 Jun 2017 14:55:08 +0100
+Message-ID: <cc8f00e4-c8af-1d51-e020-32991f91210d@arm.com>
+References: <4ceb6c92-f752-180e-6a6e-a94dcd120737@raspberrypi.org>
+ <1497457750-35585-1-git-send-email-phil@raspberrypi.org>
+ <1497457750-35585-4-git-send-email-phil@raspberrypi.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <004fe335-3f36-38e6-7a3e-0ad0623b29cf@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1497457750-35585-4-git-send-email-phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMiBKdW4gMjAxNyAxNToxNjo0NyArMDIwMApBbmRyemVqIEhhamRhIDxhLmhhamRh
-QHNhbXN1bmcuY29tPiB3cm90ZToKCj4gT24gMjIuMDYuMjAxNyAxNDo0MSwgQm9yaXMgQnJlemls
-bG9uIHdyb3RlOgo+ID4gT24gVGh1LCAyMiBKdW4gMjAxNyAxNDoyOTowNyArMDIwMAo+ID4gQW5k
-cnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4gPiAgCj4gPj4gT24gMjIu
-MDYuMjAxNyAxMToyMywgQm9yaXMgQnJlemlsbG9uIHdyb3RlOiAgCj4gPj4+IE9uIFRodSwgMjIg
-SnVuIDIwMTcgMTM6NDc6NDMgKzA1MzAKPiA+Pj4gQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2Rl
-YXVyb3JhLm9yZz4gd3JvdGU6Cj4gPj4+ICAgIAo+ID4+Pj4gT24gMDYvMjIvMjAxNyAwMToyMCBQ
-TSwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6ICAgIAo+ID4+Pj4+IDIwMTctMDYtMjAgMTk6MzEg
-R01UKzAyOjAwIEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+OiAgICAgIAo+ID4+Pj4+PiBB
-cmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPiB3cml0ZXM6Cj4gPj4+Pj4+ICAg
-ICAgCj4gPj4+Pj4+PiBPbiAwNi8xNi8yMDE3IDA4OjEzIFBNLCBFcmljIEFuaG9sdCB3cm90ZTog
-ICAgICAKPiA+Pj4+Pj4+PiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPiB3
-cml0ZXM6Cj4gPj4+Pj4+Pj4gICAgICAKPiA+Pj4+Pj4+Pj4gT24gMDYvMTYvMjAxNyAwMjoxMSBB
-TSwgRXJpYyBBbmhvbHQgd3JvdGU6ICAgICAgCj4gPj4+Pj4+Pj4+PiBJZiB0aGUgcGFuZWwtYnJp
-ZGdlIGlzIGJlaW5nIHNldCB1cCBhZnRlciB0aGUgZHJtX21vZGVfY29uZmlnX3Jlc2V0KCksCj4g
-Pj4+Pj4+Pj4+PiB0aGVuIHRoZSBjb25uZWN0b3IncyBzdGF0ZSB3b3VsZCBuZXZlciBnZXQgaW5p
-dGlhbGl6ZWQsIGFuZCB3ZSdkCj4gPj4+Pj4+Pj4+PiBkZXJlZmVyZW5jZSB0aGUgTlVMTCBpbiB0
-aGUgaG90cGx1ZyBwYXRoLiAgV2UgYWxzbyBuZWVkIHRvIHJlZ2lzdGVyCj4gPj4+Pj4+Pj4+PiB0
-aGUgY29ubmVjdG9yLCBzbyB0aGF0IHVzZXJzcGFjZSBjYW4gZ2V0IGF0IGl0Lgo+ID4+Pj4+Pj4+
-Pj4gICAgICAKPiA+Pj4+Pj4+Pj4gU2hvdWxkbid0IHRoZSBLTVMgZHJpdmVyIG1ha2Ugc3VyZSB0
-aGUgcGFuZWwtYnJpZGdlIGlzIHNldCB1cCBiZWZvcmUKPiA+Pj4+Pj4+Pj4gZHJtX21vZGVfY29u
-ZmlnX3Jlc2V0PyBJcyBpdCB0aGUgY2FzZSB3aGVuIHdlJ3JlIGluc2VydGluZyB0aGUKPiA+Pj4+
-Pj4+Pj4gcGFuZWwtYnJpZGdlIGRyaXZlciBhcyBhIG1vZHVsZT8KPiA+Pj4+Pj4+Pj4KPiA+Pj4+
-Pj4+Pj4KPiA+Pj4+Pj4+Pj4gQWxsIHRoZSBjb25uZWN0b3JzIHRoYXQgaGF2ZSBiZWVuIGFkZGVk
-IGFyZSByZWdpc3RlcmVkIGF1dG9tYXRpY2FsbHkKPiA+Pj4+Pj4+Pj4gd2hlbiBkcm1fZGV2X3Jl
-Z2lzdGVyKCkgaXMgY2FsbGVkIGJ5IHRoZSBLTVMgZHJpdmVyLiBSZWdpc3RlcmluZyBhCj4gPj4+
-Pj4+Pj4+IGNvbm5lY3RvciBpbiB0aGUgbWlkZGxlIG9mIHNldHRpbmcgdXAgb3VyIGRyaXZlciBp
-cyBwcm9uZSB0byByYWNlCj4gPj4+Pj4+Pj4+IGNvbmRpdGlvbnMgaWYgdGhlIHVzZXJzcGFjZSBk
-ZWNpZGVzIHRvIHVzZSB0aGVtIGltbWVkaWF0ZWx5LiAgICAgIAo+ID4+Pj4+Pj4+IFllYWgsIHRo
-aXMgaXMgZml4aW5nIGluaXRpYWxpemluZyBwYW5lbF9icmlkZ2UgYXQgRFNJIGhvc3RfYXR0YWNo
-IHRpbWUsCj4gPj4+Pj4+Pj4gd2hpY2ggaW4gdGhlIGNhc2Ugb2YgYSBwYW5lbCBtb2R1bGUgdGhh
-dCBjcmVhdGVzIHRoZSBEU0kgZGV2aWNlCj4gPj4+Pj4+Pj4gKGFkdjc1MzMtc3R5bGUsIGxpa2Ug
-eW91IHNhaWQgSSBzaG91bGQgdXNlIGFzIGEgcmVmZXJlbmNlKSB3aWxsIGJlIGFmdGVyCj4gPj4+
-Pj4+Pj4gZHJtX21vZGVfY29uZmlnX3Jlc2V0KCkgYW5kIGRybV9kZXZfcmVnaXN0ZXIoKS4gICAg
-ICAKPiA+Pj4+Pj4+IE9rYXkuIEluIHRoZSBjYXNlIG9mIHRoZSBtc20ga21zIGRyaXZlciwgd2Ug
-ZGVmZXIgcHJvYmUgdW50aWwgdGhlCj4gPj4+Pj4+PiBhZHY3NTMzIG1vZHVsZSBpcyBpbnNlcnRl
-ZCwgb25seSB0aGVuIHdlIHByb2NlZWQgdG8gZHJtX21vZGVfY29uZmlnX3Jlc2V0KCkKPiA+Pj4+
-Pj4+IGFuZCBkcm1fZGV2X3JlZ2lzdGVyKCkuIEkgYXNzdW1lZCB0aGlzIHdhcyB0aGUgZ2VuZXJh
-bCBwcmFjdGljZSBmb2xsb3dlZCBieQo+ID4+Pj4+Pj4gbW9zdCBrbXMgZHJpdmVycy4gSS4sZSB0
-aGUga21zIGRyaXZlciBkZWZlcnMgcHJvYmUgdW50aWwgYWxsIGNvbm5lY3Rvcgo+ID4+Pj4+Pj4g
-cmVsYXRlZCBtb2R1bGVzIGFyZSBpbnNlcnRlZCwgYW5kIG9ubHkgdGhlbiBwcm9jZWVkIHRvIGNy
-ZWF0ZSBhIGRybSBkZXZpY2UuICAgICAgCj4gPj4+Pj4+IFRoZSBwcm9ibGVtLCB0aG91Z2gsIGlz
-IHRoZSBwYW5lbCBkcml2ZXIgbmVlZHMgdGhlIE1JUEkgRFNJIGhvc3QgdG8KPiA+Pj4+Pj4gZXhp
-c3QgdG8gY2FsbCBtaXBpX2RzaV9kZXZpY2VfcmVnaXN0ZXJfZnVsbCgpIGR1cmluZyB0aGUgcHJv
-YmUgcHJvY2Vzcy4KPiA+Pj4+Pj4gVGhlIGFkdjc1MzMgZHJpdmVyIGdldHMgYXJvdW5kIHRoaXMg
-YnkgcmVnaXN0ZXJpbmcgdGhlIERTSSBkZXZpY2UgaW4gdGhlCj4gPj4+Pj4+IGJyaWRnZSBhdHRh
-Y2ggc3RlcCwgYnV0IGRybV9wYW5lbCBkb2Vzbid0IGhhdmUgYW4gYXR0YWNoIHN0ZXAuICAgICAg
-Cj4gPj4+PiBJJ20gbm90IHN1cmUgaG93IHdlIGNhbiBnZXQgYXJvdW5kIHRoaXMuIFdlIGhhZCBk
-aXNjdXNzaW9uIGFib3V0IHRoaXMgb24gaXJjCj4gPj4+PiByZWNlbnRseSwgYnV0IGNvdWxkbid0
-IGNvbWUgdXAgd2l0aCBhIGdvb2QgY29uY2x1c2lvbi4gV2UgY291bGQgY29tZSB1cCB3aXRoIGEK
-PiA+Pj4+IHBhbmVsX2F0dGFjaCgpIGNhbGxiYWNrIHRvIG1ha2UgaXQgc2ltaWxhciB0byBicmlk
-Z2VzLCBidXQgdGhhdCdzIGp1c3QgdXMgYXZvaWRpbmcKPiA+Pj4+IHRoZSByZWFsIGlzc3VlLiAg
-ICAKPiA+Pj4gSG93IGFib3V0IG1ha2luZyBEU0kgZGV2IHJlZ2lzdHJhdGlvbiBmdWxseSBhc3lu
-Y2hyb25vdXMsIHRoYXQgaXMsIERTSQo+ID4+PiBkZXZzIGRlY2xhcmVkIGluIHRoZSBEVCB1bmRl
-ciB0aGUgRFNJIGhvc3Qgbm9kZSB3aWxsIGJlCj4gPj4+IHJlZ2lzdGVyZWQvYXR0YWNoZWQgYXQg
-cHJvYmUgdGltZSwgYW5kIGRldnMgdXNpbmcgYW5vdGhlciBjb250cm9sIGJ1cwo+ID4+PiAobGlr
-ZSB0aGUgYWR2NzUzMyBjb250cm9sbGVyIG92ZXIgaTJjKSB3aWxsIGJlIHJlZ2lzdGVyZWQgYWZ0
-ZXJ3YXJkcy4KPiA+Pj4KPiA+Pj4gVGhhdCBpbXBsaWVzIG1vdmluZyB0aGUgZHJtX2JyaWdlIHJl
-Z2lzdHJhdGlvbiBsb2dpYyBvdXRzaWRlIG9mIHRoZSBEU0kKPiA+Pj4gaG9zdCAtPnByb2JlKCkg
-cGF0aC4gVGhlIGlkZWEgd291bGQgYmUgdG8gY2hlY2sgaWYgYWxsIGRldnMgY29ubmVjdGVkCj4g
-Pj4+IHRvIHRoZSBEU0kgYnVzIGFyZSByZWFkeSBhdCBkc2lfaG9zdC0+YXR0YWNoKCkgdGltZS4g
-SWYgdGhleSBhcmUsIHdlCj4gPj4+IGNhbiBmaW5hbGx5IHJlZ2lzdGVyIHRoZSBYWFggLT4gRFNJ
-IGJyaWRnZS4gSWYgdGhleSdyZSBub3QgKGJlY2F1c2UKPiA+Pj4gc29tZSBkZXZzIGNvbm5lY3Rl
-ZCB0byB0aGUgRFNJIGJ1cyBoYXZlIG5vdCBiZWVuIHByb2JlZCB5ZXQpLCB0aGVuIHdlCj4gPj4+
-IGRvIG5vdCByZWdpc3RlciB0aGUgZHJtX2JyaWRnZSBhbmQgd2FpdCBmb3IgdGhlIG5leHQgZHNp
-X2hvc3QtPmF0dGFjaCgpCj4gPj4+IGV2ZW50LiAgICAKPiA+PiBJIGd1ZXNzIHlvdSBhc3N1bWVz
-IHRoYXQgZHNpLWhvc3Qga25vd3MgYWxsIGRldnMgY29ubmVjdGVkIHRvIGl0LCB0aGFua3MgdG86
-Cj4gPj4gLSBzdWJub2RlcyBvZiB0aGUgaG9zdCAtIGllLiBkZXZpY2VzIGNvbnRyb2xsZWQgdmlh
-IGRzaSBidXMsCj4gPj4gLSBncmFwaCBsaW5rcyBmcm9tIGhvc3QgcG9ydHMvZW5kcG9pbnRzIC0g
-aWUuIGRldmljZXMgY29udHJvbGxlZCBieQo+ID4+IG90aGVyIGJ1c2VzLCBmb3IgZXhhbXBsZSBh
-ZHY3NTMzLiAgCj4gPiBZZXAsIGJ1dCBJIHRoaW5rIHRoYXQncyBhbHJlYWR5IGEgcmVxdWlyZW1l
-bnQgd2hlbiBwb3B1bGF0aW5nIGRldmljZXMKPiA+IHdpdGggdGhlIE9GIGdyYXBoIG1ldGhvZCAo
-aWYgb25lIG9mIHRoZSBEU0kgb3V0cHV0IGVuZHBvaW50IGRvZXMgbm90Cj4gPiBoYXZlIGEgZHJt
-X2JyaWRnZS9wYW5lbCBhdHRhY2hlZCB0byBpdCwgdGhlIERTSSBob3N0IGRyaXZlciByZXR1cm5z
-Cj4gPiAtRVBST0JFX0RFRkVSKS4KPiA+ICAKPiA+PiBJIHdvdWxkIHNlcGFyYXRlIGJvdGggYWJz
-dHJhY3Rpb25zIHRvIG1ha2UgaXQgbW9yZSBjbGVhcjoKPiA+PiAxLiBNSVBJIGJ1cyBzaG91bGQg
-YmUgcmVnaXN0ZXJlZCBlYXJseSAtIHRvIGFsbG93IGNyZWF0ZS9iaW5kIGRldmljZXMgb24gaXQs
-ICAKPiA+IEV4YWN0bHkuCj4gPiAgCj4gPj4gMi4gZHJtX2JyaWRnZSBzaG91bGQgYmUgcmVnaXN0
-ZXJlZCBvbmx5IGlmIGFsbCByZXF1aXJlZCBzaW5rcwo+ID4+IChicmlkZ2VzL3BhbmVscykgYXJl
-IHJlZ2lzdGVyZWQuICAKPiA+IFRoYXQncyB0cnVlLCB1bnRpbCB3ZSBmaW5kIGEgc29sdXRpb24g
-dG8gc3VwcG9ydCBhZGQgRFJNIGJyaWRnZSBob3RwbHVnLgo+ID4gIAo+ID4+IEZpcnN0IHBvaW50
-IHNlZW1zIE9LLCBJIGFtIG5vdCBzdXJlIGFib3V0IHRoZSAybmQgb25lIC0gaWYgdXNlZAo+ID4+
-IGNvbnNpc3RlbnRseSwgaXQgd291bGQgcmVxdWlyZSBidWlsZGluZyBwaXBlbGluZSBmcm9tIHNp
-bmsgdG8gc291cmNlLiAgCj4gPiBZZXMuICAKPiAKPiBTaW5jZSBkcm1fYnJpZGdlX2F0dGFjaCBy
-ZXF1aXJlcyBlbmNvZGVyIHRvIGJlIG5vdCBudWxsIHBpcGVsaW5lCj4gY3JlYXRpb24gd291bGQg
-YmUgcGFpbmZ1bDoKPiAxLiBFdmVyeSBkcml2ZXIgbXVzdCBjYWxsIGRybV9vZl9maW5kX3BhbmVs
-X29yX2JyaWRnZSBvbiBzaW5rKHMpIGJlZm9yZQo+IHJlZ2lzdGVyaW5nIGJyaWRnZSBhbmQgY2Fj
-aGUgdGhlIHJlc3VsdCBmb3IgbGF0ZXIgdXNlLgoKU2hvdWxkbid0IGJlIGhhcmQgdG8gZG8gc2lu
-Y2UgZHNpX2hvc3QtPmF0dGFjaCgpIGlzIGNhbGxlZCBlYWNoIHRpbWUgYQpzaW5rIGlzIGFkZGVk
-IChhbmQgcmVhZHkgdG8gdXNlKS4gQWxsIHlvdSBuZWVkIHRvIGRvIGlzIHJldHJpZXZlIHRoZQpi
-cmlkZ2UgcG9pbnRlciBhbmQgcHV0IGl0IGluIGEgbGlzdCBlbWJlZGRlZCBpbiB0aGUgRFNJIGhv
-c3QgcHJpdgpzdHJ1Y3QuIE9uY2UgeW91IGhhdmUgYWxsIHNpbmtzIGFkZGVkIHRvIHRoaXMgbGlz
-dCAoY2FuIGJlIGNoZWNrZWQgYnkKY291bnRpbmcgdGhlIG51bWJlciBvZiBlbmRwb2ludHMgYW5k
-IERTSSBkZXZzIGF0IHByb2JlIHRpbWUpLCB5b3UgY2FuCnJlZ2lzdGVyIHRoZSBEU0kgYnJpZGdl
-IGFuZCB3YWl0IGZvciBzb21lb25lIHRvIGNhbGwgLT5hdHRhY2goKSBvbiBpdC4KCkluIHRoZSAt
-PmF0dGFjaCgpIGhvb2sgb2YgdGhlIERTSSBicmlkZ2UsIHlvdSdsbCBoYXZlIHRvIGF0dGFjaCBh
-bGwKc2lua3Mgc3RvcmVkIGluIHRoZSBsaXN0IHRvIHRoZSBEU0kgYnJpZGdlLiBOb3RlIHRoYXQg
-cmlnaHQgbm93IHlvdSBoYXZlCmEgMToxIHJlbGF0aW9uc2hpcCwgd2hpY2ggcHJldmVudHMgeW91
-IGZyb20gaGF2aW5nIG9uZSBEU0kgYnJpZGdlIHRoYXQKY2FuIGF0dGFjaCB0byBkaWZmZXJlbnQg
-YnJpZGdlcyBhdmFpbGFibGUgb24gdGhlIERTSSBidXMgKGUuZy4gRFNJIC0+CkhETUkgYnJpZGdl
-IG9uIGNoYW5uZWwgMCBhbmQgRFNJIC0+IExWRFMgYnJpZGdlIG9uIGNoYW5uZWwgMSkuCgo+IDIu
-IEFmdGVyIGVuY29kZXIgZmluZHMgZGlyZWN0bHkgY29ubmVjdGVkIGJyaWRnZSwgaXQgY2FuIGF0
-dGFjaCBpdC4KCkkgZG9uJ3QgZ2V0IHRoYXQgb25lLgoKPiAzLiBhdHRhY2ggY2FsbGJhY2sgb2Yg
-ZXZlcnkgYnJpZGdlIHNob3VsZCBhdHRhY2ggc3Vic2VxdWVudCBicmlkZ2UuCgpZZXAuCgo+IAo+
-IFF1aXRlIGNvbXBsaWNhdGVkLAoKTm90IHN1cmUgaXQncyBtb3JlIGNvbXBsaWNhdGVkIHRoYW4g
-d2hhdCB3ZSBoYXZlIHJpZ2h0IG5vdy4KCj4gbWF5YmUgYnJpZGdlcyBzaG91bGQgYmUgY2hhaW5l
-ZCB3L28gYXZhaWxhYmxlCj4gZW5jb2RlciwgYW5kIGxhdGVyIGF0dGFjaGVkIHRvIGVuY29kZXIg
-d2l0aCBvdGhlciBoZWxwZXIsIGZvciBleGFtcGxlCj4gZHJtX2JyaWRnZV9jaGFpbl9hdHRhY2gu
-CgpUaGF0J3MgYWxzbyBhIHNvbHV0aW9uLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
-cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9kcmktZGV2ZWwK
+On 14/06/17 17:29, Phil Elwell wrote:
+> Devices in the BCM2835 AUX block share a common interrupt line, with a
+> register indicating which devices have active IRQs. Expose this as a
+> nested interrupt controller to avoid IRQ sharing problems (easily
+> observed if UART1 and SPI1/2 are enabled simultaneously).
+> 
+> Signed-off-by: Phil Elwell <phil-FnsA7b+Nu9XbIbC87yuRow@public.gmane.org>
+> ---
+>  drivers/irqchip/Makefile          |   2 +-
+>  drivers/irqchip/irq-bcm2835-aux.c | 153 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 154 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/irqchip/irq-bcm2835-aux.c
+> 
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index b64c59b..cf01920 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -3,7 +3,7 @@ obj-$(CONFIG_IRQCHIP)			+= irqchip.o
+>  obj-$(CONFIG_ALPINE_MSI)		+= irq-alpine-msi.o
+>  obj-$(CONFIG_ATH79)			+= irq-ath79-cpu.o
+>  obj-$(CONFIG_ATH79)			+= irq-ath79-misc.o
+> -obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o
+> +obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2835.o irq-bcm2835-aux.o
+>  obj-$(CONFIG_ARCH_BCM2835)		+= irq-bcm2836.o
+>  obj-$(CONFIG_ARCH_EXYNOS)		+= exynos-combiner.o
+>  obj-$(CONFIG_FARADAY_FTINTC010)		+= irq-ftintc010.o
+> diff --git a/drivers/irqchip/irq-bcm2835-aux.c b/drivers/irqchip/irq-bcm2835-aux.c
+> new file mode 100644
+> index 0000000..2151d51
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-bcm2835-aux.c
+> @@ -0,0 +1,153 @@
+> +/*
+> + * Copyright (C) 2017 Raspberry Pi (Trading) Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify it
+> + * under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <dt-bindings/interrupt-controller/bcm2835-aux-intc.h>
+> +
+> +#define BCM2835_AUXIRQ		0x00
+> +
+> +#define BCM2835_AUX_IRQ_UART_MASK BIT(BCM2835_AUX_IRQ_UART)
+> +#define BCM2835_AUX_IRQ_SPI1_MASK BIT(BCM2835_AUX_IRQ_SPI1)
+> +#define BCM2835_AUX_IRQ_SPI2_MASK BIT(BCM2835_AUX_IRQ_SPI2)
+> +
+> +#define BCM2835_AUX_IRQ_ALL_MASK \
+> +	(BCM2835_AUX_IRQ_UART_MASK | \
+> +	 BCM2835_AUX_IRQ_SPI1_MASK | \
+> +	 BCM2835_AUX_IRQ_SPI2_MASK)
+> +
+> +struct aux_irq_state {
+> +	void __iomem      *status;
+> +	struct irq_domain *domain;
+> +};
+> +
+> +static struct aux_irq_state aux_irq __read_mostly;
+> +
+> +static irqreturn_t bcm2835_aux_irq_handler(int irq, void *dev_id)
+> +{
+> +	u32 stat = readl_relaxed(aux_irq.status);
+> +
+> +	if (stat & BCM2835_AUX_IRQ_UART_MASK)
+> +		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
+> +						     BCM2835_AUX_IRQ_UART));
+> +
+> +	if (stat & BCM2835_AUX_IRQ_SPI1_MASK)
+> +		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
+> +						     BCM2835_AUX_IRQ_SPI1));
+> +
+> +	if (stat & BCM2835_AUX_IRQ_SPI2_MASK)
+> +		generic_handle_irq(irq_linear_revmap(aux_irq.domain,
+> +						     BCM2835_AUX_IRQ_SPI2));
+> +
+> +	return (stat & BCM2835_AUX_IRQ_ALL_MASK) ? IRQ_HANDLED : IRQ_NONE;
+
+That feels like the wrong conditions to return IRQ_HANDLED. Only the
+last level handler actually knows whether this has been handled or not.
+
+A vaguely better approach would be to reread the HW status and only
+return IRQ_HANDLED if everything is clear. Yes, this is racy (another
+interrupt could have come in the meantime). But I doubt you can do much
+better given the quality of the HW...
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
