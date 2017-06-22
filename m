@@ -1,109 +1,250 @@
 From: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Subject: [PATCH v6 00/8] Renesas RZ/A1 pin and gpio controller
-Date: Thu, 22 Jun 2017 16:54:28 +0200
-Message-ID: <1498143276-7976-1-git-send-email-jacopo+renesas@jmondi.org>
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
+Subject: [PATCH v6 2/8] dt-bindings: pinctrl: Add RZ/A1 bindings doc
+Date: Thu, 22 Jun 2017 16:54:30 +0200
+Message-ID: <1498143276-7976-3-git-send-email-jacopo+renesas@jmondi.org>
+References: <1498143276-7976-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498143276-7976-1-git-send-email-jacopo+renesas@jmondi.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, aisheng.dong@nxp.com
 Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-   this is 6th round of RZ/A1 pin controller patch series.
+Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
+controller.
 
-Where did we stop: discussion from pin controller driver shifted toward two
-new generic pin configuration properties I added to the previous series
-(bi-directional and output-enable).
-
-After a really long discussion, we decided to go for handling internally all
-bi-directional use cases, making the generic property not a requirement for the
-series. Interestingly, we recently found out the number of pins actually
-requiring this flag is less (~half) than what reported by the processor manual,
-so we could have handled these internally from day one :(
-
-We also now manage internally pins requiring IO direction specified in software
-even when configured in alternate function mode (SWIO mode). Most of them are
-handled by the driver, some of them have to come from DTS as the user can freely
-select if they have to be inputs or outputs. For those pins, and after another
-discussion involving NXP developers, we decided to use input-enable and
-output-enable properties. I have just sent a patch to add output-enable to the
-generic pin configuration properties, but it is currently under discussion.
-
-However, none of the pins currently configured by mainline DTS require those
-properties to be specified, so I have dropped in this driver any dependency on
-output-enable property, and I'm using instead the already in place
-PIN_CONFIG_OUTPUT one. Once output-enable will eventually be accepted, we can
-update the driver to make use of it, but since there are no use cases for that
-at the moment, it makes not too much sense holding this series back for that.
-
-The total memory occupation we were so worried about of bi-directional and swio
-pin tables is now around 100 bytes, because of how the number of pins actually
-needing those flags has  reduced and because of how we have arranged the
-tables using bitfield structures (credits to Geert here).
-
-Having cleared out dependencies on new pin configuration properties and having
-made configuration flags a driver specific issue, I hope this version can be
-accepted and land in forthcoming pull request for Renesas PFC updates from
-Geert, pending some feedback from the linux-gpio community.
-
-Thanks
-   j
-
-v1 -> v2:
-- change pin configuration flags as suggested by Chris
-- gpio set direction function fixed as suggested by Chris
-- add some more example on pin configuration flag usage to dt-binding doc
-- fix gpio-controller names to remove unit address as suggested by Geert
-- some comments chopped here and there to make the driver less verbose
-
-v2 -> v3:
-- fix grammar and syntax in comment and documentation
-- fix code style (reverse xmas tree ordering in variable declaration)
-- use irqsave/irqrestore in spinlock lock/unlock
-- use devm_ version of kasprintf (memory returned was not properly free)
-- use bitops.h operation ffs and fls to make sure a single bit is set in pmx
-  mask
-- Add Geert's reviewed-by to DTS patches
-
-v3 -> v4:
-- use "pinmux" property in pmx sub-nodes in place of "renesas,pins"
-- use pinconf standard properties to set pin mux additional flags
-- add "bi-directional" and "output-enable" to pinconf generic properties
-- perform pmx function parsing at dt_node_to_map() time
-- change DT bindings to use GENERIC_PINCONF
-- change DT bindings to allow sub-nodes to have "pinmux" property specified
-- several renames (register names, DT parse functions, set_mux() function)
-
-v4 -> v5:
-- use pinctrl_enable() function in pin controller registration function
-- update bindings documentation to incorporate Geert's comments
-- add generic properties unpack macros
-
-v5 -> v6:
-- add tables in driver to manage bi-directional and swio flags
-- drop dependecies on new generic pin configuration properties
-
-Jacopo Mondi (8):
-  pinctrl: Renesas RZ/A1 pin and gpio controller
-  dt-bindings: pinctrl: Add RZ/A1 bindings doc
-  arm: dts: dt-bindings: Add Renesas RZ/A1 pinctrl header
-  arm: dts: r7s72100: Add pin controller node
-  arm: dts: genmai: Add SCIF2 pin group
-  arm: dts: genmai: Add RIIC2 pin group
-  arm: dts: genmai: Add user led device nodes
-  arm: dts: genmai: Add ethernet pin group
-
- .../bindings/pinctrl/renesas,rza1-pinctrl.txt      |  218 ++++
- arch/arm/boot/dts/r7s72100-genmai.dts              |   69 ++
- arch/arm/boot/dts/r7s72100.dtsi                    |   78 ++
- drivers/pinctrl/Kconfig                            |   11 +
- drivers/pinctrl/Makefile                           |    1 +
- drivers/pinctrl/pinctrl-rza1.c                     | 1309 ++++++++++++++++++++
- include/dt-bindings/pinctrl/r7s72100-pinctrl.h     |   16 +
- 7 files changed, 1702 insertions(+)
+Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+---
+ .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 221 +++++++++++++++++++++
+ 1 file changed, 221 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
- create mode 100644 drivers/pinctrl/pinctrl-rza1.c
- create mode 100644 include/dt-bindings/pinctrl/r7s72100-pinctrl.h
 
---
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+new file mode 100644
+index 0000000..43e21474
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+@@ -0,0 +1,221 @@
++Renesas RZ/A1 combined Pin and GPIO controller
++
++The Renesas SoCs of the RZ/A1 family feature a combined Pin and GPIO controller,
++named "Ports" in the hardware reference manual.
++Pin multiplexing and GPIO configuration is performed on a per-pin basis
++writing configuration values to per-port register sets.
++Each "port" features up to 16 pins, each of them configurable for GPIO
++function (port mode) or in alternate function mode.
++Up to 8 different alternate function modes exist for each single pin.
++
++Pin controller node
++-------------------
++
++Required properties:
++  - compatible
++    this shall be "renesas,r7s72100-ports".
++
++  - reg
++    address base and length of the memory area where the pin controller
++    hardware is mapped to.
++
++Example:
++Pin controller node for RZ/A1H SoC (r7s72100)
++
++pinctrl: pin-controller@fcfe3000 {
++	compatible = "renesas,r7s72100-ports";
++
++	reg = <0xfcfe3000 0x4230>;
++};
++
++Sub-nodes
++---------
++
++The child nodes of the pin controller node describe a pin multiplexing
++function or a GPIO controller alternatively.
++
++- Pin multiplexing sub-nodes:
++  A pin multiplexing sub-node describes how to configure a set of
++  (or a single) pin in some desired alternate function mode.
++  A single sub-node may define several pin configurations.
++  A few alternate function require special pin configuration flags to be
++  supplied along with the alternate function configuration number.
++  The hardware reference manual specifies when a pin function requires
++  "software IO driven" mode to be specified. To do so use the generic
++  properties from the <include/linux/pinctrl/pinconf_generic.h> header file
++  to instruct the pin controller to perform the desired pin configuration
++  operation.
++  Please refer to pinctrl-bindings.txt to get to know more on generic
++  pin properties usage.
++
++  The allowed generic formats for a pin multiplexing sub-node are the
++  following ones:
++
++  node-1 {
++      pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
++      GENERIC_PINCONFIG;
++  };
++
++  node-2 {
++      sub-node-1 {
++          pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
++          GENERIC_PINCONFIG;
++      };
++
++      sub-node-2 {
++          pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
++          GENERIC_PINCONFIG;
++      };
++
++      ...
++
++      sub-node-n {
++          pinmux = <PIN_ID_AND_MUX>, <PIN_ID_AND_MUX>, ... ;
++          GENERIC_PINCONFIG;
++      };
++  };
++
++  Use the second format when pins part of the same logical group need to have
++  different generic pin configuration flags applied.
++
++  Client sub-nodes shall refer to pin multiplexing sub-nodes using the phandle
++  of the most external one.
++
++  Eg.
++
++  client-1 {
++      ...
++      pinctrl-0 = <&node-1>;
++      ...
++  };
++
++  client-2 {
++      ...
++      pinctrl-0 = <&node-2>;
++      ...
++  };
++
++  Required properties:
++    - pinmux:
++      integer array representing pin number and pin multiplexing configuration.
++      When a pin has to be configured in alternate function mode, use this
++      property to identify the pin by its global index, and provide its
++      alternate function configuration number along with it.
++      When multiple pins are required to be configured as part of the same
++      alternate function they shall be specified as members of the same
++      argument list of a single "pinmux" property.
++      Helper macros to ease assembling the pin index from its position
++      (port where it sits on and pin number) and alternate function identifier
++      are provided by the pin controller header file at:
++      <include/dt-bindings/pinctrl/r7s72100-pinctrl.h>
++      Integers values in "pinmux" argument list are assembled as:
++      ((PORT * 16 + PIN) | MUX_FUNC << 16)
++
++  Optional generic properties:
++    - input-enable:
++      enable input bufer for pins requiring software driven IO input
++      operations.
++    - output-high:
++      enable output buffer for pins requiring software driven IO output
++      operations. output-low can be used alternatively, as line value is
++      ignored by the driver.
++
++  The hardware reference manual specifies when a pin has to be configured to
++  work in bi-directional mode and when the IO direction has to be specified
++  by software. Bi-directional pins are managed by the pin controller driver
++  internally, while software driven IO direction has to be explicitly
++  selected when multiple options are available.
++
++  Example:
++  A serial communication interface with a TX output pin and an RX input pin.
++
++  &pinctrl {
++	scif2_pins: serial2 {
++		pinmux = <RZA1_PINMUX(3, 0, 6)>, <RZA1_PINMUX(3, 2, 4)>;
++	};
++  };
++
++  Pin #0 on port #3 is configured as alternate function #6.
++  Pin #2 on port #3 is configured as alternate function #4.
++
++  Example 2:
++  I2c master: both SDA and SCL pins need bi-directional operations
++
++  &pinctrl {
++	i2c2_pins: i2c2 {
++		pinmux = <RZA1_PINMUX(1, 4, 1)>, <RZA1_PINMUX(1, 5, 1)>;
++	};
++  };
++
++  Pin #4 on port #1 is configured as alternate function #1.
++  Pin #5 on port #1 is configured as alternate function #1.
++  Both need to work in bi-directional mode, the driver manages this internally.
++
++  Example 3:
++  Multi-function timer input and output compare pins.
++  Configure TIOC0A as software driven input and TIOC0B as software driven
++  output.
++
++  &pinctrl {
++	tioc0_pins: tioc0 {
++		tioc0_input_pins {
++			pinumx = <RZA1_PINMUX(4, 0, 2)>;
++			input-enable;
++		};
++
++		tioc0_output_pins {
++			pinmux = <RZA1_PINMUX(4, 1, 1)>;
++			output-enable;
++		};
++	};
++  };
++
++  &tioc0 {
++	...
++	pinctrl-0 = <&tioc0_pins>;
++	...
++  };
++
++  Pin #0 on port #4 is configured as alternate function #2 with IO direction
++  specified by software as input.
++  Pin #1 on port #4 is configured as alternate function #1 with IO direction
++  specified by software as output.
++
++- GPIO controller sub-nodes:
++  Each port of the r7s72100 pin controller hardware is itself a GPIO controller.
++  Different SoCs have different numbers of available pins per port, but
++  generally speaking, each of them can be configured in GPIO ("port") mode
++  on this hardware.
++  Describe GPIO controllers using sub-nodes with the following properties.
++
++  Required properties:
++    - gpio-controller
++      empty property as defined by the GPIO bindings documentation.
++    - #gpio-cells
++      number of cells required to identify and configure a GPIO.
++      Shall be 2.
++    - gpio-ranges
++      Describes a GPIO controller specifying its specific pin base, the pin
++      base in the global pin numbering space, and the number of controlled
++      pins, as defined by the GPIO bindings documentation. Refer to
++      Documentation/devicetree/bindings/gpio/gpio.txt file for a more detailed
++      description.
++
++  Example:
++  A GPIO controller node, controlling 16 pins indexed from 0.
++  The GPIO controller base in the global pin indexing space is pin 48, thus
++  pins [0 - 15] on this controller map to pins [48 - 63] in the global pin
++  indexing space.
++
++  port3: gpio-3 {
++	gpio-controller;
++	#gpio-cells = <2>;
++	gpio-ranges = <&pinctrl 0 48 16>;
++  };
++
++  A device node willing to use pins controlled by this GPIO controller, shall
++  refer to it as follows:
++
++  led1 {
++	gpios = <&port3 10 GPIO_ACTIVE_LOW>;
++  };
+-- 
 2.7.4
