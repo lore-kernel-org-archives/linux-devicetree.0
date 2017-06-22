@@ -1,37 +1,76 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v2 1/5] dt-bindings: add bindings for i2c-pca-platform
-Date: Thu, 22 Jun 2017 21:20:59 +0000
-Message-ID: <e121e9ad4afe49008e34b5b4a76b22c6@svr-chch-ex1.atlnz.lc>
-References: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
- <20170620011837.14010-2-chris.packham@alliedtelesis.co.nz>
- <20170622082230.wf4r2ylyevidizkd@ninjato>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: amlogic: Add SoC information
+ bindings
+Date: Thu, 22 Jun 2017 16:24:49 -0500
+Message-ID: <20170622212449.wsck475jxabawqsv@rob-hp-laptop>
+References: <1497441946-24379-1-git-send-email-narmstrong@baylibre.com>
+ <1497441946-24379-2-git-send-email-narmstrong@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1497441946-24379-2-git-send-email-narmstrong@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: khilman@baylibre.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/17 20:23, Wolfram Sang wrote:=0A=
-> =0A=
->> + - reset-gpios : gpio specifier for gpio connected to RESET_N pin.=0A=
-> =0A=
-> What about the 'active' state that Rob mentioned in his last review?=0A=
-> =0A=
-=0A=
-My intention was that by saying it is connected to the RESET_N bin the =0A=
-active state is covered.=0A=
-=0A=
-I personally always get a little confused when talking about reset =0A=
-lines. The _N denotes that the line is active low but because it is a =0A=
-reset line writing 1 releases the reset so from a what-the-user-wants =0A=
-perspective it's active high.=0A=
-=0A=
-dt-binding-wise what we want here is GPIO_ACTIVE_HIGH, as in the driver =0A=
-writes 1 to release reset so don't do any polarity inversion. I'd be =0A=
-happy do add something to that effect in a v3 but I actually felt saying =
-=0A=
-the gpio is connected to RESET_N was less ambiguous.=0A=
+On Wed, Jun 14, 2017 at 02:05:44PM +0200, Neil Armstrong wrote:
+> Add bindings for the SoC information register of the Amlogic SoCs.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/arm/amlogic.txt | 29 +++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+> index 5c01e65..a6d8754 100644
+> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+> @@ -60,3 +60,32 @@ Board compatible values (alphabetically, grouped by SoC):
+>    - "amlogic,q201" (Meson gxm s912)
+>    - "kingnovel,r-box-pro" (Meson gxm S912)
+>    - "nexbox,a1" (Meson gxm s912)
+> +
+> +Amlogic Meson Firmware registers Interface
+> +------------------------------------------
+> +
+> +The Meson SoCs have a register bank with status and data shared with the
+> +secure firmware.
+> +
+> +Required properties:
+> + - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+> +
+> +Properties should indentify components of this register interface :
+> +
+> +Meson GX SoC Information
+> +------------------------
+> +A firmware register encodes the SoC type, package and revision information on
+> +the Meson GX SoCs.
+> +If present, the following property should be added :
+> +
+> +Optional properties:
+> +  - has-chip-id: If present, the interface gives the current SoC version.
+
+amlogic,has-chip-id
+
+With that,
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> +
+> +Example
+> +-------
+> +
+> +ao-secure@140 {
+> +	compatible = "amlogic,meson-gx-ao-secure", "syscon";
+> +	reg = <0x0 0x140 0x0 0x140>;
+> +	has-chip-id;
+> +};
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
