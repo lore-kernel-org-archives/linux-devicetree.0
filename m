@@ -1,60 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] of: update ePAPR references to point to Devicetree
- Specification
-Date: Thu, 22 Jun 2017 11:22:21 -0500
-Message-ID: <20170622162221.qxglzqdxpzt6hoho@rob-hp-laptop>
-References: <1498148139-12770-1-git-send-email-frowand.list@gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3.1 1/3] drm/rockchip: dw_hdmi: add RK3399 HDMI support
+Date: Thu, 22 Jun 2017 12:04:43 -0500
+Message-ID: <CAL_JsqKU3u-PNMCeDTgiGULn29wxejWVWOa9rapJCQuvMKZpDA@mail.gmail.com>
+References: <1496992236-10634-1-git-send-email-mark.yao@rock-chips.com> <1498115845-7177-1-git-send-email-mark.yao@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1498148139-12770-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <1498115845-7177-1-git-send-email-mark.yao@rock-chips.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: Mark Rutland <mark.rutland@arm.com>, horia.geanta@nxp.com, Dan Douglass <dan.douglass@nxp.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+To: Mark Yao <mark.yao@rock-chips.com>
+Cc: David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dri-devel <dri-devel@lists.freedesktop.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 09:15:39AM -0700, frowand.list@gmail.com wrote:
-> From: Frank Rowand <frank.rowand@sony.com>
-> 
-> The Devicetree Specification has superseded the ePAPR as the
-> base specification for bindings.  Update files in Documentation
-> to reference the new document.
-> 
-> First reference to ePAPR in Documentation/devicetree/bindings/arm/cci.txt
-> is generic, remove it.
-> 
-> Some files are not updated because there is no hypervisor chapter
-> in the Devicetree Specification:
->    Documentation/devicetree/bindings/powerpc/fsl/msi-pic.txt
->    Documenation/virtual/kvm/api.txt
->    Documenation/virtual/kvm/ppc-pv.txt
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+On Thu, Jun 22, 2017 at 2:17 AM, Mark Yao <mark.yao@rock-chips.com> wrote:
+> RK3399 and RK3288 shared the same HDMI IP controller, only some light
+> difference with GRF configure.
+>
+> Signed-off-by: Yakir Yang <ykk@rock-chips.com>
+> Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
 > ---
-> 
-> changes from v1:
->    - remove boilerplat ePAPR reference from cci.txt
-> 
->  Documentation/devicetree/bindings/arm/cci.txt             | 15 ++++-----------
->  Documentation/devicetree/bindings/arm/cpus.txt            | 13 +++++++------
->  Documentation/devicetree/bindings/arm/idle-states.txt     |  4 ++--
->  Documentation/devicetree/bindings/arm/l2c2x0.txt          |  4 ++--
->  Documentation/devicetree/bindings/arm/topology.txt        |  4 ++--
->  Documentation/devicetree/bindings/bus/simple-pm-bus.txt   |  2 +-
->  Documentation/devicetree/bindings/chosen.txt              |  3 ++-
->  Documentation/devicetree/bindings/common-properties.txt   |  2 +-
->  Documentation/devicetree/bindings/crypto/fsl-sec4.txt     |  4 ++--
->  Documentation/devicetree/bindings/crypto/fsl-sec6.txt     |  4 ++--
->  .../devicetree/bindings/interrupt-controller/open-pic.txt |  5 ++---
->  Documentation/devicetree/bindings/net/ethernet.txt        |  9 ++++++---
->  Documentation/devicetree/bindings/powerpc/fsl/cpus.txt    |  6 +++---
->  Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt |  2 +-
->  .../devicetree/bindings/powerpc/fsl/srio-rmu.txt          |  4 ++--
->  Documentation/devicetree/bindings/powerpc/fsl/srio.txt    |  3 ++-
->  Documentation/devicetree/booting-without-of.txt           |  2 +-
->  Documentation/devicetree/usage-model.txt                  |  2 +-
->  Documentation/xtensa/mmu.txt                              |  6 +++---
->  19 files changed, 46 insertions(+), 48 deletions(-)
+> Changes in v3.1:
+>   Correct documentation compatible's format(Rob Herring).
+> Changes in v3:
+>   remove hdmi_phy_configure_dwc_hdmi_3d_tx callbak.
+>
+> Changes in v2:
+>   reuse hdmi_phy_configure_dwc_hdmi_3d_tx for phy configure
+>   fixup Documentation
+>
+>  .../bindings/display/rockchip/dw_hdmi-rockchip.txt |  4 +-
 
-Applied.
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c        | 67 ++++++++++++++++++----
+>  2 files changed, 59 insertions(+), 12 deletions(-)
