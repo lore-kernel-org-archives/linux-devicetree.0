@@ -1,62 +1,49 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v7.2 7/7] device property: Get rid of struct
- fwnode_handle type field
-Date: Thu, 22 Jun 2017 13:29:21 +0300
-Message-ID: <20170622102921.GE12407@valkosipuli.retiisi.org.uk>
-References: <1497354548-17502-1-git-send-email-sakari.ailus@linux.intel.com>
- <1497948596-1009-1-git-send-email-sakari.ailus@linux.intel.com>
- <20170620141414.GA11351@red-moon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-acpi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170620141414.GA11351@red-moon>
-Sender: linux-acpi-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>, linux-acpi@vger.kernel.org, devicetree@vger.kernel.org, sudeep.holla@arm.com, mika.westerberg@linux.intel.com, rafael@kernel.org, mark.rutland@arm.com, broonie@kernel.org, robh@kernel.org, ahs3@redhat.com, frowand.list@gmail.com, kieran.bingham@ideasonboard.com
+From: Frank Wang <frank.wang@rock-chips.com>
+Subject: [RESEND PATCH v2 0/7] add some device nodes support for rk322x SoC
+Date: Thu, 22 Jun 2017 18:29:55 +0800
+Message-ID: <1498127402-6705-1-git-send-email-frank.wang@rock-chips.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: heiko@sntech.de, robh+dt@kernel.org, ulf.hansson@linaro.org, mark.rutland@arm.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, charles.chen@rock-chips.com, kevan.lan@rock-chips.com, huangtao@rock-chips.com, finley.xiao@rock-chips.com, david.wu@rock-chips.com, shawn.lin@rock-chips.com, wmc@rock-chips.com, Frank Wang <frank.wang@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+Resend these series for adding compatible changes of efuse in [PATCH v2 7/7].
 
-On Tue, Jun 20, 2017 at 03:14:14PM +0100, Lorenzo Pieralisi wrote:
-> On Tue, Jun 20, 2017 at 11:49:56AM +0300, Sakari Ailus wrote:
-> 
-> [...]
-> 
-> > +#define DECLARE_ACPI_FWNODE_OPS(ops) \
-> > +	const struct fwnode_operations ops = {				\
-> > +		.device_is_available = acpi_fwnode_device_is_available, \
-> > +		.property_present = acpi_fwnode_property_present,	\
-> > +		.property_read_int_array =				\
-> > +			acpi_fwnode_property_read_int_array,		\
-> > +		.property_read_string_array =				\
-> > +			acpi_fwnode_property_read_string_array,		\
-> > +		.get_parent = acpi_node_get_parent,			\
-> > +		.get_next_child_node = acpi_get_next_subnode,		\
-> > +		.get_named_child_node = acpi_fwnode_get_named_child_node, \
-> > +		.graph_get_next_endpoint =				\
-> > +			acpi_fwnode_graph_get_next_endpoint,		\
-> > +		.graph_get_remote_endpoint =				\
-> > +			acpi_fwnode_graph_get_remote_endpoint,		\
-> > +		.graph_get_port_parent = acpi_node_get_parent,		\
-> > +		.graph_parse_endpoint = acpi_fwnode_graph_parse_endpoint, \
-> > +	};								\
-> > +	EXPORT_SYMBOL_GPL(ops)
-> > +
-> > +DECLARE_ACPI_FWNODE_OPS(acpi_device_fwnode_ops);
-> > +DECLARE_ACPI_FWNODE_OPS(acpi_data_fwnode_ops);
-> > +DECLARE_ACPI_FWNODE_OPS(acpi_static_fwnode_ops);
-> 
-> I do not think it is a great idea to associate valid fwnode_operations
-> to a static ACPI fwnode (which is just a tag - like the IRQCHIP one).
+These series add sdmmc, sdio, and other device nodes support for
+rk322x SoCs, and also introduce rk3229 basic dtsi file specifically.
 
-Thanks for the review!
+Changes from v1:
+- Extracted cpu enable-method from rk3229.dtsi to rk322x.dtsi
+- Amended compatible rk322x-efuse to rk3228-efuse in [PATCH v2 7/7].
+- Updated the 'Reviewed-by' tag from Heiko Stuebner <heiko@sntech.de> for [PATCH v2 3/7].
 
-I'll fix that in v8 of the set (by using a struct with all ops being NULL,
-just as for IRQCHIP).
+The following patch on patchwork are required for this changes.
+https://patchwork.kernel.org/patch/9803825/
+
+David Wu (1):
+  ARM: dts: rockchip: Add io-domain node for rk3228
+
+Finley Xiao (1):
+  ARM: dts: rockchip: add efuse device node for rk3228
+
+Frank Wang (2):
+  ARM: dts: rockchip: add cpu enable method for rk3228 SoC
+  ARM: dts: rockchip: add basic dtsi file for RK3229 SoC
+
+Shawn Lin (3):
+  Documentation: rockchip-dw-mshc: add description for rk3228
+  ARM: dts: rockchip: fix compatible string for eMMC node of rk3228 SoC
+  ARM: dts: rockchip: add sdmmc and sdio nodes for rk3228 SoC
+
+ .../devicetree/bindings/mmc/rockchip-dw-mshc.txt   |  1 +
+ arch/arm/boot/dts/rk3229-evb.dts                   |  2 +-
+ arch/arm/boot/dts/rk3229.dtsi                      | 89 +++++++++++++++++++++
+ arch/arm/boot/dts/rk322x.dtsi                      | 93 +++++++++++++++++++++-
+ 4 files changed, 183 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/rk3229.dtsi
 
 -- 
-Kind regards,
+2.0.0
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+
