@@ -1,92 +1,67 @@
-From: Paul Burton <paul.burton@imgtec.com>
-Subject: Re: [PATCH v5 1/4] dt-bindings: Document img,boston-clock binding
-Date: Thu, 22 Jun 2017 14:36:24 -0700
-Message-ID: <13746237.zQXctdWVES@np-p-burton>
-References: <20170617205249.1391-1-paul.burton@imgtec.com> <20170617205249.1391-2-paul.burton@imgtec.com> <20170622205655.2sp2v3hva3jtsuay@rob-hp-laptop>
+From: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH V7 2/6] mtd: partitions: remove sysfs files when deleting
+ all master's partitions
+Date: Thu, 22 Jun 2017 23:40:47 +0200
+Message-ID: <CACna6rw3B5=48qbRK+vQ1gsxsZtCtJfNa=kORZY6FrCko5PJFg@mail.gmail.com>
+References: <20170526131415.27186-1-zajec5@gmail.com> <20170621062647.6072-1-zajec5@gmail.com>
+ <20170621062647.6072-3-zajec5@gmail.com> <20170622210533.GD14148@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart6873910.WAOfOn81ZG";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170622205655.2sp2v3hva3jtsuay@rob-hp-laptop>
-Sender: linux-clk-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-mips@linux-mips.org, Ralf Baechle <ralf@linux-mips.org>, Frank Rowand <frowand.list@gmail.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170622210533.GD14148-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Weinberger <richard-/L3Ra7n9ekc@public.gmane.org>, Cyrille Pitchen <cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>, Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---nextPart6873910.WAOfOn81ZG
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+On 22 June 2017 at 23:05, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Jun 21, 2017 at 08:26:43AM +0200, Rafa=C5=82 Mi=C5=82ecki wrote:
+>> From: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>>
+>> When support for sysfs "offset" file was added it missed to update the
+>> del_mtd_partitions function. It deletes partitions just like
+>> mtd_del_partition does so both should also take care of removing sysfs
+>> files.
+>>
+>> This change moves sysfs_remove_files call to the shared function to fix
+>> this issue.
+>>
+>> Fixes: a62c24d755291 ("mtd: part: Add sysfs variable for offset of parti=
+tion")
+>> Cc: Dan Ehrenberg <dehrenberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Signed-off-by: Rafa=C5=82 Mi=C5=82ecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+>> ---
+>> V7: Introduction of this patch, it was separated from the 1/6. It should
+>>     be clear now that this change is introduced. If something goes wrong
+>>     it should also be easier to revert it this way.
+>
+> Thanks, splitting this out is nice actually. And thanks for looking up
+> the background on this oversight.
+>
+> I'm not really sure what the actual effect of that omission would be;
+> the file won't be left dangling in sysfs (the device is removed
+> entirely), but I'm not sure if that'd trigger some kind of internal
+> kobject memory leak.
+>
+> Anyway, looks good to me.
 
-Hi Rob,
-
-On Thursday, 22 June 2017 13:56:55 PDT Rob Herring wrote:
-> On Sat, Jun 17, 2017 at 01:52:46PM -0700, Paul Burton wrote:
-> > Add device tree binding documentation for the clocks provided by the
-> > MIPS Boston development board from Imagination Technologies, and a
-> > header file describing the available clocks for use by device trees &
-> > driver.
-> > 
-> > Signed-off-by: Paul Burton <paul.burton@imgtec.com>
-> > Cc: Frank Rowand <frowand.list@gmail.com>
-> > Cc: Michael Turquette <mturquette@baylibre.com>
-> > Cc: Ralf Baechle <ralf@linux-mips.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Stephen Boyd <sboyd@codeaurora.org>
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-clk@vger.kernel.org
-> > Cc: linux-mips@linux-mips.org
-> > 
-> > ---
-> > 
-> > Changes in v5: None
-> 
-> I reviewed v4. Please add acks/reviewed-by when posting new versions.
-
-Apologies, this one slipped by unnoticed.
-
-Thanks,
-    Paul
-
-> 
-> > Changes in v4:
-> > - Move img,boston-clock node under platform register syscon node.
-> > - Add MAINTAINERS entry.
-> > 
-> > Changes in v3: None
-> > 
-> > Changes in v2:
-> > - Add BOSTON_CLK_INPUT to expose the input clock.
-> > 
-> >  .../devicetree/bindings/clock/img,boston-clock.txt | 31
-> >  ++++++++++++++++++++++ MAINTAINERS                                      
-> >   |  7 +++++
-> >  include/dt-bindings/clock/boston-clock.h           | 14 ++++++++++
-> >  3 files changed, 52 insertions(+)
-> >  create mode 100644
-> >  Documentation/devicetree/bindings/clock/img,boston-clock.txt create mode
-> >  100644 include/dt-bindings/clock/boston-clock.h
+In the worst case it looks like a small cleanup of the exit path.
 
 
---nextPart6873910.WAOfOn81ZG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+> Side note: this patch series sort of massages the definition of this
+> "offset" file. Now, IIUC, subpartitions will have an "offset" file
+> relative to their parent partition, not the master flash device. I'm not
+> sure which way is expected.
 
------BEGIN PGP SIGNATURE-----
+I didn't think about this. I should be able to easily get an absolute
+offset if needed (a simple recursion), but I'm not sure what behavior
+is actually expected. Since we use a tree struct in the sysfs now,
+maybe relative offsets are actually correct ones?
 
-iQIzBAABCAAdFiEELIGR03D5+Fg+69wPgiDZ+mk8HGUFAllMOFgACgkQgiDZ+mk8
-HGVzEw//Yorvn4hI/K3R7irnxQ7EzT2cMjBI/+Gx1feWA12CfYongJuZJlRC+8bd
-uFM8Bx4WF54mx1FUgv5xr+1/lYDXn6YgwFLaaLvUQr4v450/Lg1ZeB9mG0CH2B7f
-OJdwqAi7anZbElaH8hohZ1uCKyYUKgKO5EYKqtosBkwbx7OzW3qbqY7ow9+hVoSm
-maTD8GQyrGyXwj/pKo0JXzDdTb9xgvp0JTy5O4Vinp7GrTo+IDRhnR2pjMtCxpj2
-hfeOjQ6Kb6aFNFQQqNoVb+GaHEaaM6+9NNjpTF8+bxdyEGldWwKxIW8ITD+mJ6Nh
-PTS90uGDNHioLhdSr5iISy6KYvEMu7WopxJlZV5hEIN5IR01ZOCGobrXtv4I1WLK
-ZdU682vcRFl/MVMFT93qEcyo66WopmZ5KQ2nbuqTfbsixSdsI/qjyFqImsJswn5v
-/o9JWfAeN56WaWW+wCV4O0ou87wevO4uVTKe6/7oNS/xfRi06uUdGyYtgneNspwQ
-vPDMYxfs6HodpVrAP7Di3bSMe6b6uXzoVMI/77j80dIcN1XoHn9TLKPr32wKd3Gp
-faZf6fEPtxIGfP8Y50ILZ7lyQ0x6kzyn4E+Q4CHteevGQltxzWe7r4RO+qQDVARc
-9Wg/HiFYfbCb2DxoFV/HJPeFET/LtZY1rUfeSYWfLTCF3P9ok9g=
-=B9d8
------END PGP SIGNATURE-----
-
---nextPart6873910.WAOfOn81ZG--
+--=20
+Rafa=C5=82
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
