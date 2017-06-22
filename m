@@ -1,75 +1,71 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 0/6] mfd: axp20x: Add basic support for AXP813
-Date: Thu, 22 Jun 2017 12:08:27 +0800
-Message-ID: <20170622040833.15329-1-wens@csie.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Subject: [PATCH 6/6] ARM: sun8i: a83t: Enable AC100 codec / RTC
+ combo chip in AXP813 PMIC
+Date: Thu, 22 Jun 2017 12:08:33 +0800
+Message-ID: <20170622040833.15329-7-wens@csie.org>
+References: <20170622040833.15329-1-wens@csie.org>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBSEFVXFAKGQENN4T7XQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170622040833.15329-1-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
 To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+The AXP813/AXP818 PMICs used with the A83T/H8 SoCs are actually 2 dies
+in one package sharing the serial bus (I2C/RSB) pins. One die is the
+actual PMIC. The other is an AC100 codec / RTC combo chip.
 
-This series adds basic device tree bindings and driver support for the
-AXP813/818 PMICs. The two models are identical when comparing their
-datasheets. These PMICs are actually two dies in one package: one being
-the actual PMIC, the other being an AC100 codec/RTC combo chip. The
-latter has its own device tree binding.
+This patch enables the RSB controller and adds the device nodes for
+the AC100 chip under it.
 
-This series only adds the basic parts of the device tree binding and
-driver. For the bindings, only the core and regulator bits are added.
-Any sub-devices that have their own binding will be updated later on.
-For the driver, only the mfd part with a basic power button (PEK) cell
-is added, along with regulator IDs. I hope that this part can be merged
-for 4.13, so I can work on the regulators for 4.14, and we won't have
-any cross tree compile time dependencies.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-The device tree changes depend on my R_INTC patches I sent earlier,
-which are waiting on irqchip driver changes to be merged first.
-
-To recap, I hope the mfd bits can be merged for 4.13, while the device
-tree stuff will have to wait for 4.14.
-
-Patch 1 adds AXP806 to the main list of supported chips, which was
-missing.
-
-Patch 2 adds bindings for the AXP813.
-
-Patch 3 adds basic mfd driver support with PEK enabled for AXP813.
-
-Patch 4 adds the device node and pinmux settings for the RSB controller
-on the A83T. This is used to communicate with the PMIC.
-
-Patch 5 adds a device node for the PMIC part of the chip.
-
-Patch 6 adds a device node for the embedded AC100 part of the chip.
-
-
-Regards
-ChenYu
-
-
-Chen-Yu Tsai (6):
-  dt-bindings: mfd: axp20x: Add AXP806 to supported list of chips
-  dt-bindings: mfd: axp20x: Introduce bindings for AXP813
-  mfd: axp20x: Add support for AXP813 PMIC
-  ARM: sun8i: a83t: Add device node and pinmux setting for RSB
-    controller
-  ARM: sun8i: a83t: Add device node for AXP813 PMIC
-  ARM: sun8i: a83t: Enable AC100 codec / RTC combo chip in AXP813 PMIC
-
- Documentation/devicetree/bindings/mfd/axp20x.txt | 50 +++++++++++++++++++++---
- arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts | 35 +++++++++++++++++
- arch/arm/boot/dts/sun8i-a83t.dtsi                | 22 +++++++++++
- drivers/mfd/axp20x-rsb.c                         |  1 +
- drivers/mfd/axp20x.c                             | 22 +++++++++++
- include/linux/mfd/axp20x.h                       | 29 ++++++++++++++
- 6 files changed, 154 insertions(+), 5 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+index 027602ce03d1..933245758603 100644
+--- a/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
++++ b/arch/arm/boot/dts/sun8i-a83t-cubietruck-plus.dts
+@@ -111,6 +111,30 @@
+ 		interrupt-parent = <&r_intc>;
+ 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+ 	};
++
++	ac100: codec@e89 {
++		compatible = "x-powers,ac100";
++		reg = <0xe89>;
++
++		ac100_codec: codec {
++			compatible = "x-powers,ac100-codec";
++			interrupt-parent = <&r_pio>;
++			interrupts = <0 11 IRQ_TYPE_LEVEL_LOW>; /* PL11 */
++			#clock-cells = <0>;
++			clock-output-names = "4M_adda";
++		};
++
++		ac100_rtc: rtc {
++			compatible = "x-powers,ac100-rtc";
++			interrupt-parent = <&r_intc>;
++			interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
++			clocks = <&ac100_codec>;
++			#clock-cells = <1>;
++			clock-output-names = "cko1_rtc",
++					     "cko2_rtc",
++					     "cko3_rtc";
++		};
++	};
+ };
+ 
+ &spdif {
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
