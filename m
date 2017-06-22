@@ -1,519 +1,201 @@
-From: Luis Oliveira <Luis.Oliveira@synopsys.com>
-Subject: [PATCH v12 1/2] i2c: designware: add SLAVE mode functions
-Date: Thu, 22 Jun 2017 11:17:32 +0100
-Message-ID: <8da0ec338fd4b634b01ecded0117f7bd423c6aaf.1498126241.git.lolivei@synopsys.com>
-References: <cover.1498126241.git.lolivei@synopsys.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH V1 8/9] clk: sprd: add clocks support for SC9860
+Date: Thu, 22 Jun 2017 18:21:06 +0800
+Message-ID: <CAAfSe-s5oPB_G=sSAqVpYkgxhD=AE3nxv-V7-t0v+qw_AtxH3g@mail.gmail.com>
+References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
+ <20170618015855.27738-9-chunyan.zhang@spreadtrum.com> <20170620014137.GK4493@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1498126241.git.lolivei@synopsys.com>
-In-Reply-To: <cover.1498126241.git.lolivei@synopsys.com>
-References: <cover.1498126241.git.lolivei@synopsys.com>
+In-Reply-To: <20170620014137.GK4493@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: wsa@the-dreams.de, robh+dt@kernel.org, mark.rutland@arm.com, jarkko.nikula@linux.intel.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Luis.Oliveira@synopsys.com, Ramiro.Oliveira@synopsys.com, Joao.Pinto@synopsys.com, CARLOS.PALMINHA@synopsys.com
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-- Changes in Kconfig to enable I2C_DESIGNWARE_SLAVE support
-- Slave functions added to core library file
-- Slave abort sources added to common source file
-- New driver: i2c-designware-slave added
-- Changes in the Makefile to compile the I2C_DESIGNWARE_SLAVE module
-  when supported by the architecture.
+Hi Stephen,
 
-All the SLAVE flow is added but it is not enabled via platform
-driver.
+On 20 June 2017 at 09:41, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 06/18, Chunyan Zhang wrote:
+>> diff --git a/drivers/clk/sprd/Makefile b/drivers/clk/sprd/Makefile
+>> index c593a93..0d90b40 100644
+>> --- a/drivers/clk/sprd/Makefile
+>> +++ b/drivers/clk/sprd/Makefile
+>> @@ -1,3 +1,4 @@
+>>  ifneq ($(CONFIG_OF),)
+>>  obj-y        += ccu_common.o ccu_gate.o ccu_mux.o ccu_div.o ccu_composite.o ccu_pll.o
+>> +obj-y        += ccu-sc9860.o
+>
+> And a Kconfig for this SoC specific driver.
 
-Signed-off-by: Luis Oliveira <lolivei@synopsys.com>
----
-V11-v12
-- Changed ifdef condition in the Makefile fixed Kbuild error
+Ok.
 
- drivers/i2c/busses/Kconfig                 |  14 +-
- drivers/i2c/busses/Makefile                |   3 +
- drivers/i2c/busses/i2c-designware-common.c |   6 +
- drivers/i2c/busses/i2c-designware-core.h   |   2 +
- drivers/i2c/busses/i2c-designware-slave.c  | 395 +++++++++++++++++++++++++++++
- 5 files changed, 419 insertions(+), 1 deletion(-)
- create mode 100644 drivers/i2c/busses/i2c-designware-slave.c
+>
+>>  endif
+>> diff --git a/drivers/clk/sprd/ccu-sc9860.c b/drivers/clk/sprd/ccu-sc9860.c
+>> new file mode 100644
+>> index 0000000..6cd4dc5
+>> --- /dev/null
+>> +++ b/drivers/clk/sprd/ccu-sc9860.c
+>> +
+>> +static CLK_FIXED_FACTOR(fac_4m,              "fac-4m",       "ext-26m",
+>> +                     6, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_2m,              "fac-2m",       "ext-26m",
+>> +                     13, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_1m,              "fac-1m",       "ext-26m",
+>> +                     26, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_250k,    "fac-250k",     "ext-26m",
+>> +                     104, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_rpll0_26m,       "rpll0-26m",    "ext-26m",
+>> +                     1, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_rpll1_26m,       "rpll1-26m",    "ext-26m",
+>> +                     1, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_rco_25m, "rco-25m",      "ext-rc0-100m",
+>> +                     4, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_rco_4m,  "rco-4m",       "ext-rc0-100m",
+>> +                     25, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_rco_2m,  "rco-2m",       "ext-rc0-100m",
+>> +                     50, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_3k2,     "fac-3k2",      "ext-32k",
+>> +                     10, 1, CLK_IS_BASIC);
+>> +static CLK_FIXED_FACTOR(fac_1k,              "fac-1k",       "ext-32k",
+>> +                     32, 1, CLK_IS_BASIC);
+>> +
+>> +#define SC9860_GATE_FLAGS (CLK_IGNORE_UNUSED | CLK_IS_BASIC)
+>
+> No CLK_IS_BASIC. Why is everything marked as CLK_IGNORE_UNUSED?
 
-diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
-index ed7106e48ba4..ed92bf560825 100644
---- a/drivers/i2c/busses/Kconfig
-+++ b/drivers/i2c/busses/Kconfig
-@@ -473,14 +473,26 @@ config I2C_DESIGNWARE_CORE
- config I2C_DESIGNWARE_PLATFORM
- 	tristate "Synopsys DesignWare Platform"
- 	select I2C_DESIGNWARE_CORE
-+	select I2C_DESIGNWARE_SLAVE
- 	depends on (ACPI && COMMON_CLK) || !ACPI
- 	help
- 	  If you say yes to this option, support will be included for the
--	  Synopsys DesignWare I2C adapter. Only master mode is supported.
-+	  Synopsys DesignWare I2C adapter.
- 
- 	  This driver can also be built as a module.  If so, the module
- 	  will be called i2c-designware-platform.
- 
-+config I2C_DESIGNWARE_SLAVE
-+	bool "Synopsys DesignWare Slave"
-+	select I2C_SLAVE
-+	depends on I2C_DESIGNWARE_PLATFORM
-+	help
-+	  If you say yes to this option, support will be included for the
-+	  Synopsys DesignWare I2C slave adapter.
-+
-+	  This is not a standalone module, this module compiles together with
-+	  i2c-designware-core.
-+
- config I2C_DESIGNWARE_PCI
- 	tristate "Synopsys DesignWare PCI"
- 	depends on PCI
-diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
-index c89a4314c563..d630a6cbafeb 100644
---- a/drivers/i2c/busses/Makefile
-+++ b/drivers/i2c/busses/Makefile
-@@ -41,6 +41,9 @@ obj-$(CONFIG_I2C_CPM)		+= i2c-cpm.o
- obj-$(CONFIG_I2C_DAVINCI)	+= i2c-davinci.o
- obj-$(CONFIG_I2C_DESIGNWARE_CORE)	+= i2c-designware-core.o
- i2c-designware-core-objs := i2c-designware-common.o i2c-designware-master.o
-+ifeq ($(CONFIG_I2C_DESIGNWARE_SLAVE),y)
-+i2c-designware-core-objs += i2c-designware-slave.o
-+endif
- obj-$(CONFIG_I2C_DESIGNWARE_PLATFORM)	+= i2c-designware-platform.o
- i2c-designware-platform-objs := i2c-designware-platdrv.o
- i2c-designware-platform-$(CONFIG_I2C_DESIGNWARE_BAYTRAIL) += i2c-designware-baytrail.o
-diff --git a/drivers/i2c/busses/i2c-designware-common.c b/drivers/i2c/busses/i2c-designware-common.c
-index 0d0ccb73f0e6..d1a69372432f 100644
---- a/drivers/i2c/busses/i2c-designware-common.c
-+++ b/drivers/i2c/busses/i2c-designware-common.c
-@@ -56,6 +56,12 @@ static char *abort_sources[] = {
- 		"trying to use disabled adapter",
- 	[ARB_LOST] =
- 		"lost arbitration",
-+	[ABRT_SLAVE_FLUSH_TXFIFO] =
-+		"read command so flush old data in the TX FIFO",
-+	[ABRT_SLAVE_ARBLOST] =
-+		"slave lost the bus while transmitting data to a remote master",
-+	[ABRT_SLAVE_RD_INTX] =
-+		"incorrect slave-transmitter mode configuration",
- };
- 
- u32 dw_readl(struct dw_i2c_dev *dev, int offset)
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index 76807eafda53..64a39a983410 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -305,9 +305,11 @@ u32 i2c_dw_func(struct i2c_adapter *adap);
- void i2c_dw_disable(struct dw_i2c_dev *dev);
- void i2c_dw_disable_int(struct dw_i2c_dev *dev);
- int i2c_dw_init(struct dw_i2c_dev *dev);
-+int i2c_dw_init_slave(struct dw_i2c_dev *dev);
- 
- extern u32 i2c_dw_read_comp_param(struct dw_i2c_dev *dev);
- extern int i2c_dw_probe(struct dw_i2c_dev *dev);
-+extern int i2c_dw_probe_slave(struct dw_i2c_dev *dev);
- 
- #if IS_ENABLED(CONFIG_I2C_DESIGNWARE_BAYTRAIL)
- extern int i2c_dw_probe_lock_support(struct dw_i2c_dev *dev);
-diff --git a/drivers/i2c/busses/i2c-designware-slave.c b/drivers/i2c/busses/i2c-designware-slave.c
-new file mode 100644
-index 000000000000..1f6a13f69d0c
---- /dev/null
-+++ b/drivers/i2c/busses/i2c-designware-slave.c
-@@ -0,0 +1,395 @@
-+/*
-+ * Synopsys DesignWare I2C adapter driver (slave only).
-+ *
-+ * Based on the Synopsys DesignWare I2C adapter driver (master).
-+ *
-+ * Copyright (C) 2016 Synopsys Inc.
-+ *
-+ * ----------------------------------------------------------------------------
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ * ----------------------------------------------------------------------------
-+ *
-+ */
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/pm_runtime.h>
-+
-+#include "i2c-designware-core.h"
-+
-+static void i2c_dw_configure_fifo_slave(struct dw_i2c_dev *dev)
-+{
-+	/* Configure Tx/Rx FIFO threshold levels. */
-+	dw_writel(dev, 0, DW_IC_TX_TL);
-+	dw_writel(dev, 0, DW_IC_RX_TL);
-+
-+	/* Configure the I2C slave. */
-+	dw_writel(dev, dev->slave_cfg, DW_IC_CON);
-+	dw_writel(dev, DW_IC_INTR_SLAVE_MASK, DW_IC_INTR_MASK);
-+}
-+
-+/**
-+ * i2c_dw_init_slave() - Initialize the designware i2c slave hardware
-+ * @dev: device private data
-+ *
-+ * This function configures and enables the I2C in slave mode.
-+ * This function is called during I2C init function, and in case of timeout at
-+ * run time.
-+ */
-+int i2c_dw_init_slave(struct dw_i2c_dev *dev)
-+{
-+	u32 sda_falling_time, scl_falling_time;
-+	u32 reg, comp_param1;
-+	u32 hcnt, lcnt;
-+	int ret;
-+
-+	ret = i2c_dw_acquire_lock(dev);
-+	if (ret)
-+		return ret;
-+
-+	reg = dw_readl(dev, DW_IC_COMP_TYPE);
-+	if (reg == ___constant_swab32(DW_IC_COMP_TYPE_VALUE)) {
-+		/* Configure register endianness access. */
-+		dev->flags |= ACCESS_SWAP;
-+	} else if (reg == (DW_IC_COMP_TYPE_VALUE & 0x0000ffff)) {
-+		/* Configure register access mode 16bit. */
-+		dev->flags |= ACCESS_16BIT;
-+	} else if (reg != DW_IC_COMP_TYPE_VALUE) {
-+		dev_err(dev->dev,
-+			"Unknown Synopsys component type: 0x%08x\n", reg);
-+		i2c_dw_release_lock(dev);
-+		return -ENODEV;
-+	}
-+
-+	comp_param1 = dw_readl(dev, DW_IC_COMP_PARAM_1);
-+
-+	/* Disable the adapter. */
-+	__i2c_dw_enable_and_wait(dev, false);
-+
-+	/* Set standard and fast speed deviders for high/low periods. */
-+	sda_falling_time = dev->sda_falling_time ?: 300; /* ns */
-+	scl_falling_time = dev->scl_falling_time ?: 300; /* ns */
-+
-+	/* Set SCL timing parameters for standard-mode. */
-+	if (dev->ss_hcnt && dev->ss_lcnt) {
-+		hcnt = dev->ss_hcnt;
-+		lcnt = dev->ss_lcnt;
-+	} else {
-+		hcnt = i2c_dw_scl_hcnt(i2c_dw_clk_rate(dev),
-+				       4000,	/* tHD;STA = tHIGH = 4.0 us */
-+				       sda_falling_time,
-+				       0,	/* 0: DW default, 1: Ideal */
-+				       0);	/* No offset */
-+		lcnt = i2c_dw_scl_lcnt(i2c_dw_clk_rate(dev),
-+				       4700,	/* tLOW = 4.7 us */
-+				       scl_falling_time,
-+				       0);	/* No offset */
-+	}
-+	dw_writel(dev, hcnt, DW_IC_SS_SCL_HCNT);
-+	dw_writel(dev, lcnt, DW_IC_SS_SCL_LCNT);
-+	dev_dbg(dev->dev, "Standard-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
-+
-+	/* Set SCL timing parameters for fast-mode or fast-mode plus. */
-+	if ((dev->clk_freq == 1000000) && dev->fp_hcnt && dev->fp_lcnt) {
-+		hcnt = dev->fp_hcnt;
-+		lcnt = dev->fp_lcnt;
-+	} else if (dev->fs_hcnt && dev->fs_lcnt) {
-+		hcnt = dev->fs_hcnt;
-+		lcnt = dev->fs_lcnt;
-+	} else {
-+		hcnt = i2c_dw_scl_hcnt(i2c_dw_clk_rate(dev),
-+				       600,	/* tHD;STA = tHIGH = 0.6 us */
-+				       sda_falling_time,
-+				       0,	/* 0: DW default, 1: Ideal */
-+				       0);	/* No offset */
-+		lcnt = i2c_dw_scl_lcnt(i2c_dw_clk_rate(dev),
-+				       1300,	/* tLOW = 1.3 us */
-+				       scl_falling_time,
-+				       0);	/* No offset */
-+	}
-+	dw_writel(dev, hcnt, DW_IC_FS_SCL_HCNT);
-+	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
-+	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
-+
-+	if ((dev->slave_cfg & DW_IC_CON_SPEED_MASK) ==
-+		DW_IC_CON_SPEED_HIGH) {
-+		if ((comp_param1 & DW_IC_COMP_PARAM_1_SPEED_MODE_MASK)
-+			!= DW_IC_COMP_PARAM_1_SPEED_MODE_HIGH) {
-+			dev_err(dev->dev, "High Speed not supported!\n");
-+			dev->slave_cfg &= ~DW_IC_CON_SPEED_MASK;
-+			dev->slave_cfg |= DW_IC_CON_SPEED_FAST;
-+		} else if (dev->hs_hcnt && dev->hs_lcnt) {
-+			hcnt = dev->hs_hcnt;
-+			lcnt = dev->hs_lcnt;
-+			dw_writel(dev, hcnt, DW_IC_HS_SCL_HCNT);
-+			dw_writel(dev, lcnt, DW_IC_HS_SCL_LCNT);
-+			dev_dbg(dev->dev, "HighSpeed-mode HCNT:LCNT = %d:%d\n",
-+				hcnt, lcnt);
-+		}
-+	}
-+
-+	/* Configure SDA Hold Time if required. */
-+	reg = dw_readl(dev, DW_IC_COMP_VERSION);
-+	if (reg >= DW_IC_SDA_HOLD_MIN_VERS) {
-+		if (!dev->sda_hold_time) {
-+			/* Keep previous hold time setting if no one set it. */
-+			dev->sda_hold_time = dw_readl(dev, DW_IC_SDA_HOLD);
-+		}
-+		/*
-+		 * Workaround for avoiding TX arbitration lost in case I2C
-+		 * slave pulls SDA down "too quickly" after falling egde of
-+		 * SCL by enabling non-zero SDA RX hold. Specification says it
-+		 * extends incoming SDA low to high transition while SCL is
-+		 * high but it apprears to help also above issue.
-+		 */
-+		if (!(dev->sda_hold_time & DW_IC_SDA_HOLD_RX_MASK))
-+			dev->sda_hold_time |= 1 << DW_IC_SDA_HOLD_RX_SHIFT;
-+		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
-+	} else {
-+		dev_warn(dev->dev,
-+			 "Hardware too old to adjust SDA hold time.\n");
-+	}
-+
-+	i2c_dw_configure_fifo_slave(dev);
-+	i2c_dw_release_lock(dev);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(i2c_dw_init_slave);
-+
-+int i2c_dw_reg_slave(struct i2c_client *slave)
-+{
-+	struct dw_i2c_dev *dev = i2c_get_adapdata(slave->adapter);
-+
-+	if (dev->slave)
-+		return -EBUSY;
-+	if (slave->flags & I2C_CLIENT_TEN)
-+		return -EAFNOSUPPORT;
-+	/*
-+	 * Set slave address in the IC_SAR register,
-+	 * the address to which the DW_apb_i2c responds.
-+	 */
-+	__i2c_dw_enable(dev, false);
-+	dw_writel(dev, slave->addr, DW_IC_SAR);
-+	dev->slave = slave;
-+
-+	__i2c_dw_enable(dev, true);
-+
-+	dev->cmd_err = 0;
-+	dev->msg_write_idx = 0;
-+	dev->msg_read_idx = 0;
-+	dev->msg_err = 0;
-+	dev->status = STATUS_IDLE;
-+	dev->abort_source = 0;
-+	dev->rx_outstanding = 0;
-+
-+	return 0;
-+}
-+
-+static int i2c_dw_unreg_slave(struct i2c_client *slave)
-+{
-+	struct dw_i2c_dev *dev = i2c_get_adapdata(slave->adapter);
-+
-+	dev->disable_int(dev);
-+	dev->disable(dev);
-+	dev->slave = NULL;
-+
-+	return 0;
-+}
-+
-+static u32 i2c_dw_read_clear_intrbits_slave(struct dw_i2c_dev *dev)
-+{
-+	u32 stat;
-+
-+	/*
-+	 * The IC_INTR_STAT register just indicates "enabled" interrupts.
-+	 * Ths unmasked raw version of interrupt status bits are available
-+	 * in the IC_RAW_INTR_STAT register.
-+	 *
-+	 * That is,
-+	 *   stat = dw_readl(IC_INTR_STAT);
-+	 * equals to,
-+	 *   stat = dw_readl(IC_RAW_INTR_STAT) & dw_readl(IC_INTR_MASK);
-+	 *
-+	 * The raw version might be useful for debugging purposes.
-+	 */
-+	stat = dw_readl(dev, DW_IC_INTR_STAT);
-+
-+	/*
-+	 * Do not use the IC_CLR_INTR register to clear interrupts, or
-+	 * you'll miss some interrupts, triggered during the period from
-+	 * dw_readl(IC_INTR_STAT) to dw_readl(IC_CLR_INTR).
-+	 *
-+	 * Instead, use the separately-prepared IC_CLR_* registers.
-+	 */
-+	if (stat & DW_IC_INTR_TX_ABRT)
-+		dw_readl(dev, DW_IC_CLR_TX_ABRT);
-+	if (stat & DW_IC_INTR_RX_UNDER)
-+		dw_readl(dev, DW_IC_CLR_RX_UNDER);
-+	if (stat & DW_IC_INTR_RX_OVER)
-+		dw_readl(dev, DW_IC_CLR_RX_OVER);
-+	if (stat & DW_IC_INTR_TX_OVER)
-+		dw_readl(dev, DW_IC_CLR_TX_OVER);
-+	if (stat & DW_IC_INTR_RX_DONE)
-+		dw_readl(dev, DW_IC_CLR_RX_DONE);
-+	if (stat & DW_IC_INTR_ACTIVITY)
-+		dw_readl(dev, DW_IC_CLR_ACTIVITY);
-+	if (stat & DW_IC_INTR_STOP_DET)
-+		dw_readl(dev, DW_IC_CLR_STOP_DET);
-+	if (stat & DW_IC_INTR_START_DET)
-+		dw_readl(dev, DW_IC_CLR_START_DET);
-+	if (stat & DW_IC_INTR_GEN_CALL)
-+		dw_readl(dev, DW_IC_CLR_GEN_CALL);
-+
-+	return stat;
-+}
-+
-+/*
-+ * Interrupt service routine. This gets called whenever an I2C slave interrupt
-+ * occurs.
-+ */
-+
-+static int i2c_dw_irq_handler_slave(struct dw_i2c_dev *dev)
-+{
-+	u32 raw_stat, stat, enabled;
-+	u8 val, slave_activity;
-+
-+	stat = dw_readl(dev, DW_IC_INTR_STAT);
-+	enabled = dw_readl(dev, DW_IC_ENABLE);
-+	raw_stat = dw_readl(dev, DW_IC_RAW_INTR_STAT);
-+	slave_activity = ((dw_readl(dev, DW_IC_STATUS) &
-+		DW_IC_STATUS_SLAVE_ACTIVITY) >> 6);
-+
-+	if (!enabled || !(raw_stat & ~DW_IC_INTR_ACTIVITY))
-+		return 0;
-+
-+	dev_dbg(dev->dev,
-+		"%#x STAUTS SLAVE_ACTTVITY=%#x : RAW_INTR_STAT=%#x"
-+		" : INTR_STAT=%#x\n",
-+		enabled, slave_activity, raw_stat, stat);
-+
-+	if ((stat & DW_IC_INTR_RX_FULL) && (stat & DW_IC_INTR_STOP_DET))
-+		i2c_slave_event(dev->slave, I2C_SLAVE_WRITE_REQUESTED, &val);
-+
-+	if (stat & DW_IC_INTR_RD_REQ) {
-+		if (slave_activity) {
-+			if (stat & DW_IC_INTR_RX_FULL) {
-+				val = dw_readl(dev, DW_IC_DATA_CMD);
-+
-+				if (!i2c_slave_event(dev->slave,
-+						     I2C_SLAVE_WRITE_RECEIVED,
-+						     &val)) {
-+					dev_vdbg(dev->dev, "Byte %X acked!",
-+						 val);
-+				}
-+				dw_readl(dev, DW_IC_CLR_RD_REQ);
-+				stat = i2c_dw_read_clear_intrbits_slave(dev);
-+			} else {
-+				dw_readl(dev, DW_IC_CLR_RD_REQ);
-+				dw_readl(dev, DW_IC_CLR_RX_UNDER);
-+				stat = i2c_dw_read_clear_intrbits_slave(dev);
-+			}
-+			if (!i2c_slave_event(dev->slave,
-+					     I2C_SLAVE_READ_REQUESTED,
-+					     &val))
-+				dw_writel(dev, val, DW_IC_DATA_CMD);
-+		}
-+	}
-+
-+	if (stat & DW_IC_INTR_RX_DONE) {
-+		if (!i2c_slave_event(dev->slave, I2C_SLAVE_READ_PROCESSED,
-+				     &val))
-+			dw_readl(dev, DW_IC_CLR_RX_DONE);
-+
-+		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
-+		stat = i2c_dw_read_clear_intrbits_slave(dev);
-+		return 1;
-+	}
-+
-+	if (stat & DW_IC_INTR_RX_FULL) {
-+		val = dw_readl(dev, DW_IC_DATA_CMD);
-+		if (!i2c_slave_event(dev->slave, I2C_SLAVE_WRITE_RECEIVED,
-+				     &val))
-+			dev_vdbg(dev->dev, "Byte %X acked!", val);
-+	} else {
-+		i2c_slave_event(dev->slave, I2C_SLAVE_STOP, &val);
-+		stat = i2c_dw_read_clear_intrbits_slave(dev);
-+	}
-+
-+	return 1;
-+}
-+
-+static irqreturn_t i2c_dw_isr_slave(int this_irq, void *dev_id)
-+{
-+	struct dw_i2c_dev *dev = dev_id;
-+	int ret;
-+
-+	i2c_dw_read_clear_intrbits_slave(dev);
-+	ret = i2c_dw_irq_handler_slave(dev);
-+	if (ret > 0)
-+		complete(&dev->cmd_complete);
-+
-+	return IRQ_RETVAL(ret);
-+}
-+
-+static struct i2c_algorithm i2c_dw_algo = {
-+	.functionality = i2c_dw_func,
-+	.reg_slave = i2c_dw_reg_slave,
-+	.unreg_slave = i2c_dw_unreg_slave,
-+};
-+
-+int i2c_dw_probe_slave(struct dw_i2c_dev *dev)
-+{
-+	struct i2c_adapter *adap = &dev->adapter;
-+	int ret;
-+
-+	init_completion(&dev->cmd_complete);
-+
-+	dev->init = i2c_dw_init_slave;
-+	dev->disable = i2c_dw_disable;
-+	dev->disable_int = i2c_dw_disable_int;
-+
-+	ret = dev->init(dev);
-+	if (ret)
-+		return ret;
-+
-+	snprintf(adap->name, sizeof(adap->name),
-+		 "Synopsys DesignWare I2C Slave adapter");
-+	adap->retries = 3;
-+	adap->algo = &i2c_dw_algo;
-+	adap->dev.parent = dev->dev;
-+	i2c_set_adapdata(adap, dev);
-+
-+	ret = devm_request_irq(dev->dev, dev->irq, i2c_dw_isr_slave,
-+			       IRQF_SHARED, dev_name(dev->dev), dev);
-+	if (ret) {
-+		dev_err(dev->dev, "failure requesting irq %i: %d\n",
-+			dev->irq, ret);
-+		return ret;
-+	}
-+
-+	ret = i2c_add_numbered_adapter(adap);
-+	if (ret)
-+		dev_err(dev->dev, "failure adding adapter: %d\n", ret);
-+	pm_runtime_put_noidle(dev->dev);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(i2c_dw_probe_slave);
-+
-+MODULE_AUTHOR("Luis Oliveira <lolivei@synopsys.com>");
-+MODULE_DESCRIPTION("Synopsys DesignWare I2C bus slave adapter");
-+MODULE_LICENSE("GPL v2");
--- 
-2.13.0
+Copied from the original implementation :)
+But I will do a double check, there'are indeed some clocks which
+shouldn't be marked as CLK_IGNORE_UNUSED.
+
+>
+>> +static SPRD_CCU_GATE(rpll0_gate,     "rpll0-gate",   "ext-26m", 0x402b016c,
+>> +                  0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(rpll1_gate,     "rpll1-gate",   "ext-26m", 0x402b016c,
+>> +                  0x1000, BIT(18), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(mpll0_gate,     "mpll0-gate",   "ext-26m", 0x402b00b0,
+>> +                  0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(mpll1_gate,     "mpll1-gate",   "ext-26m", 0x402b00b0,
+>> +                  0x1000, BIT(18), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(dpll0_gate,     "dpll0-gate",   "ext-26m", 0x402b00b4,
+>> +                  0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(dpll1_gate,     "dpll1-gate",   "ext-26m", 0x402b00b4,
+>> +                  0x1000, BIT(18), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(gpll_gate,              "gpll-gate",    "ext-26m", 0x402b032c,
+>> +                  0x1000, BIT(0), SC9860_GATE_FLAGS,
+>> +                  CLK_GATE_SET_TO_DISABLE);
+>> +static SPRD_CCU_GATE(cppll_gate,     "cppll-gate",   "ext-26m", 0x402b02b4,
+>> +                  0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(ltepll0_gate,   "ltepll0-gate", "ext-26m", 0x402b00b8,
+>> +                  0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(ltepll1_gate,   "ltepll1-gate", "ext-26m", 0x402b010c,
+>> +                  0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE(twpll_gate,     "twpll-gate",   "ext-26m", 0x402b00bc,
+>> +                  0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(sdio0_2x_en,  "sdio0-2x-en",  0x402e013c,
+>> +                            0x1000, BIT(2), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(sdio0_1x_en,  "sdio0-1x-en",  0x402e013c,
+>> +                            0x1000, BIT(3), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(sdio1_2x_en,  "sdio1-2x-en",  0x402e013c,
+>> +                            0x1000, BIT(4), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(sdio1_1x_en,  "sdio1-1x-en",  0x402e013c,
+>> +                            0x1000, BIT(5), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(sdio2_2x_en,  "sdio2-2x-en",  0x402e013c,
+>> +                            0x1000, BIT(6), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(sdio2_1x_en,  "sdio2-1x-en",  0x402e013c,
+>> +                            0x1000, BIT(7), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(emmc_1x_en,   "emmc-1x-en",   0x402e013c,
+>> +                            0x1000, BIT(8), SC9860_GATE_FLAGS, 0);
+>> +static SPRD_CCU_GATE_NO_PARENT(emmc_2x_en,   "emmc-2x-en",   0x402e013c,
+>> +                            0x1000, BIT(9), SC9860_GATE_FLAGS, 0);
+>> +
+>> +/* GPLL/LPLL/DPLL/RPLL/CPLL */
+>> +static const u64 const itable1[4] = {3, 780000000, 988000000, 1196000000};
+>> +
+>> +/* TWPLL/MPLL0/MPLL1 */
+>> +static const u64 itable2[4] = {3, 1638000000, 2080000000, 2600000000UL};
+>> +
+>> +static const struct ccu_bit_field const f_rpll[PLL_FACT_MAX] = {
+>> +     { .shift = 0,   .width = 1 },   /* lock_done    */
+>> +     { .shift = 3,   .width = 1 },   /* div_s        */
+>> +     { .shift = 80,  .width = 1 },   /* mod_en       */
+>
+> Are they even shifts? Or offsets from some base? I have to go
+> back and read the other patch.
+
+You must've noticed that each PLL has a structure of "ccu_bit_field
+*factors", each pair of shift - width represents a bit field in
+registers, each bit field stores a factor used to calculate PLL clock
+rate, but different PLL clock has different bit fields arrangement due
+to hardware design.
+
+>
+>> +     { .shift = 81,  .width = 1 },   /* sdm_en       */
+>> +     { .shift = 0,   .width = 0 },   /* refin        */
+>> +     { .shift = 14,  .width = 2 },   /* ibias        */
+>> +     { .shift = 16,  .width = 7 },   /* n            */
+>> +     { .shift = 4,   .width = 7 },   /* nint         */
+>> +     { .shift = 32,  .width = 23},   /* kint         */
+>> +     { .shift = 0,   .width = 0 },   /* prediv       */
+>> +     { .shift = 0,   .width = 0 },   /* postdiv      */
+>> +};
+>> +static const u32 const regs_rpll0[4] = { 3, 0x44, 0x48, 0x4c };
+>> +static SPRD_CCU_PLL_WITH_ITABLE(rpll0_clk, "rpll0", "rpll0-gate", 0x40400044,
+>> +                             regs_rpll0, itable1, 200, f_rpll);
+>> +
+>> +static const u32 const regs_rpll1[4] = { 3, 0x50, 0x54, 0x58 };
+>> +static SPRD_CCU_PLL_WITH_ITABLE(rpll1_clk, "rpll1", "rpll1-gate", 0x40400050,
+>> +                             regs_rpll1, itable1, 200, f_rpll);
+>> +
+>> +static const struct ccu_bit_field const f_mpll0[PLL_FACT_MAX] = {
+> [...]
+>> diff --git a/include/dt-bindings/clock/sc9860-ccu.h b/include/dt-bindings/clock/sc9860-ccu.h
+>> new file mode 100644
+>> index 0000000..dd7ccf9
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/sc9860-ccu.h
+>> @@ -0,0 +1,19 @@
+>> +/*
+>> + * Spreadtrum SC9860 platform clocks
+>> + *
+>> + * Copyright (C) 2017, Spreadtrum Communications Inc.
+>> + *
+>> + * SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>> + */
+>> +
+>> +#ifndef _DT_BINDINGS_CLK_SC9860_CCU_H_
+>> +#define _DT_BINDINGS_CLK_SC9860_CCU_H_
+>> +
+>> +#define CLK_FAC_1M   2
+>> +#define CLK_EMMC_2X_EN       29
+>> +#define CLK_L0_409M6 60
+>> +#define CLK_EMMC_2X  88
+>> +#define CLK_EMMC_EB  158
+>
+> Why are only a handful exposed in the header file? Not exposing
+> everything is mostly a maintenance nightmare right now.
+
+No special reason here, my thought simply was that there's no much
+Spreadtrum's device driver in mainline at present, so most of the
+clocks wouldn't be needed for now, I planned to expose only those when
+the device driver they provide clock to, that's saying when we add a
+new device driver we'll expose the clocks this device needs.
+
+Another reason is, I'm not sure if there are still some clocks I
+haven't listed for SC9860 , so if we need to add a clock in the
+feature, the value of these macros defined in
+"include/dt-bindings/clock/sc9860-ccu.h" may be changed, that means I
+need to change the index of all clocks following the clock inserted
+into.
+
+But why will not exposing everything bring trouble to maintenance? :)
+
+
+Thank you for your review,
+Chunyan
+
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
