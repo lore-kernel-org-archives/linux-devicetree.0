@@ -1,72 +1,107 @@
-From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
-Date: Thu, 22 Jun 2017 11:56:43 +0200
-Message-ID: <81a521c6-71a1-a229-d9ec-c34cc070e4ba@microchip.com>
-References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
- <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
- <20170622063157.qih2mriprczpj7zn@pengutronix.de>
- <20170622082221.v4jf2u5bdw6oyjxw@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170622082221.v4jf2u5bdw6oyjxw-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jacopo Mondi <jacopo+renesas@jmondi.org>
+Subject: [PATCH v2] pinctrl: generic: Add output-enable property
+Date: Thu, 22 Jun 2017 12:00:58 +0200
+Message-ID: <1498125658-14554-1-git-send-email-jacopo+renesas@jmondi.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, andy.shevchenko@gmail.com, dongas86@gmail.com, geert+renesas@glider.be, Chris.Brandt@renesas.com, laurent.pinchart@ideasonboard.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 22/06/2017 at 10:22, Uwe Kleine-König wrote:
-> Hello Sascha,
-> 
-> On Thu, Jun 22, 2017 at 08:31:57AM +0200, Sascha Hauer wrote:
->> On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
->>> +/**
->>> + * of_get_rs485_mode() - Implement parsing rs485 properties
->>> + * @np: uart node
->>> + * @rs485conf: output parameter
->>> + *
->>> + * This function implements the device tree binding described in
->>> + * Documentation/devicetree/bindings/serial/rs485.txt.
->>> + *
->>> + * Return: 0 on success, 1 if the node doesn't contain rs485 stuff, or a
->>> + * negative error code.
->>> + */
->>> +int of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf)
->>> +{
->>> +	u32 rs485_delay[2];
->>> +	int ret;
->>> +
->>> +	ret = of_property_read_u32_array(np, "rs485-rts-delay" rs485_delay, 2);
->>> +	if (ret == -EINVAL) /* property does not exist */
->>> +		return 1;
->>
->> As the de-facto standard for the drivers implementing the rs485 bindings
->> is to make the properties optional, despite the documentation. Wouldn't
-> 
-> I must admit that I failed to mention in the commit log that being
-> strict here was added by me even though I'm not the author.
-> 
->> it be better to make this property optional in the binding instead? This
->> wouldn't unnecessarily break old device trees and 0/0 seems a sane
->> default we can use when the property doesn't exist.
-> 
-> Would be fine for me, too. It was Nicolas Ferre who specified this as
-> being required in 0331bbf3c6fd9. Added people who discussed the patch
-> back then (but without questioning rs485-rts-delay being mandatory).
+Add output-enable generic pin configuration property.
+This properties allows enabling/disabling pin's output capabilities
+without actually driving any value on the line.
 
-Uwe,
+---
+v1->v2:
+ - Expand the property description as suggested by Laurent. I ended up
+   mentioning the in-famous output buffer :)
 
-This would be find with me too.
-Indeed, the conversion to an optional option won't break the atmel driver.
+One (more) question to GPIO people on:
++	PCONFDUMP(PIN_CONFIG_OUTPUT_ENABLE, "output enabled", NULL, false),
 
-Thanks for your work on this topic.
+I copied this from INPUT_ENABLE where arguments 2 and 3 passed to PCONFDUMP are
+NULL and false even if the property has an argument, used to enable/disable
+the input mode. Is this intended? Should that be turned instead to
+-	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
++	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", "enabled", true),
 
-Best regards,
--- 
-Nicolas Ferre
+Note that the same applies to most of the properties that have an
+"enable"/"disable" argument. Just to make sure this is done on purpose.
+
+Thanks
+   j
+ .../devicetree/bindings/pinctrl/pinctrl-bindings.txt      |  2 ++
+ drivers/pinctrl/pinconf-generic.c                         |  3 +++
+ include/linux/pinctrl/pinconf-generic.h                   | 15 +++++++++++----
+ 3 files changed, 16 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index f01d154..f8af190 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -259,6 +259,8 @@ input-debounce		- debounce mode with debound time X
+ power-source		- select between different power supplies
+ low-power-enable	- enable low power mode
+ low-power-disable	- disable low power mode
++output-disable		- disable output on a pin
++output-enable		- enable output on a pin
+ output-low		- set the pin to output mode with low level
+ output-high		- set the pin to output mode with high level
+ slew-rate		- set the slew rate
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 720a19f..fc0c230 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -44,6 +44,7 @@ static const struct pin_config_item conf_items[] = {
+ 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT, "input schmitt trigger", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_INPUT_SCHMITT_ENABLE, "input schmitt enabled", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_LOW_POWER_MODE, "pin low power", "mode", true),
++	PCONFDUMP(PIN_CONFIG_OUTPUT_ENABLE, "output enabled", NULL, false),
+ 	PCONFDUMP(PIN_CONFIG_OUTPUT, "pin output", "level", true),
+ 	PCONFDUMP(PIN_CONFIG_POWER_SOURCE, "pin power source", "selector", true),
+ 	PCONFDUMP(PIN_CONFIG_SLEW_RATE, "slew rate", NULL, true),
+@@ -172,6 +173,8 @@ static const struct pinconf_generic_params dt_params[] = {
+ 	{ "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
+ 	{ "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
+ 	{ "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
++	{ "output-disable", PIN_CONFIG_OUTPUT_ENABLE, 0 },
++	{ "output-enable", PIN_CONFIG_OUTPUT_ENABLE, 1 },
+ 	{ "output-high", PIN_CONFIG_OUTPUT, 1, },
+ 	{ "output-low", PIN_CONFIG_OUTPUT, 0, },
+ 	{ "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+index 7620eb1..231d307 100644
+--- a/include/linux/pinctrl/pinconf-generic.h
++++ b/include/linux/pinctrl/pinconf-generic.h
+@@ -73,10 +73,16 @@
+  *	operation, if several modes of operation are supported these can be
+  *	passed in the argument on a custom form, else just use argument 1
+  *	to indicate low power mode, argument 0 turns low power mode off.
+- * @PIN_CONFIG_OUTPUT: this will configure the pin as an output. Use argument
+- *	1 to indicate high level, argument 0 to indicate low level. (Please
+- *	see Documentation/pinctrl.txt, section "GPIO mode pitfalls" for a
+- *	discussion around this parameter.)
++ * @PIN_CONFIG_OUTPUT_ENABLE: this will enable the pin's output mode
++ * 	without driving a value there. For most platforms this reduces to
++ * 	enable the output buffers and then let the pin controller current
++ * 	configuration (eg. the currently selected mux function) drive values on
++ * 	the line. Use argument 1 to enable output mode, argument 0 to disable
++ * 	it.
++ * @PIN_CONFIG_OUTPUT: this will configure the pin as an output and drive a
++ * 	value on the line. Use argument 1 to indicate high level, argument 0 to
++ * 	indicate low level. (Please see Documentation/pinctrl.txt, section
++ * 	"GPIO mode pitfalls" for a discussion around this parameter.)
+  * @PIN_CONFIG_POWER_SOURCE: if the pin can select between different power
+  *	supplies, the argument to this parameter (on a custom format) tells
+  *	the driver which alternative power source to use.
+@@ -105,6 +111,7 @@ enum pin_config_param {
+ 	PIN_CONFIG_INPUT_SCHMITT,
+ 	PIN_CONFIG_INPUT_SCHMITT_ENABLE,
+ 	PIN_CONFIG_LOW_POWER_MODE,
++	PIN_CONFIG_OUTPUT_ENABLE,
+ 	PIN_CONFIG_OUTPUT,
+ 	PIN_CONFIG_POWER_SOURCE,
+ 	PIN_CONFIG_SLEW_RATE,
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.7.4
