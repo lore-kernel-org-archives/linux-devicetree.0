@@ -1,72 +1,52 @@
 From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v1 4/5] ARM: dts: stm32: Enable DCMI support on STM32F746 MCU
-Date: Thu, 22 Jun 2017 17:12:50 +0200
-Message-ID: <1498144371-13310-5-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v1 5/5] ARM: configs: stm32: DCMI + OV9655 camera support
+Date: Thu, 22 Jun 2017 17:12:51 +0200
+Message-ID: <1498144371-13310-6-git-send-email-hugues.fruchet@st.com>
 References: <1498144371-13310-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1498144371-13310-1-git-send-email-hugues.fruchet@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable DCMI camera interface on STM32F746 MCU.
+Enable DCMI camera interface and OV9655 camera sensor drivers.
 
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- arch/arm/boot/dts/stm32f746.dtsi | 31 +++++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+ arch/arm/configs/stm32_defconfig | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index c2765ce..4bdf37c 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -326,6 +326,23 @@
- 					bias-disable;
- 				};
- 			};
-+
-+			dcmi_pins: dcmi_pins@0 {
-+				pins {
-+					pinmux = <STM32F746_PA4_FUNC_DCMI_HSYNC>,
-+						 <STM32F746_PG9_FUNC_DCMI_VSYNC>,
-+						 <STM32F746_PA6_FUNC_DCMI_PIXCLK>,
-+						 <STM32F746_PH9_FUNC_DCMI_D0>,
-+						 <STM32F746_PH10_FUNC_DCMI_D1>,
-+						 <STM32F746_PH11_FUNC_DCMI_D2>,
-+						 <STM32F746_PH12_FUNC_DCMI_D3>,
-+						 <STM32F746_PH14_FUNC_DCMI_D4>,
-+						 <STM32F746_PD3_FUNC_DCMI_D5>,
-+						 <STM32F746_PE5_FUNC_DCMI_D6>,
-+						 <STM32F746_PE6_FUNC_DCMI_D7>;
-+					slew-rate = <3>;
-+				};
-+			};
- 		};
- 
- 		crc: crc@40023000 {
-@@ -344,6 +361,20 @@
- 			assigned-clocks = <&rcc 1 CLK_HSE_RTC>;
- 			assigned-clock-rates = <1000000>;
- 		};
-+
-+		dcmi: dcmi@50050000 {
-+			compatible = "st,stm32-dcmi";
-+			reg = <0x50050000 0x400>;
-+			interrupts = <78>;
-+			resets = <&rcc STM32F7_AHB2_RESET(DCMI)>;
-+			clocks = <&rcc 0 STM32F7_AHB2_CLOCK(DCMI)>;
-+			clock-names = "mclk";
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&dcmi_pins>;
-+			dmas = <&dma2 1 1 0x414 0x3>;
-+			dma-names = "tx";
-+			status = "disabled";
-+		};
- 	};
- };
- 
+diff --git a/arch/arm/configs/stm32_defconfig b/arch/arm/configs/stm32_defconfig
+index a097538..0c3cd01 100644
+--- a/arch/arm/configs/stm32_defconfig
++++ b/arch/arm/configs/stm32_defconfig
+@@ -55,6 +55,15 @@ CONFIG_I2C_STM32F4=y
+ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ # CONFIG_USB_SUPPORT is not set
++CONFIG_VIDEO_V4L2=y
++CONFIG_MEDIA_CONTROLLER=y
++CONFIG_VIDEO_V4L2_SUBDEV_API=y
++CONFIG_MEDIA_SUBDRV_AUTOSELECT=n
++CONFIG_V4L_PLATFORM_DRIVERS=y
++CONFIG_MEDIA_SUPPORT=y
++CONFIG_MEDIA_CAMERA_SUPPORT=y
++CONFIG_VIDEO_STM32_DCMI=y
++CONFIG_VIDEO_OV9650=y
+ CONFIG_NEW_LEDS=y
+ CONFIG_LEDS_CLASS=y
+ CONFIG_LEDS_GPIO=y
 -- 
 1.9.1
