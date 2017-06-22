@@ -1,22 +1,37 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/3] ARM64: dts: meson-gxl: Add support for Libre Technology CC board
-Date: Thu, 22 Jun 2017 14:19:05 -0700
-Message-ID: <7hr2ybafg6.fsf@baylibre.com>
-References: <20170619090440.27099-1-jbrunet@baylibre.com>
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: Re: [PATCH v2 1/5] dt-bindings: add bindings for i2c-pca-platform
+Date: Thu, 22 Jun 2017 21:20:59 +0000
+Message-ID: <e121e9ad4afe49008e34b5b4a76b22c6@svr-chch-ex1.atlnz.lc>
+References: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
+ <20170620011837.14010-2-chris.packham@alliedtelesis.co.nz>
+ <20170622082230.wf4r2ylyevidizkd@ninjato>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170619090440.27099-1-jbrunet@baylibre.com> (Jerome Brunet's
-        message of "Mon, 19 Jun 2017 11:04:37 +0200")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-i2c-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Jerome Brunet <jbrunet@baylibre.com> writes:
-
-> This patchset adds support for the CC board from Shenzhen Libre Technology
-
-Applied to v4.13/dt64,
-
-Kevin
+On 22/06/17 20:23, Wolfram Sang wrote:=0A=
+> =0A=
+>> + - reset-gpios : gpio specifier for gpio connected to RESET_N pin.=0A=
+> =0A=
+> What about the 'active' state that Rob mentioned in his last review?=0A=
+> =0A=
+=0A=
+My intention was that by saying it is connected to the RESET_N bin the =0A=
+active state is covered.=0A=
+=0A=
+I personally always get a little confused when talking about reset =0A=
+lines. The _N denotes that the line is active low but because it is a =0A=
+reset line writing 1 releases the reset so from a what-the-user-wants =0A=
+perspective it's active high.=0A=
+=0A=
+dt-binding-wise what we want here is GPIO_ACTIVE_HIGH, as in the driver =0A=
+writes 1 to release reset so don't do any polarity inversion. I'd be =0A=
+happy do add something to that effect in a v3 but I actually felt saying =
+=0A=
+the gpio is connected to RESET_N was less ambiguous.=0A=
