@@ -1,71 +1,196 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] watchdog: meson-wdt: add support for the watchdog on
- Meson8 and Meson8m2
-Date: Wed, 21 Jun 2017 22:22:56 -0500
-Message-ID: <CAL_JsqJutEYt0eG96RG+jMosCEkqK=145Kquj2qJdQCV=wh2zg@mail.gmail.com>
-References: <20170611095219.22095-1-martin.blumenstingl@googlemail.com>
- <20170615172510.GA7549@roeck-us.net> <CAFBinCCyqX=TGwTyhxXZPP2noUvJ1v=xNs+Vs17Gg4z2uDgjEA@mail.gmail.com>
- <20170616180009.h66dwnnhfwrjpui6@rob-hp-laptop> <CAFBinCAZZMT-YDHg4SYF3da+00KLYE-dZaEDPaEMRz_2paXNQw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFBinCAZZMT-YDHg4SYF3da+00KLYE-dZaEDPaEMRz_2paXNQw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, LINUX-WATCHDOG <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V5 Resend] PM / OPP: Use - instead of @ for DT entries
+Date: Thu, 22 Jun 2017 09:15:11 +0530
+Message-ID: <31dd4526b3975260a669494aaaaa19323f6d201d.1498103050.git.viresh.kumar@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Rafael Wysocki <rjw@rjwysocki.net>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org, Vincent Guittot <vincent.guittot@linaro.org>, Krzysztof Kozlowski <krzk@kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 19, 2017 at 1:50 PM, Martin Blumenstingl
-<martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org> wrote:
-> Hi Rob,
->
-> On Sun, Jun 18, 2017 at 4:04 PM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->> On Thu, Jun 15, 2017 at 11:13:07PM +0200, Martin Blumenstingl wrote:
->>> On Thu, Jun 15, 2017 at 7:25 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->>> > On Sun, Jun 11, 2017 at 11:52:19AM +0200, Martin Blumenstingl wrote:
->>> >> The watchdog IP block on Meson8 and Meson8m2 is already supported by the
->>> >> existing meson-wdt driver. Meson8 uses the same register bits as Meson6,
->>> >> while the newer Meson8m2 SoC uses the same register bits as Meson8b.
->>> >>
->>> >> Currently watchdog support on Meson8 SoC already works because
->>> >> meson8.dtsi simply uses the "amlogic,meson6-wdt" compatible. Adding a
->>> >> separate compatible for Meson8 makes this more explicit though.
->>> >>
->>> >> Signed-off-by: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>> >
->>> > Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>> thank you!
->>> is there anything holding you up from taking this patch (for example:
->>> are you still missing any specific Signed-off-by / Acked-by)?
->>>
->>> > In general, changes like this are not necessary, though. The dts file
->>> > is supposed to reference both generic and specific compatible strings.
->>> I thought about skipping this patch, but I find that it looks strange without.
->>>
->>> the hierarchy and the corresponding compatible strings would be:
->>> meson.dtsi / compatible = "amlogic,meson6-wdt";
->>> |- meson8.dtsi / compatible = "amlogic,meson8-wdt", "amlogic,meson6-wdt";
->>>    |- meson8m2.dtsi (upcoming) / compatible = "amlogic,meson8m2-wdt",
->>> "amlogic,meson8b-wdt";
->>> |- meson8b.dtsi / compatible = "amlogic,meson8b-wdt";
->>>
->>> instead of this seemingly random mixup of compatible strings I decided
->>> to introduce separate ones for each SoC.
->>
->> But if the block is backwards compatible, you should also provide a
->> fallback compatible string.
-> OK, fine with me - do you want me to update the documentation to
-> reflect this (or is it enough if I take care of it in the .dts files)?
-> the resulting documentation could look like this:
->        "amlogic,meson6-wdt" on Meson6 SoCs
->        "amlogic,meson8-wdt" along with "amlogic,meson6-wdt" on Meson8 SoCs
->        "amlogic,meson8b-wdt" on Meson8b SoCs
->        "amlogic,meson8m2-wdt" along with "amlogic,meson8b-wdt" on Meson8m2 SoCs
+Compiling the DT file with W=1, DTC warns like follows:
 
-Yes, like this.
+Warning (unit_address_vs_reg): Node /opp_table0/opp@1000000000 has a
+unit name, but no reg property
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fix this by replacing '@' with '-' as the OPP nodes will never have a
+"reg" property.
+
+Reported-by: Krzysztof Kozlowski <krzk@kernel.org>
+Reported-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Suggested-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <sboyd@codeaurora.org>
+---
+@Rafael: You haven't applied it yesterday and I couldn't find it in
+patchwork anymore, so I am assuming that I need to send it again.
+
+ Documentation/devicetree/bindings/opp/opp.txt | 38 +++++++++++++--------------
+ 1 file changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
+index 63725498bd20..e36d261b9ba6 100644
+--- a/Documentation/devicetree/bindings/opp/opp.txt
++++ b/Documentation/devicetree/bindings/opp/opp.txt
+@@ -186,20 +186,20 @@ Example 1: Single cluster Dual-core ARM cortex A9, switch DVFS states together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			clock-latency-ns = <290000>;
+@@ -265,20 +265,20 @@ independently.
+ 		 * independently.
+ 		 */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000;
+@@ -341,20 +341,20 @@ DVFS state together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>;
+ 			opp-microamp = <70000>;
+ 			clock-latency-ns = <300000>;
+ 			opp-suspend;
+ 		};
+-		opp@1100000000 {
++		opp-1100000000 {
+ 			opp-hz = /bits/ 64 <1100000000>;
+ 			opp-microvolt = <1000000 980000 1010000>;
+ 			opp-microamp = <80000>;
+ 			clock-latency-ns = <310000>;
+ 		};
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt = <1025000>;
+ 			opp-microamp = <90000>;
+@@ -367,20 +367,20 @@ DVFS state together.
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1300000000 {
++		opp-1300000000 {
+ 			opp-hz = /bits/ 64 <1300000000>;
+ 			opp-microvolt = <1050000 1045000 1055000>;
+ 			opp-microamp = <95000>;
+ 			clock-latency-ns = <400000>;
+ 			opp-suspend;
+ 		};
+-		opp@1400000000 {
++		opp-1400000000 {
+ 			opp-hz = /bits/ 64 <1400000000>;
+ 			opp-microvolt = <1075000>;
+ 			opp-microamp = <100000>;
+ 			clock-latency-ns = <400000>;
+ 		};
+-		opp@1500000000 {
++		opp-1500000000 {
+ 			opp-hz = /bits/ 64 <1500000000>;
+ 			opp-microvolt = <1100000 1010000 1110000>;
+ 			opp-microamp = <95000>;
+@@ -409,7 +409,7 @@ Example 4: Handling multiple regulators
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <970000>, /* Supply 0 */
+ 					<960000>, /* Supply 1 */
+@@ -422,7 +422,7 @@ Example 4: Handling multiple regulators
+ 
+ 		/* OR */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
+ 					<965000 960000 975000>, /* Supply 1 */
+@@ -435,7 +435,7 @@ Example 4: Handling multiple regulators
+ 
+ 		/* OR */
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt = <975000 970000 985000>, /* Supply 0 */
+ 					<965000 960000 975000>, /* Supply 1 */
+@@ -467,7 +467,7 @@ Example 5: opp-supported-hw
+ 		status = "okay";
+ 		opp-shared;
+ 
+-		opp@600000000 {
++		opp-600000000 {
+ 			/*
+ 			 * Supports all substrate and process versions for 0xF
+ 			 * cuts, i.e. only first four cuts.
+@@ -478,7 +478,7 @@ Example 5: opp-supported-hw
+ 			...
+ 		};
+ 
+-		opp@800000000 {
++		opp-800000000 {
+ 			/*
+ 			 * Supports:
+ 			 * - cuts: only one, 6th cut (represented by 6th bit).
+@@ -510,7 +510,7 @@ Example 5: opp-supported-hw
+ 		compatible = "operating-points-v2";
+ 		opp-shared;
+ 
+-		opp@1000000000 {
++		opp-1000000000 {
+ 			opp-hz = /bits/ 64 <1000000000>;
+ 			opp-microvolt-slow = <915000 900000 925000>;
+ 			opp-microvolt-fast = <975000 970000 985000>;
+@@ -518,7 +518,7 @@ Example 5: opp-supported-hw
+ 			opp-microamp-fast =  <71000>;
+ 		};
+ 
+-		opp@1200000000 {
++		opp-1200000000 {
+ 			opp-hz = /bits/ 64 <1200000000>;
+ 			opp-microvolt-slow = <915000 900000 925000>, /* Supply vcc0 */
+ 					      <925000 910000 935000>; /* Supply vcc1 */
+-- 
+2.13.0.71.gd7076ec9c9cb
