@@ -1,59 +1,121 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
-Date: Thu, 22 Jun 2017 08:10:07 +0200
-Message-ID: <20170622061007.h76gk3hixp4ipyvr@pengutronix.de>
-References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
- <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH RESEND 4/4] pwm: mediatek: add MT2712/MT7622 support
+Date: Thu, 22 Jun 2017 08:12:47 +0200
+Message-ID: <05b53007-44de-a236-f592-aea8e75ced44@phrozen.org>
+References: <1498032672-7172-1-git-send-email-zhi.mao@mediatek.com>
+ <1498032672-7172-5-git-send-email-zhi.mao@mediatek.com>
+ <4600cf23-5e59-df02-37dc-056cb4a9744c@phrozen.org>
+ <1498111776.18841.10.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170621102130.21024-2-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1498111776.18841.10.camel@mhfsdcap03>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?WmhlbmJhbyBMaXUgKOWImOaMr+WunSk=?= <Zhenbao.Liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, srv_heupstream <srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?U2VhbiBXYW5nICjnjovlv5fkupgp?= <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?WVQgU2hlbiAo5rKI5bKz6ZyGKQ==?= <Yt.Shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, =?UTF-8?B?WWluZ2pvZSBDaGVuICg/P+iLsea0sik=?= <Yingjoe.Chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWMMKQXVYFwzLw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
-> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Several drivers have the same device tree parsing code. Create
-> a common helper function for it.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/tty/serial/Kconfig  |  4 ++++
->  drivers/tty/serial/Makefile |  2 ++
->  drivers/tty/serial/of.c     | 45 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/serial_core.h | 12 ++++++++++++
->  4 files changed, 63 insertions(+)
->  create mode 100644 drivers/tty/serial/of.c
-> 
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 5c8850f7a2a0..8baef5b95bed 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -14,6 +14,10 @@ config SERIAL_EARLYCON
->  	  the console before standard serial driver is probed. The console is
->  	  enabled when early_param is processed.
->  
-> +config OF_SERIAL
-> +	depends on SERIAL_CORE
-> +	def_bool y
-
-This probably also needs a dependency on some device tree option,
-CONFIG_OF maybe?
-
-Sascha
 
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+On 22/06/17 08:09, Zhi Mao wrote:
+> Hi John,
+>
+> Thanks for your review the code and feedback.
+> There are 3 issues in this patch:
+> 1.adds PWM_CLK_DIV_MAX which really should go into its own patch
+> 2.adds mtk_pwm_com_reg which should also go into its own patch
+> 3.remove comments inline /*===*/
+>
+> for #1 and #3, I will modify them in the next release.
+> but for #2, I want to discuss with you,
+> adding the structure  "mtk_pwm_com_reg" is only for the registers of 
+> MT2712 PWM8,
+> so we want to keep this modification in this patch.
+>
+> what's your opinion about it?
+> Any reply is welcome.
+>
+>
+> Regards
+> Zhi
+>
+>
+>
+>
+
+Hi Zhi,
+
+I just had another look and noticed that the CON registers are not at a 
+fixed offset of 0x40 for the new pwm8 register so having 2) inside this 
+patch makes sense. please explain in the description that this is the case
+
+     John
+
+>
+> On Wed, 2017-06-21 at 20:22 +0800, John Crispin wrote:
+>> On 21/06/17 10:11, Zhi Mao wrote:
+>> > support multiple chip(MT2712, MT7622, MT7623)
+>> This patch does more than add extra SoC support. It also
+>> * adds PWM_CLK_DIV_MAX which really should go into its own patch
+>> * adds mtk_pwm_com_reg which should also go into its own patch
+>>
+>> more comments inline
+>>
+>> >
+>> > Signed-off-by: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org <mailto:zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>>
+>> > ---
+>> >   drivers/pwm/pwm-mediatek.c |   63 +++++++++++++++++++++++++++++++++++---------
+>> >   1 file changed, 51 insertions(+), 12 deletions(-)
+>> >
+>> > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+>> > index c803ff6..d520356 100644
+>> > --- a/drivers/pwm/pwm-mediatek.c
+>> > +++ b/drivers/pwm/pwm-mediatek.c
+>> > @@ -16,6 +16,7 @@
+>> >   #include <linux/module.h>
+>> >   #include <linux/clk.h>
+>> >   #include <linux/of.h>
+>> > +#include <linux/of_device.h>
+>> >   #include <linux/platform_device.h>
+>> >   #include <linux/pwm.h>
+>> >   #include <linux/slab.h>
+>> [...]
+>> > @@ -215,9 +238,25 @@ static int mtk_pwm_remove(struct platform_device *pdev)
+>> >   	return pwmchip_remove(&pc->chip);
+>> >   }
+>> >
+>> > +/*==========================================*/
+>>
+>> please remove these comment lines
+>>
+>>       John
+>> > +static const struct mtk_com_pwm_data mt2712_pwm_data = {
+>> > +	.pwm_nums = 8,
+>> > +};
+>> > +
+>> > +static const struct mtk_com_pwm_data mt7622_pwm_data = {
+>> > +	.pwm_nums = 6,
+>> > +};
+>> > +
+>> > +static const struct mtk_com_pwm_data mt7623_pwm_data = {
+>> > +	.pwm_nums = 5,
+>> > +};
+>> > +/*==========================================*/
+>> > +
+>> >   static const struct of_device_id mtk_pwm_of_match[] = {
+>> > -	{ .compatible = "mediatek,mt7623-pwm" },
+>> > -	{ }
+>> > +	{.compatible = "mediatek,mt2712-pwm", .data = &mt2712_pwm_data},
+>> > +	{.compatible = "mediatek,mt7622-pwm", .data = &mt7622_pwm_data},
+>> > +	{.compatible = "mediatek,mt7623-pwm", .data = &mt7623_pwm_data},
+>> > +	{},
+>> >   };
+>> >   MODULE_DEVICE_TABLE(of, mtk_pwm_of_match);
+>> >
+>>
+>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
