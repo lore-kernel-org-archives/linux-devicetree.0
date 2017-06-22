@@ -1,52 +1,179 @@
-From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v1 3/6] [media] ov9650: select the nearest higher resolution
-Date: Thu, 22 Jun 2017 17:05:39 +0200
-Message-ID: <1498143942-12682-4-git-send-email-hugues.fruchet@st.com>
+From: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v1 4/6] [media] ov9650: use write_array() for resolution sequences
+Date: Thu, 22 Jun 2017 17:05:40 +0200
+Message-ID: <1498143942-12682-5-git-send-email-hugues.fruchet@st.com>
 References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, " H. Nikolaus Schaller" <hns@goldelico.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Yannick Fertre <yannick.fertre@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498143942-12682-1-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, " H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Refine the resolution selection algorithm by selecting
-only the nearest higher resolution (instead of lower and higher).
+Align resolution sequences on initialization sequence using
+i2c_rv structure NULL terminated .This add flexibility
+on resolution sequence size.
+Document resolution related registers by using corresponding
+define instead of hexa address/value.
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/media/i2c/ov9650.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/media/i2c/ov9650.c | 98 ++++++++++++++++++++++++++++++----------------
+ 1 file changed, 64 insertions(+), 34 deletions(-)
 
 diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
-index 8340a45..4311da6 100644
+index 4311da6..8b283c9 100644
 --- a/drivers/media/i2c/ov9650.c
 +++ b/drivers/media/i2c/ov9650.c
-@@ -1196,9 +1196,11 @@ static void __ov965x_try_frame_size(struct v4l2_mbus_framefmt *mf,
- 	unsigned int min_err = UINT_MAX;
+@@ -227,11 +227,16 @@ struct ov965x_ctrls {
+ 	u8 update;
+ };
  
- 	while (i--) {
--		int err = abs(fsize->width - mf->width)
--				+ abs(fsize->height - mf->height);
--		if (err < min_err) {
-+		int w_err = (fsize->width - mf->width);
-+		int h_err = (fsize->height - mf->height);
-+		int err = w_err + h_err;
++struct i2c_rv {
++	u8 addr;
++	u8 value;
++};
 +
-+		if ((w_err >= 0) && (h_err >= 0) && (err < min_err)) {
- 			min_err = err;
- 			match = fsize;
- 		}
+ struct ov965x_framesize {
+ 	u16 width;
+ 	u16 height;
+ 	u16 max_exp_lines;
+-	const u8 *regs;
++	const struct i2c_rv *regs;
+ };
+ 
+ struct ov965x_interval {
+@@ -280,9 +285,11 @@ struct ov965x {
+ 	u8 apply_frame_fmt;
+ };
+ 
+-struct i2c_rv {
+-	u8 addr;
+-	u8 value;
++struct ov965x_pixfmt {
++	u32 code;
++	u32 colorspace;
++	/* REG_TSLB value, only bits [3:2] may be set. */
++	u8 tslb_reg;
+ };
+ 
+ static const struct i2c_rv ov965x_init_regs[] = {
+@@ -342,30 +349,59 @@ struct i2c_rv {
+ 	{ REG_NULL, 0 }
+ };
+ 
+-#define NUM_FMT_REGS 14
+-/*
+- * COM7,  COM3,  COM4, HSTART, HSTOP, HREF, VSTART, VSTOP, VREF,
+- * EXHCH, EXHCL, ADC,  OCOM,   OFON
+- */
+-static const u8 frame_size_reg_addr[NUM_FMT_REGS] = {
+-	0x12, 0x0c, 0x0d, 0x17, 0x18, 0x32, 0x19, 0x1a, 0x03,
+-	0x2a, 0x2b, 0x37, 0x38, 0x39,
+-};
+-
+-static const u8 ov965x_sxga_regs[NUM_FMT_REGS] = {
+-	0x00, 0x00, 0x00, 0x1e, 0xbe, 0xbf, 0x01, 0x81, 0x12,
+-	0x10, 0x34, 0x81, 0x93, 0x51,
++static const struct i2c_rv ov965x_sxga_regs[] = {
++	{ REG_COM7, 0x00 },
++	{ REG_COM3, 0x00 },
++	{ REG_COM4, 0x00 },
++	{ REG_HSTART, 0x1e },
++	{ REG_HSTOP, 0xbe },
++	{ 0x32, 0xbf },
++	{ REG_VSTART, 0x01 },
++	{ REG_VSTOP, 0x81 },
++	{ REG_VREF, 0x12 },
++	{ REG_EXHCH, 0x10 },
++	{ REG_EXHCL, 0x34 },
++	{ REG_ADC, 0x81 },
++	{ REG_ACOM, 0x93 },
++	{ REG_OFON, 0x51 },
++	{ REG_NULL, 0 },
+ };
+ 
+-static const u8 ov965x_vga_regs[NUM_FMT_REGS] = {
+-	0x40, 0x04, 0x80, 0x26, 0xc6, 0xed, 0x01, 0x3d, 0x00,
+-	0x10, 0x40, 0x91, 0x12, 0x43,
++static const struct i2c_rv ov965x_vga_regs[] = {
++	{ REG_COM7, 0x40 },
++	{ REG_COM3, 0x04 },
++	{ REG_COM4, 0x80 },
++	{ REG_HSTART, 0x26 },
++	{ REG_HSTOP, 0xc6 },
++	{ 0x32, 0xed },
++	{ REG_VSTART, 0x01 },
++	{ REG_VSTOP, 0x3d },
++	{ REG_VREF, 0x00 },
++	{ REG_EXHCH, 0x10 },
++	{ REG_EXHCL, 0x40 },
++	{ REG_ADC, 0x91 },
++	{ REG_ACOM, 0x12 },
++	{ REG_OFON, 0x43 },
++	{ REG_NULL, 0 },
+ };
+ 
+ /* Determined empirically. */
+-static const u8 ov965x_qvga_regs[NUM_FMT_REGS] = {
+-	0x10, 0x04, 0x80, 0x25, 0xc5, 0xbf, 0x00, 0x80, 0x12,
+-	0x10, 0x40, 0x91, 0x12, 0x43,
++static const struct i2c_rv ov965x_qvga_regs[] = {
++	{ REG_COM7, 0x10 },
++	{ REG_COM3, 0x04 },
++	{ REG_COM4, 0x80 },
++	{ REG_HSTART, 0x25 },
++	{ REG_HSTOP, 0xc5 },
++	{ 0x32, 0xbf },
++	{ REG_VSTART, 0x00 },
++	{ REG_VSTOP, 0x80 },
++	{ REG_VREF, 0x12 },
++	{ REG_EXHCH, 0x10 },
++	{ REG_EXHCL, 0x40 },
++	{ REG_ADC, 0x91 },
++	{ REG_ACOM, 0x12 },
++	{ REG_OFON, 0x43 },
++	{ REG_NULL, 0 },
+ };
+ 
+ static const struct ov965x_framesize ov965x_framesizes[] = {
+@@ -387,13 +423,6 @@ struct i2c_rv {
+ 	},
+ };
+ 
+-struct ov965x_pixfmt {
+-	u32 code;
+-	u32 colorspace;
+-	/* REG_TSLB value, only bits [3:2] may be set. */
+-	u8 tslb_reg;
+-};
+-
+ static const struct ov965x_pixfmt ov965x_formats[] = {
+ 	{ MEDIA_BUS_FMT_YUYV8_2X8, V4L2_COLORSPACE_JPEG, 0x00},
+ 	{ MEDIA_BUS_FMT_YVYU8_2X8, V4L2_COLORSPACE_JPEG, 0x04},
+@@ -1268,11 +1297,12 @@ static int ov965x_set_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_pad_config
+ 
+ static int ov965x_set_frame_size(struct ov965x *ov965x)
+ {
+-	int i, ret = 0;
++	int ret = 0;
++
++	v4l2_dbg(1, debug, ov965x->client, "%s\n", __func__);
+ 
+-	for (i = 0; ret == 0 && i < NUM_FMT_REGS; i++)
+-		ret = ov965x_write(ov965x->client, frame_size_reg_addr[i],
+-				   ov965x->frame_size->regs[i]);
++	ret = ov965x_write_array(ov965x->client,
++				 ov965x->frame_size->regs);
+ 	return ret;
+ }
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
