@@ -1,73 +1,71 @@
-From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Thu, 22 Jun 2017 09:50:10 +0200
-Message-ID: <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
-References: <20170615204130.19255-1-eric@anholt.net> <20170615204130.19255-2-eric@anholt.net>
- <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org> <871sqkouvr.fsf@eliezer.anholt.net>
- <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org> <871sqe7ei0.fsf@eliezer.anholt.net>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
+Date: Thu, 22 Jun 2017 10:01:43 +0200
+Message-ID: <20170622080143.waljtsziek2ciqmd@pengutronix.de>
+References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
+ <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
+ <20170622061007.h76gk3hixp4ipyvr@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <871sqe7ei0.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170622061007.h76gk3hixp4ipyvr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-06-20 19:31 GMT+02:00 Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>:
-> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->
->> On 06/16/2017 08:13 PM, Eric Anholt wrote:
->>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>>
->>>> On 06/16/2017 02:11 AM, Eric Anholt wrote:
->>>>> If the panel-bridge is being set up after the drm_mode_config_reset(),
->>>>> then the connector's state would never get initialized, and we'd
->>>>> dereference the NULL in the hotplug path.  We also need to register
->>>>> the connector, so that userspace can get at it.
->>>>>
->>>>
->>>> Shouldn't the KMS driver make sure the panel-bridge is set up before
->>>> drm_mode_config_reset? Is it the case when we're inserting the
->>>> panel-bridge driver as a module?
->>>>
->>>>
->>>> All the connectors that have been added are registered automatically
->>>> when drm_dev_register() is called by the KMS driver. Registering a
->>>> connector in the middle of setting up our driver is prone to race
->>>> conditions if the userspace decides to use them immediately.
->>>
->>> Yeah, this is fixing initializing panel_bridge at DSI host_attach time,
->>> which in the case of a panel module that creates the DSI device
->>> (adv7533-style, like you said I should use as a reference) will be after
->>> drm_mode_config_reset() and drm_dev_register().
->>
->> Okay. In the case of the msm kms driver, we defer probe until the
->> adv7533 module is inserted, only then we proceed to drm_mode_config_reset()
->> and drm_dev_register(). I assumed this was the general practice followed by
->> most kms drivers. I.,e the kms driver defers probe until all connector
->> related modules are inserted, and only then proceed to create a drm device.
->
-> The problem, though, is the panel driver needs the MIPI DSI host to
-> exist to call mipi_dsi_device_register_full() during the probe process.
-> The adv7533 driver gets around this by registering the DSI device in the
-> bridge attach step, but drm_panel doesn't have an attach step.
->
-> Another alternative is my original version of the panel driver that was
-> a mipi_dsi_device driver that registered the panel during the DSI device
-> probe.  That's why vc4's panel lookup is during the MIPI DSI attach
-> phase, currently.
+On Thu, Jun 22, 2017 at 08:10:07AM +0200, Sascha Hauer wrote:
+> On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
+> > From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > 
+> > Several drivers have the same device tree parsing code. Create
+> > a common helper function for it.
+> > 
+> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  drivers/tty/serial/Kconfig  |  4 ++++
+> >  drivers/tty/serial/Makefile |  2 ++
+> >  drivers/tty/serial/of.c     | 45 +++++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/serial_core.h | 12 ++++++++++++
+> >  4 files changed, 63 insertions(+)
+> >  create mode 100644 drivers/tty/serial/of.c
+> > 
+> > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> > index 5c8850f7a2a0..8baef5b95bed 100644
+> > --- a/drivers/tty/serial/Kconfig
+> > +++ b/drivers/tty/serial/Kconfig
+> > @@ -14,6 +14,10 @@ config SERIAL_EARLYCON
+> >  	  the console before standard serial driver is probed. The console is
+> >  	  enabled when early_param is processed.
+> >  
+> > +config OF_SERIAL
+> > +	depends on SERIAL_CORE
+> > +	def_bool y
+> 
+> This probably also needs a dependency on some device tree option,
+> CONFIG_OF maybe?
 
-+ Philippe in copy because we have the same probing issue when adding
-panel-bridge
-with the dsi bridge
+Without CONFIG_OF of_property_read_u32_array returns -ENOSYS and
+of_property_read_bool returns false. So I think (but didn't test) there
+is no problem not depending on more stuff.
 
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+But maybe do:
+
+	if (!np)
+		return 1;
+
+in of_get_rs485_mode?
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
