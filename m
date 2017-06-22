@@ -1,72 +1,45 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
-Date: Thu, 22 Jun 2017 10:01:43 +0200
-Message-ID: <20170622080143.waljtsziek2ciqmd@pengutronix.de>
-References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
- <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
- <20170622061007.h76gk3hixp4ipyvr@pengutronix.de>
+From: Mark yao <mark.yao@rock-chips.com>
+Subject: Re: [PATCH v3.1 1/3] drm/rockchip: dw_hdmi: add RK3399 HDMI support
+Date: Thu, 22 Jun 2017 16:02:44 +0800
+Message-ID: <594B79A4.1000509@rock-chips.com>
+References: <1496992236-10634-1-git-send-email-mark.yao@rock-chips.com>
+ <1498115845-7177-1-git-send-email-mark.yao@rock-chips.com>
+ <1751555.73cFbViMXZ@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170622061007.h76gk3hixp4ipyvr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1751555.73cFbViMXZ@phil>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 08:10:07AM +0200, Sascha Hauer wrote:
-> On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
-> > From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > 
-> > Several drivers have the same device tree parsing code. Create
-> > a common helper function for it.
-> > 
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  drivers/tty/serial/Kconfig  |  4 ++++
-> >  drivers/tty/serial/Makefile |  2 ++
-> >  drivers/tty/serial/of.c     | 45 +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/serial_core.h | 12 ++++++++++++
-> >  4 files changed, 63 insertions(+)
-> >  create mode 100644 drivers/tty/serial/of.c
-> > 
-> > diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> > index 5c8850f7a2a0..8baef5b95bed 100644
-> > --- a/drivers/tty/serial/Kconfig
-> > +++ b/drivers/tty/serial/Kconfig
-> > @@ -14,6 +14,10 @@ config SERIAL_EARLYCON
-> >  	  the console before standard serial driver is probed. The console is
-> >  	  enabled when early_param is processed.
-> >  
-> > +config OF_SERIAL
-> > +	depends on SERIAL_CORE
-> > +	def_bool y
-> 
-> This probably also needs a dependency on some device tree option,
-> CONFIG_OF maybe?
-
-Without CONFIG_OF of_property_read_u32_array returns -ENOSYS and
-of_property_read_bool returns false. So I think (but didn't test) there
-is no problem not depending on more stuff.
-
-But maybe do:
-
-	if (!np)
-		return 1;
-
-in of_get_rs485_mode?
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxN+W5tDA25pyIMjLml6UgMTU6MzEsIEhlaWtvIFN0dWVibmVyIHdyb3RlOgo+PiArCj4+
+ID4rLyoqCj4+ID4rICogc3RydWN0IHJvY2tjaGlwX2hkbWlfY2hpcF9kYXRhIC0gc3BsaXRlIHRo
+ZSBncmYgc2V0dGluZyBvZiBraW5kIG9mIGNoaXBzCj4+ID4rICogQGxjZHNlbF9ncmZfcmVnOiBn
+cmYgcmVnaXN0ZXIgb2Zmc2V0IG9mIGxjZGMgc2VsZWN0Cj4+ID4rICogQGxjZHNlbF9iaWc6IHJl
+ZyB2YWx1ZSBvZiBzZWxlY3Rpbmcgdm9wIGJpZyBmb3IgSERNSQo+PiA+KyAqIEBsY2RzZWxfbGl0
+OiByZWcgdmFsdWUgb2Ygc2VsZWN0aW5nIHZvcCBsaXR0bGUgZm9yIEhETUkKPj4gPisgKi8KPj4g
+PitzdHJ1Y3Qgcm9ja2NoaXBfaGRtaV9jaGlwX2RhdGEgewo+PiA+Kwl1MzIJbGNkc2VsX2dyZl9y
+ZWc7Cj4gSG93IGRvIHlvdSBwbGFuIG9uIGhhbmRsaW5nIHRoZSByazMzNjggKHdpdGggb25seSBv
+bmUgVk9QIGFuZCB0aHVzCj4gbm8gc2VsZWN0aW9uIGhhcHBlbmluZyk/IEknZCBqdXN0IG1ha2Ug
+dGhlIGFib3ZlIGFuIGludCwgc28gd2UgY291bGQKPiBzZXQgaXQgdG8gLTEgZm9yIHRoYXQgY2Fz
+ZS4gKHZhbHVlIDAgaXMgYWZ0ZXIgYWxsIGEgdmFsaWQgcmVnKS4KCkl0J3MgYSBwcm9ibGVtIGhh
+bmRsaW5nIG9uIHJrMzM2OCwgdXNpbmcgLTEgdG8ganVkZ2UgbWVhbnMgdGhhdCB3ZSBuZWVkCmlu
+aXRpYWwgdGhlIGxjZHNlbF9ncmZfcmVnIHRvIC0xIG9uIHJrMzM2OCBwbGF0Zm9ybSwgd2UgbmVl
+ZCBhbHdheXMgYWRkIGEgcGxhdGZvcm0KZGF0YSB0byBoYW5kbGUgaXQsIHNlZW1zIG5vdCBnb29k
+IGVub3VnaC4KClNpbmNlIHRoZSBoZG1pIGNoaXAgZGF0YSBvbmx5IHVzZSBmb3Igdm9wIHNlbGVj
+dGlvbiwgbWF5YmUgd2UgY2FuIGp1ZGdlIHdpdGgKY2hlY2tpbmcgaGRtaS0+Y2hpcF9kYXRhID09
+IE5VTEwgZm9yIHRoZSBjYXNlLgoKTWFyay4KCj4KPiBIZWlrbwo+Cj4KCi0tIArvvK1hcmsgWWFv
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRl
+dmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
