@@ -1,65 +1,102 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for hi3660-ufs
-Date: Thu, 22 Jun 2017 14:15:54 +0200
-Message-ID: <CAK8P3a1MRx5zRp5-7iDY32+6PGsyHFaOom-bkWmftpLUS=8gBA@mail.gmail.com>
-References: <20170616065119.10704-1-butao@hisilicon.com> <20170616065119.10704-3-butao@hisilicon.com>
- <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
- <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com> <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw@mail.gmail.com>
- <24438c4d-21c8-6302-acd4-4f0e223232ce@huawei.com>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
+Date: Thu, 22 Jun 2017 14:29:07 +0200
+Message-ID: <7ce4f741-309a-2eaa-381c-8033f089651a@samsung.com>
+References: <20170615204130.19255-1-eric@anholt.net>
+ <20170615204130.19255-2-eric@anholt.net>
+ <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
+ <871sqkouvr.fsf@eliezer.anholt.net>
+ <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
+ <871sqe7ei0.fsf@eliezer.anholt.net>
+ <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
+ <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
+ <CGME20170622092354epcas1p2eb523cbfb64a4da2dc0b188df760d493@epcas1p2.samsung.com>
+ <20170622112332.7ec7b65c@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <24438c4d-21c8-6302-acd4-4f0e223232ce-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+In-reply-to: <20170622112332.7ec7b65c@bbrezillon>
+Content-language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>Linux
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 1:58 PM, Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
-> =E5=9C=A8 2017/6/22 19:51, Arnd Bergmann =E5=86=99=E9=81=93:
->> On Thu, Jun 22, 2017 at 1:44 PM, Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
->>> =E5=9C=A8 2017/6/17 5:51, Arnd Bergmann =E5=86=99=E9=81=93:
->>>> On Fri, Jun 16, 2017 at 8:51 AM, Bu Tao <butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
->>>
->>> I do not know wheher other SoC need to use the optional properties as
->>> abover. So here the name of the optional properties has "hi3660".
->>
->>
->> They should not have "hi3660" in their names either way, independent
->> of where they are used.
+On 22.06.2017 11:23, Boris Brezillon wrote:
+> On Thu, 22 Jun 2017 13:47:43 +0530
+> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 >
+>> On 06/22/2017 01:20 PM, Benjamin Gaignard wrote:
+>>> 2017-06-20 19:31 GMT+02:00 Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>:  
+>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>>>  
+>>>>> On 06/16/2017 08:13 PM, Eric Anholt wrote:  
+>>>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>>>>>  
+>>>>>>> On 06/16/2017 02:11 AM, Eric Anholt wrote:  
+>>>>>>>> If the panel-bridge is being set up after the drm_mode_config_reset(),
+>>>>>>>> then the connector's state would never get initialized, and we'd
+>>>>>>>> dereference the NULL in the hotplug path.  We also need to register
+>>>>>>>> the connector, so that userspace can get at it.
+>>>>>>>>  
+>>>>>>> Shouldn't the KMS driver make sure the panel-bridge is set up before
+>>>>>>> drm_mode_config_reset? Is it the case when we're inserting the
+>>>>>>> panel-bridge driver as a module?
+>>>>>>>
+>>>>>>>
+>>>>>>> All the connectors that have been added are registered automatically
+>>>>>>> when drm_dev_register() is called by the KMS driver. Registering a
+>>>>>>> connector in the middle of setting up our driver is prone to race
+>>>>>>> conditions if the userspace decides to use them immediately.  
+>>>>>> Yeah, this is fixing initializing panel_bridge at DSI host_attach time,
+>>>>>> which in the case of a panel module that creates the DSI device
+>>>>>> (adv7533-style, like you said I should use as a reference) will be after
+>>>>>> drm_mode_config_reset() and drm_dev_register().  
+>>>>> Okay. In the case of the msm kms driver, we defer probe until the
+>>>>> adv7533 module is inserted, only then we proceed to drm_mode_config_reset()
+>>>>> and drm_dev_register(). I assumed this was the general practice followed by
+>>>>> most kms drivers. I.,e the kms driver defers probe until all connector
+>>>>> related modules are inserted, and only then proceed to create a drm device.  
+>>>> The problem, though, is the panel driver needs the MIPI DSI host to
+>>>> exist to call mipi_dsi_device_register_full() during the probe process.
+>>>> The adv7533 driver gets around this by registering the DSI device in the
+>>>> bridge attach step, but drm_panel doesn't have an attach step.  
+>> I'm not sure how we can get around this. We had discussion about this on irc
+>> recently, but couldn't come up with a good conclusion. We could come up with a
+>> panel_attach() callback to make it similar to bridges, but that's just us avoiding
+>> the real issue.
+> How about making DSI dev registration fully asynchronous, that is, DSI
+> devs declared in the DT under the DSI host node will be
+> registered/attached at probe time, and devs using another control bus
+> (like the adv7533 controller over i2c) will be registered afterwards.
 >
-> Oh, change the "hi3660" to "hisilicon"?
-> e.g. ufs-hi3660-use-rate-B  -->  ufs-hisilicon-use-rate-B
+> That implies moving the drm_brige registration logic outside of the DSI
+> host ->probe() path. The idea would be to check if all devs connected
+> to the DSI bus are ready at dsi_host->attach() time. If they are, we
+> can finally register the XXX -> DSI bridge. If they're not (because
+> some devs connected to the DSI bus have not been probed yet), then we
+> do not register the drm_bridge and wait for the next dsi_host->attach()
+> event.
 
-No, just 'use-rate-B', no prefix for this.
+I guess you assumes that dsi-host knows all devs connected to it, thanks to:
+- subnodes of the host - ie. devices controlled via dsi bus,
+- graph links from host ports/endpoints - ie. devices controlled by
+other buses, for example adv7533.
 
->>>> (note: this is different from the value of the "compatible" property
->>>> that
->>>> is meant to be as specific as possible".
->>>>
->>>> Also, please clarify how your binding relates to the ufshcd binding
->>>> in Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt: does
->>>> hi3660 implement any registers that are shared with ufshcd, or does
->>>> it use the same physical interface with a different register set?
->>>
->>>
->>> No, only show how to use the dt-binding for hi3660 SoC
->>
->>
->> My question was about the hardware: does hi3660 implement ufshcd
->> or not?
->
->
-> YES
+I would separate both abstractions to make it more clear:
+1. MIPI bus should be registered early - to allow create/bind devices on it,
+2. drm_bridge should be registered only if all required sinks
+(bridges/panels) are registered.
 
-Ok, then the properties should be documented as optional in the
-Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt file for anything
-that has a proper interpretation in the context of the generic ufshcd
-driver.
+First point seems OK, I am not sure about the 2nd one - if used
+consistently, it would require building pipeline from sink to source.
+By the way is there any pipeline with two consecutive external bridges
+in the mainline?
 
-      Arnd
+Regards
+Andrzej
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
