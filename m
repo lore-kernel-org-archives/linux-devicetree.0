@@ -1,92 +1,94 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Wed, 21 Jun 2017 22:19:10 -0500
-Message-ID: <CAL_JsqKddhWMXEaoxt=3_d+-STFH-OataxSgnnj9Q4A0Eqqwxg@mail.gmail.com>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
- <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop> <74b85a32-63c5-b7c5-47a2-831504be318e@broadcom.com>
+Subject: Re: [PATCH 01/12] coresight replicator: Cleanup programmable
+ replicator naming
+Date: Wed, 21 Jun 2017 22:21:45 -0500
+Message-ID: <CAL_JsqJy-1htMgRZ7r118QPU5NipeFJbq23EVe4-dv0k55z=6Q@mail.gmail.com>
+References: <1497278211-5001-1-git-send-email-suzuki.poulose@arm.com>
+ <1497278211-5001-2-git-send-email-suzuki.poulose@arm.com> <20170613165528.GA6392@xps15>
+ <20170616180820.enc3hxpju2tfu3fg@rob-hp-laptop> <CANLsYkzDMyhX_L5Aaf2p9+ze_qA=FCe+GdjEZcz03ZXaHXb46Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <74b85a32-63c5-b7c5-47a2-831504be318e-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <CANLsYkzDMyhX_L5Aaf2p9+ze_qA=FCe+GdjEZcz03ZXaHXb46Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Ivan T . Ivanov" <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 20, 2017 at 3:48 PM, Scott Branden
-<scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Rob,
->
->
-> On 17-06-18 07:04 AM, Rob Herring wrote:
->>
->> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
+On Tue, Jun 20, 2017 at 11:44 AM, Mathieu Poirier
+<mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 18 June 2017 at 08:04, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, Jun 13, 2017 at 10:55:28AM -0600, Mathieu Poirier wrote:
+>>> On Mon, Jun 12, 2017 at 03:36:40PM +0100, Suzuki K Poulose wrote:
+>>> > The Linux coresight drivers define the programmable ATB replicator as
+>>> > Qualcom replicator, while this is designed by ARM. This can cause confusion
+>>> > to a user selecting the driver. Cleanup all references to make it
+>>> >  explicitly clear. This patch :
+>>> >
+>>> >  1) Adds a new compatible string for the same, retaining the old one for
+>>> >     compatibility.
+>>> >  2) Changes the Kconfig symbol (since this is not part of any defconfigs)
+>>> >      CORESIGHT_QCOM_REPLICATOR => CORESIGHT_DYNAMIC_REPLICATOR
+>>> >  3) Improves the help message in the Kconfig.
+>>> >  4) Changes the name of the driver :
+>>> >     coresight-replicator-qcom => coresight-dynamic-replicator
+>>> >
+>>> > Cc: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> > Cc: Ivan T. Ivanov <ivan.ivanov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> > Cc: Mathieu Poirier <mathieu.poirier-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>> > Signed-off-by: Suzuki K Poulose <suzuki.poulose-5wv7dgnIgG8@public.gmane.org>
 >>>
->>> Add device tree binding documentation for the Broadcom DTE
->>> PTP clock driver.
+>>> Hi Suzuki,
 >>>
->>> Signed-off-by: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>> ---
->>>   Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 13
->>> +++++++++++++
->>>   1 file changed, 13 insertions(+)
->>>   create mode 100644
->>> Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
+>>> > ---
+>>> >  Documentation/devicetree/bindings/arm/coresight.txt     |  4 +++-
+>>> >  drivers/hwtracing/coresight/Kconfig                     | 10 +++++-----
+>>> >  drivers/hwtracing/coresight/Makefile                    |  2 +-
+>>> >  drivers/hwtracing/coresight/coresight-replicator-qcom.c |  2 +-
+>>> >  4 files changed, 10 insertions(+), 8 deletions(-)
+>>> >
+>>> > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+>>> > index fcbae6a..f77329f 100644
+>>> > --- a/Documentation/devicetree/bindings/arm/coresight.txt
+>>> > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+>>> > @@ -34,7 +34,9 @@ its hardware characteristcs.
+>>> >             - Embedded Trace Macrocell (version 4.x):
+>>> >                     "arm,coresight-etm4x", "arm,primecell";
+>>> >
+>>> > -           - Qualcomm Configurable Replicator (version 1.x):
+>>> > +           - Coresight programmable Replicator (version 1.x):
+>>> > +                   "arm,coresight-dynamic-replicator", "arm,primecell";
+>>> > +                           OR
+>>> >                     "qcom,coresight-replicator1x", "arm,primecell";
 >>>
->>> diff --git a/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>> b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>> new file mode 100644
->>> index 0000000..07590bc
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>> @@ -0,0 +1,13 @@
->>> +* Broadcom Digital Timing Engine(DTE) based PTP clock driver
+>>> Rob, what's your view on keeping the old binding around?  We could simply change
+>>> the two occurences we find in the DTs (Juno and 410c) to the new name and be
+>>> done with the old one.
 >>
->> Bindings describe h/w, not drivers.
->>
->>> +
->>> +Required properties:
->>> +- compatible: should be "brcm,ptp-dte"
->>
->> Looks too generic. You need SoC specific compatible strings.
+>> Juno uses the Qcom string? We should keep the old string. You can switch
+>> the dts files, but the driver should support the old name.
 >
+> When we first started working on CoreSight programmable replicators
+> were available but the documentation wasn't public.  As such when I
+> saw Qualcomm's design I mistakenly thought it was a custom IP block
+> and came up with a compatible string that reflected that reality.
+> Fast forward 3 years the documentation is available and Juno has used
+> the same IP block in their design.  Suzuki's patch rectifies history
+> by changing the programmable replicator naming convention to what it
+> should have been from the start.
 >
-> Rob, could you please help me understand the use of adding SoC specific
-> compatible strings.
-> I still don't get it.
+> That being said, we can keep the old compatible string around but it
+> won't change anything.  CoreSight devices are discovered on the AMBA
+> bus and don't use the compatible string - drivers are probed based on
+> AMBA IDs laid out in the drivers and device IDs found in HW ID
+> registers.
 >
-> It's my understanding that the SoC compatibility string is to future proof
-> against bugs/incompatibilities
-> between different versions of the hardware block due to integration issues
-> or any other reason.
-> You can then compare in your driver because the strings were already used in
-> the dtb.
->
-> That would make sense if you can't already differentiate what SoC you are
-> running on.
-> But the SoC is already specified in the root of the device tree in the
-> compatible string?
-> Why can't you just use of_machine_is_compatible inside your driver when
-> needed?
+> In light of the above let me know what you want to do.
 
-Use of of_machine_is_compatible in drivers will result in the same
-mess we had with machine_is_X defines pre-DT. It practically
-guarantees that you must update the driver for a new SoC (with
-fallback compatibles you don't). Plus the matching logic for
-of_machine_is_compatible is open coded logic in every driver which is
-worse IMO than having a standard match table.
-
->
-> Please explain what I'm missing.  I see other drivers already following the
-> of_machine_is_compatible
-> approach and it makes more sense to me than adding SoC specific compatible
-> strings into every
-> driver.
-
-If the IP blocks are all the same, you don't have to add them to any
-drivers, just add fallback compatibles.
+Well, if drivers don't use the string, then there is nothing to keep around.
 
 Rob
 --
