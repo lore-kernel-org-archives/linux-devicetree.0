@@ -1,32 +1,46 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/8] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Thu, 22 Jun 2017 16:09:17 -0500
-Message-ID: <20170622210917.ljbxkpaalckhegmq@rob-hp-laptop>
-References: <1498143276-7976-1-git-send-email-jacopo+renesas@jmondi.org>
- <1498143276-7976-3-git-send-email-jacopo+renesas@jmondi.org>
+Subject: Re: [PATCH 0/6] Update binding documentation for cp110 and ap806
+Date: Thu, 22 Jun 2017 16:14:56 -0500
+Message-ID: <20170622211456.rip2gveiprlfw3kj@rob-hp-laptop>
+References: <20170620083754.28053-1-gregory.clement@free-electrons.com>
+ <87k2463c66.fsf@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1498143276-7976-3-git-send-email-jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <87k2463c66.fsf-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, chris.brandt-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, aisheng.dong-3arQi8VN3Tc@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 04:54:30PM +0200, Jacopo Mondi wrote:
-> Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
-> controller.
+On Tue, Jun 20, 2017 at 05:34:57PM +0200, Gregory CLEMENT wrote:
+> Hi Rob, 
+>  
+>  On mar., juin 20 2017, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 > 
-> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
-> ---
->  .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 221 +++++++++++++++++++++
->  1 file changed, 221 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
+> > Hi Rob,
+> >
+> > As you know there were dependencies issue about the binding between my
+> > different series and you proposed yourself to apply them though the
+> > device tree subsystem: [1]
 
-Please add acks when posting new versions. It seems there are 2 more 
-lines here, but I have no idea what changed. I'm assuming it was minor 
-enough to retain my ack.
+I did, but ...
+
+> >
+> > All the driver parts have been merged so it's time merging the
+> > documentation.
+> 
+> I forgot to mentioned that this series is based on the clk-ap806-dt
+> stable branch:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-ap806-dt
+
+... that was to avoid cross tree dependencies. Now you're creating one. 
+Either Mike should take everything or drop this branch and I'll take it 
+too.
+
+And you missed my ack on patch 6.
 
 Rob
 --
