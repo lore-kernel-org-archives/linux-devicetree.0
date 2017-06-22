@@ -1,47 +1,51 @@
-From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RFC PATCH v3 3/6] ARM/arm64: dts: enable wakeup for cros-ec-spi
- devices
-Date: Thu, 22 Jun 2017 10:33:47 +0800
-Message-ID: <594B2C8B.3000401@rock-chips.com>
-References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com> <1498039313-24220-4-git-send-email-jeffy.chen@rock-chips.com> <CAJKOXPdL2CB9VWNo=it0dos-4hJYrgHUSZwcG1DS=9c+YxXzhQ@mail.gmail.com> <594A91C9.1090906@rock-chips.com> <20170621153632.7cajs5xwdmhdm2fg@kozik-lap>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt-bindings: iio: humidity: Add bindings for HTU21
+ and MS8607 sensors
+Date: Wed, 21 Jun 2017 22:05:13 -0500
+Message-ID: <CAL_JsqKDAPOqRepjRU9qrZQ-8_01JAfckP7G1EAjJi4t2UK7kg@mail.gmail.com>
+References: <1497374443-20935-1-git-send-email-manivannan.sadhasivam@linaro.org>
+ <20170618140511.kz6nvttypockcrfm@rob-hp-laptop> <20170621204050.75863dd5@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170621153632.7cajs5xwdmhdm2fg@kozik-lap>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170621204050.75863dd5-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter Meerwald <pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org>, William Markezana <william.markezana-ya7vCgA9bt58UrSeD/g0lQ@public.gmane.org>, ludovic.tancerel-sbt5i+FMW2pmsedzY7GhzwC/G2K4zDHf@public.gmane.org, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nicolas Dechesne <nicolas.dechesne-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
-
-thanx for noting that, will add it to next version :)
-
-
-On 06/21/2017 11:36 PM, Krzysztof Kozlowski wrote:
-> On Wed, Jun 21, 2017 at 11:33:29PM +0800, jeffy wrote:
->> Hi Krzysztof,
+On Wed, Jun 21, 2017 at 2:40 PM, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, 18 Jun 2017 09:05:11 -0500
+> Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+>> On Tue, Jun 13, 2017 at 10:50:43PM +0530, Manivannan Sadhasivam wrote:
+>> > Add device tree bindings for Measurement-Specialties HTU21 temperature & humidity sensor and humidity part of MS8607 sensor
+>> >
+>> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  Documentation/devicetree/bindings/iio/humidity/htu21.txt | 13 +++++++++++++
+>> >  1 file changed, 13 insertions(+)
+>> >  create mode 100644 Documentation/devicetree/bindings/iio/humidity/htu21.txt
+>> >
+>> > diff --git a/Documentation/devicetree/bindings/iio/humidity/htu21.txt b/Documentation/devicetree/bindings/iio/humidity/htu21.txt
+>> > new file mode 100644
+>> > index 0000000..97d7963
+>> > --- /dev/null
+>> > +++ b/Documentation/devicetree/bindings/iio/humidity/htu21.txt
+>> > @@ -0,0 +1,13 @@
+>> > +*HTU21 - Measurement-Specialties htu21 temperature & humidity sensor and humidity part of MS8607 sensor
 >>
->> thanx for your comment.
->>
->> On 06/21/2017 06:45 PM, Krzysztof Kozlowski wrote:
->>> On Wed, Jun 21, 2017 at 12:01 PM, Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org> wrote:
->>>> We used to enable wakeup for cros-ec-spi devices unconditionally.
->>>> Now we are using the more generic wakeup-source property to enable it.
->>>
->>> Using wakeup-source property is still enabling this unconditionally.
->>> What  do you exactly mean here?
->> i mean the wakeup-source is an optional property, we can disable wakeup by
->> not adding it.
+>> The binding should be for the device, not part of it. You should bind
+>> to a driver for MS8607 and then create 2 child devices for the humidity
+>> and temp sensors.
+> Hi Rob,
 >
-> Maybe mention this in commit msg? This removes any confusion. "Till now
-> the driver always enabled wakeup but now it supports wakeup property so
-> add it to keep same functionality."
->
-> Best regards,
-> Krzysztof
->
->
->
->
+> It's a bit of an oddity as we are look at package in package parts.
+> Really there are simply two parts here. There is no need to know
+> they are in the same package.  Obviously we 'could' describe this, but
+> it's no different form  mounting the chips next to each other on the
+> same bus sharing the same power rails.
+
+Okay, then it is fine as-is.
+
+Rob
