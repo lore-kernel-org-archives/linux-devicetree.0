@@ -1,122 +1,66 @@
-From: Boris Brezillon <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Thu, 22 Jun 2017 11:23:32 +0200
-Message-ID: <20170622112332.7ec7b65c@bbrezillon>
-References: <20170615204130.19255-1-eric@anholt.net>
- <20170615204130.19255-2-eric@anholt.net>
- <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
- <871sqkouvr.fsf@eliezer.anholt.net>
- <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
- <871sqe7ei0.fsf@eliezer.anholt.net>
- <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
- <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
+From: Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] arm: dts: mt2701: Add display bls related nodes
+ for MT2701
+Date: Thu, 22 Jun 2017 17:27:30 +0800
+Message-ID: <1498123650.25128.1.camel@mtksdaap41>
+References: <1498121019-21984-1-git-send-email-erin.lo@mediatek.com>
+         <1498121019-21984-4-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498121019-21984-4-git-send-email-erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAyMiBKdW4gMjAxNyAxMzo0Nzo0MyArMDUzMApBcmNoaXQgVGFuZWphIDxhcmNoaXR0
-QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKCj4gT24gMDYvMjIvMjAxNyAwMToyMCBQTSwgQmVuamFt
-aW4gR2FpZ25hcmQgd3JvdGU6Cj4gPiAyMDE3LTA2LTIwIDE5OjMxIEdNVCswMjowMCBFcmljIEFu
-aG9sdCA8ZXJpY0BhbmhvbHQubmV0PjogIAo+ID4+IEFyY2hpdCBUYW5lamEgPGFyY2hpdHRAY29k
-ZWF1cm9yYS5vcmc+IHdyaXRlczoKPiA+PiAgCj4gPj4+IE9uIDA2LzE2LzIwMTcgMDg6MTMgUE0s
-IEVyaWMgQW5ob2x0IHdyb3RlOiAgCj4gPj4+PiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVh
-dXJvcmEub3JnPiB3cml0ZXM6Cj4gPj4+PiAgCj4gPj4+Pj4gT24gMDYvMTYvMjAxNyAwMjoxMSBB
-TSwgRXJpYyBBbmhvbHQgd3JvdGU6ICAKPiA+Pj4+Pj4gSWYgdGhlIHBhbmVsLWJyaWRnZSBpcyBi
-ZWluZyBzZXQgdXAgYWZ0ZXIgdGhlIGRybV9tb2RlX2NvbmZpZ19yZXNldCgpLAo+ID4+Pj4+PiB0
-aGVuIHRoZSBjb25uZWN0b3IncyBzdGF0ZSB3b3VsZCBuZXZlciBnZXQgaW5pdGlhbGl6ZWQsIGFu
-ZCB3ZSdkCj4gPj4+Pj4+IGRlcmVmZXJlbmNlIHRoZSBOVUxMIGluIHRoZSBob3RwbHVnIHBhdGgu
-ICBXZSBhbHNvIG5lZWQgdG8gcmVnaXN0ZXIKPiA+Pj4+Pj4gdGhlIGNvbm5lY3Rvciwgc28gdGhh
-dCB1c2Vyc3BhY2UgY2FuIGdldCBhdCBpdC4KPiA+Pj4+Pj4gIAo+ID4+Pj4+Cj4gPj4+Pj4gU2hv
-dWxkbid0IHRoZSBLTVMgZHJpdmVyIG1ha2Ugc3VyZSB0aGUgcGFuZWwtYnJpZGdlIGlzIHNldCB1
-cCBiZWZvcmUKPiA+Pj4+PiBkcm1fbW9kZV9jb25maWdfcmVzZXQ/IElzIGl0IHRoZSBjYXNlIHdo
-ZW4gd2UncmUgaW5zZXJ0aW5nIHRoZQo+ID4+Pj4+IHBhbmVsLWJyaWRnZSBkcml2ZXIgYXMgYSBt
-b2R1bGU/Cj4gPj4+Pj4KPiA+Pj4+Pgo+ID4+Pj4+IEFsbCB0aGUgY29ubmVjdG9ycyB0aGF0IGhh
-dmUgYmVlbiBhZGRlZCBhcmUgcmVnaXN0ZXJlZCBhdXRvbWF0aWNhbGx5Cj4gPj4+Pj4gd2hlbiBk
-cm1fZGV2X3JlZ2lzdGVyKCkgaXMgY2FsbGVkIGJ5IHRoZSBLTVMgZHJpdmVyLiBSZWdpc3Rlcmlu
-ZyBhCj4gPj4+Pj4gY29ubmVjdG9yIGluIHRoZSBtaWRkbGUgb2Ygc2V0dGluZyB1cCBvdXIgZHJp
-dmVyIGlzIHByb25lIHRvIHJhY2UKPiA+Pj4+PiBjb25kaXRpb25zIGlmIHRoZSB1c2Vyc3BhY2Ug
-ZGVjaWRlcyB0byB1c2UgdGhlbSBpbW1lZGlhdGVseS4gIAo+ID4+Pj4KPiA+Pj4+IFllYWgsIHRo
-aXMgaXMgZml4aW5nIGluaXRpYWxpemluZyBwYW5lbF9icmlkZ2UgYXQgRFNJIGhvc3RfYXR0YWNo
-IHRpbWUsCj4gPj4+PiB3aGljaCBpbiB0aGUgY2FzZSBvZiBhIHBhbmVsIG1vZHVsZSB0aGF0IGNy
-ZWF0ZXMgdGhlIERTSSBkZXZpY2UKPiA+Pj4+IChhZHY3NTMzLXN0eWxlLCBsaWtlIHlvdSBzYWlk
-IEkgc2hvdWxkIHVzZSBhcyBhIHJlZmVyZW5jZSkgd2lsbCBiZSBhZnRlcgo+ID4+Pj4gZHJtX21v
-ZGVfY29uZmlnX3Jlc2V0KCkgYW5kIGRybV9kZXZfcmVnaXN0ZXIoKS4gIAo+ID4+Pgo+ID4+PiBP
-a2F5LiBJbiB0aGUgY2FzZSBvZiB0aGUgbXNtIGttcyBkcml2ZXIsIHdlIGRlZmVyIHByb2JlIHVu
-dGlsIHRoZQo+ID4+PiBhZHY3NTMzIG1vZHVsZSBpcyBpbnNlcnRlZCwgb25seSB0aGVuIHdlIHBy
-b2NlZWQgdG8gZHJtX21vZGVfY29uZmlnX3Jlc2V0KCkKPiA+Pj4gYW5kIGRybV9kZXZfcmVnaXN0
-ZXIoKS4gSSBhc3N1bWVkIHRoaXMgd2FzIHRoZSBnZW5lcmFsIHByYWN0aWNlIGZvbGxvd2VkIGJ5
-Cj4gPj4+IG1vc3Qga21zIGRyaXZlcnMuIEkuLGUgdGhlIGttcyBkcml2ZXIgZGVmZXJzIHByb2Jl
-IHVudGlsIGFsbCBjb25uZWN0b3IKPiA+Pj4gcmVsYXRlZCBtb2R1bGVzIGFyZSBpbnNlcnRlZCwg
-YW5kIG9ubHkgdGhlbiBwcm9jZWVkIHRvIGNyZWF0ZSBhIGRybSBkZXZpY2UuICAKPiA+Pgo+ID4+
-IFRoZSBwcm9ibGVtLCB0aG91Z2gsIGlzIHRoZSBwYW5lbCBkcml2ZXIgbmVlZHMgdGhlIE1JUEkg
-RFNJIGhvc3QgdG8KPiA+PiBleGlzdCB0byBjYWxsIG1pcGlfZHNpX2RldmljZV9yZWdpc3Rlcl9m
-dWxsKCkgZHVyaW5nIHRoZSBwcm9iZSBwcm9jZXNzLgo+ID4+IFRoZSBhZHY3NTMzIGRyaXZlciBn
-ZXRzIGFyb3VuZCB0aGlzIGJ5IHJlZ2lzdGVyaW5nIHRoZSBEU0kgZGV2aWNlIGluIHRoZQo+ID4+
-IGJyaWRnZSBhdHRhY2ggc3RlcCwgYnV0IGRybV9wYW5lbCBkb2Vzbid0IGhhdmUgYW4gYXR0YWNo
-IHN0ZXAuICAKPiAKPiBJJ20gbm90IHN1cmUgaG93IHdlIGNhbiBnZXQgYXJvdW5kIHRoaXMuIFdl
-IGhhZCBkaXNjdXNzaW9uIGFib3V0IHRoaXMgb24gaXJjCj4gcmVjZW50bHksIGJ1dCBjb3VsZG4n
-dCBjb21lIHVwIHdpdGggYSBnb29kIGNvbmNsdXNpb24uIFdlIGNvdWxkIGNvbWUgdXAgd2l0aCBh
-Cj4gcGFuZWxfYXR0YWNoKCkgY2FsbGJhY2sgdG8gbWFrZSBpdCBzaW1pbGFyIHRvIGJyaWRnZXMs
-IGJ1dCB0aGF0J3MganVzdCB1cyBhdm9pZGluZwo+IHRoZSByZWFsIGlzc3VlLgoKSG93IGFib3V0
-IG1ha2luZyBEU0kgZGV2IHJlZ2lzdHJhdGlvbiBmdWxseSBhc3luY2hyb25vdXMsIHRoYXQgaXMs
-IERTSQpkZXZzIGRlY2xhcmVkIGluIHRoZSBEVCB1bmRlciB0aGUgRFNJIGhvc3Qgbm9kZSB3aWxs
-IGJlCnJlZ2lzdGVyZWQvYXR0YWNoZWQgYXQgcHJvYmUgdGltZSwgYW5kIGRldnMgdXNpbmcgYW5v
-dGhlciBjb250cm9sIGJ1cwoobGlrZSB0aGUgYWR2NzUzMyBjb250cm9sbGVyIG92ZXIgaTJjKSB3
-aWxsIGJlIHJlZ2lzdGVyZWQgYWZ0ZXJ3YXJkcy4KClRoYXQgaW1wbGllcyBtb3ZpbmcgdGhlIGRy
-bV9icmlnZSByZWdpc3RyYXRpb24gbG9naWMgb3V0c2lkZSBvZiB0aGUgRFNJCmhvc3QgLT5wcm9i
-ZSgpIHBhdGguIFRoZSBpZGVhIHdvdWxkIGJlIHRvIGNoZWNrIGlmIGFsbCBkZXZzIGNvbm5lY3Rl
-ZAp0byB0aGUgRFNJIGJ1cyBhcmUgcmVhZHkgYXQgZHNpX2hvc3QtPmF0dGFjaCgpIHRpbWUuIElm
-IHRoZXkgYXJlLCB3ZQpjYW4gZmluYWxseSByZWdpc3RlciB0aGUgWFhYIC0+IERTSSBicmlkZ2Uu
-IElmIHRoZXkncmUgbm90IChiZWNhdXNlCnNvbWUgZGV2cyBjb25uZWN0ZWQgdG8gdGhlIERTSSBi
-dXMgaGF2ZSBub3QgYmVlbiBwcm9iZWQgeWV0KSwgdGhlbiB3ZQpkbyBub3QgcmVnaXN0ZXIgdGhl
-IGRybV9icmlkZ2UgYW5kIHdhaXQgZm9yIHRoZSBuZXh0IGRzaV9ob3N0LT5hdHRhY2goKQpldmVu
-dC4KCldpdGggdGhpcyBzb2x1dGlvbiwgSSB0aGluayB3ZSBjYW4gYXZvaWQgdGhlIGNoaWNrZW4m
-ZWdnIHByb2JsZW0gd2hlcmUKdGhlIGFkdjc1MzMgZGV2IGlzIHdhaXRpbmcgZm9yIHRoZSBEU0kg
-aG9zdCB0byBiZSBwcm9iZWQgdG8gYmUgYWJsZSB0bwpyZWdpc3RlciBhIERTSSBkZXYgd2l0aCBt
-aXBpX2RzaV9kZXZpY2VfcmVnaXN0ZXJfZnVsbCgpIGFuZCB0aGUgRFNJCmhvc3QgbmVlZHMgYWxs
-IGRldnMgdG8gYmUgcmVnaXN0ZXJlZCB0byBub3QgcmV0dXJuIC1FUFJPQkVfREVGRVIuCgo+IAo+
-ID4+Cj4gPj4gQW5vdGhlciBhbHRlcm5hdGl2ZSBpcyBteSBvcmlnaW5hbCB2ZXJzaW9uIG9mIHRo
-ZSBwYW5lbCBkcml2ZXIgdGhhdCB3YXMKPiA+PiBhIG1pcGlfZHNpX2RldmljZSBkcml2ZXIgdGhh
-dCByZWdpc3RlcmVkIHRoZSBwYW5lbCBkdXJpbmcgdGhlIERTSSBkZXZpY2UKPiA+PiBwcm9iZS4g
-IFRoYXQncyB3aHkgdmM0J3MgcGFuZWwgbG9va3VwIGlzIGR1cmluZyB0aGUgTUlQSSBEU0kgYXR0
-YWNoCj4gPj4gcGhhc2UsIGN1cnJlbnRseS4gIAo+ID4gICAKPiAKPiBUaGlzIHdvdWxkIHJlcXVp
-cmUgeW91IHRvIGhhdmUgYSBEU0kgZGV2aWNlIG5vZGUgaW4gRFQsIHJhdGhlciB0aGFuIGFuIGky
-Ywo+IG5vZGUsIHJpZ2h0PyBJIGRvbid0IGtub3cgaWYgd2Ugc2hvdWxkIGRvIHRoYXQgYmVjYXVz
-ZSBvZiBhIGxpbWl0YXRpb24gaW4KPiBvdXIgZHJtX21pcGlfZHNpIGFuZCBkcm1fcGFuZWwgZnJh
-bWV3b3Jrcy4KPiAKPiBEb2VzIGFueW9uZSBoYXZlIGJldHRlciBpZGVhcz8KCldlbGwsIHRoZXNl
-IG1peGVkLWJ1cyBjYXNlcyBhcmUgcmVhbGx5IHVucHJhY3RpY2FsIHRvIHJlcHJlc2VudCBpbiB0
-aGUKRFQgKGFuZCBhbHNvIG5vdCBlYXN5IHRvIGRlYWwgd2l0aCB0aGUgZGV2aWNlLW1vZGVsKS4g
-SSB1bmRlcnN0YW5kIHRoYXQKdGhlIGluaXRpYWwgc29sdXRpb24gd2FzIHRvIHB1dCB0aGUgZGV2
-aWNlIHVuZGVyIHRoZSBjb250cm9sLWJ1cywgYW5kCm5vdCB0aGUgZGF0YS1idXMsIGJ1dCB0aGVu
-IGl0IGxlYWRzIHRvIHRoZSBjdXJyZW50IHNpdHVhdGlvbiB3aGVyZSB3ZQpkb24ndCBrbm93IGV4
-YWN0bHkgd2hlbiB0aGluZ3MgYXJlIHJlYWR5IHRvIGJlIHVzZWQuCgpUaGVvcmV0aWNhbGx5LCB3
-ZSBzaG91bGQgd2FpdCBmb3IgYm90aCB0aGUgaTJjIGFuZCBEU0kgZW5kcyB0byBiZQphdHRhY2hl
-ZCB0byB0aGVpciByZXNwZWN0aXZlIGNvbnRyb2xsZXIgYmVmb3JlIHN0YXJ0aW5nIHVzaW5nIHRo
-ZQpkZXZpY2UuIEJ1dCB0aGF0IHJlcXVpcmVzIHJlcHJlc2VudGluZyB0aGluZ3Mgd2l0aCBhIDNy
-ZCBEVCBub2RlCmFnZ3JlZ2F0aW5nIGJvdGggY29tcG9uZW50czoKCglpMmMtYnVzIHsKCQkuLi4K
-CgkJYWR2NzUzM19pMmNAeHggewoJCQkuLi4KCQkJYWR2LGFkdjc1MzMtbWFzdGVyID0gPCZhZHY3
-NTMzPjsKCQl9OwoJfTsKCgkuLi4KCWRzaS1idXMgewoJCS4uLgoJCWFkdjc1MzNfZHNpOiBhZHY3
-NTMzX2RzaUB4eCB7CgkJCS4uLgoJCQlhZHYsYWR2NzUzMy1tYXN0ZXIgPSA8JmFkdjc1MzM+OwoJ
-CX07Cgl9OwoKCWFkdjc1MzM6IGFkdjc1MzMgewoJCS4uLgoJCWFkdixhZHY3NTMzLWRzaSA9IDwm
-YWR2NzUzM19kc2k+OwoJCWFkdixhZHY3NTMzLWkyYyA9IDwmYWR2NzUzM19pMmM+OwoJfTsKCgpJ
-IGd1ZXNzIHRoaXMga2luZCBvZiByZXByZXNlbnRhdGlvbiBoYXMgYWxyZWFkeSBiZWVuIGRpc2N1
-c3NlZCBhbmQKcmVqZWN0ZWQgZm9yIGdvb2QgcmVhc29ucyAobm90ZSB0aGF0IHdlIGNvdWxkIGFs
-c28gdXNlIE9GIGdyYXBoCnJlcHJlc2VudGF0aW9uIHRvIGxpbmsgYWR2NzUzMyBtYXN0ZXIgYW5k
-IGl0cyBjb21wb25lbnRzKS4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+On Thu, 2017-06-22 at 16:43 +0800, Erin Lo wrote:
+> From: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> 
+> This patch adds board related config for backlight
+> 
+> Signed-off-by: Weiqing Kong <weiqing.kong-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/mt2701-evb.dts | 29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+> index a483798..e49c2b7 100644
+> --- a/arch/arm/boot/dts/mt2701-evb.dts
+> +++ b/arch/arm/boot/dts/mt2701-evb.dts
+
+<...>
+
+> +
+> +&bls {
+> +	status = "okay";
+> +};
+> +
+> +&mmsys {
+> +	status = "okay";
+> +};
+> +
+> +&pio {
+> +	pwm_bls_gpio: pwm_bls_gpio {
+> +		pins_cmd_dat {
+> +			pinmux = <MT2701_PIN_208_AUD_EXT_CK1__FUNC_DISP_PWM>;
+> +		};
+> +	};
+>  };
+>  
+>  &auxadc {
+
+
+To help merge, I think this should be sorted according to name.
+
+Joe.C
+
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
