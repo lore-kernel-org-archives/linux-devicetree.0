@@ -1,85 +1,94 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v1 0/6] Add support of OV9655 camera
-Date: Thu, 22 Jun 2017 17:41:11 +0200
-Message-ID: <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Hugues Fruchet <hugues.fruchet@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick Fertre <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/8] dt-bindings: mfd: Add STM32 LPTimer binding
+Date: Thu, 22 Jun 2017 16:43:57 +0100
+Message-ID: <20170622154357.fedg2etrrqdslnr7@dell>
+References: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com>
+ <1498055415-31513-2-git-send-email-fabrice.gasnier@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1498055415-31513-2-git-send-email-fabrice.gasnier@st.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 21 Jun 2017, Fabrice Gasnier wrote:
 
-> Am 22.06.2017 um 17:05 schrieb Hugues Fruchet <hugues.fruchet@st.com>:
+> Add documentation for STMicroelectronics STM32 Low-Power Timer binding.
 > 
-> This patchset enables OV9655 camera support.
-> 
-> OV9655 support has been tested using STM32F4DIS-CAM extension board
-> plugged on connector P1 of STM32F746G-DISCO board.
-> Due to lack of OV9650/52 hardware support, the modified related code
-> could not have been checked for non-regression.
-> 
-> First patches upgrade current support of OV9650/52 to prepare then
-> introduction of OV9655 variant patch.
-> Because of OV9655 register set slightly different from OV9650/9652,
-> not all of the driver features are supported (controls). Supported
-> resolutions are limited to VGA, QVGA, QQVGA.
-> Supported format is limited to RGB565.
-> Controls are limited to color bar test pattern for test purpose.
-> 
-> OV9655 initial support is based on a driver written by H. Nikolaus Schaller [1].
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+> Changes in v2:
+> - Lee's comments: s/Low Power/Low-Power/, remove 0x in example, improve
+>   properties descriptions
+> ---
+>  .../devicetree/bindings/mfd/stm32-lptimer.txt      | 48 ++++++++++++++++++++++
+>  1 file changed, 48 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
 
-Great!
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
+  
+> diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+> new file mode 100644
+> index 0000000..af859c8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
+> @@ -0,0 +1,48 @@
+> +STMicroelectronics STM32 Low-Power Timer
+> +
+> +The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
+> +functions:
+> +- PWM output (with programmable prescaler, configurable polarity)
+> +- Quadrature encoder, counter
+> +- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
+> +
+> +Required properties:
+> +- compatible:		Must be "st,stm32-lptimer".
+> +- reg:			Offset and length of the device's register set.
+> +- clocks:		Phandle to the clock used by the LP Timer module.
+> +- clock-names:		Must be "mux".
+> +- #address-cells:	Should be '<1>'.
+> +- #size-cells:		Should be '<0>'.
+> +
+> +Optional subnodes:
+> +- pwm:			See ../pwm/pwm-stm32-lp.txt
+> +- counter:		See ../iio/timer/stm32-lptimer-cnt.txt
+> +- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
+> +
+> +Example:
+> +
+> +	lptimer1: lptimer@40002400 {
+> +		compatible = "st,stm32-lptimer";
+> +		reg = <0x40002400 0x400>;
+> +		clocks = <&timer_clk>;
+> +		clock-names = "mux";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pwm {
+> +			compatible = "st,stm32-pwm-lp";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&lppwm1_pins>;
+> +		};
+> +
+> +		trigger@0 {
+> +			compatible = "st,stm32-lptimer-trigger";
+> +			reg = <0>;
+> +		};
+> +
+> +		counter {
+> +			compatible = "st,stm32-lptimer-counter";
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&lptim1_in_pins>;
+> +		};
+> +	};
 
-I will test as soon as possible.
-
-> OV9655 registers sequences come from STM32CubeF7 embedded software [2].
-
-There is also a preliminary data sheet, e.g. here:
-
-http://electricstuff.co.uk/OV9655-datasheet-annotated.pdf
-
-> 
-> [1] http://git.goldelico.com/?p=gta04-kernel.git;a=shortlog;h=refs/heads/work/hns/video/ov9655
-> [2] https://developer.mbed.org/teams/ST/code/BSP_DISCO_F746NG/file/e1d9da7fe856/Drivers/BSP/Components/ov9655/ov9655.c
-> 
-> ===========
-> = history =
-> ===========
-> version 1:
->  - Initial submission.
-> 
-> H. Nikolaus Schaller (1):
->  DT bindings: add bindings for ov965x camera module
-> 
-> Hugues Fruchet (5):
->  [media] ov9650: add device tree support
->  [media] ov9650: select the nearest higher resolution
->  [media] ov9650: use write_array() for resolution sequences
->  [media] ov9650: add multiple variant support
->  [media] ov9650: add support of OV9655 variant
-> 
-> .../devicetree/bindings/media/i2c/ov965x.txt       |  37 +
-> drivers/media/i2c/Kconfig                          |   6 +-
-> drivers/media/i2c/ov9650.c                         | 792 +++++++++++++++++----
-> 3 files changed, 704 insertions(+), 131 deletions(-)
-> create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
-> 
-> -- 
-> 1.9.1
-> 
-
-BR and thanks,
-Nikolaus Schaller
+-- 
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
