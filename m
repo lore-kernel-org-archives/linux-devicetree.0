@@ -1,7 +1,7 @@
 From: Eddie James <eajames@linux.vnet.ibm.com>
-Subject: [PATCH 1/7] drivers/hwmon: Add On-Chip Controller (OCC) hwmon driver
-Date: Thu, 22 Jun 2017 17:48:30 -0500
-Message-ID: <1498171716-26620-2-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: [PATCH 2/7] drivers/hwmon/occ: Add command transport method for P8 and P9
+Date: Thu, 22 Jun 2017 17:48:31 -0500
+Message-ID: <1498171716-26620-3-git-send-email-eajames@linux.vnet.ibm.com>
 References: <1498171716-26620-1-git-send-email-eajames@linux.vnet.ibm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1498171716-26620-1-git-send-email-eajames@linux.vnet.ibm.com>
@@ -12,418 +12,305 @@ List-Id: devicetree@vger.kernel.org
 
 From: "Edward A. James" <eajames@us.ibm.com>
 
-The OCC is a device embedded on a POWER processor that collects and
-aggregates sensor data from the processor and system. The OCC can
-provide the raw sensor data as well as perform thermal and power
-management on the system.
-
-This driver provides a hwmon interface to the OCC from a service
-processor (e.g. a BMC). The driver supports both POWER8 and POWER9 OCCs.
-Communications with the POWER8 OCC are established over standard I2C
-bus. The driver communicates with the POWER9 OCC through the FSI-based
-OCC driver, which handles the lower-level communication details.
-
-This patch lays out the structure of the OCC hwmon driver. There are two
-platform drivers, one each for P8 and P9 OCCs. These are probed through
-the I2C tree and the FSI-based OCC driver, respectively. The patch also
-defines the first common structures and methods between the two OCC
-versions.
+For the P8 OCC, add the procedure to send a command to the OCC over I2C
+bus. This involves writing the OCC command registers with serial
+communication operations (SCOMs) interpreted by the I2C slave. For the
+P9 OCC, add a procedure to use the OCC in-kernel API to send a command
+to the OCC through the SBE engine.
 
 Signed-off-by: Edward A. James <eajames@us.ibm.com>
 ---
- .../devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt   | 18 ++++++
- .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   | 25 ++++++++
- drivers/hwmon/Kconfig                              |  2 +
- drivers/hwmon/Makefile                             |  1 +
- drivers/hwmon/occ/Kconfig                          | 28 +++++++++
- drivers/hwmon/occ/Makefile                         | 11 ++++
- drivers/hwmon/occ/common.c                         | 43 +++++++++++++
- drivers/hwmon/occ/common.h                         | 41 +++++++++++++
- drivers/hwmon/occ/p8_i2c.c                         | 70 ++++++++++++++++++++++
- drivers/hwmon/occ/p9_sbe.c                         | 65 ++++++++++++++++++++
- 10 files changed, 304 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
- create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
- create mode 100644 drivers/hwmon/occ/Kconfig
- create mode 100644 drivers/hwmon/occ/Makefile
- create mode 100644 drivers/hwmon/occ/common.c
- create mode 100644 drivers/hwmon/occ/common.h
- create mode 100644 drivers/hwmon/occ/p8_i2c.c
- create mode 100644 drivers/hwmon/occ/p9_sbe.c
+ drivers/hwmon/occ/common.h |  13 ++++
+ drivers/hwmon/occ/p8_i2c.c | 166 ++++++++++++++++++++++++++++++++++++++++++++-
+ drivers/hwmon/occ/p9_sbe.c |  66 +++++++++++++++++-
+ 3 files changed, 243 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
-new file mode 100644
-index 0000000..0ecebb7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
-@@ -0,0 +1,18 @@
-+Device-tree bindings for FSI-based On-Chip Controller hwmon driver
-+------------------------------------------------------------------
-+
-+This node MUST be a child node of an OCC driver node.
-+
-+Required properties:
-+ - compatible = "ibm,p9-occ-hwmon";
-+
-+Examples:
-+
-+    occ@1 {
-+        compatible = "ibm,p9-occ";
-+        reg = <1>;
-+
-+        occ-hwmon@1 {
-+            compatible = "ibm,p9-occ-hwmon";
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt b/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
-new file mode 100644
-index 0000000..8c765d0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
-@@ -0,0 +1,25 @@
-+Device-tree bindings for I2C-based On-Chip Controller hwmon driver
-+------------------------------------------------------------------
-+
-+Required properties:
-+ - compatible = "ibm,p8-occ-hwmon";
-+ - reg = <I2C address>;			: I2C bus address
-+
-+Examples:
-+
-+    i2c-bus@100 {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        clock-frequency = <100000>;
-+        < more properties >
-+
-+        occ-hwmon@1 {
-+            compatible = "ibm,p8-occ-hwmon";
-+            reg = <0x50>;
-+        };
-+
-+        occ-hwmon@2 {
-+            compatible = "ibm,p8-occ-hwmon";
-+            reg = <0x51>;
-+        };
-+    };
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 5ef2814..08add7b 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1250,6 +1250,8 @@ config SENSORS_NSA320
- 	  This driver can also be built as a module. If so, the module
- 	  will be called nsa320-hwmon.
+diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
+index dca642a..0c3f26f 100644
+--- a/drivers/hwmon/occ/common.h
++++ b/drivers/hwmon/occ/common.h
+@@ -15,6 +15,19 @@
  
-+source drivers/hwmon/occ/Kconfig
-+
- config SENSORS_PCF8591
- 	tristate "Philips PCF8591 ADC/DAC"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index d4641a9..0b342d0 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -170,6 +170,7 @@ obj-$(CONFIG_SENSORS_WM831X)	+= wm831x-hwmon.o
- obj-$(CONFIG_SENSORS_WM8350)	+= wm8350-hwmon.o
- obj-$(CONFIG_SENSORS_XGENE)	+= xgene-hwmon.o
+ #define OCC_RESP_DATA_BYTES		4089
  
-+obj-$(CONFIG_SENSORS_OCC)	+= occ/
- obj-$(CONFIG_PMBUS)		+= pmbus/
++#define OCC_TIMEOUT_MS			5000
++#define OCC_CMD_IN_PRG_MS		100
++
++/* OCC return codes */
++#define RESP_RETURN_CMD_IN_PRG		0xFF
++#define RESP_RETURN_SUCCESS		0
++#define RESP_RETURN_CMD_INVAL		0x11
++#define RESP_RETURN_CMD_LEN		0x12
++#define RESP_RETURN_DATA_INVAL		0x13
++#define RESP_RETURN_CHKSUM		0x14
++#define RESP_RETURN_OCC_ERR		0x15
++#define RESP_RETURN_STATE		0x16
++
+ /* Same response format for all OCC versions.
+  * Allocate the largest possible response.
+  */
+diff --git a/drivers/hwmon/occ/p8_i2c.c b/drivers/hwmon/occ/p8_i2c.c
+index 5075146..d6d70ce 100644
+--- a/drivers/hwmon/occ/p8_i2c.c
++++ b/drivers/hwmon/occ/p8_i2c.c
+@@ -7,6 +7,7 @@
+  * (at your option) any later version.
+  */
  
- ccflags-$(CONFIG_HWMON_DEBUG_CHIP) := -DDEBUG
-diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
-new file mode 100644
-index 0000000..0501280
---- /dev/null
-+++ b/drivers/hwmon/occ/Kconfig
-@@ -0,0 +1,28 @@
-+#
-+# On-Chip Controller configuration
-+#
-+
-+config SENSORS_OCC
-+	tristate "POWER On-Chip Controller"
-+	---help---
-+	This option enables support for monitoring a variety of system sensors
-+	provided by the On-Chip Controller (OCC) on a POWER processor.
-+
-+	This driver can also be built as a module. If so, the module will be
-+	called occ-hwmon.
-+
-+config SENSORS_OCC_P8_I2C
-+	bool "POWER8 OCC through I2C"
-+	depends on I2C && SENSORS_OCC
-+	---help---
-+	This option enables support for monitoring sensors provided by the OCC
-+	on a POWER8 processor. Communications with the OCC are established
-+	through I2C bus.
-+
-+config SENSORS_OCC_P9_SBE
-+	bool "POWER9 OCC through SBE"
-+	depends on OCCFIFO && SENSORS_OCC
-+	---help---
-+	This option enables support for monitoring sensors provided by the OCC
-+	on a POWER9 processor. Communications with the OCC are established
-+	through SBE engine on an FSI bus.
-diff --git a/drivers/hwmon/occ/Makefile b/drivers/hwmon/occ/Makefile
-new file mode 100644
-index 0000000..ab5c3e9
---- /dev/null
-+++ b/drivers/hwmon/occ/Makefile
-@@ -0,0 +1,11 @@
-+occ-hwmon-objs := common.o
-+
-+ifeq ($(CONFIG_SENSORS_OCC_P9_SBE), y)
-+occ-hwmon-objs += p9_sbe.o
-+endif
-+
-+ifeq ($(CONFIG_SENSORS_OCC_P8_I2C), y)
-+occ-hwmon-objs += p8_i2c.o
-+endif
-+
-+obj-$(CONFIG_SENSORS_OCC) += occ-hwmon.o
-diff --git a/drivers/hwmon/occ/common.c b/drivers/hwmon/occ/common.c
-new file mode 100644
-index 0000000..60c808c
---- /dev/null
-+++ b/drivers/hwmon/occ/common.c
-@@ -0,0 +1,43 @@
-+/*
-+ * Copyright 2017 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include "common.h"
-+#include <linux/hwmon.h>
-+
-+static int occ_poll(struct occ *occ)
++#include <asm/unaligned.h>
+ #include "common.h"
+ #include <linux/i2c.h>
+ #include <linux/init.h>
+@@ -19,9 +20,172 @@ struct p8_i2c_occ {
+ 
+ #define to_p8_i2c_occ(x)	container_of((x), struct p8_i2c_occ, occ)
+ 
++static int p8_i2c_occ_getscom(struct i2c_client *client, u32 address, u8 *data)
 +{
-+	u16 checksum = occ->poll_cmd_data + 1;
-+	u8 cmd[8];
++	ssize_t rc;
++	__be64 buf_be;
++	u64 buf;
++	struct i2c_msg msgs[2];
 +
-+	/* big endian */
-+	cmd[0] = 0;			/* sequence number */
-+	cmd[1] = 0;			/* cmd type */
-+	cmd[2] = 0;			/* data length msb */
-+	cmd[3] = 1;			/* data length lsb */
-+	cmd[4] = occ->poll_cmd_data;	/* data */
-+	cmd[5] = checksum >> 8;		/* checksum msb */
-+	cmd[6] = checksum & 0xFF;	/* checksum lsb */
-+	cmd[7] = 0;
++	/* p8 i2c slave requires shift */
++	address <<= 1;
 +
-+	return occ->send_cmd(occ, cmd);
++	msgs[0].addr = client->addr;
++	msgs[0].flags = client->flags & I2C_M_TEN;
++	msgs[0].len = sizeof(u32);
++	msgs[0].buf = (char *)&address;
++
++
++	msgs[1].addr = client->addr;
++	msgs[1].flags = (client->flags & I2C_M_TEN) | I2C_M_RD;
++	msgs[1].len = sizeof(u64);
++	msgs[1].buf = (char *)&buf_be;
++
++	rc = i2c_transfer(client->adapter, msgs, 2);
++	if (rc < 0)
++		return rc;
++
++	buf = be64_to_cpu(buf_be);
++	memcpy(data, &buf, sizeof(u64));
++
++	return 0;
 +}
 +
-+int occ_setup(struct occ *occ, const char *name)
++static int p8_i2c_occ_putscom(struct i2c_client *client, u32 address, u8 *data)
 +{
-+	int rc;
++	u32 buf[3];
++	ssize_t rc;
 +
-+	rc = occ_poll(occ);
++	/* p8 i2c slave requires shift */
++	address <<= 1;
++
++	buf[0] = address;
++	memcpy(&buf[1], &data[4], sizeof(u32));
++	memcpy(&buf[2], data, sizeof(u32));
++
++	rc = i2c_master_send(client, (const char *)buf, sizeof(buf));
++	if (rc < 0)
++		return rc;
++	else if (rc != sizeof(buf))
++		return -EIO;
++
++	return 0;
++}
++
++static int p8_i2c_occ_putscom_u32(struct i2c_client *client, u32 address,
++				  u32 data0, u32 data1)
++{
++	u8 buf[8];
++
++	memcpy(buf, &data0, 4);
++	memcpy(buf + 4, &data1, 4);
++
++	return p8_i2c_occ_putscom(client, address, buf);
++}
++
++static int p8_i2c_occ_putscom_be(struct i2c_client *client, u32 address,
++				 u8 *data)
++{
++	__be32 data0, data1;
++
++	memcpy(&data0, data, 4);
++	memcpy(&data1, data + 4, 4);
++
++	return p8_i2c_occ_putscom_u32(client, address, be32_to_cpu(data0),
++				      be32_to_cpu(data1));
++}
++
+ static int p8_i2c_occ_send_cmd(struct occ *occ, u8 *cmd)
+ {
+-	return -EOPNOTSUPP;
++	int i, rc;
++	unsigned long start;
++	u16 data_length;
++	struct p8_i2c_occ *p8_i2c_occ = to_p8_i2c_occ(occ);
++	struct i2c_client *client = p8_i2c_occ->client;
++	struct occ_response *resp = &occ->resp;
++
++	start = jiffies;
++
++	/* set sram address for command */
++	rc = p8_i2c_occ_putscom_u32(client, 0x6B070, 0xFFFF6000, 0);
++	if (rc)
++		goto err;
++
++	/* write command (must already be BE), i2c expects cpu-endian */
++	rc = p8_i2c_occ_putscom_be(client, 0x6B075, cmd);
++	if (rc)
++		goto err;
++
++	/* trigger OCC attention */
++	rc = p8_i2c_occ_putscom_u32(client, 0x6B035, 0x20010000, 0);
++	if (rc)
++		goto err;
++
++retry:
++	/* set sram address for response */
++	rc = p8_i2c_occ_putscom_u32(client, 0x6B070, 0xFFFF7000, 0);
++	if (rc)
++		goto err;
++
++	/* read response */
++	rc = p8_i2c_occ_getscom(client, 0x6B075, (u8 *)resp);
++	if (rc)
++		goto err;
++
++	/* check the OCC response */
++	switch (resp->return_status) {
++	case RESP_RETURN_CMD_IN_PRG:
++		if (time_after(jiffies,
++			       start + msecs_to_jiffies(OCC_TIMEOUT_MS)))
++			rc = -EALREADY;
++		else {
++			set_current_state(TASK_INTERRUPTIBLE);
++			schedule_timeout(msecs_to_jiffies(OCC_CMD_IN_PRG_MS));
++
++			goto retry;
++		}
++		break;
++	case RESP_RETURN_SUCCESS:
++		rc = 0;
++		break;
++	case RESP_RETURN_CMD_INVAL:
++	case RESP_RETURN_CMD_LEN:
++	case RESP_RETURN_DATA_INVAL:
++	case RESP_RETURN_CHKSUM:
++		rc = -EINVAL;
++		break;
++	case RESP_RETURN_OCC_ERR:
++		rc = -EREMOTE;
++		break;
++	default:
++		rc = -EFAULT;
++	}
++
 +	if (rc < 0) {
-+		dev_err(occ->bus_dev, "failed to get OCC poll response: %d\n",
-+			rc);
++		dev_warn(&client->dev, "occ bad response: %d\n",
++			 resp->return_status);
++		return rc;
++	}
++
++	data_length = get_unaligned_be16(&resp->data_length_be);
++	if (data_length > OCC_RESP_DATA_BYTES) {
++		dev_warn(&client->dev, "occ bad data length: %d\n",
++			 data_length);
++		return -EDOM;
++	}
++
++	/* read remaining response */
++	for (i = 8; i < data_length + 7; i += 8) {
++		rc = p8_i2c_occ_getscom(client, 0x6B075, ((u8 *)resp) + i);
++		if (rc)
++			goto err;
++	}
++
++	return data_length + 7;
++
++err:
++	dev_err(&client->dev, "i2c scom op failed rc: %d\n", rc);
++	return rc;
+ }
+ 
+ static int p8_i2c_occ_probe(struct i2c_client *client,
+diff --git a/drivers/hwmon/occ/p9_sbe.c b/drivers/hwmon/occ/p9_sbe.c
+index 0cef428..981c53f 100644
+--- a/drivers/hwmon/occ/p9_sbe.c
++++ b/drivers/hwmon/occ/p9_sbe.c
+@@ -22,7 +22,71 @@ struct p9_sbe_occ {
+ 
+ static int p9_sbe_occ_send_cmd(struct occ *occ, u8 *cmd)
+ {
+-	return -EOPNOTSUPP;
++	int rc;
++	unsigned long start;
++	struct occ_client *client;
++	struct occ_response *resp = &occ->resp;
++	struct p9_sbe_occ *p9_sbe_occ = to_p9_sbe_occ(occ);
++
++	start = jiffies;
++
++retry:
++	client = occ_drv_open(p9_sbe_occ->sbe, 0);
++	if (!client)
++		return -ENODEV;
++
++	/* skip first byte (sequence number), OCC driver handles it */
++	rc = occ_drv_write(client, (const char *)&cmd[1], 7);
++	if (rc < 0)
++		goto err;
++
++	rc = occ_drv_read(client, (char *)resp, sizeof(*resp));
++	if (rc < 0)
++		goto err;
++
++	occ_drv_release(client);
++
++	/* check the OCC response */
++	switch (resp->return_status) {
++	case RESP_RETURN_CMD_IN_PRG:
++		if (time_after(jiffies,
++			       start + msecs_to_jiffies(OCC_TIMEOUT_MS)))
++			rc = -EALREADY;
++		else {
++			set_current_state(TASK_INTERRUPTIBLE);
++			schedule_timeout(msecs_to_jiffies(OCC_CMD_IN_PRG_MS));
++
++			goto retry;
++		}
++		break;
++	case RESP_RETURN_SUCCESS:
++		rc = 0;
++		break;
++	case RESP_RETURN_CMD_INVAL:
++	case RESP_RETURN_CMD_LEN:
++	case RESP_RETURN_DATA_INVAL:
++	case RESP_RETURN_CHKSUM:
++		rc = -EINVAL;
++		break;
++	case RESP_RETURN_OCC_ERR:
++		rc = -EREMOTE;
++		break;
++	default:
++		rc = -EFAULT;
++	}
++
++	if (rc < 0) {
++		dev_warn(occ->bus_dev, "occ bad response: %d\n",
++			 resp->return_status);
 +		return rc;
 +	}
 +
 +	return 0;
-+}
-diff --git a/drivers/hwmon/occ/common.h b/drivers/hwmon/occ/common.h
-new file mode 100644
-index 0000000..dca642a
---- /dev/null
-+++ b/drivers/hwmon/occ/common.h
-@@ -0,0 +1,41 @@
-+/*
-+ * Copyright 2017 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
 +
-+#ifndef OCC_COMMON_H
-+#define OCC_COMMON_H
-+
-+#include <linux/hwmon-sysfs.h>
-+#include <linux/sysfs.h>
-+
-+#define OCC_RESP_DATA_BYTES		4089
-+
-+/* Same response format for all OCC versions.
-+ * Allocate the largest possible response.
-+ */
-+struct occ_response {
-+	u8 seq_no;
-+	u8 cmd_type;
-+	u8 return_status;
-+	u16 data_length_be;
-+	u8 data[OCC_RESP_DATA_BYTES];
-+	u16 checksum_be;
-+} __packed;
-+
-+struct occ {
-+	struct device *bus_dev;
-+
-+	struct occ_response resp;
-+
-+	u8 poll_cmd_data;		/* to perform OCC poll command */
-+	int (*send_cmd)(struct occ *occ, u8 *cmd);
-+};
-+
-+int occ_setup(struct occ *occ, const char *name);
-+
-+#endif /* OCC_COMMON_H */
-diff --git a/drivers/hwmon/occ/p8_i2c.c b/drivers/hwmon/occ/p8_i2c.c
-new file mode 100644
-index 0000000..5075146
---- /dev/null
-+++ b/drivers/hwmon/occ/p8_i2c.c
-@@ -0,0 +1,70 @@
-+/*
-+ * Copyright 2017 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include "common.h"
-+#include <linux/i2c.h>
-+#include <linux/init.h>
-+#include <linux/module.h>
-+
-+struct p8_i2c_occ {
-+	struct occ occ;
-+	struct i2c_client *client;
-+};
-+
-+#define to_p8_i2c_occ(x)	container_of((x), struct p8_i2c_occ, occ)
-+
-+static int p8_i2c_occ_send_cmd(struct occ *occ, u8 *cmd)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int p8_i2c_occ_probe(struct i2c_client *client,
-+			    const struct i2c_device_id *id)
-+{
-+	struct occ *occ;
-+	struct p8_i2c_occ *p8_i2c_occ = devm_kzalloc(&client->dev,
-+						     sizeof(*p8_i2c_occ),
-+						     GFP_KERNEL);
-+	if (!p8_i2c_occ)
-+		return -ENOMEM;
-+
-+	p8_i2c_occ->client = client;
-+	occ = &p8_i2c_occ->occ;
-+	occ->bus_dev = &client->dev;
-+	dev_set_drvdata(&client->dev, occ);
-+
-+	occ->poll_cmd_data = 0x10;		/* P8 OCC poll data */
-+	occ->send_cmd = p8_i2c_occ_send_cmd;
-+
-+	return occ_setup(occ, "p8_occ");
-+}
-+
-+static const struct of_device_id p8_i2c_occ_of_match[] = {
-+	{ .compatible = "ibm,p8-occ-hwmon" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, p8_i2c_occ_of_match);
-+
-+static const unsigned short p8_i2c_occ_addr[] = { 0x50, 0x51, I2C_CLIENT_END };
-+
-+static struct i2c_driver p8_i2c_occ_driver = {
-+	.class = I2C_CLASS_HWMON,
-+	.driver = {
-+		.name = "occ-hwmon",
-+		.of_match_table = p8_i2c_occ_of_match,
-+	},
-+	.probe = p8_i2c_occ_probe,
-+	.address_list = p8_i2c_occ_addr,
-+};
-+
-+module_i2c_driver(p8_i2c_occ_driver);
-+
-+MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-+MODULE_DESCRIPTION("BMC P8 OCC hwmon driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/hwmon/occ/p9_sbe.c b/drivers/hwmon/occ/p9_sbe.c
-new file mode 100644
-index 0000000..0cef428
---- /dev/null
-+++ b/drivers/hwmon/occ/p9_sbe.c
-@@ -0,0 +1,65 @@
-+/*
-+ * Copyright 2017 IBM Corp.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+#include "common.h"
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/occ.h>
-+
-+struct p9_sbe_occ {
-+	struct occ occ;
-+	struct device *sbe;
-+};
-+
-+#define to_p9_sbe_occ(x)	container_of((x), struct p9_sbe_occ, occ)
-+
-+static int p9_sbe_occ_send_cmd(struct occ *occ, u8 *cmd)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static int p9_sbe_occ_probe(struct platform_device *pdev)
-+{
-+	struct occ *occ;
-+	struct p9_sbe_occ *p9_sbe_occ = devm_kzalloc(&pdev->dev,
-+						     sizeof(*p9_sbe_occ),
-+						     GFP_KERNEL);
-+	if (!p9_sbe_occ)
-+		return -ENOMEM;
-+
-+	p9_sbe_occ->sbe = pdev->dev.parent;
-+	occ = &p9_sbe_occ->occ;
-+	occ->bus_dev = &pdev->dev;
-+	platform_set_drvdata(pdev, occ);
-+
-+	occ->poll_cmd_data = 0x20;		/* P9 OCC poll data */
-+	occ->send_cmd = p9_sbe_occ_send_cmd;
-+
-+	return occ_setup(occ, "p9_occ");
-+}
-+
-+static const struct of_device_id p9_sbe_occ_of_match[] = {
-+	{ .compatible = "ibm,p9-occ-hwmon" },
-+	{ },
-+};
-+
-+static struct platform_driver p9_sbe_occ_driver = {
-+	.driver = {
-+		.name = "occ-hwmon",
-+		.of_match_table	= p9_sbe_occ_of_match,
-+	},
-+	.probe	= p9_sbe_occ_probe,
-+};
-+
-+module_platform_driver(p9_sbe_occ_driver);
-+
-+MODULE_AUTHOR("Eddie James <eajames@us.ibm.com>");
-+MODULE_DESCRIPTION("BMC P9 OCC hwmon driver");
-+MODULE_LICENSE("GPL");
++err:
++	occ_drv_release(client);
++	dev_err(occ->bus_dev, "occ bus op failed rc: %d\n", rc);
++	return rc;
+ }
+ 
+ static int p9_sbe_occ_probe(struct platform_device *pdev)
 -- 
 1.8.3.1
