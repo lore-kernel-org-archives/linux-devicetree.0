@@ -1,7 +1,7 @@
-From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Boris Brezillon <boris.brezillon@free-electrons.com>
 Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Thu, 22 Jun 2017 15:16:47 +0200
-Message-ID: <004fe335-3f36-38e6-7a3e-0ad0623b29cf@samsung.com>
+Date: Thu, 22 Jun 2017 15:34:35 +0200
+Message-ID: <20170622153435.556fdaef@bbrezillon>
 References: <20170615204130.19255-1-eric@anholt.net>
  <20170615204130.19255-2-eric@anholt.net>
  <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
@@ -14,125 +14,134 @@ References: <20170615204130.19255-1-eric@anholt.net>
  <20170622112332.7ec7b65c@bbrezillon>
  <7ce4f741-309a-2eaa-381c-8033f089651a@samsung.com>
  <20170622144150.1663f649@bbrezillon>
+ <004fe335-3f36-38e6-7a3e-0ad0623b29cf@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20170622144150.1663f649@bbrezillon>
-Content-language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <004fe335-3f36-38e6-7a3e-0ad0623b29cf@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22.06.2017 14:41, Boris Brezillon wrote:
-> On Thu, 22 Jun 2017 14:29:07 +0200
-> Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->
->> On 22.06.2017 11:23, Boris Brezillon wrote:
->>> On Thu, 22 Jun 2017 13:47:43 +0530
->>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
->>>  
->>>> On 06/22/2017 01:20 PM, Benjamin Gaignard wrote:  
->>>>> 2017-06-20 19:31 GMT+02:00 Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>:    
->>>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>>>>>    
->>>>>>> On 06/16/2017 08:13 PM, Eric Anholt wrote:    
->>>>>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
->>>>>>>>    
->>>>>>>>> On 06/16/2017 02:11 AM, Eric Anholt wrote:    
->>>>>>>>>> If the panel-bridge is being set up after the drm_mode_config_reset(),
->>>>>>>>>> then the connector's state would never get initialized, and we'd
->>>>>>>>>> dereference the NULL in the hotplug path.  We also need to register
->>>>>>>>>> the connector, so that userspace can get at it.
->>>>>>>>>>    
->>>>>>>>> Shouldn't the KMS driver make sure the panel-bridge is set up before
->>>>>>>>> drm_mode_config_reset? Is it the case when we're inserting the
->>>>>>>>> panel-bridge driver as a module?
->>>>>>>>>
->>>>>>>>>
->>>>>>>>> All the connectors that have been added are registered automatically
->>>>>>>>> when drm_dev_register() is called by the KMS driver. Registering a
->>>>>>>>> connector in the middle of setting up our driver is prone to race
->>>>>>>>> conditions if the userspace decides to use them immediately.    
->>>>>>>> Yeah, this is fixing initializing panel_bridge at DSI host_attach time,
->>>>>>>> which in the case of a panel module that creates the DSI device
->>>>>>>> (adv7533-style, like you said I should use as a reference) will be after
->>>>>>>> drm_mode_config_reset() and drm_dev_register().    
->>>>>>> Okay. In the case of the msm kms driver, we defer probe until the
->>>>>>> adv7533 module is inserted, only then we proceed to drm_mode_config_reset()
->>>>>>> and drm_dev_register(). I assumed this was the general practice followed by
->>>>>>> most kms drivers. I.,e the kms driver defers probe until all connector
->>>>>>> related modules are inserted, and only then proceed to create a drm device.    
->>>>>> The problem, though, is the panel driver needs the MIPI DSI host to
->>>>>> exist to call mipi_dsi_device_register_full() during the probe process.
->>>>>> The adv7533 driver gets around this by registering the DSI device in the
->>>>>> bridge attach step, but drm_panel doesn't have an attach step.    
->>>> I'm not sure how we can get around this. We had discussion about this on irc
->>>> recently, but couldn't come up with a good conclusion. We could come up with a
->>>> panel_attach() callback to make it similar to bridges, but that's just us avoiding
->>>> the real issue.  
->>> How about making DSI dev registration fully asynchronous, that is, DSI
->>> devs declared in the DT under the DSI host node will be
->>> registered/attached at probe time, and devs using another control bus
->>> (like the adv7533 controller over i2c) will be registered afterwards.
->>>
->>> That implies moving the drm_brige registration logic outside of the DSI
->>> host ->probe() path. The idea would be to check if all devs connected
->>> to the DSI bus are ready at dsi_host->attach() time. If they are, we
->>> can finally register the XXX -> DSI bridge. If they're not (because
->>> some devs connected to the DSI bus have not been probed yet), then we
->>> do not register the drm_bridge and wait for the next dsi_host->attach()
->>> event.  
->> I guess you assumes that dsi-host knows all devs connected to it, thanks to:
->> - subnodes of the host - ie. devices controlled via dsi bus,
->> - graph links from host ports/endpoints - ie. devices controlled by
->> other buses, for example adv7533.
-> Yep, but I think that's already a requirement when populating devices
-> with the OF graph method (if one of the DSI output endpoint does not
-> have a drm_bridge/panel attached to it, the DSI host driver returns
-> -EPROBE_DEFER).
->
->> I would separate both abstractions to make it more clear:
->> 1. MIPI bus should be registered early - to allow create/bind devices on it,
-> Exactly.
->
->> 2. drm_bridge should be registered only if all required sinks
->> (bridges/panels) are registered.
-> That's true, until we find a solution to support add DRM bridge hotplug.
->
->> First point seems OK, I am not sure about the 2nd one - if used
->> consistently, it would require building pipeline from sink to source.
-> Yes.
-
-Since drm_bridge_attach requires encoder to be not null pipeline
-creation would be painful:
-1. Every driver must call drm_of_find_panel_or_bridge on sink(s) before
-registering bridge and cache the result for later use.
-2. After encoder finds directly connected bridge, it can attach it.
-3. attach callback of every bridge should attach subsequent bridge.
-
-Quite complicated, maybe bridges should be chained w/o available
-encoder, and later attached to encoder with other helper, for example
-drm_bridge_chain_attach.
-
-Regards
-Andrzej
-
->
->> By the way is there any pipeline with two consecutive external bridges
->> in the mainline?
-> I don't know if it exists in mainline, but I had to do that on my FPGA
-> platform when developing/testing Cadence DSI host driver. I had the
-> following chain and it worked just fine:
->
-> CRTC -> DPI encoder -> DPI to DSI bridge -> DSI to DPI bridge -> DPI to HDMI bridge (adv7511) -> HDMI connector
->
->
->
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVGh1LCAyMiBKdW4gMjAxNyAxNToxNjo0NyArMDIwMApBbmRyemVqIEhhamRhIDxhLmhhamRh
+QHNhbXN1bmcuY29tPiB3cm90ZToKCj4gT24gMjIuMDYuMjAxNyAxNDo0MSwgQm9yaXMgQnJlemls
+bG9uIHdyb3RlOgo+ID4gT24gVGh1LCAyMiBKdW4gMjAxNyAxNDoyOTowNyArMDIwMAo+ID4gQW5k
+cnplaiBIYWpkYSA8YS5oYWpkYUBzYW1zdW5nLmNvbT4gd3JvdGU6Cj4gPiAgCj4gPj4gT24gMjIu
+MDYuMjAxNyAxMToyMywgQm9yaXMgQnJlemlsbG9uIHdyb3RlOiAgCj4gPj4+IE9uIFRodSwgMjIg
+SnVuIDIwMTcgMTM6NDc6NDMgKzA1MzAKPiA+Pj4gQXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2Rl
+YXVyb3JhLm9yZz4gd3JvdGU6Cj4gPj4+ICAgIAo+ID4+Pj4gT24gMDYvMjIvMjAxNyAwMToyMCBQ
+TSwgQmVuamFtaW4gR2FpZ25hcmQgd3JvdGU6ICAgIAo+ID4+Pj4+IDIwMTctMDYtMjAgMTk6MzEg
+R01UKzAyOjAwIEVyaWMgQW5ob2x0IDxlcmljQGFuaG9sdC5uZXQ+OiAgICAgIAo+ID4+Pj4+PiBB
+cmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPiB3cml0ZXM6Cj4gPj4+Pj4+ICAg
+ICAgCj4gPj4+Pj4+PiBPbiAwNi8xNi8yMDE3IDA4OjEzIFBNLCBFcmljIEFuaG9sdCB3cm90ZTog
+ICAgICAKPiA+Pj4+Pj4+PiBBcmNoaXQgVGFuZWphIDxhcmNoaXR0QGNvZGVhdXJvcmEub3JnPiB3
+cml0ZXM6Cj4gPj4+Pj4+Pj4gICAgICAKPiA+Pj4+Pj4+Pj4gT24gMDYvMTYvMjAxNyAwMjoxMSBB
+TSwgRXJpYyBBbmhvbHQgd3JvdGU6ICAgICAgCj4gPj4+Pj4+Pj4+PiBJZiB0aGUgcGFuZWwtYnJp
+ZGdlIGlzIGJlaW5nIHNldCB1cCBhZnRlciB0aGUgZHJtX21vZGVfY29uZmlnX3Jlc2V0KCksCj4g
+Pj4+Pj4+Pj4+PiB0aGVuIHRoZSBjb25uZWN0b3IncyBzdGF0ZSB3b3VsZCBuZXZlciBnZXQgaW5p
+dGlhbGl6ZWQsIGFuZCB3ZSdkCj4gPj4+Pj4+Pj4+PiBkZXJlZmVyZW5jZSB0aGUgTlVMTCBpbiB0
+aGUgaG90cGx1ZyBwYXRoLiAgV2UgYWxzbyBuZWVkIHRvIHJlZ2lzdGVyCj4gPj4+Pj4+Pj4+PiB0
+aGUgY29ubmVjdG9yLCBzbyB0aGF0IHVzZXJzcGFjZSBjYW4gZ2V0IGF0IGl0Lgo+ID4+Pj4+Pj4+
+Pj4gICAgICAKPiA+Pj4+Pj4+Pj4gU2hvdWxkbid0IHRoZSBLTVMgZHJpdmVyIG1ha2Ugc3VyZSB0
+aGUgcGFuZWwtYnJpZGdlIGlzIHNldCB1cCBiZWZvcmUKPiA+Pj4+Pj4+Pj4gZHJtX21vZGVfY29u
+ZmlnX3Jlc2V0PyBJcyBpdCB0aGUgY2FzZSB3aGVuIHdlJ3JlIGluc2VydGluZyB0aGUKPiA+Pj4+
+Pj4+Pj4gcGFuZWwtYnJpZGdlIGRyaXZlciBhcyBhIG1vZHVsZT8KPiA+Pj4+Pj4+Pj4KPiA+Pj4+
+Pj4+Pj4KPiA+Pj4+Pj4+Pj4gQWxsIHRoZSBjb25uZWN0b3JzIHRoYXQgaGF2ZSBiZWVuIGFkZGVk
+IGFyZSByZWdpc3RlcmVkIGF1dG9tYXRpY2FsbHkKPiA+Pj4+Pj4+Pj4gd2hlbiBkcm1fZGV2X3Jl
+Z2lzdGVyKCkgaXMgY2FsbGVkIGJ5IHRoZSBLTVMgZHJpdmVyLiBSZWdpc3RlcmluZyBhCj4gPj4+
+Pj4+Pj4+IGNvbm5lY3RvciBpbiB0aGUgbWlkZGxlIG9mIHNldHRpbmcgdXAgb3VyIGRyaXZlciBp
+cyBwcm9uZSB0byByYWNlCj4gPj4+Pj4+Pj4+IGNvbmRpdGlvbnMgaWYgdGhlIHVzZXJzcGFjZSBk
+ZWNpZGVzIHRvIHVzZSB0aGVtIGltbWVkaWF0ZWx5LiAgICAgIAo+ID4+Pj4+Pj4+IFllYWgsIHRo
+aXMgaXMgZml4aW5nIGluaXRpYWxpemluZyBwYW5lbF9icmlkZ2UgYXQgRFNJIGhvc3RfYXR0YWNo
+IHRpbWUsCj4gPj4+Pj4+Pj4gd2hpY2ggaW4gdGhlIGNhc2Ugb2YgYSBwYW5lbCBtb2R1bGUgdGhh
+dCBjcmVhdGVzIHRoZSBEU0kgZGV2aWNlCj4gPj4+Pj4+Pj4gKGFkdjc1MzMtc3R5bGUsIGxpa2Ug
+eW91IHNhaWQgSSBzaG91bGQgdXNlIGFzIGEgcmVmZXJlbmNlKSB3aWxsIGJlIGFmdGVyCj4gPj4+
+Pj4+Pj4gZHJtX21vZGVfY29uZmlnX3Jlc2V0KCkgYW5kIGRybV9kZXZfcmVnaXN0ZXIoKS4gICAg
+ICAKPiA+Pj4+Pj4+IE9rYXkuIEluIHRoZSBjYXNlIG9mIHRoZSBtc20ga21zIGRyaXZlciwgd2Ug
+ZGVmZXIgcHJvYmUgdW50aWwgdGhlCj4gPj4+Pj4+PiBhZHY3NTMzIG1vZHVsZSBpcyBpbnNlcnRl
+ZCwgb25seSB0aGVuIHdlIHByb2NlZWQgdG8gZHJtX21vZGVfY29uZmlnX3Jlc2V0KCkKPiA+Pj4+
+Pj4+IGFuZCBkcm1fZGV2X3JlZ2lzdGVyKCkuIEkgYXNzdW1lZCB0aGlzIHdhcyB0aGUgZ2VuZXJh
+bCBwcmFjdGljZSBmb2xsb3dlZCBieQo+ID4+Pj4+Pj4gbW9zdCBrbXMgZHJpdmVycy4gSS4sZSB0
+aGUga21zIGRyaXZlciBkZWZlcnMgcHJvYmUgdW50aWwgYWxsIGNvbm5lY3Rvcgo+ID4+Pj4+Pj4g
+cmVsYXRlZCBtb2R1bGVzIGFyZSBpbnNlcnRlZCwgYW5kIG9ubHkgdGhlbiBwcm9jZWVkIHRvIGNy
+ZWF0ZSBhIGRybSBkZXZpY2UuICAgICAgCj4gPj4+Pj4+IFRoZSBwcm9ibGVtLCB0aG91Z2gsIGlz
+IHRoZSBwYW5lbCBkcml2ZXIgbmVlZHMgdGhlIE1JUEkgRFNJIGhvc3QgdG8KPiA+Pj4+Pj4gZXhp
+c3QgdG8gY2FsbCBtaXBpX2RzaV9kZXZpY2VfcmVnaXN0ZXJfZnVsbCgpIGR1cmluZyB0aGUgcHJv
+YmUgcHJvY2Vzcy4KPiA+Pj4+Pj4gVGhlIGFkdjc1MzMgZHJpdmVyIGdldHMgYXJvdW5kIHRoaXMg
+YnkgcmVnaXN0ZXJpbmcgdGhlIERTSSBkZXZpY2UgaW4gdGhlCj4gPj4+Pj4+IGJyaWRnZSBhdHRh
+Y2ggc3RlcCwgYnV0IGRybV9wYW5lbCBkb2Vzbid0IGhhdmUgYW4gYXR0YWNoIHN0ZXAuICAgICAg
+Cj4gPj4+PiBJJ20gbm90IHN1cmUgaG93IHdlIGNhbiBnZXQgYXJvdW5kIHRoaXMuIFdlIGhhZCBk
+aXNjdXNzaW9uIGFib3V0IHRoaXMgb24gaXJjCj4gPj4+PiByZWNlbnRseSwgYnV0IGNvdWxkbid0
+IGNvbWUgdXAgd2l0aCBhIGdvb2QgY29uY2x1c2lvbi4gV2UgY291bGQgY29tZSB1cCB3aXRoIGEK
+PiA+Pj4+IHBhbmVsX2F0dGFjaCgpIGNhbGxiYWNrIHRvIG1ha2UgaXQgc2ltaWxhciB0byBicmlk
+Z2VzLCBidXQgdGhhdCdzIGp1c3QgdXMgYXZvaWRpbmcKPiA+Pj4+IHRoZSByZWFsIGlzc3VlLiAg
+ICAKPiA+Pj4gSG93IGFib3V0IG1ha2luZyBEU0kgZGV2IHJlZ2lzdHJhdGlvbiBmdWxseSBhc3lu
+Y2hyb25vdXMsIHRoYXQgaXMsIERTSQo+ID4+PiBkZXZzIGRlY2xhcmVkIGluIHRoZSBEVCB1bmRl
+ciB0aGUgRFNJIGhvc3Qgbm9kZSB3aWxsIGJlCj4gPj4+IHJlZ2lzdGVyZWQvYXR0YWNoZWQgYXQg
+cHJvYmUgdGltZSwgYW5kIGRldnMgdXNpbmcgYW5vdGhlciBjb250cm9sIGJ1cwo+ID4+PiAobGlr
+ZSB0aGUgYWR2NzUzMyBjb250cm9sbGVyIG92ZXIgaTJjKSB3aWxsIGJlIHJlZ2lzdGVyZWQgYWZ0
+ZXJ3YXJkcy4KPiA+Pj4KPiA+Pj4gVGhhdCBpbXBsaWVzIG1vdmluZyB0aGUgZHJtX2JyaWdlIHJl
+Z2lzdHJhdGlvbiBsb2dpYyBvdXRzaWRlIG9mIHRoZSBEU0kKPiA+Pj4gaG9zdCAtPnByb2JlKCkg
+cGF0aC4gVGhlIGlkZWEgd291bGQgYmUgdG8gY2hlY2sgaWYgYWxsIGRldnMgY29ubmVjdGVkCj4g
+Pj4+IHRvIHRoZSBEU0kgYnVzIGFyZSByZWFkeSBhdCBkc2lfaG9zdC0+YXR0YWNoKCkgdGltZS4g
+SWYgdGhleSBhcmUsIHdlCj4gPj4+IGNhbiBmaW5hbGx5IHJlZ2lzdGVyIHRoZSBYWFggLT4gRFNJ
+IGJyaWRnZS4gSWYgdGhleSdyZSBub3QgKGJlY2F1c2UKPiA+Pj4gc29tZSBkZXZzIGNvbm5lY3Rl
+ZCB0byB0aGUgRFNJIGJ1cyBoYXZlIG5vdCBiZWVuIHByb2JlZCB5ZXQpLCB0aGVuIHdlCj4gPj4+
+IGRvIG5vdCByZWdpc3RlciB0aGUgZHJtX2JyaWRnZSBhbmQgd2FpdCBmb3IgdGhlIG5leHQgZHNp
+X2hvc3QtPmF0dGFjaCgpCj4gPj4+IGV2ZW50LiAgICAKPiA+PiBJIGd1ZXNzIHlvdSBhc3N1bWVz
+IHRoYXQgZHNpLWhvc3Qga25vd3MgYWxsIGRldnMgY29ubmVjdGVkIHRvIGl0LCB0aGFua3MgdG86
+Cj4gPj4gLSBzdWJub2RlcyBvZiB0aGUgaG9zdCAtIGllLiBkZXZpY2VzIGNvbnRyb2xsZWQgdmlh
+IGRzaSBidXMsCj4gPj4gLSBncmFwaCBsaW5rcyBmcm9tIGhvc3QgcG9ydHMvZW5kcG9pbnRzIC0g
+aWUuIGRldmljZXMgY29udHJvbGxlZCBieQo+ID4+IG90aGVyIGJ1c2VzLCBmb3IgZXhhbXBsZSBh
+ZHY3NTMzLiAgCj4gPiBZZXAsIGJ1dCBJIHRoaW5rIHRoYXQncyBhbHJlYWR5IGEgcmVxdWlyZW1l
+bnQgd2hlbiBwb3B1bGF0aW5nIGRldmljZXMKPiA+IHdpdGggdGhlIE9GIGdyYXBoIG1ldGhvZCAo
+aWYgb25lIG9mIHRoZSBEU0kgb3V0cHV0IGVuZHBvaW50IGRvZXMgbm90Cj4gPiBoYXZlIGEgZHJt
+X2JyaWRnZS9wYW5lbCBhdHRhY2hlZCB0byBpdCwgdGhlIERTSSBob3N0IGRyaXZlciByZXR1cm5z
+Cj4gPiAtRVBST0JFX0RFRkVSKS4KPiA+ICAKPiA+PiBJIHdvdWxkIHNlcGFyYXRlIGJvdGggYWJz
+dHJhY3Rpb25zIHRvIG1ha2UgaXQgbW9yZSBjbGVhcjoKPiA+PiAxLiBNSVBJIGJ1cyBzaG91bGQg
+YmUgcmVnaXN0ZXJlZCBlYXJseSAtIHRvIGFsbG93IGNyZWF0ZS9iaW5kIGRldmljZXMgb24gaXQs
+ICAKPiA+IEV4YWN0bHkuCj4gPiAgCj4gPj4gMi4gZHJtX2JyaWRnZSBzaG91bGQgYmUgcmVnaXN0
+ZXJlZCBvbmx5IGlmIGFsbCByZXF1aXJlZCBzaW5rcwo+ID4+IChicmlkZ2VzL3BhbmVscykgYXJl
+IHJlZ2lzdGVyZWQuICAKPiA+IFRoYXQncyB0cnVlLCB1bnRpbCB3ZSBmaW5kIGEgc29sdXRpb24g
+dG8gc3VwcG9ydCBhZGQgRFJNIGJyaWRnZSBob3RwbHVnLgo+ID4gIAo+ID4+IEZpcnN0IHBvaW50
+IHNlZW1zIE9LLCBJIGFtIG5vdCBzdXJlIGFib3V0IHRoZSAybmQgb25lIC0gaWYgdXNlZAo+ID4+
+IGNvbnNpc3RlbnRseSwgaXQgd291bGQgcmVxdWlyZSBidWlsZGluZyBwaXBlbGluZSBmcm9tIHNp
+bmsgdG8gc291cmNlLiAgCj4gPiBZZXMuICAKPiAKPiBTaW5jZSBkcm1fYnJpZGdlX2F0dGFjaCBy
+ZXF1aXJlcyBlbmNvZGVyIHRvIGJlIG5vdCBudWxsIHBpcGVsaW5lCj4gY3JlYXRpb24gd291bGQg
+YmUgcGFpbmZ1bDoKPiAxLiBFdmVyeSBkcml2ZXIgbXVzdCBjYWxsIGRybV9vZl9maW5kX3BhbmVs
+X29yX2JyaWRnZSBvbiBzaW5rKHMpIGJlZm9yZQo+IHJlZ2lzdGVyaW5nIGJyaWRnZSBhbmQgY2Fj
+aGUgdGhlIHJlc3VsdCBmb3IgbGF0ZXIgdXNlLgoKU2hvdWxkbid0IGJlIGhhcmQgdG8gZG8gc2lu
+Y2UgZHNpX2hvc3QtPmF0dGFjaCgpIGlzIGNhbGxlZCBlYWNoIHRpbWUgYQpzaW5rIGlzIGFkZGVk
+IChhbmQgcmVhZHkgdG8gdXNlKS4gQWxsIHlvdSBuZWVkIHRvIGRvIGlzIHJldHJpZXZlIHRoZQpi
+cmlkZ2UgcG9pbnRlciBhbmQgcHV0IGl0IGluIGEgbGlzdCBlbWJlZGRlZCBpbiB0aGUgRFNJIGhv
+c3QgcHJpdgpzdHJ1Y3QuIE9uY2UgeW91IGhhdmUgYWxsIHNpbmtzIGFkZGVkIHRvIHRoaXMgbGlz
+dCAoY2FuIGJlIGNoZWNrZWQgYnkKY291bnRpbmcgdGhlIG51bWJlciBvZiBlbmRwb2ludHMgYW5k
+IERTSSBkZXZzIGF0IHByb2JlIHRpbWUpLCB5b3UgY2FuCnJlZ2lzdGVyIHRoZSBEU0kgYnJpZGdl
+IGFuZCB3YWl0IGZvciBzb21lb25lIHRvIGNhbGwgLT5hdHRhY2goKSBvbiBpdC4KCkluIHRoZSAt
+PmF0dGFjaCgpIGhvb2sgb2YgdGhlIERTSSBicmlkZ2UsIHlvdSdsbCBoYXZlIHRvIGF0dGFjaCBh
+bGwKc2lua3Mgc3RvcmVkIGluIHRoZSBsaXN0IHRvIHRoZSBEU0kgYnJpZGdlLiBOb3RlIHRoYXQg
+cmlnaHQgbm93IHlvdSBoYXZlCmEgMToxIHJlbGF0aW9uc2hpcCwgd2hpY2ggcHJldmVudHMgeW91
+IGZyb20gaGF2aW5nIG9uZSBEU0kgYnJpZGdlIHRoYXQKY2FuIGF0dGFjaCB0byBkaWZmZXJlbnQg
+YnJpZGdlcyBhdmFpbGFibGUgb24gdGhlIERTSSBidXMgKGUuZy4gRFNJIC0+CkhETUkgYnJpZGdl
+IG9uIGNoYW5uZWwgMCBhbmQgRFNJIC0+IExWRFMgYnJpZGdlIG9uIGNoYW5uZWwgMSkuCgo+IDIu
+IEFmdGVyIGVuY29kZXIgZmluZHMgZGlyZWN0bHkgY29ubmVjdGVkIGJyaWRnZSwgaXQgY2FuIGF0
+dGFjaCBpdC4KCkkgZG9uJ3QgZ2V0IHRoYXQgb25lLgoKPiAzLiBhdHRhY2ggY2FsbGJhY2sgb2Yg
+ZXZlcnkgYnJpZGdlIHNob3VsZCBhdHRhY2ggc3Vic2VxdWVudCBicmlkZ2UuCgpZZXAuCgo+IAo+
+IFF1aXRlIGNvbXBsaWNhdGVkLAoKTm90IHN1cmUgaXQncyBtb3JlIGNvbXBsaWNhdGVkIHRoYW4g
+d2hhdCB3ZSBoYXZlIHJpZ2h0IG5vdy4KCj4gbWF5YmUgYnJpZGdlcyBzaG91bGQgYmUgY2hhaW5l
+ZCB3L28gYXZhaWxhYmxlCj4gZW5jb2RlciwgYW5kIGxhdGVyIGF0dGFjaGVkIHRvIGVuY29kZXIg
+d2l0aCBvdGhlciBoZWxwZXIsIGZvciBleGFtcGxlCj4gZHJtX2JyaWRnZV9jaGFpbl9hdHRhY2gu
+CgpUaGF0J3MgYWxzbyBhIHNvbHV0aW9uLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5m
+cmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9kcmktZGV2ZWwK
