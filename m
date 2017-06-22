@@ -1,130 +1,74 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v3.1 1/3] drm/rockchip: dw_hdmi: add RK3399 HDMI support
-Date: Thu, 22 Jun 2017 09:31:37 +0200
-Message-ID: <1751555.73cFbViMXZ@phil>
-References: <1496992236-10634-1-git-send-email-mark.yao@rock-chips.com>
- <1498115845-7177-1-git-send-email-mark.yao@rock-chips.com>
+From: Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
+Date: Thu, 22 Jun 2017 09:50:10 +0200
+Message-ID: <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
+References: <20170615204130.19255-1-eric@anholt.net> <20170615204130.19255-2-eric@anholt.net>
+ <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org> <871sqkouvr.fsf@eliezer.anholt.net>
+ <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org> <871sqe7ei0.fsf@eliezer.anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1498115845-7177-1-git-send-email-mark.yao@rock-chips.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Yao <mark.yao@rock-chips.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <871sqe7ei0.fsf-omZaPlIz5HhaEpDpdNBo/KxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyaywKCkFtIERvbm5lcnN0YWcsIDIyLiBKdW5pIDIwMTcsIDE1OjE3OjI0IENFU1Qgc2No
-cmllYiBNYXJrIFlhbzoKPiBSSzMzOTkgYW5kIFJLMzI4OCBzaGFyZWQgdGhlIHNhbWUgSERNSSBJ
-UCBjb250cm9sbGVyLCBvbmx5IHNvbWUgbGlnaHQKPiBkaWZmZXJlbmNlIHdpdGggR1JGIGNvbmZp
-Z3VyZS4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBZYWtpciBZYW5nIDx5a2tAcm9jay1jaGlwcy5jb20+
-Cj4gU2lnbmVkLW9mZi1ieTogTWFyayBZYW8gPG1hcmsueWFvQHJvY2stY2hpcHMuY29tPgo+IC0t
-LQo+IENoYW5nZXMgaW4gdjMuMToKPiAgIENvcnJlY3QgZG9jdW1lbnRhdGlvbiBjb21wYXRpYmxl
-J3MgZm9ybWF0KFJvYiBIZXJyaW5nKS4KPiBDaGFuZ2VzIGluIHYzOgo+ICAgcmVtb3ZlIGhkbWlf
-cGh5X2NvbmZpZ3VyZV9kd2NfaGRtaV8zZF90eCBjYWxsYmFrLgo+IAo+IENoYW5nZXMgaW4gdjI6
-Cj4gICByZXVzZSBoZG1pX3BoeV9jb25maWd1cmVfZHdjX2hkbWlfM2RfdHggZm9yIHBoeSBjb25m
-aWd1cmUKPiAgIGZpeHVwIERvY3VtZW50YXRpb24KPiAKPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkv
-cm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQgfCAgNCArLQo+ICBkcml2ZXJzL2dwdS9kcm0v
-cm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC5jICAgICAgICB8IDY3ICsrKysrKysrKysrKysrKysr
-Ky0tLS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA1OSBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlvbnMo
-LSkKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLnR4dAo+IGlu
-ZGV4IDA0NjA3NmMuLjcwMzlhMTUgMTAwNjQ0Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hpcC50eHQKPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9yb2NrY2hpcC9kd19o
-ZG1pLXJvY2tjaGlwLnR4dAo+IEBAIC0xMSw3ICsxMSw5IEBAIGZvbGxvd2luZyBkZXZpY2Utc3Bl
-Y2lmaWMgcHJvcGVydGllcy4KPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIAo+IC0tIGNv
-bXBhdGlibGU6IFNoYWxsIGNvbnRhaW4gInJvY2tjaGlwLHJrMzI4OC1kdy1oZG1pIi4KPiArLSBj
-b21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mIHRoZSBmb2xsb3dpbmc6Cj4gKwkJInJvY2tjaGlw
-LHJrMzI4OC1kdy1oZG1pIgo+ICsJCSJyb2NrY2hpcCxyazMzOTktZHctaGRtaSIKPiAgLSByZWc6
-IFNlZSBkd19oZG1pLnR4dC4KPiAgLSByZWctaW8td2lkdGg6IFNlZSBkd19oZG1pLnR4dC4gU2hh
-bGwgYmUgNC4KPiAgLSBpbnRlcnJ1cHRzOiBIRE1JIGludGVycnVwdCBudW1iZXIKPiBkaWZmIC0t
-Z2l0IGEvZHJpdmVycy9ncHUvZHJtL3JvY2tjaGlwL2R3X2hkbWktcm9ja2NoaXAuYyBiL2RyaXZl
-cnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJvY2tjaGlwLmMKPiBpbmRleCA2M2RhYjZmLi45
-MGFhYWY0IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9yb2NrY2hpcC9kd19oZG1pLXJv
-Y2tjaGlwLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vcm9ja2NoaXAvZHdfaGRtaS1yb2NrY2hp
-cC5jCj4gQEAgLTIwLDEzICsyMCwzMCBAQAo+ICAjaW5jbHVkZSAicm9ja2NoaXBfZHJtX2Rydi5o
-Igo+ICAjaW5jbHVkZSAicm9ja2NoaXBfZHJtX3ZvcC5oIgo+ICAKPiAtI2RlZmluZSBHUkZfU09D
-X0NPTjYgICAgICAgICAgICAgICAgICAgIDB4MDI1Ywo+IC0jZGVmaW5lIEhETUlfU0VMX1ZPUF9M
-SVQgICAgICAgICAgICAgICAgKDEgPDwgNCkKPiArI2RlZmluZSBSSzMyODhfR1JGX1NPQ19DT042
-CQkweDAyNUMKPiArI2RlZmluZSBSSzMyODhfSERNSV9MQ0RDX1NFTAkJQklUKDQpCj4gKyNkZWZp
-bmUgUkszMzk5X0dSRl9TT0NfQ09OMjAJCTB4NjI1MAo+ICsjZGVmaW5lIFJLMzM5OV9IRE1JX0xD
-RENfU0VMCQlCSVQoNikKPiArCj4gKyNkZWZpbmUgSElXT1JEX1VQREFURSh2YWwsIG1hc2spCSh2
-YWwgfCAobWFzaykgPDwgMTYpCj4gKwo+ICsvKioKPiArICogc3RydWN0IHJvY2tjaGlwX2hkbWlf
-Y2hpcF9kYXRhIC0gc3BsaXRlIHRoZSBncmYgc2V0dGluZyBvZiBraW5kIG9mIGNoaXBzCj4gKyAq
-IEBsY2RzZWxfZ3JmX3JlZzogZ3JmIHJlZ2lzdGVyIG9mZnNldCBvZiBsY2RjIHNlbGVjdAo+ICsg
-KiBAbGNkc2VsX2JpZzogcmVnIHZhbHVlIG9mIHNlbGVjdGluZyB2b3AgYmlnIGZvciBIRE1JCj4g
-KyAqIEBsY2RzZWxfbGl0OiByZWcgdmFsdWUgb2Ygc2VsZWN0aW5nIHZvcCBsaXR0bGUgZm9yIEhE
-TUkKPiArICovCj4gK3N0cnVjdCByb2NrY2hpcF9oZG1pX2NoaXBfZGF0YSB7Cj4gKwl1MzIJbGNk
-c2VsX2dyZl9yZWc7CgpIb3cgZG8geW91IHBsYW4gb24gaGFuZGxpbmcgdGhlIHJrMzM2OCAod2l0
-aCBvbmx5IG9uZSBWT1AgYW5kIHRodXMKbm8gc2VsZWN0aW9uIGhhcHBlbmluZyk/IEknZCBqdXN0
-IG1ha2UgdGhlIGFib3ZlIGFuIGludCwgc28gd2UgY291bGQKc2V0IGl0IHRvIC0xIGZvciB0aGF0
-IGNhc2UuICh2YWx1ZSAwIGlzIGFmdGVyIGFsbCBhIHZhbGlkIHJlZykuCgoKSGVpa28KCgo+ICsJ
-dTMyCWxjZHNlbF9iaWc7Cj4gKwl1MzIJbGNkc2VsX2xpdDsKPiArfTsKPiAgCj4gIHN0cnVjdCBy
-b2NrY2hpcF9oZG1pIHsKPiAgCXN0cnVjdCBkZXZpY2UgKmRldjsKPiAgCXN0cnVjdCByZWdtYXAg
-KnJlZ21hcDsKPiAgCXN0cnVjdCBkcm1fZW5jb2RlciBlbmNvZGVyOwo+ICsJY29uc3Qgc3RydWN0
-IHJvY2tjaGlwX2hkbWlfY2hpcF9kYXRhICpjaGlwX2RhdGE7Cj4gIH07Cj4gIAo+ICAjZGVmaW5l
-IHRvX3JvY2tjaGlwX2hkbWkoeCkJY29udGFpbmVyX29mKHgsIHN0cnVjdCByb2NrY2hpcF9oZG1p
-LCB4KQo+IEBAIC0xOTgsMTcgKzIxNSwyMCBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3JvY2tjaGlw
-X2VuY29kZXJfZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiAgewo+ICAJc3Ry
-dWN0IHJvY2tjaGlwX2hkbWkgKmhkbWkgPSB0b19yb2NrY2hpcF9oZG1pKGVuY29kZXIpOwo+ICAJ
-dTMyIHZhbDsKPiAtCWludCBtdXg7Cj4gKwlpbnQgcmV0Owo+ICAKPiAtCW11eCA9IGRybV9vZl9l
-bmNvZGVyX2FjdGl2ZV9lbmRwb2ludF9pZChoZG1pLT5kZXYtPm9mX25vZGUsIGVuY29kZXIpOwo+
-IC0JaWYgKG11eCkKPiAtCQl2YWwgPSBIRE1JX1NFTF9WT1BfTElUIHwgKEhETUlfU0VMX1ZPUF9M
-SVQgPDwgMTYpOwo+ICsJcmV0ID0gZHJtX29mX2VuY29kZXJfYWN0aXZlX2VuZHBvaW50X2lkKGhk
-bWktPmRldi0+b2Zfbm9kZSwgZW5jb2Rlcik7Cj4gKwlpZiAocmV0KQo+ICsJCXZhbCA9IGhkbWkt
-PmNoaXBfZGF0YS0+bGNkc2VsX2xpdDsKPiAgCWVsc2UKPiAtCQl2YWwgPSBIRE1JX1NFTF9WT1Bf
-TElUIDw8IDE2Owo+ICsJCXZhbCA9IGhkbWktPmNoaXBfZGF0YS0+bGNkc2VsX2JpZzsKPiArCj4g
-KwlyZXQgPSByZWdtYXBfd3JpdGUoaGRtaS0+cmVnbWFwLCBoZG1pLT5jaGlwX2RhdGEtPmxjZHNl
-bF9ncmZfcmVnLCB2YWwpOwo+ICsJaWYgKHJldCAhPSAwKQo+ICsJCWRldl9lcnIoaGRtaS0+ZGV2
-LCAiQ291bGQgbm90IHdyaXRlIHRvIEdSRjogJWRcbiIsIHJldCk7Cj4gIAo+IC0JcmVnbWFwX3dy
-aXRlKGhkbWktPnJlZ21hcCwgR1JGX1NPQ19DT042LCB2YWwpOwo+ICAJZGV2X2RiZyhoZG1pLT5k
-ZXYsICJ2b3AgJXMgb3V0cHV0IHRvIGhkbWlcbiIsCj4gLQkJKG11eCkgPyAiTElUIiA6ICJCSUci
-KTsKPiArCQlyZXQgPyAiTElUIiA6ICJCSUciKTsKPiAgfQo+ICAKPiAgc3RhdGljIGludAo+IEBA
-IC0yMzIsMTYgKzI1Miw0MCBAQCBzdGF0aWMgdm9pZCBkd19oZG1pX3JvY2tjaGlwX2VuY29kZXJf
-ZW5hYmxlKHN0cnVjdCBkcm1fZW5jb2RlciAqZW5jb2RlcikKPiAgCS5hdG9taWNfY2hlY2sgPSBk
-d19oZG1pX3JvY2tjaGlwX2VuY29kZXJfYXRvbWljX2NoZWNrLAo+ICB9Owo+ICAKPiAtc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkd19oZG1pX3BsYXRfZGF0YSByb2NrY2hpcF9oZG1pX2Rydl9kYXRhID0g
-ewo+ICtzdGF0aWMgc3RydWN0IHJvY2tjaGlwX2hkbWlfY2hpcF9kYXRhIHJrMzI4OF9jaGlwX2Rh
-dGEgPSB7Cj4gKwkubGNkc2VsX2dyZl9yZWcgPSBSSzMyODhfR1JGX1NPQ19DT042LAo+ICsJLmxj
-ZHNlbF9iaWcgPSBISVdPUkRfVVBEQVRFKDAsIFJLMzI4OF9IRE1JX0xDRENfU0VMKSwKPiArCS5s
-Y2RzZWxfbGl0ID0gSElXT1JEX1VQREFURShSSzMyODhfSERNSV9MQ0RDX1NFTCwgUkszMjg4X0hE
-TUlfTENEQ19TRUwpLAo+ICt9Owo+ICsKPiArc3RhdGljIGNvbnN0IHN0cnVjdCBkd19oZG1pX3Bs
-YXRfZGF0YSByazMyODhfaGRtaV9kcnZfZGF0YSA9IHsKPiArCS5tb2RlX3ZhbGlkID0gZHdfaGRt
-aV9yb2NrY2hpcF9tb2RlX3ZhbGlkLAo+ICsJLm1wbGxfY2ZnICAgPSByb2NrY2hpcF9tcGxsX2Nm
-ZywKPiArCS5jdXJfY3RyICAgID0gcm9ja2NoaXBfY3VyX2N0ciwKPiArCS5waHlfY29uZmlnID0g
-cm9ja2NoaXBfcGh5X2NvbmZpZywKPiArCS5waHlfZGF0YSA9ICZyazMyODhfY2hpcF9kYXRhLAo+
-ICt9Owo+ICsKPiArc3RhdGljIHN0cnVjdCByb2NrY2hpcF9oZG1pX2NoaXBfZGF0YSByazMzOTlf
-Y2hpcF9kYXRhID0gewo+ICsJLmxjZHNlbF9ncmZfcmVnID0gUkszMzk5X0dSRl9TT0NfQ09OMjAs
-Cj4gKwkubGNkc2VsX2JpZyA9IEhJV09SRF9VUERBVEUoMCwgUkszMzk5X0hETUlfTENEQ19TRUwp
-LAo+ICsJLmxjZHNlbF9saXQgPSBISVdPUkRfVVBEQVRFKFJLMzM5OV9IRE1JX0xDRENfU0VMLCBS
-SzMzOTlfSERNSV9MQ0RDX1NFTCksCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGR3
-X2hkbWlfcGxhdF9kYXRhIHJrMzM5OV9oZG1pX2Rydl9kYXRhID0gewo+ICAJLm1vZGVfdmFsaWQg
-PSBkd19oZG1pX3JvY2tjaGlwX21vZGVfdmFsaWQsCj4gIAkubXBsbF9jZmcgICA9IHJvY2tjaGlw
-X21wbGxfY2ZnLAo+ICAJLmN1cl9jdHIgICAgPSByb2NrY2hpcF9jdXJfY3RyLAo+ICAJLnBoeV9j
-b25maWcgPSByb2NrY2hpcF9waHlfY29uZmlnLAo+ICsJLnBoeV9kYXRhID0gJnJrMzM5OV9jaGlw
-X2RhdGEsCj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBkd19o
-ZG1pX3JvY2tjaGlwX2R0X2lkc1tdID0gewo+ICAJeyAuY29tcGF0aWJsZSA9ICJyb2NrY2hpcCxy
-azMyODgtZHctaGRtaSIsCj4gLQkgIC5kYXRhID0gJnJvY2tjaGlwX2hkbWlfZHJ2X2RhdGEKPiAr
-CSAgLmRhdGEgPSAmcmszMjg4X2hkbWlfZHJ2X2RhdGEKPiArCX0sCj4gKwl7IC5jb21wYXRpYmxl
-ID0gInJvY2tjaGlwLHJrMzM5OS1kdy1oZG1pIiwKPiArCSAgLmRhdGEgPSAmcmszMzk5X2hkbWlf
-ZHJ2X2RhdGEKPiAgCX0sCj4gIAl7fSwKPiAgfTsKPiBAQCAtMjY4LDYgKzMxMiw3IEBAIHN0YXRp
-YyBpbnQgZHdfaGRtaV9yb2NrY2hpcF9iaW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRl
-dmljZSAqbWFzdGVyLAo+ICAJbWF0Y2ggPSBvZl9tYXRjaF9ub2RlKGR3X2hkbWlfcm9ja2NoaXBf
-ZHRfaWRzLCBwZGV2LT5kZXYub2Zfbm9kZSk7Cj4gIAlwbGF0X2RhdGEgPSBtYXRjaC0+ZGF0YTsK
-PiAgCWhkbWktPmRldiA9ICZwZGV2LT5kZXY7Cj4gKwloZG1pLT5jaGlwX2RhdGEgPSBwbGF0X2Rh
-dGEtPnBoeV9kYXRhOwo+ICAJZW5jb2RlciA9ICZoZG1pLT5lbmNvZGVyOwo+ICAKPiAgCWVuY29k
-ZXItPnBvc3NpYmxlX2NydGNzID0gZHJtX29mX2ZpbmRfcG9zc2libGVfY3J0Y3MoZHJtLCBkZXYt
-Pm9mX25vZGUpOwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+2017-06-20 19:31 GMT+02:00 Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>:
+> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>
+>> On 06/16/2017 08:13 PM, Eric Anholt wrote:
+>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>>
+>>>> On 06/16/2017 02:11 AM, Eric Anholt wrote:
+>>>>> If the panel-bridge is being set up after the drm_mode_config_reset(),
+>>>>> then the connector's state would never get initialized, and we'd
+>>>>> dereference the NULL in the hotplug path.  We also need to register
+>>>>> the connector, so that userspace can get at it.
+>>>>>
+>>>>
+>>>> Shouldn't the KMS driver make sure the panel-bridge is set up before
+>>>> drm_mode_config_reset? Is it the case when we're inserting the
+>>>> panel-bridge driver as a module?
+>>>>
+>>>>
+>>>> All the connectors that have been added are registered automatically
+>>>> when drm_dev_register() is called by the KMS driver. Registering a
+>>>> connector in the middle of setting up our driver is prone to race
+>>>> conditions if the userspace decides to use them immediately.
+>>>
+>>> Yeah, this is fixing initializing panel_bridge at DSI host_attach time,
+>>> which in the case of a panel module that creates the DSI device
+>>> (adv7533-style, like you said I should use as a reference) will be after
+>>> drm_mode_config_reset() and drm_dev_register().
+>>
+>> Okay. In the case of the msm kms driver, we defer probe until the
+>> adv7533 module is inserted, only then we proceed to drm_mode_config_reset()
+>> and drm_dev_register(). I assumed this was the general practice followed by
+>> most kms drivers. I.,e the kms driver defers probe until all connector
+>> related modules are inserted, and only then proceed to create a drm device.
+>
+> The problem, though, is the panel driver needs the MIPI DSI host to
+> exist to call mipi_dsi_device_register_full() during the probe process.
+> The adv7533 driver gets around this by registering the DSI device in the
+> bridge attach step, but drm_panel doesn't have an attach step.
+>
+> Another alternative is my original version of the panel driver that was
+> a mipi_dsi_device driver that registered the panel during the DSI device
+> probe.  That's why vc4's panel lookup is during the MIPI DSI attach
+> phase, currently.
+
++ Philippe in copy because we have the same probing issue when adding
+panel-bridge
+with the dsi bridge
+
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
