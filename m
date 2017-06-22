@@ -1,28 +1,39 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] dt-bindings: pwm: update STM32 timers clock names
-Date: Thu, 22 Jun 2017 16:25:57 -0500
-Message-ID: <20170622212557.vwojcyil5sg2jpsg@rob-hp-laptop>
-References: <1497453196-31470-1-git-send-email-fabrice.gasnier@st.com>
- <1497453196-31470-4-git-send-email-fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2] regulator: tps65910: wire up sleep control
+ configuration
+Date: Thu, 22 Jun 2017 16:29:12 -0500
+Message-ID: <20170622212911.ciuihaishtryuwgb@rob-hp-laptop>
+References: <48ab466a6832807a585012209f94855ff67ddc95.1497466956.git.mirq-linux@rere.qmqm.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1497453196-31470-4-git-send-email-fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
-Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <48ab466a6832807a585012209f94855ff67ddc95.1497466956.git.mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 05:13:16PM +0200, Fabrice Gasnier wrote:
-> Clock name has been updated during driver/DT binding review:
-> https://lkml.org/lkml/2016/12/13/718
-> Update DT binding doc to reflect this.
+On Wed, Jun 14, 2017 at 09:04:14PM +0200, Michał Mirosław wrote:
+> This enables configuring the PMIC's sleep mode via device-tree.
 > 
-> Fixes: cd9a99c2f8e8 (dt-bindings: pwm: Add STM32 bindings)
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier-qxv4g6HH51o@public.gmane.org>
+> A pointer indirection to sleep mode data is removed, as it simplifies
+> the implementation slightly. In current kernel tree, platform data
+> structure is not used outside MFD cell drivers.
+> 
+> Signed-off-by: Michał Mirosław <mirq-linux-CoA6ZxLDdyEEUmgCuDUIdw@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v2:
+>   - updated commit message
+> 
+>  Documentation/devicetree/bindings/mfd/tps65910.txt |  4 ++++
+>  drivers/mfd/tps65910.c                             | 22 +++++++++++++++-------
+>  include/linux/mfd/tps65910.h                       |  2 +-
+>  3 files changed, 20 insertions(+), 8 deletions(-)
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
