@@ -1,72 +1,63 @@
-From: Bu Tao <butao@huawei.com>
-Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for hi3660-ufs
-Date: Thu, 22 Jun 2017 19:58:45 +0800
-Message-ID: <24438c4d-21c8-6302-acd4-4f0e223232ce@huawei.com>
-References: <20170616065119.10704-1-butao@hisilicon.com>
- <20170616065119.10704-3-butao@hisilicon.com>
- <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
- <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com>
- <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw@mail.gmail.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH V1 7/9] clk: sprd: add adjustable pll support
+Date: Thu, 22 Jun 2017 20:06:29 +0800
+Message-ID: <CAAfSe-vtAqmiJ-ZuxQde4i7FEo76kkbk-mev_S31i3g3GHwrcQ@mail.gmail.com>
+References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
+ <20170618015855.27738-8-chunyan.zhang@spreadtrum.com> <20170620013710.GJ4493@codeaurora.org>
+ <CAAfSe-sMy3aM9=LwpVivvHKy4hVw3GEd3U-hZe17pXM5fJRxPg@mail.gmail.com> <CAK8P3a1ELg1XcY-QOZn-f6kR9yt-Q6LNLUYEY-BNW-2BaBy6EQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <CAK8P3a1ELg1XcY-QOZn-f6kR9yt-Q6LNLUYEY-BNW-2BaBy6EQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Eric Anholt <eric@anholt.net>, Krzysztof Kozlowski <krzk@kernel.org>, Vinayak Holikatti <vinholikatti@gmail.com>, "James E.J. Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Wei Xu <xuwei5@hisilicon.com>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Guodong Xu <guodong.xu@linaro.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>Linux
+Cc: Stephen Boyd <sboyd@codeaurora.org>, Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-CgrlnKggMjAxNy82LzIyIDE5OjUxLCBBcm5kIEJlcmdtYW5uIOWGmemBkzoKPiBPbiBUaHUsIEp1
-biAyMiwgMjAxNyBhdCAxOjQ0IFBNLCBCdSBUYW8gPGJ1dGFvQGh1YXdlaS5jb20+IHdyb3RlOgo+
-PiDlnKggMjAxNy82LzE3IDU6NTEsIEFybmQgQmVyZ21hbm4g5YaZ6YGTOgo+Pj4gT24gRnJpLCBK
-dW4gMTYsIDIwMTcgYXQgODo1MSBBTSwgQnUgVGFvIDxidXRhb0BoaXNpbGljb24uY29tPiB3cm90
-ZToKPj4+PiArT3B0aW9uYWwgcHJvcGVydGllcyBmb3IgYm9hcmQgZGV2aWNlOgo+Pj4+ICstIHVm
-cy1oaTM2NjAtdXNlLXJhdGUtQiAgICAgICAgICAgICAgICA6IHNwZWNpZmllcyBVRlMgcmF0ZS1C
-Cj4+Pj4gKy0gdWZzLWhpMzY2MC1icm9rZW4tZmFzdGF1dG8gICA6IHNwZWNpZmllcyBubyBmYXN0
-YXV0bwo+Pj4+ICstIHVmcy1oaTM2NjAtdXNlLUhTLUdFQVIzICAgICAgOiBzcGVjaWZpZXMgVUZT
-IEhTLUdFQVIzCj4+Pj4gKy0gdWZzLWhpMzY2MC11c2UtSFMtR0VBUjIgICAgICA6IHNwZWNpZmll
-cyBVRlMgSFMtR0VBUjIKPj4+PiArLSB1ZnMtaGkzNjYwLXVzZS1IUy1HRUFSMSAgICAgIDogc3Bl
-Y2lmaWVzIFVGUyBIUy1HRUFSMQo+Pj4+ICstIHVmcy1oaTM2NjAtYnJva2VuLWNsay1nYXRlLWJ5
-cGFzcyAgICA6IHNwZWNpZmllcyBubyBjbGstZ2F0ZQo+Pj4+ICstIHVmcy1oaTM2NjAtdXNlLW9u
-ZS1saW5lICAgICAgOiBzcGVjaWZpZXMgVUZTIHVzZSBvbmUgbGluZSB3b3JrCj4+Pj4gKy0gcmVz
-ZXQtZ3BpbyAgICAgICAgICAgICAgICAgICA6IHNwZWNpZmllcyB0byByZXNldCBkZXZpY2VzCj4+
-Pgo+Pj4KPj4+IFNvbWUgb2YgdGhlc2Ugc291bmQgcmF0aGVyIGdlbmVyaWMgYW5kIG1pZ2h0IGFw
-cGx5IHRvIFVGUyBpbXBsZW1lbnRhdGlvbnMKPj4+IG90aGVyIHRoYW4gaGkzNjYwLCBzbyBJJ2Qg
-c3VnZ2VzdCBhZGRpbmcgdGhlbSB0byB0aGUgYmFzZSB1ZnMgYmluZGluZyB3aXRoCj4+PiBhIGdl
-bmVyaWMgbmFtZSBpbnN0ZWFkLgo+Pj4KPj4+IEFueSBEVCBwcm9wZXJ0aWVzIHRoYXQgbWlnaHQg
-YmUgdXNlZnVsIGFjcm9zcyBtdWx0aXBsZSBpbXBsZW1lbnRhdGlvbnMKPj4+IHNob3VsZCBiZSBw
-YXJzZWQgaW4gZ2VuZXJpYyBjb2RlIHRoYXQgZ2V0cyBjYWxsZWQgYnkgdGhlIGluZGl2aWR1YWwK
-Pj4+IGRyaXZlcnMsCj4+PiBhbmQgdGhlbiB0aGUgcHJvcGVydGllcyB0aGF0IGFyZSBzcGVjaWZp
-YyB0byB0aGUgaW50ZWdyYXRpb24gd29yayBkb25lIGJ5Cj4+PiBoaXNpbGljb24gc2hvdWxkIGJl
-IHByZWZpeGVkIHdpdGggImhpc2lsaWNvbiwiLCBidXQgbm90IG5vcm1hbGx5IHdpdGggdGhlCj4+
-PiBTb0MgbmFtZTogaXQgaXMgcXVpdGUgcG9zc2libGUgdGhhdCBhbm90aGVyIFNvQyB3aWxsIGJl
-IGRlcml2ZWQgZnJvbSB0aGlzCj4+PiBjaGlwIGFuZCBpdCBzaG91bGQgcmV1c2UgdGhlIHByb3Bl
-cnRpZXMuCj4+Cj4+Cj4+IEkgZG8gbm90IGtub3cgd2hlaGVyIG90aGVyIFNvQyBuZWVkIHRvIHVz
-ZSB0aGUgb3B0aW9uYWwgcHJvcGVydGllcyBhcwo+PiBhYm92ZXIuIFNvIGhlcmUgdGhlIG5hbWUg
-b2YgdGhlIG9wdGlvbmFsIHByb3BlcnRpZXMgaGFzICJoaTM2NjAiLgo+Cj4gVGhleSBzaG91bGQg
-bm90IGhhdmUgImhpMzY2MCIgaW4gdGhlaXIgbmFtZXMgZWl0aGVyIHdheSwgaW5kZXBlbmRlbnQK
-PiBvZiB3aGVyZSB0aGV5IGFyZSB1c2VkLgoKT2gsIGNoYW5nZSB0aGUgImhpMzY2MCIgdG8gImhp
-c2lsaWNvbiI/CmUuZy4gdWZzLWhpMzY2MC11c2UtcmF0ZS1CICAtLT4gIHVmcy1oaXNpbGljb24t
-dXNlLXJhdGUtQgo+Cj4+PiAobm90ZTogdGhpcyBpcyBkaWZmZXJlbnQgZnJvbSB0aGUgdmFsdWUg
-b2YgdGhlICJjb21wYXRpYmxlIiBwcm9wZXJ0eSB0aGF0Cj4+PiBpcyBtZWFudCB0byBiZSBhcyBz
-cGVjaWZpYyBhcyBwb3NzaWJsZSIuCj4+Pgo+Pj4gQWxzbywgcGxlYXNlIGNsYXJpZnkgaG93IHlv
-dXIgYmluZGluZyByZWxhdGVzIHRvIHRoZSB1ZnNoY2QgYmluZGluZwo+Pj4gaW4gRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy91ZnNoY2QtcGx0ZnJtLnR4dDogZG9lcwo+Pj4g
-aGkzNjYwIGltcGxlbWVudCBhbnkgcmVnaXN0ZXJzIHRoYXQgYXJlIHNoYXJlZCB3aXRoIHVmc2hj
-ZCwgb3IgZG9lcwo+Pj4gaXQgdXNlIHRoZSBzYW1lIHBoeXNpY2FsIGludGVyZmFjZSB3aXRoIGEg
-ZGlmZmVyZW50IHJlZ2lzdGVyIHNldD8KPj4KPj4gTm8sIG9ubHkgc2hvdyBob3cgdG8gdXNlIHRo
-ZSBkdC1iaW5kaW5nIGZvciBoaTM2NjAgU29DCj4KPiBNeSBxdWVzdGlvbiB3YXMgYWJvdXQgdGhl
-IGhhcmR3YXJlOiBkb2VzIGhpMzY2MCBpbXBsZW1lbnQgdWZzaGNkCj4gb3Igbm90PwoKWUVTCj4K
-PiAgICAgICBBcm5kCj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxp
-c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
-aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hi Arnd,
+
+On 22 June 2017 at 19:15, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Thu, Jun 22, 2017 at 12:17 PM, Chunyan Zhang <zhang.lyra@gmail.com> wrote:
+>> On 20 June 2017 at 09:37, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>>> On 06/18, Chunyan Zhang wrote:
+>
+>>>> +     kint = DIV_ROUND_CLOSEST(((fvco - refin * nint * CCU_PLL_1M)/10000) *
+>>>> +     ((mask >> (shift + i)) + 1), refin * 100) << i;
+>>>> +     cfg[index].val |= (kint << shift) & mask;
+>>>> +     cfg[index].msk |= mask;
+>>>> +
+>>>> +     ibias_val = pll_get_ibias(fvco, pll->itable);
+>>>> +
+>>>> +     mask = pmask(pll, PLL_IBIAS);
+>>>> +     index = pindex(pll, PLL_IBIAS);
+>>>> +     shift = pshift(pll, PLL_IBIAS);
+>>>> +     cfg[index].val |= ibias_val << shift & mask;
+>>>> +     cfg[index].msk |= mask;
+>>>> +
+>>>> +     for (i = 0; i < reg_num; i++) {
+>>>> +             if (cfg[i].msk)
+>>>> +                     ccu_pll_writel(pll, i, cfg[i].val, cfg[i].msk);
+>>>> +     }
+>>>> +
+>>>
+>>> Are we waiting for the writel() to go through above? If so we
+>>> need a readl() of the same register to make sure the write has
+>>> completed before delaying.
+>>
+>> After writing these configuration registers, we have to wait a certain
+>> time to make sure the pll has worked as we configured.  This depends
+>> on other circuit part, so we use udelay rather than reading the same
+>> register.
+>
+> I think you have to do both: normally the writel() is not guaranteed
+> to arrive at the device until you read back from an address in the
+> same device, so the delay must happen after the readl(), or you won't
+> know how long to wait for.
+
+I got it, will add the readl() in the next iterator.
+
+Thanks,
+Chunyan
+
+>
+>        Arnd
