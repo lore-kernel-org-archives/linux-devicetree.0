@@ -1,16 +1,15 @@
-From: Amelie DELAUNAY <amelie.delaunay@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings: spi: Document the STM32 SPI bindings
-Date: Thu, 22 Jun 2017 13:51:51 +0200
-Message-ID: <af653847-8850-5ca3-17a1-63cb23e74ad6@st.com>
-References: <1498055526-6918-1-git-send-email-amelie.delaunay@st.com>
- <1498055526-6918-2-git-send-email-amelie.delaunay@st.com>
- <5df6d07a-59b7-6460-75c5-c3b239067616@baylibre.com>
+From: Bu Tao <butao@huawei.com>
+Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for hi3660-ufs
+Date: Thu, 22 Jun 2017 19:44:33 +0800
+Message-ID: <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com>
+References: <20170616065119.10704-1-butao@hisilicon.com>
+ <20170616065119.10704-3-butao@hisilicon.com>
+ <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5df6d07a-59b7-6460-75c5-c3b239067616@baylibre.com>
-Content-Language: en-US
+In-Reply-To: <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,118 +19,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Eric Anholt <eric@anholt.net>, Krzysztof Kozlowski <krzk@kernel.org>, vinholikatti@gmail.com, "James E.J.
+ Bottomley" <jejb@linux.vnet.ibm.com>, linux-scsi@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Wei Xu <xuwei5@hisilicon.com>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Guodong Xu <guodong.xu@linaro.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Riku Voipio <riku.voipio@linaro.org>, Linux Kernel Mailing List <linux-kernel@v>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/21/2017 05:20 PM, Neil Armstrong wrote:
-> On 06/21/2017 04:32 PM, Amelie Delaunay wrote:
->> This patch adds the documentation of device tree bindings
->> for the STM32 SPI controller.
->>
->> Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
->> ---
->>   .../devicetree/bindings/spi/spi-stm32.txt          | 60 ++++++++++++++++++++++
->>   1 file changed, 60 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/spi/spi-stm32.txt
->>
->> diff --git a/Documentation/devicetree/bindings/spi/spi-stm32.txt b/Documentation/devicetree/bindings/spi/spi-stm32.txt
->> new file mode 100644
->> index 0000000..3958bf6
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/spi/spi-stm32.txt
->> @@ -0,0 +1,60 @@
->> +STMicroelectronics STM32 SPI Controller
->> +
->> +The STM32 SPI controller is used to communicate with external devices using
->> +the Serial Peripheral Interface. It supports full-duplex, half-duplex and
->> +simplex synchronous serial communication with external devices. It supports
->> +from 4 to 32-bit data size. Although it can be configured as master or slave,
->> +only master is supported by the driver.
->> +
->> +Required properties:
->> +- compatible: Must be "st,stm32-spi".
-> 
-> Hi Amelie,
-> 
-> What about the gen1 SPI devices like the F4 ?
-> 
-> It should have been better to use SoC specific compatible, or specify the SPI HW gen like gen1 or gen2.
-> 
-> Neil
-> 
-
-Hi Neil,
-
-The gen1 SPI controller embedded on F4/F7 is different from gen2 
-embedded on H7 and just to illustrate this, there are 5 main registers 
-(16-bit) on gen1 versus 10 main registers on gen2 (32-bit)! Their 
-operating modes are different, fifo management and so on... Moreover, I 
-know that the community is working on an SPI driver for F4.
-
-I agree with you on the fact that it would be better to use a SoC 
-specific compatible: I will send a v2 with "st,stm32h7-spi". This way, 
-this will be aligned with what have been done for the I2S part of this 
-controller: https://patchwork.kernel.org/patch/9737799/
-
-By the way, I also noticed that my optional property "st,spi-midi-ns" 
-doesn't fit with the example "st,spi-midi". I will fix that in the v2 
-and keep "st,spi-midi-ns".
-
-Regards,
-Amelie
-
->> +- reg: Offset and length of the device's register set.
->> +- interrupts: Must contain the interrupt id.
->> +- clocks: Must contain an entry for spiclk (which feeds the internal clock
->> +	  generator).
->> +- #address-cells:  Number of cells required to define a chip select address.
->> +- #size-cells: Should be zero.
->> +
->> +Optional properties:
->> +- resets: Must contain the phandle to the reset controller.
->> +- A pinctrl state named "default" may be defined to set pins in mode of
->> +  operation for SPI transfer.
->> +- dmas: DMA specifiers for tx and rx dma. DMA fifo mode must be used. See the
->> +  STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt.
->> +- dma-names: DMA request names should include "tx" and "rx" if present.
->> +- cs-gpios: list of GPIO chip selects. See the SPI bus bindings,
->> +  Documentation/devicetree/bindings/spi/spi-bus.txt
->> +
->> +
->> +Child nodes represent devices on the SPI bus
->> +  See ../spi/spi-bus.txt
->> +
->> +Optional properties:
->> +- st,spi-midi-ns: (Master Inter-Data Idleness) minimum time delay in
->> +		  nanoseconds inserted between two consecutive data frames.
->> +
->> +
->> +Example:
->> +	spi2: spi@40003800 {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		compatible = "st,stm32-spi";
->> +		reg = <0x40003800 0x400>;
->> +		interrupts = <36>;
->> +		clocks = <&rcc SPI2_CK>;
->> +		resets = <&rcc 1166>;
->> +		dmas = <&dmamux1 0 39 0x400 0x01>,
->> +		       <&dmamux1 1 40 0x400 0x01>;
->> +		dma-names = "rx", "tx";
->> +		pinctrl-0 = <&spi2_pins_b>;
->> +		pinctrl-names = "default";
->> +		status = "okay";
->> +		cs-gpios = <&gpioa 11 0>;
->> +
->> +		spidev@0 {
->> +			compatible = "spidev";
->> +			reg = <0>;
->> +			spi-max-frequency = <4000000>;
->> +			st,spi-midi = <4000>;
->> +		};
->> +	};
->>
-> 
+CgrlnKggMjAxNy82LzE3IDU6NTEsIEFybmQgQmVyZ21hbm4g5YaZ6YGTOgo+IE9uIEZyaSwgSnVu
+IDE2LCAyMDE3IGF0IDg6NTEgQU0sIEJ1IFRhbyA8YnV0YW9AaGlzaWxpY29uLmNvbT4gd3JvdGU6
+Cj4+IGFkZCB1ZnMgbm9kZSBkb2N1bWVudCBmb3IgaGkzNjYwCj4+Cj4+IFNpZ25lZC1vZmYtYnk6
+IEJ1IFRhbyA8YnV0YW9AaGlzaWxpY29uLmNvbT4KPj4gLS0tCj4+ICAuLi4vZGV2aWNldHJlZS9i
+aW5kaW5ncy91ZnMvaGkzNjYwLXVmcy50eHQgICAgICAgICB8IDU4ICsrKysrKysrKysrKysrKysr
+KysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vmcy9oaTM2NjAtdWZz
+LnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Vmcy9oaTM2NjAtdWZzLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91
+ZnMvaGkzNjYwLXVmcy50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAwMDAw
+MDAwMDAwLi40NjFhZmM4ZWYwMTcKPj4gLS0tIC9kZXYvbnVsbAo+PiArKysgYi9Eb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdWZzL2hpMzY2MC11ZnMudHh0Cj4+IEBAIC0wLDAgKzEs
+NTggQEAKPj4gKyogSGlzaWxpY29uIFVuaXZlcnNhbCBGbGFzaCBTdG9yYWdlIChVRlMpIEhvc3Qg
+Q29udHJvbGxlcgo+PiArCj4+ICtVRlMgbm9kZXMgYXJlIGRlZmluZWQgdG8gZGVzY3JpYmUgb24t
+Y2hpcCBVRlMgaGFyZHdhcmUgbWFjcm8uCj4+ICtFYWNoIFVGUyBIb3N0IENvbnRyb2xsZXIgc2hv
+dWxkIGhhdmUgaXRzIG93biBub2RlLgo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiAr
+LSBjb21wYXRpYmxlICAgICAgICA6IGNvbXBhdGlibGUgbGlzdCwgY29udGFpbnMgb25lIG9mIHRo
+ZSBmb2xsb3dpbmcgLQo+PiArICAgICAgICAgICAgICAgICAgICAgICAiaGlzaWxpY29uLGhpMzY2
+MC11ZnMiIGZvciBoaXNpIHVmcyBob3N0IGNvbnRyb2xsZXIKPj4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgIHByZXNlbnQgb24gSGkzNjYwIGNoaXBzZXQuCj4+ICstIHJlZyAgICAgICAgICAgICAg
+IDogc2hvdWxkIGNvbnRhaW4gVUZTIHJlZ2lzdGVyIGFkZHJlc3Mgc3BhY2UgJiBVRlMgU1lTIENU
+UkwgcmVnaXN0ZXIgYWRkcmVzcywKPj4gKy0gaW50ZXJydXB0LXBhcmVudCAgOiBpbnRlcnJ1cHQg
+ZGV2aWNlCj4+ICstIGludGVycnVwdHMgICAgICAgIDogaW50ZXJydXB0IG51bWJlcgo+PiArLSBj
+bG9ja3MgICAgICAgICAgICAgICA6IExpc3Qgb2YgcGhhbmRsZSBhbmQgY2xvY2sgc3BlY2lmaWVy
+IHBhaXJzCj4+ICstIGNsb2NrLW5hbWVzICAgICAgIDogTGlzdCBvZiBjbG9jayBpbnB1dCBuYW1l
+IHN0cmluZ3Mgc29ydGVkIGluIHRoZSBzYW1lCj4+ICsgICAgICAgICAgICAgICAgICAgICBvcmRl
+ciBhcyB0aGUgY2xvY2tzIHByb3BlcnR5LiAiY2xrX3JlZiIsICJjbGtfcGh5IiBpcyBvcHRpb25h
+bAo+PiArLSByZXNldHMgICAgICAgICAgICA6IHJlc2V0IG5vZGUgcmVnaXN0ZXIsIG9uZSByZXNl
+dCB0aGUgY2xrIGFuZCB0aGUgb3RoZXIgcmVzZXQgdGhlIGNvbnRyb2xsZXIKPj4gKy0gcmVzZXQt
+bmFtZXMgICAgICAgOiBkZXNjcmliZSByZXNldCBub2RlIHJlZ2lzdGVyCj4+ICsKPj4gK09wdGlv
+bmFsIHByb3BlcnRpZXMgZm9yIGJvYXJkIGRldmljZToKPj4gKy0gdWZzLWhpMzY2MC11c2UtcmF0
+ZS1CICAgICAgICAgICAgICAgIDogc3BlY2lmaWVzIFVGUyByYXRlLUIKPj4gKy0gdWZzLWhpMzY2
+MC1icm9rZW4tZmFzdGF1dG8gICA6IHNwZWNpZmllcyBubyBmYXN0YXV0bwo+PiArLSB1ZnMtaGkz
+NjYwLXVzZS1IUy1HRUFSMyAgICAgIDogc3BlY2lmaWVzIFVGUyBIUy1HRUFSMwo+PiArLSB1ZnMt
+aGkzNjYwLXVzZS1IUy1HRUFSMiAgICAgIDogc3BlY2lmaWVzIFVGUyBIUy1HRUFSMgo+PiArLSB1
+ZnMtaGkzNjYwLXVzZS1IUy1HRUFSMSAgICAgIDogc3BlY2lmaWVzIFVGUyBIUy1HRUFSMQo+PiAr
+LSB1ZnMtaGkzNjYwLWJyb2tlbi1jbGstZ2F0ZS1ieXBhc3MgICAgOiBzcGVjaWZpZXMgbm8gY2xr
+LWdhdGUKPj4gKy0gdWZzLWhpMzY2MC11c2Utb25lLWxpbmUgICAgICA6IHNwZWNpZmllcyBVRlMg
+dXNlIG9uZSBsaW5lIHdvcmsKPj4gKy0gcmVzZXQtZ3BpbyAgICAgICAgICAgICAgICAgICA6IHNw
+ZWNpZmllcyB0byByZXNldCBkZXZpY2VzCj4KPiBTb21lIG9mIHRoZXNlIHNvdW5kIHJhdGhlciBn
+ZW5lcmljIGFuZCBtaWdodCBhcHBseSB0byBVRlMgaW1wbGVtZW50YXRpb25zCj4gb3RoZXIgdGhh
+biBoaTM2NjAsIHNvIEknZCBzdWdnZXN0IGFkZGluZyB0aGVtIHRvIHRoZSBiYXNlIHVmcyBiaW5k
+aW5nIHdpdGgKPiBhIGdlbmVyaWMgbmFtZSBpbnN0ZWFkLgo+Cj4gQW55IERUIHByb3BlcnRpZXMg
+dGhhdCBtaWdodCBiZSB1c2VmdWwgYWNyb3NzIG11bHRpcGxlIGltcGxlbWVudGF0aW9ucwo+IHNo
+b3VsZCBiZSBwYXJzZWQgaW4gZ2VuZXJpYyBjb2RlIHRoYXQgZ2V0cyBjYWxsZWQgYnkgdGhlIGlu
+ZGl2aWR1YWwgZHJpdmVycywKPiBhbmQgdGhlbiB0aGUgcHJvcGVydGllcyB0aGF0IGFyZSBzcGVj
+aWZpYyB0byB0aGUgaW50ZWdyYXRpb24gd29yayBkb25lIGJ5Cj4gaGlzaWxpY29uIHNob3VsZCBi
+ZSBwcmVmaXhlZCB3aXRoICJoaXNpbGljb24sIiwgYnV0IG5vdCBub3JtYWxseSB3aXRoIHRoZQo+
+IFNvQyBuYW1lOiBpdCBpcyBxdWl0ZSBwb3NzaWJsZSB0aGF0IGFub3RoZXIgU29DIHdpbGwgYmUg
+ZGVyaXZlZCBmcm9tIHRoaXMKPiBjaGlwIGFuZCBpdCBzaG91bGQgcmV1c2UgdGhlIHByb3BlcnRp
+ZXMuCgpJIGRvIG5vdCBrbm93IHdoZWhlciBvdGhlciBTb0MgbmVlZCB0byB1c2UgdGhlIG9wdGlv
+bmFsIHByb3BlcnRpZXMgYXMgCmFib3Zlci4gU28gaGVyZSB0aGUgbmFtZSBvZiB0aGUgb3B0aW9u
+YWwgcHJvcGVydGllcyBoYXMgImhpMzY2MCIuCj4KPiAobm90ZTogdGhpcyBpcyBkaWZmZXJlbnQg
+ZnJvbSB0aGUgdmFsdWUgb2YgdGhlICJjb21wYXRpYmxlIiBwcm9wZXJ0eSB0aGF0Cj4gaXMgbWVh
+bnQgdG8gYmUgYXMgc3BlY2lmaWMgYXMgcG9zc2libGUiLgo+Cj4gQWxzbywgcGxlYXNlIGNsYXJp
+ZnkgaG93IHlvdXIgYmluZGluZyByZWxhdGVzIHRvIHRoZSB1ZnNoY2QgYmluZGluZwo+IGluIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91ZnMvdWZzaGNkLXBsdGZybS50eHQ6IGRv
+ZXMKPiBoaTM2NjAgaW1wbGVtZW50IGFueSByZWdpc3RlcnMgdGhhdCBhcmUgc2hhcmVkIHdpdGgg
+dWZzaGNkLCBvciBkb2VzCj4gaXQgdXNlIHRoZSBzYW1lIHBoeXNpY2FsIGludGVyZmFjZSB3aXRo
+IGEgZGlmZmVyZW50IHJlZ2lzdGVyIHNldD8KCk5vLCBvbmx5IHNob3cgaG93IHRvIHVzZSB0aGUg
+ZHQtYmluZGluZyBmb3IgaGkzNjYwIFNvQwo+Cj4gICAgICAgIEFybmQKPgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
