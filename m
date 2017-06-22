@@ -1,90 +1,67 @@
-From: Archit Taneja <architt@codeaurora.org>
-Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
-Date: Thu, 22 Jun 2017 13:47:43 +0530
-Message-ID: <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
-References: <20170615204130.19255-1-eric@anholt.net>
- <20170615204130.19255-2-eric@anholt.net>
- <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
- <871sqkouvr.fsf@eliezer.anholt.net>
- <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
- <871sqe7ei0.fsf@eliezer.anholt.net>
- <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
+Date: Thu, 22 Jun 2017 10:22:21 +0200
+Message-ID: <20170622082221.v4jf2u5bdw6oyjxw@pengutronix.de>
+References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
+ <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
+ <20170622063157.qih2mriprczpj7zn@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, Eric Anholt <eric@anholt.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Boris Brezillon <boris.brezillon@free-electrons.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Philippe Cornu <philippe.cornu@st.com>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170622063157.qih2mriprczpj7zn-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAwNi8yMi8yMDE3IDAxOjIwIFBNLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToKPiAyMDE3
-LTA2LTIwIDE5OjMxIEdNVCswMjowMCBFcmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PjoKPj4g
-QXJjaGl0IFRhbmVqYSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4gd3JpdGVzOgo+Pgo+Pj4gT24g
-MDYvMTYvMjAxNyAwODoxMyBQTSwgRXJpYyBBbmhvbHQgd3JvdGU6Cj4+Pj4gQXJjaGl0IFRhbmVq
-YSA8YXJjaGl0dEBjb2RlYXVyb3JhLm9yZz4gd3JpdGVzOgo+Pj4+Cj4+Pj4+IE9uIDA2LzE2LzIw
-MTcgMDI6MTEgQU0sIEVyaWMgQW5ob2x0IHdyb3RlOgo+Pj4+Pj4gSWYgdGhlIHBhbmVsLWJyaWRn
-ZSBpcyBiZWluZyBzZXQgdXAgYWZ0ZXIgdGhlIGRybV9tb2RlX2NvbmZpZ19yZXNldCgpLAo+Pj4+
-Pj4gdGhlbiB0aGUgY29ubmVjdG9yJ3Mgc3RhdGUgd291bGQgbmV2ZXIgZ2V0IGluaXRpYWxpemVk
-LCBhbmQgd2UnZAo+Pj4+Pj4gZGVyZWZlcmVuY2UgdGhlIE5VTEwgaW4gdGhlIGhvdHBsdWcgcGF0
-aC4gIFdlIGFsc28gbmVlZCB0byByZWdpc3Rlcgo+Pj4+Pj4gdGhlIGNvbm5lY3Rvciwgc28gdGhh
-dCB1c2Vyc3BhY2UgY2FuIGdldCBhdCBpdC4KPj4+Pj4+Cj4+Pj4+Cj4+Pj4+IFNob3VsZG4ndCB0
-aGUgS01TIGRyaXZlciBtYWtlIHN1cmUgdGhlIHBhbmVsLWJyaWRnZSBpcyBzZXQgdXAgYmVmb3Jl
-Cj4+Pj4+IGRybV9tb2RlX2NvbmZpZ19yZXNldD8gSXMgaXQgdGhlIGNhc2Ugd2hlbiB3ZSdyZSBp
-bnNlcnRpbmcgdGhlCj4+Pj4+IHBhbmVsLWJyaWRnZSBkcml2ZXIgYXMgYSBtb2R1bGU/Cj4+Pj4+
-Cj4+Pj4+Cj4+Pj4+IEFsbCB0aGUgY29ubmVjdG9ycyB0aGF0IGhhdmUgYmVlbiBhZGRlZCBhcmUg
-cmVnaXN0ZXJlZCBhdXRvbWF0aWNhbGx5Cj4+Pj4+IHdoZW4gZHJtX2Rldl9yZWdpc3RlcigpIGlz
-IGNhbGxlZCBieSB0aGUgS01TIGRyaXZlci4gUmVnaXN0ZXJpbmcgYQo+Pj4+PiBjb25uZWN0b3Ig
-aW4gdGhlIG1pZGRsZSBvZiBzZXR0aW5nIHVwIG91ciBkcml2ZXIgaXMgcHJvbmUgdG8gcmFjZQo+
-Pj4+PiBjb25kaXRpb25zIGlmIHRoZSB1c2Vyc3BhY2UgZGVjaWRlcyB0byB1c2UgdGhlbSBpbW1l
-ZGlhdGVseS4KPj4+Pgo+Pj4+IFllYWgsIHRoaXMgaXMgZml4aW5nIGluaXRpYWxpemluZyBwYW5l
-bF9icmlkZ2UgYXQgRFNJIGhvc3RfYXR0YWNoIHRpbWUsCj4+Pj4gd2hpY2ggaW4gdGhlIGNhc2Ug
-b2YgYSBwYW5lbCBtb2R1bGUgdGhhdCBjcmVhdGVzIHRoZSBEU0kgZGV2aWNlCj4+Pj4gKGFkdjc1
-MzMtc3R5bGUsIGxpa2UgeW91IHNhaWQgSSBzaG91bGQgdXNlIGFzIGEgcmVmZXJlbmNlKSB3aWxs
-IGJlIGFmdGVyCj4+Pj4gZHJtX21vZGVfY29uZmlnX3Jlc2V0KCkgYW5kIGRybV9kZXZfcmVnaXN0
-ZXIoKS4KPj4+Cj4+PiBPa2F5LiBJbiB0aGUgY2FzZSBvZiB0aGUgbXNtIGttcyBkcml2ZXIsIHdl
-IGRlZmVyIHByb2JlIHVudGlsIHRoZQo+Pj4gYWR2NzUzMyBtb2R1bGUgaXMgaW5zZXJ0ZWQsIG9u
-bHkgdGhlbiB3ZSBwcm9jZWVkIHRvIGRybV9tb2RlX2NvbmZpZ19yZXNldCgpCj4+PiBhbmQgZHJt
-X2Rldl9yZWdpc3RlcigpLiBJIGFzc3VtZWQgdGhpcyB3YXMgdGhlIGdlbmVyYWwgcHJhY3RpY2Ug
-Zm9sbG93ZWQgYnkKPj4+IG1vc3Qga21zIGRyaXZlcnMuIEkuLGUgdGhlIGttcyBkcml2ZXIgZGVm
-ZXJzIHByb2JlIHVudGlsIGFsbCBjb25uZWN0b3IKPj4+IHJlbGF0ZWQgbW9kdWxlcyBhcmUgaW5z
-ZXJ0ZWQsIGFuZCBvbmx5IHRoZW4gcHJvY2VlZCB0byBjcmVhdGUgYSBkcm0gZGV2aWNlLgo+Pgo+
-PiBUaGUgcHJvYmxlbSwgdGhvdWdoLCBpcyB0aGUgcGFuZWwgZHJpdmVyIG5lZWRzIHRoZSBNSVBJ
-IERTSSBob3N0IHRvCj4+IGV4aXN0IHRvIGNhbGwgbWlwaV9kc2lfZGV2aWNlX3JlZ2lzdGVyX2Z1
-bGwoKSBkdXJpbmcgdGhlIHByb2JlIHByb2Nlc3MuCj4+IFRoZSBhZHY3NTMzIGRyaXZlciBnZXRz
-IGFyb3VuZCB0aGlzIGJ5IHJlZ2lzdGVyaW5nIHRoZSBEU0kgZGV2aWNlIGluIHRoZQo+PiBicmlk
-Z2UgYXR0YWNoIHN0ZXAsIGJ1dCBkcm1fcGFuZWwgZG9lc24ndCBoYXZlIGFuIGF0dGFjaCBzdGVw
-LgoKSSdtIG5vdCBzdXJlIGhvdyB3ZSBjYW4gZ2V0IGFyb3VuZCB0aGlzLiBXZSBoYWQgZGlzY3Vz
-c2lvbiBhYm91dCB0aGlzIG9uIGlyYwpyZWNlbnRseSwgYnV0IGNvdWxkbid0IGNvbWUgdXAgd2l0
-aCBhIGdvb2QgY29uY2x1c2lvbi4gV2UgY291bGQgY29tZSB1cCB3aXRoIGEKcGFuZWxfYXR0YWNo
-KCkgY2FsbGJhY2sgdG8gbWFrZSBpdCBzaW1pbGFyIHRvIGJyaWRnZXMsIGJ1dCB0aGF0J3MganVz
-dCB1cyBhdm9pZGluZwp0aGUgcmVhbCBpc3N1ZS4KCj4+Cj4+IEFub3RoZXIgYWx0ZXJuYXRpdmUg
-aXMgbXkgb3JpZ2luYWwgdmVyc2lvbiBvZiB0aGUgcGFuZWwgZHJpdmVyIHRoYXQgd2FzCj4+IGEg
-bWlwaV9kc2lfZGV2aWNlIGRyaXZlciB0aGF0IHJlZ2lzdGVyZWQgdGhlIHBhbmVsIGR1cmluZyB0
-aGUgRFNJIGRldmljZQo+PiBwcm9iZS4gIFRoYXQncyB3aHkgdmM0J3MgcGFuZWwgbG9va3VwIGlz
-IGR1cmluZyB0aGUgTUlQSSBEU0kgYXR0YWNoCj4+IHBoYXNlLCBjdXJyZW50bHkuCj4gCgpUaGlz
-IHdvdWxkIHJlcXVpcmUgeW91IHRvIGhhdmUgYSBEU0kgZGV2aWNlIG5vZGUgaW4gRFQsIHJhdGhl
-ciB0aGFuIGFuIGkyYwpub2RlLCByaWdodD8gSSBkb24ndCBrbm93IGlmIHdlIHNob3VsZCBkbyB0
-aGF0IGJlY2F1c2Ugb2YgYSBsaW1pdGF0aW9uIGluCm91ciBkcm1fbWlwaV9kc2kgYW5kIGRybV9w
-YW5lbCBmcmFtZXdvcmtzLgoKRG9lcyBhbnlvbmUgaGF2ZSBiZXR0ZXIgaWRlYXM/CgpUaGFua3Ms
-CkFyY2hpdAoKPiArIFBoaWxpcHBlIGluIGNvcHkgYmVjYXVzZSB3ZSBoYXZlIHRoZSBzYW1lIHBy
-b2JpbmcgaXNzdWUgd2hlbiBhZGRpbmcKPiBwYW5lbC1icmlkZ2UKPiB3aXRoIHRoZSBkc2kgYnJp
-ZGdlCj4gCj4+Cj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCj4+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPj4gZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwo+PiBodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo+PgoKLS0gClF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEg
-bWVtYmVyIG9mIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3Jh
-dGl2ZSBQcm9qZWN0Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Hello Sascha,
+
+On Thu, Jun 22, 2017 at 08:31:57AM +0200, Sascha Hauer wrote:
+> On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
+> > +/**
+> > + * of_get_rs485_mode() - Implement parsing rs485 properties
+> > + * @np: uart node
+> > + * @rs485conf: output parameter
+> > + *
+> > + * This function implements the device tree binding described in
+> > + * Documentation/devicetree/bindings/serial/rs485.txt.
+> > + *
+> > + * Return: 0 on success, 1 if the node doesn't contain rs485 stuff, or a
+> > + * negative error code.
+> > + */
+> > +int of_get_rs485_mode(struct device_node *np, struct serial_rs485 *rs485conf)
+> > +{
+> > +	u32 rs485_delay[2];
+> > +	int ret;
+> > +
+> > +	ret = of_property_read_u32_array(np, "rs485-rts-delay" rs485_delay, 2);
+> > +	if (ret == -EINVAL) /* property does not exist */
+> > +		return 1;
+> 
+> As the de-facto standard for the drivers implementing the rs485 bindings
+> is to make the properties optional, despite the documentation. Wouldn't
+
+I must admit that I failed to mention in the commit log that being
+strict here was added by me even though I'm not the author.
+
+> it be better to make this property optional in the binding instead? This
+> wouldn't unnecessarily break old device trees and 0/0 seems a sane
+> default we can use when the property doesn't exist.
+
+Would be fine for me, too. It was Nicolas Ferre who specified this as
+being required in 0331bbf3c6fd9. Added people who discussed the patch
+back then (but without questioning rs485-rts-delay being mandatory).
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
