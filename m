@@ -1,35 +1,60 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: [PATCH 3/3] iio: adc: mt7622: Add compatible node for mt7622.
-Date: Thu, 22 Jun 2017 13:44:34 +0800
-Message-ID: <1498110274-18678-4-git-send-email-zhiyong.tao@mediatek.com>
-References: <1498110274-18678-1-git-send-email-zhiyong.tao@mediatek.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/9] serial: Add common rs485 device tree parsing function
+Date: Thu, 22 Jun 2017 08:10:07 +0200
+Message-ID: <20170622061007.h76gk3hixp4ipyvr@pengutronix.de>
+References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
+ <20170621102130.21024-2-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498110274-18678-1-git-send-email-zhiyong.tao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net
-Cc: srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, matthias.bgg@gmail.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org, Zhiyong Tao <zhiyong.tao@mediatek.com>
+Content-Type: text/plain; charset=iso-8859-15
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170621102130.21024-2-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds mt7622 compatible node.
+On Wed, Jun 21, 2017 at 12:21:22PM +0200, Uwe Kleine-König wrote:
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> Several drivers have the same device tree parsing code. Create
+> a common helper function for it.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/tty/serial/Kconfig  |  4 ++++
+>  drivers/tty/serial/Makefile |  2 ++
+>  drivers/tty/serial/of.c     | 45 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/serial_core.h | 12 ++++++++++++
+>  4 files changed, 63 insertions(+)
+>  create mode 100644 drivers/tty/serial/of.c
+> 
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 5c8850f7a2a0..8baef5b95bed 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -14,6 +14,10 @@ config SERIAL_EARLYCON
+>  	  the console before standard serial driver is probed. The console is
+>  	  enabled when early_param is processed.
+>  
+> +config OF_SERIAL
+> +	depends on SERIAL_CORE
+> +	def_bool y
 
-Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
----
- drivers/iio/adc/mt6577_auxadc.c |    1 +
- 1 file changed, 1 insertion(+)
+This probably also needs a dependency on some device tree option,
+CONFIG_OF maybe?
 
-diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
-index 2dd7c74..4a2cd9e 100644
---- a/drivers/iio/adc/mt6577_auxadc.c
-+++ b/drivers/iio/adc/mt6577_auxadc.c
-@@ -308,6 +308,7 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
- static const struct of_device_id mt6577_auxadc_of_match[] = {
- 	{ .compatible = "mediatek,mt2701-auxadc", },
- 	{ .compatible = "mediatek,mt8173-auxadc", },
-+	{ .compatible = "mediatek,mt7622-auxadc", },
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, mt6577_auxadc_of_match);
+Sascha
+
+
 -- 
-1.7.9.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
