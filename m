@@ -1,62 +1,72 @@
 From: Hugues Fruchet <hugues.fruchet@st.com>
-Subject: [PATCH v1 2/5] [media] stm32-dcmi: revisit control register handling
-Date: Thu, 22 Jun 2017 17:12:48 +0200
-Message-ID: <1498144371-13310-3-git-send-email-hugues.fruchet@st.com>
+Subject: [PATCH v1 4/5] ARM: dts: stm32: Enable DCMI support on STM32F746 MCU
+Date: Thu, 22 Jun 2017 17:12:50 +0200
+Message-ID: <1498144371-13310-5-git-send-email-hugues.fruchet@st.com>
 References: <1498144371-13310-1-git-send-email-hugues.fruchet@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1498144371-13310-1-git-send-email-hugues.fruchet@st.com>
-Sender: linux-media-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Simplify bits handling of DCMI_CR register.
+Enable DCMI camera interface on STM32F746 MCU.
 
 Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
 ---
- drivers/media/platform/stm32/stm32-dcmi.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/stm32f746.dtsi | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
-index 0dd5d1c..75d53aa 100644
---- a/drivers/media/platform/stm32/stm32-dcmi.c
-+++ b/drivers/media/platform/stm32/stm32-dcmi.c
-@@ -490,7 +490,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
- {
- 	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
- 	struct dcmi_buf *buf, *node;
--	u32 val;
-+	u32 val = 0;
- 	int ret;
+diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
+index c2765ce..4bdf37c 100644
+--- a/arch/arm/boot/dts/stm32f746.dtsi
++++ b/arch/arm/boot/dts/stm32f746.dtsi
+@@ -326,6 +326,23 @@
+ 					bias-disable;
+ 				};
+ 			};
++
++			dcmi_pins: dcmi_pins@0 {
++				pins {
++					pinmux = <STM32F746_PA4_FUNC_DCMI_HSYNC>,
++						 <STM32F746_PG9_FUNC_DCMI_VSYNC>,
++						 <STM32F746_PA6_FUNC_DCMI_PIXCLK>,
++						 <STM32F746_PH9_FUNC_DCMI_D0>,
++						 <STM32F746_PH10_FUNC_DCMI_D1>,
++						 <STM32F746_PH11_FUNC_DCMI_D2>,
++						 <STM32F746_PH12_FUNC_DCMI_D3>,
++						 <STM32F746_PH14_FUNC_DCMI_D4>,
++						 <STM32F746_PD3_FUNC_DCMI_D5>,
++						 <STM32F746_PE5_FUNC_DCMI_D6>,
++						 <STM32F746_PE6_FUNC_DCMI_D7>;
++					slew-rate = <3>;
++				};
++			};
+ 		};
  
- 	ret = clk_enable(dcmi->mclk);
-@@ -510,22 +510,16 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+ 		crc: crc@40023000 {
+@@ -344,6 +361,20 @@
+ 			assigned-clocks = <&rcc 1 CLK_HSE_RTC>;
+ 			assigned-clock-rates = <1000000>;
+ 		};
++
++		dcmi: dcmi@50050000 {
++			compatible = "st,stm32-dcmi";
++			reg = <0x50050000 0x400>;
++			interrupts = <78>;
++			resets = <&rcc STM32F7_AHB2_RESET(DCMI)>;
++			clocks = <&rcc 0 STM32F7_AHB2_CLOCK(DCMI)>;
++			clock-names = "mclk";
++			pinctrl-names = "default";
++			pinctrl-0 = <&dcmi_pins>;
++			dmas = <&dma2 1 1 0x414 0x3>;
++			dma-names = "tx";
++			status = "disabled";
++		};
+ 	};
+ };
  
- 	spin_lock_irq(&dcmi->irqlock);
- 
--	val = reg_read(dcmi->regs, DCMI_CR);
--
--	val &= ~(CR_PCKPOL | CR_HSPOL | CR_VSPOL |
--		 CR_EDM_0 | CR_EDM_1 | CR_FCRC_0 |
--		 CR_FCRC_1 | CR_JPEG | CR_ESS);
--
- 	/* Set bus width */
- 	switch (dcmi->bus.bus_width) {
- 	case 14:
--		val &= CR_EDM_0 + CR_EDM_1;
-+		val |= CR_EDM_0 | CR_EDM_1;
- 		break;
- 	case 12:
--		val &= CR_EDM_1;
-+		val |= CR_EDM_1;
- 		break;
- 	case 10:
--		val &= CR_EDM_0;
-+		val |= CR_EDM_0;
- 		break;
- 	default:
- 		/* Set bus width to 8 bits by default */
 -- 
 1.9.1
