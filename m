@@ -1,98 +1,64 @@
-From: "A.s. Dong" <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V4 1/7] dt-bindings: pinctrl: extend the pinmux property
- to support integers array
-Date: Thu, 22 Jun 2017 14:35:02 +0000
-Message-ID: <AM3PR04MB306DCE8DEF8507B4175789180DB0@AM3PR04MB306.eurprd04.prod.outlook.com>
-References: <1498046395-30001-1-git-send-email-aisheng.dong@nxp.com>
- <1498046395-30001-2-git-send-email-aisheng.dong@nxp.com>
- <20170621215059.GA14826@w540>
+From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCH 3/4] ARM: l2x0: add arm,ecc-enable property for
+ aurora
+Date: Thu, 22 Jun 2017 16:46:30 +0200
+Message-ID: <1498142790.2533.80.camel@pengutronix.de>
+References: <20170608041124.4624-1-chris.packham@alliedtelesis.co.nz>
+         <20170608041124.4624-4-chris.packham@alliedtelesis.co.nz>
+         <1496998692.3536.24.camel@pengutronix.de>
+         <220533aeb8f64e829f483e38e209cdc8@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170621215059.GA14826@w540>
-Content-Language: en-US
-Sender: linux-gpio-owner@vger.kernel.org
-To: jmondi <jacopo@jmondi.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "stefan@agner.ch" <stefan@agner.ch>, Jacky Bai <ping.bai@nxp.com>, Andy Duan <fugang.duan@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jacopo Mondi <jacopo+renesas@jmondi.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <220533aeb8f64e829f483e38e209cdc8-5g7mGxlPNYb6GjIOKuZY+ItlCAj8ZROq@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: "bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org" <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFjb3BvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IGptb25k
-aSBbbWFpbHRvOmphY29wb0BqbW9uZGkub3JnXQ0KPiBTZW50OiBUaHVyc2RheSwgSnVuZSAyMiwg
-MjAxNyA1OjUxIEFNDQo+IFRvOiBBLnMuIERvbmcNCj4gQ2M6IGxpbnV4LWdwaW9Admdlci5rZXJu
-ZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnVzLndh
-bGxlaWpAbGluYXJvLm9yZzsgc2hhd25ndW9Aa2VybmVsLm9yZzsgc3RlZmFuQGFnbmVyLmNoOyBK
-YWNreSBCYWk7DQo+IEFuZHkgRHVhbjsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBSb2IgSGVycmlu
-ZzsgTWFyayBSdXRsYW5kOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgSmFjb3BvIE1v
-bmRpDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjQgMS83XSBkdC1iaW5kaW5nczogcGluY3RybDog
-ZXh0ZW5kIHRoZSBwaW5tdXgNCj4gcHJvcGVydHkgdG8gc3VwcG9ydCBpbnRlZ2VycyBhcnJheQ0K
-PiANCj4gSGkgRG9uZywNCj4gICAgdGhhbmtzIGZvciB0aGlzDQo+IA0KPiBPbiBXZWQsIEp1biAy
-MSwgMjAxNyBhdCAwNzo1OTo0OVBNICswODAwLCBEb25nIEFpc2hlbmcgd3JvdGU6DQo+ID4gU29t
-ZSBwbGF0Zm9ybXMgbWF5IG5lZWQgbW9yZSB0aGFuIG9uZSBpbnRlZ2VyIHRvIHJlcHJlc2VudCBh
-IGNvbXBsZXRlDQo+ID4gcGlubXV4IGJpbmRpbmcsIHNvIGxldCdzIGV4dGVuZCB0aGUgcGlubXV4
-IHByb3BlcnR5IHRvIGFsbG93IHRvIGFjY2VwdA0KPiA+IGludGVnZXIgYXJyYXkgaW5zdGVhZCBv
-ZiBvbmx5IGEgc2luZ2xlIGludGVnZXIuDQo+ID4NCj4gPiBDYzogUm9iIEhlcnJpbmcgPHJvYmgr
-ZHRAa2VybmVsLm9yZz4NCj4gPiBDYzogTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNv
-bT4NCj4gPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiBDYzogTGludXMgV2Fs
-bGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiA+IENjOiBTaGF3biBHdW8gPHNoYXdu
-Z3VvQGtlcm5lbC5vcmc+DQo+ID4gQ2M6IEphY29wbyBNb25kaSA8amFjb3BvK3JlbmVzYXNAam1v
-bmRpLm9yZz4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0Bu
-eHAuY29tPg0KPiA+DQo+ID4gLS0tDQo+ID4gQ2hhbmdlTG9nOg0KPiA+ICAqIG5ldyBwYXRjaA0K
-PiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGluY3RybC9w
-aW5jdHJsLWJpbmRpbmdzLnR4dCB8IDkNCj4gPiArKysrKy0tLS0NCj4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQN
-Cj4gPiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwt
-YmluZGluZ3MudHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGlu
-Y3RybC9waW5jdHJsLWJpbmRpbmdzLnR4dA0KPiA+IGluZGV4IGYwMWQxNTQuLjFiOTU0YjUgMTAw
-NjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BpbmN0cmwv
-cGluY3RybC1iaW5kaW5ncy50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvcGluY3RybC9waW5jdHJsLWJpbmRpbmdzLnR4dA0KPiA+IEBAIC0yMDUsMTAgKzIw
-NSwxMSBAQCBtYWludGFpbi4NCj4gPg0KPiA+ICBGb3IgY2FzZXMgbGlrZSB0aGlzLCB0aGUgcGlu
-IGNvbnRyb2xsZXIgZHJpdmVyIG1heSB1c2UgdGhlIHBpbm11eA0KPiA+IGhlbHBlciAgcHJvcGVy
-dHksIHdoZXJlIHRoZSBwaW4gaWRlbnRpZmllciBpcyBwYWNrZWQgd2l0aCBtdXgNCj4gPiBjb25m
-aWd1cmF0aW9uIHNldHRpbmdzIC1pbiBhIHNpbmdsZSBpbnRlZ2VyLg0KPiA+ICtpbiBhIHNpbmds
-ZSBpbnRlZ2VyIG9yIGludGVnZXJzIGFycmF5IHdoaWNoIGRlcGVuZHMgb24gcGxhdGZvcm0NCj4g
-PiArYmluZGluZyBzcGVjaWZpYy4NCj4gPg0KPiANCj4gcy9vciBpbnRlZ2VycyBhcnJheS9vciBh
-IGdyb3VwIG9mIGludGVnZXJzLyBzaW5jZSB5b3UncmUgdXNpbmcgImdyb3VwIg0KPiBiZWxvdw0K
-PiANCj4gcy8gd2hpY2ggZGVwZW5kcyBvbiBwbGF0Zm9ybSBiaW5kaW5nIHNwZWNpZmljLy8NCj4g
-DQo+IEknbSBub3QgYSBuYXRpdmUgc3BlYWtlciwgYnV0IHRoaXMgc291bmRzIHdlaXJkIHRvIG1l
-LiBJZiBJJ20gdGhlIG9ubHkgb25lLA0KPiBwbGVhc2UgaWdub3JlIG15IGNvbW1lbnQgb3RoZXJ3
-aXNlIHBsZWFzZSBkcm9wIHRoaXMNCj4gDQo+IEFjdHVhbGx5LCB0byBhdm9pZCBjb25mdXNpb24g
-YmV0d2VlbiAiYXJyYXkgb2YgaW50ZWdlcnMiIGFuZCAiZ3JvdXAgb2YNCj4gaW50ZWdlcnMiIEkg
-d291bGQgcHJvdmlkZSBhIGRlZmluaXRpb24gb2Ygd2hhdCBhICJwaW5tdXggZ3JvdXAiIGlzIGJl
-Zm9yZQ0KPiBldmVyeXRoaW5nIGVsc2UuDQo+IFRoaXMgaXMgaG93IHRoZSBwYXJhZ3JhcGggd291
-bGQgbG9vayBsaWtlOg0KPiANCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gLS0tDQo+ICBGb3IgY2Fz
-ZXMgbGlrZSB0aGlzLCB0aGUgcGluIGNvbnRyb2xsZXIgZHJpdmVyIG1heSB1c2UgdGhlIHBpbm11
-eCBoZWxwZXINCj4gcHJvcGVydHksIHdoZXJlIHRoZSBwaW4gaWRlbnRpZmllciBpcyBwcm92aWRl
-ZCB3aXRoIG11eCBjb25maWd1cmF0aW9uDQo+IHNldHRpbmdzICBpbiBhIHBpbm11eCBncm91cC4N
-Cj4gDQo+ICBBIHBpbnVtdXggZ3JvdXAgY29uc2lzdHMgb2YgdGhlIHBpbiBpZGVudGlmaWVyIGFu
-ZCBtdXggc2V0dGluZ3MNCj4gcmVwcmVzZW50ZWQgYXMgYSBzaW5nbGUgaW50ZWdlciBvciBhbiBh
-cnJheSBvZiBpbnRlZ2Vycy4NCj4gDQo+ICBUaGUgcGlubXV4IHByb3BlcnR5IGFjY2VwdHMgYW4g
-YXJyYXkgb2YgcGlubXV4IGdyb3VwcywgZWFjaCBvZiB0aGVtDQo+IGRlc2NyaWJpbmcgIGEgc2lu
-Z2xlIHBpbiBtdWx0aXBsZXhpbmcgY29uZmlndXJhdGlvbi4NCj4gDQo+ICBwaW5jb250cm9sbGVy
-IHsNCj4gCXN0YXRlXzBfbm9kZV9hIHsNCj4gCQlwaW5tdXggPSA8UElOTVVYX0dST1VQPiwgPFBJ
-Tk1VWF9HUk9VUD4sIC4uLjsNCj4gCX07DQo+ICB9Ow0KPiANCj4gIEVhY2ggaW5kaXZpZHVhbCBw
-aW4gY29udHJvbGxlciBkcml2ZXIgYmluZGluZ3MgZG9jdW1lbnRhdGlvbiBzaGFsbA0KPiBzcGVj
-aWZ5ICBob3cgcGluIElEcyBhbmQgcGluIG11bHRpcGxleGluZyBjb25maWd1cmF0aW9uIGFyZSBk
-ZWZpbmVkIGFuZA0KPiBhc3NlbWJsZWQgdG9nZXRoZXIgIGluIGEgcGlubXV4IGdyb3VwLg0KPiAt
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQ0KPiAtLS0NCg0KVGhpcyBkb2VzIGxvb2sgbXVjaCBiZXR0ZXIuDQpJ
-IHdpbGwgcmVuZXcgdGhlIHBhdGNoIHdpdGggeW91ciBzaWduLW9mZiBhcyB3ZWxsIHNpbmNlIGl0
-IG1vc3RseSBmcm9tIHlvdS4NClRoYW5rcyBmb3IgdGhlIGdyZWF0IHN1Z2dlc3Rpb24uDQoNClJl
-Z2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo+IA0KPiBUaGFua3MNCj4gICAgag0KPiANCj4gPiAtVGhl
-IHBpbm11eCBwcm9wZXJ0eSBhY2NlcHRzIGFuIGFycmF5IG9mIGludGVnZXJzLCBlYWNoIG9mIHRo
-ZW0NCj4gPiBkZXNjcmliaW5nIC1hIHNpbmdsZSBwaW4gbXVsdGlwbGV4aW5nIGNvbmZpZ3VyYXRp
-b24uDQo+ID4gK1RoZSBwaW5tdXggcHJvcGVydHkgYWNjZXB0cyBhbiBhcnJheSBvZiBncm91cCBv
-ZiBpbnRlZ2VycywgZWFjaCBncm91cA0KPiA+ICtkZXNjcmliaW5nIGEgc2luZ2xlIHBpbiBtdWx0
-aXBsZXhpbmcgY29uZmlndXJhdGlvbi4NCj4gPg0KPiA+ICBwaW5jb250cm9sbGVyIHsNCj4gPiAg
-CXN0YXRlXzBfbm9kZV9hIHsNCj4gPiBAQCAtMzAwLDcgKzMwMSw3IEBAIGFyZ3VtZW50cyBhcmUg
-ZGVzY3JpYmVkIGJlbG93Lg0KPiA+ICAtIHBpbm11eCB0YWtlcyBhIGxpc3Qgb2YgcGluIElEcyBh
-bmQgbXV4IHNldHRpbmdzIGFzIHJlcXVpcmVkIGFyZ3VtZW50Lg0KPiBUaGUNCj4gPiAgICBzcGVj
-aWZpYyBiaW5kaW5ncyBmb3IgdGhlIGhhcmR3YXJlIGRlZmluZXM6DQo+ID4gICAgLSBIb3cgcGlu
-IElEcyBhbmQgbXV4IHNldHRpbmdzIGFyZSBkZWZpbmVkIGFuZCBhc3NlbWJsZWQgdG9nZXRoZXIg
-aW4NCj4gYSBzaW5nbGUNCj4gPiAtICAgIGludGVnZXIuDQo+ID4gKyAgICBpbnRlZ2VyIG9yIGlu
-dGVnZXJzIGFycmF5Lg0KPiA+DQo+ID4gIC0gYmlhcy1wdWxsLXVwLCAtZG93biBhbmQgLXBpbi1k
-ZWZhdWx0IHRha2UgYXMgb3B0aW9uYWwgYXJndW1lbnQgb24NCj4gaGFyZHdhcmUNCj4gPiAgICBz
-dXBwb3J0aW5nIGl0IHRoZSBwdWxsIHN0cmVuZ3RoIGluIE9obS4gYmlhcy1kaXNhYmxlIHdpbGwg
-ZGlzYWJsZSB0aGUNCj4gcHVsbC4NCj4gPiAtLQ0KPiA+IDIuNy40DQo+ID4NCg==
+Chris,
+
+On So, 2017-06-11 at 22:55 +0000, Chris Packham wrote:
+> On 09/06/17 20:58, Jan Lübbe wrote:
+> > On Do, 2017-06-08 at 16:11 +1200, Chris Packham wrote:
+> >> +       if (of_property_read_bool(np, "arm,ecc-enable")) {
+> >> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
+> >> +               val |= L2C_AUX_CTRL_EVTMON_ENABLE;
+> >> +       } else if (of_property_read_bool(np, "arm,ecc-disable")) {
+> >> +               mask |= L2C_AUX_CTRL_EVTMON_ENABLE;
+> >> +       }
+> > 
+> > Unless I misunderstand the code in __l2c_init(), the mask is used to
+> > specify the bits to preserve:
+> >          old_aux = aux = readl_relaxed(l2x0_base + L2X0_AUX_CTRL);
+> >          aux &= aux_mask;
+> >          aux |= aux_val;
+> > 
+> >          if (old_aux != aux)
+> >                  pr_warn("L2C: DT/platform modifies aux control register: 0x%08x -> 0x%08x\n",
+> >                          old_aux, aux);
+> > 
+> > So the arm,ecc-disable property will have no effect. This probably also
+> > applies to patch 2/4. The existing property *-disable code removes the
+> > corresponding bit from the mask.
+> 
+> Indeed the disable version should be mask &= ~L2C_AUX_CTRL_EVTMON_ENABLE 
+> and I was probably a little lazy to have used the L2C EVTMON instead of 
+> adding AURORA specific ones like you have in your series.
+> 
+> I'll rebase my series on top of yours and send it direct to you so you 
+> can include it in the overall submission.
+
+While picking up your arm,parity-enable and arm,ecc-enable patches for
+my series, I noticed that the mask variable is inverted when merging the
+local changes into aux_val/aux_mask at the end of aurora_of_parse. So I
+now believe your code is correct. ;) I'd appreciate a close look,
+nevertheless.
+
+Regards,
+Jan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
