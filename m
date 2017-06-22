@@ -1,39 +1,60 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] scripts/dtc: dtx_diff - Show real file names in diff
- header
-Date: Thu, 22 Jun 2017 11:21:12 -0500
-Message-ID: <20170622162112.45uobyoar7cddorv@rob-hp-laptop>
-References: <1498136826-6793-1-git-send-email-geert+renesas@glider.be>
+Subject: Re: [PATCH v2] of: update ePAPR references to point to Devicetree
+ Specification
+Date: Thu, 22 Jun 2017 11:22:21 -0500
+Message-ID: <20170622162221.qxglzqdxpzt6hoho@rob-hp-laptop>
+References: <1498148139-12770-1-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1498136826-6793-1-git-send-email-geert+renesas@glider.be>
+In-Reply-To: <1498148139-12770-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: Mark Rutland <mark.rutland@arm.com>, horia.geanta@nxp.com, Dan Douglass <dan.douglass@nxp.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Scott Wood <oss@buserror.net>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 03:07:06PM +0200, Geert Uytterhoeven wrote:
-> As the comparison uses process substitution to pass files after
-> conversion to DTS format, the diff header doesn't show the real
-> filenames, but the names of the file descriptors used:
+On Thu, Jun 22, 2017 at 09:15:39AM -0700, frowand.list@gmail.com wrote:
+> From: Frank Rowand <frank.rowand@sony.com>
 > 
->     --- /dev/fd/63  2017-06-22 11:21:47.531637188 +0200
->     +++ /dev/fd/62  2017-06-22 11:21:47.531637188 +0200
+> The Devicetree Specification has superseded the ePAPR as the
+> base specification for bindings.  Update files in Documentation
+> to reference the new document.
 > 
-> This is especially annoying when comparing a bunch of DT files in a
-> loop, as the output doesn't show a clue about which files it refers to.
+> First reference to ePAPR in Documentation/devicetree/bindings/arm/cci.txt
+> is generic, remove it.
 > 
-> Fix this by explicitly passing the original file names to the diff
-> command using the --label option, giving e.g.:
+> Some files are not updated because there is no hypervisor chapter
+> in the Devicetree Specification:
+>    Documentation/devicetree/bindings/powerpc/fsl/msi-pic.txt
+>    Documenation/virtual/kvm/api.txt
+>    Documenation/virtual/kvm/ppc-pv.txt
 > 
->     --- arch/arm/boot/dts/r8a7791-koelsch.dtb
->     +++ arch/arm/boot/dts/r8a7791-porter.dtb
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
 > ---
->  scripts/dtc/dtx_diff | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> changes from v1:
+>    - remove boilerplat ePAPR reference from cci.txt
+> 
+>  Documentation/devicetree/bindings/arm/cci.txt             | 15 ++++-----------
+>  Documentation/devicetree/bindings/arm/cpus.txt            | 13 +++++++------
+>  Documentation/devicetree/bindings/arm/idle-states.txt     |  4 ++--
+>  Documentation/devicetree/bindings/arm/l2c2x0.txt          |  4 ++--
+>  Documentation/devicetree/bindings/arm/topology.txt        |  4 ++--
+>  Documentation/devicetree/bindings/bus/simple-pm-bus.txt   |  2 +-
+>  Documentation/devicetree/bindings/chosen.txt              |  3 ++-
+>  Documentation/devicetree/bindings/common-properties.txt   |  2 +-
+>  Documentation/devicetree/bindings/crypto/fsl-sec4.txt     |  4 ++--
+>  Documentation/devicetree/bindings/crypto/fsl-sec6.txt     |  4 ++--
+>  .../devicetree/bindings/interrupt-controller/open-pic.txt |  5 ++---
+>  Documentation/devicetree/bindings/net/ethernet.txt        |  9 ++++++---
+>  Documentation/devicetree/bindings/powerpc/fsl/cpus.txt    |  6 +++---
+>  Documentation/devicetree/bindings/powerpc/fsl/l2cache.txt |  2 +-
+>  .../devicetree/bindings/powerpc/fsl/srio-rmu.txt          |  4 ++--
+>  Documentation/devicetree/bindings/powerpc/fsl/srio.txt    |  3 ++-
+>  Documentation/devicetree/booting-without-of.txt           |  2 +-
+>  Documentation/devicetree/usage-model.txt                  |  2 +-
+>  Documentation/xtensa/mmu.txt                              |  6 +++---
+>  19 files changed, 46 insertions(+), 48 deletions(-)
 
 Applied.
