@@ -1,46 +1,41 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 01/11] net: phy: Add rockchip phy driver support
-Date: Fri, 23 Jun 2017 15:55:45 +0200
-Message-ID: <20170623135545.GB21943@lunn.ch>
-References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
- <1498192929-7519-2-git-send-email-david.wu@rock-chips.com>
+From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH] regulator: fixed, gpio: dt: regulator-name is required property
+Date: Fri, 23 Jun 2017 15:55:09 +0200
+Message-ID: <E1dOP3F-0000NF-Pe@stardust.g4.wien.funkfeuer.at>
+References: <1488836249-1193-1-git-send-email-harald@ccbib.org> <20170315171009.4raoe35x4mdtsw4w@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1498192929-7519-2-git-send-email-david.wu@rock-chips.com>
-Sender: netdev-owner@vger.kernel.org
-To: David Wu <david.wu@rock-chips.com>
-Cc: davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20170315171009.4raoe35x4mdtsw4w@rob-hp-laptop>
+Content-ID: <1439.1498226108.1-rvrRdOlaWMmli2aaYNgTVBW+3FKk/ZpWT2auq/jSWdo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 12:41:59PM +0800, David Wu wrote:
-> Support internal ephy currently.
+Hi Mark,
+
+what happened to this patch? Since it was written to your specification
+and got an ack from a devicetree maintainer more then 3 months ago,
+I don't see what is holding it back. I can't find it in any tree.
+
+TIA,
+Harald
+
+Rob Herring writes:
+> On Mon, Mar 06, 2017 at 09:37:29PM +0000, Harald Geyer wrote:
+> > These two drivers fail to probe if no name is provided. For details see:
+> > https://www.spinics.net/lists/kernel/msg2457515.html
+> > 
+> > Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 1 +
+> >  Documentation/devicetree/bindings/regulator/gpio-regulator.txt  | 2 ++
+> >  2 files changed, 3 insertions(+)
 > 
-> Signed-off-by: David Wu <david.wu@rock-chips.com>
-> ---
->  drivers/net/phy/Kconfig    |  4 ++
->  drivers/net/phy/Makefile   |  1 +
->  drivers/net/phy/rockchip.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 99 insertions(+)
->  create mode 100644 drivers/net/phy/rockchip.c
-> 
-> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-> index c360dd6..86010d4 100644
-> --- a/drivers/net/phy/Kconfig
-> +++ b/drivers/net/phy/Kconfig
-> @@ -350,6 +350,10 @@ config XILINX_GMII2RGMII
->           the Reduced Gigabit Media Independent Interface(RGMII) between
->           Ethernet physical media devices and the Gigabit Ethernet controller.
->  
-> +config ROCKCHIP_MAC_PHY
-> +	tristate "Drivers for ROCKCHIP MAC PHY"
-> +	---help---
-> +	  Currently supports the mac internal ephy.
->  endif # PHYLIB
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Alphabetic order please for Kconfig and Makefile.
-
-I will review the rest later today/tomorrow.
-
-  Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
