@@ -1,11 +1,11 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 4/4] net: dsa: bcm_sf2: Remove special handling of "internal" phy-mode
-Date: Fri, 23 Jun 2017 10:31:35 -0700
-Message-ID: <20170623173135.22912-5-f.fainelli@gmail.com>
+Subject: [PATCH 3/4] net: bcmgenet: Remove special handling of "internal" phy-mode
+Date: Fri, 23 Jun 2017 10:31:34 -0700
+Message-ID: <20170623173135.22912-4-f.fainelli@gmail.com>
 References: <20170623173135.22912-1-f.fainelli@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170623173135.22912-1-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: netdev@ver.kernel.org
 Cc: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Russell King <rmk+kernel@armlinux.org.uk>, "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
         DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, david.wu@rock-chips.com, opendmb@gmail.com
@@ -16,44 +16,64 @@ custom parsing code now unnecessary.
 
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/net/dsa/bcm_sf2.c | 16 +++++-----------
- 1 file changed, 5 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/broadcom/genet/bcmmii.c | 24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/dsa/bcm_sf2.c b/drivers/net/dsa/bcm_sf2.c
-index 76e98e8ed315..648f91b58d1e 100644
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -498,10 +498,8 @@ static void bcm_sf2_identify_ports(struct bcm_sf2_priv *priv,
- 				   struct device_node *dn)
- {
- 	struct device_node *port;
--	const char *phy_mode_str;
- 	int mode;
- 	unsigned int port_num;
--	int ret;
+diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+index 285676f8da6b..071fcbd14e6a 100644
+--- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
++++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
+@@ -251,11 +251,8 @@ int bcmgenet_mii_config(struct net_device *dev)
+ 	priv->ext_phy = !priv->internal_phy &&
+ 			(priv->phy_interface != PHY_INTERFACE_MODE_MOCA);
  
- 	priv->moca_port = -1;
- 
-@@ -515,15 +513,11 @@ static void bcm_sf2_identify_ports(struct bcm_sf2_priv *priv,
- 		 * time
- 		 */
- 		mode = of_get_phy_mode(port);
--		if (mode < 0) {
--			ret = of_property_read_string(port, "phy-mode",
--						      &phy_mode_str);
--			if (ret < 0)
--				continue;
+-	if (priv->internal_phy)
+-		priv->phy_interface = PHY_INTERFACE_MODE_NA;
 -
--			if (!strcasecmp(phy_mode_str, "internal"))
--				priv->int_phy_mask |= 1 << port_num;
--		}
-+		if (mode < 0)
-+			continue;
-+
-+		if (mode == PHY_INTERFACE_MODE_INTERNAL)
-+			priv->int_phy_mask |= 1 << port_num;
+ 	switch (priv->phy_interface) {
+-	case PHY_INTERFACE_MODE_NA:
++	case PHY_INTERFACE_MODE_INTERNAL:
+ 	case PHY_INTERFACE_MODE_MOCA:
+ 		/* Irrespective of the actually configured PHY speed (100 or
+ 		 * 1000) GENETv4 only has an internal GPHY so we will just end
+@@ -471,7 +468,6 @@ static int bcmgenet_mii_of_init(struct bcmgenet_priv *priv)
+ {
+ 	struct device_node *dn = priv->pdev->dev.of_node;
+ 	struct device *kdev = &priv->pdev->dev;
+-	const char *phy_mode_str = NULL;
+ 	struct phy_device *phydev = NULL;
+ 	char *compat;
+ 	int phy_mode;
+@@ -510,23 +506,19 @@ static int bcmgenet_mii_of_init(struct bcmgenet_priv *priv)
  
- 		if (mode == PHY_INTERFACE_MODE_MOCA)
- 			priv->moca_port = port_num;
+ 	/* Get the link mode */
+ 	phy_mode = of_get_phy_mode(dn);
++	if (phy_mode < 0) {
++		dev_err(kdev, "invalid PHY mode property\n");
++		return phy_mode;
++	}
++
+ 	priv->phy_interface = phy_mode;
+ 
+ 	/* We need to specifically look up whether this PHY interface is internal
+ 	 * or not *before* we even try to probe the PHY driver over MDIO as we
+ 	 * may have shut down the internal PHY for power saving purposes.
+ 	 */
+-	if (phy_mode < 0) {
+-		ret = of_property_read_string(dn, "phy-mode", &phy_mode_str);
+-		if (ret < 0) {
+-			dev_err(kdev, "invalid PHY mode property\n");
+-			return ret;
+-		}
+-
+-		priv->phy_interface = PHY_INTERFACE_MODE_NA;
+-		if (!strcasecmp(phy_mode_str, "internal"))
+-			priv->internal_phy = true;
+-	}
++	if (priv->phy_interface == PHY_INTERFACE_MODE_INTERNAL)
++		priv->internal_phy = true;
+ 
+ 	/* Make sure we initialize MoCA PHYs with a link down */
+ 	if (phy_mode == PHY_INTERFACE_MODE_MOCA) {
 -- 
 2.9.3
