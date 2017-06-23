@@ -1,34 +1,75 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: r8a7795: Add DRIF support
-Date: Fri, 23 Jun 2017 11:41:04 +0200
-Message-ID: <20170623094104.GA24191@verge.net.au>
-References: <20170623091320.12664-1-ramesh.shanmugasundaram@bp.renesas.com>
+From: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 3/9] serial: atmel: Use common rs485 device tree parsing
+ function
+Date: Fri, 23 Jun 2017 11:49:38 +0200
+Message-ID: <8ab92dee-d9ba-0f7d-389c-e35a0f7f304c@gmail.com>
+References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
+ <20170621102130.21024-4-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170623091320.12664-1-ramesh.shanmugasundaram@bp.renesas.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: magnus.damm@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, chris.paterson2@renesas.com, geert+renesas@glider.be
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170621102130.21024-4-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 10:13:20AM +0100, Ramesh Shanmugasundaram wrote:
-> Adds the DRIF controller nodes for r8a7795.
+On 21/06/2017 12:21, Uwe Kleine-König wrote:
+> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> We just got a common helper for parsing the rs485 specific
+> device tree properties. Use it and drop the open coded parser.
+> 
+> Note that the common function is more strict, so some device trees
+> needed fixing in the previous commit.
+> 
+> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
-> Hi Simon,
+> Cc: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
->    This patch is based on renesas-devel-20170622-v4.12-rc6 tag.
->    It is verified on both H3 ES1.1 and ES2.0 SoC revisions.
+>  drivers/tty/serial/atmel_serial.c | 17 +----------------
+>  1 file changed, 1 insertion(+), 16 deletions(-)
 > 
->    The bindings[1] and the driver[2] were pushed into the media_tree.
+> diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
+> index b753d2020068..a6b0c0087e2d 100644
+> --- a/drivers/tty/serial/atmel_serial.c
+> +++ b/drivers/tty/serial/atmel_serial.c
+> @@ -1706,22 +1706,7 @@ static void atmel_init_rs485(struct uart_port *port,
+>  	struct atmel_uart_data *pdata = dev_get_platdata(&pdev->dev);
+>  
+>  	if (np) {
+> -		struct serial_rs485 *rs485conf = &port->rs485;
+> -		u32 rs485_delay[2];
+> -		/* rs485 properties */
+> -		if (of_property_read_u32_array(np, "rs485-rts-delay",
+> -					rs485_delay, 2) == 0) {
+> -			rs485conf->delay_rts_before_send = rs485_delay[0];
+> -			rs485conf->delay_rts_after_send = rs485_delay[1];
+> -			rs485conf->flags = 0;
+> -		}
+> -
+> -		if (of_get_property(np, "rs485-rx-during-tx", NULL))
+> -			rs485conf->flags |= SER_RS485_RX_DURING_TX;
+> -
+> -		if (of_get_property(np, "linux,rs485-enabled-at-boot-time",
+> -								NULL))
+> -			rs485conf->flags |= SER_RS485_ENABLED;
+> +		of_get_rs485_mode(np, &port->rs485);
+>  	} else if (pdata) {
+>  		port->rs485 = pdata->rs485;
+>  	} else {
 > 
->    [1] https://git.linuxtv.org/media_tree.git/commit/?id=54a707ea011601f06cc5ef7fe6d0daac71ab0622
->    [2] https://git.linuxtv.org/media_tree.git/commit/?id=7625ee981af166ddb569e2e6c0006e2af471326f
-> 
+I don't kown if the serie will make it to 4.12, but as you may have
+noticed, this patch will break with tty-next.
+In fact, you could get rid of atmel_init_rs485() and just replace it
+with of_get_rs485_mode() :)
 
-Thanks. Has this been tested not to cause regressions when
-applied on top of renesas-devel-20170622-v4.12-rc6 (without the driver
-changes) ?
+Thanks !
+
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
