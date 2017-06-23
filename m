@@ -1,107 +1,63 @@
-From: Quentin Schulz <quentin.schulz@free-electrons.com>
-Subject: [PATCH 3/6] ARM: dts: at91: sama5d2: add classd nodes
-Date: Fri, 23 Jun 2017 11:00:56 +0200
-Message-ID: <20170623090059.8371-4-quentin.schulz@free-electrons.com>
-References: <20170623090059.8371-1-quentin.schulz@free-electrons.com>
+From: Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
+Date: Fri, 23 Jun 2017 11:04:47 +0200
+Message-ID: <20170623090446.ogaoqg7gcsiaxs4a@phenom.ffwll.local>
+References: <20170615204130.19255-1-eric@anholt.net>
+ <20170615204130.19255-2-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170623090059.8371-1-quentin.schulz@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com
-Cc: thomas.petazzoni@free-electrons.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, Quentin Schulz <quentin.schulz@free-electrons.com>, Cyrille Pitchen <cyrille.pitchen@atmel.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20170615204130.19255-2-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-
-This patch adds nodes for the classd device and its generated clock.
-
-Signed-off-by: Cyrille Pitchen <cyrille.pitchen@atmel.com>
-Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
----
- arch/arm/boot/dts/sama5d2.dtsi | 39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/sama5d2.dtsi b/arch/arm/boot/dts/sama5d2.dtsi
-index cc06da394366..a564cd1ba327 100644
---- a/arch/arm/boot/dts/sama5d2.dtsi
-+++ b/arch/arm/boot/dts/sama5d2.dtsi
-@@ -494,6 +494,24 @@
- 					clocks = <&plla>;
- 				};
- 
-+				audio_pll_frac: audiopll_fracck {
-+					compatible = "atmel,sama5d2-clk-audio-pll-frac";
-+					#clock-cells = <0>;
-+					clocks = <&main>;
-+				};
-+
-+				audio_pll_pad: audiopll_padck {
-+					compatible = "atmel,sama5d2-clk-audio-pll-pad";
-+					#clock-cells = <0>;
-+					clocks = <&audio_pll_frac>;
-+				};
-+
-+				audio_pll_pmc: audiopll_pmcck {
-+					compatible = "atmel,sama5d2-clk-audio-pll-pmc";
-+					#clock-cells = <0>;
-+					clocks = <&audio_pll_frac>;
-+				};
-+
- 				utmi: utmick {
- 					compatible = "atmel,at91sam9x5-clk-utmi";
- 					#clock-cells = <0>;
-@@ -895,7 +913,7 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					interrupt-parent = <&pmc>;
--					clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>;
-+					clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>, <&audio_pll_pmc>;
- 
- 					sdmmc0_gclk: sdmmc0_gclk {
- 						#clock-cells = <0>;
-@@ -951,6 +969,12 @@
- 						reg = <57>;
- 						atmel,clk-output-range = <0 80000000>;
- 					};
-+
-+					classd_gclk: classd_gclk {
-+						#clock-cells = <0>;
-+						reg = <59>;
-+						atmel,clk-output-range = <0 100000000>;
-+					};
- 				};
- 			};
- 
-@@ -1406,6 +1430,19 @@
- 				status = "okay";
- 			};
- 
-+			classd: classd@fc048000 {
-+				compatible = "atmel,sama5d2-classd";
-+				reg = <0xfc048000 0x100>;
-+				interrupts = <59 IRQ_TYPE_LEVEL_HIGH 7>;
-+				dmas = <&dma0
-+					(AT91_XDMAC_DT_MEM_IF(0) | AT91_XDMAC_DT_PER_IF(1) |
-+					 AT91_XDMAC_DT_PERID(47))>;
-+				dma-names = "tx";
-+				clocks = <&classd_clk>, <&classd_gclk>;
-+				clock-names = "pclk", "gclk";
-+				status = "disabled";
-+			};
-+
- 			can1: can@fc050000 {
- 				compatible = "bosch,m_can";
- 				reg = <0xfc050000 0x4000>, <0x210000 0x4000>;
--- 
-2.11.0
+T24gVGh1LCBKdW4gMTUsIDIwMTcgYXQgMDE6NDE6MjRQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gSWYgdGhlIHBhbmVsLWJyaWRnZSBpcyBiZWluZyBzZXQgdXAgYWZ0ZXIgdGhlIGRybV9t
+b2RlX2NvbmZpZ19yZXNldCgpLAo+IHRoZW4gdGhlIGNvbm5lY3RvcidzIHN0YXRlIHdvdWxkIG5l
+dmVyIGdldCBpbml0aWFsaXplZCwgYW5kIHdlJ2QKPiBkZXJlZmVyZW5jZSB0aGUgTlVMTCBpbiB0
+aGUgaG90cGx1ZyBwYXRoLiAgV2UgYWxzbyBuZWVkIHRvIHJlZ2lzdGVyCj4gdGhlIGNvbm5lY3Rv
+ciwgc28gdGhhdCB1c2Vyc3BhY2UgY2FuIGdldCBhdCBpdC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBF
+cmljIEFuaG9sdCA8ZXJpY0BhbmhvbHQubmV0PgoKSSd2ZSBub3QgcmVhZCBhbGwgdGhlIGRldGFp
+bHMgb2YgdGhlIGRpc2N1c3Npb24gaGVyZSwganVzdCBhIGNvbW1lbnQgb24Kd2hhdCB0aGlzIGlt
+cGxpZXMgaWYgd2UgZ28gd2l0aCB0aGlzLgoKPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL2JyaWRn
+ZS9wYW5lbC5jIHwgMyArKysKPiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKQo+IAo+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BhbmVsLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vYnJpZGdlL3BhbmVsLmMKPiBpbmRleCA2N2ZlMTllNWE5YzYuLjhlZDhhNzA3OTljNyAx
+MDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vYnJpZGdlL3BhbmVsLmMKPiArKysgYi9kcml2
+ZXJzL2dwdS9kcm0vYnJpZGdlL3BhbmVsLmMKPiBAQCAtODIsMTEgKzgyLDE0IEBAIHN0YXRpYyBp
+bnQgcGFuZWxfYnJpZGdlX2F0dGFjaChzdHJ1Y3QgZHJtX2JyaWRnZSAqYnJpZGdlKQo+ICAKPiAg
+CWRybV9tb2RlX2Nvbm5lY3Rvcl9hdHRhY2hfZW5jb2RlcigmcGFuZWxfYnJpZGdlLT5jb25uZWN0
+b3IsCj4gIAkJCQkJICBicmlkZ2UtPmVuY29kZXIpOwo+ICsJZHJtX2F0b21pY19oZWxwZXJfY29u
+bmVjdG9yX3Jlc2V0KCZwYW5lbF9icmlkZ2UtPmNvbm5lY3Rvcik7CgpJJ20gbm90IHN1cmUgd2Ug
+d2FudCB0byB0aWUgdGhlIC0+cmVzZXQgc3R1ZmYgaW4gd2l0aCBvdGhlciBoZWxwZXJzLiBPbmUK
+b2YgdGhlIGRlc2lnbiBnb2FscyBJIGhhZCB3aXRoIGFsbCB0aGluZ3MgYXRvbWljIHdhcyB0byBt
+YWtlIGhlbHBlcnMgbXVjaAptb3JlIG1vZHVsYXIsIGFuZCBpbW8gdGhlIHJlc2V0IGlzIG9uZSBz
+dWNoIHBpZWNlIC0gYSBkcml2ZXIgbWlnaHQgd2FudCB0bwppbnN0ZWFkIHJlY29uc3RydWN0IHN0
+YXRlIGZyb20gaHcgdXNpbmcgc29tZXRoaW5nIGxpa2UgaTkxNSdzIGh3IHN0YXRlCnJlYWRvdXQv
+Y29tcGFyZS92ZXJpZnkgZnJhbWV3b3JrLgoKSWYgd2UgY2FuIHNvbHZlIHRoaXMgaW5pdCBvcmRl
+cmluZyBpc3N1ZSB3aXRob3V0IGFkZGluZyBhIGRlcGVuY3kgb24gdGhlCnJlc2V0IHN0dWZmIHRo
+YXQgd291bGQgYmUgYSBiaXQgbmVhdGVyIGltby4gQnV0IHRoYXQncyBqdXN0IG15IDIgY2VudHMu
+CgpDaGVlcnMsIERhbmllbAoKPiAgCj4gIAlyZXQgPSBkcm1fcGFuZWxfYXR0YWNoKHBhbmVsX2Jy
+aWRnZS0+cGFuZWwsICZwYW5lbF9icmlkZ2UtPmNvbm5lY3Rvcik7Cj4gIAlpZiAocmV0IDwgMCkK
+PiAgCQlyZXR1cm4gcmV0Owo+ICAKPiArCWRybV9jb25uZWN0b3JfcmVnaXN0ZXIoJnBhbmVsX2Jy
+aWRnZS0+Y29ubmVjdG9yKTsKPiArCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiAtLSAKPiAyLjEx
+LjAKPiAKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+
+IGRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKPiBkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
+Cj4gaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2
+ZWwKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2luZWVyLCBJbnRlbCBDb3Jwb3JhdGlv
+bgpodHRwOi8vYmxvZy5mZndsbC5jaApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9kcmktZGV2ZWwK
