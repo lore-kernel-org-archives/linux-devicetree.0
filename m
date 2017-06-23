@@ -1,66 +1,66 @@
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH v7 05/10] i2c: core: call of_i2c_setup_smbus_alert in
- i2c_register_adapter
-Date: Fri, 23 Jun 2017 14:19:23 +0200
-Message-ID: <20170623121923.GN26073@mail.corp.redhat.com>
-References: <1497535178-12001-1-git-send-email-preid@electromag.com.au>
- <1497535178-12001-6-git-send-email-preid@electromag.com.au>
- <20170619152811.svoxmxybyoy6l4hc@ninjato>
+From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
+Subject: RE: [PATCH] iommu/arm-smmu-v3: Enable ACPI based HiSilicon
+ CMD_PREFETCH quirk(erratum 161010701)
+Date: Fri, 23 Jun 2017 12:49:34 +0000
+Message-ID: <5FC3163CFD30C246ABAA99954A238FA83838930B@FRAEML521-MBS.china.huawei.com>
+References: <20170517091205.7752-1-shameerali.kolothum.thodi@huawei.com>
+ <5FC3163CFD30C246ABAA99954A238FA838388F08@FRAEML521-MBS.china.huawei.com>
+ <20170623120207.GA2310@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170619152811.svoxmxybyoy6l4hc@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Phil Reid <preid@electromag.com.au>, robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-acpi-owner@vger.kernel.org>
+In-Reply-To: <20170623120207.GA2310@arm.com>
+Content-Language: en-US
+Sender: linux-acpi-owner@vger.kernel.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: "robin.murphy@arm.com" <robin.murphy@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, John Garry <john.garry@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "devel@acpica.org" <devel@acpica.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Jun 19 2017 or thereabouts, Wolfram Sang wrote:
-> On Thu, Jun 15, 2017 at 09:59:33PM +0800, Phil Reid wrote:
-> > Add a call to of_i2c_setup_smbus_alert when a i2c adapter is registered
-> > so the the smbalert driver can be registered.
-> > 
-> > Signed-off-by: Phil Reid <preid@electromag.com.au>
+
+
+> -----Original Message-----
+> From: Will Deacon [mailto:will.deacon@arm.com]
+> Sent: Friday, June 23, 2017 1:02 PM
+> To: Shameerali Kolothum Thodi
+> Cc: robin.murphy@arm.com; mark.rutland@arm.com;
+> lorenzo.pieralisi@arm.com; John Garry; Gabriele Paoloni; Guohanjun
+> (Hanjun Guo); xuwei (O); Linuxarm; devel@acpica.org; linux-
+> acpi@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> devicetree@vger.kernel.org
+> Subject: Re: [PATCH] iommu/arm-smmu-v3: Enable ACPI based HiSilicon
+> CMD_PREFETCH quirk(erratum 161010701)
 > 
-> CCing Benjamin
+> On Fri, Jun 23, 2017 at 08:29:28AM +0000, Shameerali Kolothum Thodi wrote:
+> > > -----Original Message-----
+> > > From: Shameerali Kolothum Thodi
+> > > Sent: Wednesday, May 17, 2017 10:12 AM
+> > > To: robin.murphy@arm.com; will.deacon@arm.com;
+> mark.rutland@arm.com;
+> > > lorenzo.pieralisi@arm.com
+> > > Cc: John Garry; Gabriele Paoloni; Guohanjun (Hanjun Guo); xuwei (O);
+> > > Linuxarm; devel@acpica.org; linux-acpi@vger.kernel.org; linux-arm-
+> > > kernel@lists.infradead.org; devicetree@vger.kernel.org; Shameerali
+> > > Kolothum Thodi
+> > > Subject: [PATCH] iommu/arm-smmu-v3: Enable ACPI based HiSilicon
+> > > CMD_PREFETCH quirk(erratum 161010701)
+> > >
+> > > HiSilicon SMMUv3 on Hip06/Hip07 platforms doesn't support
+> > > CMD_PREFETCH command. The dt based support for this quirk is already
+> > > present in the driver(hisilicon,broken-prefetch-cmd). This adds ACPI
+> > > support for the quirk using the IORT smmu model number.
+> >
+> > This also  has dependency on acpica header update and it looks like
+> > it's going to take a while to appear on Linux mainline. I have seen
+> > patches where a temp local definition for SMMU v3 model number is
+> suggested instead.
+> >
+> > Could you please let me know the plan so that I can base this patch
+> > similar to or on top of Caviums "[PATCH] iommu/arm-smmu-v3, acpi: Add
+> > temporary Cavium SMMU-V3 IORT model number definitions"
 > 
-> > ---
-> >  drivers/i2c/i2c-core.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-> > index d2402bb..626471b 100644
-> > --- a/drivers/i2c/i2c-core.c
-> > +++ b/drivers/i2c/i2c-core.c
-> > @@ -40,6 +40,7 @@
-> >  #include <linux/gpio.h>
-> >  #include <linux/hardirq.h>
-> >  #include <linux/i2c.h>
-> > +#include <linux/i2c-smbus.h>
-> >  #include <linux/idr.h>
-> >  #include <linux/init.h>
-> >  #include <linux/irqflags.h>
-> > @@ -2045,6 +2046,9 @@ static int i2c_register_adapter(struct i2c_adapter *adap)
-> >  		dev_warn(&adap->dev,
-> >  			 "Failed to create compatibility class link\n");
-> >  #endif
-> > +	res = of_i2c_setup_smbus_alert(adap);
-> > +	if (res)
-> > +		goto out_list;
+> I think I've got this in hand, but I'll shout if I run into any issues.
 
-See my concerns in patch 4/10.
+Ok. Thanks Will. Sure.
 
-In addition, shouldn't this be placed before device_register() for the
-least? pm_runtime_enable() would require a matching pm_runtime_disable(),
-and device_register() some unregistering behavior too.
-
-Cheers,
-Benjamin
-
-> >  
-> >  	i2c_init_recovery(adap);
-> >  
-> > -- 
-> > 1.8.3.1
-> > 
+Shameer
