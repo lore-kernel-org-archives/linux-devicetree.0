@@ -1,94 +1,94 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] vsprintf: Add %p extension "%pOF" for device tree
-Date: Thu, 22 Jun 2017 20:01:52 -0700
-Message-ID: <1498186912.24295.9.camel@perches.com>
-References: <20170614203025.7581-4-robh@kernel.org>
-         <20170622204445.14930-1-robh@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170622204445.14930-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v3 1/1] usb:host:xhci support option to disable the xHCI USB2 HW LPM
+Date: Fri, 23 Jun 2017 10:02:12 +0700
+Message-ID: <1498186932-29277-1-git-send-email-tqnguyen@apm.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Thang Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-06-22 at 15:44 -0500, Rob Herring wrote:
-> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> 
-> 90% of the usage of device node's full_name is printing it out in a
-> kernel message. However, storing the full path for every node is
-> wasteful and redundant. With a custom format specifier, we can generate
-> the full path at run-time and eventually remove the full path from every
-> node.
-> 
-> For instance typical use is:
-> 	pr_info("Frobbing node %s\n", node->full_name);
-> 
-> Which can be written now as:
-> 	pr_info("Frobbing node %pOF\n", node);
+XHCI specification 1.1 does not require xHCI-compliant controllers
+to always enable hardware USB2 LPM. However, the current xHCI
+driver always enable it when seeing HLC=1.
+This patch supports an option for users to control disabling
+USB2 Hardware LPM via DT/ACPI attribute.
+This option is needed in case user would like to disable this
+feature. For example, their xHCI controller has its USB2 HW LPM
+broken.
 
-I still think this should use another identifier like
-%pO for object then another letter for type of object
-maybe N for node.
+Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+---
+Changes since v2:
+ - Change code to disable HW LPM as an option for user which
+   is set via ACPI/DT.
+Changes since v1:
+ - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
+   be consistent with other attribute names.
+---
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
+ drivers/usb/host/xhci-plat.c                       |    3 +++
+ drivers/usb/host/xhci.c                            |    3 +++
+ drivers/usb/host/xhci.h                            |    1 +
+ 4 files changed, 8 insertions(+), 0 deletions(-)
 
-And F is flags, f is name
-
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-[]
-> @@ -1470,6 +1471,131 @@ char *flags_string(char *buf, char *end, void *flags_ptr, const char *fmt)
->  	return format_flags(buf, end, flags, names);
->  }
->  
-> +static int device_node_calc_depth(const struct device_node *np)
-> +{
-> +	int d;
-> +
-> +	for (d = 0; np; d++)
-> +		np = np->parent;
-> +
-> +	return d;
-> +}
-> +
-> +static noinline_for_stack
-> +char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
-> +{
-> +	int i;
-> +	int depth = device_node_calc_depth(np);
-> +	static const struct printf_spec strspec = {
-> +		.field_width = -1,
-> +		.precision = -1,
-> +	};
-> +	const struct device_node *nodes[depth];
-> +
-> +	if (!depth)
-> +		returnuf;
-> +	/* special case for root node */
-> +	if (depth == 1)
-> +		return string(buf, end, "/", strspec);
-> +
-> +	depth--;
-> +	for (i = depth - 1; i >= 0; i--) {
-> +		nodes[i] = np;
-> +		np = np->parent;
-> +	}
-> +	for (i = 0; i < depth; i++) {
-> +		buf = string(buf, end, "/", strspec);
-> +		buf = string(buf, end, kbasename(nodes[i]->full_name), strspec);
-> +	}
-> +	return buf;
-> +}
-
-I think there should be another function to get
-a particular struct device_node * at a particular
-depth to avoid all the pointers on stack.
-
-Basically, adapt the for (i = depth - 1 loop to
-a function that returns nodes[i]
-
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 2d80b60..ae6e484 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -26,6 +26,7 @@ Required properties:
+ 
+ Optional properties:
+   - clocks: reference to a clock
++  - usb2-lpm-disable: indicate if we don't want to enable USB2 HW LPM
+   - usb3-lpm-capable: determines if platform is USB3 LPM capable
+   - quirk-broken-port-ped: set if the controller has broken port disable mechanism
+ 
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index c04144b..9028fb5 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -267,6 +267,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 		goto disable_clk;
+ 	}
+ 
++	if (device_property_read_bool(sysdev, "usb2-lpm-disable"))
++		xhci->quirks |= XHCI_HW_LPM_DISABLE;
++
+ 	if (device_property_read_bool(sysdev, "usb3-lpm-capable"))
+ 		xhci->quirks |= XHCI_LPM_SUPPORT;
+ 
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index 30f47d9..49d05c7 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4061,6 +4061,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 			!udev->lpm_capable)
+ 		return -EPERM;
+ 
++	if (xhci->quirks & XHCI_HW_LPM_DISABLE)
++		return -EPERM;
++
+ 	if (!udev->parent || udev->parent->parent ||
+ 			udev->descriptor.bDeviceClass == USB_CLASS_HUB)
+ 		return -EPERM;
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 73a28a9..03d50e8 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -1819,6 +1819,7 @@ struct xhci_hcd {
+ /* For controller with a broken Port Disable implementation */
+ #define XHCI_BROKEN_PORT_PED	(1 << 25)
+ #define XHCI_LIMIT_ENDPOINT_INTERVAL_7	(1 << 26)
++#define XHCI_HW_LPM_DISABLE	(1 << 27)
+ 
+ 	unsigned int		num_active_eps;
+ 	unsigned int		limit_active_eps;
+-- 
+1.7.1
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
