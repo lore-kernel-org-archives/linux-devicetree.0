@@ -1,44 +1,139 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: input: Add DT bindings
- documentation for Allwinner A83T R_LRADC
-Date: Fri, 23 Jun 2017 16:51:31 -0500
-Message-ID: <20170623215131.d5kickxtqdxxm3t4@rob-hp-laptop>
-References: <20170620134445.23097-1-techping.chan@gmail.com>
- <20170620134445.23097-3-techping.chan@gmail.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Subject: Re: [PATCH v4 4/4] dt-bindings: media: Document Synopsys Designware
+ HDMI RX
+Date: Fri, 23 Jun 2017 16:58:14 -0500
+Message-ID: <20170623215814.ase6g4lbukaeqak2@rob-hp-laptop>
+References: <cover.1497978962.git.joabreu@synopsys.com>
+ <8ebe3dfcd61a1c8cfa99102c376ad26b2bfbd254.1497978963.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBZM2W3FAKGQEHOAVKMQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170620134445.23097-3-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <8ebe3dfcd61a1c8cfa99102c376ad26b2bfbd254.1497978963.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 20, 2017 at 09:44:44PM +0800, Ziping Chen wrote:
-> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Your subject could be more concise. "DT bindings documentation" is 
-redundant.
-
+On Tue, Jun 20, 2017 at 06:26:12PM +0100, Jose Abreu wrote:
+> Document the bindings for the Synopsys Designware HDMI RX.
 > 
-> Allwinner A83T SoC has a low res adc like the one
-> in Allwinner A10 SoC.
+> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+> Cc: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> Add binding for it.
-> 
-> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Changes from v3:
+> 	- Document the new DT bindings suggested by Sylwester
+> Changes from v2:
+> 	- Document edid-phandle property
 > ---
->  Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+> new file mode 100644
+> index 0000000..efb0ac3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+> @@ -0,0 +1,70 @@
+> +Synopsys DesignWare HDMI RX Decoder
+> +===================================
+> +
+> +This document defines device tree properties for the Synopsys DesignWare HDMI
+> +RX Decoder (DWC HDMI RX). It doesn't constitute a device tree binding
+> +specification by itself but is meant to be referenced by platform-specific
+> +device tree bindings.
+> +
+> +When referenced from platform device tree bindings the properties defined in
+> +this document are defined as follows.
+> +
+> +- compatible: Shall be "snps,dw-hdmi-rx".
+> +
+> +- reg: Memory mapped base address and length of the DWC HDMI RX registers.
+> +
+> +- interrupts: Reference to the DWC HDMI RX interrupt and 5v sense interrupt.
+> +
+> +- clocks: Phandle to the config clock block.
+> +
+> +- clock-names: Shall be "cfg-clk".
 
-Otherwise,
+"-clk" is redundant.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Seems strange that this is the only clock. The only other clock is the 
+HDMI clock from the HDMI transmitter.
+
+> +
+> +- edid-phandle: phandle to the EDID handler block.
+> +
+> +- #address-cells: Shall be 1.
+> +
+> +- #size-cells: Shall be 0.
+> +
+> +You also have to create a subnode for phy driver. Phy properties are as follows.
+> +
+> +- compatible: Shall be "snps,dw-hdmi-phy-e405".
+> +
+> +- reg: Shall be JTAG address of phy.
+> +
+> +- clocks: Phandle for cfg clock.
+> +
+> +- clock-names:Shall be "cfg-clk".
+> +
+> +A sample binding is now provided. The compatible string is for a SoC which has
+> +has a Synopsys Designware HDMI RX decoder inside.
+> +
+> +Example:
+> +
+> +dw_hdmi_soc: dw-hdmi-soc@0 {
+> +	compatible = "snps,dw-hdmi-soc";
+
+Not documented.
+
+> +	reg = <0x11c00 0x1000>; /* EDIDs */
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	ranges;
+> +
+> +	dw_hdmi_rx@0 {
+
+hdmi-rx@0
+
+> +		compatible = "snps,dw-hdmi-rx";
+> +		reg = <0x0 0x10000>;
+> +		interrupts = <1 2>;
+> +		edid-phandle = <&dw_hdmi_soc>;
+
+Don't need this if it is the parent node.
+
+> +
+> +		clocks = <&dw_hdmi_refclk>;
+> +		clock-names = "cfg-clk";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		dw_hdmi_phy_e405@fc {
+
+hdmi-phy@fc
+
+> +			compatible = "snps,dw-hdmi-phy-e405";
+> +			reg = <0xfc>;
+> +
+> +			clocks = <&dw_hdmi_refclk>;
+> +			clock-names = "cfg-clk";
+> +		};
+> +	};
+> +};
+> -- 
+> 1.9.1
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
