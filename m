@@ -1,68 +1,66 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] regulator: fixed, gpio: dt: regulator-name is required
- property
-Date: Fri, 23 Jun 2017 16:03:21 +0100
-Message-ID: <20170623150321.4e2m3ehaot2n5hrz@sirena.org.uk>
-References: <1488836249-1193-1-git-send-email-harald@ccbib.org>
- <20170315171009.4raoe35x4mdtsw4w@rob-hp-laptop>
- <E1dOP3F-0000NF-Pe@stardust.g4.wien.funkfeuer.at>
+From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] input: sun4i-a10-lradc-keys: Add
+ support for A83T
+Date: Fri, 23 Jun 2017 23:12:42 +0800
+Message-ID: <CAAST=9wwwC6fYyNmSV5w4b37tdXVtELFaV3NmenQhDK70HoY7g@mail.gmail.com>
+References: <20170620134445.23097-1-techping.chan@gmail.com>
+ <20170620134445.23097-2-techping.chan@gmail.com> <20170621203502.ng7auh6vfmibobwo@flea.lan>
+ <CAAST=9zK8CjpEwy1rSjwnaSrpoQor-NkjWcX8kFSM-o=qP8OWQ@mail.gmail.com> <20170623144622.zn6ecwl2dwkc63w2@flea.lan>
+Reply-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="75bx3oydpai5e77j"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <E1dOP3F-0000NF-Pe-rvrRdOlaWMmli2aaYNgTVBW+3FKk/ZpWT2auq/jSWdo@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCJ6PAPY4MPBB2W7WTFAKGQEIHK6GZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170623144622.zn6ecwl2dwkc63w2-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+2017-06-23 22:46 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> On Thu, Jun 22, 2017 at 12:50:47PM +0800, Ziping Chen wrote:
+>> 2017-06-22 4:35 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+>>
+>> > On Tue, Jun 20, 2017 at 09:44:43PM +0800, Ziping Chen wrote:
+>> > > From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> > >
+>> > > Allwinner A83T SoC has a low res adc like the one
+>> > > in Allwinner A10 SoC, however, the A10 SoC's vref
+>> > > of lradc internally is divided by 2/3 and the A83T
+>> > > SoC's isn't, thus add a hardware variant for it to
+>> > > be compatible with various devices.
+>> >
+>> > Where did you get that info from?
+>> >
+>> > Judging from the user manual, the threshold is actually set to 3/4,
+>> > and not 2/3, but there's still one.
+>> >
+>>
+>> In the top of page 266 of the A10 User Manual V1.50, it said "2/3 ADC_REF
+>> (Level A)" which mean Level A is 2/3 of the vref.
+>>
+>> In the bottom of page 230 of the A83T User Manual V1.5.1, it said "1.35V
+>> (Level A)" meaning that Level A is 1.35V. Oh, it's my fault... It's 3/4 of
+>> the vref (A83T's ADC_REF is fixed at 1.8V).
+>>
+>> So... i will change r_lradc_variant_a83t.divisor_numerator to 3
+>> and r_lradc_variant_a83t.divisor_denominator to 4...
+>>
+>> Is there any other problems?
+>
+> I don't see any :)
 
---75bx3oydpai5e77j
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK! Thanks. I will send v3 soon.
 
-On Fri, Jun 23, 2017 at 03:55:09PM +0200, Harald Geyer wrote:
-
-> what happened to this patch? Since it was written to your specification
-> and got an ack from a devicetree maintainer more then 3 months ago,
-> I don't see what is holding it back. I can't find it in any tree.
-
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, though there are some other maintainers who like them - if in
-doubt look at how patches for the subsystem are normally handled.
-
-Please don't top post, reply in line with needed context.  This allows
-readers to readily follow the flow of conversation and understand what
-you are talking about and also helps ensure that everything in the
-discussion is being addressed.
-
---75bx3oydpai5e77j
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllNLbkACgkQJNaLcl1U
-h9CuBAf+KeOKpU998fcckSG98FOxRSPSi1RthNt6FLzxvfI69ZwqFEy0nJoBTsL7
-2d0d6NjGasqxp1NmFEVf2CtiYXfxUhtVMq4ecwry5kVCer/cCHH6gGExLE6+wk+4
-6VW68P5zf/7vhd08sbYvr1AWk8aK5lczMVZPBo2NgahsLQBvgOMtQTC/j8vlXz/Y
-3gCk8Rxj8n2AijWaY5Vq/puhIS5cig4eY7ZECZI7KQS+z4zV+h3mwUjwq952KGub
-+KVzR8viW1uoRIiRDddBsoCX6N8uo8FS9SRophPwo9ytSQ1xKwxP9lR3Ud+uyRO0
-DASq+/S1B65JQcYWMTgdPyo54QUWVg==
-=Qy3u
------END PGP SIGNATURE-----
-
---75bx3oydpai5e77j--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
