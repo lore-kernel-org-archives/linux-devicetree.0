@@ -1,112 +1,68 @@
-From: Shameerali Kolothum Thodi <shameerali.kolothum.thodi@huawei.com>
-Subject: RE: [PATCH] iommu/arm-smmu-v3: Enable ACPI based HiSilicon
- CMD_PREFETCH quirk(erratum 161010701)
-Date: Fri, 23 Jun 2017 08:29:28 +0000
-Message-ID: <5FC3163CFD30C246ABAA99954A238FA838388F08@FRAEML521-MBS.china.huawei.com>
-References: <20170517091205.7752-1-shameerali.kolothum.thodi@huawei.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 0/6] Update binding documentation for cp110 and ap806
+Date: Fri, 23 Jun 2017 10:49:01 +0200
+Message-ID: <87shirytqa.fsf@free-electrons.com>
+References: <20170620083754.28053-1-gregory.clement@free-electrons.com>
+        <87k2463c66.fsf@free-electrons.com>
+        <20170622211456.rip2gveiprlfw3kj@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-acpi-owner@vger.kernel.org>
-In-Reply-To: <20170517091205.7752-1-shameerali.kolothum.thodi@huawei.com>
-Content-Language: en-US
-Sender: linux-acpi-owner@vger.kernel.org
-To: "robin.murphy@arm.com" <robin.murphy@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
-Cc: John Garry <john.garry@huawei.com>, Gabriele Paoloni <gabriele.paoloni@huawei.com>, "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>, "xuwei (O)" <xuwei5@hisilicon.com>, Linuxarm <linuxarm@huawei.com>, "devel@acpica.org" <devel@acpica.org>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170622211456.rip2gveiprlfw3kj@rob-hp-laptop> (Rob Herring's
+        message of "Thu, 22 Jun 2017 16:14:56 -0500")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Will/Robin,
+Hi Mike,
 
-> -----Original Message-----
-> From: Shameerali Kolothum Thodi
-> Sent: Wednesday, May 17, 2017 10:12 AM
-> To: robin.murphy@arm.com; will.deacon@arm.com;
-> mark.rutland@arm.com; lorenzo.pieralisi@arm.com
-> Cc: John Garry; Gabriele Paoloni; Guohanjun (Hanjun Guo); xuwei (O);
-> Linuxarm; devel@acpica.org; linux-acpi@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; devicetree@vger.kernel.org; Shameerali
-> Kolothum Thodi
-> Subject: [PATCH] iommu/arm-smmu-v3: Enable ACPI based HiSilicon
-> CMD_PREFETCH quirk(erratum 161010701)
-> 
-> HiSilicon SMMUv3 on Hip06/Hip07 platforms doesn't support CMD_PREFETCH
-> command. The dt based support for this quirk is already present in the
-> driver(hisilicon,broken-prefetch-cmd). This adds ACPI support for the
-> quirk using the IORT smmu model number.
 
-This also  has dependency on acpica header update and it looks like it's going
-to take a while to appear on Linux mainline. I have seen patches where a 
-temp local definition for SMMU v3 model number is suggested instead.
+as you were not in CC of the thread here is the reference:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-June/514497.html
 
-Could you please let me know the plan so that I can base this patch similar
-to or on top of Caviums "[PATCH] iommu/arm-smmu-v3, acpi: Add temporary
-Cavium SMMU-V3 IORT model number definitions"
+ On jeu., juin 22 2017, Rob Herring <robh@kernel.org> wrote:
+
+> On Tue, Jun 20, 2017 at 05:34:57PM +0200, Gregory CLEMENT wrote:
+>> Hi Rob, 
+>>  
+>>  On mar., juin 20 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
+>> 
+>> > Hi Rob,
+>> >
+>> > As you know there were dependencies issue about the binding between my
+>> > different series and you proposed yourself to apply them though the
+>> > device tree subsystem: [1]
+>
+> I did, but ...
+>
+>> >
+>> > All the driver parts have been merged so it's time merging the
+>> > documentation.
+>> 
+>> I forgot to mentioned that this series is based on the clk-ap806-dt
+>> stable branch:
+>> 
+>> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-ap806-dt
+>
+> ... that was to avoid cross tree dependencies. Now you're creating one. 
+> Either Mike should take everything or drop this branch and I'll take it 
+> too.
+
+Could you take them all? I can do a PR for this and I take this
+opportunity to add the missing ack in pacth 6
+
 
 Thanks,
-Shameer
 
-> Signed-off-by: shameer <shameerali.kolothum.thodi@huawei.com>
-> Signed-off-by: hanjun <guohanjun@huawei.com>
-> ---
->  Documentation/arm64/silicon-errata.txt |  1 +
->  drivers/iommu/arm-smmu-v3.c            | 16 ++++++++++++++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/Documentation/arm64/silicon-errata.txt
-> b/Documentation/arm64/silicon-errata.txt
-> index 10f2ddd..d5d23d0 100644
-> --- a/Documentation/arm64/silicon-errata.txt
-> +++ b/Documentation/arm64/silicon-errata.txt
-> @@ -66,6 +66,7 @@ stable kernels.
->  | Freescale/NXP  | LS2080A/LS1043A | A-008585        |
-> FSL_ERRATUM_A008585         |
->  |                |                 |                 |                             |
->  | Hisilicon      | Hip0{5,6,7}     | #161010101      |
-> HISILICON_ERRATUM_161010101 |
-> +| Hisilicon      | Hip0{6,7}       | #161010701      | N/A                         |
->  |                |                 |                 |                             |
->  | Qualcomm Tech. | Falkor v1       | E1003           |
-> QCOM_FALKOR_ERRATUM_1003    |
->  | Qualcomm Tech. | Falkor v1       | E1009           |
-> QCOM_FALKOR_ERRATUM_1009    |
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 380969a..abe4b88 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2605,6 +2605,20 @@ static int arm_smmu_device_hw_probe(struct
-> arm_smmu_device *smmu)
->  }
-> 
->  #ifdef CONFIG_ACPI
-> +static void parse_driver_acpi_options(struct acpi_iort_smmu_v3
-> *iort_smmu,
-> +				      struct arm_smmu_device *smmu)
-> +{
-> +	switch (iort_smmu->model) {
-> +	case ACPI_IORT_SMMU_HISILICON_HI161X:
-> +		smmu->options |= ARM_SMMU_OPT_SKIP_PREFETCH;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	dev_notice(smmu->dev, "options set 0x%x\n", smmu->options);
-> +}
-> +
->  static int arm_smmu_device_acpi_probe(struct platform_device *pdev,
->  				      struct arm_smmu_device *smmu)
->  {
-> @@ -2617,6 +2631,8 @@ static int arm_smmu_device_acpi_probe(struct
-> platform_device *pdev,
->  	/* Retrieve SMMUv3 specific data */
->  	iort_smmu = (struct acpi_iort_smmu_v3 *)node->node_data;
-> 
-> +	parse_driver_acpi_options(iort_smmu, smmu);
-> +
->  	if (iort_smmu->flags & ACPI_IORT_SMMU_V3_COHACC_OVERRIDE)
->  		smmu->features |= ARM_SMMU_FEAT_COHERENCY;
-> 
-> --
-> 1.9.1
+Gregory
 >
+> And you missed my ack on patch 6.
+>
+> Rob
 
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
