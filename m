@@ -1,45 +1,54 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Document the Broadcom STB
- wake-up timer node
-Date: Fri, 23 Jun 2017 13:40:19 -0500
-Message-ID: <20170623184019.ftptqodyv3bnkyz2@rob-hp-laptop>
-References: <20170615195904.12653-1-f.fainelli@gmail.com>
- <20170615195904.12653-2-f.fainelli@gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v11 1/4] MAINTAINERS: add entry for Aspeed I2C driver
+Date: Fri, 23 Jun 2017 20:40:58 +0200
+Message-ID: <20170623184058.psxlo5gagnvzedpy@ninjato>
+References: <20170620211516.13095-1-brendanhiggins@google.com>
+ <20170620211516.13095-2-brendanhiggins@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <rtc-linux+bncBDJIP47K7MERBFOBWXFAKGQENIT4R4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="6uvrsnxszvshohcf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170615195904.12653-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20170620211516.13095-2-brendanhiggins@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brendan Higgins <brendanhiggins@google.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, joel@jms.id.au, martin.petersen@oracle.com, benh@kernel.crashing.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 12:59:03PM -0700, Florian Fainelli wrote:
-> Document the binding for the Broadcom STB SoCs wake-up timer node
-> allowing the system to generate alarms and exit low power states.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../bindings/rtc/brcm,brcmstb-waketimer.txt        | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--6uvrsnxszvshohcf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+On Tue, Jun 20, 2017 at 02:15:13PM -0700, Brendan Higgins wrote:
+> Added myself as maintainer of the Aspeed I2C driver and the associated
+> I2C interrupt controller and added Joel Stanley and Benjamin
+> Herrenschmidt as reviewers.
+>=20
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+
+Applied to for-next, thanks!
+
+
+--6uvrsnxszvshohcf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllNYLoACgkQFA3kzBSg
+KbbSDA//Q6G6LRPXxe6ZmVOsdyPSMIcGpq6/6xxXyP6H3qFXU2pa3wo8y8lbhTYm
+SlFTb5UcFqCk8NGqVKOuTeG/Zoj5WIiaTvMoD83dWfiRiPFVt/E14FFObwUNwmkx
+EjOIoaVFjQbVUmqqUdR21y/4nzY1uzk75/4TuUuwQRb7FgwiyIhAwV+nQVhvD5um
+FUgOIp0tYUVlcdMP4fIDFYc2nUUGabm3X5QQzBCnLSDPCZ03gPp5/1tJFLemYftc
+mQxfAaZjdZVa9/XtswkSZi6maUEAMO6nomUypGHrqiNwPcglHHB4/FFyzUhcQTW2
+nfX09MnN7Nv3CEebsKoG+bh6obf8/ore5HgUH0IIPF5hZzZdDgqfC3kKtd1nCIJf
+NgFRrNT8ERTCBICHqwSPV7xAk7KydohWUx4SuRbKvyjJJDUxstCfRI9t/Z5kHMJp
+V7NAp9vPmWFxdB1wbQqRgDqsBrVL8PS+Jgd14gEcIEyqi0aJMLViaMlbPy6yX5EA
+1i/WqX9J2BzvXJ2RgyV5PviEFA33KhxsTSBAcLO5S/kNxtCfP6teIdqYgMGULvPk
+1mGzDZKML6ifxi06Ap1AFVXjZRd3D7hzMJHfUdmsDqsKujMy4JYFL7vFX8gmIHRQ
+vVKTdIB3QRJlfQmlOhgr/B7kBHPMoZlwUn6zV26EEySOnfhwHd0=
+=VAZG
+-----END PGP SIGNATURE-----
+
+--6uvrsnxszvshohcf--
