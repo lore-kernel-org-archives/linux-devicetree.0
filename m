@@ -1,68 +1,70 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH 0/6] Update binding documentation for cp110 and ap806
-Date: Fri, 23 Jun 2017 10:49:01 +0200
-Message-ID: <87shirytqa.fsf@free-electrons.com>
-References: <20170620083754.28053-1-gregory.clement@free-electrons.com>
-        <87k2463c66.fsf@free-electrons.com>
-        <20170622211456.rip2gveiprlfw3kj@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170622211456.rip2gveiprlfw3kj@rob-hp-laptop> (Rob Herring's
-        message of "Thu, 22 Jun 2017 16:14:56 -0500")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Stephen Boyd <sboyd@codeaurora.org>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/6] clk: at91: clk-generated: remove useless divisor loop
+Date: Fri, 23 Jun 2017 11:00:54 +0200
+Message-ID: <20170623090059.8371-2-quentin.schulz@free-electrons.com>
+References: <20170623090059.8371-1-quentin.schulz@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170623090059.8371-1-quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org
+Cc: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+The driver requests the current clk rate of each of its parent clocks to
+decide whether a clock rate is suitable or not. It does not request
+determine_rate from a parent clock which could request a rate change in
+parent clock (i.e. there is no parent rate propagation).
 
+We know the rate we want (passed along req argument of the function) and
+the parent clock rate, thus we know the closest rounded divisor, we
+don't need to iterate over the available divisors to find the best one
+for a given clock.
 
-as you were not in CC of the thread here is the reference:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2017-June/514497.html
+Signed-off-by: Quentin Schulz <quentin.schulz-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/clk/at91/clk-generated.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
- On jeu., juin 22 2017, Rob Herring <robh@kernel.org> wrote:
-
-> On Tue, Jun 20, 2017 at 05:34:57PM +0200, Gregory CLEMENT wrote:
->> Hi Rob, 
->>  
->>  On mar., juin 20 2017, Gregory CLEMENT <gregory.clement@free-electrons.com> wrote:
->> 
->> > Hi Rob,
->> >
->> > As you know there were dependencies issue about the binding between my
->> > different series and you proposed yourself to apply them though the
->> > device tree subsystem: [1]
->
-> I did, but ...
->
->> >
->> > All the driver parts have been merged so it's time merging the
->> > documentation.
->> 
->> I forgot to mentioned that this series is based on the clk-ap806-dt
->> stable branch:
->> 
->> https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-ap806-dt
->
-> ... that was to avoid cross tree dependencies. Now you're creating one. 
-> Either Mike should take everything or drop this branch and I'll take it 
-> too.
-
-Could you take them all? I can do a PR for this and I take this
-opportunity to add the missing ack in pacth 6
-
-
-Thanks,
-
-Gregory
->
-> And you missed my ack on patch 6.
->
-> Rob
-
+diff --git a/drivers/clk/at91/clk-generated.c b/drivers/clk/at91/clk-generated.c
+index 07c8f701e51c..dab7002937e6 100644
+--- a/drivers/clk/at91/clk-generated.c
++++ b/drivers/clk/at91/clk-generated.c
+@@ -124,19 +124,18 @@ static int clk_generated_determine_rate(struct clk_hw *hw,
+ 		    (gck->range.max && min_rate > gck->range.max))
+ 			continue;
+ 
+-		for (div = 1; div < GENERATED_MAX_DIV + 2; div++) {
+-			tmp_rate = DIV_ROUND_CLOSEST(parent_rate, div);
+-			tmp_diff = abs(req->rate - tmp_rate);
+-
+-			if (best_diff < 0 || best_diff > tmp_diff) {
+-				best_rate = tmp_rate;
+-				best_diff = tmp_diff;
+-				req->best_parent_rate = parent_rate;
+-				req->best_parent_hw = parent;
+-			}
+-
+-			if (!best_diff || tmp_rate < req->rate)
+-				break;
++		div = DIV_ROUND_CLOSEST(parent_rate, req->rate);
++		if (!div)
++			tmp_rate = parent_rate;
++		else
++			tmp_rate = parent_rate / div;
++		tmp_diff = abs(req->rate - tmp_rate);
++
++		if (best_diff < 0 || best_diff > tmp_diff) {
++			best_rate = tmp_rate;
++			best_diff = tmp_diff;
++			req->best_parent_rate = parent_rate;
++			req->best_parent_hw = parent;
+ 		}
+ 
+ 		if (!best_diff)
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
