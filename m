@@ -1,16 +1,17 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
-Date: Fri, 23 Jun 2017 12:59:24 +0200
-Message-ID: <3E7B1344-ECE6-4CCC-9E9D-7521BB566CDE@goldelico.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
- <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
- <d14b8c6e-b480-36f0-ed0a-684647617dbe@suse.de>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 3/9] serial: atmel: Use common rs485 device tree parsing
+ function
+Date: Fri, 23 Jun 2017 13:13:40 +0200
+Message-ID: <20170623111340.4osgybelqy5fzloz@pengutronix.de>
+References: <20170621102130.21024-1-u.kleine-koenig@pengutronix.de>
+ <20170621102130.21024-4-u.kleine-koenig@pengutronix.de>
+ <8ab92dee-d9ba-0f7d-389c-e35a0f7f304c@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <d14b8c6e-b480-36f0-ed0a-684647617dbe@suse.de>
+Content-Disposition: inline
+In-Reply-To: <8ab92dee-d9ba-0f7d-389c-e35a0f7f304c@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,39 +21,82 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Suman Anna <s-anna@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-media@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Cj4gQW0gMjMuMDYuMjAxNyB1bSAxMjo0NiBzY2hyaWViIEFuZHJlYXMgRsOkcmJlciA8YWZhZXJi
-ZXJAc3VzZS5kZT46Cj4gCj4gSGksCj4gCj4gQW0gMjMuMDYuMjAxNyB1bSAxMjoyNSBzY2hyaWVi
-IEguIE5pa29sYXVzIFNjaGFsbGVyOgo+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Y5NjV4LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Y5NjV4LnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQKPj4+IGluZGV4IDAwMDAwMDAuLjBlMGRlMWYKPj4+IC0tLSAvZGV2L251bGwKPj4+ICsr
-KyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Y5NjV4LnR4
-dAo+Pj4gQEAgLTAsMCArMSwzNyBAQAo+Pj4gKyogT21uaXZpc2lvbiBPVjk2NTAvOTY1Mi85NjU1
-IENNT1Mgc2Vuc29yCj4+PiArCj4+PiArVGhlIE9tbml2aXNpb24gT1Y5NjV4IHNlbnNvciBzdXBw
-b3J0IG11bHRpcGxlIHJlc29sdXRpb25zIG91dHB1dCwgc3VjaCBhcwo+Pj4gK0NJRiwgU1ZHQSwg
-VVhHQS4gSXQgYWxzbyBjYW4gc3VwcG9ydCBZVVY0MjIvNDIwLCBSR0I1NjUvNTU1IG9yIHJhdyBS
-R0IKPj4+ICtvdXRwdXQgZm9ybWF0Lgo+Pj4gKwo+Pj4gK1JlcXVpcmVkIFByb3BlcnRpZXM6Cj4+
-PiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mCj4+PiArCSJvdnRpLG92OTY1MCIKPj4+
-ICsJIm92dGksb3Y5NjUyIgo+Pj4gKwkib3Z0aSxvdjk2NTUiCj4+PiArLSBjbG9ja3M6IHJlZmVy
-ZW5jZSB0byB0aGUgbWNsayBpbnB1dCBjbG9jay4KPj4gCj4+IEkgd29uZGVyIHdoeSB5b3UgaGF2
-ZSByZW1vdmVkIHRoZSBjbG9jay1mcmVxdWVuY3kgcHJvcGVydHk/Cj4+IAo+PiBJbiBzb21lIHNp
-dHVhdGlvbnMgdGhlIGNhbWVyYSBkcml2ZXIgbXVzdCBiZSBhYmxlIHRvIHRlbGwgdGhlIGNsb2Nr
-IHNvdXJjZQo+PiB3aGljaCBmcmVxdWVuY3kgaXQgd2FudHMgdG8gc2VlLgo+IAo+IFRoYXQncyB3
-aGF0IGFzc2lnbmVkLWNsb2NrLXJhdGVzIHByb3BlcnR5IGlzIGZvcjoKPiAKPiBodHRwczovL3d3
-dy5rZXJuZWwub3JnL2RvYy9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2sv
-Y2xvY2stYmluZGluZ3MudHh0Cj4gCj4gQUZBSVUgY2xvY2stZnJlcXVlbmN5IG9uIGRldmljZXMg
-aXMgZGVwcmVjYXRlZCBhbmQgZXF1aXZhbGVudCB0byBoYXZpbmcKPiBhIGNsb2NrcyBwcm9wZXJ0
-eSBwb2ludGluZyB0byBhIGZpeGVkLWNsb2NrLCB3aGljaCBpcyBkaWZmZXJlbnQgZnJvbSBhCj4g
-Y2xvY2sgd2l0aCB2YXJ5aW5nIHJhdGUuCgpJIGFtIG5vdCBzdXJlIGlmIHRoYXQgaGVscHMgaGVy
-ZS4gVGhlIE9NQVAzLUlTUCBkb2VzIG5vdCBoYXZlIGEgZml4ZWQgY2xvY2sgcmF0ZQpzbyB3ZSBj
-YW4gb25seSBoYXZlIHRoZSBkcml2ZXIgZGVmaW5lIHdoYXQgaXQgd2FudHMgdG8gc2VlLgoKQW5k
-IGNvbW1vbiBwcmFjdGlzZSBmb3IgT01BUDMtSVNQIGJhc2VkIGNhbWVyYSBtb2R1bGVzIChlLmcu
-IE45MDAsIE45KSBpcyB0aGF0IHRoZXkgZG8gaXQgaW4gdGhlIGRyaXZlci4KCk1heWJlIElTUCBk
-ZXZlbG9wZXJzIGNhbiBjb21tZW50PwoKQlIsCk5pa29sYXVzCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0
-CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On Fri, Jun 23, 2017 at 11:49:38AM +0200, Richard Genoud wrote:
+> On 21/06/2017 12:21, Uwe Kleine-K=F6nig wrote:
+> > From: Sascha Hauer <s.hauer@pengutronix.de>
+> > =
+
+> > We just got a common helper for parsing the rs485 specific
+> > device tree properties. Use it and drop the open coded parser.
+> > =
+
+> > Note that the common function is more strict, so some device trees
+> > needed fixing in the previous commit.
+> > =
+
+> > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > ---
+> > Cc: Richard Genoud <richard.genoud@gmail.com>
+> > =
+
+> >  drivers/tty/serial/atmel_serial.c | 17 +----------------
+> >  1 file changed, 1 insertion(+), 16 deletions(-)
+> > =
+
+> > diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atm=
+el_serial.c
+> > index b753d2020068..a6b0c0087e2d 100644
+> > --- a/drivers/tty/serial/atmel_serial.c
+> > +++ b/drivers/tty/serial/atmel_serial.c
+> > @@ -1706,22 +1706,7 @@ static void atmel_init_rs485(struct uart_port *p=
+ort,
+> >  	struct atmel_uart_data *pdata =3D dev_get_platdata(&pdev->dev);
+> >  =
+
+> >  	if (np) {
+> > -		struct serial_rs485 *rs485conf =3D &port->rs485;
+> > -		u32 rs485_delay[2];
+> > -		/* rs485 properties */
+> > -		if (of_property_read_u32_array(np, "rs485-rts-delay",
+> > -					rs485_delay, 2) =3D=3D 0) {
+> > -			rs485conf->delay_rts_before_send =3D rs485_delay[0];
+> > -			rs485conf->delay_rts_after_send =3D rs485_delay[1];
+> > -			rs485conf->flags =3D 0;
+> > -		}
+> > -
+> > -		if (of_get_property(np, "rs485-rx-during-tx", NULL))
+> > -			rs485conf->flags |=3D SER_RS485_RX_DURING_TX;
+> > -
+> > -		if (of_get_property(np, "linux,rs485-enabled-at-boot-time",
+> > -								NULL))
+> > -			rs485conf->flags |=3D SER_RS485_ENABLED;
+> > +		of_get_rs485_mode(np, &port->rs485);
+> >  	} else if (pdata) {
+> >  		port->rs485 =3D pdata->rs485;
+> >  	} else {
+> > =
+
+> I don't kown if the serie will make it to 4.12, but as you may have
+> noticed, this patch will break with tty-next.
+
+I'm pretty sure it won't make it into 4.12 given we're already at -rc6.
+And there is a v2 that should apply on top of tty-next. (I have it on
+4.12-rc6 + the two patches by Alexandre Belloni.)
+
+> In fact, you could get rid of atmel_init_rs485() and just replace it
+> with of_get_rs485_mode() :)
+
+As mentioned in the v2 thread I plan to do this for v3.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
