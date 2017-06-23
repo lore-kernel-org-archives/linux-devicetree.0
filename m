@@ -1,149 +1,84 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [RFC PATCH 2/3] remoteproc: imx_rproc: add a NXP/Freescale imx
- rproc driver
-Date: Fri, 23 Jun 2017 13:52:52 -0500
-Message-ID: <432e5352-537d-7fea-f468-def29a6ca1e6@ti.com>
-References: <20170614204855.18347-1-o.rempel@pengutronix.de>
- <20170614204855.18347-3-o.rempel@pengutronix.de>
- <96edc898-ad2b-c781-b7eb-0645902837df@ti.com>
- <f146c11f-1cca-68db-325b-036b0f614963@pengutronix.de>
- <42620944-14b6-1591-e2b4-4c15a577774a@ti.com>
- <20170623143537.e2bfsssxwdnft3pe@pengutronix.de>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Document the STM32 SPDIFRX interface
+Date: Fri, 23 Jun 2017 13:55:14 -0500
+Message-ID: <20170623185514.nc3jqq6ikvwwv6sn@rob-hp-laptop>
+References: <1497621452-615-1-git-send-email-olivier.moysan@st.com>
+ <1497621452-615-2-git-send-email-olivier.moysan@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170623143537.e2bfsssxwdnft3pe@pengutronix.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Oleksij Rempel <ore@pengutronix.de>
-Cc: Oleksij Rempel <o.rempel@pengutronix.de>, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-remoteproc@vger.kernel.org, Oleksij Rempel <linux@rempel-privat.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1497621452-615-2-git-send-email-olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-IBi9RG/b67k@public.gmane.org, mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnaud.pouliquen-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2017 09:35 AM, Oleksij Rempel wrote:
-> On Wed, Jun 21, 2017 at 04:09:26PM -0500, Suman Anna wrote:
->> Hi Oleksij,
->>
->> On 06/19/2017 02:43 AM, Oleksij Rempel wrote:
->>> Hi,
->>>
->>> Thank you for your review!
->>>
->>> On 15.06.2017 21:01, Suman Anna wrote:
->>>> Hi Oleksij,
->>>>
->>>> On 06/14/2017 03:48 PM, Oleksij Rempel wrote:
->>>>> From: Oleksij Rempel <linux@rempel-privat.de>
->>>>>
->>>>> this driver was tested on NXP imx7d but should work on
->>>>> imx6sx as well.
->>>>> It will upload firmware to OCRAM, which shared memory between
->>>>> Cortex A7 and Cortex M4, then turn M4 on.
->>>>
->>>> Mostly looks fine, need to address few comments. I take it that you
->>>> haven't added the binding since this is just an RFC.
->>>>
-> .....
->>>>> +
->>>>> +static const char *mem_names[IMX7D_RPROC_MEM_MAX] = {
->>>>> +    [IMX7D_RPROC_IMEM]    = "imem",
->>>>> +    [IMX7D_RPROC_DMEM]    = "dmem",
->>>>> +};
->>>>
->>>> Do you really need these to be globally defined? You only need them in
->>>> the addr_init function, they can be made local to that function.
->>>
->>> I don't needed. At least not with my testing remote code.
->>> It is mostly copy/paste from existing drivers.
->>>
->>> But according to this page, there are multiple memory regions, with
->>> different mapping for data and code.
->>> http://developer.toradex.com/knowledge-base/freertos-on-the-cortex-m4-of-a-colibri-imx7#Memory_areas
->>>
->>>
->>> "The Cortex-M4 CPU has two buses connected to the main interconnect
->>> (modified Harvard architecture). One bus is meant to fetch data (system
->>> bus) whereas the other bus is meant to fetch instructions (code bus). To
->>> get optimal performance, the program code should be located and linked
->>> for a region which is going to be fetched through the code bus, while
->>> the data area (e.g. bss or data section) should be located in a region
->>> which is fetched through the system bus.
->>
->> Yeah that's standard Cortex-M4 address/bus access architecture based on
->> memory addresses it sees, and the addresses are as per what the CPU
->> views them at.
->>
->>  There are multiple example
->>> linker files in the platform/devices/MCIMX7D/linker/ sub directory which
->>> can be used and/or modified. All example firmware below use the
->>> MCIMX7D_M4_tcm.ld linker file (TCML region for code, and the TCMU region
->>> for data)."
->>>
->>> What is the proper way to implement it with remoteproc?
->>
->> So, TCML and TCMU looks to be internal memories within the Cortex-M4
->> subsystem from the link you shared. The rproc_da_to_va() is being used
->> today to provide the translations from the CPU device address (da) to
->> the kernel virtual address for the same memory (va) so that memcpy can
->> be used for loading the section data into those memories. The ioremap
->> from the A7 should be using the bus addresses.
+On Fri, Jun 16, 2017 at 03:57:31PM +0200, olivier moysan wrote:
+> This adds documentation of device tree bindings for the
+> STM32 SPDIFRX interface.
 > 
-> I was reading linker and Make files provided by the git repo in the page
->  posted before. So far:
-> - different app examples can use different linker configurations
->   (MCIMX7D_M4_ddr.ld, MCIMX7D_M4_ocram.ld or MCIMX7D_M4_tcm.ld)
-> - only one configuration was used at the time.
+> Signed-off-by: olivier moysan <olivier.moysan-qxv4g6HH51o@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/st,stm32-spdifrx.txt | 56 ++++++++++++++++++++++
+>  1 file changed, 56 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
 > 
-> I assume, to cover all this cases:
-> - for each momory range should be created own DT node, with probably own
->   clock entry.  At leas *_tcm.ld and *_ocram.ld seems to fit in this pattern.
-> 
-> Should actually all possible variants be covered?
+> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+> new file mode 100644
+> index 0000000..33826f2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
+> @@ -0,0 +1,56 @@
+> +STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
+> +
+> +The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
+> +IEC-60958 and IEC-61937.
+> +
+> +Required properties:
+> +  - compatible: should be "st,stm32h7-spdifrx"
+> +  - reg: cpu DAI IP base address and size
+> +  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
+> +  - clock-names: must contain "kclk"
+> +  - interrupts: cpu DAI interrupt line
+> +  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
+> +    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
+> +  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
+> +
+> +Optional properties:
+> +  - resets: Reference to a reset controller asserting the SPDIFRX
+> +
+> +The device node should contain one 'port' child node with one child 'endpoint'
+> +node, according to the bindings defined in Documentation/devicetree/bindings/
+> +graph.txt.
+> +
+> +Example:
+> +spdifrx: spdifrx@40004000 {
+> +	compatible = "st,stm32h7-spdifrx";
+> +	reg = <0x40004000 0x400>;
+> +	clocks = <&rcc SPDIFRX_CK>;
+> +	clock-names = "kclk";
+> +	interrupts = <97>;
+> +	dmas = <&dmamux1 2 93 0x400 0x0>,
+> +	       <&dmamux1 3 94 0x400 0x0>;
+> +	dma-names = "rx", "rx-ctrl";
+> +	pinctrl-0 = <&spdifrx_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	spdifrx_port: port {
+> +		cpu_endpoint: endpoint {
+> +			remote-endpoint = <&codec_endpoint>;
+> +		};
+> +	};
+> +};
+> +
+> +spdif_in: spdif-in {
+> +	compatible = "linux,spdif-dir";
 
-The TCML and TCMU are internal to your Cortex-M4 subsystem, so I expect
-them to be defined within the corresponding node. This looks like the
-minimum you would want to start with (given that it seems to be most
-used in those examples). Obviously, the others depends on what you want
-to support.
+What is this? It should go.
 
-> 
-> what is the best practice to proceed with shared ddr space? Should it be
-> reserved-memory node in DT?
-
-Yeah, reserved-memory node (CMA or carveout) in board files is what most
-of the rproc drivers have been using so far. OCRAM and DDR usage may
-vary from your use-case to use-case. I assume the OCRAM is the on-chip
-RAM, so I take it that it will have its own DTS node (mmio-sram), and
-reference it using a phandle in your remoteproc node. Usage will depend
-on whether you need a fixed location or if you can allocate memory
-dynamically.
-
-> Should the translation map created in DeviceTree or in driver?
-
-On TI devices, I have provided it through the driver.
-
-regards
-Suman
-
-> 
->>
->>>>> +
->>>>> +/**
->>>>> + * struct imx_rproc_mem - slim internal memory structure
->>>>> + * @cpu_addr: MPU virtual address of the memory region
->>>>> + * @bus_addr: Bus address used to access the memory region
->>>>> + * @size: Size of the memory region
->>>>> + */
->>>>> +};
->>>>> +
->>>>> +struct imx_rproc_dcfg {
->>>>> +    int offset;
->>>>> +};
->>>>> +
->>>>> +struct imx_rproc {
->>>>> +    struct device            *dev;
->>>>> +    struct regmap            *regmap;
->>>>> +    struct rproc            *rproc;
->>>>> +    const struct imx_rproc_dcfg    *dcfg;
->>>>
-> 
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
