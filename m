@@ -1,66 +1,94 @@
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] input: sun4i-a10-lradc-keys: Add
- support for A83T
-Date: Fri, 23 Jun 2017 23:12:42 +0800
-Message-ID: <CAAST=9wwwC6fYyNmSV5w4b37tdXVtELFaV3NmenQhDK70HoY7g@mail.gmail.com>
-References: <20170620134445.23097-1-techping.chan@gmail.com>
- <20170620134445.23097-2-techping.chan@gmail.com> <20170621203502.ng7auh6vfmibobwo@flea.lan>
- <CAAST=9zK8CjpEwy1rSjwnaSrpoQor-NkjWcX8kFSM-o=qP8OWQ@mail.gmail.com> <20170623144622.zn6ecwl2dwkc63w2@flea.lan>
-Reply-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCJ6PAPY4MPBB2W7WTFAKGQEIHK6GZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170623144622.zn6ecwl2dwkc63w2-ZC1Zs529Oq4@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
+Date: Fri, 23 Jun 2017 17:22:23 +0200
+Message-ID: <05CBF9B8-2297-447B-860D-A89126B46FC9@goldelico.com>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <d14b8c6e-b480-36f0-ed0a-684647617dbe@suse.de>
+ <3E7B1344-ECE6-4CCC-9E9D-7521BB566CDE@goldelico.com>
+ <13144955.Kq5qljPvgI@avalon>
+ <24C976BF-52FD-4509-BCE4-9AE41B335482@goldelico.com>
+ <88d0e8ea-74e4-6845-4e0d-8cd0f3a054be@suse.de>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <88d0e8ea-74e4-6845-4e0d-8cd0f3a054be@suse.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2017-06-23 22:46 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Thu, Jun 22, 2017 at 12:50:47PM +0800, Ziping Chen wrote:
->> 2017-06-22 4:35 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->>
->> > On Tue, Jun 20, 2017 at 09:44:43PM +0800, Ziping Chen wrote:
->> > > From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> > >
->> > > Allwinner A83T SoC has a low res adc like the one
->> > > in Allwinner A10 SoC, however, the A10 SoC's vref
->> > > of lradc internally is divided by 2/3 and the A83T
->> > > SoC's isn't, thus add a hardware variant for it to
->> > > be compatible with various devices.
->> >
->> > Where did you get that info from?
->> >
->> > Judging from the user manual, the threshold is actually set to 3/4,
->> > and not 2/3, but there's still one.
->> >
->>
->> In the top of page 266 of the A10 User Manual V1.50, it said "2/3 ADC_REF
->> (Level A)" which mean Level A is 2/3 of the vref.
->>
->> In the bottom of page 230 of the A83T User Manual V1.5.1, it said "1.35V
->> (Level A)" meaning that Level A is 1.35V. Oh, it's my fault... It's 3/4 of
->> the vref (A83T's ADC_REF is fixed at 1.8V).
->>
->> So... i will change r_lradc_variant_a83t.divisor_numerator to 3
->> and r_lradc_variant_a83t.divisor_denominator to 4...
->>
->> Is there any other problems?
->
-> I don't see any :)
-
-OK! Thanks. I will send v3 soon.
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+SGksCgo+IEFtIDIzLjA2LjIwMTcgdW0gMTY6NTcgc2NocmllYiBBbmRyZWFzIEbDpHJiZXIgPGFm
+YWVyYmVyQHN1c2UuZGU+Ogo+IAo+IEFtIDIzLjA2LjIwMTcgdW0gMTY6NTMgc2NocmllYiBILiBO
+aWtvbGF1cyBTY2hhbGxlcjoKPj4gSGkgTGF1cmVudCwKPj4gCj4+PiBBbSAyMy4wNi4yMDE3IHVt
+IDEzOjU4IHNjaHJpZWIgTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29u
+Ym9hcmQuY29tPjoKPj4+IAo+Pj4gSGkgTmlrb2xhdXMsCj4+PiAKPj4+IE9uIEZyaWRheSAyMyBK
+dW4gMjAxNyAxMjo1OToyNCBILiBOaWtvbGF1cyBTY2hhbGxlciB3cm90ZToKPj4+PiBBbSAyMy4w
+Ni4yMDE3IHVtIDEyOjQ2IHNjaHJpZWIgQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRl
+PjoKPj4+Pj4gQW0gMjMuMDYuMjAxNyB1bSAxMjoyNSBzY2hyaWViIEguIE5pa29sYXVzIFNjaGFs
+bGVyOgo+Pj4+Pj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvbWVkaWEvaTJjL292OTY1eC50eHQKPj4+Pj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9tZWRpYS9pMmMvb3Y5NjV4LnR4dCBuZXcgZmlsZSBtb2RlCj4+Pj4+Pj4gMTAw
+NjQ0Cj4+Pj4+Pj4gaW5kZXggMDAwMDAwMC4uMGUwZGUxZgo+Pj4+Pj4+IC0tLSAvZGV2L251bGwK
+Pj4+Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJj
+L292OTY1eC50eHQKPj4+Pj4+PiBAQCAtMCwwICsxLDM3IEBACj4+Pj4+Pj4gKyogT21uaXZpc2lv
+biBPVjk2NTAvOTY1Mi85NjU1IENNT1Mgc2Vuc29yCj4+Pj4+Pj4gKwo+Pj4+Pj4+ICtUaGUgT21u
+aXZpc2lvbiBPVjk2NXggc2Vuc29yIHN1cHBvcnQgbXVsdGlwbGUgcmVzb2x1dGlvbnMgb3V0cHV0
+LCBzdWNoCj4+Pj4+Pj4gYXMKPj4+Pj4+PiArQ0lGLCBTVkdBLCBVWEdBLiBJdCBhbHNvIGNhbiBz
+dXBwb3J0IFlVVjQyMi80MjAsIFJHQjU2NS81NTUgb3IgcmF3IFJHQgo+Pj4+Pj4+ICtvdXRwdXQg
+Zm9ybWF0Lgo+Pj4+Pj4+ICsKPj4+Pj4+PiArUmVxdWlyZWQgUHJvcGVydGllczoKPj4+Pj4+PiAr
+LSBjb21wYXRpYmxlOiBzaG91bGQgYmUgb25lIG9mCj4+Pj4+Pj4gKwkib3Z0aSxvdjk2NTAiCj4+
+Pj4+Pj4gKwkib3Z0aSxvdjk2NTIiCj4+Pj4+Pj4gKwkib3Z0aSxvdjk2NTUiCj4+Pj4+Pj4gKy0g
+Y2xvY2tzOiByZWZlcmVuY2UgdG8gdGhlIG1jbGsgaW5wdXQgY2xvY2suCj4+Pj4+PiAKPj4+Pj4+
+IEkgd29uZGVyIHdoeSB5b3UgaGF2ZSByZW1vdmVkIHRoZSBjbG9jay1mcmVxdWVuY3kgcHJvcGVy
+dHk/Cj4+Pj4+PiAKPj4+Pj4+IEluIHNvbWUgc2l0dWF0aW9ucyB0aGUgY2FtZXJhIGRyaXZlciBt
+dXN0IGJlIGFibGUgdG8gdGVsbCB0aGUgY2xvY2sKPj4+Pj4+IHNvdXJjZSB3aGljaCBmcmVxdWVu
+Y3kgaXQgd2FudHMgdG8gc2VlLgo+Pj4+PiAKPj4+Pj4gVGhhdCdzIHdoYXQgYXNzaWduZWQtY2xv
+Y2stcmF0ZXMgcHJvcGVydHkgaXMgZm9yOgo+Pj4+PiAKPj4+Pj4gaHR0cHM6Ly93d3cua2VybmVs
+Lm9yZy9kb2MvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2Nsb2NrLWIK
+Pj4+Pj4gaW5kaW5ncy50eHQKPj4+Pj4gCj4+Pj4+IEFGQUlVIGNsb2NrLWZyZXF1ZW5jeSBvbiBk
+ZXZpY2VzIGlzIGRlcHJlY2F0ZWQgYW5kIGVxdWl2YWxlbnQgdG8gaGF2aW5nCj4+Pj4+IGEgY2xv
+Y2tzIHByb3BlcnR5IHBvaW50aW5nIHRvIGEgZml4ZWQtY2xvY2ssIHdoaWNoIGlzIGRpZmZlcmVu
+dCBmcm9tIGEKPj4+Pj4gY2xvY2sgd2l0aCB2YXJ5aW5nIHJhdGUuCj4+Pj4gCj4+Pj4gSSBhbSBu
+b3Qgc3VyZSBpZiB0aGF0IGhlbHBzIGhlcmUuIFRoZSBPTUFQMy1JU1AgZG9lcyBub3QgaGF2ZSBh
+IGZpeGVkIGNsb2NrCj4+Pj4gcmF0ZSBzbyB3ZSBjYW4gb25seSBoYXZlIHRoZSBkcml2ZXIgZGVm
+aW5lIHdoYXQgaXQgd2FudHMgdG8gc2VlLgo+Pj4+IAo+Pj4+IEFuZCBjb21tb24gcHJhY3Rpc2Ug
+Zm9yIE9NQVAzLUlTUCBiYXNlZCBjYW1lcmEgbW9kdWxlcyAoZS5nLiBOOTAwLCBOOSkgaXMKPj4+
+PiB0aGF0IHRoZXkgZG8gaXQgaW4gdGhlIGRyaXZlci4KPj4+PiAKPj4+PiBNYXliZSBJU1AgZGV2
+ZWxvcGVycyBjYW4gY29tbWVudD8KPj4+IAo+Pj4gVGhlIE9NQVAzIElTUCBpcyBhIHZhcmlhYmxl
+LWZyZXF1ZW5jeSBjbG9jayBwcm92aWRlci4gVGhlIGNsb2NrIGZyZXF1ZW5jeSBpcyAKPj4+IGNv
+bnRyb2xsZWQgYnkgdGhlIGNsb2NrIGNvbnN1bWVyLiBBcyBzdWNoLCBpdCdzIHVwIHRvIHRoZSBj
+b25zdW1lciB0byBkZWNpZGUgCj4+PiB3aGV0aGVyIHRvIGNvbXB1dGUgYW5kIHJlcXVlc3QgdGhl
+IGNsb2NrIHJhdGUgZHluYW1pY2FsbHkgYXQgcnVudGltZSwgb3IgdXNlIAo+Pj4gdGhlIGFzc2ln
+bmVkLWNsb2NrLXJhdGVzIHByb3BlcnR5IGluIERULgo+Pj4gCj4+PiBTb21lIElTUHMgaW5jbHVk
+ZSBhIGNsb2NrIGdlbmVyYXRvciwgb3RoZXJzIGRvbid0LiBJdCBzaG91bGQgbWFrZSBubyAKPj4+
+IGRpZmZlcmVuY2Ugd2hldGhlciB0aGUgY2xvY2sgaXMgcHJvdmlkZWQgYnkgdGhlIElTUCwgYnkg
+YSBkZWRpY2F0ZWQgY2xvY2sgCj4+PiBzb3VyY2UgaW4gdGhlIFNvQyBvciBieSBhIGRpc2NyZXRl
+IG9uLWJvYXJkIGFkanVzdGFibGUgY2xvY2sgc291cmNlLgo+PiAKPj4gVGhhbmtzIGZvciBleHBs
+YWluaW5nIHRoZSBiYWNrZ3JvdW5kLgo+PiAKPj4gRG8geW91IGhhdmUgYW4gaGludCBvciBleGFt
+cGxlIGhvdyB0byB1c2UgdGhlIGFzc2lnbmVkLWNsb2NrLXJhdGVzIHByb3BlcnR5IGluCj4+IGEg
+RFQgZm9yIGEgY2FtZXJhIG1vZHVsZSBjb25uZWN0ZWQgdG8gdGhlIG9tYXAzaXNwPwo+PiAKPj4g
+T3IgZG9lcyBpdCBqdXN0IG1lYW4gdGhhdCBpdCBkZWZpbmVzIHRoZSBwcm9wZXJ0eSBuYW1lPwo+
+IAo+IFBsZWFzZSByZWFkIHRoZSBkb2N1bWVudGF0aW9uIGxpbmsgSSBzZW50IC0gaXQncyBpbiB0
+aGUgdmVyeSBib3R0b20gYW5kCj4gc2hvdWxkIGhhdmUgYW4gZXhhbXBsZS4KCkkgaGF2ZSBzZWVu
+IGl0IGJ1dCBpdCBkb2VzIG5vdCBnaXZlIG1lIGEgZ29vZCBjbHVlIGhvdyB0byB0cmFuc2xhdGUg
+dGhhdCBpbnRvCmNvcnJlY3Qgb21hcDNpc3Agbm9kZSBzZXR1cCBpbiBhIHNwZWNpZmljIERULiBS
+YXRoZXIgaXQgcmFpc2VzIG1vcmUgcXVlc3Rpb25zLgpNYXliZSBiZWNhdXNlIEkgZG9uJ3QgdW5k
+ZXJzdGFuZCBjb21wbGV0ZWx5IHdoYXQgaXQgaXMgdGFsa2luZyBhYm91dC4KClRoZSBmdW5kYW1l
+bnRhbCBxdWVzdGlvbiBpcyBpZiB0aGlzICJhc3NpZ25lZC1jbG9jay1yYXRlcyIgaXMgYWxyZWFk
+eQpoYW5kbGVkIGJ5IG92OTY1eC0+Y2xrID0gZGV2bV9jbGtfZ2V0KCZjbGllbnQtPmRldiwgTlVM
+TCk7ID8KCk9yIHNob3VsZCB3ZSBkZWZpbmUgdGhhdCBmb3IgdGhlIG9tYXAzaXNwIG5vZGU/CgpU
+aGVuIG9mIGNvdXJzZSB3ZSBuZWVkIG5vIG5ldyBjb2RlIGFuZCBqdXN0IHVzZSB0aGUgcmlnaHQg
+cHJvcGVydHkgbmFtZXMuCkFuZCBOOTAwLCBOOSBjYW1lcmEgRFRzIHNob3VsZCBiZSB1cGRhdGVk
+LgoKQlIgYW5kIHRoYW5rcywKTmlrb2xhdXMKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
