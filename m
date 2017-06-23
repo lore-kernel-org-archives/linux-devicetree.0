@@ -1,100 +1,82 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] vsprintf: Add %p extension "%pOF" for device tree
-Date: Fri, 23 Jun 2017 09:13:38 -0500
-Message-ID: <CAL_JsqLDd7e888JzrJw_af62umPgyRee91oZ47EKd9Wyxz6pBw@mail.gmail.com>
-References: <20170614203025.7581-4-robh@kernel.org> <20170622204445.14930-1-robh@kernel.org>
- <1498186912.24295.9.camel@perches.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498186912.24295.9.camel-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Subject: [PATCH 1/3 v5] ARC: Set IO-coherency aperture base to LINUX_LINK_BASE
+Date: Fri, 23 Jun 2017 17:31:44 +0300
+Message-ID: <20170623143146.14281-2-Eugeniy.Paltsev@synopsys.com>
+References: <20170623143146.14281-1-Eugeniy.Paltsev@synopsys.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170623143146.14281-1-Eugeniy.Paltsev@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Alexey Brodkin <Alexey.Brodkin@synopsys.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 10:01 PM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
-> On Thu, 2017-06-22 at 15:44 -0500, Rob Herring wrote:
->> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>
->> 90% of the usage of device node's full_name is printing it out in a
->> kernel message. However, storing the full path for every node is
->> wasteful and redundant. With a custom format specifier, we can generate
->> the full path at run-time and eventually remove the full path from every
->> node.
->>
->> For instance typical use is:
->>       pr_info("Frobbing node %s\n", node->full_name);
->>
->> Which can be written now as:
->>       pr_info("Frobbing node %pOF\n", node);
->
-> I still think this should use another identifier like
-> %pO for object then another letter for type of object
-> maybe N for node.
+Most of the time we indeed use the one and only LINUX_LINK_BASE
+set to 0x8000_0000. But there might be good reasons to move
+the kernel to another location like 0x9z etc.
 
-It is. O is for kobj and F is for device node. It doesn't make a much
-sense separately, but OF together makes sense as Open Firmware.
+And we want IOC aperture to cover entire area used by the kernel,
+so let's make its base matching link base and add required asserts:
+checking IOC aperture base address and size to be supported by IOC.
 
->
-> And F is flags, f is name
->
->> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> []
->> @@ -1470,6 +1471,131 @@ char *flags_string(char *buf, char *end, void *flags_ptr, const char *fmt)
->>       return format_flags(buf, end, flags, names);
->>  }
->>
->> +static int device_node_calc_depth(const struct device_node *np)
->> +{
->> +     int d;
->> +
->> +     for (d = 0; np; d++)
->> +             np = np->parent;
->> +
->> +     return d;
->> +}
->> +
->> +static noinline_for_stack
->> +char *device_node_gen_full_name(const struct device_node *np, char *buf, char *end)
->> +{
->> +     int i;
->> +     int depth = device_node_calc_depth(np);
->> +     static const struct printf_spec strspec = {
->> +             .field_width = -1,
->> +             .precision = -1,
->> +     };
->> +     const struct device_node *nodes[depth];
->> +
->> +     if (!depth)
->> +             returnuf;
->> +     /* special case for root node */
->> +     if (depth == 1)
->> +             return string(buf, end, "/", strspec);
->> +
->> +     depth--;
->> +     for (i = depth - 1; i >= 0; i--) {
->> +             nodes[i] = np;
->> +             np = np->parent;
->> +     }
->> +     for (i = 0; i < depth; i++) {
->> +             buf = string(buf, end, "/", strspec);
->> +             buf = string(buf, end, kbasename(nodes[i]->full_name), strspec);
->> +     }
->> +     return buf;
->> +}
->
-> I think there should be another function to get
-> a particular struct device_node * at a particular
-> depth to avoid all the pointers on stack.
->
-> Basically, adapt the for (i = depth - 1 loop to
-> a function that returns nodes[i]
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+---
+ arch/arc/mm/cache.c | 33 ++++++++++++++++++++++++---------
+ 1 file changed, 24 insertions(+), 9 deletions(-)
 
-Okay.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c
+index a867575..383ff77 100644
+--- a/arch/arc/mm/cache.c
++++ b/arch/arc/mm/cache.c
+@@ -1083,7 +1083,8 @@ SYSCALL_DEFINE3(cacheflush, uint32_t, start, uint32_t, sz, uint32_t, flags)
+  */
+ noinline void __init arc_ioc_setup(void)
+ {
+-	unsigned int ap_sz;
++	unsigned int ap_base;
++	long ap_size;
+ 
+ 	/* Flush + invalidate + disable L1 dcache */
+ 	__dc_disable();
+@@ -1092,18 +1093,32 @@ noinline void __init arc_ioc_setup(void)
+ 	if (read_aux_reg(ARC_REG_SLC_BCR))
+ 		slc_entire_op(OP_FLUSH_N_INV);
+ 
+-	/* IOC Aperture start: TDB: handle non default CONFIG_LINUX_LINK_BASE */
+-	write_aux_reg(ARC_REG_IO_COH_AP0_BASE, 0x80000);
+-
+ 	/*
+-	 * IOC Aperture size:
+-	 *   decoded as 2 ^ (SIZE + 2) KB: so setting 0x11 implies 512M
+-	 * TBD: fix for PGU + 1GB of low mem
++	 * IOC Aperture size is equal to memory size.
++	 * TBD: fix for PGU + 1GiB of low mem
+ 	 * TBD: fix for PAE
+ 	 */
+-	ap_sz = order_base_2(arc_get_mem_sz()/1024) - 2;
+-	write_aux_reg(ARC_REG_IO_COH_AP0_SIZE, ap_sz);
++	ap_size = arc_get_mem_sz();
++
++	if (!is_power_of_2(ap_size) || ap_size < 4096)
++		panic("IOC Aperture size must be power of 2 larger than 4KiB");
++
++	/*
++	 * IOC Aperture size decoded as 2 ^ (SIZE + 2) KiB,
++	 * so setting 0x11 implies 512MiB, 0x12 implies 1G...
++	 */
++	write_aux_reg(ARC_REG_IO_COH_AP0_SIZE, order_base_2(ap_size / 1024) - 2);
++
++	/*
++	 * For now we assume IOC aperture to cover all the memory used by the
++	 * kernel.
++	 */
++	ap_base = CONFIG_LINUX_LINK_BASE;
++
++	if (ap_base % ap_size != 0)
++		panic("IOC Aperture start must be aligned to the size of the aperture");
+ 
++	write_aux_reg(ARC_REG_IO_COH_AP0_BASE, ap_base >> 12);
+ 	write_aux_reg(ARC_REG_IO_COH_PARTIAL, 1);
+ 	write_aux_reg(ARC_REG_IO_COH_ENABLE, 1);
+ 
+-- 
+2.9.3
