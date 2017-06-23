@@ -1,189 +1,181 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v8 1/3] clk: qcom: Add A53 PLL support
-Date: Fri, 23 Jun 2017 19:15:31 +0300
-Message-ID: <20170623161533.20449-2-georgi.djakov@linaro.org>
-References: <20170623161533.20449-1-georgi.djakov@linaro.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170623161533.20449-1-georgi.djakov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 01/11] net: phy: Add rockchip phy driver support
+Date: Fri, 23 Jun 2017 09:18:24 -0700
+Message-ID: <52e9b0d3-0db4-cc03-91a6-774d16115f0f@gmail.com>
+References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
+ <1498192929-7519-2-git-send-email-david.wu@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498192929-7519-2-git-send-email-david.wu@rock-chips.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Wu <david.wu@rock-chips.com>, davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de
+Cc: andrew@lunn.ch, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The CPUs on Qualcomm MSM8916-based platforms are clocked by two PLLs,
-a primary (A53) CPU PLL and a secondary fixed-rate GPLL0. These sources
-are connected to a mux and half-integer divider, which is feeding the
-CPU cores.
+On 06/22/2017 09:41 PM, David Wu wrote:
+> Support internal ephy currently.
+> 
+> Signed-off-by: David Wu <david.wu@rock-chips.com>
+> ---
+>  drivers/net/phy/Kconfig    |  4 ++
+>  drivers/net/phy/Makefile   |  1 +
+>  drivers/net/phy/rockchip.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 99 insertions(+)
+>  create mode 100644 drivers/net/phy/rockchip.c
+> 
+> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> index c360dd6..86010d4 100644
+> --- a/drivers/net/phy/Kconfig
+> +++ b/drivers/net/phy/Kconfig
+> @@ -350,6 +350,10 @@ config XILINX_GMII2RGMII
+>           the Reduced Gigabit Media Independent Interface(RGMII) between
+>           Ethernet physical media devices and the Gigabit Ethernet controller.
+>  
+> +config ROCKCHIP_MAC_PHY
+> +	tristate "Drivers for ROCKCHIP MAC PHY"
+> +	---help---
+> +	  Currently supports the mac internal ephy.
+>  endif # PHYLIB
+>  
+>  config MICREL_KS8995MA
+> diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
+> index e36db9a..6d96779 100644
+> --- a/drivers/net/phy/Makefile
+> +++ b/drivers/net/phy/Makefile
+> @@ -69,3 +69,4 @@ obj-$(CONFIG_STE10XP)		+= ste10Xp.o
+>  obj-$(CONFIG_TERANETICS_PHY)	+= teranetics.o
+>  obj-$(CONFIG_VITESSE_PHY)	+= vitesse.o
+>  obj-$(CONFIG_XILINX_GMII2RGMII) += xilinx_gmii2rgmii.o
+> +obj-$(CONFIG_ROCKCHIP_MAC_PHY)	+= rockchip.o
+> diff --git a/drivers/net/phy/rockchip.c b/drivers/net/phy/rockchip.c
+> new file mode 100644
+> index 0000000..69e96ec
+> --- /dev/null
+> +++ b/drivers/net/phy/rockchip.c
+> @@ -0,0 +1,94 @@
+> +/**
+> + * Rockchip mac phy driver
 
-This patch adds support for the primary CPU PLL which generates the
-higher range of frequencies above 1GHz.
+MAC and PHY, capitalized.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 +++++
- drivers/clk/qcom/Kconfig                           |  9 +++
- drivers/clk/qcom/Makefile                          |  1 +
- drivers/clk/qcom/a53-pll.c                         | 94 ++++++++++++++++++++++
- 4 files changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
- create mode 100644 drivers/clk/qcom/a53-pll.c
+> + *
+> + * Copyright (c) 2017, Fuzhou Rockchip Electronics Co., Ltd
+> + *
+> + * David Wu<david.wu@rock-chips.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + */
+> +
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mii.h>
+> +#include <linux/ethtool.h>
+> +#include <linux/phy.h>
+> +#include <linux/netdevice.h>
+> +
+> +static int internal_config_init(struct phy_device *phydev)
+> +{
+> +	int val;
+> +	u32 features;
+> +
+> +	/*enable auto mdix*/
+> +	phy_write(phydev, 0x11, 0x0080);
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-new file mode 100644
-index 000000000000..f4c2fddf6e7f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
-@@ -0,0 +1,22 @@
-+MSM8916 A53 PLL Binding
-+---------------
-+The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
-+above 1GHz.
-+
-+Required properties :
-+- compatible : Shall contain only one of the following:
-+
-+		"qcom,msm8916-a53pll"
-+
-+- reg : shall contain base register location and length
-+
-+- #clock-cells : must be set to <0>
-+
-+Example:
-+
-+	a53pll: clock@b016000 {
-+		compatible = "qcom,msm8916-a53pll";
-+		reg = <0xb016000 0x40>;
-+		#clock-cells = <0>;
-+	};
-+
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 9f6c278deead..057cf60ed037 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -12,6 +12,15 @@ config COMMON_CLK_QCOM
- 	select REGMAP_MMIO
- 	select RESET_CONTROLLER
- 
-+config QCOM_A53PLL
-+	bool "A53 PLL"
-+	depends on COMMON_CLK_QCOM
-+	help
-+	  Support for the A53 PLL on Qualcomm MSM8916 devices. It provides
-+	  support for CPU frequencies above 1GHz.
-+	  Say Y if you want to support CPU frequency scaling on devices
-+	  such as MSM8916.
-+
- config QCOM_CLK_RPM
- 	tristate "RPM based Clock Controller"
- 	depends on COMMON_CLK_QCOM && MFD_QCOM_RPM
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 3f3aff229fb7..19ae884b5166 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -31,5 +31,6 @@ obj-$(CONFIG_MSM_LCC_8960) += lcc-msm8960.o
- obj-$(CONFIG_MSM_MMCC_8960) += mmcc-msm8960.o
- obj-$(CONFIG_MSM_MMCC_8974) += mmcc-msm8974.o
- obj-$(CONFIG_MSM_MMCC_8996) += mmcc-msm8996.o
-+obj-$(CONFIG_QCOM_A53PLL) += a53-pll.o
- obj-$(CONFIG_QCOM_CLK_RPM) += clk-rpm.o
- obj-$(CONFIG_QCOM_CLK_SMD_RPM) += clk-smd-rpm.o
-diff --git a/drivers/clk/qcom/a53-pll.c b/drivers/clk/qcom/a53-pll.c
-new file mode 100644
-index 000000000000..e039937e89fc
---- /dev/null
-+++ b/drivers/clk/qcom/a53-pll.c
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (c) 2017, Linaro Limited
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/kernel.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include "clk-pll.h"
-+#include "clk-regmap.h"
-+
-+static const struct pll_freq_tbl a53pll_freq[] = {
-+	{  998400000, 52, 0x0, 0x1, 0 },
-+	{ 1094400000, 57, 0x0, 0x1, 0 },
-+	{ 1152000000, 62, 0x0, 0x1, 0 },
-+	{ 1209600000, 65, 0x0, 0x1, 0 },
-+	{ 1401600000, 73, 0x0, 0x1, 0 },
-+};
-+
-+static const struct regmap_config a53pll_regmap_config = {
-+	.reg_bits		= 32,
-+	.reg_stride		= 4,
-+	.val_bits		= 32,
-+	.max_register		= 0x40,
-+	.fast_io		= true,
-+	.val_format_endian	= REGMAP_ENDIAN_LITTLE,
-+};
-+
-+static const struct of_device_id qcom_a53pll_match_table[] = {
-+	{ .compatible = "qcom,msm8916-a53pll" },
-+	{ }
-+};
-+
-+static int qcom_a53pll_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct clk_pll *pll;
-+	struct resource *res;
-+	void __iomem *base;
-+	struct regmap *regmap;
-+	struct clk_init_data init = { };
-+
-+	pll = devm_kzalloc(dev, sizeof(*pll), GFP_KERNEL);
-+	if (!pll)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	regmap = devm_regmap_init_mmio(dev, base, &a53pll_regmap_config);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	pll->l_reg = 0x04;
-+	pll->m_reg = 0x08;
-+	pll->n_reg = 0x0c;
-+	pll->config_reg = 0x14;
-+	pll->mode_reg = 0x00;
-+	pll->status_reg = 0x1c;
-+	pll->status_bit = 16;
-+	pll->freq_tbl = a53pll_freq;
-+
-+	init.name = "a53pll";
-+	init.parent_names = (const char *[]){ "xo" };
-+	init.num_parents = 1;
-+	init.ops = &clk_pll_sr2_ops;
-+	init.flags = CLK_IS_CRITICAL;
-+	pll->clkr.hw.init = &init;
-+
-+	return devm_clk_register_regmap(dev, &pll->clkr);
-+}
-+
-+static struct platform_driver qcom_a53pll_driver = {
-+	.probe = qcom_a53pll_probe,
-+	.driver = {
-+		.name = "qcom-a53pll",
-+		.of_match_table = qcom_a53pll_match_table,
-+	},
-+};
-+
-+builtin_platform_driver(qcom_a53pll_driver);
+That is probably the only meaningful change needed by this driver, and
+even that is not quite correct because auto MDI-X can be changed from
+user-space through ethtool, see
+drivers/net/phy/marvell.c::marvell_config_aneg()
+
+> +
+> +	features = (SUPPORTED_TP | SUPPORTED_MII
+> +			| SUPPORTED_AUI | SUPPORTED_FIBRE |
+> +			SUPPORTED_BNC);
+
+This is not necessary, using driver::features set to PHY_GBIT_FEATURES
+
+> +
+> +	/* Do we support autonegotiation? */
+> +	val = phy_read(phydev, MII_BMSR);
+> +	if (val < 0)
+> +		return val;
+> +
+> +	if (val & BMSR_ANEGCAPABLE)
+> +		features |= SUPPORTED_Autoneg;
+
+If we have disabled auto-negotiation prior to probing this driver, and
+somehow the PHY is not reset, then you are falsely not advertising
+support for auto-negotiation just because it *currently is* disabled.
+
+> +
+> +	if (val & BMSR_100FULL)
+> +		features |= SUPPORTED_100baseT_Full;
+> +	if (val & BMSR_100HALF)
+> +		features |= SUPPORTED_100baseT_Half;
+> +	if (val & BMSR_10FULL)
+> +		features |= SUPPORTED_10baseT_Full;
+> +	if (val & BMSR_10HALF)
+> +		features |= SUPPORTED_10baseT_Half;
+> +
+> +	if (val & BMSR_ESTATEN) {
+> +		val = phy_read(phydev, MII_ESTATUS);
+> +		if (val < 0)
+> +			return val;
+> +
+> +		if (val & ESTATUS_1000_TFULL)
+> +			features |= SUPPORTED_1000baseT_Full;
+> +		if (val & ESTATUS_1000_THALF)
+> +			features |= SUPPORTED_1000baseT_Half;
+> +	}
+> +
+> +	phydev->supported = features;
+> +	phydev->advertising = features;
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy_driver rockchip_phy_driver[] = {
+> +{
+> +	.phy_id 	= 0x1234d400,
+> +	.phy_id_mask	= 0xffffffff,
+
+Last 4 digits are supposed to hold the revision, do you really need to
+have such a strict mask here?
+
+> +	.name		= "rockchip internal ephy",
+> +	.features	= 0,
+
+features shoul dbe set to what you support: PHY_GBIT_FEAUTERS
+
+> +	.config_init	= internal_config_init,
+> +	.config_aneg	= genphy_config_aneg,
+> +	.read_status	= genphy_read_status,
+> +	.suspend	= genphy_suspend,
+> +	.resume 	= genphy_resume,
+> +},
+> +};
+> +
+> +module_phy_driver(rockchip_phy_driver);
+> +
+> +static struct mdio_device_id __maybe_unused rockchip_phy_tbl[] = {
+> +	{ 0x1234d400, 0xffffffff },
+> +	{ }
+> +};
+> +
+> +MODULE_DEVICE_TABLE(mdio, rockchip_phy_tbl);
+> +
+> +MODULE_AUTHOR("David Wu<david.wu@rock-chips.com>");
+> +MODULE_DESCRIPTION("Rockchip mac phy driver");
+> +MODULE_LICENSE("GPL v2");
+> 
+
+
+-- 
+Florian
