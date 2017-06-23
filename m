@@ -1,28 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V1 1/9] dt-bindings: Add Spreadtrum CCU binding
- documentation
-Date: Fri, 23 Jun 2017 15:05:04 -0500
-Message-ID: <20170623200504.k5pigr32uva7ef3p@rob-hp-laptop>
-References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
- <20170618015855.27738-2-chunyan.zhang@spreadtrum.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: add Libre Technology vendor prefix
+Date: Fri, 23 Jun 2017 15:06:05 -0500
+Message-ID: <20170623200605.nkadcign24xj7rs5@rob-hp-laptop>
+References: <20170619090440.27099-1-jbrunet@baylibre.com>
+ <20170619090440.27099-2-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170618015855.27738-2-chunyan.zhang@spreadtrum.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Chunyan Zhang <zhang.lyra@gmail.com>
+In-Reply-To: <20170619090440.27099-2-jbrunet@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 18, 2017 at 09:58:47AM +0800, Chunyan Zhang wrote:
-> Introduce a new binding with its documentation for Spreadtrum clock
-> sub-framework.
+On Mon, Jun 19, 2017 at 11:04:38AM +0200, Jerome Brunet wrote:
+> Shenzhen Libre Technology Co., Ltd is a single board computer
+> manufacturer
 > 
-> Signed-off-by: Chunyan Zhang <chunyan.zhang@spreadtrum.com>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 > ---
->  .../devicetree/bindings/clock/sprd-ccu.txt         | 46 ++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/sprd-ccu.txt
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
 Acked-by: Rob Herring <robh@kernel.org>
