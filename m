@@ -1,26 +1,147 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add Libre Technology vendor prefix
-Date: Fri, 23 Jun 2017 15:06:05 -0500
-Message-ID: <20170623200605.nkadcign24xj7rs5@rob-hp-laptop>
-References: <20170619090440.27099-1-jbrunet@baylibre.com>
- <20170619090440.27099-2-jbrunet@baylibre.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/5] dt-bindings: Document MIPS Broadcom STB power
+ management nodes
+Date: Fri, 23 Jun 2017 13:08:43 -0700
+Message-ID: <e21d2356-4096-a53c-2d55-7f3b8f09ff0a@gmail.com>
+References: <20170616213703.21487-1-f.fainelli@gmail.com>
+ <20170616213703.21487-5-f.fainelli@gmail.com>
+ <20170623200229.p6pp4g2hvkei4doj@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170619090440.27099-2-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170623200229.p6pp4g2hvkei4doj@rob-hp-laptop>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 19, 2017 at 11:04:38AM +0200, Jerome Brunet wrote:
-> Shenzhen Libre Technology Co., Ltd is a single board computer
-> manufacturer
+On 06/23/2017 01:02 PM, Rob Herring wrote:
+> On Fri, Jun 16, 2017 at 02:37:02PM -0700, Florian Fainelli wrote:
+>> Document the different nodes required for supporting S2/S3/S5 suspend
+>> states on MIPS-based Broadcom STB SoCs.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mips/brcm/soc.txt          | 77 ++++++++++++++++++++++
+>>  1 file changed, 77 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mips/brcm/soc.txt b/Documentation/devicetree/bindings/mips/brcm/soc.txt
+>> index e4e1cd91fb1f..f7413168d938 100644
+>> --- a/Documentation/devicetree/bindings/mips/brcm/soc.txt
+>> +++ b/Documentation/devicetree/bindings/mips/brcm/soc.txt
+>> @@ -11,3 +11,80 @@ Required properties:
+>>  
+>>  The experimental -viper variants are for running Linux on the 3384's
+>>  BMIPS4355 cable modem CPU instead of the BMIPS5000 application processor.
+>> +
+>> +Power management
+>> +----------------
+>> +
+>> +For power management (particularly, S2/S3/S5 system suspend), the following SoC
+>> +components are needed:
+>> +
+>> += Always-On control block (AON CTRL)
+>> +
+>> +This hardware provides control registers for the "always-on" (even in low-power
+>> +modes) hardware, such as the Power Management State Machine (PMSM).
+>> +
+>> +Required properties:
+>> +- compatible     : should contain "brcm,brcmstb-aon-ctrl"
 > 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Exact same block on all SoCs?
 
-Acked-by: Rob Herring <robh@kernel.org>
+Not quite exactly the same, I will put something more SoC-specific in
+the binding here.
+
+> 
+>> +- reg            : the register start and length for the AON CTRL block
+>> +
+>> +Example:
+>> +
+>> +aon-ctrl@410000 {
+> 
+> syscon@...
+> 
+>> +	compatible = "brcm,brcmstb-aon-ctrl";
+>> +	reg = <0x410000 0x400>;
+>> +};
+>> +
+>> += Memory controllers
+>> +
+>> +A Broadcom STB SoC typically has a number of independent memory controllers,
+>> +each of which may have several associated hardware blocks, which are versioned
+>> +independently (control registers, DDR PHYs, etc.). One might consider
+>> +describing these controllers as a parent "memory controllers" block, which
+>> +contains N sub-nodes (one for each controller in the system), each of which is
+>> +associated with a number of hardware register resources (e.g., its PHY). See
+>> +the example device tree snippet below.
+> 
+> What example?
+
+Whoops, that's indeed missing.
+
+> 
+>> +
+>> +== MEMC (MEMory Controller)
+>> +
+>> +Represents a single memory controller instance.
+>> +
+>> +Required properties:
+>> +- compatible     : should contain "brcm,brcmstb-memc" and "simple-bus"
+> 
+> No registers for the controller?
+
+There are indeed registers, thanks for catching that.
+
+> 
+>> +
+>> +Should contain subnodes for any of the following relevant hardware resources:
+>> +
+>> +== DDR PHY control
+>> +
+>> +Control registers for this memory controller's DDR PHY.
+>> +
+>> +Required properties:
+>> +- compatible     : should contain one of these
+>> +	"brcm,brcmstb-ddr-phy-v64.5"
+>> +	"brcm,brcmstb-ddr-phy"
+>> +
+>> +- reg            : the DDR PHY register range
+>> +
+>> +== MEMC Arbiter
+>> +
+>> +The memory controller arbiter is responsible for memory clients allocation
+>> +(bandwidth, priorities etc.) and needs to have its contents restored during
+>> +deep sleep states (S3).
+>> +
+>> +Required properties:
+>> +
+>> +- compatible	: should contain one of these
+>> +	"brcm,brcmstb-memc-arb-v10.0.0.0"
+>> +	"brcm,brcmstb-memc-arb"
+>> +
+>> +- reg		: the DDR Arbiter register range
+>> +
+>> +== Timers
+>> +
+>> +The Broadcom STB chips contain a timer block with several general purpose
+>> +timers that can be used.
+>> +
+>> +Required properties:
+>> +
+>> +- compatible	: should contain "brcm,brcmstb-timers"
+>> +- reg		: the timers register range
+>> +
+>> -- 
+>> 2.9.3
+>>
+
+
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
