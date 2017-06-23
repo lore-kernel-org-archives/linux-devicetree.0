@@ -1,51 +1,74 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RESEND PATCH v5 01/16] dt-bindings: i2c: eeprom: Document
- vendor to be used and deprecated ones
-Date: Fri, 23 Jun 2017 13:17:03 -0500
-Message-ID: <20170623181703.jv6xsb55dsp6n6sn@rob-hp-laptop>
-References: <20170615185418.13980-1-javier@dowhile0.org>
- <20170615185418.13980-2-javier@dowhile0.org>
+Subject: Re: [PATCH/RFC] phy: renesas: rcar-gen3-usb2-clksel: Add R-Car Gen3
+ USB 2.0 clock selector PHY
+Date: Fri, 23 Jun 2017 13:20:51 -0500
+Message-ID: <20170623182051.eznaqqyr6dcrdjdg@rob-hp-laptop>
+References: <1497526462-9179-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170615185418.13980-2-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1497526462-9179-1-git-send-email-yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: kishon-l0cyMroinI0@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 08:54:03PM +0200, Javier Martinez Canillas wrote:
-> The at24 driver allows to register I2C EEPROM chips using different vendor
-> and devices, but the I2C subsystem does not take the vendor into account
-> when matching using the I2C table since it only has device entries.
+On Thu, Jun 15, 2017 at 08:34:22PM +0900, Yoshihiro Shimoda wrote:
+> USB 2.0 PHY of R-Car Gen3 can change the clock source from an oscillator
+> to an external clock via a register. So, this patch adds support
+> the clock source selector as a generic PHY driver.
 > 
-> But when matching using an OF table, both the vendor and device has to be
-> taken into account so the driver defines only a set of compatible strings
-> using the "atmel" vendor as a generic fallback for compatible I2C devices.
-> 
-> Document in the Device Tree binding document that this manufacturer should
-> be used as the generic fallback. Also document the deprecated vendors.
-> 
-> Suggested-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 > ---
+>  This patch is based on the latest linux-phy.git / next branch
+>  (commit id = 787f24543c4a599e5d9d311a3fce839ce87bbff0)
 > 
-> Changes in v5:
-> - Only deprecate the atmel variants at25 and at (Geert Uytterhoeven).
+>  I'm not sure this driver ss OK or not as a generic phy driver.
+>  So, I send this patch as RFC.
 > 
-> Changes in v4:
-> - Document the manufacturers that have been deprecated (Rob Herring).
+>  .../bindings/phy/rcar-gen3-phy-usb2-clksel.txt     |  58 +++++++++
+>  drivers/phy/renesas/Kconfig                        |   8 ++
+>  drivers/phy/renesas/Makefile                       |   1 +
+>  drivers/phy/renesas/phy-rcar-gen3-usb2-clksel.c    | 129 +++++++++++++++++++++
+>  4 files changed, 196 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt
+>  create mode 100644 drivers/phy/renesas/phy-rcar-gen3-usb2-clksel.c
 > 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/eeprom/eeprom.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> diff --git a/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt
+> new file mode 100644
+> index 0000000..71b2f1b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb2-clksel.txt
+> @@ -0,0 +1,58 @@
+> +* Renesas R-Car generation 3 USB 2.0 clock selector PHY
+> +
+> +This file provides information on what the device node for the R-Car generation
+> +3 USB 2.0 clock selector PHY contains.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Is this a phy or just a clock selector and nothing else? It sounds more 
+like the latter and you should use the clock binding. Whether this is a 
+phy driver in the kernel is a separate question really.
+
+> +
+> +If you connect an external clock to the USB_EXTAL pin, you can use the
+> +"renesas,usb_extal_only" property for it.
+> +If you connect an oscillator to both the USB_XTAL and USB_EXTAL, this module
+> +is not needed because this is default setting.
+> +
+> +Case 1: An external clock connects to R-Car SoC
+> +	+----------+   +--- R-Car ---------------------+
+> +	|External  |---|USB_EXTAL ---> all usb channels|
+> +	|clock     |   |USB_XTAL                       |
+> +	+----------+   +-------------------------------+
+> +In this case, we need this driver with "usb-extal-only" property.
+> +
+> +Case 2: An oscillator connects to R-Car SoC
+> +	+----------+   +--- R-Car ---------------------+
+> +	|Oscillator|---|USB_EXTAL -+-> all usb channels|
+> +	|          |---|USB_XTAL --+                   |
+> +	+----------+   +-------------------------------+
+> +In this case, we don't need this selector.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
