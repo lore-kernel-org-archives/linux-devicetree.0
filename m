@@ -1,141 +1,90 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Thu, 22 Jun 2017 18:04:41 -0700
-Message-ID: <86c2b69e-a3f4-69d8-63c3-d3e73b4bde54@gmail.com>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
- <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop>
- <74b85a32-63c5-b7c5-47a2-831504be318e@broadcom.com>
- <CAL_JsqKddhWMXEaoxt=3_d+-STFH-OataxSgnnj9Q4A0Eqqwxg@mail.gmail.com>
- <1abad545-ee20-e047-8cb6-b130ad037213@broadcom.com>
+From: Subhash Jadavani <subhashj-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] dt-bindings: scsi: ufs: add document for
+ hi3660-ufs
+Date: Thu, 22 Jun 2017 18:05:40 -0700
+Message-ID: <5c4c0a7b844055b32b8463fcee04401e@codeaurora.org>
+References: <20170616065119.10704-1-butao@hisilicon.com>
+ <20170616065119.10704-3-butao@hisilicon.com>
+ <CAK8P3a2aPorzpUzwL=dkUkYNCGkhQMDPOkKRW1-=Hf=yCdvTsQ@mail.gmail.com>
+ <0f79aeea-53e3-6bea-ffa6-0e057f2ff83b@huawei.com>
+ <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1abad545-ee20-e047-8cb6-b130ad037213-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <CAK8P3a2z7VbPb95Ltj=Duh1v_Yqxedb_g=ADNPWOrpEz1dCTuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Branden <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Vinayak Holikatti <vinholikatti-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Riku Voipio <riku.voipio-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-fy+rA21nqHI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/22/2017 05:42 PM, Scott Branden wrote:
+On 2017-06-22 04:51, Arnd Bergmann wrote:
+> On Thu, Jun 22, 2017 at 1:44 PM, Bu Tao <butao-hv44wF8Li93QT0dZR+AlfA@public.gmane.org> wrote:
+>> 在 2017/6/17 5:51, Arnd Bergmann 写道:
+>>> On Fri, Jun 16, 2017 at 8:51 AM, Bu Tao <butao-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org> wrote:
+>>>> +Optional properties for board device:
+>>>> +- ufs-hi3660-use-rate-B                : specifies UFS rate-B
+>>>> +- ufs-hi3660-broken-fastauto   : specifies no fastauto
+>>>> +- ufs-hi3660-use-HS-GEAR3      : specifies UFS HS-GEAR3
+>>>> +- ufs-hi3660-use-HS-GEAR2      : specifies UFS HS-GEAR2
+>>>> +- ufs-hi3660-use-HS-GEAR1      : specifies UFS HS-GEAR1
+>>>> +- ufs-hi3660-broken-clk-gate-bypass    : specifies no clk-gate
+>>>> +- ufs-hi3660-use-one-line      : specifies UFS use one line work
+>>>> +- reset-gpio                   : specifies to reset devices
+>>> 
+>>> 
+>>> Some of these sound rather generic and might apply to UFS 
+>>> implementations
+>>> other than hi3660, so I'd suggest adding them to the base ufs binding 
+>>> with
+>>> a generic name instead.
+>>> 
+>>> Any DT properties that might be useful across multiple 
+>>> implementations
+>>> should be parsed in generic code that gets called by the individual
+>>> drivers,
+>>> and then the properties that are specific to the integration work 
+>>> done by
+>>> hisilicon should be prefixed with "hisilicon,", but not normally with 
+>>> the
+>>> SoC name: it is quite possible that another SoC will be derived from 
+>>> this
+>>> chip and it should reuse the properties.
+>> 
+>> 
+>> I do not know wheher other SoC need to use the optional properties as
+>> abover. So here the name of the optional properties has "hi3660".
 > 
-> 
-> On 17-06-21 08:19 PM, Rob Herring wrote:
->> On Tue, Jun 20, 2017 at 3:48 PM, Scott Branden
->> <scott.branden-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->>> Hi Rob,
->>>
->>>
->>> On 17-06-18 07:04 AM, Rob Herring wrote:
->>>> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
->>>>> Add device tree binding documentation for the Broadcom DTE
->>>>> PTP clock driver.
->>>>>
->>>>> Signed-off-by: Arun Parameswaran <arun.parameswaran-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>>> ---
->>>>>    Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 13
->>>>> +++++++++++++
->>>>>    1 file changed, 13 insertions(+)
->>>>>    create mode 100644
->>>>> Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>> b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>> new file mode 100644
->>>>> index 0000000..07590bc
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>> @@ -0,0 +1,13 @@
->>>>> +* Broadcom Digital Timing Engine(DTE) based PTP clock driver
->>>> Bindings describe h/w, not drivers.
->>>>
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible: should be "brcm,ptp-dte"
->>>> Looks too generic. You need SoC specific compatible strings.
->>>
->>> Rob, could you please help me understand the use of adding SoC specific
->>> compatible strings.
->>> I still don't get it.
->>>
->>> It's my understanding that the SoC compatibility string is to future
->>> proof
->>> against bugs/incompatibilities
->>> between different versions of the hardware block due to integration
->>> issues
->>> or any other reason.
->>> You can then compare in your driver because the strings were already
->>> used in
->>> the dtb.
->>>
->>> That would make sense if you can't already differentiate what SoC you
->>> are
->>> running on.
->>> But the SoC is already specified in the root of the device tree in the
->>> compatible string?
->>> Why can't you just use of_machine_is_compatible inside your driver when
->>> needed?
->> Use of of_machine_is_compatible in drivers will result in the same
->> mess we had with machine_is_X defines pre-DT. It practically
->> guarantees that you must update the driver for a new SoC (with
->> fallback compatibles you don't). Plus the matching logic for
->> of_machine_is_compatible is open coded logic in every driver which is
->> worse IMO than having a standard match table.
-> I don't understand what you mean by fallback compatible then.
-> 
-> Let's say I have 3 SoCs that each contain the same ip block.
-> You want us to add a fallback compatibility per SoC, is that correct?
+> They should not have "hi3660" in their names either way, independent
+> of where they are used.
 
-I think Rob meant a fallback compatibility for the particular block.
-E.g: brcm,iproc-ptp is the fallback compatible string, but in your
-SoC-specific DTS, you would have at least:
 
-compatible = "brcm,cygnus-ptp", "brcm,iproc-ptp";
-
-Where cygnus-ptp is more specific than iproc-ptp
+Yes, i agree with Arnd that SoCs might also need these so please make 
+these properties generic (put them under 
+Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt) and also move 
+their parsing code in generic driver (ufshcd.c or ufshcd-pltfrm.c).
 
 > 
-> Then, if there is a workaround discovered in a particular SoC the driver
-> can be updated in the future without changing the dtb.
+>>> (note: this is different from the value of the "compatible" property 
+>>> that
+>>> is meant to be as specific as possible".
+>>> 
+>>> Also, please clarify how your binding relates to the ufshcd binding
+>>> in Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt: does
+>>> hi3660 implement any registers that are shared with ufshcd, or does
+>>> it use the same physical interface with a different register set?
+>> 
+>> No, only show how to use the dt-binding for hi3660 SoC
 > 
-> Then, the block gets added to a 4th SoC.
-> You want us to another new compatibility string for the new SoC?
-> If the new SoC has a bug then the driver has to be updated whether it is
-> in uses the fallback compatible or machine_is_compatible string.
+> My question was about the hardware: does hi3660 implement ufshcd
+> or not?
 > 
-> There is no difference in amount of code added to a driver when a new
-> SoC is introduced into the system that has bugs that need to be handled
-> by the driver.
-> 
-> The difference is in your recommendation we need to go through all the
-> drivers used by the new SoC and add fallback compatibility strings.
+>       Arnd
 
-Not really, the fallback is what the driver should be matching by
-default (hence the name fallback) and if and only if you need to have a
-SoC-specific behavior in your driver (because of bugs, or slight
-differences) would you be matching this SoC-specific compatible string
-to capture that and key the driver behavior based off that.
-
-> Then, we have to modify all the devicetree documentation for all the
-> drivers.  Then, we have to ensure that all dts files populate this new
-> fallback string (even if it is unused).  We don't see the benefit in
-> doing any of that.  Using machine_is_compatible and having less
-> compatibility strings to deal appears much cleaner and more foolproof
-> for all situations.
-
-When you introduce a new SoC, you would update all the bindings for the
-devices (not drivers) that are susceptible to be used by this SoC. If
-all goes well, your SoC has little bugs, and your drivers don't even
-need to see an update because they are already matching the fallback
-compatible string.
-
-That's what I understand from the suggestion but I may be totally off
-rails here.
 -- 
-Florian
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
