@@ -1,90 +1,73 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/9] serial: atmel: Use common rs485 device tree
- parsing function
-Date: Fri, 23 Jun 2017 12:01:50 +0200
-Message-ID: <20170623100150.6dxgr2rq5fmf3mtb@pengutronix.de>
-References: <20170623094945.31908-1-u.kleine-koenig@pengutronix.de>
- <20170623094945.31908-5-u.kleine-koenig@pengutronix.de>
- <CACQ1gAh3jpcyPLexNgEU7KV0qX1Wor2dsLRV8LJYpA-1Wmp9SA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACQ1gAh3jpcyPLexNgEU7KV0qX1Wor2dsLRV8LJYpA-1Wmp9SA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: Re: [PATCH v1 0/6] Add support of OV9655 camera
+Date: Fri, 23 Jun 2017 12:25:09 +0200
+Message-ID: <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Hugues Fruchet <hugues.fruchet@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 11:58:37AM +0200, Richard Genoud wrote:
-> 2017-06-23 11:49 GMT+02:00 Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>:
-> > From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >
-> > We just got a common helper for parsing the rs485 specific
-> > device tree properties. Use it and drop the open coded parser.
-> >
-> > Note that there is a small difference between the removed and the now
-> > used implementation: The former cleared flags to 0 if rs485-rts-delay
-> > was given, the common helper clears SER_RS485_RX_DURING_TX and
-> > SER_RS485_ENABLED only but always which makes more sense.
-> >
-> > Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > [ukleinek: point out semantic change in commit log]
-> > Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> > Changes since v1:
-> >  - as I dropped my two atmel patches and used Alexandre Belloni's (that are
-> >    already in next) instead, there are a few changes that are necessary to
-> >    adapt to the new base.
-> >
-> >  drivers/tty/serial/atmel_serial.c | 17 +----------------
-> >  1 file changed, 1 insertion(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-> > index 937d67f22fba..357570a216ad 100644
-> > --- a/drivers/tty/serial/atmel_serial.c
-> > +++ b/drivers/tty/serial/atmel_serial.c
-> > @@ -1689,22 +1689,7 @@ static void atmel_init_rs485(struct uart_port *port,
-> >  {
-> >         struct device_node *np = pdev->dev.of_node;
-> >
-> > -       struct serial_rs485 *rs485conf = &port->rs485;
-> > -       u32 rs485_delay[2];
-> > -
-> > -       /* rs485 properties */
-> > -       if (of_property_read_u32_array(np, "rs485-rts-delay",
-> > -                                      rs485_delay, 2) == 0) {
-> > -               rs485conf->delay_rts_before_send = rs485_delay[0];
-> > -               rs485conf->delay_rts_after_send = rs485_delay[1];
-> > -               rs485conf->flags = 0;
-> > -       }
-> > -
-> > -       if (of_get_property(np, "rs485-rx-during-tx", NULL))
-> > -               rs485conf->flags |= SER_RS485_RX_DURING_TX;
-> > -
-> > -       if (of_get_property(np, "linux,rs485-enabled-at-boot-time", NULL))
-> > -               rs485conf->flags |= SER_RS485_ENABLED;
-> > +       of_get_rs485_mode(np, &port->rs485);
-> >  }
+Hi Hugues,
+
+> Am 22.06.2017 um 17:41 schrieb H. Nikolaus Schaller <hns@goldelico.com>:
 > 
-> as atmel_init_rs485() is only used once in the code, what do you think of
-> getting rid of it and just have something like:
-> of_get_rs485_mode(pdev->dev.of_node, &port->rs485);
-> in atmel_init_port() ?
-> (possibly with a little comment)
+> 
+>> Am 22.06.2017 um 17:05 schrieb Hugues Fruchet <hugues.fruchet@st.com>:
+>> 
+>> This patchset enables OV9655 camera support.
+>> 
+>> OV9655 support has been tested using STM32F4DIS-CAM extension board
+>> plugged on connector P1 of STM32F746G-DISCO board.
+>> Due to lack of OV9650/52 hardware support, the modified related code
+>> could not have been checked for non-regression.
+>> 
+>> First patches upgrade current support of OV9650/52 to prepare then
+>> introduction of OV9655 variant patch.
+>> Because of OV9655 register set slightly different from OV9650/9652,
+>> not all of the driver features are supported (controls). Supported
+>> resolutions are limited to VGA, QVGA, QQVGA.
+>> Supported format is limited to RGB565.
+>> Controls are limited to color bar test pattern for test purpose.
+>> 
+>> OV9655 initial support is based on a driver written by H. Nikolaus Schaller [1].
+> 
+> Great!
 
-Right, that is something that I thought once, too, but then forgot on
-the other changes I still had to do. Noted for v3.
+Thanks again for picking up or work and trying to get it upstream.
 
-Best regards
-Uwe
+> 
+> I will test as soon as possible.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have tried and had to fix some issues first:
+* gpio properties have a different name than in our approach (but that is something maintainers have to decide and is easy to follow this or that way)
+* there is no clock-frequency property which makes the driver request a clock frequency (something our camera interface expects this way)
+* there is no vana-supply regulator and we need that to power on/off the camera on demand (reset and pwdn isn't enough in our hardware)
+* for some unknown reason the driver does not load automatically from DT compatibility string and needs to be explicitly modprobed
+* unfortunately we still get no image :(
+
+The latter is likely a setup issue of our camera interface (OMAP3 ISP = Image Signal Processor) which
+we were not yet able to solve. Oscilloscoping signals on the interface indicated that signals and
+sync are correct. But we do not know since mplayer only shows a green screen.
+
+Therefore we had not submitted anything upstream ourselves, because our driver setup
+isn't finished and completely working.
+
+I have written some more specific comments linked to proposals for patches as answer to your [PATCH v1 1/6]
+
+BR and thanks,
+Nikolaus
