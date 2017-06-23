@@ -1,67 +1,88 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3] vsprintf: Add %p extension "%pOF" for device tree
-Date: Fri, 23 Jun 2017 10:38:08 -0700
-Message-ID: <1498239488.24295.20.camel@perches.com>
-References: <20170622204445.14930-1-robh@kernel.org>
-         <20170623173053.636-1-robh@kernel.org>
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v8 3/3] mailbox: qcom: Add support for APCS clock
+ controller
+Date: Fri, 23 Jun 2017 10:45:28 -0700
+Message-ID: <20170623174528.GC18666@tuxbook>
+References: <20170623161533.20449-1-georgi.djakov@linaro.org>
+ <20170623161533.20449-4-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170623173053.636-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170623161533.20449-4-georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2017-06-23 at 12:30 -0500, Rob Herring wrote:
-> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> 
-> 90% of the usage of device node's full_name is printing it out in a
-> kernel message. However, storing the full path for every node is
-> wasteful and redundant. With a custom format specifier, we can generate
-> the full path at run-time and eventually remove the full path from every
-> node.
-> 
-> For instance typical use is:
-> 	pr_info("Frobbing node %s\n", node->full_name);
-> 
-> Which can be written now as:
-> 	pr_info("Frobbing node %pOF\n", node);
-> 
-> '%pO' is the base specifier to represent kobjects with '%pOF'
-> representing struct device_node. Currently, struct device_node is the
-> only supported type of kobject.
-> 
-> More fine-grained control of formatting includes printing the name,
-> flags, path-spec name and others, explained in the documentation entry.
-> 
-> Originally written by Pantelis, but pretty much rewrote the core
-> function using existing string/number functions. The 2 passes were
-> unnecessary and have been removed. Also, updated the checkpatch.pl
-> check. The unittest code was written by Grant Likely.
-> 
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
-> v3:
-> - Fix missing documentation updates using '%pOF' as the device_node 
->   specifier.
-> - Update the commit msg and documentation to clearly define '%pO' is the
->   base specifier for kobjects.
-> - Rework device_node_gen_full_name() to avoid creating an array of node
->   pointers on the stack.
+On Fri 23 Jun 09:15 PDT 2017, Georgi Djakov wrote:
 
-Thanks Rob.
+> +static int msm8916_register_clk(struct device *dev, void __iomem *base)
+> +{
+[..]
+> +	regmap = devm_regmap_init_mmio(dev, base, &a53cc_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		ret = PTR_ERR(regmap);
+> +		dev_err(dev, "failed to init regmap mmio: %d\n", ret);
+> +		goto err;
+> +	}
 
-This all seems sensible to me now.
+I think it would be cleaner if you create the regmap in probe() and we
+use that throughout the driver - rather than using two different access
+mechanism.
 
-If you want:
+> +
+> +	a53cc->clkr.regmap = regmap;
+> +
+> +	ret = devm_clk_register_regmap(dev, &a53cc->clkr);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register regmap clock: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_simple_get,
+> +				     &a53cc->clkr.hw);
+> +	if (ret) {
+> +		dev_err(dev, "failed to add clock provider: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	clk_notifier_unregister(pclk, &a53cc->clk_nb);
+> +	return ret;
+> +}
+> +
+>  static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  {
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct qcom_apcs_ipc *apcs;
+>  	struct resource *res;
+>  	unsigned long offset;
+> @@ -63,6 +178,13 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+>  
+> +	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
+> +		/* register the APCS mux and divider clock */
+> +		ret = msm8916_register_clk(&pdev->dev, base);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
 
-Acked-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Don't you need to clean up anything in the below error path and in
+remove()?
 
-cheers, Joe
+>  	offset = (unsigned long)of_device_get_match_data(&pdev->dev);
+>  
+>  	apcs->reg = base + offset;
 
+Other than that I think this looks reasonable.
+
+Regards,
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
