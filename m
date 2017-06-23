@@ -1,79 +1,81 @@
-From: <nkosuta-f+iqBESB6gc@public.gmane.org>
-Subject: (unknown)
-Date: Fri, 23 Jun 2017 04:50:23 -0000
-Message-ID: <149819342331.29697.3047892805649045325@isurgut.ru>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 0/7] drivers/hwmon: Add On-Chip Controller (OCC) hwmon
+ driver
+Date: Thu, 22 Jun 2017 21:52:08 -0700
+Message-ID: <7806f15f-a594-2cfb-777a-29f1e8a3fd97@roeck-us.net>
+References: <1498171716-26620-1-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: application/zip; name="39579.zip"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: attachment
-Subject: 
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-hwmon-owner@vger.kernel.org>
+In-Reply-To: <1498171716-26620-1-git-send-email-eajames@linux.vnet.ibm.com>
+Content-Language: en-US
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, jdelvare@suse.com, mark.rutland@arm.com, robh+dt@kernel.org, gregkh@linuxfoundation.org, cbostic@linux.vnet.ibm.com, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-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
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 06/22/2017 03:48 PM, Eddie James wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
+> 
+> This series adds a hwmon driver to support the OCC on POWER8 and POWER9
+> processors. The OCC is an embedded processor that provides realtime power and
+> thermal monitoring and management.
+> 
+> This driver has two different platform drivers as a "base" for the
+> hwmon stuff, as the means of communicating with the OCC on P8 and P9 is
+> completely different. For P8, the driver is an I2C client driver. For P9 the
+> driver is an FSI-based OCC client driver, and uses the OCC driver in-kernel
+> API.
+> 
+> There was a previous version of this driver that wasn't written with the
+> differences in communication methods between the two versions in mind. This
+> driver has been considerably simplified.
+> 
+
+I thought I did see this before.
+
+It is customary to use "v2" in such situations, and add a change log.
+You expect me to go into the two versions and compare them to figure
+out what changed to evaluate if it makes sense. Do you really believe that
+I have enough time to do that, and that I would be willing to spend that
+time in the first place ?
+
+Presumably you know what changed. Why not just tell me ?
+
+Guenter
+
+> Edward A. James (7):
+>    drivers/hwmon: Add On-Chip Controller (OCC) hwmon driver
+>    drivers/hwmon/occ: Add command transport method for P8 and P9
+>    drivers/hwmon/occ: Parse OCC poll response
+>    drivers/hwmon/occ: Add sensor types and versions
+>    drivers/hwmon/occ: Add sensor attributes and register hwmon device
+>    drivers/hwmon/occ: Add non-hwmon attributes
+>    drivers/hwmon/occ: Add error handling
+> 
+>   Documentation/ABI/testing/sysfs-driver-occ-hwmon   |   77 ++
+>   .../devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt   |   18 +
+>   .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   |   25 +
+>   Documentation/hwmon/occ                            |   84 ++
+>   drivers/hwmon/Kconfig                              |    2 +
+>   drivers/hwmon/Makefile                             |    1 +
+>   drivers/hwmon/occ/Kconfig                          |   28 +
+>   drivers/hwmon/occ/Makefile                         |   11 +
+>   drivers/hwmon/occ/common.c                         | 1242 ++++++++++++++++++++
+>   drivers/hwmon/occ/common.h                         |  151 +++
+>   drivers/hwmon/occ/p8_i2c.c                         |  250 ++++
+>   drivers/hwmon/occ/p9_sbe.c                         |  144 +++
+>   12 files changed, 2033 insertions(+)
+>   create mode 100644 Documentation/ABI/testing/sysfs-driver-occ-hwmon
+>   create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
+>   create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+>   create mode 100644 Documentation/hwmon/occ
+>   create mode 100644 drivers/hwmon/occ/Kconfig
+>   create mode 100644 drivers/hwmon/occ/Makefile
+>   create mode 100644 drivers/hwmon/occ/common.c
+>   create mode 100644 drivers/hwmon/occ/common.h
+>   create mode 100644 drivers/hwmon/occ/p8_i2c.c
+>   create mode 100644 drivers/hwmon/occ/p9_sbe.c
+> 
+
