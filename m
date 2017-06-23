@@ -1,364 +1,80 @@
-From: Willy Wolff <willy.mh.wolff@gmail.com>
-Subject: [PATCH] ARM: dts: exynos: Exynos5422 Odroid-XU* incomplete
- thermal-zones definition
-Date: Fri, 23 Jun 2017 22:09:14 +0100
-Message-ID: <20170623210913.ugutgop7ratwolfy@inc028000032.lancs.ac.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 2/6] dt-bindings: display: Add Synopsys DW MIPI DSI DRM
+ bridge driver
+Date: Fri, 23 Jun 2017 16:24:46 -0500
+Message-ID: <CAL_JsqLPzoMNMhMuuvwLPRhxXgFOBroMhB8sG0zm-ofLt0AZhQ@mail.gmail.com>
+References: <1496414235-20098-1-git-send-email-philippe.cornu@st.com>
+ <1496414235-20098-3-git-send-email-philippe.cornu@st.com>
+ <20170608154028.6ck3dos6de2dogrk@rob-hp-laptop>
+ <c939ea5e-1c45-72af-0a0b-1f89fffa8c87@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <c939ea5e-1c45-72af-0a0b-1f89fffa8c87@st.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Philippe CORNU <philippe.cornu@st.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Thierry Reding <thierry.reding@gmail.com>, Chris Zhong <zyw@rock-chips.com>, Mickael REULIER <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien DESSENNE <fabien.dessenne@st.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre TORGUE <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, Vincent ABRIOU <vincent.abriou@st.com>, Ludovic BARRE <ludovic.barre@st.com>, Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, "zourongrong@gmail.com" <zourongrong@gmail.com>, Gabriel FERNANDEZ <gabriel.f>
 List-Id: devicetree@vger.kernel.org
 
-Odroid XU*-familly boards has thermal sensors per A15 cores, but the actual
- thermal-zones define only cooling-maps action for cpu0.
-
-If the application is running on all cores but core4 (first core of the A15
- cluster), the CPU can reach high temperature without any proper cooling
- action.
-
-As already discus in prior mail, and on IRC, it's a quit big code
-duplication, but I don't found the write way to express that in a better
- way.
-
-The situation for this board is that we have multiple sensors, but
- matching cooling devices for these sensors act for the same physical
- device (FAN and A15 cluster, as each core of the cluster share the same
- frequency).
-In fact, of-thermal.c:473:thermal_zone_of_sensor_register() can't use
-multiple sensors for one single thermal zone.
-This patch follow the path taken in arch/arm/boot/dts/qcom-apq8084.dtsi:97
-
-I'm interested to extending the thermal driver, but it will takes time.
- So this is a workaround before refactoring the driver.
-If somebody knows how to write it better, any advice and suggestions
-are more than welcome.
-
-Also, the comment for cpu_alert4 in cooling-maps definition is not
-accurate, 11 steps for A15 correspond to 700MHz, not 600MHz.
-
-Signed-off-by: Willy Wolff <willy.mh.wolff@gmail.com>
----
- arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi | 249 +++++++++++++++++++--
- 1 file changed, 231 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-index 05b9afdd6757..0759cc0812fb 100644
---- a/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-+++ b/arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi
-@@ -64,22 +64,22 @@
- 			polling-delay-passive = <250>;
- 			polling-delay = <0>;
- 			trips {
--				cpu_alert0: cpu-alert-0 {
-+				cpu0_alert0: cpu-alert-0 {
- 					temperature = <50000>; /* millicelsius */
- 					hysteresis = <5000>; /* millicelsius */
- 					type = "active";
- 				};
--				cpu_alert1: cpu-alert-1 {
-+				cpu0_alert1: cpu-alert-1 {
- 					temperature = <60000>; /* millicelsius */
- 					hysteresis = <5000>; /* millicelsius */
- 					type = "active";
- 				};
--				cpu_alert2: cpu-alert-2 {
-+				cpu0_alert2: cpu-alert-2 {
- 					temperature = <70000>; /* millicelsius */
- 					hysteresis = <5000>; /* millicelsius */
- 					type = "active";
- 				};
--				cpu_crit0: cpu-crit-0 {
-+				cpu0_crit0: cpu-crit-0 {
- 					temperature = <120000>; /* millicelsius */
- 					hysteresis = <0>; /* millicelsius */
- 					type = "critical";
-@@ -88,14 +88,14 @@
- 				 * Exynos542x supports only 4 trip-points
- 				 * so for these polling mode is required.
- 				 * Start polling at temperature level of last
--				 * interrupt-driven trip: cpu_alert2
-+				 * interrupt-driven trip: cpu0_alert2
- 				 */
--				cpu_alert3: cpu-alert-3 {
-+				cpu0_alert3: cpu-alert-3 {
- 					temperature = <70000>; /* millicelsius */
- 					hysteresis = <10000>; /* millicelsius */
- 					type = "passive";
- 				};
--				cpu_alert4: cpu-alert-4 {
-+				cpu0_alert4: cpu-alert-4 {
- 					temperature = <85000>; /* millicelsius */
- 					hysteresis = <10000>; /* millicelsius */
- 					type = "passive";
-@@ -104,43 +104,256 @@
- 			};
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert0>;
-+					trip = <&cpu0_alert0>;
- 					cooling-device = <&fan0 0 1>;
- 				};
- 				map1 {
--					trip = <&cpu_alert1>;
-+					trip = <&cpu0_alert1>;
- 					cooling-device = <&fan0 1 2>;
- 				};
- 				map2 {
--					trip = <&cpu_alert2>;
-+					trip = <&cpu0_alert2>;
- 					cooling-device = <&fan0 2 3>;
- 				};
- 				/*
--				 * When reaching cpu_alert3, reduce CPU
-+				 * When reaching cpu0_alert3, reduce CPU
- 				 * by 2 steps. On Exynos5422/5800 that would
- 				 * be: 1600 MHz and 1100 MHz.
- 				 */
- 				map3 {
--					trip = <&cpu_alert3>;
-+					trip = <&cpu0_alert3>;
- 					cooling-device = <&cpu0 0 2>;
- 				};
- 				map4 {
--					trip = <&cpu_alert3>;
-+					trip = <&cpu0_alert3>;
- 					cooling-device = <&cpu4 0 2>;
- 				};
- 
- 				/*
--				 * When reaching cpu_alert4, reduce CPU
--				 * further, down to 600 MHz (11 steps for big,
-+				 * When reaching cpu0_alert4, reduce CPU
-+				 * further, down to 600 MHz (12 steps for big,
- 				 * 7 steps for LITTLE).
- 				 */
- 				map5 {
--					trip = <&cpu_alert4>;
-+					trip = <&cpu0_alert4>;
- 					cooling-device = <&cpu0 3 7>;
- 				};
- 				map6 {
--					trip = <&cpu_alert4>;
--					cooling-device = <&cpu4 3 11>;
-+					trip = <&cpu0_alert4>;
-+					cooling-device = <&cpu4 3 12>;
-+				};
-+			};
-+		};
-+		cpu1_thermal: cpu1-thermal {
-+			thermal-sensors = <&tmu_cpu1 0>;
-+			polling-delay-passive = <250>;
-+			polling-delay = <0>;
-+			trips {
-+				cpu1_alert0: cpu-alert-0 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu1_alert1: cpu-alert-1 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu1_alert2: cpu-alert-2 {
-+					temperature = <70000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu1_crit0: cpu-crit-0 {
-+					temperature = <120000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+
-+				cpu1_alert3: cpu-alert-3 {
-+					temperature = <70000>;
-+					hysteresis = <10000>; /* millicelsius */
-+					type = "passive";
-+				};
-+				cpu1_alert4: cpu-alert-4 {
-+					temperature = <85000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu1_alert0>;
-+					cooling-device = <&fan0 0 1>;
-+				};
-+				map1 {
-+					trip = <&cpu1_alert1>;
-+					cooling-device = <&fan0 1 2>;
-+				};
-+				map2 {
-+					trip = <&cpu1_alert2>;
-+					cooling-device = <&fan0 2 3>;
-+				};
-+
-+				map3 {
-+					trip = <&cpu1_alert3>;
-+					cooling-device = <&cpu0 0 2>;
-+				};
-+				map4 {
-+					trip = <&cpu1_alert3>;
-+					cooling-device = <&cpu4 0 2>;
-+				};
-+
-+				map5 {
-+					trip = <&cpu1_alert4>;
-+					cooling-device = <&cpu0 3 7>;
-+				};
-+				map6 {
-+					trip = <&cpu1_alert4>;
-+					cooling-device = <&cpu4 3 12>;
-+				};
-+			};
-+		};
-+		cpu2_thermal: cpu2-thermal {
-+			thermal-sensors = <&tmu_cpu2 0>;
-+			polling-delay-passive = <250>;
-+			polling-delay = <0>;
-+			trips {
-+				cpu2_alert0: cpu-alert-0 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu2_alert1: cpu-alert-1 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu2_alert2: cpu-alert-2 {
-+					temperature = <70000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu2_crit0: cpu-crit-0 {
-+					temperature = <120000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+
-+				cpu2_alert3: cpu-alert-3 {
-+					temperature = <70000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+				cpu2_alert4: cpu-alert-4 {
-+					temperature = <85000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu2_alert0>;
-+					cooling-device = <&fan0 0 1>;
-+				};
-+				map1 {
-+					trip = <&cpu2_alert1>;
-+					cooling-device = <&fan0 1 2>;
-+				};
-+				map2 {
-+					trip = <&cpu2_alert2>;
-+					cooling-device = <&fan0 2 3>;
-+				};
-+
-+				map3 {
-+					trip = <&cpu2_alert3>;
-+					cooling-device = <&cpu0 0 2>;
-+				};
-+				map4 {
-+					trip = <&cpu2_alert3>;
-+					cooling-device = <&cpu4 0 2>;
-+				};
-+
-+				map5 {
-+					trip = <&cpu2_alert4>;
-+					cooling-device = <&cpu0 3 7>;
-+				};
-+				map6 {
-+					trip = <&cpu2_alert4>;
-+					cooling-device = <&cpu4 3 12>;
-+				};
-+			};
-+		};
-+		cpu3_thermal: cpu3-thermal {
-+			thermal-sensors = <&tmu_cpu3 0>;
-+			polling-delay-passive = <250>;
-+			polling-delay = <0>;
-+			trips {
-+				cpu3_alert0: cpu-alert-0 {
-+					temperature = <50000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu3_alert1: cpu-alert-1 {
-+					temperature = <60000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu3_alert2: cpu-alert-2 {
-+					temperature = <70000>;
-+					hysteresis = <5000>;
-+					type = "active";
-+				};
-+				cpu3_crit0: cpu-crit-0 {
-+					temperature = <120000>;
-+					hysteresis = <0>;
-+					type = "critical";
-+				};
-+
-+				cpu3_alert3: cpu-alert-3 {
-+					temperature = <70000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+				cpu3_alert4: cpu-alert-4 {
-+					temperature = <85000>;
-+					hysteresis = <10000>;
-+					type = "passive";
-+				};
-+
-+			};
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu3_alert0>;
-+					cooling-device = <&fan0 0 1>;
-+				};
-+				map1 {
-+					trip = <&cpu3_alert1>;
-+					cooling-device = <&fan0 1 2>;
-+				};
-+				map2 {
-+					trip = <&cpu3_alert2>;
-+					cooling-device = <&fan0 2 3>;
-+				};
-+
-+				map3 {
-+					trip = <&cpu3_alert3>;
-+					cooling-device = <&cpu0 0 2>;
-+				};
-+				map4 {
-+					trip = <&cpu3_alert3>;
-+					cooling-device = <&cpu4 0 2>;
-+				};
-+
-+				map5 {
-+					trip = <&cpu3_alert4>;
-+					cooling-device = <&cpu0 3 7>;
-+				};
-+				map6 {
-+					trip = <&cpu3_alert4>;
-+					cooling-device = <&cpu4 3 12>;
- 				};
- 			};
- 		};
--- 
-2.11.0
+T24gTW9uLCBKdW4gMTksIDIwMTcgYXQgMTE6NTEgQU0sIFBoaWxpcHBlIENPUk5VIDxwaGlsaXBw
+ZS5jb3JudUBzdC5jb20+IHdyb3RlOgo+IE9uIDA2LzA4LzIwMTcgMDU6NDAgUE0sIFJvYiBIZXJy
+aW5nIHdyb3RlOgo+PiBPbiBGcmksIEp1biAwMiwgMjAxNyBhdCAwNDozNzoxMVBNICswMjAwLCBQ
+aGlsaXBwZSBDT1JOVSB3cm90ZToKPj4+IFRoaXMgcGF0Y2ggYWRkcyBkb2N1bWVudGF0aW9uIG9m
+IGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciB0aGUKPj4+IFN5bm9wc3lzIERlc2lnbldhcmUgTUlQ
+SSBEU0kgaG9zdCBEUk0gYnJpZGdlIGRyaXZlci4KPj4+Cj4+PiBTaWduZWQtb2ZmLWJ5OiBQaGls
+aXBwZSBDT1JOVSA8cGhpbGlwcGUuY29ybnVAc3QuY29tPgo+Pj4gLS0tCj4+PiAgIC4uLi9iaW5k
+aW5ncy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQgICAgICAgIHwgMzAgKysrKysrKysr
+KysrKysrKysrKysrKwo+Pj4gICAxIGZpbGUgY2hhbmdlZCwgMzAgaW5zZXJ0aW9ucygrKQo+Pj4g
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL2R3X21pcGlfZHNpLnR4dAo+Pj4KPj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvZHdfbWlwaV9kc2kudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2R3X21p
+cGlfZHNpLnR4dAo+Pj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4+IGluZGV4IDAwMDAwMDAuLjFk
+N2M0MzgKPj4+IC0tLSAvZGV2L251bGwKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9kd19taXBpX2RzaS50eHQKPj4+IEBAIC0wLDAgKzEs
+MzAgQEAKPj4+ICtTeW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkgRFNJIGhvc3QgY29udHJvbGxlcgo+
+Pj4gKz09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Cj4+PiArCj4+
+PiArVGhpcyBkb2N1bWVudCBkZWZpbmVzIGRldmljZSB0cmVlIHByb3BlcnRpZXMgZm9yIHRoZSBT
+eW5vcHN5cyBEZXNpZ25XYXJlIE1JUEkKPj4+ICtEU0kgaG9zdCBjb250cm9sbGVyLiBJdCBkb2Vz
+bid0IGNvbnN0aXR1ZSBhIGRldmljZSB0cmVlIGJpbmRpbmcgc3BlY2lmaWNhdGlvbgo+Pj4gK2J5
+IGl0c2VsZiBidXQgaXMgbWVhbnQgdG8gYmUgcmVmZXJlbmNlZCBieSBwbGF0Zm9ybS1zcGVjaWZp
+YyBkZXZpY2UgdHJlZQo+Pj4gK2JpbmRpbmdzLgo+Pj4gKwo+Pj4gK1doZW4gcmVmZXJlbmNlZCBm
+cm9tIHBsYXRmb3JtIGRldmljZSB0cmVlIGJpbmRpbmdzIHRoZSBwcm9wZXJ0aWVzIGRlZmluZWQg
+aW4KPj4+ICt0aGlzIGRvY3VtZW50IGFyZSBkZWZpbmVkIGFzIGZvbGxvd3MuIFRoZSBwbGF0Zm9y
+bSBkZXZpY2UgdHJlZSBiaW5kaW5ncyBhcmUKPj4+ICtyZXNwb25zaWJsZSBmb3IgZGVmaW5pbmcg
+d2hldGhlciBlYWNoIHByb3BlcnR5IGlzIHJlcXVpcmVkIG9yIG9wdGlvbmFsLgo+Pj4gKwo+Pj4g
+Ky0gcmVnOiBNZW1vcnkgbWFwcGVkIGJhc2UgYWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSBEV0Mg
+TUlQSSBEU0kKPj4+ICsgIHJlZ2lzdGVycy4gKG1hbmRhdG9yeSkKPj4+ICsKPj4+ICstIGNsb2Nr
+czogUmVmZXJlbmNlcyB0byBhbGwgdGhlIGNsb2NrcyBzcGVjaWZpZWQgaW4gdGhlIGNsb2NrLW5h
+bWVzIHByb3BlcnR5Cj4+PiArICBhcyBzcGVjaWZpZWQgaW4gWzFdLiAobWFuZGF0b3J5KQo+Pj4g
+Kwo+Pj4gKy0gY2xvY2stbmFtZXM6ICJwY2xrIiBpcyBwZXJpcGhlcmFsIGNsb2NrIGZvciBlaXRo
+ZXIgQUhCIGFuZCBBUEIuIChtYW5kYXRvcnkpCj4+Cj4+IFNlZW1zIHN0cmFuZ2UgdGhlcmUncyBu
+b3QgYWxzbyBhIHBpeGVsIG9yIGJpdCBjbG9jaz8gT3IgdGhpcyBnZXRzIGRyaXZlbgo+PiBmcm9t
+IHRoZSBwaHk/Cj4+Cj4gSGkgUm9iLAo+IEFuZCBtYW55IHRoYW5rcyBmb3IgeW91ciBjb21tZW50
+cyA6KQo+Cj4gVGhlcmUgaXMgYSAicGh5c2ljYWwiIHBpeGVsIGNsb2NrIGVudGVyaW5nIGludG8g
+dGhlICJEU0kgY29udHJvbGxlciBJUCIKPiBidXQgdGhlICJEU0kgY29udHJvbGxlciBkcml2ZXIi
+IGRvZXMgbm90IG5lZWQgdG8gY29udHJvbCAob3IgcmVhZCkgaXQKPiB3aXRoIHRoZSBkdCBiZWNh
+dXNlIHRoaXMgY2xvY2sgaW5mb3JtYXRpb24gKHRoZSBmcmVxdWVuY3kpIGlzIGFsc28KPiBhdmFp
+bGFibGUgaW4gcGFuZWwgdGltaW5ncyBhbmQgdGhlIGRybS9rbXMgZnJhbWV3b3JrIHdpbGwgcHJv
+cGFnYXRlIHRoZQo+IHBhbmVsIHRpbWluZ3MgaW4gdGhlIGRybS9rbXMgImNydGMvZW5jb2Rlci9i
+cmlkZ2UmcGFuZWwvY29ubmVjdG9yLi4uIgo+IGNoYWluLiBUaGVuLCB0aGUgRFNJIGNvbnRyb2xs
+ZXIgZHJpdmVyIHdpbGwgY29tcHV0ZSBwaHkgcGFyYW1ldGVycwo+IGFjY29yZGluZyB0byB0aGVz
+ZSBwYW5lbCB0aW1pbmdzLgo+IEFkZGluZyBhIHBpeGVsIGNsb2NrIGRlcGVuZGVuY3kgaW4gdGhl
+IGR0IGhlcmUgaXMgdGhlbiBub3QgbmVjZXNzYXJ5IGFzCj4gdGhlIGZyZXF1ZW5jeSBpbmZvcm1h
+dGlvbiBjb21lcyB0aHJvdWdoIHRoZSBwYW5lbCB0aW1pbmdzLgoKRXZlbiBpZiB0aGUgTGludXgg
+ZHJpdmVyIGRvZXNuJ3QgY3VycmVudGx5IG5lZWQgdG8gY29udHJvbCB0aGUgcGl4ZWwKY2xvY2sg
+aXQgc2hvdWxkIHN0aWxsIGJlIGRlZmluZWQgaW4gdGhlIGJpbmRpbmcuIEJpbmRpbmdzIGFyZSB3
+aGF0IHlvdQpwaHlzaWNhbGx5IGhhdmUsIG5vdCBqdXN0IHdoYXQgdGhlIGRyaXZlciBuZWVkcyBv
+ciBkb2Vzbid0IG5lZWQuCgpSb2IKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZHJpLWRldmVsCg==
