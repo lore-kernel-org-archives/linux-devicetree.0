@@ -1,38 +1,24 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 5/6] dt-bindings: display: stm32: Add DSI host driver
-Date: Fri, 23 Jun 2017 16:28:24 -0500
-Message-ID: <20170623212824.3c5ny3jn7xfxw2ab@rob-hp-laptop>
-References: <1497889685-27349-1-git-send-email-philippe.cornu@st.com>
- <1497889685-27349-6-git-send-email-philippe.cornu@st.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: gyro: add L3GD20H sensor device
+ binding
+Date: Fri, 23 Jun 2017 16:29:10 -0500
+Message-ID: <20170623212910.xxucowiowpa47wff@rob-hp-laptop>
+References: <20170619200431.9615-1-lorenzo.bianconi@st.com>
+ <20170619200431.9615-3-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1497889685-27349-6-git-send-email-philippe.cornu@st.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philippe CORNU <philippe.cornu@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Neil Armstrong <narmstrong@baylibre.com>, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Chris Zhong <zyw@rock-chips.com>, Mickael Reulier <mickael.reulier@st.com>, Russell King <linux@armlinux.org.uk>, Fabien Dessenne <fabien.dessenne@st.com>, Xinwei Kong <kong.kongxinwei@hisilicon.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, Arnd Bergmann <arnd@arndb.de>, Chen Feng <puck.chen@hisilicon.com>, Vincent Abriou <vincent.abriou@st.com>, Ludovic Barre <ludovic.barre@st.com>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, zourongrong@gmail.com, Gabriel Fernandez <gabriel.fernandez@st.com>
+In-Reply-To: <20170619200431.9615-3-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robert.dolca-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, denis.ciocca-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKdW4gMTksIDIwMTcgYXQgMDY6Mjg6MDRQTSArMDIwMCwgUGhpbGlwcGUgQ09STlUg
-d3JvdGU6Cj4gVGhpcyBwYXRjaCBhZGRzIGRvY3VtZW50YXRpb24gb2YgZGV2aWNlIHRyZWUgYmlu
-ZGluZ3MgZm9yIHRoZSBTVE0zMgo+IERTSSBob3N0IGRyaXZlciBiYXNlZCBvbiB0aGUgU3lub3Bz
-eXMgRFcgTUlQSSBEU0kgYnJpZGdlIGRyaXZlci4KClNhbWUgY29tbWVudCBoZXJlLiBXaXRoIHRo
-YXQsCgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCj4gCj4gU2lnbmVk
-LW9mZi1ieTogUGhpbGlwcGUgQ09STlUgPHBoaWxpcHBlLmNvcm51QHN0LmNvbT4KPiBSZXZpZXdl
-ZC1ieTogTmVpbCBBcm1zdHJvbmcgPG5hcm1zdHJvbmdAYmF5bGlicmUuY29tPgo+IC0tLQo+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3N0LHN0bTMyLWx0ZGMudHh0ICB8IDEwNCAr
-KysrKysrKysrKysrKysrKysrKy0KPiAgMSBmaWxlIGNoYW5nZWQsIDEwMyBpbnNlcnRpb25zKCsp
-LCAxIGRlbGV0aW9uKC0pCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Mon, Jun 19, 2017 at 10:04:31PM +0200, Lorenzo Bianconi wrote:
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
+>  1 file changed, 1 insertion(+)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
