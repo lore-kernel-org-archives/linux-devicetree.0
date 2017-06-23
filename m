@@ -1,99 +1,68 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
-Date: Fri, 23 Jun 2017 16:57:19 +0200
-Message-ID: <88d0e8ea-74e4-6845-4e0d-8cd0f3a054be@suse.de>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <d14b8c6e-b480-36f0-ed0a-684647617dbe@suse.de>
- <3E7B1344-ECE6-4CCC-9E9D-7521BB566CDE@goldelico.com>
- <13144955.Kq5qljPvgI@avalon>
- <24C976BF-52FD-4509-BCE4-9AE41B335482@goldelico.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] regulator: fixed, gpio: dt: regulator-name is required
+ property
+Date: Fri, 23 Jun 2017 16:03:21 +0100
+Message-ID: <20170623150321.4e2m3ehaot2n5hrz@sirena.org.uk>
+References: <1488836249-1193-1-git-send-email-harald@ccbib.org>
+ <20170315171009.4raoe35x4mdtsw4w@rob-hp-laptop>
+ <E1dOP3F-0000NF-Pe@stardust.g4.wien.funkfeuer.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <24C976BF-52FD-4509-BCE4-9AE41B335482@goldelico.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Hugues Fruchet <hugues.fruchet@st.com>, Suman Anna <s-anna@ti.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick Fertre <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="75bx3oydpai5e77j"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <E1dOP3F-0000NF-Pe-rvrRdOlaWMmli2aaYNgTVBW+3FKk/ZpWT2auq/jSWdo@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 23.06.2017 um 16:53 schrieb H. Nikolaus Schaller:
-> Hi Laurent,
-> 
->> Am 23.06.2017 um 13:58 schrieb Laurent Pinchart <laurent.pinchart@ideasonboard.com>:
->>
->> Hi Nikolaus,
->>
->> On Friday 23 Jun 2017 12:59:24 H. Nikolaus Schaller wrote:
->>> Am 23.06.2017 um 12:46 schrieb Andreas Färber <afaerber@suse.de>:
->>>> Am 23.06.2017 um 12:25 schrieb H. Nikolaus Schaller:
->>>>>> diff --git a/Documentation/devicetree/bindings/media/i2c/ov965x.txt
->>>>>> b/Documentation/devicetree/bindings/media/i2c/ov965x.txt new file mode
->>>>>> 100644
->>>>>> index 0000000..0e0de1f
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/media/i2c/ov965x.txt
->>>>>> @@ -0,0 +1,37 @@
->>>>>> +* Omnivision OV9650/9652/9655 CMOS sensor
->>>>>> +
->>>>>> +The Omnivision OV965x sensor support multiple resolutions output, such
->>>>>> as
->>>>>> +CIF, SVGA, UXGA. It also can support YUV422/420, RGB565/555 or raw RGB
->>>>>> +output format.
->>>>>> +
->>>>>> +Required Properties:
->>>>>> +- compatible: should be one of
->>>>>> +	"ovti,ov9650"
->>>>>> +	"ovti,ov9652"
->>>>>> +	"ovti,ov9655"
->>>>>> +- clocks: reference to the mclk input clock.
->>>>>
->>>>> I wonder why you have removed the clock-frequency property?
->>>>>
->>>>> In some situations the camera driver must be able to tell the clock
->>>>> source which frequency it wants to see.
->>>>
->>>> That's what assigned-clock-rates property is for:
->>>>
->>>> https://www.kernel.org/doc/Documentation/devicetree/bindings/clock/clock-b
->>>> indings.txt
->>>>
->>>> AFAIU clock-frequency on devices is deprecated and equivalent to having
->>>> a clocks property pointing to a fixed-clock, which is different from a
->>>> clock with varying rate.
->>>
->>> I am not sure if that helps here. The OMAP3-ISP does not have a fixed clock
->>> rate so we can only have the driver define what it wants to see.
->>>
->>> And common practise for OMAP3-ISP based camera modules (e.g. N900, N9) is
->>> that they do it in the driver.
->>>
->>> Maybe ISP developers can comment?
->>
->> The OMAP3 ISP is a variable-frequency clock provider. The clock frequency is 
->> controlled by the clock consumer. As such, it's up to the consumer to decide 
->> whether to compute and request the clock rate dynamically at runtime, or use 
->> the assigned-clock-rates property in DT.
->>
->> Some ISPs include a clock generator, others don't. It should make no 
->> difference whether the clock is provided by the ISP, by a dedicated clock 
->> source in the SoC or by a discrete on-board adjustable clock source.
-> 
-> Thanks for explaining the background.
-> 
-> Do you have an hint or example how to use the assigned-clock-rates property in
-> a DT for a camera module connected to the omap3isp?
-> 
-> Or does it just mean that it defines the property name?
 
-Please read the documentation link I sent - it's in the very bottom and
-should have an example.
+--75bx3oydpai5e77j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Andreas
+On Fri, Jun 23, 2017 at 03:55:09PM +0200, Harald Geyer wrote:
 
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+> what happened to this patch? Since it was written to your specification
+> and got an ack from a devicetree maintainer more then 3 months ago,
+> I don't see what is holding it back. I can't find it in any tree.
+
+Please don't send content free pings and please allow a reasonable time
+for review.  People get busy, go on holiday, attend conferences and so=20
+on so unless there is some reason for urgency (like critical bug fixes)
+please allow at least a couple of weeks for review.  If there have been
+review comments then people may be waiting for those to be addressed.
+
+Sending content free pings adds to the mail volume (if they are seen at
+all) which is often the problem and since they can't be reviewed
+directly if something has gone wrong you'll have to resend the patches
+anyway, though there are some other maintainers who like them - if in
+doubt look at how patches for the subsystem are normally handled.
+
+Please don't top post, reply in line with needed context.  This allows
+readers to readily follow the flow of conversation and understand what
+you are talking about and also helps ensure that everything in the
+discussion is being addressed.
+
+--75bx3oydpai5e77j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllNLbkACgkQJNaLcl1U
+h9CuBAf+KeOKpU998fcckSG98FOxRSPSi1RthNt6FLzxvfI69ZwqFEy0nJoBTsL7
+2d0d6NjGasqxp1NmFEVf2CtiYXfxUhtVMq4ecwry5kVCer/cCHH6gGExLE6+wk+4
+6VW68P5zf/7vhd08sbYvr1AWk8aK5lczMVZPBo2NgahsLQBvgOMtQTC/j8vlXz/Y
+3gCk8Rxj8n2AijWaY5Vq/puhIS5cig4eY7ZECZI7KQS+z4zV+h3mwUjwq952KGub
++KVzR8viW1uoRIiRDddBsoCX6N8uo8FS9SRophPwo9ytSQ1xKwxP9lR3Ud+uyRO0
+DASq+/S1B65JQcYWMTgdPyo54QUWVg==
+=Qy3u
+-----END PGP SIGNATURE-----
+
+--75bx3oydpai5e77j--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
