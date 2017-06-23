@@ -1,94 +1,72 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 12/16] MIPS: lantiq: Add a GPHY driver which uses the
- RCU syscon-mfd
-Date: Fri, 23 Jun 2017 17:17:35 -0500
-Message-ID: <20170623221735.yxeqnn4javhboegx@rob-hp-laptop>
-References: <20170620223743.13735-1-hauke@hauke-m.de>
- <20170620223743.13735-13-hauke@hauke-m.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: i2c: Add Spreadtrum I2C controller
+ documentation
+Date: Fri, 23 Jun 2017 17:20:16 -0500
+Message-ID: <20170623222016.qwnypaumkytrfrn2@rob-hp-laptop>
+References: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1498029380.git.baolin.wang@spreadtrum.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170620223743.13735-13-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1498029380.git.baolin.wang@spreadtrum.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Baolin Wang <baolin.wang@spreadtrum.com>
+Cc: wsa@the-dreams.de, mark.rutland@arm.com, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 12:37:39AM +0200, Hauke Mehrtens wrote:
-> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+On Wed, Jun 21, 2017 at 03:23:03PM +0800, Baolin Wang wrote:
+> This patch adds the binding documentation for Spreadtrum I2C
+> controller device.
 > 
-> Compared to the old xrx200_phy_fw driver the new version has multiple
-> enhancements. The name of the firmware files does not have to be added
-> to all .dts files anymore - one now configures the GPHY mode (FE or GE)
-> instead. Each GPHY can now also boot separate firmware (thus mixing of
-> GE and FE GPHYs is now possible).
-> The new implementation is based on the RCU syscon-mfd and uses the
-> reeset_controller framework instead of raw RCU register reads/writes.
-> 
-> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-> Reviewed-by: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
 > ---
->  .../devicetree/bindings/mips/lantiq/rcu-gphy.txt   |  36 +++
->  arch/mips/lantiq/xway/sysctrl.c                    |   6 +-
->  drivers/soc/lantiq/Makefile                        |   1 +
->  drivers/soc/lantiq/gphy.c                          | 260 +++++++++++++++++++++
->  include/dt-bindings/mips/lantiq_rcu_gphy.h         |  15 ++
->  5 files changed, 316 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
->  create mode 100644 drivers/soc/lantiq/gphy.c
->  create mode 100644 include/dt-bindings/mips/lantiq_rcu_gphy.h
+> Changes since v1:
+>  - No updates.
+> ---
+>  Documentation/devicetree/bindings/i2c/i2c-sprd.txt |   31 ++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sprd.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-sprd.txt b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
 > new file mode 100644
-> index 000000000000..ec09783da9b2
+> index 0000000..f285e5b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mips/lantiq/rcu-gphy.txt
-> @@ -0,0 +1,36 @@
-> +Lantiq XWAY SoC GPHY binding
-> +============================
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
+> @@ -0,0 +1,31 @@
+> +I2C for Spreadtrum platforms
 > +
-> +This binding describes a software-defined ethernet PHY, provided by the RCU
-> +module on newer Lantiq XWAY SoCs (xRX200 and newer).
-> +
-> +-------------------------------------------------------------------------------
 > +Required properties:
-> +- compatible		: Should be one of
-> +				"lantiq,xrx200a1x-gphy"
-> +				"lantiq,xrx200a2x-gphy"
-> +				"lantiq,xrx300-gphy"
-> +				"lantiq,xrx330-gphy"
-> +- reg			: Addrress of the GPHY FW load address register
-> +- resets		: Must reference the RCU GPHY reset bit
-> +- reset-names		: One entry, value must be "gphy" or optional "gphy2"
-> +- clocks		: A reference to the (PMU) GPHY clock gate
+> +- compatible: Should be "sprd,r8p0-i2c".
+
+Compatible strings should be SoC specific.
+
+> +- reg: Specify the physical base address of the controller and length
+> +  of memory mapped region.
+> +- interrupts: Should contain I2C interrupt.
+> +- clock-names: Should contain following entries:
+> +  "i2c" for I2C clock,
+> +  "source" for I2C source (parent) clock,
+> +  "enable" for I2C module enable clock.
+> +- clocks: Should contain a clock specifier for each entry in clock-names.
+> +- clock-frequency: Constains desired I2C bus clock frequency in Hz.
+> +- #address-cells: Should be 1 to describe address cells for I2C device address.
+> +- #size-cells: Should be 0 means no size cell for I2C device address.
 > +
 > +Optional properties:
-> +- lantiq,gphy-mode	: GPHY_MODE_GE (default) or GPHY_MODE_FE as defined in
-> +			  <dt-bindings/mips/lantiq_xway_gphy.h>
+> +- Child nodes conforming to I2C bus binding
 > +
+> +Examples:
+> +i2c0: i2c@70500000 {
+> +	compatible = "sprd,r8p0-i2c";
+> +	reg = <0 0x70500000 0 0x1000>;
+> +	interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+> +	clock-names = "i2c", "source", "enable";
+> +	clocks = <&clk_i2c3>, <&ext_26m>, <&clk_ap_apb_gates 11>;
+> +	clock-frequency = <400000>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +};
 > +
-> +-------------------------------------------------------------------------------
-> +Example for the GPHys on the xRX200 SoCs:
-> +
-> +#include <dt-bindings/mips/lantiq_rcu_gphy.h>
-> +	gphy0: gphy@0 {
-
-phy@20
-
-With that,
-
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-> +		compatible = "lantiq,xrx200a2x-gphy";
-> +		reg = <0x20 0x4>
-> +
-> +		resets = <&reset0 31 30>, <&reset1 7 7>;
-> +		reset-names = "gphy", "gphy2";
-> +		clocks = <&pmu0 XRX200_PMU_GATE_GPHY>;
-> +		lantiq,gphy-mode = <GPHY_MODE_GE>
-> +	};
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -- 
+> 1.7.9.5
+> 
