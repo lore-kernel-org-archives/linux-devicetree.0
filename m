@@ -1,59 +1,77 @@
-From: jmondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v6 2/8] dt-bindings: pinctrl: Add RZ/A1 bindings doc
-Date: Fri, 23 Jun 2017 10:05:31 +0200
-Message-ID: <20170623080531.GA14273@w540>
-References: <1498143276-7976-1-git-send-email-jacopo+renesas@jmondi.org>
- <1498143276-7976-3-git-send-email-jacopo+renesas@jmondi.org>
- <20170622210917.ljbxkpaalckhegmq@rob-hp-laptop>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: add bindings for i2c-pca-platform
+Date: Fri, 23 Jun 2017 10:17:26 +0200
+Message-ID: <20170623081726.GA1526@katana>
+References: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
+ <20170620011837.14010-2-chris.packham@alliedtelesis.co.nz>
+ <20170622082230.wf4r2ylyevidizkd@ninjato>
+ <e121e9ad4afe49008e34b5b4a76b22c6@svr-chch-ex1.atlnz.lc>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170622210917.ljbxkpaalckhegmq@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, linus.walleij@linaro.org, geert+renesas@glider.be, laurent.pinchart@ideasonboard.com, chris.brandt@renesas.com, mark.rutland@arm.com, linux@armlinux.org.uk, aisheng.dong@nxp.com, linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <e121e9ad4afe49008e34b5b4a76b22c6-5g7mGxlPNYb6GjIOKuZY+ItlCAj8ZROq@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
+Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
 
-On Thu, Jun 22, 2017 at 04:09:17PM -0500, Rob Herring wrote:
-> On Thu, Jun 22, 2017 at 04:54:30PM +0200, Jacopo Mondi wrote:
-> > Add device tree bindings documentation for Renesas RZ/A1 gpio and pin
-> > controller.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  .../bindings/pinctrl/renesas,rza1-pinctrl.txt      | 221 +++++++++++++++++++++
-> >  1 file changed, 221 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,rza1-pinctrl.txt
->
-> Please add acks when posting new versions. It seems there are 2 more
-> lines here, but I have no idea what changed. I'm assuming it was minor
-> enough to retain my ack.
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I have dropped your Acked-by in v4, as compared to the previous
-versions bindings changed "significantly".
-Quoting the v4 cover letter:
+On Thu, Jun 22, 2017 at 09:20:59PM +0000, Chris Packham wrote:
+> On 22/06/17 20:23, Wolfram Sang wrote:
+> >=20
+> >> + - reset-gpios : gpio specifier for gpio connected to RESET_N pin.
+> >=20
+> > What about the 'active' state that Rob mentioned in his last review?
+> >=20
+>=20
+> My intention was that by saying it is connected to the RESET_N bin the=20
+> active state is covered.
+>=20
+> I personally always get a little confused when talking about reset=20
+> lines. The _N denotes that the line is active low but because it is a=20
+> reset line writing 1 releases the reset so from a what-the-user-wants=20
+> perspective it's active high.
+>=20
+> dt-binding-wise what we want here is GPIO_ACTIVE_HIGH, as in the driver=
+=20
+> writes 1 to release reset so don't do any polarity inversion. I'd be=20
+> happy do add something to that effect in a v3 but I actually felt saying=
+=20
+> the gpio is connected to RESET_N was less ambiguous.
 
-"The device tree bindings changed significantly, and as anticipated I
-have not incorporated Rob's ack as I would like him to have a look there again."
+Okay. Thanks for the explanation. I am fine with it but I'll leave the
+final decision to Rob.
 
-Now that I look at bindings again, I guess I could have kept it
-because all of the changes are related to pin controller subsystem
-specificities and are not that "significant" in the end..
 
-I'll list them here for your reference
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
 
-- use "pinmux" in place of "renesas,pins" property
-- use generic properties in place of pin mux flags
-- a bit of shuffling on generic properties in v4->v6 transition
+-----BEGIN PGP SIGNATURE-----
 
-If none of these is relevant to you, we can add you Acked-by back when
-sending pull-request (right Geert?)
+iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllMzpEACgkQFA3kzBSg
+Kbax5Q/+LlVQxArD1mHZh3ZY0Z3UAXkxO3f1Y+6Xz35ukFVqQyM0WIA0w+MJUbiP
+viTfB5gilClaj+ZRCH7lrOCTnpRE3YFNTi3TQgGPdkiwIuNk0QTHiM3fw84+cuUS
+Le6JAm7IwVM8Bf1bRBQp3/B2TmCOXyJ5+XUAGIjA/CNGKzOT4O5T/yCqdNMzwVUD
+/bvUEG6YCEpOvaB3iynaMBnLtPuRwXNvkLq1ZWT8sXtcV1DFbBDrQ6blqAubBMEA
+QeRT26sal9wzQomgnYZrMBuw3Z3VPwNwBjx6UGsFoOwaAIUAgYccYoPN+GafOgO+
+d5cRdjkYpJTEe9DAiI+Cuy8iEg0evMpNSvlIt+3PVQAoEt7VzCJcokq5WsNZQPKm
+B9gqn+Y5UojlVraOv895hOJWlTsLvToP4RUORaDwzreaRqznmJdPOWZH7RdVBc+n
+1ByYqAQ4oxud6dYfAW36CGYBcABREs8jcygOSgf4zI9ZuVpPMjsKDaAYiSutSroz
+dfLJTfEhvkumlk9DxUASjrM/YPVF2m7TFo81rKqXJMK7vQ+YAFM3jUVdCpu7CrkM
+sB0zd1S5+GkEwDh4IFnIaOosM2V8xQhPmzQJz+E4LXhHJQa+5wP2UsU54ay+lNRC
+0eUQwvJxRgV098RjGKSA6kCIbRCyJHc3jDQAMhG9qSfR5Ff5lL8=
+=e/0/
+-----END PGP SIGNATURE-----
 
-Thanks
-   j
-
->
-> Rob
+--PNTmBPCT7hxwcZjr--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
