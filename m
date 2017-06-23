@@ -1,85 +1,25 @@
-From: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
-Date: Fri, 23 Jun 2017 20:59:28 +0200
-Message-ID: <74EE8B20-84A2-4579-ACBE-32E55CECE1C5@goldelico.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com> <d14b8c6e-b480-36f0-ed0a-684647617dbe@suse.de> <3E7B1344-ECE6-4CCC-9E9D-7521BB566CDE@goldelico.com> <13144955.Kq5qljPvgI@avalon> <24C976BF-52FD-4509-BCE4-9AE41B335482@goldelico.com> <88d0e8ea-74e4-6845-4e0d-8cd0f3a054be@suse.de> <05CBF9B8-2297-447B-860D-A89126B46FC9@goldelico.com> <3f0dcd4f-92ef-a79d-b00b-1f348a201bd2@ti.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3f0dcd4f-92ef-a79d-b00b-1f348a201bd2-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>, =?utf-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net-next 0/4] net: phy: Support "internal" PHY interface
+Date: Fri, 23 Jun 2017 15:07:05 -0400 (EDT)
+Message-ID: <20170623.150705.237882810208849414.davem@davemloft.net>
+References: <20170623173316.23017-1-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170623173316.23017-1-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, sean.wang@mediatek.com, martin.blumenstingl@googlemail.com, rmk+kernel@armlinux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, david.wu@rock-chips.com, opendmb@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Suman,
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Fri, 23 Jun 2017 10:33:12 -0700
 
-> Am 23.06.2017 um 20:05 schrieb Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>:
->=20
->>>>=20
->>>> Or does it just mean that it defines the property name?
->>>=20
->>> Please read the documentation link I sent - it's in the very bottom =
-and
->>> should have an example.
->>=20
->> I have seen it but it does not give me a good clue how to translate =
-that into
->> correct omap3isp node setup in a specific DT. Rather it raises more =
-questions.
->> Maybe because I don't understand completely what it is talking about.
->>=20
->> The fundamental question is if this "assigned-clock-rates" is already
->> handled by ov965x->clk =3D devm_clk_get(&client->dev, NULL); ?
->>=20
->> Or should we define that for the omap3isp node?
->>=20
->> Then of course we need no new code and just use the right property =
-names.
->> And N900, N9 camera DTs should be updated.
->=20
-> Look up of_clk_set_defaults() function in drivers/clk/clk-conf.c. This
-> function gets invoked usually during clock registration, and also gets
-> called in platform_drv_probe(), so the parents and clocks do get
-> configured before your driver gets probed. So, this provides a default
-> configuration if these properties are supplied (in either clock nodes =
-or
-> actual device nodes), and if your driver needs to change the rates at
-> runtime, then you would have to do that in the driver itself.
+> This makes the "internal" phy-mode property generally available and
+> documented and this allows us to remove some custom parsing code
+> we had for bcmgenet and bcm_sf2 which both used that specific value.
 
-Ok, now I understand. Thanks!
+Nice cleanup.
 
-Quite hidden, but nice feature. I would never have thought that it =
-exists.
-Especially as there are no examples around omap3isp cameras...
-
-And an fgrep assigned-clock-rates shows not many use cases outside =
-CPU/SoC
-include files.
-
-But interestingly arch/arm/boot/dts/at91sam9g25ek.dts uses it for an =
-ovti,ov2640 camera...
-
-So it seems that we just have to write:
-
-	ov9655@30 {
-		compatible =3D "ovti,ov9655";
-		reg =3D <0x30>;
-		clocks =3D <&isp 0>;	/* cam_clka */
-		assigned-clocks =3D <&isp 0>;
-		assigned-clock-rates =3D <24000000>;
-	};
-
-instead of introducing a new clock-frequency property and code to handle =
-it.
-
-Or do I misinterpret what "parents" and "clocks" are in this context?
-
-BR and thanks,
-Nikolaus
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Series applied, thanks.
