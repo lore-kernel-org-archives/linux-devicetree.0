@@ -1,77 +1,84 @@
-From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] dt-bindings: add bindings for i2c-pca-platform
-Date: Fri, 23 Jun 2017 10:17:26 +0200
-Message-ID: <20170623081726.GA1526@katana>
-References: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
- <20170620011837.14010-2-chris.packham@alliedtelesis.co.nz>
- <20170622082230.wf4r2ylyevidizkd@ninjato>
- <e121e9ad4afe49008e34b5b4a76b22c6@svr-chch-ex1.atlnz.lc>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH v3 1/3] dt-bindings: arm: amlogic: Add SoC information
+ bindings
+Date: Fri, 23 Jun 2017 10:22:24 +0200
+Message-ID: <c62ace5a-f977-6f07-2e02-e20aac94bcb9@baylibre.com>
+References: <1497441946-24379-1-git-send-email-narmstrong@baylibre.com>
+ <1497441946-24379-2-git-send-email-narmstrong@baylibre.com>
+ <20170622212449.wsck475jxabawqsv@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <e121e9ad4afe49008e34b5b4a76b22c6-5g7mGxlPNYb6GjIOKuZY+ItlCAj8ZROq@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chris Packham <Chris.Packham-6g8wRflRTwXFdCa3tKVlE6U/zSkkHjvu@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170622212449.wsck475jxabawqsv@rob-hp-laptop>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: khilman@baylibre.com, carlo@caione.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/22/2017 11:24 PM, Rob Herring wrote:
+> On Wed, Jun 14, 2017 at 02:05:44PM +0200, Neil Armstrong wrote:
+>> Add bindings for the SoC information register of the Amlogic SoCs.
+>>
+>> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+>> ---
+>>  Documentation/devicetree/bindings/arm/amlogic.txt | 29 +++++++++++++++++++++++
+>>  1 file changed, 29 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
+>> index 5c01e65..a6d8754 100644
+>> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
+>> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
+>> @@ -60,3 +60,32 @@ Board compatible values (alphabetically, grouped by SoC):
+>>    - "amlogic,q201" (Meson gxm s912)
+>>    - "kingnovel,r-box-pro" (Meson gxm S912)
+>>    - "nexbox,a1" (Meson gxm s912)
+>> +
+>> +Amlogic Meson Firmware registers Interface
+>> +------------------------------------------
+>> +
+>> +The Meson SoCs have a register bank with status and data shared with the
+>> +secure firmware.
+>> +
+>> +Required properties:
+>> + - compatible: For Meson GX SoCs, must be "amlogic,meson-gx-ao-secure", "syscon"
+>> +
+>> +Properties should indentify components of this register interface :
+>> +
+>> +Meson GX SoC Information
+>> +------------------------
+>> +A firmware register encodes the SoC type, package and revision information on
+>> +the Meson GX SoCs.
+>> +If present, the following property should be added :
+>> +
+>> +Optional properties:
+>> +  - has-chip-id: If present, the interface gives the current SoC version.
+> 
+> amlogic,has-chip-id
 
---PNTmBPCT7hxwcZjr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+OK, thanks I'll send a v3.1 with this small change.
 
-On Thu, Jun 22, 2017 at 09:20:59PM +0000, Chris Packham wrote:
-> On 22/06/17 20:23, Wolfram Sang wrote:
-> >=20
-> >> + - reset-gpios : gpio specifier for gpio connected to RESET_N pin.
-> >=20
-> > What about the 'active' state that Rob mentioned in his last review?
-> >=20
->=20
-> My intention was that by saying it is connected to the RESET_N bin the=20
-> active state is covered.
->=20
-> I personally always get a little confused when talking about reset=20
-> lines. The _N denotes that the line is active low but because it is a=20
-> reset line writing 1 releases the reset so from a what-the-user-wants=20
-> perspective it's active high.
->=20
-> dt-binding-wise what we want here is GPIO_ACTIVE_HIGH, as in the driver=
-=20
-> writes 1 to release reset so don't do any polarity inversion. I'd be=20
-> happy do add something to that effect in a v3 but I actually felt saying=
-=20
-> the gpio is connected to RESET_N was less ambiguous.
+Neil
 
-Okay. Thanks for the explanation. I am fine with it but I'll leave the
-final decision to Rob.
-
-
---PNTmBPCT7hxwcZjr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllMzpEACgkQFA3kzBSg
-Kbax5Q/+LlVQxArD1mHZh3ZY0Z3UAXkxO3f1Y+6Xz35ukFVqQyM0WIA0w+MJUbiP
-viTfB5gilClaj+ZRCH7lrOCTnpRE3YFNTi3TQgGPdkiwIuNk0QTHiM3fw84+cuUS
-Le6JAm7IwVM8Bf1bRBQp3/B2TmCOXyJ5+XUAGIjA/CNGKzOT4O5T/yCqdNMzwVUD
-/bvUEG6YCEpOvaB3iynaMBnLtPuRwXNvkLq1ZWT8sXtcV1DFbBDrQ6blqAubBMEA
-QeRT26sal9wzQomgnYZrMBuw3Z3VPwNwBjx6UGsFoOwaAIUAgYccYoPN+GafOgO+
-d5cRdjkYpJTEe9DAiI+Cuy8iEg0evMpNSvlIt+3PVQAoEt7VzCJcokq5WsNZQPKm
-B9gqn+Y5UojlVraOv895hOJWlTsLvToP4RUORaDwzreaRqznmJdPOWZH7RdVBc+n
-1ByYqAQ4oxud6dYfAW36CGYBcABREs8jcygOSgf4zI9ZuVpPMjsKDaAYiSutSroz
-dfLJTfEhvkumlk9DxUASjrM/YPVF2m7TFo81rKqXJMK7vQ+YAFM3jUVdCpu7CrkM
-sB0zd1S5+GkEwDh4IFnIaOosM2V8xQhPmzQJz+E4LXhHJQa+5wP2UsU54ay+lNRC
-0eUQwvJxRgV098RjGKSA6kCIbRCyJHc3jDQAMhG9qSfR5Ff5lL8=
-=e/0/
------END PGP SIGNATURE-----
-
---PNTmBPCT7hxwcZjr--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> With that,
+> 
+> Acked-by: Rob Herring <robh@kernel.org>
+> 
+>> +
+>> +Example
+>> +-------
+>> +
+>> +ao-secure@140 {
+>> +	compatible = "amlogic,meson-gx-ao-secure", "syscon";
+>> +	reg = <0x0 0x140 0x0 0x140>;
+>> +	has-chip-id;
+>> +};
+>> -- 
+>> 1.9.1
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
