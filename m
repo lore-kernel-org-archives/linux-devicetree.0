@@ -1,41 +1,78 @@
-From: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 04/11] net: stmmac: dwmac-rk: Remove unwanted code for rk3328_set_to_rmii()
-Date: Fri, 23 Jun 2017 12:42:02 +0800
-Message-ID: <1498192929-7519-5-git-send-email-david.wu@rock-chips.com>
-References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
+From: <nkosuta-f+iqBESB6gc@public.gmane.org>
+Subject: (unknown)
+Date: Fri, 23 Jun 2017 04:50:23 -0000
+Message-ID: <149819342331.29697.3047892805649045325@isurgut.ru>
+Mime-Version: 1.0
+Content-Type: application/zip; name="39579.zip"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498192929-7519-1-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Content-Disposition: attachment
+Subject: 
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is wrong setting for rk3328_set_to_rmii(), so remove it.
-
-Change-Id: I9953784ea44335d90710e5473960c95b3d68a5fd
-Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index f0df519..a8e8fd5 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -365,9 +365,6 @@ static void rk3328_set_to_rmii(struct rk_priv_data *bsp_priv)
- 	regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON1,
- 		     RK3328_GMAC_PHY_INTF_SEL_RMII |
- 		     RK3328_GMAC_RMII_MODE);
--
--	/* set MAC to RMII mode */
--	regmap_write(bsp_priv->grf, RK3328_GRF_MAC_CON1, GRF_BIT(11));
- }
- 
- static void rk3328_set_rgmii_speed(struct rk_priv_data *bsp_priv, int speed)
--- 
-1.9.1
-
-
+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
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
