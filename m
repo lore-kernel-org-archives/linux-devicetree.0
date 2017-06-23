@@ -1,91 +1,157 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 1/3] overlay: Documentation for the overlay sugar syntax
-Date: Fri, 23 Jun 2017 09:39:27 +0300
-Message-ID: <1498199967.5656.4.camel@hp800z>
-References: <1497451986-15515-1-git-send-email-pantelis.antoniou@konsulko.com>
-         <1497451986-15515-2-git-send-email-pantelis.antoniou@konsulko.com>
-         <594C36F9.1070405@gmail.com>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/7] drm/bridge: Support hotplugging panel-bridge.
+Date: Fri, 23 Jun 2017 09:22:15 +0200
+Message-ID: <4a64ad72-1e3b-d9e9-4800-e543264fa8f7@samsung.com>
+References: <20170615204130.19255-1-eric@anholt.net>
+ <20170615204130.19255-2-eric@anholt.net>
+ <777ee1b1-e5ce-ea29-8a48-f792354a22d1@codeaurora.org>
+ <871sqkouvr.fsf@eliezer.anholt.net>
+ <8e148170-b626-b426-3c94-b93d2746f4ce@codeaurora.org>
+ <871sqe7ei0.fsf@eliezer.anholt.net>
+ <CA+M3ks6T5aXjVuiYirw+j0UMt-x6tPjoeBXfOTAH8DXQNW-5sA@mail.gmail.com>
+ <dd33044e-46d6-6f33-1011-b0bc343ddc96@codeaurora.org>
+ <CGME20170622092354epcas1p2eb523cbfb64a4da2dc0b188df760d493@epcas1p2.samsung.com>
+ <20170622112332.7ec7b65c@bbrezillon>
+ <7ce4f741-309a-2eaa-381c-8033f089651a@samsung.com>
+ <20170622144150.1663f649@bbrezillon>
+ <004fe335-3f36-38e6-7a3e-0ad0623b29cf@samsung.com>
+ <20170622153435.556fdaef@bbrezillon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <594C36F9.1070405-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-reply-to: <20170622153435.556fdaef@bbrezillon>
+Content-language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Philippe Cornu <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Frank,
+On 22.06.2017 15:34, Boris Brezillon wrote:
+> On Thu, 22 Jun 2017 15:16:47 +0200
+> Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>
+>> On 22.06.2017 14:41, Boris Brezillon wrote:
+>>> On Thu, 22 Jun 2017 14:29:07 +0200
+>>> Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>  
+>>>> On 22.06.2017 11:23, Boris Brezillon wrote:  
+>>>>> On Thu, 22 Jun 2017 13:47:43 +0530
+>>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+>>>>>    
+>>>>>> On 06/22/2017 01:20 PM, Benjamin Gaignard wrote:    
+>>>>>>> 2017-06-20 19:31 GMT+02:00 Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>:      
+>>>>>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>>>>>>>      
+>>>>>>>>> On 06/16/2017 08:13 PM, Eric Anholt wrote:      
+>>>>>>>>>> Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> writes:
+>>>>>>>>>>      
+>>>>>>>>>>> On 06/16/2017 02:11 AM, Eric Anholt wrote:      
+>>>>>>>>>>>> If the panel-bridge is being set up after the drm_mode_config_reset(),
+>>>>>>>>>>>> then the connector's state would never get initialized, and we'd
+>>>>>>>>>>>> dereference the NULL in the hotplug path.  We also need to register
+>>>>>>>>>>>> the connector, so that userspace can get at it.
+>>>>>>>>>>>>      
+>>>>>>>>>>> Shouldn't the KMS driver make sure the panel-bridge is set up before
+>>>>>>>>>>> drm_mode_config_reset? Is it the case when we're inserting the
+>>>>>>>>>>> panel-bridge driver as a module?
+>>>>>>>>>>>
+>>>>>>>>>>>
+>>>>>>>>>>> All the connectors that have been added are registered automatically
+>>>>>>>>>>> when drm_dev_register() is called by the KMS driver. Registering a
+>>>>>>>>>>> connector in the middle of setting up our driver is prone to race
+>>>>>>>>>>> conditions if the userspace decides to use them immediately.      
+>>>>>>>>>> Yeah, this is fixing initializing panel_bridge at DSI host_attach time,
+>>>>>>>>>> which in the case of a panel module that creates the DSI device
+>>>>>>>>>> (adv7533-style, like you said I should use as a reference) will be after
+>>>>>>>>>> drm_mode_config_reset() and drm_dev_register().      
+>>>>>>>>> Okay. In the case of the msm kms driver, we defer probe until the
+>>>>>>>>> adv7533 module is inserted, only then we proceed to drm_mode_config_reset()
+>>>>>>>>> and drm_dev_register(). I assumed this was the general practice followed by
+>>>>>>>>> most kms drivers. I.,e the kms driver defers probe until all connector
+>>>>>>>>> related modules are inserted, and only then proceed to create a drm device.      
+>>>>>>>> The problem, though, is the panel driver needs the MIPI DSI host to
+>>>>>>>> exist to call mipi_dsi_device_register_full() during the probe process.
+>>>>>>>> The adv7533 driver gets around this by registering the DSI device in the
+>>>>>>>> bridge attach step, but drm_panel doesn't have an attach step.      
+>>>>>> I'm not sure how we can get around this. We had discussion about this on irc
+>>>>>> recently, but couldn't come up with a good conclusion. We could come up with a
+>>>>>> panel_attach() callback to make it similar to bridges, but that's just us avoiding
+>>>>>> the real issue.    
+>>>>> How about making DSI dev registration fully asynchronous, that is, DSI
+>>>>> devs declared in the DT under the DSI host node will be
+>>>>> registered/attached at probe time, and devs using another control bus
+>>>>> (like the adv7533 controller over i2c) will be registered afterwards.
+>>>>>
+>>>>> That implies moving the drm_brige registration logic outside of the DSI
+>>>>> host ->probe() path. The idea would be to check if all devs connected
+>>>>> to the DSI bus are ready at dsi_host->attach() time. If they are, we
+>>>>> can finally register the XXX -> DSI bridge. If they're not (because
+>>>>> some devs connected to the DSI bus have not been probed yet), then we
+>>>>> do not register the drm_bridge and wait for the next dsi_host->attach()
+>>>>> event.    
+>>>> I guess you assumes that dsi-host knows all devs connected to it, thanks to:
+>>>> - subnodes of the host - ie. devices controlled via dsi bus,
+>>>> - graph links from host ports/endpoints - ie. devices controlled by
+>>>> other buses, for example adv7533.  
+>>> Yep, but I think that's already a requirement when populating devices
+>>> with the OF graph method (if one of the DSI output endpoint does not
+>>> have a drm_bridge/panel attached to it, the DSI host driver returns
+>>> -EPROBE_DEFER).
+>>>  
+>>>> I would separate both abstractions to make it more clear:
+>>>> 1. MIPI bus should be registered early - to allow create/bind devices on it,  
+>>> Exactly.
+>>>  
+>>>> 2. drm_bridge should be registered only if all required sinks
+>>>> (bridges/panels) are registered.  
+>>> That's true, until we find a solution to support add DRM bridge hotplug.
+>>>  
+>>>> First point seems OK, I am not sure about the 2nd one - if used
+>>>> consistently, it would require building pipeline from sink to source.  
+>>> Yes.  
+>> Since drm_bridge_attach requires encoder to be not null pipeline
+>> creation would be painful:
+>> 1. Every driver must call drm_of_find_panel_or_bridge on sink(s) before
+>> registering bridge and cache the result for later use.
+> Shouldn't be hard to do since dsi_host->attach() is called each time a
+> sink is added (and ready to use). All you need to do is retrieve the
+> bridge pointer and put it in a list embedded in the DSI host priv
+> struct. Once you have all sinks added to this list (can be checked by
+> counting the number of endpoints and DSI devs at probe time), you can
+> register the DSI bridge and wait for someone to call ->attach() on it.
+>
+> In the ->attach() hook of the DSI bridge, you'll have to attach all
+> sinks stored in the list to the DSI bridge. Note that right now you have
+> a 1:1 relationship, which prevents you from having one DSI bridge that
+> can attach to different bridges available on the DSI bus (e.g. DSI ->
+> HDMI bridge on channel 0 and DSI -> LVDS bridge on channel 1).
+>
+>> 2. After encoder finds directly connected bridge, it can attach it.
+> I don't get that one.
 
-On Thu, 2017-06-22 at 14:30 -0700, Frank Rowand wrote:
-> Hi David, Pantelis,
-> 
-> On 06/14/17 07:53, Pantelis Antoniou wrote:
-> > There exists a syntactic sugar version of overlays which
-> > make them simpler to write for the trivial case of a single target.
-> > 
-> > Document it in the device tree object internals.
-> > 
-> > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  Documentation/dt-object-internal.txt | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> > 
-> > diff --git a/Documentation/dt-object-internal.txt b/Documentation/dt-object-internal.txt
-> > index 51d68ab..624aa43 100644
-> > --- a/Documentation/dt-object-internal.txt
-> > +++ b/Documentation/dt-object-internal.txt
-> > @@ -308,3 +308,20 @@ the run time loader must apply an offset to each phandle in every dynamic
-> >  DT object loaded. The __local_fixups__ node records the offset relative to the
-> >  start of every local reference within that property so that the loader can apply
-> >  the offset.
-> > +
-> > +There is an alternative syntax to the expanded form for overlays with phandle
-> > +targets which makes the format similar to the one using in .dtsi include files.
-> > +
-> > +So for the &ocp target example above one can simply write:
-> > +
-> > +/dts-v1/;
-> > +/plugin/;
-> > +&ocp {
-> > +	/* bar peripheral */
-> > +	bar {
-> > +		compatible = "corp,bar";
-> > +		... /* various properties and child nodes */
-> > +	}
-> > +};
-> > +
-> > +The resulting dtb object is identical.
-> 
-> 
-> Ignoring the fact that this file describes the device tree internals
-> instead of the device tree source format -- did we decide that we can
-> deprecate specifying nodes __symbols__,  __overlay__, __fixups__, and
-> __local_fixups__ (any node name beginning with an underscore) in
-> device tree source.  Then at a future date make node names beginning
-> with an underscore an error (maybe with a command line flag to override
-> the error?)?
-> 
+If you have pipeline:
 
-There are a few things in mind about this. In my TODO list is a patch
-that completely deprecates the manual overlay crafting.
+crtc -> encoder -> bridge1 -> bridge2 -> panel
 
-My goal is to have the overlay format be source identical to a .dtsi
-file that usually is included when crafting the single dtb blob we're
-booting with. That is a format that most are familiar with.
+encoder knows only about bridge1, and must wait till it is registered,
+before attaching it,
+and assuming bridge must wait for its sinks before registration the
+whole pipeline construction will look like:
 
-For that to work, we need to handle transformations of the form
-/foo -> <&/foo> -> runtime phandle insertion of <&/foo> if it doesn't
-work.
+0. encoder waits for bridge1, bridge1 waits for bridge2, bridge2 waits
+for panel, usually by deferring.
+1. panel is registered.
+2. bridge2 finds panel and is registered.
+3. bridge1 finds bridge2 and is registered.
+4. encoder finds bridge1 and attach it to encoder,
+4a. bridge1->attach() attach bridge2 to encoder after bridge1
+4b. bridge2->attach() attach panel to bridge2
 
-This patch is a prerequisite, and we can take it from there. 
-
-> -Frank
+This is why it seems for me quite complicated.
 
 Regards
-
--- Pantelis
-
+Andrzej
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
