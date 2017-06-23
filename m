@@ -1,47 +1,45 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] Revert "NFC: trf7970a: Handle extra byte in response
- to Type 5 RMB commands"
-Date: Fri, 23 Jun 2017 13:34:11 -0500
-Message-ID: <20170623183411.tkwc2iuw7bmymkds@rob-hp-laptop>
-References: <20170615174617.1817-1-mgreer@animalcreek.com>
- <20170615174617.1817-4-mgreer@animalcreek.com>
+Subject: Re: [PATCH 1/2] dt-bindings: Document the Broadcom STB
+ wake-up timer node
+Date: Fri, 23 Jun 2017 13:40:19 -0500
+Message-ID: <20170623184019.ftptqodyv3bnkyz2@rob-hp-laptop>
+References: <20170615195904.12653-1-f.fainelli@gmail.com>
+ <20170615195904.12653-2-f.fainelli@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <rtc-linux+bncBDJIP47K7MERBFOBWXFAKGQENIT4R4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20170615174617.1817-4-mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170615195904.12653-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 15, 2017 at 10:46:17AM -0700, Mark Greer wrote:
-> This reverts commit ab714817d7e891608d31f6996b1e4c43cf2bf342.
+On Thu, Jun 15, 2017 at 12:59:03PM -0700, Florian Fainelli wrote:
+> Document the binding for the Broadcom STB SoCs wake-up timer node
+> allowing the system to generate alarms and exit low power states.
 > 
-> The original commit was designed to handle a bug in the trf7970a NFC
-> controller where an extra byte was returned in Read Multiple Blocks (RMB)
-> command responses.  However, it has become less clear whether it is a bug
-> in the trf7970a or in the tag.  In addition, it was assumed that the extra
-> byte was always returned but it turns out that is not always the case. The
-> result is that a byte of good data is trimmed off when the extra byte is
-> not present ultimately causing the neard deamon to fail the read.
-> 
-> Since the trf7970a driver does not have the context to know when to trim
-> the byte or not, remove the code from the trf7970a driver all together
-> (and move it up to the neard daemon).  This has the added benefit of
-> simplifying the kernel driver and putting the extra complexity into
-> userspace.
-> 
-> CC: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Mark Greer <mgreer-luAo+O/VEmrlveNOaEYElw@public.gmane.org>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../devicetree/bindings/net/nfc/trf7970a.txt       |  4 ----
->  drivers/nfc/trf7970a.c                             | 25 ++++------------------
->  2 files changed, 4 insertions(+), 25 deletions(-)
+>  .../bindings/rtc/brcm,brcmstb-waketimer.txt        | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
