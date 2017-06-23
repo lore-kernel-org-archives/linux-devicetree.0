@@ -1,67 +1,38 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v11 3/4] i2c: aspeed: added driver for Aspeed I2C
-Date: Fri, 23 Jun 2017 20:43:05 +0200
-Message-ID: <20170623184305.xqqhjgrbdmgk6lsr@ninjato>
-References: <20170620211516.13095-1-brendanhiggins@google.com>
- <20170620211516.13095-4-brendanhiggins@google.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 5/7] dt-bindings: Document the Raspberry Pi Touchscreen
+ nodes.
+Date: Fri, 23 Jun 2017 13:44:40 -0500
+Message-ID: <20170623184440.6bgd2z34lmn3ygax@rob-hp-laptop>
+References: <20170615204130.19255-1-eric@anholt.net>
+ <20170615204130.19255-6-eric@anholt.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cllrszhierrtvfet"
-Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20170620211516.13095-4-brendanhiggins@google.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Brendan Higgins <brendanhiggins@google.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org, joel@jms.id.au, martin.petersen@oracle.com, benh@kernel.crashing.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+In-Reply-To: <20170615204130.19255-6-eric@anholt.net>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Eric Anholt <eric@anholt.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-
---cllrszhierrtvfet
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jun 20, 2017 at 02:15:15PM -0700, Brendan Higgins wrote:
-> Added initial master support for Aspeed I2C controller. Supports
-> fourteen busses present in AST24XX and AST25XX BMC SoCs by Aspeed.
->=20
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-
-Applied to for-next, thanks for all the hard work!
-
-One question however which can be solved incrementally if needed:
-
-> +	if (command & ASPEED_I2CD_SDA_LINE_STS) {
-> +		/* Bus is idle: no recovery needed. */
-> +		if (command & ASPEED_I2CD_SCL_LINE_STS)
-> +			goto out;
-> +		dev_dbg(bus->dev, "SCL hung (state %x), attempting recovery\n",
-> +			command);
-> +
-> +		reinit_completion(&bus->cmd_complete);
-> +		writel(ASPEED_I2CD_M_STOP_CMD, bus->base + ASPEED_I2C_CMD_REG);
-
-If SCL is stuck low, how do you want to send a STOP?
-
-
---cllrszhierrtvfet
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllNYTkACgkQFA3kzBSg
-KbZVhw/9Go56ft5oIvkP1bjK2kctgGDt2F5/nDU1eUYYAAv7InrJf5bkeYmOiO/L
-jzbuPboz7QiyuBeRB+ojVSiSYG0o3Bq4WBWOT796CU3D7wsoDG+P4kzGtZlzUxeU
-7CJtRk1XFzHs87X0NXUxmH2GK+ARD8iDvKtTLicxPYAOC+zAcPnZ+THkYYAJMhte
-ubG0x3Zb+KLqf+2YvFkwNDhcfaS04GXLAOnd7YhQt9a4ziggcqpjO1hc7JM8qQWm
-zZbI73pnvCOs78gS22AZigAvB2pZN043i0IgJFsFzqicunZo86C+gCJCWVBc4acv
-DxIsxiESy0YOe3HFyPnKR3sFX8jWP1OUteV5RUcWdNRikDSSWQjdGdx/mClPym49
-ALWoV5/4PGBzsf46d/OVj4gmcDhFUAnwC9pz5SnEGBChyc+2F7SmS+OmV7YgCuL0
-xBPEXJdnT5PllHwwFtqsOuyB1DnBVpITW76VSELlhuCbl/rpfTXvh7gtvAzZdx9h
-ofnQpM8Dh4wjuwKUp7wVoLAS2jdPQG/BmNgX+gx3+nWe9otG6GupBhKme9szkfua
-KIBivSIyfbUmHJwLcEsIiRBW+81ErCpy6uRkxmqFTLO+T1NId3p+Vn5qEkJQH2DK
-OebTbw85hbUb5aZKN6PKyc0mj/9HzgC4H12WSU88PLOQf6VdEXQ=
-=Qt77
------END PGP SIGNATURE-----
-
---cllrszhierrtvfet--
+T24gVGh1LCBKdW4gMTUsIDIwMTcgYXQgMDE6NDE6MjhQTSAtMDcwMCwgRXJpYyBBbmhvbHQgd3Jv
+dGU6Cj4gVGhpcyBkb2Vzbid0IHlldCBjb3ZlciBpbnB1dCwgYnV0IHRoZSBkcml2ZXIgZG9lcyBn
+ZXQgdGhlIGRpc3BsYXkKPiB3b3JraW5nIHdoZW4gdGhlIGZpcm13YXJlIGlzIGRpc2FibGVkIGZy
+b20gdGFsa2luZyB0byBvdXIgSTJDIGxpbmVzLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEVyaWMgQW5o
+b2x0IDxlcmljQGFuaG9sdC5uZXQ+Cj4gLS0tCj4gIC4uLi9wYW5lbC9yYXNwYmVycnlwaSw3aW5j
+aC10b3VjaHNjcmVlbi50eHQgICAgICAgIHwgNDkgKysrKysrKysrKysrKysrKysrKysrKwo+ICAx
+IGZpbGUgY2hhbmdlZCwgNDkgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvcmFzcGJlcnJ5cGks
+N2luY2gtdG91Y2hzY3JlZW4udHh0CgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVs
+Lm9yZz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
