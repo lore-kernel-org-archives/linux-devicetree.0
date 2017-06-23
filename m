@@ -1,107 +1,52 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
-Date: Fri, 23 Jun 2017 13:05:26 -0500
-Message-ID: <3f0dcd4f-92ef-a79d-b00b-1f348a201bd2@ti.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <d14b8c6e-b480-36f0-ed0a-684647617dbe@suse.de>
- <3E7B1344-ECE6-4CCC-9E9D-7521BB566CDE@goldelico.com>
- <13144955.Kq5qljPvgI@avalon>
- <24C976BF-52FD-4509-BCE4-9AE41B335482@goldelico.com>
- <88d0e8ea-74e4-6845-4e0d-8cd0f3a054be@suse.de>
- <05CBF9B8-2297-447B-860D-A89126B46FC9@goldelico.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v5 01/16] dt-bindings: i2c: eeprom: Document
+ vendor to be used and deprecated ones
+Date: Fri, 23 Jun 2017 13:17:03 -0500
+Message-ID: <20170623181703.jv6xsb55dsp6n6sn@rob-hp-laptop>
+References: <20170615185418.13980-1-javier@dowhile0.org>
+ <20170615185418.13980-2-javier@dowhile0.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <05CBF9B8-2297-447B-860D-A89126B46FC9@goldelico.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-media@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170615185418.13980-2-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmlrb2xhdXMsCgpPbiAwNi8yMy8yMDE3IDEwOjIyIEFNLCBILiBOaWtvbGF1cyBTY2hhbGxl
-ciB3cm90ZToKPiBIaSwKPiAKPj4gQW0gMjMuMDYuMjAxNyB1bSAxNjo1NyBzY2hyaWViIEFuZHJl
-YXMgRsOkcmJlciA8YWZhZXJiZXJAc3VzZS5kZT46Cj4+Cj4+IEFtIDIzLjA2LjIwMTcgdW0gMTY6
-NTMgc2NocmllYiBILiBOaWtvbGF1cyBTY2hhbGxlcjoKPj4+IEhpIExhdXJlbnQsCj4+Pgo+Pj4+
-IEFtIDIzLjA2LjIwMTcgdW0gMTM6NTggc2NocmllYiBMYXVyZW50IFBpbmNoYXJ0IDxsYXVyZW50
-LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+Ogo+Pj4+Cj4+Pj4gSGkgTmlrb2xhdXMsCj4+Pj4K
-Pj4+PiBPbiBGcmlkYXkgMjMgSnVuIDIwMTcgMTI6NTk6MjQgSC4gTmlrb2xhdXMgU2NoYWxsZXIg
-d3JvdGU6Cj4+Pj4+IEFtIDIzLjA2LjIwMTcgdW0gMTI6NDYgc2NocmllYiBBbmRyZWFzIEbDpHJi
-ZXIgPGFmYWVyYmVyQHN1c2UuZGU+Ogo+Pj4+Pj4gQW0gMjMuMDYuMjAxNyB1bSAxMjoyNSBzY2hy
-aWViIEguIE5pa29sYXVzIFNjaGFsbGVyOgo+Pj4+Pj4+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjk2NXgudHh0Cj4+Pj4+Pj4+IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2kyYy9vdjk2NXgudHh0IG5l
-dyBmaWxlIG1vZGUKPj4+Pj4+Pj4gMTAwNjQ0Cj4+Pj4+Pj4+IGluZGV4IDAwMDAwMDAuLjBlMGRl
-MWYKPj4+Pj4+Pj4gLS0tIC9kZXYvbnVsbAo+Pj4+Pj4+PiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvaTJjL292OTY1eC50eHQKPj4+Pj4+Pj4gQEAgLTAsMCAr
-MSwzNyBAQAo+Pj4+Pj4+PiArKiBPbW5pdmlzaW9uIE9WOTY1MC85NjUyLzk2NTUgQ01PUyBzZW5z
-b3IKPj4+Pj4+Pj4gKwo+Pj4+Pj4+PiArVGhlIE9tbml2aXNpb24gT1Y5NjV4IHNlbnNvciBzdXBw
-b3J0IG11bHRpcGxlIHJlc29sdXRpb25zIG91dHB1dCwgc3VjaAo+Pj4+Pj4+PiBhcwo+Pj4+Pj4+
-PiArQ0lGLCBTVkdBLCBVWEdBLiBJdCBhbHNvIGNhbiBzdXBwb3J0IFlVVjQyMi80MjAsIFJHQjU2
-NS81NTUgb3IgcmF3IFJHQgo+Pj4+Pj4+PiArb3V0cHV0IGZvcm1hdC4KPj4+Pj4+Pj4gKwo+Pj4+
-Pj4+PiArUmVxdWlyZWQgUHJvcGVydGllczoKPj4+Pj4+Pj4gKy0gY29tcGF0aWJsZTogc2hvdWxk
-IGJlIG9uZSBvZgo+Pj4+Pj4+PiArCSJvdnRpLG92OTY1MCIKPj4+Pj4+Pj4gKwkib3Z0aSxvdjk2
-NTIiCj4+Pj4+Pj4+ICsJIm92dGksb3Y5NjU1Igo+Pj4+Pj4+PiArLSBjbG9ja3M6IHJlZmVyZW5j
-ZSB0byB0aGUgbWNsayBpbnB1dCBjbG9jay4KPj4+Pj4+Pgo+Pj4+Pj4+IEkgd29uZGVyIHdoeSB5
-b3UgaGF2ZSByZW1vdmVkIHRoZSBjbG9jay1mcmVxdWVuY3kgcHJvcGVydHk/Cj4+Pj4+Pj4KPj4+
-Pj4+PiBJbiBzb21lIHNpdHVhdGlvbnMgdGhlIGNhbWVyYSBkcml2ZXIgbXVzdCBiZSBhYmxlIHRv
-IHRlbGwgdGhlIGNsb2NrCj4+Pj4+Pj4gc291cmNlIHdoaWNoIGZyZXF1ZW5jeSBpdCB3YW50cyB0
-byBzZWUuCj4+Pj4+Pgo+Pj4+Pj4gVGhhdCdzIHdoYXQgYXNzaWduZWQtY2xvY2stcmF0ZXMgcHJv
-cGVydHkgaXMgZm9yOgo+Pj4+Pj4KPj4+Pj4+IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbG9jay1iCj4+Pj4+PiBpbmRp
-bmdzLnR4dAo+Pj4+Pj4KPj4+Pj4+IEFGQUlVIGNsb2NrLWZyZXF1ZW5jeSBvbiBkZXZpY2VzIGlz
-IGRlcHJlY2F0ZWQgYW5kIGVxdWl2YWxlbnQgdG8gaGF2aW5nCj4+Pj4+PiBhIGNsb2NrcyBwcm9w
-ZXJ0eSBwb2ludGluZyB0byBhIGZpeGVkLWNsb2NrLCB3aGljaCBpcyBkaWZmZXJlbnQgZnJvbSBh
-Cj4+Pj4+PiBjbG9jayB3aXRoIHZhcnlpbmcgcmF0ZS4KPj4+Pj4KPj4+Pj4gSSBhbSBub3Qgc3Vy
-ZSBpZiB0aGF0IGhlbHBzIGhlcmUuIFRoZSBPTUFQMy1JU1AgZG9lcyBub3QgaGF2ZSBhIGZpeGVk
-IGNsb2NrCj4+Pj4+IHJhdGUgc28gd2UgY2FuIG9ubHkgaGF2ZSB0aGUgZHJpdmVyIGRlZmluZSB3
-aGF0IGl0IHdhbnRzIHRvIHNlZS4KPj4+Pj4KPj4+Pj4gQW5kIGNvbW1vbiBwcmFjdGlzZSBmb3Ig
-T01BUDMtSVNQIGJhc2VkIGNhbWVyYSBtb2R1bGVzIChlLmcuIE45MDAsIE45KSBpcwo+Pj4+PiB0
-aGF0IHRoZXkgZG8gaXQgaW4gdGhlIGRyaXZlci4KPj4+Pj4KPj4+Pj4gTWF5YmUgSVNQIGRldmVs
-b3BlcnMgY2FuIGNvbW1lbnQ/Cj4+Pj4KPj4+PiBUaGUgT01BUDMgSVNQIGlzIGEgdmFyaWFibGUt
-ZnJlcXVlbmN5IGNsb2NrIHByb3ZpZGVyLiBUaGUgY2xvY2sgZnJlcXVlbmN5IGlzIAo+Pj4+IGNv
-bnRyb2xsZWQgYnkgdGhlIGNsb2NrIGNvbnN1bWVyLiBBcyBzdWNoLCBpdCdzIHVwIHRvIHRoZSBj
-b25zdW1lciB0byBkZWNpZGUgCj4+Pj4gd2hldGhlciB0byBjb21wdXRlIGFuZCByZXF1ZXN0IHRo
-ZSBjbG9jayByYXRlIGR5bmFtaWNhbGx5IGF0IHJ1bnRpbWUsIG9yIHVzZSAKPj4+PiB0aGUgYXNz
-aWduZWQtY2xvY2stcmF0ZXMgcHJvcGVydHkgaW4gRFQuCj4+Pj4KPj4+PiBTb21lIElTUHMgaW5j
-bHVkZSBhIGNsb2NrIGdlbmVyYXRvciwgb3RoZXJzIGRvbid0LiBJdCBzaG91bGQgbWFrZSBubyAK
-Pj4+PiBkaWZmZXJlbmNlIHdoZXRoZXIgdGhlIGNsb2NrIGlzIHByb3ZpZGVkIGJ5IHRoZSBJU1As
-IGJ5IGEgZGVkaWNhdGVkIGNsb2NrIAo+Pj4+IHNvdXJjZSBpbiB0aGUgU29DIG9yIGJ5IGEgZGlz
-Y3JldGUgb24tYm9hcmQgYWRqdXN0YWJsZSBjbG9jayBzb3VyY2UuCj4+Pgo+Pj4gVGhhbmtzIGZv
-ciBleHBsYWluaW5nIHRoZSBiYWNrZ3JvdW5kLgo+Pj4KPj4+IERvIHlvdSBoYXZlIGFuIGhpbnQg
-b3IgZXhhbXBsZSBob3cgdG8gdXNlIHRoZSBhc3NpZ25lZC1jbG9jay1yYXRlcyBwcm9wZXJ0eSBp
-bgo+Pj4gYSBEVCBmb3IgYSBjYW1lcmEgbW9kdWxlIGNvbm5lY3RlZCB0byB0aGUgb21hcDNpc3A/
-Cj4+Pgo+Pj4gT3IgZG9lcyBpdCBqdXN0IG1lYW4gdGhhdCBpdCBkZWZpbmVzIHRoZSBwcm9wZXJ0
-eSBuYW1lPwo+Pgo+PiBQbGVhc2UgcmVhZCB0aGUgZG9jdW1lbnRhdGlvbiBsaW5rIEkgc2VudCAt
-IGl0J3MgaW4gdGhlIHZlcnkgYm90dG9tIGFuZAo+PiBzaG91bGQgaGF2ZSBhbiBleGFtcGxlLgo+
-IAo+IEkgaGF2ZSBzZWVuIGl0IGJ1dCBpdCBkb2VzIG5vdCBnaXZlIG1lIGEgZ29vZCBjbHVlIGhv
-dyB0byB0cmFuc2xhdGUgdGhhdCBpbnRvCj4gY29ycmVjdCBvbWFwM2lzcCBub2RlIHNldHVwIGlu
-IGEgc3BlY2lmaWMgRFQuIFJhdGhlciBpdCByYWlzZXMgbW9yZSBxdWVzdGlvbnMuCj4gTWF5YmUg
-YmVjYXVzZSBJIGRvbid0IHVuZGVyc3RhbmQgY29tcGxldGVseSB3aGF0IGl0IGlzIHRhbGtpbmcg
-YWJvdXQuCj4gCj4gVGhlIGZ1bmRhbWVudGFsIHF1ZXN0aW9uIGlzIGlmIHRoaXMgImFzc2lnbmVk
-LWNsb2NrLXJhdGVzIiBpcyBhbHJlYWR5Cj4gaGFuZGxlZCBieSBvdjk2NXgtPmNsayA9IGRldm1f
-Y2xrX2dldCgmY2xpZW50LT5kZXYsIE5VTEwpOyA/Cj4gCj4gT3Igc2hvdWxkIHdlIGRlZmluZSB0
-aGF0IGZvciB0aGUgb21hcDNpc3Agbm9kZT8KPiAKPiBUaGVuIG9mIGNvdXJzZSB3ZSBuZWVkIG5v
-IG5ldyBjb2RlIGFuZCBqdXN0IHVzZSB0aGUgcmlnaHQgcHJvcGVydHkgbmFtZXMuCj4gQW5kIE45
-MDAsIE45IGNhbWVyYSBEVHMgc2hvdWxkIGJlIHVwZGF0ZWQuCgpMb29rIHVwIG9mX2Nsa19zZXRf
-ZGVmYXVsdHMoKSBmdW5jdGlvbiBpbiBkcml2ZXJzL2Nsay9jbGstY29uZi5jLiBUaGlzCmZ1bmN0
-aW9uIGdldHMgaW52b2tlZCB1c3VhbGx5IGR1cmluZyBjbG9jayByZWdpc3RyYXRpb24sIGFuZCBh
-bHNvIGdldHMKY2FsbGVkIGluIHBsYXRmb3JtX2Rydl9wcm9iZSgpLCBzbyB0aGUgcGFyZW50cyBh
-bmQgY2xvY2tzIGRvIGdldApjb25maWd1cmVkIGJlZm9yZSB5b3VyIGRyaXZlciBnZXRzIHByb2Jl
-ZC4gU28sIHRoaXMgcHJvdmlkZXMgYSBkZWZhdWx0CmNvbmZpZ3VyYXRpb24gaWYgdGhlc2UgcHJv
-cGVydGllcyBhcmUgc3VwcGxpZWQgKGluIGVpdGhlciBjbG9jayBub2RlcyBvcgphY3R1YWwgZGV2
-aWNlIG5vZGVzKSwgYW5kIGlmIHlvdXIgZHJpdmVyIG5lZWRzIHRvIGNoYW5nZSB0aGUgcmF0ZXMg
-YXQKcnVudGltZSwgdGhlbiB5b3Ugd291bGQgaGF2ZSB0byBkbyB0aGF0IGluIHRoZSBkcml2ZXIg
-aXRzZWxmLgoKcmVnYXJkcwpTdW1hbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Jun 15, 2017 at 08:54:03PM +0200, Javier Martinez Canillas wrote:
+> The at24 driver allows to register I2C EEPROM chips using different vendor
+> and devices, but the I2C subsystem does not take the vendor into account
+> when matching using the I2C table since it only has device entries.
+> 
+> But when matching using an OF table, both the vendor and device has to be
+> taken into account so the driver defines only a set of compatible strings
+> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+> 
+> Document in the Device Tree binding document that this manufacturer should
+> be used as the generic fallback. Also document the deprecated vendors.
+> 
+> Suggested-by: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> Suggested-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+> 
+> ---
+> 
+> Changes in v5:
+> - Only deprecate the atmel variants at25 and at (Geert Uytterhoeven).
+> 
+> Changes in v4:
+> - Document the manufacturers that have been deprecated (Rob Herring).
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  Documentation/devicetree/bindings/eeprom/eeprom.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
