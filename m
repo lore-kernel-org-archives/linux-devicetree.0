@@ -1,56 +1,36 @@
-From: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 11/11] ARM64: dts: rockchip: Enable gmac2phy for rk3328-evb
-Date: Fri, 23 Jun 2017 13:04:09 +0800
-Message-ID: <1498194249-8368-1-git-send-email-david.wu@rock-chips.com>
-References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498192929-7519-1-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+From: Zhi Mao <zhi.mao@mediatek.com>
+Subject: [PATCH v2 1/6] pwm: kconfig: modify mediatek information
+Date: Fri, 23 Jun 2017 13:08:20 +0800
+Message-ID: <1498194505-30930-2-git-send-email-zhi.mao@mediatek.com>
+References: <1498194505-30930-1-git-send-email-zhi.mao@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1498194505-30930-1-git-send-email-zhi.mao@mediatek.com>
+Sender: linux-pwm-owner@vger.kernel.org
+To: john@phrozen.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org
+Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, zhi.mao@mediatek.com, yingjoe.chen@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, zhenbao.liu@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Let's enable the gmac2phy, make the gmac2phy work on
-the rk3328-evb board.
+modify mediatek information
 
-Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3328-evb.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/pwm/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-index cf27239..b9f36da 100644
---- a/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-evb.dts
-@@ -50,6 +50,23 @@
- 	chosen {
- 		stdout-path = "serial2:1500000n8";
- 	};
-+
-+	vcc_phy: vcc-phy-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_phy";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+};
-+
-+&gmac2phy {
-+	phy-supply = <&vcc_phy>;
-+	clock_in_out = "output";
-+	assigned-clocks = <&cru SCLK_MAC2PHY_SRC>;
-+	assigned-clock-rate = <50000000>;
-+	assigned-clocks = <&cru SCLK_MAC2PHY>;
-+	assigned-clock-parents = <&cru SCLK_MAC2PHY_SRC>;
-+	status = "okay";
- };
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 313c107..45cdf2a 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -300,7 +300,7 @@ config PWM_MEDIATEK
+ 	  Generic PWM framework driver for Mediatek ARM SoC.
  
- &uart2 {
+ 	  To compile this driver as a module, choose M here: the module
+-	  will be called pwm-mxs.
++	  will be called pwm-mediatek.
+ 
+ config PWM_MXS
+ 	tristate "Freescale MXS PWM support"
 -- 
-1.9.1
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
