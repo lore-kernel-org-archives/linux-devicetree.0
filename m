@@ -1,137 +1,66 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 4/4] dt-bindings: media: Document Synopsys Designware
- HDMI RX
-Date: Fri, 23 Jun 2017 16:58:14 -0500
-Message-ID: <20170623215814.ase6g4lbukaeqak2@rob-hp-laptop>
-References: <cover.1497978962.git.joabreu@synopsys.com>
- <8ebe3dfcd61a1c8cfa99102c376ad26b2bfbd254.1497978963.git.joabreu@synopsys.com>
+Subject: Re: [PATCH v5 05/16] watchdog: lantiq: add device tree binding
+ documentation
+Date: Fri, 23 Jun 2017 17:05:08 -0500
+Message-ID: <20170623220508.2kgxfadjeee76eqt@rob-hp-laptop>
+References: <20170620223743.13735-1-hauke@hauke-m.de>
+ <20170620223743.13735-6-hauke@hauke-m.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <8ebe3dfcd61a1c8cfa99102c376ad26b2bfbd254.1497978963.git.joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+In-Reply-To: <20170620223743.13735-6-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 20, 2017 at 06:26:12PM +0100, Jose Abreu wrote:
-> Document the bindings for the Synopsys Designware HDMI RX.
+On Wed, Jun 21, 2017 at 12:37:32AM +0200, Hauke Mehrtens wrote:
+> The binding was not documented before, add the documentation now.
 > 
-> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Cc: Carlos Palminha <palminha-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
-> Cc: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> Changes from v3:
-> 	- Document the new DT bindings suggested by Sylwester
-> Changes from v2:
-> 	- Document edid-phandle property
+> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
 > ---
->  .../devicetree/bindings/media/snps,dw-hdmi-rx.txt  | 70 ++++++++++++++++++++++
->  1 file changed, 70 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+>  .../devicetree/bindings/watchdog/lantiq-wdt.txt    | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
+> diff --git a/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
 > new file mode 100644
-> index 0000000..efb0ac3
+> index 000000000000..1d41142ca55f
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/snps,dw-hdmi-rx.txt
-> @@ -0,0 +1,70 @@
-> +Synopsys DesignWare HDMI RX Decoder
-> +===================================
+> +++ b/Documentation/devicetree/bindings/watchdog/lantiq-wdt.txt
+> @@ -0,0 +1,22 @@
+> +Lantiq WTD watchdog binding
+> +============================
 > +
-> +This document defines device tree properties for the Synopsys DesignWare HDMI
-> +RX Decoder (DWC HDMI RX). It doesn't constitute a device tree binding
-> +specification by itself but is meant to be referenced by platform-specific
-> +device tree bindings.
+> +This describes the binding of the Lantiq watchdog driver.
 > +
-> +When referenced from platform device tree bindings the properties defined in
-> +this document are defined as follows.
-> +
-> +- compatible: Shall be "snps,dw-hdmi-rx".
-> +
-> +- reg: Memory mapped base address and length of the DWC HDMI RX registers.
-> +
-> +- interrupts: Reference to the DWC HDMI RX interrupt and 5v sense interrupt.
-> +
-> +- clocks: Phandle to the config clock block.
-> +
-> +- clock-names: Shall be "cfg-clk".
+> +-------------------------------------------------------------------------------
+> +Required properties:
+> +- compatible		: Should be one of
+> +				"lantiq,wdt"
+> +				"lantiq,xrx100-wdt"
+> +				"lantiq,falcon-wdt"
+> +- regmap		: A phandle to the RCU syscon (required for
+> +			  "lantiq,falcon-wdt" and "lantiq,xrx100-wdt")
 
-"-clk" is redundant.
-
-Seems strange that this is the only clock. The only other clock is the 
-HDMI clock from the HDMI transmitter.
+regmap is a Linuxism. I'd suggest "lantiq,rcu" instead.
 
 > +
-> +- edid-phandle: phandle to the EDID handler block.
-> +
-> +- #address-cells: Shall be 1.
-> +
-> +- #size-cells: Shall be 0.
-> +
-> +You also have to create a subnode for phy driver. Phy properties are as follows.
-> +
-> +- compatible: Shall be "snps,dw-hdmi-phy-e405".
-> +
-> +- reg: Shall be JTAG address of phy.
-> +
-> +- clocks: Phandle for cfg clock.
-> +
-> +- clock-names:Shall be "cfg-clk".
-> +
-> +A sample binding is now provided. The compatible string is for a SoC which has
-> +has a Synopsys Designware HDMI RX decoder inside.
-> +
-> +Example:
-> +
-> +dw_hdmi_soc: dw-hdmi-soc@0 {
-> +	compatible = "snps,dw-hdmi-soc";
+> +-------------------------------------------------------------------------------
+> +Example for the watchdog on the xRX200 SoCs:
+> +		watchdog@803f0 {
+> +			compatible = "lantiq,xrx100-wdt";
 
-Not documented.
+Why did you remove the xrx200 compatible? You should add it to the 
+compatible list (with the fallback).
 
-> +	reg = <0x11c00 0x1000>; /* EDIDs */
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges;
+> +			reg = <0x803f0 0x10>;
 > +
-> +	dw_hdmi_rx@0 {
-
-hdmi-rx@0
-
-> +		compatible = "snps,dw-hdmi-rx";
-> +		reg = <0x0 0x10000>;
-> +		interrupts = <1 2>;
-> +		edid-phandle = <&dw_hdmi_soc>;
-
-Don't need this if it is the parent node.
-
-> +
-> +		clocks = <&dw_hdmi_refclk>;
-> +		clock-names = "cfg-clk";
-> +
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		dw_hdmi_phy_e405@fc {
-
-hdmi-phy@fc
-
-> +			compatible = "snps,dw-hdmi-phy-e405";
-> +			reg = <0xfc>;
-> +
-> +			clocks = <&dw_hdmi_refclk>;
-> +			clock-names = "cfg-clk";
+> +			regmap = <&rcu0>;
 > +		};
-> +	};
-> +};
 > -- 
-> 1.9.1
-> 
+> 2.11.0
 > 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
