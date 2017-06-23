@@ -1,42 +1,68 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH net-next 0/4] net: phy: Support "internal" PHY interface
-Date: Fri, 23 Jun 2017 10:34:05 -0700
-Message-ID: <23546e5b-3ab4-5862-2f31-06380a868c0f@gmail.com>
-References: <20170623173316.23017-1-f.fainelli@gmail.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3] vsprintf: Add %p extension "%pOF" for device tree
+Date: Fri, 23 Jun 2017 10:38:08 -0700
+Message-ID: <1498239488.24295.20.camel@perches.com>
+References: <20170622204445.14930-1-robh@kernel.org>
+         <20170623173053.636-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170623173316.23017-1-f.fainelli@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>, "David S. Miller" <davem@davemloft.net>, Sean Wang <sean.wang@mediatek.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Russell King <rmk+kernel@armlinux.org.uk>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, david.wu@rock-chips.com, opendmb@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170623173053.636-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2017 10:33 AM, Florian Fainelli wrote:
-> Hi all,
+On Fri, 2017-06-23 at 12:30 -0500, Rob Herring wrote:
+> From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 > 
-> This makes the "internal" phy-mode property generally available and
-> documented and this allows us to remove some custom parsing code
-> we had for bcmgenet and bcm_sf2 which both used that specific value.
-
-Sorry for the resend, this is net-next material.
-
+> 90% of the usage of device node's full_name is printing it out in a
+> kernel message. However, storing the full path for every node is
+> wasteful and redundant. With a custom format specifier, we can generate
+> the full path at run-time and eventually remove the full path from every
+> node.
 > 
-> Florian Fainelli (4):
->   dt-bindings: Add "internal" as a valid 'phy-mode' property
->   net: phy: Support "internal" PHY interface
->   net: bcmgenet: Remove special handling of "internal" phy-mode
->   net: dsa: bcm_sf2: Remove special handling of "internal" phy-mode
+> For instance typical use is:
+> 	pr_info("Frobbing node %s\n", node->full_name);
 > 
->  Documentation/devicetree/bindings/net/ethernet.txt |  1 +
->  drivers/net/dsa/bcm_sf2.c                          | 16 +++++----------
->  drivers/net/ethernet/broadcom/genet/bcmmii.c       | 24 ++++++++--------------
->  include/linux/phy.h                                |  3 +++
->  4 files changed, 17 insertions(+), 27 deletions(-)
+> Which can be written now as:
+> 	pr_info("Frobbing node %pOF\n", node);
 > 
+> '%pO' is the base specifier to represent kobjects with '%pOF'
+> representing struct device_node. Currently, struct device_node is the
+> only supported type of kobject.
+> 
+> More fine-grained control of formatting includes printing the name,
+> flags, path-spec name and others, explained in the documentation entry.
+> 
+> Originally written by Pantelis, but pretty much rewrote the core
+> function using existing string/number functions. The 2 passes were
+> unnecessary and have been removed. Also, updated the checkpatch.pl
+> check. The unittest code was written by Grant Likely.
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> v3:
+> - Fix missing documentation updates using '%pOF' as the device_node 
+>   specifier.
+> - Update the commit msg and documentation to clearly define '%pO' is the
+>   base specifier for kobjects.
+> - Rework device_node_gen_full_name() to avoid creating an array of node
+>   pointers on the stack.
 
+Thanks Rob.
 
--- 
-Florian
+This all seems sensible to me now.
+
+If you want:
+
+Acked-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+
+cheers, Joe
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
