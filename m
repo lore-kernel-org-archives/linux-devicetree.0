@@ -1,339 +1,69 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: [PATCH v8 2/3] clk: qcom: Add regmap mux-div clocks support
-Date: Fri, 23 Jun 2017 19:15:32 +0300
-Message-ID: <20170623161533.20449-3-georgi.djakov@linaro.org>
-References: <20170623161533.20449-1-georgi.djakov@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170623161533.20449-1-georgi.djakov@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, robh+dt@kernel.org
-Cc: mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, georgi.djakov@linaro.org
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v8 0/3] Add support for Qualcomm A53 CPU clock
+Date: Fri, 23 Jun 2017 19:15:30 +0300
+Message-ID: <20170623161533.20449-1-georgi.djakov@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for hardware that can switch both parent clock and divider
-at the same time. This avoids generating intermediate frequencies from
-either the old parent clock and new divider or new parent clock and
-old divider combinations.
+This patchset adds support for the A53 CPU clock and allows scaling
+of the CPU frequency on msm8916 based platforms.
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/clk/qcom/Makefile             |   1 +
- drivers/clk/qcom/clk-regmap-mux-div.c | 237 ++++++++++++++++++++++++++++++++++
- drivers/clk/qcom/clk-regmap-mux-div.h |  52 ++++++++
- 3 files changed, 290 insertions(+)
+Changes since v7 (https://lkml.org/lkml/2016/10/31/296)
+ * Add the APCS clock controller to the APCS driver to expose both the
+ mailbox and clock controller functionality as discussed earlier:
+ https://lkml.org/lkml/2016/11/14/860
+ * Changed the a53pll compatible string as suggested by Rob.
+
+Changes since v6 (https://lkml.org/lkml/2016/9/7/347)
+ * Addressed various comments from Stephen Boyd
+
+Changes since v5 (https://lkml.org/lkml/2016/2/1/407)
+ * Rebase to clk-next and update according to the recent API changes.
+
+Changes since v4 (https://lkml.org/lkml/2015/12/14/367)
+ * Convert to builtin drivers as now __clk_lookup() is used
+
+Changes since v3 (https://lkml.org/lkml/2015/8/12/585)
+ * Split driver into two parts - and separate A53 PLL and
+   A53 clock controller drivers.
+ * Drop the safe switch hook patch. Add a clock notifier in
+   the clock provider to handle switching via safe mux and
+   divider configuration.
+
+Changes since v2 (https://lkml.org/lkml/2015/7/24/526)
+ * Drop gpll0_vote patch.
+ * Switch to the new clk_hw_* APIs.
+ * Rebase to the current clk-next.
+
+Changes since v1 (https://lkml.org/lkml/2015/6/12/193)
+ * Drop SR2 PLL patch, as it is already applied.
+ * Add gpll0_vote rate propagation patch.
+ * Update/rebase patches to the current clk-next.
+
+
+Georgi Djakov (3):
+  clk: qcom: Add A53 PLL support
+  clk: qcom: Add regmap mux-div clocks support
+  mailbox: qcom: Add support for APCS clock controller
+
+ .../devicetree/bindings/clock/qcom,a53pll.txt      |  22 ++
+ .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   5 +
+ drivers/clk/qcom/Kconfig                           |   9 +
+ drivers/clk/qcom/Makefile                          |   2 +
+ drivers/clk/qcom/a53-pll.c                         |  94 ++++++++
+ drivers/clk/qcom/clk-regmap-mux-div.c              | 237 +++++++++++++++++++++
+ drivers/clk/qcom/clk-regmap-mux-div.h              |  52 +++++
+ drivers/mailbox/qcom-apcs-ipc-mailbox.c            | 122 +++++++++++
+ 8 files changed, 543 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
+ create mode 100644 drivers/clk/qcom/a53-pll.c
  create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.c
  create mode 100644 drivers/clk/qcom/clk-regmap-mux-div.h
 
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 19ae884b5166..ac38c2b21847 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -9,6 +9,7 @@ clk-qcom-y += clk-rcg2.o
- clk-qcom-y += clk-branch.o
- clk-qcom-y += clk-regmap-divider.o
- clk-qcom-y += clk-regmap-mux.o
-+clk-qcom-y += clk-regmap-mux-div.o
- clk-qcom-y += reset.o
- clk-qcom-$(CONFIG_QCOM_GDSC) += gdsc.o
- 
-diff --git a/drivers/clk/qcom/clk-regmap-mux-div.c b/drivers/clk/qcom/clk-regmap-mux-div.c
-new file mode 100644
-index 000000000000..5ec31ec3efa7
---- /dev/null
-+++ b/drivers/clk/qcom/clk-regmap-mux-div.c
-@@ -0,0 +1,237 @@
-+/*
-+ * Copyright (c) 2017, Linaro Limited
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/bitops.h>
-+#include <linux/delay.h>
-+#include <linux/kernel.h>
-+#include <linux/regmap.h>
-+
-+#include "clk-regmap-mux-div.h"
-+
-+#define CMD_RCGR			0x0
-+#define CMD_RCGR_UPDATE			BIT(0)
-+#define CMD_RCGR_DIRTY_CFG		BIT(4)
-+#define CMD_RCGR_ROOT_OFF		BIT(31)
-+#define CFG_RCGR			0x4
-+
-+#define to_clk_regmap_mux_div(_hw) \
-+	container_of(to_clk_regmap(_hw), struct clk_regmap_mux_div, clkr)
-+
-+int __mux_div_set_src_div(struct clk_regmap_mux_div *md, u32 src, u32 div)
-+{
-+	int ret, count;
-+	u32 val, mask;
-+	const char *name = clk_hw_get_name(&md->clkr.hw);
-+
-+	val = (div << md->hid_shift) | (src << md->src_shift);
-+	mask = ((BIT(md->hid_width) - 1) << md->hid_shift) |
-+	       ((BIT(md->src_width) - 1) << md->src_shift);
-+
-+	ret = regmap_update_bits(md->clkr.regmap, CFG_RCGR + md->reg_offset,
-+				 mask, val);
-+	if (ret)
-+		return ret;
-+
-+	ret = regmap_update_bits(md->clkr.regmap, CMD_RCGR + md->reg_offset,
-+				 CMD_RCGR_UPDATE, CMD_RCGR_UPDATE);
-+	if (ret)
-+		return ret;
-+
-+	/* Wait for update to take effect */
-+	for (count = 500; count > 0; count--) {
-+		ret = regmap_read(md->clkr.regmap, CMD_RCGR + md->reg_offset,
-+				  &val);
-+		if (ret)
-+			return ret;
-+		if (!(val & CMD_RCGR_UPDATE))
-+			return 0;
-+		udelay(1);
-+	}
-+
-+	pr_err("%s: RCG did not update its configuration", name);
-+	return -EBUSY;
-+}
-+
-+static void __mux_div_get_src_div(struct clk_regmap_mux_div *md, u32 *src,
-+				  u32 *div)
-+{
-+	u32 val, d, s;
-+	const char *name = clk_hw_get_name(&md->clkr.hw);
-+
-+	regmap_read(md->clkr.regmap, CMD_RCGR + md->reg_offset, &val);
-+
-+	if (val & CMD_RCGR_DIRTY_CFG) {
-+		pr_err("%s: RCG configuration is pending\n", name);
-+		return;
-+	}
-+
-+	regmap_read(md->clkr.regmap, CFG_RCGR + md->reg_offset, &val);
-+	s = (val >> md->src_shift);
-+	s &= BIT(md->src_width) - 1;
-+	*src = s;
-+
-+	d = (val >> md->hid_shift);
-+	d &= BIT(md->hid_width) - 1;
-+	*div = d;
-+}
-+
-+static inline bool is_better_rate(unsigned long req, unsigned long best,
-+				  unsigned long new)
-+{
-+	return (req <= new && new < best) || (best < req && best < new);
-+}
-+
-+static int mux_div_determine_rate(struct clk_hw *hw,
-+				  struct clk_rate_request *req)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	unsigned int i, div, max_div;
-+	unsigned long actual_rate, best_rate = 0;
-+	unsigned long req_rate = req->rate;
-+
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
-+		unsigned long parent_rate = clk_hw_get_rate(parent);
-+
-+		max_div = BIT(md->hid_width) - 1;
-+		for (div = 1; div < max_div; div++) {
-+			parent_rate = mult_frac(req_rate, div, 2);
-+			parent_rate = clk_hw_round_rate(parent, parent_rate);
-+			actual_rate = mult_frac(parent_rate, 2, div);
-+
-+			if (is_better_rate(req_rate, best_rate, actual_rate)) {
-+				best_rate = actual_rate;
-+				req->rate = best_rate;
-+				req->best_parent_rate = parent_rate;
-+				req->best_parent_hw = parent;
-+			}
-+
-+			if (actual_rate < req_rate || best_rate <= req_rate)
-+				break;
-+		}
-+	}
-+
-+	if (!best_rate)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int __mux_div_set_rate_and_parent(struct clk_hw *hw, unsigned long rate,
-+					 unsigned long prate, u32 src)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	int ret;
-+	u32 div, max_div, best_src = 0, best_div = 0;
-+	unsigned int i;
-+	unsigned long actual_rate, best_rate = 0;
-+
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++) {
-+		struct clk_hw *parent = clk_hw_get_parent_by_index(hw, i);
-+		unsigned long parent_rate = clk_hw_get_rate(parent);
-+
-+		max_div = BIT(md->hid_width) - 1;
-+		for (div = 1; div < max_div; div++) {
-+			parent_rate = mult_frac(rate, div, 2);
-+			parent_rate = clk_hw_round_rate(parent, parent_rate);
-+			actual_rate = mult_frac(parent_rate, 2, div);
-+
-+			if (is_better_rate(rate, best_rate, actual_rate)) {
-+				best_rate = actual_rate;
-+				best_src = md->parent_map[i].cfg;
-+				best_div = div - 1;
-+			}
-+
-+			if (actual_rate < rate || best_rate <= rate)
-+				break;
-+		}
-+	}
-+
-+	ret = __mux_div_set_src_div(md, best_src, best_div);
-+	if (!ret) {
-+		md->div = best_div;
-+		md->src = best_src;
-+	}
-+
-+	return ret;
-+}
-+
-+static u8 mux_div_get_parent(struct clk_hw *hw)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	const char *name = clk_hw_get_name(hw);
-+	u32 i, div, src = 0;
-+
-+	__mux_div_get_src_div(md, &src, &div);
-+
-+	for (i = 0; i < clk_hw_get_num_parents(hw); i++)
-+		if (src == md->parent_map[i].cfg)
-+			return i;
-+
-+	pr_err("%s: Can't find parent with src %d\n", name, src);
-+	return 0;
-+}
-+
-+static int mux_div_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+
-+	return __mux_div_set_src_div(md, md->parent_map[index].cfg, md->div);
-+}
-+
-+static int mux_div_set_rate(struct clk_hw *hw,
-+			    unsigned long rate, unsigned long prate)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+
-+	return __mux_div_set_rate_and_parent(hw, rate, prate, md->src);
-+}
-+
-+static int mux_div_set_rate_and_parent(struct clk_hw *hw,  unsigned long rate,
-+				       unsigned long prate, u8 index)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+
-+	return __mux_div_set_rate_and_parent(hw, rate, prate,
-+					     md->parent_map[index].cfg);
-+}
-+
-+static unsigned long mux_div_recalc_rate(struct clk_hw *hw, unsigned long prate)
-+{
-+	struct clk_regmap_mux_div *md = to_clk_regmap_mux_div(hw);
-+	u32 div, src;
-+	int i, num_parents = clk_hw_get_num_parents(hw);
-+	const char *name = clk_hw_get_name(hw);
-+
-+	__mux_div_get_src_div(md, &src, &div);
-+	for (i = 0; i < num_parents; i++)
-+		if (src == md->parent_map[i].cfg) {
-+			struct clk_hw *p = clk_hw_get_parent_by_index(hw, i);
-+			unsigned long parent_rate = clk_hw_get_rate(p);
-+
-+			return mult_frac(parent_rate, 2, div + 1);
-+		}
-+
-+	pr_err("%s: Can't find parent %d\n", name, src);
-+	return 0;
-+}
-+
-+const struct clk_ops clk_regmap_mux_div_ops = {
-+	.get_parent = mux_div_get_parent,
-+	.set_parent = mux_div_set_parent,
-+	.set_rate = mux_div_set_rate,
-+	.set_rate_and_parent = mux_div_set_rate_and_parent,
-+	.determine_rate = mux_div_determine_rate,
-+	.recalc_rate = mux_div_recalc_rate,
-+};
-diff --git a/drivers/clk/qcom/clk-regmap-mux-div.h b/drivers/clk/qcom/clk-regmap-mux-div.h
-new file mode 100644
-index 000000000000..3380e8f6e8a1
---- /dev/null
-+++ b/drivers/clk/qcom/clk-regmap-mux-div.h
-@@ -0,0 +1,52 @@
-+/*
-+ * Copyright (c) 2015, Linaro Limited
-+ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __QCOM_CLK_REGMAP_MUX_DIV_H__
-+#define __QCOM_CLK_REGMAP_MUX_DIV_H__
-+
-+#include <linux/clk-provider.h>
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+
-+/**
-+ * struct mux_div_clk - combined mux/divider clock
-+ * @reg_offset: offset of the mux/divider register
-+ * @hid_width:	number of bits in half integer divider
-+ * @hid_shift:	lowest bit of hid value field
-+ * @src_width:	number of bits in source select
-+ * @src_shift:	lowest bit of source select field
-+ * @div:	the divider raw configuration value
-+ * @src:	the mux index which will be used if the clock is enabled
-+ * @parent_map:	pointer to parent_map struct
-+ * @clkr:	handle between common and hardware-specific interfaces
-+ * @clk_nb:	clock notifier registered for clock rate changes of the A53 PLL
-+ */
-+
-+struct clk_regmap_mux_div {
-+	u32				reg_offset;
-+	u32				hid_width;
-+	u32				hid_shift;
-+	u32				src_width;
-+	u32				src_shift;
-+	u32				div;
-+	u32				src;
-+	const struct parent_map		*parent_map;
-+	struct clk_regmap		clkr;
-+	struct notifier_block		clk_nb;
-+};
-+
-+extern const struct clk_ops clk_regmap_mux_div_ops;
-+int __mux_div_set_src_div(struct clk_regmap_mux_div *md, u32 src, u32 div);
-+
-+#endif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
