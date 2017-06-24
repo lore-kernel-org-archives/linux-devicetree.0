@@ -1,45 +1,48 @@
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 0/3] Allwinner A83T R_LRADC support
-Date: Sat, 24 Jun 2017 10:45:12 +0800
-Message-ID: <20170624024515.4669-1-techping.chan@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Ziping Chen <techping.chan@gmail.com>
+Subject: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC support for A83T
+Date: Sat, 24 Jun 2017 10:45:14 +0800
+Message-ID: <20170624024515.4669-3-techping.chan@gmail.com>
+References: <20170624024515.4669-1-techping.chan@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170624024515.4669-1-techping.chan@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: maxime.ripard@free-electrons.com, wens@csie.org, robh@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Ziping Chen <techping.chan@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Ziping Chen <techping.chan@gmail.com>
 
-Hi,
+Allwinner A83T SoC has a low res adc like the one
+in Allwinner A10 SoC.
 
-This is the remaining parts of my A83T R_LRADC support series
+Add binding for it.
 
-Allwinner A83T SoC has a low res adc like the one in Allwinner
-A10 SoC.
+Signed-off-by: Ziping Chen <techping.chan@gmail.com>
+Acked-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Add support for it. 
-
-Changes for v3:
-- Fix some issuses raised by Maxime.
-- Added Rob's ACK.
-
-Changes for v2:
-- Add an A83T specific compatible.
-
-Ziping Chen (3):
-  input: sun4i-a10-lradc-keys: Add support for A83T
-  dt-bindings: input: Add R_LRADC support for A83T
-  ARM: dts: sunxi: Add R_LRADC support for A83T
-
- .../devicetree/bindings/input/sun4i-lradc-keys.txt |  6 ++--
- arch/arm/boot/dts/sun8i-a83t.dtsi                  |  7 ++++
- drivers/input/keyboard/sun4i-lradc-keys.c          | 38 +++++++++++++++++++---
- 3 files changed, 45 insertions(+), 6 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+index 4357e498ef04..525d85e3043f 100644
+--- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
++++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+@@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
+ ------------------------------------------------
+ 
+ Required properties:
+- - compatible: "allwinner,sun4i-a10-lradc-keys"
++ - compatible: should be one of the following string:
++		"allwinner,sun4i-a10-lradc-keys"
++		"allwinner,sun8i-a83t-r-lradc-keys"
+  - reg: mmio address range of the chip
+  - interrupts: interrupt to which the chip is connected
+  - vref-supply: powersupply for the lradc reference voltage
+ 
+-Each key is represented as a sub-node of "allwinner,sun4i-a10-lradc-keys":
++Each key is represented as a sub-node of the compatible mentioned above:
+ 
+ Required subnode-properties:
+ 	- label: Descriptive name of the key.
 -- 
 2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
