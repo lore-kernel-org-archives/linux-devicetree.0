@@ -1,53 +1,55 @@
-From: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH,RESEND] regulator: fixed, gpio: dt: regulator-name is required property
-Date: Sat, 24 Jun 2017 08:36:50 +0000
-Message-ID: <1498293410-16222-1-git-send-email-harald@ccbib.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 01/11] net: phy: Add rockchip phy driver support
+Date: Sat, 24 Jun 2017 10:38:13 +0200
+Message-ID: <2277908.rG2NXdikOp@phil>
+References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com> <1498192929-7519-2-git-send-email-david.wu@rock-chips.com> <20170624021910.GB4875@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170624021910.GB4875-g2DYL2Zd6BY@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-These two drivers fail to probe if no name is provided. For details see:
-https://www.spinics.net/lists/kernel/msg2457515.html
+Am Samstag, 24. Juni 2017, 04:19:10 CEST schrieb Andrew Lunn:
+> On Fri, Jun 23, 2017 at 12:41:59PM +0800, David Wu wrote:
+> > Support internal ephy currently.
+> > 
+> > Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> > ---
+> >  drivers/net/phy/Kconfig    |  4 ++
+> >  drivers/net/phy/Makefile   |  1 +
+> >  drivers/net/phy/rockchip.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 99 insertions(+)
+> >  create mode 100644 drivers/net/phy/rockchip.c
+> > 
+> > diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+> > index c360dd6..86010d4 100644
+> > --- a/drivers/net/phy/Kconfig
+> > +++ b/drivers/net/phy/Kconfig
+> > @@ -350,6 +350,10 @@ config XILINX_GMII2RGMII
+> >           the Reduced Gigabit Media Independent Interface(RGMII) between
+> >           Ethernet physical media devices and the Gigabit Ethernet controller.
+> >  
+> > +config ROCKCHIP_MAC_PHY
+> 
+> This is a bit of an odd name, having both MAC and PHY in it. Are there
+> any other RockChip PHYs? Any external PHYS? Are they register
+> incompatible with the internal PHY?  Is it even RockChip IP? Or has it
+> been licensed from somebody else?
+> 
+> I would more likely just call it ROCKCHIP_PHY.
 
-Signed-off-by: Harald Geyer <harald-95f8Dae0BrPYtjvyW6yDsg@public.gmane.org>
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
-Added the ACK in the resend.
+hmm, we do have quite a number of non-net phys in the phy subsystem
+(DP, PCIe, ...) and given that the above would be CONFIG_ROCKCHIP_PHY
+in a global sense, sounds like it could make things confusing.
 
- Documentation/devicetree/bindings/regulator/fixed-regulator.txt | 1 +
- Documentation/devicetree/bindings/regulator/gpio-regulator.txt  | 2 ++
- 2 files changed, 3 insertions(+)
+So some addition sounds reasonable ... ROCKCHIP_ETH_PHY or so?
 
-diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-index 4fae41d..0c2a6c8 100644
---- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
-@@ -2,6 +2,7 @@ Fixed Voltage regulators
- 
- Required properties:
- - compatible: Must be "regulator-fixed";
-+- regulator-name: Defined in regulator.txt as optional, but required here.
- 
- Optional properties:
- - gpio: gpio to use for enable control
-diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-index dd1ed78..1f49615 100644
---- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
-@@ -2,6 +2,8 @@ GPIO controlled regulators
- 
- Required properties:
- - compatible		: Must be "regulator-gpio".
-+- regulator-name	: Defined in regulator.txt as optional, but required
-+			  here.
- - states		: Selection of available voltages and GPIO configs.
-                           if there are no states, then use a fixed regulator
- 
--- 
-2.1.4
 
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
