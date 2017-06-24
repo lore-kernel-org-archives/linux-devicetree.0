@@ -1,44 +1,44 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 05/11] net: stmmac: dwmac-rk: Add internal phy support
-Date: Sat, 24 Jun 2017 04:29:54 +0200
-Message-ID: <20170624022954.GD4875@lunn.ch>
-References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
- <1498193947-8011-1-git-send-email-david.wu@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 0/3] Allwinner A83T R_LRADC support
+Date: Sat, 24 Jun 2017 10:45:12 +0800
+Message-ID: <20170624024515.4669-1-techping.chan@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498193947-8011-1-git-send-email-david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 12:59:07PM +0800, David Wu wrote:
-> To make internal phy worked, need to configure the phy_clock,
-> phy cru_reset and related registers.
-> 
-> Change-Id: I6971c0a769754b824b1b908b56080cbaf7867d13
-> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/rockchip-dwmac.txt     |  3 +
->  drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 82 ++++++++++++++++++++++
->  2 files changed, 85 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-> index 8f42755..0514f69 100644
-> --- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
-> @@ -22,6 +22,7 @@ Required properties:
->  	   <&cru SCLK_MACREF_OUT> clock gate for RMII reference clock output
->  	   <&cru ACLK_GMAC>: AXI clock gate for GMAC
->  	   <&cru PCLK_GMAC>: APB clock gate for GMAC
-> +	   <&cru MAC_PHY>: clock for internal macphy
+From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-If this is the PHY clock, should it actually be specified in the PHY
-binding? Can you read the PHY ID registers with this clock off?
+Hi,
 
-	 Andrew
+This is the remaining parts of my A83T R_LRADC support series
+
+Allwinner A83T SoC has a low res adc like the one in Allwinner
+A10 SoC.
+
+Add support for it. 
+
+Changes for v3:
+- Fix some issuses raised by Maxime.
+- Added Rob's ACK.
+
+Changes for v2:
+- Add an A83T specific compatible.
+
+Ziping Chen (3):
+  input: sun4i-a10-lradc-keys: Add support for A83T
+  dt-bindings: input: Add R_LRADC support for A83T
+  ARM: dts: sunxi: Add R_LRADC support for A83T
+
+ .../devicetree/bindings/input/sun4i-lradc-keys.txt |  6 ++--
+ arch/arm/boot/dts/sun8i-a83t.dtsi                  |  7 ++++
+ drivers/input/keyboard/sun4i-lradc-keys.c          | 38 +++++++++++++++++++---
+ 3 files changed, 45 insertions(+), 6 deletions(-)
+
+-- 
+2.11.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
