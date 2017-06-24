@@ -1,7 +1,7 @@
 From: Ziping Chen <techping.chan@gmail.com>
-Subject: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC support for A83T
-Date: Sat, 24 Jun 2017 10:45:14 +0800
-Message-ID: <20170624024515.4669-3-techping.chan@gmail.com>
+Subject: [PATCH v3 3/3] ARM: dts: sunxi: Add R_LRADC support for A83T
+Date: Sat, 24 Jun 2017 10:45:15 +0800
+Message-ID: <20170624024515.4669-4-techping.chan@gmail.com>
 References: <20170624024515.4669-1-techping.chan@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170624024515.4669-1-techping.chan@gmail.com>
@@ -13,36 +13,32 @@ List-Id: devicetree@vger.kernel.org
 From: Ziping Chen <techping.chan@gmail.com>
 
 Allwinner A83T SoC has a low res adc like the one
-in Allwinner A10 SoC.
+in Allwinner A10 SoC. Now the driver has been
+modified to support it.
 
-Add binding for it.
+Add support for it.
 
 Signed-off-by: Ziping Chen <techping.chan@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/sun8i-a83t.dtsi | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-index 4357e498ef04..525d85e3043f 100644
---- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-+++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-@@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
- ------------------------------------------------
- 
- Required properties:
-- - compatible: "allwinner,sun4i-a10-lradc-keys"
-+ - compatible: should be one of the following string:
-+		"allwinner,sun4i-a10-lradc-keys"
-+		"allwinner,sun8i-a83t-r-lradc-keys"
-  - reg: mmio address range of the chip
-  - interrupts: interrupt to which the chip is connected
-  - vref-supply: powersupply for the lradc reference voltage
- 
--Each key is represented as a sub-node of "allwinner,sun4i-a10-lradc-keys":
-+Each key is represented as a sub-node of the compatible mentioned above:
- 
- Required subnode-properties:
- 	- label: Descriptive name of the key.
+diff --git a/arch/arm/boot/dts/sun8i-a83t.dtsi b/arch/arm/boot/dts/sun8i-a83t.dtsi
+index 8923ba625b76..ccee83cc0610 100644
+--- a/arch/arm/boot/dts/sun8i-a83t.dtsi
++++ b/arch/arm/boot/dts/sun8i-a83t.dtsi
+@@ -301,5 +301,12 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+ 		};
++
++		r_lradc: lradc@01f03c00 {
++			compatible = "allwinner,sun8i-a83t-r-lradc-keys";
++			reg = <0x01f03c00 0x100>;
++			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 2.11.0
