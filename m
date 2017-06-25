@@ -1,114 +1,76 @@
 From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/4] iio: accel: st_accel_spi: add OF capability to st_accel_spi
-Date: Sun, 25 Jun 2017 17:24:10 +0200
-Message-ID: <20170625152413.22325-2-lorenzo.bianconi@st.com>
+Subject: [PATCH v2 2/4] iio: magnetometer: st_magn_spi: add OF capability to st_magn_spi
+Date: Sun, 25 Jun 2017 17:24:11 +0200
+Message-ID: <20170625152413.22325-3-lorenzo.bianconi@st.com>
 References: <20170625152413.22325-1-lorenzo.bianconi@st.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <20170625152413.22325-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for LIS3DH, LSM330D, LSM330DL, LSM330DLC,
-LIS331DLH, LSM330, LSM303AGR, LIS2DH12, LIS3L02DQ, LNG2DM accel sensors.
+Add device tree support for LIS3MDL and LSM303AGR magnetometer sensors
 
 Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/iio/accel/st_accel_spi.c | 67 +++++++++++++++++++++++++++++++++++-----
- 1 file changed, 59 insertions(+), 8 deletions(-)
+ drivers/iio/magnetometer/st_magn_spi.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/drivers/iio/accel/st_accel_spi.c b/drivers/iio/accel/st_accel_spi.c
-index d13742edee0e..a8b61daa83d7 100644
---- a/drivers/iio/accel/st_accel_spi.c
-+++ b/drivers/iio/accel/st_accel_spi.c
-@@ -18,6 +18,63 @@
+diff --git a/drivers/iio/magnetometer/st_magn_spi.c b/drivers/iio/magnetometer/st_magn_spi.c
+index f3cb4dc05391..1ea64dd318aa 100644
+--- a/drivers/iio/magnetometer/st_magn_spi.c
++++ b/drivers/iio/magnetometer/st_magn_spi.c
+@@ -18,6 +18,28 @@
  #include <linux/iio/common/st_sensors_spi.h>
- #include "st_accel.h"
+ #include "st_magn.h"
  
 +#ifdef CONFIG_OF
 +/*
 + * For new single-chip sensors use <device_name> as compatible string.
-+ * For old single-chip devices keep <device_name>-accel to maintain
++ * For old single-chip devices keep <device_name>-magn to maintain
 + * compatibility
 + */
-+static const struct of_device_id st_accel_of_match[] = {
++static const struct of_device_id st_magn_of_match[] = {
 +	{
-+		.compatible = "st,lis302dl-spi"
++		.compatible = "st,lis3mdl-magn",
++		.data = LIS3MDL_MAGN_DEV_NAME,
 +	},
 +	{
-+		.compatible = "st,lis3dh-accel",
-+		.data = LIS3DH_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330d-accel",
-+		.data = LSM330D_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330dl-accel",
-+		.data = LSM330DL_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330dlc-accel",
-+		.data = LSM330DLC_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lis331dlh-accel",
-+		.data = LIS331DLH_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330-accel",
-+		.data = LSM330_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm303agr-accel",
-+		.data = LSM303AGR_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lis2dh12-accel",
-+		.data = LIS2DH12_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lis3l02dq",
-+		.data = LIS3L02DQ_ACCEL_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lng2dm-accel",
-+		.data = LNG2DM_ACCEL_DEV_NAME,
++		.compatible = "st,lsm303agr-magn",
++		.data = LSM303AGR_MAGN_DEV_NAME,
 +	},
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, st_accel_of_match);
++MODULE_DEVICE_TABLE(of, st_magn_of_match);
 +#else
-+#define st_accel_of_match	NULL
++#define st_magn_of_match	NULL
 +#endif
 +
- static int st_accel_spi_probe(struct spi_device *spi)
+ static int st_magn_spi_probe(struct spi_device *spi)
  {
  	struct iio_dev *indio_dev;
-@@ -30,6 +87,8 @@ static int st_accel_spi_probe(struct spi_device *spi)
+@@ -30,6 +52,8 @@ static int st_magn_spi_probe(struct spi_device *spi)
  
- 	adata = iio_priv(indio_dev);
+ 	mdata = iio_priv(indio_dev);
  
-+	st_sensors_of_name_probe(&spi->dev, st_accel_of_match,
++	st_sensors_of_name_probe(&spi->dev, st_magn_of_match,
 +				 spi->modalias, sizeof(spi->modalias));
- 	st_sensors_spi_configure(indio_dev, spi, adata);
+ 	st_sensors_spi_configure(indio_dev, spi, mdata);
  
- 	err = st_accel_common_probe(indio_dev);
-@@ -61,14 +120,6 @@ static const struct spi_device_id st_accel_id_table[] = {
- };
- MODULE_DEVICE_TABLE(spi, st_accel_id_table);
- 
--#ifdef CONFIG_OF
--static const struct of_device_id st_accel_of_match[] = {
--	{ .compatible = "st,lis302dl-spi" },
--	{}
--};
--MODULE_DEVICE_TABLE(of, st_accel_of_match);
--#endif
--
- static struct spi_driver st_accel_driver = {
+ 	err = st_magn_common_probe(indio_dev);
+@@ -57,6 +81,7 @@ MODULE_DEVICE_TABLE(spi, st_magn_id_table);
+ static struct spi_driver st_magn_driver = {
  	.driver = {
- 		.name = "st-accel-spi",
+ 		.name = "st-magn-spi",
++		.of_match_table = of_match_ptr(st_magn_of_match),
+ 	},
+ 	.probe = st_magn_spi_probe,
+ 	.remove = st_magn_spi_remove,
 -- 
 2.13.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
