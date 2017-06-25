@@ -1,107 +1,29 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Exynos5422 Odroid-XU* incomplete
- thermal-zones definition
-Date: Sun, 25 Jun 2017 17:29:11 +0200
-Message-ID: <20170625152911.kfq7vnxyhcqvfxpu@kozik-lap>
-References: <20170623210913.ugutgop7ratwolfy@inc028000032.lancs.ac.uk>
- <CANAwSgSN5zi72m1td-NAaCPGLUZybSdefrKAo2t9v-gOXn3tGA@mail.gmail.com>
- <20170625133134.g4iinztozsp4p2aa@kozik-lap>
- <CANAwSgQV6rtbx=LqWxRS+_sRctWiU1L=np7cZU8hTYg_V8Fbnw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANAwSgQV6rtbx=LqWxRS+_sRctWiU1L=np7cZU8hTYg_V8Fbnw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Willy Wolff <willy.mh.wolff@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] dt-bindings: iio: accel: add LIS3L02DQ sensor device binding
+Date: Sun, 25 Jun 2017 17:50:50 +0200
+Message-ID: <20170625155050.23074-1-lorenzo.bianconi@st.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 25, 2017 at 08:48:13PM +0530, Anand Moon wrote:
-> Hi Krzystof,
-> >> 2: We should also increase the tips from 4 to 8 to support different
-> >> cluster of cpu's.
-> >
-> > There are 4 CPU thermal zones on Exynos5422. What do you want to expand?
-> 
-> What I meant was to support more trip point to address below.
-> [    2.776320] exynos-tmu 100a0000.tmu: More trip points than
-> supported by this TMU.
-> [    2.782370] exynos-tmu 100a0000.tmu: 2 trip points should be
-> configured in polling mode.
-> 
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+---
+ Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I do not understand what you want to achieve. I added 2 trip points in
-polling mode for the CPU cooling mode. Just describe the problem and
-send the patch - it is the best way to explain one's thought...
-
-> >> 3: To avoid duplication of cooling-maps we can make tmu sensor work
-> >> differently for cluster of cpu's
-> >>       tmu_cpu0: handle pwm-fan control.
-> >>       tmu_cpu1: handle cpu[0-3] cpufreq mapping.
-> >>       tmu_cpu2: handle cpu[4-7] cpufreq mapping.
-> >
-> > I miss the point behind this. Why fan should work only when CPU4
-> > (tmu_cpu0) is heated and not CPU5-7 (rest of cpu tmu's)?
-> 
-> Ok fan should work on all the thermal zone. To avoid thermal shutdown.
-> 
-> But I want to avoid scaling down of all the cores of cpu to low freq
-> as cooling-maps cross the alert temperature. For below example.
-> ----
->  map3 {
->               trip = <&cpu1_alert3>;
->               cooling-device = <&cpu0 0 2>;
->  };
->  map4 {
->               trip = <&cpu1_alert3>;
->               cooling-device = <&cpu4 0 2>;
->  };
-> 
->  map5 {
->               trip = <&cpu1_alert4>;
->               cooling-device = <&cpu0 3 7>;
->  };
->  map6 {
->              trip = <&cpu1_alert4>;
->              cooling-device = <&cpu4 3 12>;
->  };
-> 
-> What I want to configure thermal zone as.
-> 
-> cpu0_thermal: cpu0-thermal {
->      configure cluster of cpu[0-3]
->      {
->         tips
->      }
->      cooling map
->      {
->          device handle cpu[0-3] with frequency scaling at particular
-> alert temperature.
->      }
-> }
-
-cpu0_thermal is attached to tmu_cpu0 which is the temperature of CPU4
-(first big core). I do not see reason behind connecting thermal zone
-(thus temperature) of CPU4 with frequency of LITTLE cluster (CPU0-3). In
-case of busy CPU4, you will scale down CPU0-3. Does not make sense.
-
-> cpu1_thermal: cpu1-thermal {
->      configure cluster of cpu[4-7]
->      {
->         tips
->      }
->      cooling map
->      {
->          device handle cpu[4-7] with frequency scaling at particular
-> alert temperature.
->      }
-> }
-> 
-> We can chose to configure rest of the thermal-zone on this approach.
-> Please share your thoughts.
-
-I am sorry, I do not understand the idea, the problem nor the solution.
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
+index e31457ae6f50..1e305f61f3df 100644
+--- a/Documentation/devicetree/bindings/iio/st-sensors.txt
++++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
+@@ -45,6 +45,7 @@ Accelerometers:
+ - st,lis2dh12-accel
+ - st,h3lis331dl-accel
+ - st,lng2dm-accel
++- st,lis3l02dq
+ 
+ Gyroscopes:
+ - st,l3g4200d-gyro
+-- 
+2.13.1
