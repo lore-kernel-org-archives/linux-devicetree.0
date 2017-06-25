@@ -1,104 +1,69 @@
-From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] clk: sunxi-ng: div: Add support for
- fixed post-divider
-Date: Mon, 26 Jun 2017 08:05:16 +1000
-Message-ID: <CANwerB1q68-PpQ7+-QbgBgZHeWw_4p1ruiwzy7upjLLRTDEG1w@mail.gmail.com>
-References: <cover.24b2b13ec5a68552e186ba1637f1328363c3886e.1498422562.git-series.plaes@plaes.org>
- <bc043a64775ec8c9cfcfe6d638e348d38e34eba3.1498422562.git-series.plaes@plaes.org>
-Reply-To: net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] DT: pinctrl: Add binding documentation for
+ Spreadtrum pin controller
+Date: Mon, 26 Jun 2017 00:19:03 +0200
+Message-ID: <CACRpkdYETvpsr1X1dfiGfg9i=Tq2qHJBZHv7Us4aZ_1HQcOdoA@mail.gmail.com>
+References: <359d62c1f2f7ef61c6160df9b60c1af4bfcea89a.1496664241.git.baolin.wang@spreadtrum.com>
+ <CACRpkdbtuPKr=tWGoJC-sg2Oj47rYMpo6fs_Us=Nynew1Wkz=w@mail.gmail.com>
+ <20170612060718.GA8566@spreadtrum.com> <20170613031547.GA29679@spreadtrum.com>
+ <CACRpkdbaP1U3pefTbPj-wOa1AibcJHBBALfKWO8dBR=YW8f7zA@mail.gmail.com> <CAMz4ku+jZ-S6sBL=ib++j+ooqweU9UC+MTgFca7ScrQiJDeZVQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCVMZKEXYEFBBHPHYDFAKGQEXAEQQGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <bc043a64775ec8c9cfcfe6d638e348d38e34eba3.1498422562.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMz4ku+jZ-S6sBL=ib++j+ooqweU9UC+MTgFca7ScrQiJDeZVQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Priit,
-
-This is showing from clock rate of 171428572 in the output of "cat
-/sys/kernel/debug/clk/clk_summary" for pll-periph-sata.
-The clock rate should be 100000000 (100 MHz) when read from the hardware.
-
-On 26 June 2017 at 06:45, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org> wrote:
-> SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
-> 6 is fixed post-divider.
+On Wed, Jun 21, 2017 at 10:10 AM, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 20 June 2017 at 17:31, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, Jun 13, 2017 at 5:15 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+>>
+>>> I forgot one most important reason why we can not use the "sleep" state. As I explained
+>>> above, the sleep related configuration will bind with the pin's sleep mode. If we set the
+>>> pin's sleep mode as AP_SLEEP, then we can select "sleep" state when AP system goes into
+>>> deep sleep mode by issuing "pinctrl_force_sleep()" in pinctrl suspend function.
+>>>
+>>> But if we set the pin's sleep mode as PUBCP_SLEEP and pubcp system doesn't run linux kernel
+>>> (it run another thread OS), then we can not select "sleep" state since the AP system does
+>>> not go into deep sleep mode (AP system run linux kernel OS).
+>>
+>> Allright yes it makes sense, and also there are systems that just go into
+>> "hardware sleep" and just put the pin into some pre-programmed mode.
+>>
+>> I'm a bit back-and-forth. I didn't mean that some code would actually
+>> switch the state to "sleep" when we go to sleep, I meant that when
+>> the system configures "default" mode it should also look up and
+>> program the "sleep" mode, but this approach with a special property
+>> is just another way of achieveing the same thing.
+>>
+>> But then we should add a whole slew of sleep states.
+>>
+>> I was thinking whether we could avoid having a special DT property
+>> by parsing ahead to states we do not currently use and programming
+>> that into the sleep mode registers.
 >
-> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-> ---
->  drivers/clk/sunxi-ng/ccu_div.c | 12 ++++++++++--
->  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
->  2 files changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
-> index c0e5c10..de30e15 100644
-> --- a/drivers/clk/sunxi-ng/ccu_div.c
-> +++ b/drivers/clk/sunxi-ng/ccu_div.c
+> Yes, for most scenarios, it can work with the "sleep" state to set
+> sleep-related config. But for our Spreadtrum platform scenario (I do
+> not know if there are other platforms need this feature), we can not
+> select the "sleep" state when pubcp system goes into deep sleep mode
+> but ap system does not go into deep sleep mode. So I think we still
+> need these "sleep-bias-pull-up", "sleep-bias-pull-down",
+> "sleep-input-enable" and "sleep-output-enable" properties.
 
-Missing handling of fixed_post_div in ccu_div_round_rate.
-ccu_div_round_rate should multiply the rate by the postdiv before
-looking up the divider using divider_get_val and divide val by postdiv
-just before returning.
+I don't really mean you should select the "sleep" state.
 
-> @@ -62,8 +62,13 @@ static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
->         parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
->                                                   parent_rate);
->
-> -       return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
-> -                                  cd->div.flags);
-> +       val = divider_recalc_rate(hw, parent_rate, val, cd->div.table,
-> +                                 cd->div.flags);
-> +
-> +       if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> +               val /= cd->fixed_post_div;
-> +
-> +       return val;
->  }
->
->  static int ccu_div_determine_rate(struct clk_hw *hw,
+I meant, as part of setting the "default" state or even the "init"
+state, we would inspect the "sleep" state, use those settings, and
+program them into the registers at this early point.
 
-> @@ -89,6 +94,9 @@ static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
->         val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
->                               cd->div.flags);
->
-> +       if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> +               val *= cd->fixed_post_div;
-> +
->         spin_lock_irqsave(cd->common.lock, flags);
->
->         reg = readl(cd->common.base + cd->common.reg);
+Then never touch the registers again, and never really go to the
+sleep state by software, just by hardware.
 
-val here is the divider value that is stored in the clock register
-field not the actual rate so this is incorrect. Instead the rate needs
-to be multiplied by postdiv just before divider_get_val.
-
-> diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
-> index 08d0744..f3a5028 100644
-> --- a/drivers/clk/sunxi-ng/ccu_div.h
-> +++ b/drivers/clk/sunxi-ng/ccu_div.h
-> @@ -86,9 +86,10 @@ struct ccu_div_internal {
->  struct ccu_div {
->         u32                     enable;
->
-> -       struct ccu_div_internal         div;
-> +       struct ccu_div_internal div;
->         struct ccu_mux_internal mux;
->         struct ccu_common       common;
-> +       unsigned int            fixed_post_div;
->  };
->
->  #define SUNXI_CCU_DIV_TABLE_WITH_GATE(_struct, _name, _parent, _reg,   \
-> --
-> git-series 0.9.1
-
-Thanks.
-
-Regards,
-Jonathan
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
