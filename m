@@ -1,105 +1,107 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 3/4] iio: gyro: st_gyro_spi: add OF capability to st_gyro_spi
-Date: Sun, 25 Jun 2017 17:24:12 +0200
-Message-ID: <20170625152413.22325-4-lorenzo.bianconi@st.com>
-References: <20170625152413.22325-1-lorenzo.bianconi@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170625152413.22325-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Exynos5422 Odroid-XU* incomplete
+ thermal-zones definition
+Date: Sun, 25 Jun 2017 17:29:11 +0200
+Message-ID: <20170625152911.kfq7vnxyhcqvfxpu@kozik-lap>
+References: <20170623210913.ugutgop7ratwolfy@inc028000032.lancs.ac.uk>
+ <CANAwSgSN5zi72m1td-NAaCPGLUZybSdefrKAo2t9v-gOXn3tGA@mail.gmail.com>
+ <20170625133134.g4iinztozsp4p2aa@kozik-lap>
+ <CANAwSgQV6rtbx=LqWxRS+_sRctWiU1L=np7cZU8hTYg_V8Fbnw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANAwSgQV6rtbx=LqWxRS+_sRctWiU1L=np7cZU8hTYg_V8Fbnw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>
+Cc: Willy Wolff <willy.mh.wolff@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for L3G4200D, LSM330D, LSM330DL, LSM330DLC,
-L3GD20, L3GD20H, L3G4IS, LSM330, LSM9DS0 gyroscope sensors
+On Sun, Jun 25, 2017 at 08:48:13PM +0530, Anand Moon wrote:
+> Hi Krzystof,
+> >> 2: We should also increase the tips from 4 to 8 to support different
+> >> cluster of cpu's.
+> >
+> > There are 4 CPU thermal zones on Exynos5422. What do you want to expand?
+> 
+> What I meant was to support more trip point to address below.
+> [    2.776320] exynos-tmu 100a0000.tmu: More trip points than
+> supported by this TMU.
+> [    2.782370] exynos-tmu 100a0000.tmu: 2 trip points should be
+> configured in polling mode.
+> 
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
----
- drivers/iio/gyro/st_gyro_spi.c | 53 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+I do not understand what you want to achieve. I added 2 trip points in
+polling mode for the CPU cooling mode. Just describe the problem and
+send the patch - it is the best way to explain one's thought...
 
-diff --git a/drivers/iio/gyro/st_gyro_spi.c b/drivers/iio/gyro/st_gyro_spi.c
-index fa14d8f2170d..0b52ed577dc2 100644
---- a/drivers/iio/gyro/st_gyro_spi.c
-+++ b/drivers/iio/gyro/st_gyro_spi.c
-@@ -18,6 +18,56 @@
- #include <linux/iio/common/st_sensors_spi.h>
- #include "st_gyro.h"
- 
-+#ifdef CONFIG_OF
-+/*
-+ * For new single-chip sensors use <device_name> as compatible string.
-+ * For old single-chip devices keep <device_name>-gyro to maintain
-+ * compatibility
-+ */
-+static const struct of_device_id st_gyro_of_match[] = {
-+	{
-+		.compatible = "st,l3g4200d-gyro",
-+		.data = L3G4200D_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330d-gyro",
-+		.data = LSM330D_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330dl-gyro",
-+		.data = LSM330DL_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330dlc-gyro",
-+		.data = LSM330DLC_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,l3gd20-gyro",
-+		.data = L3GD20_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,l3gd20h-gyro",
-+		.data = L3GD20H_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,l3g4is-gyro",
-+		.data = L3G4IS_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm330-gyro",
-+		.data = LSM330_GYRO_DEV_NAME,
-+	},
-+	{
-+		.compatible = "st,lsm9ds0-gyro",
-+		.data = LSM9DS0_GYRO_DEV_NAME,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, st_gyro_of_match);
-+#else
-+#define st_gyro_of_match	NULL
-+#endif
-+
- static int st_gyro_spi_probe(struct spi_device *spi)
- {
- 	struct iio_dev *indio_dev;
-@@ -30,6 +80,8 @@ static int st_gyro_spi_probe(struct spi_device *spi)
- 
- 	gdata = iio_priv(indio_dev);
- 
-+	st_sensors_of_name_probe(&spi->dev, st_gyro_of_match,
-+				 spi->modalias, sizeof(spi->modalias));
- 	st_sensors_spi_configure(indio_dev, spi, gdata);
- 
- 	err = st_gyro_common_probe(indio_dev);
-@@ -63,6 +115,7 @@ MODULE_DEVICE_TABLE(spi, st_gyro_id_table);
- static struct spi_driver st_gyro_driver = {
- 	.driver = {
- 		.name = "st-gyro-spi",
-+		.of_match_table = of_match_ptr(st_gyro_of_match),
- 	},
- 	.probe = st_gyro_spi_probe,
- 	.remove = st_gyro_spi_remove,
--- 
-2.13.1
+> >> 3: To avoid duplication of cooling-maps we can make tmu sensor work
+> >> differently for cluster of cpu's
+> >>       tmu_cpu0: handle pwm-fan control.
+> >>       tmu_cpu1: handle cpu[0-3] cpufreq mapping.
+> >>       tmu_cpu2: handle cpu[4-7] cpufreq mapping.
+> >
+> > I miss the point behind this. Why fan should work only when CPU4
+> > (tmu_cpu0) is heated and not CPU5-7 (rest of cpu tmu's)?
+> 
+> Ok fan should work on all the thermal zone. To avoid thermal shutdown.
+> 
+> But I want to avoid scaling down of all the cores of cpu to low freq
+> as cooling-maps cross the alert temperature. For below example.
+> ----
+>  map3 {
+>               trip = <&cpu1_alert3>;
+>               cooling-device = <&cpu0 0 2>;
+>  };
+>  map4 {
+>               trip = <&cpu1_alert3>;
+>               cooling-device = <&cpu4 0 2>;
+>  };
+> 
+>  map5 {
+>               trip = <&cpu1_alert4>;
+>               cooling-device = <&cpu0 3 7>;
+>  };
+>  map6 {
+>              trip = <&cpu1_alert4>;
+>              cooling-device = <&cpu4 3 12>;
+>  };
+> 
+> What I want to configure thermal zone as.
+> 
+> cpu0_thermal: cpu0-thermal {
+>      configure cluster of cpu[0-3]
+>      {
+>         tips
+>      }
+>      cooling map
+>      {
+>          device handle cpu[0-3] with frequency scaling at particular
+> alert temperature.
+>      }
+> }
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cpu0_thermal is attached to tmu_cpu0 which is the temperature of CPU4
+(first big core). I do not see reason behind connecting thermal zone
+(thus temperature) of CPU4 with frequency of LITTLE cluster (CPU0-3). In
+case of busy CPU4, you will scale down CPU0-3. Does not make sense.
+
+> cpu1_thermal: cpu1-thermal {
+>      configure cluster of cpu[4-7]
+>      {
+>         tips
+>      }
+>      cooling map
+>      {
+>          device handle cpu[4-7] with frequency scaling at particular
+> alert temperature.
+>      }
+> }
+> 
+> We can chose to configure rest of the thermal-zone on this approach.
+> Please share your thoughts.
+
+I am sorry, I do not understand the idea, the problem nor the solution.
+
+Best regards,
+Krzysztof
