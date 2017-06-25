@@ -1,78 +1,48 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH 0/5] ARM: Socionext MB86S71 and Fujitsu F-Cue enablement
-Date: Sun, 25 Jun 2017 19:00:15 +0200
-Message-ID: <20170625170020.11791-1-afaerber@suse.de>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
+Subject: [PATCH 5/5] ARM: dts: mb86s71-f-cue: Add fake UART0 clock
+Date: Sun, 25 Jun 2017 19:00:20 +0200
+Message-ID: <20170625170020.11791-6-afaerber@suse.de>
+References: <20170625170020.11791-1-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Satoru OKAMOTO <okamoto.satoru-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Tetsuya Nuriya <nuriya.tetsuya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170625170020.11791-1-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Masahiro Yamada <yamada.masahiro@socionext.com>, Satoru OKAMOTO <okamoto.satoru@socionext.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+As long as the clk driver is not building, use a fixed-clock for the UART.
 
-This mini-series adds initial Device Trees for the Socionext MB86S71 SoC and
-the Fujitsu F-Cue board. A clk driver and a gpio driver are already merged,
-although the clk driver does not build for lack of an scb mailbox driver.
-I am not familiar with the circumstances of those older efforts.
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+---
+ arch/arm/boot/dts/mb86s71-f-cue.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-My proposal is to disable the build of the clk driver for now. This allows
-to introduce the Kconfig symbol without breaking the build.
-
-With the Device Tree added here it is possible to boot into an initrd,
-with one CPU core up.
-
-Cf. https://en.opensuse.org/HCL:F-Cue
-
-More experimental patches at:
-https://github.com/afaerber/linux/commits/f-cue-next
-
-Have a lot of fun!
-
-Cheers,
-Andreas
-
-Cc: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Satoru OKAMOTO <okamoto.satoru-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andy Green <andy.green-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vincent Yang <vincent.yang-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Tetsuya Nuriya <nuriya.tetsuya-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Cc: Michael Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Boyd <stephen.boyd-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Andreas Färber (5):
-  clk: mb86s7x: Suppress build
-  ARM: Prepare Socionext MB86S71
-  dt-bindings: arm: Document Socionext MB86S71 and Fujitsu F-Cue
-  ARM: dts: Add Socionext MB86S71 and Fujitsu F-Cue
-  ARM: dts: mb86s71-f-cue: Add fake UART0 clock
-
- .../devicetree/bindings/arm/socionext.txt          |  17 ++
- arch/arm/Kconfig                                   |   2 +
- arch/arm/Makefile                                  |   1 +
- arch/arm/boot/dts/Makefile                         |   2 +
- arch/arm/boot/dts/mb86s71-f-cue.dts                |  46 ++++++
- arch/arm/boot/dts/mb86s71.dtsi                     | 178 +++++++++++++++++++++
- arch/arm/mach-mb86s7x/Kconfig                      |  10 ++
- arch/arm/mach-mb86s7x/Makefile                     |   1 +
- drivers/clk/Makefile                               |   2 +-
- 9 files changed, 258 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/arm/socionext.txt
- create mode 100644 arch/arm/boot/dts/mb86s71-f-cue.dts
- create mode 100644 arch/arm/boot/dts/mb86s71.dtsi
- create mode 100644 arch/arm/mach-mb86s7x/Kconfig
- create mode 100644 arch/arm/mach-mb86s7x/Makefile
-
+diff --git a/arch/arm/boot/dts/mb86s71-f-cue.dts b/arch/arm/boot/dts/mb86s71-f-cue.dts
+index 148d1aee11a6..726bf189e8e7 100644
+--- a/arch/arm/boot/dts/mb86s71-f-cue.dts
++++ b/arch/arm/boot/dts/mb86s71-f-cue.dts
+@@ -27,6 +27,12 @@
+ 		device_type = "memory";
+ 		reg = <0x80000000 0x80000000>;
+ 	};
++
++	uart0_clk: uart0-clk {
++		compatible = "fixed-clock";
++		clock-frequency = <7813000>;
++		#clock-cells = <0>;
++	};
+ };
+ 
+ &arch_timer {
+@@ -35,4 +41,6 @@
+ 
+ &uart0 {
+ 	status = "okay";
++	clocks = <&uart0_clk>;
++	clock-names = "apb_pclk";
+ };
 -- 
 2.12.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
