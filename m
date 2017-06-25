@@ -1,62 +1,106 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: omap3isp camera was Re: [PATCH v1 0/6] Add support of OV9655 camera
-Date: Sun, 25 Jun 2017 11:18:56 +0200
-Message-ID: <20170625091856.GA22791@amd>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
- <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: support open drain mode
+Date: Sun, 25 Jun 2017 11:34:10 +0200
+Message-ID: <CAA2SeNJ5yPqMiW2tVSc9ZSC5Rt=Q+CRoMibzigjvPyw05Qsr5Q@mail.gmail.com>
+References: <20170621192129.10226-1-lorenzo.bianconi@st.com>
+ <20170621192129.10226-2-lorenzo.bianconi@st.com> <20170624210835.56ffdd1c@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pf9I7BMVVzbSWLtt"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Hugues Fruchet <hugues.fruchet@st.com>, Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick Fertre <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170624210835.56ffdd1c-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> On Wed, 21 Jun 2017 21:21:28 +0200
+> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> Add open drain support in order to share requested IRQ line between
+>> st_lsm6dsx device and other peripherals
+>>
+>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> Issue when IRQF_RISING and open drain is set.
+>
 
---pf9I7BMVVzbSWLtt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Jonathan,
 
-Hi!
+> Otherwise looks good.
+>> ---
+>>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 17 +++++++++++++++++
+>>  1 file changed, 17 insertions(+)
+>>
+>> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+>> index 2a72acc6e049..e2737dc71b67 100644
+>> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+>> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+>> @@ -31,6 +31,8 @@
+>>  #include <linux/iio/iio.h>
+>>  #include <linux/iio/buffer.h>
+>>
+>> +#include <linux/platform_data/st_sensors_pdata.h>
+>> +
+>>  #include "st_lsm6dsx.h"
+>>
+>>  #define ST_LSM6DSX_REG_FIFO_THL_ADDR         0x06
+>> @@ -39,6 +41,8 @@
+>>  #define ST_LSM6DSX_REG_FIFO_DEC_GXL_ADDR     0x08
+>>  #define ST_LSM6DSX_REG_HLACTIVE_ADDR         0x12
+>>  #define ST_LSM6DSX_REG_HLACTIVE_MASK         BIT(5)
+>> +#define ST_LSM6DSX_REG_PP_OD_ADDR            0x12
+>> +#define ST_LSM6DSX_REG_PP_OD_MASK            BIT(4)
+>>  #define ST_LSM6DSX_REG_FIFO_MODE_ADDR                0x0a
+>>  #define ST_LSM6DSX_FIFO_MODE_MASK            GENMASK(2, 0)
+>>  #define ST_LSM6DSX_FIFO_ODR_MASK             GENMASK(6, 3)
+>> @@ -417,6 +421,8 @@ static const struct iio_buffer_setup_ops st_lsm6dsx_buffer_ops = {
+>>
+>>  int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw)
+>>  {
+>> +     struct device_node *np = hw->dev->of_node;
+>> +     struct st_sensors_platform_data *pdata;
+>>       struct iio_buffer *buffer;
+>>       unsigned long irq_type;
+>>       bool irq_active_low;
+>> @@ -444,6 +450,17 @@ int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw)
+>>       if (err < 0)
+>>               return err;
+>>
+>> +     pdata = (struct st_sensors_platform_data *)hw->dev->platform_data;
+>> +     if ((np && of_property_read_bool(np, "drive-open-drain")) ||
+>> +         (pdata && pdata->open_drain)) {
+>> +             err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_PP_OD_ADDR,
+>> +                                              ST_LSM6DSX_REG_PP_OD_MASK, 1);
+>> +             if (err < 0)
+>> +                     return err;
+>> +
+>> +             irq_type |= IRQF_SHARED;
+>> +     }
+>> +
+> In common with the mpu3050 which was the first driver in IIO to do open drain,
+> I think you need to think about precedence as we allow for IRQF_RISING
+> and IRQF_FALLING already.  Open drain only allows for shared interrupts
+> if IRQF_FALLING (I think)
+>>       err = devm_request_threaded_irq(hw->dev, hw->irq,
+>>                                       st_lsm6dsx_handler_irq,
+>>                                       st_lsm6dsx_handler_thread,
+>
 
-> * unfortunately we still get no image :(
->=20
-> The latter is likely a setup issue of our camera interface (OMAP3 ISP =3D=
- Image Signal Processor) which
-> we were not yet able to solve. Oscilloscoping signals on the interface in=
-dicated that signals and
-> sync are correct. But we do not know since mplayer only shows a green scr=
-een.
+I have not got the difference between IRQF_RISING and IRQF_FALLING
+when the irq line
+is marked as shared (when open drain is enabled).
+Looking at the code, mpu3050 gyro sensor does not support shared interrupts
+with IRQF_RISING and IRQF_TRIGGER_HIGH. Is it a hw limitation?
+Speaking with digital designer, lsm6dsx series allows open drain mode
+even if the requested irq line
+is IRQF_TRIGGER_HIGH or IRQF_RISING, we need to add a pull-down resistor.
+Moreover ST framework already supports open drain if the requested
+interrupt is IRQF_RISING.
 
-What mplayer command line do you use? How did you set up the pipeline
-with media-ctl?
+Regards,
+Lorenzo
 
-On kernel.org, I have tree called camera-fw5-6 , where camera works
-for me on n900. On gitlab, there's modifed fcam-dev, which can be used
-for testing.
 
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pf9I7BMVVzbSWLtt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAllPgAAACgkQMOfwapXb+vJTAQCgwZ7HMGVaCoeKt4tzcR+qbKym
-0WQAniWT609o3JHGvEBsl51g7se8b9FP
-=ZOxj
------END PGP SIGNATURE-----
-
---pf9I7BMVVzbSWLtt--
+-- 
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
