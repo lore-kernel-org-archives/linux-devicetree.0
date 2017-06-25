@@ -1,77 +1,166 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] remoteproc/keystone: Add a remoteproc driver for
- Keystone 2 DSPs
-Date: Sun, 25 Jun 2017 13:15:45 -0700
-Message-ID: <20170625201545.GA26155@builder>
-References: <20170613234513.7624-1-s-anna@ti.com>
- <20170613234513.7624-3-s-anna@ti.com>
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] iio: accel: st_accel_spi: add OF capability to st_accel_spi
+Date: Sun, 25 Jun 2017 22:24:48 +0200
+Message-ID: <CAA2SeNKPtOZ8P5ioT1a--Voa_GAqttRrpeh4zCk5SWXvAZ17-w@mail.gmail.com>
+References: <20170625152413.22325-1-lorenzo.bianconi@st.com>
+ <20170625152413.22325-2-lorenzo.bianconi@st.com> <20170625171404.4ee965c7@kernel.org>
+ <CAA2SeNKs8VZehYWpGjnPzTn4N5dzK6VxQs5=e51p2cXVWzPkig@mail.gmail.com> <140A7A0D-35DB-433F-8861-2D4400AA7942@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170613234513.7624-3-s-anna-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <140A7A0D-35DB-433F-8861-2D4400AA7942-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 13 Jun 16:45 PDT 2017, Suman Anna wrote:
+>
+>
+> On 25 June 2017 18:20:33 CEST, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Sun, 25 Jun 2017 17:24:10 +0200
+>>> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>
+>>>> Add device tree support for LIS3DH, LSM330D, LSM330DL, LSM330DLC,
+>>>> LIS331DLH, LSM330, LSM303AGR, LIS2DH12, LIS3L02DQ, LNG2DM accel
+>>sensors.
+>>>>
+>>>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>>>> ---
+>>>>  drivers/iio/accel/st_accel_spi.c | 67
+>>+++++++++++++++++++++++++++++++++++-----
+>>>>  1 file changed, 59 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/iio/accel/st_accel_spi.c
+>>b/drivers/iio/accel/st_accel_spi.c
+>>>> index d13742edee0e..a8b61daa83d7 100644
+>>>> --- a/drivers/iio/accel/st_accel_spi.c
+>>>> +++ b/drivers/iio/accel/st_accel_spi.c
+>>>> @@ -18,6 +18,63 @@
+>>>>  #include <linux/iio/common/st_sensors_spi.h>
+>>>>  #include "st_accel.h"
+>>>>
+>>>> +#ifdef CONFIG_OF
+>>>> +/*
+>>>> + * For new single-chip sensors use <device_name> as compatible
+>>string.
+>>>> + * For old single-chip devices keep <device_name>-accel to maintain
+>>>> + * compatibility
+>>>> + */
+>>>> +static const struct of_device_id st_accel_of_match[] = {
+>>>> +     {
+>>>> +             .compatible = "st,lis302dl-spi"
+>>> Leaving this without some explanation of why it doesn't have
+>>> .data set requires a comment at least. It will result
+>>> in the name never being set - or ending up as
+>>> the default spi->modalias anyway.. Presumably not what is
+>>> desired?
+>>>
+>>> If I have missed something about why this works, please
+>>> add a comment here in v3 to explain it.
+>>
+>>Right, it will not work, but it needs a device (lis3lv02dl) that is
+>>not currently support in st_accel_spi.
+>>So I preferred to fix OF capability for currently supported devices
+>>and add missing ones (LIS3LV02DL, LIS331DL and H3LIS331DL)
+>>in a subsequent patch. What do you think? Is it better to squash the
+>>two patches together?
+> Up to you, but if separate squash this element for now.
+>>
+>>Regards,
+>>Lorenzo
 
-> +static int keystone_rproc_start(struct rproc *rproc)
-> +{
-> +	struct keystone_rproc *ksproc = rproc->priv;
-> +	int ret;
-> +
-> +	INIT_WORK(&ksproc->workqueue, handle_event);
-> +
-> +	ret = request_irq(ksproc->irq_ring, keystone_rproc_vring_interrupt, 0,
-> +			  dev_name(ksproc->dev), ksproc);
-> +	if (ret) {
-> +		dev_err(ksproc->dev, "failed to enable vring interrupt, ret = %d\n",
-> +			ret);
-> +		goto out;
-> +	}
-> +
-> +	ret = request_irq(ksproc->irq_fault, keystone_rproc_exception_interrupt,
-> +			  0, dev_name(ksproc->dev), ksproc);
-> +	if (ret) {
-> +		dev_err(ksproc->dev, "failed to enable exception interrupt, ret = %d\n",
-> +			ret);
-> +		goto free_vring_irq;
-> +	}
-
-I do prefer that your request any resources during probe() and
-potentially enable/disable them here. If below concern about using a
-GPIO driver is cleared already I'll take it as is though.
-
-[..]
-> +static void keystone_rproc_kick(struct rproc *rproc, int vqid)
-> +{
-> +	struct keystone_rproc *ksproc = rproc->priv;
-> +
-> +	if (WARN_ON(ksproc->kick_gpio < 0))
-> +		return;
-> +
-> +	gpio_set_value(ksproc->kick_gpio, 1);
-> +}
-> +
-
-This doesn't sound like a gpio-controller and the GPIO maintainer did
-reject an attempt by me to use the GPIO framework to abstract a similar
-thing. Do you already have this driver upstream or have you clarified
-with the maintainer that the GPIO framework is an acceptable abstraction
-for this?
-
-It looks equivalent to the "APCS IPC" register found in Qualcomm
-platforms, previously implemented through a syscon but in v4.13 being
-pushed to being a mailbox driver.
-
-
-Apart from this I think the series looks good.
-
+Ok, I figured out I can fix support for lis302dl without adding new devices.
+I will send a v3 with that fix.
 Regards,
-Bjorn
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Lorenzo
+
+>>
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lis3dh-accel",
+>>>> +             .data = LIS3DH_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lsm330d-accel",
+>>>> +             .data = LSM330D_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lsm330dl-accel",
+>>>> +             .data = LSM330DL_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lsm330dlc-accel",
+>>>> +             .data = LSM330DLC_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lis331dlh-accel",
+>>>> +             .data = LIS331DLH_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lsm330-accel",
+>>>> +             .data = LSM330_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lsm303agr-accel",
+>>>> +             .data = LSM303AGR_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lis2dh12-accel",
+>>>> +             .data = LIS2DH12_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lis3l02dq",
+>>>> +             .data = LIS3L02DQ_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {
+>>>> +             .compatible = "st,lng2dm-accel",
+>>>> +             .data = LNG2DM_ACCEL_DEV_NAME,
+>>>> +     },
+>>>> +     {}
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, st_accel_of_match);
+>>>> +#else
+>>>> +#define st_accel_of_match    NULL
+>>>> +#endif
+>>>> +
+>>>>  static int st_accel_spi_probe(struct spi_device *spi)
+>>>>  {
+>>>>       struct iio_dev *indio_dev;
+>>>> @@ -30,6 +87,8 @@ static int st_accel_spi_probe(struct spi_device
+>>*spi)
+>>>>
+>>>>       adata = iio_priv(indio_dev);
+>>>>
+>>>> +     st_sensors_of_name_probe(&spi->dev, st_accel_of_match,
+>>>> +                              spi->modalias,
+>>sizeof(spi->modalias));
+>>>>       st_sensors_spi_configure(indio_dev, spi, adata);
+>>>>
+>>>>       err = st_accel_common_probe(indio_dev);
+>>>> @@ -61,14 +120,6 @@ static const struct spi_device_id
+>>st_accel_id_table[] = {
+>>>>  };
+>>>>  MODULE_DEVICE_TABLE(spi, st_accel_id_table);
+>>>>
+>>>> -#ifdef CONFIG_OF
+>>>> -static const struct of_device_id st_accel_of_match[] = {
+>>>> -     { .compatible = "st,lis302dl-spi" },
+>>>> -     {}
+>>>> -};
+>>>> -MODULE_DEVICE_TABLE(of, st_accel_of_match);
+>>>> -#endif
+>>>> -
+>>>>  static struct spi_driver st_accel_driver = {
+>>>>       .driver = {
+>>>>               .name = "st-accel-spi",
+>>>
+>
+> --
+> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+
+
+
+-- 
+UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
+unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
+umount; make clean; sleep
