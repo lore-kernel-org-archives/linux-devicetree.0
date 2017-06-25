@@ -1,88 +1,60 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH] ARM: dts: exynos: Exynos5422 Odroid-XU* incomplete
- thermal-zones definition
-Date: Sun, 25 Jun 2017 15:31:34 +0200
-Message-ID: <20170625133134.g4iinztozsp4p2aa@kozik-lap>
-References: <20170623210913.ugutgop7ratwolfy@inc028000032.lancs.ac.uk>
- <CANAwSgSN5zi72m1td-NAaCPGLUZybSdefrKAo2t9v-gOXn3tGA@mail.gmail.com>
+From: kbuild test robot <lkp@intel.com>
+Subject: [PATCH] stm32-dcmi: fix semicolon.cocci warnings
+Date: Sun, 25 Jun 2017 23:02:54 +0800
+Message-ID: <20170625150254.GA28052@xian.lkp.intel.com>
+References: <201706252214.3z2NADlJ%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANAwSgSN5zi72m1td-NAaCPGLUZybSdefrKAo2t9v-gOXn3tGA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: Willy Wolff <willy.mh.wolff@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+In-Reply-To: <1498144371-13310-4-git-send-email-hugues.fruchet@st.com>
+Sender: linux-media-owner@vger.kernel.org
+Cc: kbuild-all@01.org, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick Fertre <yannick.fertre@st.com>, Hugues Fruchet <hugues.fruchet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 25, 2017 at 06:53:24PM +0530, Anand Moon wrote:
-> Hi Willy,
-> 
-> On 24 June 2017 at 02:39, Willy Wolff <willy.mh.wolff@gmail.com> wrote:
-> > Odroid XU*-familly boards has thermal sensors per A15 cores, but the actual
-> >  thermal-zones define only cooling-maps action for cpu0.
-> >
-> > If the application is running on all cores but core4 (first core of the A15
-> >  cluster), the CPU can reach high temperature without any proper cooling
-> >  action.
-> >
-> > As already discus in prior mail, and on IRC, it's a quit big code
-> > duplication, but I don't found the write way to express that in a better
-> >  way.
-> >
-> > The situation for this board is that we have multiple sensors, but
-> >  matching cooling devices for these sensors act for the same physical
-> >  device (FAN and A15 cluster, as each core of the cluster share the same
-> >  frequency).
-> > In fact, of-thermal.c:473:thermal_zone_of_sensor_register() can't use
-> > multiple sensors for one single thermal zone.
-> > This patch follow the path taken in arch/arm/boot/dts/qcom-apq8084.dtsi:97
-> >
-> > I'm interested to extending the thermal driver, but it will takes time.
-> >  So this is a workaround before refactoring the driver.
-> > If somebody knows how to write it better, any advice and suggestions
-> > are more than welcome.
-> >
-> > Also, the comment for cpu_alert4 in cooling-maps definition is not
-> > accurate, 11 steps for A15 correspond to 700MHz, not 600MHz.
-> >
-> 
-> [snip]
-> 
-> Few point to from my side.
-> 
-> 1: We should also increase the trip points temperature so that it can
-> throttle at high temperature.
-
-It is not related to this problem. If you wish to address different
-problem related to non-optimal choice of temperature, then please send a
-separate patch explaining chosen values.
-
-> 2: We should also increase the tips from 4 to 8 to support different
-> cluster of cpu's.
-
-There are 4 CPU thermal zones on Exynos5422. What do you want to expand?
-
-> 3: To avoid duplication of cooling-maps we can make tmu sensor work
-> differently for cluster of cpu's
->       tmu_cpu0: handle pwm-fan control.
->       tmu_cpu1: handle cpu[0-3] cpufreq mapping.
->       tmu_cpu2: handle cpu[4-7] cpufreq mapping.
-
-I miss the point behind this. Why fan should work only when CPU4
-(tmu_cpu0) is heated and not CPU5-7 (rest of cpu tmu's)?
-
-Best regards,
-Krzysztof
+drivers/media/platform/stm32/stm32-dcmi.c:808:2-3: Unneeded semicolon
+drivers/media/platform/stm32/stm32-dcmi.c:562:2-3: Unneeded semicolon
+drivers/media/platform/stm32/stm32-dcmi.c:762:2-3: Unneeded semicolon
 
 
->       tmu_gpu: handle gpu (mali) cpu throttle.
-> 
-> Please share your thought on this new approach.
-> 
-> I generally test using linaro's pm-qa and most of the time the test case fails
->       # git clone git://git.linaro.org/tools/pm-qa.git
->       # make -C thermal check
-> 
-> -Best Regards
-> -Anand Moon
+ Remove unneeded semicolon.
+
+Generated by: scripts/coccinelle/misc/semicolon.cocci
+
+Fixes: a8a270dedb25 ("stm32-dcmi: crop sensor image to match user resolution")
+CC: Hugues Fruchet <hugues.fruchet@st.com>
+Signed-off-by: Fengguang Wu <fengguang.wu@intel.com>
+---
+
+ stm32-dcmi.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/drivers/media/platform/stm32/stm32-dcmi.c
++++ b/drivers/media/platform/stm32/stm32-dcmi.c
+@@ -559,7 +559,7 @@ static int dcmi_start_streaming(struct v
+ 
+ 		/* Enable crop */
+ 		val |= CR_CROP;
+-	};
++	}
+ 
+ 	reg_write(dcmi->regs, DCMI_CR, val);
+ 
+@@ -759,7 +759,7 @@ static int dcmi_try_fmt(struct stm32_dcm
+ 		/* Restore width/height */
+ 		pixfmt->width = width;
+ 		pixfmt->height = height;
+-	};
++	}
+ 
+ 	pixfmt->field = V4L2_FIELD_NONE;
+ 	pixfmt->bytesperline = pixfmt->width * dcmi_fmt->bpp;
+@@ -805,7 +805,7 @@ static int dcmi_set_fmt(struct stm32_dcm
+ 			mf->width, mf->height,
+ 			dcmi->crop.width, dcmi->crop.height,
+ 			dcmi->crop.left, dcmi->crop.top);
+-	};
++	}
+ 
+ 	dcmi->fmt = *f;
+ 	dcmi->current_fmt = current_fmt;
