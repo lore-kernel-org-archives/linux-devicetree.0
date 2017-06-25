@@ -1,86 +1,178 @@
-From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-Subject: [PATCH v4 0/6] ARM: sunxi: Convert sun4i/sun7i series
- SoCs to sunxi-ng CCU
-Date: Sun, 25 Jun 2017 23:45:41 +0300
-Message-ID: <cover.24b2b13ec5a68552e186ba1637f1328363c3886e.1498422562.git-series.plaes@plaes.org>
-Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
+From: Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH v4 1/4] [media] platform: Add Synopsys Designware HDMI RX
+ PHY e405 Driver
+Date: Sun, 25 Jun 2017 23:13:05 +0200
+Message-ID: <eea50b14-73f2-ed7f-3928-2c394af02259@kernel.org>
+References: <cover.1497978962.git.joabreu@synopsys.com>
+ <83bcf6996bfce22948df7963ddfe3c0cb56b96dc.1497978962.git.joabreu@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJLTBEBXENBBG6CYDFAKGQEFGY2U5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <83bcf6996bfce22948df7963ddfe3c0cb56b96dc.1497978962.git.joabreu@synopsys.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jose Abreu <Jose.Abreu@synopsys.com>
+Cc: linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Carlos Palminha <CARLOS.PALMINHA@synopsys.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hans.verkuil@cisco.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Jose,
 
-This serie brings A10 (sun4i) and A20 (sun7i) SoCs into the
-sunxi-ng world.
+Thank you for addressing my review comments. Couple more suggestions below.
 
-As mentioned in sun5i conversion, this is pretty much standard
-stuff as all the required clocks were already implemented in
-the sunxi-ng framework.
+On 06/20/2017 07:26 PM, Jose Abreu wrote:
+> This adds support for the Synopsys Designware HDMI RX PHY e405. This
+> phy receives and decodes HDMI video that is delivered to a controller.
 
-Changes from v3:
- - Add support for fixed post-divider support for DIV clocks.
- - Fix wrong clk_ops for SATA. Spotted by Jonathan Liu.
- - Use numeric values for clock indices to make merging somewhat easier
- - Create separate sun7i/a20 specific header.
+> +static int dw_phy_config(struct dw_phy_dev *dw_dev, unsigned char color_depth,
+> +		bool hdmi2, bool scrambling)
+> +{
 
-Changes from v2:
- - Rename driver and relevant files to sun4i-a10-ccu.
- - Drop mmc output and sample clocks for sun4i-a10.
- - Rename CSI ISP clock to SCLK as it is called on other variants.
- - Add comment on why PLL6 is used as AHB parent.
- - Fix parents for out_a/out_b clocks.
- - Stop exporting PLL_PERIPH_SATA gate. Driver takes care of gate.
- - Rework SATA clock handling.
- - Fix ahb gate parents.
- - Simplefb clock fixes (add dependencies for HDMI/LVDS clocks).
- - Fixes for pll-ve and pll-video1 clocks pointed out by Jonathan Liu.
- - Adapt to latest upstream changes from sunxi-next.
+> +	phy_reset(dw_dev, 1);
+> +	phy_pddq(dw_dev, 1);
+> +	phy_svsmode(dw_dev, 1);
+> +
+> +	phy_zcal_reset(dw_dev);
+> +	do {
+> +		udelay(1000);
 
-Changes from v1:
- - Drop useless comments
- - Add support for A10 / sun4i.
- - Rename driver to sunxi-a10-a20.
- - Add previously unimplemented clocks.
- - Document the audio pll hardcoded post-divider
- - Add Acked-by: Rob Herring <robh at kernel.org> on patch 4
+Could be mdelay(1) or better e.g. usleep_range(1000, 1100);
 
-Priit Laes (6):
-  clk: sunxi-ng: div: Add support for fixed post-divider
-  clk: sunxi-ng: Add sun4i/sun7i CCU driver
-  dt-bindings: List devicetree binding for the CCU of Allwinner A20
-  dt-bindings: List devicetree binding for the CCU of Allwinner A10
-  ARM: sun7i: Convert to CCU
-  ARM: sun4i: Convert to CCU
+> +		zcal_done = phy_zcal_done(dw_dev);
+> +	} while (!zcal_done && timeout--);
+> +
+> +	if (!zcal_done) {
+> +		dev_err(dw_dev->dev, "Zcal calibration failed\n");
+> +		return -ETIMEDOUT;
+> +	}
 
- Documentation/devicetree/bindings/clock/sunxi-ccu.txt |    2 +-
- arch/arm/boot/dts/sun4i-a10.dtsi                      |  643 +----
- arch/arm/boot/dts/sun7i-a20.dtsi                      |  719 +-----
- drivers/clk/sunxi-ng/Kconfig                          |   14 +-
- drivers/clk/sunxi-ng/Makefile                         |    1 +-
- drivers/clk/sunxi-ng/ccu-sun4i-a10.c                  | 1446 ++++++++++-
- drivers/clk/sunxi-ng/ccu-sun4i-a10.h                  |   61 +-
- drivers/clk/sunxi-ng/ccu_div.c                        |   12 +-
- drivers/clk/sunxi-ng/ccu_div.h                        |    3 +-
- include/dt-bindings/clock/sun4i-a10-ccu.h             |  200 +-
- include/dt-bindings/clock/sun7i-a20-ccu.h             |   53 +-
- include/dt-bindings/reset/sun4i-a10-ccu.h             |   67 +-
- 12 files changed, 2012 insertions(+), 1209 deletions(-)
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.c
- create mode 100644 drivers/clk/sunxi-ng/ccu-sun4i-a10.h
- create mode 100644 include/dt-bindings/clock/sun4i-a10-ccu.h
- create mode 100644 include/dt-bindings/clock/sun7i-a20-ccu.h
- create mode 100644 include/dt-bindings/reset/sun4i-a10-ccu.h
+> +	return 0;
+> +}
 
-base-commit: 25b1d5e0c166759abba86cd38b5e2e5b6d833876
--- 
-git-series 0.9.1
+> +static int dw_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct dw_phy_pdata *pdata = pdev->dev.platform_data;
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_phy_dev *dw_dev;
+> +	struct v4l2_subdev *sd;
+> +	int ret;
+> +
+> +	dev_dbg(dev, "probe start\n");
+> +
+> +	/* Resource allocation */
+
+This comment is not needed.
+
+> +	dw_dev = devm_kzalloc(dev, sizeof(*dw_dev), GFP_KERNEL);
+> +	if (!dw_dev)
+> +		return -ENOMEM;
+> +
+> +	/* Resource initialization */
+
+Ditto.
+
+> +	if (!pdata) {
+> +		dev_err(dev, "no platform data suplied\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	dw_dev->dev = dev;
+> +	dw_dev->config = pdata;
+> +	dw_dev->version = 405;
+
+How about storing the version number in the dw_hdmi_phy_e405_id[] table
+and retrieving it here with of_device_get_match_data() ?
+
+> +	mutex_init(&dw_dev->lock);
+> +
+> +	/* Get config clock value */
+
+The comment is not needed, it's clear from the code we are getting the clock 
+and its rate.
+
+> +	dw_dev->clk = devm_clk_get(dev, "cfg-clk");
+
+As Rob suggested, it would be good to change name of the clock to just "cfg".
+
+> +	if (IS_ERR(dw_dev->clk)) {
+> +		dev_err(dev, "failed to get cfg-clk\n");
+> +		return PTR_ERR(dw_dev->clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(dw_dev->clk);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable cfg-clk\n");
+> +		return ret;
+> +	}
+> +
+> +	dw_dev->cfg_clk = clk_get_rate(dw_dev->clk) / 1000000;
+
+1000000U ?
+
+> +	if (!dw_dev->cfg_clk) {
+> +		dev_err(dev, "invalid cfg-clk frequency\n");> +		ret = -EINVAL;
+> +		goto err_clk;
+> +	}
+> +
+> +	/* V4L2 initialization */
+> +	sd = &dw_dev->sd;
+> +	v4l2_subdev_init(sd, &dw_phy_sd_ops);
+> +	strlcpy(sd->name, dev_name(dev), sizeof(sd->name));
+> +	sd->dev = dev;
+> +
+> +	/* Force phy disabling */
+> +	dw_dev->phy_enabled = true;
+> +	dw_phy_disable(dw_dev);
+> +
+> +	/* Register subdev */
+> +	ret = v4l2_async_register_subdev(sd);
+> +	if (ret) {
+> +		dev_err(dev, "failed to register subdev\n");
+> +		goto err_clk;
+> +	}
+> +
+> +	/* All done */
+
+Superfluous comment.
+
+> +	dev_set_drvdata(dev, sd);
+> +	dev_info(dev, "driver probed (cfg-clk=%d)\n", dw_dev->cfg_clk);
+
+This should be at dev_dbg() level.
+
+> +	return 0;
+> +
+> +err_clk:
+> +	clk_disable_unprepare(dw_dev->clk);
+> +	return ret;
+> +}
+> +
+> +static int dw_phy_remove(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+
+The assignment here could be dropped and &pdev->dev used directly below.
+
+> +	struct v4l2_subdev *sd = dev_get_drvdata(dev);
+
+> +	struct dw_phy_dev *dw_dev = to_dw_dev(sd);
+> +
+> +	v4l2_async_unregister_subdev(sd);
+> +	clk_disable_unprepare(dw_dev->clk);
+
+> +	dev_info(dev, "driver removed\n");
+
+This should be at dev_dbg() level or dropped entirely.
+
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id dw_hdmi_phy_e405_id[] = {
+> +	{ .compatible = "snps,dw-hdmi-phy-e405" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, dw_hdmi_phy_e405_id);
+
+--
+Regards,
+Sylwester
