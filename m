@@ -1,301 +1,143 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2 2/2] i2c: Add Spreadtrum I2C controller driver
-Date: Sun, 25 Jun 2017 18:06:44 +0300
-Message-ID: <CAHp75Vem3mG6BW4WdPOZAXz+m+2ANeJ8qiS5GH1z-BYUnTq9Og@mail.gmail.com>
-References: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1498029380.git.baolin.wang@spreadtrum.com>
- <01e8aa0450b294c0a9b4aeefcf99f35ced953fc9.1498029380.git.baolin.wang@spreadtrum.com>
+From: Anand Moon <linux.amoon-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: exynos: Exynos5422 Odroid-XU* incomplete
+ thermal-zones definition
+Date: Sun, 25 Jun 2017 20:48:13 +0530
+Message-ID: <CANAwSgQV6rtbx=LqWxRS+_sRctWiU1L=np7cZU8hTYg_V8Fbnw@mail.gmail.com>
+References: <20170623210913.ugutgop7ratwolfy@inc028000032.lancs.ac.uk>
+ <CANAwSgSN5zi72m1td-NAaCPGLUZybSdefrKAo2t9v-gOXn3tGA@mail.gmail.com> <20170625133134.g4iinztozsp4p2aa@kozik-lap>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <01e8aa0450b294c0a9b4aeefcf99f35ced953fc9.1498029380.git.baolin.wang@spreadtrum.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@spreadtrum.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170625133134.g4iinztozsp4p2aa@kozik-lap>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Willy Wolff <willy.mh.wolff-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Javier Martinez Canillas <javier-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 10:23 AM, Baolin Wang
-<baolin.wang@spreadtrum.com> wrote:
-> This patch adds the I2C controller driver for Spreadtrum platform.
-
-Needs more work.
-See my comments below.
-
-
-
-> +#include <linux/init.h>
-
-> +#include <linux/module.h>
-
-Since your answer to the comment about arch_initcall you perhaps need
-to get rid of tristate (use bool) and drop module.h here and all
-leftovers like MODULE_*() calls.
-
-> +#include <linux/slab.h>
-
-Should we include this still explicitly (after kernel.h)?
-
-> +
-> +#define I2C_CTL                        0x0
-> +#define I2C_ADDR_CFG           0x4
-> +#define I2C_COUNT              0x8
-> +#define I2C_RX                 0xC
-> +#define I2C_TX                 0x10
-> +#define I2C_STATUS             0x14
-> +#define I2C_HSMODE_CFG         0x18
-> +#define I2C_VERSION            0x1C
-> +#define ADDR_DVD0              0x20
-> +#define ADDR_DVD1              0x24
-> +#define ADDR_STA0_DVD          0x28
-> +#define ADDR_RST               0x2C
-
-1. Please, use fixed sized values
-0x00 and so on.
-2. Please, low case.
-
-> +#define SPRD_I2C_TIMEOUT       (msecs_to_jiffies(1000))
-
-Redundant parens.
-
-> +static void sprd_i2c_dump_reg(struct sprd_i2c *i2c_dev)
-
-If you switch your driver to regmap API, you may drop this function completely.
-
-> +               writel(tmp & (~STP_EN), i2c_dev->base + I2C_CTL);
-
-Redundant parens.
-Also pay attention to other similar places.
-
-
-> +static void sprd_i2c_write_bytes(struct sprd_i2c *i2c_dev, u8 *buf, u32 len)
-
-So, isn't better to provide a writesb(), readsb() to ia64 instead of
-doing below?
-
-> +{
-> +       u32 i = 0;
-> +
-> +       for (i = 0; i < len; i++) {
-> +               writel(buf[i], i2c_dev->base + I2C_TX);
-
-> +               dev_dbg(&i2c_dev->adap.dev, "write bytes[%d] = %x\n", i, buf[i]);
-
-Moreover, don't waste lines in the kernel log buffer by doing this.
-Choose either
-
-%*ph (up to 64 bytes)
-
-or
-
-print_hex_dump()
-
-(Same for _read_bytes() below)
-
-> +       }
-> +}
-
-> +static void sprd_i2c_set_full_thld(struct sprd_i2c *i2c_dev, u32 full_thld)
-> +{
-> +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-> +
-> +       tmp &= ~(0xf << FIFO_AF_LVL);
-
-Magic.
-Define it using GENMASK()
-
-> +       tmp |= (full_thld << FIFO_AF_LVL);
-
-Redundant parens.
-
-> +       tmp &= ~(0xf << FIFO_AE_LVL);
-> +       tmp |= (empty_thld << FIFO_AE_LVL);
-
-Same.
-
-> +static void sprd_i2c_opt_mode(struct sprd_i2c *i2c_dev, int rw)
-> +{
-> +       unsigned int cmd = readl(i2c_dev->base + I2C_CTL) & (~I2C_MODE);
-
-Redundant parens.
-
-> +       writel((cmd | rw << 3), i2c_dev->base + I2C_CTL);
-
-Ditto.
-
-It's a C, and not a LISP :-)
-
-> +}
-
-> +static void sprd_i2c_data_transfer(struct sprd_i2c *i2c_dev)
-> +{
-
-> +       if ((msg->flags & I2C_M_RD)) {
-
-Redundant parens.
-
-> +       /* Reset rx/tx fifos */
-
-Noise.
-
-> +       /* Set device address */
-
-Ditto.
-
-> +       /* Set I2C read or write bytes count */
-
-Ditto.
-
-> +       if ((msg->flags & I2C_M_RD)) {
-> +               /* Set read operation */
-> +               sprd_i2c_opt_mode(i2c_dev, 1);
-> +               /* Last byte transmission should excute stop operation */
-> +               sprd_i2c_send_stop(i2c_dev, 1);
-
-Same comments as above.
-
-> +       } else {
-
-> +               /* Set write operation */
-
-Noise.
-
-> +               /* Last byte transmission should excute stop operation */
-> +               if (is_last_msg)
-> +                       sprd_i2c_send_stop(i2c_dev, 1);
-> +               else
-> +                       sprd_i2c_send_stop(i2c_dev, 0);
-
-    sprd_i2c_send_stop(i2c_dev, !!is_last_msg);
-
-Though, consider to make is_last_msg boolean.
-
-> +static int sprd_i2c_master_xfer(struct i2c_adapter *i2c_adap,
-> +                               struct i2c_msg *msgs, int num)
-> +{
-> +       struct sprd_i2c *i2c_dev = i2c_adap->algo_data;
-> +       int im, ret;
-> +
-> +       ret = pm_runtime_get_sync(i2c_dev->dev);
-> +       if (ret < 0)
-> +               return ret;
-> +
-
-> +       for (im = 0; im != num; im++)
-
-im < num - 1, and...
-
-        ret = sprd_i2c_handle_msg(i2c_adap, &msgs[im], 0);
-... ret = sprd_i2c_handle_msg(i2c_adap, &msgs[im++], 1);
-
-...and we clearly see that you have messed up with returned code on
-each itteration here
-
-> +       pm_runtime_mark_last_busy(i2c_dev->dev);
-> +       pm_runtime_put_autosuspend(i2c_dev->dev);
-
-
-> +       return (ret >= 0) ? im : ret;
-
-Usual pattern is
-ret < 0 ? ret : im;
-
-
-> +static void sprd_i2c_set_clk(struct sprd_i2c *i2c_dev, unsigned int freq)
-> +{
-> +       u32 apb_clk = i2c_dev->src_clk;
-> +       u32 i2c_dvd = apb_clk / (4 * freq) - 1;
-> +       u32 high = ((i2c_dvd << 1) * 2) / 5;
-> +       u32 low = ((i2c_dvd << 1) * 3) / 5;
-
-> +       u32 div0 = (high & 0xffff) << 16 | (low & 0xffff);
-> +       u32 div1 =  (high & 0xffff0000) | ((low & 0xffff0000) >> 16);
-
-Magic masks all over.
-
-Also it needs a comment what formula is used and how.
-
-> +
-> +       writel(div0, i2c_dev->base + ADDR_DVD0);
-> +       writel(div1, i2c_dev->base + ADDR_DVD1);
-> +
-
-> +       if (freq == 400000)
-> +               writel((6 * apb_clk) / 10000000, i2c_dev->base + ADDR_STA0_DVD);
-> +       else if (freq == 100000)
-> +               writel((4 * apb_clk) / 1000000, i2c_dev->base + ADDR_STA0_DVD);
-
-What about 3400000?
-
-What about the rest of the speeds, shouldn't you return an error from here?
-
-> +}
-> +
-> +static void sprd_i2c_enable(struct sprd_i2c *i2c_dev)
-> +{
-> +       unsigned int tmp = readl(i2c_dev->base + I2C_CTL);
-> +
-> +       tmp &= ~(I2C_EN | I2C_TRIM_OPT | (0xF << FIFO_AF_LVL) |
-> +                (0xF << FIFO_AE_LVL));
-
-Magic masks (I saw them already above).
-
-
-> +       /* Set rx fifo full data threshold */
-
-Drop noise comments. They don't bring any value since you have nice
-function names.
-
-> +       sprd_i2c_set_full_thld(i2c_dev, I2C_FIFO_FULL_THLD);
-> +       /* Set tx fifo empty data threshold */
-> +       sprd_i2c_set_empty_thld(i2c_dev, I2C_FIFO_EMPTY_THLD);
-> +
-> +       sprd_i2c_set_clk(i2c_dev, i2c_dev->bus_freq);
-> +       /* Reset rx/tx fifo */
-> +       sprd_i2c_reset_fifo(i2c_dev);
-> +       sprd_i2c_clear_irq(i2c_dev);
-
-> +static int sprd_i2c_clk_init(struct sprd_i2c *i2c_dev)
-> +{
-> +       struct clk *clk_i2c, *clk_parent;
-> +       struct device_node *np = i2c_dev->adap.dev.of_node;
-> +
-
-> +       clk_i2c = of_clk_get_by_name(np, "i2c");
-
-What the issue to use resource agnostic API here, i.e. devm_clk_get() ?
-
-> +       clk_parent = of_clk_get_by_name(np, "source");
-
-Ditto.
-
-> +       i2c_dev->clk = of_clk_get_by_name(np, "enable");
-
-Ditto.
-
-> +       if (!of_property_read_u32(dev->of_node, "clock-frequency", &prop))
-> +               i2c_dev->bus_freq = prop;
-> +
-> +       sprd_i2c_clk_init(i2c_dev);
-> +       platform_set_drvdata(pdev, i2c_dev);
-> +
-> +       ret = clk_prepare_enable(i2c_dev->clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       sprd_i2c_enable(i2c_dev);
-> +
-
-> +error:
-
-I would put it as
-
-err_rpm_put:
-
-> +       pm_runtime_put_noidle(i2c_dev->dev);
-> +       pm_runtime_disable(i2c_dev->dev);
-> +       clk_disable_unprepare(i2c_dev->clk);
-> +       return ret;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
+Hi Krzystof,
+
+On 25 June 2017 at 19:01, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Sun, Jun 25, 2017 at 06:53:24PM +0530, Anand Moon wrote:
+>> Hi Willy,
+>>
+>> On 24 June 2017 at 02:39, Willy Wolff <willy.mh.wolff-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > Odroid XU*-familly boards has thermal sensors per A15 cores, but the actual
+>> >  thermal-zones define only cooling-maps action for cpu0.
+>> >
+>> > If the application is running on all cores but core4 (first core of the A15
+>> >  cluster), the CPU can reach high temperature without any proper cooling
+>> >  action.
+>> >
+>> > As already discus in prior mail, and on IRC, it's a quit big code
+>> > duplication, but I don't found the write way to express that in a better
+>> >  way.
+>> >
+>> > The situation for this board is that we have multiple sensors, but
+>> >  matching cooling devices for these sensors act for the same physical
+>> >  device (FAN and A15 cluster, as each core of the cluster share the same
+>> >  frequency).
+>> > In fact, of-thermal.c:473:thermal_zone_of_sensor_register() can't use
+>> > multiple sensors for one single thermal zone.
+>> > This patch follow the path taken in arch/arm/boot/dts/qcom-apq8084.dtsi:97
+>> >
+>> > I'm interested to extending the thermal driver, but it will takes time.
+>> >  So this is a workaround before refactoring the driver.
+>> > If somebody knows how to write it better, any advice and suggestions
+>> > are more than welcome.
+>> >
+>> > Also, the comment for cpu_alert4 in cooling-maps definition is not
+>> > accurate, 11 steps for A15 correspond to 700MHz, not 600MHz.
+>> >
+>>
+>> [snip]
+>>
+>> Few point to from my side.
+>>
+>> 1: We should also increase the trip points temperature so that it can
+>> throttle at high temperature.
+>
+> It is not related to this problem. If you wish to address different
+> problem related to non-optimal choice of temperature, then please send a
+> separate patch explaining chosen values.
+
+Certain task  tends to run slow in current thermal zone setting.
+If needed I will send a patch for this.
+
+>> 2: We should also increase the tips from 4 to 8 to support different
+>> cluster of cpu's.
+>
+> There are 4 CPU thermal zones on Exynos5422. What do you want to expand?
+
+What I meant was to support more trip point to address below.
+[    2.776320] exynos-tmu 100a0000.tmu: More trip points than
+supported by this TMU.
+[    2.782370] exynos-tmu 100a0000.tmu: 2 trip points should be
+configured in polling mode.
+
+>> 3: To avoid duplication of cooling-maps we can make tmu sensor work
+>> differently for cluster of cpu's
+>>       tmu_cpu0: handle pwm-fan control.
+>>       tmu_cpu1: handle cpu[0-3] cpufreq mapping.
+>>       tmu_cpu2: handle cpu[4-7] cpufreq mapping.
+>
+> I miss the point behind this. Why fan should work only when CPU4
+> (tmu_cpu0) is heated and not CPU5-7 (rest of cpu tmu's)?
+
+Ok fan should work on all the thermal zone. To avoid thermal shutdown.
+
+But I want to avoid scaling down of all the cores of cpu to low freq
+as cooling-maps cross the alert temperature. For below example.
+----
+ map3 {
+              trip = <&cpu1_alert3>;
+              cooling-device = <&cpu0 0 2>;
+ };
+ map4 {
+              trip = <&cpu1_alert3>;
+              cooling-device = <&cpu4 0 2>;
+ };
+
+ map5 {
+              trip = <&cpu1_alert4>;
+              cooling-device = <&cpu0 3 7>;
+ };
+ map6 {
+             trip = <&cpu1_alert4>;
+             cooling-device = <&cpu4 3 12>;
+ };
+
+What I want to configure thermal zone as.
+
+cpu0_thermal: cpu0-thermal {
+     configure cluster of cpu[0-3]
+     {
+        tips
+     }
+     cooling map
+     {
+         device handle cpu[0-3] with frequency scaling at particular
+alert temperature.
+     }
+}
+
+cpu1_thermal: cpu1-thermal {
+     configure cluster of cpu[4-7]
+     {
+        tips
+     }
+     cooling map
+     {
+         device handle cpu[4-7] with frequency scaling at particular
+alert temperature.
+     }
+}
+
+We can chose to configure rest of the thermal-zone on this approach.
+Please share your thoughts.
+
+Best Regards
+-Anand Moon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
