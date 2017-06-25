@@ -1,37 +1,128 @@
-From: kbuild test robot <lkp-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v1 6/6] [media] ov9650: add support of OV9655 variant
-Date: Mon, 26 Jun 2017 00:07:08 +0800
-Message-ID: <201706252313.0XcqTjb4%fengguang.wu@intel.com>
-References: <1498143942-12682-7-git-send-email-hugues.fruchet@st.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] iio: accel: st_accel_spi: add OF capability to
+ st_accel_spi
+Date: Sun, 25 Jun 2017 17:14:04 +0100
+Message-ID: <20170625171404.4ee965c7@kernel.org>
+References: <20170625152413.22325-1-lorenzo.bianconi@st.com>
+        <20170625152413.22325-2-lorenzo.bianconi@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498143942-12682-7-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kbuild-all-JC7UmRfGjtg@public.gmane.org, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170625152413.22325-2-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hugues,
+On Sun, 25 Jun 2017 17:24:10 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-[auto build test WARNING on linuxtv-media/master]
-[also build test WARNING on v4.12-rc6 next-20170623]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> Add device tree support for LIS3DH, LSM330D, LSM330DL, LSM330DLC,
+> LIS331DLH, LSM330, LSM303AGR, LIS2DH12, LIS3L02DQ, LNG2DM accel sensors.
+> 
+> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+> ---
+>  drivers/iio/accel/st_accel_spi.c | 67 +++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 59 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/st_accel_spi.c b/drivers/iio/accel/st_accel_spi.c
+> index d13742edee0e..a8b61daa83d7 100644
+> --- a/drivers/iio/accel/st_accel_spi.c
+> +++ b/drivers/iio/accel/st_accel_spi.c
+> @@ -18,6 +18,63 @@
+>  #include <linux/iio/common/st_sensors_spi.h>
+>  #include "st_accel.h"
+>  
+> +#ifdef CONFIG_OF
+> +/*
+> + * For new single-chip sensors use <device_name> as compatible string.
+> + * For old single-chip devices keep <device_name>-accel to maintain
+> + * compatibility
+> + */
+> +static const struct of_device_id st_accel_of_match[] = {
+> +	{
+> +		.compatible = "st,lis302dl-spi"
+Leaving this without some explanation of why it doesn't have
+.data set requires a comment at least. It will result
+in the name never being set - or ending up as
+the default spi->modalias anyway.. Presumably not what is
+desired?
 
-url:    https://github.com/0day-ci/linux/commits/Hugues-Fruchet/Add-support-of-OV9655-camera/20170625-201153
-base:   git://linuxtv.org/media_tree.git master
-
-
-coccinelle warnings: (new ones prefixed by >>)
-
->> drivers/media/i2c/ov9650.c:2034:2-3: Unneeded semicolon
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If I have missed something about why this works, please
+add a comment here in v3 to explain it.
+> +	},
+> +	{
+> +		.compatible = "st,lis3dh-accel",
+> +		.data = LIS3DH_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lsm330d-accel",
+> +		.data = LSM330D_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lsm330dl-accel",
+> +		.data = LSM330DL_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lsm330dlc-accel",
+> +		.data = LSM330DLC_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lis331dlh-accel",
+> +		.data = LIS331DLH_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lsm330-accel",
+> +		.data = LSM330_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lsm303agr-accel",
+> +		.data = LSM303AGR_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lis2dh12-accel",
+> +		.data = LIS2DH12_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lis3l02dq",
+> +		.data = LIS3L02DQ_ACCEL_DEV_NAME,
+> +	},
+> +	{
+> +		.compatible = "st,lng2dm-accel",
+> +		.data = LNG2DM_ACCEL_DEV_NAME,
+> +	},
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, st_accel_of_match);
+> +#else
+> +#define st_accel_of_match	NULL
+> +#endif
+> +
+>  static int st_accel_spi_probe(struct spi_device *spi)
+>  {
+>  	struct iio_dev *indio_dev;
+> @@ -30,6 +87,8 @@ static int st_accel_spi_probe(struct spi_device *spi)
+>  
+>  	adata = iio_priv(indio_dev);
+>  
+> +	st_sensors_of_name_probe(&spi->dev, st_accel_of_match,
+> +				 spi->modalias, sizeof(spi->modalias));
+>  	st_sensors_spi_configure(indio_dev, spi, adata);
+>  
+>  	err = st_accel_common_probe(indio_dev);
+> @@ -61,14 +120,6 @@ static const struct spi_device_id st_accel_id_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(spi, st_accel_id_table);
+>  
+> -#ifdef CONFIG_OF
+> -static const struct of_device_id st_accel_of_match[] = {
+> -	{ .compatible = "st,lis302dl-spi" },
+> -	{}
+> -};
+> -MODULE_DEVICE_TABLE(of, st_accel_of_match);
+> -#endif
+> -
+>  static struct spi_driver st_accel_driver = {
+>  	.driver = {
+>  		.name = "st-accel-spi",
