@@ -1,135 +1,153 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH] ARM: dts: exynos: Exynos5422 Odroid-XU* incomplete
- thermal-zones definition
-Date: Sun, 25 Jun 2017 23:29:54 +0530
-Message-ID: <CANAwSgQoSQCoDBGd3dS=m0MtXWsbFvpa6Jp+wNEYGqJAogFQ8w@mail.gmail.com>
-References: <20170623210913.ugutgop7ratwolfy@inc028000032.lancs.ac.uk>
- <CANAwSgSN5zi72m1td-NAaCPGLUZybSdefrKAo2t9v-gOXn3tGA@mail.gmail.com>
- <20170625133134.g4iinztozsp4p2aa@kozik-lap> <CANAwSgQV6rtbx=LqWxRS+_sRctWiU1L=np7cZU8hTYg_V8Fbnw@mail.gmail.com>
- <20170625152911.kfq7vnxyhcqvfxpu@kozik-lap> <CANAwSgSZyhf-7BjwqoSAxBg=UDzCwEG=thpASEmZ=p=N5gpFQw@mail.gmail.com>
- <20170625171921.sijfwgnuk5cwdi74@kozik-lap>
+From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] iio: accel: st_accel_spi: add OF capability to st_accel_spi
+Date: Sun, 25 Jun 2017 18:58:35 +0200
+Message-ID: <140A7A0D-35DB-433F-8861-2D4400AA7942@jic23.retrosnub.co.uk>
+References: <20170625152413.22325-1-lorenzo.bianconi@st.com> <20170625152413.22325-2-lorenzo.bianconi@st.com> <20170625171404.4ee965c7@kernel.org> <CAA2SeNKs8VZehYWpGjnPzTn4N5dzK6VxQs5=e51p2cXVWzPkig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20170625171921.sijfwgnuk5cwdi74@kozik-lap>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Willy Wolff <willy.mh.wolff@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Kukjin Kim <kgene@kernel.org>, Javier Martinez Canillas <javier@osg.samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA2SeNKs8VZehYWpGjnPzTn4N5dzK6VxQs5=e51p2cXVWzPkig-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
 
-On 25 June 2017 at 22:49, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> On Sun, Jun 25, 2017 at 10:25:32PM +0530, Anand Moon wrote:
->> Hi Krzysztof
->>
->> On 25 June 2017 at 20:59, Krzysztof Kozlowski <krzk@kernel.org> wrote:
->> > On Sun, Jun 25, 2017 at 08:48:13PM +0530, Anand Moon wrote:
->> >> Hi Krzystof,
->> >> >> 2: We should also increase the tips from 4 to 8 to support different
->> >> >> cluster of cpu's.
->> >> >
->> >> > There are 4 CPU thermal zones on Exynos5422. What do you want to expand?
->> >>
->> >> What I meant was to support more trip point to address below.
->> >> [    2.776320] exynos-tmu 100a0000.tmu: More trip points than
->> >> supported by this TMU.
->> >> [    2.782370] exynos-tmu 100a0000.tmu: 2 trip points should be
->> >> configured in polling mode.
->> >>
->> >
->> > I do not understand what you want to achieve. I added 2 trip points in
->> > polling mode for the CPU cooling mode. Just describe the problem and
->> > send the patch - it is the best way to explain one's thought...
->> >
->> >> >> 3: To avoid duplication of cooling-maps we can make tmu sensor work
->> >> >> differently for cluster of cpu's
->> >> >>       tmu_cpu0: handle pwm-fan control.
->> >> >>       tmu_cpu1: handle cpu[0-3] cpufreq mapping.
->> >> >>       tmu_cpu2: handle cpu[4-7] cpufreq mapping.
->> >> >
->> >> > I miss the point behind this. Why fan should work only when CPU4
->> >> > (tmu_cpu0) is heated and not CPU5-7 (rest of cpu tmu's)?
->> >>
->> >> Ok fan should work on all the thermal zone. To avoid thermal shutdown.
->> >>
->> >> But I want to avoid scaling down of all the cores of cpu to low freq
->> >> as cooling-maps cross the alert temperature. For below example.
->> >> ----
->> >>  map3 {
->> >>               trip = <&cpu1_alert3>;
->> >>               cooling-device = <&cpu0 0 2>;
->> >>  };
->> >>  map4 {
->> >>               trip = <&cpu1_alert3>;
->> >>               cooling-device = <&cpu4 0 2>;
->> >>  };
->> >>
->> >>  map5 {
->> >>               trip = <&cpu1_alert4>;
->> >>               cooling-device = <&cpu0 3 7>;
->> >>  };
->> >>  map6 {
->> >>              trip = <&cpu1_alert4>;
->> >>              cooling-device = <&cpu4 3 12>;
->> >>  };
->> >>
->> >> What I want to configure thermal zone as.
->> >>
->> >> cpu0_thermal: cpu0-thermal {
->> >>      configure cluster of cpu[0-3]
->> >>      {
->> >>         tips
->> >>      }
->> >>      cooling map
->> >>      {
->> >>          device handle cpu[0-3] with frequency scaling at particular
->> >> alert temperature.
->> >>      }
->> >> }
->> >
->> > cpu0_thermal is attached to tmu_cpu0 which is the temperature of CPU4
->> > (first big core). I do not see reason behind connecting thermal zone
->> > (thus temperature) of CPU4 with frequency of LITTLE cluster (CPU0-3). In
->> > case of busy CPU4, you will scale down CPU0-3. Does not make sense.
->> >
->>
->> Both the cpu cluster are independent and have different cpu-freqency scaling.
->> that is the reason to for my changes.
->
-> Still does not make sense. Big is busy, LITTLE is doing nothing and you
-> want to scale down LITTLE. No reason.
->
->>
->> >> cpu1_thermal: cpu1-thermal {
->> >>      configure cluster of cpu[4-7]
->> >>      {
->> >>         tips
->> >>      }
->> >>      cooling map
->> >>      {
->> >>          device handle cpu[4-7] with frequency scaling at particular
->> >> alert temperature.
->> >>      }
->> >> }
->> >>
->> >> We can chose to configure rest of the thermal-zone on this approach.
->> >> Please share your thoughts.
->> >
->> > I am sorry, I do not understand the idea, the problem nor the solution.
->> >
->> > Best regards,
->> > Krzysztof
->> >
->>
->> Sorry for not able to express my self in technical terms.
->> my changes are based on exynos5433-tmu at this moment.
->> Just attaching small patch to share my point.
->
-> On Odroid XU3-family, all TMU interrupt-driven configureable trip points
-> are configured. Why are you referring to Exynos5433?
 
-Because both these ARCH are big.Little.
+On 25 June 2017 18:20:33 CEST, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sun, 25 Jun 2017 17:24:10 +0200
+>> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>
+>>> Add device tree support for LIS3DH, LSM330D, LSM330DL, LSM330DLC,
+>>> LIS331DLH, LSM330, LSM303AGR, LIS2DH12, LIS3L02DQ, LNG2DM accel
+>sensors.
+>>>
+>>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+>>> ---
+>>>  drivers/iio/accel/st_accel_spi.c | 67
+>+++++++++++++++++++++++++++++++++++-----
+>>>  1 file changed, 59 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/iio/accel/st_accel_spi.c
+>b/drivers/iio/accel/st_accel_spi.c
+>>> index d13742edee0e..a8b61daa83d7 100644
+>>> --- a/drivers/iio/accel/st_accel_spi.c
+>>> +++ b/drivers/iio/accel/st_accel_spi.c
+>>> @@ -18,6 +18,63 @@
+>>>  #include <linux/iio/common/st_sensors_spi.h>
+>>>  #include "st_accel.h"
+>>>
+>>> +#ifdef CONFIG_OF
+>>> +/*
+>>> + * For new single-chip sensors use <device_name> as compatible
+>string.
+>>> + * For old single-chip devices keep <device_name>-accel to maintain
+>>> + * compatibility
+>>> + */
+>>> +static const struct of_device_id st_accel_of_match[] = {
+>>> +     {
+>>> +             .compatible = "st,lis302dl-spi"
+>> Leaving this without some explanation of why it doesn't have
+>> .data set requires a comment at least. It will result
+>> in the name never being set - or ending up as
+>> the default spi->modalias anyway.. Presumably not what is
+>> desired?
+>>
+>> If I have missed something about why this works, please
+>> add a comment here in v3 to explain it.
+>
+>Right, it will not work, but it needs a device (lis3lv02dl) that is
+>not currently support in st_accel_spi.
+>So I preferred to fix OF capability for currently supported devices
+>and add missing ones (LIS3LV02DL, LIS331DL and H3LIS331DL)
+>in a subsequent patch. What do you think? Is it better to squash the
+>two patches together?
+Up to you, but if separate squash this element for now.
+>
+>Regards,
+>Lorenzo
+>
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lis3dh-accel",
+>>> +             .data = LIS3DH_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lsm330d-accel",
+>>> +             .data = LSM330D_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lsm330dl-accel",
+>>> +             .data = LSM330DL_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lsm330dlc-accel",
+>>> +             .data = LSM330DLC_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lis331dlh-accel",
+>>> +             .data = LIS331DLH_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lsm330-accel",
+>>> +             .data = LSM330_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lsm303agr-accel",
+>>> +             .data = LSM303AGR_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lis2dh12-accel",
+>>> +             .data = LIS2DH12_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lis3l02dq",
+>>> +             .data = LIS3L02DQ_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {
+>>> +             .compatible = "st,lng2dm-accel",
+>>> +             .data = LNG2DM_ACCEL_DEV_NAME,
+>>> +     },
+>>> +     {}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, st_accel_of_match);
+>>> +#else
+>>> +#define st_accel_of_match    NULL
+>>> +#endif
+>>> +
+>>>  static int st_accel_spi_probe(struct spi_device *spi)
+>>>  {
+>>>       struct iio_dev *indio_dev;
+>>> @@ -30,6 +87,8 @@ static int st_accel_spi_probe(struct spi_device
+>*spi)
+>>>
+>>>       adata = iio_priv(indio_dev);
+>>>
+>>> +     st_sensors_of_name_probe(&spi->dev, st_accel_of_match,
+>>> +                              spi->modalias,
+>sizeof(spi->modalias));
+>>>       st_sensors_spi_configure(indio_dev, spi, adata);
+>>>
+>>>       err = st_accel_common_probe(indio_dev);
+>>> @@ -61,14 +120,6 @@ static const struct spi_device_id
+>st_accel_id_table[] = {
+>>>  };
+>>>  MODULE_DEVICE_TABLE(spi, st_accel_id_table);
+>>>
+>>> -#ifdef CONFIG_OF
+>>> -static const struct of_device_id st_accel_of_match[] = {
+>>> -     { .compatible = "st,lis302dl-spi" },
+>>> -     {}
+>>> -};
+>>> -MODULE_DEVICE_TABLE(of, st_accel_of_match);
+>>> -#endif
+>>> -
+>>>  static struct spi_driver st_accel_driver = {
+>>>       .driver = {
+>>>               .name = "st-accel-spi",
+>>
 
-Best Regards
--Anand
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity.
