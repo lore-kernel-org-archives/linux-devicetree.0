@@ -1,166 +1,71 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] iio: accel: st_accel_spi: add OF capability to st_accel_spi
-Date: Sun, 25 Jun 2017 22:24:48 +0200
-Message-ID: <CAA2SeNKPtOZ8P5ioT1a--Voa_GAqttRrpeh4zCk5SWXvAZ17-w@mail.gmail.com>
-References: <20170625152413.22325-1-lorenzo.bianconi@st.com>
- <20170625152413.22325-2-lorenzo.bianconi@st.com> <20170625171404.4ee965c7@kernel.org>
- <CAA2SeNKs8VZehYWpGjnPzTn4N5dzK6VxQs5=e51p2cXVWzPkig@mail.gmail.com> <140A7A0D-35DB-433F-8861-2D4400AA7942@jic23.retrosnub.co.uk>
+From: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH] iio: dac: DS4424: add Maxim DS4422/DS4424 DAC driver
+ support (fwd)
+Date: Sun, 25 Jun 2017 16:27:16 -0400 (EDT)
+Message-ID: <alpine.DEB.2.20.1706251625510.3109@hadrien>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <140A7A0D-35DB-433F-8861-2D4400AA7942-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, vilhelm.gray@gmail.com, linus.walleij@linaro.org, jeff.dagenais@gmail.com, fabrice.gasnier@st.com, gwenhael.goavec-merou@trabucayre.com, peda@axentia.se, maxime.roussinbelanger@gmail.com, ihkose@gmail.com, Ismail.Kose@maximintegrated.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.orggwenhael.goavec-merou@trabucayre.compeda@axentia.semaxime.roussinbelanger@gmail.comihkose@gmail.comIsmail.Kose@maximintegrated.comlinux-iio@vger.kernel.orgdevicetree@vger.kernel.orglinux-kernel@vger.kernel.org, kbuild-all@01.org
 List-Id: devicetree@vger.kernel.org
 
->
->
-> On 25 June 2017 18:20:33 CEST, Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Sun, 25 Jun 2017 17:24:10 +0200
->>> Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>
->>>> Add device tree support for LIS3DH, LSM330D, LSM330DL, LSM330DLC,
->>>> LIS331DLH, LSM330, LSM303AGR, LIS2DH12, LIS3L02DQ, LNG2DM accel
->>sensors.
->>>>
->>>> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
->>>> ---
->>>>  drivers/iio/accel/st_accel_spi.c | 67
->>+++++++++++++++++++++++++++++++++++-----
->>>>  1 file changed, 59 insertions(+), 8 deletions(-)
->>>>
->>>> diff --git a/drivers/iio/accel/st_accel_spi.c
->>b/drivers/iio/accel/st_accel_spi.c
->>>> index d13742edee0e..a8b61daa83d7 100644
->>>> --- a/drivers/iio/accel/st_accel_spi.c
->>>> +++ b/drivers/iio/accel/st_accel_spi.c
->>>> @@ -18,6 +18,63 @@
->>>>  #include <linux/iio/common/st_sensors_spi.h>
->>>>  #include "st_accel.h"
->>>>
->>>> +#ifdef CONFIG_OF
->>>> +/*
->>>> + * For new single-chip sensors use <device_name> as compatible
->>string.
->>>> + * For old single-chip devices keep <device_name>-accel to maintain
->>>> + * compatibility
->>>> + */
->>>> +static const struct of_device_id st_accel_of_match[] = {
->>>> +     {
->>>> +             .compatible = "st,lis302dl-spi"
->>> Leaving this without some explanation of why it doesn't have
->>> .data set requires a comment at least. It will result
->>> in the name never being set - or ending up as
->>> the default spi->modalias anyway.. Presumably not what is
->>> desired?
->>>
->>> If I have missed something about why this works, please
->>> add a comment here in v3 to explain it.
->>
->>Right, it will not work, but it needs a device (lis3lv02dl) that is
->>not currently support in st_accel_spi.
->>So I preferred to fix OF capability for currently supported devices
->>and add missing ones (LIS3LV02DL, LIS331DL and H3LIS331DL)
->>in a subsequent patch. What do you think? Is it better to squash the
->>two patches together?
-> Up to you, but if separate squash this element for now.
->>
->>Regards,
->>Lorenzo
+Both tests on lines 531-532 are the same.
 
-Ok, I figured out I can fix support for lis302dl without adding new devices.
-I will send a v3 with that fix.
-Regards,
-Lorenzo
+julia
 
->>
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lis3dh-accel",
->>>> +             .data = LIS3DH_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lsm330d-accel",
->>>> +             .data = LSM330D_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lsm330dl-accel",
->>>> +             .data = LSM330DL_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lsm330dlc-accel",
->>>> +             .data = LSM330DLC_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lis331dlh-accel",
->>>> +             .data = LIS331DLH_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lsm330-accel",
->>>> +             .data = LSM330_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lsm303agr-accel",
->>>> +             .data = LSM303AGR_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lis2dh12-accel",
->>>> +             .data = LIS2DH12_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lis3l02dq",
->>>> +             .data = LIS3L02DQ_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {
->>>> +             .compatible = "st,lng2dm-accel",
->>>> +             .data = LNG2DM_ACCEL_DEV_NAME,
->>>> +     },
->>>> +     {}
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, st_accel_of_match);
->>>> +#else
->>>> +#define st_accel_of_match    NULL
->>>> +#endif
->>>> +
->>>>  static int st_accel_spi_probe(struct spi_device *spi)
->>>>  {
->>>>       struct iio_dev *indio_dev;
->>>> @@ -30,6 +87,8 @@ static int st_accel_spi_probe(struct spi_device
->>*spi)
->>>>
->>>>       adata = iio_priv(indio_dev);
->>>>
->>>> +     st_sensors_of_name_probe(&spi->dev, st_accel_of_match,
->>>> +                              spi->modalias,
->>sizeof(spi->modalias));
->>>>       st_sensors_spi_configure(indio_dev, spi, adata);
->>>>
->>>>       err = st_accel_common_probe(indio_dev);
->>>> @@ -61,14 +120,6 @@ static const struct spi_device_id
->>st_accel_id_table[] = {
->>>>  };
->>>>  MODULE_DEVICE_TABLE(spi, st_accel_id_table);
->>>>
->>>> -#ifdef CONFIG_OF
->>>> -static const struct of_device_id st_accel_of_match[] = {
->>>> -     { .compatible = "st,lis302dl-spi" },
->>>> -     {}
->>>> -};
->>>> -MODULE_DEVICE_TABLE(of, st_accel_of_match);
->>>> -#endif
->>>> -
->>>>  static struct spi_driver st_accel_driver = {
->>>>       .driver = {
->>>>               .name = "st-accel-spi",
->>>
->
-> --
-> Sent from my Android device with K-9 Mail. Please excuse my brevity.
+---------- Forwarded message ----------
+Date: Mon, 26 Jun 2017 04:19:55 +0800
+From: kbuild test robot <fengguang.wu@intel.com>
+To: kbuild@01.org
+Cc: Julia Lawall <julia.lawall@lip6.fr>
+Subject: Re: [PATCH] iio: dac: DS4424: add Maxim DS4422/DS4424 DAC driver
+    support
 
+Hi Ismail,
 
+[auto build test WARNING on iio/togreg]
+[also build test WARNING on v4.12-rc6 next-20170623]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
--- 
-UNIX is Sexy: who | grep -i blonde | talk; cd ~; wine; talk; touch;
-unzip; touch; strip; gasp; finger; gasp; mount; fsck; more; yes; gasp;
-umount; make clean; sleep
+url:    https://github.com/0day-ci/linux/commits/Ismail-Kose/iio-dac-DS4424-add-Maxim-DS4422-DS4424-DAC-driver-support/20170626-020351
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+:::::: branch date: 2 hours ago
+:::::: commit date: 2 hours ago
+
+>> drivers/iio/dac/ds4424.c:531:5-41: duplicated argument to && or ||
+
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 9f3baa7b21297c1311b902cb3643fb77b7683e05
+vim +531 drivers/iio/dac/ds4424.c
+
+9f3baa7b Ismail H. Kose 2017-06-23  515
+9f3baa7b Ismail H. Kose 2017-06-23  516  	pr_info("ds4424 max-picoamp: %d, ifs-scale: %d\n",
+9f3baa7b Ismail H. Kose 2017-06-23  517  			data->max_picoamp, data->ifs_scale);
+9f3baa7b Ismail H. Kose 2017-06-23  518
+9f3baa7b Ismail H. Kose 2017-06-23  519  	count = of_property_count_strings(node, "dac-iio-map");
+9f3baa7b Ismail H. Kose 2017-06-23  520  	if (count < 0) {
+9f3baa7b Ismail H. Kose 2017-06-23  521  		pr_info("dac-iio-map not found in dts\n");
+9f3baa7b Ismail H. Kose 2017-06-23  522  		return count;
+9f3baa7b Ismail H. Kose 2017-06-23  523  	}
+9f3baa7b Ismail H. Kose 2017-06-23  524
+9f3baa7b Ismail H. Kose 2017-06-23  525  	ret = of_property_read_string(node, "vcc-supply", &data->vcc_reg_name);
+9f3baa7b Ismail H. Kose 2017-06-23  526  	if (ret < 0) {
+9f3baa7b Ismail H. Kose 2017-06-23  527  		pr_info("DAC vcc-supply is not available in dts\n");
+9f3baa7b Ismail H. Kose 2017-06-23  528  		data->vcc_reg_name = NULL;
+9f3baa7b Ismail H. Kose 2017-06-23  529  	}
+9f3baa7b Ismail H. Kose 2017-06-23  530
+9f3baa7b Ismail H. Kose 2017-06-23 @531  	if (count != DS4424_MAX_DAC_CHANNELS * 3 &&
+9f3baa7b Ismail H. Kose 2017-06-23  532  		count != DS4424_MAX_DAC_CHANNELS * 3) {
+9f3baa7b Ismail H. Kose 2017-06-23  533  		pr_info("Incorrect dac-iio-map in dts. count: %d\n", count);
+9f3baa7b Ismail H. Kose 2017-06-23  534  		return -EINVAL;
+9f3baa7b Ismail H. Kose 2017-06-23  535  	}
+9f3baa7b Ismail H. Kose 2017-06-23  536
+9f3baa7b Ismail H. Kose 2017-06-23  537  	num_ch = count / 3;
+9f3baa7b Ismail H. Kose 2017-06-23  538  	for (i = 0; i < num_ch; i++) {
+9f3baa7b Ismail H. Kose 2017-06-23  539  		ret = of_property_read_string_index(node,
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
