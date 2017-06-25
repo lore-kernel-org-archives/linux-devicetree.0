@@ -1,29 +1,124 @@
-From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] dt-bindings: iio: accel: add LIS3L02DQ sensor device binding
-Date: Sun, 25 Jun 2017 17:50:50 +0200
-Message-ID: <20170625155050.23074-1-lorenzo.bianconi@st.com>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] iio: imu: st_lsm6dsx: support open drain mode
+Date: Sun, 25 Jun 2017 17:01:59 +0100
+Message-ID: <20170625170159.34026350@kernel.org>
+References: <20170621192129.10226-1-lorenzo.bianconi@st.com>
+        <20170621192129.10226-2-lorenzo.bianconi@st.com>
+        <20170624210835.56ffdd1c@kernel.org>
+        <CAA2SeNJ5yPqMiW2tVSc9ZSC5Rt=Q+CRoMibzigjvPyw05Qsr5Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAA2SeNJ5yPqMiW2tVSc9ZSC5Rt=Q+CRoMibzigjvPyw05Qsr5Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo BIANCONI <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
----
- Documentation/devicetree/bindings/iio/st-sensors.txt | 1 +
- 1 file changed, 1 insertion(+)
+On Sun, 25 Jun 2017 11:34:10 +0200
+Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-index e31457ae6f50..1e305f61f3df 100644
---- a/Documentation/devicetree/bindings/iio/st-sensors.txt
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -45,6 +45,7 @@ Accelerometers:
- - st,lis2dh12-accel
- - st,h3lis331dl-accel
- - st,lng2dm-accel
-+- st,lis3l02dq
- 
- Gyroscopes:
- - st,l3g4200d-gyro
--- 
-2.13.1
+> > On Wed, 21 Jun 2017 21:21:28 +0200
+> > Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >  
+> >> Add open drain support in order to share requested IRQ line between
+> >> st_lsm6dsx device and other peripherals
+> >>
+> >> Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>  
+> > Issue when IRQF_RISING and open drain is set.
+> >  
+> 
+> Hi Jonathan,
+> 
+> > Otherwise looks good.  
+> >> ---
+> >>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c | 17 +++++++++++++++++
+> >>  1 file changed, 17 insertions(+)
+> >>
+> >> diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> >> index 2a72acc6e049..e2737dc71b67 100644
+> >> --- a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> >> +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_buffer.c
+> >> @@ -31,6 +31,8 @@
+> >>  #include <linux/iio/iio.h>
+> >>  #include <linux/iio/buffer.h>
+> >>
+> >> +#include <linux/platform_data/st_sensors_pdata.h>
+> >> +
+> >>  #include "st_lsm6dsx.h"
+> >>
+> >>  #define ST_LSM6DSX_REG_FIFO_THL_ADDR         0x06
+> >> @@ -39,6 +41,8 @@
+> >>  #define ST_LSM6DSX_REG_FIFO_DEC_GXL_ADDR     0x08
+> >>  #define ST_LSM6DSX_REG_HLACTIVE_ADDR         0x12
+> >>  #define ST_LSM6DSX_REG_HLACTIVE_MASK         BIT(5)
+> >> +#define ST_LSM6DSX_REG_PP_OD_ADDR            0x12
+> >> +#define ST_LSM6DSX_REG_PP_OD_MASK            BIT(4)
+> >>  #define ST_LSM6DSX_REG_FIFO_MODE_ADDR                0x0a
+> >>  #define ST_LSM6DSX_FIFO_MODE_MASK            GENMASK(2, 0)
+> >>  #define ST_LSM6DSX_FIFO_ODR_MASK             GENMASK(6, 3)
+> >> @@ -417,6 +421,8 @@ static const struct iio_buffer_setup_ops st_lsm6dsx_buffer_ops = {
+> >>
+> >>  int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw)
+> >>  {
+> >> +     struct device_node *np = hw->dev->of_node;
+> >> +     struct st_sensors_platform_data *pdata;
+> >>       struct iio_buffer *buffer;
+> >>       unsigned long irq_type;
+> >>       bool irq_active_low;
+> >> @@ -444,6 +450,17 @@ int st_lsm6dsx_fifo_setup(struct st_lsm6dsx_hw *hw)
+> >>       if (err < 0)
+> >>               return err;
+> >>
+> >> +     pdata = (struct st_sensors_platform_data *)hw->dev->platform_data;
+> >> +     if ((np && of_property_read_bool(np, "drive-open-drain")) ||
+> >> +         (pdata && pdata->open_drain)) {
+> >> +             err = st_lsm6dsx_write_with_mask(hw, ST_LSM6DSX_REG_PP_OD_ADDR,
+> >> +                                              ST_LSM6DSX_REG_PP_OD_MASK, 1);
+> >> +             if (err < 0)
+> >> +                     return err;
+> >> +
+> >> +             irq_type |= IRQF_SHARED;
+> >> +     }
+> >> +  
+> > In common with the mpu3050 which was the first driver in IIO to do open drain,
+> > I think you need to think about precedence as we allow for IRQF_RISING
+> > and IRQF_FALLING already.  Open drain only allows for shared interrupts
+> > if IRQF_FALLING (I think)  
+> >>       err = devm_request_threaded_irq(hw->dev, hw->irq,
+> >>                                       st_lsm6dsx_handler_irq,
+> >>                                       st_lsm6dsx_handler_thread,  
+> >  
+> 
+> I have not got the difference between IRQF_RISING and IRQF_FALLING
+> when the irq line
+> is marked as shared (when open drain is enabled).
+> Looking at the code, mpu3050 gyro sensor does not support shared interrupts
+> with IRQF_RISING and IRQF_TRIGGER_HIGH. Is it a hw limitation?
+> Speaking with digital designer, lsm6dsx series allows open drain mode
+> even if the requested irq line
+> is IRQF_TRIGGER_HIGH or IRQF_RISING, we need to add a pull-down resistor.
+> Moreover ST framework already supports open drain if the requested
+> interrupt is IRQF_RISING.
+Just looked this up in more detail than I ever have before. I wasn't
+thinking beyond the 'canonical form' with the thing set up as pull down.
+
+Sure it will work fine.  My bad!
+
+Applied to the togreg branch of iio.git and pushed out as testing.
+As this is a carbon copy binding wise of the existing support
+I'm not going to wait for Rob or Mark to have a chance to look at
+it (of course their confirmation / feedback is always welcome though!)
+
+Jonathan
+> 
+> Regards,
+> Lorenzo
+> 
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
