@@ -1,421 +1,56 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 2/2] rtc: brcmstb-waketimer: Add Broadcom STB wake-timer
-Date: Mon, 26 Jun 2017 14:15:03 -0700
-Message-ID: <20170626211503.7471-3-f.fainelli@gmail.com>
-References: <20170626211503.7471-1-f.fainelli@gmail.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] remoteproc/keystone: Add a remoteproc driver for
+ Keystone 2 DSPs
+Date: Mon, 26 Jun 2017 14:19:57 -0700
+Message-ID: <20170626211957.GH18666@tuxbook>
+References: <20170613234513.7624-1-s-anna@ti.com>
+ <20170613234513.7624-3-s-anna@ti.com>
+ <20170625201545.GA26155@builder>
+ <1ccd9273-0fde-4241-6d99-1d03be2f5b57@ti.com>
+ <20170626200608.GG18666@tuxbook>
+ <1f8d65fc-0acc-499e-a98e-953dce60750f@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <rtc-linux+bncBCH67JWTV4DBBZPSYXFAKGQELAZDJNY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170626211503.7471-1-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1f8d65fc-0acc-499e-a98e-953dce60750f-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
+Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Mon 26 Jun 13:20 PDT 2017, Suman Anna wrote:
 
-This adds support for the Broadcom STB wake-timer which is a timer in
-the chip's 27Mhz clock domain that offers the ability to wake the system
-(wake-up source) from suspend states (S2, S3, S5). It is supported using
-the rtc framework allowing us to configure alarms for system wake-up.
+> On 06/26/2017 03:06 PM, Bjorn Andersson wrote:
+> > On Mon 26 Jun 08:54 PDT 2017, Suman Anna wrote:
+> >> On 06/25/2017 03:15 PM, Bjorn Andersson wrote:
+[..]
+> > I still would like to have resources allocated at probe() time, so I
+> > would appreciate a follow up patch moving the request_irq()s to probe,
+> > per above comment (but we can take that after v4.13).
+> 
+> OK thanks. This is a common theme across all the remoteproc drivers
+> supporting rpmsg, and I definitely need to disable them in probe since
+> the boot or the virtio/rpmsg devices are not guaranteed to be present in
+> the probe.
+> 
 
-Signed-off-by: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/rtc/Kconfig                 |  11 ++
- drivers/rtc/Makefile                |   1 +
- drivers/rtc/rtc-brcmstb-waketimer.c | 325 ++++++++++++++++++++++++++++++++=
-++++
- 3 files changed, 337 insertions(+)
- create mode 100644 drivers/rtc/rtc-brcmstb-waketimer.c
+We have a consistent struct rproc after rproc_alloc(). So before the
+virtio device (rpmsg in your case) calls virtio_find_vqs() rvring->vq
+will be NULL and rproc_vq_interrupt() is a nop.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 8d3b95728326..8e1aa67fe533 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -197,6 +197,17 @@ config RTC_DRV_AC100
- 	  This driver can also be built as a module. If so, the module
- 	  will be called rtc-ac100.
-=20
-+config RTC_DRV_BRCMSTB
-+	tristate "Broadcom STB wake-timer"
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
-+	default ARCH_BRCMSTB || BMIPS_GENERIC
-+	help
-+	  If you say yes here you get support for the wake-timer found on
-+	  Broadcom STB SoCs (BCM7xxx).
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called rtc-brcmstb-waketimer.
-+
- config RTC_DRV_AS3722
- 	tristate "ams AS3722 RTC driver"
- 	depends on MFD_AS3722
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 13857d2fce09..df89cac1f9ae 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_RTC_DRV_AT91RM9200)+=3D rtc-at91rm9200.o
- obj-$(CONFIG_RTC_DRV_AT91SAM9)	+=3D rtc-at91sam9.o
- obj-$(CONFIG_RTC_DRV_AU1XXX)	+=3D rtc-au1xxx.o
- obj-$(CONFIG_RTC_DRV_BFIN)	+=3D rtc-bfin.o
-+obj-$(CONFIG_RTC_DRV_BRCMSTB)	+=3D rtc-brcmstb-waketimer.o
- obj-$(CONFIG_RTC_DRV_BQ32K)	+=3D rtc-bq32k.o
- obj-$(CONFIG_RTC_DRV_BQ4802)	+=3D rtc-bq4802.o
- obj-$(CONFIG_RTC_DRV_CMOS)	+=3D rtc-cmos.o
-diff --git a/drivers/rtc/rtc-brcmstb-waketimer.c b/drivers/rtc/rtc-brcmstb-=
-waketimer.c
-new file mode 100644
-index 000000000000..5dea6d0627d8
---- /dev/null
-+++ b/drivers/rtc/rtc-brcmstb-waketimer.c
-@@ -0,0 +1,325 @@
-+/*
-+ * Copyright =C2=A9 2014-2017 Broadcom
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
-+
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irqreturn.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/pm_wakeup.h>
-+#include <linux/reboot.h>
-+#include <linux/rtc.h>
-+#include <linux/stat.h>
-+#include <linux/suspend.h>
-+
-+struct brcmstb_waketmr {
-+	struct rtc_device *rtc;
-+	struct device *dev;
-+	void __iomem *base;
-+	int irq;
-+	struct notifier_block reboot_notifier;
-+	struct clk *clk;
-+	u32 rate;
-+};
-+
-+#define BRCMSTB_WKTMR_EVENT		0x00
-+#define BRCMSTB_WKTMR_COUNTER		0x04
-+#define BRCMSTB_WKTMR_ALARM		0x08
-+#define BRCMSTB_WKTMR_PRESCALER		0x0C
-+#define BRCMSTB_WKTMR_PRESCALER_VAL	0x10
-+
-+#define BRCMSTB_WKTMR_DEFAULT_FREQ	27000000
-+
-+static inline void brcmstb_waketmr_clear_alarm(struct brcmstb_waketmr *tim=
-er)
-+{
-+	writel_relaxed(1, timer->base + BRCMSTB_WKTMR_EVENT);
-+	(void)readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
-+}
-+
-+static void brcmstb_waketmr_set_alarm(struct brcmstb_waketmr *timer,
-+				      unsigned int secs)
-+{
-+	brcmstb_waketmr_clear_alarm(timer);
-+
-+	writel_relaxed(secs + 1, timer->base + BRCMSTB_WKTMR_ALARM);
-+}
-+
-+static irqreturn_t brcmstb_waketmr_irq(int irq, void *data)
-+{
-+	struct brcmstb_waketmr *timer =3D data;
-+
-+	pm_wakeup_event(timer->dev, 0);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+struct wktmr_time {
-+	u32 sec;
-+	u32 pre;
-+};
-+
-+static void wktmr_read(struct brcmstb_waketmr *timer,
-+		       struct wktmr_time *t)
-+{
-+	u32 tmp;
-+
-+	do {
-+		t->sec =3D readl_relaxed(timer->base + BRCMSTB_WKTMR_COUNTER);
-+		tmp =3D readl_relaxed(timer->base + BRCMSTB_WKTMR_PRESCALER_VAL);
-+	} while (tmp >=3D timer->rate);
-+
-+	t->pre =3D timer->rate - tmp;
-+}
-+
-+static int brcmstb_waketmr_prepare_suspend(struct brcmstb_waketmr *timer)
-+{
-+	struct device *dev =3D timer->dev;
-+	int ret =3D 0;
-+
-+	if (device_may_wakeup(dev)) {
-+		ret =3D enable_irq_wake(timer->irq);
-+		if (ret) {
-+			dev_err(dev, "failed to enable wake-up interrupt\n");
-+			return ret;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+/* If enabled as a wakeup-source, arm the timer when powering off */
-+static int brcmstb_waketmr_reboot(struct notifier_block *nb,
-+		unsigned long action, void *data)
-+{
-+	struct brcmstb_waketmr *timer;
-+
-+	timer =3D container_of(nb, struct brcmstb_waketmr, reboot_notifier);
-+
-+	/* Set timer for cold boot */
-+	if (action =3D=3D SYS_POWER_OFF)
-+		brcmstb_waketmr_prepare_suspend(timer);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static int brcmstb_waketmr_gettime(struct device *dev,
-+				   struct rtc_time *tm)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+	struct wktmr_time now;
-+
-+	wktmr_read(timer, &now);
-+
-+	rtc_time_to_tm(now.sec, tm);
-+
-+	return 0;
-+}
-+
-+static int brcmstb_waketmr_settime(struct device *dev,
-+				   struct rtc_time *tm)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+	unsigned long sec;
-+	int ret;
-+
-+	rtc_tm_to_time(tm, &sec);
-+
-+	writel_relaxed(sec, timer->base + BRCMSTB_WKTMR_COUNTER);
-+
-+	return 0;
-+}
-+
-+static int brcmstb_waketmr_getalarm(struct device *dev,
-+				    struct rtc_wkalrm *alarm)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+	unsigned long sec;
-+	u32 reg;
-+
-+	sec =3D readl_relaxed(timer->base + BRCMSTB_WKTMR_ALARM);
-+	if (sec !=3D 0) {
-+		/* Alarm is enabled */
-+		alarm->enabled =3D 1;
-+		rtc_time_to_tm(sec, &alarm->time);
-+	}
-+
-+	reg =3D readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
-+	alarm->pending =3D !!(reg & 1);
-+
-+	return 0;
-+}
-+
-+static int brcmstb_waketmr_setalarm(struct device *dev,
-+				     struct rtc_wkalrm *alarm)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+	unsigned long sec;
-+
-+	if (alarm->enabled)
-+		rtc_tm_to_time(&alarm->time, &sec);
-+	else
-+		sec =3D 0;
-+
-+	brcmstb_waketmr_set_alarm(timer, sec);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Does not do much but keep the RTC class happy. We always support
-+ * alarms.
-+ */
-+static int brcmstb_waketmr_alarm_enable(struct device *dev,
-+					unsigned int enabled)
-+{
-+	return 0;
-+}
-+
-+static const struct rtc_class_ops brcmstb_waketmr_ops =3D {
-+	.read_time	=3D brcmstb_waketmr_gettime,
-+	.set_time	=3D brcmstb_waketmr_settime,
-+	.read_alarm	=3D brcmstb_waketmr_getalarm,
-+	.set_alarm	=3D brcmstb_waketmr_setalarm,
-+	.alarm_irq_enable =3D brcmstb_waketmr_alarm_enable,
-+};
-+
-+static int brcmstb_waketmr_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct brcmstb_waketmr *timer;
-+	struct resource *res;
-+	int ret;
-+
-+	timer =3D devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
-+	if (!timer)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, timer);
-+	timer->dev =3D dev;
-+
-+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	timer->base =3D devm_ioremap_resource(dev, res);
-+	if (IS_ERR(timer->base))
-+		return PTR_ERR(timer->base);
-+
-+	/*
-+	 * Set wakeup capability before requesting wakeup interrupt, so we can
-+	 * process boot-time "wakeups" (e.g., from S5 soft-off)
-+	 */
-+	device_set_wakeup_capable(dev, true);
-+	device_wakeup_enable(dev);
-+
-+	timer->irq =3D platform_get_irq(pdev, 0);
-+	if (timer->irq < 0)
-+		return -ENODEV;
-+
-+	timer->clk =3D devm_clk_get(dev, NULL);
-+	if (!IS_ERR(timer->clk)) {
-+		ret =3D clk_prepare_enable(timer->clk);
-+		if (ret)
-+			return ret;
-+		timer->rate =3D clk_get_rate(timer->clk);
-+		if (!timer->rate)
-+			timer->rate =3D BRCMSTB_WKTMR_DEFAULT_FREQ;
-+	} else {
-+		timer->rate =3D BRCMSTB_WKTMR_DEFAULT_FREQ;
-+		timer->clk =3D NULL;
-+	}
-+
-+	ret =3D devm_request_irq(dev, timer->irq, brcmstb_waketmr_irq, 0,
-+			       "brcmstb-waketimer", timer);
-+	if (ret < 0)
-+		return ret;
-+
-+	timer->reboot_notifier.notifier_call =3D brcmstb_waketmr_reboot;
-+	register_reboot_notifier(&timer->reboot_notifier);
-+
-+	timer->rtc =3D rtc_device_register("brcmstb-waketmr", dev,
-+					 &brcmstb_waketmr_ops, THIS_MODULE);
-+	if (IS_ERR(timer->rtc)) {
-+		dev_err(dev, "unable to register device\n");
-+		unregister_reboot_notifier(&timer->reboot_notifier);
-+		return PTR_ERR(timer->rtc);
-+	}
-+
-+	dev_info(dev, "registered, with irq %d\n", timer->irq);
-+
-+	return ret;
-+}
-+
-+static int brcmstb_waketmr_remove(struct platform_device *pdev)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(&pdev->dev);
-+
-+	unregister_reboot_notifier(&timer->reboot_notifier);
-+	rtc_device_unregister(timer->rtc);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int brcmstb_waketmr_suspend(struct device *dev)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+
-+	return brcmstb_waketmr_prepare_suspend(timer);
-+}
-+
-+static int brcmstb_waketmr_resume(struct device *dev)
-+{
-+	struct brcmstb_waketmr *timer =3D dev_get_drvdata(dev);
-+	int ret;
-+
-+	if (!device_may_wakeup(dev))
-+		return 0;
-+
-+	ret =3D disable_irq_wake(timer->irq);
-+
-+	brcmstb_waketmr_clear_alarm(timer);
-+
-+	return ret;
-+}
-+#endif /* CONFIG_PM_SLEEP */
-+
-+static SIMPLE_DEV_PM_OPS(brcmstb_waketmr_pm_ops,
-+			 brcmstb_waketmr_suspend, brcmstb_waketmr_resume);
-+
-+static const struct of_device_id brcmstb_waketmr_of_match[] =3D {
-+	{ .compatible =3D "brcm,brcmstb-waketimer" },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver brcmstb_waketmr_driver =3D {
-+	.probe			=3D brcmstb_waketmr_probe,
-+	.remove			=3D brcmstb_waketmr_remove,
-+	.driver =3D {
-+		.name		=3D "brcmstb-waketimer",
-+		.pm		=3D &brcmstb_waketmr_pm_ops,
-+		.of_match_table	=3D of_match_ptr(brcmstb_waketmr_of_match),
-+	}
-+};
-+module_platform_driver(brcmstb_waketmr_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("Brian Norris");
-+MODULE_AUTHOR("Markus Mayer");
-+MODULE_DESCRIPTION("Wake-up timer driver for STB chips");
---=20
-2.9.3
+So AFAICT it should be fine to register this at probe time and leave it
+enabled...but there's a lot of moving parts involved here, so it's
+possible that I'm missing something.
 
---=20
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
----=20
-You received this message because you are subscribed to the Google Groups "=
-rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+
+But in for both interrupts it's important to disable them before calling
+rproc_free(), as this will free the memory passed to the interrupt
+handler.
+
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
