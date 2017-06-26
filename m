@@ -1,51 +1,54 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v1 2/6] [media] ov9650: add device tree support
-Date: Mon, 26 Jun 2017 19:46:34 +0200
-Message-ID: <D780984B-70A1-4E9C-A887-DD2CBAAC7CCA@goldelico.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-3-git-send-email-hugues.fruchet@st.com>
- <20170626163102.GQ12407@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170626163102.GQ12407@valkosipuli.retiisi.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, Hugues Fruchet <hugues.fruchet@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick Fertre <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-media@vger.kernel.org
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 2/7] dt-bindings: pinctrl: add imx7ulp pinctrl binding
+ doc
+Date: Mon, 26 Jun 2017 13:02:41 -0500
+Message-ID: <20170626180241.4453lvcsxw4b7cnp@rob-hp-laptop>
+References: <1498046395-30001-1-git-send-email-aisheng.dong@nxp.com>
+ <1498046395-30001-3-git-send-email-aisheng.dong@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1498046395-30001-3-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, ping.bai-3arQi8VN3Tc@public.gmane.org, fugang.duan-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-> Am 26.06.2017 um 18:31 schrieb Sakari Ailus <sakari.ailus@iki.fi>:
+On Wed, Jun 21, 2017 at 07:59:50PM +0800, Dong Aisheng wrote:
+> i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports,
+> IOMUXC1 for A7 ports and IOMUXC DDR for DDR interface.
 > 
-> Hi Hugues,
+> This patch adds the IOMUXC1 support for A7.
 > 
-> On Thu, Jun 22, 2017 at 05:05:38PM +0200, Hugues Fruchet wrote:
->> @@ -1545,15 +1577,22 @@ static int ov965x_remove(struct i2c_client *client)
->> }
->> 
->> static const struct i2c_device_id ov965x_id[] = {
->> -	{ "OV9650", 0 },
->> -	{ "OV9652", 0 },
->> +	{ "OV9650", 0x9650 },
->> +	{ "OV9652", 0x9652 },
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 > 
-> This change does not appear to match with the patch description nor it the
-> information is used. How about not changing it, unless there's a reason to?
-> The same for the data field of the of_device_id array below.
+> ---
+> ChangeLog:
+> v3->v4:
+>  * change pad name to IMX7ULP_PAD_X style
+>  * switch to generic pinmux property
+>  * input/output property are removed.
+> v2->v3:
+>  * switch to generic input/output-enable property
+> v1->v2:
+>  * add more descriptions in binding doc
+>  * add missed prefix for private properties.
+>  * move dt-bindings/pinctrl/imx7ulp-pinfunc.h to arch/arm/boot/dts
+> ---
+>  .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       |  61 +++
+>  arch/arm/boot/dts/imx7ulp-pinfunc.h                | 468 +++++++++++++++++++++
+>  2 files changed, 529 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
+>  create mode 100644 arch/arm/boot/dts/imx7ulp-pinfunc.h
 
-I think it could/should be used to check if the camera chip that is found
-by reading the product-id and version registers does match what the device
-tree expects and abort probing on a mismatch.
-
-BR,
-Nikolaus
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
