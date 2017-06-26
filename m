@@ -1,43 +1,71 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: Re: [PATCH 1/3] dt-bindings: adc: mt7622: add binding document
-Date: Mon, 26 Jun 2017 18:45:19 +0800
-Message-ID: <1498473919.844.7.camel@mhfsdcap03>
-References: <1498110274-18678-1-git-send-email-zhiyong.tao@mediatek.com>
-         <1498110274-18678-2-git-send-email-zhiyong.tao@mediatek.com>
-         <20170624210241.361743b3@kernel.org>
+From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+Subject: Re: [PATCH v5 1/2] media: i2c: adv748x: add adv748x driver
+Date: Mon, 26 Jun 2017 12:06:15 +0100
+Message-ID: <dcc244f1-411b-886d-7d23-9aed3835da80@ideasonboard.com>
+References: <cover.90fc3153078e79a3f74af832de923ac675eb29ad.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com>
+ <de701d3899e68ddf8a2ad0316459b8f1868132b5.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com>
+ <20170622213401.jdktgcx5tbsxhh5d@rob-hp-laptop>
+Reply-To: kieran.bingham@ideasonboard.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170624210241.361743b3@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: robh+dt@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, srv_heupstream@mediatek.com, liguo.zhang@mediatek.com, yingjoe.chen@mediatek.com, sean.wang@mediatek.com, matthias.bgg@gmail.com, s.hauer@pengutronix.de, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-iio@vger.kernel.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170622213401.jdktgcx5tbsxhh5d@rob-hp-laptop>
+Content-Language: en-GB
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Kieran Bingham <kbingham@kernel.org>
+Cc: laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, "Martin K. Petersen" <martin.petersen@oracle.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, Steve Longerbeam <slongerbeam@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Todor Tomov <todor.tomov@linaro.org>, open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2017-06-24 at 21:02 +0100, Jonathan Cameron wrote:
-> On Thu, 22 Jun 2017 13:44:32 +0800
-> Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
+Thanks Rob,
+
+Comments addressed, and a new version 6 to be posted soon.
+
+On 22/06/17 22:34, Rob Herring wrote:
+> On Wed, Jun 14, 2017 at 08:58:12PM +0100, Kieran Bingham wrote:
+>> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>>
+>> Provide support for the ADV7481 and ADV7482.
+>>
+>> The driver is modelled with 4 subdevices to allow simultaneous streaming
+>> from the AFE (Analog front end) and HDMI inputs though two CSI TX
+>> entities.
+>>
+>> The HDMI entity is linked to the TXA CSI bus, whilst the AFE is linked
+>> to the TXB CSI bus.
+>>
+>> The driver is based on a prototype by Koji Matsuoka in the Renesas BSP,
+>> and an earlier rework by Niklas Söderlund.
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+>>
+>> ---
+...
+>> +
+>> +The digital output port nodes must contain at least one endpoint.
+>> +
+>> +Ports are optional if they are not connected to anything at the hardware level,
+>> +but the driver may not provide any support for ports which are not described.
 > 
-> > The commit adds mt7622 compatible node in binding document.
-> > 
-> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/iio/adc/mt6577_auxadc.txt  |    1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> > index 68c45cb..e6aa30a 100644
-> > --- a/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> > +++ b/Documentation/devicetree/bindings/iio/adc/mt6577_auxadc.txt
-> > @@ -13,6 +13,7 @@ Required properties:
-> >    - compatible: Should be one of:
-> >      - "mediatek,mt2701-auxadc": For MT2701 family of SoCs
-> >      - "mediatek,mt8173-auxadc": For MT8173 family of SoCs
-> > +    - "mediatek,mt7622-auxadc": For MT7622 family of SoCs
-> numeric order?
-==> yes, we have changed it as numeric order in v2. Thanks.
-> >    - reg: Address range of the AUXADC unit.
-> >    - clocks: Should contain a clock specifier for each entry in clock-names
-> >    - clock-names: Should contain "main".
+> What the driver does is not relevant to the binding.
+
+Of course. (Fixed)
+
 > 
+>> +
+>> +Example:
+>> +
+>> +	video_receiver@70 {
+> 
+> video-receiver@70
+
+Aha, I didn't realise the distinction between using '-' in node names and
+properties vs '_' in labels.
+
+Hopefully updated in my mind map. And I'll try to get this one right in the
+future. :)
+
+--
+Regards
+
+Kieran
