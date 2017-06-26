@@ -1,55 +1,38 @@
-From: Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] remoteproc/keystone: Add a remoteproc driver for
- Keystone 2 DSPs
-Date: Mon, 26 Jun 2017 14:19:57 -0700
-Message-ID: <20170626211957.GH18666@tuxbook>
-References: <20170613234513.7624-1-s-anna@ti.com>
- <20170613234513.7624-3-s-anna@ti.com>
- <20170625201545.GA26155@builder>
- <1ccd9273-0fde-4241-6d99-1d03be2f5b57@ti.com>
- <20170626200608.GG18666@tuxbook>
- <1f8d65fc-0acc-499e-a98e-953dce60750f@ti.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] rtc: brcmstb-waketimer: Add Broadcom STB wake-timer
+Date: Mon, 26 Jun 2017 23:35:34 +0200
+Message-ID: <20170626213534.jur6rggwbzhk6r4t@piout.net>
+References: <20170615195904.12653-1-f.fainelli@gmail.com>
+ <20170615195904.12653-3-f.fainelli@gmail.com>
+ <20170624185942.vq656pjxbqnqdhll@piout.net>
+ <35c43786-ee58-130c-2ecd-5577197bd5aa@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1f8d65fc-0acc-499e-a98e-953dce60750f-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <35c43786-ee58-130c-2ecd-5577197bd5aa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Suman Anna <s-anna-l0cyMroinI0@public.gmane.org>
-Cc: Ohad Ben-Cohen <ohad-Ix1uc/W3ht7QT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <ssantosh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-remoteproc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Andrew F. Davis" <afd-l0cyMroinI0@public.gmane.org>, Sam Nelson <sam.nelson-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon 26 Jun 13:20 PDT 2017, Suman Anna wrote:
-
-> On 06/26/2017 03:06 PM, Bjorn Andersson wrote:
-> > On Mon 26 Jun 08:54 PDT 2017, Suman Anna wrote:
-> >> On 06/25/2017 03:15 PM, Bjorn Andersson wrote:
-[..]
-> > I still would like to have resources allocated at probe() time, so I
-> > would appreciate a follow up patch moving the request_irq()s to probe,
-> > per above comment (but we can take that after v4.13).
+On 26/06/2017 at 10:15:46 -0700, Florian Fainelli wrote:
+> > This is not needed since d68778b80dd7
 > 
-> OK thanks. This is a common theme across all the remoteproc drivers
-> supporting rpmsg, and I definitely need to disable them in probe since
-> the boot or the virtio/rpmsg devices are not guaranteed to be present in
-> the probe.
+> Great, I will take that out.
+> 
+> Do you care whether some dev_dbg() prints are left in the driver or
+> should I remove those in v2?
 > 
 
-We have a consistent struct rproc after rproc_alloc(). So before the
-virtio device (rpmsg in your case) calls virtio_find_vqs() rvring->vq
-will be NULL and rproc_vq_interrupt() is a nop.
+It could have stayed but it seems you removed it from v2.
 
-So AFAICT it should be fine to register this at probe time and leave it
-enabled...but there's a lot of moving parts involved here, so it's
-possible that I'm missing something.
+I'll applay that but it is ok if you change your mind.
 
-
-But in for both interrupts it's important to disable them before calling
-rproc_free(), as this will free the memory passed to the interrupt
-handler.
-
-Regards,
-Bjorn
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
