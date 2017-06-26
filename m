@@ -1,96 +1,122 @@
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 1/2] dt-bindings: rtc: stm32: add support for STM32H7
-Date: Mon, 26 Jun 2017 11:51:28 +0200
-Message-ID: <1498470689-26829-2-git-send-email-amelie.delaunay@st.com>
-References: <1498470689-26829-1-git-send-email-amelie.delaunay@st.com>
-Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH v1 3/5] [media] stm32-dcmi: crop sensor image to match
+ user resolution
+Date: Mon, 26 Jun 2017 09:53:18 +0000
+Message-ID: <8ae4c160-3137-0fa8-3d78-e4e1284521a4@st.com>
+References: <1498144371-13310-1-git-send-email-hugues.fruchet@st.com>
+ <1498144371-13310-4-git-send-email-hugues.fruchet@st.com>
+ <ee46bbd4-9343-7060-3c1b-455486eb7a9c@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <rtc-linux+bncBC2IT2GSZUDRBMNSYPFAKGQEGEHIKQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <1498470689-26829-1-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/rtc-linux
-List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/rtc-linux/subscribe>
-To: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>
-Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <ee46bbd4-9343-7060-3c1b-455486eb7a9c-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Content-Language: en-US
+Content-ID: <50B199C8E011B048ABAA5CE0E98D5542-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents support for STM32H7 Real Time Clock.
-It introduces a new compatible and rework clock definitions.
-On STM32H7 we have a 'pclk' clock for register access, in addition to
-the 'rtc_ck' clock.
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
----
- .../devicetree/bindings/rtc/st,stm32-rtc.txt       | 32 ++++++++++++++++++----
- 1 file changed, 27 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-index e2837b9..0a4c371 100644
---- a/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/st,stm32-rtc.txt
-@@ -1,17 +1,25 @@
- STM32 Real Time Clock
- 
- Required properties:
--- compatible: "st,stm32-rtc".
-+- compatible: can be either "st,stm32-rtc" or "st,stm32h7-rtc", depending on
-+  the device is compatible with stm32(f4/f7) or stm32h7.
- - reg: address range of rtc register set.
--- clocks: reference to the clock entry ck_rtc.
-+- clocks: can use up to two clocks, depending on part used:
-+  - "rtc_ck": RTC clock source.
-+    It is required on stm32(f4/f7) and stm32h7.
-+  - "pclk": RTC APB interface clock.
-+    It is not present on stm32(f4/f7).
-+    It is required on stm32h7.
-+- clock-names: must be "rtc_ck" and "pclk".
-+    It is required only on stm32h7.
- - interrupt-parent: phandle for the interrupt controller.
- - interrupts: rtc alarm interrupt.
- - st,syscfg: phandle for pwrcfg, mandatory to disable/enable backup domain
-   (RTC registers) write protection.
- 
--Optional properties (to override default ck_rtc parent clock):
--- assigned-clocks: reference to the ck_rtc clock entry.
--- assigned-clock-parents: phandle of the new parent clock of ck_rtc.
-+Optional properties (to override default rtc_ck parent clock):
-+- assigned-clocks: reference to the rtc_ck clock entry.
-+- assigned-clock-parents: phandle of the new parent clock of rtc_ck.
- 
- Example:
- 
-@@ -25,3 +33,17 @@ Example:
- 		interrupts = <17 1>;
- 		st,syscfg = <&pwrcfg>;
- 	};
-+
-+	rtc: rtc@58004000 {
-+		compatible = "st,stm32h7-rtc";
-+		reg = <0x58004000 0x400>;
-+		clocks = <&rcc RTCAPB_CK>, <&rcc RTC_CK>;
-+		clock-names = "pclk", "rtc_ck";
-+		assigned-clocks = <&rcc RTC_CK>;
-+		assigned-clock-parents = <&rcc LSE_CK>;
-+		interrupt-parent = <&exti>;
-+		interrupts = <17 1>;
-+		interrupt-names = "alarm";
-+		st,syscfg = <&pwrcfg>;
-+		status = "disabled";
-+	};
--- 
-1.9.1
-
--- 
-You received this message because you are subscribed to "rtc-linux".
-Membership options at http://groups.google.com/group/rtc-linux .
-Please read http://groups.google.com/group/rtc-linux/web/checklist
-before submitting a driver.
---- 
-You received this message because you are subscribed to the Google Groups "rtc-linux" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+SGkgSGFucywgdGhhbmtzIGZvciByZXZpZXcuDQoNClJlcGx5IGJlbG93Lg0KDQpCUg0KSHVndWVz
+Lg0KDQpPbiAwNi8yMi8yMDE3IDA1OjE5IFBNLCBIYW5zIFZlcmt1aWwgd3JvdGU6DQo+IE9uIDA2
+LzIyLzIwMTcgMDU6MTIgUE0sIEh1Z3VlcyBGcnVjaGV0IHdyb3RlOg0KPj4gQWRkIGZsZXhpYmls
+aXR5IG9uIHN1cHBvcnRlZCByZXNvbHV0aW9ucyBieSBjcm9wcGluZyBzZW5zb3INCj4+IGltYWdl
+IHRvIGZpdCB1c2VyIHJlc29sdXRpb24gZm9ybWF0IHJlcXVlc3QuDQo+Pg0KPj4gU2lnbmVkLW9m
+Zi1ieTogSHVndWVzIEZydWNoZXQgPGh1Z3Vlcy5mcnVjaGV0QHN0LmNvbT4NCj4+IC0tLQ0KPj4g
+ICAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMgfCA1NCArKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKystDQo+PiAgICAxIGZpbGUgY2hhbmdlZCwgNTMgaW5zZXJ0
+aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL21lZGlh
+L3BsYXRmb3JtL3N0bTMyL3N0bTMyLWRjbWkuYyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vc3Rt
+MzIvc3RtMzItZGNtaS5jDQo+PiBpbmRleCA3NWQ1M2FhLi5iYzVlMDUyIDEwMDY0NA0KPj4gLS0t
+IGEvZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9zdG0zMi9zdG0zMi1kY21pLmMNCj4+ICsrKyBiL2Ry
+aXZlcnMvbWVkaWEvcGxhdGZvcm0vc3RtMzIvc3RtMzItZGNtaS5jDQo+PiBAQCAtMTMxLDYgKzEz
+MSw4IEBAIHN0cnVjdCBzdG0zMl9kY21pIHsNCj4+ICAgIAlzdHJ1Y3QgdjRsMl9hc3luY19ub3Rp
+Zmllcglub3RpZmllcjsNCj4+ICAgIAlzdHJ1Y3QgZGNtaV9ncmFwaF9lbnRpdHkJZW50aXR5Ow0K
+Pj4gICAgCXN0cnVjdCB2NGwyX2Zvcm1hdAkJZm10Ow0KPj4gKwlzdHJ1Y3QgdjRsMl9yZWN0CQlj
+cm9wOw0KPj4gKwlib29sCQkJCWRvX2Nyb3A7DQo+PiAgICANCj4+ICAgIAljb25zdCBzdHJ1Y3Qg
+ZGNtaV9mb3JtYXQJKip1c2VyX2Zvcm1hdHM7DQo+PiAgICAJdW5zaWduZWQgaW50CQkJbnVtX3Vz
+ZXJfZm9ybWF0czsNCj4+IEBAIC01MzgsNiArNTQwLDI3IEBAIHN0YXRpYyBpbnQgZGNtaV9zdGFy
+dF9zdHJlYW1pbmcoc3RydWN0IHZiMl9xdWV1ZSAqdnEsIHVuc2lnbmVkIGludCBjb3VudCkNCj4+
+ICAgIAlpZiAoZGNtaS0+YnVzLmZsYWdzICYgVjRMMl9NQlVTX1BDTEtfU0FNUExFX1JJU0lORykN
+Cj4+ICAgIAkJdmFsIHw9IENSX1BDS1BPTDsNCj4+ICAgIA0KPj4gKwlpZiAoZGNtaS0+ZG9fY3Jv
+cCkgew0KPj4gKwkJdTMyIHNpemUsIHN0YXJ0Ow0KPj4gKw0KPj4gKwkJLyogQ3JvcCByZXNvbHV0
+aW9uICovDQo+PiArCQlzaXplID0gKChkY21pLT5jcm9wLmhlaWdodCAtIDEpIDw8IDE2KSB8DQo+
+PiArCQkJKChkY21pLT5jcm9wLndpZHRoIDw8IDEpIC0gMSk7DQo+PiArCQlyZWdfd3JpdGUoZGNt
+aS0+cmVncywgRENNSV9DV1NJWkUsIHNpemUpOw0KPj4gKw0KPj4gKwkJLyogQ3JvcCBzdGFydCBw
+b2ludCAqLw0KPj4gKwkJc3RhcnQgPSAoKGRjbWktPmNyb3AudG9wKSA8PCAxNikgfA0KPj4gKwkJ
+CSAoKGRjbWktPmNyb3AubGVmdCA8PCAxKSk7DQo+PiArCQlyZWdfd3JpdGUoZGNtaS0+cmVncywg
+RENNSV9DV1NUUlQsIHN0YXJ0KTsNCj4+ICsNCj4+ICsJCWRldl9kYmcoZGNtaS0+ZGV2LCAiQ3Jv
+cHBpbmcgdG8gJXV4JXVAJXU6JXVcbiIsDQo+PiArCQkJZGNtaS0+Y3JvcC53aWR0aCwgZGNtaS0+
+Y3JvcC5oZWlnaHQsDQo+PiArCQkJZGNtaS0+Y3JvcC5sZWZ0LCBkY21pLT5jcm9wLnRvcCk7DQo+
+PiArDQo+PiArCQkvKiBFbmFibGUgY3JvcCAqLw0KPj4gKwkJdmFsIHw9IENSX0NST1A7DQo+PiAr
+CX07DQo+PiArDQo+PiAgICAJcmVnX3dyaXRlKGRjbWktPnJlZ3MsIERDTUlfQ1IsIHZhbCk7DQo+
+PiAgICANCj4+ICAgIAkvKiBFbmFibGUgZGNtaSAqLw0KPj4gQEAgLTcwNyw2ICs3MzAsOCBAQCBz
+dGF0aWMgaW50IGRjbWlfdHJ5X2ZtdChzdHJ1Y3Qgc3RtMzJfZGNtaSAqZGNtaSwgc3RydWN0IHY0
+bDJfZm9ybWF0ICpmLA0KPj4gICAgCQkud2hpY2ggPSBWNEwyX1NVQkRFVl9GT1JNQVRfVFJZLA0K
+Pj4gICAgCX07DQo+PiAgICAJaW50IHJldDsNCj4+ICsJX191MzIgd2lkdGgsIGhlaWdodDsNCj4+
+ICsJc3RydWN0IHY0bDJfbWJ1c19mcmFtZWZtdCAqbWYgPSAmZm9ybWF0LmZvcm1hdDsNCj4+ICAg
+IA0KPj4gICAgCWRjbWlfZm10ID0gZmluZF9mb3JtYXRfYnlfZm91cmNjKGRjbWksIHBpeGZtdC0+
+cGl4ZWxmb3JtYXQpOw0KPj4gICAgCWlmICghZGNtaV9mbXQpIHsNCj4+IEBAIC03MjQsOCArNzQ5
+LDE4IEBAIHN0YXRpYyBpbnQgZGNtaV90cnlfZm10KHN0cnVjdCBzdG0zMl9kY21pICpkY21pLCBz
+dHJ1Y3QgdjRsMl9mb3JtYXQgKmYsDQo+PiAgICAJaWYgKHJldCA8IDApDQo+PiAgICAJCXJldHVy
+biByZXQ7DQo+PiAgICANCj4+ICsJLyogQWxpZ24gZm9ybWF0IG9uIHdoYXQgc2Vuc29yIGNhbiBk
+byAqLw0KPj4gKwl3aWR0aCA9IHBpeGZtdC0+d2lkdGg7DQo+PiArCWhlaWdodCA9IHBpeGZtdC0+
+aGVpZ2h0Ow0KPj4gICAgCXY0bDJfZmlsbF9waXhfZm9ybWF0KHBpeGZtdCwgJmZvcm1hdC5mb3Jt
+YXQpOw0KPj4gICAgDQo+PiArCS8qIFdlIGNhbiBkbyBhbnkgcmVzb2x1dGlvbiB0aGFua3MgdG8g
+Y3JvcCAqLw0KPj4gKwlpZiAoKG1mLT53aWR0aCA+IHdpZHRoKSB8fCAobWYtPmhlaWdodCA+IGhl
+aWdodCkpIHsNCj4+ICsJCS8qIFJlc3RvcmUgd2lkdGgvaGVpZ2h0ICovDQo+PiArCQlwaXhmbXQt
+PndpZHRoID0gd2lkdGg7DQo+PiArCQlwaXhmbXQtPmhlaWdodCA9IGhlaWdodDsNCj4+ICsJfTsN
+Cj4+ICsNCj4+ICAgIAlwaXhmbXQtPmZpZWxkID0gVjRMMl9GSUVMRF9OT05FOw0KPj4gICAgCXBp
+eGZtdC0+Ynl0ZXNwZXJsaW5lID0gcGl4Zm10LT53aWR0aCAqIGRjbWlfZm10LT5icHA7DQo+PiAg
+ICAJcGl4Zm10LT5zaXplaW1hZ2UgPSBwaXhmbXQtPmJ5dGVzcGVybGluZSAqIHBpeGZtdC0+aGVp
+Z2h0Ow0KPj4gQEAgLTc0MSw2ICs3NzYsOCBAQCBzdGF0aWMgaW50IGRjbWlfc2V0X2ZtdChzdHJ1
+Y3Qgc3RtMzJfZGNtaSAqZGNtaSwgc3RydWN0IHY0bDJfZm9ybWF0ICpmKQ0KPj4gICAgCXN0cnVj
+dCB2NGwyX3N1YmRldl9mb3JtYXQgZm9ybWF0ID0gew0KPj4gICAgCQkud2hpY2ggPSBWNEwyX1NV
+QkRFVl9GT1JNQVRfQUNUSVZFLA0KPj4gICAgCX07DQo+PiArCXN0cnVjdCB2NGwyX21idXNfZnJh
+bWVmbXQgKm1mID0gJmZvcm1hdC5mb3JtYXQ7DQo+PiArCXN0cnVjdCB2NGwyX3BpeF9mb3JtYXQg
+KnBpeGZtdCA9ICZmLT5mbXQucGl4Ow0KPj4gICAgCWNvbnN0IHN0cnVjdCBkY21pX2Zvcm1hdCAq
+Y3VycmVudF9mbXQ7DQo+PiAgICAJaW50IHJldDsNCj4+ICAgIA0KPj4gQEAgLTc0OCwxMyArNzg1
+LDI4IEBAIHN0YXRpYyBpbnQgZGNtaV9zZXRfZm10KHN0cnVjdCBzdG0zMl9kY21pICpkY21pLCBz
+dHJ1Y3QgdjRsMl9mb3JtYXQgKmYpDQo+PiAgICAJaWYgKHJldCkNCj4+ICAgIAkJcmV0dXJuIHJl
+dDsNCj4+ICAgIA0KPj4gLQl2NGwyX2ZpbGxfbWJ1c19mb3JtYXQoJmZvcm1hdC5mb3JtYXQsICZm
+LT5mbXQucGl4LA0KPj4gKwl2NGwyX2ZpbGxfbWJ1c19mb3JtYXQoJmZvcm1hdC5mb3JtYXQsIHBp
+eGZtdCwNCj4+ICAgIAkJCSAgICAgIGN1cnJlbnRfZm10LT5tYnVzX2NvZGUpOw0KPj4gICAgCXJl
+dCA9IHY0bDJfc3ViZGV2X2NhbGwoZGNtaS0+ZW50aXR5LnN1YmRldiwgcGFkLA0KPj4gICAgCQkJ
+ICAgICAgIHNldF9mbXQsIE5VTEwsICZmb3JtYXQpOw0KPj4gICAgCWlmIChyZXQgPCAwKQ0KPj4g
+ICAgCQlyZXR1cm4gcmV0Ow0KPj4gICAgDQo+PiArCS8qIEVuYWJsZSBjcm9wIGlmIHNlbnNvciBy
+ZXNvbHV0aW9uIGlzIGxhcmdlciB0aGFuIHJlcXVlc3QgKi8NCj4+ICsJZGNtaS0+ZG9fY3JvcCA9
+IGZhbHNlOw0KPj4gKwlpZiAoKG1mLT53aWR0aCA+IHBpeGZtdC0+d2lkdGgpIHx8IChtZi0+aGVp
+Z2h0ID4gcGl4Zm10LT5oZWlnaHQpKSB7DQo+PiArCQlkY21pLT5jcm9wLndpZHRoID0gcGl4Zm10
+LT53aWR0aDsNCj4+ICsJCWRjbWktPmNyb3AuaGVpZ2h0ID0gcGl4Zm10LT5oZWlnaHQ7DQo+PiAr
+CQlkY21pLT5jcm9wLmxlZnQgPSAobWYtPndpZHRoIC0gcGl4Zm10LT53aWR0aCkgLyAyOw0KPj4g
+KwkJZGNtaS0+Y3JvcC50b3AgPSAobWYtPmhlaWdodCAtIHBpeGZtdC0+aGVpZ2h0KSAvIDI7DQo+
+PiArCQlkY21pLT5kb19jcm9wID0gdHJ1ZTsNCj4gDQo+IFdoeSBub3QgaW1wbGVtZW50IHRoZSBz
+ZWxlY3Rpb24gQVBJIGluc3RlYWQ/IEkgYXNzdW1lIHRoYXQgeW91IGNhbiBjcm9wIGZyb20gYW55
+DQo+IHJlZ2lvbiBvZiB0aGUgc2Vuc29yLCBub3QganVzdCB0aGUgY2VudGVyIHBhcnQuDQoNClRo
+ZSBwb2ludCBoZXJlIHdhcyB0byBhZGQgc29tZSBmbGV4aWJpbGl0eSBmb3IgdXNlciBpbiB0ZXJt
+IG9mIA0KcmVzb2x1dGlvbiBhbmQgYWxzbyBsZXNzIG1lbW9yeSBjb25zdW1wdGlvbi4NCkZvciBl
+eGFtcGxlIGhlcmUgSSB3YW50IHRvIG1ha2UgYSA0ODB4MjcyIHByZXZpZXc6DQotIHdpdGhvdXQg
+dGhpcyBjaGFuZ2U6IFNfRk1UKDQ4MHgyNzIpIHJldHVybnMgVkdBICh0aGUgT1Y5NjU1IGxhcmdl
+ciANCmRpc2NyZXRlIHJlc29sdXRpb24pLCB0aGVuIGFwcCBoYXMgdG8gY2FwdHVyZSBWR0EgZnJh
+bWVzIHRoZW4gY3JvcCB0byANCmZpdCA0ODB4MjcyIGZyYW1lIGJ1ZmZlci4NCi0gd2l0aCB0aGlz
+IGNoYW5nZTogU19GTVQoNDgweDI3MikgcmV0dXJucyA0ODB4MjcyIChjcm9wIGRvbmUgYnkgDQpo
+YXJkd2FyZSksIGFwcCBjYW4gZGlyZWN0bHkgY2FwdHVyZSA0ODB4MjcyIHRoZW4gY29weSB0byBm
+cmFtZWJ1ZmZlciANCndpdGhvdXQgYW55IGNvbnZlcnNpb24uDQoNCkltcGxlbWVudGF0aW9uIG9m
+IFY0TDIgY3JvcCB1c2luZyBTRUxFQ1RJT04gQVBJIGNvdWxkIGFsc28gYmUgdXNlZCwNCmJ1dCBJ
+IG5lZWQgdG8gY2hhbmdlIGFwcC4NCg0KTW9yZSBnZW5lcmFsbHksIHdpdGggYSBnaXZlbiBjb3Vw
+bGUgSVNQK3NlbnNvciwgd2lsbCBTX0ZNVCgpDQpyZXR1cm4gdGhlIHNlbnNvciBvbmx5IHN1cHBv
+cnRlZCByZXNvbHV0aW9ucyA/IG9yIHRoZSBzdXBwb3J0ZWQgDQpyZXNvbHV0aW9ucyBvZiB0aGUg
+Y291cGxlIElTUCtzZW5zb3IgKElTUCB3aWxsIGRvd25zY2FsZS91cHNjYWxlL2Nyb3ANCnRoZSBz
+ZW5zb3IgZGlzY3JldGUgcmVzb2x1dGlvbiB0byBmaXQgdXNlciByZXF1ZXN0KSA/DQoNCkhhbnMs
+IHdoYXQgYXJlIHlvdXIgcmVjb21tZW5kYXRpb25zID8NCg0KPiANCj4gUmVnYXJkcywNCj4gDQo+
+IAlIYW5zDQo+IA0KPj4gKw0KPj4gKwkJZGV2X2RiZyhkY21pLT5kZXYsICIldXgldSBjcm9wcGVk
+IHRvICV1eCV1QCgldSwldSlcbiIsDQo+PiArCQkJbWYtPndpZHRoLCBtZi0+aGVpZ2h0LA0KPj4g
+KwkJCWRjbWktPmNyb3Aud2lkdGgsIGRjbWktPmNyb3AuaGVpZ2h0LA0KPj4gKwkJCWRjbWktPmNy
+b3AubGVmdCwgZGNtaS0+Y3JvcC50b3ApOw0KPj4gKwl9Ow0KPj4gKw0KPj4gICAgCWRjbWktPmZt
+dCA9ICpmOw0KPj4gICAgCWRjbWktPmN1cnJlbnRfZm10ID0gY3VycmVudF9mbXQ7DQo+PiAgICAN
+Cj4+DQo+IA==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
