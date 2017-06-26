@@ -1,46 +1,55 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 04/15] clk: Add Ingenic jz4770 CGU driver
-Date: Mon, 26 Jun 2017 15:50:11 +0200
-Message-ID: <639b492cc57200bab14572ac591ef8af@crapouillou.net>
-References: <20170607200439.24450-1-paul@crapouillou.net>
- <20170607200439.24450-5-paul@crapouillou.net>
- <20170607205943.GO20170@codeaurora.org>
+From: Romain Perier <romain.perier@collabora.com>
+Subject: Re: [PATCH v3 0/3] Add support for es8323 and hdmi
+ audio to the firefly-rk3288
+Date: Mon, 26 Jun 2017 16:00:17 +0200
+Message-ID: <98ec8d72-2977-4347-86b0-4b423b55c434@collabora.com>
+References: <20170512132227.24916-1-romain.perier@collabora.com>
+ <20170512132227.24916-9-romain.perier@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170607205943.GO20170@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170512132227.24916-9-romain.perier@collabora.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Romain Perier <romain.perier@collabora.co.uk>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-Le 2017-06-07 22:59, Stephen Boyd a écrit :
-> On 06/07, Paul Cercueil wrote:
->> Add support for the clocks provided by the CGU in the Ingenic JZ4770
->> SoC.
->> 
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-
-[...]
-
->> diff --git a/include/dt-bindings/clock/jz4770-cgu.h 
->> b/include/dt-bindings/clock/jz4770-cgu.h
->> new file mode 100644
->> index 000000000000..54b8b2ae4a73
->> --- /dev/null
->> +++ b/include/dt-bindings/clock/jz4770-cgu.h
-> 
-> Can you split this file off into a different patch? That way clk
-> tree can apply clk patches on top of a stable branch where this
-> file lives by itself.
-
-Oops, I forgot that in the v2.
-
-The jz4770-cgu.c file includes and uses 
-<dt-bindings/clock/jz4770-cgu.h>, so I don't think
-it would make sense to split it, since it wouldn't compile without it.
+SGVsbG8sCgpwaW5nLAoKbm8gb3RoZXIgZmVlZGJhY2tzIChmb3IgMi8zIGFuZCAzLzMpPwoKUm9t
+YWluCgoKTGUgMTIvMDUvMjAxNyDDoCAxNToyMiwgUm9tYWluIFBlcmllciBhIMOpY3JpdCA6Cj4g
+VGhpcyBzZXQgb2YgcGF0Y2hlcyBlbmFibGVzIHN1cHBvcnQgZm9yIHRoZSBlczgzMjMgY29kZWNz
+IG9uIHRoZQo+IGZpcmVmbHktcmszMjg4LiBJdCBhZGRzIHRoZSByZXF1aXJlZCBEVCBkZWZpbml0
+aW9ucyB0byBsaW5rIHJvY2tjaGlwLWkycwo+IHRvIHRoZSBlczgzODggYW5hbG9nIG91dHB1dC4g
+QXMgdGhlIHN1cHBvcnQgZm9yIEhETUkgYXVkaW8gaXMgYWxzbwo+IGJ1aWx0LWluIGluIHRoZSBj
+b3JyZXNwb25kaW5nIEFTb0MgbWFjaGluZSBkcml2ZXIsIEhETUkgYXVkaW8gb3V0cHV0IGlzCj4g
+YWxzbyBlbmFibGVkLgo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAgLSBTeW5jZWQgRFQgd2l0aCB0aGUg
+b25lIG9mIHRoZSBSb2NrMiwgdGhlIHByb3BlcnRpZXMgaGF2ZSBiZWVuCj4gICAgbGV4aWNhbGx5
+IHJlLW9yZGVyZWQgaW4gdGhlIHJpZ2h0IG9yZGVyLCBJIGhhdmUgc3BsaXR0ZWQgdGhlCj4gICAg
+aGVhZHBob25lIHBpbmN0cmwgaW4gdHdvOiBwaG9uZV9jdGwgYW5kIGhwX2RldAo+IENoYW5nZXMg
+aW4gdjI6Cj4gIC0gQWRhcHRlZCBEVCBmb3IgdGhlIGZpcmVmbHktcmszMjg4IHRvIHRoZSBBU29D
+IG1hY2hpbmUgZHJpdmVyCj4gICAgcmszMjg4LWhkbWktYW5hbG9nCj4gIC0gQWRkZWQgcGF0Y2gg
+MDIvMDMgdG8gdGhpcyBzZXJpZXMKPiAgLSBSZS13cm90ZSB0aGlzIGNvdmVyIGxldHRlcgo+Cj4g
+Um9tYWluIFBlcmllciAoMyk6Cj4gICBTb0M6IGVzODMyOC1pMmM6IEFkZCBjb21wYXRpYmxlIGZv
+ciBFUzgzMjMKPiAgIGFybTogZHRzOiByb2NrY2hpcDogRG9uJ3Qgc2V0IG90cC1ncGlvIHBpbmN0
+cmwgYnkgZGVmYXVsdCBpbgo+ICAgICByazMyODguZHRzaQo+ICAgYXJtOiBkdHM6IEFkZCBzdXBw
+b3J0IGZvciBFUzgzMjMgdG8gdGhlIEZpcmVmbHktUkszMjg4Cj4KPiAgRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2VzODMyOC50eHQgfCAgNSArKy0KPiAgYXJjaC9hcm0v
+Ym9vdC9kdHMvcmszMjg4LWV2Yi5kdHNpICAgICAgICAgICAgICAgICAgfCAgNCArKysKPiAgYXJj
+aC9hcm0vYm9vdC9kdHMvcmszMjg4LWZpcmVmbHkuZHRzaSAgICAgICAgICAgICAgfCAzOCArKysr
+KysrKysrKysrKysrKysrKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC12ZXlyb24uZHRz
+aSAgICAgICAgICAgICAgIHwgIDQgKysrCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3JrMzI4OC5kdHNp
+ICAgICAgICAgICAgICAgICAgICAgIHwgIDQgLS0tCj4gIHNvdW5kL3NvYy9jb2RlY3MvZXM4MzI4
+LWkyYy5jICAgICAgICAgICAgICAgICAgICAgIHwgIDIgKysKPiAgNiBmaWxlcyBjaGFuZ2VkLCA1
+MiBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQo+CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRl
+dmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
