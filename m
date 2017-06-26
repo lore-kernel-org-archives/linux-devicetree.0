@@ -1,15 +1,16 @@
 From: Hugues FRUCHET <hugues.fruchet@st.com>
-Subject: Re: [PATCH v1 5/6] [media] ov9650: add multiple variant support (fwd)
-Date: Mon, 26 Jun 2017 09:59:04 +0000
-Message-ID: <c58a896c-4955-e051-82b6-395174cdbe7e@st.com>
-References: <alpine.DEB.2.20.1706251559180.3109@hadrien>
+Subject: Re: [PATCH v1 0/6] Add support of OV9655 camera
+Date: Mon, 26 Jun 2017 10:05:41 +0000
+Message-ID: <cb9bcc6e-4bc8-7eaa-3d15-6e16e22226f2@st.com>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <alpine.DEB.2.20.1706251559180.3109@hadrien>
+In-Reply-To: <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
 Content-Language: en-US
-Content-ID: <8DEAE6A33F22974AA2DF8424A82E7F86@st.com>
+Content-ID: <BE11225E35AA654C82341E0EB2465CF1@st.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,55 +20,81 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Julia Lawall <julia.lawall@lip6.fr>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "H. Nikolaus Schaller" <hns@goldelico.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, "kbuild-all@01.org" <kbuild-all@01.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick FERTRE <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Alexandre TORGUE <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick FERTRE <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Ok course, thanks Julia.
+Hi Nikolaus,
 
-On 06/25/2017 10:00 PM, Julia Lawall wrote:
-> Braces are probably missing aroud lines 1618-1620.
+On 06/22/2017 05:41 PM, H. Nikolaus Schaller wrote:
 > 
-> julia
+>> Am 22.06.2017 um 17:05 schrieb Hugues Fruchet <hugues.fruchet@st.com>:
+>>
+>> This patchset enables OV9655 camera support.
+>>
+>> OV9655 support has been tested using STM32F4DIS-CAM extension board
+>> plugged on connector P1 of STM32F746G-DISCO board.
+>> Due to lack of OV9650/52 hardware support, the modified related code
+>> could not have been checked for non-regression.
+>>
+>> First patches upgrade current support of OV9650/52 to prepare then
+>> introduction of OV9655 variant patch.
+>> Because of OV9655 register set slightly different from OV9650/9652,
+>> not all of the driver features are supported (controls). Supported
+>> resolutions are limited to VGA, QVGA, QQVGA.
+>> Supported format is limited to RGB565.
+>> Controls are limited to color bar test pattern for test purpose.
+>>
+>> OV9655 initial support is based on a driver written by H. Nikolaus Schaller [1].
 > 
-> ---------- Forwarded message ----------
-> Date: Sun, 25 Jun 2017 23:06:03 +0800
-> From: kbuild test robot <fengguang.wu@intel.com>
-> To: kbuild@01.org
-> Cc: Julia Lawall <julia.lawall@lip6.fr>
-> Subject: Re: [PATCH v1 5/6] [media] ov9650: add multiple variant support
+> Great!
 > 
-> Hi Hugues,
+> I will test as soon as possible.
 > 
-> [auto build test WARNING on linuxtv-media/master]
-> [also build test WARNING on v4.12-rc6 next-20170623]
-> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+
+Many thanks for your active review and testing Nikolaus !
+
+>> OV9655 registers sequences come from STM32CubeF7 embedded software [2].
 > 
-> url:    https://github.com/0day-ci/linux/commits/Hugues-Fruchet/Add-support-of-OV9655-camera/20170625-201153
-> base:   git://linuxtv.org/media_tree.git master
-> :::::: branch date: 3 hours ago
-> :::::: commit date: 3 hours ago
+> There is also a preliminary data sheet, e.g. here:
 > 
->>> drivers/media/i2c/ov9650.c:1618:2-44: code aligned with following code on line 1619
+> http://electricstuff.co.uk/OV9655-datasheet-annotated.pdf
+
+This is the datasheet I've used for registers naming and signification.
+
+BR,
+Hugues.
 > 
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout a9fe8c23240a7f8df39c6238d98e41f41fedb641
-> vim +1618 drivers/media/i2c/ov9650.c
+>>
+>> [1] http://git.goldelico.com/?p=gta04-kernel.git;a=shortlog;h=refs/heads/work/hns/video/ov9655
+>> [2] https://developer.mbed.org/teams/ST/code/BSP_DISCO_F746NG/file/e1d9da7fe856/Drivers/BSP/Components/ov9655/ov9655.c
+>>
+>> ===========
+>> = history =
+>> ===========
+>> version 1:
+>>   - Initial submission.
+>>
+>> H. Nikolaus Schaller (1):
+>>   DT bindings: add bindings for ov965x camera module
+>>
+>> Hugues Fruchet (5):
+>>   [media] ov9650: add device tree support
+>>   [media] ov9650: select the nearest higher resolution
+>>   [media] ov9650: use write_array() for resolution sequences
+>>   [media] ov9650: add multiple variant support
+>>   [media] ov9650: add support of OV9655 variant
+>>
+>> .../devicetree/bindings/media/i2c/ov965x.txt       |  37 +
+>> drivers/media/i2c/Kconfig                          |   6 +-
+>> drivers/media/i2c/ov9650.c                         | 792 +++++++++++++++++----
+>> 3 files changed, 704 insertions(+), 131 deletions(-)
+>> create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
+>>
+>> -- 
+>> 1.9.1
+>>
 > 
-> a9fe8c23 Hugues Fruchet     2017-06-22  1612  	ov965x->set_params = __ov965x_set_params;
-> 84a15ded Sylwester Nawrocki 2012-12-26  1613
-> a9fe8c23 Hugues Fruchet     2017-06-22  1614  	ov965x->frame_size = &ov965x->framesizes[0];
-> a9fe8c23 Hugues Fruchet     2017-06-22  1615  	ov965x_get_default_format(ov965x, &ov965x->format);
-> a9fe8c23 Hugues Fruchet     2017-06-22  1616
-> a9fe8c23 Hugues Fruchet     2017-06-22  1617  	if (ov965x->initialize_controls)
-> a9fe8c23 Hugues Fruchet     2017-06-22 @1618  		ret = ov965x->initialize_controls(ov965x);
-> 84a15ded Sylwester Nawrocki 2012-12-26 @1619  		if (ret < 0)
-> 84a15ded Sylwester Nawrocki 2012-12-26  1620  			goto err_ctrls;
-> 84a15ded Sylwester Nawrocki 2012-12-26  1621
-> 84a15ded Sylwester Nawrocki 2012-12-26  1622  	/* Update exposure time min/max to match frame format */
-> 
-> ---
-> 0-DAY kernel test infrastructure                Open Source Technology Center
-> https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+> BR and thanks,
+> Nikolaus Schaller
 > 
