@@ -1,70 +1,98 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 1/9] Documentation: dt-bindings: add support for mailbox client shared memory
-Date: Mon, 26 Jun 2017 16:55:05 +0100
-Message-ID: <1498492513-29771-2-git-send-email-sudeep.holla@arm.com>
-References: <1498492513-29771-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498492513-29771-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Matt Sealey <neko@bakuhatsu.net>, Rob Herring <robh+dt@kernel.org>
+From: Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v3 2/3] remoteproc/keystone: Add a remoteproc driver for
+ Keystone 2 DSPs
+Date: Mon, 26 Jun 2017 10:54:16 -0500
+Message-ID: <1ccd9273-0fde-4241-6d99-1d03be2f5b57@ti.com>
+References: <20170613234513.7624-1-s-anna@ti.com>
+ <20170613234513.7624-3-s-anna@ti.com> <20170625201545.GA26155@builder>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20170625201545.GA26155@builder>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Grygorii Strashko <grygorii.strashko@ti.com>, devicetree@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, "Andrew F.
+ Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, linux-arm-kernel@lists.infradead.org, Sam Nelson <sam.nelson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Many users of the mailbox controllers depend on the shared memory between the
-two end points to exchange the main data while using simple doorbell mechanism
-to alert the end points of the presence of a message.
+Hi Bjorn,
 
-This patch defines device tree bindings to represent such shared memory in a
-generic way.
+On 06/25/2017 03:15 PM, Bjorn Andersson wrote:
+> On Tue 13 Jun 16:45 PDT 2017, Suman Anna wrote:
+> 
+>> +static int keystone_rproc_start(struct rproc *rproc)
+>> +{
+>> +	struct keystone_rproc *ksproc = rproc->priv;
+>> +	int ret;
+>> +
+>> +	INIT_WORK(&ksproc->workqueue, handle_event);
+>> +
+>> +	ret = request_irq(ksproc->irq_ring, keystone_rproc_vring_interrupt, 0,
+>> +			  dev_name(ksproc->dev), ksproc);
+>> +	if (ret) {
+>> +		dev_err(ksproc->dev, "failed to enable vring interrupt, ret = %d\n",
+>> +			ret);
+>> +		goto out;
+>> +	}
+>> +
+>> +	ret = request_irq(ksproc->irq_fault, keystone_rproc_exception_interrupt,
+>> +			  0, dev_name(ksproc->dev), ksproc);
+>> +	if (ret) {
+>> +		dev_err(ksproc->dev, "failed to enable exception interrupt, ret = %d\n",
+>> +			ret);
+>> +		goto free_vring_irq;
+>> +	}
+> 
+> I do prefer that your request any resources during probe() and
+> potentially enable/disable them here. If below concern about using a
+> GPIO driver is cleared already I'll take it as is though.
+> 
+> [..]
+>> +static void keystone_rproc_kick(struct rproc *rproc, int vqid)
+>> +{
+>> +	struct keystone_rproc *ksproc = rproc->priv;
+>> +
+>> +	if (WARN_ON(ksproc->kick_gpio < 0))
+>> +		return;
+>> +
+>> +	gpio_set_value(ksproc->kick_gpio, 1);
+>> +}
+>> +
+> 
+> This doesn't sound like a gpio-controller and the GPIO maintainer did
+> reject an attempt by me to use the GPIO framework to abstract a similar
+> thing. Do you already have this driver upstream or have you clarified
+> with the maintainer that the GPIO framework is an acceptable abstraction
+> for this?
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- .../devicetree/bindings/mailbox/mailbox.txt        | 28 ++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+Yeah, this has been upstream since quite some time. See commit
+2134cb997f2f ("gpio: syscon: reuse for keystone 2 socs").
 
-diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-index be05b9746c69..af8ecee2ac68 100644
---- a/Documentation/devicetree/bindings/mailbox/mailbox.txt
-+++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
-@@ -23,6 +23,11 @@ assign appropriate mailbox channel to client drivers.
- 
- Optional property:
- - mbox-names: List of identifier strings for each mailbox channel.
-+- shmem : List of phandle pointing to the shared memory(SHM) area between the
-+	  users of these mailboxes for IPC, one for each mailbox. This shared
-+	  memory can be part of any memory reserved for the purpose of this
-+	  communication between the mailbox client and the remote.
-+
- 
- Example:
- 	pwr_cntrl: power {
-@@ -30,3 +35,26 @@ assign appropriate mailbox channel to client drivers.
- 		mbox-names = "pwr-ctrl", "rpc";
- 		mboxes = <&mailbox 0 &mailbox 1>;
- 	};
-+
-+Example with shared memory(shmem):
-+
-+	sram: sram@50000000 {
-+		compatible = "mmio-sram";
-+		reg = <0x50000000 0x10000>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0 0x50000000 0x10000>;
-+
-+		cl_shmem: shmem@0 {
-+			compatible = "client-shmem";
-+			reg = <0x0 0x200>;
-+		};
-+	};
-+
-+	client@2e000000 {
-+		...
-+		mboxes = <&mailbox 0>;
-+		shmem = <&cl_shmem>;
-+		..
-+	};
--- 
-2.7.4
+regards
+Suman
+
+> 
+> It looks equivalent to the "APCS IPC" register found in Qualcomm
+> platforms, previously implemented through a syscon but in v4.13 being
+> pushed to being a mailbox driver.
+> 
+> 
+> Apart from this I think the series looks good.
+> 
+> Regards,
+> Bjorn
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-remoteproc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
