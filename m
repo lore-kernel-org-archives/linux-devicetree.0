@@ -1,143 +1,169 @@
-From: Hugues FRUCHET <hugues.fruchet@st.com>
-Subject: Re: omap3isp camera was Re: [PATCH v1 0/6] Add support of OV9655
- camera
-Date: Mon, 26 Jun 2017 13:19:27 +0000
-Message-ID: <e725a457-5efc-22fa-ce97-bb7753185d21@st.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
- <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
- <20170625091856.GA22791@amd>
- <EDFD663F-37F9-42C2-92A9-66C2508B361E@goldelico.com>
- <20170626083927.GB9621@amd>
+From: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: input: Add the Goodix GTx5 series
+ Touchscreen devicetree bindings
+Date: Mon, 26 Jun 2017 21:22:53 +0800
+Message-ID: <20170626132253.GA24061@andrew-dell>
+References: <22592d94-f482-3e4f-3860-1dce83472d4f@goodix.com>
+ <20170623203706.upfzigj6ghdbqx2q@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170626083927.GB9621@amd>
-Content-Language: en-US
-Content-ID: <5369098A36BC864388663457045F018A@st.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick FERTRE <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170623203706.upfzigj6ghdbqx2q@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andrew-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org, mouse-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Nikolaus,
-some comments about pixel format/resolution below:
+Hi Rob,
 
-On 06/26/2017 10:39 AM, Pavel Machek wrote:
-> On Mon 2017-06-26 08:05:04, H. Nikolaus Schaller wrote:
->> Hi Pavel,
->>
->>> Am 25.06.2017 um 11:18 schrieb Pavel Machek <pavel@ucw.cz>:
->>>
->>> Hi!
->>>
->>>> * unfortunately we still get no image :(
->>>>
->>>> The latter is likely a setup issue of our camera interface (OMAP3 ISP = Image Signal Processor) which
->>>> we were not yet able to solve. Oscilloscoping signals on the interface indicated that signals and
->>>> sync are correct. But we do not know since mplayer only shows a green screen.
->>>
->>> What mplayer command line do you use? How did you set up the pipeline
->>> with media-ctl?
->>>
->>> On kernel.org, I have tree called camera-fw5-6 , where camera works
->>> for me on n900. On gitlab, there's modifed fcam-dev, which can be used
->>> for testing.
->>
->> We did have yet another (non-DT) camera driver and media-ctl working in with 3.12.37,
->> but had no success yet to update it to work with modern kernels or drivers. It
->> is either that the (newer) drivers missing something or the media-ctl has changed.
->>
->> Here is the log of our scripts with Hugues' driver and our latest setup:
->>
->> root@letux:~# ./camera-demo sxga
->> DISPLAY=:0
->> XAUTHORITY=tcp
->> Camera: /dev/v4l-subdev8
->> Setting mode sxga
->> media-ctl -r
->> media-ctl -l '"ov965x":0 -> "OMAP3 ISP CCDC":0[1]'
->> media-ctl -l '"OMAP3 ISP CCDC":1 -> "OMAP3 ISP CCDC output":0[1]'
->> media-ctl -V '"ov965x":0 [UYVY2X8 1280x1024]'
->> media-ctl -V '"OMAP3 ISP CCDC":0 [UYVY2X8 1280x1024]'
->> media-ctl -V '"OMAP3 ISP CCDC":1 [UYVY 1280x1024]'
-> 
-> Ok, so you are using capture, not preview.
-> 
-> You may want to try this one:
-> 
-> commit 0eae9d2a8f096f703cbc8f9a0ab155cd3cc14cef
-> Author: Pavel <pavel@ucw.cz>
-> Date:   Mon Feb 13 21:26:51 2017 +0100
-> 
->      omap3isp: fix VP2SDR bit so capture (not preview) works
-> 
->      This is neccessary for capture (not preview) to work properly on
->          N900. Why is unknown.
-> 	
-> 									Pavel
-> 
->> ### starting mplayer in sxga mode ###
->> mplayer tv:// -vf rotate=2 -tv driver=v4l2:device=/dev/video2:outfmt=uyvy:width=1280:height=1024:fps=15 -vo x11
+Thank you for the review.
 
-=> "outfmt=uyvy:width=1280:height=1024"
+On Fri, Jun 23, 2017 at 03:37:06PM -0500, Rob Herring wrote:
+> On Mon, Jun 19, 2017 at 06:40:32PM +0800, Wang Yafei wrote:
+> > Signed-off-by: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
+> > ---
+> >  .../bindings/input/touchscreen/goodix-gtx5.txt     | 75 ++++++++++++++++++++++
+> >  1 file changed, 75 insertions(+)
+> >  create mode 100755 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+> > new file mode 100755
+> > index 0000000..116c3ec
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+> > @@ -0,0 +1,75 @@
+> > +Device tree bindings for Goodix GTx5 series touchscreen controller
+> > +
+> > +Required properties:
+> > +
+> > +- compatible	: should be "goodix,gtx5" or "goodix,gsx" 
+> > +
+> > +- reg	: I2C address of the chip. Should be 0x5d or 0x14
+> > +- interrupt-parent	: Inerrupt controller to which the chip is connected
+> > +- interrupts	: Interrrupt to which the chip is connected
+> > +- touchscreen-size-x	: horizontal resolution of touchscreen          
+> > +                                  (in pixels)                                   
+> > +- touchscreen-size-y	: vertical resolution of touchscreen            
+> > +                                  (in pixels)                                  
+> > +- touchscreen-max-id	: panel supported max touch number.
+> > +- touchscreen-max-w	: panel max width value.
+> 
+> Just "See touchscreen.txt" for all of these common props.
 
-Nikolaus,
-Be careful that only VGA/RGB565 is coded in this basic version of OV9655,
-perhaps this explain partly your troubles ?
+Okay, I have noticed that.
 
->> MPlayer2 2.0-728-g2c378c7-4+b1 (C) 2000-2012 MPlayer Team
->>
->> Playing tv://.
->> Detected file format: TV
->> Selected driver: v4l2
->>   name: Video 4 Linux 2 input
->>   author: Martin Olschewski <olschewski@zpr.uni-koeln.de>
->>   comment: first try, more to come ;-)
->> v4l2: ioctl get standard failed: Invalid argument
->> Selected device: OMAP3 ISP CCDC output
->>   Capabilities:  video capture  video output  streaming
->>   supported norms:
->>   inputs: 0 = camera;
->>   Current input: 0
->>   Current format: unknown (0x0)
->> tv.c: norm_from_string(pal): Bogus norm parameter, setting default.
->> v4l2: ioctl enum norm failed: Inappropriate ioctl for device
->> Error: Cannot set norm!
->> Selected input hasn't got a tuner!
->> v4l2: ioctl set mute failed: Inappropriate ioctl for device
->> v4l2: ioctl query control failed: Inappropriate ioctl for device
->> v4l2: ioctl query control failed: Inappropriate ioctl for device
->> v4l2: ioctl query control failed: Inappropriate ioctl for device
->> v4l2: ioctl query control failed: Inappropriate ioctl for device
->> v4l2: ioctl streamon failed: Broken pipe
->> [ass] auto-open
->> Opening video filter: [rotate=2]
->> VIDEO:  1280x1024  15.000 fps    0.0 kbps ( 0.0 kB/s)
->> Could not find matching colorspace - retrying with -vf scale...
->> Opening video filter: [scale]
->> [swscaler @ 0xb5ca9980]using unscaled uyvy422 -> yuv420p special converter
->> VO: [x11] 1024x1280 => 1024x1280 Planar YV12
->> [swscaler @ 0xb5ca9980]No accelerated colorspace conversion found from yuv420p to bgra.
->> Colorspace details not fully supported by selected vo.
->> Selected video codec: RAW UYVY [raw]
->> Audio: no sound
->> Starting playback...
->> V:   0.0  10/ 10 ??% ??% ??,?% 0 0 $<3>
->>
->>
->> MPlayer interrupted by signal 2 in module: filter_video
->> V:   0.0  11/ 11 ??% ??% ??,?% 0 0 $<3>
->> v4l2: ioctl set mute failed: Inappropriate ioctl for device
->> v4l2: 0 frames successfully processed, 0 frames dropped.
->>
->> Exiting... (Quit)
->> root@letux:~#
->>
->> BR and thanks,
->> Nikolaus
->>
+> > +
+> > +
+> > +Optional properties:
+> > +- reset-gpios	: reset gpio.
+> > +- irq-gpios	: interrupt gpio. 
 > 
+> Use interrupts binding.
 > 
+> > +- irq-flags	: irq trigger type config, value should be:
+> > +                       1 - rising edge,
+> > +                       2 - falling edge,
+> > +                       4 - high level,
+> > +                       5 - low level.
 > 
+> Part of the flags for interrupt cells.
+
+Okay, I will remove this property and use the flowing property:
+interrupts =  <13 IRQ_TYPE_EDGE_FALLING>;
+
+> > +- touchscreen-swapped-x-y: swap  x/y axis coordinates.
+> 
+> "See touchscreen.txt"
+> 
+> > +- touchscreen-key-map: keycode value map  /*KEY_HOMEPAGE, KEY_BACK*/
+> 
+> This hardly seems sufficient to map screen areas to keys. There's been 
+> some discussion about doing that in the past.
+
+Sorry haven't notice that before, I will change it to the flowing
+property format:
+linux,keycodes = <KEY_HOMEPAGE>, <KEY_MENU>, <KEY_BACK>;
+
+> > +- power-on-delay-us: delay after power on.
+> > +- power-off-delay-us: delay after power off.
+> 
+> These should be implied by the compatible. If not, you need more 
+> specific compatible strings.
+
+Okay, I will remove this props from DT.
+
+> > +- normal-cfg: touch device normal config data.
+> 
+> There's no mention these are a sub-node sensorX.
+> 
+> Needs a vendor prefix too.
+> 
+> > +- vtouch-supply	: power supply for the touch device.
+> > +Example:
+> > +i2c@00000000 {
+> > +	/* ... */
+> > +
+> > +	goodix-ts-i2c@14 {
+> 
+> touchscreen@14
+> 
+> > +		compatible = "goodix,gtx5";
+> > +		reg = <0x14>;
+> > +		interrupt-parent = <&msm_gpio>;
+> > +		interrupts = <13 0x2800>;
+> > +		vtouch-supply = <&pm8916_l15>;
+> > +		reset-gpios = <&msm_gpio 12 0x0>;
+> > +		irq-gpios = <&msm_gpio 13 0x2800>;
+> > +		irq-flags = <1>; /* 1:trigger rising, 2:trigger falling;*/
+> > +		touchscreen-max-id = <10>;
+> > +		touchscreen-size-x = <400>;
+> > +		touchscreen-size-y = <400>;
+> > +		touchscreen-max-w = <400>;
+> > +		touchscreen-max-pressure = <255>;
+> > +		touchscreen-swapped-x-y;
+> > +		touchscreen-key-map = <172 158>; /*KEY_HOMEPAGE, KEY_BACK*/
+> > +		sensor0 {
+> 
+> How many sensors can there be? That needs to be documented.
+> 
+> Why do you need a sub-node?
+
+sensor is an internal call, we use senesorX to represent the touchpanel
+is produced by which factory. A panel factory will have it corresponding
+config data to get the best touch results. It will delete the sub-node 
+and change to the following format:
+	panel0,normal-cfg = [...]  /* panelX,cfg : X is no more than 10*/
+ 
+> > +			normal-cfg = [
+> > +				02 00 00 09 09 01 07 02 00 00 00 00 01 00 3C 00 07 07
+> > +				00 00 00 00 00 00 40 01 40 01 C8 00 96 00 F4 01 F4 01
+> > +				F4 01 20 01 11 0A 0A 03 14 14 14 14 0A 0C 01 01 11 11
+> > +				11 00 14 14 14 14 14 14 14 14 14 00 00 0F 00 00 00 00
+> > +				00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+> > +				00 00 00 00 00 00 00 00 00 00 11 09 10 00 31 32 33 34
+> > +				00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 CA 64 00
+> > +				00 00 00 00 00 00 09 00 13 00 00 00 00 00 00 00 00 00
+> > +				50 B0 19 00 19 00 05 00 00 00 00 0A 05 00 00 00 00 00
+> > +				01 00 FF 00 0B 06 0D 02 FF 04 05 03 07 01 08 0A 0E 11
+> > +				0F 10 09 13 0C 16 17 14 18 12 19 15 1D 1E 1C 1F 1B 20
+> > +				1A 2A 29 28 25 2B 27 21 FF 24 22 2C 26 23 FF 00 00 00
+> > +				00 00 00 00 00 00 00 00 00 00 00 00 80 80 80 80 80 80
+> > +				80 80 80 80 80 80 80 80 80 80 9F 22 01 AE];
+> > +		};
+> > +		sensor1 {
+> > +			normal-cfg = [ ];
+> > +		};
+> > +	};
+> > +}
+> > +
+> > +
+> > -- 
+> > 2.7.4
+> > 
+
+Sincerely.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
