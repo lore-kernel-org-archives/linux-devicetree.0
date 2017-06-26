@@ -1,126 +1,31 @@
-From: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
-Subject: Re: [PATCH 2/3] iio: adc: mt7622: add support for suspend/resume.
-Date: Mon, 26 Jun 2017 07:01:15 +0200
-Message-ID: <114E2942-6A96-432A-A4E1-6976440D1883@jic23.retrosnub.co.uk>
-References: <1498110274-18678-1-git-send-email-zhiyong.tao@mediatek.com> <1498110274-18678-3-git-send-email-zhiyong.tao@mediatek.com> <20170624210043.29569f3a@kernel.org> <1498445692.844.5.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498445692.844.5.camel@mhfsdcap03>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhiyong tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: <dieutv-CRy2XRVWyAa81eZEIcUDRw@public.gmane.org>
+Subject: The actual truth behind long term weight loss
+Date: Mon, 26 Jun 2017 07:46:59 +0200
+Message-ID: <B4D63042-0858-7861-722F-8F9A7DEC0980@hup.edu.vn>
+Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: delphine.berthier-ksIvt8Q0xqBWk0Htik3J/w@public.gmane.org, diane.mccurdy-N+13R9pCJaxWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ctello-W4QYX6+MYU4oLIxb8h4+0g@public.gmane.org, dtortola-Zyr1YNcT1EBU1h8h+wwwftBPR1lH4CV8@public.gmane.org, david-fe1X/zl/3XT0kXk7eCdv2u658FiBabzs@public.gmane.org, enrico.parenti-43U1HMFuhqanywlS5GSjHg@public.gmane.org, efimova-ZSN1rAK9rQEox3rIn2DAYQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 26 June 2017 04:54:52 CEST, zhiyong tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->On Sat, 2017-06-24 at 21:00 +0100, Jonathan Cameron wrote:
->> On Thu, 22 Jun 2017 13:44:33 +0800
->> Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
->> 
->> > This patch supports auxadc suspend/resume flow.
->> > Disable auxadc clk and power in suspend function.
->> > Enable axuadc clk and power in resume function.
->> > 
->> > Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
->> Worth handling the cases where power management is not configured
->into the
->> kernel properly.
->> 
->> So a few minor suggestions.  Otherwise looks good to me.
->> > ---
->> >  drivers/iio/adc/mt6577_auxadc.c |   37
->+++++++++++++++++++++++++++++++++++++
->> >  1 file changed, 37 insertions(+)
->> > 
->> > diff --git a/drivers/iio/adc/mt6577_auxadc.c
->b/drivers/iio/adc/mt6577_auxadc.c
->> > index 2d104c8..2dd7c74 100644
->> > --- a/drivers/iio/adc/mt6577_auxadc.c
->> > +++ b/drivers/iio/adc/mt6577_auxadc.c
->> > @@ -184,6 +184,37 @@ static int mt6577_auxadc_read_raw(struct
->iio_dev *indio_dev,
->> >  	.read_raw = &mt6577_auxadc_read_raw,
->> >  };
->> >  
->> > +static int mt6577_auxadc_resume(struct device *dev)
->> > +{
->> > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->> > +	struct mt6577_auxadc_device *adc_dev = iio_priv(indio_dev);
->> > +	int ret;
->> > +
->> > +	ret = clk_prepare_enable(adc_dev->adc_clk);
->> > +	if (ret) {
->> > +		pr_err("failed to enable auxadc clock\n");
->> > +		return ret;
->> > +	}
->> > +
->> > +	mt6577_auxadc_mod_reg(adc_dev->reg_base + MT6577_AUXADC_MISC,
->> > +			      MT6577_AUXADC_PDN_EN, 0);
->> > +	mdelay(MT6577_AUXADC_POWER_READY_MS);
->> > +
->> > +	return 0;
->> > +}
->> > +
->> > +static int mt6577_auxadc_suspend(struct device *dev)
->> Mark these __maybe_unused for the CONFIG_PM but not CONFIG_PM_SLEEP
->case.
-Preferred to mark __maybe_unused and use the macro mentioned below.
->
->==> ok, We will add CONFIG_PM_SLEEP for the suspend/resume case in v2.
->thanks!
->
->> > +{
->> > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
->> > +	struct mt6577_auxadc_device *adc_dev = iio_priv(indio_dev);
->> > +
->> > +	mt6577_auxadc_mod_reg(adc_dev->reg_base + MT6577_AUXADC_MISC,
->> > +			      0, MT6577_AUXADC_PDN_EN);
->> > +	clk_disable_unprepare(adc_dev->adc_clk);
->> > +
->> > +	return 0;
->> > +}
->> > +
->> >  static int mt6577_auxadc_probe(struct platform_device *pdev)
->> >  {
->> >  	struct mt6577_auxadc_device *adc_dev;
->> > @@ -269,6 +300,11 @@ static int mt6577_auxadc_remove(struct
->platform_device *pdev)
->> >  	return 0;
->> >  }
->> >  
->> > +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
->> > +	.suspend = mt6577_auxadc_suspend,
->> > +	.resume = mt6577_auxadc_resume,
->> > +};
->> > +
->> Use the SIMPLE_SYSTEM_PM_OPS macro to make these assignments
->magically go away
->> if PM_CONFIG_SLEEP is not defined.
->
->==> ok, We will use SIMPLE_DEV_PM_OPS macro to change it in v2. Thanks.
->>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
->> >  	{ .compatible = "mediatek,mt2701-auxadc", },
->> >  	{ .compatible = "mediatek,mt8173-auxadc", },
->> > @@ -280,6 +316,7 @@ static int mt6577_auxadc_remove(struct
->platform_device *pdev)
->> >  	.driver = {
->> >  		.name   = "mt6577-auxadc",
->> >  		.of_match_table = mt6577_auxadc_of_match,
->> > +		.pm = &mt6577_auxadc_pm_ops,
->> >  	},
->> >  	.probe	= mt6577_auxadc_probe,
->> >  	.remove	= mt6577_auxadc_remove,
->> 
->
->
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+T3VyIHByb2R1Y3QgaXMgYSBzdHJvbmcgd2VpZ2h0IGxvc3Mgc29sdXRpb24uDQoNCkJlY2F1c2Ug
+b2YgaXRzIGVmZmVjdGl2ZW5lc3MsIGl0IGhlbHBzIHRvIHJhcGlkbHkgYnVybiBib2R5IGZhdCwg
+dGhpcyBzdGltdWxhdGVzIHlvdXIgbWV0YWJvbGlzbSBhbmQgeW91ciBib2R5IGJlZ2lucyB0byB1
+c2Ugc3RvcmVkIGJvZHkgZmF0IGRlcG9zaXRzLg0KDQpGdXJ0aGVyIGFkdmFudGFnZXM6DQoNCj9S
+ZWR1Y2VkIGZvb2QgY3JhdmluZ3M7DQo/QWxsZXZpYXRlZCBhdHRlbnRpdmVuZXNzLCBlbmVyZ3kg
+YW5kIHN0cmVuZ3RoLg0KDQpUaGUgbGFzdCBmYWN0IGlzIHRoZSBtb3N0IGNydWNpYWwsIGJlY2F1
+c2UgYSBsb3Qgb2YgcGVvcGxlIGZlZWwgZGlldC1yZWxhdGVkIGZlZWxpbmcgb2YgZmF0aWd1ZSBh
+bmQgb3VyIHByb2R1Y3QgcmVhbGx5IGhlbHBzIGNhbmNlbCBpdCBvdXQuDQoNCkFsc28gd29ydGgg
+bWVudGlvbmluZzogd2UndmUgYSByZWdpc3RlcmVkIGRpZXRpdGlhbiBvbiBvdXIgc2l0ZSB0byBo
+ZWxwIGFkanVzdCB0aGUgZGFpbHkgZG9zZSB0aGF0J2xsIGdldCB5b3UgdGhlIGRyZWFtIHJlc3Vs
+dHMgaW4gbm8gdGltZS4NCg0KVG8gbGVhcm4gbW9yZSBpbmZvcm1hdGlvbiBhYm91dCB0aGUgc3Vw
+cGxlbWVudCBpdHNlbGYgYW5kIGdldCBhIHNwZWNpYWwgZGlzY291bnQsIHVzZSB0aGlzIFVSTA0K
+DQpodHRwOi8vd3d3LnFjb25uZWN0LmNvbS5ici93cC1jb250ZW50L3BsdWdpbnMvTGF5ZXJTbGlk
+ZXIvc2VuZGZvcm0uaW5jLnBocD9aR1ZzY0docGJtVXVZbVZ5ZEdocFpYSkFaMmwyWVhWa1lXNHVZ
+Mjl0DQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
