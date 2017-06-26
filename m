@@ -1,462 +1,70 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 6/9] firmware: arm_scmi: add initial support for clock protocol
-Date: Mon, 26 Jun 2017 16:55:10 +0100
-Message-ID: <1498492513-29771-7-git-send-email-sudeep.holla@arm.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: [PATCH 1/9] Documentation: dt-bindings: add support for mailbox client shared memory
+Date: Mon, 26 Jun 2017 16:55:05 +0100
+Message-ID: <1498492513-29771-2-git-send-email-sudeep.holla@arm.com>
 References: <1498492513-29771-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498492513-29771-1-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498492513-29771-1-git-send-email-sudeep.holla@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Matt Sealey <neko@bakuhatsu.net>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The clock protocol is intended for management of clocks. It is used to
-enable or disable clocks, and to set and get the clock rates. This
-protocol provides commands to describe the protocol version, discover
-various implementation specific attributes, describe a clock, enable
-and disable a clock and get/set the rate of the clock synchronously or
-asynchronously.
+Many users of the mailbox controllers depend on the shared memory between the
+two end points to exchange the main data while using simple doorbell mechanism
+to alert the end points of the presence of a message.
 
-This patch adds initial support for the clock protocol.
+This patch defines device tree bindings to represent such shared memory in a
+generic way.
 
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/firmware/arm_scmi/Makefile |   2 +-
- drivers/firmware/arm_scmi/clock.c  | 339 +++++++++++++++++++++++++++++++++++++
- include/linux/scmi_protocol.h      |  40 +++++
- 3 files changed, 380 insertions(+), 1 deletion(-)
- create mode 100644 drivers/firmware/arm_scmi/clock.c
+ .../devicetree/bindings/mailbox/mailbox.txt        | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-index 159de726ee45..6836b1f38f7f 100644
---- a/drivers/firmware/arm_scmi/Makefile
-+++ b/drivers/firmware/arm_scmi/Makefile
-@@ -1,2 +1,2 @@
- obj-$(CONFIG_ARM_SCMI_PROTOCOL)	= arm_scmi.o
--arm_scmi-y = base.o driver.o perf.o
-+arm_scmi-y = base.o clock.o driver.o perf.o
-diff --git a/drivers/firmware/arm_scmi/clock.c b/drivers/firmware/arm_scmi/clock.c
-new file mode 100644
-index 000000000000..87d0befab07d
---- /dev/null
-+++ b/drivers/firmware/arm_scmi/clock.c
-@@ -0,0 +1,339 @@
-+/*
-+ * System Control and Management Interface (SCMI) Clock Protocol
-+ *
-+ * Copyright (C) 2017 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along
-+ * with this program. If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include "common.h"
-+
-+enum scmi_clock_protocol_cmd {
-+	CLOCK_ATTRIBUTES = 0x3,
-+	CLOCK_DESCRIBE_RATES = 0x4,
-+	CLOCK_RATE_SET = 0x5,
-+	CLOCK_RATE_GET = 0x6,
-+	CLOCK_CONFIG_SET = 0x7,
-+};
-+
-+struct scmi_msg_resp_clock_protocol_attributes {
-+	__le16 num_clocks;
-+	    u8 max_async_req;
-+	    u8 reserved;
-+};
-+
-+struct scmi_msg_resp_clock_attributes {
-+	__le32 attributes;
-+#define	CLOCK_ENABLE	BIT(0)
-+	    u8 name[SCMI_MAX_STR_SIZE];
-+};
-+
-+struct scmi_clock_set_config {
-+	__le32 id;
-+	__le32 attributes;
-+};
-+
-+struct scmi_msg_clock_describe_rates {
-+	__le32 id;
-+	__le32 rate_index;
-+};
-+
-+struct scmi_msg_resp_clock_describe_rates {
-+	__le32 num_rates_flags;
-+#define NUM_RETURNED(x)		((x) & 0xfff)
-+#define RATE_DISCRETE(x)	!((x) & BIT(12))
-+#define NUM_REMAINING(x)	((x) >> 16)
-+	struct {
-+		__le32 value_low;
-+		__le32 value_high;
-+	} rate[0];
-+#define RATE_TO_U64(X)		\
-+({				\
-+	typeof(X) x = (X);	\
-+	le32_to_cpu((x).value_low) | (u64)le32_to_cpu((x).value_high) << 32; \
-+})
-+};
-+
-+struct scmi_clock_set_rate {
-+	__le32 flags;
-+#define CLOCK_SET_ASYNC		BIT(0)
-+#define CLOCK_SET_DELAYED	BIT(1)
-+#define CLOCK_SET_ROUND_UP	BIT(2)
-+#define CLOCK_SET_ROUND_AUTO	BIT(3)
-+	__le32 id;
-+	__le32 value_low;
-+	__le32 value_high;
-+};
-+
-+struct clock_info {
-+	int num_clocks;
-+	int max_async_req;
-+	struct scmi_clock_info *clk;
-+};
-+
-+static struct clock_info clocks;
-+
-+static int scmi_clock_protocol_attributes_get(const struct scmi_handle *handle,
-+					      struct clock_info *clocks)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_resp_clock_protocol_attributes *attr;
-+
-+	ret = scmi_one_xfer_init(handle, PROTOCOL_ATTRIBUTES,
-+				 SCMI_PROTOCOL_CLOCK, 0, sizeof(*attr), &t);
-+	if (ret)
-+		return ret;
-+
-+	attr = t->rx.buf;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret) {
-+		clocks->num_clocks = le16_to_cpu(attr->num_clocks);
-+		clocks->max_async_req = attr->max_async_req;
-+	}
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static int scmi_clock_attributes_get(const struct scmi_handle *handle,
-+				     u32 clk_id, struct scmi_clock_info *clk)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_resp_clock_attributes *attr;
-+
-+	ret = scmi_one_xfer_init(handle, CLOCK_ATTRIBUTES, SCMI_PROTOCOL_CLOCK,
-+				 sizeof(clk_id), sizeof(*attr), &t);
-+	if (ret)
-+		return ret;
-+
-+	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
-+	attr = t->rx.buf;
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret)
-+		memcpy(clk->name, attr->name, SCMI_MAX_STR_SIZE);
-+	else
-+		clk->name[0] = '\0';
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static int
-+scmi_clock_describe_rates_get(const struct scmi_handle *handle, u32 clk_id,
-+			      struct scmi_clock_info *clk)
-+{
-+	u64 *rate;
-+	int ret, cnt;
-+	bool rate_discrete;
-+	u32 tot_rate_cnt = 0, rates_flag;
-+	u16 num_returned, num_remaining;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_clock_describe_rates *clk_desc;
-+	struct scmi_msg_resp_clock_describe_rates *rlist;
-+
-+	ret = scmi_one_xfer_init(handle, CLOCK_DESCRIBE_RATES,
-+				 SCMI_PROTOCOL_CLOCK, sizeof(*clk_desc), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	clk_desc = t->tx.buf;
-+	rlist = t->rx.buf;
-+
-+	do {
-+		clk_desc->id = cpu_to_le32(clk_id);
-+		/* Set the number of rates to be skipped/already read */
-+		clk_desc->rate_index = cpu_to_le32(tot_rate_cnt);
-+
-+		ret = scmi_do_xfer(handle, t);
-+		if (ret)
-+			break;
-+
-+		rates_flag = le32_to_cpu(rlist->num_rates_flags);
-+		num_remaining = NUM_REMAINING(rates_flag);
-+		rate_discrete = RATE_DISCRETE(rates_flag);
-+		num_returned = NUM_RETURNED(rates_flag);
-+
-+		if (tot_rate_cnt + num_returned > SCMI_MAX_NUM_RATES) {
-+			dev_err(handle->dev, "No. of rates > MAX_NUM_RATES");
-+			break;
-+		}
-+
-+		if (!rate_discrete) {
-+			clk->range.min_rate = RATE_TO_U64(rlist->rate[0]);
-+			clk->range.max_rate = RATE_TO_U64(rlist->rate[1]);
-+			clk->range.step_size = RATE_TO_U64(rlist->rate[2]);
-+			dev_dbg(handle->dev, "Min %llu Max %llu Step %llu Hz\n",
-+				clk->range.min_rate, clk->range.max_rate,
-+				clk->range.step_size);
-+			break;
-+		}
-+
-+		rate = &clk->list.rates[tot_rate_cnt];
-+		for (cnt = 0; cnt < num_returned; cnt++, rate++) {
-+			*rate = RATE_TO_U64(rlist->rate[cnt]);
-+			dev_dbg(handle->dev, "Rate %llu Hz\n", *rate);
-+		}
-+
-+		tot_rate_cnt += num_returned;
-+		/*
-+		 * check for both returned and remaining to avoid infinite
-+		 * loop due to buggy firmware
-+		 */
-+	} while (num_returned && num_remaining);
-+
-+	if (rate_discrete)
-+		clk->list.num_rates = tot_rate_cnt;
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static int
-+scmi_clock_rate_get(const struct scmi_handle *handle, u32 clk_id, u64 *value)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+
-+	ret = scmi_one_xfer_init(handle, CLOCK_RATE_GET, SCMI_PROTOCOL_CLOCK,
-+				 sizeof(__le32), sizeof(u64), &t);
-+	if (ret)
-+		return ret;
-+
-+	*(__le32 *)t->tx.buf = cpu_to_le32(clk_id);
-+
-+	ret = scmi_do_xfer(handle, t);
-+	if (!ret) {
-+		__le32 *pval = t->rx.buf;
-+
-+		*value = le32_to_cpu(*pval);
-+		*value |= (u64)le32_to_cpu(*(pval + 1)) << 32;
-+	}
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static int scmi_clock_rate_set(const struct scmi_handle *handle, u32 clk_id,
-+			       u32 config, u64 rate)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_clock_set_rate *cfg;
-+
-+	ret = scmi_one_xfer_init(handle, CLOCK_RATE_SET, SCMI_PROTOCOL_CLOCK,
-+				 sizeof(*cfg), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	cfg = t->tx.buf;
-+	cfg->flags = cpu_to_le32(config);
-+	cfg->id = cpu_to_le32(clk_id);
-+	cfg->value_low = cpu_to_le32(rate & 0xffffffff);
-+	cfg->value_high = cpu_to_le32(rate >> 32);
-+
-+	ret = scmi_do_xfer(handle, t);
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static int
-+scmi_clock_config_set(const struct scmi_handle *handle, u32 clk_id, u32 config)
-+{
-+	int ret;
-+	struct scmi_xfer *t;
-+	struct scmi_clock_set_config *cfg;
-+
-+	ret = scmi_one_xfer_init(handle, CLOCK_CONFIG_SET, SCMI_PROTOCOL_CLOCK,
-+				 sizeof(*cfg), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	cfg = t->tx.buf;
-+	cfg->id = cpu_to_le32(clk_id);
-+	cfg->attributes = cpu_to_le32(config);
-+
-+	ret = scmi_do_xfer(handle, t);
-+
-+	scmi_one_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static int scmi_clock_enable(const struct scmi_handle *handle, u32 clk_id)
-+{
-+	return scmi_clock_config_set(handle, clk_id, CLOCK_ENABLE);
-+}
-+
-+static int scmi_clock_disable(const struct scmi_handle *handle, u32 clk_id)
-+{
-+	return scmi_clock_config_set(handle, clk_id, 0);
-+}
-+
-+static int scmi_clock_count_get(const struct scmi_handle *handle)
-+{
-+	return clocks.num_clocks;
-+}
-+
-+static const struct scmi_clock_info *
-+scmi_clock_info_get(const struct scmi_handle *handle, u32 clk_id)
-+{
-+	struct scmi_clock_info *clk = clocks.clk + clk_id;
-+
-+	if (!clk->name || !clk->name[0])
-+		return NULL;
-+
-+	return clk;
-+}
-+
-+static struct scmi_clk_ops clk_ops = {
-+	.count_get = scmi_clock_count_get,
-+	.info_get = scmi_clock_info_get,
-+	.rate_get = scmi_clock_rate_get,
-+	.rate_set = scmi_clock_rate_set,
-+	.enable = scmi_clock_enable,
-+	.disable = scmi_clock_disable,
-+};
-+
-+int scmi_clock_protocol_init(struct scmi_handle *handle)
-+{
-+	int clkid, ret;
-+	u32 version;
-+
-+	scmi_version_get(handle, SCMI_PROTOCOL_CLOCK, &version);
-+
-+	dev_dbg(handle->dev, "Clock Version %d.%d\n",
-+		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
-+
-+	scmi_clock_protocol_attributes_get(handle, &clocks);
-+
-+	clocks.clk = devm_kcalloc(handle->dev, clocks.num_clocks,
-+				  sizeof(struct scmi_clock_info), GFP_KERNEL);
-+	if (!clocks.clk)
-+		return -ENOMEM;
-+
-+	for (clkid = 0; clkid < clocks.num_clocks; clkid++) {
-+		struct scmi_clock_info *clk = clocks.clk + clkid;
-+
-+		ret = scmi_clock_attributes_get(handle, clkid, clk);
-+		if (!ret)
-+			scmi_clock_describe_rates_get(handle, clkid, clk);
-+	}
-+
-+	handle->clk_ops = &clk_ops;
-+
-+	return 0;
-+}
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index c9f97e69444a..c15f37c86025 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -18,6 +18,7 @@
- #include <linux/types.h>
+diff --git a/Documentation/devicetree/bindings/mailbox/mailbox.txt b/Documentation/devicetree/bindings/mailbox/mailbox.txt
+index be05b9746c69..af8ecee2ac68 100644
+--- a/Documentation/devicetree/bindings/mailbox/mailbox.txt
++++ b/Documentation/devicetree/bindings/mailbox/mailbox.txt
+@@ -23,6 +23,11 @@ assign appropriate mailbox channel to client drivers.
  
- #define SCMI_MAX_STR_SIZE	16
-+#define SCMI_MAX_NUM_RATES	16
+ Optional property:
+ - mbox-names: List of identifier strings for each mailbox channel.
++- shmem : List of phandle pointing to the shared memory(SHM) area between the
++	  users of these mailboxes for IPC, one for each mailbox. This shared
++	  memory can be part of any memory reserved for the purpose of this
++	  communication between the mailbox client and the remote.
++
  
- /**
-  * struct scmi_revision_info - version information structure
-@@ -43,9 +44,46 @@ struct scmi_revision_info {
- 	char sub_vendor_id[SCMI_MAX_STR_SIZE];
- };
- 
-+struct scmi_clock_info {
-+	char name[SCMI_MAX_STR_SIZE];
-+	bool rate_discrete;
-+	union {
-+		struct {
-+			int num_rates;
-+			u64 rates[SCMI_MAX_NUM_RATES];
-+		} list;
-+		struct {
-+			u64 min_rate;
-+			u64 max_rate;
-+			u64 step_size;
-+		} range;
+ Example:
+ 	pwr_cntrl: power {
+@@ -30,3 +35,26 @@ assign appropriate mailbox channel to client drivers.
+ 		mbox-names = "pwr-ctrl", "rpc";
+ 		mboxes = <&mailbox 0 &mailbox 1>;
+ 	};
++
++Example with shared memory(shmem):
++
++	sram: sram@50000000 {
++		compatible = "mmio-sram";
++		reg = <0x50000000 0x10000>;
++
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x50000000 0x10000>;
++
++		cl_shmem: shmem@0 {
++			compatible = "client-shmem";
++			reg = <0x0 0x200>;
++		};
 +	};
-+};
 +
- struct scmi_handle;
- 
- /**
-+ * struct scmi_clk_ops - represents the various operations provided
-+ *	by SCMI Clock Protocol
-+ *
-+ * @count_get: get the count of clocks provided by SCMI
-+ * @info_get: get the information of the specified clock
-+ * @rate_get: request the current clock rate of a clock
-+ * @rate_set: set the clock rate of a clock
-+ * @enable: enables the specified clock
-+ * @disable: disables the specified clock
-+ */
-+struct scmi_clk_ops {
-+	int (*count_get)(const struct scmi_handle *);
-+	const struct scmi_clock_info *(*info_get)(const struct scmi_handle *,
-+						  u32);
-+	int (*rate_get)(const struct scmi_handle *, u32, u64*);
-+	int (*rate_set)(const struct scmi_handle *, u32, u32, u64);
-+	int (*enable)(const struct scmi_handle *, u32);
-+	int (*disable)(const struct scmi_handle *, u32);
-+};
-+
-+/**
-  * struct scmi_perf_ops - represents the various operations provided
-  *	by SCMI Performance Protocol
-  *
-@@ -78,11 +116,13 @@ struct scmi_perf_ops {
-  * @dev: pointer to the SCMI device
-  * @version: pointer to the structure containing SCMI version information
-  * @perf_ops: pointer to set of performance protocol operations
-+ * @clk_ops: pointer to set of clock protocol operations
-  */
- struct scmi_handle {
- 	struct device *dev;
- 	struct scmi_revision_info *version;
- 	struct scmi_perf_ops *perf_ops;
-+	struct scmi_clk_ops *clk_ops;
- };
- 
- #if IS_REACHABLE(CONFIG_ARM_SCMI_PROTOCOL)
++	client@2e000000 {
++		...
++		mboxes = <&mailbox 0>;
++		shmem = <&cl_shmem>;
++		..
++	};
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
