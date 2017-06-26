@@ -1,64 +1,119 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 04/15] clk: Add Ingenic jz4770 CGU driver
-Date: Mon, 26 Jun 2017 15:49:46 -0700
-Message-ID: <20170626224946.GR4493@codeaurora.org>
-References: <20170607200439.24450-1-paul@crapouillou.net>
- <20170607200439.24450-5-paul@crapouillou.net>
- <20170607205943.GO20170@codeaurora.org>
- <639b492cc57200bab14572ac591ef8af@crapouillou.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-Content-Disposition: inline
-In-Reply-To: <639b492cc57200bab14572ac591ef8af@crapouillou.net>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+From: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/4] iio: accel: st_accel_spi: add OF capability to st_accel_spi
+Date: Tue, 27 Jun 2017 00:53:43 +0200
+Message-ID: <20170626225346.12019-2-lorenzo.bianconi@st.com>
+References: <20170626225346.12019-1-lorenzo.bianconi@st.com>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170626225346.12019-1-lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.bianconi-qxv4g6HH51o@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/26, Paul Cercueil wrote:
-> Hi,
-> 
-> Le 2017-06-07 22:59, Stephen Boyd a écrit :
-> >On 06/07, Paul Cercueil wrote:
-> >>Add support for the clocks provided by the CGU in the Ingenic JZ4770
-> >>SoC.
-> >>
-> >>Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
-> 
-> [...]
-> 
-> >>diff --git a/include/dt-bindings/clock/jz4770-cgu.h
-> >>b/include/dt-bindings/clock/jz4770-cgu.h
-> >>new file mode 100644
-> >>index 000000000000..54b8b2ae4a73
-> >>--- /dev/null
-> >>+++ b/include/dt-bindings/clock/jz4770-cgu.h
-> >
-> >Can you split this file off into a different patch? That way clk
-> >tree can apply clk patches on top of a stable branch where this
-> >file lives by itself.
-> 
-> Oops, I forgot that in the v2.
-> 
-> The jz4770-cgu.c file includes and uses
-> <dt-bindings/clock/jz4770-cgu.h>, so I don't think
-> it would make sense to split it, since it wouldn't compile without it.
+Add device tree support for LIS3DH, LSM330D, LSM330DL, LSM330DLC,
+LIS331DLH, LSM330, LSM303AGR, LIS2DH12, LIS3L02DQ, LNG2DM accel sensors.
+Fix LIS302DL support defining of_device_id data field in st_accel_of_match
+table
 
-I was suggesting this header file be a patch before the driver C
-file patch, so that it would still compile. Does that change
-anything?
+Fixes: 762227721fe6 (iio: accel: st_accel: handle deprecated bindings)
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/iio/accel/st_accel_spi.c | 69 +++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 61 insertions(+), 8 deletions(-)
 
+diff --git a/drivers/iio/accel/st_accel_spi.c b/drivers/iio/accel/st_accel_spi.c
+index d13742edee0e..6b2eafa45cbb 100644
+--- a/drivers/iio/accel/st_accel_spi.c
++++ b/drivers/iio/accel/st_accel_spi.c
+@@ -18,6 +18,65 @@
+ #include <linux/iio/common/st_sensors_spi.h>
+ #include "st_accel.h"
+ 
++#ifdef CONFIG_OF
++/*
++ * For new single-chip sensors use <device_name> as compatible string.
++ * For old single-chip devices keep <device_name>-accel to maintain
++ * compatibility
++ */
++static const struct of_device_id st_accel_of_match[] = {
++	{
++		/* An older compatible */
++		.compatible = "st,lis302dl-spi",
++		.data = LIS3LV02DL_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lis3dh-accel",
++		.data = LIS3DH_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lsm330d-accel",
++		.data = LSM330D_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lsm330dl-accel",
++		.data = LSM330DL_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lsm330dlc-accel",
++		.data = LSM330DLC_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lis331dlh-accel",
++		.data = LIS331DLH_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lsm330-accel",
++		.data = LSM330_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lsm303agr-accel",
++		.data = LSM303AGR_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lis2dh12-accel",
++		.data = LIS2DH12_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lis3l02dq",
++		.data = LIS3L02DQ_ACCEL_DEV_NAME,
++	},
++	{
++		.compatible = "st,lng2dm-accel",
++		.data = LNG2DM_ACCEL_DEV_NAME,
++	},
++	{}
++};
++MODULE_DEVICE_TABLE(of, st_accel_of_match);
++#else
++#define st_accel_of_match	NULL
++#endif
++
+ static int st_accel_spi_probe(struct spi_device *spi)
+ {
+ 	struct iio_dev *indio_dev;
+@@ -30,6 +89,8 @@ static int st_accel_spi_probe(struct spi_device *spi)
+ 
+ 	adata = iio_priv(indio_dev);
+ 
++	st_sensors_of_name_probe(&spi->dev, st_accel_of_match,
++				 spi->modalias, sizeof(spi->modalias));
+ 	st_sensors_spi_configure(indio_dev, spi, adata);
+ 
+ 	err = st_accel_common_probe(indio_dev);
+@@ -61,14 +122,6 @@ static const struct spi_device_id st_accel_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(spi, st_accel_id_table);
+ 
+-#ifdef CONFIG_OF
+-static const struct of_device_id st_accel_of_match[] = {
+-	{ .compatible = "st,lis302dl-spi" },
+-	{}
+-};
+-MODULE_DEVICE_TABLE(of, st_accel_of_match);
+-#endif
+-
+ static struct spi_driver st_accel_driver = {
+ 	.driver = {
+ 		.name = "st-accel-spi",
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.13.1
