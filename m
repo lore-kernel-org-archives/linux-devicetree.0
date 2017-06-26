@@ -1,89 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/7] drivers/hwmon: Add On-Chip Controller (OCC) hwmon
- driver
-Date: Mon, 26 Jun 2017 14:01:36 -0500
-Message-ID: <20170626190136.xtc2qjbkiwyrgnzs@rob-hp-laptop>
-References: <1498171716-26620-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1498171716-26620-2-git-send-email-eajames@linux.vnet.ibm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/1] usb:host:xhci support option to disable the xHCI
+ USB2 HW LPM
+Date: Mon, 26 Jun 2017 14:03:08 -0500
+Message-ID: <20170626190308.7usyayemlgekpe2s@rob-hp-laptop>
+References: <1498186932-29277-1-git-send-email-tqnguyen@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-hwmon-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1498171716-26620-2-git-send-email-eajames@linux.vnet.ibm.com>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Eddie James <eajames@linux.vnet.ibm.com>
-Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, mark.rutland@arm.com, gregkh@linuxfoundation.org, cbostic@linux.vnet.ibm.com, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, "Edward A. James" <eajames@us.ibm.com>
+In-Reply-To: <1498186932-29277-1-git-send-email-tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Thang Q. Nguyen" <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Phong Vo <pvo-qTEPVZfXA3Y@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 05:48:30PM -0500, Eddie James wrote:
-> From: "Edward A. James" <eajames@us.ibm.com>
+On Fri, Jun 23, 2017 at 10:02:12AM +0700, Thang Q. Nguyen wrote:
+> XHCI specification 1.1 does not require xHCI-compliant controllers
+> to always enable hardware USB2 LPM. However, the current xHCI
+> driver always enable it when seeing HLC=1.
+> This patch supports an option for users to control disabling
+> USB2 Hardware LPM via DT/ACPI attribute.
+> This option is needed in case user would like to disable this
+> feature. For example, their xHCI controller has its USB2 HW LPM
+> broken.
 > 
-> The OCC is a device embedded on a POWER processor that collects and
-> aggregates sensor data from the processor and system. The OCC can
-> provide the raw sensor data as well as perform thermal and power
-> management on the system.
-> 
-> This driver provides a hwmon interface to the OCC from a service
-> processor (e.g. a BMC). The driver supports both POWER8 and POWER9 OCCs.
-> Communications with the POWER8 OCC are established over standard I2C
-> bus. The driver communicates with the POWER9 OCC through the FSI-based
-> OCC driver, which handles the lower-level communication details.
-> 
-> This patch lays out the structure of the OCC hwmon driver. There are two
-> platform drivers, one each for P8 and P9 OCCs. These are probed through
-> the I2C tree and the FSI-based OCC driver, respectively. The patch also
-> defines the first common structures and methods between the two OCC
-> versions.
-> 
-> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> Signed-off-by: Tung Nguyen <tunguyen-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Thang Q. Nguyen <tqnguyen-qTEPVZfXA3Y@public.gmane.org>
 > ---
->  .../devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt   | 18 ++++++
->  .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   | 25 ++++++++
->  drivers/hwmon/Kconfig                              |  2 +
->  drivers/hwmon/Makefile                             |  1 +
->  drivers/hwmon/occ/Kconfig                          | 28 +++++++++
->  drivers/hwmon/occ/Makefile                         | 11 ++++
->  drivers/hwmon/occ/common.c                         | 43 +++++++++++++
->  drivers/hwmon/occ/common.h                         | 41 +++++++++++++
->  drivers/hwmon/occ/p8_i2c.c                         | 70 ++++++++++++++++++++++
->  drivers/hwmon/occ/p9_sbe.c                         | 65 ++++++++++++++++++++
->  10 files changed, 304 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
->  create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
->  create mode 100644 drivers/hwmon/occ/Kconfig
->  create mode 100644 drivers/hwmon/occ/Makefile
->  create mode 100644 drivers/hwmon/occ/common.c
->  create mode 100644 drivers/hwmon/occ/common.h
->  create mode 100644 drivers/hwmon/occ/p8_i2c.c
->  create mode 100644 drivers/hwmon/occ/p9_sbe.c
-> 
-> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
-> new file mode 100644
-> index 0000000..0ecebb7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
-> @@ -0,0 +1,18 @@
-> +Device-tree bindings for FSI-based On-Chip Controller hwmon driver
-> +------------------------------------------------------------------
-> +
-> +This node MUST be a child node of an OCC driver node.
+> Changes since v2:
+>  - Change code to disable HW LPM as an option for user which
+>    is set via ACPI/DT.
+> Changes since v1:
+>  - Update DT/ACPI attribute and corresponding codes from HLE to LPM to
+>    be consistent with other attribute names.
+> ---
+>  Documentation/devicetree/bindings/usb/usb-xhci.txt |    1 +
+>  drivers/usb/host/xhci-plat.c                       |    3 +++
+>  drivers/usb/host/xhci.c                            |    3 +++
+>  drivers/usb/host/xhci.h                            |    1 +
+>  4 files changed, 8 insertions(+), 0 deletions(-)
 
-Bindings describe h/w, not drivers. And hwmon is a Linuxism.
-
-> +
-> +Required properties:
-> + - compatible = "ibm,p9-occ-hwmon";
-> +
-> +Examples:
-> +
-> +    occ@1 {
-> +        compatible = "ibm,p9-occ";
-> +        reg = <1>;
-> +
-> +        occ-hwmon@1 {
-> +            compatible = "ibm,p9-occ-hwmon";
-
-See my comment in the other version I just reviewed...
-
-> +        };
-> +    };
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
