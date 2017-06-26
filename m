@@ -1,91 +1,121 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC support for A83T
-Date: Mon, 26 Jun 2017 19:15:24 +0200
-Message-ID: <20170626171524.cqfyasetpsfr6xfg@flea.lan>
-References: <20170624024515.4669-1-techping.chan@gmail.com>
- <20170624024515.4669-3-techping.chan@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] rtc: brcmstb-waketimer: Add Broadcom STB wake-timer
+Date: Mon, 26 Jun 2017 10:15:46 -0700
+Message-ID: <35c43786-ee58-130c-2ecd-5577197bd5aa@gmail.com>
+References: <20170615195904.12653-1-f.fainelli@gmail.com>
+ <20170615195904.12653-3-f.fainelli@gmail.com>
+ <20170624185942.vq656pjxbqnqdhll@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ntcxmtfx3hmrdmuz"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170624024515.4669-3-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170624185942.vq656pjxbqnqdhll-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:REAL TIME CLOCK (RTC) SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/24/2017 11:59 AM, Alexandre Belloni wrote:
+> Hi,
+> 
+> This seems mostly good.
+> 
+> On 15/06/2017 at 12:59:04 -0700, Florian Fainelli wrote:
+>> +static void wktmr_read(struct brcmstb_waketmr *timer,
+>> +		       struct wktmr_time *t)
+>> +{
+>> +	u32 tmp;
+>> +
+> 
+> To be sure, is this IP always 32bit, even on 64bit platforms?
 
---ntcxmtfx3hmrdmuz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Correct, it's only 32-bit capable (saw the recent discussions about the
+2038yr "problem"...).
 
-Hi,
+> 
+>> +	do {
+>> +		t->sec = readl_relaxed(timer->base + BRCMSTB_WKTMR_COUNTER);
+>> +		tmp = readl_relaxed(timer->base + BRCMSTB_WKTMR_PRESCALER_VAL);
+>> +	} while (tmp >= timer->rate);
+>> +
+>> +	t->pre = timer->rate - tmp;
+>> +}
+>> +
+> 
+> [...]
+> 
+>> +static int brcmstb_waketmr_settime(struct device *dev,
+>> +				   struct rtc_time *tm)
+>> +{
+>> +	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
+>> +	unsigned long sec;
+>> +	int ret;
+>> +
+>> +	ret = rtc_valid_tm(tm);
+>> +	if (ret)
+>> +		return ret;
+>> +
+> 
+> There is no way this function can be called without a valid tm. The only
+> caller checks before calling.
 
-On Sat, Jun 24, 2017 at 10:45:14AM +0800, Ziping Chen wrote:
-> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> Allwinner A83T SoC has a low res adc like the one
-> in Allwinner A10 SoC.
->=20
-> Add binding for it.
->=20
-> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt=
- b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> index 4357e498ef04..525d85e3043f 100644
-> --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
-> @@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
->  ------------------------------------------------
-> =20
->  Required properties:
-> - - compatible: "allwinner,sun4i-a10-lradc-keys"
-> + - compatible: should be one of the following string:
-> +		"allwinner,sun4i-a10-lradc-keys"
-> +		"allwinner,sun8i-a83t-r-lradc-keys"
+OK.
 
-This doesn't really have anything related to keys, and can be used
-purely as an ADC.
+> 
+>> +	rtc_tm_to_time(tm, &sec);
+>> +
+>> +	dev_dbg(dev, "%s: sec=%ld\n", __func__, sec);
+>> +	writel_relaxed(sec, timer->base + BRCMSTB_WKTMR_COUNTER);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int brcmstb_waketmr_getalarm(struct device *dev,
+>> +				    struct rtc_wkalrm *alarm)
+>> +{
+>> +	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
+>> +	unsigned long sec;
+>> +	u32 reg;
+>> +
+>> +	sec = readl_relaxed(timer->base + BRCMSTB_WKTMR_ALARM);
+>> +	if (sec == 0) {
+>> +		/* Alarm is disabled */
+>> +		alarm->enabled = 0;
+>> +		alarm->time.tm_mon = -1;
+>> +		alarm->time.tm_mday = -1;
+>> +		alarm->time.tm_year = -1;
+>> +		alarm->time.tm_hour = -1;
+>> +		alarm->time.tm_min = -1;
+>> +		alarm->time.tm_sec = -1;
+> 
+> This is not needed since d68778b80dd7
 
-I know this is the compatible that was used for the A10, but I'd
-rather drop the keys for the the new compatible.
+Great, I will take that out.
 
-Thanks!
-Maxime
+Do you care whether some dev_dbg() prints are left in the driver or
+should I remove those in v2?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+> 
+>> +		dev_dbg(dev, "%s: alarm is disabled\n", __func__);
+>> +	} else {
+>> +		/* Alarm is enabled */
+>> +		alarm->enabled = 1;
+>> +		rtc_time_to_tm(sec, &alarm->time);
+>> +		dev_dbg(dev, "%s: alarm is enabled\n", __func__);
+>> +	}
+>> +
+>> +	reg = readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
+>> +	alarm->pending = !!(reg & 1);
+>> +	dev_dbg(dev, "%s: alarm pending=%d\n", __func__, alarm->pending);
+>> +
+>> +	return 0;
+>> +}
+> 
 
---ntcxmtfx3hmrdmuz
-Content-Type: application/pgp-signature; name="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZUUEsAAoJEBx+YmzsjxAgNoIP/2RE0M1RveOQxP6mPdbSIbPH
-VZPLy8lO3zIYBXwtCZGcMD3eOiVUSBUYgvhnGQpkRxngA7DfSzDHinBZd5OuQFm4
-r0Hc57gP8Y1jpjQokj9XJk1HB3j3cn8dlzqbh7D+c1NOOaYVIbVMUtWJ7akxlDMW
-R2AD2jF2nZHARdijA2LMJ1a2tC5MORq/MSSEYW+czI8niVsz7boaGNzpjBJQ8phY
-+xmYI9fwguLOG/0jOfCV8ABHP1dhesI0fKkcelP9JVb6M9FyPN33N/a3IJVVrdqJ
-+QOui9QwPmVxgKSDCGrCWK/yW22hG8kzA2XwYGMCN8iPUBIpXKyENkC+5+BffnBp
-pu5vuLLi+kx1YHAL1lXayj5fI6sX3DUdi4s/93i1971aQllIhDexlVU00zW9fvJt
-6me7A4DD2IP9scWV6cNPmdE1ik50FJ+DPvC83Mn1n31Vo2cbzyeM7eCWybg8ebNO
-Q8aZU/iNzPRqP4g3IxOR5LRR85C0AT3lV66b55IFP3LKMuHlq4iZnXPhdJ/B5khW
-E2zbv/53pR2wsHgjm8iQ9jx3gNkFB5z2dahkluIskn1Ovn7xlMrZIbboWoSihnuK
-Gh+eCcaSFsMZxtWH8W18C/zPf/9PzqWqEnG4bAY5+GeGoCAES3p/5GFBUsrqAsaP
-QHd4aPTIa3u6VgYtEg+r
-=Pu70
------END PGP SIGNATURE-----
-
---ntcxmtfx3hmrdmuz--
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
