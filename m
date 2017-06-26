@@ -1,51 +1,32 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V4 2/7] dt-bindings: pinctrl: add imx7ulp pinctrl binding
- doc
-Date: Mon, 26 Jun 2017 13:02:41 -0500
-Message-ID: <20170626180241.4453lvcsxw4b7cnp@rob-hp-laptop>
-References: <1498046395-30001-1-git-send-email-aisheng.dong@nxp.com>
- <1498046395-30001-3-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH v5 1/6] dt-bindings: interrupt-controller: add DT binding
+ for the Marvell GICP
+Date: Mon, 26 Jun 2017 13:04:14 -0500
+Message-ID: <20170626180414.w6lc7oyalmc5ib74@rob-hp-laptop>
+References: <20170621132917.14187-1-thomas.petazzoni@free-electrons.com>
+ <20170621132917.14187-2-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1498046395-30001-3-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+In-Reply-To: <20170621132917.14187-2-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-Cc: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org, ping.bai-3arQi8VN3Tc@public.gmane.org, fugang.duan-3arQi8VN3Tc@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Hanna Hawa <hannah-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?iso-8859-1?Q?Miqu=E8l?= Raynal <miquel.raynal-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 07:59:50PM +0800, Dong Aisheng wrote:
-> i.MX 7ULP has three IOMUXC instances: IOMUXC0 for M4 ports,
-> IOMUXC1 for A7 ports and IOMUXC DDR for DDR interface.
+On Wed, Jun 21, 2017 at 03:29:12PM +0200, Thomas Petazzoni wrote:
+> This commit adds the Device Tree binding documentation for the Marvell
+> GICP, an extension to the GIC that allows to trigger GIC SPI interrupts
+> using memory transactions. It is used by the ICU unit in the Marvell
+> CP110 block to turn wired interrupts inside the CP into SPI interrupts
+> at the GIC level in the AP.
 > 
-> This patch adds the IOMUXC1 support for A7.
-> 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
-> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
-> ChangeLog:
-> v3->v4:
->  * change pad name to IMX7ULP_PAD_X style
->  * switch to generic pinmux property
->  * input/output property are removed.
-> v2->v3:
->  * switch to generic input/output-enable property
-> v1->v2:
->  * add more descriptions in binding doc
->  * add missed prefix for private properties.
->  * move dt-bindings/pinctrl/imx7ulp-pinfunc.h to arch/arm/boot/dts
-> ---
->  .../bindings/pinctrl/fsl,imx7ulp-pinctrl.txt       |  61 +++
->  arch/arm/boot/dts/imx7ulp-pinfunc.h                | 468 +++++++++++++++++++++
->  2 files changed, 529 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/fsl,imx7ulp-pinctrl.txt
->  create mode 100644 arch/arm/boot/dts/imx7ulp-pinfunc.h
+>  .../bindings/interrupt-controller/marvell,gicp.txt | 27 ++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,gicp.txt
 
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
