@@ -1,203 +1,100 @@
-From: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] [media] platform: Add Synopsys Designware HDMI RX
- PHY e405 Driver
-Date: Mon, 26 Jun 2017 17:46:40 +0100
-Message-ID: <8e66df79-64dd-5a1b-4c30-77bf971e92cf@synopsys.com>
-References: <cover.1497978962.git.joabreu@synopsys.com>
- <83bcf6996bfce22948df7963ddfe3c0cb56b96dc.1497978962.git.joabreu@synopsys.com>
- <eea50b14-73f2-ed7f-3928-2c394af02259@kernel.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] drm: rcar-du: Add a VSP channel index to the vsps DT property
+Date: Mon, 26 Jun 2017 19:55:01 +0300
+Message-ID: <2459224.Ig6sMHSA2b@avalon>
+References: <20170626162930.30240-1-laurent.pinchart+renesas@ideasonboard.com> <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com> <CAMuHMdUy+qYi8cVg2JQNLUxSeuntnJ-KcMm5AwdVRKOW0A7A7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <eea50b14-73f2-ed7f-3928-2c394af02259-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUy+qYi8cVg2JQNLUxSeuntnJ-KcMm5AwdVRKOW0A7A7A@mail.gmail.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Hi Geert,
 
+On Monday 26 Jun 2017 18:36:14 Geert Uytterhoeven wrote:
+> On Mon, Jun 26, 2017 at 6:29 PM, Laurent Pinchart wrote:
+> > On some R-Car SoCs a single VSP can serve multiple DU channels through
+> > multiple LIF instances in the VSP. The current DT bindings don't support
+> > specifying that kind of SoC integration scheme. Extend them with a VSP
+> > channel index.
+> > 
+> > Backward compatibility can be ensured in drivers by checking the length
+> > of the vsps property and setting the channel to 0 when the property
+> > doesn't contain channel indices.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> 
+> Thanks for your patch!
+> 
+> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> > 
+> > @@ -36,8 +36,10 @@ Required Properties:
+> >        When supplied they must be named "dclkin.x" with "x" being the
+> >        input
+> >        clock numerical index.
+> > 
+> > -  - vsps: A list of phandles to the VSP nodes that handle the memory
+> > -    interfaces for the DU channels.
+> > +  - vsps: A list of phandle and channel index tuples to the VSPs that
+> > handle +    the memory interfaces for the DU channels. The phandle
+> > identifies the VSP +    instance that serves the DU channel, and the
+> > channel index identifies the +    LIF instances in that VSP.
+> 
+> instance
+> 
+> > @@ -59,24 +61,24 @@ corresponding to each DU output.
+> > 
+> >   R8A7796 (M3-W)        DPAD            HDMI            LVDS            -
+> > 
+> > -Example: R8A7790 (R-Car H2) DU
+> > +Example: R8A7795 (R-Car H3) ES2.0 DU
+> > 
+> > -       du: du@feb00000 {
+> > -               compatible = "renesas,du-r8a7790";
+> > -               reg = <0 0xfeb00000 0 0x70000>,
+> > -                     <0 0xfeb90000 0 0x1c>,
+> > -                     <0 0xfeb94000 0 0x1c>;
+> > -               reg-names = "du", "lvds.0", "lvds.1";
+> > -               interrupt-parent = <&gic>;
+> > -               interrupts = <0 256 IRQ_TYPE_LEVEL_HIGH>,
+> > -                            <0 268 IRQ_TYPE_LEVEL_HIGH>,
+> > -                            <0 269 IRQ_TYPE_LEVEL_HIGH>;
+> > -               clocks = <&mstp7_clks R8A7790_CLK_DU0>,
+> > -                        <&mstp7_clks R8A7790_CLK_DU1>,
+> > -                        <&mstp7_clks R8A7790_CLK_DU2>,
+> > -                        <&mstp7_clks R8A7790_CLK_LVDS0>,
+> > -                        <&mstp7_clks R8A7790_CLK_LVDS1>;
+> > -               clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1";
+> > +       du: display@feb00000 {
+> > +               compatible = "renesas,du-r8a7795";
+> > +               reg = <0 0xfeb00000 0 0x80000>,
+> > +                     <0 0xfeb90000 0 0x14>;
+> > +               reg-names = "du", "lvds.0";
+> > +               interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> > +                            <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
+> > +                            <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
+> > +                            <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
+> > +               clocks = <&cpg CPG_MOD 724>,
+> > +                        <&cpg CPG_MOD 723>,
+> > +                        <&cpg CPG_MOD 722>,
+> > +                        <&cpg CPG_MOD 721>,
+> > +                        <&cpg CPG_MOD 727>;
+> > +               clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0";
+> > +               vsps = <&vspd0 0 &vspd1 0 &vspd2 0 &vspd0 1>;
+> 
+> For increased readability, I suggest formatting this as:
+> 
+>         vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
 
-On 25-06-2017 22:13, Sylwester Nawrocki wrote:
-> Hi Jose,
->
-> Thank you for addressing my review comments. Couple more suggestions below.
->
-> On 06/20/2017 07:26 PM, Jose Abreu wrote:
->> This adds support for the Synopsys Designware HDMI RX PHY e405. This
->> phy receives and decodes HDMI video that is delivered to a controller.
->> +static int dw_phy_config(struct dw_phy_dev *dw_dev, unsigned char color_depth,
->> +		bool hdmi2, bool scrambling)
->> +{
->> +	phy_reset(dw_dev, 1);
->> +	phy_pddq(dw_dev, 1);
->> +	phy_svsmode(dw_dev, 1);
->> +
->> +	phy_zcal_reset(dw_dev);
->> +	do {
->> +		udelay(1000);
-> Could be mdelay(1) or better e.g. usleep_range(1000, 1100);
+Good point. I'll address both comments in v3.
 
-Ok.
+-- 
+Regards,
 
->
->> +		zcal_done = phy_zcal_done(dw_dev);
->> +	} while (!zcal_done && timeout--);
->> +
->> +	if (!zcal_done) {
->> +		dev_err(dw_dev->dev, "Zcal calibration failed\n");
->> +		return -ETIMEDOUT;
->> +	}
->> +	return 0;
->> +}
->> +static int dw_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct dw_phy_pdata *pdata = pdev->dev.platform_data;
->> +	struct device *dev = &pdev->dev;
->> +	struct dw_phy_dev *dw_dev;
->> +	struct v4l2_subdev *sd;
->> +	int ret;
->> +
->> +	dev_dbg(dev, "probe start\n");
->> +
->> +	/* Resource allocation */
-> This comment is not needed.
->
->> +	dw_dev = devm_kzalloc(dev, sizeof(*dw_dev), GFP_KERNEL);
->> +	if (!dw_dev)
->> +		return -ENOMEM;
->> +
->> +	/* Resource initialization */
-> Ditto.
-
-Ok.
-
->
->> +	if (!pdata) {
->> +		dev_err(dev, "no platform data suplied\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	dw_dev->dev = dev;
->> +	dw_dev->config = pdata;
->> +	dw_dev->version = 405;
-> How about storing the version number in the dw_hdmi_phy_e405_id[] table
-> and retrieving it here with of_device_get_match_data() ?
-
-Yeah, seems nice :)
-
->
->> +	mutex_init(&dw_dev->lock);
->> +
->> +	/* Get config clock value */
-> The comment is not needed, it's clear from the code we are getting the clock 
-> and its rate.
-
-Ok.
-
->
->> +	dw_dev->clk = devm_clk_get(dev, "cfg-clk");
-> As Rob suggested, it would be good to change name of the clock to just "cfg".
-
-Yes, I will change.
-
->
->> +	if (IS_ERR(dw_dev->clk)) {
->> +		dev_err(dev, "failed to get cfg-clk\n");
->> +		return PTR_ERR(dw_dev->clk);
->> +	}
->> +
->> +	ret = clk_prepare_enable(dw_dev->clk);
->> +	if (ret) {
->> +		dev_err(dev, "failed to enable cfg-clk\n");
->> +		return ret;
->> +	}
->> +
->> +	dw_dev->cfg_clk = clk_get_rate(dw_dev->clk) / 1000000;
-> 1000000U ?
-
-Ok.
-
->
->> +	if (!dw_dev->cfg_clk) {
->> +		dev_err(dev, "invalid cfg-clk frequency\n");> +		ret = -EINVAL;
->> +		goto err_clk;
->> +	}
->> +
->> +	/* V4L2 initialization */
->> +	sd = &dw_dev->sd;
->> +	v4l2_subdev_init(sd, &dw_phy_sd_ops);
->> +	strlcpy(sd->name, dev_name(dev), sizeof(sd->name));
->> +	sd->dev = dev;
->> +
->> +	/* Force phy disabling */
->> +	dw_dev->phy_enabled = true;
->> +	dw_phy_disable(dw_dev);
->> +
->> +	/* Register subdev */
->> +	ret = v4l2_async_register_subdev(sd);
->> +	if (ret) {
->> +		dev_err(dev, "failed to register subdev\n");
->> +		goto err_clk;
->> +	}
->> +
->> +	/* All done */
-> Superfluous comment.
-
-Ok.
-
->
->> +	dev_set_drvdata(dev, sd);
->> +	dev_info(dev, "driver probed (cfg-clk=%d)\n", dw_dev->cfg_clk);
-> This should be at dev_dbg() level.
-
-Ok.
-
->
->> +	return 0;
->> +
->> +err_clk:
->> +	clk_disable_unprepare(dw_dev->clk);
->> +	return ret;
->> +}
->> +
->> +static int dw_phy_remove(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
-> The assignment here could be dropped and &pdev->dev used directly below.
-
-Ok.
-
->
->> +	struct v4l2_subdev *sd = dev_get_drvdata(dev);
->> +	struct dw_phy_dev *dw_dev = to_dw_dev(sd);
->> +
->> +	v4l2_async_unregister_subdev(sd);
->> +	clk_disable_unprepare(dw_dev->clk);
->> +	dev_info(dev, "driver removed\n");
-> This should be at dev_dbg() level or dropped entirely.
-
-Ok.
-
-Thanks for the review!
-
-Best regards,
-Jose Miguel Abreu
->
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id dw_hdmi_phy_e405_id[] = {
->> +	{ .compatible = "snps,dw-hdmi-phy-e405" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, dw_hdmi_phy_e405_id);
-> --
-> Regards,
-> Sylwester
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
