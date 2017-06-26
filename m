@@ -1,140 +1,46 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH 9/9] firmware: arm_scmi: probe and initialise all the supported protocols
-Date: Mon, 26 Jun 2017 16:55:13 +0100
-Message-ID: <1498492513-29771-10-git-send-email-sudeep.holla@arm.com>
-References: <1498492513-29771-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498492513-29771-1-git-send-email-sudeep.holla@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: ALKML <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Roy Franz <roy.franz@cavium.com>, Harb Abdulhamid <harba@codeaurora.org>, Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>, Loc Ho <lho@apm.com>, Alexey Klimov <alexey.klimov@arm.com>, Matt Sealey <neko@bakuhatsu.net>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH v3 2/6] dt-bindings: spi/core: add wakeup-source
+ optional property
+Date: Mon, 26 Jun 2017 11:00:11 -0500
+Message-ID: <20170626160011.qi3bliz5jt6d5wgb@rob-hp-laptop>
+References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com>
+ <1498039313-24220-3-git-send-email-jeffy.chen@rock-chips.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1498039313-24220-3-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that we have basic support for all the protocols in the
-specification, let's probe them individually and initialise them.
+On Wed, Jun 21, 2017 at 06:01:49PM +0800, Jeffy Chen wrote:
+> Update document devicetree bindings to support "wakeup-source" property.
+> 
+> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> ---
+> 
+> Changes in v3: None
+> 
+>  Documentation/devicetree/bindings/spi/spi-bus.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index 1f6e86f..0fa1ccf 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -77,6 +77,7 @@ All slave nodes can contain the following optional properties:
+>  		    Defaults to 1 if not present.
+>  - spi-rx-delay-us - Microsecond delay after a read transfer.
+>  - spi-tx-delay-us - Microsecond delay after a write transfer.
+> +- wakeup-source   - Device can be used as a wakeup source.
 
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- drivers/firmware/arm_scmi/common.h |  5 +++
- drivers/firmware/arm_scmi/driver.c | 71 +++++++++++++++++++++++++++++++++++++-
- 2 files changed, 75 insertions(+), 1 deletion(-)
+wakeup-source is valid for any device with an interrupts property 
+already, so I don't think this is necessary.
 
-diff --git a/drivers/firmware/arm_scmi/common.h b/drivers/firmware/arm_scmi/common.h
-index 7473dfcad4ee..d7c73a8d260b 100644
---- a/drivers/firmware/arm_scmi/common.h
-+++ b/drivers/firmware/arm_scmi/common.h
-@@ -118,4 +118,9 @@ int scmi_version_get(const struct scmi_handle *h, u8 protocol, u32 *version);
- void scmi_setup_protocol_implemented(const struct scmi_handle *handle,
- 				     u8 *prot_imp);
- 
-+typedef int (*scmi_init_fn_t)(struct scmi_handle *);
- int scmi_base_protocol_init(struct scmi_handle *h);
-+int scmi_perf_protocol_init(struct scmi_handle *h);
-+int scmi_sensors_protocol_init(struct scmi_handle *h);
-+int scmi_power_protocol_init(struct scmi_handle *h);
-+int scmi_clock_protocol_init(struct scmi_handle *h);
-diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-index 45f31eaf085a..d3d289f7a174 100644
---- a/drivers/firmware/arm_scmi/driver.c
-+++ b/drivers/firmware/arm_scmi/driver.c
-@@ -157,6 +157,12 @@ struct scmi_shared_mem {
- 	u8 msg_payload[0];
- };
- 
-+struct scmi_protocol_match {
-+	u8 protocol_id;
-+	scmi_init_fn_t fn;
-+	char name[32];
-+};
-+
- static int scmi_linux_errmap[] = {
- 	/* better than switch case as long as return value is continuous */
- 	0,			/* SCMI_SUCCESS */
-@@ -680,6 +686,41 @@ static int scmi_xfer_info_init(struct scmi_info *sinfo)
- 	return 0;
- }
- 
-+static const struct scmi_protocol_match scmi_protocols[] = {
-+	{
-+		.protocol_id = SCMI_PROTOCOL_PERF,
-+		.fn = scmi_perf_protocol_init,
-+		.name = "scmi-cpufreq",
-+	}, {
-+		.protocol_id = SCMI_PROTOCOL_CLOCK,
-+		.fn = scmi_clock_protocol_init,
-+		.name = "scmi-clocks",
-+	}, {
-+		.protocol_id = SCMI_PROTOCOL_POWER,
-+		.fn = scmi_power_protocol_init,
-+		.name = "scmi-power-domain",
-+	}, {
-+		.protocol_id = SCMI_PROTOCOL_SENSOR,
-+		.fn = scmi_sensors_protocol_init,
-+		.name = "scmi-hwmon",
-+	},
-+	{}
-+};
-+
-+static const struct scmi_protocol_match *scmi_protocol_match_get(u8 protocol_id)
-+{
-+	int i;
-+	const struct scmi_protocol_match *match = NULL, *loop = scmi_protocols;
-+
-+	for (i = 0; i < ARRAY_SIZE(scmi_protocols); i++, loop++)
-+		if (loop->protocol_id == protocol_id) {
-+			match = loop;
-+			break;
-+		}
-+
-+	return match;
-+}
-+
- static int scmi_probe(struct platform_device *pdev)
- {
- 	int ret = -EINVAL;
-@@ -690,7 +731,7 @@ static int scmi_probe(struct platform_device *pdev)
- 	const struct scmi_desc *desc;
- 	struct scmi_info *info = NULL;
- 	struct device *dev = &pdev->dev;
--	struct device_node *shmem, *np = dev->of_node;
-+	struct device_node *child, *shmem, *np = dev->of_node;
- 
- 	desc = of_match_device(scmi_of_match, dev)->data;
- 
-@@ -755,6 +796,34 @@ static int scmi_probe(struct platform_device *pdev)
- 	list_add_tail(&info->node, &scmi_list);
- 	mutex_unlock(&scmi_list_mutex);
- 
-+	for_each_available_child_of_node(np, child) {
-+		int init_ret;
-+		u32 protocol_id;
-+		const struct scmi_protocol_match *match;
-+
-+		if (of_property_read_u32(child, "reg", &protocol_id))
-+			continue;
-+
-+		protocol_id &= MSG_PROTOCOL_ID_MASK;
-+
-+		if (!scmi_is_protocol_implemented(handle, protocol_id)) {
-+			dev_err(dev, "SCMI protocol %d not implemented\n",
-+				protocol_id);
-+			continue;
-+		}
-+
-+		match = scmi_protocol_match_get(protocol_id);
-+		if (match) {
-+			init_ret = match->fn(handle);
-+			if (!init_ret)
-+				of_platform_device_create(child, match->name,
-+							  dev);
-+			else
-+				dev_err(dev, "SCMI protocol %d init error %d\n",
-+					protocol_id, init_ret);
-+		}
-+	}
-+
- 	return 0;
- out:
- 	if (!IS_ERR(info->tx_chan))
--- 
-2.7.4
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
