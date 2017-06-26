@@ -1,69 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 1/3] pinctrl: Add sleep related configuration
-Date: Mon, 26 Jun 2017 11:13:48 -0500
-Message-ID: <20170626161348.vrtlpat5eof5aa2c@rob-hp-laptop>
-References: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@spreadtrum.com>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCH 1/3] ARM: dts: Bindings for Altera Quadspi Controller Version 2
+Date: Mon, 26 Jun 2017 09:13:37 -0700
+Message-ID: <1498493619-4633-2-git-send-email-matthew.gerlach@linux.intel.com>
+References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498493619-4633-1-git-send-email-matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 07:55:37PM +0800, Baolin Wang wrote:
-> In some scenarios, we should set some pins as input/output/pullup/pulldown
-> when the specified system goes into deep sleep mode, then when the system
-> goes into deep sleep mode, these pins will be set automatically by hardware.
-> 
-> Usually we can set the "sleep" state to set sleep related config, but one SoC
-> usually has not only one system (especially for mobile SoC), some systems on
-> the SoC which did not run linux kernel, they can not select the "sleep" state
-> when they go into deep sleep mode.
+From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-The wording here is not very clear. I think what you mean is some pins 
-are not controlled by any specific driver in the OS, but need to be 
-controlled when entering sleep mode.
+Device Tree bindings for Version 2 of the Altera Quadspi Controller
+that can be optionally paired with a windowed bridge.
 
-> Thus we introduce some sleep related config into pinconf-generic for users to
-> configure.
-> 
-> Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> ---
->  - Add this patch since v4.
-> ---
->  .../bindings/pinctrl/pinctrl-bindings.txt          |   12 ++++++++++++
->  drivers/pinctrl/pinconf-generic.c                  |   10 ++++++++++
->  include/linux/pinctrl/pinconf-generic.h            |   14 ++++++++++++++
->  3 files changed, 36 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> index bf3f7b0..e098059 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> @@ -236,6 +236,18 @@ low-power-enable	- enable low power mode
->  low-power-disable	- disable low power mode
->  output-low		- set the pin to output mode with low level
->  output-high		- set the pin to output mode with high level
-> +sleep-bias-pull-up	- pull up the pin when the specified system goes into
-> +			  deep sleep mode
-> +sleep-bias-pull-down	- pull down the pin when the specified system goes into
-> +			  deep sleep mode
-> +sleep-input-enable	- enable input on pin when the specified system goes
-> +			  into deep sleep mode (no effect on output)
-> +sleep-intput-disable	- disable input on pin when the specified system goes
-> +			  into deep sleep mode (no effect on output)
-> +sleep-output-low	- set the pin to output mode with low level when the
-> +			  specified system goes into deep sleep mode
-> +sleep-output-high	- set the pin to output mode with high level when the
-> +			  specified system goes into deep sleep mode
->  slew-rate		- set the slew rate
+Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+---
+ .../devicetree/bindings/mtd/altera-quadspi-v2.txt  | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
 
-I don't really like having 2 ways to define pin setup and this doesn't 
-scale if I need to define 3 states. Couldn't we create pin state 
-definitions and have a pinctrl-n property within the pin controller 
-node to handle all the unhandled pins?
+diff --git a/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+new file mode 100644
+index 0000000..8ba63d7
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+@@ -0,0 +1,37 @@
++* Altera Quad SPI Controller Version 2
++
++Required properties:
++- compatible : Should be "altr,quadspi-v2".
++- reg : Contains at least two entries, and possibly three entries, each of
++	which is a tuple consisting of a physical address and length.
++- reg-names : Should contain the names "avl_csr" and "avl_mem" corresponding
++	      to the control and status registers and qspi memory, respectively.
++
++
++The Altera Quad SPI Controller Version 2 can be paired with a windowed bridge
++in order to reduce the footprint of the memory interface.  When a windowed
++bridge is used, reads and writes of data must be 32 bits wide.
++
++Optional properties:
++- reg-names : Should contain the name "avl_window", if the windowed bridge
++	      is used.  This name corresponds to the register space that
++	      controls the window.
++- window-size : The size of the window which must be an even power of 2.
++- read-bit-reverse : A boolean indicating the data read from the flash should
++		     be bit reversed on a byte by byte basis before being
++		     delivered to the MTD layer.
++- write-bit-reverse : A boolean indicating the data written to the flash should
++		      be bit reversed on a byte by byte basis.
++
++Example:
++
++qspi: spi@a0001000 {
++	compatible = "altr,quadspi-v2";
++	reg = <0xa0001000 0x40>, <0xb0000000 0x4000000>;
++	reg-names = "avl_csr", "avl_mem";
++
++	flash@0 {
++		reg = <0>;
++		label = "FPGA Image";
++	};
++};
+-- 
+2.7.4
 
-Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
