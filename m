@@ -1,146 +1,63 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v8 3/3] mailbox: qcom: Add support for APCS clock
- controller
-Date: Mon, 26 Jun 2017 15:47:35 -0700
-Message-ID: <20170626224735.GQ4493@codeaurora.org>
-References: <20170623161533.20449-1-georgi.djakov@linaro.org>
- <20170623161533.20449-4-georgi.djakov@linaro.org>
+Subject: Re: [PATCH 04/15] clk: Add Ingenic jz4770 CGU driver
+Date: Mon, 26 Jun 2017 15:49:46 -0700
+Message-ID: <20170626224946.GR4493@codeaurora.org>
+References: <20170607200439.24450-1-paul@crapouillou.net>
+ <20170607200439.24450-5-paul@crapouillou.net>
+ <20170607205943.GO20170@codeaurora.org>
+ <639b492cc57200bab14572ac591ef8af@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mips-bounce@linux-mips.org>
 Content-Disposition: inline
-In-Reply-To: <20170623161533.20449-4-georgi.djakov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <639b492cc57200bab14572ac591ef8af@crapouillou.net>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/23, Georgi Djakov wrote:
-> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> index 9924c6d7f05d..da363c6580da 100644
-> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-> @@ -11,6 +11,8 @@
->   * GNU General Public License for more details.
->   */
->  
-> +#include <linux/clk.h>
-> +#include <linux/clk-provider.h>
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/io.h>
-> @@ -19,6 +21,34 @@
->  #include <linux/of_platform.h>
->  #include <linux/platform_device.h>
->  #include <linux/mailbox_controller.h>
-> +#include <linux/regmap.h>
-> +
-> +#include "../clk/qcom/clk-regmap.h"
-> +#include "../clk/qcom/clk-regmap-mux-div.h"
+On 06/26, Paul Cercueil wrote:
+> Hi,
+> 
+> Le 2017-06-07 22:59, Stephen Boyd a écrit :
+> >On 06/07, Paul Cercueil wrote:
+> >>Add support for the clocks provided by the CGU in the Ingenic JZ4770
+> >>SoC.
+> >>
+> >>Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> >>Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+> 
+> [...]
+> 
+> >>diff --git a/include/dt-bindings/clock/jz4770-cgu.h
+> >>b/include/dt-bindings/clock/jz4770-cgu.h
+> >>new file mode 100644
+> >>index 000000000000..54b8b2ae4a73
+> >>--- /dev/null
+> >>+++ b/include/dt-bindings/clock/jz4770-cgu.h
+> >
+> >Can you split this file off into a different patch? That way clk
+> >tree can apply clk patches on top of a stable branch where this
+> >file lives by itself.
+> 
+> Oops, I forgot that in the v2.
+> 
+> The jz4770-cgu.c file includes and uses
+> <dt-bindings/clock/jz4770-cgu.h>, so I don't think
+> it would make sense to split it, since it wouldn't compile without it.
 
-Why?
-
-> +
-> +
-> +static int msm8916_register_clk(struct device *dev, void __iomem *base)
-> +{
-> +	struct clk_regmap_mux_div *a53cc;
-> +	struct clk *pclk;
-> +	struct regmap *regmap;
-> +	struct clk_init_data init = { };
-> +	int ret;
-> +
-> +	a53cc = devm_kzalloc(dev, sizeof(*a53cc), GFP_KERNEL);
-> +	if (!a53cc)
-> +		return -ENOMEM;
-> +
-> +	a53cc->reg_offset = 0x50;
-> +	a53cc->hid_width = 5;
-> +	a53cc->hid_shift = 0;
-> +	a53cc->src_width = 3;
-> +	a53cc->src_shift = 8;
-> +	a53cc->parent_map = gpll0_a53cc_map;
-> +
-> +	init.name = "a53mux";
-> +	init.parent_names = gpll0_a53cc;
-> +	init.num_parents = 2;
-
-ARRAY_SIZE(gpll0_a53cc) instead of 2 please
-
-> +	init.ops = &clk_regmap_mux_div_ops;
-> +	init.flags = CLK_SET_RATE_PARENT;
-> +	a53cc->clkr.hw.init = &init;
-> +
-> +	pclk = __clk_lookup(gpll0_a53cc[1]);
-
-Urgh.. ok. We can't clk_get()?
-
-> +	if (!pclk)
-> +		return -EPROBE_DEFER;
-> +
-> +	a53cc->clk_nb.notifier_call = a53cc_notifier_cb;
-> +	ret = clk_notifier_register(pclk, &a53cc->clk_nb);
-> +	if (ret) {
-> +		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	regmap = devm_regmap_init_mmio(dev, base, &a53cc_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		ret = PTR_ERR(regmap);
-> +		dev_err(dev, "failed to init regmap mmio: %d\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	a53cc->clkr.regmap = regmap;
-> +
-> +	ret = devm_clk_register_regmap(dev, &a53cc->clkr);
-
-Regmap is not a requirement to work with the qcom clk driver.
-
-> +	if (ret) {
-> +		dev_err(dev, "failed to register regmap clock: %d\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	ret = of_clk_add_hw_provider(dev->of_node, of_clk_hw_simple_get,
-> +				     &a53cc->clkr.hw);
-> +	if (ret) {
-> +		dev_err(dev, "failed to add clock provider: %d\n", ret);
-> +		goto err;
-> +	}
-> +
-> +	return 0;
-> +
-> +err:
-> +	clk_notifier_unregister(pclk, &a53cc->clk_nb);
-> +	return ret;
-> +}
-> +
->  static int qcom_apcs_ipc_probe(struct platform_device *pdev)
->  {
-> +	struct device_node *np = pdev->dev.of_node;
->  	struct qcom_apcs_ipc *apcs;
->  	struct resource *res;
->  	unsigned long offset;
-> @@ -63,6 +178,13 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
->  	if (IS_ERR(base))
->  		return PTR_ERR(base);
->  
-> +	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
-> +		/* register the APCS mux and divider clock */
-> +		ret = msm8916_register_clk(&pdev->dev, base);
-
-Register a child platform device here instead of creating clks in the
-same driver?
-
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
->  	offset = (unsigned long)of_device_get_match_data(&pdev->dev);
->  
->  	apcs->reg = base + offset;
+I was suggesting this header file be a patch before the driver C
+file patch, so that it would still compile. Does that change
+anything?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
