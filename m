@@ -1,47 +1,119 @@
-From: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun4i: Add A10 LCD0 RGB888 pins
-Date: Mon, 26 Jun 2017 23:32:37 +1000
-Message-ID: <20170626133237.22664-1-net147@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 15/17] MIPS: JZ4770: Workaround for corrupted DMA
+ transfers
+Date: Mon, 26 Jun 2017 15:32:12 +0200
+Message-ID: <30175ba3ce2d1bd6f83ccb515f179aec@crapouillou.net>
+References: <20170607200439.24450-2-paul@crapouillou.net>
+ <20170620151855.19399-1-paul@crapouillou.net>
+ <20170620151855.19399-15-paul@crapouillou.net>
+ <ca37b50d-951c-2264-fa37-cca7149ed4ba@imgtec.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <ca37b50d-951c-2264-fa37-cca7149ed4ba@imgtec.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The LCD0 controller on the A10 can do RGB output up to 8 bits per
-channel. Add the pins for RGB888 output.
+Hi,
 
-Signed-off-by: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/sun4i-a10.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Le 2017-06-22 09:21, Marcin Nowakowski a écrit :
+> Hi Paul, Maarten,
+> 
+> On 20.06.2017 17:18, Paul Cercueil wrote:
+>> From: Maarten ter Huurne <maarten@treewalker.org>
+>> 
+>> We have seen MMC DMA transfers read corrupted data from SDRAM when
+>> a burst interval ends at physical address 0x10000000. To avoid this
+>> problem, we remove the final page of low memory from the memory map.
+>> 
+>> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+>> ---
+>>   arch/mips/jz4740/setup.c | 24 ++++++++++++++++++++++++
+>>   arch/mips/kernel/setup.c |  8 ++++++++
+>>   2 files changed, 32 insertions(+)
+>> 
+>>   v2: No change
+>> 
+>> diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
+>> index afd84ee966e8..6948b133a15d 100644
+>> --- a/arch/mips/jz4740/setup.c
+>> +++ b/arch/mips/jz4740/setup.c
+>> @@ -23,6 +23,7 @@
+>>     #include <asm/bootinfo.h>
+>>   #include <asm/mips_machine.h>
+>> +#include <asm/page.h>
+>>   #include <asm/prom.h>
+>>     #include <asm/mach-jz4740/base.h>
+>> @@ -102,6 +103,29 @@ void __init arch_init_irq(void)
+>>   	irqchip_init();
+>>   }
+>>   +/*
+>> + * We have seen MMC DMA transfers read corrupted data from SDRAM when 
+>> a burst
+>> + * interval ends at physical address 0x10000000. To avoid this 
+>> problem, we
+>> + * remove the final page of low memory from the memory map.
+>> + */
+>> +void __init jz4770_reserve_unsafe_for_dma(void)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = 0; i < boot_mem_map.nr_map; i++) {
+>> +		struct boot_mem_map_entry *entry = boot_mem_map.map + i;
+>> +
+>> +		if (entry->type != BOOT_MEM_RAM)
+>> +			continue;
+>> +
+>> +		if (entry->addr + entry->size != 0x10000000)
+>> +			continue;
+>> +
+>> +		entry->size -= PAGE_SIZE;
+>> +		break;
+>> +	}
+>> +}
+>> +
+>>   static int __init jz4740_machine_setup(void)
+>>   {
+>>   	mips_machine_setup();
+>> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+>> index 89785600fde4..cccfd7ba89fe 100644
+>> --- a/arch/mips/kernel/setup.c
+>> +++ b/arch/mips/kernel/setup.c
+>> @@ -838,6 +838,14 @@ static void __init arch_mem_init(char 
+>> **cmdline_p)
+>>     	parse_early_param();
+>>   +#ifdef CONFIG_MACH_JZ4770
+>> +	if (current_cpu_type() == CPU_JZRISC &&
+>> +				mips_machtype == MACH_INGENIC_JZ4770) {
+>> +		extern void __init jz4770_reserve_unsafe_for_dma(void);
+>> +		jz4770_reserve_unsafe_for_dma();
+>> +	}
+>> +#endif
+>> +
+> 
+> This part doesn't look good in the platform-agnostic code ... is there
+> a reason why you wouldn't do that from within plat_mem_setup()?
+> 
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index b63668ece151..6fa2622a78c2 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -1022,6 +1022,17 @@
- 				function = "ir1";
- 			};
- 
-+			lcd0_rgb888_pins: lcd0_rgb888@0 {
-+				pins = "PD0", "PD1", "PD2", "PD3",
-+				       "PD4", "PD5", "PD6", "PD7",
-+				       "PD8", "PD9", "PD10", "PD11",
-+				       "PD12", "PD13", "PD14", "PD15",
-+				       "PD16", "PD17", "PD18", "PD19",
-+				       "PD20", "PD21", "PD22", "PD23",
-+				       "PD24", "PD25", "PD26", "PD27";
-+				function = "lcd0";
-+			};
-+
- 			mmc0_pins_a: mmc0@0 {
- 				pins = "PF0", "PF1", "PF2",
- 				       "PF3", "PF4", "PF5";
--- 
-2.13.1
+I agree, but, doing it in plat_mem_setup() is too early, as the 'boot 
+mem map' hasn't been initialized yet then...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>   	if (usermem) {
+>>   		pr_info("User-defined physical RAM map:\n");
+>>   		print_memory_map();
+>> 
+> 
+> 
+> Marcin
