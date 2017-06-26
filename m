@@ -1,84 +1,106 @@
-From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: i2c: Add Spreadtrum I2C controller
- documentation
-Date: Mon, 26 Jun 2017 10:40:47 +0800
-Message-ID: <20170626024046.GA19042@spreadtrum.com>
-References: <7bc5c69030b6e491cfb2519eb1b21c1b0adc70c3.1498029380.git.baolin.wang@spreadtrum.com>
- <20170623222016.qwnypaumkytrfrn2@rob-hp-laptop>
+From: zhiyong tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] iio: adc: mt7622: add support for suspend/resume.
+Date: Mon, 26 Jun 2017 10:54:52 +0800
+Message-ID: <1498445692.844.5.camel@mhfsdcap03>
+References: <1498110274-18678-1-git-send-email-zhiyong.tao@mediatek.com>
+         <1498110274-18678-3-git-send-email-zhiyong.tao@mediatek.com>
+         <20170624210043.29569f3a@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170623222016.qwnypaumkytrfrn2@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170624210043.29569f3a-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, liguo.zhang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 五,  6月 23, 2017 at 05:20:16下午 -0500, Rob Herring wrote:
-> On Wed, Jun 21, 2017 at 03:23:03PM +0800, Baolin Wang wrote:
-> > This patch adds the binding documentation for Spreadtrum I2C
-> > controller device.
-> > 
-> > Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
-> > ---
-> > Changes since v1:
-> >  - No updates.
-> > ---
-> >  Documentation/devicetree/bindings/i2c/i2c-sprd.txt |   31 ++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sprd.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/i2c/i2c-sprd.txt b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
-> > new file mode 100644
-> > index 0000000..f285e5b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/i2c/i2c-sprd.txt
-> > @@ -0,0 +1,31 @@
-> > +I2C for Spreadtrum platforms
-> > +
-> > +Required properties:
-> > +- compatible: Should be "sprd,r8p0-i2c".
+On Sat, 2017-06-24 at 21:00 +0100, Jonathan Cameron wrote:
+> On Thu, 22 Jun 2017 13:44:33 +0800
+> Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 > 
-> Compatible strings should be SoC specific.
-
-Will fix this in next version. Thanks.
-
+> > This patch supports auxadc suspend/resume flow.
+> > Disable auxadc clk and power in suspend function.
+> > Enable axuadc clk and power in resume function.
+> > 
+> > Signed-off-by: Zhiyong Tao <zhiyong.tao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Worth handling the cases where power management is not configured into the
+> kernel properly.
 > 
-> > +- reg: Specify the physical base address of the controller and length
-> > +  of memory mapped region.
-> > +- interrupts: Should contain I2C interrupt.
-> > +- clock-names: Should contain following entries:
-> > +  "i2c" for I2C clock,
-> > +  "source" for I2C source (parent) clock,
-> > +  "enable" for I2C module enable clock.
-> > +- clocks: Should contain a clock specifier for each entry in clock-names.
-> > +- clock-frequency: Constains desired I2C bus clock frequency in Hz.
-> > +- #address-cells: Should be 1 to describe address cells for I2C device address.
-> > +- #size-cells: Should be 0 means no size cell for I2C device address.
+> So a few minor suggestions.  Otherwise looks good to me.
+> > ---
+> >  drivers/iio/adc/mt6577_auxadc.c |   37 +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 37 insertions(+)
+> > 
+> > diff --git a/drivers/iio/adc/mt6577_auxadc.c b/drivers/iio/adc/mt6577_auxadc.c
+> > index 2d104c8..2dd7c74 100644
+> > --- a/drivers/iio/adc/mt6577_auxadc.c
+> > +++ b/drivers/iio/adc/mt6577_auxadc.c
+> > @@ -184,6 +184,37 @@ static int mt6577_auxadc_read_raw(struct iio_dev *indio_dev,
+> >  	.read_raw = &mt6577_auxadc_read_raw,
+> >  };
+> >  
+> > +static int mt6577_auxadc_resume(struct device *dev)
+> > +{
+> > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> > +	struct mt6577_auxadc_device *adc_dev = iio_priv(indio_dev);
+> > +	int ret;
 > > +
-> > +Optional properties:
-> > +- Child nodes conforming to I2C bus binding
+> > +	ret = clk_prepare_enable(adc_dev->adc_clk);
+> > +	if (ret) {
+> > +		pr_err("failed to enable auxadc clock\n");
+> > +		return ret;
+> > +	}
 > > +
-> > +Examples:
-> > +i2c0: i2c@70500000 {
-> > +	compatible = "sprd,r8p0-i2c";
-> > +	reg = <0 0x70500000 0 0x1000>;
-> > +	interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-> > +	clock-names = "i2c", "source", "enable";
-> > +	clocks = <&clk_i2c3>, <&ext_26m>, <&clk_ap_apb_gates 11>;
-> > +	clock-frequency = <400000>;
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
+> > +	mt6577_auxadc_mod_reg(adc_dev->reg_base + MT6577_AUXADC_MISC,
+> > +			      MT6577_AUXADC_PDN_EN, 0);
+> > +	mdelay(MT6577_AUXADC_POWER_READY_MS);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +static int mt6577_auxadc_suspend(struct device *dev)
+> Mark these __maybe_unused for the CONFIG_PM but not CONFIG_PM_SLEEP case.
+
+==> ok, We will add CONFIG_PM_SLEEP for the suspend/resume case in v2.
+thanks!
+
+> > +{
+> > +	struct iio_dev *indio_dev = dev_get_drvdata(dev);
+> > +	struct mt6577_auxadc_device *adc_dev = iio_priv(indio_dev);
+> > +
+> > +	mt6577_auxadc_mod_reg(adc_dev->reg_base + MT6577_AUXADC_MISC,
+> > +			      0, MT6577_AUXADC_PDN_EN);
+> > +	clk_disable_unprepare(adc_dev->adc_clk);
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int mt6577_auxadc_probe(struct platform_device *pdev)
+> >  {
+> >  	struct mt6577_auxadc_device *adc_dev;
+> > @@ -269,6 +300,11 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
+> >  	return 0;
+> >  }
+> >  
+> > +static const struct dev_pm_ops mt6577_auxadc_pm_ops = {
+> > +	.suspend = mt6577_auxadc_suspend,
+> > +	.resume = mt6577_auxadc_resume,
 > > +};
 > > +
-> > -- 
-> > 1.7.9.5
-> > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Use the SIMPLE_SYSTEM_PM_OPS macro to make these assignments magically go away
+> if PM_CONFIG_SLEEP is not defined.
+
+==> ok, We will use SIMPLE_DEV_PM_OPS macro to change it in v2. Thanks.
+>>  static const struct of_device_id mt6577_auxadc_of_match[] = {
+> >  	{ .compatible = "mediatek,mt2701-auxadc", },
+> >  	{ .compatible = "mediatek,mt8173-auxadc", },
+> > @@ -280,6 +316,7 @@ static int mt6577_auxadc_remove(struct platform_device *pdev)
+> >  	.driver = {
+> >  		.name   = "mt6577-auxadc",
+> >  		.of_match_table = mt6577_auxadc_of_match,
+> > +		.pm = &mt6577_auxadc_pm_ops,
+> >  	},
+> >  	.probe	= mt6577_auxadc_probe,
+> >  	.remove	= mt6577_auxadc_remove,
+> 
