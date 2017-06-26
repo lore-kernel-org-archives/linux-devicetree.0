@@ -1,35 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 3/3] mailbox: qcom: Add support for APCS clock
- controller
-Date: Mon, 26 Jun 2017 14:40:58 -0500
-Message-ID: <20170626194058.43fttjvs23vxtuuu@rob-hp-laptop>
-References: <20170623161533.20449-1-georgi.djakov@linaro.org>
- <20170623161533.20449-4-georgi.djakov@linaro.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] dt-bindings: Add "internal" as a valid 'phy-mode'
+ property
+Date: Mon, 26 Jun 2017 14:43:41 -0500
+Message-ID: <20170626194341.pi4zyxgkvhwuu4pb@rob-hp-laptop>
+References: <20170623173135.22912-1-f.fainelli@gmail.com>
+ <20170623173135.22912-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170623161533.20449-4-georgi.djakov@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: sboyd@codeaurora.org, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20170623173135.22912-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev-gepDB1WL6pn9qxiX1TGQuw@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Vivien Didelot <vivien.didelot-4ysUXcep3aM1wj+D4I0NRVaTQe2KTcn/@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, Russell King <rmk+kernel-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "open list:NETWORKING DRIVERS" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 07:15:33PM +0300, Georgi Djakov wrote:
-> Add a driver for the APCS clock controller. It is part of the APCS
-> hardware block, which among other things implements also a combined
-> mux and half integer divider functionality. It can choose between a
-> fixed-rate clock or the dedicated APCS (A53) PLL. The source and the
-> divider can be set both at the same time.
+On Fri, Jun 23, 2017 at 10:31:32AM -0700, Florian Fainelli wrote:
+> A number of Ethernet MACs have internal Ethernet PHYs and the internal
+> wiring makes it so that this knowledge needs to be available using the
+> standard 'phy-mode' property.
 > 
-> This is required for enabling CPU frequency scaling on MSM8916-based
-> platforms.
-> 
-> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  .../bindings/mailbox/qcom,apcs-kpss-global.txt     |   5 +
+>  Documentation/devicetree/bindings/net/ethernet.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
->  drivers/mailbox/qcom-apcs-ipc-mailbox.c            | 122 +++++++++++++++++++++
->  2 files changed, 127 insertions(+)
+I haven't checked, but this should probably go in the DT spec and we 
+should update the kernel docs to just point to it.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
