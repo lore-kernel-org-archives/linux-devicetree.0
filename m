@@ -1,805 +1,266 @@
-From: matthew.gerlach@linux.intel.com
-Subject: [PATCH 2/3] mtd: spi-nor: core code for the Altera Quadspi Flash
- Controller v2
-Date: Mon, 26 Jun 2017 09:13:38 -0700
-Message-ID: <1498493619-4633-3-git-send-email-matthew.gerlach@linux.intel.com>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
+From: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 3/3 v6] ARC: hsdk: initial port for HSDK board
+Date: Mon, 26 Jun 2017 16:25:35 +0000
+Message-ID: <1498494334.28955.58.camel@synopsys.com>
+References: <20170626151118.19507-1-Eugeniy.Paltsev@synopsys.com>
+         <20170626151118.19507-4-Eugeniy.Paltsev@synopsys.com>
+         <CAL_JsqJBPL+AuYNP=JgXWOGNFxdenKY4Rt3_f6tG6MYDLncRNg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJBPL+AuYNP=JgXWOGNFxdenKY4Rt3_f6tG6MYDLncRNg@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <322D90A068F1A3449A5B9EF749B5EF2D@internal.synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Vineet.Gupta1@synopsys.com" <Vineet.Gupta1@synopsys.com>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
-
-Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
----
- MAINTAINERS                          |   7 +
- drivers/mtd/spi-nor/Kconfig          |   5 +
- drivers/mtd/spi-nor/Makefile         |   4 +-
- drivers/mtd/spi-nor/altera-quadspi.c | 676 +++++++++++++++++++++++++++++++++++
- include/linux/mtd/altera-quadspi.h   |  28 ++
- 5 files changed, 719 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mtd/spi-nor/altera-quadspi.c
- create mode 100644 include/linux/mtd/altera-quadspi.h
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6b4395c..ae33fa6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -648,6 +648,13 @@ L:	linux-gpio@vger.kernel.org
- S:	Maintained
- F:	drivers/gpio/gpio-altera.c
- 
-+ALTERA QUADSPI FLASH DRIVER
-+M:	Matthew Gerlach <matthew.gerlach@linux.intel.com>
-+L:	linux-mtd@lists.infradead.org
-+S:	Maintained
-+F:	drivers/mtd/spi-nor/altera-quadspi.c
-+F:	inclulde/linux/mtd/altera-quadspi.h
-+
- ALTERA SYSTEM RESOURCE DRIVER FOR ARRIA10 DEVKIT
- M:	Thor Thayer <thor.thayer@linux.intel.com>
- S:	Maintained
-diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
-index 293c8a4..89fe425 100644
---- a/drivers/mtd/spi-nor/Kconfig
-+++ b/drivers/mtd/spi-nor/Kconfig
-@@ -113,4 +113,9 @@ config SPI_STM32_QUADSPI
- 	  This enables support for the STM32 Quad SPI controller.
- 	  We only connect the NOR to this controller.
- 
-+config SPI_ALTERA_QUADSPI
-+        tristate "Altera Quad SPI Flash Controller II"
-+        help
-+          Enable support for version 2 of Altera Quad SPI Flash Controller.
-+
- endif # MTD_SPI_NOR
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index 285aab8..024c6ac 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -8,4 +8,6 @@ obj-$(CONFIG_MTD_MT81xx_NOR)    += mtk-quadspi.o
- obj-$(CONFIG_SPI_NXP_SPIFI)	+= nxp-spifi.o
- obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
- obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
--obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
-\ No newline at end of file
-+obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
-+obj-$(CONFIG_SPI_ALTERA_QUADSPI) += altera-quadspi.o
-+
-diff --git a/drivers/mtd/spi-nor/altera-quadspi.c b/drivers/mtd/spi-nor/altera-quadspi.c
-new file mode 100644
-index 0000000..de65453
---- /dev/null
-+++ b/drivers/mtd/spi-nor/altera-quadspi.c
-@@ -0,0 +1,676 @@
-+/*
-+ * Copyright (C) 2014 Altera Corporation. All rights reserved.
-+ * Copyright (C) 2017 Intel Corporation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+
-+#include <linux/bitrev.h>
-+#include <linux/module.h>
-+#include <linux/mtd/altera-quadspi.h>
-+#include <linux/mtd/mtd.h>
-+#include <linux/mtd/spi-nor.h>
-+
-+#define ALTERA_QUADSPI_RESOURCE_NAME			"altera_quadspi"
-+
-+#define EPCS_OPCODE_ID					1
-+#define NON_EPCS_OPCODE_ID				2
-+
-+#define WRITE_CHECK					1
-+#define ERASE_CHECK					0
-+
-+#define QUADSPI_SR_REG					0x0
-+#define QUADSPI_SR_MASK					0x0000000F
-+
-+/* defines for device id register */
-+#define QUADSPI_SID_REG					0x4
-+#define QUADSPI_RDID_REG				0x8
-+#define QUADSPI_ID_MASK					0x000000FF
-+
-+/*
-+ * QUADSPI_MEM_OP register offset
-+ *
-+ * The QUADSPI_MEM_OP register is used to do memory protect and erase operations
-+ *
-+ */
-+#define QUADSPI_MEM_OP_REG				0xC
-+
-+#define QUADSPI_MEM_OP_CMD_MASK				0x00000003
-+#define QUADSPI_MEM_OP_BULK_ERASE_CMD			0x00000001
-+#define QUADSPI_MEM_OP_SECTOR_ERASE_CMD			0x00000002
-+#define QUADSPI_MEM_OP_SECTOR_PROTECT_CMD		0x00000003
-+#define QUADSPI_MEM_OP_SECTOR_WRITE_ENABLE_CMD		0x00000004
-+#define QUADSPI_MEM_OP_SECTOR_VALUE_MASK		0x0003FF00
-+
-+#define QUADSPI_MEM_OP_SECTOR_PROTECT_SHIFT		8
-+#define QUADSPI_MEM_OP_SECTOR_PROTECT_VALUE_MASK	0x00001F00
-+/*
-+ * QUADSPI_ISR register offset
-+ *
-+ * The QUADSPI_ISR register is used to determine whether an invalid write or
-+ * erase operation trigerred an interrupt
-+ *
-+ */
-+#define QUADSPI_ISR_REG					0x10
-+
-+#define QUADSPI_ISR_ILLEGAL_ERASE_MASK			0x00000001
-+#define QUADSPI_ISR_ILLEGAL_WRITE_MASK			0x00000002
-+
-+/*
-+ * QUADSPI_IMR register offset
-+ *
-+ * The QUADSPI_IMR register is used to mask the invalid erase or the invalid
-+ * write interrupts.
-+ *
-+ */
-+#define QUADSPI_IMR_REG					0x14
-+#define QUADSPI_IMR_ILLEGAL_ERASE_MASK			0x00000001
-+
-+#define QUADSPI_IMR_ILLEGAL_WRITE_MASK			0x00000002
-+
-+#define QUADSPI_CHIP_SELECT_REG				0x18
-+#define QUADSPI_CHIP_SELECT_MASK			0x00000007
-+#define QUADSPI_CHIP_SELECT_0				0x00000001
-+#define QUADSPI_CHIP_SELECT_1				0x00000002
-+#define QUADSPI_CHIP_SELECT_2				0x00000004
-+
-+#define QUADSPI_FLAG_STATUS_REG				0x1C
-+#define QUADSPI_DEV_ID_DATA_0				0x20
-+#define QUADSPI_DEV_ID_DATA_1				0x24
-+#define QUADSPI_DEV_ID_DATA_2				0x28
-+#define QUADSPI_DEV_ID_DATA_3				0x2C
-+#define QUADSPI_DEV_ID_DATA_4				0x30
-+
-+#define QUADSPI_WIN_OCC_REG				0x4
-+#define QUADSPI_WIN_OCC_SFT				24
-+
-+#define QUADSPI_WIN_SEL_REG				0x8
-+
-+struct altera_quadspi {
-+	u32 opcode_id;
-+	void __iomem *csr_base;
-+	void __iomem *data_base;
-+	void __iomem *window_base;
-+	size_t window_size;
-+	u32 num_flashes;
-+	u32 flags;
-+	struct device *dev;
-+	struct altera_quadspi_flash *flash[ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP];
-+	struct device_node *np[ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP];
-+};
-+
-+struct altera_quadspi_flash {
-+	struct spi_nor nor;
-+	struct altera_quadspi *q;
-+	u32 bank;
-+};
-+
-+struct flash_device {
-+	char *name;
-+	u32 opcode_id;
-+	u32 device_id;
-+};
-+
-+#ifdef DEBUG
-+static inline u32 alt_qspi_readl(void __iomem *base, off_t offset)
-+{
-+	u32 val = readl(base + offset);
-+
-+	pr_info("%s 0x%x from offset 0x%lx\n", __func__, val, offset);
-+	return val;
-+}
-+static inline void alt_qspi_writel(u32 val, void __iomem *base, off_t offset)
-+{
-+	writel(val, base + offset);
-+	pr_info("%s 0x%x to offset 0x%lx\n", __func__, val, offset);
-+}
-+#else
-+#define alt_qspi_readl(base, offset) readl(base+offset)
-+#define alt_qspi_writel(val, base, offset) writel(val, base + offset)
-+#endif
-+
-+static void altera_quadspi_chip_select(struct altera_quadspi *q, u32 bank)
-+{
-+	u32 val = 0;
-+
-+	switch (bank) {
-+	case 0:
-+		val = QUADSPI_CHIP_SELECT_0;
-+		break;
-+	case 1:
-+		val = QUADSPI_CHIP_SELECT_1;
-+		break;
-+	case 2:
-+		val = QUADSPI_CHIP_SELECT_2;
-+		break;
-+	default:
-+		dev_err(q->dev, "invalid bank\n");
-+		return;
-+	}
-+	alt_qspi_writel(val, q->csr_base, QUADSPI_CHIP_SELECT_REG);
-+}
-+
-+static int altera_quadspi_write_reg(struct spi_nor *nor, u8 opcode, u8 *val,
-+				    int len)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+
-+	altera_quadspi_chip_select(q, flash->bank);
-+
-+	switch (opcode) {
-+	case SPINOR_OP_WREN:
-+		dev_dbg(q->dev, "%s enabling write\n", __func__);
-+		alt_qspi_writel(QUADSPI_MEM_OP_SECTOR_WRITE_ENABLE_CMD,
-+				q->csr_base, QUADSPI_MEM_OP_REG);
-+		break;
-+
-+	case SPINOR_OP_CHIP_ERASE:
-+		alt_qspi_writel(QUADSPI_MEM_OP_BULK_ERASE_CMD,
-+				q->csr_base, QUADSPI_MEM_OP_REG);
-+		break;
-+
-+	default:
-+		dev_dbg(q->dev, "%s UNHANDLED write_reg 0x%x\n",
-+			__func__, opcode);
-+
-+	}
-+
-+	return 0;
-+}
-+
-+static int altera_quadspi_read_reg(struct spi_nor *nor, u8 opcode, u8 *val,
-+				   int len)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+	u32 data = 0;
-+
-+	memset(val, 0, len);
-+
-+	altera_quadspi_chip_select(q, flash->bank);
-+
-+	switch (opcode) {
-+	case SPINOR_OP_RDSR:
-+		data = alt_qspi_readl(q->csr_base, QUADSPI_SR_REG);
-+		dev_dbg(q->dev, "%s RDSR 0x%x\n", __func__, data);
-+		*val = (u8)data & QUADSPI_SR_MASK;
-+		break;
-+	case SPINOR_OP_RDID:
-+		if (q->opcode_id == EPCS_OPCODE_ID)
-+			data = alt_qspi_readl(q->csr_base, QUADSPI_SID_REG);
-+		else
-+			data = alt_qspi_readl(q->csr_base, QUADSPI_RDID_REG);
-+
-+		*((u32 *)val) = data;
-+		break;
-+	case SPINOR_OP_RDFSR:
-+		data = alt_qspi_readl(q->csr_base, QUADSPI_FLAG_STATUS_REG);
-+		dev_dbg(q->dev, "%s RDFSR 0x%x\n", __func__, data);
-+		*val = (u8)(data & 0xff);
-+		break;
-+	default:
-+		dev_dbg(q->dev, "%s UNHANDLED read_reg 0x%x\n",
-+			__func__, opcode);
-+		*val = 0;
-+		break;
-+	}
-+	return 0;
-+}
-+
-+static int altera_quadspi_write_erase_check(struct spi_nor *nor,
-+					    bool write_erase)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+	u32 val;
-+	u32 mask;
-+
-+	if (write_erase)
-+		mask = QUADSPI_ISR_ILLEGAL_WRITE_MASK;
-+	else
-+		mask = QUADSPI_ISR_ILLEGAL_ERASE_MASK;
-+
-+	val = alt_qspi_readl(q->csr_base, QUADSPI_ISR_REG);
-+
-+	if (val & mask) {
-+		dev_err(nor->dev,
-+			"write/erase failed, sector might be protected\n");
-+		alt_qspi_writel(0, q->csr_base, QUADSPI_FLAG_STATUS_REG);
-+
-+		return -EIO;
-+	}
-+
-+	return 0;
-+}
-+
-+static int altera_quadspi_addr_to_sector(struct mtd_info *mtd, uint64_t offset)
-+{
-+	if (mtd->erasesize_shift)
-+		return offset >> mtd->erasesize_shift;
-+	do_div(offset, mtd->erasesize);
-+	return offset;
-+}
-+
-+static int altera_quadspi_erase(struct spi_nor *nor, loff_t offset)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+	struct mtd_info *mtd = &nor->mtd;
-+	u32 val;
-+	int sector_value;
-+
-+	altera_quadspi_chip_select(q, flash->bank);
-+
-+	sector_value = altera_quadspi_addr_to_sector(mtd, offset);
-+
-+	dev_dbg(q->dev, "%s sector %d\n", __func__, sector_value);
-+
-+	if (sector_value < 0)
-+		return -EINVAL;
-+
-+	val = (sector_value << 8) & QUADSPI_MEM_OP_SECTOR_VALUE_MASK;
-+
-+	val |= QUADSPI_MEM_OP_SECTOR_ERASE_CMD;
-+
-+	alt_qspi_writel(val, q->csr_base, QUADSPI_MEM_OP_REG);
-+
-+	dev_dbg(q->dev, "%s SR=0x%x FSR=0x%x\n", __func__,
-+		alt_qspi_readl(q->csr_base, QUADSPI_SR_REG),
-+		alt_qspi_readl(q->csr_base, QUADSPI_FLAG_STATUS_REG));
-+
-+	return altera_quadspi_write_erase_check(nor, ERASE_CHECK);
-+}
-+
-+#define WINDOW_ALIGN 4
-+#define WINDOW_MASK (WINDOW_ALIGN - 1)
-+
-+static ssize_t altera_quadspi_windowed_read(struct altera_quadspi *q,
-+					    loff_t from,
-+					    size_t len, u_char *buf)
-+{
-+	size_t bytes_left = len;
-+	size_t bytes_to_read, i;
-+	loff_t next_window_off;
-+	u64 start_window;
-+	u32 window;
-+	u32 *dst;
-+
-+	if ((from & WINDOW_MASK) || (len & WINDOW_MASK) ||
-+	    !IS_ALIGNED((unsigned long)buf, WINDOW_ALIGN)) {
-+		dev_err(q->dev, "%s only 32 bit aligned accesses allowed\n",
-+			__func__);
-+		return 0;
-+	}
-+
-+	start_window = from;
-+	do_div(start_window, q->window_size);
-+	window = (u32)(start_window & 0xffffffff);
-+
-+	next_window_off = (window + 1) * q->window_size;
-+
-+	while (bytes_left > 0) {
-+
-+		writel(window, q->window_base + QUADSPI_WIN_SEL_REG);
-+
-+		bytes_to_read = min((size_t)bytes_left,
-+				    (size_t)(next_window_off - from));
-+
-+		dev_dbg(q->dev,
-+			"window%u fr0x%llx next0x%llx left%zu num0x%zx\n",
-+			window,  from, next_window_off, bytes_left,
-+			bytes_to_read);
-+
-+		dst = (u32 *)buf;
-+		for (i = 0; i < bytes_to_read; i += 4, dst++)
-+			*dst = readl(q->data_base +
-+				     (from & (q->window_size - 1)) + i);
-+
-+		bytes_left -= bytes_to_read;
-+		buf += bytes_to_read;
-+		from += bytes_to_read;
-+		window++;
-+		next_window_off += q->window_size;
-+	}
-+
-+	return len;
-+}
-+static ssize_t altera_quadspi_windowed_write(struct altera_quadspi *q,
-+					     loff_t to, size_t len,
-+					     const u_char *buf)
-+{
-+	size_t bytes_left = len;
-+	u32 window_mask = q->window_size - 1;
-+	u32 read_back;
-+	size_t bytes_to_write, i;
-+	loff_t next_window_off;
-+	u64 start_window;
-+	u32 window;
-+	const u32 *src;
-+	u32 words_can_write;
-+
-+	if ((to & WINDOW_MASK) || (len & WINDOW_MASK) ||
-+	    !IS_ALIGNED((unsigned long)buf, WINDOW_ALIGN)) {
-+		dev_err(q->dev, "%s only 32 bit aligned accesses allowed\n",
-+			__func__);
-+		return 0;
-+	}
-+
-+	start_window = to;
-+	do_div(start_window, q->window_size);
-+	window = (u32)(start_window & 0xffffffff);
-+
-+	next_window_off = (window + 1) * q->window_size;
-+
-+	while (bytes_left > 0) {
-+
-+		writel(window, q->window_base + QUADSPI_WIN_SEL_REG);
-+
-+		bytes_to_write = min((size_t)bytes_left,
-+				    (size_t)(next_window_off - to));
-+
-+		dev_dbg(q->dev,
-+			"window%u to0x%llx next0x%llx left%zu num0x%zx\n",
-+			window,  to, next_window_off, bytes_left,
-+			bytes_to_write);
-+
-+		src = (u32 *)buf;
-+		for (i = 0; i < bytes_to_write;) {
-+			words_can_write =
-+				readl(q->window_base + QUADSPI_WIN_OCC_REG) >>
-+				      QUADSPI_WIN_OCC_SFT;
-+			dev_dbg(q->dev, "can write 0x%x\n", words_can_write);
-+
-+			for (; words_can_write > 0; words_can_write--) {
-+				writel(*src,
-+				       q->data_base +
-+				       (to & window_mask) + i);
-+				read_back = readl(q->data_base +
-+						  (to & window_mask) + i);
-+				if (*src != read_back) {
-+					dev_err(q->dev, "%s 0x%x != 0x%x\n",
-+						__func__, *src, read_back);
-+					return (len - bytes_left);
-+				}
-+				i += 4;
-+				src++;
-+			}
-+		}
-+
-+		bytes_left -= bytes_to_write;
-+		buf += bytes_to_write;
-+		to += bytes_to_write;
-+		window++;
-+		next_window_off += q->window_size;
-+	}
-+
-+	return len;
-+}
-+
-+static ssize_t altera_quadspi_read(struct spi_nor *nor, loff_t from, size_t len,
-+				   u_char *buf)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+	size_t i;
-+
-+	altera_quadspi_chip_select(q, flash->bank);
-+
-+	if (q->window_size)
-+		altera_quadspi_windowed_read(q, from, len, buf);
-+	else
-+		memcpy_fromio(buf, q->data_base + from, len);
-+
-+	if (q->flags & ALTERA_QUADSPI_FL_BITREV_READ) {
-+		for (i = 0; i < len; i++, buf++)
-+			*buf = bitrev8(*buf);
-+	}
-+
-+	return len;
-+}
-+
-+static ssize_t altera_quadspi_write(struct spi_nor *nor, loff_t to,
-+				    size_t len, const u_char *buf)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+	u_char *bitrev_buf = NULL;
-+	const u_char *src;
-+	u_char *dst;
-+	size_t i;
-+	int ret = 0;
-+
-+	altera_quadspi_chip_select(q, flash->bank);
-+
-+	if (q->flags & ALTERA_QUADSPI_FL_BITREV_WRITE) {
-+		bitrev_buf = devm_kzalloc(q->dev, len, GFP_KERNEL);
-+		if (!bitrev_buf)
-+			return 0;
-+
-+		src = buf;
-+		dst = bitrev_buf;
-+		for (i = 0; i < len; i++, src++, dst++)
-+			*dst = bitrev8(*src);
-+
-+		buf = bitrev_buf;
-+	}
-+
-+	if (q->window_size)
-+		altera_quadspi_windowed_write(q, to, len, buf);
-+	else
-+		memcpy_toio(q->data_base + to, buf, len);
-+
-+
-+	if (bitrev_buf)
-+		devm_kfree(q->dev, bitrev_buf);
-+
-+	ret = altera_quadspi_write_erase_check(nor, WRITE_CHECK);
-+
-+	return len;
-+
-+}
-+
-+static int altera_quadspi_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+	struct mtd_info *mtd = &nor->mtd;
-+	uint32_t offset = ofs;
-+	u32 sector_start, sector_end;
-+	uint64_t num_sectors;
-+	u32 mem_op;
-+	u32 sr_bp;
-+	u32 sr_tb;
-+
-+	altera_quadspi_chip_select(q, flash->bank);
-+
-+	sector_start = offset;
-+	sector_end = altera_quadspi_addr_to_sector(mtd, offset + len);
-+	num_sectors = mtd->size;
-+	do_div(num_sectors, mtd->erasesize);
-+
-+	dev_dbg(nor->dev, "%s: sector start is %u,sector end is %u\n",
-+		__func__, sector_start, sector_end);
-+
-+	if (sector_start >= num_sectors / 2) {
-+		sr_bp = fls(num_sectors - 1 - sector_start) + 1;
-+		sr_tb = 0;
-+	} else if ((sector_end < num_sectors / 2) &&
-+		  (q->opcode_id != EPCS_OPCODE_ID)) {
-+		sr_bp = fls(sector_end) + 1;
-+		sr_tb = 1;
-+	} else {
-+		sr_bp = 16;
-+		sr_tb = 0;
-+	}
-+
-+	mem_op = (sr_tb << 12) | (sr_bp << 8);
-+	mem_op &= QUADSPI_MEM_OP_SECTOR_PROTECT_VALUE_MASK;
-+	mem_op |= QUADSPI_MEM_OP_SECTOR_PROTECT_CMD;
-+
-+	alt_qspi_writel(mem_op, q->csr_base, QUADSPI_MEM_OP_REG);
-+
-+	return 0;
-+}
-+
-+static int altera_quadspi_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-+{
-+	struct altera_quadspi_flash *flash = nor->priv;
-+	struct altera_quadspi *q = flash->q;
-+	u32 mem_op;
-+
-+	dev_dbg(nor->dev, "Unlock all protected area\n");
-+
-+	altera_quadspi_chip_select(q, flash->bank);
-+
-+	mem_op = QUADSPI_MEM_OP_SECTOR_PROTECT_CMD;
-+	alt_qspi_writel(mem_op, q->csr_base, QUADSPI_MEM_OP_REG);
-+
-+	return 0;
-+}
-+
-+static int altera_quadspi_setup_banks(struct device *dev,
-+				      u32 bank, struct device_node *np)
-+{
-+	struct altera_quadspi *q = dev_get_drvdata(dev);
-+	struct altera_quadspi_flash *flash;
-+	struct spi_nor *nor;
-+	int ret = 0;
-+	char modalias[40] = {0};
-+	struct spi_nor_hwcaps hwcaps = {
-+		.mask = SNOR_HWCAPS_READ |
-+			SNOR_HWCAPS_READ_FAST |
-+			SNOR_HWCAPS_READ_1_1_2 |
-+			SNOR_HWCAPS_READ_1_1_4 |
-+			SNOR_HWCAPS_PP,
-+	};
-+
-+	if (bank > q->num_flashes - 1)
-+		return -EINVAL;
-+
-+	altera_quadspi_chip_select(q, bank);
-+
-+	flash = devm_kzalloc(q->dev, sizeof(*flash), GFP_KERNEL);
-+	if (!flash)
-+		return -ENOMEM;
-+
-+	q->flash[bank] = flash;
-+	nor = &flash->nor;
-+	nor->dev = dev;
-+	nor->priv = flash;
-+	nor->mtd.priv = nor;
-+	flash->q = q;
-+	flash->bank = bank;
-+	spi_nor_set_flash_node(nor, np);
-+
-+	/* spi nor framework*/
-+	nor->read_reg = altera_quadspi_read_reg;
-+	nor->write_reg = altera_quadspi_write_reg;
-+	nor->read = altera_quadspi_read;
-+	nor->write = altera_quadspi_write;
-+	nor->erase = altera_quadspi_erase;
-+	nor->flash_lock = altera_quadspi_lock;
-+	nor->flash_unlock = altera_quadspi_unlock;
-+
-+	/* scanning flash and checking dev id */
-+#ifdef CONFIG_OF
-+	if (np && (of_modalias_node(np, modalias, sizeof(modalias)) < 0))
-+		return -EINVAL;
-+#endif
-+
-+	ret = spi_nor_scan(nor, modalias, &hwcaps);
-+	if (ret) {
-+		dev_err(nor->dev, "flash not found\n");
-+		return ret;
-+	}
-+
-+	ret =  mtd_device_register(&nor->mtd, NULL, 0);
-+
-+	altera_quadspi_unlock(nor, 0, 0);
-+
-+	return ret;
-+}
-+
-+int altera_quadspi_create(struct device *dev, void __iomem *csr_base,
-+			  void __iomem *data_base, void __iomem *window_base,
-+			  size_t window_size, u32 flags)
-+{
-+	struct altera_quadspi *q;
-+
-+	q = devm_kzalloc(dev, sizeof(*q), GFP_KERNEL);
-+	if (!q)
-+		return -ENOMEM;
-+
-+	q->dev = dev;
-+	q->csr_base = csr_base;
-+	q->data_base = data_base;
-+	q->window_base = window_base;
-+	q->window_size = window_size;
-+
-+	q->flags = flags;
-+
-+	dev_set_drvdata(dev, q);
-+
-+	dev_dbg(dev, "%s SR=0x%x FSR=0x%x\n", __func__,
-+		alt_qspi_readl(q->csr_base, QUADSPI_SR_REG),
-+		alt_qspi_readl(q->csr_base, QUADSPI_FLAG_STATUS_REG));
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(altera_quadspi_create);
-+
-+int altera_qspi_add_bank(struct device *dev,
-+			 u32 bank, struct device_node *np)
-+{
-+	struct altera_quadspi *q = dev_get_drvdata(dev);
-+
-+	if (q->num_flashes >= ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP)
-+		return -ENOMEM;
-+
-+	q->num_flashes++;
-+
-+	return altera_quadspi_setup_banks(dev, bank, np);
-+}
-+EXPORT_SYMBOL_GPL(altera_qspi_add_bank);
-+
-+int altera_quadspi_remove_banks(struct device *dev)
-+{
-+	struct altera_quadspi *q = dev_get_drvdata(dev);
-+	struct altera_quadspi_flash *flash;
-+	int i;
-+	int ret = 0;
-+
-+	/* clean up for all nor flash */
-+	for (i = 0; i < q->num_flashes; i++) {
-+		flash = q->flash[i];
-+		if (!flash)
-+			continue;
-+
-+		/* clean up mtd stuff */
-+		ret = mtd_device_unregister(&flash->nor.mtd);
-+		if (ret) {
-+			dev_err(dev, "error removing mtd\n");
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(altera_quadspi_remove_banks);
-+
-+MODULE_AUTHOR("Viet Nga Dao <vndao@altera.com>");
-+MODULE_AUTHOR("Yong Sern Lau <lau.yong.sern@intel.com>");
-+MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach@linux.intel.com>");
-+MODULE_DESCRIPTION("Altera QuadSPI Version 2 Driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/linux/mtd/altera-quadspi.h b/include/linux/mtd/altera-quadspi.h
-new file mode 100644
-index 0000000..58f31ee
---- /dev/null
-+++ b/include/linux/mtd/altera-quadspi.h
-@@ -0,0 +1,28 @@
-+/*
-+ *
-+ * Copyright 2017 Intel Corporation, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#ifndef __ALTERA_QUADSPI_H
-+#define __ALTERA_QUADSPI_H
-+
-+#include <linux/device.h>
-+
-+#define ALTERA_QUADSPI_FL_BITREV_READ BIT(0)
-+#define ALTERA_QUADSPI_FL_BITREV_WRITE BIT(1)
-+
-+#define ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP 3
-+
-+int altera_quadspi_create(struct device *dev, void __iomem *csr_base,
-+			  void __iomem *data_base, void __iomem *window_reg,
-+			  size_t window_size, u32 flags);
-+
-+int altera_qspi_add_bank(struct device *dev,
-+			 u32 bank, struct device_node *np);
-+
-+int altera_quadspi_remove_banks(struct device *dev);
-+#endif
--- 
-2.7.4
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+SGkgUm9iLA0KDQpPbiBNb24sIDIwMTctMDYtMjYgYXQgMTA6NTEgLTA1MDAsIFJvYiBIZXJyaW5n
+IHdyb3RlOg0KPiBPbiBNb24sIEp1biAyNiwgMjAxNyBhdCAxMDoxMSBBTSwgRXVnZW5peSBQYWx0
+c2V2DQo+IDxFdWdlbml5LlBhbHRzZXZAc3lub3BzeXMuY29tPiB3cm90ZToNCj4gPiANCj4gPiBG
+cm9tOiBBbGV4ZXkgQnJvZGtpbiA8YWJyb2RraW5Ac3lub3BzeXMuY29tPg0KPiA+IA0KDQpbc25p
+cF0NCg0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBjaG9zZW4gew0KPiA+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBib290YXJncyA9ICJlYXJseWNvbj11YXJ0ODI1MCxtbWlvMzIs
+MHhmMDAwNTAwMCwxMTUyMDBuOCBjb25zb2xlPXR0eVMwLDExNTIwMG44IGRlYnVnIHByaW50LWZh
+dGFsLXNpZ25hbHM9MSI7DQo+IA0KPiBVc2Ugc3Rkb3V0LXBhdGggZm9yIHRoZSBjb25zb2xlLiBS
+ZWFsbHksIHRoZSBib290YXJncyBzaG91bGQgYmUgYmxhbmsNCj4gYW5kIHBvcHVsYXRlZCBieSB0
+aGUgYm9vdGxvYWRlciBlc3BlY2lhbGx5IGRlYnVnIG9wdGlvbnMuDQoNCkFncmVlIGJ1dCBpbiBj
+YXNlIG9mIGRldmJvYXJkcyB3ZSBxdWl0ZSBvZnRlbiBkaXNhYmxlIGJvb3Rsb2FkZXIgYW5kDQps
+b2FkIExpbnV4IGltYWdlIGluIG1lbW9yeSB2aWEgSlRBRy4gU28gaW4gdGhhdCBjYXNlIGJvb3Rh
+cmdzIG1ha2UgcGVyZmVjdCBzZW5zZSBJTUhPLsKgDQoNCj4gPiANCj4gPiArwqDCoMKgwqDCoMKg
+wqB9Ow0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqBjcHUgew0KPiANCj4gJ2NwdScgaXMgZm9y
+IGNwdSBub2Rlcywgc28gbmVlZCBzb21ldGhpbmcgZGlmZmVyZW50Lg0KDQpBZ3JlZS4NCg0KPiA+
+IA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gInNpbXBs
+ZS1idXMiOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjYWRkcmVzcy1jZWxs
+cyA9IDwxPjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI3NpemUtY2VsbHMg
+PSA8MT47DQo+IA0KPiBUaGVyZSBhcmUgbm8gcmVnIHByb3BlcnRpZXMsIHNvIHRoZXNlIGFyZW4n
+dCBuZWVkZWQuIFRoaXMgZG9lc24ndCBsb29rDQo+IGxpa2UgYSBzaW1wbGUtYnVzIGVpdGhlci4N
+Cj4gDQo+IFByb2JhYmx5IHRoZXNlIGNoaWxkIG5vZGVzIHNob3VsZCBqdXN0IGJlIG1vdmVkIHVw
+IHRvIHJvb3QgbGV2ZWwuDQoNCkxvb2tzIGxpa2UgdGhhdC4gVGhhbmtzLg0KDQo+ID4gDQo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGludGVycnVwdC1wYXJlbnQgPSA8JmNvcmVf
+aW50Yz47DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb3JlX2Ns
+azogY29yZV9jbGsgew0KPiANCj4gY29yZS1jbGsgew0KDQpPay4NCg0KPiA+IA0KPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI2Nsb2NrLWNlbGxzID0g
+PDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+Y29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbG9jay1mcmVxdWVuY3kgPSA8MTAwMDAwMDAwMD47DQo+
+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07DQo+ID4gKw0KPiA+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb3JlX2ludGM6IGFyY2hzLWludGNAY3B1IHsNCj4gDQo+
+IGNwdSBpcyBub3QgYSB2YWxpZCB1bml0LWFkZHJlc3MuIEhvdyBhcmUgdGhlc2UgaW50ZXJydXB0
+IGNvbnRyb2xsZXJzIGFkZHJlc3NlZD8NCg0KV2UgaGF2ZSBwZXItY29yZSBJTlRDIHNvIGVhY2gg
+Y29yZSBjb21tdW5pY2F0ZXMgdG8gaXRzIG93biBJTlRDIGFuZCB0aGVyZSdzIG5vIHdheQ0KZm9y
+IGFueSBjb3JlIHRvIHRhbGsgd2l0aCBJTlRDIG9mIGFub3RoZXIgY29yZS4NCg0KQnV0IHRoZW4g
+d2UgaGF2ZSB0aGUgbmV4dCBsZXZlbCBJTlRDIHdoaWNoIGlzIElEVSAoSW50ZXJydXB0IERpc3Ry
+aWJ1dGlvbiBVbml0KQ0Kd2hpY2ggZGlzcGF0Y2hlcyAiY29tbW9uIiBJUlFzIHRvIGRpZmZlcmVu
+dCB1cHN0cmVhbSBwZXItY29yZSBJTlRDLCBzZWUgYmVsb3cgaXRzIG5vZGUuwqANCg0KPiA+IA0K
+PiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0
+aWJsZSA9ICJzbnBzLGFyY2hzLWludGMiOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ZXJydXB0LWNvbnRyb2xsZXI7DQo+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjaW50ZXJydXB0LWNlbGxzID0g
+PDE+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPiA+ICsNCj4gPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaWR1X2ludGM6IGlkdS1pbnRlcnJ1cHQtY29u
+dHJvbGxlciB7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBjb21wYXRpYmxlID0gInNucHMsYXJjaHMtaWR1LWludGMiOw0KPiA+ICvCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ZXJydXB0LWNvbnRyb2xsZXI7
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjaW50
+ZXJydXB0LWNlbGxzID0gPDE+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9
+Ow0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgYXJjcGN0MDogcGN0
+IHsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNv
+bXBhdGlibGUgPSAic25wcyxhcmNocy1wY3QiOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqB9Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoH07DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKg
+wqDCoHNvYyB7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUg
+PSAic2ltcGxlLWJ1cyI7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNhZGRy
+ZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjc2l6
+ZS1jZWxscyA9IDwxPjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ZXJy
+dXB0LXBhcmVudCA9IDwmaWR1X2ludGM+Ow0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgcmFuZ2VzID0gPDB4MDAwMDAwMDAgMHhmMDAwMDAwMCAweDEwMDAwMDAwPjsN
+Cj4gPiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHVhcnQ6IGR3LWFwYi11
+YXJ0QDUwMDAgew0KPiANCj4gc2VyaWFsQC4uLg0KDQpZZXAuDQoNCj4gPiANCj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAic25w
+cyxkdy1hcGItdWFydCI7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqByZWcgPSA8MHg1MDAwIDB4MTAwPjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2NrLWZyZXF1ZW5jeSA9IDwzMzMzMDAwMD47
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbnRl
+cnJ1cHRzID0gPDY+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgYmF1ZCA9IDwxMTUyMDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnLXNoaWZ0ID0gPDI+Ow0KPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmVnLWlvLXdpZHRoID0gPDQ+Ow0KPiA+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPiA+ICsNCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgZ21hY2NsazogZ21hY2NsayB7DQo+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxlID0gImZpeGVkLWNs
+b2NrIjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oGNsb2NrLWZyZXF1ZW5jeSA9IDw0MDAwMDAwMDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI2Nsb2NrLWNlbGxzID0gPDA+Ow0KPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPiA+ICsNCj4gPiArwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgbW1jY2xrX2NpdTogbW1jY2xrX2NpdSB7DQo+IA0KPiBEb24ndCB1c2Ug
+dW5kZXJzY29yZXMgaW4gbm9kZSBuYW1lcy4NCg0KT2suDQoNCj4gPiANCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAiZml4ZWQt
+Y2xvY2siOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMDAwMD47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjY2xvY2stY2VsbHMgPSA8MD47DQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqBtbWNjbGtfYml1OiBtbWNjbGtfYml1IHsNCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAiZml4ZWQt
+Y2xvY2siOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgY2xvY2stZnJlcXVlbmN5ID0gPDQwMDAwMDAwMD47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjY2xvY2stY2VsbHMgPSA8MD47DQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoH07DQo+ID4gKw0KPiA+ICvCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqBldGhlcm5ldEA4MDAwIHsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47DQo+ID4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjb21wYXRpYmxl
+ID0gInNucHMsZHdtYWMiOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgcmVnID0gPDB4ODAwMCAweDIwMDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgaW50ZXJydXB0cyA9IDwxMD47DQo+ID4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbnRlcnJ1cHQtbmFt
+ZXMgPSAibWFjaXJxIjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoHBoeS1tb2RlID0gInJnbWlpIjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHNucHMscGJsID0gPDMyPjsNCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNsb2NrcyA9IDwmZ21hY2Nsaz47
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBjbG9j
+ay1uYW1lcyA9ICJzdG1tYWNldGgiOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgcGh5LWhhbmRsZSA9IDwmcGh5MD47DQo+ID4gKw0KPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgbWRpbzAgew0KPiANCj4g
+bWRpbyB7DQo+IA0KPiA+IA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoCNzaXplLWNlbGxzID0gPDA+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAic25wcyxkd21h
+Yy1tZGlvIjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBwaHkwOiBldGhlcm5ldC1waHlAMCB7DQo+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoHJlZyA9IDwwPjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgdGkscngt
+aW50ZXJuYWwtZGVsYXkgPSA8RFA4Mzg2N19SR01JSURDVExfMl8wMF9OUz47DQo+ID4gK8KgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoHRpLHR4LWludGVybmFsLWRlbGF5ID0gPERQODM4NjdfUkdNSUlEQ1RM
+XzJfMDBfTlM+Ow0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB0aSxmaWZvLWRlcHRoID0gPERQ
+ODM4NjdfUEhZQ1JfRklGT19ERVBUSF80X0JfTklCPjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB9Ow0KPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiArDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoG9oY2lANjAwMDAgew0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJnZW5lcmljLW9oY2kiOw0KPiANCj4g
+VGhpcyBzaG91bGQgaGF2ZSBhbiBTb0Mgc3BlY2lmaWMgY29tcGF0aWJsZS4NCg0KQnV0IHdoeT8g
+V2UgZG9uJ3QgaGF2ZSBhbnkgU29DLXNwZWNpZmljIGV4dGVuc2lvbnMuDQpUaGlzIGVzc2VudGlh
+bGx5IGFwcGxpZXMgdG8gRUhDSSBhcyB3ZWxsLg0KDQo+ID4gDQo+ID4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHg2MDAwMCAweDEwMD47DQo+
+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbnRlcnJ1
+cHRzID0gPDE1PjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiAr
+DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGVoY2lANDAwMDAgew0KPiA+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9
+ICJnZW5lcmljLWVoY2kiOw0KPiANCj4gVGhpcyBzaG91bGQgaGF2ZSBhbiBTb0Mgc3BlY2lmaWMg
+Y29tcGF0aWJsZS4NCj4gDQo+ID4gDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHg0MDAwMCAweDEwMD47DQo+ID4gK8KgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBpbnRlcnJ1cHRzID0gPDE1PjsNCj4g
+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiArDQo+ID4gK8KgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoG1tY0BhMDAwIHsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAiYWx0cixzb2NmcGdhLWR3
+LW1zaGMiOw0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgcmVnID0gPDB4YTAwMCAweDQwMD47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqBudW0tc2xvdHMgPSA8MT47DQo+ID4gK8KgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBmaWZvLWRlcHRoID0gPDE2PjsNCj4gPiAr
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGNhcmQtZGV0ZWN0
+LWRlbGF5ID0gPDIwMD47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBjbG9ja3MgPSA8Jm1tY2Nsa19iaXU+LCA8Jm1tY2Nsa19jaXU+Ow0KPiA+ICvC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xvY2stbmFtZXMg
+PSAiYml1IiwgImNpdSI7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqBpbnRlcnJ1cHRzID0gPDEyPjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGJ1cy13aWR0aCA9IDw0PjsNCj4gPiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgfTsNCj4gPiArwqDCoMKgwqDCoMKgwqB9Ow0KPiA+ICsNCj4g
+PiArwqDCoMKgwqDCoMKgwqBtZW1vcnkgew0KPiANCj4gbWVtb3J5QDgwMDAwMDAwDQoNCk9rLg0K
+DQo+IA0KPiA+IA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsNCj4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgI3NpemUtY2Vs
+bHMgPSA8MT47DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoGRldmljZV90eXBl
+ID0gIm1lbW9yeSI7DQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDww
+eDgwMDAwMDAwIDB4NDAwMDAwMDA+O8KgwqAvKiAxIEdpQiAqLw0KPiA+ICvCoMKgwqDCoMKgwqDC
+oH07DQo+ID4gK307DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJjL2NvbmZpZ3MvaHNka19kZWZj
+b25maWcgYi9hcmNoL2FyYy9jb25maWdzL2hzZGtfZGVmY29uZmlnDQo+ID4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi41M2JjOWYzDQo+ID4gLS0tIC9kZXYvbnVsbA0K
+PiA+ICsrKyBiL2FyY2gvYXJjL2NvbmZpZ3MvaHNka19kZWZjb25maWcNCj4gPiBAQCAtMCwwICsx
+LDc1IEBADQo+ID4gK0NPTkZJR19ERUZBVUxUX0hPU1ROQU1FPSJBUkNMaW51eCINCj4gPiArQ09O
+RklHX1NZU1ZJUEM9eQ0KPiA+ICsjIENPTkZJR19DUk9TU19NRU1PUllfQVRUQUNIIGlzIG5vdCBz
+ZXQNCj4gPiArQ09ORklHX05PX0haX0lETEU9eQ0KPiA+ICtDT05GSUdfSElHSF9SRVNfVElNRVJT
+PXkNCj4gPiArQ09ORklHX0lLQ09ORklHPXkNCj4gPiArQ09ORklHX0lLQ09ORklHX1BST0M9eQ0K
+PiA+ICtDT05GSUdfTkFNRVNQQUNFUz15DQo+ID4gKyMgQ09ORklHX1VUU19OUyBpcyBub3Qgc2V0
+DQo+ID4gKyMgQ09ORklHX1BJRF9OUyBpcyBub3Qgc2V0DQo+ID4gK0NPTkZJR19CTEtfREVWX0lO
+SVRSRD15DQo+ID4gK0NPTkZJR19JTklUUkFNRlNfU09VUkNFPSIuLi8uLi9hcmNfaW5pdHJhbWZz
+X2hzLyINCj4gPiArQ09ORklHX0VNQkVEREVEPXkNCj4gPiArQ09ORklHX1BFUkZfRVZFTlRTPXkN
+Cj4gPiArIyBDT05GSUdfVk1fRVZFTlRfQ09VTlRFUlMgaXMgbm90IHNldA0KPiA+ICsjIENPTkZJ
+R19DT01QQVRfQlJLIGlzIG5vdCBzZXQNCj4gPiArQ09ORklHX1NMQUI9eQ0KPiA+ICtDT05GSUdf
+QVJDX1BMQVRfSFNESz15DQo+ID4gK0NPTkZJR19JU0FfQVJDVjI9eQ0KPiA+ICtDT05GSUdfU01Q
+PXkNCj4gPiArQ09ORklHX0xJTlVYX0xJTktfQkFTRT0weDkwMDAwMDAwDQo+ID4gK0NPTkZJR19L
+RVJORUxfUkFNX0JBU0VfQUREUkVTUz0weDgwMDAwMDAwDQo+ID4gK0NPTkZJR19BUkNfQlVJTFRJ
+Tl9EVEJfTkFNRT0iaHNkayINCj4gPiArQ09ORklHX1BSRUVNUFQ9eQ0KPiA+ICsjIENPTkZJR19D
+T01QQUNUSU9OIGlzIG5vdCBzZXQNCj4gPiArQ09ORklHX05FVD15DQo+ID4gK0NPTkZJR19QQUNL
+RVQ9eQ0KPiA+ICtDT05GSUdfVU5JWD15DQo+ID4gK0NPTkZJR19JTkVUPXkNCj4gPiArQ09ORklH
+X0RFVlRNUEZTPXkNCj4gPiArIyBDT05GSUdfU1RBTkRBTE9ORSBpcyBub3Qgc2V0DQo+ID4gKyMg
+Q09ORklHX1BSRVZFTlRfRklSTVdBUkVfQlVJTEQgaXMgbm90IHNldA0KPiA+ICsjIENPTkZJR19G
+SVJNV0FSRV9JTl9LRVJORUwgaXMgbm90IHNldA0KPiA+ICtDT05GSUdfU0NTST15DQo+ID4gK0NP
+TkZJR19CTEtfREVWX1NEPXkNCj4gPiArQ09ORklHX05FVERFVklDRVM9eQ0KPiA+ICtDT05GSUdf
+U1RNTUFDX0VUSD15DQo+ID4gK0NPTkZJR19NSUNSRUxfUEhZPXkNCj4gPiArIyBDT05GSUdfSU5Q
+VVRfS0VZQk9BUkQgaXMgbm90IHNldA0KPiA+ICsjIENPTkZJR19JTlBVVF9NT1VTRSBpcyBub3Qg
+c2V0DQo+ID4gKyMgQ09ORklHX1NFUklPIGlzIG5vdCBzZXQNCj4gPiArIyBDT05GSUdfTEVHQUNZ
+X1BUWVMgaXMgbm90IHNldA0KPiA+ICtDT05GSUdfU0VSSUFMXzgyNTA9eQ0KPiA+ICtDT05GSUdf
+U0VSSUFMXzgyNTBfQ09OU09MRT15DQo+ID4gK0NPTkZJR19TRVJJQUxfODI1MF9EVz15DQo+ID4g
+K0NPTkZJR19TRVJJQUxfT0ZfUExBVEZPUk09eQ0KPiA+ICsjIENPTkZJR19IV19SQU5ET00gaXMg
+bm90IHNldA0KPiA+ICsjIENPTkZJR19IV01PTiBpcyBub3Qgc2V0DQo+ID4gK0NPTkZJR19GQj15
+DQo+ID4gK0NPTkZJR19GQl9VREw9eQ0KPiA+ICtDT05GSUdfRlJBTUVCVUZGRVJfQ09OU09MRT15
+DQo+ID4gK0NPTkZJR19VU0I9eQ0KPiA+ICtDT05GSUdfVVNCX0VIQ0lfSENEPXkNCj4gPiArQ09O
+RklHX1VTQl9FSENJX0hDRF9QTEFURk9STT15DQo+ID4gK0NPTkZJR19VU0JfT0hDSV9IQ0Q9eQ0K
+PiA+ICtDT05GSUdfVVNCX09IQ0lfSENEX1BMQVRGT1JNPXkNCj4gPiArQ09ORklHX1VTQl9TVE9S
+QUdFPXkNCj4gPiArQ09ORklHX01NQz15DQo+ID4gK0NPTkZJR19NTUNfU0RIQ0k9eQ0KPiA+ICtD
+T05GSUdfTU1DX1NESENJX1BMVEZNPXkNCj4gPiArQ09ORklHX01NQ19EVz15DQo+ID4gKyMgQ09O
+RklHX0lPTU1VX1NVUFBPUlQgaXMgbm90IHNldA0KPiA+ICtDT05GSUdfRVhUM19GUz15DQo+ID4g
+K0NPTkZJR19WRkFUX0ZTPXkNCj4gPiArQ09ORklHX1RNUEZTPXkNCj4gPiArQ09ORklHX05MU19D
+T0RFUEFHRV80Mzc9eQ0KPiA+ICtDT05GSUdfTkxTX0lTTzg4NTlfMT15DQo+ID4gKyMgQ09ORklH
+X0VOQUJMRV9XQVJOX0RFUFJFQ0FURUQgaXMgbm90IHNldA0KPiA+ICsjIENPTkZJR19FTkFCTEVf
+TVVTVF9DSEVDSyBpcyBub3Qgc2V0DQo+ID4gK0NPTkZJR19TVFJJUF9BU01fU1lNUz15DQo+ID4g
+K0NPTkZJR19MT0NLVVBfREVURUNUT1I9eQ0KPiA+ICtDT05GSUdfREVGQVVMVF9IVU5HX1RBU0tf
+VElNRU9VVD0xMA0KPiA+ICsjIENPTkZJR19TQ0hFRF9ERUJVRyBpcyBub3Qgc2V0DQo+ID4gKyMg
+Q09ORklHX0RFQlVHX1BSRUVNUFQgaXMgbm90IHNldA0KPiA+ICsjIENPTkZJR19GVFJBQ0UgaXMg
+bm90IHNldA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FyYy9rZXJuZWwvZGV2dHJlZS5jIGIvYXJj
+aC9hcmMva2VybmVsL2RldnRyZWUuYw0KPiA+IGluZGV4IDNiNjdmNTMuLjUyMWVmMzUgMTAwNjQ0
+DQo+ID4gLS0tIGEvYXJjaC9hcmMva2VybmVsL2RldnRyZWUuYw0KPiA+ICsrKyBiL2FyY2gvYXJj
+L2tlcm5lbC9kZXZ0cmVlLmMNCj4gPiBAQCAtMjksOCArMjksOSBAQCBzdGF0aWMgdm9pZCBfX2lu
+aXQgYXJjX3NldF9lYXJseV9iYXNlX2JhdWQodW5zaWduZWQgbG9uZyBkdF9yb290KQ0KPiA+IMKg
+ew0KPiA+IMKgwqDCoMKgwqDCoMKgwqBpZiAob2ZfZmxhdF9kdF9pc19jb21wYXRpYmxlKGR0X3Jv
+b3QsICJhYmlsaXMsYXJjLXRiMTB4IikpDQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqBhcmNfYmFzZV9iYXVkID0gMTY2NjY2NjY2O8KgwqDCoMKgwqDCoC8qIEZpeGVkIDE2Ni42
+TUh6IGNsayAoVEIxMHgpICovDQo+ID4gLcKgwqDCoMKgwqDCoMKgZWxzZSBpZiAob2ZfZmxhdF9k
+dF9pc19jb21wYXRpYmxlKGR0X3Jvb3QsICJzbnBzLGFyYy1zZHAiKSkNCj4gPiAtwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgYXJjX2Jhc2VfYmF1ZCA9IDMzMzMzMzMzO8KgwqDCoMKgwqDC
+oMKgLyogRml4ZWQgMzNNSHogY2xrIChBWFMxMHgpICovDQo+ID4gK8KgwqDCoMKgwqDCoMKgZWxz
+ZSBpZiAob2ZfZmxhdF9kdF9pc19jb21wYXRpYmxlKGR0X3Jvb3QsICJzbnBzLGFyYy1zZHAiKSB8
+fA0KPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoG9mX2ZsYXRfZHRfaXNfY29t
+cGF0aWJsZShkdF9yb290LCAic25wcyxoc2RrIikpDQo+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoGFyY19iYXNlX2JhdWQgPSAzMzMzMzMzMzvCoMKgwqDCoMKgwqDCoC8qIEZpeGVk
+IDMzTUh6IGNsayAoQVhTMTB4ICYgSFNESykgKi8NCj4gDQo+IFlvdSBzaG91bGQgZ2V0IHRoaXMg
+aW5mbyBmcm9tIERULiBZb3UgZG9uJ3QgbmVlZCB0byBhZGRyZXNzIHRoYXQgbm93IHRob3VnaC4N
+Cg0KRm9yIG5vcm1hbCBVQVJUIHdlIGluZGVlZCBkb24ndCBuZWVkIHRoYXQuIEJ1dCB0aGlzIGlz
+IHJlYWxseSByZXF1aXJlZCBmb3IgZWFybHkNCmNvbnNvbGUgb3RoZXJ3aXNlIGhvdyBtYXkgd2Ug
+c3RhcnQgb3V0cHV0dGluZyBzdHVmZiBldmVuIGJlZm9yZSB3ZSBoYXZlIC5kdGINCnVuZmxhdHRl
+bmVkLg0KDQpUaGUgb25seSB0aGluZyBJIG1heSB0aGluayBvZiBlYXJseSBwbGF0Zm9ybSBjb2Rl
+IHRoYXQgZXh0cmFjdHMgdGhpcyB2YWx1ZSBmcm9tIC5kdGINCmltYWdlIGJ1dDoNCsKgMSkgSSdt
+IG5vdCBzdXJlIGl0IGlzIG1vcmUgZWxlZ2FudA0KwqAyKSBTdGlsbCBpdCB3aWxsIGJlIGEgYml0
+IHRvbyBsYXRlIC0gbm93IHdlIHN0YXJ0IHByaW50aW5nIHZlcnktdmVyeSBlYXJseS4NCg0KPiA+
+IA0KPiA+IMKgwqDCoMKgwqDCoMKgwqBlbHNlIGlmIChvZl9mbGF0X2R0X2lzX2NvbXBhdGlibGUo
+ZHRfcm9vdCwgImV6Y2hpcCxhcmMtbnBzIikpDQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqBhcmNfYmFzZV9iYXVkID0gODAwMDAwMDAwO8KgwqDCoMKgwqDCoC8qIEZpeGVkIDgw
+ME1IeiBjbGsgKE5QUykgKi8NCj4gPiDCoMKgwqDCoMKgwqDCoMKgZWxzZQ0KPiA+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FyYy9wbGF0LWhzZGsvS2NvbmZpZyBiL2FyY2gvYXJjL3BsYXQtaHNkay9LY29u
+ZmlnDQo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiBpbmRleCAwMDAwMDAwLi4yOWRmZmVk
+DQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL2FyY2gvYXJjL3BsYXQtaHNkay9LY29uZmln
+DQo+ID4gQEAgLTAsMCArMSwxMiBAQA0KPiA+ICsjDQo+ID4gKyMgQ29weXJpZ2h0IChDKSAyMDE3
+IFN5bm9wc3lzLCBJbmMuICh3d3cuc3lub3BzeXMuY29tKQ0KPiA+ICsjDQo+ID4gKyMgVGhpcyBw
+cm9ncmFtIGlzIGZyZWUgc29mdHdhcmU7IHlvdSBjYW4gcmVkaXN0cmlidXRlIGl0IGFuZC9vciBt
+b2RpZnkNCj4gPiArIyBpdCB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEdOVSBHZW5lcmFsIFB1Ymxp
+YyBMaWNlbnNlIHZlcnNpb24gMiBhcw0KPiA+ICsjIHB1Ymxpc2hlZCBieSB0aGUgRnJlZSBTb2Z0
+d2FyZSBGb3VuZGF0aW9uLg0KPiA+ICsjDQo+ID4gKw0KPiA+ICttZW51Y29uZmlnIEFSQ19QTEFU
+X0hTREsNCj4gPiArwqDCoMKgwqDCoMKgwqBib29sICJBUkMgSFMgRGV2ZWxvcG1lbnQgS2l0IGJv
+YXJkIg0KPiANCj4gUGVyIGJvYXJkIGNvbmZpZyBvcHRpb25zIGRvbid0IHNjYWxlIGFuZCBzaG91
+bGRuJ3QgYmUgbmVjZXNzYXJ5IHdpdGggRFQuLi4NCg0KTm90IHN1cmUgaWYgSSB1bmRlcnN0YW5k
+IHRoYXQgY29tcGxldGVseS4NCkNvdWxkIHlvdSBwbGVhc2UgZXhwbGFpbiBpbiBhIGJpdCBtb3Jl
+IGRldGFpbHM/DQoNCi1BbGV4ZXk=
