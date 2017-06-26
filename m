@@ -1,39 +1,61 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] input: sun4i-a10-lradc-keys: Add support for A83T
-Date: Mon, 26 Jun 2017 19:13:42 +0200
-Message-ID: <20170626171342.pdr7xdiaki4i5bdt@flea.lan>
+Subject: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC support for A83T
+Date: Mon, 26 Jun 2017 19:15:24 +0200
+Message-ID: <20170626171524.cqfyasetpsfr6xfg@flea.lan>
 References: <20170624024515.4669-1-techping.chan@gmail.com>
- <20170624024515.4669-2-techping.chan@gmail.com>
+ <20170624024515.4669-3-techping.chan@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ru5yr2c4dqsm7ci7"
+        protocol="application/pgp-signature"; boundary="ntcxmtfx3hmrdmuz"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170624024515.4669-2-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170624024515.4669-3-techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: wens-jdAy2FN1RRM@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---ru5yr2c4dqsm7ci7
+--ntcxmtfx3hmrdmuz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Jun 24, 2017 at 10:45:13AM +0800, Ziping Chen wrote:
+Hi,
+
+On Sat, Jun 24, 2017 at 10:45:14AM +0800, Ziping Chen wrote:
 > From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 >=20
 > Allwinner A83T SoC has a low res adc like the one
-> in Allwinner A10 SoC, however, the A10 SoC's vref
-> of lradc internally is divided by 2/3 and the A83T
-> SoC's vref of lradc internally is divided by 3/4,
-> thus add a hardware variant for it to be compatible
-> with various devices.
+> in Allwinner A10 SoC.
+>=20
+> Add binding for it.
 >=20
 > Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt=
+ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+> index 4357e498ef04..525d85e3043f 100644
+> --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+> +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+> @@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
+>  ------------------------------------------------
+> =20
+>  Required properties:
+> - - compatible: "allwinner,sun4i-a10-lradc-keys"
+> + - compatible: should be one of the following string:
+> +		"allwinner,sun4i-a10-lradc-keys"
+> +		"allwinner,sun8i-a83t-r-lradc-keys"
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+This doesn't really have anything related to keys, and can be used
+purely as an ADC.
+
+I know this is the compatible that was used for the A10, but I'd
+rather drop the keys for the the new compatible.
 
 Thanks!
 Maxime
@@ -43,27 +65,27 @@ Maxime Ripard, Free Electrons
 Embedded Linux and Kernel engineering
 http://free-electrons.com
 
---ru5yr2c4dqsm7ci7
+--ntcxmtfx3hmrdmuz
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIcBAEBAgAGBQJZUUDGAAoJEBx+YmzsjxAg0tsP/09BldPOXo09X+5UwUFPkJHF
-szHs12T/cS21V4Wxl5O0QMthXEjiRZPLit6y8m6vKDC1jhWHSdKFqUtGCMZpS7Sm
-3BEPTkQhovrgdkObJMxI962UaOef6eSWnAIae5ybc5Pvj/q8hKanphhIyELFn5RN
-R1MSunxA/MdSdLRxoo21Y6xIBzNiz8xYjvu2k9vGleWZVfRvZO3Res0QFNJaYvjc
-WakzKbVmRKOn6eUbs8+vQmJHa8OUOURsM+vqsmBci2x96Q9ZvXC7XqCziOh7n8mU
-5/QXyN2Ysfs2U1C0cJA5r1nTmZzgUiqvlGDdj/JzCYX5JBgOZksOL9cQdt7hcNV7
-4fjG+FOc5fPAb/rBUMdNN7yrH+Rgbzy53FvRw7MbwihafzRh95DHYCSK6ie8uI55
-WExpPl16z4nJx55fdUYj8aSN6jBCNDr7zHH9tb5hGqaHrUs9R17dD69ihQUa5nX3
-QkLqvUqe4uylqi97zO0oXIuk3S6xaSv3F7KA8b2bN8zVhZv0mz3Dps7tFDi2k+4d
-aBT2Uw23lD7UTWTF/CrBPplytD0Hm2byS+MVpQzJ+ayouHLSx4xbd+F9Xz48nj/N
-Ssv0OrVrrSA6W2VSjqMHEbu9zfEliJGaOzmKAjsVCNojTdNa/CI8lRe/wgwQrT2m
-XrsrVAHZVKvaprURCwe1
-=EdxR
+iQIcBAEBAgAGBQJZUUEsAAoJEBx+YmzsjxAgNoIP/2RE0M1RveOQxP6mPdbSIbPH
+VZPLy8lO3zIYBXwtCZGcMD3eOiVUSBUYgvhnGQpkRxngA7DfSzDHinBZd5OuQFm4
+r0Hc57gP8Y1jpjQokj9XJk1HB3j3cn8dlzqbh7D+c1NOOaYVIbVMUtWJ7akxlDMW
+R2AD2jF2nZHARdijA2LMJ1a2tC5MORq/MSSEYW+czI8niVsz7boaGNzpjBJQ8phY
++xmYI9fwguLOG/0jOfCV8ABHP1dhesI0fKkcelP9JVb6M9FyPN33N/a3IJVVrdqJ
++QOui9QwPmVxgKSDCGrCWK/yW22hG8kzA2XwYGMCN8iPUBIpXKyENkC+5+BffnBp
+pu5vuLLi+kx1YHAL1lXayj5fI6sX3DUdi4s/93i1971aQllIhDexlVU00zW9fvJt
+6me7A4DD2IP9scWV6cNPmdE1ik50FJ+DPvC83Mn1n31Vo2cbzyeM7eCWybg8ebNO
+Q8aZU/iNzPRqP4g3IxOR5LRR85C0AT3lV66b55IFP3LKMuHlq4iZnXPhdJ/B5khW
+E2zbv/53pR2wsHgjm8iQ9jx3gNkFB5z2dahkluIskn1Ovn7xlMrZIbboWoSihnuK
+Gh+eCcaSFsMZxtWH8W18C/zPf/9PzqWqEnG4bAY5+GeGoCAES3p/5GFBUsrqAsaP
+QHd4aPTIa3u6VgYtEg+r
+=Pu70
 -----END PGP SIGNATURE-----
 
---ru5yr2c4dqsm7ci7--
+--ntcxmtfx3hmrdmuz--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
