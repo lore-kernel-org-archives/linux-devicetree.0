@@ -1,31 +1,111 @@
-From: <dieutv-CRy2XRVWyAa81eZEIcUDRw@public.gmane.org>
-Subject: The actual truth behind long term weight loss
-Date: Mon, 26 Jun 2017 07:46:59 +0200
-Message-ID: <B4D63042-0858-7861-722F-8F9A7DEC0980@hup.edu.vn>
-Mime-Version: 1.0 (Mac OS X Mail 8.2 \(2104\))
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: delphine.berthier-ksIvt8Q0xqBWk0Htik3J/w@public.gmane.org, diane.mccurdy-N+13R9pCJaxWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ctello-W4QYX6+MYU4oLIxb8h4+0g@public.gmane.org, dtortola-Zyr1YNcT1EBU1h8h+wwwftBPR1lH4CV8@public.gmane.org, david-fe1X/zl/3XT0kXk7eCdv2u658FiBabzs@public.gmane.org, enrico.parenti-43U1HMFuhqanywlS5GSjHg@public.gmane.org, efimova-ZSN1rAK9rQEox3rIn2DAYQ@public.gmane.org
+From: Priit Laes <plaes@plaes.org>
+Subject: Re: [linux-sunxi] [PATCH v4 1/6] clk: sunxi-ng: div: Add support for
+ fixed post-divider
+Date: Mon, 26 Jun 2017 05:53:31 +0000
+Message-ID: <20170626055331.GB31066@plaes.org>
+References: <cover.24b2b13ec5a68552e186ba1637f1328363c3886e.1498422562.git-series.plaes@plaes.org>
+ <bc043a64775ec8c9cfcfe6d638e348d38e34eba3.1498422562.git-series.plaes@plaes.org>
+ <CANwerB1q68-PpQ7+-QbgBgZHeWw_4p1ruiwzy7upjLLRTDEG1w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANwerB1q68-PpQ7+-QbgBgZHeWw_4p1ruiwzy7upjLLRTDEG1w@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Jonathan Liu <net147@gmail.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-T3VyIHByb2R1Y3QgaXMgYSBzdHJvbmcgd2VpZ2h0IGxvc3Mgc29sdXRpb24uDQoNCkJlY2F1c2Ug
-b2YgaXRzIGVmZmVjdGl2ZW5lc3MsIGl0IGhlbHBzIHRvIHJhcGlkbHkgYnVybiBib2R5IGZhdCwg
-dGhpcyBzdGltdWxhdGVzIHlvdXIgbWV0YWJvbGlzbSBhbmQgeW91ciBib2R5IGJlZ2lucyB0byB1
-c2Ugc3RvcmVkIGJvZHkgZmF0IGRlcG9zaXRzLg0KDQpGdXJ0aGVyIGFkdmFudGFnZXM6DQoNCj9S
-ZWR1Y2VkIGZvb2QgY3JhdmluZ3M7DQo/QWxsZXZpYXRlZCBhdHRlbnRpdmVuZXNzLCBlbmVyZ3kg
-YW5kIHN0cmVuZ3RoLg0KDQpUaGUgbGFzdCBmYWN0IGlzIHRoZSBtb3N0IGNydWNpYWwsIGJlY2F1
-c2UgYSBsb3Qgb2YgcGVvcGxlIGZlZWwgZGlldC1yZWxhdGVkIGZlZWxpbmcgb2YgZmF0aWd1ZSBh
-bmQgb3VyIHByb2R1Y3QgcmVhbGx5IGhlbHBzIGNhbmNlbCBpdCBvdXQuDQoNCkFsc28gd29ydGgg
-bWVudGlvbmluZzogd2UndmUgYSByZWdpc3RlcmVkIGRpZXRpdGlhbiBvbiBvdXIgc2l0ZSB0byBo
-ZWxwIGFkanVzdCB0aGUgZGFpbHkgZG9zZSB0aGF0J2xsIGdldCB5b3UgdGhlIGRyZWFtIHJlc3Vs
-dHMgaW4gbm8gdGltZS4NCg0KVG8gbGVhcm4gbW9yZSBpbmZvcm1hdGlvbiBhYm91dCB0aGUgc3Vw
-cGxlbWVudCBpdHNlbGYgYW5kIGdldCBhIHNwZWNpYWwgZGlzY291bnQsIHVzZSB0aGlzIFVSTA0K
-DQpodHRwOi8vd3d3LnFjb25uZWN0LmNvbS5ici93cC1jb250ZW50L3BsdWdpbnMvTGF5ZXJTbGlk
-ZXIvc2VuZGZvcm0uaW5jLnBocD9aR1ZzY0docGJtVXVZbVZ5ZEdocFpYSkFaMmwyWVhWa1lXNHVZ
-Mjl0DQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, Jun 26, 2017 at 08:05:16AM +1000, Jonathan Liu wrote:
+> Hi Priit,
+> 
+> This is showing from clock rate of 171428572 in the output of "cat
+> /sys/kernel/debug/clk/clk_summary" for pll-periph-sata.
+> The clock rate should be 100000000 (100 MHz) when read from the hardware.
+
+This is what I see on Cubietruck. Can you check with sunxi-ccu-wip branch?
+
+$ cat /sys/kernel/debug/clk/clk_summary  |grep -i sata
+          pll-periph-sata                 1            1   100000000          0 0  
+             sata                         1            1   100000000          0 0  
+                ahb-sata                  1            1   300000000          0 0  
+
+> 
+> On 26 June 2017 at 06:45, Priit Laes <plaes@plaes.org> wrote:
+> > SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
+> > 6 is fixed post-divider.
+> >
+> > Signed-off-by: Priit Laes <plaes@plaes.org>
+> > ---
+> >  drivers/clk/sunxi-ng/ccu_div.c | 12 ++++++++++--
+> >  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
+> >  2 files changed, 12 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+> > index c0e5c10..de30e15 100644
+> > --- a/drivers/clk/sunxi-ng/ccu_div.c
+> > +++ b/drivers/clk/sunxi-ng/ccu_div.c
+> 
+> Missing handling of fixed_post_div in ccu_div_round_rate.
+> ccu_div_round_rate should multiply the rate by the postdiv before
+> looking up the divider using divider_get_val and divide val by postdiv
+> just before returning.
+> 
+> > @@ -62,8 +62,13 @@ static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
+> >         parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
+> >                                                   parent_rate);
+> >
+> > -       return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
+> > -                                  cd->div.flags);
+> > +       val = divider_recalc_rate(hw, parent_rate, val, cd->div.table,
+> > +                                 cd->div.flags);
+> > +
+> > +       if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> > +               val /= cd->fixed_post_div;
+> > +
+> > +       return val;
+> >  }
+> >
+> >  static int ccu_div_determine_rate(struct clk_hw *hw,
+> 
+> > @@ -89,6 +94,9 @@ static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
+> >         val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
+> >                               cd->div.flags);
+> >
+> > +       if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> > +               val *= cd->fixed_post_div;
+> > +
+> >         spin_lock_irqsave(cd->common.lock, flags);
+> >
+> >         reg = readl(cd->common.base + cd->common.reg);
+> 
+> val here is the divider value that is stored in the clock register
+> field not the actual rate so this is incorrect. Instead the rate needs
+> to be multiplied by postdiv just before divider_get_val.
+
+OK, thanks, this one I wasn't really sure about.
+
+> 
+> > diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+> > index 08d0744..f3a5028 100644
+> > --- a/drivers/clk/sunxi-ng/ccu_div.h
+> > +++ b/drivers/clk/sunxi-ng/ccu_div.h
+> > @@ -86,9 +86,10 @@ struct ccu_div_internal {
+> >  struct ccu_div {
+> >         u32                     enable;
+> >
+> > -       struct ccu_div_internal         div;
+> > +       struct ccu_div_internal div;
+> >         struct ccu_mux_internal mux;
+> >         struct ccu_common       common;
+> > +       unsigned int            fixed_post_div;
+> >  };
+> >
+> >  #define SUNXI_CCU_DIV_TABLE_WITH_GATE(_struct, _name, _parent, _reg,   \
+> > --
+> > git-series 0.9.1
+> 
+> Thanks.
+> 
+> Regards,
+> Jonathan
