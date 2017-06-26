@@ -1,58 +1,89 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
-Date: Mon, 26 Jun 2017 13:56:32 -0500
-Message-ID: <20170626185632.bfwuogm62ouo5y2j@rob-hp-laptop>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
- <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
+Subject: Re: [PATCH 1/7] drivers/hwmon: Add On-Chip Controller (OCC) hwmon
+ driver
+Date: Mon, 26 Jun 2017 14:01:36 -0500
+Message-ID: <20170626190136.xtc2qjbkiwyrgnzs@rob-hp-laptop>
+References: <1498171716-26620-1-git-send-email-eajames@linux.vnet.ibm.com>
+ <1498171716-26620-2-git-send-email-eajames@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Yannick Fertre <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-media@vger.kernel.org
+In-Reply-To: <1498171716-26620-2-git-send-email-eajames@linux.vnet.ibm.com>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Eddie James <eajames@linux.vnet.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com, mark.rutland@arm.com, gregkh@linuxfoundation.org, cbostic@linux.vnet.ibm.com, jk@ozlabs.org, joel@jms.id.au, andrew@aj.id.au, "Edward A. James" <eajames@us.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 12:25:33PM +0200, H. Nikolaus Schaller wrote:
-> Hi Hugues,
+On Thu, Jun 22, 2017 at 05:48:30PM -0500, Eddie James wrote:
+> From: "Edward A. James" <eajames@us.ibm.com>
 > 
-> > Am 22.06.2017 um 17:05 schrieb Hugues Fruchet <hugues.fruchet@st.com>:
-> > 
-> > From: "H. Nikolaus Schaller" <hns@goldelico.com>
-> > 
-> > This adds documentation of device tree bindings
-> > for the OV965X family camera sensor module.
-> > 
-> > Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-> > Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
-> > ---
-> > .../devicetree/bindings/media/i2c/ov965x.txt       | 37 ++++++++++++++++++++++
-> > 1 file changed, 37 insertions(+)
-> > create mode 100644 Documentation/devicetree/bindings/media/i2c/ov965x.txt
-
-[...]
-
-> > +Optional Properties:
-> > +- resetb-gpios: reference to the GPIO connected to the resetb pin, if any.
-> > +- pwdn-gpios: reference to the GPIO connected to the pwdn pin, if any.
+> The OCC is a device embedded on a POWER processor that collects and
+> aggregates sensor data from the processor and system. The OCC can
+> provide the raw sensor data as well as perform thermal and power
+> management on the system.
 > 
-> Here I wonder why you did split that up into two gpios. Each "*-gpios" can have
-> multiple entries and if one is not used, a 0 can be specified to make it being ignored.
+> This driver provides a hwmon interface to the OCC from a service
+> processor (e.g. a BMC). The driver supports both POWER8 and POWER9 OCCs.
+> Communications with the POWER8 OCC are established over standard I2C
+> bus. The driver communicates with the POWER9 OCC through the FSI-based
+> OCC driver, which handles the lower-level communication details.
 > 
-> But it is up to DT maintainers what they prefer: separate single gpios or a single gpio array.
+> This patch lays out the structure of the OCC hwmon driver. There are two
+> platform drivers, one each for P8 and P9 OCCs. These are probed through
+> the I2C tree and the FSI-based OCC driver, respectively. The patch also
+> defines the first common structures and methods between the two OCC
+> versions.
+> 
+> Signed-off-by: Edward A. James <eajames@us.ibm.com>
+> ---
+>  .../devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt   | 18 ++++++
+>  .../devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt   | 25 ++++++++
+>  drivers/hwmon/Kconfig                              |  2 +
+>  drivers/hwmon/Makefile                             |  1 +
+>  drivers/hwmon/occ/Kconfig                          | 28 +++++++++
+>  drivers/hwmon/occ/Makefile                         | 11 ++++
+>  drivers/hwmon/occ/common.c                         | 43 +++++++++++++
+>  drivers/hwmon/occ/common.h                         | 41 +++++++++++++
+>  drivers/hwmon/occ/p8_i2c.c                         | 70 ++++++++++++++++++++++
+>  drivers/hwmon/occ/p9_sbe.c                         | 65 ++++++++++++++++++++
+>  10 files changed, 304 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
+>  create mode 100644 Documentation/devicetree/bindings/i2c/ibm,p8-occ-hwmon.txt
+>  create mode 100644 drivers/hwmon/occ/Kconfig
+>  create mode 100644 drivers/hwmon/occ/Makefile
+>  create mode 100644 drivers/hwmon/occ/common.c
+>  create mode 100644 drivers/hwmon/occ/common.h
+>  create mode 100644 drivers/hwmon/occ/p8_i2c.c
+>  create mode 100644 drivers/hwmon/occ/p9_sbe.c
+> 
+> diff --git a/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt b/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
+> new file mode 100644
+> index 0000000..0ecebb7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/fsi/ibm,p9-occ-hwmon.txt
+> @@ -0,0 +1,18 @@
+> +Device-tree bindings for FSI-based On-Chip Controller hwmon driver
+> +------------------------------------------------------------------
+> +
+> +This node MUST be a child node of an OCC driver node.
 
-I think that is pretty clear if you survey a number of bindings (hint: 
-it's the former).
+Bindings describe h/w, not drivers. And hwmon is a Linuxism.
 
-Rob
+> +
+> +Required properties:
+> + - compatible = "ibm,p9-occ-hwmon";
+> +
+> +Examples:
+> +
+> +    occ@1 {
+> +        compatible = "ibm,p9-occ";
+> +        reg = <1>;
+> +
+> +        occ-hwmon@1 {
+> +            compatible = "ibm,p9-occ-hwmon";
+
+See my comment in the other version I just reviewed...
+
+> +        };
+> +    };
