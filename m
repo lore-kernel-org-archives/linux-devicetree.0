@@ -1,29 +1,32 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/6] pwm: bindings: add MT2712/MT7622 information
-Date: Mon, 26 Jun 2017 14:04:35 -0500
-Message-ID: <20170626190434.zp2sthfhkfxy775i@rob-hp-laptop>
-References: <1498194505-30930-1-git-send-email-zhi.mao@mediatek.com>
- <1498194505-30930-5-git-send-email-zhi.mao@mediatek.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: media: Add r8a7796 DRIF bindings
+Date: Mon, 26 Jun 2017 14:07:37 -0500
+Message-ID: <20170626190737.lzaqrnusvj75wtgp@rob-hp-laptop>
+References: <20170623092502.57818-1-ramesh.shanmugasundaram@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1498194505-30930-5-git-send-email-zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Cc: john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, yt.shen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, zhenbao.liu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
+In-Reply-To: <20170623092502.57818-1-ramesh.shanmugasundaram@bp.renesas.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: mark.rutland@arm.com, mchehab@kernel.org, hverkuil@xs4all.nl, chris.paterson2@renesas.com, geert+renesas@glider.be, horms@verge.net.au, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 01:08:23PM +0800, Zhi Mao wrote:
-> add MT2712/MT7622 pwm information
+On Fri, Jun 23, 2017 at 10:25:02AM +0100, Ramesh Shanmugasundaram wrote:
+> Add r8a7796 DRIF bindings.
 > 
-> Signed-off-by: Zhi Mao <zhi.mao-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
 > ---
->  .../devicetree/bindings/pwm/pwm-mediatek.txt       |    6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> Hi DT & Media maintainers, All,
+> 
+>    This patch adds DRIF bindings for R8A7796 SoC.
+>    It is based on media_tree - commit 76724b30f222
+> 
+> Thanks,
+> Ramesh.
+> 
+>  Documentation/devicetree/bindings/media/renesas,drif.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Rob Herring <robh@kernel.org>
