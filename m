@@ -1,39 +1,84 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/7] dt-bindings: display: renesas: Add R-Car M3-W
- HDMI TX DT bindings
-Date: Mon, 26 Jun 2017 10:56:42 -0500
-Message-ID: <20170626155642.6ux7rdtwup6vzhnk@rob-hp-laptop>
-References: <20170621093133.5677-1-laurent.pinchart+renesas@ideasonboard.com>
- <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
+Subject: Re: [PATCH 2/5] dt-bindings: phy-hisi-inno-usb2: add support for
+ hisi-inno-usb2 phy
+Date: Mon, 26 Jun 2017 10:56:00 -0500
+Message-ID: <20170626155600.abksvlvxehksp2hp@rob-hp-laptop>
+References: <1498035645-22804-1-git-send-email-xuejiancheng@hisilicon.com>
+ <1498035645-22804-3-git-send-email-xuejiancheng@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170621093133.5677-2-laurent.pinchart+renesas@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+In-Reply-To: <1498035645-22804-3-git-send-email-xuejiancheng@hisilicon.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jiancheng Xue <xuejiancheng@hisilicon.com>
+Cc: sboyd@codeaurora.org, kishon@ti.com, xuwei5@hisilicon.com, catalin.marinas@arm.com, balbi@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, project-aspen-dev@linaro.org, yanhaifeng@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBKdW4gMjEsIDIwMTcgYXQgMTI6MzE6MjdQTSArMDMwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBUaGUgTTMtVyBIRE1JIFRYIGNvbnRyb2xsZXIgc2VlbXMgdG8gYmUgY29tcGF0
-aWJsZSBmb3IgdGhlIEgzLiBObwo+IGV4dGVuc2lvbiB0byB0aGUgRFQgYmluZGluZ3MgYXJlIG5l
-ZWRlZCwgYWRkIGFuIFNvQy1zcGVjaWZpYyBjb21wYXRpYmxlCj4gc3RyaW5nIGluIGNhc2UgZGlm
-ZmVyZW5jZXMgYmV0d2VlbiB0aGUgSVAgdmVyc2lvbnMgYXJlIGZvdW5kIGxhdGVyIGFuZAo+IHJl
-cXVpcmUgbW9kZWwtc3BlY2lmaWMgaGFuZGxpbmcuCj4gCj4gU2lnbmVkLW9mZi1ieTogTGF1cmVu
-dCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydCtyZW5lc2FzQGlkZWFzb25ib2FyZC5jb20+Cj4g
-LS0tCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9y
-ZW5lc2FzLGR3LWhkbWkudHh0IHwgMSArCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigr
-KQoKQWNrZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Wed, Jun 21, 2017 at 05:00:42PM +0800, Jiancheng Xue wrote:
+> Add support for hisi-inno-usb2 phy.
+> 
+> Signed-off-by: Jiancheng Xue <xuejiancheng@hisilicon.com>
+> ---
+>  .../devicetree/bindings/phy/phy-hisi-inno-usb2.txt | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> new file mode 100644
+> index 0000000..21f8208
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/phy-hisi-inno-usb2.txt
+> @@ -0,0 +1,36 @@
+> +HiSilicon INNO USB2 PHY
+> +-----------------------
+> +Required properties:
+> +- compatible: Should be one of the following strings:
+> +		"hisilicon,inno-usb2-phy",
+> +		"hisilicon,hi3798cv200-usb2-phy",
+> +- #phy-cells: Must be 0
+> +- hisilicon,peripheral-syscon: Phandle of syscon used to control phy.
+> +- clocks: Phandle and clock specifier pair for reference clock utmi_refclk.
+> +- resets: List of phandle and reset specifier pairs for each reset signal in
+> +reset-names.
+> +- reset-names: Should be "por_rst" and "test_rst". The test_rst only
+> +exists in some of SOCs, so it is optional.
+
+_rst is redundant.
+
+> +
+> +Phy node can include up to four subnodes. Each subnode represents one port.
+> +The required properties of port node are as follows:
+> +- clocks: Phandle and clock specifier pair for utmi_clock.
+> +- resets: List of phandle and reset specifier pairs for port reset and utmi reset.
+> +- reset-names: List of reset signal names. Should be "port_rst" and "utmi_rst"
+> +
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +
+> +Example:
+> +usb_phy: phy {
+> +		 compatible = "hisilicon,inno_usb2_phy";
+
+Doesn't match the above compatible.
+
+> +		 #phy-cells = <0>;
+> +		 hisilicon,peripheral-syscon = <&peri_ctrl>;
+> +		 clocks = <&crg USB2_REF_CLK>;
+> +		 resets = <&crg 0xb4 2>;
+> +		 reset-names = "por_rst";
+> +		 port0 {
+
+port@0 and provide a reg property.
+
+> +			 clocks = <&crg USB2_UTMI0_CLK>;
+> +			 resets = <&crg 0xb4 5>, <&crg 0xb4 1>;
+> +			 reset-names = "port_rst", "utmi_rst";
+> +		 };
+> +	 };
+> -- 
+> 1.9.1
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
