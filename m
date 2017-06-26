@@ -1,76 +1,225 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: omap3isp camera was Re: [PATCH v1 0/6] Add support of OV9655
- camera
-Date: Mon, 26 Jun 2017 13:16:21 +0200
-Message-ID: <20170626111621.GC11688@amd>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
- <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
- <20170625091856.GA22791@amd>
- <EDFD663F-37F9-42C2-92A9-66C2508B361E@goldelico.com>
- <20170626083927.GB9621@amd>
- <5364AD62-5000-451E-B3F7-93D49A91EED5@goldelico.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] ARC: AXS: prepare dts files for enabling PAE40 on axs103
+Date: Mon, 26 Jun 2017 14:47:25 +0300
+Message-ID: <20170626114725.9678-1-Eugeniy.Paltsev@synopsys.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5364AD62-5000-451E-B3F7-93D49A91EED5-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
+To: linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Enable 64bit adressing, where it needed, to make possible
+enabling PAE40 on axs103.
 
---4jXrM3lyYWu4nBt5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch doesn't affect on any functionality.
 
-Hi!
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ arch/arc/boot/dts/axc001.dtsi     | 20 +++++++++-----------
+ arch/arc/boot/dts/axc003.dtsi     | 21 ++++++++++-----------
+ arch/arc/boot/dts/axc003_idu.dtsi | 21 ++++++++++-----------
+ arch/arc/boot/dts/axs10x_mb.dtsi  |  2 +-
+ 4 files changed, 30 insertions(+), 34 deletions(-)
 
-> > You may want to try this one:
-> >=20
-> > commit 0eae9d2a8f096f703cbc8f9a0ab155cd3cc14cef
-> > Author: Pavel <pavel-+ZI9xUNit7I@public.gmane.org>
-> > Date:   Mon Feb 13 21:26:51 2017 +0100
-> >=20
-> >    omap3isp: fix VP2SDR bit so capture (not preview) works
-> >=20
-> >    This is neccessary for capture (not preview) to work properly on
-> >        N900. Why is unknown.
->=20
-> Ah, interesting. I will give it a try.
->=20
-> Do you please have a link to the repo where this commit can be
-> > found?
+diff --git a/arch/arc/boot/dts/axc001.dtsi b/arch/arc/boot/dts/axc001.dtsi
+index 53ce226..a380ffa 100644
+--- a/arch/arc/boot/dts/axc001.dtsi
++++ b/arch/arc/boot/dts/axc001.dtsi
+@@ -15,15 +15,15 @@
+ 
+ / {
+ 	compatible = "snps,arc";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
++	#address-cells = <2>;
++	#size-cells = <2>;
+ 
+ 	cpu_card {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		ranges = <0x00000000 0xf0000000 0x10000000>;
++		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
+ 
+ 		core_clk: core_clk {
+ 			#clock-cells = <0>;
+@@ -91,23 +91,21 @@
+ 	mb_intc: dw-apb-ictl@0xe0012000 {
+ 		#interrupt-cells = <1>;
+ 		compatible = "snps,dw-apb-ictl";
+-		reg = < 0xe0012000 0x200 >;
++		reg = < 0x0 0xe0012000 0x0 0x200 >;
+ 		interrupt-controller;
+ 		interrupt-parent = <&core_intc>;
+ 		interrupts = < 7 >;
+ 	};
+ 
+ 	memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x00000000 0x80000000 0x20000000>;
+ 		device_type = "memory";
+-		reg = <0x80000000 0x1b000000>;	/* (512 - 32) MiB */
++		/* CONFIG_KERNEL_RAM_BASE_ADDRESS needs to match low mem start */
++		reg = <0x0 0x80000000 0x0 0x1b000000>;	/* (512 - 32) MiB */
+ 	};
+ 
+ 	reserved-memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 		ranges;
+ 		/*
+ 		 * We just move frame buffer area to the very end of
+@@ -118,7 +116,7 @@
+ 		 */
+ 		frame_buffer: frame_buffer@9e000000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0x9e000000 0x2000000>;
++			reg = <0x0 0x9e000000 0x0 0x2000000>;
+ 			no-map;
+ 		};
+ 	};
+diff --git a/arch/arc/boot/dts/axc003.dtsi b/arch/arc/boot/dts/axc003.dtsi
+index 14df46f..cc9239e 100644
+--- a/arch/arc/boot/dts/axc003.dtsi
++++ b/arch/arc/boot/dts/axc003.dtsi
+@@ -14,15 +14,15 @@
+ 
+ / {
+ 	compatible = "snps,arc";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
++	#address-cells = <2>;
++	#size-cells = <2>;
+ 
+ 	cpu_card {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		ranges = <0x00000000 0xf0000000 0x10000000>;
++		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
+ 
+ 		core_clk: core_clk {
+ 			#clock-cells = <0>;
+@@ -94,30 +94,29 @@
+ 	mb_intc: dw-apb-ictl@0xe0012000 {
+ 		#interrupt-cells = <1>;
+ 		compatible = "snps,dw-apb-ictl";
+-		reg = < 0xe0012000 0x200 >;
++		reg = < 0x0 0xe0012000 0x0 0x200 >;
+ 		interrupt-controller;
+ 		interrupt-parent = <&core_intc>;
+ 		interrupts = < 24 >;
+ 	};
+ 
+ 	memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x00000000 0x80000000 0x40000000>;
+ 		device_type = "memory";
+-		reg = <0x80000000 0x20000000>;	/* 512MiB */
++		/* CONFIG_KERNEL_RAM_BASE_ADDRESS needs to match low mem start */
++		reg = <0x0 0x80000000 0x0 0x20000000	/* 512 MiB low mem */
++		       0x1 0xc0000000 0x0 0x40000000>;	/* 1 GiB highmem */
+ 	};
+ 
+ 	reserved-memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 		ranges;
+ 		/*
+ 		 * Move frame buffer out of IOC aperture (0x8z-0xAz).
+ 		 */
+ 		frame_buffer: frame_buffer@be000000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0xbe000000 0x2000000>;
++			reg = <0x0 0xbe000000 0x0 0x2000000>;
+ 			no-map;
+ 		};
+ 	};
+diff --git a/arch/arc/boot/dts/axc003_idu.dtsi b/arch/arc/boot/dts/axc003_idu.dtsi
+index 695f9fa..4ebb2170 100644
+--- a/arch/arc/boot/dts/axc003_idu.dtsi
++++ b/arch/arc/boot/dts/axc003_idu.dtsi
+@@ -14,15 +14,15 @@
+ 
+ / {
+ 	compatible = "snps,arc";
+-	#address-cells = <1>;
+-	#size-cells = <1>;
++	#address-cells = <2>;
++	#size-cells = <2>;
+ 
+ 	cpu_card {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 
+-		ranges = <0x00000000 0xf0000000 0x10000000>;
++		ranges = <0x00000000 0x0 0xf0000000 0x10000000>;
+ 
+ 		core_clk: core_clk {
+ 			#clock-cells = <0>;
+@@ -100,30 +100,29 @@
+ 	mb_intc: dw-apb-ictl@0xe0012000 {
+ 		#interrupt-cells = <1>;
+ 		compatible = "snps,dw-apb-ictl";
+-		reg = < 0xe0012000 0x200 >;
++		reg = < 0x0 0xe0012000 0x0 0x200 >;
+ 		interrupt-controller;
+ 		interrupt-parent = <&idu_intc>;
+ 		interrupts = <0>;
+ 	};
+ 
+ 	memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
+-		ranges = <0x00000000 0x80000000 0x40000000>;
+ 		device_type = "memory";
+-		reg = <0x80000000 0x20000000>;	/* 512MiB */
++		/* CONFIG_KERNEL_RAM_BASE_ADDRESS needs to match low mem start */
++		reg = <0x0 0x80000000 0x0 0x20000000	/* 512 MiB low mem */
++		       0x1 0xc0000000 0x0 0x40000000>;	/* 1 GiB highmem */
+ 	};
+ 
+ 	reserved-memory {
+-		#address-cells = <1>;
+-		#size-cells = <1>;
++		#address-cells = <2>;
++		#size-cells = <2>;
+ 		ranges;
+ 		/*
+ 		 * Move frame buffer out of IOC aperture (0x8z-0xAz).
+ 		 */
+ 		frame_buffer: frame_buffer@be000000 {
+ 			compatible = "shared-dma-pool";
+-			reg = <0xbe000000 0x2000000>;
++			reg = <0x0 0xbe000000 0x0 0x2000000>;
+ 			no-map;
+ 		};
+ 	};
+diff --git a/arch/arc/boot/dts/axs10x_mb.dtsi b/arch/arc/boot/dts/axs10x_mb.dtsi
+index 41cfb29..0ff7e07 100644
+--- a/arch/arc/boot/dts/axs10x_mb.dtsi
++++ b/arch/arc/boot/dts/axs10x_mb.dtsi
+@@ -13,7 +13,7 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges = <0x00000000 0xe0000000 0x10000000>;
++		ranges = <0x00000000 0x0 0xe0000000 0x10000000>;
+ 		interrupt-parent = <&mb_intc>;
+ 
+ 		i2sclk: i2sclk@100a0 {
+-- 
+2.9.3
 
-This branch, as mentioned before:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-n900.git/log/?h=
-=3Dcamera-fw5-6
-
-									Pavel
-								=09
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---4jXrM3lyYWu4nBt5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAllQ7QUACgkQMOfwapXb+vKIcwCgg3ewjLvWvqSo3rWAi+dadBJ5
-058AnRVDYSBMAYco7NYUW9hsoS6MnU00
-=Keaa
------END PGP SIGNATURE-----
-
---4jXrM3lyYWu4nBt5--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
