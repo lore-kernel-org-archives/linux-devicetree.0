@@ -1,191 +1,101 @@
-From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Subject: Re: [PATCH v1 4/6] [media] ov9650: use write_array() for resolution
- sequences
-Date: Mon, 26 Jun 2017 19:33:30 +0300
-Message-ID: <20170626163330.GR12407@valkosipuli.retiisi.org.uk>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-5-git-send-email-hugues.fruchet@st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/2] drm: rcar-du: Add a VSP channel index to the vsps
+ DT property
+Date: Mon, 26 Jun 2017 18:36:14 +0200
+Message-ID: <CAMuHMdUy+qYi8cVg2JQNLUxSeuntnJ-KcMm5AwdVRKOW0A7A7A@mail.gmail.com>
+References: <20170626162930.30240-1-laurent.pinchart+renesas@ideasonboard.com> <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498143942-12682-5-git-send-email-hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, " H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hugues,
+Hi Laurent,
 
-On Thu, Jun 22, 2017 at 05:05:40PM +0200, Hugues Fruchet wrote:
-> Align resolution sequences on initialization sequence using
-> i2c_rv structure NULL terminated .This add flexibility
-> on resolution sequence size.
-> Document resolution related registers by using corresponding
-> define instead of hexa address/value.
-> 
-> Signed-off-by: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-> ---
->  drivers/media/i2c/ov9650.c | 98 ++++++++++++++++++++++++++++++----------------
->  1 file changed, 64 insertions(+), 34 deletions(-)
-> 
-> diff --git a/drivers/media/i2c/ov9650.c b/drivers/media/i2c/ov9650.c
-> index 4311da6..8b283c9 100644
-> --- a/drivers/media/i2c/ov9650.c
-> +++ b/drivers/media/i2c/ov9650.c
-> @@ -227,11 +227,16 @@ struct ov965x_ctrls {
->  	u8 update;
->  };
->  
-> +struct i2c_rv {
-> +	u8 addr;
-> +	u8 value;
-> +};
-> +
->  struct ov965x_framesize {
->  	u16 width;
->  	u16 height;
->  	u16 max_exp_lines;
-> -	const u8 *regs;
-> +	const struct i2c_rv *regs;
->  };
->  
->  struct ov965x_interval {
-> @@ -280,9 +285,11 @@ struct ov965x {
->  	u8 apply_frame_fmt;
->  };
->  
-> -struct i2c_rv {
-> -	u8 addr;
-> -	u8 value;
-> +struct ov965x_pixfmt {
-> +	u32 code;
-> +	u32 colorspace;
-> +	/* REG_TSLB value, only bits [3:2] may be set. */
-> +	u8 tslb_reg;
->  };
->  
->  static const struct i2c_rv ov965x_init_regs[] = {
-> @@ -342,30 +349,59 @@ struct i2c_rv {
->  	{ REG_NULL, 0 }
->  };
->  
-> -#define NUM_FMT_REGS 14
-> -/*
-> - * COM7,  COM3,  COM4, HSTART, HSTOP, HREF, VSTART, VSTOP, VREF,
-> - * EXHCH, EXHCL, ADC,  OCOM,   OFON
-> - */
-> -static const u8 frame_size_reg_addr[NUM_FMT_REGS] = {
-> -	0x12, 0x0c, 0x0d, 0x17, 0x18, 0x32, 0x19, 0x1a, 0x03,
-> -	0x2a, 0x2b, 0x37, 0x38, 0x39,
-> -};
-> -
-> -static const u8 ov965x_sxga_regs[NUM_FMT_REGS] = {
-> -	0x00, 0x00, 0x00, 0x1e, 0xbe, 0xbf, 0x01, 0x81, 0x12,
-> -	0x10, 0x34, 0x81, 0x93, 0x51,
-> +static const struct i2c_rv ov965x_sxga_regs[] = {
-> +	{ REG_COM7, 0x00 },
-> +	{ REG_COM3, 0x00 },
-> +	{ REG_COM4, 0x00 },
-> +	{ REG_HSTART, 0x1e },
-> +	{ REG_HSTOP, 0xbe },
-> +	{ 0x32, 0xbf },
-> +	{ REG_VSTART, 0x01 },
-> +	{ REG_VSTOP, 0x81 },
-> +	{ REG_VREF, 0x12 },
-> +	{ REG_EXHCH, 0x10 },
-> +	{ REG_EXHCL, 0x34 },
-> +	{ REG_ADC, 0x81 },
-> +	{ REG_ACOM, 0x93 },
-> +	{ REG_OFON, 0x51 },
-> +	{ REG_NULL, 0 },
->  };
->  
-> -static const u8 ov965x_vga_regs[NUM_FMT_REGS] = {
-> -	0x40, 0x04, 0x80, 0x26, 0xc6, 0xed, 0x01, 0x3d, 0x00,
-> -	0x10, 0x40, 0x91, 0x12, 0x43,
-> +static const struct i2c_rv ov965x_vga_regs[] = {
-> +	{ REG_COM7, 0x40 },
-> +	{ REG_COM3, 0x04 },
-> +	{ REG_COM4, 0x80 },
-> +	{ REG_HSTART, 0x26 },
-> +	{ REG_HSTOP, 0xc6 },
-> +	{ 0x32, 0xed },
-> +	{ REG_VSTART, 0x01 },
-> +	{ REG_VSTOP, 0x3d },
-> +	{ REG_VREF, 0x00 },
-> +	{ REG_EXHCH, 0x10 },
-> +	{ REG_EXHCL, 0x40 },
-> +	{ REG_ADC, 0x91 },
-> +	{ REG_ACOM, 0x12 },
-> +	{ REG_OFON, 0x43 },
-> +	{ REG_NULL, 0 },
->  };
->  
->  /* Determined empirically. */
-> -static const u8 ov965x_qvga_regs[NUM_FMT_REGS] = {
-> -	0x10, 0x04, 0x80, 0x25, 0xc5, 0xbf, 0x00, 0x80, 0x12,
-> -	0x10, 0x40, 0x91, 0x12, 0x43,
-> +static const struct i2c_rv ov965x_qvga_regs[] = {
-> +	{ REG_COM7, 0x10 },
-> +	{ REG_COM3, 0x04 },
-> +	{ REG_COM4, 0x80 },
-> +	{ REG_HSTART, 0x25 },
-> +	{ REG_HSTOP, 0xc5 },
-> +	{ 0x32, 0xbf },
-> +	{ REG_VSTART, 0x00 },
-> +	{ REG_VSTOP, 0x80 },
-> +	{ REG_VREF, 0x12 },
-> +	{ REG_EXHCH, 0x10 },
-> +	{ REG_EXHCL, 0x40 },
-> +	{ REG_ADC, 0x91 },
-> +	{ REG_ACOM, 0x12 },
-> +	{ REG_OFON, 0x43 },
-> +	{ REG_NULL, 0 },
->  };
->  
->  static const struct ov965x_framesize ov965x_framesizes[] = {
-> @@ -387,13 +423,6 @@ struct i2c_rv {
->  	},
->  };
->  
-> -struct ov965x_pixfmt {
-> -	u32 code;
-> -	u32 colorspace;
-> -	/* REG_TSLB value, only bits [3:2] may be set. */
-> -	u8 tslb_reg;
-> -};
+On Mon, Jun 26, 2017 at 6:29 PM, Laurent Pinchart
+<laurent.pinchart+renesas@ideasonboard.com> wrote:
+> On some R-Car SoCs a single VSP can serve multiple DU channels through
+> multiple LIF instances in the VSP. The current DT bindings don't support
+> specifying that kind of SoC integration scheme. Extend them with a VSP
+> channel index.
+>
+> Backward compatibility can be ensured in drivers by checking the length
+> of the vsps property and setting the channel to 0 when the property
+> doesn't contain channel indices.
+>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
 
-Any particular reason for moving struct ov965x_pixfmt definition?
+Thanks for your patch!
 
-> -
->  static const struct ov965x_pixfmt ov965x_formats[] = {
->  	{ MEDIA_BUS_FMT_YUYV8_2X8, V4L2_COLORSPACE_JPEG, 0x00},
->  	{ MEDIA_BUS_FMT_YVYU8_2X8, V4L2_COLORSPACE_JPEG, 0x04},
-> @@ -1268,11 +1297,12 @@ static int ov965x_set_fmt(struct v4l2_subdev *sd, struct v4l2_subdev_pad_config
->  
->  static int ov965x_set_frame_size(struct ov965x *ov965x)
->  {
-> -	int i, ret = 0;
-> +	int ret = 0;
-> +
-> +	v4l2_dbg(1, debug, ov965x->client, "%s\n", __func__);
->  
-> -	for (i = 0; ret == 0 && i < NUM_FMT_REGS; i++)
-> -		ret = ov965x_write(ov965x->client, frame_size_reg_addr[i],
-> -				   ov965x->frame_size->regs[i]);
-> +	ret = ov965x_write_array(ov965x->client,
-> +				 ov965x->frame_size->regs);
->  	return ret;
->  }
->  
+> --- a/Documentation/devicetree/bindings/display/renesas,du.txt
+> +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
+> @@ -36,8 +36,10 @@ Required Properties:
+>        When supplied they must be named "dclkin.x" with "x" being the input
+>        clock numerical index.
+>
+> -  - vsps: A list of phandles to the VSP nodes that handle the memory
+> -    interfaces for the DU channels.
+> +  - vsps: A list of phandle and channel index tuples to the VSPs that handle
+> +    the memory interfaces for the DU channels. The phandle identifies the VSP
+> +    instance that serves the DU channel, and the channel index identifies the
+> +    LIF instances in that VSP.
 
--- 
-Regards,
+instance
 
-Sakari Ailus
-e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
+> @@ -59,24 +61,24 @@ corresponding to each DU output.
+>   R8A7796 (M3-W)        DPAD            HDMI            LVDS            -
+>
+>
+> -Example: R8A7790 (R-Car H2) DU
+> +Example: R8A7795 (R-Car H3) ES2.0 DU
+>
+> -       du: du@feb00000 {
+> -               compatible = "renesas,du-r8a7790";
+> -               reg = <0 0xfeb00000 0 0x70000>,
+> -                     <0 0xfeb90000 0 0x1c>,
+> -                     <0 0xfeb94000 0 0x1c>;
+> -               reg-names = "du", "lvds.0", "lvds.1";
+> -               interrupt-parent = <&gic>;
+> -               interrupts = <0 256 IRQ_TYPE_LEVEL_HIGH>,
+> -                            <0 268 IRQ_TYPE_LEVEL_HIGH>,
+> -                            <0 269 IRQ_TYPE_LEVEL_HIGH>;
+> -               clocks = <&mstp7_clks R8A7790_CLK_DU0>,
+> -                        <&mstp7_clks R8A7790_CLK_DU1>,
+> -                        <&mstp7_clks R8A7790_CLK_DU2>,
+> -                        <&mstp7_clks R8A7790_CLK_LVDS0>,
+> -                        <&mstp7_clks R8A7790_CLK_LVDS1>;
+> -               clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1";
+> +       du: display@feb00000 {
+> +               compatible = "renesas,du-r8a7795";
+> +               reg = <0 0xfeb00000 0 0x80000>,
+> +                     <0 0xfeb90000 0 0x14>;
+> +               reg-names = "du", "lvds.0";
+> +               interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
+> +                            <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&cpg CPG_MOD 724>,
+> +                        <&cpg CPG_MOD 723>,
+> +                        <&cpg CPG_MOD 722>,
+> +                        <&cpg CPG_MOD 721>,
+> +                        <&cpg CPG_MOD 727>;
+> +               clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0";
+> +               vsps = <&vspd0 0 &vspd1 0 &vspd2 0 &vspd0 1>;
+
+For increased readability, I suggest formatting this as:
+
+        vsps = <&vspd0 0>, <&vspd1 0>, <&vspd2 0>, <&vspd0 1>;
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
