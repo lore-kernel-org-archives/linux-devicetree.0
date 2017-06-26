@@ -1,46 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] pinctrl: generic: Add output-enable property
-Date: Mon, 26 Jun 2017 13:40:50 -0500
-Message-ID: <20170626184050.k4fibk5m42f47sug@rob-hp-laptop>
-References: <1498125658-14554-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RESEND PATCH v2 3/7] Documentation: rockchip-dw-mshc: add
+ description for rk3228
+Date: Mon, 26 Jun 2017 13:46:13 -0500
+Message-ID: <20170626184613.ns747evnz7lng64h@rob-hp-laptop>
+References: <1498127402-6705-1-git-send-email-frank.wang@rock-chips.com>
+ <1498127402-6705-4-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1498125658-14554-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: linus.walleij@linaro.org, andy.shevchenko@gmail.com, dongas86@gmail.com, geert+renesas@glider.be, Chris.Brandt@renesas.com, laurent.pinchart@ideasonboard.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1498127402-6705-4-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 12:00:58PM +0200, Jacopo Mondi wrote:
-> Add output-enable generic pin configuration property.
-> This properties allows enabling/disabling pin's output capabilities
-> without actually driving any value on the line.
+On Thu, Jun 22, 2017 at 06:29:58PM +0800, Frank Wang wrote:
+> From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 > 
+> Add "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc" for
+> dwmmc on rk322x platform.
+> 
+> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> Reviewed-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 > ---
-> v1->v2:
->  - Expand the property description as suggested by Laurent. I ended up
->    mentioning the in-famous output buffer :)
-> 
-> One (more) question to GPIO people on:
-> +	PCONFDUMP(PIN_CONFIG_OUTPUT_ENABLE, "output enabled", NULL, false),
-> 
-> I copied this from INPUT_ENABLE where arguments 2 and 3 passed to PCONFDUMP are
-> NULL and false even if the property has an argument, used to enable/disable
-> the input mode. Is this intended? Should that be turned instead to
-> -	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", NULL, false),
-> +	PCONFDUMP(PIN_CONFIG_INPUT_ENABLE, "input enabled", "enabled", true),
-> 
-> Note that the same applies to most of the properties that have an
-> "enable"/"disable" argument. Just to make sure this is done on purpose.
-> 
-> Thanks
->    j
->  .../devicetree/bindings/pinctrl/pinctrl-bindings.txt      |  2 ++
+>  Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Acked-by: Rob Herring <robh@kernel.org>
-
->  drivers/pinctrl/pinconf-generic.c                         |  3 +++
->  include/linux/pinctrl/pinconf-generic.h                   | 15 +++++++++++----
->  3 files changed, 16 insertions(+), 4 deletions(-)
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
