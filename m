@@ -1,18 +1,17 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 15/17] MIPS: JZ4770: Workaround for corrupted DMA
- transfers
-Date: Mon, 26 Jun 2017 15:32:12 +0200
-Message-ID: <30175ba3ce2d1bd6f83ccb515f179aec@crapouillou.net>
+Subject: Re: [PATCH v2 01/17] clk: ingenic: Use const pointer to clk_ops in
+ struct
+Date: Mon, 26 Jun 2017 15:34:38 +0200
+Message-ID: <580231557b0447d9019a20ac99292938@crapouillou.net>
 References: <20170607200439.24450-2-paul@crapouillou.net>
  <20170620151855.19399-1-paul@crapouillou.net>
- <20170620151855.19399-15-paul@crapouillou.net>
- <ca37b50d-951c-2264-fa37-cca7149ed4ba@imgtec.com>
+ <20170621215038.GG4493@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <ca37b50d-951c-2264-fa37-cca7149ed4ba@imgtec.com>
+In-Reply-To: <20170621215038.GG4493@codeaurora.org>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -22,98 +21,24 @@ List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
 List-owner: <mailto:ralf@linux-mips.org>
 List-post: <mailto:linux-mips@linux-mips.org>
 List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Marcin Nowakowski <marcin.nowakowski@imgtec.com>
-Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Le 2017-06-22 09:21, Marcin Nowakowski a écrit :
-> Hi Paul, Maarten,
-> 
-> On 20.06.2017 17:18, Paul Cercueil wrote:
->> From: Maarten ter Huurne <maarten@treewalker.org>
+Le 2017-06-21 23:50, Stephen Boyd a écrit :
+> On 06/20, Paul Cercueil wrote:
+>> The CGU common code does not modify the pointed clk_ops structure, so 
+>> it
+>> should be marked as const.
 >> 
->> We have seen MMC DMA transfers read corrupted data from SDRAM when
->> a burst interval ends at physical address 0x10000000. To avoid this
->> problem, we remove the final page of low memory from the memory map.
->> 
->> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 >> ---
->>   arch/mips/jz4740/setup.c | 24 ++++++++++++++++++++++++
->>   arch/mips/kernel/setup.c |  8 ++++++++
->>   2 files changed, 32 insertions(+)
->> 
->>   v2: No change
->> 
->> diff --git a/arch/mips/jz4740/setup.c b/arch/mips/jz4740/setup.c
->> index afd84ee966e8..6948b133a15d 100644
->> --- a/arch/mips/jz4740/setup.c
->> +++ b/arch/mips/jz4740/setup.c
->> @@ -23,6 +23,7 @@
->>     #include <asm/bootinfo.h>
->>   #include <asm/mips_machine.h>
->> +#include <asm/page.h>
->>   #include <asm/prom.h>
->>     #include <asm/mach-jz4740/base.h>
->> @@ -102,6 +103,29 @@ void __init arch_init_irq(void)
->>   	irqchip_init();
->>   }
->>   +/*
->> + * We have seen MMC DMA transfers read corrupted data from SDRAM when 
->> a burst
->> + * interval ends at physical address 0x10000000. To avoid this 
->> problem, we
->> + * remove the final page of low memory from the memory map.
->> + */
->> +void __init jz4770_reserve_unsafe_for_dma(void)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < boot_mem_map.nr_map; i++) {
->> +		struct boot_mem_map_entry *entry = boot_mem_map.map + i;
->> +
->> +		if (entry->type != BOOT_MEM_RAM)
->> +			continue;
->> +
->> +		if (entry->addr + entry->size != 0x10000000)
->> +			continue;
->> +
->> +		entry->size -= PAGE_SIZE;
->> +		break;
->> +	}
->> +}
->> +
->>   static int __init jz4740_machine_setup(void)
->>   {
->>   	mips_machine_setup();
->> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
->> index 89785600fde4..cccfd7ba89fe 100644
->> --- a/arch/mips/kernel/setup.c
->> +++ b/arch/mips/kernel/setup.c
->> @@ -838,6 +838,14 @@ static void __init arch_mem_init(char 
->> **cmdline_p)
->>     	parse_early_param();
->>   +#ifdef CONFIG_MACH_JZ4770
->> +	if (current_cpu_type() == CPU_JZRISC &&
->> +				mips_machtype == MACH_INGENIC_JZ4770) {
->> +		extern void __init jz4770_reserve_unsafe_for_dma(void);
->> +		jz4770_reserve_unsafe_for_dma();
->> +	}
->> +#endif
->> +
 > 
-> This part doesn't look good in the platform-agnostic code ... is there
-> a reason why you wouldn't do that from within plat_mem_setup()?
-> 
+> How did you want to merge this series? I can ack clk patches if
+> you like, or apply the clk patches to the clk tree.
 
-I agree, but, doing it in plat_mem_setup() is too early, as the 'boot 
-mem map' hasn't been initialized yet then...
-
->>   	if (usermem) {
->>   		pr_info("User-defined physical RAM map:\n");
->>   		print_memory_map();
->> 
-> 
-> 
-> Marcin
+The clk patches refer to CONFIG_MACH_JZ4770 in the Kconfig, so they 
+indirectly depend on the other patches. I think it's better that you ack 
+them then.
