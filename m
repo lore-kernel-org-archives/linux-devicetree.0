@@ -1,44 +1,46 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 01/17] clk: ingenic: Use const pointer to clk_ops in
- struct
-Date: Mon, 26 Jun 2017 15:34:38 +0200
-Message-ID: <580231557b0447d9019a20ac99292938@crapouillou.net>
-References: <20170607200439.24450-2-paul@crapouillou.net>
- <20170620151855.19399-1-paul@crapouillou.net>
- <20170621215038.GG4493@codeaurora.org>
+Subject: Re: [PATCH 04/15] clk: Add Ingenic jz4770 CGU driver
+Date: Mon, 26 Jun 2017 15:50:11 +0200
+Message-ID: <639b492cc57200bab14572ac591ef8af@crapouillou.net>
+References: <20170607200439.24450-1-paul@crapouillou.net>
+ <20170607200439.24450-5-paul@crapouillou.net>
+ <20170607205943.GO20170@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8;
  format=flowed
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20170621215038.GG4493@codeaurora.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170607205943.GO20170@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
 To: Stephen Boyd <sboyd@codeaurora.org>
 Cc: Ralf Baechle <ralf@linux-mips.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Maarten ter Huurne <maarten@treewalker.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@linux-mips.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-Le 2017-06-21 23:50, Stephen Boyd a écrit :
-> On 06/20, Paul Cercueil wrote:
->> The CGU common code does not modify the pointed clk_ops structure, so 
->> it
->> should be marked as const.
+Le 2017-06-07 22:59, Stephen Boyd a écrit :
+> On 06/07, Paul Cercueil wrote:
+>> Add support for the clocks provided by the CGU in the Ingenic JZ4770
+>> SoC.
 >> 
 >> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> ---
-> 
-> How did you want to merge this series? I can ack clk patches if
-> you like, or apply the clk patches to the clk tree.
+>> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
 
-The clk patches refer to CONFIG_MACH_JZ4770 in the Kconfig, so they 
-indirectly depend on the other patches. I think it's better that you ack 
-them then.
+[...]
+
+>> diff --git a/include/dt-bindings/clock/jz4770-cgu.h 
+>> b/include/dt-bindings/clock/jz4770-cgu.h
+>> new file mode 100644
+>> index 000000000000..54b8b2ae4a73
+>> --- /dev/null
+>> +++ b/include/dt-bindings/clock/jz4770-cgu.h
+> 
+> Can you split this file off into a different patch? That way clk
+> tree can apply clk patches on top of a stable branch where this
+> file lives by itself.
+
+Oops, I forgot that in the v2.
+
+The jz4770-cgu.c file includes and uses 
+<dt-bindings/clock/jz4770-cgu.h>, so I don't think
+it would make sense to split it, since it wouldn't compile without it.
