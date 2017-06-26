@@ -1,66 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v6] media: platform: Renesas IMR driver
-Date: Mon, 26 Jun 2017 22:02:58 +0200
-Message-ID: <CAMuHMdX_RWn_p5U2K8E+zHy8Pmm8azbA4uySyfDxpNKvD6acAw@mail.gmail.com>
-References: <20170623203456.503714406@cogentembedded.com> <20170626194905.zjvdzcdlnv74mnr5@rob-hp-laptop>
- <2c173ca0-533c-babc-dcc7-f265bc3fda5d@cogentembedded.com>
+From: Sylwester Nawrocki <snawrocki@kernel.org>
+Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
+Date: Mon, 26 Jun 2017 22:04:53 +0200
+Message-ID: <5cd25a47-f3be-8c40-3940-29f26a245076@kernel.org>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
+ <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
+ <64e3005d-31df-71f2-762b-2c1b1152fc2d@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <2c173ca0-533c-babc-dcc7-f265bc3fda5d@cogentembedded.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <64e3005d-31df-71f2-762b-2c1b1152fc2d@st.com>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Hugues FRUCHET <hugues.fruchet@st.com>, "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Mon, Jun 26, 2017 at 9:56 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> On 06/26/2017 10:49 PM, Rob Herring wrote:
->>> From: Konstantin Kozhevnikov <Konstantin.Kozhevnikov@cogentembedded.com>
->>>
->>> The image renderer, or the distortion correction engine, is a drawing
->>> processor with a simple instruction system capable of referencing video
->>> capture data or data in an external memory as the 2D texture data and
->>> performing texture mapping and drawing with respect to any shape that is
->>> split into triangular objects.
->>>
->>> This V4L2 memory-to-memory device driver only supports image renderer
->>> light
->>> extended 4 (IMR-LX4) found in the R-Car gen3 SoCs; the R-Car gen2 support
->>> can be added later...
->>>
->>> [Sergei: merged 2 original patches, added  the patch description, removed
-
-[...]
-
->>> macros.]
+On 06/26/2017 12:35 PM, Hugues FRUCHET wrote:
+>> What I am missing to support the GTA04 camera is the control of the optional "vana-supply".
+>> So the driver does not power up the camera module when needed and therefore probing fails.
 >>
+>>     - vana-supply: a regulator to power up the camera module.
 >>
->> TL;DR needed here IMO.
->
->    Not sure I understand... stands for "too long; didn't read", right?
->
->> Not sure anyone really cares every detail you
->> changed in re-writing this. If they did, it should all be separate
->> commits.
->
->    AFAIK this is a way that's things are dealt with when you submit somebody
-> else's work with your changes. Sorry if the list is too long...
+>> Driver code is not complex to add:
 
-Based on a patch by Konstantin Kozhevnikov
-<Konstantin.Kozhevnikov@cogentembedded.com>?
+> Yes, I saw it in your code, but as I don't have any programmable power
+> supply on my setup, I have not pushed this commit.
 
-Of course, that's bad for your coworker's patch statistics...
+Since you are about to add voltage supplies to the DT binding I'd suggest
+to include all three voltage supplies of the sensor chip. Looking at the OV9650
+and the OV9655 datasheet there are following names used for the voltage supply
+pins:
 
-Gr{oetje,eeting}s,
+AVDD - Analog power supply,
+DVDD - Power supply for digital core logic,
+DOVDD - Digital power supply for I/O.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I doubt the sensor can work without any of these voltage supplies, thus
+regulator_get_optional() should not be used. I would just use the regulator
+bulk API to handle all three power supplies.
