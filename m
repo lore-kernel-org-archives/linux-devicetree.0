@@ -1,29 +1,45 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v11 3/4] i2c: aspeed: added driver for Aspeed I2C
-Date: Mon, 26 Jun 2017 15:48:57 +0930
-Message-ID: <CACPK8XepziqsQVC6R_97s24=8o5F-TZCO1+opZxBJW8SNHRHkg@mail.gmail.com>
-References: <20170620211516.13095-1-brendanhiggins@google.com>
- <20170620211516.13095-4-brendanhiggins@google.com> <20170623184305.xqqhjgrbdmgk6lsr@ninjato>
+From: Erin Lo <erin.lo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v3 0/4] Add some DT nodes for Mediatek MT2701
+Date: Mon, 26 Jun 2017 15:51:28 +0800
+Message-ID: <1498463492-24633-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <20170623184305.xqqhjgrbdmgk6lsr@ninjato>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg KH <gregkh@linuxfoundation.org>, "David S . Miller" <davem@davemloft.net>, mchehab@kernel.org, martin.petersen@oracle.com, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-i2c@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rick Altherr <raltherr@google.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 24, 2017 at 4:13 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
-> On Tue, Jun 20, 2017 at 02:15:15PM -0700, Brendan Higgins wrote:
->> Added initial master support for Aspeed I2C controller. Supports
->> fourteen busses present in AST24XX and AST25XX BMC SoCs by Aspeed.
->>
->> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->
-> Applied to for-next, thanks for all the hard work!
+This patch series based on v4.12-rc1, include MT2701 ethernet/disp bls/display function DT nodes.
 
-Congratulations Brendan. It's great to see this driver in the tree.
+Change in v3:
+1. Sorting according to name in mt2701-evb.dts
+2. Really remove redundant dispsys@14000000 node
 
-Cheers,
+Change in v2:
+1. Add reset properties in ethernet nodes
+2. Split bls nodes into two patches for dtsi and actual board
+3. Remove redundant dispsys@14000000 node
 
-Joel
+
+Sean Wang (1):
+  arm: dts: mt2701: Add ethernet device node
+
+Weiqing Kong (2):
+  arm: dts: mt2701: Add display bls related nodes for MT2701
+  arm: dts: mt2701: Add display bls related nodes for MT2701
+
+YT Shen (1):
+  arm: dts: mt2701: Add display subsystem related nodes for MT2701
+
+ arch/arm/boot/dts/mt2701-evb.dts |  27 ++++++++++
+ arch/arm/boot/dts/mt2701.dtsi    | 111 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 138 insertions(+)
+
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
