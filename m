@@ -1,80 +1,63 @@
-From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Subject: Re: [PATCH v2 5/8] dt-bindings: iio: Add STM32 LPTimer trigger binding
-Date: Mon, 26 Jun 2017 21:38:07 +0100
-Message-ID: <3D30F4CE-048C-4E5E-BDE1-48660B295066@jic23.retrosnub.co.uk>
-References: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com> <1498055415-31513-6-git-send-email-fabrice.gasnier@st.com> <20170626181416.b7wr6wswuzeasuks@rob-hp-laptop>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/2] Broadcom STB wake-timer support
+Date: Mon, 26 Jun 2017 14:15:01 -0700
+Message-ID: <20170626211503.7471-1-f.fainelli@gmail.com>
+Reply-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <20170626181416.b7wr6wswuzeasuks@rob-hp-laptop>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: lee.jones@linaro.org, benjamin.gaignard@linaro.org, jic23@kernel.org, thierry.reding@gmail.com, mark.rutland@arm.com, alexandre.torgue@st.com, mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <rtc-linux+bncBCH67JWTV4DBBXXSYXFAKGQEWMWMVJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/rtc-linux/post>, <mailto:rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:rtc-linux+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/rtc-linux
+List-Subscribe: <https://groups.google.com/group/rtc-linux/subscribe>, <mailto:rtc-linux+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+712029733259+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/rtc-linux/subscribe>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "open list:REAL TIME CLOCK RTC SUBSYSTEM" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Alexandre,
 
+This patch series adds support for the Broadcom STB wake-timer. This is a 27Mhz
+timer which allows the system to exit S2/S3/S5 sleep states when configured.
 
-On 26 June 2017 19:14:16 BST, Rob Herring <robh@kernel.org> wrote:
->On Wed, Jun 21, 2017 at 04:30:12PM +0200, Fabrice Gasnier wrote:
->> Add documentation for STMicroelectronics STM32 Low-Power Timer
->Trigger
->> binding.
->> 
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->> Changes in v2:
->> - s/Low Power/Low-Power
->> - remove leading 0x in example (parent node)
->> - improve reg property description
->> ---
->>  .../bindings/iio/timer/stm32-lptimer-trigger.txt   | 23
->++++++++++++++++++++++
->>  1 file changed, 23 insertions(+)
->>  create mode 100644
->Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
->> 
->> diff --git
->a/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
->b/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
->> new file mode 100644
->> index 0000000..466d99f
->> --- /dev/null
->> +++
->b/Documentation/devicetree/bindings/iio/timer/stm32-lptimer-trigger.txt
->> @@ -0,0 +1,23 @@
->> +STMicroelectronics STM32 Low-Power Timer Trigger
->> +
->> +STM32 Low-Power Timer provides trigger source (LPTIM output) that
->can be used
->> +by STM32 internal ADC and/or DAC.
->> +
->> +Must be a sub-node of an STM32 Low-Power Timer device tree node.
->> +See ../mfd/stm32-lptimer.txt for details about the parent node.
->> +
->> +Required properties:
->> +- compatible:		Must be "st,stm32-lptimer-trigger".
->> +- reg:			Selects trigger hardware block. Must be 0, 1 or 2
->> +			respectively for lptimer1, lptimer2 or lptimer3
->> +			trigger output.
->
->I guess this answers my question. However, this seems like abuse of the
->
->reg prop. This should not be how you select a trigger. The DT should 
->describe all the h/w blocks and then the adc connection is a separate 
->property.
-I think this is miss described. Reg is labelling instances of the hardware block which is providing the trigger.
+The wake-timer has has a long history within our internal/downstream tree, and
+Brian authored it in the first place, then Markus added the rtc bits, and then I
+cleaned it up for upstream.
 
-The connection to an ADC etc is done from userspace.
+Changes in v2:
 
+- added Rob's Acked-by tag to the device tree binding patch
+- removed dev_dbg() prints
+- removed unnecessary initialization in .read_alarm callback
+- rebase against latest rtc-next
 
->
->Rob
->--
->To unsubscribe from this list: send the line "unsubscribe linux-iio" in
->the body of a message to majordomo@vger.kernel.org
->More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+Brian Norris (1):
+  rtc: brcmstb-waketimer: Add Broadcom STB wake-timer
+
+Florian Fainelli (1):
+  dt-bindings: Document the Broadcom STB wake-up timer node
+
+ .../bindings/rtc/brcm,brcmstb-waketimer.txt        |  22 ++
+ drivers/rtc/Kconfig                                |  11 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-brcmstb-waketimer.c                | 345 +++++++++++++++++++++
+ 4 files changed, 379 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/brcm,brcmstb-waketimer.txt
+ create mode 100644 drivers/rtc/rtc-brcmstb-waketimer.c
 
 -- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+2.9.3
+
+-- 
+You received this message because you are subscribed to "rtc-linux".
+Membership options at http://groups.google.com/group/rtc-linux .
+Please read http://groups.google.com/group/rtc-linux/web/checklist
+before submitting a driver.
+--- 
+You received this message because you are subscribed to the Google Groups "rtc-linux" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to rtc-linux+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
