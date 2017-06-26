@@ -1,46 +1,52 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/6] dt-bindings: spi/core: add wakeup-source
- optional property
-Date: Mon, 26 Jun 2017 11:00:11 -0500
-Message-ID: <20170626160011.qi3bliz5jt6d5wgb@rob-hp-laptop>
-References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com>
- <1498039313-24220-3-git-send-email-jeffy.chen@rock-chips.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498039313-24220-3-git-send-email-jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: [PATCH 0/3] Altera Quadspi Controller Version 2
+Date: Mon, 26 Jun 2017 09:13:36 -0700
+Message-ID: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 21, 2017 at 06:01:49PM +0800, Jeffy Chen wrote:
-> Update document devicetree bindings to support "wakeup-source" property.
-> 
-> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-> ---
-> 
-> Changes in v3: None
-> 
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 1f6e86f..0fa1ccf 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -77,6 +77,7 @@ All slave nodes can contain the following optional properties:
->  		    Defaults to 1 if not present.
->  - spi-rx-delay-us - Microsecond delay after a read transfer.
->  - spi-tx-delay-us - Microsecond delay after a write transfer.
-> +- wakeup-source   - Device can be used as a wakeup source.
+From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 
-wakeup-source is valid for any device with an interrupts property 
-already, so I don't think this is necessary.
+Hi Everyone,
 
-Rob
+This patch set adds support for Version 2 of the Altera
+Quadspi Controller.  Version 1 of the Altera Quadspi
+Controller only supported 1 byte of flash id instead of
+the 3 bytes required for a JEDEC ID.  As such the driver
+for Version 1 was rejected.  Please see 
+https://patchwork.kernel.org/patch/7025681
+
+Patch 1: add device tree bindings document for platform driver
+
+Patch 2: add core code for driver
+
+Patch 3: add platform driver
+
+Matthew Gerlach (3):
+  ARM: dts: Bindings for Altera Quadspi Controller Version 2
+  mtd: spi-nor: core code for the Altera Quadspi Flash Controller v2
+  mtd: spi-nor: Altera Quadspi Flash Controller v2 Platform driver
+
+ .../devicetree/bindings/mtd/altera-quadspi-v2.txt  |  37 ++
+ MAINTAINERS                                        |   8 +
+ drivers/mtd/spi-nor/Kconfig                        |  10 +
+ drivers/mtd/spi-nor/Makefile                       |   5 +-
+ drivers/mtd/spi-nor/altera-quadspi-platform.c      | 137 +++++
+ drivers/mtd/spi-nor/altera-quadspi.c               | 676 +++++++++++++++++++++
+ include/linux/mtd/altera-quadspi.h                 |  28 +
+ 7 files changed, 900 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+ create mode 100644 drivers/mtd/spi-nor/altera-quadspi-platform.c
+ create mode 100644 drivers/mtd/spi-nor/altera-quadspi.c
+ create mode 100644 include/linux/mtd/altera-quadspi.h
+
+-- 
+2.7.4
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
