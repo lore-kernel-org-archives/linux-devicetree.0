@@ -1,80 +1,55 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: input: Add the Goodix GTx5 series
- Touchscreen devicetree bindings
-Date: Mon, 26 Jun 2017 09:16:40 -0500
-Message-ID: <CAL_JsqJ6w7oEjm=i_KX8Y_axbRSdX4Q+14NQ8XaHnDevGQrS_w@mail.gmail.com>
-References: <22592d94-f482-3e4f-3860-1dce83472d4f@goodix.com>
- <20170623203706.upfzigj6ghdbqx2q@rob-hp-laptop> <20170626132253.GA24061@andrew-dell>
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/3] Add support for es8323 and hdmi audio to the
+ firefly-rk3288
+Date: Mon, 26 Jun 2017 16:19:59 +0200
+Message-ID: <778a96a1-a6b0-ad78-89c1-7928dd50e3c4@collabora.com>
+References: <20170512132227.24916-1-romain.perier@collabora.com>
+ <20170512132227.24916-9-romain.perier@collabora.com>
+ <98ec8d72-2977-4347-86b0-4b423b55c434@collabora.com>
+ <20170626140740.jlgtwaaivn3bvg2g@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170626132253.GA24061@andrew-dell>
+In-Reply-To: <20170626140740.jlgtwaaivn3bvg2g-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrew-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org, mouse-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Romain Perier <romain.perier-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 8:22 AM, Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi Rob,
->
-> Thank you for the review.
->
-> On Fri, Jun 23, 2017 at 03:37:06PM -0500, Rob Herring wrote:
->> On Mon, Jun 19, 2017 at 06:40:32PM +0800, Wang Yafei wrote:
->> > Signed-off-by: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
->> > ---
->> >  .../bindings/input/touchscreen/goodix-gtx5.txt     | 75 ++++++++++++++++++++++
->> >  1 file changed, 75 insertions(+)
->> >  create mode 100755 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+I did not kill a kitten or a puppy, I have just sent a ping 2 weeks
+later for v3. The v2 was sent on Jan 23 2017... so that's not what I
+call a top post or a flood ^^
 
-[...]
+anyway,
+Have a nice day,
+Romain
 
->> > +- touchscreen-key-map: keycode value map  /*KEY_HOMEPAGE, KEY_BACK*/
+Le 26/06/2017 à 16:07, Mark Brown a écrit :
+> On Mon, Jun 26, 2017 at 04:00:17PM +0200, Romain Perier wrote:
+>> Hello,
 >>
->> This hardly seems sufficient to map screen areas to keys. There's been
->> some discussion about doing that in the past.
->
-> Sorry haven't notice that before, I will change it to the flowing
-> property format:
-> linux,keycodes = <KEY_HOMEPAGE>, <KEY_MENU>, <KEY_BACK>;
-
-That's better, but not really what I meant. There's still some
-assumption about what region each key is located in. Is every design 3
-keys? How do you know what region of the touchscreen is a given key?
-iOW, what are the valid ranges of coordinates for each key?
-
-
->> > +           compatible = "goodix,gtx5";
->> > +           reg = <0x14>;
->> > +           interrupt-parent = <&msm_gpio>;
->> > +           interrupts = <13 0x2800>;
->> > +           vtouch-supply = <&pm8916_l15>;
->> > +           reset-gpios = <&msm_gpio 12 0x0>;
->> > +           irq-gpios = <&msm_gpio 13 0x2800>;
->> > +           irq-flags = <1>; /* 1:trigger rising, 2:trigger falling;*/
->> > +           touchscreen-max-id = <10>;
->> > +           touchscreen-size-x = <400>;
->> > +           touchscreen-size-y = <400>;
->> > +           touchscreen-max-w = <400>;
->> > +           touchscreen-max-pressure = <255>;
->> > +           touchscreen-swapped-x-y;
->> > +           touchscreen-key-map = <172 158>; /*KEY_HOMEPAGE, KEY_BACK*/
->> > +           sensor0 {
+>> ping,
 >>
->> How many sensors can there be? That needs to be documented.
->>
->> Why do you need a sub-node?
+>> no other feedbacks (for 2/3 and 3/3)?
+> Please don't send content free pings and please allow a reasonable time
+> for review.  People get busy, go on holiday, attend conferences and so 
+> on so unless there is some reason for urgency (like critical bug fixes)
+> please allow at least a couple of weeks for review.  If there have been
+> review comments then people may be waiting for those to be addressed.
 >
-> sensor is an internal call, we use senesorX to represent the touchpanel
-> is produced by which factory. A panel factory will have it corresponding
-> config data to get the best touch results. It will delete the sub-node
-> and change to the following format:
->         panel0,normal-cfg = [...]  /* panelX,cfg : X is no more than 10*/
+> Sending content free pings adds to the mail volume (if they are seen at
+> all) which is often the problem and since they can't be reviewed
+> directly if something has gone wrong you'll have to resend the patches
+> anyway, though there are some other maintainers who like them - if in
+> doubt look at how patches for the subsystem are normally handled.
+>
+> Please don't top post, reply in line with needed context.  This allows
+> readers to readily follow the flow of conversation and understand what
+> you are talking about and also helps ensure that everything in the
+> discussion is being addressed.
 
-panel0 is not a vendor and normal doesn't tell us anything. How about
-just "goodix,panel-cfg-X"?
-
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
