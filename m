@@ -1,144 +1,401 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 2/4] misc: sram-exec: Use aligned fncpy instead of memcpy
-Date: Mon, 26 Jun 2017 15:32:43 -0700
-Message-ID: <20170626223248.14199-4-f.fainelli@gmail.com>
+Subject: [PATCH 4/4] rtc: brcmstb-waketimer: Add Broadcom STB wake-timer
+Date: Mon, 26 Jun 2017 15:32:47 -0700
+Message-ID: <20170626223248.14199-8-f.fainelli@gmail.com>
 References: <20170626223248.14199-1-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20170626223248.14199-1-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Dave Gerlach <d-gerlach@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Markus Mayer <mmayer@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Eric Anholt <eric@anholt.net>, Justin Chen <justinpopo6@gmail.com>, Doug Berger <opendmb@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, open li <linux-mips@linux-mips.org>
+Cc: Brian Norris <computersforpeace@gmail.com>, Markus Mayer <mmayer@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM
+        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Arnd Bergmann <arnd@arndb.de>, Eric Anholt <eric@anholt.net>, Justin Chen <justinpopo6@gmail.com>, Doug Berger <opendmb@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:BROADCOM BCM47XX MIPS ARCHITEC" <linux-mips@linux-mips.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Dave Gerlach <d-gerlach@ti.com>
+From: Brian Norris <computersforpeace@gmail.com>
 
-Currently the sram-exec functionality, which allows allocation of
-executable memory and provides an API to move code to it, is only
-selected in configs for the ARM architecture. Based on commit
-5756e9dd0de6 ("ARM: 6640/1: Thumb-2: Symbol manipulation macros for
-function body copying") simply copying a C function pointer address
-using memcpy without consideration of alignment and Thumb is unsafe on
-ARM platforms.
+This adds support for the Broadcom STB wake-timer which is a timer in
+the chip's 27Mhz clock domain that offers the ability to wake the system
+(wake-up source) from suspend states (S2, S3, S5). It is supported using
+the rtc framework allowing us to configure alarms for system wake-up.
 
-The aforementioned patch introduces the fncpy macro which is a safe way
-to copy executable code on ARM platforms, so let's make use of that here
-rather than the unsafe plain memcpy that was previously used by
-sram_exec_copy. Now sram_exec_copy will move the code to "dst" and
-return an address that is guaranteed to be safely callable.
-
-In the future, architectures hoping to make use of the sram-exec
-functionality must define an fncpy macro just as ARM has done to
-guarantee or check for safe copying to executable memory before allowing
-the arch to select CONFIG_SRAM_EXEC.
-
-Acked-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+Signed-off-by: Markus Mayer <mmayer@broadcom.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- drivers/misc/sram-exec.c | 27 ++++++++++++++++++++-------
- include/linux/sram.h     |  8 ++++----
- 2 files changed, 24 insertions(+), 11 deletions(-)
+ drivers/rtc/Kconfig                 |  11 ++
+ drivers/rtc/Makefile                |   1 +
+ drivers/rtc/rtc-brcmstb-waketimer.c | 325 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 337 insertions(+)
+ create mode 100644 drivers/rtc/rtc-brcmstb-waketimer.c
 
-diff --git a/drivers/misc/sram-exec.c b/drivers/misc/sram-exec.c
-index 3d528a13b8fc..426ad912b441 100644
---- a/drivers/misc/sram-exec.c
-+++ b/drivers/misc/sram-exec.c
-@@ -19,6 +19,7 @@
- #include <linux/mm.h>
- #include <linux/sram.h>
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 8d3b95728326..8e1aa67fe533 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -197,6 +197,17 @@ config RTC_DRV_AC100
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called rtc-ac100.
  
-+#include <asm/fncpy.h>
- #include <asm/set_memory.h>
- 
- #include "sram.h"
-@@ -58,20 +59,32 @@ int sram_add_protect_exec(struct sram_partition *part)
-  * @src: Source address for the data to copy
-  * @size: Size of copy to perform, which starting from dst, must reside in pool
-  *
-+ * Return: Address for copied data that can safely be called through function
-+ *	   pointer, or NULL if problem.
++config RTC_DRV_BRCMSTB
++	tristate "Broadcom STB wake-timer"
++	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
++	default ARCH_BRCMSTB || BMIPS_GENERIC
++	help
++	  If you say yes here you get support for the wake-timer found on
++	  Broadcom STB SoCs (BCM7xxx).
++
++	  This driver can also be built as a module. If so, the module will
++	  be called rtc-brcmstb-waketimer.
++
+ config RTC_DRV_AS3722
+ 	tristate "ams AS3722 RTC driver"
+ 	depends on MFD_AS3722
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 13857d2fce09..df89cac1f9ae 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_RTC_DRV_AT91RM9200)+= rtc-at91rm9200.o
+ obj-$(CONFIG_RTC_DRV_AT91SAM9)	+= rtc-at91sam9.o
+ obj-$(CONFIG_RTC_DRV_AU1XXX)	+= rtc-au1xxx.o
+ obj-$(CONFIG_RTC_DRV_BFIN)	+= rtc-bfin.o
++obj-$(CONFIG_RTC_DRV_BRCMSTB)	+= rtc-brcmstb-waketimer.o
+ obj-$(CONFIG_RTC_DRV_BQ32K)	+= rtc-bq32k.o
+ obj-$(CONFIG_RTC_DRV_BQ4802)	+= rtc-bq4802.o
+ obj-$(CONFIG_RTC_DRV_CMOS)	+= rtc-cmos.o
+diff --git a/drivers/rtc/rtc-brcmstb-waketimer.c b/drivers/rtc/rtc-brcmstb-waketimer.c
+new file mode 100644
+index 000000000000..5dea6d0627d8
+--- /dev/null
++++ b/drivers/rtc/rtc-brcmstb-waketimer.c
+@@ -0,0 +1,325 @@
++/*
++ * Copyright © 2014-2017 Broadcom
 + *
-  * This helper function allows sram driver to act as central control location
-  * of 'protect-exec' pools which are normal sram pools but are always set
-  * read-only and executable except when copying data to them, at which point
-  * they are set to read-write non-executable, to make sure no memory is
-  * writeable and executable at the same time. This region must be page-aligned
-  * and is checked during probe, otherwise page attribute manipulation would
-- * not be possible.
-+ * not be possible. Care must be taken to only call the returned address as
-+ * dst address is not guaranteed to be safely callable.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + *
-+ * NOTE: This function uses the fncpy macro to move code to the executable
-+ * region. Some architectures have strict requirements for relocating
-+ * executable code, so fncpy is a macro that must be defined by any arch
-+ * making use of this functionality that guarantees a safe copy of exec
-+ * data and returns a safe address that can be called as a C function
-+ * pointer.
-  */
--int sram_exec_copy(struct gen_pool *pool, void *dst, void *src,
--		   size_t size)
-+void *sram_exec_copy(struct gen_pool *pool, void *dst, void *src,
-+		     size_t size)
- {
- 	struct sram_partition *part = NULL, *p;
- 	unsigned long base;
- 	int pages;
-+	void *dst_cpy;
- 
- 	mutex_lock(&exec_pool_list_mutex);
- 	list_for_each_entry(p, &exec_pool_list, list) {
-@@ -81,10 +94,10 @@ int sram_exec_copy(struct gen_pool *pool, void *dst, void *src,
- 	mutex_unlock(&exec_pool_list_mutex);
- 
- 	if (!part)
--		return -EINVAL;
-+		return NULL;
- 
- 	if (!addr_in_gen_pool(pool, (unsigned long)dst, size))
--		return -EINVAL;
-+		return NULL;
- 
- 	base = (unsigned long)part->base;
- 	pages = PAGE_ALIGN(size) / PAGE_SIZE;
-@@ -94,13 +107,13 @@ int sram_exec_copy(struct gen_pool *pool, void *dst, void *src,
- 	set_memory_nx((unsigned long)base, pages);
- 	set_memory_rw((unsigned long)base, pages);
- 
--	memcpy(dst, src, size);
-+	dst_cpy = fncpy(dst, src, size);
- 
- 	set_memory_ro((unsigned long)base, pages);
- 	set_memory_x((unsigned long)base, pages);
- 
- 	mutex_unlock(&part->lock);
- 
--	return 0;
-+	return dst_cpy;
- }
- EXPORT_SYMBOL_GPL(sram_exec_copy);
-diff --git a/include/linux/sram.h b/include/linux/sram.h
-index c97dcbe8ce25..4fb405fb0480 100644
---- a/include/linux/sram.h
-+++ b/include/linux/sram.h
-@@ -16,12 +16,12 @@
- struct gen_pool;
- 
- #ifdef CONFIG_SRAM_EXEC
--int sram_exec_copy(struct gen_pool *pool, void *dst, void *src, size_t size);
-+void *sram_exec_copy(struct gen_pool *pool, void *dst, void *src, size_t size);
- #else
--static inline int sram_exec_copy(struct gen_pool *pool, void *dst, void *src,
--				 size_t size)
-+static inline void *sram_exec_copy(struct gen_pool *pool, void *dst, void *src,
-+				   size_t size)
- {
--	return -ENODEV;
-+	return NULL;
- }
- #endif /* CONFIG_SRAM_EXEC */
- #endif /* __LINUX_SRAM_H__ */
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ */
++
++#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
++
++#include <linux/clk.h>
++#include <linux/device.h>
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/irqreturn.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/pm_wakeup.h>
++#include <linux/reboot.h>
++#include <linux/rtc.h>
++#include <linux/stat.h>
++#include <linux/suspend.h>
++
++struct brcmstb_waketmr {
++	struct rtc_device *rtc;
++	struct device *dev;
++	void __iomem *base;
++	int irq;
++	struct notifier_block reboot_notifier;
++	struct clk *clk;
++	u32 rate;
++};
++
++#define BRCMSTB_WKTMR_EVENT		0x00
++#define BRCMSTB_WKTMR_COUNTER		0x04
++#define BRCMSTB_WKTMR_ALARM		0x08
++#define BRCMSTB_WKTMR_PRESCALER		0x0C
++#define BRCMSTB_WKTMR_PRESCALER_VAL	0x10
++
++#define BRCMSTB_WKTMR_DEFAULT_FREQ	27000000
++
++static inline void brcmstb_waketmr_clear_alarm(struct brcmstb_waketmr *timer)
++{
++	writel_relaxed(1, timer->base + BRCMSTB_WKTMR_EVENT);
++	(void)readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
++}
++
++static void brcmstb_waketmr_set_alarm(struct brcmstb_waketmr *timer,
++				      unsigned int secs)
++{
++	brcmstb_waketmr_clear_alarm(timer);
++
++	writel_relaxed(secs + 1, timer->base + BRCMSTB_WKTMR_ALARM);
++}
++
++static irqreturn_t brcmstb_waketmr_irq(int irq, void *data)
++{
++	struct brcmstb_waketmr *timer = data;
++
++	pm_wakeup_event(timer->dev, 0);
++
++	return IRQ_HANDLED;
++}
++
++struct wktmr_time {
++	u32 sec;
++	u32 pre;
++};
++
++static void wktmr_read(struct brcmstb_waketmr *timer,
++		       struct wktmr_time *t)
++{
++	u32 tmp;
++
++	do {
++		t->sec = readl_relaxed(timer->base + BRCMSTB_WKTMR_COUNTER);
++		tmp = readl_relaxed(timer->base + BRCMSTB_WKTMR_PRESCALER_VAL);
++	} while (tmp >= timer->rate);
++
++	t->pre = timer->rate - tmp;
++}
++
++static int brcmstb_waketmr_prepare_suspend(struct brcmstb_waketmr *timer)
++{
++	struct device *dev = timer->dev;
++	int ret = 0;
++
++	if (device_may_wakeup(dev)) {
++		ret = enable_irq_wake(timer->irq);
++		if (ret) {
++			dev_err(dev, "failed to enable wake-up interrupt\n");
++			return ret;
++		}
++	}
++
++	return ret;
++}
++
++/* If enabled as a wakeup-source, arm the timer when powering off */
++static int brcmstb_waketmr_reboot(struct notifier_block *nb,
++		unsigned long action, void *data)
++{
++	struct brcmstb_waketmr *timer;
++
++	timer = container_of(nb, struct brcmstb_waketmr, reboot_notifier);
++
++	/* Set timer for cold boot */
++	if (action == SYS_POWER_OFF)
++		brcmstb_waketmr_prepare_suspend(timer);
++
++	return NOTIFY_DONE;
++}
++
++static int brcmstb_waketmr_gettime(struct device *dev,
++				   struct rtc_time *tm)
++{
++	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
++	struct wktmr_time now;
++
++	wktmr_read(timer, &now);
++
++	rtc_time_to_tm(now.sec, tm);
++
++	return 0;
++}
++
++static int brcmstb_waketmr_settime(struct device *dev,
++				   struct rtc_time *tm)
++{
++	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
++	unsigned long sec;
++	int ret;
++
++	rtc_tm_to_time(tm, &sec);
++
++	writel_relaxed(sec, timer->base + BRCMSTB_WKTMR_COUNTER);
++
++	return 0;
++}
++
++static int brcmstb_waketmr_getalarm(struct device *dev,
++				    struct rtc_wkalrm *alarm)
++{
++	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
++	unsigned long sec;
++	u32 reg;
++
++	sec = readl_relaxed(timer->base + BRCMSTB_WKTMR_ALARM);
++	if (sec != 0) {
++		/* Alarm is enabled */
++		alarm->enabled = 1;
++		rtc_time_to_tm(sec, &alarm->time);
++	}
++
++	reg = readl_relaxed(timer->base + BRCMSTB_WKTMR_EVENT);
++	alarm->pending = !!(reg & 1);
++
++	return 0;
++}
++
++static int brcmstb_waketmr_setalarm(struct device *dev,
++				     struct rtc_wkalrm *alarm)
++{
++	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
++	unsigned long sec;
++
++	if (alarm->enabled)
++		rtc_tm_to_time(&alarm->time, &sec);
++	else
++		sec = 0;
++
++	brcmstb_waketmr_set_alarm(timer, sec);
++
++	return 0;
++}
++
++/*
++ * Does not do much but keep the RTC class happy. We always support
++ * alarms.
++ */
++static int brcmstb_waketmr_alarm_enable(struct device *dev,
++					unsigned int enabled)
++{
++	return 0;
++}
++
++static const struct rtc_class_ops brcmstb_waketmr_ops = {
++	.read_time	= brcmstb_waketmr_gettime,
++	.set_time	= brcmstb_waketmr_settime,
++	.read_alarm	= brcmstb_waketmr_getalarm,
++	.set_alarm	= brcmstb_waketmr_setalarm,
++	.alarm_irq_enable = brcmstb_waketmr_alarm_enable,
++};
++
++static int brcmstb_waketmr_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct brcmstb_waketmr *timer;
++	struct resource *res;
++	int ret;
++
++	timer = devm_kzalloc(dev, sizeof(*timer), GFP_KERNEL);
++	if (!timer)
++		return -ENOMEM;
++
++	platform_set_drvdata(pdev, timer);
++	timer->dev = dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	timer->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(timer->base))
++		return PTR_ERR(timer->base);
++
++	/*
++	 * Set wakeup capability before requesting wakeup interrupt, so we can
++	 * process boot-time "wakeups" (e.g., from S5 soft-off)
++	 */
++	device_set_wakeup_capable(dev, true);
++	device_wakeup_enable(dev);
++
++	timer->irq = platform_get_irq(pdev, 0);
++	if (timer->irq < 0)
++		return -ENODEV;
++
++	timer->clk = devm_clk_get(dev, NULL);
++	if (!IS_ERR(timer->clk)) {
++		ret = clk_prepare_enable(timer->clk);
++		if (ret)
++			return ret;
++		timer->rate = clk_get_rate(timer->clk);
++		if (!timer->rate)
++			timer->rate = BRCMSTB_WKTMR_DEFAULT_FREQ;
++	} else {
++		timer->rate = BRCMSTB_WKTMR_DEFAULT_FREQ;
++		timer->clk = NULL;
++	}
++
++	ret = devm_request_irq(dev, timer->irq, brcmstb_waketmr_irq, 0,
++			       "brcmstb-waketimer", timer);
++	if (ret < 0)
++		return ret;
++
++	timer->reboot_notifier.notifier_call = brcmstb_waketmr_reboot;
++	register_reboot_notifier(&timer->reboot_notifier);
++
++	timer->rtc = rtc_device_register("brcmstb-waketmr", dev,
++					 &brcmstb_waketmr_ops, THIS_MODULE);
++	if (IS_ERR(timer->rtc)) {
++		dev_err(dev, "unable to register device\n");
++		unregister_reboot_notifier(&timer->reboot_notifier);
++		return PTR_ERR(timer->rtc);
++	}
++
++	dev_info(dev, "registered, with irq %d\n", timer->irq);
++
++	return ret;
++}
++
++static int brcmstb_waketmr_remove(struct platform_device *pdev)
++{
++	struct brcmstb_waketmr *timer = dev_get_drvdata(&pdev->dev);
++
++	unregister_reboot_notifier(&timer->reboot_notifier);
++	rtc_device_unregister(timer->rtc);
++
++	return 0;
++}
++
++#ifdef CONFIG_PM_SLEEP
++static int brcmstb_waketmr_suspend(struct device *dev)
++{
++	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
++
++	return brcmstb_waketmr_prepare_suspend(timer);
++}
++
++static int brcmstb_waketmr_resume(struct device *dev)
++{
++	struct brcmstb_waketmr *timer = dev_get_drvdata(dev);
++	int ret;
++
++	if (!device_may_wakeup(dev))
++		return 0;
++
++	ret = disable_irq_wake(timer->irq);
++
++	brcmstb_waketmr_clear_alarm(timer);
++
++	return ret;
++}
++#endif /* CONFIG_PM_SLEEP */
++
++static SIMPLE_DEV_PM_OPS(brcmstb_waketmr_pm_ops,
++			 brcmstb_waketmr_suspend, brcmstb_waketmr_resume);
++
++static const struct of_device_id brcmstb_waketmr_of_match[] = {
++	{ .compatible = "brcm,brcmstb-waketimer" },
++	{ /* sentinel */ },
++};
++
++static struct platform_driver brcmstb_waketmr_driver = {
++	.probe			= brcmstb_waketmr_probe,
++	.remove			= brcmstb_waketmr_remove,
++	.driver = {
++		.name		= "brcmstb-waketimer",
++		.pm		= &brcmstb_waketmr_pm_ops,
++		.of_match_table	= of_match_ptr(brcmstb_waketmr_of_match),
++	}
++};
++module_platform_driver(brcmstb_waketmr_driver);
++
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Brian Norris");
++MODULE_AUTHOR("Markus Mayer");
++MODULE_DESCRIPTION("Wake-up timer driver for STB chips");
 -- 
 2.9.3
