@@ -1,71 +1,77 @@
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-Subject: Re: [PATCH v5 1/2] media: i2c: adv748x: add adv748x driver
-Date: Mon, 26 Jun 2017 12:06:15 +0100
-Message-ID: <dcc244f1-411b-886d-7d23-9aed3835da80@ideasonboard.com>
-References: <cover.90fc3153078e79a3f74af832de923ac675eb29ad.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com>
- <de701d3899e68ddf8a2ad0316459b8f1868132b5.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com>
- <20170622213401.jdktgcx5tbsxhh5d@rob-hp-laptop>
-Reply-To: kieran.bingham@ideasonboard.com
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: omap3isp camera was Re: [PATCH v1 0/6] Add support of OV9655
+ camera
+Date: Mon, 26 Jun 2017 13:16:21 +0200
+Message-ID: <20170626111621.GC11688@amd>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
+ <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
+ <20170625091856.GA22791@amd>
+ <EDFD663F-37F9-42C2-92A9-66C2508B361E@goldelico.com>
+ <20170626083927.GB9621@amd>
+ <5364AD62-5000-451E-B3F7-93D49A91EED5@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170622213401.jdktgcx5tbsxhh5d@rob-hp-laptop>
-Content-Language: en-GB
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Kieran Bingham <kbingham@kernel.org>
-Cc: laurent.pinchart@ideasonboard.com, niklas.soderlund@ragnatech.se, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, "Martin K. Petersen" <martin.petersen@oracle.com>, Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Pavel Machek <pavel@ucw.cz>, Steve Longerbeam <slongerbeam@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Ramiro Oliveira <Ramiro.Oliveira@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Todor Tomov <todor.tomov@linaro.org>, open list:MEDIA INPUT INFRASTRUCTURE (V4L/DVB)
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="4jXrM3lyYWu4nBt5"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5364AD62-5000-451E-B3F7-93D49A91EED5-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Hugues Fruchet <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Rob,
 
-Comments addressed, and a new version 6 to be posted soon.
+--4jXrM3lyYWu4nBt5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 22/06/17 22:34, Rob Herring wrote:
-> On Wed, Jun 14, 2017 at 08:58:12PM +0100, Kieran Bingham wrote:
->> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->>
->> Provide support for the ADV7481 and ADV7482.
->>
->> The driver is modelled with 4 subdevices to allow simultaneous streaming
->> from the AFE (Analog front end) and HDMI inputs though two CSI TX
->> entities.
->>
->> The HDMI entity is linked to the TXA CSI bus, whilst the AFE is linked
->> to the TXB CSI bus.
->>
->> The driver is based on a prototype by Koji Matsuoka in the Renesas BSP,
->> and an earlier rework by Niklas Söderlund.
->>
->> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
->>
->> ---
-...
->> +
->> +The digital output port nodes must contain at least one endpoint.
->> +
->> +Ports are optional if they are not connected to anything at the hardware level,
->> +but the driver may not provide any support for ports which are not described.
-> 
-> What the driver does is not relevant to the binding.
+Hi!
 
-Of course. (Fixed)
+> > You may want to try this one:
+> >=20
+> > commit 0eae9d2a8f096f703cbc8f9a0ab155cd3cc14cef
+> > Author: Pavel <pavel-+ZI9xUNit7I@public.gmane.org>
+> > Date:   Mon Feb 13 21:26:51 2017 +0100
+> >=20
+> >    omap3isp: fix VP2SDR bit so capture (not preview) works
+> >=20
+> >    This is neccessary for capture (not preview) to work properly on
+> >        N900. Why is unknown.
+>=20
+> Ah, interesting. I will give it a try.
+>=20
+> Do you please have a link to the repo where this commit can be
+> > found?
 
-> 
->> +
->> +Example:
->> +
->> +	video_receiver@70 {
-> 
-> video-receiver@70
+This branch, as mentioned before:
 
-Aha, I didn't realise the distinction between using '-' in node names and
-properties vs '_' in labels.
+https://git.kernel.org/pub/scm/linux/kernel/git/pavel/linux-n900.git/log/?h=
+=3Dcamera-fw5-6
 
-Hopefully updated in my mind map. And I'll try to get this one right in the
-future. :)
+									Pavel
+								=09
 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--4jXrM3lyYWu4nBt5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAllQ7QUACgkQMOfwapXb+vKIcwCgg3ewjLvWvqSo3rWAi+dadBJ5
+058AnRVDYSBMAYco7NYUW9hsoS6MnU00
+=Keaa
+-----END PGP SIGNATURE-----
+
+--4jXrM3lyYWu4nBt5--
 --
-Regards
-
-Kieran
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
