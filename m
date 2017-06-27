@@ -1,42 +1,64 @@
-From: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-Subject: [PATCHv2 0/3] DA9052 hardware monitoring improvements
-Date: Tue, 27 Jun 2017 16:38:56 +0200
-Message-ID: <20170627143859.21312-1-sebastian.reichel@collabora.co.uk>
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sebastian.reichel@collabora.co.uk>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH 01/11] net: phy: Add rockchip phy driver support
+Date: Tue, 27 Jun 2017 22:44:10 +0800
+Message-ID: <38394157-adae-3476-55f3-ab5838744033@rock-chips.com>
+References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
+ <1498192929-7519-2-git-send-email-david.wu@rock-chips.com>
+ <20170624021910.GB4875@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20170624021910.GB4875@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Andrew,
 
-GE Healthcare's PPD [0] uses DA9053's touchscreen pins
-for hardware monitoring purposes. This adds support for
-the feature and fixes a bug, which came up during
-stress-testing of the driver.
+ÔÚ 2017/6/24 10:19, Andrew Lunn Ð´µÀ:
+> On Fri, Jun 23, 2017 at 12:41:59PM +0800, David Wu wrote:
+>> Support internal ephy currently.
+>>
+>> Signed-off-by: David Wu <david.wu@rock-chips.com>
+>> ---
+>>   drivers/net/phy/Kconfig    |  4 ++
+>>   drivers/net/phy/Makefile   |  1 +
+>>   drivers/net/phy/rockchip.c | 94 ++++++++++++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 99 insertions(+)
+>>   create mode 100644 drivers/net/phy/rockchip.c
+>>
+>> diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
+>> index c360dd6..86010d4 100644
+>> --- a/drivers/net/phy/Kconfig
+>> +++ b/drivers/net/phy/Kconfig
+>> @@ -350,6 +350,10 @@ config XILINX_GMII2RGMII
+>>            the Reduced Gigabit Media Independent Interface(RGMII) between
+>>            Ethernet physical media devices and the Gigabit Ethernet controller.
+>>   
+>> +config ROCKCHIP_MAC_PHY
+> 
+> This is a bit of an odd name, having both MAC and PHY in it. Are there
+> any other RockChip PHYs? Any external PHYS? Are they register
+> incompatible with the internal PHY?  Is it even RockChip IP? Or has it
+> been licensed from somebody else?
+> 
 
-[0] https://patchwork.kernel.org/patch/9809681/
+Maybe I just want to highlight it applies to the PHY with Mac 
+connection, actually I was named Rockchip at the beginning, as Heiko 
+said, PHY is a wide range, so add a modifier to restrict it.
 
-Changes since PATCHv1:
- - convert tsiref-microvolt property into proper regulator
- - drop error message for timeout
- - simplify da9052_channel_is_visible()
- - fix checkpatch warnings
+Yes, we use other external phys, like realtek and etc...
 
--- Sebastian
+If we have any other phy in our socs, it also could be expanded at 
+rockchip_phy_tbl{} at rockchip.c
 
-Sebastian Reichel (3):
-  mfd: da9052: fix manual ADC read after timed out read
-  hwmon: da9052: fix checkpatch warnings
-  hwmon: da9052: add support for TSI channel
+it has been licensed from somebody.
 
- .../devicetree/bindings/mfd/da9052-i2c.txt         |   8 +
- drivers/hwmon/da9052-hwmon.c                       | 288 +++++++++++++++++++--
- drivers/input/touchscreen/da9052_tsi.c             |   5 +
- drivers/mfd/da9052-core.c                          |   2 +
- include/linux/mfd/da9052/da9052.h                  |   6 +
- 5 files changed, 287 insertions(+), 22 deletions(-)
-
--- 
-2.11.0
-
+> I would more likely just call it ROCKCHIP_PHY.
+> 
+>    Andrew
+> 
+> 
+> 
