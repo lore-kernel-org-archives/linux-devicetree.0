@@ -1,170 +1,225 @@
-From: Oliver <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 2/4] libnvdimm: Add a device-tree interface
-Date: Wed, 28 Jun 2017 00:05:27 +1000
-Message-ID: <CAOSf1CGxciDwRLKv5JkessO_AGAKR4jKiY5+=3z4dptQHPssxw@mail.gmail.com>
-References: <20170627102851.15484-1-oohall@gmail.com> <20170627102851.15484-2-oohall@gmail.com>
- <20170627104328.GD30002@leverpostej>
+From: "David.Wu" <david.wu@rock-chips.com>
+Subject: Re: [PATCH 05/11] net: stmmac: dwmac-rk: Add internal phy support
+Date: Tue, 27 Jun 2017 22:21:24 +0800
+Message-ID: <1f8255c9-14c1-440f-0f0c-d173ed439d8d@rock-chips.com>
+References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
+ <1498193947-8011-1-git-send-email-david.wu@rock-chips.com>
+ <3788bbae-c99c-b63e-8910-f98567124cac@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170627104328.GD30002@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org" <linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <3788bbae-c99c-b63e-8910-f98567124cac@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de
+Cc: andrew@lunn.ch, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Florian,
 
-Thanks for the review and sorry, I really should have added more
-context. I was originally just going to send this to the linux-nvdimm
-list, but I figured the wider device-tree community might be
-interested too.
+Sorry for reply late.
 
-Preamble:
-
-Non-volatile DIMMs (nvdimms) are otherwise normal DDR DIMMs that are
-based on some kind of non-volatile memory with DRAM-like performance
-(i.e. not flash). The best known example would probably be Intel's 3D
-XPoint technology, but there are a few others around. The non-volatile
-aspect makes them useful as storage devices and being part of the
-memory space allows the backing storage to be exposed to userspace via
-mmap() provided the kernel supports it. The mmap() trick is enabled by
-the kernel supporting "direct access" aka DAX.
-
-With that out of the way...
-
-On Tue, Jun 27, 2017 at 8:43 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi,
->
-> On Tue, Jun 27, 2017 at 08:28:49PM +1000, Oliver O'Halloran wrote:
->> A fairly bare-bones set of device-tree bindings so libnvdimm can be used
->> on powerpc and other, less cool, device-tree based platforms.
->
-> ;)
->
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+在 2017/6/24 0:22, Florian Fainelli 写道:
+> On 06/22/2017 09:59 PM, David Wu wrote:
+>> To make internal phy worked, need to configure the phy_clock,
+>> phy cru_reset and related registers.
+>>
+>> Change-Id: I6971c0a769754b824b1b908b56080cbaf7867d13
+>> Signed-off-by: David Wu <david.wu@rock-chips.com>
 >> ---
->> The current bindings are essentially this:
+>>   .../devicetree/bindings/net/rockchip-dwmac.txt     |  3 +
+>>   drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 82 ++++++++++++++++++++++
+>>   2 files changed, 85 insertions(+)
 >>
->> nonvolatile-memory {
->>       compatible = "nonvolatile-memory", "special-memory";
->>       ranges;
+>> diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+>> index 8f42755..0514f69 100644
+>> --- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+>> @@ -22,6 +22,7 @@ Required properties:
+>>   	   <&cru SCLK_MACREF_OUT> clock gate for RMII reference clock output
+>>   	   <&cru ACLK_GMAC>: AXI clock gate for GMAC
+>>   	   <&cru PCLK_GMAC>: APB clock gate for GMAC
+>> +	   <&cru MAC_PHY>: clock for internal macphy
+>>    - clock-names: One name for each entry in the clocks property.
+>>    - phy-mode: See ethernet.txt file in the same directory.
+>>    - pinctrl-names: Names corresponding to the numbered pinctrl states.
+>> @@ -35,6 +36,8 @@ Required properties:
+>>    - assigned-clocks: main clock, should be <&cru SCLK_MAC>;
+>>    - assigned-clock-parents = parent of main clock.
+>>      can be <&ext_gmac> or <&cru SCLK_MAC_PLL>.
+>> + - phy-type: For internal phy, it must be "internal"; For external phy, no need
+>> +   to configure this.
+> 
+> Use the standard "phy-mode" property. You will see
+> drivers/net/ethernet/broadcom/genet/ actually define a phy-mode =
+> "internal" property specifically for that. This should probably be
+> generalized so it is useful to other drivers a well, I will do just that.
+> 
+
+I'm a little confused for the property of phy-mode = "internal".
+If the property of phy-mode is configured as "internal" from DT , i 
+could not get the rmii or rgmii mode for the phy.
+I use it to differentiate rmii or rgmii for different configuration.
+
+>>   
+>>   Optional properties:
+>>    - tx_delay: Delay value for TXD timing. Range value is 0~0x7F, 0x30 as default.
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+>> index a8e8fd5..c1a1413 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+>> @@ -41,6 +41,7 @@ struct rk_gmac_ops {
+>>   	void (*set_to_rmii)(struct rk_priv_data *bsp_priv);
+>>   	void (*set_rgmii_speed)(struct rk_priv_data *bsp_priv, int speed);
+>>   	void (*set_rmii_speed)(struct rk_priv_data *bsp_priv, int speed);
+>> +	void (*internal_phy_powerup)(struct rk_priv_data *bsp_priv);
+>>   };
+>>   
+>>   struct rk_priv_data {
+>> @@ -52,6 +53,7 @@ struct rk_priv_data {
+>>   
+>>   	bool clk_enabled;
+>>   	bool clock_input;
+>> +	bool internal_phy;
+>>   
+>>   	struct clk *clk_mac;
+>>   	struct clk *gmac_clkin;
+>> @@ -61,6 +63,9 @@ struct rk_priv_data {
+>>   	struct clk *clk_mac_refout;
+>>   	struct clk *aclk_mac;
+>>   	struct clk *pclk_mac;
+>> +	struct clk *clk_macphy;
+>> +
+>> +	struct reset_control *macphy_reset;
+>>   
+>>   	int tx_delay;
+>>   	int rx_delay;
+>> @@ -750,6 +755,48 @@ static void rk3399_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+>>   	.set_rmii_speed = rk3399_set_rmii_speed,
+>>   };
+>>   
+>> +#define RK_GRF_MACPHY_CON0		0xb00
+>> +#define RK_GRF_MACPHY_CON1		0xb04
+>> +#define RK_GRF_MACPHY_CON2		0xb08
+>> +#define RK_GRF_MACPHY_CON3		0xb0c
+>> +
+>> +#define RK_MACPHY_ENABLE		GRF_BIT(0)
+>> +#define RK_MACPHY_DISABLE		GRF_CLR_BIT(0)
+>> +#define RK_MACPHY_CFG_CLK_50M		GRF_BIT(14)
+>> +#define RK_GMAC2PHY_RMII_MODE		(GRF_BIT(6) | GRF_CLR_BIT(7))
+>> +#define RK_GRF_CON2_MACPHY_ID		HIWORD_UPDATE(0x1234, 0xffff, 0)
+>> +#define RK_GRF_CON3_MACPHY_ID		HIWORD_UPDATE(0x35, 0x3f, 0)
+>> +
+>> +static void rk_gmac_internal_phy_powerup(struct rk_priv_data *priv)
+>> +{
+>> +	if (priv->ops->internal_phy_powerup)
+>> +		priv->ops->internal_phy_powerup(priv);
+>> +
+>> +	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_CFG_CLK_50M);
+>> +	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_GMAC2PHY_RMII_MODE);
+>> +
+>> +	regmap_write(priv->grf, RK_GRF_MACPHY_CON2, RK_GRF_CON2_MACPHY_ID);
+>> +	regmap_write(priv->grf, RK_GRF_MACPHY_CON3, RK_GRF_CON3_MACPHY_ID);
+>> +
+>> +	/* disable macphy, the default value is enabled */
+>> +	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_DISABLE);
+>> +	if (priv->macphy_reset)
+>> +		reset_control_assert(priv->macphy_reset);
+>> +	usleep_range(10, 20);
+>> +	if (priv->macphy_reset)
+>> +		reset_control_deassert(priv->macphy_reset);
+>> +	usleep_range(10, 20);
+>> +	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_ENABLE);
+>> +	msleep(30);
+>> +}
+>> +
+>> +static void rk_gmac_internal_phy_powerdown(struct rk_priv_data *priv)
+>> +{
+>> +	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_DISABLE);
+>> +	if (priv->macphy_reset)
+>> +		reset_control_assert(priv->macphy_reset);
+>> +}
+>> +
+>>   static int gmac_clk_init(struct rk_priv_data *bsp_priv)
+>>   {
+>>   	struct device *dev = &bsp_priv->pdev->dev;
+>> @@ -803,6 +850,14 @@ static int gmac_clk_init(struct rk_priv_data *bsp_priv)
+>>   			clk_set_rate(bsp_priv->clk_mac, 50000000);
+>>   	}
+>>   
+>> +	if (bsp_priv->internal_phy) {
+>> +		bsp_priv->clk_macphy = devm_clk_get(dev, "clk_macphy");
+>> +		if (IS_ERR(bsp_priv->clk_macphy))
+>> +			dev_err(dev, "cannot get %s clock\n", "clk_macphy");
+>> +		else
+>> +			clk_set_rate(bsp_priv->clk_macphy, 50000000);
+>> +	}
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -826,6 +881,9 @@ static int gmac_clk_enable(struct rk_priv_data *bsp_priv, bool enable)
+>>   						bsp_priv->clk_mac_refout);
+>>   			}
+>>   
+>> +			if (!IS_ERR(bsp_priv->clk_macphy))
+>> +				clk_prepare_enable(bsp_priv->clk_macphy);
+>> +
+>>   			if (!IS_ERR(bsp_priv->aclk_mac))
+>>   				clk_prepare_enable(bsp_priv->aclk_mac);
+>>   
+>> @@ -858,6 +916,9 @@ static int gmac_clk_enable(struct rk_priv_data *bsp_priv, bool enable)
+>>   						bsp_priv->clk_mac_refout);
+>>   			}
+>>   
+>> +			if (!IS_ERR(bsp_priv->clk_macphy))
+>> +				clk_disable_unprepare(bsp_priv->clk_macphy);
+>> +
+>>   			if (!IS_ERR(bsp_priv->aclk_mac))
+>>   				clk_disable_unprepare(bsp_priv->aclk_mac);
+>>   
+>> @@ -940,6 +1001,21 @@ static struct rk_priv_data *rk_gmac_setup(struct platform_device *pdev,
+>>   			bsp_priv->clock_input = false;
+>>   	}
+>>   
+>> +	ret = of_property_read_string(dev->of_node, "phy-type", &strings);
+>> +	if (!ret && !strcmp(strings, "internal")) {
+>> +		bsp_priv->internal_phy = true;
+>> +		bsp_priv->macphy_reset = devm_reset_control_get(dev,
+>> +				  "mac-phy");
+>> +		if (IS_ERR(bsp_priv->macphy_reset)) {
+>> +			dev_info(dev, "no macphy_reset control found\n");
+>> +			bsp_priv->macphy_reset = NULL;
+>> +		}
+>> +	} else {
+>> +		bsp_priv->internal_phy = false;
+>> +	}
+>> +	dev_info(dev, "internal PHY? (%s).\n",
+>> +		 bsp_priv->internal_phy ? "yes" : "no");
+>> +
+>>   	ret = of_property_read_u32(dev->of_node, "tx_delay", &value);
+>>   	if (ret) {
+>>   		bsp_priv->tx_delay = 0x30;
+>> @@ -1014,6 +1090,9 @@ static int rk_gmac_powerup(struct rk_priv_data *bsp_priv)
+>>   	pm_runtime_enable(dev);
+>>   	pm_runtime_get_sync(dev);
+>>   
+>> +	if (bsp_priv->internal_phy)
+>> +		rk_gmac_internal_phy_powerup(bsp_priv);
+>> +
+>>   	return 0;
+>>   }
+>>   
+>> @@ -1021,6 +1100,9 @@ static void rk_gmac_powerdown(struct rk_priv_data *gmac)
+>>   {
+>>   	struct device *dev = &gmac->pdev->dev;
+>>   
+>> +	if (gmac->internal_phy)
+>> +		rk_gmac_internal_phy_powerdown(gmac);
+>> +
+>>   	pm_runtime_put_sync(dev);
+>>   	pm_runtime_disable(dev);
+>>   
 >>
->>       region@0 {
->>               compatible = "nvdimm,byte-addressable";
->>               reg = <0x0 0x1000>;
->>       };
->>
->>       region@1000 {
->>               compatible = "nvdimm,byte-addressable";
->>               reg = <0x1000 0x1000>;
->>       };
->> };
->
-> This needs to have a proper binding document under
-> Documentation/devicetree/bindings/. Something like the reserved-memory
-> bdings would be a good template.
->
-> If we want thet "nvdimm" vendor-prefix, that'll have to be reserved,
-> too (see Documentation/devicetree/bindings/vendor-prefixes.txt).
-
-It's on my TODO list, I just wanted to get some comments on the
-overall approach before doing the rest of the grunt work.
-
->
-> What is "special-memory"? What other memory types would be described
-> here?
->
-> What exacctly does "nvdimm,byte-addressable" imply? I suspect that you
-> also expect such memory to be compatible with mappings using (some)
-> cacheable attributes?
-
-I think it's always been assumed that nvdimm memory can be treated as
-cacheable system memory for all intents and purposes. It might be
-useful to be able to override it on a per-bus or per-region basis
-though.
-
->
-> Perhaps the byte-addressable property should be a boolean property on
-> the region, rather than part of the compatible string.
-See below.
-
->> To handle interleave sets, etc the plan was the add an extra property with the
->> interleave stride and a "mapping" property with <&DIMM, dimm-start-offset>
->> tuples for each dimm in the interleave set. Block MMIO regions can be added
->> with a different compatible type, but I'm not too concerned with them for
->> now.
->
-> Sorry, I'm not too familiar with nonvolatile memory. What are interleave
-> sets?
-
-An interleave set refers to a group of DIMMs which share a physical
-address range. The addresses in the range are assigned to different
-backing DIMMs to improve performance. E.g
-
-Addr 0 to Addr 127 are on DIMM0, Addr 127 to 255 are on DIMM1, Addr
-256 to 384 are on DIMM0, etc, etc
-
-software needs to be aware of the interleave pattern so it can
-localise memory errors to a specific DIMM.
-
->
-> What are block MMIO regions?
-
-NVDIMMs come in two flavours: byte addressable and block aperture. The
-byte addressable type can be treated as conventional memory while the
-block aperture type are essentially an MMIO block device. Their
-contents are accessed via the MMIO window rather than being presented
-to the system as RAM so they don't have any of the features that make
-NVDIMMs interesting. It would be nice if we could punt them into a
-different driver, unfortunately ACPI allows storage on one DIMM to be
-partitioned into byte addressable and block regions and libnvdimm
-provides the management interface for both. Dan Williams, who
-maintains libnvdimm and the ACPI interface to it, would be a better
-person to ask about the finer details.
-
->
-> Is there any documentation one can refer to for any of this?
-
-Documentation/nvdimm/nvdimm.txt has a fairly detailed overview of how
-libnvdimm operates. The short version is that libnvdimm provides a
-"nvdimm_bus" container for "regions" and "dimms." Regions are chunks
-of memory and come in the block or byte types mentioned above, while
-DIMMs refer to the physical devices. A firmware specific driver
-converts the firmware's hardware description into a set of DIMMs, a
-set of regions, and a set of relationships between the two.
-
-On top of that, regions are partitioned into "namespaces" which are
-then exported to userspace as either a block device (with PAGE_SIZE
-blocks) or as a "DAX device." In the block device case a filesystem is
-used to manage the storage and provided the filesystem supports FS_DAX
-and is mounted with -o dax, mmap() calls will map the backing memory
-directly rather than buffering IO in the page cache. DAX devices can
-be mmap()ed to access the backing storage directly so all the
-management issues can be punted to userspace.
-
->
-> [...]
->
->> +static const struct of_device_id of_nvdimm_bus_match[] = {
->> +     { .compatible = "nonvolatile-memory" },
->> +     { .compatible = "special-memory" },
->> +     { },
->> +};
->
-> Why both? Is the driver handling other "special-memory"?
-
-This is one of the things I was hoping the community could help
-decide. "nonvolatile-memory" is probably a more accurate description
-of the for the current usage, but the functionality does have other
-uses. The interface might be useful for exposing any kind memory with
-special characteristics, like high-bandwidth memory or memory on a
-coherent accelerator.
-
-Thanks,
-Oliver
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
