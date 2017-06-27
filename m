@@ -1,37 +1,258 @@
-From: "David.Wu" <david.wu@rock-chips.com>
-Subject: Re: [PATCH 01/11] net: phy: Add rockchip phy driver support
-Date: Tue, 27 Jun 2017 23:07:28 +0800
-Message-ID: <5839f1df-a2b4-4856-0ccd-5535c6035897@rock-chips.com>
-References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com>
- <1498192929-7519-2-git-send-email-david.wu@rock-chips.com>
- <20170624021910.GB4875@lunn.ch>
- <38394157-adae-3476-55f3-ab5838744033@rock-chips.com>
- <20170627144649.GD9921@lunn.ch>
+From: matthew.gerlach@linux.intel.com
+Subject: Re: [PATCH 3/3] mtd: spi-nor: Altera Quadspi Flash Controller v2
+ Platform driver
+Date: Tue, 27 Jun 2017 08:15:48 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1706270800240.8058@mgerlach-VirtualBox>
+References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
+ <1498493619-4633-4-git-send-email-matthew.gerlach@linux.intel.com>
+ <2ac33989-5665-33e0-c6f0-6791c8e46b0d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170627144649.GD9921@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: davem@davemloft.net, heiko@sntech.de, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, olof@lixom.net, linux@armlinux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, huangtao@rock-chips.com, hwg@rock-chips.com, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <2ac33989-5665-33e0-c6f0-6791c8e46b0d@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Marek Vasut <marek.vasut@gmail.com>
+Cc: vndao@altera.com, boris.brezillon@free-electrons.com, mchehab@kernel.org, devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, computersforpeace@gmail.com, dwmw2@infradead.org, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
 
-ÔÚ 2017/6/27 22:46, Andrew Lunn Ð´µÀ:
->> it has been licensed from somebody.
-> 
-> And does that somebody already have a driver for it? There is no point
-> adding a driver, if all you need to do is add the ID to another
-> driver.
-> 
 
-I didn't find it.
-Maybe use the same, but the configuration is different.
-But this may also be possible, upstream with a new driver.
+On Tue, 27 Jun 2017, Marek Vasut wrote:
 
-> 	Andrew
-> 
-> 
-> 
+> On 06/26/2017 06:13 PM, matthew.gerlach@linux.intel.com wrote:
+>> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>
+> Just wrap it into the Altera QSPI driver , no need for separate platform
+> driver IMO.
+
+Hi Marek,
+
+I answered this question when you asked why the header file was necessary, 
+but I think further discussion could be helpful, since this problem is 
+becoming more prevelent.  The Altera Quadspi component is a soft IP in a
+FPGA, and the processor using the component may or may not have device 
+tree support compiled into the Linux kernel.  Since device tree support 
+may or may not be available, the device tree specific code must be separated
+from the core driver code.
+
+One can certainly make the case, that device tree support could/should
+be available everywhere, but the current reality is most x86 Linux
+kernel configurations do not include device tree support.
+
+For the record, I believe device trees, and more specifically device tree 
+overlays, are the best way for Linux to use FPGAs, but I have to deal with 
+the current realities.
+
+Thanks again for all the great feedback.
+
+Matthew Gerlach
+
+>
+>> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>> ---
+>>  MAINTAINERS                                   |   1 +
+>>  drivers/mtd/spi-nor/Kconfig                   |   5 +
+>>  drivers/mtd/spi-nor/Makefile                  |   1 +
+>>  drivers/mtd/spi-nor/altera-quadspi-platform.c | 137 ++++++++++++++++++++++++++
+>>  4 files changed, 144 insertions(+)
+>>  create mode 100644 drivers/mtd/spi-nor/altera-quadspi-platform.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index ae33fa6..c32bb98 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -653,6 +653,7 @@ M:	Matthew Gerlach <matthew.gerlach@linux.intel.com>
+>>  L:	linux-mtd@lists.infradead.org
+>>  S:	Maintained
+>>  F:	drivers/mtd/spi-nor/altera-quadspi.c
+>> +F:	drivers/mtd/spi-nor/altera-quadspi-platform.c
+>>  F:	inclulde/linux/mtd/altera-quadspi.h
+>>
+>>  ALTERA SYSTEM RESOURCE DRIVER FOR ARRIA10 DEVKIT
+>> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
+>> index 89fe425..f3d5c01 100644
+>> --- a/drivers/mtd/spi-nor/Kconfig
+>> +++ b/drivers/mtd/spi-nor/Kconfig
+>> @@ -118,4 +118,9 @@ config SPI_ALTERA_QUADSPI
+>>          help
+>>            Enable support for version 2 of Altera Quad SPI Flash Controller.
+>>
+>> +config SPI_ALTERA_QUADSPI_PLATFORM
+>> +	tristate "Platform support for Altera Quad SPI Flash Controller II"
+>> +	help
+>> +	  Platform driver support for  Altera Quad SPI Flash Controller II"
+>> +
+>>  endif # MTD_SPI_NOR
+>> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
+>> index 024c6ac..042f87e 100644
+>> --- a/drivers/mtd/spi-nor/Makefile
+>> +++ b/drivers/mtd/spi-nor/Makefile
+>> @@ -10,4 +10,5 @@ obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
+>>  obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
+>>  obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
+>>  obj-$(CONFIG_SPI_ALTERA_QUADSPI) += altera-quadspi.o
+>> +obj-$(CONFIG_SPI_ALTERA_QUADSPI_PLATFORM) += altera-quadspi-platform.o
+>>
+>> diff --git a/drivers/mtd/spi-nor/altera-quadspi-platform.c b/drivers/mtd/spi-nor/altera-quadspi-platform.c
+>> new file mode 100644
+>> index 0000000..c8d2a47
+>> --- /dev/null
+>> +++ b/drivers/mtd/spi-nor/altera-quadspi-platform.c
+>> @@ -0,0 +1,137 @@
+>> +/*
+>> + * Copyright (C) 2014 Altera Corporation. All rights reserved.
+>> + * Copyright (C) 2017 Intel Corporation. All rights reserved.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify it
+>> + * under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * You should have received a copy of the GNU General Public License along with
+>> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/mtd/altera-quadspi.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_device.h>
+>> +
+>> +static int altera_quadspi_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct resource *res;
+>> +	void __iomem *csr_base;
+>> +	void __iomem *data_base;
+>> +	void __iomem *window_base = NULL;
+>> +	u32 window_size = 0;
+>> +	u32 flags = 0;
+>> +	u32 bank;
+>> +	int ret;
+>> +	struct device_node *pp;
+>> +
+>> +	if (!np) {
+>> +		dev_err(dev, "no device found\n");
+>> +		return -ENODEV;
+>> +	}
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "avl_csr");
+>> +	csr_base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(csr_base)) {
+>> +		dev_err(dev, "%s: ERROR: failed to map csr base\n", __func__);
+>> +		return PTR_ERR(csr_base);
+>> +	}
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "avl_mem");
+>> +	data_base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (IS_ERR(data_base)) {
+>> +		dev_err(dev, "%s: ERROR: failed to map data base\n", __func__);
+>> +		return PTR_ERR(data_base);
+>> +	}
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "avl_window");
+>> +	if (res) {
+>> +		window_base = NULL;
+>> +		window_base = devm_ioremap_resource(dev, res);
+>> +		if (IS_ERR(window_base)) {
+>> +			dev_err(dev, "%s: ERROR: failed to map window base\n",
+>> +				__func__);
+>> +			return PTR_ERR(data_base);
+>> +		}
+>> +
+>> +		of_property_read_u32(dev->of_node, "window-size", &window_size);
+>> +
+>> +		if (!window_size) {
+>> +			dev_err(dev,
+>> +				"alv_window defined, %s",
+>> +				"but no window-size defined\n");
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	if (of_property_read_bool(np, "read-bit-reverse"))
+>> +		flags |= ALTERA_QUADSPI_FL_BITREV_READ;
+>> +
+>> +	if (of_property_read_bool(np, "write-bit-reverse"))
+>> +		flags |= ALTERA_QUADSPI_FL_BITREV_WRITE;
+>> +
+>> +	ret = altera_quadspi_create(dev, csr_base, data_base,
+>> +				    window_base, (size_t)window_size, flags);
+>> +
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to create qspi device\n");
+>> +		return ret;
+>> +	}
+>> +
+>> +	for_each_available_child_of_node(np, pp) {
+>> +		of_property_read_u32(pp, "reg", &bank);
+>> +		if (bank >= ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP) {
+>> +			dev_err(dev, "bad reg value %u >= %u\n", bank,
+>> +				ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP);
+>> +			goto error;
+>> +		}
+>> +
+>> +		if (altera_qspi_add_bank(dev, bank, pp)) {
+>> +			dev_err(dev, "failed to add bank %u\n", bank);
+>> +			goto error;
+>> +		}
+>> +	}
+>> +
+>> +	return 0;
+>> +error:
+>> +	altera_quadspi_remove_banks(dev);
+>> +	return -EIO;
+>> +}
+>> +
+>> +static int altera_quadspi_remove(struct platform_device *pdev)
+>> +{
+>> +	return altera_quadspi_remove_banks(&pdev->dev);
+>> +}
+>> +
+>> +static const struct of_device_id altera_quadspi_id_table[] = {
+>> +
+>> +	{ .compatible = "altr,quadspi-v2",},
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, altera_quadspi_id_table);
+>> +
+>> +static struct platform_driver altera_quadspi_driver = {
+>> +	.driver = {
+>> +		.name = "altera_quadspi_platform",
+>> +		.of_match_table = altera_quadspi_id_table,
+>> +	},
+>> +	.probe = altera_quadspi_probe,
+>> +	.remove = altera_quadspi_remove,
+>> +};
+>> +module_platform_driver(altera_quadspi_driver);
+>> +
+>> +MODULE_AUTHOR("Viet Nga Dao <vndao@altera.com>");
+>> +MODULE_AUTHOR("Yong Sern Lau <lau.yong.sern@intel.com>");
+>> +MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach@linux.intel.com>");
+>> +MODULE_DESCRIPTION("Altera QuadSPI Version 2 Platform Driver");
+>> +MODULE_LICENSE("GPL v2");
+>>
+>
+>
+> -- 
+> Best regards,
+> Marek Vasut
+>
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
