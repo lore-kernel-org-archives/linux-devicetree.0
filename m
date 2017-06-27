@@ -1,61 +1,139 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/4] misc: sram: Allow ARM64 to select SRAM_EXEC
-Date: Tue, 27 Jun 2017 18:38:59 +0100
-Message-ID: <20170627173859.GA5189@leverpostej>
-References: <20170626223248.14199-1-f.fainelli@gmail.com>
- <20170626223248.14199-3-f.fainelli@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v1 0/3] Introduce on-chip interconnect API
+Date: Tue, 27 Jun 2017 20:49:00 +0300
+Message-ID: <20170627174903.27978-1-georgi.djakov@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170626223248.14199-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, lorenzo.pieralisi@arm.com
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Hauke Mehrtens <hauke@hauke-m.de>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Ralf Baechle <ralf@linux-mips.org>, Markus Mayer <mmayer@broadcom.com>, Arnd Bergmann <arnd@arndb.de>, Eric Anholt <eric@anholt.net>, Justin Chen <justinpopo6@gmail.com>, Doug Berger <opendmb@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:BROADCOM BCM47XX MIPS ARCHITECTURE" <linux-mips@linux-mips.org>, linux-pm@vger
+To: linux-pm@vger.kernel.org, rjw@rjwysocki.net
+Cc: robh+dt@kernel.org, khilman@baylibre.com, mturquette@baylibre.com, gregkh@linuxfoundation.org, vincent.guittot@linaro.org, skannan@codeaurora.org, sboyd@codeaurora.org, andy.gross@linaro.org, seansw@qti.qualcomm.com, davidai@quicinc.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 03:32:42PM -0700, Florian Fainelli wrote:
-> Now that ARM64 also has a fncpy() implementation, allow selection
-> SRAM_EXEC for ARM64 as well.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Modern SoCs have multiple processors and various dedicated cores (video, gpu,
+graphics, modem). These cores are talking to each other and can generate a lot
+of data flowing through the on-chip interconnects. These interconnect buses
+could form different topologies such as crossbar, point to point buses,
+hierarchical buses or use the network-on-chip concept.
 
-Sorr,y but I must NAK this patch.
+These buses have been sized usually to handle use cases with high data
+throughput but it is not necessary all the time and consume a lot of power.
+Furthermore, the priority between masters can vary depending on the running
+use case like video playback or cpu intensive tasks.
 
-As mentioned on prior threads regarding fncpy, I do not think it makes
-sense to enable this for arm64. The only use-cases that have been
-described so far for this are power-management stuff that should live in
-PSCI or other secure FW, and have no place in the kernel on arm64.
+Having an API to control the requirement of the system in term of bandwidth
+and QoS, so we can adapt the interconnect configuration to match those by
+scaling the frequencies, setting link priority and tuning QoS parameters.
+This configuration can be a static, one-time operation done at boot for some
+platforms or a dynamic set of operations that happen at run-time.
 
-There are no other users of this functionality, and until there are, I
-see no reason to enable this, and risk a proliferation of unnecessary
-platform-specific code.
+This patchset introduce a new API to get the requirement and configure the
+interconnect buses across the entire chipset to fit with the current demand.
+The API is NOT for changing the performance of the endpoint devices, but only
+the interconnect path in between them.
 
-It should be possible to #ifdef-ise the relevant callers of this such
-that they can be built on arm64 without using fncpy or sram_exec
-functionality. AFAICT, there are no users on arm64 introduced by this
-series.
+The API is using a consumer/provider-based model, where the providers are
+the interconnect controllers and the consumers could be various drivers.
+The consumers request interconnect resources (path) to an endpoint and set
+the desired constraints on this data flow path. The provider(s) receive
+requests from consumers and aggregate these requests for all master-slave
+pairs on that path. Then the providers configure each participating in the
+topology node according to the requested data flow path, physical links and
+constraints. The topology could be complicated and multi-tiered and is SoC
+specific.
 
-Thanks,
-Mark.
+Below is a simplified diagram of a real-world SoC topology. The interconnect
+providers are the memory front-end and the NoCs.
 
-> ---
->  drivers/misc/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 07bbd4cc1852..ac8779278c0c 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -464,7 +464,7 @@ config SRAM
->  	bool "Generic on-chip SRAM driver"
->  	depends on HAS_IOMEM
->  	select GENERIC_ALLOCATOR
-> -	select SRAM_EXEC if ARM
-> +	select SRAM_EXEC if ARM || ARM64
->  	help
->  	  This driver allows you to declare a memory region to be managed by
->  	  the genalloc API. It is supposed to be used for small on-chip SRAM
-> -- 
-> 2.9.3
-> 
++----------------+    +----------------+
+| HW Accelerator |--->|      M NoC     |<---------------+
++----------------+    +----------------+                |
+                        |      |                    +------------+
+          +-------------+      V       +------+     |            |
+          |                +--------+  | PCIe |     |            |
+          |                | Slaves |  +------+     |            |
+          |                +--------+     |         |   C NoC    |
+          V                               V         |            |
++------------------+   +------------------------+   |            |   +-----+
+|                  |-->|                        |-->|            |-->| CPU |
+|                  |-->|                        |<--|            |   +-----+
+|      Memory      |   |         S NoC          |   +------------+
+|                  |<--|                        |---------+    |
+|                  |<--|                        |<------+ |    |   +--------+
++------------------+   +------------------------+       | |    +-->| Slaves |
+   ^     ^    ^           ^                             | |        +--------+
+   |     |    |           |                             | V
++-----+  |  +-----+    +-----+  +---------+   +----------------+   +--------+
+| CPU |  |  | GPU |    | DSP |  | Masters |-->|       P NoC    |-->| Slaves |
++-----+  |  +-----+    +-----+  +---------+   +----------------+   +--------+
+         |
+     +-------+
+     | Modem |
+     +-------+
+
+This RFC does not implement all features but only main skeleton to check the
+validity of the proposal.
+
+TODO:
+ * Constraints are currently stored in internal data structure. Should PM QoS
+ be used instead?
+ * Extend interconect_set() to handle parameters such as latency and other QoS
+   values.
+ * Cache the path between the nodes instead of walking the graph on each get().
+ * Sync interconnect requests with the idle state of the device.
+
+Summary of the patches:
+Patch 1 introduces the interconnect API.
+Patch 2 creates the first vendor specific interconnect controller driver.
+Patch 3 is a proposal for DT bindings
+
+Changes since RFC v2 (https://lkml.org/lkml/2017/6/12/316)
+* Converted documentation to rst format.
+* Fixed an incorrect call to mutex_lock. Renamed max_bw to peak_bw.
+
+Changes since RFC v1 (https://lkml.org/lkml/2017/5/15/605)
+* Refactored code into shorter functions.
+* Added a new aggregate() API function.
+* Rearranged some structs to reduce padding bytes.
+
+Changes since RFC v0 (https://lkml.org/lkml/2017/3/1/599)
+* Removed DT support and added optional Patch 3 with new bindings proposal.
+* Converted the topology into internal driver data.
+* Made the framework modular.
+* interconnect_get() now takes (src and dst ports as arguments).
+* Removed public declarations of some structs.
+* Now passing prev/next nodes to the vendor driver.
+* Properly remove requests on _put().
+* Added refcounting.
+* Updated documentation.
+* Changed struct interconnect_path to use array instead of linked list.
+
+
+Georgi Djakov (3):
+  interconnect: Add generic interconnect controller API
+  interconnect: Add Qualcomm msm8916 interconnect provider driver
+  dt-bindings: Interconnect device-tree bindings draft
+
+ .../bindings/interconnect/interconnect.txt         |  75 ++++
+ Documentation/interconnect/interconnect.rst        |  71 ++++
+ drivers/Kconfig                                    |   2 +
+ drivers/Makefile                                   |   1 +
+ drivers/interconnect/Kconfig                       |  15 +
+ drivers/interconnect/Makefile                      |   2 +
+ drivers/interconnect/interconnect.c                | 376 ++++++++++++++++++
+ drivers/interconnect/qcom/Kconfig                  |  12 +
+ drivers/interconnect/qcom/Makefile                 |   2 +
+ drivers/interconnect/qcom/interconnect_msm8916.c   | 421 +++++++++++++++++++++
+ include/dt-bindings/interconnect/qcom,msm8916.h    |  87 +++++
+ include/linux/interconnect-consumer.h              |  72 ++++
+ include/linux/interconnect-provider.h              | 120 ++++++
+ 13 files changed, 1256 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
+ create mode 100644 Documentation/interconnect/interconnect.rst
+ create mode 100644 drivers/interconnect/Kconfig
+ create mode 100644 drivers/interconnect/Makefile
+ create mode 100644 drivers/interconnect/interconnect.c
+ create mode 100644 drivers/interconnect/qcom/Kconfig
+ create mode 100644 drivers/interconnect/qcom/Makefile
+ create mode 100644 drivers/interconnect/qcom/interconnect_msm8916.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,msm8916.h
+ create mode 100644 include/linux/interconnect-consumer.h
+ create mode 100644 include/linux/interconnect-provider.h
