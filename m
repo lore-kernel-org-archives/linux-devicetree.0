@@ -1,89 +1,38 @@
-From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
-Date: Wed, 28 Jun 2017 00:57:32 +0200
-Message-ID: <e2a9df8b-00f8-ae36-f4f3-63dcc98dea50@kernel.org>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
- <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
- <64e3005d-31df-71f2-762b-2c1b1152fc2d@st.com>
- <5cd25a47-f3be-8c40-3940-29f26a245076@kernel.org>
- <39501C78-7B81-4803-94C1-25DFA06EA526@goldelico.com>
+From: Brendan Higgins <brendanhiggins-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v11 3/4] i2c: aspeed: added driver for Aspeed I2C
+Date: Tue, 27 Jun 2017 16:47:45 -0700
+Message-ID: <CAFd5g449iu6DGvMuP8-n8C6GBbr62G6_ZYS6Lh9038EB0XO9YA@mail.gmail.com>
+References: <20170620211516.13095-1-brendanhiggins@google.com>
+ <20170620211516.13095-4-brendanhiggins@google.com> <20170623184305.xqqhjgrbdmgk6lsr@ninjato>
+ <CAFd5g45=O2_MgfZEkmbY-=ZZY+izxeWSuhZT+B2e08P=O+WEog@mail.gmail.com> <20170627090042.GA2408@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <39501C78-7B81-4803-94C1-25DFA06EA526-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20170627090042.GA2408@katana>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
-Cc: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S . Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OpenBMC Maillist <openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2017 07:48 AM, H. Nikolaus Schaller wrote:
->> Am 26.06.2017 um 22:04 schrieb Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+On Tue, Jun 27, 2017 at 2:00 AM, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org> wrote:
+>
+>> > If SCL is stuck low, how do you want to send a STOP?
+>> >
 >>
->> On 06/26/2017 12:35 PM, Hugues FRUCHET wrote:
->>>> What I am missing to support the GTA04 camera is the control of the optional "vana-supply".
->>>> So the driver does not power up the camera module when needed and therefore probing fails.
->>>>
->>>>     - vana-supply: a regulator to power up the camera module.
->>>>
->>>> Driver code is not complex to add:
->>
->>> Yes, I saw it in your code, but as I don't have any programmable power
->>> supply on my setup, I have not pushed this commit.
->>
->> Since you are about to add voltage supplies to the DT binding I'd suggest
->> to include all three voltage supplies of the sensor chip. Looking at the OV9650
->> and the OV9655 datasheet there are following names used for the voltage supply
->> pins:
->>
->> AVDD - Analog power supply,
->> DVDD - Power supply for digital core logic,
->> DOVDD - Digital power supply for I/O.
-> 
-> The latter two are usually not independently switchable from the SoC power
-> the module is connected to.
-> 
-> And sometimes DVDD and DOVDD are connected together.
-> 
-> So the driver can't make much use of knowing or requesting them because the
-> 1.8V supply is always active, even during suspend.
-> 
->>
->> I doubt the sensor can work without any of these voltage supplies, thus
->> regulator_get_optional() should not be used. I would just use the regulator
->> bulk API to handle all three power supplies.
-> 
-> The digital part works with AVDD turned off. So the LDO supplying AVDD should
-> be switchable to save power (&vaux3 on the GTA04 device).>
-> But not all designs can switch it off. Hence the idea to define it as an
-> /optional/ regulator. If it is not defined by DT, the driver simply assumes
-> it is always powered on.
+>> Fair point. I should probably drop that in the future and just do a
+>> reset, and even then, doing a
+>> reset is probably just wishful thinking. If a slave is holding down
+>> SCL, we are pretty screwed.
+>
+> Yes, you'd need to reset the client device. And that has to be done in
+> the client driver. I wonder if i2c_transfer and friends should return a
+> specific error value in that case... need to think about it.
+>
 
-I didn't say we can't define regulator supply properties as optional in the DT 
-binding.  If we define them as such and any of these *-supply properties is 
-missing in DT with regulator_get() the regulator core will use dummy regulator 
-for that particular voltage supply.  While with regulator_get_optional() 
--ENODEV is returned when the regulator cannot be found. 
-
-> So in summary we only need AVDD switched for the GTA04 - but it does not
-> matter if the others are optional properties. We would not use them.
-> 
-> It does matter if they are mandatory because it adds DT complexity (size
-> and processing) without added function.
- 
-We should not be defining DT binding only with selected use cases/board
-designs in mind.  IMO all three voltage supplies should be listed in the
-binding, presumably all can be made optional, with an assumption that when
-the property is missing selected pin is hooked up to a fixed regulator.
-
---
-Thanks,
-Sylwester
-
-
-
+Well, a good first step would be to make my recovery code conform to
+the struct i2c_bus_recovery_info. Is i2c_generic_scl_recovery supposed
+to be part of the user interface, or is it just intended to help put the
+main recovery function together?
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
