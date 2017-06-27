@@ -1,80 +1,201 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: rockchip: fix typo in mmc pinctrl
-Date: Tue, 27 Jun 2017 21:28:56 +0200
-Message-ID: <1623992.6iPIWFxdC5@diego>
-References: <20170627061904.12128-1-klaus.goger@theobroma-systems.com>
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: Re: [PATCH 1/3] ARM: dts: Bindings for Altera Quadspi Controller
+ Version 2
+Date: Tue, 27 Jun 2017 12:32:26 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1706271226100.8058@mgerlach-VirtualBox>
+References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com> <1498493619-4633-2-git-send-email-matthew.gerlach@linux.intel.com> <0bfc282d-2aec-8f36-1528-312f7ded8d9c@gmail.com> <alpine.DEB.2.20.1706270722440.8058@mgerlach-VirtualBox>
+ <0ca53c35-732c-a122-8191-6d102e824d52@gmail.com> <alpine.DEB.2.20.1706270833100.8058@mgerlach-VirtualBox> <a7e3bb21-6e05-4117-0a25-8782a75b93ad@gmail.com> <alpine.DEB.2.20.1706271004460.8058@mgerlach-VirtualBox>
+ <510a1968-3e5c-8621-a2f1-116cfe8f6eac@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170627061904.12128-1-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+In-Reply-To: <510a1968-3e5c-8621-a2f1-116cfe8f6eac-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, 27. Juni 2017, 08:19:03 CEST schrieb Klaus Goger:
-> replace all occurrences of sdmcc with sdmmc in the rockchip devicetree
-> files.
-> 
-> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> ---
-> 
->  arch/arm/boot/dts/rk3036.dtsi                | 2 +-
->  arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi | 2 +-
->  arch/arm64/boot/dts/rockchip/rk3399.dtsi     | 2 +-
-
-please split arm32/arm64 changes, as they go through different branches
-on their way to mainline.
-
-Otherwise looks good
-Heiko
-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/rk3036.dtsi b/arch/arm/boot/dts/rk3036.dtsi
-> index ec91325d3b6e..bc5942023889 100644
-> --- a/arch/arm/boot/dts/rk3036.dtsi
-> +++ b/arch/arm/boot/dts/rk3036.dtsi
-> @@ -599,7 +599,7 @@
->  				rockchip,pins = <1 15 RK_FUNC_1 &pcfg_pull_default>;
->  			};
-> 
-> -			sdmmc_cd: sdmcc-cd {
-> +			sdmmc_cd: sdmmc-cd {
->  				rockchip,pins = <1 17 RK_FUNC_1 &pcfg_pull_default>;
->  			};
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi index
-> eb5059344023..eddc6eb31286 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-gru.dtsi
-> @@ -1031,7 +1031,7 @@ ap_i2c_audio: &i2c8 {
->  		 * hurt and dw_mmc will ignore it.  We make sure to disable
->  		 * the pull though so we don't burn needless power.
->  		 */
-> -		sdmmc_cd: sdmcc-cd {
-> +		sdmmc_cd: sdmmc-cd {
->  			rockchip,pins =
->  				<0 7 RK_FUNC_1 &pcfg_pull_none>;
->  		};
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi index 69c56f7316c4..21f32c42d7db
-> 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> @@ -1786,7 +1786,7 @@
->  					<4 RK_PB5 RK_FUNC_1 &pcfg_pull_up>;
->  			};
-> 
-> -			sdmmc_cd: sdmcc-cd {
-> +			sdmmc_cd: sdmmc-cd {
->  				rockchip,pins =
->  					<0 RK_PA7 RK_FUNC_1 &pcfg_pull_up>;
->  			};
 
 
+On Tue, 27 Jun 2017, Marek Vasut wrote:
+
+> On 06/27/2017 07:18 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>
+>>
+>> On Tue, 27 Jun 2017, Marek Vasut wrote:
+>>
+>>> On 06/27/2017 05:57 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>>>
+>>>>
+>>>> On Tue, 27 Jun 2017, Marek Vasut wrote:
+>>>>
+>>>>> On 06/27/2017 04:32 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>>>>>
+>>>>>>
+>>>>>> On Tue, 27 Jun 2017, Marek Vasut wrote:
+>>>>>>
+>>>>>> Hi Marek,
+>>>>>>
+>>>>>> Thanks for the feedback.  See my comments below.
+>>>>>>
+>>>>>> Matthew Gerlach
+>>>>>>
+>>>>>>> On 06/26/2017 06:13 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>>>>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>>>>>>
+>>>>>>>> Device Tree bindings for Version 2 of the Altera Quadspi Controller
+>>>>>>>> that can be optionally paired with a windowed bridge.
+>>>>>>>>
+>>>>>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>>>>>> ---
+>>>>>>>>  .../devicetree/bindings/mtd/altera-quadspi-v2.txt  | 37
+>>>>>>>> ++++++++++++++++++++++
+>>>>>>>>  1 file changed, 37 insertions(+)
+>>>>>>>>  create mode 100644
+>>>>>>>> Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>>>>
+>>>>>>>> diff --git
+>>>>>>>> a/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>>>> b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>>>> new file mode 100644
+>>>>>>>> index 0000000..8ba63d7
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>>>> @@ -0,0 +1,37 @@
+>>>>>>>> +* Altera Quad SPI Controller Version 2
+>>>>>>>> +
+>>>>>>>> +Required properties:
+>>>>>>>> +- compatible : Should be "altr,quadspi-v2".
+>>>>>>>> +- reg : Contains at least two entries, and possibly three entries,
+>>>>>>>> each of
+>>>>>>>> +    which is a tuple consisting of a physical address and length.
+>>>>>>>> +- reg-names : Should contain the names "avl_csr" and "avl_mem"
+>>>>>>>> corresponding
+>>>>>>>> +          to the control and status registers and qspi memory,
+>>>>>>>> respectively.
+>>>>>>>> +
+>>>>>>>> +
+>>>>>>>> +The Altera Quad SPI Controller Version 2 can be paired with a
+>>>>>>>> windowed bridge
+>>>>>>>> +in order to reduce the footprint of the memory interface.  When a
+>>>>>>>> windowed
+>>>>>>>> +bridge is used, reads and writes of data must be 32 bits wide.
+>>>>>>>> +
+>>>>>>>> +Optional properties:
+>>>>>>>> +- reg-names : Should contain the name "avl_window", if the windowed
+>>>>>>>> bridge
+>>>>>>>> +          is used.  This name corresponds to the register space
+>>>>>>>> that
+>>>>>>>> +          controls the window.
+>>>>>>>> +- window-size : The size of the window which must be an even power
+>>>>>>>> of 2.
+>>>>>>>> +- read-bit-reverse : A boolean indicating the data read from the
+>>>>>>>> flash should
+>>>>>>>> +             be bit reversed on a byte by byte basis before being
+>>>>>>>> +             delivered to the MTD layer.
+>>>>>>>> +- write-bit-reverse : A boolean indicating the data written to the
+>>>>>>>> flash should
+>>>>>>>> +              be bit reversed on a byte by byte basis.
+>>>>>>>
+>>>>>>> Is there ever a usecase where you need to set just one of these
+>>>>>>> props ?
+>>>>>>> Also, they're altera specific, so altr, prefix should be added.
+>>>>>>
+>>>>>> In general, I think if bit reversal is required, it would be
+>>>>>> required in
+>>>>>> both directions.  However, anything is possible when using FPGAs.  So
+>>>>>> I thought separate booleans would be future proofing the bindings.
+>>>>>
+>>>>> Maybe we should drop this whole thing and add it when this is actually
+>>>>> required.
+>>>>>
+>>>>> Are there any users of this in the wild currently ?
+>>>>>
+>>>>> What is the purpose of doing this per-byte bit reverse instead of
+>>>>> storing th bits in the original order ?
+>>>>
+>>>> Hi Marek,
+>>>>
+>>>> Yes, there is hardware that has been in the wild for years that needs
+>>>> this bit reversal.  The specific use case is when a flash chip is
+>>>> connected to
+>>>> a FPGA, and the contents of the flash is used to configure the FPGA on
+>>>> power up.  In this use case, there is no processor involved with
+>>>> configuring the FPGA.  I am most familiar with this feature/bug with
+>>>> Altera FPGAs, but I believe this issue exists with other programmable
+>>>> devices.
+>>>
+>>> So the EPCQ/EPCS flash stores the bitstream in reverse or something ?
+>>> What are you storing in that flash except for the bitstream, filesystem?
+>>> Feel free to go into details, I believe it'd be useful to know exactly
+>>> what the problem is you're trying to solve here.
+>>
+>> Hi Marek,
+>>
+>> I am trying to write an MTD/spi-nor driver for version 2 of the
+>> Altera Quadspi contoller.  This controller is soft IP that is deployed
+>> in a FPGA.  As such, this component/driver can be used in wide range of
+>> use cases.  The controller could be used to update EPCQ/EPCS flash
+>> stores containing bit streams, but this component could be used for
+>> flash for filesystems or any non-volatile data store.  My hope is that
+>> all possible use cases should be covered by this driver.
+>
+> How does this particular case where you have to reverse the bits look like ?
+
+The use case for reversing the bits involves a processor updating 
+EPCQ/EPCS flash whose contents are read by the FPGA on power up.  The 
+processor and Altera Quadspi component, inside the configured FPGA, access 
+the bits in one way serially, but the hardware that accesses the flash 
+during power accesses the bits in the opposite way serially.
+
+>
+>>>>>> Thinking about this binding more, I wonder if the binding name(s)
+>>>>>> should be (read|write)-bit8-reverse to indicate reversings the bits
+>>>>>> in a byte as opposed to reversing the bits in a 32 bit word?
+>>>>>>
+>>>>>> I don't think bit reversal is specific to Altera/Intel components.
+>>>>>> I see
+>>>>>> a nand driver performing bit reversal, and I think I've recently seen
+>>>>>> other FPGA based drivers requiring bit reversal.
+>>>>>
+>>>>> $ git grep bit.reverse Documentation/devicetree/ | wc -l
+>>>>> 0
+>>>>>
+>>>>> So we don't have such a generic binding . It's up to Rob (I guess) to
+>>>>> decide whether this is SoC specific and should've altr, prefix or not.
+>>>>> IMO it is.
+>>>>
+>>>> I agree there is no generic binding at this time, and I look forward
+>>>> to any input from Rob and anyone else on this issue.  I think it is
+>>>> worth pointing out that this really isn't an issue of an SoC, but rather
+>>>> it is an
+>>>> issue of how data in the flash chip is accessed.I think what makes
+>>>> this issue
+>>>> "weird" is that we have different hardware accessing the data in the
+>>>> flash with a different perspective.  The FPGA looks at the data from one
+>>>> perspective on power up, and a processor trying to update the flash has
+>>>> a different perspective.
+>>>
+>>> Another thing I'd ask here is, is that bit-reverse a hardware property
+>>> or is that some software configuration thing ?
+>>
+>> I would say the bit reversal is a property of the FPGA that is reading
+>> the flash at power up.
+>
+> So it's not a property of the block, but rather of the bus somewhere ?
+
+You are correct, it is not a property of the Altera Quadspi component, but
+a property of the fpga and external hardware that access the flash on 
+power up.
+
+Thanks again,
+Matthew Gerlach
+
+>
+> -- 
+> Best regards,
+> Marek Vasut
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
