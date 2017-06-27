@@ -1,104 +1,288 @@
-From: Riku Voipio <riku.voipio@linaro.org>
-Subject: Re: [PATCH v8 1/3] clk: qcom: Add A53 PLL support
-Date: Tue, 27 Jun 2017 12:48:07 +0300
-Message-ID: <CAAqcGHm3R_P71szGq4Tf+B8sB9Mwd0RAi9RsssV5MwWcfuGdsw@mail.gmail.com>
-References: <20170623161533.20449-1-georgi.djakov@linaro.org>
- <20170623161533.20449-2-georgi.djakov@linaro.org> <20170626194015.pejm43gl5khoqizy@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Varadarajan Narayanan <varada@codeaurora.org>
+Subject: [PATCH v4 11/14] spi: qup: allow block mode to generate multiple transactions
+Date: Tue, 27 Jun 2017 15:15:28 +0530
+Message-ID: <1498556731-13087-12-git-send-email-varada@codeaurora.org>
+References: <1498556731-13087-1-git-send-email-varada@codeaurora.org>
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20170626194015.pejm43gl5khoqizy@rob-hp-laptop>
+In-Reply-To: <1498556731-13087-1-git-send-email-varada@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Georgi Djakov <georgi.djakov@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, jassisinghbrar@gmail.com, Bjorn Andersson <bjorn.andersson@linaro.org>, mturquette@baylibre.com, linux-clk@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: Varadarajan Narayanan <varada@codeaurora.org>, Matthew McClintock <mmcclint@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26 June 2017 at 22:40, Rob Herring <robh@kernel.org> wrote:
-> On Fri, Jun 23, 2017 at 07:15:31PM +0300, Georgi Djakov wrote:
->> The CPUs on Qualcomm MSM8916-based platforms are clocked by two PLLs,
->> a primary (A53) CPU PLL and a secondary fixed-rate GPLL0. These sources
->> are connected to a mux and half-integer divider, which is feeding the
->> CPU cores.
->>
->> This patch adds support for the primary CPU PLL which generates the
->> higher range of frequencies above 1GHz.
->>
->> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
->> ---
->>  .../devicetree/bindings/clock/qcom,a53pll.txt      | 22 +++++
->
-> It's preferred to split bindings to a separate patch. In any case,
->
-> Acked-by: Rob Herring <robh@kernel.org>
->
-> One kconfig comment though:
->
->>  drivers/clk/qcom/Kconfig                           |  9 +++
->>  drivers/clk/qcom/Makefile                          |  1 +
->>  drivers/clk/qcom/a53-pll.c                         | 94 ++++++++++++++++++++++
->>  4 files changed, 126 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->>  create mode 100644 drivers/clk/qcom/a53-pll.c
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,a53pll.txt b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->> new file mode 100644
->> index 000000000000..f4c2fddf6e7f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,a53pll.txt
->> @@ -0,0 +1,22 @@
->> +MSM8916 A53 PLL Binding
->> +---------------
->> +The A53 PLL on MSM8916 platforms is the main CPU PLL used used for frequencies
->> +above 1GHz.
->> +
->> +Required properties :
->> +- compatible : Shall contain only one of the following:
->> +
->> +             "qcom,msm8916-a53pll"
->> +
->> +- reg : shall contain base register location and length
->> +
->> +- #clock-cells : must be set to <0>
->> +
->> +Example:
->> +
->> +     a53pll: clock@b016000 {
->> +             compatible = "qcom,msm8916-a53pll";
->> +             reg = <0xb016000 0x40>;
->> +             #clock-cells = <0>;
->> +     };
->> +
->> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
->> index 9f6c278deead..057cf60ed037 100644
->> --- a/drivers/clk/qcom/Kconfig
->> +++ b/drivers/clk/qcom/Kconfig
->> @@ -12,6 +12,15 @@ config COMMON_CLK_QCOM
->>       select REGMAP_MMIO
->>       select RESET_CONTROLLER
->>
->> +config QCOM_A53PLL
->> +     bool "A53 PLL"
->
-> Figuring out config options needed for a specific QC SoC is "fun". If
-> this is only for MSM8916, then add that to the config option or prompt
-> text at least.
+This let's you write more to the SPI bus than 64K-1 which is important
+if the block size of a SPI device is >= 64K or some other device wants
+to do something larger.
 
-> And please update the arm64 defconfig with this option.
+This has the benefit of completely removing spi_message from the spi-qup
+transactions
 
-Maybe instead of updating defconfig set:
+Signed-off-by: Matthew McClintock <mmcclint@codeaurora.org>
+Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
+---
+ drivers/spi/spi-qup.c | 128 +++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 80 insertions(+), 48 deletions(-)
 
-        default ARCH_QCOM
-
-I think the effect is roughly same but it makes the life of
-distribution maintainers easier.
-
->> +     depends on COMMON_CLK_QCOM
->> +     help
->> +       Support for the A53 PLL on Qualcomm MSM8916 devices. It provides
->> +       support for CPU frequencies above 1GHz.
->> +       Say Y if you want to support CPU frequency scaling on devices
->> +       such as MSM8916.
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/spi/spi-qup.c b/drivers/spi/spi-qup.c
+index 37b51e3..026f25e 100644
+--- a/drivers/spi/spi-qup.c
++++ b/drivers/spi/spi-qup.c
+@@ -120,7 +120,7 @@
+ 
+ #define SPI_NUM_CHIPSELECTS		4
+ 
+-#define SPI_MAX_DMA_XFER		(SZ_64K - 64)
++#define SPI_MAX_XFER			(SZ_64K - 64)
+ 
+ /* high speed mode is when bus rate is greater then 26MHz */
+ #define SPI_HS_MIN_RATE			26000000
+@@ -151,6 +151,8 @@ struct spi_qup {
+ 	int			n_words;
+ 	int			tx_bytes;
+ 	int			rx_bytes;
++	const u8		*tx_buf;
++	u8			*rx_buf;
+ 	int			qup_v1;
+ 
+ 	int			mode;
+@@ -175,6 +177,12 @@ static inline bool spi_qup_is_dma_xfer(int mode)
+ 	return false;
+ }
+ 
++/* get's the transaction size length */
++static inline unsigned int spi_qup_len(struct spi_qup *controller)
++{
++	return controller->n_words * controller->w_size;
++}
++
+ static inline bool spi_qup_is_valid_state(struct spi_qup *controller)
+ {
+ 	u32 opstate = readl_relaxed(controller->base + QUP_STATE);
+@@ -227,10 +235,9 @@ static int spi_qup_set_state(struct spi_qup *controller, u32 state)
+ 	return 0;
+ }
+ 
+-static void spi_qup_read_from_fifo(struct spi_qup *controller,
+-	struct spi_transfer *xfer, u32 num_words)
++static void spi_qup_read_from_fifo(struct spi_qup *controller, u32 num_words)
+ {
+-	u8 *rx_buf = xfer->rx_buf;
++	u8 *rx_buf = controller->rx_buf;
+ 	int i, shift, num_bytes;
+ 	u32 word;
+ 
+@@ -238,8 +245,9 @@ static void spi_qup_read_from_fifo(struct spi_qup *controller,
+ 
+ 		word = readl_relaxed(controller->base + QUP_INPUT_FIFO);
+ 
+-		num_bytes = min_t(int, xfer->len - controller->rx_bytes,
+-					controller->w_size);
++		num_bytes = min_t(int, spi_qup_len(controller) -
++				       controller->rx_bytes,
++				       controller->w_size);
+ 
+ 		if (!rx_buf) {
+ 			controller->rx_bytes += num_bytes;
+@@ -260,13 +268,12 @@ static void spi_qup_read_from_fifo(struct spi_qup *controller,
+ 	}
+ }
+ 
+-static void spi_qup_read(struct spi_qup *controller,
+-			    struct spi_transfer *xfer)
++static void spi_qup_read(struct spi_qup *controller)
+ {
+ 	u32 remainder, words_per_block, num_words;
+ 	bool is_block_mode = controller->mode == QUP_IO_M_MODE_BLOCK;
+ 
+-	remainder = DIV_ROUND_UP(xfer->len - controller->rx_bytes,
++	remainder = DIV_ROUND_UP(spi_qup_len(controller) - controller->rx_bytes,
+ 				 controller->w_size);
+ 	words_per_block = controller->in_blk_sz >> 2;
+ 
+@@ -287,7 +294,7 @@ static void spi_qup_read(struct spi_qup *controller,
+ 		}
+ 
+ 		/* read up to the maximum transfer size available */
+-		spi_qup_read_from_fifo(controller, xfer, num_words);
++		spi_qup_read_from_fifo(controller, num_words);
+ 
+ 		remainder -= num_words;
+ 
+@@ -309,18 +316,18 @@ static void spi_qup_read(struct spi_qup *controller,
+ 
+ }
+ 
+-static void spi_qup_write_to_fifo(struct spi_qup *controller,
+-	struct spi_transfer *xfer, u32 num_words)
++static void spi_qup_write_to_fifo(struct spi_qup *controller, u32 num_words)
+ {
+-	const u8 *tx_buf = xfer->tx_buf;
++	const u8 *tx_buf = controller->tx_buf;
+ 	int i, num_bytes;
+ 	u32 word, data;
+ 
+ 	for (; num_words; num_words--) {
+ 		word = 0;
+ 
+-		num_bytes = min_t(int, xfer->len - controller->tx_bytes,
+-				    controller->w_size);
++		num_bytes = min_t(int, spi_qup_len(controller) -
++				       controller->tx_bytes,
++				       controller->w_size);
+ 		if (tx_buf)
+ 			for (i = 0; i < num_bytes; i++) {
+ 				data = tx_buf[controller->tx_bytes + i];
+@@ -338,13 +345,12 @@ static void spi_qup_dma_done(void *data)
+ 	complete(data);
+ }
+ 
+-static void spi_qup_write(struct spi_qup *controller,
+-			    struct spi_transfer *xfer)
++static void spi_qup_write(struct spi_qup *controller)
+ {
+ 	bool is_block_mode = controller->mode == QUP_IO_M_MODE_BLOCK;
+ 	u32 remainder, words_per_block, num_words;
+ 
+-	remainder = DIV_ROUND_UP(xfer->len - controller->tx_bytes,
++	remainder = DIV_ROUND_UP(spi_qup_len(controller) - controller->tx_bytes,
+ 				 controller->w_size);
+ 	words_per_block = controller->out_blk_sz >> 2;
+ 
+@@ -364,7 +370,7 @@ static void spi_qup_write(struct spi_qup *controller,
+ 			num_words = 1;
+ 		}
+ 
+-		spi_qup_write_to_fifo(controller, xfer, num_words);
++		spi_qup_write_to_fifo(controller, num_words);
+ 
+ 		remainder -= num_words;
+ 
+@@ -469,36 +475,62 @@ static int spi_qup_do_pio(struct spi_device *spi, struct spi_transfer *xfer,
+ {
+ 	struct spi_master *master = spi->master;
+ 	struct spi_qup *qup = spi_master_get_devdata(master);
+-	int ret;
++	int ret, n_words, iterations, offset = 0;
+ 
+-	ret = spi_qup_io_config(spi, xfer);
+-	if (ret)
+-		return ret;
++	n_words = qup->n_words;
++	iterations = n_words / SPI_MAX_XFER; /* round down */
++	qup->rx_buf = xfer->rx_buf;
++	qup->tx_buf = xfer->tx_buf;
+ 
+-	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
+-	if (ret) {
+-		dev_warn(qup->dev, "cannot set RUN state\n");
+-		return ret;
+-	}
++	do {
++		if (iterations)
++			qup->n_words = SPI_MAX_XFER;
++		else
++			qup->n_words = n_words % SPI_MAX_XFER;
+ 
+-	ret = spi_qup_set_state(qup, QUP_STATE_PAUSE);
+-	if (ret) {
+-		dev_warn(qup->dev, "cannot set PAUSE state\n");
+-		return ret;
+-	}
++		if (qup->tx_buf && offset)
++			qup->tx_buf = xfer->tx_buf + offset * SPI_MAX_XFER;
+ 
+-	if (qup->mode == QUP_IO_M_MODE_FIFO)
+-		spi_qup_write(qup, xfer);
++		if (qup->rx_buf && offset)
++			qup->rx_buf = xfer->rx_buf + offset * SPI_MAX_XFER;
+ 
+-	ret = spi_qup_set_state(qup, QUP_STATE_RUN);
+-	if (ret) {
+-		dev_warn(qup->dev, "%s(%d): cannot set RUN state\n",
+-				__func__, __LINE__);
+-		return ret;
+-	}
++		/*
++		 * if the transaction is small enough, we need
++		 * to fallback to FIFO mode
++		 */
++		if (qup->n_words <= (qup->in_fifo_sz / sizeof(u32)))
++			qup->mode = QUP_IO_M_MODE_FIFO;
+ 
+-	if (!wait_for_completion_timeout(&qup->done, timeout))
+-		return -ETIMEDOUT;
++		ret = spi_qup_io_config(spi, xfer);
++		if (ret)
++			return ret;
++
++		ret = spi_qup_set_state(qup, QUP_STATE_RUN);
++		if (ret) {
++			dev_warn(qup->dev, "cannot set RUN state\n");
++			return ret;
++		}
++
++		ret = spi_qup_set_state(qup, QUP_STATE_PAUSE);
++		if (ret) {
++			dev_warn(qup->dev, "cannot set PAUSE state\n");
++			return ret;
++		}
++
++		if (qup->mode == QUP_IO_M_MODE_FIFO)
++			spi_qup_write(qup);
++
++		ret = spi_qup_set_state(qup, QUP_STATE_RUN);
++		if (ret) {
++			dev_warn(qup->dev, "cannot set RUN state\n");
++			return ret;
++		}
++
++		if (!wait_for_completion_timeout(&qup->done, timeout))
++			return -ETIMEDOUT;
++
++		offset++;
++	} while (iterations--);
+ 
+ 	return 0;
+ }
+@@ -506,7 +538,6 @@ static int spi_qup_do_pio(struct spi_device *spi, struct spi_transfer *xfer,
+ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ {
+ 	struct spi_qup *controller = dev_id;
+-	struct spi_transfer *xfer = controller->xfer;
+ 	u32 opflags, qup_err, spi_err;
+ 	int error = 0;
+ 
+@@ -543,10 +574,10 @@ static irqreturn_t spi_qup_qup_irq(int irq, void *dev_id)
+ 		writel_relaxed(opflags, controller->base + QUP_OPERATIONAL);
+ 	} else {
+ 		if (opflags & QUP_OP_IN_SERVICE_FLAG)
+-			spi_qup_read(controller, xfer);
++			spi_qup_read(controller);
+ 
+ 		if (opflags & QUP_OP_OUT_SERVICE_FLAG)
+-			spi_qup_write(controller, xfer);
++			spi_qup_write(controller);
+ 	}
+ 
+ 	if ((opflags & QUP_OP_MAX_INPUT_DONE_FLAG) || error)
+@@ -756,7 +787,8 @@ static int spi_qup_transfer_one(struct spi_master *master,
+ 		return ret;
+ 
+ 	timeout = DIV_ROUND_UP(xfer->speed_hz, MSEC_PER_SEC);
+-	timeout = DIV_ROUND_UP(xfer->len * 8, timeout);
++	timeout = DIV_ROUND_UP(min_t(unsigned long, SPI_MAX_XFER,
++				     xfer->len) * 8, timeout);
+ 	timeout = 100 * msecs_to_jiffies(timeout);
+ 
+ 	if (spi_qup_is_dma_xfer(controller->mode))
+@@ -961,7 +993,7 @@ static int spi_qup_probe(struct platform_device *pdev)
+ 	master->dev.of_node = pdev->dev.of_node;
+ 	master->auto_runtime_pm = true;
+ 	master->dma_alignment = dma_get_cache_alignment();
+-	master->max_dma_len = SPI_MAX_DMA_XFER;
++	master->max_dma_len = SPI_MAX_XFER;
+ 
+ 	platform_set_drvdata(pdev, master);
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
