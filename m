@@ -1,90 +1,61 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] ARM: dts: BCM5301X: Specify USB ports for each controller
-Date: Tue, 27 Jun 2017 19:35:27 +0200
-Message-ID: <20170627173527.16682-1-zajec5@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC
+ support for A83T
+Date: Tue, 27 Jun 2017 19:36:31 +0200
+Message-ID: <20170627173631.2rjdzgwdwnksqjzm@flea>
+References: <20170624024515.4669-1-techping.chan@gmail.com>
+ <20170624024515.4669-3-techping.chan@gmail.com>
+ <20170626171524.cqfyasetpsfr6xfg@flea.lan>
+ <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA@mail.gmail.com>
+ <24845446a80e3542d90a1111a6141415@aosc.io>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="74dueohwaqvcb35s"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBIFPZLFAKGQETA57EGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <24845446a80e3542d90a1111a6141415-h8G6r0blFSE@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: icenowy-h8G6r0blFSE@public.gmane.org
+Cc: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
 
-Northstar has 3 controllers: OHCI and EHCI (each with 2 ports) and XHCI
-(with just 1 port). Describe them in the DT. In future this will allow
-to reference them as trigger sources.
+--74dueohwaqvcb35s
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Rafał Miłecki <rafal-g1n6cQUeyibVItvQsEIGlw@public.gmane.org>
----
- arch/arm/boot/dts/bcm5301x.dtsi | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+Hi,
 
-diff --git a/arch/arm/boot/dts/bcm5301x.dtsi b/arch/arm/boot/dts/bcm5301x.dtsi
-index 98647d22b291..045b9bb857f9 100644
---- a/arch/arm/boot/dts/bcm5301x.dtsi
-+++ b/arch/arm/boot/dts/bcm5301x.dtsi
-@@ -272,6 +272,19 @@
- 				reg = <0x00021000 0x1000>;
- 				interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&usb2_phy>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ehci_port1: port@1 {
-+					reg = <1>;
-+					#trigger-source-cells = <0>;
-+				};
-+
-+				ehci_port2: port@2 {
-+					reg = <2>;
-+					#trigger-source-cells = <0>;
-+				};
- 			};
- 
- 			ohci: ohci@22000 {
-@@ -280,6 +293,19 @@
- 				compatible = "generic-ohci";
- 				reg = <0x00022000 0x1000>;
- 				interrupts = <GIC_SPI 79 IRQ_TYPE_LEVEL_HIGH>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				ohci_port1: port@1 {
-+					reg = <1>;
-+					#trigger-source-cells = <0>;
-+				};
-+
-+				ohci_port2: port@2 {
-+					reg = <2>;
-+					#trigger-source-cells = <0>;
-+				};
- 			};
- 		};
- 
-@@ -300,6 +326,14 @@
- 				interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&usb3_phy>;
- 				phy-names = "usb";
-+
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				xhci_port1: port@1 {
-+					reg = <1>;
-+					#trigger-source-cells = <0>;
-+				};
- 			};
- 		};
- 
+On Tue, Jun 27, 2017 at 11:29:10PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
+> Maxime, here's another problem: if we have already a GP LRADC driver,
+> how can we tell the kernel to use it as IIO ADC rather than keys?
+
+The GPADC IIO driver is not for the LRADC driver, but the GPADC /
+temperature sensor.
+
+We used to have an LRADC IIO driver in the CHIP BSP written by Alex
+(in CC):
+https://github.com/NextThingCo/CHIP-linux/commit/8675b761c54be73dc7cc0113209f02e10cc63a27
+
+But he never mainlined it.
+
+> Should we introduce a new property for this once ready?
+
+We need to keep the current binding. We can just check for the
+presence or not of child nodes to see if it has some keys, and we'd
+need an IIO-to-input driver that is yet to be written.
+
+Maxime
+
 -- 
-2.11.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--74dueohwaqvcb35s--
