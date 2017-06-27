@@ -1,78 +1,235 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: Re: [PATCH 3/3] mtd: spi-nor: Altera Quadspi Flash Controller v2
- Platform driver
-Date: Tue, 27 Jun 2017 10:38:44 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1706271028260.8058@mgerlach-VirtualBox>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com> <1498493619-4633-4-git-send-email-matthew.gerlach@linux.intel.com> <2ac33989-5665-33e0-c6f0-6791c8e46b0d@gmail.com> <alpine.DEB.2.20.1706270800240.8058@mgerlach-VirtualBox>
- <5f0e2ddd-d329-cb3d-01bc-c101247281a7@gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
+Date: Tue, 27 Jun 2017 10:38:59 -0700
+Message-ID: <03ba6198-a2cc-da9f-7d7d-f626d53d5717@gmail.com>
+References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
+ <20170315185214.GF21021@lunn.ch>
+ <CAChtp75xk3LN1-DPVvaHT5qEvrdoFFvXEk-daVCcJ=4rYu_vmw@mail.gmail.com>
+ <7f5ddeba-6f79-9de5-2c67-a77e6bec0ef9@broadcom.com>
+ <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
+ <2e4ed52f-4134-9b6a-18c9-7c1f28cd7038@broadcom.com>
+ <CAChtp76sbKjxq03ipSDJN69XeJRU-0aRTeJ75+gCXZfo4D5r0A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5f0e2ddd-d329-cb3d-01bc-c101247281a7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAChtp76sbKjxq03ipSDJN69XeJRU-0aRTeJ75+gCXZfo4D5r0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Vivek Unune <npcomplete13-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Vivek,
 
-
-On Tue, 27 Jun 2017, Marek Vasut wrote:
-
-> On 06/27/2017 05:15 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>
->>
->> On Tue, 27 Jun 2017, Marek Vasut wrote:
->>
->>> On 06/26/2017 06:13 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+On 06/27/2017 10:03 AM, Vivek Unune wrote:
+> On Wed, Mar 15, 2017 at 5:19 PM, Florian Fainelli
+> <florian.fainelli-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
+>> On 03/15/2017 01:18 PM, Vivek Unune wrote:
+>>> Thanks Florian.
 >>>
->>> Just wrap it into the Altera QSPI driver , no need for separate platform
->>> driver IMO.
+>>> Let me try this out. First I'll try to figure out how to add a mdio node.
+>>>
+>>> Over the weekend I was trying enable DSA driver, but did not see DSA
+>>> under network. I'm using LEDE source with kernel 4.9. Nor did I see it
+>>> when I tried 'make kernel_menuconfig'
 >>
->> Hi Marek,
+>> (please don't top post on public mailing lists)
 >>
->> I answered this question when you asked why the header file was
->> necessary, but I think further discussion could be helpful, since this
->> problem is becoming more prevelent.  The Altera Quadspi component is a
->> soft IP in a
->> FPGA, and the processor using the component may or may not have device
->> tree support compiled into the Linux kernel.  Since device tree support
->> may or may not be available, the device tree specific code must be
->> separated
->> from the core driver code.
->
-> I see, that's fine, although there is no PCIe or other support in this
-> submission. Is that planned ?
+>> You need to enable SWITCHDEV to have DSA. AFAIR SWITCHDEV may depend on
+>> EXPERT/EXPERIMENTAL as of 4.9 (or that was before).
+>>
+> 
+> Florian,
+> 
+> I have managed to use DSA driver and was able detect both internal and
+> external switches. However, I only get packets flowing only through the
+> internal switch. I have used the ip & bridge commands to setup the vlan
+> 101 & 102 for lan and wan respectively.
+> 
+> VLAN101 = lan1 lan2 lan3 lan4 lan5 lan6 lan7 lan8 eth0.101
 
-You probably would not see a PCIe driver for a card with a FPGA that would 
-only have the Altera Quadspi component on it.  Usually a FPGA has several 
-components, each requiring their own driver which are considered 
-sub-drivers of the PCIe driver.  I will be adding Altera Quadspi support 
-to the Intel-FPGA PCIe driver that is currently under review.  We have 
-also seen people use the Altera Quadspi with a NIOS-II soft processor, and 
-I expect someone would want to use the component with ARM SOCFPGAs.
+That looks reasonable although keep in mind that the IMP/CPU interfaces
+of the switch are configured with VLAN tags (see commit [1]), so you may
+need to make sure that port 0 of the internal switch is not accidentally
+configured back to untagged since that would cause problem when
+terminating the VLAN tag on the SW side.
 
-Matthew Gerlach
+So here are a few things that you want to check:
 
->
->> One can certainly make the case, that device tree support could/should
->> be available everywhere, but the current reality is most x86 Linux
->> kernel configurations do not include device tree support.
->>
->> For the record, I believe device trees, and more specifically device
->> tree overlays, are the best way for Linux to use FPGAs, but I have to
->> deal with the current realities.
->>
->> Thanks again for all the great feedback.
->>
->> Matthew Gerlach
->
-> [...]
->
-> -- 
-> Best regards,
-> Marek Vasut
->
+- read the MIB counters from the "extswitch" interface and see if
+packets flow through in both directions with no errors
+
+- check the "extswitch" VLAN configuration on both the internal switch
+side (port 0) and on the external switch side ("cpu", port 8, not visible)
+
+- see if you can get traffic end-to-end from eth0 all the way through
+one of the external switch port. If that's the case, that means that the
+configuration of internal switch port 0, internal switch CPU port, and
+external switch external port is working and operational
+
+[1]:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e47112d9d6009bf6b7438cedc0270316d6b0370d
+
+> VLAN102 = wan eth0.102
+> 
+> Reading configs from the factory firmware, I'm sure that sw0port0 and> sw1port8 are connected. Excerpt from the same:
+> 
+> port_numbers=0 2 4 2 1 3 1 3
+> port_switch_id=1 1 1 0 1 1 0 0
+> port_names=port0 port1 port2 port3 port4 port5 port6 port7
+
+Is 0 the identifier for the external or internal switch? If 0 is
+internal switch identifier and 1 is the external switch identifier, your
+mapping looks correct to me with one exception below:
+
+> cpu_port_number=5 7 8
+> cpu_port_switch_id=0 0 0
+> hidden_port_numbers=0 8
+> hidden_port_switch_id=0 1
+> 
+> Below is my updated device tree.
+> 
+> Thanks,
+> 
+> Vivek
+> 
+> &srab {
+>     compatible = "brcm,bcm53012-srab", "brcm,bcm5301x-srab";
+>     status = "okay";
+>     dsa,member = <0 0>;
+> 
+>     ports {
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+> 
+>         port@1 {
+>             reg = <1>;
+>             label = "lan7";
+>         };
+> 
+>         port@2 {
+>             reg = <2>;
+>             label = "lan4";
+>         };
+> 
+>         port@3 {
+>             reg = <3>;
+>             label = "lan8";
+>         };
+> 
+>         port@4 {
+>             reg = <4>;
+>             label = "wan";
+>         };
+> 
+>         port@5 {
+>             reg = <5>;
+>             ethernet = <&gmac0>;
+>             label = "cpu";
+> 
+>             fixed-link {
+> 
+>                 speed = <1000>;
+>                 full-duplex;
+>             };
+>         };
+
+I think this is meant to be port 8 here based on the hidden_port_number
+value. This actually matters for VLAN configuration because B53 is not
+(unfortunately, to be fixed) consistently using dst->cpu_port (whatever
+is configured in Device Tree) vs. dev->cpu_port (hardcoded to 8 for this
+class of switch).
+
+PS: on that front, we will have to rework that when we bring multiple
+CPU port support in DSA/B53/bcm_sf2 and so for now what we could do is
+just check that the configured CPU port in Device Tree is a valid CPU
+port for that switch (typically 5, 7 or 8), and if not, just issue a
+warning.
+
+> 
+>         sw0port0: port@0 {
+>             reg = <0>;
+>             label = "extswitch";
+> 
+>             fixed-link {
+>                 speed = <1000>;
+>                 full-duplex;
+>             };
+
+There might be some additional configuration needed here for this port,
+because by default, the port will most likely try to use its built-in
+PHY and maybe that's what they did, they wired the built-in PHY directly
+to the IMP port of the external switch.
+
+>         };
+>     };
+> };
+> 
+> &mdiomux {
+>     mdio-slave@0 {
+>         reg = <0x00>;
+>         address-cells = <1>;
+>         size-cells = <0>;
+> 
+>         switch@0  {
+>             compatible = "brcm,bcm53125";
+>             #address-cells = <1>;
+>             #size-cells = <0>;
+>             reset-gpios = <&chipcommon 10 GPIO_ACTIVE_LOW>;
+>             reset-names = "robo_reset";
+>              reg = <0>;
+>              dsa,member = <1 0>;
+> 
+>             ports {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> 
+>                 port@0 {
+>                         reg = <0>;
+>                         label = "lan1";
+>                 };
+> 
+>                 port@1 {
+>                         reg = <1>;
+>                         label = "lan5";
+>                 };
+> 
+>                 port@2 {
+>                         reg = <2>;
+>                         label = "lan2";
+>                 };
+> 
+>                 port@3 {
+>                         reg = <3>;
+>                         label = "lan6";
+>                 };
+> 
+>                 port@4 {
+>                         reg = <4>;
+>                         label = "lan3";
+>                 };
+> 
+>                 sw1port8:port@8 {
+>                         reg = <8>;
+>                         ethernet = <&sw0port0>;
+>                         label = "cpu";
+>                         phy-mode = "rgmii-txid";
+> 
+>                         fixed-link {
+>                             speed = <1000>;
+>                             full-duplex;
+>                         };
+>                 };
+>             };
+>         };
+>     };
+> };
+> 
+
+
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
