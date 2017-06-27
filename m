@@ -1,73 +1,54 @@
-From: jeffy <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: Re: [RFC PATCH v3 2/6] dt-bindings: spi/core: add wakeup-source optional
- property
-Date: Tue, 27 Jun 2017 10:04:07 +0800
-Message-ID: <5951BD17.305@rock-chips.com>
-References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com> <1498039313-24220-3-git-send-email-jeffy.chen@rock-chips.com> <20170626160011.qi3bliz5jt6d5wgb@rob-hp-laptop> <20170626164016.GA4965@dtor-ws>
+From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
+Subject: [PATCH v3 1/3] dt-bindings: Add support for samsung s6e63j0x03
+ panel binding
+Date: Tue, 27 Jun 2017 11:11:08 +0900
+Message-ID: <1498529470-20652-2-git-send-email-hoegeun.kwon@samsung.com>
+References: <1498529470-20652-1-git-send-email-hoegeun.kwon@samsung.com>
+ <CGME20170627021124epcas5p1715e8cfd3f61c79d424cf1901888fecd@epcas5p1.samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170626164016.GA4965@dtor-ws>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, briannorris-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1498529470-20652-1-git-send-email-hoegeun.kwon@samsung.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 06/27/2017 12:40 AM, Dmitry Torokhov wrote:
-> On Mon, Jun 26, 2017 at 11:00:11AM -0500, Rob Herring wrote:
->> On Wed, Jun 21, 2017 at 06:01:49PM +0800, Jeffy Chen wrote:
->>> Update document devicetree bindings to support "wakeup-source" property.
->>>
->>> Signed-off-by: Jeffy Chen <jeffy.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>> ---
->>>
->>> Changes in v3: None
->>>
->>>   Documentation/devicetree/bindings/spi/spi-bus.txt | 1 +
->>>   1 file changed, 1 insertion(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
->>> index 1f6e86f..0fa1ccf 100644
->>> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
->>> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
->>> @@ -77,6 +77,7 @@ All slave nodes can contain the following optional properties:
->>>   		    Defaults to 1 if not present.
->>>   - spi-rx-delay-us - Microsecond delay after a read transfer.
->>>   - spi-tx-delay-us - Microsecond delay after a write transfer.
->>> +- wakeup-source   - Device can be used as a wakeup source.
->>
->> wakeup-source is valid for any device with an interrupts property
->> already, so I don't think this is necessary.
-i saw http://lkml.iu.edu/hypermail/linux/kernel/1510.2/04553.html add a 
-Documentation/devicetree/bindings/power/wakeup-source.txt for this, but 
-that serial didn't remove all wakeup-source property from other 
-bindings, but standardize them, for example:
-71a0151 Documentation: devicetree: fix reference to legacy wakeup properties
-
-+++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-@@ -24,6 +24,7 @@ Optional subnode-properties:
-         - debounce-interval: Debouncing interval time in milliseconds.
-           If not specified defaults to 5.
-         - wakeup-source: Boolean, button can wake-up the system.
-+                        (Legacy property supported: "gpio-key,wakeup")
-
->
-> Do you mean it is not necessary on SPI level or not necessary at all? Or
-> you disagree with wording? Because we do need a way to say that on given
-> platform the device is supposed to be configured as a wakeup source.
->
-> Thanks.
->
-
-Hi guys,
-
-Mark Brown suggested to put wakeup-source support in some common place 
-instead of sub drivers, should we do that?
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhlIFNhbXN1bmcgczZlNjNqMHgwMyBpcyBhIDEuNjMiIDMyMHgzMjAgQU1PTEVEIHBhbmVsIGNv
+bm5lY3RlZCB1c2luZwpNSVBJLURTSSBpbnRlcmZhY2VzLgoKU2lnbmVkLW9mZi1ieTogSG9lZ2V1
+biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+ClJldmlld2VkLWJ5OiBBbmRyemVqIEhh
+amRhIDxhLmhhamRhQHNhbXN1bmcuY29tPgpBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4
+MDMudHh0ICB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAyNCBp
+bnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M2oweDAzLnR4dAoKZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3NhbXN1
+bmcsczZlNjNqMHgwMy50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4MDMudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0Cmlu
+ZGV4IDAwMDAwMDAuLjNmMWE4MzkKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzajB4MDMudHh0CkBA
+IC0wLDAgKzEsMjQgQEAKK1NhbXN1bmcgUzZFNjNKMFgwMyAxLjYzIiAzMjB4MzIwIEFNT0xFRCBw
+YW5lbCAoaW50ZXJmYWNlOiBNSVBJLURTSSBjb21tYW5kIG1vZGUpCisKK1JlcXVpcmVkIHByb3Bl
+cnRpZXM6CisgIC0gY29tcGF0aWJsZTogInNhbXN1bmcsczZlNjNqMHgwMyIKKyAgLSByZWc6IHRo
+ZSB2aXJ0dWFsIGNoYW5uZWwgbnVtYmVyIG9mIGEgRFNJIHBlcmlwaGVyYWwKKyAgLSB2ZGQzLXN1
+cHBseTogSS9PIHZvbHRhZ2Ugc3VwcGx5CisgIC0gdmNpLXN1cHBseTogdm9sdGFnZSBzdXBwbHkg
+Zm9yIGFuYWxvZyBjaXJjdWl0cworICAtIHJlc2V0LWdwaW9zOiBhIEdQSU8gc3BlYyBmb3IgdGhl
+IHJlc2V0IHBpbiAoYWN0aXZlIGxvdykKKyAgLSB0ZS1ncGlvczogYSBHUElPIHNwZWMgZm9yIHRo
+ZSB0ZWFyaW5nIGVmZmVjdCBzeW5jaHJvbml6YXRpb24gc2lnbmFsCisgICAgZ3BpbyBwaW4gKGFj
+dGl2ZSBoaWdoKQorCitFeGFtcGxlOgorJmRzaSB7CisJLi4uCisKKwlwYW5lbEAwIHsKKwkJY29t
+cGF0aWJsZSA9ICJzYW1zdW5nLHM2ZTYzajB4MDMiOworCQlyZWcgPSA8MD47CisJCXZkZDMtc3Vw
+cGx5ID0gPCZsZG8xNl9yZWc+OworCQl2Y2ktc3VwcGx5ID0gPCZsZG8yMF9yZWc+OworCQlyZXNl
+dC1ncGlvcyA9IDwmZ3BlMCAxIEdQSU9fQUNUSVZFX0xPVz47CisJCXRlLWdwaW9zID0gPCZncHgw
+IDYgR1BJT19BQ1RJVkVfSElHSD47CisJfTsKK307Ci0tIAoxLjkuMQoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApk
+cmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
