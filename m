@@ -1,308 +1,195 @@
-From: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC 2/4] libnvdimm: Add a device-tree interface
-Date: Tue, 27 Jun 2017 20:28:49 +1000
-Message-ID: <20170627102851.15484-2-oohall@gmail.com>
-References: <20170627102851.15484-1-oohall@gmail.com>
+From: Andre Przywara <andre.przywara@arm.com>
+Subject: Re: [PATCH v6 05/21] net-next: stmmac: Add dwmac-sun8i
+Date: Tue, 27 Jun 2017 11:33:56 +0100
+Message-ID: <858b5361-fde5-8ab4-b9ba-aeb7859b9a7d@arm.com>
+References: <20170531071852.12422-1-clabbe.montjoie@gmail.com>
+ <20170531071852.12422-6-clabbe.montjoie@gmail.com>
+ <8e3d73a7-e9ff-d3e2-4bce-bcc79cdf86db@arm.com> <20170627080529.GA2468@Red>
+ <CAGb2v65mhDN9vXe6DE2cZPW1BzgYPwK+D2U5VFgyr0wVVZZqDQ@mail.gmail.com>
+ <20170627082103.GB2468@Red> <530f7b3e-247d-2e4d-8174-ce6195bacf5b@arm.com>
+ <20170627094111.supxmzf2k3n3ewec@flea.lan>
+ <44afb371-44d4-dbb5-0aac-4bbc55269344@arm.com>
+ <700A8221-3CEC-4657-900D-183398D25AE7@aosc.io>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-In-Reply-To: <20170627102851.15484-1-oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.01.org/mailman/options/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.01.org/pipermail/linux-nvdimm/>
-List-Post: <mailto:linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-List-Help: <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.01.org/mailman/listinfo/linux-nvdimm>,
- <mailto:linux-nvdimm-request-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org?subject=subscribe>
-Errors-To: linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
-Sender: "Linux-nvdimm" <linux-nvdimm-bounces-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org>
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-nvdimm-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <700A8221-3CEC-4657-900D-183398D25AE7@aosc.io>
+Content-Language: en-GB
+Sender: netdev-owner@vger.kernel.org
+To: Icenowy Zheng <icenowy@aosc.io>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Corentin Labbe <clabbe.montjoie@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, alexandre.torgue@st.com, devicetree <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, david.wu@rock-chips.com, Florian Fainelli <f.fainelli@gmail.com>, Andrew Lunn <andrew@lunn.ch>, =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-A fairly bare-bones set of device-tree bindings so libnvdimm can be used
-on powerpc and other, less cool, device-tree based platforms.
+Hi,
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Oliver O'Halloran <oohall-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-The current bindings are essentially this:
+On 27/06/17 11:23, Icenowy Zheng wrote:
+> 
+> 
+> 于 2017年6月27日 GMT+08:00 下午6:15:58, Andre Przywara <andre.przywara@arm.com> 写到:
+>> Hi,
+>>
+>> On 27/06/17 10:41, Maxime Ripard wrote:
+>>> On Tue, Jun 27, 2017 at 10:02:45AM +0100, Andre Przywara wrote:
+>>>> Hi,
+>>>>
+>>>> (CC:ing some people from that Rockchip dmwac series)
+>>>>
+>>>> On 27/06/17 09:21, Corentin Labbe wrote:
+>>>>> On Tue, Jun 27, 2017 at 04:11:21PM +0800, Chen-Yu Tsai wrote:
+>>>>>> On Tue, Jun 27, 2017 at 4:05 PM, Corentin Labbe
+>>>>>> <clabbe.montjoie@gmail.com> wrote:
+>>>>>>> On Mon, Jun 26, 2017 at 01:18:23AM +0100, André Przywara wrote:
+>>>>>>>> On 31/05/17 08:18, Corentin Labbe wrote:
+>>>>>>>>> The dwmac-sun8i is a heavy hacked version of stmmac hardware by
+>>>>>>>>> allwinner.
+>>>>>>>>> In fact the only common part is the descriptor management and
+>> the first
+>>>>>>>>> register function.
+>>>>>>>>
+>>>>>>>> Hi,
+>>>>>>>>
+>>>>>>>> I know I am a bit late with this, but while adapting the U-Boot
+>> driver
+>>>>>>>> to the new binding I was wondering about the internal PHY
+>> detection:
+>>>>>>>>
+>>>>>>>>
+>>>>>>>> So here you seem to deduce the usage of the internal PHY by the
+>> PHY
+>>>>>>>> interface specified in the DT (MII = internal, RGMII =
+>> external).
+>>>>>>>> I think I raised this question before, but isn't it perfectly
+>> legal for
+>>>>>>>> a board to use MII with an external PHY even on those SoCs that
+>> feature
+>>>>>>>> an internal PHY?
+>>>>>>>> On the first glance that does not make too much sense, but apart
+>> from
+>>>>>>>> not being the correct binding to describe all of the SoCs
+>> features I see
+>>>>>>>> two scenarios:
+>>>>>>>> 1) A board vendor might choose to not use the internal PHY
+>> because it
+>>>>>>>> has bugs, lacks features (configurability) or has other issues.
+>> For
+>>>>>>>> instance I have heard reports that the internal PHY makes the
+>> SoC go
+>>>>>>>> rather hot, possibly limiting the CPU frequency. By using an
+>> external
+>>>>>>>> MII PHY (which are still cheaper than RGMII PHYs) this can be
+>> avoided.
+>>>>>>>> 2) A PHY does not necessarily need to be directly connected to
+>>>>>>>> magnetics. Indeed quite some boards use (RG)MII to connect to a
+>> switch
+>>>>>>>> IC or some other network circuitry, for instance fibre
+>> connectors.
+>>>>>>>>
+>>>>>>>> So I was wondering if we would need an explicit:
+>>>>>>>>       allwinner,use-internal-phy;
+>>>>>>>> boolean DT property to signal the usage of the internal PHY?
+>>>>>>>> Alternatively we could go with the negative version:
+>>>>>>>>       allwinner,disable-internal-phy;
+>>>>>>>>
+>>>>>>>> Or what about introducing a new "allwinner,internal-mii-phy"
+>> compatible
+>>>>>>>> string for the *PHY* node and use that?
+>>>>>>>>
+>>>>>>>> I just want to avoid that we introduce a binding that causes us
+>>>>>>>> headaches later. I think we can still fix this with a followup
+>> patch
+>>>>>>>> before the driver and its binding hit a release kernel.
+>>>>>>>>
+>>>>>>>> Cheers,
+>>>>>>>> Andre.
+>>>>>>>>
+>>>>>>>
+>>>>>>> I just see some patch, where "phy-mode = internal" is valid.
+>>>>>>> I will try to find a way to use it
+>>>>>>
+>>>>>> Can you provide a link?
+>>>>>
+>>>>> https://lkml.org/lkml/2017/6/23/479
+>>>>>
+>>>>>>
+>>>>>> I'm not a fan of using phy-mode for this. There's no guarantee
+>> what
+>>>>>> mode the internal PHY uses. That's what phy-mode is for.
+>>>>
+>>>> I can understand Chen-Yu's concerns, but ...
+>>>>
+>>>>> For each soc the internal PHY mode is know and setted in
+>> emac_variant/internal_phy
+>>>>> So its not a problem.
+>>>>
+>>>> that is true as well, at least for now.
+>>>>
+>>>> So while I agree that having a separate property to indicate the
+>> usage
+>>>> of the internal PHY would be nice, I am bit tempted to use this
+>> easier
+>>>> approach and piggy back on the existing phy-mode property.
+>>>
+>>> We're trying to fix an issue that works for now too.
+>>>
+>>> If we want to consider future weird cases, then we must consider all
+>>> of them. And the phy mode changing is definitely not really far
+>>> fetched.
+>>>
+>>> I agree with Chen-Yu, and I really feel like the compatible solution
+>>> you suggested would cover both your concerns, and ours.
+>>
+>> So something like this?
+>> 	emac: emac@1c30000 {
+>> 	    compatible = "allwinner,sun8i-h3-emac";
+>> 	    ...
+>> 	    phy-mode = "mii";
+>> 	    phy-handle = <&int_mii_phy>;
+>> 	    ...
+>>
+>> 	    mdio: mdio {
+>>                #address-cells = <1>;
+>>                #size-cells = <0>;
+>>                int_mii_phy: ethernet-phy@1 {
+>>                    compatible = "allwinner,sun8i-h3-ephy";
+>>                    syscon = <&syscon>;
+> 
+> The MAC still needs to set some bits of syscon register.
 
-nonvolatile-memory {
-	compatible = "nonvolatile-memory", "special-memory";
-	ranges;
+Yes, the syscon property needs also to be in the MAC node, that was
+meant to be somewhere in the second "..." ;-)
 
-	region@0 {
-		compatible = "nvdimm,byte-addressable";
-		reg = <0x0 0x1000>;
-	};
+But now since Chen-Yu mentioned that we need to set up the PHY *first*
+to make it actually discoverable via MDIO, I wonder if we could change
+this to:
+1) have the DT as described here
+2) Let the dwmac-sun8i driver peek into the node referenced by
+phy-handle and check the compatible string there.
+3) If that matches some allwinner internal PHY name, it sets up the PHY
+to make it respond when the MDIO driver queries its bus.
 
-	region@1000 {
-		compatible = "nvdimm,byte-addressable";
-		reg = <0x1000 0x1000>;
-	};
-};
+Or can a PHY driver set itself up (since we have clocks and resets
+properties in there) *before* the MDIO bus gets scanned?
+Chen-Yu's comment in the other mail hints at that this is not easily
+possible.
 
-To handle interleave sets, etc the plan was the add an extra property with the
-interleave stride and a "mapping" property with <&DIMM, dimm-start-offset>
-tuples for each dimm in the interleave set. Block MMIO regions can be added
-with a different compatible type, but I'm not too concerned with them for
-now.
+Cheers,
+Andre.
 
-Does this sound reasonable? Is there anything this scheme would make difficult?
----
- drivers/nvdimm/Kconfig     |  10 +++
- drivers/nvdimm/Makefile    |   1 +
- drivers/nvdimm/of_nvdimm.c | 209 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 220 insertions(+)
- create mode 100644 drivers/nvdimm/of_nvdimm.c
-
-diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-index 5bdd499b5f4f..72d147b55596 100644
---- a/drivers/nvdimm/Kconfig
-+++ b/drivers/nvdimm/Kconfig
-@@ -102,4 +102,14 @@ config NVDIMM_DAX
- 
- 	  Select Y if unsure
- 
-+config OF_NVDIMM
-+	tristate "Device-tree support for NVDIMMs"
-+	depends on OF
-+	default LIBNVDIMM
-+	help
-+	  Allows byte addressable persistent memory regions to be described in the
-+	  device-tree.
-+
-+	  Select Y if unsure.
-+
- endif
-diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
-index 909554c3f955..622961f4849d 100644
---- a/drivers/nvdimm/Makefile
-+++ b/drivers/nvdimm/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_BLK_DEV_PMEM) += nd_pmem.o
- obj-$(CONFIG_ND_BTT) += nd_btt.o
- obj-$(CONFIG_ND_BLK) += nd_blk.o
- obj-$(CONFIG_X86_PMEM_LEGACY) += nd_e820.o
-+obj-$(CONFIG_OF_NVDIMM) += of_nvdimm.o
- 
- nd_pmem-y := pmem.o
- 
-diff --git a/drivers/nvdimm/of_nvdimm.c b/drivers/nvdimm/of_nvdimm.c
-new file mode 100644
-index 000000000000..359808200feb
---- /dev/null
-+++ b/drivers/nvdimm/of_nvdimm.c
-@@ -0,0 +1,209 @@
-+/*
-+ * Copyright 2017, IBM Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, you can access it online at
-+ * http://www.gnu.org/licenses/gpl-2.0.html.
-+ */
-+
-+#define pr_fmt(fmt) "of_nvdimm: " fmt
-+
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/libnvdimm.h>
-+#include <linux/module.h>
-+#include <linux/ioport.h>
-+#include <linux/slab.h>
-+
-+static const struct attribute_group *region_attr_groups[] = {
-+	&nd_region_attribute_group,
-+	&nd_device_attribute_group,
-+	NULL,
-+};
-+
-+static int of_nvdimm_add_byte(struct nvdimm_bus *bus, struct device_node *np)
-+{
-+	struct nd_region_desc ndr_desc;
-+	struct resource temp_res;
-+	struct nd_region *region;
-+
-+	/*
-+	 * byte regions should only have one address range
-+	 */
-+	if (of_address_to_resource(np, 0, &temp_res)) {
-+		pr_warn("Unable to parse reg[0] for %s\n", np->full_name);
-+		return -ENXIO;
-+	}
-+
-+	pr_debug("Found %pR for %s\n", &temp_res, np->full_name);
-+
-+	memset(&ndr_desc, 0, sizeof(ndr_desc));
-+	ndr_desc.res = &temp_res;
-+	ndr_desc.attr_groups = region_attr_groups;
-+#ifdef CONFIG_NUMA
-+	ndr_desc.numa_node = of_node_to_nid(np);
-+#endif
-+	set_bit(ND_REGION_PAGEMAP, &ndr_desc.flags);
-+
-+	region = nvdimm_pmem_region_create(bus, &ndr_desc);
-+	if (!region)
-+		return -ENXIO;
-+
-+	/*
-+	 * Bind the region to the OF node we spawned it from. We
-+	 * already bumped the node's refcount while walking the
-+	 * bus.
-+	 */
-+	to_nd_region_dev(region)->of_node = np;
-+
-+	return 0;
-+}
-+
-+/*
-+ * 'data' is a pointer to the function that handles registering the device
-+ * on the nvdimm bus.
-+ */
-+static struct of_device_id of_nvdimm_dev_types[] = {
-+	{ .compatible = "nvdimm,byte-addressable", .data = of_nvdimm_add_byte },
-+	{ },
-+};
-+
-+static void of_nvdimm_parse_one(struct nvdimm_bus *bus,
-+		struct device_node *node)
-+{
-+	int (*parse_node)(struct nvdimm_bus *, struct device_node *);
-+	const struct of_device_id *match;
-+	int rc;
-+
-+	if (of_node_test_and_set_flag(node, OF_POPULATED)) {
-+		pr_debug("%s already parsed, skipping\n",
-+			node->full_name);
-+		return;
-+	}
-+
-+	match = of_match_node(of_nvdimm_dev_types, node);
-+	if (!match) {
-+		pr_info("No compatible match for '%s'\n",
-+			node->full_name);
-+		of_node_clear_flag(node, OF_POPULATED);
-+		return;
-+	}
-+
-+	of_node_get(node);
-+	parse_node = match->data;
-+	rc = parse_node(bus, node);
-+
-+	if (rc) {
-+		of_node_clear_flag(node, OF_POPULATED);
-+		of_node_put(node);
-+	}
-+
-+	pr_debug("Parsed %s, rc = %d\n", node->full_name, rc);
-+
-+	return;
-+}
-+
-+/*
-+ * The nvdimm core refers to the bus descriptor structure at runtime
-+ * so we need to keep it around. Note that this is different to region
-+ * descriptors which can be stack allocated.
-+ */
-+struct of_nd_bus {
-+	struct nvdimm_bus_descriptor desc;
-+	struct nvdimm_bus *bus;
-+};
-+
-+static const struct attribute_group *bus_attr_groups[] = {
-+	&nvdimm_bus_attribute_group,
-+	NULL,
-+};
-+
-+static int of_nvdimm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *node, *child;
-+	struct of_nd_bus *of_nd_bus;
-+
-+	node = dev_of_node(&pdev->dev);
-+	if (!node)
-+		return -ENXIO;
-+
-+	of_nd_bus = kzalloc(sizeof(*of_nd_bus), GFP_KERNEL);
-+	if (!of_nd_bus)
-+		return -ENOMEM;
-+
-+	of_nd_bus->desc.attr_groups = bus_attr_groups;
-+	of_nd_bus->desc.provider_name = "of_nvdimm";
-+	of_nd_bus->desc.module = THIS_MODULE;
-+	of_nd_bus->bus = nvdimm_bus_register(&pdev->dev, &of_nd_bus->desc);
-+	if (!of_nd_bus->bus)
-+		goto err;
-+
-+	to_nvdimm_bus_dev(of_nd_bus->bus)->of_node = node;
-+
-+	/* now walk the node bus and setup regions, etc */
-+        for_each_available_child_of_node(node, child)
-+		of_nvdimm_parse_one(of_nd_bus->bus, child);
-+
-+	platform_set_drvdata(pdev, of_nd_bus);
-+
-+	return 0;
-+
-+err:
-+	nvdimm_bus_unregister(of_nd_bus->bus);
-+	kfree(of_nd_bus);
-+	return -ENXIO;
-+}
-+
-+static int of_nvdimm_remove(struct platform_device *pdev)
-+{
-+	struct of_nd_bus *bus = platform_get_drvdata(pdev);
-+	struct device_node *node;
-+
-+	if (!bus)
-+		return 0; /* possible? */
-+
-+	for_each_available_child_of_node(pdev->dev.of_node, node) {
-+		if (!of_node_check_flag(node, OF_POPULATED))
-+			continue;
-+
-+		of_node_clear_flag(node, OF_POPULATED);
-+		of_node_put(node);
-+		pr_debug("de-populating %s\n", node->full_name);
-+	}
-+
-+	nvdimm_bus_unregister(bus->bus);
-+	kfree(bus);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id of_nvdimm_bus_match[] = {
-+	{ .compatible = "nonvolatile-memory" },
-+	{ .compatible = "special-memory" },
-+	{ },
-+};
-+
-+static struct platform_driver of_nvdimm_driver = {
-+	.probe = of_nvdimm_probe,
-+	.remove = of_nvdimm_remove,
-+	.driver = {
-+		.name = "of_nvdimm",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_nvdimm_bus_match,
-+	},
-+};
-+
-+module_platform_driver(of_nvdimm_driver);
-+MODULE_DEVICE_TABLE(of, of_nvdimm_bus_match);
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR("IBM Corporation");
--- 
-2.9.4
+> 
+>>                    reg = <1>;
+>>                    clocks = <&ccu CLK_BUS_EPHY>;
+>>                    resets = <&ccu RST_BUS_EPHY>;
+>>                };
+>>            };
+>>        };
+>>
+>> And then move the internal-PHY setup code into a separate PHY driver?
+>>
+>> That looks like the architecturally best solution to me, but is
+>> probably
+>> also a bit involved since it would require a separate PHY driver.
+>> Or can we make it simpler, but still use this binding?
+>>
+>> Cheers,
+>> Andre.
