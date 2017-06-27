@@ -1,69 +1,39 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH 1/4] ARM: aspeed: g4: Add USB functions to pinctrl
- bindings
-Date: Mon, 26 Jun 2017 22:53:39 -0500
-Message-ID: <1498535619.3651.29.camel@kernel.crashing.org>
-References: <20170627021214.23323-1-andrew@aj.id.au>
-         <20170627021214.23323-2-andrew@aj.id.au>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: stdout-path (was Re: [PATCH 3/3 v6] ARC: hsdk: initial port for HSDK
+ board)
+Date: Tue, 27 Jun 2017 07:25:39 +0300
+Message-ID: <5abefbed-fd4d-0564-e99c-e17f6a1445b5@synopsys.com>
+References: <20170626151118.19507-1-Eugeniy.Paltsev@synopsys.com>
+ <20170626151118.19507-4-Eugeniy.Paltsev@synopsys.com>
+ <CAL_JsqJBPL+AuYNP=JgXWOGNFxdenKY4Rt3_f6tG6MYDLncRNg@mail.gmail.com>
+ <1498494334.28955.58.camel@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <20170627021214.23323-2-andrew@aj.id.au>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498494334.28955.58.camel@synopsys.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Alexey.Brodkin@synopsys.com" <Alexey.Brodkin@synopsys.com>, "Eugeniy.Paltsev@synopsys.com" <Eugeniy.Paltsev@synopsys.com>, "linux-snps-arc@lists.infradead.org" <linux-snps-arc@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2017-06-27 at 11:42 +0930, Andrew Jeffery wrote:
-> The AST2400 contains several USB controllers:
-> 
-> * USB 1.1 Host Controller
-> * USB 2.0 Host Controller
-> * Combined USB 2.0 Virtual Hub and USB 1.1 HID Controller
+On 06/26/2017 07:25 PM, Alexey Brodkin wrote:
+>>> +
+>>> +       chosen {
+>>> +               bootargs = "earlycon=uart8250,mmio32,0xf0005000,115200n8 console=ttyS0,115200n8 debug print-fatal-signals=1";
+>> Use stdout-path for the console. Really, the bootargs should be blank
+>> and populated by the bootloader especially debug options.
+> Agree but in case of devboards we quite often disable bootloader and
+> load Linux image in memory via JTAG. So in that case bootargs make perfect sense IMH
 
-There's also a USB1.1 HID-only device-controller, but it's a legacy
-piece of IP that we may never support. It might be worth mentioning its
-existence and Ryan might want it supported in the bindings at least no
-?
+FWIW, I tried this 2 years ago (v4.1 ish) per pestering by Arnd but at the time I 
+had to add some hacks in early 8250 driver to get this working for ARC.
 
-> Pins for three ports are routed to the three controllers such that:
-> 
-> * Port 1 is a dedicated USB 1.1 host port
-> * Port 2 is shared between the USB 1.1 host and HID controllers
-> * Port 3 is shared between the USB 2.0 host and Hub controllers
-> 
-> As the pins for port 1 are fixed function there is no associated mux
-> function or group described in the bindings. Ports 2 and 3 are muxed as
-> above, and the table below describes the mapping between pinmux function
-> names and ports:
-> 
-> Port  | USB Version  | USB Mode  | Mux Function
-> ------|--------------|-----------|-------------
-> 1     | 1.1          | Host      | -
-> 2     | 1.1          | Host      | USB11H2
-> 2     | 1.1          | Device    | USB11D1
-> 3     | 2.0          | Host      | USB2H1
-> 3     | 2.0          | Device    | USB2D1
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-> index ca01710ee29a..09142dab47db 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
-> @@ -69,8 +69,9 @@ PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 ROM16 ROM8 ROMCS1
->  ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3 SALT4 SD1 SD2 SGPMCK
->  SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCTRL SIOPBI SIOPBO SIOPWREQ
->  SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PASSTHRU SPICS1 TIMER3 TIMER4
-> -TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6 USBCKI VGABIOS_ROM VGAHS
-> -VGAVS VPI18 VPI24 VPI30 VPO12 VPO24 WDTRST1 WDTRST2
-> +TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6 USB11D1 USB11H2 USB2D1
-> +USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI18 VPI24 VPI30 VPO12 VPO24 WDTRST1
-> +WDTRST2
->  
->  aspeed,ast2500-pinctrl, aspeed,g5-pinctrl:
->  
+See,
+http://www.spinics.net/lists/linux-serial/msg17742.html
+http://www.spinics.net/lists/linux-serial/msg17747.html
+
+We can certainly revisit this now.
+
+-Vineet
