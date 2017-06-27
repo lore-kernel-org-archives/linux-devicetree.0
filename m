@@ -1,128 +1,52 @@
 From: Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 4/4] pinctrl: aspeed: g5: Add USB device and host support
-Date: Tue, 27 Jun 2017 11:42:14 +0930
-Message-ID: <20170627021214.23323-5-andrew@aj.id.au>
+Subject: [PATCH 2/4] ARM: aspeed: g5: Add USB functions to pinctrl bindings
+Date: Tue, 27 Jun 2017 11:42:12 +0930
+Message-ID: <20170627021214.23323-3-andrew@aj.id.au>
 References: <20170627021214.23323-1-andrew@aj.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
 In-Reply-To: <20170627021214.23323-1-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-gpio-owner@vger.kernel.org
 To: linus.walleij@linaro.org
 Cc: Andrew Jeffery <andrew@aj.id.au>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, benh@kernel.crashing.org, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Implement the AST2500 USB functions as described by the devicetree
-bindings. The AST2500 exposes five USB controllers through two USB
-ports. Similar to the AST2400, the pins exposing USB are outliers with
-respect to the rest of the pinmux as they not capable of GPIO.
+The Aspeed AST2500 SoC contains a number of USB controllers:
+
+* USB 1.1 Host Controller
+* USB 2.0 Host Controller (x2)
+* Combined USB 2.0 Virtual Hub and USB 1.1 HID Controller
+
+The controllers are exposed via two USB ports with functionality muxed
+as required. The following table illustrates the relationships between
+the ports and the controllers via the mux function names:
+
+Port  | USB Version  | USB Mode     | Mux Function
+------|--------------|--------------|-------------
+A     | 2.0          | Virtual Hub  | USB2AD
+A     | 2.0          | Host         | USB2AH
+B     | 1.1          | HID          | USB11BHID
+B     | 2.0          | Device       | USB2BD
+B     | 2.0          | Host         | USB2BH
 
 Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c | 58 +++++++++++++++++++++++++++++-
- 1 file changed, 57 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-index 68aa04664a62..634b371da43a 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c
-@@ -25,7 +25,7 @@
- #include "../pinctrl-utils.h"
- #include "pinctrl-aspeed.h"
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+index 09142dab47db..3b7266c7c438 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+@@ -87,7 +87,8 @@ SALT11 SALT12 SALT13 SALT14 SALT2 SALT3 SALT4 SALT5 SALT6 SALT7 SALT8 SALT9
+ SCL1 SCL2 SD1 SD2 SDA1 SDA2 SGPS1 SGPS2 SIOONCTRL SIOPBI SIOPBO SIOPWREQ
+ SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1CS1 SPI1DEBUG SPI1PASSTHRU SPI2CK SPI2CS0
+ SPI2CS1 SPI2MISO SPI2MOSI TIMER3 TIMER4 TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2
+-TXD3 TXD4 UART6 USBCKI VGABIOSROM VGAHS VGAVS VPI24 VPO WDTRST1 WDTRST2
++TXD3 TXD4 UART6 USB11BHID USB2AD USB2AH USB2BD USB2BH USBCKI VGABIOSROM VGAHS
++VGAVS VPI24 VPO WDTRST1 WDTRST2
  
--#define ASPEED_G5_NR_PINS 232
-+#define ASPEED_G5_NR_PINS 236
- 
- #define COND1		{ ASPEED_IP_SCU, SCU90, BIT(6), 0, 0 }
- #define COND2		{ ASPEED_IP_SCU, SCU94, GENMASK(1, 0), 0, 0 }
-@@ -1724,6 +1724,48 @@ FUNC_GROUP_DECL(LPCRST, G22);
- 
- FUNC_GROUP_DECL(ESPI, G21, G20, D22, E22, C22, F21, F22, G22);
- 
-+#define A7 232
-+SIG_EXPR_LIST_DECL_SINGLE(USB2AHDP, USB2AH, SIG_DESC_SET(SCU90, 29));
-+SIG_EXPR_LIST_DECL_SINGLE(USB2ADDP, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
-+MS_PIN_DECL_(A7, SIG_EXPR_LIST_PTR(USB2AHDP), SIG_EXPR_LIST_PTR(USB2ADDP));
-+
-+#define A8 233
-+SIG_EXPR_LIST_DECL_SINGLE(USB2AHDN, USB2AH, SIG_DESC_SET(SCU90, 29));
-+SIG_EXPR_LIST_DECL_SINGLE(USB2ADDN, USB2AD, SIG_DESC_BIT(SCU90, 29, 0));
-+MS_PIN_DECL_(A8, SIG_EXPR_LIST_PTR(USB2AHDN), SIG_EXPR_LIST_PTR(USB2ADDN));
-+
-+FUNC_GROUP_DECL(USB2AH, A7, A8);
-+FUNC_GROUP_DECL(USB2AD, A7, A8);
-+
-+#define USB11BHID_DESC  { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 0, 0 }
-+#define USB2BD_DESC   { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 1, 0 }
-+#define USB2BH1_DESC { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 2, 0 }
-+#define USB2BH2_DESC { ASPEED_IP_SCU, SCU94, GENMASK(14, 13), 3, 0 }
-+
-+#define B6 234
-+SIG_EXPR_LIST_DECL_SINGLE(USB11BDP, USB11BHID, USB11BHID_DESC);
-+SIG_EXPR_LIST_DECL_SINGLE(USB2BDDP, USB2BD, USB2BD_DESC);
-+SIG_EXPR_DECL(USB2BHDP1, USB2BH, USB2BH1_DESC);
-+SIG_EXPR_DECL(USB2BHDP2, USB2BH, USB2BH2_DESC);
-+SIG_EXPR_LIST_DECL(USB2BHDP, SIG_EXPR_PTR(USB2BHDP1, USB2BH),
-+		SIG_EXPR_PTR(USB2BHDP2, USB2BH));
-+MS_PIN_DECL_(B6, SIG_EXPR_LIST_PTR(USB11BDP), SIG_EXPR_LIST_PTR(USB2BDDP),
-+		SIG_EXPR_LIST_PTR(USB2BHDP));
-+
-+#define A6 235
-+SIG_EXPR_LIST_DECL_SINGLE(USB11BDN, USB11BHID, USB11BHID_DESC);
-+SIG_EXPR_LIST_DECL_SINGLE(USB2BDN, USB2BD, USB2BD_DESC);
-+SIG_EXPR_DECL(USB2BHDN1, USB2BH, USB2BH1_DESC);
-+SIG_EXPR_DECL(USB2BHDN2, USB2BH, USB2BH2_DESC);
-+SIG_EXPR_LIST_DECL(USB2BHDN, SIG_EXPR_PTR(USB2BHDN1, USB2BH),
-+		SIG_EXPR_PTR(USB2BHDN2, USB2BH));
-+MS_PIN_DECL_(A6, SIG_EXPR_LIST_PTR(USB11BDN), SIG_EXPR_LIST_PTR(USB2BDN),
-+		SIG_EXPR_LIST_PTR(USB2BHDN));
-+
-+FUNC_GROUP_DECL(USB11BHID, B6, A6);
-+FUNC_GROUP_DECL(USB2BD, B6, A6);
-+FUNC_GROUP_DECL(USB2BH, B6, A6);
-+
- /* Pins, groups and functions are sort(1):ed alphabetically for sanity */
- 
- static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
-@@ -1743,6 +1785,9 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(A3),
- 	ASPEED_PINCTRL_PIN(A4),
- 	ASPEED_PINCTRL_PIN(A5),
-+	ASPEED_PINCTRL_PIN(A6),
-+	ASPEED_PINCTRL_PIN(A7),
-+	ASPEED_PINCTRL_PIN(A8),
- 	ASPEED_PINCTRL_PIN(A9),
- 	ASPEED_PINCTRL_PIN(AA1),
- 	ASPEED_PINCTRL_PIN(AA19),
-@@ -1777,6 +1822,7 @@ static struct pinctrl_pin_desc aspeed_g5_pins[ASPEED_G5_NR_PINS] = {
- 	ASPEED_PINCTRL_PIN(B3),
- 	ASPEED_PINCTRL_PIN(B4),
- 	ASPEED_PINCTRL_PIN(B5),
-+	ASPEED_PINCTRL_PIN(B6),
- 	ASPEED_PINCTRL_PIN(B9),
- 	ASPEED_PINCTRL_PIN(C1),
- 	ASPEED_PINCTRL_PIN(C11),
-@@ -2111,6 +2157,11 @@ static const struct aspeed_pin_group aspeed_g5_groups[] = {
- 	ASPEED_PINCTRL_GROUP(TXD3),
- 	ASPEED_PINCTRL_GROUP(TXD4),
- 	ASPEED_PINCTRL_GROUP(UART6),
-+	ASPEED_PINCTRL_GROUP(USB11BHID),
-+	ASPEED_PINCTRL_GROUP(USB2AD),
-+	ASPEED_PINCTRL_GROUP(USB2AH),
-+	ASPEED_PINCTRL_GROUP(USB2BD),
-+	ASPEED_PINCTRL_GROUP(USB2BH),
- 	ASPEED_PINCTRL_GROUP(USBCKI),
- 	ASPEED_PINCTRL_GROUP(VGABIOSROM),
- 	ASPEED_PINCTRL_GROUP(VGAHS),
-@@ -2275,6 +2326,11 @@ static const struct aspeed_pin_function aspeed_g5_functions[] = {
- 	ASPEED_PINCTRL_FUNC(TXD3),
- 	ASPEED_PINCTRL_FUNC(TXD4),
- 	ASPEED_PINCTRL_FUNC(UART6),
-+	ASPEED_PINCTRL_FUNC(USB11BHID),
-+	ASPEED_PINCTRL_FUNC(USB2AD),
-+	ASPEED_PINCTRL_FUNC(USB2AH),
-+	ASPEED_PINCTRL_FUNC(USB2BD),
-+	ASPEED_PINCTRL_FUNC(USB2BH),
- 	ASPEED_PINCTRL_FUNC(USBCKI),
- 	ASPEED_PINCTRL_FUNC(VGABIOSROM),
- 	ASPEED_PINCTRL_FUNC(VGAHS),
+ Examples
+ ========
 -- 
 2.11.0
+
