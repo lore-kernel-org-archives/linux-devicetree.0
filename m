@@ -1,134 +1,57 @@
-From: Baolin Wang <baolin.wang@spreadtrum.com>
-Subject: Re: [PATCH v4 1/3] pinctrl: Add sleep related configuration
-Date: Tue, 27 Jun 2017 20:06:26 +0800
-Message-ID: <20170627120626.GA1067@spreadtrum.com>
-References: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
- <20170626161348.vrtlpat5eof5aa2c@rob-hp-laptop>
- <20170627082132.GB32447@spreadtrum.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170627082132.GB32447@spreadtrum.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, linus.walleij@linaro.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+From: surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org
+Subject: [PATCH] arm: boot: dts: artpec6: Remove unnecessary interrupt-parent property from sub-nodes
+Date: Tue, 27 Jun 2017 17:45:35 +0530
+Message-ID: <1498565735-8208-1-git-send-email-surenderp@techveda.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jesper.nilsson-VrBV9hrLPhE@public.gmane.org, lars.persson-VrBV9hrLPhE@public.gmane.org, niklas.cassel-VrBV9hrLPhE@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org
+Cc: linux-arm-kernel-VrBV9hrLPhE@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sunil.m-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org, Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
 
-On 二,  6月 27, 2017 at 04:21:32下午 +0800, Baolin Wang wrote:
-> On 一,  6月 26, 2017 at 11:13:48上午 -0500, Rob Herring wrote:
-> > On Wed, Jun 21, 2017 at 07:55:37PM +0800, Baolin Wang wrote:
-> > > In some scenarios, we should set some pins as input/output/pullup/pulldown
-> > > when the specified system goes into deep sleep mode, then when the system
-> > > goes into deep sleep mode, these pins will be set automatically by hardware.
-> > > 
-> > > Usually we can set the "sleep" state to set sleep related config, but one SoC
-> > > usually has not only one system (especially for mobile SoC), some systems on
-> > > the SoC which did not run linux kernel, they can not select the "sleep" state
-> > > when they go into deep sleep mode.
-> > 
-> > The wording here is not very clear. I think what you mean is some pins 
-> > are not controlled by any specific driver in the OS, but need to be 
-> > controlled when entering sleep mode.
-> 
-> Yes, that is what I meaning, sorry for confusing.
-> 
-> > 
-> > > Thus we introduce some sleep related config into pinconf-generic for users to
-> > > configure.
-> > > 
-> > > Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> > > ---
-> > >  - Add this patch since v4.
-> > > ---
-> > >  .../bindings/pinctrl/pinctrl-bindings.txt          |   12 ++++++++++++
-> > >  drivers/pinctrl/pinconf-generic.c                  |   10 ++++++++++
-> > >  include/linux/pinctrl/pinconf-generic.h            |   14 ++++++++++++++
-> > >  3 files changed, 36 insertions(+)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > > index bf3f7b0..e098059 100644
-> > > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > > @@ -236,6 +236,18 @@ low-power-enable	- enable low power mode
-> > >  low-power-disable	- disable low power mode
-> > >  output-low		- set the pin to output mode with low level
-> > >  output-high		- set the pin to output mode with high level
-> > > +sleep-bias-pull-up	- pull up the pin when the specified system goes into
-> > > +			  deep sleep mode
-> > > +sleep-bias-pull-down	- pull down the pin when the specified system goes into
-> > > +			  deep sleep mode
-> > > +sleep-input-enable	- enable input on pin when the specified system goes
-> > > +			  into deep sleep mode (no effect on output)
-> > > +sleep-intput-disable	- disable input on pin when the specified system goes
-> > > +			  into deep sleep mode (no effect on output)
-> > > +sleep-output-low	- set the pin to output mode with low level when the
-> > > +			  specified system goes into deep sleep mode
-> > > +sleep-output-high	- set the pin to output mode with high level when the
-> > > +			  specified system goes into deep sleep mode
-> > >  slew-rate		- set the slew rate
-> > 
-> > I don't really like having 2 ways to define pin setup and this doesn't 
-> > scale if I need to define 3 states. Couldn't we create pin state 
-> > definitions and have a pinctrl-n property within the pin controller 
-> > node to handle all the unhandled pins?
-> 
-> As LinusW also suggest we can create one "sleep" state and program them
-> into registers at early point (like: after probing pinctrl driver). So I
-> think I can introduce one called "early-sleep" state which need select it
-> after initializing pinctrl driver.
+"interrupt-parent" property is declared in root node, so it is global
+to all nodes. This property is re-declared in few sub-nodes. To avoid
+duplication this property is removed from following sub-nodes:
+pmu, amba@0, amba@0/ethernet.
 
-After more investigation, I do not think it is a good solution to create one
-state containing sleep related configs and select it at early point.
+Signed-off-by: Surender Polsani <surenderp-fINqtvHxh+hg9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/artpec6.dtsi | 3 ---
+ 1 file changed, 3 deletions(-)
 
-First these sleep related configs are pins' attributes, they should be set
-depanding on users situation, which means the state containing sleep related
-configs should be selected by users. We can not create one "sleep-xxx" state
-containing all pins' sleep related configs, and select it when initializing
-pinctrl driver.
+diff --git a/arch/arm/boot/dts/artpec6.dtsi b/arch/arm/boot/dts/artpec6.dtsi
+index 767cbe8..2ed1177 100644
+--- a/arch/arm/boot/dts/artpec6.dtsi
++++ b/arch/arm/boot/dts/artpec6.dtsi
+@@ -151,7 +151,6 @@
+ 		interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+ 			<GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-affinity = <&cpu0>, <&cpu1>;
+-		interrupt-parent = <&intc>;
+ 	};
+ 
+ 	pcie: pcie@f8050000 {
+@@ -185,7 +184,6 @@
+ 		compatible = "simple-bus";
+ 		#address-cells = <0x1>;
+ 		#size-cells = <0x1>;
+-		interrupt-parent = <&intc>;
+ 		ranges;
+ 		dma-ranges = <0x80000000 0x00000000 0x40000000>;
+ 		dma-coherent;
+@@ -195,7 +193,6 @@
+ 			clocks = <&eth_phy_ref_clk>,
+ 				<&clkctrl ARTPEC6_CLK_ETH_ACLK>;
+ 			compatible = "snps,dwc-qos-ethernet-4.10";
+-			interrupt-parent = <&intc>;
+ 			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0xf8010000 0x4000>;
+ 
+-- 
+1.9.1
 
-Second if we create one "sleep-xxx" state containing sleep related configs,
-which means we should set one pin's configuration in 2 places.
-
-If we introduce "sleep-input-enable" config, we can set the pin's config
-as below:
-vio_sd0_ms_3: regctrl3 {
-	pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
-	function = "func1";
-	sprd,sleep-mode = <0x3>;
-	sleep-input-enable;
-};
-
-But If we create one extra "sleep-xxx" state for sleep-related configs,
-it will be like:
-grp1: regctrl3 {
-	pins = "SC9860_RFCTL30", "SC9860_RFCTL31";
-	function = "func1";
-	sprd,sleep-mode = <0x3>;
-};
-
-sleep-input: input_grp {
-	pins = "SC9860_RFCTL30", "SC9860_RFCTL31", "SC9860_RFCTL32";
-	input-enable;
-};
-
-pinctrl-names = "sleep-input";
-pinctrl-0 = <&sleep-input>;
-
-"sleep-input" state will be selected when initializing pinctrl driver, "grp1"
-will be selected by user to set other pin configuration.
-
-Then we need config "SC9860_RFCTL30" pin in 2 different places, which is
-more inconvenient for users.
-
-Accoring to above explanation, I think we should introduce these standard
-sleep related configs for users, but if you still have strong objection for
-it, I think I should introduce some SoC-specific attributes (something like
-"sprd,sleep-input") for our driver. LinusW and Rob, do you have any good
-suggestion? Thanks.
-
-> 
-> > 
-> > Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
