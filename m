@@ -1,118 +1,140 @@
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: Re: [PATCH v2 1/8] dt-bindings: mfd: Add STM32 LPTimer binding
-Date: Tue, 27 Jun 2017 10:57:32 +0200
-Message-ID: <a69a61c3-95a8-d0cc-10a6-4a7cf65ff2c5@st.com>
-References: <1498055415-31513-1-git-send-email-fabrice.gasnier@st.com>
- <1498055415-31513-2-git-send-email-fabrice.gasnier@st.com>
- <20170626180744.fyyzjsu4pmurohap@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170626180744.fyyzjsu4pmurohap@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, mcoquelin.stm32@gmail.com, alexandre.torgue@st.com, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org, benjamin.gaignard@linaro.org, lee.jones@linaro.org, jic23@kernel.org, benjamin.gaignard@st.com
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: Disable HDMI CEC internal pull-ups
+Date: Tue, 27 Jun 2017 01:58:32 -0700
+Message-ID: <20170627085832.30949-1-tony@atomide.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2017 08:07 PM, Rob Herring wrote:
-> On Wed, Jun 21, 2017 at 04:30:08PM +0200, Fabrice Gasnier wrote:
->> Add documentation for STMicroelectronics STM32 Low-Power Timer binding.
->>
->> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
->> ---
->> Changes in v2:
->> - Lee's comments: s/Low Power/Low-Power/, remove 0x in example, improve
->>   properties descriptions
->> ---
->>  .../devicetree/bindings/mfd/stm32-lptimer.txt      | 48 ++++++++++++++++++++++
->>  1 file changed, 48 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
->> new file mode 100644
->> index 0000000..af859c8
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/stm32-lptimer.txt
->> @@ -0,0 +1,48 @@
->> +STMicroelectronics STM32 Low-Power Timer
->> +
->> +The STM32 Low-Power Timer (LPTIM) is a 16-bit timer that provides several
->> +functions:
->> +- PWM output (with programmable prescaler, configurable polarity)
->> +- Quadrature encoder, counter
->> +- Trigger source for STM32 ADC/DAC (LPTIM_OUT)
->> +
->> +Required properties:
->> +- compatible:		Must be "st,stm32-lptimer".
->> +- reg:			Offset and length of the device's register set.
->> +- clocks:		Phandle to the clock used by the LP Timer module.
->> +- clock-names:		Must be "mux".
->> +- #address-cells:	Should be '<1>'.
->> +- #size-cells:		Should be '<0>'.
->> +
->> +Optional subnodes:
->> +- pwm:			See ../pwm/pwm-stm32-lp.txt
->> +- counter:		See ../iio/timer/stm32-lptimer-cnt.txt
->> +- trigger:		See ../iio/timer/stm32-lptimer-trigger.txt
->> +
->> +Example:
->> +
->> +	lptimer1: lptimer@40002400 {
-> 
-> timer@...
+Devices using an external encoder, ESD protection and level shifter
+such as tpd12s015 or ip4791cz12 have the CEC pull in the encoder
+chip. And on var-som-om44, there is external pull up resistor R30.
 
-Hi Rob,
+So the internal CEC pull-up resistor needs to be disabled as otherwise
+the external and internal pull are parallel making the pull value
+much smaller than intended. This leads into the CEC not working as
+reported by Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>.
 
-I initially put "lptimer" here to distinguish Low-Power Timer hardware
-from other "timers" hardware that can be found also on stm32 devices.
-I'd prefer to keep it, is it sensible from your point of view ?
-Please advise.
+Reported-by: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
+Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+---
 
-> 
->> +		compatible = "st,stm32-lptimer";
->> +		reg = <0x40002400 0x400>;
->> +		clocks = <&timer_clk>;
->> +		clock-names = "mux";
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		pwm {
->> +			compatible = "st,stm32-pwm-lp";
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&lppwm1_pins>;
->> +		};
->> +
->> +		trigger@0 {
->> +			compatible = "st,stm32-lptimer-trigger";
->> +			reg = <0>;
-> 
-> Is there more than 1? 
+Dmitry, care to check that also omap5-cm-t54 has external pull on CEC pin?
 
-reg identifies trigger hardware block.
+---
+ arch/arm/boot/dts/omap4-droid4-xt894.dts         | 2 +-
+ arch/arm/boot/dts/omap4-duovero-parlor.dts       | 2 +-
+ arch/arm/boot/dts/omap4-panda-common.dtsi        | 2 +-
+ arch/arm/boot/dts/omap4-sdp-es23plus.dts         | 2 +-
+ arch/arm/boot/dts/omap4-sdp.dts                  | 2 +-
+ arch/arm/boot/dts/omap4-var-om44customboard.dtsi | 2 +-
+ arch/arm/boot/dts/omap5-board-common.dtsi        | 2 +-
+ arch/arm/boot/dts/omap5-cm-t54.dts               | 2 +-
+ 8 files changed, 8 insertions(+), 8 deletions(-)
 
-Best Regards,
-Thanks,
-Fabrice
-
-> 
->> +		};
->> +
->> +		counter {
->> +			compatible = "st,stm32-lptimer-counter";
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&lptim1_in_pins>;
->> +		};
->> +	};
->> -- 
->> 1.9.1
->>
+diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+--- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
++++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
+@@ -373,7 +373,7 @@
+ 	/* hdmi_cec.hdmi_cec, hdmi_scl.hdmi_scl, hdmi_sda.hdmi_sda */
+ 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+ 		pinctrl-single,pins = <
+-		OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)
++		OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)
+ 		OMAP4_IOPAD(0x09c, PIN_INPUT | MUX_MODE0)
+ 		OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)
+ 		>;
+diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
+--- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
++++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
+@@ -100,7 +100,7 @@
+ 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+ 		pinctrl-single,pins = <
+ 			OMAP4_IOPAD(0x098, PIN_INPUT | MUX_MODE3)		/* hdmi_hpd.gpio_63 */
+-			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
++			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
+ 			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_scl.hdmi_ddc_scl */
+ 			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_sda.hdmi_ddc_sda */
+ 		>;
+diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dts/omap4-panda-common.dtsi
+--- a/arch/arm/boot/dts/omap4-panda-common.dtsi
++++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+@@ -267,7 +267,7 @@
+ 
+ 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+ 		pinctrl-single,pins = <
+-			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
++			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
+ 			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_scl.hdmi_scl */
+ 			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_sda.hdmi_sda */
+ 		>;
+diff --git a/arch/arm/boot/dts/omap4-sdp-es23plus.dts b/arch/arm/boot/dts/omap4-sdp-es23plus.dts
+--- a/arch/arm/boot/dts/omap4-sdp-es23plus.dts
++++ b/arch/arm/boot/dts/omap4-sdp-es23plus.dts
+@@ -10,7 +10,7 @@
+ /* SDP boards with 4430 ES2.3+ or 4460 have external pullups on SCL & SDA */
+ &dss_hdmi_pins {
+ 	pinctrl-single,pins = <
+-		OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
++		OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
+ 		OMAP4_IOPAD(0x09c, PIN_INPUT | MUX_MODE0)		/* hdmi_scl.hdmi_scl */
+ 		OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)		/* hdmi_sda.hdmi_sda */
+ 		>;
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -290,7 +290,7 @@
+ 
+ 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+ 		pinctrl-single,pins = <
+-			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
++			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
+ 			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_scl.hdmi_scl */
+ 			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_sda.hdmi_sda */
+ 		>;
+diff --git a/arch/arm/boot/dts/omap4-var-om44customboard.dtsi b/arch/arm/boot/dts/omap4-var-om44customboard.dtsi
+--- a/arch/arm/boot/dts/omap4-var-om44customboard.dtsi
++++ b/arch/arm/boot/dts/omap4-var-om44customboard.dtsi
+@@ -122,7 +122,7 @@
+ 
+ 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+ 		pinctrl-single,pins = <
+-			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
++			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
+ 			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_scl.hdmi_scl */
+ 			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_sda.hdmi_sda */
+ 		>;
+diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dts/omap5-board-common.dtsi
+--- a/arch/arm/boot/dts/omap5-board-common.dtsi
++++ b/arch/arm/boot/dts/omap5-board-common.dtsi
+@@ -294,7 +294,7 @@
+ 
+ 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+ 		pinctrl-single,pins = <
+-			OMAP5_IOPAD(0x13c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
++			OMAP5_IOPAD(0x13c, PIN_INPUT | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
+ 			OMAP5_IOPAD(0x140, PIN_INPUT | MUX_MODE0)	/* hdmi_ddc_scl.hdmi_ddc_scl */
+ 			OMAP5_IOPAD(0x142, PIN_INPUT | MUX_MODE0)	/* hdmi_ddc_sda.hdmi_ddc_sda */
+ 		>;
+diff --git a/arch/arm/boot/dts/omap5-cm-t54.dts b/arch/arm/boot/dts/omap5-cm-t54.dts
+--- a/arch/arm/boot/dts/omap5-cm-t54.dts
++++ b/arch/arm/boot/dts/omap5-cm-t54.dts
+@@ -266,7 +266,7 @@
+ 
+ 	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+ 		pinctrl-single,pins = <
+-			OMAP5_IOPAD(0x013c, PIN_INPUT_PULLUP | MUX_MODE0) /* hdmi_cec */
++			OMAP5_IOPAD(0x013c, PIN_INPUT | MUX_MODE0) /* hdmi_cec */
+ 			OMAP5_IOPAD(0x0140, PIN_INPUT | MUX_MODE0) /* hdmi_ddc_scl */
+ 			OMAP5_IOPAD(0x0142, PIN_INPUT | MUX_MODE0) /* hdmi_ddc_sda */
+ 		>;
+-- 
+2.13.0
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
