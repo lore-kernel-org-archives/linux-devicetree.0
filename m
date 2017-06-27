@@ -1,93 +1,46 @@
-From: Hugues FRUCHET <hugues.fruchet@st.com>
-Subject: Re: [PATCH v1 2/6] [media] ov9650: add device tree support
-Date: Tue, 27 Jun 2017 10:14:46 +0000
-Message-ID: <00c5784a-8e13-be01-5c9e-4747aaa14ae5@st.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-3-git-send-email-hugues.fruchet@st.com>
- <20170626163102.GQ12407@valkosipuli.retiisi.org.uk>
- <D780984B-70A1-4E9C-A887-DD2CBAAC7CCA@goldelico.com>
- <20170627053642.GW12407@valkosipuli.retiisi.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: sun7i: Add A20 LCD0 RGB888 pins
+Date: Tue, 27 Jun 2017 12:15:50 +0200
+Message-ID: <20170627101550.mr3qp5dgazbm7lsy@flea.lan>
+References: <20170626125506.21063-1-net147@gmail.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170627053642.GW12407@valkosipuli.retiisi.org.uk>
-Content-Language: en-US
-Content-ID: <2B917BC86A1C8248B4FEBDFE843330DF@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sakari Ailus <sakari.ailus@iki.fi>, "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Alexandre TORGUE <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Yannick FERTRE <yannick.fertre@st.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b4susz5ofmmkpyze"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV7AZDFAKGQEV3LLPVI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170626125506.21063-1-net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+--b4susz5ofmmkpyze
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-On 06/27/2017 07:36 AM, Sakari Ailus wrote:
-> On Mon, Jun 26, 2017 at 07:46:34PM +0200, H. Nikolaus Schaller wrote:
->> Hi,
->>
->>> Am 26.06.2017 um 18:31 schrieb Sakari Ailus <sakari.ailus@iki.fi>:
->>>
->>> Hi Hugues,
->>>
->>> On Thu, Jun 22, 2017 at 05:05:38PM +0200, Hugues Fruchet wrote:
->>>> @@ -1545,15 +1577,22 @@ static int ov965x_remove(struct i2c_client *client)
->>>> }
->>>>
->>>> static const struct i2c_device_id ov965x_id[] = {
->>>> -	{ "OV9650", 0 },
->>>> -	{ "OV9652", 0 },
->>>> +	{ "OV9650", 0x9650 },
->>>> +	{ "OV9652", 0x9652 },
->>>
->>> This change does not appear to match with the patch description nor it the
->>> information is used. How about not changing it, unless there's a reason to?
->>> The same for the data field of the of_device_id array below.
->>
->> I think it could/should be used to check if the camera chip that is found
->> by reading the product-id and version registers does match what the device
->> tree expects and abort probing on a mismatch.
+Hi,
+
+On Mon, Jun 26, 2017 at 10:55:06PM +1000, Jonathan Liu wrote:
+> The LCD0 controller on the A20 can do RGB output up to 8 bits per
+> channel. Add the pins for RGB888 output.
 > 
-> Makes sense. But it should be a separate patch, shouldn't it?
-> 
-> You could also put the id to the ops struct, and choose the ops struct that
-> way. Entirely up to you.
-> 
+> Signed-off-by: Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I'll suggest to skip the id check between DT compatible string and real 
-device id read from sensor, this is not something I see in other drivers 
-currently.
-But I would suggest to keep in a separate patch the switch of device id 
-names to lower case in order to align with other omnivision cameras and 
-not introduce upper/lower case potential bugs in DT later on (as the one 
-encountered by Nikolaus):
+We're not merging those patches if it's not used by any boards in
+tree.
 
-  [media] ov9650: switch i2c device id to lower case
+Maxime
 
-  static const struct i2c_device_id ov965x_id[] = {
--	{ "OV9650", 0 },
--	{ "OV9652", 0 },
-+	{ "ov9650", 0 },
-+	{ "ov9652", 0 },
-
-
-  [media] ov9650: add device tree support
-
-+static const struct of_device_id ov965x_of_match[] = {
-+	{ .compatible = "ovti,ov9650", },
-+	{ .compatible = "ovti,ov9652", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, ov965x_of_match);
-+
-  static struct i2c_driver ov965x_i2c_driver = {
-  	.driver = {
-  		.name	= DRIVER_NAME,
-+		.of_match_table = of_match_ptr(ov965x_of_match),
+-- 
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--b4susz5ofmmkpyze--
