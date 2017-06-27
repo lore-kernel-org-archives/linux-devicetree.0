@@ -1,77 +1,50 @@
-From: matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH 2/3] mtd: spi-nor: core code for the Altera Quadspi Flash
- Controller v2
-Date: Tue, 27 Jun 2017 12:44:29 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1706271243150.8058@mgerlach-VirtualBox>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com> <1498493619-4633-3-git-send-email-matthew.gerlach@linux.intel.com> <852b819d-ea7a-4854-cae1-3857cf92930d@gmail.com> <alpine.DEB.2.20.1706270737120.8058@mgerlach-VirtualBox>
- <0cb464ef-eeb8-ebc9-fde9-b6d42bf03877@gmail.com> <alpine.DEB.2.20.1706271019140.8058@mgerlach-VirtualBox> <9ca626e3-fc80-2b50-85aa-5db102dc9b7f@gmail.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/5] dt-bindings: add bindings for i2c-pca-platform
+Date: Tue, 27 Jun 2017 21:53:42 +0200
+Message-ID: <20170627195342.p2e7wx7lv5v6emhw@ninjato>
+References: <20170620011837.14010-1-chris.packham@alliedtelesis.co.nz>
+ <20170626004434.2757-1-chris.packham@alliedtelesis.co.nz>
+ <20170626004434.2757-2-chris.packham@alliedtelesis.co.nz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9ca626e3-fc80-2b50-85aa-5db102dc9b7f@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="efxffvqdpbjftnss"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170626004434.2757-2-chris.packham@alliedtelesis.co.nz>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc: robh+dt@kernel.org, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--efxffvqdpbjftnss
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tue, 27 Jun 2017, Marek Vasut wrote:
+On Mon, Jun 26, 2017 at 12:44:30PM +1200, Chris Packham wrote:
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-> On 06/27/2017 07:26 PM, matthew.gerlach@linux.intel.com wrote:
->
-> [...]
->
->>>>>> +#ifndef __ALTERA_QUADSPI_H
->>>>>> +#define __ALTERA_QUADSPI_H
->>>>>> +
->>>>>> +#include <linux/device.h>
->>>>>> +
->>>>>> +#define ALTERA_QUADSPI_FL_BITREV_READ BIT(0)
->>>>>> +#define ALTERA_QUADSPI_FL_BITREV_WRITE BIT(1)
->>>>>> +
->>>>>> +#define ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP 3
->>>>>> +
->>>>>> +int altera_quadspi_create(struct device *dev, void __iomem *csr_base,
->>>>>> +              void __iomem *data_base, void __iomem *window_reg,
->>>>>> +              size_t window_size, u32 flags);
->>>>>> +
->>>>>> +int altera_qspi_add_bank(struct device *dev,
->>>>>> +             u32 bank, struct device_node *np);
->>>>>> +
->>>>>> +int altera_quadspi_remove_banks(struct device *dev);
->>>>>
->>>>> Why is this header needed at all ?
->>>>
->>>> This header is needed because of the very different ways
->>>> FPGAs can be used with a processor running Linux.  In the case of a
->>>> soft processor in the FPGA or an ARM connected to a FPGA, this header
->>>> is not necessary because device trees are used to probe the driver.
->>>> However, if the FPGA is on a PCIe card connected to an x86, device trees
->>>> are not generally used, and the pcie driver must enumerate the
->>>> "sub-driver".
->>>
->>> But we don't support that later part, do we ?
->>
->> There is currently v2 patch set for the intel-fpga PCIe driver being
->> reviewed where I am adding support for version 2 of the Altera Quadspi
->> controller.
->
-> It'd be real nice to mention that in the cover letter with a link to
-> that patchset , otherwise it's real hard to understand why you did this.
+Applied to for-next, thanks!
 
-The v2 patch set does not have my changes in it, but adding discussion in 
-the cover letter is great idea!
 
-Many thanks,
+--efxffvqdpbjftnss
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Matthew Gerlach
->
->> This technique of separating core driver code from platform/device tree
->> code has been reviewed and accepted for the Altera Partial
->> Reconfiguration IP, Altera Freeze Bridge, and the fpga region.
->
-> -- 
-> Best regards,
-> Marek Vasut
->
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAllSt8YACgkQFA3kzBSg
+KbadCBAAruiQUGjGeDLdUyvF8xNyQ9n8PdP1ElAWay0FMN7kMnqCdcoeNXgWhQDx
+d0TUocH3KMXNoriZxWWLewp38mfjD5Gd5KoqW8oix2IBGGbv2ZS+i2vRm0Ch8MKX
+1OXG7APLzA5Eou/SdOpI83QTrk0aCkCYMPUhtYFYCSOil0b4UWeku7s3kyAZZoYr
+Cao6NcPWZ7tAcrayLK23fXbh8kO1LPpW9OJD/GF2YtRt8foR70n15GlwPbr+DNxd
++4jSahl5mM/2aR7FRi+L6Zp2EbrWdf4i4alGrWFoWEO0V0JsPf7DSll3IJkNZ+2e
+2xfxmlbypW8P/MZQgZxG7iP5O7HslE0Oi9W0wZQhTK49p0S4dX+2tAylYoQdeMeL
+s/Doky9L0xvXPCxz0rLi8+XZksLl0fZ4hCizDRD1MUyWDZ56s69OZzv0mxLZ0gjf
+cBj+4vZewpHFukFe0dcHDHrVh3YiBX2BfuW/w04ss0iIEyijyanJe67UyOCCImR3
+kMuALdcx1SEwmHd2jjnvWHdpBIZsk1TjItfR5x3S+YC8gMKL1tPn7di+KkCmFucj
+2728Xf079zO9zhsr6OMekaxN9jdYSwop69eSbxrlhurNUomlfdffltxqljXlUUyH
+Ox4gkk5y3QAZ4Mx1LQPbLOOv5sOgS7MG8loc2gltdKsPRJ80BbU=
+=yulN
+-----END PGP SIGNATURE-----
+
+--efxffvqdpbjftnss--
