@@ -1,111 +1,168 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: Bindings for Altera Quadspi Controller
- Version 2
-Date: Tue, 27 Jun 2017 21:56:10 +0200
-Message-ID: <6d1cba23-afc9-96db-00d1-47e6aefcc9f0@gmail.com>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1498493619-4633-2-git-send-email-matthew.gerlach@linux.intel.com>
- <0bfc282d-2aec-8f36-1528-312f7ded8d9c@gmail.com>
- <alpine.DEB.2.20.1706270722440.8058@mgerlach-VirtualBox>
- <0ca53c35-732c-a122-8191-6d102e824d52@gmail.com>
- <alpine.DEB.2.20.1706270833100.8058@mgerlach-VirtualBox>
- <a7e3bb21-6e05-4117-0a25-8782a75b93ad@gmail.com>
- <alpine.DEB.2.20.1706271004460.8058@mgerlach-VirtualBox>
- <510a1968-3e5c-8621-a2f1-116cfe8f6eac@gmail.com>
- <alpine.DEB.2.20.1706271226100.8058@mgerlach-VirtualBox>
+From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] [media] platform: Add Synopsys Designware HDMI RX
+ Controller Driver
+Date: Tue, 27 Jun 2017 22:34:46 +0200
+Message-ID: <2153d8da-effc-fedd-a2ce-b1c9ee40a82c@kernel.org>
+References: <cover.1497978962.git.joabreu@synopsys.com>
+ <314b7ae92c9924d0991e14ccad80ca937a2d7b07.1497978962.git.joabreu@synopsys.com>
+ <e6f63454-2e87-6e93-50c3-2802e9357c2a@kernel.org>
+ <2868c525-3edd-0fe1-cc6f-49a758f8c434@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.20.1706271226100.8058@mgerlach-VirtualBox>
+In-Reply-To: <2868c525-3edd-0fe1-cc6f-49a758f8c434-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2017 09:32 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+Hi Jose,
 
-[...]
+On 06/27/2017 10:43 AM, Jose Abreu wrote:
+> On 25-06-2017 22:13, Sylwester Nawrocki wrote:
+>> On 06/20/2017 07:26 PM, Jose Abreu wrote:
+>>> This is an initial submission for the Synopsys Designware HDMI RX
+>>> Controller Driver. This driver interacts with a phy driver so that
+>>> a communication between them is created and a video pipeline is
+>>> configured.
+>>> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
->>> Hi Marek,
->>>
->>> I am trying to write an MTD/spi-nor driver for version 2 of the
->>> Altera Quadspi contoller.  This controller is soft IP that is deployed
->>> in a FPGA.  As such, this component/driver can be used in wide range of
->>> use cases.  The controller could be used to update EPCQ/EPCS flash
->>> stores containing bit streams, but this component could be used for
->>> flash for filesystems or any non-volatile data store.  My hope is that
->>> all possible use cases should be covered by this driver.
+>>> +static int dw_hdmi_phy_init(struct dw_hdmi_dev *dw_dev)
+>>> +{
+>>> +	struct dw_phy_pdata *phy = &dw_dev->phy_config;
+>>> +	const struct of_device_id *of_id;
+>>> +	struct of_dev_auxdata lookup;
+>> 	struct of_dev_auxdata lookup = { };
 >>
->> How does this particular case where you have to reverse the bits look
->> like ?
-> 
-> The use case for reversing the bits involves a processor updating
-> EPCQ/EPCS flash whose contents are read by the FPGA on power up.  The
-> processor and Altera Quadspi component, inside the configured FPGA,
-> access the bits in one way serially, but the hardware that accesses the
-> flash during power accesses the bits in the opposite way serially.
-
-So it's the same crap Xilinx does, they have some tool to do this with
-their bitstream before they write it into flash.
-
-But then, you only have to do it with your bitstream. If you put ie. UBI
-after the bitstream part, the UBI can be in normal bit ordering.
-So instead of polluting the DT bindings with this, make a similar tool
-to what Xilinx has, do the bit shuffling using that tool and then write
-the bitstream into the flash in the correct order.
-
->>>>>>> Thinking about this binding more, I wonder if the binding name(s)
->>>>>>> should be (read|write)-bit8-reverse to indicate reversings the bits
->>>>>>> in a byte as opposed to reversing the bits in a 32 bit word?
->>>>>>>
->>>>>>> I don't think bit reversal is specific to Altera/Intel components.
->>>>>>> I see
->>>>>>> a nand driver performing bit reversal, and I think I've recently
->>>>>>> seen
->>>>>>> other FPGA based drivers requiring bit reversal.
->>>>>>
->>>>>> $ git grep bit.reverse Documentation/devicetree/ | wc -l
->>>>>> 0
->>>>>>
->>>>>> So we don't have such a generic binding . It's up to Rob (I guess) to
->>>>>> decide whether this is SoC specific and should've altr, prefix or
->>>>>> not.
->>>>>> IMO it is.
->>>>>
->>>>> I agree there is no generic binding at this time, and I look forward
->>>>> to any input from Rob and anyone else on this issue.  I think it is
->>>>> worth pointing out that this really isn't an issue of an SoC, but
->>>>> rather
->>>>> it is an
->>>>> issue of how data in the flash chip is accessed.I think what makes
->>>>> this issue
->>>>> "weird" is that we have different hardware accessing the data in the
->>>>> flash with a different perspective.  The FPGA looks at the data
->>>>> from one
->>>>> perspective on power up, and a processor trying to update the flash
->>>>> has
->>>>> a different perspective.
->>>>
->>>> Another thing I'd ask here is, is that bit-reverse a hardware property
->>>> or is that some software configuration thing ?
->>>
->>> I would say the bit reversal is a property of the FPGA that is reading
->>> the flash at power up.
+>> You could initialize to 0 here and...
 >>
->> So it's not a property of the block, but rather of the bus somewhere ?
+>>> +	struct device_node *child;
+>>> +	const char *drvname;
+>>> +	int ret;
+>>> +
+>>> +	child = dw_hdmi_get_phy_of_node(dw_dev, &of_id);
+>>> +	if (!child || !of_id || !of_id->data) {
+>>> +		dev_err(dw_dev->dev, "no supported phy found in DT\n");
+>>> +		return -EINVAL;
+>>> +	}
+>>> +
+>>> +	drvname = of_id->data;
+>>> +	phy->funcs = &dw_hdmi_phy_funcs;
+>>> +	phy->funcs_arg = dw_dev;
+>>> +
+>>> +	lookup.compatible = (char *)of_id->compatible;
+>>> +	lookup.phys_addr = 0x0;
+>>> +	lookup.name = NULL;
+>>
+>> ...drop these two assignments.
 > 
-> You are correct, it is not a property of the Altera Quadspi component, but
-> a property of the fpga and external hardware that access the flash on
-> power up.
+> Ok.
+> 
+>>> +	lookup.platform_data = phy;
+>>> +
+>>> +	request_module(drvname);
+>>
+>> I'd say this request_module() is not needed when you use the v4l2-async
+>> subnotifiers and the modules are properly installed in the file system.
+>> I might be missing something though.
+> 
+> Hmm, well I didn't actually test without request_module but I
+> think its needed, otherwise I would have to do:
+> 
+> modprobe phy_module
+> modprobe controller_module
+> 
+> With request_module I just have to do:
+> 
+> modprobe controller_module
 
-So yes, it's a property of that small thing which loads the bitstream
-from the EPCS/EPCQ and programs the cells in the FPGA. This shouldn't be
-in this driver nor it's bindings, see above.
+If you are sure you need it I'm not against that.  But assuming you have udev 
+in your system it should also work like this, without request_module():
 
--- 
-Best regards,
-Marek Vasut
+1. modprobe controller_module -> phy device is created in the kernel, uevent sent
+2. udev receives uevent, finds matching module and does modprobe phy_module
+
+Remaining part is as before: phy_module registers the driver which gets matched with 
+phy device; probe() is called which registers v4l2 subdev which then is registered
+to v4l2_device through the v4l2-async mechanism.
+
+All this assumes udev is running and modules are installed in /lib/modules/$(uname -r).
+E.g. there should be your module alias as shown by modinfo phy_module in
+/lib/modules/$(uname -r)/modules.alias.
+
+>>> +	ret = of_platform_populate(dw_dev->of_node, NULL, &lookup, dw_dev->dev);
+>>> +	if (ret) {
+>>> +		dev_err(dw_dev->dev, "failed to populate phy driver\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void dw_hdmi_phy_exit(struct dw_hdmi_dev *dw_dev)
+>>> +{
+>>> +	of_platform_depopulate(dw_dev->dev);
+>>> +}
+
+>>> +static int dw_hdmi_v4l2_notify_complete(struct v4l2_async_notifier *notifier)
+>>> +{
+>>> +	struct dw_hdmi_dev *dw_dev = notifier_to_dw_dev(notifier);
+>>> +	int ret;
+>>> +
+>>> +	ret = v4l2_device_register_subdev_nodes(&dw_dev->v4l2_dev);
+>>
+>> There shouldn't be multiple struct v4l2_device instances, instead we should
+>> have only one created by the main driver. AFAIU, in your case it would be
+>> driver associated with the dw-hdmi-soc DT node.  And normally such a top level
+>> driver creates subdev device nodes when its all required sub-devices are
+>> available.
+>>
+>> I think this patch could be useful for you:
+>> https://patchwork.linuxtv.org/patch/41834
+>>
+>> With that the dw-hdmi-soc driver would have it's v4l2-async notifier's
+>> notify_complete() callback called only when both the hdmi-rx and the
+>> hdmi-phy subdevs are registered.
+> 
+> Yeah, I saw the patches. I just implemented this way because they
+> are not merged yet, right?
+
+I think these patches will be merged in v4.14-rc1, so together with your driver.
+You could apply them locally and indicate that your series depends on them in 
+the cover letter.
+
+>>> +	if (ret) {
+>>> +		dev_err(dw_dev->dev, "failed to register subdev nodes\n");
+>>> +		return ret;
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+
+>>> +static int dw_hdmi_rx_probe(struct platform_device *pdev)
+>>> +{
+>>> +	/* V4L2 initialization */
+>>> +	sd = &dw_dev->sd;
+>>> +	v4l2_subdev_init(sd, &dw_hdmi_sd_ops);
+>>> +	strlcpy(sd->name, dev_name(dev), sizeof(sd->name));
+>>> +	sd->dev = dev;
+>>> +	sd->internal_ops = &dw_hdmi_internal_ops;
+>>> +	sd->flags |= V4L2_SUBDEV_FL_HAS_EVENTS;
+>>
+>> Don't you also need V4L2_SUBDEV_FL_HAS_DEVNODE flag set?
+> 
+> Ouch. Yes I need otherwise the subdev will not be associated with
+> the v4l2_device.
+
+This flag indicates that the v4l2 subdev device node (/dev/v4l-subdev?)
+should be created for this subdevice.
+
+---
+Regards,
+Sylwester
+ 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
