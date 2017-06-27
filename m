@@ -1,92 +1,69 @@
-From: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: input: Add the Goodix GTx5 series
- Touchscreen devicetree bindings
-Date: Tue, 27 Jun 2017 11:27:05 +0800
-Message-ID: <20170627032705.GA16627@andrew-dell>
-References: <22592d94-f482-3e4f-3860-1dce83472d4f@goodix.com>
- <20170623203706.upfzigj6ghdbqx2q@rob-hp-laptop>
- <20170626132253.GA24061@andrew-dell>
- <CAL_JsqJ6w7oEjm=i_KX8Y_axbRSdX4Q+14NQ8XaHnDevGQrS_w@mail.gmail.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH 1/4] ARM: aspeed: g4: Add USB functions to pinctrl
+ bindings
+Date: Mon, 26 Jun 2017 22:53:39 -0500
+Message-ID: <1498535619.3651.29.camel@kernel.crashing.org>
+References: <20170627021214.23323-1-andrew@aj.id.au>
+         <20170627021214.23323-2-andrew@aj.id.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJ6w7oEjm=i_KX8Y_axbRSdX4Q+14NQ8XaHnDevGQrS_w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrew-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org, mouse-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <20170627021214.23323-2-andrew@aj.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Andrew Jeffery <andrew@aj.id.au>, linus.walleij@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 09:16:40AM -0500, Rob Herring wrote:
-> On Mon, Jun 26, 2017 at 8:22 AM, Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org> wrote:
-> > Hi Rob,
-> >
-> > Thank you for the review.
-> >
-> > On Fri, Jun 23, 2017 at 03:37:06PM -0500, Rob Herring wrote:
-> >> On Mon, Jun 19, 2017 at 06:40:32PM +0800, Wang Yafei wrote:
-> >> > Signed-off-by: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
-> >> > ---
-> >> >  .../bindings/input/touchscreen/goodix-gtx5.txt     | 75 ++++++++++++++++++++++
-> >> >  1 file changed, 75 insertions(+)
-> >> >  create mode 100755 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+On Tue, 2017-06-27 at 11:42 +0930, Andrew Jeffery wrote:
+> The AST2400 contains several USB controllers:
 > 
-> [...]
-> 
-> >> > +- touchscreen-key-map: keycode value map  /*KEY_HOMEPAGE, KEY_BACK*/
-> >>
-> >> This hardly seems sufficient to map screen areas to keys. There's been
-> >> some discussion about doing that in the past.
-> >
-> > Sorry haven't notice that before, I will change it to the flowing
-> > property format:
-> > linux,keycodes = <KEY_HOMEPAGE>, <KEY_MENU>, <KEY_BACK>;
-> 
-> That's better, but not really what I meant. There's still some
-> assumption about what region each key is located in. Is every design 3
-> keys? How do you know what region of the touchscreen is a given key?
-> iOW, what are the valid ranges of coordinates for each key?
-> 
-> 
-> >> > +           compatible = "goodix,gtx5";
-> >> > +           reg = <0x14>;
-> >> > +           interrupt-parent = <&msm_gpio>;
-> >> > +           interrupts = <13 0x2800>;
-> >> > +           vtouch-supply = <&pm8916_l15>;
-> >> > +           reset-gpios = <&msm_gpio 12 0x0>;
-> >> > +           irq-gpios = <&msm_gpio 13 0x2800>;
-> >> > +           irq-flags = <1>; /* 1:trigger rising, 2:trigger falling;*/
-> >> > +           touchscreen-max-id = <10>;
-> >> > +           touchscreen-size-x = <400>;
-> >> > +           touchscreen-size-y = <400>;
-> >> > +           touchscreen-max-w = <400>;
-> >> > +           touchscreen-max-pressure = <255>;
-> >> > +           touchscreen-swapped-x-y;
-> >> > +           touchscreen-key-map = <172 158>; /*KEY_HOMEPAGE, KEY_BACK*/
-> >> > +           sensor0 {
-> >>
-> >> How many sensors can there be? That needs to be documented.
-> >>
-> >> Why do you need a sub-node?
-> >
-> > sensor is an internal call, we use senesorX to represent the touchpanel
-> > is produced by which factory. A panel factory will have it corresponding
-> > config data to get the best touch results. It will delete the sub-node
-> > and change to the following format:
-> >         panel0,normal-cfg = [...]  /* panelX,cfg : X is no more than 10*/
-> 
-> panel0 is not a vendor and normal doesn't tell us anything. How about
-> just "goodix,panel-cfg-X"?
+> * USB 1.1 Host Controller
+> * USB 2.0 Host Controller
+> * Combined USB 2.0 Virtual Hub and USB 1.1 HID Controller
 
-Can I use "goodix,normal-cfg-X" rather than "goodix,panel-cfg-X"? The
-string "normal-cfg" is meaningful to driver.
+There's also a USB1.1 HID-only device-controller, but it's a legacy
+piece of IP that we may never support. It might be worth mentioning its
+existence and Ryan might want it supported in the bindings at least no
+?
 
-> Rob
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-input" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Pins for three ports are routed to the three controllers such that:
+> 
+> * Port 1 is a dedicated USB 1.1 host port
+> * Port 2 is shared between the USB 1.1 host and HID controllers
+> * Port 3 is shared between the USB 2.0 host and Hub controllers
+> 
+> As the pins for port 1 are fixed function there is no associated mux
+> function or group described in the bindings. Ports 2 and 3 are muxed as
+> above, and the table below describes the mapping between pinmux function
+> names and ports:
+> 
+> Port  | USB Version  | USB Mode  | Mux Function
+> ------|--------------|-----------|-------------
+> 1     | 1.1          | Host      | -
+> 2     | 1.1          | Host      | USB11H2
+> 2     | 1.1          | Device    | USB11D1
+> 3     | 2.0          | Host      | USB2H1
+> 3     | 2.0          | Device    | USB2D1
+> 
+> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> index ca01710ee29a..09142dab47db 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt
+> @@ -69,8 +69,9 @@ PWM1 PWM2 PWM3 PWM4 PWM5 PWM6 PWM7 RGMII1 RGMII2 RMII1 RMII2 ROM16 ROM8 ROMCS1
+>  ROMCS2 ROMCS3 ROMCS4 RXD1 RXD2 RXD3 RXD4 SALT1 SALT2 SALT3 SALT4 SD1 SD2 SGPMCK
+>  SGPMI SGPMLD SGPMO SGPSCK SGPSI0 SGPSI1 SGPSLD SIOONCTRL SIOPBI SIOPBO SIOPWREQ
+>  SIOPWRGD SIOS3 SIOS5 SIOSCI SPI1 SPI1DEBUG SPI1PASSTHRU SPICS1 TIMER3 TIMER4
+> -TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6 USBCKI VGABIOS_ROM VGAHS
+> -VGAVS VPI18 VPI24 VPI30 VPO12 VPO24 WDTRST1 WDTRST2
+> +TIMER5 TIMER6 TIMER7 TIMER8 TXD1 TXD2 TXD3 TXD4 UART6 USB11D1 USB11H2 USB2D1
+> +USB2H1 USBCKI VGABIOS_ROM VGAHS VGAVS VPI18 VPI24 VPI30 VPO12 VPO24 WDTRST1
+> +WDTRST2
+>  
+>  aspeed,ast2500-pinctrl, aspeed,g5-pinctrl:
+>  
