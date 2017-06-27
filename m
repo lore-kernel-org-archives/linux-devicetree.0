@@ -1,99 +1,136 @@
-From: icenowy-h8G6r0blFSE@public.gmane.org
-Subject: Re: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC
- support for A83T
-Date: Tue, 27 Jun 2017 23:29:10 +0800
-Message-ID: <24845446a80e3542d90a1111a6141415@aosc.io>
-References: <20170624024515.4669-1-techping.chan@gmail.com>
- <20170624024515.4669-3-techping.chan@gmail.com>
- <20170626171524.cqfyasetpsfr6xfg@flea.lan>
- <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA@mail.gmail.com>
-Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 05/11] net: stmmac: dwmac-rk: Add internal phy support
+Date: Tue, 27 Jun 2017 17:40:04 +0200
+Message-ID: <2551050.3LrlfzW890@phil>
+References: <1498192929-7519-1-git-send-email-david.wu@rock-chips.com> <2805278.mLmlzpUgMM@phil> <924d248f-f1c0-7fa2-4b97-c4f753ffe35b@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSPTZHFAKGQEBTLYZYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <924d248f-f1c0-7fa2-4b97-c4f753ffe35b-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "David.Wu" <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hwg-TNX95d0MmH7DzftRWevZcw@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=E5=9C=A8 2017-06-27 23:18=EF=BC=8CZiping Chen =E5=86=99=E9=81=93=EF=BC=9A
-> 2017-06-27 1:15 GMT+08:00 Maxime Ripard=20
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->> Hi,
->>=20
->> On Sat, Jun 24, 2017 at 10:45:14AM +0800, Ziping Chen wrote:
->>> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>=20
->>> Allwinner A83T SoC has a low res adc like the one
->>> in Allwinner A10 SoC.
->>>=20
->>> Add binding for it.
->>>=20
->>> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6=20
->>> ++++--
->>>  1 file changed, 4 insertions(+), 2 deletions(-)
->>>=20
->>> diff --git=20
->>> a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt=20
->>> b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
->>> index 4357e498ef04..525d85e3043f 100644
->>> --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
->>> +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
->>> @@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
->>>  ------------------------------------------------
->>>=20
->>>  Required properties:
->>> - - compatible: "allwinner,sun4i-a10-lradc-keys"
->>> + - compatible: should be one of the following string:
->>> +             "allwinner,sun4i-a10-lradc-keys"
->>> +             "allwinner,sun8i-a83t-r-lradc-keys"
->>=20
->> This doesn't really have anything related to keys, and can be used
->> purely as an ADC.
->>=20
->> I know this is the compatible that was used for the A10, but I'd
->> rather drop the keys for the the new compatible.
->>=20
->=20
-> Hi,
-> LRADC is named KEYADC in some other SoCs' User Manual(such as R40 User
-> Manual V1.0), thus LRADC is related to keys.
->=20
-> Without keys there is another driver named sun4i-gpadc-iio which is
-> located at driver/iio/adc/sun4i-gpadc-iio.c
+Hi David,
 
-Nope. The general purpose LRADC driver still doesn't land in mainline,
-and this driver is for the GPADC related to thermal and resistive
-touch screen.
+Am Dienstag, 27. Juni 2017, 22:33:20 CEST schrieb David.Wu:
+> 在 2017/6/24 1:19, Heiko Stuebner 写道:
+> > Am Freitag, 23. Juni 2017, 12:59:07 CEST schrieb David Wu:
+> >> To make internal phy worked, need to configure the phy_clock,
+> >> phy cru_reset and related registers.
+> >>
+> >> Change-Id: I6971c0a769754b824b1b908b56080cbaf7867d13
+> > 
+> > please remove all Change-Ids from patches before sending upstream.
+> > There were more affected patches in this series.
+> > 
+> >> Signed-off-by: David Wu <david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> >> ---
+> >>   .../devicetree/bindings/net/rockchip-dwmac.txt     |  3 +
+> >>   drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c     | 82 ++++++++++++++++++++++
+> >>   2 files changed, 85 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> >> index 8f42755..0514f69 100644
+> >> --- a/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> >> +++ b/Documentation/devicetree/bindings/net/rockchip-dwmac.txt
+> >> @@ -22,6 +22,7 @@ Required properties:
+> >>   	   <&cru SCLK_MACREF_OUT> clock gate for RMII reference clock output
+> >>   	   <&cru ACLK_GMAC>: AXI clock gate for GMAC
+> >>   	   <&cru PCLK_GMAC>: APB clock gate for GMAC
+> >> +	   <&cru MAC_PHY>: clock for internal macphy
+> > 
+> > that clock should not be listed as always "Required" like it is here.
+> > Make it some sort of extra paragraph marking it as required when using
+> > an internal phy.
+> > 
+> 
+> Okay, move it to the option.
+> 
+> >>    - clock-names: One name for each entry in the clocks property.
+> >>    - phy-mode: See ethernet.txt file in the same directory.
+> >>    - pinctrl-names: Names corresponding to the numbered pinctrl states.
+> >> @@ -35,6 +36,8 @@ Required properties:
+> >>    - assigned-clocks: main clock, should be <&cru SCLK_MAC>;
+> >>    - assigned-clock-parents = parent of main clock.
+> >>      can be <&ext_gmac> or <&cru SCLK_MAC_PLL>.
+> >> + - phy-type: For internal phy, it must be "internal"; For external phy, no need
+> >> +   to configure this.
+> >>   
+> >>   Optional properties:
+> >>    - tx_delay: Delay value for TXD timing. Range value is 0~0x7F, 0x30 as default.
+> >> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> >> index a8e8fd5..c1a1413 100644
+> >> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> >> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
+> >> @@ -41,6 +41,7 @@ struct rk_gmac_ops {
+> >>   	void (*set_to_rmii)(struct rk_priv_data *bsp_priv);
+> >>   	void (*set_rgmii_speed)(struct rk_priv_data *bsp_priv, int speed);
+> >>   	void (*set_rmii_speed)(struct rk_priv_data *bsp_priv, int speed);
+> >> +	void (*internal_phy_powerup)(struct rk_priv_data *bsp_priv);
+> >>   };
+> >>   
+> >>   struct rk_priv_data {
+> >> @@ -52,6 +53,7 @@ struct rk_priv_data {
+> >>   
+> >>   	bool clk_enabled;
+> >>   	bool clock_input;
+> >> +	bool internal_phy;
+> >>   
+> >>   	struct clk *clk_mac;
+> >>   	struct clk *gmac_clkin;
+> >> @@ -61,6 +63,9 @@ struct rk_priv_data {
+> >>   	struct clk *clk_mac_refout;
+> >>   	struct clk *aclk_mac;
+> >>   	struct clk *pclk_mac;
+> >> +	struct clk *clk_macphy;
+> >> +
+> >> +	struct reset_control *macphy_reset;
+> >>   
+> >>   	int tx_delay;
+> >>   	int rx_delay;
+> >> @@ -750,6 +755,48 @@ static void rk3399_set_rmii_speed(struct rk_priv_data *bsp_priv, int speed)
+> >>   	.set_rmii_speed = rk3399_set_rmii_speed,
+> >>   };
+> >>   
+> >> +#define RK_GRF_MACPHY_CON0		0xb00
+> >> +#define RK_GRF_MACPHY_CON1		0xb04
+> >> +#define RK_GRF_MACPHY_CON2		0xb08
+> >> +#define RK_GRF_MACPHY_CON3		0xb0c
+> >> +
+> >> +#define RK_MACPHY_ENABLE		GRF_BIT(0)
+> >> +#define RK_MACPHY_DISABLE		GRF_CLR_BIT(0)
+> >> +#define RK_MACPHY_CFG_CLK_50M		GRF_BIT(14)
+> >> +#define RK_GMAC2PHY_RMII_MODE		(GRF_BIT(6) | GRF_CLR_BIT(7))
+> >> +#define RK_GRF_CON2_MACPHY_ID		HIWORD_UPDATE(0x1234, 0xffff, 0)
+> >> +#define RK_GRF_CON3_MACPHY_ID		HIWORD_UPDATE(0x35, 0x3f, 0)
+> > 
+> > These are primarily registers for the rk3328 and come from the GRF which is
+> > somehow prone to chip-designers moving bits around in registers and also
+> > especially the register offsets (*_CONx) will probably not stay the same
+> > on future socs.
+> > 
+> 
+> I think they should try to keep the same. But what you said is very 
+> reasonable. So let's give rk3228 and rk3328 different 
+> internal_phy_powerup() in the rk_gmac_ops to set their own configuration?
 
-However, the LRADC is possible to be used in general purpose, and
-more and more boards are wiring the LRADC pin as a pin on the pinout
-(e.g. Pine64 and Lichee Pi Zero) and it may be useful.
+I just looked at both the rk3228 and rk3328 GRFs and really this seems
+to be the first time I see GRF-parts that are similar :-) .
 
-And the hardware is not bound to keys -- it's only the Allwinner
-reference design which bind the LRADC to keys. Device vendors can
-change it if needed.
+There is no need to duplicate code unnecessarily, if the registers really
+are the same for both. So I guess, just prefix everything with a rk3228_*
+and add a comment that the rk3328 uses the same GRF layout.
 
-So it's suggested to have a binding without "-keys".
+That way future socs, can then add their (likely) changed register setups
+as needed.
 
-Maxime, here's another problem: if we have already a GP LRADC driver,
-how can we tell the kernel to use it as IIO ADC rather than keys?
-Should we introduce a new property for this once ready?
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Heiko
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
