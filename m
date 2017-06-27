@@ -1,231 +1,79 @@
-From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 05/21] net-next: stmmac: Add dwmac-sun8i
-Date: Tue, 27 Jun 2017 19:37:27 +0200
-Message-ID: <20170627173727.GA21301@Red>
-References: <20170627080529.GA2468@Red>
- <CAGb2v65mhDN9vXe6DE2cZPW1BzgYPwK+D2U5VFgyr0wVVZZqDQ@mail.gmail.com>
- <20170627082103.GB2468@Red>
- <530f7b3e-247d-2e4d-8174-ce6195bacf5b@arm.com>
- <20170627094111.supxmzf2k3n3ewec@flea.lan>
- <44afb371-44d4-dbb5-0aac-4bbc55269344@arm.com>
- <700A8221-3CEC-4657-900D-183398D25AE7@aosc.io>
- <858b5361-fde5-8ab4-b9ba-aeb7859b9a7d@arm.com>
- <20170627123748.GA8403@Red>
- <20170627172937.qrbcie347wlbo3z3@flea>
-Reply-To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Subject: Re: [PATCH 3/3] mtd: spi-nor: Altera Quadspi Flash Controller v2
+ Platform driver
+Date: Tue, 27 Jun 2017 10:38:44 -0700 (PDT)
+Message-ID: <alpine.DEB.2.20.1706271028260.8058@mgerlach-VirtualBox>
+References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com> <1498493619-4633-4-git-send-email-matthew.gerlach@linux.intel.com> <2ac33989-5665-33e0-c6f0-6791c8e46b0d@gmail.com> <alpine.DEB.2.20.1706270800240.8058@mgerlach-VirtualBox>
+ <5f0e2ddd-d329-cb3d-01bc-c101247281a7@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBZFPZLFAKGQE5B53U6Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20170627172937.qrbcie347wlbo3z3@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>, Icenowy Zheng <icenowy-h8G6r0blFSE@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, alexandre.torgue-qxv4g6HH51o@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5f0e2ddd-d329-cb3d-01bc-c101247281a7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 07:29:37PM +0200, Maxime Ripard wrote:
-> On Tue, Jun 27, 2017 at 02:37:48PM +0200, Corentin Labbe wrote:
-> > On Tue, Jun 27, 2017 at 11:33:56AM +0100, Andre Przywara wrote:
-> > > Hi,
-> > >=20
-> > > On 27/06/17 11:23, Icenowy Zheng wrote:
-> > > >=20
-> > > >=20
-> > > > =E4=BA=8E 2017=E5=B9=B46=E6=9C=8827=E6=97=A5 GMT+08:00 =E4=B8=8B=E5=
-=8D=886:15:58, Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org> =E5=86=99=E5=88=B0:
-> > > >> Hi,
-> > > >>
-> > > >> On 27/06/17 10:41, Maxime Ripard wrote:
-> > > >>> On Tue, Jun 27, 2017 at 10:02:45AM +0100, Andre Przywara wrote:
-> > > >>>> Hi,
-> > > >>>>
-> > > >>>> (CC:ing some people from that Rockchip dmwac series)
-> > > >>>>
-> > > >>>> On 27/06/17 09:21, Corentin Labbe wrote:
-> > > >>>>> On Tue, Jun 27, 2017 at 04:11:21PM +0800, Chen-Yu Tsai wrote:
-> > > >>>>>> On Tue, Jun 27, 2017 at 4:05 PM, Corentin Labbe
-> > > >>>>>> <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > > >>>>>>> On Mon, Jun 26, 2017 at 01:18:23AM +0100, Andr=C3=A9 Przywara=
- wrote:
-> > > >>>>>>>> On 31/05/17 08:18, Corentin Labbe wrote:
-> > > >>>>>>>>> The dwmac-sun8i is a heavy hacked version of stmmac hardwar=
-e by
-> > > >>>>>>>>> allwinner.
-> > > >>>>>>>>> In fact the only common part is the descriptor management a=
-nd
-> > > >> the first
-> > > >>>>>>>>> register function.
-> > > >>>>>>>>
-> > > >>>>>>>> Hi,
-> > > >>>>>>>>
-> > > >>>>>>>> I know I am a bit late with this, but while adapting the U-B=
-oot
-> > > >> driver
-> > > >>>>>>>> to the new binding I was wondering about the internal PHY
-> > > >> detection:
-> > > >>>>>>>>
-> > > >>>>>>>>
-> > > >>>>>>>> So here you seem to deduce the usage of the internal PHY by =
-the
-> > > >> PHY
-> > > >>>>>>>> interface specified in the DT (MII =3D internal, RGMII =3D
-> > > >> external).
-> > > >>>>>>>> I think I raised this question before, but isn't it perfectl=
-y
-> > > >> legal for
-> > > >>>>>>>> a board to use MII with an external PHY even on those SoCs t=
-hat
-> > > >> feature
-> > > >>>>>>>> an internal PHY?
-> > > >>>>>>>> On the first glance that does not make too much sense, but a=
-part
-> > > >> from
-> > > >>>>>>>> not being the correct binding to describe all of the SoCs
-> > > >> features I see
-> > > >>>>>>>> two scenarios:
-> > > >>>>>>>> 1) A board vendor might choose to not use the internal PHY
-> > > >> because it
-> > > >>>>>>>> has bugs, lacks features (configurability) or has other issu=
-es.
-> > > >> For
-> > > >>>>>>>> instance I have heard reports that the internal PHY makes th=
-e
-> > > >> SoC go
-> > > >>>>>>>> rather hot, possibly limiting the CPU frequency. By using an
-> > > >> external
-> > > >>>>>>>> MII PHY (which are still cheaper than RGMII PHYs) this can b=
-e
-> > > >> avoided.
-> > > >>>>>>>> 2) A PHY does not necessarily need to be directly connected =
-to
-> > > >>>>>>>> magnetics. Indeed quite some boards use (RG)MII to connect t=
-o a
-> > > >> switch
-> > > >>>>>>>> IC or some other network circuitry, for instance fibre
-> > > >> connectors.
-> > > >>>>>>>>
-> > > >>>>>>>> So I was wondering if we would need an explicit:
-> > > >>>>>>>>       allwinner,use-internal-phy;
-> > > >>>>>>>> boolean DT property to signal the usage of the internal PHY?
-> > > >>>>>>>> Alternatively we could go with the negative version:
-> > > >>>>>>>>       allwinner,disable-internal-phy;
-> > > >>>>>>>>
-> > > >>>>>>>> Or what about introducing a new "allwinner,internal-mii-phy"
-> > > >> compatible
-> > > >>>>>>>> string for the *PHY* node and use that?
-> > > >>>>>>>>
-> > > >>>>>>>> I just want to avoid that we introduce a binding that causes=
- us
-> > > >>>>>>>> headaches later. I think we can still fix this with a follow=
-up
-> > > >> patch
-> > > >>>>>>>> before the driver and its binding hit a release kernel.
-> > > >>>>>>>>
-> > > >>>>>>>> Cheers,
-> > > >>>>>>>> Andre.
-> > > >>>>>>>>
-> > > >>>>>>>
-> > > >>>>>>> I just see some patch, where "phy-mode =3D internal" is valid=
-.
-> > > >>>>>>> I will try to find a way to use it
-> > > >>>>>>
-> > > >>>>>> Can you provide a link?
-> > > >>>>>
-> > > >>>>> https://lkml.org/lkml/2017/6/23/479
-> > > >>>>>
-> > > >>>>>>
-> > > >>>>>> I'm not a fan of using phy-mode for this. There's no guarantee
-> > > >> what
-> > > >>>>>> mode the internal PHY uses. That's what phy-mode is for.
-> > > >>>>
-> > > >>>> I can understand Chen-Yu's concerns, but ...
-> > > >>>>
-> > > >>>>> For each soc the internal PHY mode is know and setted in
-> > > >> emac_variant/internal_phy
-> > > >>>>> So its not a problem.
-> > > >>>>
-> > > >>>> that is true as well, at least for now.
-> > > >>>>
-> > > >>>> So while I agree that having a separate property to indicate
-> > > >>>> the usage of the internal PHY would be nice, I am bit tempted
-> > > >>>> to use this easier approach and piggy back on the existing
-> > > >>>> phy-mode property.
-> > > >>>
-> > > >>> We're trying to fix an issue that works for now too.
-> > > >>>
-> > > >>> If we want to consider future weird cases, then we must
-> > > >>> consider all of them. And the phy mode changing is definitely
-> > > >>> not really far fetched.
-> > > >>>
-> > > >>> I agree with Chen-Yu, and I really feel like the compatible
-> > > >>> solution you suggested would cover both your concerns, and
-> > > >>> ours.
-> > > >>
-> > > >> So something like this?
-> > > >> 	emac: emac@1c30000 {
-> > > >> 	    compatible =3D "allwinner,sun8i-h3-emac";
-> > > >> 	    ...
-> > > >> 	    phy-mode =3D "mii";
-> > > >> 	    phy-handle =3D <&int_mii_phy>;
-> > > >> 	    ...
-> > > >>
-> > > >> 	    mdio: mdio {
-> > > >>                #address-cells =3D <1>;
-> > > >>                #size-cells =3D <0>;
-> > > >>                int_mii_phy: ethernet-phy@1 {
-> > > >>                    compatible =3D "allwinner,sun8i-h3-ephy";
-> > > >>                    syscon =3D <&syscon>;
-> > > >=20
-> > > > The MAC still needs to set some bits of syscon register.
-> > >=20
-> > > Yes, the syscon property needs also to be in the MAC node, that
-> > > was meant to be somewhere in the second "..." ;-)
-> > >=20
-> > > But now since Chen-Yu mentioned that we need to set up the PHY *first=
-*
-> > > to make it actually discoverable via MDIO, I wonder if we could chang=
-e
-> > > this to:
-> > > 1) have the DT as described here
-> > > 2) Let the dwmac-sun8i driver peek into the node referenced by
-> > > phy-handle and check the compatible string there.
-> > > 3) If that matches some allwinner internal PHY name, it sets up the P=
-HY
-> > > to make it respond when the MDIO driver queries its bus.
-> > >=20
-> > > Or can a PHY driver set itself up (since we have clocks and resets
-> > > properties in there) *before* the MDIO bus gets scanned?
-> > > Chen-Yu's comment in the other mail hints at that this is not easily
-> > > possible.
-> >=20
-> > I think adding phy compatible just make things more complex.
-> >=20
-> > I think the patch series I sent early fix all problems without more
-> > complexity since:
-> >
-> > - it does not add more DT stuff
-> > - it use an already used in tree DT phy-mode "internal" (and so phy
-> >   mode PHY_INTERFACE_MODE_INTERNAL)
->=20
->   - it doesn't cover all the concerns we had
->   - it uses an undocumented value, with an unclear implication
->=20
 
-The answer from Florian anyway breaks my logic, internal is for "internal p=
-hy with non-xMII protocol" not just internal PHY
 
-Regards
+On Tue, 27 Jun 2017, Marek Vasut wrote:
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> On 06/27/2017 05:15 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>
+>>
+>> On Tue, 27 Jun 2017, Marek Vasut wrote:
+>>
+>>> On 06/26/2017 06:13 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>
+>>> Just wrap it into the Altera QSPI driver , no need for separate platform
+>>> driver IMO.
+>>
+>> Hi Marek,
+>>
+>> I answered this question when you asked why the header file was
+>> necessary, but I think further discussion could be helpful, since this
+>> problem is becoming more prevelent.  The Altera Quadspi component is a
+>> soft IP in a
+>> FPGA, and the processor using the component may or may not have device
+>> tree support compiled into the Linux kernel.  Since device tree support
+>> may or may not be available, the device tree specific code must be
+>> separated
+>> from the core driver code.
+>
+> I see, that's fine, although there is no PCIe or other support in this
+> submission. Is that planned ?
+
+You probably would not see a PCIe driver for a card with a FPGA that would 
+only have the Altera Quadspi component on it.  Usually a FPGA has several 
+components, each requiring their own driver which are considered 
+sub-drivers of the PCIe driver.  I will be adding Altera Quadspi support 
+to the Intel-FPGA PCIe driver that is currently under review.  We have 
+also seen people use the Altera Quadspi with a NIOS-II soft processor, and 
+I expect someone would want to use the component with ARM SOCFPGAs.
+
+Matthew Gerlach
+
+>
+>> One can certainly make the case, that device tree support could/should
+>> be available everywhere, but the current reality is most x86 Linux
+>> kernel configurations do not include device tree support.
+>>
+>> For the record, I believe device trees, and more specifically device
+>> tree overlays, are the best way for Linux to use FPGAs, but I have to
+>> deal with the current realities.
+>>
+>> Thanks again for all the great feedback.
+>>
+>> Matthew Gerlach
+>
+> [...]
+>
+> -- 
+> Best regards,
+> Marek Vasut
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
