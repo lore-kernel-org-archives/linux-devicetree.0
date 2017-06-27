@@ -1,81 +1,75 @@
-From: Baolin Wang <baolin.wang@spreadtrum.com>
-Subject: Re: [PATCH v4 1/3] pinctrl: Add sleep related configuration
-Date: Tue, 27 Jun 2017 16:21:33 +0800
-Message-ID: <20170627082132.GB32447@spreadtrum.com>
-References: <62a67526907157d41235403bd05af309fd4db16b.1498045588.git.baolin.wang@spreadtrum.com>
- <20170626161348.vrtlpat5eof5aa2c@rob-hp-laptop>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH v3 4/9] serial: atmel: Use common rs485 device tree
+ parsing function
+Date: Tue, 27 Jun 2017 10:27:25 +0200
+Message-ID: <e0d071e6-c5ca-1bda-1a2e-b695463b66ab@gmail.com>
+References: <20170626090803.10981-1-u.kleine-koenig@pengutronix.de>
+ <20170626090803.10981-5-u.kleine-koenig@pengutronix.de>
+ <bac50abd-9c55-c9cb-7d10-24ef8efbdb53@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170626161348.vrtlpat5eof5aa2c@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <bac50abd-9c55-c9cb-7d10-24ef8efbdb53@microchip.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@microchip.com>, =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 一,  6月 26, 2017 at 11:13:48上午 -0500, Rob Herring wrote:
-> On Wed, Jun 21, 2017 at 07:55:37PM +0800, Baolin Wang wrote:
-> > In some scenarios, we should set some pins as input/output/pullup/pulldown
-> > when the specified system goes into deep sleep mode, then when the system
-> > goes into deep sleep mode, these pins will be set automatically by hardware.
-> > 
-> > Usually we can set the "sleep" state to set sleep related config, but one SoC
-> > usually has not only one system (especially for mobile SoC), some systems on
-> > the SoC which did not run linux kernel, they can not select the "sleep" state
-> > when they go into deep sleep mode.
-> 
-> The wording here is not very clear. I think what you mean is some pins 
-> are not controlled by any specific driver in the OS, but need to be 
-> controlled when entering sleep mode.
-
-Yes, that is what I meaning, sorry for confusing.
-
-> 
-> > Thus we introduce some sleep related config into pinconf-generic for users to
-> > configure.
-> > 
-> > Signed-off-by: Baolin Wang <baolin.wang@spreadtrum.com>
-> > ---
-> >  - Add this patch since v4.
-> > ---
-> >  .../bindings/pinctrl/pinctrl-bindings.txt          |   12 ++++++++++++
-> >  drivers/pinctrl/pinconf-generic.c                  |   10 ++++++++++
-> >  include/linux/pinctrl/pinconf-generic.h            |   14 ++++++++++++++
-> >  3 files changed, 36 insertions(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > index bf3f7b0..e098059 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> > @@ -236,6 +236,18 @@ low-power-enable	- enable low power mode
-> >  low-power-disable	- disable low power mode
-> >  output-low		- set the pin to output mode with low level
-> >  output-high		- set the pin to output mode with high level
-> > +sleep-bias-pull-up	- pull up the pin when the specified system goes into
-> > +			  deep sleep mode
-> > +sleep-bias-pull-down	- pull down the pin when the specified system goes into
-> > +			  deep sleep mode
-> > +sleep-input-enable	- enable input on pin when the specified system goes
-> > +			  into deep sleep mode (no effect on output)
-> > +sleep-intput-disable	- disable input on pin when the specified system goes
-> > +			  into deep sleep mode (no effect on output)
-> > +sleep-output-low	- set the pin to output mode with low level when the
-> > +			  specified system goes into deep sleep mode
-> > +sleep-output-high	- set the pin to output mode with high level when the
-> > +			  specified system goes into deep sleep mode
-> >  slew-rate		- set the slew rate
-> 
-> I don't really like having 2 ways to define pin setup and this doesn't 
-> scale if I need to define 3 states. Couldn't we create pin state 
-> definitions and have a pinctrl-n property within the pin controller 
-> node to handle all the unhandled pins?
-
-As LinusW also suggest we can create one "sleep" state and program them
-into registers at early point (like: after probing pinctrl driver). So I
-think I can introduce one called "early-sleep" state which need select it
-after initializing pinctrl driver.
-
-> 
-> Rob
+T24gMjcvMDYvMjAxNyAwOTo0MSwgTmljb2xhcyBGZXJyZSB3cm90ZToKPiBPbiAyNi8wNi8yMDE3
+IGF0IDExOjA3LCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToKPj4gRnJvbTogU2FzY2hhIEhhdWVy
+IDxzLmhhdWVyQHBlbmd1dHJvbml4LmRlPgo+Pgo+PiBXZSBqdXN0IGdvdCBhIGNvbW1vbiBoZWxw
+ZXIgZm9yIHBhcnNpbmcgdGhlIHJzNDg1IHNwZWNpZmljCj4+IGRldmljZSB0cmVlIHByb3BlcnRp
+ZXMuIFVzZSBpdCBhbmQgZHJvcCB0aGUgb3BlbiBjb2RlZCBwYXJzZXIuCj4+Cj4+IE5vdGUgdGhh
+dCB0aGVyZSBpcyBhIHNtYWxsIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGUgcmVtb3ZlZCBhbmQgdGhl
+IG5vdwo+PiB1c2VkIGltcGxlbWVudGF0aW9uOiBUaGUgZm9ybWVyIGNsZWFyZWQgZmxhZ3MgdG8g
+MCBpZiByczQ4NS1ydHMtZGVsYXkKPj4gd2FzIGdpdmVuLCB0aGUgY29tbW9uIGhlbHBlciBjbGVh
+cnMgU0VSX1JTNDg1X1JYX0RVUklOR19UWCBhbmQKPj4gU0VSX1JTNDg1X0VOQUJMRUQgb25seSBi
+dXQgYWx3YXlzIHdoaWNoIG1ha2VzIG1vcmUgc2Vuc2UuCj4gCj4gU3VyZToKPiBBY2tlZC1ieTog
+Tmljb2xhcyBGZXJyZSA8bmljb2xhcy5mZXJyZUBtaWNyb2NoaXAuY29tPgo+IAo+IFRoYW5rcyBT
+YXNoYSBhbmQgVXdlIQo+IApBY2tlZC1ieTogUmljaGFyZCBHZW5vdWQgPHJpY2hhcmQuZ2Vub3Vk
+QGdtYWlsLmNvbT4KClRoYW5rcyAhCj4+IFNpZ25lZC1vZmYtYnk6IFNhc2NoYSBIYXVlciA8cy5o
+YXVlckBwZW5ndXRyb25peC5kZT4KPj4gW3VrbGVpbmVrOiBwb2ludCBvdXQgc2VtYW50aWMgY2hh
+bmdlIGluIGNvbW1pdCBsb2ddCj4+IFNpZ25lZC1vZmYtYnk6IFV3ZSBLbGVpbmUtS8O2bmlnIDx1
+LmtsZWluZS1rb2VuaWdAcGVuZ3V0cm9uaXguZGU+Cj4+IC0tLQo+PiAgZHJpdmVycy90dHkvc2Vy
+aWFsL2F0bWVsX3NlcmlhbC5jIHwgMjUgKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiAgMSBm
+aWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAyNCBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvdHR5L3NlcmlhbC9hdG1lbF9zZXJpYWwuYyBiL2RyaXZlcnMvdHR5L3Nl
+cmlhbC9hdG1lbF9zZXJpYWwuYwo+PiBpbmRleCA5MzdkNjdmMjJmYmEuLjI0NWQ5YzIyN2FkNSAx
+MDA2NDQKPj4gLS0tIGEvZHJpdmVycy90dHkvc2VyaWFsL2F0bWVsX3NlcmlhbC5jCj4+ICsrKyBi
+L2RyaXZlcnMvdHR5L3NlcmlhbC9hdG1lbF9zZXJpYWwuYwo+PiBAQCAtMTY4NCwyOSArMTY4NCw2
+IEBAIHN0YXRpYyB2b2lkIGF0bWVsX2luaXRfcHJvcGVydHkoc3RydWN0IGF0bWVsX3VhcnRfcG9y
+dCAqYXRtZWxfcG9ydCwKPj4gIAl9Cj4+ICB9Cj4+ICAKPj4gLXN0YXRpYyB2b2lkIGF0bWVsX2lu
+aXRfcnM0ODUoc3RydWN0IHVhcnRfcG9ydCAqcG9ydCwKPj4gLQkJCQlzdHJ1Y3QgcGxhdGZvcm1f
+ZGV2aWNlICpwZGV2KQo+PiAtewo+PiAtCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBwZGV2LT5k
+ZXYub2Zfbm9kZTsKPj4gLQo+PiAtCXN0cnVjdCBzZXJpYWxfcnM0ODUgKnJzNDg1Y29uZiA9ICZw
+b3J0LT5yczQ4NTsKPj4gLQl1MzIgcnM0ODVfZGVsYXlbMl07Cj4+IC0KPj4gLQkvKiByczQ4NSBw
+cm9wZXJ0aWVzICovCj4+IC0JaWYgKG9mX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KG5wLCAicnM0
+ODUtcnRzLWRlbGF5IiwKPj4gLQkJCQkgICAgICAgcnM0ODVfZGVsYXksIDIpID09IDApIHsKPj4g
+LQkJcnM0ODVjb25mLT5kZWxheV9ydHNfYmVmb3JlX3NlbmQgPSByczQ4NV9kZWxheVswXTsKPj4g
+LQkJcnM0ODVjb25mLT5kZWxheV9ydHNfYWZ0ZXJfc2VuZCA9IHJzNDg1X2RlbGF5WzFdOwo+PiAt
+CQlyczQ4NWNvbmYtPmZsYWdzID0gMDsKPj4gLQl9Cj4+IC0KPj4gLQlpZiAob2ZfZ2V0X3Byb3Bl
+cnR5KG5wLCAicnM0ODUtcngtZHVyaW5nLXR4IiwgTlVMTCkpCj4+IC0JCXJzNDg1Y29uZi0+Zmxh
+Z3MgfD0gU0VSX1JTNDg1X1JYX0RVUklOR19UWDsKPj4gLQo+PiAtCWlmIChvZl9nZXRfcHJvcGVy
+dHkobnAsICJsaW51eCxyczQ4NS1lbmFibGVkLWF0LWJvb3QtdGltZSIsIE5VTEwpKQo+PiAtCQly
+czQ4NWNvbmYtPmZsYWdzIHw9IFNFUl9SUzQ4NV9FTkFCTEVEOwo+PiAtfQo+PiAtCj4+ICBzdGF0
+aWMgdm9pZCBhdG1lbF9zZXRfb3BzKHN0cnVjdCB1YXJ0X3BvcnQgKnBvcnQpCj4+ICB7Cj4+ICAJ
+c3RydWN0IGF0bWVsX3VhcnRfcG9ydCAqYXRtZWxfcG9ydCA9IHRvX2F0bWVsX3VhcnRfcG9ydChw
+b3J0KTsKPj4gQEAgLTIzOTAsNyArMjM2Nyw3IEBAIHN0YXRpYyBpbnQgYXRtZWxfaW5pdF9wb3J0
+KHN0cnVjdCBhdG1lbF91YXJ0X3BvcnQgKmF0bWVsX3BvcnQsCj4+ICAJYXRtZWxfaW5pdF9wcm9w
+ZXJ0eShhdG1lbF9wb3J0LCBwZGV2KTsKPj4gIAlhdG1lbF9zZXRfb3BzKHBvcnQpOwo+PiAgCj4+
+IC0JYXRtZWxfaW5pdF9yczQ4NShwb3J0LCBwZGV2KTsKPj4gKwlvZl9nZXRfcnM0ODVfbW9kZShw
+ZGV2LT5kZXYub2Zfbm9kZSwgJnBvcnQtPnJzNDg1KTsKPj4gIAo+PiAgCXBvcnQtPmlvdHlwZQkJ
+PSBVUElPX01FTTsKPj4gIAlwb3J0LT5mbGFncwkJPSBVUEZfQk9PVF9BVVRPQ09ORiB8IFVQRl9J
+T1JFTUFQOwo+Pgo+IAo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
