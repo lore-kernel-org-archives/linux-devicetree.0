@@ -1,210 +1,235 @@
-From: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Disable HDMI CEC internal pull-ups
-Date: Tue, 27 Jun 2017 11:06:35 +0200
-Message-ID: <20170627090635.bgizpseg3k5wnimn@earth>
-References: <20170627085832.30949-1-tony@atomide.com>
+From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCH v5 2/2] arm64: dts: renesas: salvator-x: Add ADV7482
+ support
+Date: Tue, 27 Jun 2017 10:25:39 +0100
+Message-ID: <f1967d99-da16-303f-f3e9-7a3d28ccaf1d@ideasonboard.com>
+References: <cover.90fc3153078e79a3f74af832de923ac675eb29ad.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com>
+ <ce388da93b793abc1b54df3e59ab287aedb9797f.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com>
+ <10057741.K1MBojqRFe@avalon>
+Reply-To: kieran.bingham-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4li2qy32yrblxzza"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170627085832.30949-1-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <10057741.K1MBojqRFe@avalon>
+Content-Language: en-GB
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Laurent,
 
---4li2qy32yrblxzza
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the review,
 
-Hi,
+On 23/06/17 08:43, Laurent Pinchart wrote:
+> Hi Kieran,
+> 
+> Thank you for the patch.
+> 
+> On Wednesday 14 Jun 2017 20:58:13 Kieran Bingham wrote:
+>> From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>>
+>> The Salvator boards use an ADV7482 receiver for HDMI and CVBS inputs.
+>>
+>> Provide ADV7482 node on the i2c4 bus, along with connectors for the
+>> hdmi and cvbs inputs, and link to the csi20 and csi40 nodes as outputs.
+>>
+>> Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+>>
+>> v4:
+>>  - dt: Rebase to dts/renesas/salvator-x.dtsi
+>>  - dt: Use AIN0-7 rather than AIN1-8
+>>
+>> v5:
+>>  - dt: Move to salvator-common.dtsi
+>> ---
+>>  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 123 ++++++++++++++++-
+>>  1 file changed, 123 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+>> b/arch/arm64/boot/dts/renesas/salvator-common.dtsi index
+>> aef35e0b685a..d74fb55c38bc 100644
+>> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+>> @@ -65,6 +65,27 @@
+>>  		enable-gpios = <&gpio6 7 GPIO_ACTIVE_HIGH>;
+>>  	};
+>>
+>> +	cvbs-in {
+>> +		compatible = "composite-video-connector";
+>> +		label = "CVBS IN";
+>> +
+>> +		port {
+>> +			cvbs_con: endpoint {
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	hdmi-in {
+>> +		compatible = "hdmi-connector";
+>> +		label = "HDMI IN";
+>> +		type = "a";
+>> +
+>> +		port {
+>> +			hdmi_in_con: endpoint {
+>> +			};
+>> +		};
+>> +	};
+>> +
+>>  	reg_1p8v: regulator0 {
+>>  		compatible = "regulator-fixed";
+>>  		regulator-name = "fixed-1.8V";
+>> @@ -257,6 +278,59 @@
+>>  	};
+>>  };
+>>
+>> +&csi20 {
+>> +	status = "okay";
+>> +
+>> +	ports {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +
+>> +		port@0 {
+>> +			reg = <0>;
+> 
+> Aren't #address-cells, #size-cells and reg already present in the SoC .dtsi ? 
+> And if they're not, shouldn't they be ? :-)
 
-On Tue, Jun 27, 2017 at 01:58:32AM -0700, Tony Lindgren wrote:
-> Devices using an external encoder, ESD protection and level shifter
-> such as tpd12s015 or ip4791cz12 have the CEC pull in the encoder
-> chip. And on var-som-om44, there is external pull up resistor R30.
->=20
-> So the internal CEC pull-up resistor needs to be disabled as otherwise
-> the external and internal pull are parallel making the pull value
-> much smaller than intended. This leads into the CEC not working as
-> reported by Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>.
->=20
-> Reported-by: Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>
-> Cc: Dmitry Lifshitz <lifshitz-UTxiZqZC01RS1MOuV/RT9w@public.gmane.org>
-> Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Hrm - I think I added them because I was getting warnings from the DTC.
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+I've removed them from the csi nodes and no warning returns :)
+So they're gone.
 
--- Sebastian
 
-> ---
->=20
-> Dmitry, care to check that also omap5-cm-t54 has external pull on CEC pin?
->=20
-> ---
->  arch/arm/boot/dts/omap4-droid4-xt894.dts         | 2 +-
->  arch/arm/boot/dts/omap4-duovero-parlor.dts       | 2 +-
->  arch/arm/boot/dts/omap4-panda-common.dtsi        | 2 +-
->  arch/arm/boot/dts/omap4-sdp-es23plus.dts         | 2 +-
->  arch/arm/boot/dts/omap4-sdp.dts                  | 2 +-
->  arch/arm/boot/dts/omap4-var-om44customboard.dtsi | 2 +-
->  arch/arm/boot/dts/omap5-board-common.dtsi        | 2 +-
->  arch/arm/boot/dts/omap5-cm-t54.dts               | 2 +-
->  8 files changed, 8 insertions(+), 8 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/omap4-droid4-xt894.dts b/arch/arm/boot/dts=
-/omap4-droid4-xt894.dts
-> --- a/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> +++ b/arch/arm/boot/dts/omap4-droid4-xt894.dts
-> @@ -373,7 +373,7 @@
->  	/* hdmi_cec.hdmi_cec, hdmi_scl.hdmi_scl, hdmi_sda.hdmi_sda */
->  	dss_hdmi_pins: pinmux_dss_hdmi_pins {
->  		pinctrl-single,pins =3D <
-> -		OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)
-> +		OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)
->  		OMAP4_IOPAD(0x09c, PIN_INPUT | MUX_MODE0)
->  		OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)
->  		>;
-> diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/d=
-ts/omap4-duovero-parlor.dts
-> --- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
-> +++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-> @@ -100,7 +100,7 @@
->  	dss_hdmi_pins: pinmux_dss_hdmi_pins {
->  		pinctrl-single,pins =3D <
->  			OMAP4_IOPAD(0x098, PIN_INPUT | MUX_MODE3)		/* hdmi_hpd.gpio_63 */
-> -			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec=
- */
-> +			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
->  			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_scl.hdmi=
-_ddc_scl */
->  			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_sda.hdmi=
-_ddc_sda */
->  		>;
-> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/dt=
-s/omap4-panda-common.dtsi
-> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
-> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
-> @@ -267,7 +267,7 @@
-> =20
->  	dss_hdmi_pins: pinmux_dss_hdmi_pins {
->  		pinctrl-single,pins =3D <
-> -			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec=
- */
-> +			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
->  			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_scl.hdmi_scl=
- */
->  			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_sda.hdmi_sda=
- */
->  		>;
-> diff --git a/arch/arm/boot/dts/omap4-sdp-es23plus.dts b/arch/arm/boot/dts=
-/omap4-sdp-es23plus.dts
-> --- a/arch/arm/boot/dts/omap4-sdp-es23plus.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp-es23plus.dts
-> @@ -10,7 +10,7 @@
->  /* SDP boards with 4430 ES2.3+ or 4460 have external pullups on SCL & SD=
-A */
->  &dss_hdmi_pins {
->  	pinctrl-single,pins =3D <
-> -		OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec =
-*/
-> +		OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
->  		OMAP4_IOPAD(0x09c, PIN_INPUT | MUX_MODE0)		/* hdmi_scl.hdmi_scl */
->  		OMAP4_IOPAD(0x09e, PIN_INPUT | MUX_MODE0)		/* hdmi_sda.hdmi_sda */
->  		>;
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sd=
-p.dts
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -290,7 +290,7 @@
-> =20
->  	dss_hdmi_pins: pinmux_dss_hdmi_pins {
->  		pinctrl-single,pins =3D <
-> -			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec=
- */
-> +			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
->  			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_scl.hdmi_scl=
- */
->  			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_sda.hdmi_sda=
- */
->  		>;
-> diff --git a/arch/arm/boot/dts/omap4-var-om44customboard.dtsi b/arch/arm/=
-boot/dts/omap4-var-om44customboard.dtsi
-> --- a/arch/arm/boot/dts/omap4-var-om44customboard.dtsi
-> +++ b/arch/arm/boot/dts/omap4-var-om44customboard.dtsi
-> @@ -122,7 +122,7 @@
-> =20
->  	dss_hdmi_pins: pinmux_dss_hdmi_pins {
->  		pinctrl-single,pins =3D <
-> -			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec=
- */
-> +			OMAP4_IOPAD(0x09a, PIN_INPUT | MUX_MODE0)		/* hdmi_cec.hdmi_cec */
->  			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_scl.hdmi_scl=
- */
->  			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_sda.hdmi_sda=
- */
->  		>;
-> diff --git a/arch/arm/boot/dts/omap5-board-common.dtsi b/arch/arm/boot/dt=
-s/omap5-board-common.dtsi
-> --- a/arch/arm/boot/dts/omap5-board-common.dtsi
-> +++ b/arch/arm/boot/dts/omap5-board-common.dtsi
-> @@ -294,7 +294,7 @@
-> =20
->  	dss_hdmi_pins: pinmux_dss_hdmi_pins {
->  		pinctrl-single,pins =3D <
-> -			OMAP5_IOPAD(0x13c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec=
- */
-> +			OMAP5_IOPAD(0x13c, PIN_INPUT | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
->  			OMAP5_IOPAD(0x140, PIN_INPUT | MUX_MODE0)	/* hdmi_ddc_scl.hdmi_ddc_sc=
-l */
->  			OMAP5_IOPAD(0x142, PIN_INPUT | MUX_MODE0)	/* hdmi_ddc_sda.hdmi_ddc_sd=
-a */
->  		>;
-> diff --git a/arch/arm/boot/dts/omap5-cm-t54.dts b/arch/arm/boot/dts/omap5=
--cm-t54.dts
-> --- a/arch/arm/boot/dts/omap5-cm-t54.dts
-> +++ b/arch/arm/boot/dts/omap5-cm-t54.dts
-> @@ -266,7 +266,7 @@
-> =20
->  	dss_hdmi_pins: pinmux_dss_hdmi_pins {
->  		pinctrl-single,pins =3D <
-> -			OMAP5_IOPAD(0x013c, PIN_INPUT_PULLUP | MUX_MODE0) /* hdmi_cec */
-> +			OMAP5_IOPAD(0x013c, PIN_INPUT | MUX_MODE0) /* hdmi_cec */
->  			OMAP5_IOPAD(0x0140, PIN_INPUT | MUX_MODE0) /* hdmi_ddc_scl */
->  			OMAP5_IOPAD(0x0142, PIN_INPUT | MUX_MODE0) /* hdmi_ddc_sda */
->  		>;
-> --=20
-> 2.13.0
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>> +			csi20_in: endpoint {
+>> +				clock-lanes = <0>;
+>> +				data-lanes = <1>;
+>> +				remote-endpoint = <&adv7482_txb>;
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&csi40 {
+>> +	status = "okay";
+>> +
+>> +	ports {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
 
---4li2qy32yrblxzza
-Content-Type: application/pgp-signature; name="signature.asc"
+# Removed
 
------BEGIN PGP SIGNATURE-----
+>> +
+>> +		port@0 {
+>> +			reg = <0>;
+>> +
+>> +			csi40_in: endpoint {
+>> +				clock-lanes = <0>;
+>> +				data-lanes = <1 2 3 4>;
+>> +				remote-endpoint = <&adv7482_txa>;
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> +
+>> +&cvbs_con {
+>> +	port {
+>> +		cvbs_in: endpoint {
+>> +			remote-endpoint = <&adv7482_ain7>;
+>> +		};
+>> +	};
+>> +};
+> 
+> You could merge this with the cvbs_con node above.
 
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAllSIBgACgkQ2O7X88g7
-+ppB/w/+J/GqEuBSwsoY9LM8HPsWxx8hN0OTcVQy2WTyfuMHCXxhTCO8iJ6KoBIc
-cEeQbDsukw4flvdb4eilHq6E1Bhv5MEKpgb1uYu1LWm9pP2C6MaUvEyUcG48NqLj
-hwy9OVl79zQ1Ecg6glgqxpRMS5vwvt+5g7el2MZ48Lns5SbyOk6k+OMS0K4W9Dpi
-1N90yVXSu8UWf7W56SqGm6qjPy9bfILswTnavdGn4+DNuORhrb1G+ACAAwtptPzp
-CU6B0IixsBI6qiWoudzk9zIzF6Cuw/dndIGgfxMXGv3NGTy9wne7BjXlgDTjEL/D
-lcdfgeHrWK1b37lgNbYM6G4ou1B1rW+qgQMWsHll7RvlwLdaIAKJw3rlM+ceAPhV
-MBrTQnnipQxCfCHybrTDILgcR/gvN17e5YLkjjxHmWmPyltCVxRsQpAKLB/k+H1N
-cBDvggjtwVWo6sMc60BlwzfymIlE6D+bZFW9zAuw7M1su3cGH+zzZNpaYUpGcRaW
-QnJscI1ZG0pV7bVDQyeU3wr1n+oWteewYUIDbW+YZHPwsO8CvuI1uE1rJIeQMc+0
-3eizW4VlhzEUXv/BKDJnAPhs4HK+RrALR1DhHP3AU59I7byjAIzeUGscyoSNT3e0
-nFSPJ27rjLCOfYrchtUOqJW80opaHnluTYZO2qB0Aas7xtYAVdE=
-=UG6S
------END PGP SIGNATURE-----
+What is the distinction that means cvbs_con can be merged where hdmi_in_con
+would not ?
 
---4li2qy32yrblxzza--
+
+Similarly, I see that VGA out is 'merged' where hdmi outs are not ... is it just
+determined by whether the connector is on all boards that inherit
+salvator-common.dtsi ?
+
+
+> 
+> Apart from that the patch looks good to me.
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> 
+>> +&hdmi_in_con {
+>> +	port {
+>> +		hdmi_in: endpoint {
+>> +			remote-endpoint = <&adv7482_hdmi>;
+>> +		};
+>> +	};
+>> +};
+>> +
+>>  &du {
+>>  	pinctrl-0 = <&du_pins>;
+>>  	pinctrl-names = "default";
+>> @@ -343,6 +417,55 @@
+>>
+>>  		shunt-resistor-micro-ohms = <5000>;
+>>  	};
+>> +
+>> +	video-receiver@70 {
+>> +		compatible = "adi,adv7482";
+>> +		reg = <0x70>;
+>> +
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+
+But I can't remove these # without generating a warning message ...
+
+>> +
+>> +		interrupt-parent = <&gpio6>;
+>> +		interrupt-names = "intrq1", "intrq2";
+>> +		interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
+>> +			     <31 IRQ_TYPE_LEVEL_LOW>;
+>> +
+>> +		port@7 {
+>> +			reg = <7>;
+>> +
+>> +			adv7482_ain7: endpoint {
+>> +				remote-endpoint = <&cvbs_in>;
+>> +			};
+>> +		};
+>> +
+>> +		port@8 {
+>> +			reg = <8>;
+>> +
+>> +			adv7482_hdmi: endpoint {
+>> +				remote-endpoint = <&hdmi_in>;
+>> +			};
+>> +		};
+>> +
+>> +		port@10 {
+>> +			reg = <10>;
+>> +
+>> +			adv7482_txa: endpoint {
+>> +				clock-lanes = <0>;
+>> +				data-lanes = <1 2 3 4>;
+>> +				remote-endpoint = <&csi40_in>;
+>> +			};
+>> +		};
+>> +
+>> +		port@11 {
+>> +			reg = <11>;
+>> +
+>> +			adv7482_txb: endpoint {
+>> +				clock-lanes = <0>;
+>> +				data-lanes = <1>;
+>> +				remote-endpoint = <&csi20_in>;
+>> +			};
+>> +		};
+>> +	};
+>>  };
+>>
+>>  &i2c_dvfs {
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
