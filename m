@@ -1,83 +1,43 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH v2 1/2] DT: pinctrl: Add binding documentation for
- Spreadtrum pin controller
-Date: Tue, 27 Jun 2017 15:59:02 +0800
-Message-ID: <CAMz4kuJigdhbV5+J1CcqP6zb7pqi9HaW=dxe_rsNi-=RsQ70vA@mail.gmail.com>
-References: <359d62c1f2f7ef61c6160df9b60c1af4bfcea89a.1496664241.git.baolin.wang@spreadtrum.com>
- <CACRpkdbtuPKr=tWGoJC-sg2Oj47rYMpo6fs_Us=Nynew1Wkz=w@mail.gmail.com>
- <20170612060718.GA8566@spreadtrum.com> <20170613031547.GA29679@spreadtrum.com>
- <CACRpkdbaP1U3pefTbPj-wOa1AibcJHBBALfKWO8dBR=YW8f7zA@mail.gmail.com>
- <CAMz4ku+jZ-S6sBL=ib++j+ooqweU9UC+MTgFca7ScrQiJDeZVQ@mail.gmail.com> <CACRpkdYETvpsr1X1dfiGfg9i=Tq2qHJBZHv7Us4aZ_1HQcOdoA@mail.gmail.com>
+From: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] dt-bindings: i2c: Add Spreadtrum I2C controller
+ documentation
+Date: Tue, 27 Jun 2017 16:00:02 +0800
+Message-ID: <20170627080002.GA32447@spreadtrum.com>
+References: <2083c9d6e96a72f9c1324c8a277acfd780a34094.1498472593.git.baolin.wang@spreadtrum.com>
+ <CAL_JsqL5GcMAvO0-TLHqq5ho9bN_Xs45DWj8dtKRf-t_mr0n0g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYETvpsr1X1dfiGfg9i=Tq2qHJBZHv7Us4aZ_1HQcOdoA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL5GcMAvO0-TLHqq5ho9bN_Xs45DWj8dtKRf-t_mr0n0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Baolin Wang <baolin.wang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 26 June 2017 at 06:19, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, Jun 21, 2017 at 10:10 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
->> On 20 June 2017 at 17:31, Linus Walleij <linus.walleij@linaro.org> wrote:
->>> On Tue, Jun 13, 2017 at 5:15 AM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
->>>
->>>> I forgot one most important reason why we can not use the "sleep" state. As I explained
->>>> above, the sleep related configuration will bind with the pin's sleep mode. If we set the
->>>> pin's sleep mode as AP_SLEEP, then we can select "sleep" state when AP system goes into
->>>> deep sleep mode by issuing "pinctrl_force_sleep()" in pinctrl suspend function.
->>>>
->>>> But if we set the pin's sleep mode as PUBCP_SLEEP and pubcp system doesn't run linux kernel
->>>> (it run another thread OS), then we can not select "sleep" state since the AP system does
->>>> not go into deep sleep mode (AP system run linux kernel OS).
->>>
->>> Allright yes it makes sense, and also there are systems that just go into
->>> "hardware sleep" and just put the pin into some pre-programmed mode.
->>>
->>> I'm a bit back-and-forth. I didn't mean that some code would actually
->>> switch the state to "sleep" when we go to sleep, I meant that when
->>> the system configures "default" mode it should also look up and
->>> program the "sleep" mode, but this approach with a special property
->>> is just another way of achieveing the same thing.
->>>
->>> But then we should add a whole slew of sleep states.
->>>
->>> I was thinking whether we could avoid having a special DT property
->>> by parsing ahead to states we do not currently use and programming
->>> that into the sleep mode registers.
->>
->> Yes, for most scenarios, it can work with the "sleep" state to set
->> sleep-related config. But for our Spreadtrum platform scenario (I do
->> not know if there are other platforms need this feature), we can not
->> select the "sleep" state when pubcp system goes into deep sleep mode
->> but ap system does not go into deep sleep mode. So I think we still
->> need these "sleep-bias-pull-up", "sleep-bias-pull-down",
->> "sleep-input-enable" and "sleep-output-enable" properties.
->
-> I don't really mean you should select the "sleep" state.
->
-> I meant, as part of setting the "default" state or even the "init"
-> state, we would inspect the "sleep" state, use those settings, and
-> program them into the registers at this early point.
+On 一,  6月 26, 2017 at 09:05:39上午 -0500, Rob Herring wrote:
+> On Mon, Jun 26, 2017 at 5:28 AM, Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org> wrote:
+> > This patch adds the binding documentation for Spreadtrum I2C
+> > controller device.
+> >
+> > Signed-off-by: Baolin Wang <baolin.wang-lxIno14LUO0EEoCn2XhGlw@public.gmane.org>
+> > ---
+> > Changes since v2:
+> >  - Change compatible strings to be SoC specific.
+> >
+> > Changes since v1:
+> >  - No updates.
+> > ---
+> >  Documentation/devicetree/bindings/i2c/i2c-sprd.txt |   31 ++++++++++++++++++++
+> >  1 file changed, 31 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sprd.txt
+> 
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-I understood your points. But we can not program all into the
-registers at one early point, sometimes these sleep-related configs
-need depend on some conditions in users' drivers, like on condition 1:
-driver need to set one pin as input-enable when specified system goes
-into deep sleep, on condition 2: driver need set this pin as
-output-enable when specified system goes into deep sleep. So I still
-think it is better if we introduce some standard sleep related
-configs.
+Thanks Rob.
 
->
-> Then never touch the registers again, and never really go to the
-> sleep state by software, just by hardware.
->
-> Yours,
-> Linus Walleij
-
-
-
--- 
-Baolin.wang
-Best Regards
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
