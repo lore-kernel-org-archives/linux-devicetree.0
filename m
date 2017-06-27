@@ -1,138 +1,55 @@
-From: Kieran Bingham <kbingham-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v6 1/3] media: adv748x: Add adv7181, adv7182 bindings
-Date: Tue, 27 Jun 2017 16:03:32 +0100
-Message-ID: <17f2a43c3500f610f8df2548f51555eb5ae03293.1498575029.git-series.kieran.bingham+renesas@ideasonboard.com>
-References: <cover.13d48bb2ba66a5e11c962c62b1a7b5832b0a2344.1498575029.git-series.kieran.bingham+renesas@ideasonboard.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/3] ARM: dts: dra71-evm: workaround incorrect DP83867 RX_CTRL pin strap
+Date: Tue, 27 Jun 2017 20:36:10 +0530
+Message-ID: <d283da02e13907f87d9b05a605f4114a95524255.1498573382.git.nsekhar@ti.com>
+References: <cover.1498573382.git.nsekhar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.13d48bb2ba66a5e11c962c62b1a7b5832b0a2344.1498575029.git-series.kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-In-Reply-To: <cover.13d48bb2ba66a5e11c962c62b1a7b5832b0a2344.1498575029.git-series.kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-References: <cover.13d48bb2ba66a5e11c962c62b1a7b5832b0a2344.1498575029.git-series.kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+In-Reply-To: <cover.1498573382.git.nsekhar-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+The DRA71 EVM straps the DP83867 GigaBit Ethernet phy's RX_DV/RX_CTRL pin
+in mode 1. Unfortunately, the phy data manual disallows this.
 
-Create device tree bindings documentation for the ADV748x.
-The ADV748x supports both the ADV7481 and ADV7482 chips which
-provide analogue decoding and HDMI receiving capabilities
+Add "ti,dp83867-rxctrl-strap-quirk" property to the phy's device-tree node
+to allow kernel to enable software workaround for this incorrect strap
+setting. This is as suggested by the phy's datamanual and ensures proper
+operation of this PHY.
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+This needs to be done for both instances of this PHY present on the board.
 
+Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
 ---
-v6:
- - Clean up description and remove redundant text regarding optional
-   nodes
+ arch/arm/boot/dts/dra71-evm.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
- Documentation/devicetree/bindings/media/i2c/adv748x.txt | 95 ++++++++++-
- 1 file changed, 95 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/adv748x.txt
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/adv748x.txt b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-new file mode 100644
-index 000000000000..21ffb5ed8183
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/adv748x.txt
-@@ -0,0 +1,95 @@
-+* Analog Devices ADV748X video decoder with HDMI receiver
-+
-+The ADV7481 and ADV7482 are multi format video decoders with an integrated
-+HDMI receiver. They can output CSI-2 on two independent outputs TXA and TXB
-+from three input sources HDMI, analog and TTL.
-+
-+Required Properties:
-+
-+  - compatible: Must contain one of the following
-+    - "adi,adv7481" for the ADV7481
-+    - "adi,adv7482" for the ADV7482
-+
-+  - reg: I2C slave address
-+
-+Optional Properties:
-+
-+  - interrupt-names: Should specify the interrupts as "intrq1", "intrq2" and/or
-+		     "intrq3". All interrupts are optional. The "intrq3" interrupt
-+		     is only available on the adv7481
-+  - interrupts: Specify the interrupt lines for the ADV748x
-+
-+The device node must contain one 'port' child node per device input and output
-+port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-+are numbered as follows.
-+
-+	  Name		Type		Port
-+	---------------------------------------
-+	  AIN0		sink		0
-+	  AIN1		sink		1
-+	  AIN2		sink		2
-+	  AIN3		sink		3
-+	  AIN4		sink		4
-+	  AIN5		sink		5
-+	  AIN6		sink		6
-+	  AIN7		sink		7
-+	  HDMI		sink		8
-+	  TTL		sink		9
-+	  TXA		source		10
-+	  TXB		source		11
-+
-+The digital output port nodes must contain at least one endpoint.
-+
-+Ports are optional if they are not connected to anything at the hardware level.
-+
-+Example:
-+
-+	video-receiver@70 {
-+		compatible = "adi,adv7482";
-+		reg = <0x70>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		interrupt-parent = <&gpio6>;
-+		interrupt-names = "intrq1", "intrq2";
-+		interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
-+			     <31 IRQ_TYPE_LEVEL_LOW>;
-+
-+		port@7 {
-+			reg = <7>;
-+
-+			adv7482_ain7: endpoint {
-+				remote-endpoint = <&cvbs_in>;
-+			};
-+		};
-+
-+		port@8 {
-+			reg = <8>;
-+
-+			adv7482_hdmi: endpoint {
-+				remote-endpoint = <&hdmi_in>;
-+			};
-+		};
-+
-+		port@10 {
-+			reg = <10>;
-+
-+			adv7482_txa: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2 3 4>;
-+				remote-endpoint = <&csi40_in>;
-+			};
-+		};
-+
-+		port@11 {
-+			reg = <11>;
-+
-+			adv7482_txb: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+				remote-endpoint = <&csi20_in>;
-+			};
-+		};
-+	};
+diff --git a/arch/arm/boot/dts/dra71-evm.dts b/arch/arm/boot/dts/dra71-evm.dts
+index 570f06e4f71f..c1a7ee09218f 100644
+--- a/arch/arm/boot/dts/dra71-evm.dts
++++ b/arch/arm/boot/dts/dra71-evm.dts
+@@ -205,6 +205,7 @@
+ 		ti,tx-internal-delay = <DP83867_RGMIIDCTL_250_PS>;
+ 		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
+ 		ti,min-output-impedance;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ 
+ 	dp83867_1: ethernet-phy@3 {
+@@ -213,6 +214,7 @@
+ 		ti,tx-internal-delay = <DP83867_RGMIIDCTL_250_PS>;
+ 		ti,fifo-depth = <DP83867_PHYCR_FIFO_DEPTH_8_B_NIB>;
+ 		ti,min-output-impedance;
++		ti,dp83867-rxctrl-strap-quirk;
+ 	};
+ };
+ 
 -- 
-git-series 0.9.1
+2.9.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
