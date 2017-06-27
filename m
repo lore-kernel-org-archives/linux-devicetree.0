@@ -1,153 +1,19 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v1 1/2] dt-binding: ptp: add bindings document for dte
- based ptp clock
-Date: Mon, 26 Jun 2017 22:10:57 -0700
-Message-ID: <7bb41c9b-20d8-6003-8a0f-b09f0071ed71@broadcom.com>
-References: <1497299161-6458-1-git-send-email-arun.parameswaran@broadcom.com>
- <1497299161-6458-2-git-send-email-arun.parameswaran@broadcom.com>
- <20170618140449.aek7vag22i5lnbhl@rob-hp-laptop>
- <74b85a32-63c5-b7c5-47a2-831504be318e@broadcom.com>
- <CAL_JsqKddhWMXEaoxt=3_d+-STFH-OataxSgnnj9Q4A0Eqqwxg@mail.gmail.com>
- <1abad545-ee20-e047-8cb6-b130ad037213@broadcom.com>
- <86c2b69e-a3f4-69d8-63c3-d3e73b4bde54@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <86c2b69e-a3f4-69d8-63c3-d3e73b4bde54@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Arun Parameswaran <arun.parameswaran@broadcom.com>, Richard Cochran <richardcochran@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, netdev <netdev@vger.kernel.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>
+From: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+Subject: RISC-V Device Tree Documentation
+Date: Mon, 26 Jun 2017 22:21:21 -0700
+Message-ID: <20170627052124.426-1-palmer@dabbelt.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob/Florian,
+As part of submitting the RISC-V Linux port it was suggested that we write some
+documentation that describes our device tree bindings.  Our port is still in
+progress, but it was suggested that we start sending patches to the relevant
+parties.  There is one outstanding issue to resolve with the PLIC bindings, but
+I think the other two patches should be sane.
 
-Thanks for input but still don't see any need for SoC specific
-compatible stings.  IP revision specific yes.
-
-On 17-06-22 06:04 PM, Florian Fainelli wrote:
-> On 06/22/2017 05:42 PM, Scott Branden wrote:
->>
->> On 17-06-21 08:19 PM, Rob Herring wrote:
->>> On Tue, Jun 20, 2017 at 3:48 PM, Scott Branden
->>> <scott.branden@broadcom.com> wrote:
->>>> Hi Rob,
->>>>
->>>>
->>>> On 17-06-18 07:04 AM, Rob Herring wrote:
->>>>> On Mon, Jun 12, 2017 at 01:26:00PM -0700, Arun Parameswaran wrote:
->>>>>> Add device tree binding documentation for the Broadcom DTE
->>>>>> PTP clock driver.
->>>>>>
->>>>>> Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
->>>>>> ---
->>>>>>     Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt | 13
->>>>>> +++++++++++++
->>>>>>     1 file changed, 13 insertions(+)
->>>>>>     create mode 100644
->>>>>> Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>>> b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..07590bc
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/ptp/brcm,ptp-dte.txt
->>>>>> @@ -0,0 +1,13 @@
->>>>>> +* Broadcom Digital Timing Engine(DTE) based PTP clock driver
->>>>> Bindings describe h/w, not drivers.
->>>>>
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible: should be "brcm,ptp-dte"
->>>>> Looks too generic. You need SoC specific compatible strings.
->>>> Rob, could you please help me understand the use of adding SoC specific
->>>> compatible strings.
->>>> I still don't get it.
->>>>
->>>> It's my understanding that the SoC compatibility string is to future
->>>> proof
->>>> against bugs/incompatibilities
->>>> between different versions of the hardware block due to integration
->>>> issues
->>>> or any other reason.
->>>> You can then compare in your driver because the strings were already
->>>> used in
->>>> the dtb.
->>>>
->>>> That would make sense if you can't already differentiate what SoC you
->>>> are
->>>> running on.
->>>> But the SoC is already specified in the root of the device tree in the
->>>> compatible string?
->>>> Why can't you just use of_machine_is_compatible inside your driver when
->>>> needed?
->>> Use of of_machine_is_compatible in drivers will result in the same
->>> mess we had with machine_is_X defines pre-DT. It practically
->>> guarantees that you must update the driver for a new SoC (with
->>> fallback compatibles you don't). Plus the matching logic for
->>> of_machine_is_compatible is open coded logic in every driver which is
->>> worse IMO than having a standard match table.
->> I don't understand what you mean by fallback compatible then.
->>
->> Let's say I have 3 SoCs that each contain the same ip block.
->> You want us to add a fallback compatibility per SoC, is that correct?
-> I think Rob meant a fallback compatibility for the particular block.
-> E.g: brcm,iproc-ptp is the fallback compatible string, but in your
-> SoC-specific DTS, you would have at least:
->
-> compatible = "brcm,cygnus-ptp", "brcm,iproc-ptp";
->
-> Where cygnus-ptp is more specific than iproc-ptp
->> Then, if there is a workaround discovered in a particular SoC the driver
->> can be updated in the future without changing the dtb.
->>
->> Then, the block gets added to a 4th SoC.
->> You want us to another new compatibility string for the new SoC?
->> If the new SoC has a bug then the driver has to be updated whether it is
->> in uses the fallback compatible or machine_is_compatible string.
->>
->> There is no difference in amount of code added to a driver when a new
->> SoC is introduced into the system that has bugs that need to be handled
->> by the driver.
->>
->> The difference is in your recommendation we need to go through all the
->> drivers used by the new SoC and add fallback compatibility strings.
-> Not really, the fallback is what the driver should be matching by
-> default (hence the name fallback) and if and only if you need to have a
-> SoC-specific behavior in your driver (because of bugs, or slight
-> differences) would you be matching this SoC-specific compatible string
-> to capture that and key the driver behavior based off that.
->
->> Then, we have to modify all the devicetree documentation for all the
->> drivers.  Then, we have to ensure that all dts files populate this new
->> fallback string (even if it is unused).  We don't see the benefit in
->> doing any of that.  Using machine_is_compatible and having less
->> compatibility strings to deal appears much cleaner and more foolproof
->> for all situations.
-> When you introduce a new SoC, you would update all the bindings for the
-> devices (not drivers) that are susceptible to be used by this SoC. If
-> all goes well, your SoC has little bugs, and your drivers don't even
-> need to see an update because they are already matching the fallback
-> compatible string.
->
-> That's what I understand from the suggestion but I may be totally off
-> rails here.
-In this particular case, the IP is integrated within and outside a 
-family of SoCs
-(the exact same block is in Capri for example).
-The only fallback compatablity string that makes sense is "brcm, 
-dte-ptp-v1".
-When we integrate a new version of this IP we would add "brcm, dte-ptp-v2".
-
-Rob, I still see no need to define any other compatablity strings.
-
-Everything else can be handled with machine_is_compatible
-with the exact same amount of code change to the driver?
-Adding the additional strings simply
-adds a need to change documentation and changes to dts that are otherwise
-completely unnecessary.  machine_is_compatible appears to be the cleaner
-and simpler solution?
-
-Regards,
-  Scott
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
