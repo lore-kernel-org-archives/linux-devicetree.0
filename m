@@ -1,236 +1,160 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 2/2] arm64: dts: renesas: salvator-x: Add ADV7482 support
-Date: Tue, 27 Jun 2017 16:57:10 +0300
-Message-ID: <3381435.LMORAGhIb5@avalon>
-References: <cover.90fc3153078e79a3f74af832de923ac675eb29ad.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com> <10057741.K1MBojqRFe@avalon> <f1967d99-da16-303f-f3e9-7a3d28ccaf1d@ideasonboard.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v1] ARM: dts: sun7i: provide ramoops region on BananaPi
+Date: Tue, 27 Jun 2017 15:59:00 +0200
+Message-ID: <20170627135900.smezq4mvdowmhbaz@flea.lan>
+References: <1498065017-30556-1-git-send-email-linux@rempel-privat.de>
+ <20170622061617.5guhcyxdthvmiq7j@flea.lan>
+ <48c81184-3713-31a8-03e8-f55ffaef639c@rempel-privat.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <f1967d99-da16-303f-f3e9-7a3d28ccaf1d@ideasonboard.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: kieran.bingham@ideasonboard.com
-Cc: Kieran Bingham <kbingham@kernel.org>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="r7u2543jfozqbruv"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <48c81184-3713-31a8-03e8-f55ffaef639c@rempel-privat.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <linux@rempel-privat.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Chen-Yu Tsai <wens@csie.org>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kieran,
 
-On Tuesday 27 Jun 2017 10:25:39 Kieran Bingham wrote:
-> On 23/06/17 08:43, Laurent Pinchart wrote:
-> > On Wednesday 14 Jun 2017 20:58:13 Kieran Bingham wrote:
-> >> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> >> 
-> >> The Salvator boards use an ADV7482 receiver for HDMI and CVBS inputs.
-> >> 
-> >> Provide ADV7482 node on the i2c4 bus, along with connectors for the
-> >> hdmi and cvbs inputs, and link to the csi20 and csi40 nodes as outputs.
-> >> 
-> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> >> 
-> >> v4:
-> >>  - dt: Rebase to dts/renesas/salvator-x.dtsi
-> >>  - dt: Use AIN0-7 rather than AIN1-8
-> >> 
-> >> v5:
-> >>  - dt: Move to salvator-common.dtsi
-> >> 
+--r7u2543jfozqbruv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 22, 2017 at 08:40:44AM +0200, Oleksij Rempel wrote:
+> Am 22.06.2017 um 08:16 schrieb Maxime Ripard:
+> > Hi Oleksij,
+> >=20
+> > On Wed, Jun 21, 2017 at 07:10:17PM +0200, Oleksij Rempel wrote:
+> >> This should help provide useful debug information on remote
+> >> targets without UART.
+> >>
+> >> Signed-off-by: Oleksij Rempel <linux@rempel-privat.de>
 > >> ---
-> >> 
-> >>  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 123 ++++++++++++++++-
-> >>  1 file changed, 123 insertions(+)
-> >> 
-> >> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> >> b/arch/arm64/boot/dts/renesas/salvator-common.dtsi index
-> >> aef35e0b685a..d74fb55c38bc 100644
-> >> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> >> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
-> >> @@ -65,6 +65,27 @@
-> >>  		enable-gpios = <&gpio6 7 GPIO_ACTIVE_HIGH>;
+> >>  arch/arm/boot/dts/sun7i-a20-bananapi.dts | 16 ++++++++++++++++
+> >>  1 file changed, 16 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/=
+dts/sun7i-a20-bananapi.dts
+> >> index ed2f35a..38923bf 100644
+> >> --- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> >> +++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
+> >> @@ -63,6 +63,22 @@
+> >>  		stdout-path =3D "serial0:115200n8";
 > >>  	};
-> >> 
-> >> +	cvbs-in {
-> >> +		compatible = "composite-video-connector";
-> >> +		label = "CVBS IN";
+> >> =20
+> >> +	reserved-memory {
+> >> +		#address-cells =3D <1>;
+> >> +		#size-cells =3D <1>;
+> >> +		ranges;
 > >> +
-> >> +		port {
-> >> +			cvbs_con: endpoint {
-> >> +			};
+> >> +		ramoops@7fb6a000 {
+> >> +			compatible =3D "ramoops";
+> >> +			reg =3D <0x7fb6a000 0x100000>;
+> >> +			ecc-size	=3D <16>;
+> >> +			record-size	=3D <0x00020000>;
+> >> +			console-size	=3D <0x00020000>;
+> >> +			ftrace-size	=3D <0x00020000>;
+> >> +			pmsg-size	=3D <0x00020000>;
 > >> +		};
 > >> +	};
 > >> +
-> >> +	hdmi-in {
-> >> +		compatible = "hdmi-connector";
-> >> +		label = "HDMI IN";
-> >> +		type = "a";
-> >> +
-> >> +		port {
-> >> +			hdmi_in_con: endpoint {
-> >> +			};
-> >> +		};
-> >> +	};
-> >> +
-> >>  	reg_1p8v: regulator0 {
-> >>  		compatible = "regulator-fixed";
-> >>  		regulator-name = "fixed-1.8V";
-> >> @@ -257,6 +278,59 @@
-> >>  	};
-> >>  };
-> >> 
-> >> +&csi20 {
-> >> +	status = "okay";
-> >> +
-> >> +	ports {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +
-> >> +		port@0 {
-> >> +			reg = <0>;
-> > 
-> > Aren't #address-cells, #size-cells and reg already present in the SoC
-> > .dtsi ? And if they're not, shouldn't they be ? :-)
-> 
-> Hrm - I think I added them because I was getting warnings from the DTC.
-> 
-> I've removed them from the csi nodes and no warning returns :)
-> So they're gone.
+> >=20
+> > I'm a bit skeptical about this one.
+>=20
+> I can understand your concern.
+>=20
+> > First, there's nothing specific to the bananapi,
+>=20
+> It is specific to memory size, bootloader used for the board and in some
+> cases security co processor. Any thing else I forgot?
 
-You need the #address-cells and #size-cells properties in the ports node, but 
-as they're already added by the SoC .dtsi, you don't need to duplicate them 
-here.
+Ah, right, you end up depending on the memory size...
 
-> >> +			csi20_in: endpoint {
-> >> +				clock-lanes = <0>;
-> >> +				data-lanes = <1>;
-> >> +				remote-endpoint = <&adv7482_txb>;
-> >> +			};
-> >> +		};
-> >> +	};
-> >> +};
-> >> +
-> >> +&csi40 {
-> >> +	status = "okay";
-> >> +
-> >> +	ports {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> 
-> # Removed
-> 
-> >> +
-> >> +		port@0 {
-> >> +			reg = <0>;
-> >> +
-> >> +			csi40_in: endpoint {
-> >> +				clock-lanes = <0>;
-> >> +				data-lanes = <1 2 3 4>;
-> >> +				remote-endpoint = <&adv7482_txa>;
-> >> +			};
-> >> +		};
-> >> +	};
-> >> +};
-> >> +
-> >> +&cvbs_con {
-> >> +	port {
-> >> +		cvbs_in: endpoint {
-> >> +			remote-endpoint = <&adv7482_ain7>;
-> >> +		};
-> >> +	};
-> >> +};
-> > 
-> > You could merge this with the cvbs_con node above.
-> 
-> What is the distinction that means cvbs_con can be merged where hdmi_in_con
-> would not ?
+> > but every one will want to have different sizes here, or different
+> > parameters.
+>=20
+> I don't thing every one need different configurations. I assume current
+> parameters are good enough for most users. But if users need some thing
+> different they should be overwritten by kernel boot args.
 
-No reason, the same comment applies to HDMI too :-)
+We're basically stuck between two constraints that are opposing: the
+users that don't care about ramoops want to use all the RAM they can
+and the users that care about ramoops will probably like to have quite
+a big buffer to be able to have as much backlog as possible in case of
+a crash.
 
-> Similarly, I see that VGA out is 'merged' where hdmi outs are not ... is it
-> just determined by whether the connector is on all boards that inherit
-> salvator-common.dtsi ?
+And then, we'd need to define how much exactly "big enough" is, which
+is probably going to be subject to debate across the latter population
+:)
 
-My point was that it seems a bit pointless to define a node and extend it with 
-additional properties in the same file, when you could merge those properties 
-in the node definition. You only need to extend nodes with additional 
-properties when they're defined in one file and extended in another one.
+> May be, DTS should provide some generic/ramoops area and let
+> distributions decide how to use it? For example compile kernel with
+> some defaults for ramoops.
 
-> > Apart from that the patch looks good to me.
-> > 
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > 
-> >> +&hdmi_in_con {
-> >> +	port {
-> >> +		hdmi_in: endpoint {
-> >> +			remote-endpoint = <&adv7482_hdmi>;
-> >> +		};
-> >> +	};
-> >> +};
-> >> +
-> >>  &du {
-> >>  	pinctrl-0 = <&du_pins>;
-> >>  	pinctrl-names = "default";
-> >> @@ -343,6 +417,55 @@
-> >> 
-> >>  		shunt-resistor-micro-ohms = <5000>;
-> >>  	};
-> >> +
-> >> +	video-receiver@70 {
-> >> +		compatible = "adi,adv7482";
-> >> +		reg = <0x70>;
-> >> +
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> 
-> But I can't remove these # without generating a warning message ...
+That would be difficult to achieve, since you don't know where the end
+of the RAM is from one board to another (and even between two variants
+of the same board sold in different memory size variants).
 
-The properties are needed, why should you remove them ? :-)
+> > Since using the kernel parameters is also an option, I'd rather
+> > document how to do that with the parameters.
+>=20
+> Here are my arguments to do this in DTS:
+>
+> - some issues are hardly reproducible and it is good to catch it as soon
+> as possible. So it should be enabled before first problem will happen.
 
-> >> +
-> >> +		interrupt-parent = <&gpio6>;
-> >> +		interrupt-names = "intrq1", "intrq2";
-> >> +		interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
-> >> +			     <31 IRQ_TYPE_LEVEL_LOW>;
-> >> +
-> >> +		port@7 {
-> >> +			reg = <7>;
-> >> +
-> >> +			adv7482_ain7: endpoint {
-> >> +				remote-endpoint = <&cvbs_in>;
-> >> +			};
-> >> +		};
-> >> +
-> >> +		port@8 {
-> >> +			reg = <8>;
-> >> +
-> >> +			adv7482_hdmi: endpoint {
-> >> +				remote-endpoint = <&hdmi_in>;
-> >> +			};
-> >> +		};
-> >> +
-> >> +		port@10 {
-> >> +			reg = <10>;
-> >> +
-> >> +			adv7482_txa: endpoint {
-> >> +				clock-lanes = <0>;
-> >> +				data-lanes = <1 2 3 4>;
-> >> +				remote-endpoint = <&csi40_in>;
-> >> +			};
-> >> +		};
-> >> +
-> >> +		port@11 {
-> >> +			reg = <11>;
-> >> +
-> >> +			adv7482_txb: endpoint {
-> >> +				clock-lanes = <0>;
-> >> +				data-lanes = <1>;
-> >> +				remote-endpoint = <&csi20_in>;
-> >> +			};
-> >> +		};
-> >> +	};
-> >>  };
-> >>  
-> >>  &i2c_dvfs {
+You'll probably need some extra step anyway though, for example to
+load the module.
 
--- 
-Regards,
+> - my previous experience with pstore was a bit disappointing, it didn't
+> worked on SMP system correctly. So the test coverage seems to be
+> minimal. Probably because it is not enabled by default.
 
-Laurent Pinchart
+That's not really a good argument to enable it though :)
+
+> - at least barebox can extract some postmortem information from not
+> booting system. Bootloader and Kernel need to use same parameters,
+> devicetree seems to be perfect here.
+
+That could be patched in the DT from bootloaders that are able to do
+that then? That would even work better, since they know what the
+memory size is.
+
+> - distributions should be able to use this per default as soon as this
+> option is available.
+
+This is the issue with defaults, no one agree with them. I can
+probably give you a good number of people that would not want to have
+that memory at waste. And given the number of current users (3), the
+default seems to be of not enabling it.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--r7u2543jfozqbruv
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZUmSkAAoJEBx+YmzsjxAgLJwQAJQ6wVrMVapTsLmYR5svImRA
+iOPxL85AxZ1zIqOuktWw0x1OwckfQV4cc3fuv55Sad5py91bu6u+Wg47l2IrQvgw
++GkJevK3vIQixxgj4p+pjCB2KEgrel9xVNu2K4Bet6M8ax4bdcu4uE8ezacFsVbF
+sLSc7D/5u8Qo8T69jggnvh2Y/ECJ1kTzgBMvgZpdSWfqhdBfGwBzlPSXRjxIu+T1
+5J8PzvgkoFy3YDgOm2JcDsV5+bTcj59EMLYDOBbvmc7XEeNlHa3hLQXSgIB9SMOz
+cpGl3zXIkemV9Xm8F0I3BVf83PgjXQKi59CNcPB1n5Td8e0LNSPJoGWP23EhvfKl
+3Tws46mdaTUSnMy8zxBxArz36sueFqnd+dYDx2UaP6EpVGOwHZrfzb7PqWXOQawF
+robdhlhze86bTO9QL4yTKgotzazzcTk+qaqXR75Lrg1+/kl/KOxNT1AYhu06Tmr2
+Gs8pxSdaig8XksJZ8G9aghztJU1hycfRtWZ4+VQR2hqra03ETFhPsannl+tTtCCc
+aruxr2iQgm4TapN+XjBnpyqnJ907WjzULJB9YUVpNXa3H8zn1ZkvMxu50cs9f4ts
+rY1gP6wA5s9eejVDFnawhiE0gdvBLZvHvkZdbIcFeuapr3BCKraKlbMTBMNZB9Ii
+ghjgEnsZ/8Goio6dhqdc
+=/fkx
+-----END PGP SIGNATURE-----
+
+--r7u2543jfozqbruv--
