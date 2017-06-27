@@ -1,182 +1,83 @@
-From: Hugues FRUCHET <hugues.fruchet@st.com>
-Subject: Re: omap3isp camera was Re: [PATCH v1 0/6] Add support of OV9655
- camera
-Date: Tue, 27 Jun 2017 07:57:02 +0000
-Message-ID: <658307f3-7abe-5738-7a8a-2eff6e0902a1@st.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
- <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
- <20170625091856.GA22791@amd>
- <EDFD663F-37F9-42C2-92A9-66C2508B361E@goldelico.com>
- <20170626083927.GB9621@amd> <e725a457-5efc-22fa-ce97-bb7753185d21@st.com>
- <E4E1E683-9CD0-4F23-AB03-080C52D0D73B@goldelico.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH v2 1/2] DT: pinctrl: Add binding documentation for
+ Spreadtrum pin controller
+Date: Tue, 27 Jun 2017 15:59:02 +0800
+Message-ID: <CAMz4kuJigdhbV5+J1CcqP6zb7pqi9HaW=dxe_rsNi-=RsQ70vA@mail.gmail.com>
+References: <359d62c1f2f7ef61c6160df9b60c1af4bfcea89a.1496664241.git.baolin.wang@spreadtrum.com>
+ <CACRpkdbtuPKr=tWGoJC-sg2Oj47rYMpo6fs_Us=Nynew1Wkz=w@mail.gmail.com>
+ <20170612060718.GA8566@spreadtrum.com> <20170613031547.GA29679@spreadtrum.com>
+ <CACRpkdbaP1U3pefTbPj-wOa1AibcJHBBALfKWO8dBR=YW8f7zA@mail.gmail.com>
+ <CAMz4ku+jZ-S6sBL=ib++j+ooqweU9UC+MTgFca7ScrQiJDeZVQ@mail.gmail.com> <CACRpkdYETvpsr1X1dfiGfg9i=Tq2qHJBZHv7Us4aZ_1HQcOdoA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E4E1E683-9CD0-4F23-AB03-080C52D0D73B@goldelico.com>
-Content-Language: en-US
-Content-ID: <15ED3E17860D6B469DE4E1A7B49A7C65@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>, Suman Anna <s-anna@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Pavel Machek <pavel@ucw.cz>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYETvpsr1X1dfiGfg9i=Tq2qHJBZHv7Us4aZ_1HQcOdoA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Nikolaus,
-
-I would propose to work first on YUV support, so you can test a YUV VGA 
-grabbing using your OMPA3 setup, I will add this support then in patch 
-serie.
-
-For the co-work, let's continue on IRC (irc.freenode.net), chat #v4l, my 
-pseudo is "hfr".
-
-BR,
-Hugues.
-
-On 06/26/2017 06:28 PM, H. Nikolaus Schaller wrote:
-> Hi Hugues,
-> 
->> Am 26.06.2017 um 15:19 schrieb Hugues FRUCHET <hugues.fruchet@st.com>:
->>
->> Nikolaus,
->> some comments about pixel format/resolution below:
->>
->> On 06/26/2017 10:39 AM, Pavel Machek wrote:
->>> On Mon 2017-06-26 08:05:04, H. Nikolaus Schaller wrote:
->>>> Hi Pavel,
+On 26 June 2017 at 06:19, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, Jun 21, 2017 at 10:10 AM, Baolin Wang <baolin.wang@linaro.org> wrote:
+>> On 20 June 2017 at 17:31, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>> On Tue, Jun 13, 2017 at 5:15 AM, Baolin Wang <baolin.wang@spreadtrum.com> wrote:
+>>>
+>>>> I forgot one most important reason why we can not use the "sleep" state. As I explained
+>>>> above, the sleep related configuration will bind with the pin's sleep mode. If we set the
+>>>> pin's sleep mode as AP_SLEEP, then we can select "sleep" state when AP system goes into
+>>>> deep sleep mode by issuing "pinctrl_force_sleep()" in pinctrl suspend function.
 >>>>
->>>>> Am 25.06.2017 um 11:18 schrieb Pavel Machek <pavel@ucw.cz>:
->>>>>
->>>>> Hi!
->>>>>
->>>>>> * unfortunately we still get no image :(
->>>>>>
->>>>>> The latter is likely a setup issue of our camera interface (OMAP3 ISP = Image Signal Processor) which
->>>>>> we were not yet able to solve. Oscilloscoping signals on the interface indicated that signals and
->>>>>> sync are correct. But we do not know since mplayer only shows a green screen.
->>>>>
->>>>> What mplayer command line do you use? How did you set up the pipeline
->>>>> with media-ctl?
->>>>>
->>>>> On kernel.org, I have tree called camera-fw5-6 , where camera works
->>>>> for me on n900. On gitlab, there's modifed fcam-dev, which can be used
->>>>> for testing.
->>>>
->>>> We did have yet another (non-DT) camera driver and media-ctl working in with 3.12.37,
->>>> but had no success yet to update it to work with modern kernels or drivers. It
->>>> is either that the (newer) drivers missing something or the media-ctl has changed.
->>>>
->>>> Here is the log of our scripts with Hugues' driver and our latest setup:
->>>>
->>>> root@letux:~# ./camera-demo sxga
->>>> DISPLAY=:0
->>>> XAUTHORITY=tcp
->>>> Camera: /dev/v4l-subdev8
->>>> Setting mode sxga
->>>> media-ctl -r
->>>> media-ctl -l '"ov965x":0 -> "OMAP3 ISP CCDC":0[1]'
->>>> media-ctl -l '"OMAP3 ISP CCDC":1 -> "OMAP3 ISP CCDC output":0[1]'
->>>> media-ctl -V '"ov965x":0 [UYVY2X8 1280x1024]'
->>>> media-ctl -V '"OMAP3 ISP CCDC":0 [UYVY2X8 1280x1024]'
->>>> media-ctl -V '"OMAP3 ISP CCDC":1 [UYVY 1280x1024]'
+>>>> But if we set the pin's sleep mode as PUBCP_SLEEP and pubcp system doesn't run linux kernel
+>>>> (it run another thread OS), then we can not select "sleep" state since the AP system does
+>>>> not go into deep sleep mode (AP system run linux kernel OS).
 >>>
->>> Ok, so you are using capture, not preview.
+>>> Allright yes it makes sense, and also there are systems that just go into
+>>> "hardware sleep" and just put the pin into some pre-programmed mode.
 >>>
->>> You may want to try this one:
+>>> I'm a bit back-and-forth. I didn't mean that some code would actually
+>>> switch the state to "sleep" when we go to sleep, I meant that when
+>>> the system configures "default" mode it should also look up and
+>>> program the "sleep" mode, but this approach with a special property
+>>> is just another way of achieveing the same thing.
 >>>
->>> commit 0eae9d2a8f096f703cbc8f9a0ab155cd3cc14cef
->>> Author: Pavel <pavel@ucw.cz>
->>> Date:   Mon Feb 13 21:26:51 2017 +0100
+>>> But then we should add a whole slew of sleep states.
 >>>
->>>      omap3isp: fix VP2SDR bit so capture (not preview) works
->>>
->>>      This is neccessary for capture (not preview) to work properly on
->>>          N900. Why is unknown.
->>> 	
->>> 									Pavel
->>>
->>>> ### starting mplayer in sxga mode ###
->>>> mplayer tv:// -vf rotate=2 -tv driver=v4l2:device=/dev/video2:outfmt=uyvy:width=1280:height=1024:fps=15 -vo x11
+>>> I was thinking whether we could avoid having a special DT property
+>>> by parsing ahead to states we do not currently use and programming
+>>> that into the sleep mode registers.
 >>
->> => "outfmt=uyvy:width=1280:height=1024"
->>
->> Nikolaus,
->> Be careful that only VGA/RGB565 is coded in this basic version of OV9655,
->> perhaps this explain partly your troubles ?
-> 
-> Ah, I see. The driver should support SXGA and UYVY2X8 (because our 3.12 compatible driver did).
-> 
-> This very old (but working) non-DT driver for 3.12 kernels
-> was not based on the ov9650.c code but mt9p031.c:
-> 
-> 	http://git.goldelico.com/?p=gta04-kernel.git;a=blob;f=drivers/media/i2c/ov9655.c;hb=refs/heads/3.12.37
-> 
-> We abandoned this independent driver because we felt (like you) that extending the existing
-> ov9650 driver is a better solution for mainline.
-> 
-> 
-> At least in theory. Therefore I assumed your submission supports SXGA and UYVY as well,
-> since your work is based on ours.
-> 
-> Nevertheless, VGA resolution doesn't work either.
-> 
-> root@letux:~# ./camera-demo vga
-> DISPLAY=:0
-> XAUTHORITY=tcp
-> Camera: /dev/v4l-subdev8
-> Setting mode vga
-> media-ctl -r
-> media-ctl -l '"ov965x":0 -> "OMAP3 ISP CCDC":0[1]'
-> media-ctl -l '"OMAP3 ISP CCDC":1 -> "OMAP3 ISP CCDC output":0[1]'
-> media-ctl -V '"ov965x":0 [UYVY2X8 640x480]'
-> media-ctl -V '"OMAP3 ISP CCDC":0 [UYVY2X8 640x480]'
-> media-ctl -V '"OMAP3 ISP CCDC":1 [UYVY 640x480]'
-> ### starting mplayer in vga mode ###
-> mplayer tv:// -vf rotate=2 -tv driver=v4l2:device=/dev/video2:outfmt=uyvy:width=640:height=480:fps=30 -vo x11
-> 
-> 
-> A little later it reports a NULL pointer dereference in ccdc_link_validate() / ccdc_is_shiftable().
-> 
-> It appears as if the input format translates into a NULL pointer by
-> omap3isp_video_format_info(0x00001008).
-> 
-> This NULL pointer is not catched by ccdc_is_shiftable().
-> 
-> And it indicates that the camera driver is doing a format that is not
-> supported by omap3isp...
-> 
-> 
-> So how should we proceed?
-> 
-> It looks as if your driver supports your scenario (STM32F746G-DISCO) in VGA/RGB565
-> and our drivers (basically) support ours (omap3isp) in VGA/SXGA but UYVY.
-> 
-> We certainly need a generic driver that supports all platforms and formats. So
-> we somehow need to get all this stuff into a single driver.
-> 
-> Working on two different patch sets doesn't make sense and would be rejected
-> my maintainers...
-> 
-> Basically I could work on your basis to add what we need, but this requires your
-> basis to be stabilized first. Or I would spend more time rebasing my code than
-> fixing things.
-> 
-> Or you implement the missing formats / features and I test and try to pinpoint
-> and report issues to you for integration.
-> 
-> So we have to agree on some way to coordinate the work, especially who submits
-> patch sets for review here. Since you were faster than us to submit anything,
-> so you should continue with this series.
-> 
-> BR and thanks,
-> Nikolaus
-> 
+>> Yes, for most scenarios, it can work with the "sleep" state to set
+>> sleep-related config. But for our Spreadtrum platform scenario (I do
+>> not know if there are other platforms need this feature), we can not
+>> select the "sleep" state when pubcp system goes into deep sleep mode
+>> but ap system does not go into deep sleep mode. So I think we still
+>> need these "sleep-bias-pull-up", "sleep-bias-pull-down",
+>> "sleep-input-enable" and "sleep-output-enable" properties.
+>
+> I don't really mean you should select the "sleep" state.
+>
+> I meant, as part of setting the "default" state or even the "init"
+> state, we would inspect the "sleep" state, use those settings, and
+> program them into the registers at this early point.
+
+I understood your points. But we can not program all into the
+registers at one early point, sometimes these sleep-related configs
+need depend on some conditions in users' drivers, like on condition 1:
+driver need to set one pin as input-enable when specified system goes
+into deep sleep, on condition 2: driver need set this pin as
+output-enable when specified system goes into deep sleep. So I still
+think it is better if we introduce some standard sleep related
+configs.
+
+>
+> Then never touch the registers again, and never really go to the
+> sleep state by software, just by hardware.
+>
+> Yours,
+> Linus Walleij
+
+
+
+-- 
+Baolin.wang
+Best Regards
