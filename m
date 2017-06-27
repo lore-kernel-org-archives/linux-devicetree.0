@@ -1,90 +1,182 @@
-From: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Subject: Re: [PATCH v3 9/9] of: document rs485 bindings for Atmel USART,
- Freescale UARTs and OMAP UART
-Date: Tue, 27 Jun 2017 09:42:06 +0200
-Message-ID: <cf02163a-72d4-5e98-a764-ba5af19a6bf7@microchip.com>
-References: <20170626090803.10981-1-u.kleine-koenig@pengutronix.de>
- <20170626090803.10981-10-u.kleine-koenig@pengutronix.de>
+From: Hugues FRUCHET <hugues.fruchet@st.com>
+Subject: Re: omap3isp camera was Re: [PATCH v1 0/6] Add support of OV9655
+ camera
+Date: Tue, 27 Jun 2017 07:57:02 +0000
+Message-ID: <658307f3-7abe-5738-7a8a-2eff6e0902a1@st.com>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <385A82AC-CC23-41BD-9F57-0232F713FED9@goldelico.com>
+ <1E453955-0C1A-414B-BBB2-C64B6D0EF378@goldelico.com>
+ <20170625091856.GA22791@amd>
+ <EDFD663F-37F9-42C2-92A9-66C2508B361E@goldelico.com>
+ <20170626083927.GB9621@amd> <e725a457-5efc-22fa-ce97-bb7753185d21@st.com>
+ <E4E1E683-9CD0-4F23-AB03-080C52D0D73B@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170626090803.10981-10-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E4E1E683-9CD0-4F23-AB03-080C52D0D73B@goldelico.com>
 Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-ID: <15ED3E17860D6B469DE4E1A7B49A7C65@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>, Suman Anna <s-anna@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Pavel Machek <pavel@ucw.cz>, LKML <linux-kernel@vger.kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Hans Verkuil <hverkuil@xs4all.nl>, Rob Herring <robh+dt@kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Yannick FERTRE <yannick.fertre@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 26/06/2017 at 11:08, Uwe Kleine-König wrote:
-> The drivers support the rs485 binding described in rs485.txt, this commit
-> just makes that explicit.
+Hi Nikolaus,
+
+I would propose to work first on YUV support, so you can test a YUV VGA 
+grabbing using your OMPA3 setup, I will add this support then in patch 
+serie.
+
+For the co-work, let's continue on IRC (irc.freenode.net), chat #v4l, my 
+pseudo is "hfr".
+
+BR,
+Hugues.
+
+On 06/26/2017 06:28 PM, H. Nikolaus Schaller wrote:
+> Hi Hugues,
 > 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-Acked-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-
-> ---
->  Documentation/devicetree/bindings/serial/atmel-usart.txt  | 1 +
->  Documentation/devicetree/bindings/serial/fsl-imx-uart.txt | 1 +
->  Documentation/devicetree/bindings/serial/fsl-lpuart.txt   | 1 +
->  Documentation/devicetree/bindings/serial/omap_serial.txt  | 1 +
->  4 files changed, 4 insertions(+)
+>> Am 26.06.2017 um 15:19 schrieb Hugues FRUCHET <hugues.fruchet@st.com>:
+>>
+>> Nikolaus,
+>> some comments about pixel format/resolution below:
+>>
+>> On 06/26/2017 10:39 AM, Pavel Machek wrote:
+>>> On Mon 2017-06-26 08:05:04, H. Nikolaus Schaller wrote:
+>>>> Hi Pavel,
+>>>>
+>>>>> Am 25.06.2017 um 11:18 schrieb Pavel Machek <pavel@ucw.cz>:
+>>>>>
+>>>>> Hi!
+>>>>>
+>>>>>> * unfortunately we still get no image :(
+>>>>>>
+>>>>>> The latter is likely a setup issue of our camera interface (OMAP3 ISP = Image Signal Processor) which
+>>>>>> we were not yet able to solve. Oscilloscoping signals on the interface indicated that signals and
+>>>>>> sync are correct. But we do not know since mplayer only shows a green screen.
+>>>>>
+>>>>> What mplayer command line do you use? How did you set up the pipeline
+>>>>> with media-ctl?
+>>>>>
+>>>>> On kernel.org, I have tree called camera-fw5-6 , where camera works
+>>>>> for me on n900. On gitlab, there's modifed fcam-dev, which can be used
+>>>>> for testing.
+>>>>
+>>>> We did have yet another (non-DT) camera driver and media-ctl working in with 3.12.37,
+>>>> but had no success yet to update it to work with modern kernels or drivers. It
+>>>> is either that the (newer) drivers missing something or the media-ctl has changed.
+>>>>
+>>>> Here is the log of our scripts with Hugues' driver and our latest setup:
+>>>>
+>>>> root@letux:~# ./camera-demo sxga
+>>>> DISPLAY=:0
+>>>> XAUTHORITY=tcp
+>>>> Camera: /dev/v4l-subdev8
+>>>> Setting mode sxga
+>>>> media-ctl -r
+>>>> media-ctl -l '"ov965x":0 -> "OMAP3 ISP CCDC":0[1]'
+>>>> media-ctl -l '"OMAP3 ISP CCDC":1 -> "OMAP3 ISP CCDC output":0[1]'
+>>>> media-ctl -V '"ov965x":0 [UYVY2X8 1280x1024]'
+>>>> media-ctl -V '"OMAP3 ISP CCDC":0 [UYVY2X8 1280x1024]'
+>>>> media-ctl -V '"OMAP3 ISP CCDC":1 [UYVY 1280x1024]'
+>>>
+>>> Ok, so you are using capture, not preview.
+>>>
+>>> You may want to try this one:
+>>>
+>>> commit 0eae9d2a8f096f703cbc8f9a0ab155cd3cc14cef
+>>> Author: Pavel <pavel@ucw.cz>
+>>> Date:   Mon Feb 13 21:26:51 2017 +0100
+>>>
+>>>      omap3isp: fix VP2SDR bit so capture (not preview) works
+>>>
+>>>      This is neccessary for capture (not preview) to work properly on
+>>>          N900. Why is unknown.
+>>> 	
+>>> 									Pavel
+>>>
+>>>> ### starting mplayer in sxga mode ###
+>>>> mplayer tv:// -vf rotate=2 -tv driver=v4l2:device=/dev/video2:outfmt=uyvy:width=1280:height=1024:fps=15 -vo x11
+>>
+>> => "outfmt=uyvy:width=1280:height=1024"
+>>
+>> Nikolaus,
+>> Be careful that only VGA/RGB565 is coded in this basic version of OV9655,
+>> perhaps this explain partly your troubles ?
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
-> index e6e6142e33ac..7c0d6b2f53e4 100644
-> --- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
-> +++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
-> @@ -24,6 +24,7 @@ Optional properties:
->  	- dma-names: "rx" for RX channel, "tx" for TX channel.
->  - atmel,fifo-size: maximum number of data the RX and TX FIFOs can store for FIFO
->    capable USARTs.
-> +- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
->  
->  <chip> compatible description:
->  - at91rm9200:  legacy USART support
-> diff --git a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> index 574c3a2c77d5..860a9559839a 100644
-> --- a/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> +++ b/Documentation/devicetree/bindings/serial/fsl-imx-uart.txt
-> @@ -9,6 +9,7 @@ Optional properties:
->  - fsl,irda-mode : Indicate the uart supports irda mode
->  - fsl,dte-mode : Indicate the uart works in DTE mode. The uart works
->                    in DCE mode by default.
-> +- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
->  
->  Please check Documentation/devicetree/bindings/serial/serial.txt
->  for the complete list of generic properties.
-> diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
-> index c95005efbcb8..4eca15378584 100644
-> --- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
-> +++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
-> @@ -14,6 +14,7 @@ Required properties:
->  Optional properties:
->  - dmas: A list of two dma specifiers, one for each entry in dma-names.
->  - dma-names: should contain "tx" and "rx".
-> +- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
->  
->  Note: Optional properties for DMA support. Write them both or both not.
->  
-> diff --git a/Documentation/devicetree/bindings/serial/omap_serial.txt b/Documentation/devicetree/bindings/serial/omap_serial.txt
-> index 7a71b5de77d6..43eac675f21f 100644
-> --- a/Documentation/devicetree/bindings/serial/omap_serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/omap_serial.txt
-> @@ -19,6 +19,7 @@ Optional properties:
->  - dmas : DMA specifier, consisting of a phandle to the DMA controller
->           node and a DMA channel number.
->  - dma-names : "rx" for receive channel, "tx" for transmit channel.
-> +- rs485-rts-delay, rs485-rx-during-tx, linux,rs485-enabled-at-boot-time: see rs485.txt
->  
->  Example:
->  
+> Ah, I see. The driver should support SXGA and UYVY2X8 (because our 3.12 compatible driver did).
 > 
-
-
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This very old (but working) non-DT driver for 3.12 kernels
+> was not based on the ov9650.c code but mt9p031.c:
+> 
+> 	http://git.goldelico.com/?p=gta04-kernel.git;a=blob;f=drivers/media/i2c/ov9655.c;hb=refs/heads/3.12.37
+> 
+> We abandoned this independent driver because we felt (like you) that extending the existing
+> ov9650 driver is a better solution for mainline.
+> 
+> 
+> At least in theory. Therefore I assumed your submission supports SXGA and UYVY as well,
+> since your work is based on ours.
+> 
+> Nevertheless, VGA resolution doesn't work either.
+> 
+> root@letux:~# ./camera-demo vga
+> DISPLAY=:0
+> XAUTHORITY=tcp
+> Camera: /dev/v4l-subdev8
+> Setting mode vga
+> media-ctl -r
+> media-ctl -l '"ov965x":0 -> "OMAP3 ISP CCDC":0[1]'
+> media-ctl -l '"OMAP3 ISP CCDC":1 -> "OMAP3 ISP CCDC output":0[1]'
+> media-ctl -V '"ov965x":0 [UYVY2X8 640x480]'
+> media-ctl -V '"OMAP3 ISP CCDC":0 [UYVY2X8 640x480]'
+> media-ctl -V '"OMAP3 ISP CCDC":1 [UYVY 640x480]'
+> ### starting mplayer in vga mode ###
+> mplayer tv:// -vf rotate=2 -tv driver=v4l2:device=/dev/video2:outfmt=uyvy:width=640:height=480:fps=30 -vo x11
+> 
+> 
+> A little later it reports a NULL pointer dereference in ccdc_link_validate() / ccdc_is_shiftable().
+> 
+> It appears as if the input format translates into a NULL pointer by
+> omap3isp_video_format_info(0x00001008).
+> 
+> This NULL pointer is not catched by ccdc_is_shiftable().
+> 
+> And it indicates that the camera driver is doing a format that is not
+> supported by omap3isp...
+> 
+> 
+> So how should we proceed?
+> 
+> It looks as if your driver supports your scenario (STM32F746G-DISCO) in VGA/RGB565
+> and our drivers (basically) support ours (omap3isp) in VGA/SXGA but UYVY.
+> 
+> We certainly need a generic driver that supports all platforms and formats. So
+> we somehow need to get all this stuff into a single driver.
+> 
+> Working on two different patch sets doesn't make sense and would be rejected
+> my maintainers...
+> 
+> Basically I could work on your basis to add what we need, but this requires your
+> basis to be stabilized first. Or I would spend more time rebasing my code than
+> fixing things.
+> 
+> Or you implement the missing formats / features and I test and try to pinpoint
+> and report issues to you for integration.
+> 
+> So we have to agree on some way to coordinate the work, especially who submits
+> patch sets for review here. Since you were faster than us to submit anything,
+> so you should continue with this series.
+> 
+> BR and thanks,
+> Nikolaus
+> 
