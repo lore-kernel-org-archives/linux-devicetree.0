@@ -1,103 +1,99 @@
-From: Olivier MOYSAN <olivier.moysan@st.com>
-Subject: Re: [PATCH 1/2] dt-bindings: Document the STM32
-	SPDIFRX interface
-Date: Tue, 27 Jun 2017 15:23:08 +0000
-Message-ID: <b74e1d76-de2c-9eb3-4ea1-f63d3e8c82b7@st.com>
-References: <1497621452-615-1-git-send-email-olivier.moysan@st.com>
- <1497621452-615-2-git-send-email-olivier.moysan@st.com>
- <20170623185514.nc3jqq6ikvwwv6sn@rob-hp-laptop>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC
+ support for A83T
+Date: Tue, 27 Jun 2017 23:29:10 +0800
+Message-ID: <24845446a80e3542d90a1111a6141415@aosc.io>
+References: <20170624024515.4669-1-techping.chan@gmail.com>
+ <20170624024515.4669-3-techping.chan@gmail.com>
+ <20170626171524.cqfyasetpsfr6xfg@flea.lan>
+ <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA@mail.gmail.com>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20170623185514.nc3jqq6ikvwwv6sn@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <CEAD4BC86887F942ABB7DA2A4E2AF39F@st.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Arnaud POULIQUEN <arnaud.pouliquen@st.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRBSPTZHFAKGQEBTLYZYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
+=E5=9C=A8 2017-06-27 23:18=EF=BC=8CZiping Chen =E5=86=99=E9=81=93=EF=BC=9A
+> 2017-06-27 1:15 GMT+08:00 Maxime Ripard=20
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+>> Hi,
+>>=20
+>> On Sat, Jun 24, 2017 at 10:45:14AM +0800, Ziping Chen wrote:
+>>> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>=20
+>>> Allwinner A83T SoC has a low res adc like the one
+>>> in Allwinner A10 SoC.
+>>>=20
+>>> Add binding for it.
+>>>=20
+>>> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6=20
+>>> ++++--
+>>>  1 file changed, 4 insertions(+), 2 deletions(-)
+>>>=20
+>>> diff --git=20
+>>> a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt=20
+>>> b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+>>> index 4357e498ef04..525d85e3043f 100644
+>>> --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+>>> +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+>>> @@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
+>>>  ------------------------------------------------
+>>>=20
+>>>  Required properties:
+>>> - - compatible: "allwinner,sun4i-a10-lradc-keys"
+>>> + - compatible: should be one of the following string:
+>>> +             "allwinner,sun4i-a10-lradc-keys"
+>>> +             "allwinner,sun8i-a83t-r-lradc-keys"
+>>=20
+>> This doesn't really have anything related to keys, and can be used
+>> purely as an ADC.
+>>=20
+>> I know this is the compatible that was used for the A10, but I'd
+>> rather drop the keys for the the new compatible.
+>>=20
+>=20
+> Hi,
+> LRADC is named KEYADC in some other SoCs' User Manual(such as R40 User
+> Manual V1.0), thus LRADC is related to keys.
+>=20
+> Without keys there is another driver named sun4i-gpadc-iio which is
+> located at driver/iio/adc/sun4i-gpadc-iio.c
 
-On 06/23/2017 08:55 PM, Rob Herring wrote:
-> On Fri, Jun 16, 2017 at 03:57:31PM +0200, olivier moysan wrote:
->> This adds documentation of device tree bindings for the
->> STM32 SPDIFRX interface.
->>
->> Signed-off-by: olivier moysan <olivier.moysan@st.com>
->> ---
->>   .../devicetree/bindings/sound/st,stm32-spdifrx.txt | 56 ++++++++++++++++++++++
->>   1 file changed, 56 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
->>
->> diff --git a/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
->> new file mode 100644
->> index 0000000..33826f2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/st,stm32-spdifrx.txt
->> @@ -0,0 +1,56 @@
->> +STMicroelectronics STM32 S/PDIF receiver (SPDIFRX).
->> +
->> +The SPDIFRX peripheral, is designed to receive an S/PDIF flow compliant with
->> +IEC-60958 and IEC-61937.
->> +
->> +Required properties:
->> +  - compatible: should be "st,stm32h7-spdifrx"
->> +  - reg: cpu DAI IP base address and size
->> +  - clocks: must contain an entry for kclk (used as S/PDIF signal reference)
->> +  - clock-names: must contain "kclk"
->> +  - interrupts: cpu DAI interrupt line
->> +  - dmas: DMA specifiers for audio data DMA and iec control flow DMA
->> +    See STM32 DMA bindings, Documentation/devicetree/bindings/dma/stm32-dma.txt
->> +  - dma-names: two dmas have to be defined, "rx" and "rx-ctrl"
->> +
->> +Optional properties:
->> +  - resets: Reference to a reset controller asserting the SPDIFRX
->> +
->> +The device node should contain one 'port' child node with one child 'endpoint'
->> +node, according to the bindings defined in Documentation/devicetree/bindings/
->> +graph.txt.
->> +
->> +Example:
->> +spdifrx: spdifrx@40004000 {
->> +	compatible = "st,stm32h7-spdifrx";
->> +	reg = <0x40004000 0x400>;
->> +	clocks = <&rcc SPDIFRX_CK>;
->> +	clock-names = "kclk";
->> +	interrupts = <97>;
->> +	dmas = <&dmamux1 2 93 0x400 0x0>,
->> +	       <&dmamux1 3 94 0x400 0x0>;
->> +	dma-names = "rx", "rx-ctrl";
->> +	pinctrl-0 = <&spdifrx_pins>;
->> +	pinctrl-names = "default";
->> +
->> +	spdifrx_port: port {
->> +		cpu_endpoint: endpoint {
->> +			remote-endpoint = <&codec_endpoint>;
->> +		};
->> +	};
->> +};
->> +
->> +spdif_in: spdif-in {
->> +	compatible = "linux,spdif-dir";
-> 
-> What is this? It should go.
-> 
-> Rob
-> 
+Nope. The general purpose LRADC driver still doesn't land in mainline,
+and this driver is for the GPADC related to thermal and resistive
+touch screen.
 
-This is the ASoC spdif stub codec. This is relevant in DT when
-spdif interface is wired to a connector.
-I will remove it from bindings.
+However, the LRADC is possible to be used in general purpose, and
+more and more boards are wiring the LRADC pin as a pin on the pinout
+(e.g. Pine64 and Lichee Pi Zero) and it may be useful.
 
-BRs
-olivier
+And the hardware is not bound to keys -- it's only the Allwinner
+reference design which bind the LRADC to keys. Device vendors can
+change it if needed.
+
+So it's suggested to have a binding without "-keys".
+
+Maxime, here's another problem: if we have already a GP LRADC driver,
+how can we tell the kernel to use it as IIO ADC rather than keys?
+Should we introduce a new property for this once ready?
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
