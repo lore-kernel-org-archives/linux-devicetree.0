@@ -1,258 +1,76 @@
-From: matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH 3/3] mtd: spi-nor: Altera Quadspi Flash Controller v2
- Platform driver
-Date: Tue, 27 Jun 2017 08:15:48 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1706270800240.8058@mgerlach-VirtualBox>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1498493619-4633-4-git-send-email-matthew.gerlach@linux.intel.com>
- <2ac33989-5665-33e0-c6f0-6791c8e46b0d@gmail.com>
+From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC
+ support for A83T
+Date: Tue, 27 Jun 2017 23:18:17 +0800
+Message-ID: <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA@mail.gmail.com>
+References: <20170624024515.4669-1-techping.chan@gmail.com>
+ <20170624024515.4669-3-techping.chan@gmail.com> <20170626171524.cqfyasetpsfr6xfg@flea.lan>
+Reply-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <2ac33989-5665-33e0-c6f0-6791c8e46b0d@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: vndao@altera.com, boris.brezillon@free-electrons.com, mchehab@kernel.org, devicetree@vger.kernel.org, richard@nod.at, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, computersforpeace@gmail.com, dwmw2@infradead.org, davem@davemloft.net
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCJ6PAPY4MPBBOXOZHFAKGQEWYC6JCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170626171524.cqfyasetpsfr6xfg-ZC1Zs529Oq4@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Tue, 27 Jun 2017, Marek Vasut wrote:
-
-> On 06/26/2017 06:13 PM, matthew.gerlach@linux.intel.com wrote:
->> From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+2017-06-27 1:15 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
+> Hi,
 >
-> Just wrap it into the Altera QSPI driver , no need for separate platform
-> driver IMO.
-
-Hi Marek,
-
-I answered this question when you asked why the header file was necessary, 
-but I think further discussion could be helpful, since this problem is 
-becoming more prevelent.  The Altera Quadspi component is a soft IP in a
-FPGA, and the processor using the component may or may not have device 
-tree support compiled into the Linux kernel.  Since device tree support 
-may or may not be available, the device tree specific code must be separated
-from the core driver code.
-
-One can certainly make the case, that device tree support could/should
-be available everywhere, but the current reality is most x86 Linux
-kernel configurations do not include device tree support.
-
-For the record, I believe device trees, and more specifically device tree 
-overlays, are the best way for Linux to use FPGAs, but I have to deal with 
-the current realities.
-
-Thanks again for all the great feedback.
-
-Matthew Gerlach
-
->
->> Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> On Sat, Jun 24, 2017 at 10:45:14AM +0800, Ziping Chen wrote:
+>> From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>
+>> Allwinner A83T SoC has a low res adc like the one
+>> in Allwinner A10 SoC.
+>>
+>> Add binding for it.
+>>
+>> Signed-off-by: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >> ---
->>  MAINTAINERS                                   |   1 +
->>  drivers/mtd/spi-nor/Kconfig                   |   5 +
->>  drivers/mtd/spi-nor/Makefile                  |   1 +
->>  drivers/mtd/spi-nor/altera-quadspi-platform.c | 137 ++++++++++++++++++++++++++
->>  4 files changed, 144 insertions(+)
->>  create mode 100644 drivers/mtd/spi-nor/altera-quadspi-platform.c
+>>  Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt | 6 ++++--
+>>  1 file changed, 4 insertions(+), 2 deletions(-)
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index ae33fa6..c32bb98 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -653,6 +653,7 @@ M:	Matthew Gerlach <matthew.gerlach@linux.intel.com>
->>  L:	linux-mtd@lists.infradead.org
->>  S:	Maintained
->>  F:	drivers/mtd/spi-nor/altera-quadspi.c
->> +F:	drivers/mtd/spi-nor/altera-quadspi-platform.c
->>  F:	inclulde/linux/mtd/altera-quadspi.h
+>> diff --git a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+>> index 4357e498ef04..525d85e3043f 100644
+>> --- a/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+>> +++ b/Documentation/devicetree/bindings/input/sun4i-lradc-keys.txt
+>> @@ -2,12 +2,14 @@ Allwinner sun4i low res adc attached tablet keys
+>>  ------------------------------------------------
 >>
->>  ALTERA SYSTEM RESOURCE DRIVER FOR ARRIA10 DEVKIT
->> diff --git a/drivers/mtd/spi-nor/Kconfig b/drivers/mtd/spi-nor/Kconfig
->> index 89fe425..f3d5c01 100644
->> --- a/drivers/mtd/spi-nor/Kconfig
->> +++ b/drivers/mtd/spi-nor/Kconfig
->> @@ -118,4 +118,9 @@ config SPI_ALTERA_QUADSPI
->>          help
->>            Enable support for version 2 of Altera Quad SPI Flash Controller.
->>
->> +config SPI_ALTERA_QUADSPI_PLATFORM
->> +	tristate "Platform support for Altera Quad SPI Flash Controller II"
->> +	help
->> +	  Platform driver support for  Altera Quad SPI Flash Controller II"
->> +
->>  endif # MTD_SPI_NOR
->> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
->> index 024c6ac..042f87e 100644
->> --- a/drivers/mtd/spi-nor/Makefile
->> +++ b/drivers/mtd/spi-nor/Makefile
->> @@ -10,4 +10,5 @@ obj-$(CONFIG_SPI_INTEL_SPI)	+= intel-spi.o
->>  obj-$(CONFIG_SPI_INTEL_SPI_PLATFORM)	+= intel-spi-platform.o
->>  obj-$(CONFIG_SPI_STM32_QUADSPI)	+= stm32-quadspi.o
->>  obj-$(CONFIG_SPI_ALTERA_QUADSPI) += altera-quadspi.o
->> +obj-$(CONFIG_SPI_ALTERA_QUADSPI_PLATFORM) += altera-quadspi-platform.o
->>
->> diff --git a/drivers/mtd/spi-nor/altera-quadspi-platform.c b/drivers/mtd/spi-nor/altera-quadspi-platform.c
->> new file mode 100644
->> index 0000000..c8d2a47
->> --- /dev/null
->> +++ b/drivers/mtd/spi-nor/altera-quadspi-platform.c
->> @@ -0,0 +1,137 @@
->> +/*
->> + * Copyright (C) 2014 Altera Corporation. All rights reserved.
->> + * Copyright (C) 2017 Intel Corporation. All rights reserved.
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/mtd/altera-quadspi.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_device.h>
->> +
->> +static int altera_quadspi_probe(struct platform_device *pdev)
->> +{
->> +	struct device_node *np = pdev->dev.of_node;
->> +	struct device *dev = &pdev->dev;
->> +	struct resource *res;
->> +	void __iomem *csr_base;
->> +	void __iomem *data_base;
->> +	void __iomem *window_base = NULL;
->> +	u32 window_size = 0;
->> +	u32 flags = 0;
->> +	u32 bank;
->> +	int ret;
->> +	struct device_node *pp;
->> +
->> +	if (!np) {
->> +		dev_err(dev, "no device found\n");
->> +		return -ENODEV;
->> +	}
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "avl_csr");
->> +	csr_base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(csr_base)) {
->> +		dev_err(dev, "%s: ERROR: failed to map csr base\n", __func__);
->> +		return PTR_ERR(csr_base);
->> +	}
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "avl_mem");
->> +	data_base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (IS_ERR(data_base)) {
->> +		dev_err(dev, "%s: ERROR: failed to map data base\n", __func__);
->> +		return PTR_ERR(data_base);
->> +	}
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "avl_window");
->> +	if (res) {
->> +		window_base = NULL;
->> +		window_base = devm_ioremap_resource(dev, res);
->> +		if (IS_ERR(window_base)) {
->> +			dev_err(dev, "%s: ERROR: failed to map window base\n",
->> +				__func__);
->> +			return PTR_ERR(data_base);
->> +		}
->> +
->> +		of_property_read_u32(dev->of_node, "window-size", &window_size);
->> +
->> +		if (!window_size) {
->> +			dev_err(dev,
->> +				"alv_window defined, %s",
->> +				"but no window-size defined\n");
->> +			return -EINVAL;
->> +		}
->> +	}
->> +
->> +	if (of_property_read_bool(np, "read-bit-reverse"))
->> +		flags |= ALTERA_QUADSPI_FL_BITREV_READ;
->> +
->> +	if (of_property_read_bool(np, "write-bit-reverse"))
->> +		flags |= ALTERA_QUADSPI_FL_BITREV_WRITE;
->> +
->> +	ret = altera_quadspi_create(dev, csr_base, data_base,
->> +				    window_base, (size_t)window_size, flags);
->> +
->> +	if (ret) {
->> +		dev_err(dev, "failed to create qspi device\n");
->> +		return ret;
->> +	}
->> +
->> +	for_each_available_child_of_node(np, pp) {
->> +		of_property_read_u32(pp, "reg", &bank);
->> +		if (bank >= ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP) {
->> +			dev_err(dev, "bad reg value %u >= %u\n", bank,
->> +				ALTERA_QUADSPI_MAX_NUM_FLASH_CHIP);
->> +			goto error;
->> +		}
->> +
->> +		if (altera_qspi_add_bank(dev, bank, pp)) {
->> +			dev_err(dev, "failed to add bank %u\n", bank);
->> +			goto error;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +error:
->> +	altera_quadspi_remove_banks(dev);
->> +	return -EIO;
->> +}
->> +
->> +static int altera_quadspi_remove(struct platform_device *pdev)
->> +{
->> +	return altera_quadspi_remove_banks(&pdev->dev);
->> +}
->> +
->> +static const struct of_device_id altera_quadspi_id_table[] = {
->> +
->> +	{ .compatible = "altr,quadspi-v2",},
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, altera_quadspi_id_table);
->> +
->> +static struct platform_driver altera_quadspi_driver = {
->> +	.driver = {
->> +		.name = "altera_quadspi_platform",
->> +		.of_match_table = altera_quadspi_id_table,
->> +	},
->> +	.probe = altera_quadspi_probe,
->> +	.remove = altera_quadspi_remove,
->> +};
->> +module_platform_driver(altera_quadspi_driver);
->> +
->> +MODULE_AUTHOR("Viet Nga Dao <vndao@altera.com>");
->> +MODULE_AUTHOR("Yong Sern Lau <lau.yong.sern@intel.com>");
->> +MODULE_AUTHOR("Matthew Gerlach <matthew.gerlach@linux.intel.com>");
->> +MODULE_DESCRIPTION("Altera QuadSPI Version 2 Platform Driver");
->> +MODULE_LICENSE("GPL v2");
->>
+>>  Required properties:
+>> - - compatible: "allwinner,sun4i-a10-lradc-keys"
+>> + - compatible: should be one of the following string:
+>> +             "allwinner,sun4i-a10-lradc-keys"
+>> +             "allwinner,sun8i-a83t-r-lradc-keys"
 >
+> This doesn't really have anything related to keys, and can be used
+> purely as an ADC.
 >
-> -- 
-> Best regards,
-> Marek Vasut
+> I know this is the compatible that was used for the A10, but I'd
+> rather drop the keys for the the new compatible.
 >
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Hi,
+LRADC is named KEYADC in some other SoCs' User Manual(such as R40 User
+Manual V1.0), thus LRADC is related to keys.
+
+Without keys there is another driver named sun4i-gpadc-iio which is
+located at driver/iio/adc/sun4i-gpadc-iio.c
+
+Is my understanding right?
+
+> Thanks!
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
