@@ -1,170 +1,236 @@
-From: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
-Subject: [PATCH] arm64: dts: r8a7796: Add DRIF support
-Date: Tue, 27 Jun 2017 13:54:38 +0100
-Message-ID: <20170627125438.44491-1-ramesh.shanmugasundaram@bp.renesas.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org, Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v5 2/2] arm64: dts: renesas: salvator-x: Add ADV7482 support
+Date: Tue, 27 Jun 2017 16:57:10 +0300
+Message-ID: <3381435.LMORAGhIb5@avalon>
+References: <cover.90fc3153078e79a3f74af832de923ac675eb29ad.1497469745.git-series.kieran.bingham+renesas@ideasonboard.com> <10057741.K1MBojqRFe@avalon> <f1967d99-da16-303f-f3e9-7a3d28ccaf1d@ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <f1967d99-da16-303f-f3e9-7a3d28ccaf1d@ideasonboard.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: kieran.bingham@ideasonboard.com
+Cc: Kieran Bingham <kbingham@kernel.org>, Niklas =?ISO-8859-1?Q?S=F6derlund?= <niklas.soderlund@ragnatech.se>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds the DRIF controller nodes for r8a7796.
+Hi Kieran,
 
-Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
----
-Hi Simon,
+On Tuesday 27 Jun 2017 10:25:39 Kieran Bingham wrote:
+> On 23/06/17 08:43, Laurent Pinchart wrote:
+> > On Wednesday 14 Jun 2017 20:58:13 Kieran Bingham wrote:
+> >> From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> 
+> >> The Salvator boards use an ADV7482 receiver for HDMI and CVBS inputs.
+> >> 
+> >> Provide ADV7482 node on the i2c4 bus, along with connectors for the
+> >> hdmi and cvbs inputs, and link to the csi20 and csi40 nodes as outputs.
+> >> 
+> >> Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+> >> 
+> >> v4:
+> >>  - dt: Rebase to dts/renesas/salvator-x.dtsi
+> >>  - dt: Use AIN0-7 rather than AIN1-8
+> >> 
+> >> v5:
+> >>  - dt: Move to salvator-common.dtsi
+> >> 
+> >> ---
+> >> 
+> >>  arch/arm64/boot/dts/renesas/salvator-common.dtsi | 123 ++++++++++++++++-
+> >>  1 file changed, 123 insertions(+)
+> >> 
+> >> diff --git a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> >> b/arch/arm64/boot/dts/renesas/salvator-common.dtsi index
+> >> aef35e0b685a..d74fb55c38bc 100644
+> >> --- a/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> >> +++ b/arch/arm64/boot/dts/renesas/salvator-common.dtsi
+> >> @@ -65,6 +65,27 @@
+> >>  		enable-gpios = <&gpio6 7 GPIO_ACTIVE_HIGH>;
+> >>  	};
+> >> 
+> >> +	cvbs-in {
+> >> +		compatible = "composite-video-connector";
+> >> +		label = "CVBS IN";
+> >> +
+> >> +		port {
+> >> +			cvbs_con: endpoint {
+> >> +			};
+> >> +		};
+> >> +	};
+> >> +
+> >> +	hdmi-in {
+> >> +		compatible = "hdmi-connector";
+> >> +		label = "HDMI IN";
+> >> +		type = "a";
+> >> +
+> >> +		port {
+> >> +			hdmi_in_con: endpoint {
+> >> +			};
+> >> +		};
+> >> +	};
+> >> +
+> >>  	reg_1p8v: regulator0 {
+> >>  		compatible = "regulator-fixed";
+> >>  		regulator-name = "fixed-1.8V";
+> >> @@ -257,6 +278,59 @@
+> >>  	};
+> >>  };
+> >> 
+> >> +&csi20 {
+> >> +	status = "okay";
+> >> +
+> >> +	ports {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +
+> >> +		port@0 {
+> >> +			reg = <0>;
+> > 
+> > Aren't #address-cells, #size-cells and reg already present in the SoC
+> > .dtsi ? And if they're not, shouldn't they be ? :-)
+> 
+> Hrm - I think I added them because I was getting warnings from the DTC.
+> 
+> I've removed them from the csi nodes and no warning returns :)
+> So they're gone.
 
-   This patch is based on renesas-devel-20170626-v4.12-rc7 tag.
-   It is verified on M3 ES1.0. I also verified there are no regression issues
-   with this addition.
+You need the #address-cells and #size-cells properties in the ports node, but 
+as they're already added by the SoC .dtsi, you don't need to duplicate them 
+here.
 
-   The driver[1] is pushed into the media_tree. The bindings[2] are ACK'ed
-   by Geert & Rob and in the media_tree queue.
+> >> +			csi20_in: endpoint {
+> >> +				clock-lanes = <0>;
+> >> +				data-lanes = <1>;
+> >> +				remote-endpoint = <&adv7482_txb>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >> +};
+> >> +
+> >> +&csi40 {
+> >> +	status = "okay";
+> >> +
+> >> +	ports {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> 
+> # Removed
+> 
+> >> +
+> >> +		port@0 {
+> >> +			reg = <0>;
+> >> +
+> >> +			csi40_in: endpoint {
+> >> +				clock-lanes = <0>;
+> >> +				data-lanes = <1 2 3 4>;
+> >> +				remote-endpoint = <&adv7482_txa>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >> +};
+> >> +
+> >> +&cvbs_con {
+> >> +	port {
+> >> +		cvbs_in: endpoint {
+> >> +			remote-endpoint = <&adv7482_ain7>;
+> >> +		};
+> >> +	};
+> >> +};
+> > 
+> > You could merge this with the cvbs_con node above.
+> 
+> What is the distinction that means cvbs_con can be merged where hdmi_in_con
+> would not ?
 
-   [1] https://git.linuxtv.org/media_tree.git/commit/?id=7625ee981af166ddb569e2e6c0006e2af471326f
-   [2] https://www.mail-archive.com/linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg15602.html
+No reason, the same comment applies to HDMI too :-)
 
-Thanks,
-Ramesh.
+> Similarly, I see that VGA out is 'merged' where hdmi outs are not ... is it
+> just determined by whether the connector is on all boards that inherit
+> salvator-common.dtsi ?
 
- arch/arm64/boot/dts/renesas/r8a7796.dtsi | 120 +++++++++++++++++++++++++++++++
- 1 file changed, 120 insertions(+)
+My point was that it seems a bit pointless to define a node and extend it with 
+additional properties in the same file, when you could merge those properties 
+in the node definition. You only need to extend nodes with additional 
+properties when they're defined in one file and extended in another one.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-index 1f6710912045..df04d132a127 100644
---- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-@@ -639,6 +639,126 @@
- 			};
- 		};
- 
-+		drif00: rif@e6f40000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f40000 0 0x64>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 515>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 515>;
-+			renesas,bonding = <&drif01>;
-+			status = "disabled";
-+		};
-+
-+		drif01: rif@e6f50000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f50000 0 0x64>;
-+			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 514>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x22>, <&dmac2 0x22>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 514>;
-+			renesas,bonding = <&drif00>;
-+			status = "disabled";
-+		};
-+
-+		drif10: rif@e6f60000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f60000 0 0x64>;
-+			interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 513>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x24>, <&dmac2 0x24>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 513>;
-+			renesas,bonding = <&drif11>;
-+			status = "disabled";
-+		};
-+
-+		drif11: rif@e6f70000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f70000 0 0x64>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 512>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x26>, <&dmac2 0x26>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 512>;
-+			renesas,bonding = <&drif10>;
-+			status = "disabled";
-+		};
-+
-+		drif20: rif@e6f80000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f80000 0 0x64>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 511>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x28>, <&dmac2 0x28>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 511>;
-+			renesas,bonding = <&drif21>;
-+			status = "disabled";
-+		};
-+
-+		drif21: rif@e6f90000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6f90000 0 0x64>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 510>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x2a>, <&dmac2 0x2a>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 510>;
-+			renesas,bonding = <&drif20>;
-+			status = "disabled";
-+		};
-+
-+		drif30: rif@e6fa0000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6fa0000 0 0x64>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 509>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x2c>, <&dmac2 0x2c>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 509>;
-+			renesas,bonding = <&drif31>;
-+			status = "disabled";
-+		};
-+
-+		drif31: rif@e6fb0000 {
-+			compatible = "renesas,r8a7796-drif",
-+				     "renesas,rcar-gen3-drif";
-+			reg = <0 0xe6fb0000 0 0x64>;
-+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 508>;
-+			clock-names = "fck";
-+			dmas = <&dmac1 0x2e>, <&dmac2 0x2e>;
-+			dma-names = "rx", "rx";
-+			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-+			resets = <&cpg 508>;
-+			renesas,bonding = <&drif30>;
-+			status = "disabled";
-+		};
-+
- 		avb: ethernet@e6800000 {
- 			compatible = "renesas,etheravb-r8a7796",
- 				     "renesas,etheravb-rcar-gen3";
+> > Apart from that the patch looks good to me.
+> > 
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > 
+> >> +&hdmi_in_con {
+> >> +	port {
+> >> +		hdmi_in: endpoint {
+> >> +			remote-endpoint = <&adv7482_hdmi>;
+> >> +		};
+> >> +	};
+> >> +};
+> >> +
+> >>  &du {
+> >>  	pinctrl-0 = <&du_pins>;
+> >>  	pinctrl-names = "default";
+> >> @@ -343,6 +417,55 @@
+> >> 
+> >>  		shunt-resistor-micro-ohms = <5000>;
+> >>  	};
+> >> +
+> >> +	video-receiver@70 {
+> >> +		compatible = "adi,adv7482";
+> >> +		reg = <0x70>;
+> >> +
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> 
+> But I can't remove these # without generating a warning message ...
+
+The properties are needed, why should you remove them ? :-)
+
+> >> +
+> >> +		interrupt-parent = <&gpio6>;
+> >> +		interrupt-names = "intrq1", "intrq2";
+> >> +		interrupts = <30 IRQ_TYPE_LEVEL_LOW>,
+> >> +			     <31 IRQ_TYPE_LEVEL_LOW>;
+> >> +
+> >> +		port@7 {
+> >> +			reg = <7>;
+> >> +
+> >> +			adv7482_ain7: endpoint {
+> >> +				remote-endpoint = <&cvbs_in>;
+> >> +			};
+> >> +		};
+> >> +
+> >> +		port@8 {
+> >> +			reg = <8>;
+> >> +
+> >> +			adv7482_hdmi: endpoint {
+> >> +				remote-endpoint = <&hdmi_in>;
+> >> +			};
+> >> +		};
+> >> +
+> >> +		port@10 {
+> >> +			reg = <10>;
+> >> +
+> >> +			adv7482_txa: endpoint {
+> >> +				clock-lanes = <0>;
+> >> +				data-lanes = <1 2 3 4>;
+> >> +				remote-endpoint = <&csi40_in>;
+> >> +			};
+> >> +		};
+> >> +
+> >> +		port@11 {
+> >> +			reg = <11>;
+> >> +
+> >> +			adv7482_txb: endpoint {
+> >> +				clock-lanes = <0>;
+> >> +				data-lanes = <1>;
+> >> +				remote-endpoint = <&csi20_in>;
+> >> +			};
+> >> +		};
+> >> +	};
+> >>  };
+> >>  
+> >>  &i2c_dvfs {
+
 -- 
-2.12.2
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
