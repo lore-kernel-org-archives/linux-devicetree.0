@@ -1,106 +1,90 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Tue, 27 Jun 2017 15:07:40 -0700
-Message-ID: <20170627220740.GA19461@roeck-us.net>
-References: <20170627211734.60477-1-cbostic@linux.vnet.ibm.com>
- <20170627211734.60477-2-cbostic@linux.vnet.ibm.com>
- <20170627213216.GA4132@roeck-us.net>
- <6f2a77e0-e64c-70b7-812a-6a5e8a0b5e6f@linux.vnet.ibm.com>
+From: Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
+Date: Wed, 28 Jun 2017 00:57:32 +0200
+Message-ID: <e2a9df8b-00f8-ae36-f4f3-63dcc98dea50@kernel.org>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
+ <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
+ <64e3005d-31df-71f2-762b-2c1b1152fc2d@st.com>
+ <5cd25a47-f3be-8c40-3940-29f26a245076@kernel.org>
+ <39501C78-7B81-4803-94C1-25DFA06EA526@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6f2a77e0-e64c-70b7-812a-6a5e8a0b5e6f-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <39501C78-7B81-4803-94C1-25DFA06EA526-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Cc: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Discussions about the Letux Kernel <letux-kernel-S0jZdbWzriLCfDggNXIi3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 04:42:24PM -0500, Christopher Bostic wrote:
+On 06/27/2017 07:48 AM, H. Nikolaus Schaller wrote:
+>> Am 26.06.2017 um 22:04 schrieb Sylwester Nawrocki <snawrocki-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>
+>> On 06/26/2017 12:35 PM, Hugues FRUCHET wrote:
+>>>> What I am missing to support the GTA04 camera is the control of the optional "vana-supply".
+>>>> So the driver does not power up the camera module when needed and therefore probing fails.
+>>>>
+>>>>     - vana-supply: a regulator to power up the camera module.
+>>>>
+>>>> Driver code is not complex to add:
+>>
+>>> Yes, I saw it in your code, but as I don't have any programmable power
+>>> supply on my setup, I have not pushed this commit.
+>>
+>> Since you are about to add voltage supplies to the DT binding I'd suggest
+>> to include all three voltage supplies of the sensor chip. Looking at the OV9650
+>> and the OV9655 datasheet there are following names used for the voltage supply
+>> pins:
+>>
+>> AVDD - Analog power supply,
+>> DVDD - Power supply for digital core logic,
+>> DOVDD - Digital power supply for I/O.
 > 
+> The latter two are usually not independently switchable from the SoC power
+> the module is connected to.
 > 
-> On 6/27/17 4:32 PM, Guenter Roeck wrote:
-> >On Tue, Jun 27, 2017 at 04:17:33PM -0500, Christopher Bostic wrote:
-> >>Describe device tree optional properties:
-> >>
-> >>   * aspeed,arm-reet - ARM CPU reset on signal
-> >>   * aspeed,soc-reset - SOC reset on signal
-> >>   * aspeed,sys-reset - System reset on signal
-> >>           Disabling system reset may be required in situations where
-> >>           one of the other watchdog engines in the system is responsible
-> >>           for this.
-> >>   * aspeed,interrupt - Interrupt CPU on signal
-> >>   * aspeed,external-signal - Generate external signal (WDT1 and WDT2 only)
-> >>   * aspeed,alt-boot - Boot from alternate block on signal
-> >>
-> >>Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> >>---
-> >>v2 - Add 'aspeed,' prefix to all optional properties
-> >>    - Add arm-reset, soc-reset, interrupt, alt-boot properties
-> >>---
-> >>  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 25 ++++++++++++++++++++++
-> >>  1 file changed, 25 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>index c5e74d7..555b8b4 100644
-> >>--- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>+++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>@@ -8,9 +8,34 @@ Required properties:
-> >>   - reg: physical base address of the controller and length of memory mapped
-> >>     region
-> >>+Optional properties:
-> >>+   Signal behavior - Whenever a timeout occurs, the watchdog can be programmed
-> >>+   to generate 6 types of signals:
-> >>+
-> >>+ - aspeed,arm-reset:  If property is present then reset ARM CPU only.
-> >>+
-> >>+ - aspeed,soc-reset:  If property is present then reset SOC.
-> >>+
-> >>+ - aspeed,sys-reset:  If property is present then reset the entire chip.
-> >>+                      In cases where one of the other watchdog engines
-> >>+                      in the system is responsible for system reset it
-> >>+                      may be required to not specify this property.
-> >>+
-> >>+ - aspeed,interrupt:  If property is present then interrupt CPU.
-> >>+
-> >>+ - aspeed,external-signal: If property is present then signal is sent to
-> >>+                           external reset counter (only WDT1 and WDT2).
-> >>+ - aspeed,alt-boot:    If property is present then boot from alternate block.
-> >>+
-> >>  Example:
-> >>  	wdt1: watchdog@1e785000 {
-> >>  		compatible = "aspeed,ast2400-wdt";
-> >>  		reg = <0x1e785000 0x1c>;
-> >>+		aspeed,arm-reset;
-> >>+		aspeed,soc-reset;
-> >>+		aspeed,sys-reset;
-> >>+		aspeed,interrupt;
-> >>+		aspeed,external-signal;
-> >>+		aspeed,alt-boot;
-> >Is that a bit mask or a value ? I would have thought that,
-> >for example, a complete system reset would include the SoC reset,
-> >and a SoC reset would include the ARM reset. Generating an
-> >interrupt while at the same time resetting the system (or
-> >part of it) doesn't seem to make much sense either.
+> And sometimes DVDD and DOVDD are connected together.
 > 
-> No these aren't bitmasks.   The example was intended to indicate what could
-> be used.
-> In practice only a subset of each of these properties would make any sense.
-> How
-> would you suggest the example be formatted to convey that? Multiple examples
-> I suppose.
+> So the driver can't make much use of knowing or requesting them because the
+> 1.8V supply is always active, even during suspend.
 > 
+>>
+>> I doubt the sensor can work without any of these voltage supplies, thus
+>> regulator_get_optional() should not be used. I would just use the regulator
+>> bulk API to handle all three power supplies.
+> 
+> The digital part works with AVDD turned off. So the LDO supplying AVDD should
+> be switchable to save power (&vaux3 on the GTA04 device).>
+> But not all designs can switch it off. Hence the idea to define it as an
+> /optional/ regulator. If it is not defined by DT, the driver simply assumes
+> it is always powered on.
 
-I would just pick one (which is perfectly fine). After all, it is an example.
+I didn't say we can't define regulator supply properties as optional in the DT 
+binding.  If we define them as such and any of these *-supply properties is 
+missing in DT with regulator_get() the regulator core will use dummy regulator 
+for that particular voltage supply.  While with regulator_get_optional() 
+-ENODEV is returned when the regulator cannot be found. 
 
-Reminds me: Is there a default (eg the chip's default configuration) ?
-In other words, what is expected to happen if none of the properties
-is specified ?
+> So in summary we only need AVDD switched for the GTA04 - but it does not
+> matter if the others are optional properties. We would not use them.
+> 
+> It does matter if they are mandatory because it adds DT complexity (size
+> and processing) without added function.
+ 
+We should not be defining DT binding only with selected use cases/board
+designs in mind.  IMO all three voltage supplies should be listed in the
+binding, presumably all can be made optional, with an assumption that when
+the property is missing selected pin is hooked up to a fixed regulator.
 
-Thanks,
-Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+Thanks,
+Sylwester
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
