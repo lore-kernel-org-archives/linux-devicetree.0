@@ -1,48 +1,46 @@
-From: Hoegeun Kwon <hoegeun.kwon@samsung.com>
-Subject: [PATCH v3 3/3] ARM: dts: exynos: Remove the display-timing and
- delay from rinato dts
-Date: Tue, 27 Jun 2017 11:11:10 +0900
-Message-ID: <1498529470-20652-4-git-send-email-hoegeun.kwon@samsung.com>
-References: <1498529470-20652-1-git-send-email-hoegeun.kwon@samsung.com>
- <CGME20170627021125epcas5p1033ac999b038fcc6e062d8aae90d4ee7@epcas5p1.samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1498529470-20652-1-git-send-email-hoegeun.kwon@samsung.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: thierry.reding@gmail.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, catalin.marinas@arm.com, will.deacon@arm.com, kgene@kernel.org, krzk@kernel.org
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, javier@osg.samsung.com, Hoegeun Kwon <hoegeun.kwon@samsung.com>, linux-arm-kernel@lists.infradead.org
+From: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
+Subject: [PATCH 0/4] pinctrl: Add USB support for Aspeed SoCs
+Date: Tue, 27 Jun 2017 11:42:10 +0930
+Message-ID: <20170627021214.23323-1-andrew@aj.id.au>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGRpc3BsYXktdGltaW5nIGFuZCBkZWxheSBhcmUgaW5jbHVkZWQgaW4gdGhlIHBhbmVsIGRy
-aXZlci4gU28gaXQKc2hvdWxkIGJlIHJlbW92ZWQgaW4gZHRzLgoKU2lnbmVkLW9mZi1ieTogSG9l
-Z2V1biBLd29uIDxob2VnZXVuLmt3b25Ac2Ftc3VuZy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9k
-dHMvZXh5bm9zMzI1MC1yaW5hdG8uZHRzIHwgMjIgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogMSBm
-aWxlIGNoYW5nZWQsIDIyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2V4eW5vczMyNTAtcmluYXRvLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4eW5vczMyNTAt
-cmluYXRvLmR0cwppbmRleCBkZTI3MDJlLi4zZGY4ODM4MyAxMDA2NDQKLS0tIGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvZXh5bm9zMzI1MC1yaW5hdG8uZHRzCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2V4
-eW5vczMyNTAtcmluYXRvLmR0cwpAQCAtMjI3LDI4ICsyMjcsNiBAQAogCQl2Y2ktc3VwcGx5ID0g
-PCZsZG8yMF9yZWc+OwogCQlyZXNldC1ncGlvcyA9IDwmZ3BlMCAxIEdQSU9fQUNUSVZFX0xPVz47
-CiAJCXRlLWdwaW9zID0gPCZncHgwIDYgR1BJT19BQ1RJVkVfSElHSD47Ci0JCXBvd2VyLW9uLWRl
-bGF5PSA8MzA+OwotCQlwb3dlci1vZmYtZGVsYXk9IDwxMjA+OwotCQlyZXNldC1kZWxheSA9IDw1
-PjsKLQkJaW5pdC1kZWxheSA9IDwxMDA+OwotCQlmbGlwLWhvcml6b250YWw7Ci0JCWZsaXAtdmVy
-dGljYWw7Ci0JCXBhbmVsLXdpZHRoLW1tID0gPDI5PjsKLQkJcGFuZWwtaGVpZ2h0LW1tID0gPDI5
-PjsKLQotCQlkaXNwbGF5LXRpbWluZ3MgewotCQkJdGltaW5nLTAgewotCQkJCWNsb2NrLWZyZXF1
-ZW5jeSA9IDw0NjAwMDAwPjsKLQkJCQloYWN0aXZlID0gPDMyMD47Ci0JCQkJdmFjdGl2ZSA9IDwz
-MjA+OwotCQkJCWhmcm9udC1wb3JjaCA9IDwxPjsKLQkJCQloYmFjay1wb3JjaCA9IDwxPjsKLQkJ
-CQloc3luYy1sZW4gPSA8MT47Ci0JCQkJdmZyb250LXBvcmNoID0gPDE1MD47Ci0JCQkJdmJhY2st
-cG9yY2ggPSA8MT47Ci0JCQkJdnN5bmMtbGVuID0gPDI+OwotCQkJfTsKLQkJfTsKIAl9OwogfTsK
-IAotLSAKMS45LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9y
-ZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZl
-bAo=
+Hello,
+
+With recent interest in the USB virtual hub in the Aspeed SoCs[1] it is a good
+time to add pinmux support for the USB ports and controllers. The earlier
+series of pinmux patches for the Aspeed SoCs focussed on supporting pins which
+were capable of GPIO. This is not the case for the USB pins, hence they have
+been unsupported until now.
+
+Rob: I know you've mentioned previously you desired complete bindings to be
+provided up front, so apologies for continuing to add functionality. This looks
+to be the last of it.
+
+Cheers,
+
+Andrew
+
+[1] https://www.spinics.net/lists/linux-usb/msg158506.html
+
+Andrew Jeffery (4):
+  ARM: aspeed: g4: Add USB functions to pinctrl bindings
+  ARM: aspeed: g5: Add USB functions to pinctrl bindings
+  pinctrl: aspeed: g4: Add USB device and host support
+  pinctrl: aspeed: g5: Add USB device and host support
+
+ .../devicetree/bindings/pinctrl/pinctrl-aspeed.txt |  8 ++-
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g4.c         | 66 +++++++++++++++++++---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g5.c         | 58 ++++++++++++++++++-
+ 3 files changed, 121 insertions(+), 11 deletions(-)
+
+-- 
+2.11.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
