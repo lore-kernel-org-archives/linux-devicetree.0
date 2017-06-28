@@ -1,40 +1,51 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [RESEND PATCH v4] clk: stm32h7: Add stm32h743 clock driver
-Date: Wed, 28 Jun 2017 08:59:56 -0700
-Message-ID: <20170628155956.GA5316@codeaurora.org>
-References: <1496818794-14771-1-git-send-email-gabriel.fernandez@st.com>
- <20170621220703.GI4493@codeaurora.org>
- <110cf67f-e1d6-1f99-953c-6b9639bb4910@st.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
+Date: Wed, 28 Jun 2017 09:00:48 -0700
+Message-ID: <20170628160048.GA8915@roeck-us.net>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
+ <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
+ <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
+ <97eb089f-e0e2-1146-6e17-8f9f790433d8@topic.nl>
+ <20170628150130.GC30968@roeck-us.net>
+ <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-hwmon-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <110cf67f-e1d6-1f99-953c-6b9639bb4910-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.thompson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <andrea.merello-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <radoslaw.pietrzyk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch>
+Sender: linux-hwmon-owner@vger.kernel.org
+To: Tom Levens <tom.levens@cern.ch>
+Cc: Mike Looijmans <mike.looijmans@topic.nl>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/27, Gabriel FERNANDEZ wrote:
+On Wed, Jun 28, 2017 at 05:29:38PM +0200, Tom Levens wrote:
 > 
-> 
-> On 06/22/2017 12:07 AM, Stephen Boyd wrote:
-> > readl_poll_timeout?
+[ ... ]
+
 > >
-> if i use readl_poll_timeout (wich use 'ktime_get()') it can be 
-> operational only after the selection of clocksource ? (device_initcall).
-> And then if a driver turn on a clock before, it could blocked the linux 
-> console ?
+> >>Whatever happened to this patch though? It didn't make it to mainline,
+> >>otherwise I'd have found it sooner...
+> >>
+> >I'll have to look it up, but I guess I didn't get an updated version.
 > 
+> As far as I remember I had a working V3 of this patch, but it is entirely
+> possible that it was never submitted as I have been busy with other projects
+> recently. I'll dig it out and check that it is complete.
+> 
+FWIW, I don't see it at
+https://patchwork.kernel.org/project/linux-hwmon/list/?submitter=171225&state=*
 
-Ok. I wonder if we could add some sort of starting check to
-readl_poll_timeout() that tests system_state for booting vs.
-scheduling? That should be sufficient to handle this case?
+Maybe you were waiting for a reply from Rob. Either case, it might make
+sense to only provide valid modes, ie to abstract the mode bits from the
+hardware, such as
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+0 - internal temp only
+1 - Tr1
+2 - V1
+3 - V1-V2
+4 - Tr2
+5 - V3
+6 - V3-V4
+7 to 14 - per bit 0..2
+
+Guenter
