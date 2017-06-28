@@ -1,170 +1,55 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: stm32: add runtime PM support" to the spi tree
-Date: Wed, 28 Jun 2017 20:25:17 +0100
-Message-ID: <E1dQIaT-0004cD-Qg@finisterre>
-References: <1498222550-19092-7-git-send-email-amelie.delaunay@st.com>
+Subject: Re: [PATCH v3 01/17] mfd: madera: Add register definitions for
+ Cirrus Logic Madera codecs
+Date: Wed, 28 Jun 2017 20:26:40 +0100
+Message-ID: <20170628192640.lboeddcabjcrvmtw@sirena.org.uk>
+References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1496415790-19164-2-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20170605100707.zqyfyzhlhrpswa2u@dell>
+ <1498466018.4826.81.camel@rf-debian.wolfsonmicro.main>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1498222550-19092-7-git-send-email-amelie.delaunay@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Alexandre Torgue <alexandre.torgue@st.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="blk3miywyypstlok"
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1498466018.4826.81.camel@rf-debian.wolfsonmicro.main>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Cc: Lee Jones <lee.jones@linaro.org>, linus.walleij@linaro.org, gnurou@gmail.com, robh+dt@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, alsa-devel@alsa-project.org, patches@opensource.wolfsonmicro.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
 
-   spi: stm32: add runtime PM support
+--blk3miywyypstlok
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been applied to the spi tree at
+On Mon, Jun 26, 2017 at 09:33:38AM +0100, Richard Fitzgerald wrote:
+> On Mon, 2017-06-05 at 11:07 +0100, Lee Jones wrote:
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+> > For my own reference:
+> >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+> Can I suggest that you take this patch into the mfd tree? Other
+> subsystem maintainers will have to base on that but it avoids me keeping
+> emailing out nearly 9000 lines of register definitions each time I do an
+> update to the other patches in the chain.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Yes, please!  It also helps other maintainers see that the early bits of
+the series we depend on are making progress.
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+--blk3miywyypstlok
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks,
-Mark
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllUAvAACgkQJNaLcl1U
+h9BXmAf/fnhzU7vj/WylR2wzdugxyjm9fV1/gjWMvcByJKDFtMByxHBcNjgW05/1
+G5tPf1ztaOoSv+3aQ2CLKeK/HUvvwHrLreWpqXd9XLVMSn/TrjJUEsXX9Y5XVMNV
+cmuM24laOuGphT/QnC21LdK+3qeB6E1ou97brmCv0AkDZh2TOwzCz26BY0v6uuPn
+BArlPD/Cgr3MQCI4iT8d6U5iDhCcGioMqUk6jpMLAWVlLAVe/oA3GTxozlYL7dfs
+Rda3MYCqfQDenCjXIOBxuWPF/i3H1IlIETeGXqQ+oPgTEv8Xm1VO+/sqE8V1wX+z
+BHiMz/gEQmrPhWK1akV5AvBjRYA/dg==
+=GX1w
+-----END PGP SIGNATURE-----
 
->From 038ac869c9d27fceb6197e775d780ad6aeb45b1f Mon Sep 17 00:00:00 2001
-From: Amelie Delaunay <amelie.delaunay@st.com>
-Date: Tue, 27 Jun 2017 17:45:18 +0200
-Subject: [PATCH] spi: stm32: add runtime PM support
-
-This patch reworks suspend and resume callbacks and add runtime_suspend
-and runtime_resume callbacks.
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-stm32.c | 43 ++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 36 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 123529a1b40d..392c9453c2e6 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -27,6 +27,7 @@
- #include <linux/iopoll.h>
- #include <linux/module.h>
- #include <linux/of_platform.h>
-+#include <linux/pm_runtime.h>
- #include <linux/reset.h>
- #include <linux/spi/spi.h>
- 
-@@ -1164,6 +1165,9 @@ static int stm32_spi_probe(struct platform_device *pdev)
- 	if (spi->dma_tx || spi->dma_rx)
- 		master->can_dma = stm32_spi_can_dma;
- 
-+	pm_runtime_set_active(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+
- 	ret = devm_spi_register_master(&pdev->dev, master);
- 	if (ret) {
- 		dev_err(&pdev->dev, "spi master registration failed: %d\n",
-@@ -1203,6 +1207,8 @@ static int stm32_spi_probe(struct platform_device *pdev)
- 		dma_release_channel(spi->dma_tx);
- 	if (spi->dma_rx)
- 		dma_release_channel(spi->dma_rx);
-+
-+	pm_runtime_disable(&pdev->dev);
- err_clk_disable:
- 	clk_disable_unprepare(spi->clk);
- err_master_put:
-@@ -1225,23 +1231,42 @@ static int stm32_spi_remove(struct platform_device *pdev)
- 
- 	clk_disable_unprepare(spi->clk);
- 
-+	pm_runtime_disable(&pdev->dev);
-+
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+static int stm32_spi_runtime_suspend(struct device *dev)
-+{
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct stm32_spi *spi = spi_master_get_devdata(master);
-+
-+	clk_disable_unprepare(spi->clk);
-+
-+	return 0;
-+}
-+
-+static int stm32_spi_runtime_resume(struct device *dev)
-+{
-+	struct spi_master *master = dev_get_drvdata(dev);
-+	struct stm32_spi *spi = spi_master_get_devdata(master);
-+
-+	return clk_prepare_enable(spi->clk);
-+}
-+#endif
-+
- #ifdef CONFIG_PM_SLEEP
- static int stm32_spi_suspend(struct device *dev)
- {
- 	struct spi_master *master = dev_get_drvdata(dev);
--	struct stm32_spi *spi = spi_master_get_devdata(master);
- 	int ret;
- 
- 	ret = spi_master_suspend(master);
- 	if (ret)
- 		return ret;
- 
--	clk_disable_unprepare(spi->clk);
--
--	return ret;
-+	return pm_runtime_force_suspend(dev);
- }
- 
- static int stm32_spi_resume(struct device *dev)
-@@ -1250,9 +1275,10 @@ static int stm32_spi_resume(struct device *dev)
- 	struct stm32_spi *spi = spi_master_get_devdata(master);
- 	int ret;
- 
--	ret = clk_prepare_enable(spi->clk);
-+	ret = pm_runtime_force_resume(dev);
- 	if (ret)
- 		return ret;
-+
- 	ret = spi_master_resume(master);
- 	if (ret)
- 		clk_disable_unprepare(spi->clk);
-@@ -1261,8 +1287,11 @@ static int stm32_spi_resume(struct device *dev)
- }
- #endif
- 
--static SIMPLE_DEV_PM_OPS(stm32_spi_pm_ops,
--			 stm32_spi_suspend, stm32_spi_resume);
-+static const struct dev_pm_ops stm32_spi_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(stm32_spi_suspend, stm32_spi_resume)
-+	SET_RUNTIME_PM_OPS(stm32_spi_runtime_suspend,
-+			   stm32_spi_runtime_resume, NULL)
-+};
- 
- static struct platform_driver stm32_spi_driver = {
- 	.probe = stm32_spi_probe,
--- 
-2.13.2
+--blk3miywyypstlok--
