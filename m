@@ -1,73 +1,47 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Applied "spi: stm32: fix compatible to fit with new bindings" to the spi tree
-Date: Wed, 28 Jun 2017 20:25:48 +0100
-Message-ID: <E1dQIay-0004gJ-DK@finisterre>
-References: <1498222550-19092-3-git-send-email-amelie.delaunay@st.com>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498222550-19092-3-git-send-email-amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orglinux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 1/2] PCI: mediatek: Add Mediatek PCIe host controller
+ support
+Date: Wed, 28 Jun 2017 14:53:26 -0500
+Message-ID: <20170628195325.GR17844@bhelgaas-glaptop.roam.corp.google.com>
+References: <1495338145-9384-1-git-send-email-ryder.lee@mediatek.com>
+ <1495338145-9384-2-git-send-email-ryder.lee@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1495338145-9384-2-git-send-email-ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Red Hung <red.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+On Sun, May 21, 2017 at 11:42:24AM +0800, Ryder Lee wrote:
+> Add support for the Mediatek PCIe Gen2 controller which can
+> be found on MT7623 series SoCs.
+> 
+> Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> ---
+>  drivers/pci/host/Kconfig         |  11 +
+>  drivers/pci/host/Makefile        |   1 +
+>  drivers/pci/host/pcie-mediatek.c | 553 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 565 insertions(+)
+>  create mode 100644 drivers/pci/host/pcie-mediatek.c
+>...
 
-   spi: stm32: fix compatible to fit with new bindings
+> +static int mtk_pcie_register_host(struct pci_host_bridge *host)
+> +{
+> +	struct mtk_pcie *pcie = pci_host_bridge_priv(host);
+> +	struct pci_bus *child;
+> +	int err;
+> +
+> +	pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
 
-has been applied to the spi tree at
+Do you really need the PCI_REASSIGN_ALL_RSRC and PCI_REASSIGN_ALL_BUS
+flags?  I'd like to get rid of them because we should automatically
+assign resources if the firmware hasn't done it.
 
-   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From c5fe2faabad41737fa36cedc1c6e15cbc9ddff11 Mon Sep 17 00:00:00 2001
-From: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Date: Tue, 27 Jun 2017 17:45:14 +0200
-Subject: [PATCH] spi: stm32: fix compatible to fit with new bindings
-
-This patch updates of_device_id compatible string to fit with new
-bindings.
-
-Signed-off-by: Amelie Delaunay <amelie.delaunay-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
----
- drivers/spi/spi-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index 305ecd5334fc..1eb07bef043e 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -1038,7 +1038,7 @@ static int stm32_spi_config(struct stm32_spi *spi)
- }
- 
- static const struct of_device_id stm32_spi_of_match[] = {
--	{ .compatible = "st,stm32-spi", },
-+	{ .compatible = "st,stm32h7-spi", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, stm32_spi_of_match);
--- 
-2.13.2
-
+Bjorn
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
