@@ -1,136 +1,106 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Wed, 28 Jun 2017 19:33:33 +0200
-Message-ID: <abe96add-88fc-af6c-a5ed-330c7ae422b9@topic.nl>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <97eb089f-e0e2-1146-6e17-8f9f790433d8@topic.nl>
- <20170628150130.GC30968@roeck-us.net>
- <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch>
- <20170628160048.GA8915@roeck-us.net>
- <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch>
-Content-Language: en-US
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Tom Levens <tom.levens@cern.ch>, Guenter Roeck <linux@roeck-us.net>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: stm32: fix potential dereference null return value" to the spi tree
+Date: Wed, 28 Jun 2017 20:25:04 +0100
+Message-ID: <E1dQIaG-0004aF-4V@finisterre>
+References: <1498222550-19092-9-git-send-email-amelie.delaunay@st.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498222550-19092-9-git-send-email-amelie.delaunay@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Colin Ian King <colin.king@canonical.com>, Mark Brown <broonie@kernel.org>Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.orglinux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-﻿On 28-06-17 19:02, Tom Levens wrote:
-> 
-> On Wed, 28 Jun 2017, Guenter Roeck wrote:
-> 
->> On Wed, Jun 28, 2017 at 05:29:38PM +0200, Tom Levens wrote:
->>>
->> [ ... ]
->>
->>>>
->>>>> Whatever happened to this patch though? It didn't make it to mainline,
->>>>> otherwise I'd have found it sooner...
->>>>>
->>>> I'll have to look it up, but I guess I didn't get an updated version.
->>>
->>> As far as I remember I had a working V3 of this patch, but it is 
->>> entirely
->>> possible that it was never submitted as I have been busy with other 
->>> projects
->>> recently. I'll dig it out and check that it is complete.
->>>
->> FWIW, I don't see it at
->> https://patchwork.kernel.org/project/linux-hwmon/list/?submitter=171225&state=* 
->>
->>
->> Maybe you were waiting for a reply from Rob. Either case, it might make
->> sense to only provide valid modes, ie to abstract the mode bits from the
->> hardware, such as
->>
->> 0 - internal temp only
->> 1 - Tr1
->> 2 - V1
->> 3 - V1-V2
->> 4 - Tr2
->> 5 - V3
->> 6 - V3-V4
->> 7 to 14 - per bit 0..2
->>
->> Guenter
->>
-> 
-> You are right, there was still an open question about how best to handle 
-> the mode selection in DT.
-> 
-> In the latest version of my patch I have it implemented as an array for 
-> setting the two values, for example:
-> 
->      lltc,meas-mode = <7 3>;
-> 
-> This sets bits [2..0] = 7 and [4..3] = 3. Of course these could be split 
-> into two DT properties, but I was unsure what to name them as both 
-> fields are called "mode" in the datasheet and "mode-43"/"mode-20" (or 
-> similar) is ugly.
-> 
-> With regards to your proposal, it is not clear to me whether the modes 
-> which have the same result are exactly equivalent. Does disabling a 
-> measurement with the mode[4..3] bits really leaves the part in a safe 
-> state for all possible HW connections? With this doubt in my head, I 
-> would prefer to keep the option available to the user to select any 
-> specific mode. But I am open to suggestions.
+The patch
 
-Well, the input restrictions always apply, so disabling V3 measurement 
-doesn't imply that you can apply 20V to that input safely now.
+   spi: stm32: fix potential dereference null return value
 
-I'd suggest to set unused input to plain voltage measurement. That is 
-"passive" and safe for external components.
+has been applied to the spi tree at
 
-So I'd suggest just setting the mode as per device datasheet, I can see 
-no real advantage in abstracting it away and forcing users to read yet 
-another document to get it right, e.g.:
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-lltc,mode = <6>;
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-As for the input disabling, since I doubt anyone would use it (why 
-purchase a 4-channel device and use only 2), just add two booleans, e.g. 
-"disable-inputs-34" and "disable-inputs-12" which set the command bits 
-appropriately, and change the mode such that the disabled inputs are 
-voltage readout only.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-A case could even be made for changing mode at runtime. This allows 
-using it to measure both current and voltage on two inputs, by reading 
-V1, and V3, and then switch mode to obtain (accurate) V1-V2 and V4-V3.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-That might be a viable way to handle not setting the mode at all. If the 
-mode can be selected via sysfs, the driver can keep the device in a 
-"safe" mode until the mode has been selected.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
 
-> Mike, if you would like to test it, the latest version of my code is here:
-> 
-> https://github.com/levens/ltc2990/blob/dev/drivers/hwmon/ltc2990.c
+>From 7b821a6485c943edc752a94260a29116237f9153 Mon Sep 17 00:00:00 2001
+From: Amelie Delaunay <amelie.delaunay@st.com>
+Date: Tue, 27 Jun 2017 17:45:20 +0200
+Subject: [PATCH] spi: stm32: fix potential dereference null return value
 
-Sure, I even have a board with 2 of these devices now :)
+This patch fixes the usage of rx_dma_desc and tx_dma_desc pointers
+returned by dmaengine_prep_slave_sg, which can be null.
 
+Detected by CoverityScan, CID#1446587 ("Dereference null return value")
+
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-stm32.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 8a6bff379b21..75644bcd938b 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -775,9 +775,6 @@ static int stm32_spi_transfer_one_dma(struct stm32_spi *spi,
+ 					xfer->rx_sg.nents,
+ 					rx_dma_conf.direction,
+ 					DMA_PREP_INTERRUPT);
+-
+-		rx_dma_desc->callback = stm32_spi_dma_cb;
+-		rx_dma_desc->callback_param = spi;
+ 	}
+ 
+ 	tx_dma_desc = NULL;
+@@ -790,11 +787,6 @@ static int stm32_spi_transfer_one_dma(struct stm32_spi *spi,
+ 					xfer->tx_sg.nents,
+ 					tx_dma_conf.direction,
+ 					DMA_PREP_INTERRUPT);
+-
+-		if (spi->cur_comm == SPI_SIMPLEX_TX) {
+-			tx_dma_desc->callback = stm32_spi_dma_cb;
+-			tx_dma_desc->callback_param = spi;
+-		}
+ 	}
+ 
+ 	if ((spi->tx_buf && !tx_dma_desc) ||
+@@ -802,6 +794,9 @@ static int stm32_spi_transfer_one_dma(struct stm32_spi *spi,
+ 		goto dma_desc_error;
+ 
+ 	if (rx_dma_desc) {
++		rx_dma_desc->callback = stm32_spi_dma_cb;
++		rx_dma_desc->callback_param = spi;
++
+ 		if (dma_submit_error(dmaengine_submit(rx_dma_desc))) {
+ 			dev_err(spi->dev, "Rx DMA submit failed\n");
+ 			goto dma_desc_error;
+@@ -811,6 +806,11 @@ static int stm32_spi_transfer_one_dma(struct stm32_spi *spi,
+ 	}
+ 
+ 	if (tx_dma_desc) {
++		if (spi->cur_comm == SPI_SIMPLEX_TX) {
++			tx_dma_desc->callback = stm32_spi_dma_cb;
++			tx_dma_desc->callback_param = spi;
++		}
++
+ 		if (dma_submit_error(dmaengine_submit(tx_dma_desc))) {
+ 			dev_err(spi->dev, "Tx DMA submit failed\n");
+ 			goto dma_submit_error;
 -- 
-Mike Looijmans
-
-
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
-
-
-
+2.13.2
