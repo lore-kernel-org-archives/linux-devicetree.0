@@ -1,39 +1,114 @@
-From: Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: [PATCH v2 0/2] add thermal nodes for UniPhier SoCs
-Date: Wed, 28 Jun 2017 19:18:27 +0900
-Message-ID: <1498645109-25985-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org, masami.hiramatsu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Kunihiko Hayashi <hayashi.kunihiko-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 1/2] ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for PXs2
+Date: Wed, 28 Jun 2017 19:18:28 +0900
+Message-ID: <1498645109-25985-2-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1498645109-25985-1-git-send-email-hayashi.kunihiko@socionext.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1498645109-25985-1-git-send-email-hayashi.kunihiko@socionext.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 List-Id: devicetree@vger.kernel.org
 
-This series adds thermal nodes for UniPhier PXs2 and LD20 SoCs.
+Add nodes of thermal monitor and thermal zone for UniPhier PXs2 SoC.
+The thermal monitor is included in sysctrl.
+Furthermore, add cpuN labels for reference in cooling-device property.
 
-Changes in v1:
-- separate from driver's patchset[1]
-- add cooling-maps nodes on the device tree
-- fix an interrupt trigger to set 'level-triggered' according to
-  hardware specification
-- bring up threshold temperature for LD20 according to the spec sheet
-- add cpuN labels for reference in cooling-device property on PXs2 dts
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+---
+ arch/arm/boot/dts/uniphier-pxs2.dtsi | 43 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 39 insertions(+), 4 deletions(-)
 
-[1] https://lkml.org/lkml/2017/6/28/170
-
-Kunihiko Hayashi (2):
-  ARM: dts: uniphier: add nodes of thermal monitor and thermal zone for
-    PXs2
-  arm64: dts: uniphier: add nodes of thermal monitor and thermal zone
-    for LD20
-
- arch/arm/boot/dts/uniphier-pxs2.dtsi             | 43 +++++++++++++++++++++---
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 40 ++++++++++++++++++++++
- 2 files changed, 79 insertions(+), 4 deletions(-)
-
+diff --git a/arch/arm/boot/dts/uniphier-pxs2.dtsi b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+index e9e031d..1ff5531 100644
+--- a/arch/arm/boot/dts/uniphier-pxs2.dtsi
++++ b/arch/arm/boot/dts/uniphier-pxs2.dtsi
+@@ -52,7 +52,7 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
+-		cpu@0 {
++		cpu0: cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <0>;
+@@ -60,9 +60,10 @@
+ 			enable-method = "psci";
+ 			next-level-cache = <&l2>;
+ 			operating-points-v2 = <&cpu_opp>;
++			#cooling-cells = <2>;
+ 		};
+ 
+-		cpu@1 {
++		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <1>;
+@@ -72,7 +73,7 @@
+ 			operating-points-v2 = <&cpu_opp>;
+ 		};
+ 
+-		cpu@2 {
++		cpu2: cpu@2 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <2>;
+@@ -82,7 +83,7 @@
+ 			operating-points-v2 = <&cpu_opp>;
+ 		};
+ 
+-		cpu@3 {
++		cpu3: cpu@3 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a9";
+ 			reg = <3>;
+@@ -150,6 +151,34 @@
+ 		};
+ 	};
+ 
++	thermal-zones {
++		cpu_thermal {
++			polling-delay-passive = <250>;	/* 250ms */
++			polling-delay = <1000>;		/* 1000ms */
++			thermal-sensors = <&pvtctl>;
++
++			trips {
++				cpu_crit: cpu_crit {
++					temperature = <95000>;	/* 95C */
++					hysteresis = <2000>;
++					type = "critical";
++				};
++				cpu_alert: cpu_alert {
++					temperature = <85000>;	/* 85C */
++					hysteresis = <2000>;
++					type = "passive";
++				};
++			};
++
++			cooling-maps {
++				map {
++					trip = <&cpu_alert>;
++					cooling-device = <&cpu0 (-1) (-1)>;
++				};
++			};
++		};
++	};
++
+ 	soc {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+@@ -387,6 +416,12 @@
+ 				compatible = "socionext,uniphier-pxs2-reset";
+ 				#reset-cells = <1>;
+ 			};
++
++			pvtctl: pvtctl {
++				compatible = "socionext,uniphier-pxs2-thermal";
++				interrupts = <0 3 4>;
++				#thermal-sensor-cells = <0>;
++			};
+ 		};
+ 	};
+ };
 -- 
 2.7.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
