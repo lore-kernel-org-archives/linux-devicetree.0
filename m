@@ -1,110 +1,38 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
-Date: Wed, 28 Jun 2017 11:12:38 +0200
-Message-ID: <6F68CD33-70E6-47C1-9E89-5E2AA776879F@goldelico.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
- <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
- <64e3005d-31df-71f2-762b-2c1b1152fc2d@st.com>
- <5cd25a47-f3be-8c40-3940-29f26a245076@kernel.org>
- <39501C78-7B81-4803-94C1-25DFA06EA526@goldelico.com>
- <e2a9df8b-00f8-ae36-f4f3-63dcc98dea50@kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2 0/2] arm/arm64: dts: fix typo in mmc pinctrl
+Date: Wed, 28 Jun 2017 11:19:30 +0200
+Message-ID: <2086760.HXNp32Jd3t@phil>
+References: <20170627195831.56449-1-klaus.goger@theobroma-systems.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e2a9df8b-00f8-ae36-f4f3-63dcc98dea50@kernel.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sylwester Nawrocki <snawrocki@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Alexandre TORGUE <alexandre.torgue@st.com>, LKML <linux-kernel@vger.kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, Yannick FERTRE <yannick.fertre@st.com>, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Hugues FRUCHET <hugues.fruchet@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170627195831.56449-1-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kever Yang <kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-> Am 28.06.2017 um 00:57 schrieb Sylwester Nawrocki <snawrocki@kernel.org>:
+Am Dienstag, 27. Juni 2017, 21:58:29 CEST schrieb Klaus Goger:
 > 
-> On 06/27/2017 07:48 AM, H. Nikolaus Schaller wrote:
->>> Am 26.06.2017 um 22:04 schrieb Sylwester Nawrocki <snawrocki@kernel.org>:
->>> 
->>> On 06/26/2017 12:35 PM, Hugues FRUCHET wrote:
->>>>> What I am missing to support the GTA04 camera is the control of the optional "vana-supply".
->>>>> So the driver does not power up the camera module when needed and therefore probing fails.
->>>>> 
->>>>>    - vana-supply: a regulator to power up the camera module.
->>>>> 
->>>>> Driver code is not complex to add:
->>> 
->>>> Yes, I saw it in your code, but as I don't have any programmable power
->>>> supply on my setup, I have not pushed this commit.
->>> 
->>> Since you are about to add voltage supplies to the DT binding I'd suggest
->>> to include all three voltage supplies of the sensor chip. Looking at the OV9650
->>> and the OV9655 datasheet there are following names used for the voltage supply
->>> pins:
->>> 
->>> AVDD - Analog power supply,
->>> DVDD - Power supply for digital core logic,
->>> DOVDD - Digital power supply for I/O.
->> 
->> The latter two are usually not independently switchable from the SoC power
->> the module is connected to.
->> 
->> And sometimes DVDD and DOVDD are connected together.
->> 
->> So the driver can't make much use of knowing or requesting them because the
->> 1.8V supply is always active, even during suspend.
->> 
->>> 
->>> I doubt the sensor can work without any of these voltage supplies, thus
->>> regulator_get_optional() should not be used. I would just use the regulator
->>> bulk API to handle all three power supplies.
->> 
->> The digital part works with AVDD turned off. So the LDO supplying AVDD should
->> be switchable to save power (&vaux3 on the GTA04 device).>
->> But not all designs can switch it off. Hence the idea to define it as an
->> /optional/ regulator. If it is not defined by DT, the driver simply assumes
->> it is always powered on.
+> replaces all occurrences of sdmmc with sdmmc in the arm64 and arm
+> rockchip devicetree files
 > 
-> I didn't say we can't define regulator supply properties as optional in the DT 
-> binding.  If we define them as such and any of these *-supply properties is 
-> missing in DT with regulator_get() the regulator core will use dummy regulator 
-> for that particular voltage supply.  While with regulator_get_optional() 
-> -ENODEV is returned when the regulator cannot be found. 
-
-Ah, ok. I see.
-
-I had thought that it is the right thing to do like devm_gpiod_get_optional().
-
-That one it is described as:
-
-"* This is equivalent to gpiod_get(), except that when no GPIO was assigned to
- * the requested function it will return NULL. This is convenient for drivers
- * that need to handle optional GPIOs."
-
-Seems to be inconsistent definition of what "optional" means.
-
-So we indeed should use devm_regulator_get() in this case. Thanks for pointing out!
-
+> Changes in v2:
+> - split arm and arm64 changes into separate changes
 > 
->> So in summary we only need AVDD switched for the GTA04 - but it does not
->> matter if the others are optional properties. We would not use them.
->> 
->> It does matter if they are mandatory because it adds DT complexity (size
->> and processing) without added function.
-> 
-> We should not be defining DT binding only with selected use cases/board
-> designs in mind.  IMO all three voltage supplies should be listed in the
-> binding, presumably all can be made optional, with an assumption that when
-> the property is missing selected pin is hooked up to a fixed regulator.
+> Klaus Goger (2):
+>   arm: dts: rockchip: fix typo in rk3036 mmc pinctrl
+ARM: dts: rockchip: in future please
+[arm32 uses capital letters]
 
-Ok, then it should just be defined in the bindings but not used by the driver?
+>   arm64: dts: rockchip: fix typo in mmc pinctrl
 
-BR and thanks,
-Nikolaus
+applied both for 4.14 with the subject of patch1 fixed up.
+
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
