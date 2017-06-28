@@ -1,84 +1,31 @@
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/6] Documentation/devicetree: Add FSI-attached I2C
- master dt bindings
-Date: Wed, 28 Jun 2017 18:21:28 -0500
-Message-ID: <20170628232128.ldglm4fjqivspxn3@rob-hp-laptop>
-References: <1498505375-1454-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1498505375-1454-7-git-send-email-eajames@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: ARM: brcmstb: Update Broadcom STB
+ Power Management binding
+Date: Wed, 28 Jun 2017 18:23:44 -0500
+Message-ID: <20170628232344.rb4jus266yeq5yoj@rob-hp-laptop>
+References: <20170626223248.14199-1-f.fainelli@gmail.com>
+ <20170626223248.14199-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1498505375-1454-7-git-send-email-eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20170626223248.14199-2-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eddie James <eajames-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jk-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, andrew-zrmu5oMJ5Fs@public.gmane.org, "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BROADCOM BCM47XX MIPS ARCHITECTURE" <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, linux-pm@v
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 02:29:35PM -0500, Eddie James wrote:
-> From: "Edward A. James" <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
-
-"dt-bindings: i2c: ..." for the subject.
-
+On Mon, Jun 26, 2017 at 03:32:41PM -0700, Florian Fainelli wrote:
+> Update the Broadcom STB Power Management binding document with new
+> compatible strings for the DDR PHY and memory controller found on newer
+> chips.
 > 
-> Document the bindings.
-> 
-> Signed-off-by: Edward A. James <eajames-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->  Documentation/devicetree/bindings/i2c/i2c-fsi.txt | 31 +++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-fsi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-fsi.txt b/Documentation/devicetree/bindings/i2c/i2c-fsi.txt
-> new file mode 100644
-> index 0000000..fffc067
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/i2c-fsi.txt
-> @@ -0,0 +1,31 @@
-> +Device-tree bindings for FSI-attached I2C master driver
-> +-------------------------------------------------------
-> +
-> +Required properties:
-> + - compatible = "ibm,i2cm-fsi";
+>  Documentation/devicetree/bindings/arm/bcm/brcm,brcmstb.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 
-Only one version?
-
-> + - reg = < address size >;		: The FSI CFAM address and address space
-> +					  size.
-> + - #address-cells = <1>;		: Number of address cells in child nodes
-> + - #size-cells = <0>;			: Number of size cells in child nodes.
-> + - child nodes				: Nodes to describe ports off the I2C
-> +					  master.
-> +
-> +Child node required properties:
-> + - reg = < port number >		: The port number on the I2C master.
-> +
-> +Examples:
-> +
-> +    i2cm@1800 {
-
-i2c@1800
-
-> +        compatible = "ibm,i2cm-fsi";
-> +        reg = < 0x1800 0x400 >;
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        port@0 {
-
-The ports are separate i2c buses? Use i2c-bus@... instead. "ports" is 
-already used by OF graph binding.
-
-> +            reg = <0>;
-> +        };
-> +
-> +        port@1 {
-> +            reg = <1>;
-> +        };
-> +    };
-> -- 
-> 1.8.3.1
-> 
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
