@@ -1,366 +1,44 @@
-From: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v4 1/6] drm/stm: ltdc: Add panel-bridge support
-Date: Wed, 28 Jun 2017 10:13:21 +0530
-Message-ID: <250841cc-75ec-0cab-ef54-c0152aa78f04@codeaurora.org>
-References: <1497889685-27349-1-git-send-email-philippe.cornu@st.com>
- <1497889685-27349-2-git-send-email-philippe.cornu@st.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/3] ARM: dts: omap: workarounds for Ethernet PHY strap on
+ DRA71 and DRA72 EVMs
+Date: Wed, 28 Jun 2017 10:39:08 +0530
+Message-ID: <80147da4-a405-cdc2-7d2c-95c16dfb08e6@ti.com>
+References: <cover.1498573382.git.nsekhar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497889685-27349-2-git-send-email-philippe.cornu-qxv4g6HH51o@public.gmane.org>
+In-Reply-To: <cover.1498573382.git.nsekhar-l0cyMroinI0@public.gmane.org>
 Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>, Alexandre Torgue <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick Fertre <yannick.fertre-qxv4g6HH51o@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Chris Zhong <zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Xinliang Liu <xinliang.liu-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, zourongrong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Xinwei Kong <kong.kongxinwei-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Chen Feng <puck.chen-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Mark Yao <mark.yao@rock-chip>
-Cc: Mickael Reulier <mickael.reulier-qxv4g6HH51o@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Vincent Abriou <vincent.abriou-qxv4g6HH51o@public.gmane.org>, Fabien Dessenne <fabien.dessenne-qxv4g6HH51o@public.gmane.org>, Ludovic Barre <ludovic.barre-qxv4g6HH51o@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Device Tree Mailing List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
-
-On 06/19/2017 09:58 PM, Philippe CORNU wrote:
-> Add the panel-bridge support for both panels & bridges (used by DSI host &
-> HDMI/LVDS bridges).
-
-Reviewed-by: Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
+On Tuesday 27 June 2017 08:36 PM, Sekhar Nori wrote:
+> Hi Tony,
 > 
-> Signed-off-by: Philippe CORNU <philippe.cornu-qxv4g6HH51o@public.gmane.org>
-> ---
->   drivers/gpu/drm/stm/Kconfig |   2 +-
->   drivers/gpu/drm/stm/ltdc.c  | 211 ++++++++------------------------------------
->   drivers/gpu/drm/stm/ltdc.h  |   3 +-
->   3 files changed, 38 insertions(+), 178 deletions(-)
+> Here are some patches to overcome incorrect Ethernet PHY strap settings
+> on DRA72x EVM Rev C and DRA71 EVM. Both of these boards use TI's DP83867
+> PHY.
 > 
-> diff --git a/drivers/gpu/drm/stm/Kconfig b/drivers/gpu/drm/stm/Kconfig
-> index 2c4817f..4b88223 100644
-> --- a/drivers/gpu/drm/stm/Kconfig
-> +++ b/drivers/gpu/drm/stm/Kconfig
-> @@ -4,7 +4,7 @@ config DRM_STM
->   	select DRM_KMS_HELPER
->   	select DRM_GEM_CMA_HELPER
->   	select DRM_KMS_CMA_HELPER
-> -	select DRM_PANEL
-> +	select DRM_PANEL_BRIDGE
->   	select VIDEOMODE_HELPERS
->   	select FB_PROVIDE_GET_FB_UNMAPPED_AREA
->   	default y
-> diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-> index 1b9483d..8aa0586 100644
-> --- a/drivers/gpu/drm/stm/ltdc.c
-> +++ b/drivers/gpu/drm/stm/ltdc.c
-> @@ -21,7 +21,7 @@
->   #include <drm/drm_fb_cma_helper.h>
->   #include <drm/drm_gem_cma_helper.h>
->   #include <drm/drm_of.h>
-> -#include <drm/drm_panel.h>
-> +#include <drm/drm_bridge.h>
->   #include <drm/drm_plane_helper.h>
->   
->   #include <video/videomode.h>
-> @@ -269,11 +269,6 @@ static inline struct ltdc_device *encoder_to_ltdc(struct drm_encoder *enc)
->   	return (struct ltdc_device *)enc->dev->dev_private;
->   }
->   
-> -static inline struct ltdc_device *connector_to_ltdc(struct drm_connector *con)
-> -{
-> -	return (struct ltdc_device *)con->dev->dev_private;
-> -}
-> -
->   static inline enum ltdc_pix_fmt to_ltdc_pixelformat(u32 drm_fmt)
->   {
->   	enum ltdc_pix_fmt pf;
-> @@ -813,130 +808,35 @@ static int ltdc_crtc_init(struct drm_device *ddev, struct drm_crtc *crtc)
->    * DRM_ENCODER
->    */
->   
-> -static void ltdc_rgb_encoder_enable(struct drm_encoder *encoder)
-> -{
-> -	struct ltdc_device *ldev = encoder_to_ltdc(encoder);
-> -
-> -	DRM_DEBUG_DRIVER("\n");
-> -
-> -	drm_panel_prepare(ldev->panel);
-> -	drm_panel_enable(ldev->panel);
-> -}
-> -
-> -static void ltdc_rgb_encoder_disable(struct drm_encoder *encoder)
-> -{
-> -	struct ltdc_device *ldev = encoder_to_ltdc(encoder);
-> -
-> -	DRM_DEBUG_DRIVER("\n");
-> -
-> -	drm_panel_disable(ldev->panel);
-> -	drm_panel_unprepare(ldev->panel);
-> -}
-> -
-> -static const struct drm_encoder_helper_funcs ltdc_rgb_encoder_helper_funcs = {
-> -	.enable = ltdc_rgb_encoder_enable,
-> -	.disable = ltdc_rgb_encoder_disable,
-> -};
-> -
-> -static const struct drm_encoder_funcs ltdc_rgb_encoder_funcs = {
-> +static const struct drm_encoder_funcs ltdc_encoder_funcs = {
->   	.destroy = drm_encoder_cleanup,
->   };
->   
-> -static struct drm_encoder *ltdc_rgb_encoder_create(struct drm_device *ddev)
-> +static int ltdc_encoder_init(struct drm_device *ddev)
->   {
-> +	struct ltdc_device *ldev = ddev->dev_private;
->   	struct drm_encoder *encoder;
-> +	int ret;
->   
->   	encoder = devm_kzalloc(ddev->dev, sizeof(*encoder), GFP_KERNEL);
->   	if (!encoder)
-> -		return NULL;
-> +		return -ENOMEM;
->   
->   	encoder->possible_crtcs = CRTC_MASK;
->   	encoder->possible_clones = 0; /* No cloning support */
->   
-> -	drm_encoder_init(ddev, encoder, &ltdc_rgb_encoder_funcs,
-> +	drm_encoder_init(ddev, encoder, &ltdc_encoder_funcs,
->   			 DRM_MODE_ENCODER_DPI, NULL);
->   
-> -	drm_encoder_helper_add(encoder, &ltdc_rgb_encoder_helper_funcs);
-> -
-> -	DRM_DEBUG_DRIVER("RGB encoder:%d created\n", encoder->base.id);
-> -
-> -	return encoder;
-> -}
-> -
-> -/*
-> - * DRM_CONNECTOR
-> - */
-> -
-> -static int ltdc_rgb_connector_get_modes(struct drm_connector *connector)
-> -{
-> -	struct drm_device *ddev = connector->dev;
-> -	struct ltdc_device *ldev = ddev->dev_private;
-> -	int ret = 0;
-> -
-> -	DRM_DEBUG_DRIVER("\n");
-> -
-> -	if (ldev->panel)
-> -		ret = drm_panel_get_modes(ldev->panel);
-> -
-> -	return ret < 0 ? 0 : ret;
-> -}
-> -
-> -static struct drm_connector_helper_funcs ltdc_rgb_connector_helper_funcs = {
-> -	.get_modes = ltdc_rgb_connector_get_modes,
-> -};
-> -
-> -static enum drm_connector_status
-> -ltdc_rgb_connector_detect(struct drm_connector *connector, bool force)
-> -{
-> -	struct ltdc_device *ldev = connector_to_ltdc(connector);
-> -
-> -	return ldev->panel ? connector_status_connected :
-> -	       connector_status_disconnected;
-> -}
-> -
-> -static void ltdc_rgb_connector_destroy(struct drm_connector *connector)
-> -{
-> -	DRM_DEBUG_DRIVER("\n");
-> -
-> -	drm_connector_unregister(connector);
-> -	drm_connector_cleanup(connector);
-> -}
-> -
-> -static const struct drm_connector_funcs ltdc_rgb_connector_funcs = {
-> -	.dpms = drm_atomic_helper_connector_dpms,
-> -	.fill_modes = drm_helper_probe_single_connector_modes,
-> -	.detect = ltdc_rgb_connector_detect,
-> -	.destroy = ltdc_rgb_connector_destroy,
-> -	.reset = drm_atomic_helper_connector_reset,
-> -	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
-> -	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
-> -};
-> -
-> -struct drm_connector *ltdc_rgb_connector_create(struct drm_device *ddev)
-> -{
-> -	struct drm_connector *connector;
-> -	int err;
-> -
-> -	connector = devm_kzalloc(ddev->dev, sizeof(*connector), GFP_KERNEL);
-> -	if (!connector) {
-> -		DRM_ERROR("Failed to allocate connector\n");
-> -		return NULL;
-> -	}
-> -
-> -	connector->polled = DRM_CONNECTOR_POLL_HPD;
-> -
-> -	err = drm_connector_init(ddev, connector, &ltdc_rgb_connector_funcs,
-> -				 DRM_MODE_CONNECTOR_DPI);
-> -	if (err) {
-> -		DRM_ERROR("Failed to initialize connector\n");
-> -		return NULL;
-> +	ret = drm_bridge_attach(encoder, ldev->bridge, NULL);
-> +	if (ret) {
-> +		drm_encoder_cleanup(encoder);
-> +		return -EINVAL;
->   	}
->   
-> -	drm_connector_helper_add(connector, &ltdc_rgb_connector_helper_funcs);
-> -
-> -	DRM_DEBUG_DRIVER("RGB connector:%d created\n", connector->base.id);
-> +	DRM_DEBUG_DRIVER("Bridge encoder:%d created\n", encoder->base.id);
->   
-> -	return connector;
-> +	return 0;
->   }
->   
->   static int ltdc_get_caps(struct drm_device *ddev)
-> @@ -972,49 +872,14 @@ static int ltdc_get_caps(struct drm_device *ddev)
->   	return 0;
->   }
->   
-> -static struct drm_panel *ltdc_get_panel(struct drm_device *ddev)
-> -{
-> -	struct device *dev = ddev->dev;
-> -	struct device_node *np = dev->of_node;
-> -	struct device_node *entity, *port = NULL;
-> -	struct drm_panel *panel = NULL;
-> -
-> -	DRM_DEBUG_DRIVER("\n");
-> -
-> -	/*
-> -	 * Parse ltdc node to get remote port and find RGB panel / HDMI slave
-> -	 * If a dsi or a bridge (hdmi, lvds...) is connected to ltdc,
-> -	 * a remote port & RGB panel will not be found.
-> -	 */
-> -	for_each_endpoint_of_node(np, entity) {
-> -		if (!of_device_is_available(entity))
-> -			continue;
-> -
-> -		port = of_graph_get_remote_port_parent(entity);
-> -		if (port) {
-> -			panel = of_drm_find_panel(port);
-> -			of_node_put(port);
-> -			if (panel) {
-> -				DRM_DEBUG_DRIVER("remote panel %s\n",
-> -						 port->full_name);
-> -			} else {
-> -				DRM_DEBUG_DRIVER("panel missing\n");
-> -				of_node_put(entity);
-> -			}
-> -		}
-> -	}
-> -
-> -	return panel;
-> -}
-> -
->   int ltdc_load(struct drm_device *ddev)
->   {
->   	struct platform_device *pdev = to_platform_device(ddev->dev);
->   	struct ltdc_device *ldev = ddev->dev_private;
->   	struct device *dev = ddev->dev;
->   	struct device_node *np = dev->of_node;
-> -	struct drm_encoder *encoder;
-> -	struct drm_connector *connector = NULL;
-> +	struct drm_bridge *bridge;
-> +	struct drm_panel *panel;
->   	struct drm_crtc *crtc;
->   	struct reset_control *rstc;
->   	struct resource res;
-> @@ -1022,9 +887,9 @@ int ltdc_load(struct drm_device *ddev)
->   
->   	DRM_DEBUG_DRIVER("\n");
->   
-> -	ldev->panel = ltdc_get_panel(ddev);
-> -	if (!ldev->panel)
-> -		return -EPROBE_DEFER;
-> +	ret = drm_of_find_panel_or_bridge(np, 0, 0, &panel, &bridge);
-> +	if (ret)
-> +		return ret;
->   
->   	rstc = of_reset_control_get(np, NULL);
->   
-> @@ -1082,28 +947,21 @@ int ltdc_load(struct drm_device *ddev)
->   
->   	DRM_INFO("ltdc hw version 0x%08x - ready\n", ldev->caps.hw_version);
->   
-> -	if (ldev->panel) {
-> -		encoder = ltdc_rgb_encoder_create(ddev);
-> -		if (!encoder) {
-> -			DRM_ERROR("Failed to create RGB encoder\n");
-> -			ret = -EINVAL;
-> -			goto err;
-> +	if (panel) {
-> +		bridge = drm_panel_bridge_add(panel, DRM_MODE_CONNECTOR_DPI);
-> +		if (IS_ERR(bridge)) {
-> +			DRM_ERROR("Failed to create panel-bridge\n");
-> +			return PTR_ERR(bridge);
->   		}
-> +		ldev->is_panel_bridge = true;
-> +	}
->   
-> -		connector = ltdc_rgb_connector_create(ddev);
-> -		if (!connector) {
-> -			DRM_ERROR("Failed to create RGB connector\n");
-> -			ret = -EINVAL;
-> -			goto err;
-> -		}
-> +	ldev->bridge = bridge;
->   
-> -		ret = drm_mode_connector_attach_encoder(connector, encoder);
-> -		if (ret) {
-> -			DRM_ERROR("Failed to attach connector to encoder\n");
-> -			goto err;
-> -		}
-> -
-> -		drm_panel_attach(ldev->panel, connector);
-> +	ret = ltdc_encoder_init(ddev);
-> +	if (ret) {
-> +		DRM_ERROR("Failed to init encoder\n");
-> +		goto err;
->   	}
->   
->   	crtc = devm_kzalloc(dev, sizeof(*crtc), GFP_KERNEL);
-> @@ -1129,9 +987,10 @@ int ltdc_load(struct drm_device *ddev)
->   	ddev->irq_enabled = 1;
->   
->   	return 0;
-> +
->   err:
-> -	if (ldev->panel)
-> -		drm_panel_detach(ldev->panel);
-> +	if (ldev->is_panel_bridge)
-> +		drm_panel_bridge_remove(bridge);
->   
->   	clk_disable_unprepare(ldev->pixel_clk);
->   
-> @@ -1144,8 +1003,8 @@ void ltdc_unload(struct drm_device *ddev)
->   
->   	DRM_DEBUG_DRIVER("\n");
->   
-> -	if (ldev->panel)
-> -		drm_panel_detach(ldev->panel);
-> +	if (ldev->is_panel_bridge)
-> +		drm_panel_bridge_remove(ldev->bridge);
->   
->   	clk_disable_unprepare(ldev->pixel_clk);
->   }
-> diff --git a/drivers/gpu/drm/stm/ltdc.h b/drivers/gpu/drm/stm/ltdc.h
-> index d7a9c73..d9e899d 100644
-> --- a/drivers/gpu/drm/stm/ltdc.h
-> +++ b/drivers/gpu/drm/stm/ltdc.h
-> @@ -24,7 +24,8 @@ struct ltdc_device {
->   	struct drm_fbdev_cma *fbdev;
->   	void __iomem *regs;
->   	struct clk *pixel_clk;	/* lcd pixel clock */
-> -	struct drm_panel *panel;
-> +	struct drm_bridge *bridge;
-> +	bool is_panel_bridge;
->   	struct mutex err_lock;	/* protecting error_status */
->   	struct ltdc_caps caps;
->   	u32 clut[256];		/* color look up table */
+> The incorrect PHY strap settings cause a voilation of PHY specification
+> and need to be worked around in software as documented in the commit
+> messages. But there is no known issue that these patches fix.
 > 
+> I did verify that there are no regressions with NFS boot on these boards
+> after the patches are applied on v4.12-rc4.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Please ignore this series. It is prematurely posted. The DT property I
+use is not upstream yet. I relied on some recollection of it being
+upstream. I should have grepped instead. Since there was no regression
+and no change in behavior could also be explained, I did not catch it in
+my testing. Thanks Grygorii for pointing out.
+
+Regards,
+Sekhar
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
