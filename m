@@ -1,114 +1,172 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] [media] platform: Add Synopsys Designware HDMI
- RX Controller Driver
-Date: Wed, 28 Jun 2017 12:36:44 +0200
-Message-ID: <e3e515b3-167b-8159-f636-588f6d4b730a@samsung.com>
-References: <cover.1497978962.git.joabreu@synopsys.com>
-        <314b7ae92c9924d0991e14ccad80ca937a2d7b07.1497978962.git.joabreu@synopsys.com>
-        <e6f63454-2e87-6e93-50c3-2802e9357c2a@kernel.org>
-        <2868c525-3edd-0fe1-cc6f-49a758f8c434@synopsys.com>
-        <2153d8da-effc-fedd-a2ce-b1c9ee40a82c@kernel.org>
-        <CGME20170628092556epcas2p276880133453e1b5450e3135786aa9e38@epcas2p2.samsung.com>
-        <31dbb0fb-6256-a609-856c-f92b4245e2e6@synopsys.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm64: dts: add RK3399-Q7 (Puma) SoM
+Date: Wed, 28 Jun 2017 12:49:10 +0200
+Message-ID: <3683842.NarJoYnXid@phil>
+References: <20170626191854.58253-1-klaus.goger@theobroma-systems.com> <2336478.rsaXP0O2Er@diego> <3F2C0996-F298-4628-BCF3-DE721F3B818D@theobroma-systems.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <31dbb0fb-6256-a609-856c-f92b4245e2e6-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Content-language: en-GB
+In-Reply-To: <3F2C0996-F298-4628-BCF3-DE721F3B818D-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jose Abreu <Jose.Abreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Carlos Palminha <CARLOS.PALMINHA-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>
+To: "Dr. Philipp Tomsich" <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jose,
-
-On 06/28/2017 11:25 AM, Jose Abreu wrote:
-> On 27-06-2017 21:34, Sylwester Nawrocki wrote:
->> On 06/27/2017 10:43 AM, Jose Abreu wrote:
->>> On 25-06-2017 22:13, Sylwester Nawrocki wrote:
->>>> On 06/20/2017 07:26 PM, Jose Abreu wrote:
->>>>> This is an initial submission for the Synopsys Designware HDMI RX
->>>>> Controller Driver. This driver interacts with a phy driver so that
->>>>> a communication between them is created and a video pipeline is
->>>>> configured.
->>>>> Signed-off-by: Jose Abreu <joabreu-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-
-> The modules are installed but I think I don't have udev :/ I'm
-> running this on an embedded platform called ARC AXS and I'm using
-> buildroot with minimal options.
-
-OK, then let's keep this request_module.
-
->>>>> +static int dw_hdmi_v4l2_notify_complete(struct v4l2_async_notifier *notifier)
->>>>> +{
->>>>> +	struct dw_hdmi_dev *dw_dev = notifier_to_dw_dev(notifier);
->>>>> +	int ret;
->>>>> +
->>>>> +	ret = v4l2_device_register_subdev_nodes(&dw_dev->v4l2_dev);
->>>> There shouldn't be multiple struct v4l2_device instances, instead we should
->>>> have only one created by the main driver. AFAIU, in your case it would be
->>>> driver associated with the dw-hdmi-soc DT node.  And normally such a top level
->>>> driver creates subdev device nodes when its all required sub-devices are
->>>> available.
->>>>
->>>> I think this patch could be useful for you:
->>>> https://urldefense.proofpoint.com/v2/url?u=https-3A__patchwork.linuxtv.
->>>> org_patch_41834&d=DwICaQ&c=DPL6_X_6JkXFx7AXWqB0tg&r=WHDsc6kcWAl4i96Vm5hJ_19I
->>>> Jiuxx_p_Rzo2g-uHDKw&m=uNHRQkbP_-z8v5d30KFx9pcPEUhlr4ciWY3ZDAVExTA&s=dB9wpgeP
->>>> 7AJg1eDRty0-RKhq3DY-7J5srIzyVoJey5I&e=
->>>>
->>>> With that the dw-hdmi-soc driver would have it's v4l2-async notifier's
->>>> notify_complete() callback called only when both the hdmi-rx and the
->>>> hdmi-phy subdevs are registered.
->>> Yeah, I saw the patches. I just implemented this way because they
->>> are not merged yet, right?
- >>
->> I think these patches will be merged in v4.14-rc1, so together with your driver.
->> You could apply them locally and indicate that your series depends on them in
->> the cover letter.
+Am Mittwoch, 28. Juni 2017, 12:40:01 CEST schrieb Dr. Philipp Tomsich:
 > 
-> Ok, will apply them locally and re-test.
-
-Thanks.
-
->>>>> +	if (ret) {
->>>>> +		dev_err(dw_dev->dev, "failed to register subdev nodes\n");
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +static int dw_hdmi_rx_probe(struct platform_device *pdev)
->>>>> +{
->>>>> +	/* V4L2 initialization */
->>>>> +	sd = &dw_dev->sd;
->>>>> +	v4l2_subdev_init(sd, &dw_hdmi_sd_ops);
->>>>> +	strlcpy(sd->name, dev_name(dev), sizeof(sd->name));
->>>>> +	sd->dev = dev;
->>>>> +	sd->internal_ops = &dw_hdmi_internal_ops;
->>>>> +	sd->flags |= V4L2_SUBDEV_FL_HAS_EVENTS;
- >>>>
->>>> Don't you also need V4L2_SUBDEV_FL_HAS_DEVNODE flag set?
->>> Ouch. Yes I need otherwise the subdev will not be associated with
->>> the v4l2_device.
- >>
->> This flag indicates that the v4l2 subdev device node (/dev/v4l-subdev?)
->> should be created for this subdevice.
+> > On 28 Jun 2017, at 12:26, Heiko Stübner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wrote:
+> > 
+> > Hi Klaus,
+> > 
+> > [added Kever from Rockchip concerning the cluster1-opps below]
+> > 
+> > 
+> > Am Montag, 26. Juni 2017, 21:18:54 CEST schrieb Klaus Goger:
+> >> The RK3399-Q7 SoM is a Qseven-compatible (70mm x 70mm, MXM-230
+> >> connector) system-on-module from Theobroma Systems, featuring the
+> >> Rockchip RK3399.
+> >> 
+> >> It provides the following feature set:
+> >> * up to 4GB DDR3
+> >> * on-module SPI-NOR flash
+> >> * on-module eMMC (with 8-bit 1.8V interface)
+> >> * SD card (on a baseboad) via edge connector
+> >> * Gigabit Ethernet with on-module Micrel KSZ9031 GbE PHY
+> >> * HDMI/eDP/2x MIPI-DSI
+> >> * 2x MIPI-CSI
+> >> * USB
+> >>   - 1x USB 3.0 dual-role (direct connection)
+> >>   - 2x USB 3.0 host + 1x USB 2.0 (on-module USB 3.0 hub)
+> >> * on-module STM32 Cortex-M0 companion controller, implementing:
+> >>   - low-power RTC functionality (ISL1208 emulation)
+> >>   - fan controller (AMC6821 emulation)
+> >>   - USB<->CAN bridge controller
+> >> 
+> >> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> >> 
+> >> ---
+> > 
+> > [...]
+> > 
+> >> +	leds {
+> >> +		compatible = "gpio-leds";
+> >> +		pinctrl-names = "default";
+> >> +
+> >> +		module_led {
+> > 
+> > phandles use underscores, node names are supposed to use dashes "-"
+> > 
+> >> +			label = "module_led";
+> >> +			gpios = <&gpio2 RK_PD1 GPIO_ACTIVE_HIGH>;
+> >> +			linux,default-trigger = "heartbeat";
+> >> +			panic-indicator;
+> >> +		};
+> >> +
+> >> +		sd_card_led {
+> >> +			label = "sd_card_led";
+> >> +			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
+> >> +			linux,default-trigger = "mmc0";
+> >> +		};
+> >> +	};
+> >> +
+> >> +	cluster1_opp: opp-table1 {
+> >> +		compatible = "operating-points-v2";
+> >> +		opp-shared;
+> >> +
+> >> +		opp00 {
+> >> +			opp-hz = /bits/ 64 <408000000>;
+> >> +			opp-microvolt = <800000>;
+> >> +			clock-latency-ns = <40000>;
+> >> +		};
+> >> +		opp01 {
+> >> +			opp-hz = /bits/ 64 <600000000>;
+> >> +			opp-microvolt = <800000>;
+> >> +		};
+> >> +		opp02 {
+> >> +			opp-hz = /bits/ 64 <816000000>;
+> >> +			opp-microvolt = <830000>;
+> > 
+> > this is 5mV higher than the "official" OPPs used by Rockchip, so
+> > I'd like to know its background :-) . Especially as I really would like
+> > to keep the number of per-board OPPs minimal.
 > 
-> Ok, will add for controller driver only then: I think for phy
-> this should not be added because controller is responsible to
-> manage phy entirely so creating a /dev/ which can be seen by
-> userspace can lead to confusion, maybe?
+> The on-board regulators differ and can’t hit the voltages specified
+> in the original OPP table… this is the next closest value we can
+> set and is at least what Rockchip uses in the ref-design.
+> 
+> > So does this make the board run more stable or something else?
+> > And might this be applicable for all "standard" rk3399 boards?
+> > Especially as other OPPs in your list use the regular voltages.
+> 
+> It avoids ugly issues with OPPs being deactivated due to the the
+> exact voltage used in the “official” OPPs not being supported by
+> our regulator.
+> 
+> We decided against reusing the original OPP table and modifying it
+> (to use ranges) as that was likely to cause even more harm in the
+> long term.
 
-Right, there should be no need for the PHY. It's up to you to
-set it or not for the RX controller subdev. I just got confused
-because in your dw_hdmi_sd_ops data structure there are ops which
-would suggest that device node is used.
+ok, thanks for that explanation, which also satisfies my reservations :-) .
+
+When fixing the other things, please also add a comment above opp-table
+with the above explanation, so future changers don't need to remember
+this mail thread :-) .
+
+Also, you might want to add something like
+
+/delete-node/ opp-table1;
+
+before defining your new opp table to prevent the subnode changes
+from interfering with your new table.
 
 
-Regards,
-Sylwester
+> >> +			opp-suspend;
+> >> +		};
+> >> +		opp03 {
+> >> +			opp-hz = /bits/ 64 <1008000000>;
+> >> +			opp-microvolt = <880000>;
+> > 
+> > same as above
+> > 
+> >> +		};
+> >> +		opp04 {
+> >> +			opp-hz = /bits/ 64 <1200000000>;
+> >> +			opp-microvolt = <950000>;
+> >> +		};
+> >> +		opp05 {
+> >> +			opp-hz = /bits/ 64 <1416000000>;
+> >> +			opp-microvolt = <1030000>;
+> > 
+> > same as above
+> > 
+> >> +		};
+> >> +		opp06 {
+> >> +			opp-hz = /bits/ 64 <1608000000>;
+> >> +			opp-microvolt = <1100000>;
+> >> +		};
+> >> +		opp07 {
+> >> +			opp-hz = /bits/ 64 <1800000000>;
+> >> +			opp-microvolt = <1200000>;
+> >> +		};
+> >> +		opp08 {
+> >> +			opp-hz = /bits/ 64 <1992000000>;
+> >> +			opp-microvolt = <1230000>;
+> >> +			turbo-mode;
+> > 
+> > Is this part of the soc-spec or more like wishful thinking? :-)
+> > Again with the question in mind if this applies to all rk3399.
+> 
+> Tested in our lab on a decent population of boards using various
+> forms of stress-testing (incl. a 6-way and 8-way SPEC).
+> 
+> This one is marked ‘turbo-mode’ as we do recommend to only
+> enable it if a (Qseven-style) heat-sink is mounted.
+
+ok then.
+
+
+Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
