@@ -1,59 +1,80 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [PATCH 3/3] ARM: omap2plus_defconfig: enable DP83867 phy driver
-Date: Wed, 28 Jun 2017 11:54:46 -0500
-Message-ID: <8b0c4fb9-978b-0d67-85e2-af994f1a66e8@ti.com>
-References: <cover.1498573382.git.nsekhar@ti.com>
- <3e141e778cedc0cc6168a9f9a3787a49042681c5.1498573382.git.nsekhar@ti.com>
+From: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
+Date: Wed, 28 Jun 2017 19:02:29 +0200
+Message-ID: <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch> <1479384616-12479-3-git-send-email-tom.levens@cern.ch> <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net> <97eb089f-e0e2-1146-6e17-8f9f790433d8@topic.nl> <20170628150130.GC30968@roeck-us.net>
+ <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch> <20170628160048.GA8915@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3e141e778cedc0cc6168a9f9a3787a49042681c5.1498573382.git.nsekhar@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="US-ASCII"; format=flowed
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170628160048.GA8915-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, jdelvare-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
+On Wed, 28 Jun 2017, Guenter Roeck wrote:
 
-On 06/27/2017 10:06 AM, Sekhar Nori wrote:
-> TI's DP83867 phy is used on DRA72x EVM rev C and DRA71x
-> EVMs. Enable support for it in omap2plus_defconfig.
-> 
-> The driver is built into the kernel to help NFS booting.
-> 
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
+> On Wed, Jun 28, 2017 at 05:29:38PM +0200, Tom Levens wrote:
+>>
+> [ ... ]
+>
+>>>
+>>>> Whatever happened to this patch though? It didn't make it to mainline,
+>>>> otherwise I'd have found it sooner...
+>>>>
+>>> I'll have to look it up, but I guess I didn't get an updated version.
+>>
+>> As far as I remember I had a working V3 of this patch, but it is entirely
+>> possible that it was never submitted as I have been busy with other projects
+>> recently. I'll dig it out and check that it is complete.
+>>
+> FWIW, I don't see it at
+> https://patchwork.kernel.org/project/linux-hwmon/list/?submitter=171225&state=*
+>
+> Maybe you were waiting for a reply from Rob. Either case, it might make
+> sense to only provide valid modes, ie to abstract the mode bits from the
+> hardware, such as
+>
+> 0 - internal temp only
+> 1 - Tr1
+> 2 - V1
+> 3 - V1-V2
+> 4 - Tr2
+> 5 - V3
+> 6 - V3-V4
+> 7 to 14 - per bit 0..2
+>
+> Guenter
+>
 
-Reviewed-by: Grygorii Strashko <grygorii.strashko@ti.com>
+You are right, there was still an open question about how best to handle 
+the mode selection in DT.
 
-this can go alone I think.
-> ---
->   arch/arm/configs/omap2plus_defconfig | 1 +
->   1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/configs/omap2plus_defconfig b/arch/arm/configs/omap2plus_defconfig
-> index a120ae816260..d4afa2ca2537 100644
-> --- a/arch/arm/configs/omap2plus_defconfig
-> +++ b/arch/arm/configs/omap2plus_defconfig
-> @@ -170,6 +170,7 @@ CONFIG_TI_CPTS=y
->   # CONFIG_NET_VENDOR_WIZNET is not set
->   CONFIG_AT803X_PHY=y
->   CONFIG_DP83848_PHY=y
-> +CONFIG_DP83867_PHY=y
->   CONFIG_MICREL_PHY=y
->   CONFIG_SMSC_PHY=y
->   CONFIG_PPP=m
-> 
+In the latest version of my patch I have it implemented as an array for 
+setting the two values, for example:
 
--- 
-regards,
--grygorii
+ 	lltc,meas-mode = <7 3>;
+
+This sets bits [2..0] = 7 and [4..3] = 3. Of course these could be split 
+into two DT properties, but I was unsure what to name them as both fields 
+are called "mode" in the datasheet and "mode-43"/"mode-20" (or similar) is 
+ugly.
+
+With regards to your proposal, it is not clear to me whether the modes 
+which have the same result are exactly equivalent. Does disabling a 
+measurement with the mode[4..3] bits really leaves the part in a safe 
+state for all possible HW connections? With this doubt in my head, I would 
+prefer to keep the option available to the user to select any specific 
+mode. But I am open to suggestions.
+
+Mike, if you would like to test it, the latest version of my code is here:
+
+https://github.com/levens/ltc2990/blob/dev/drivers/hwmon/ltc2990.c
+
+Cheers,
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
