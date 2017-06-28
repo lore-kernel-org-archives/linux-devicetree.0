@@ -1,61 +1,161 @@
-From: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 15/15] spi: qup: support for qup v1 dma
-Date: Wed, 28 Jun 2017 01:47:38 -0500
-Message-ID: <20170628064738.GD5203@hector.attlocal.net>
-References: <1497949857-1852-1-git-send-email-varada@codeaurora.org>
- <1497949857-1852-16-git-send-email-varada@codeaurora.org>
- <20170623214923.ratchkoay73ytlv3@rob-hp-laptop>
+From: Phil Reid <preid@electromag.com.au>
+Subject: Re: [PATCH v7 04/10] i2c: i2c-smbus: add of_i2c_setup_smbus_alert
+Date: Wed, 28 Jun 2017 14:48:07 +0800
+Message-ID: <96160849-c1c7-afdd-8f9f-c9269f66efb2@electromag.com.au>
+References: <1497535178-12001-1-git-send-email-preid@electromag.com.au>
+ <1497535178-12001-5-git-send-email-preid@electromag.com.au>
+ <20170619152744.4gtlyrwdhjbhy562@ninjato>
+ <20170623121552.GM26073@mail.corp.redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170623214923.ratchkoay73ytlv3@rob-hp-laptop>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
+In-Reply-To: <20170623121552.GM26073@mail.corp.redhat.com>
+Content-Language: en-AU
+Sender: linux-i2c-owner@vger.kernel.org
+To: Benjamin Tissoires <benjamin.tissoires@redhat.com>, Wolfram Sang <wsa@the-dreams.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, sre@kernel.org, jdelvare@suse.com, jglauber@cavium.com, david.daney@cavium.com, peda@axentia.se, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 23, 2017 at 04:49:23PM -0500, Rob Herring wrote:
-> On Tue, Jun 20, 2017 at 02:40:57PM +0530, Varadarajan Narayanan wrote:
-> > Currently the QUP Version v1 does not work with DMA so added
-> > the support for the same.
-> > 
-> > 1. It uses ADM DMA which requires TX and RX CRCI
-> > 2. DMA channel initialization need to be done after setting
-> >    block size for having valid values in maxburst
-> > 3. QUP mode should be DMOV instead of BAM.
-> > 
-> > Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Signed-off-by: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/spi/qcom,spi-qup.txt       |  6 ++++
-> >  drivers/spi/spi-qup.c                              | 35 +++++++++++++++++-----
-> >  2 files changed, 34 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-> > index 5c09077..e754181 100644
-> > --- a/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-> > +++ b/Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-> > @@ -38,6 +38,12 @@ Optional properties:
-> >  - dma-names:    Names for the dma channels, if present. There must be at
-> >                  least one channel named "tx" for transmit and named "rx" for
-> >                  receive.
-> > +- qcom,tx-crci: Identificator for Client Rate Control Interface (CRCI) to be
+On 23/06/2017 20:15, Benjamin Tissoires wrote:
+> On Jun 19 2017 or thereabouts, Wolfram Sang wrote:
+>> On Thu, Jun 15, 2017 at 09:59:32PM +0800, Phil Reid wrote:
+>>> This commit adds of_i2c_setup_smbus_alert which allows the smbalert
+>>> driver to be attached to an i2c adapter via the device tree.
+>>>
+>>> Signed-off-by: Phil Reid <preid@electromag.com.au>
+>>> Acked-by: Rob Herring <robh@kernel.org>
+>>
+>> CCing Benjamin
+>>
+>>> ---
+>>>   Documentation/devicetree/bindings/i2c/i2c.txt |  4 ++--
+>>>   drivers/i2c/i2c-smbus.c                       | 34 ++++++++++++++++++++++++---
+>>>   include/linux/i2c-smbus.h                     |  9 +++++++
+>>>   3 files changed, 42 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> index cee9d50..1126398 100644
+>>> --- a/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> +++ b/Documentation/devicetree/bindings/i2c/i2c.txt
+>>> @@ -59,8 +59,8 @@ wants to support one of the below features, it should adapt the bindings below.
+>>>   	interrupts used by the device.
+>>>   
+>>>   - interrupt-names
+>>> -	"irq" and "wakeup" names are recognized by I2C core, other names are
+>>> -	left to individual drivers.
+>>> +	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
+>>> +	other names are	left to individual drivers.
+>>>   
+>>>   - host-notify
+>>>   	device uses SMBus host notify protocol instead of interrupt line.
+>>> diff --git a/drivers/i2c/i2c-smbus.c b/drivers/i2c/i2c-smbus.c
+>>> index d4af270..0ad7f7f 100644
+>>> --- a/drivers/i2c/i2c-smbus.c
+>>> +++ b/drivers/i2c/i2c-smbus.c
+>>> @@ -21,6 +21,7 @@
+>>>   #include <linux/interrupt.h>
+>>>   #include <linux/kernel.h>
+>>>   #include <linux/module.h>
+>>> +#include <linux/of_irq.h>
+>>>   #include <linux/slab.h>
+>>>   #include <linux/workqueue.h>
+>>>   
+>>> @@ -131,7 +132,7 @@ static int smbalert_probe(struct i2c_client *ara,
+>>>   {
+>>>   	struct i2c_smbus_alert_setup *setup = dev_get_platdata(&ara->dev);
+>>>   	struct i2c_smbus_alert *alert;
+>>> -	struct i2c_adapter *adapter = ara->adapter;
+>>> +	struct i2c_adapter *adap = ara->adapter;
 > 
-> Identificator is not a word.
+> I am not a big fan of this rename (even for consistency with the rest of
+> the file). It makes the patch bigger of 2 hunks for nothing :/
 > 
-> This sounds like something that should be a cell in the dmas property.
+> (Wolfram might have a different opinion)
 
-Yes, the CRCI should be part of the dma cells for the ADM.  That would make a
-channel + crci work as a virtual channel that is backed by a hardware channel.
+Fair enough I'll remove the rename.
 
-The only thing that has to be dealt with is the protocol difference between the
-BAM and ADM dma blocks, which is what the v1 compatible tells us.
+> 
+>>>   	int res, irq;
+>>>   
+>>>   	alert = devm_kzalloc(&ara->dev, sizeof(struct i2c_smbus_alert),
+>>> @@ -139,7 +140,14 @@ static int smbalert_probe(struct i2c_client *ara,
+>>>   	if (!alert)
+>>>   		return -ENOMEM;
+>>>   
+>>> -	irq = setup->irq;
+>>> +	if (setup) {
+>>> +		irq = setup->irq;
+>>> +	} else {
+>>> +		irq = of_irq_get_byname(adap->dev.of_node, "smbus_alert");
+>>> +		if (irq <= 0)
+>>> +			return irq;
+>>> +	}
+>>> +
+>>>   	INIT_WORK(&alert->alert, smbalert_work);
+>>>   	alert->ara = ara;
+>>>   
+>>> @@ -153,7 +161,7 @@ static int smbalert_probe(struct i2c_client *ara,
+>>>   	}
+>>>   
+>>>   	i2c_set_clientdata(ara, alert);
+>>> -	dev_info(&adapter->dev, "supports SMBALERT#\n");
+>>> +	dev_info(&adap->dev, "supports SMBALERT#\n");
+>>>   
+>>>   	return 0;
+>>>   }
+>>> @@ -214,6 +222,26 @@ struct i2c_client *i2c_setup_smbus_alert(struct i2c_adapter *adapter,
+>>>   }
+>>>   EXPORT_SYMBOL_GPL(i2c_setup_smbus_alert);
+>>>   
+>>> +int of_i2c_setup_smbus_alert(struct i2c_adapter *adap)
+>>> +{
+>>> +	struct i2c_client *client;
+>>> +	int irq;
+>>> +
+>>> +	irq = of_property_match_string(adap->dev.of_node, "interrupt-names",
+>>> +				       "smbus_alert");
+>>> +	if (irq == -EINVAL || irq == -ENODATA)
+>>> +		return 0;
+>>> +	else if (irq < 0)
+>>> +		return irq;
+>>> +
+>>> +	client = i2c_setup_smbus_alert(adap, NULL);
+>>> +	if (!client)
+>>> +		return -ENODEV;
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(of_i2c_setup_smbus_alert);
+>>> +
+>>>   /**
+>>>    * i2c_handle_smbus_alert - Handle an SMBus alert
+>>>    * @ara: the ARA client on the relevant adapter
+>>> diff --git a/include/linux/i2c-smbus.h b/include/linux/i2c-smbus.h
+>>> index 19efbd1..b5261c1 100644
+>>> --- a/include/linux/i2c-smbus.h
+>>> +++ b/include/linux/i2c-smbus.h
+>>> @@ -49,4 +49,13 @@ struct i2c_client *i2c_setup_smbus_alert(struct i2c_adapter *adapter,
+>>>   					 struct i2c_smbus_alert_setup *setup);
+>>>   int i2c_handle_smbus_alert(struct i2c_client *ara);
+>>>   
+>>> +#if IS_ENABLED(CONFIG_I2C_SMBUS)
+> 
+> Can't we have:
+> #if IS_ENABLED(CONFIG_I2C_SMBUS) && IS_ENABLED(*whatever OF config symbol is*)
+> 
+> Because otherwise, even if the code works from what I understand, we
+> will pull in i2c-smbus from i2c-core all the time.
+
+Sorry I'm lost here.
+CONFIG_I2C_SMBUS looks to the be symbol that enables i2c-smbus in the makefile.
+I thought this would be enough to keep it out of the core.
 
 
-Regards,
-Andy
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
+
+-- 
+Regards
+Phil Reid
