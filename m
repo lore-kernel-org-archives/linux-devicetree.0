@@ -1,52 +1,112 @@
-From: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] dt-bindings: amlogic: add unstable statement
-Date: Wed, 28 Jun 2017 07:53:43 -0700
-Message-ID: <20170628145343.25443-1-khilman@baylibre.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drivers/watchdog: ASPEED reference dev tree
+ properties for config
+Date: Wed, 28 Jun 2017 07:54:52 -0700
+Message-ID: <20170628145452.GA30968@roeck-us.net>
+References: <20170627211734.60477-1-cbostic@linux.vnet.ibm.com>
+ <20170627211734.60477-3-cbostic@linux.vnet.ibm.com>
+ <606a2e11-2d43-5204-0bb6-9c4415ee03df@roeck-us.net>
+ <de0dc054-0813-fab1-d7ac-2f1d7ba61fd8@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <de0dc054-0813-fab1-d7ac-2f1d7ba61fd8-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Due to the lack of documentation on this SoC family, discovery of new
-features, and correcting of previous misunderstandings is expected, so
-it's unrealistic to expect any form of stable bindings for this SoC
-family.  Make that clear inthe binding documentation.
+On Wed, Jun 28, 2017 at 09:29:50AM -0500, Christopher Bostic wrote:
+> 
+> 
+> On 6/28/17 6:31 AM, Guenter Roeck wrote:
+> >On 06/27/2017 02:17 PM, Christopher Bostic wrote:
+> >>Reference the system device tree when configuring the watchdog
+> >>engines.  Set external signal mode on timeout if specified.
+> >>Set system reset on timeout if specified.
+> >>
+> >>Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> >>---
+> >>v2 - Change of_get_property() to of_property_read_bool()
+> >>    - Remove redundant check for NULL struct device_node pointer
+> >>    - Optional property names now start with prefix 'aspeed,'
+> >>---
+> >>  drivers/watchdog/aspeed_wdt.c | 13 +++++++++++--
+> >>  1 file changed, 11 insertions(+), 2 deletions(-)
+> >>
+> >>diff --git a/drivers/watchdog/aspeed_wdt.c
+> >>b/drivers/watchdog/aspeed_wdt.c
+> >>index 1c65258..71ce5f5 100644
+> >>--- a/drivers/watchdog/aspeed_wdt.c
+> >>+++ b/drivers/watchdog/aspeed_wdt.c
+> >>@@ -140,6 +140,7 @@ static int aspeed_wdt_probe(struct platform_device
+> >>*pdev)
+> >>  {
+> >>      struct aspeed_wdt *wdt;
+> >>      struct resource *res;
+> >>+    struct device_node *np;
+> >>      int ret;
+> >>        wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+> >>@@ -170,8 +171,16 @@ static int aspeed_wdt_probe(struct platform_device
+> >>*pdev)
+> >>       * the SOC and not the full chip
+> >>       */
+> >>      wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
+> >>-        WDT_CTRL_1MHZ_CLK |
+> >>-        WDT_CTRL_RESET_SYSTEM;
+> >>+        WDT_CTRL_1MHZ_CLK;
+> >>+
+> >>+    np = pdev->dev.of_node;
+> >>+    if (of_property_read_bool(np, "aspeed,sys-reset"))
+> >>+        wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
+> >>+
+> >
+> >For backward compatibility, this should default to WDT_CTRL_RESET_SYSTEM
+> >if no optional property is provided.
+> >
+> I had the logic inverted for this property in a previous patch.  The
+> property was 'no-system-reset' so that when not present the default was to
+> set WDT_CTRL_RESET_SYSTEM.   As it is in this patch, the only way to
+> indicate that no system reset is to be done is to not specify the property.
+> No system reset is desired under circumstances when another wdt engine is to
+> be responsible for this.   Given the issue with backward compatibility
+> that's not a solution.  Given this, would creating a property
+> 'no-system-reset' be acceptable?
+> 
+Sorry, I fail to see the problem. There are half a dozen properties. What is the
+problem with having a default if no property is specified ? Your default is "do
+nothing", which does not really make any sense to me. If the user wants the
+watchdog to do nothing, the simple means to accomplish that would be to not
+instantiate it.
 
-Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/amlogic.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Sure, that means specifying "system-reset" is redundant, but I don't see a
+problem with that either. But I do see a problem with loading a watchdog driver
+that doesn't do anything.
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index bfd5b558477d..9be902b4656d 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -1,6 +1,18 @@
- Amlogic MesonX device tree bindings
- -------------------------------------------
- 
-+Work in progress statement:
-+
-+Device tree files and bindings applying to Amlogic SoCs and boards are
-+considered "unstable". Any Amlogic device tree binding may change at
-+any time. Be sure to use a device tree binary and a kernel image
-+generated from the same source tree.
-+
-+Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of a
-+stable binding/ABI.
-+
-+---------------------------------------------------------------
-+
- Boards with the Amlogic Meson6 SoC shall have the following properties:
-   Required root node property:
-     compatible: "amlogic,meson6"
--- 
-2.9.3
+If there is really some use case where it makes sense to load a watchdog driver
+and have it do nothing, please explain and provide a respective devicetree
+property. "aspeed,do-nothing" (or whatever similar) doesn't sound good, but
+at least makes it obvious that the driver isn't doing anything besides
+creating a false sense of "the system is watchdog protected".
 
+Thanks,
+Guenter
+
+
+> Thanks,
+> Chris
+> 
+> >>+    if (of_property_read_bool(np, "aspeed,external-signal"))
+> >>+        wdt->ctrl |= WDT_CTRL_WDT_EXT;
+> >>+
+> >>+    writel(wdt->ctrl, wdt->base + WDT_CTRL);
+> >>        if (readl(wdt->base + WDT_CTRL) & WDT_CTRL_ENABLE)  {
+> >>          aspeed_wdt_start(&wdt->wdd);
+> >>
+> >
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
