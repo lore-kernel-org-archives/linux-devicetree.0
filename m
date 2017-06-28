@@ -1,94 +1,339 @@
-From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: [PATCH v2 2/2] arm64: dts: uniphier: add nodes of thermal monitor and thermal zone for LD20
-Date: Wed, 28 Jun 2017 19:18:29 +0900
-Message-ID: <1498645109-25985-3-git-send-email-hayashi.kunihiko@socionext.com>
-References: <1498645109-25985-1-git-send-email-hayashi.kunihiko@socionext.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498645109-25985-1-git-send-email-hayashi.kunihiko@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, yamada.masahiro@socionext.com, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm64: dts: add RK3399-Q7 (Puma) SoM
+Date: Wed, 28 Jun 2017 12:26:14 +0200
+Message-ID: <2336478.rsaXP0O2Er@diego>
+References: <20170626191854.58253-1-klaus.goger@theobroma-systems.com> <20170626191854.58253-5-klaus.goger@theobroma-systems.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170626191854.58253-5-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes of thermal monitor and thermal zone for UniPhier LD20 SoC.
-The thermal monitor is included in sysctrl.
+Hi Klaus,
 
-Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
----
- arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi | 40 ++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+[added Kever from Rockchip concerning the cluster1-opps below]
 
-diff --git a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-index a6b3a70..22d04111 100644
---- a/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-+++ b/arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi
-@@ -82,6 +82,7 @@
- 			clocks = <&sys_clk 32>;
- 			enable-method = "psci";
- 			operating-points-v2 = <&cluster0_opp>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu1: cpu@1 {
-@@ -100,6 +101,7 @@
- 			clocks = <&sys_clk 33>;
- 			enable-method = "psci";
- 			operating-points-v2 = <&cluster1_opp>;
-+			#cooling-cells = <2>;
- 		};
- 
- 		cpu3: cpu@101 {
-@@ -209,6 +211,38 @@
- 			     <1 10 4>;
- 	};
- 
-+	thermal-zones {
-+		cpu_thermal {
-+			polling-delay-passive = <250>;	/* 250ms */
-+			polling-delay = <1000>;		/* 1000ms */
-+			thermal-sensors = <&pvtctl>;
-+
-+			trips {
-+				cpu_crit: cpu_crit {
-+					temperature = <110000>;	/* 110C */
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+				cpu_alert: cpu_alert {
-+					temperature = <100000>;	/* 100C */
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu_alert>;
-+					cooling-device = <&cpu0 (-1) (-1)>;
-+				};
-+				map1 {
-+					trip = <&cpu_alert>;
-+					cooling-device = <&cpu2 (-1) (-1)>;
-+				};
-+			};
-+		};
-+	};
-+
- 	soc {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -417,6 +451,12 @@
- 				compatible = "socionext,uniphier-ld20-reset";
- 				#reset-cells = <1>;
- 			};
-+
-+			pvtctl: pvtctl {
-+				compatible = "socionext,uniphier-ld20-thermal";
-+				interrupts = <0 3 4>;
-+				#thermal-sensor-cells = <0>;
-+			};
- 		};
- 	};
- };
--- 
-2.7.4
+
+Am Montag, 26. Juni 2017, 21:18:54 CEST schrieb Klaus Goger:
+> The RK3399-Q7 SoM is a Qseven-compatible (70mm x 70mm, MXM-230
+> connector) system-on-module from Theobroma Systems, featuring the
+> Rockchip RK3399.
+> 
+> It provides the following feature set:
+>  * up to 4GB DDR3
+>  * on-module SPI-NOR flash
+>  * on-module eMMC (with 8-bit 1.8V interface)
+>  * SD card (on a baseboad) via edge connector
+>  * Gigabit Ethernet with on-module Micrel KSZ9031 GbE PHY
+>  * HDMI/eDP/2x MIPI-DSI
+>  * 2x MIPI-CSI
+>  * USB
+>    - 1x USB 3.0 dual-role (direct connection)
+>    - 2x USB 3.0 host + 1x USB 2.0 (on-module USB 3.0 hub)
+>  * on-module STM32 Cortex-M0 companion controller, implementing:
+>    - low-power RTC functionality (ISL1208 emulation)
+>    - fan controller (AMC6821 emulation)
+>    - USB<->CAN bridge controller
+> 
+> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+> 
+> ---
+
+[...]
+
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +
+> +		module_led {
+
+phandles use underscores, node names are supposed to use dashes "-"
+
+> +			label = "module_led";
+> +			gpios = <&gpio2 RK_PD1 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "heartbeat";
+> +			panic-indicator;
+> +		};
+> +
+> +		sd_card_led {
+> +			label = "sd_card_led";
+> +			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
+> +			linux,default-trigger = "mmc0";
+> +		};
+> +	};
+> +
+> +	cluster1_opp: opp-table1 {
+> +		compatible = "operating-points-v2";
+> +		opp-shared;
+> +
+> +		opp00 {
+> +			opp-hz = /bits/ 64 <408000000>;
+> +			opp-microvolt = <800000>;
+> +			clock-latency-ns = <40000>;
+> +		};
+> +		opp01 {
+> +			opp-hz = /bits/ 64 <600000000>;
+> +			opp-microvolt = <800000>;
+> +		};
+> +		opp02 {
+> +			opp-hz = /bits/ 64 <816000000>;
+> +			opp-microvolt = <830000>;
+
+this is 5mV higher than the "official" OPPs used by Rockchip, so
+I'd like to know its background :-) . Especially as I really would like
+to keep the number of per-board OPPs minimal.
+
+So does this make the board run more stable or something else?
+And might this be applicable for all "standard" rk3399 boards?
+Especially as other OPPs in your list use the regular voltages.
+
+
+> +			opp-suspend;
+> +		};
+> +		opp03 {
+> +			opp-hz = /bits/ 64 <1008000000>;
+> +			opp-microvolt = <880000>;
+
+same as above
+
+> +		};
+> +		opp04 {
+> +			opp-hz = /bits/ 64 <1200000000>;
+> +			opp-microvolt = <950000>;
+> +		};
+> +		opp05 {
+> +			opp-hz = /bits/ 64 <1416000000>;
+> +			opp-microvolt = <1030000>;
+
+same as above
+
+> +		};
+> +		opp06 {
+> +			opp-hz = /bits/ 64 <1608000000>;
+> +			opp-microvolt = <1100000>;
+> +		};
+> +		opp07 {
+> +			opp-hz = /bits/ 64 <1800000000>;
+> +			opp-microvolt = <1200000>;
+> +		};
+> +		opp08 {
+> +			opp-hz = /bits/ 64 <1992000000>;
+> +			opp-microvolt = <1230000>;
+> +			turbo-mode;
+
+Is this part of the soc-spec or more like wishful thinking? :-)
+Again with the question in mind if this applies to all rk3399.
+
+
+> +		};
+> +	};
+> +
+> +	clkin_gmac: external-gmac-clock {
+> +		compatible = "fixed-clock";
+> +		clock-frequency = <125000000>;
+> +		clock-output-names = "clkin_gmac";
+> +		#clock-cells = <0>;
+> +	};
+> +
+> +	vcc3v3_sys: vcc3v3-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc3v3_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +	};
+> +
+> +	vcc5v0_otg: vcc5v0-otg-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&otg_vbus_drv>;
+
+gpio pinctrl names should generally follow the pin names
+in schematics. For example on the rk3399-firefly it also
+had a pinctrl named host_vbus_drv while the pin in the
+schematics was named vcc5v0_host_en.
+
+Following the schematic names makes it easier in the
+long run to find and fix things as they occur.
+
+This of course applies to all gpio-pinctrls in this dts.
+
+
+> +		regulator-name = "vcc5v0_otg";
+> +		regulator-always-on;
+> +	};
+> +
+> +	vcc5v0_host: vcc5v0-host-regulator {
+> +		compatible = "regulator-fixed";
+> +		enable-active-high;
+> +		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&vcc5v0_host_en>;
+> +		regulator-name = "vcc5v0_host";
+> +		vin-supply = <&vcc5v0_sys>;
+> +	};
+> +
+> +	vcc5v0_sys: vcc5v0-sys {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc5v0_sys";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +	};
+> +
+> +	vcc_phy: vcc-phy-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "vcc_phy";
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+
+This looks suspiciously copy-pasted from a vendor devicetree.
+The firefly used a similar "nonsense"-regulator which I fixed
+together with other regulators in
+
+https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=12335ebaac8639a2745245e5d179f44f3c70fed1
+
+Similar to other regulators above, which also follow naming I fixed
+on the firefly. Regulators should generally follow the schematics
+in their naming and also hierarchy.
+
+(debugsfs/regulator/regulator_summary shows a nice graph of them)
+
+This of course applies to all defined regulators.
+
+If your regulator setup actually follows your own schematics then
+nevermind this comment ;-) .
+
+
+> +
+> +	vdd_log: vdd-log {
+> +		compatible = "pwm-regulator";
+> +		pwms = <&pwm2 0 25000 0>;
+> +		regulator-name = "vdd_log";
+> +		regulator-min-microvolt = <800000>;
+> +		regulator-max-microvolt = <1400000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +		status = "okay";
+> +	};
+> +};
+
+> +&i2c0 {
+> +	status = "okay";
+> +	i2c-scl-rising-time-ns = <168>;
+> +	i2c-scl-falling-time-ns = <4>;
+> +	clock-frequency = <400000>;
+> +
+> +	vdd_gpu: fan535555@60 {
+
+vdd_gpu: regulator@60 {
+
+node names should be generic (aka device category)
+
+> +		compatible = "fcs,fan53555";
+> +		reg = <0x60>;
+> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+
+not part of the binding right now. While it may be nice to teach
+the fan53555 to handle the vsel gpio if it is controllable [similar to
+how the rk808 can do this], this hasn't been implemented yet.
+
+Also applies to vdd_cpu_b below.
+
+
+> +		vin-supply = <&vcc5v0_sys>;
+> +		regulator-compatible = "fan53555-reg";
+
+deprecated property and not really needed.
+
+
+> +		regulator-name = "vdd_gpu";
+> +		regulator-min-microvolt = <600000>;
+> +		regulator-max-microvolt = <1230000>;
+> +		regulator-ramp-delay = <1000>;
+> +		fcs,suspend-voltage-selector = <1>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +};
+
+
+[...]
+
+> +&pcie0 {
+> +	ep-gpios = <&gpio4 RK_PC6 GPIO_ACTIVE_LOW>;
+> +	num-lanes = <4>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pcie_clkreqn>;
+> +	status = "okay";
+
+vpcie{3v3, 1v8, 0v9}-supply properties? 
+
+
+> +};
+> +
+
+[...]
+
+> +&sdmmc {
+> +	clock-frequency = <150000000>;
+> +	bus-width = <4>;
+> +	cap-mmc-highspeed;
+> +	cap-sd-highspeed;
+> +	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
+> +	wp-gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_LOW>;
+> +	num-slots = <1>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_gpio &sdmmc_bus4>;
+> +	status = "okay";
+> +};
+> +
+> +
+
+double empty line
+
+
+> +&spi1 {
+> +	status = "okay";
+> +
+> +	flash: norflash@0 {
+
+norflash: flash@0 maybe?
+
+You reference the phandle and at the position it gets referenced
+the specific name might be more helpful.
+
+
+> +		compatible = "jedec,spi-nor";
+> +		reg = <0>;
+> +		spi-max-frequency = <50000000>;
+> +	};
+> +};
+
+
+
+> +&pinctrl {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&puma_pin_hog>;
+> +
+> +	hog {
+> +			puma_pin_hog: puma_pin_hog {
+
+puma_pin_hog: puma-pin-hog
+
+Same for more defined pinctrl nodes below that.
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
