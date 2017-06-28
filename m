@@ -1,94 +1,379 @@
-From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
-Subject: [PATCH] ARM: dts: imx6q-bx50v3: Enable i2c recovery mechanism
-Date: Wed, 28 Jun 2017 14:35:31 +0200
-Message-ID: <20170628123531.26996-1-romain.perier@collabora.com>
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: Re: [PATCH 4/4] arm64: dts: add RK3399-Q7 (Puma) SoM
+Date: Wed, 28 Jun 2017 20:41:15 +0800
+Message-ID: <db92a83b-a80b-6c9f-76dc-646d9155bc20@rock-chips.com>
+References: <20170626191854.58253-1-klaus.goger@theobroma-systems.com>
+ <20170626191854.58253-5-klaus.goger@theobroma-systems.com>
+ <2336478.rsaXP0O2Er@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2336478.rsaXP0O2Er@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>, Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
+To: =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
+Hi
 
-This commit enables i2c recovery, supported by the i2c core subsystem.
-It defines the required GPIOs for SDA and SLC lines.
+On 2017/6/28 18:26, Heiko Stübner wrote:
+> Hi Klaus,
+>
+> [added Kever from Rockchip concerning the cluster1-opps below]
+>
+>
+> Am Montag, 26. Juni 2017, 21:18:54 CEST schrieb Klaus Goger:
+>> The RK3399-Q7 SoM is a Qseven-compatible (70mm x 70mm, MXM-230
+>> connector) system-on-module from Theobroma Systems, featuring the
+>> Rockchip RK3399.
+>>
+>> It provides the following feature set:
+>>  * up to 4GB DDR3
+>>  * on-module SPI-NOR flash
+>>  * on-module eMMC (with 8-bit 1.8V interface)
+>>  * SD card (on a baseboad) via edge connector
+>>  * Gigabit Ethernet with on-module Micrel KSZ9031 GbE PHY
+>>  * HDMI/eDP/2x MIPI-DSI
+>>  * 2x MIPI-CSI
+>>  * USB
+>>    - 1x USB 3.0 dual-role (direct connection)
+>>    - 2x USB 3.0 host + 1x USB 2.0 (on-module USB 3.0 hub)
+>>  * on-module STM32 Cortex-M0 companion controller, implementing:
+>>    - low-power RTC functionality (ISL1208 emulation)
+>>    - fan controller (AMC6821 emulation)
+>>    - USB<->CAN bridge controller
+>>
 
-Signed-off-by: Jose Alarcon <jose.alarcon-JJi787mZWgc@public.gmane.org>
-Signed-off-by: Nandor Han <nandor.han-JJi787mZWgc@public.gmane.org>
-Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6q-bx50v3.dtsi | 42 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
+I don't find these patches on patchwork of linux-rockchip?
+Anyway, there are some minor inline comment below.
 
-diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-index c90b26f..75201ca 100644
---- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-+++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
-@@ -94,6 +94,29 @@
- 	};
- };
- 
-+&iomuxc {
-+        pinctrl_i2c1_gpio: i2c1gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_CSI0_DAT8__GPIO5_IO26	0x1b0b0
-+			MX6QDL_PAD_CSI0_DAT9__GPIO5_IO27	0x1b0b0
-+		>;
-+	};
-+
-+        pinctrl_i2c2_gpio: i2c2gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_KEY_COL3__GPIO4_IO12	0x1b0b0
-+			MX6QDL_PAD_KEY_ROW3__GPIO4_IO13	0x1b0b0
-+		>;
-+	};
-+
-+        pinctrl_i2c3_gpio: i2c3gpiogrp {
-+		fsl,pins = <
-+			MX6QDL_PAD_GPIO_3__GPIO1_IO03	0x1b0b0
-+			MX6QDL_PAD_GPIO_6__GPIO1_IO06	0x1b0b0
-+		>;
-+	};
-+};
-+
- &ecspi5 {
- 	cs-gpios = <&gpio1 17 GPIO_ACTIVE_HIGH>;
- 	pinctrl-names = "default";
-@@ -111,6 +134,11 @@
- };
- 
- &i2c1 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-1 = <&pinctrl_i2c1_gpio>;
-+	sda-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;
-+
- 	pca9547: mux@70 {
- 		compatible = "nxp,pca9547";
- 		reg = <0x70>;
-@@ -261,6 +289,20 @@
- 	};
- };
- 
-+&i2c2 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-1 = <&pinctrl_i2c2_gpio>;
-+	sda-gpios = <&gpio4 13 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio4 12 GPIO_ACTIVE_HIGH>;
-+};
-+
-+&i2c3 {
-+	pinctrl-names = "default", "gpio";
-+	pinctrl-1 = <&pinctrl_i2c3_gpio>;
-+	sda-gpios = <&gpio1 06 GPIO_ACTIVE_HIGH>;
-+	scl-gpios = <&gpio1 03 GPIO_ACTIVE_HIGH>;
-+};
-+
- &usdhc4 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_usdhc4>;
+>> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
+>>
+>> ---
+>
+> [...]
+>
+>> +	leds {
+>> +		compatible = "gpio-leds";
+>> +		pinctrl-names = "default";
+>> +
+>> +		module_led {
+>
+> phandles use underscores, node names are supposed to use dashes "-"
+>
+>> +			label = "module_led";
+>> +			gpios = <&gpio2 RK_PD1 GPIO_ACTIVE_HIGH>;
+>> +			linux,default-trigger = "heartbeat";
+>> +			panic-indicator;
+>> +		};
+>> +
+>> +		sd_card_led {
+>> +			label = "sd_card_led";
+>> +			gpios = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
+>> +			linux,default-trigger = "mmc0";
+>> +		};
+>> +	};
+>> +
+>> +	cluster1_opp: opp-table1 {
+>> +		compatible = "operating-points-v2";
+>> +		opp-shared;
+>> +
+>> +		opp00 {
+>> +			opp-hz = /bits/ 64 <408000000>;
+>> +			opp-microvolt = <800000>;
+>> +			clock-latency-ns = <40000>;
+>> +		};
+>> +		opp01 {
+>> +			opp-hz = /bits/ 64 <600000000>;
+>> +			opp-microvolt = <800000>;
+>> +		};
+>> +		opp02 {
+>> +			opp-hz = /bits/ 64 <816000000>;
+>> +			opp-microvolt = <830000>;
+>
+> this is 5mV higher than the "official" OPPs used by Rockchip, so
+> I'd like to know its background :-) . Especially as I really would like
+> to keep the number of per-board OPPs minimal.
+>
+> So does this make the board run more stable or something else?
+> And might this be applicable for all "standard" rk3399 boards?
+> Especially as other OPPs in your list use the regular voltages.
+>
+>
+>> +			opp-suspend;
+>> +		};
+>> +		opp03 {
+>> +			opp-hz = /bits/ 64 <1008000000>;
+>> +			opp-microvolt = <880000>;
+>
+> same as above
+>
+>> +		};
+>> +		opp04 {
+>> +			opp-hz = /bits/ 64 <1200000000>;
+>> +			opp-microvolt = <950000>;
+>> +		};
+>> +		opp05 {
+>> +			opp-hz = /bits/ 64 <1416000000>;
+>> +			opp-microvolt = <1030000>;
+>
+> same as above
+>
+>> +		};
+>> +		opp06 {
+>> +			opp-hz = /bits/ 64 <1608000000>;
+>> +			opp-microvolt = <1100000>;
+>> +		};
+>> +		opp07 {
+>> +			opp-hz = /bits/ 64 <1800000000>;
+>> +			opp-microvolt = <1200000>;
+>> +		};
+>> +		opp08 {
+>> +			opp-hz = /bits/ 64 <1992000000>;
+>> +			opp-microvolt = <1230000>;
+>> +			turbo-mode;
+>
+> Is this part of the soc-spec or more like wishful thinking? :-)
+> Again with the question in mind if this applies to all rk3399.
+>
+>
+>> +		};
+>> +	};
+>> +
+>> +	clkin_gmac: external-gmac-clock {
+>> +		compatible = "fixed-clock";
+>> +		clock-frequency = <125000000>;
+>> +		clock-output-names = "clkin_gmac";
+>> +		#clock-cells = <0>;
+>> +	};
+>> +
+>> +	vcc3v3_sys: vcc3v3-sys {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc3v3_sys";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-min-microvolt = <3300000>;
+>> +		regulator-max-microvolt = <3300000>;
+>> +	};
+>> +
+>> +	vcc5v0_otg: vcc5v0-otg-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		enable-active-high;
+>> +		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&otg_vbus_drv>;
+>
+> gpio pinctrl names should generally follow the pin names
+> in schematics. For example on the rk3399-firefly it also
+> had a pinctrl named host_vbus_drv while the pin in the
+> schematics was named vcc5v0_host_en.
+>
+> Following the schematic names makes it easier in the
+> long run to find and fix things as they occur.
+>
+> This of course applies to all gpio-pinctrls in this dts.
+>
+>
+>> +		regulator-name = "vcc5v0_otg";
+>> +		regulator-always-on;
+>> +	};
+>> +
+>> +	vcc5v0_host: vcc5v0-host-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		enable-active-high;
+>> +		gpio = <&gpio4 RK_PA3 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&vcc5v0_host_en>;
+>> +		regulator-name = "vcc5v0_host";
+>> +		vin-supply = <&vcc5v0_sys>;
+>> +	};
+>> +
+>> +	vcc5v0_sys: vcc5v0-sys {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc5v0_sys";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		regulator-min-microvolt = <5000000>;
+>> +		regulator-max-microvolt = <5000000>;
+>> +	};
+>> +
+>> +	vcc_phy: vcc-phy-regulator {
+>> +		compatible = "regulator-fixed";
+>> +		regulator-name = "vcc_phy";
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +	};
+>
+> This looks suspiciously copy-pasted from a vendor devicetree.
+> The firefly used a similar "nonsense"-regulator which I fixed
+> together with other regulators in
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/mmind/linux-rockchip.git/commit/?id=12335ebaac8639a2745245e5d179f44f3c70fed1
+>
+> Similar to other regulators above, which also follow naming I fixed
+> on the firefly. Regulators should generally follow the schematics
+> in their naming and also hierarchy.
+>
+> (debugsfs/regulator/regulator_summary shows a nice graph of them)
+>
+> This of course applies to all defined regulators.
+>
+> If your regulator setup actually follows your own schematics then
+> nevermind this comment ;-) .
+>
+>
+>> +
+>> +	vdd_log: vdd-log {
+>> +		compatible = "pwm-regulator";
+>> +		pwms = <&pwm2 0 25000 0>;
+>> +		regulator-name = "vdd_log";
+>> +		regulator-min-microvolt = <800000>;
+>> +		regulator-max-microvolt = <1400000>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +		status = "okay";
+>> +	};
+>> +};
+>
+>> +&i2c0 {
+>> +	status = "okay";
+>> +	i2c-scl-rising-time-ns = <168>;
+>> +	i2c-scl-falling-time-ns = <4>;
+>> +	clock-frequency = <400000>;
+>> +
+>> +	vdd_gpu: fan535555@60 {
+>
+> vdd_gpu: regulator@60 {
+>
+> node names should be generic (aka device category)
+>
+>> +		compatible = "fcs,fan53555";
+>> +		reg = <0x60>;
+>> +		vsel-gpios = <&gpio1 RK_PB6 GPIO_ACTIVE_HIGH>;
+>
+> not part of the binding right now. While it may be nice to teach
+> the fan53555 to handle the vsel gpio if it is controllable [similar to
+> how the rk808 can do this], this hasn't been implemented yet.
+>
+> Also applies to vdd_cpu_b below.
+>
+>
+>> +		vin-supply = <&vcc5v0_sys>;
+>> +		regulator-compatible = "fan53555-reg";
+>
+> deprecated property and not really needed.
+>
+>
+>> +		regulator-name = "vdd_gpu";
+>> +		regulator-min-microvolt = <600000>;
+>> +		regulator-max-microvolt = <1230000>;
+>> +		regulator-ramp-delay = <1000>;
+>> +		fcs,suspend-voltage-selector = <1>;
+>> +		regulator-always-on;
+>> +		regulator-boot-on;
+>> +};
+>
+>
+> [...]
+>
+>> +&pcie0 {
+>> +	ep-gpios = <&gpio4 RK_PC6 GPIO_ACTIVE_LOW>;
+>> +	num-lanes = <4>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&pcie_clkreqn>;
+>> +	status = "okay";
+>
+> vpcie{3v3, 1v8, 0v9}-supply properties?
+
+These supply are optional which depend on the HW design.
+But pcie_clkreqn doesn't really work. I think we should
+use pcie_clkreqn_cpm instead and fix this for rk3399-evb.dts
+to prevent the further copy-n-paste.
+
+
+>
+>
+>> +};
+>> +
+>
+> [...]
+>
+>> +&sdmmc {
+>> +	clock-frequency = <150000000>;
+
+we deprecates this now, so please use max-frequency instead.
+
+>> +	bus-width = <4>;
+>> +	cap-mmc-highspeed;
+>> +	cap-sd-highspeed;
+>> +	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
+
+Really this board use gpio-based card detect pin?
+
+>> +	wp-gpios = <&gpio0 RK_PB5 GPIO_ACTIVE_LOW>;
+>> +	num-slots = <1>;
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_gpio &sdmmc_bus4>;
+
+I guess you don't need sdmmc_gpio and let mmc core request
+this gpio as irq pin from parsing cd-gpios?
+
+>> +	status = "okay";
+>> +};
+
+And I would be more happy here to see the present of vqmmc and vmmc
+supply if possible.
+
+>> +
+>> +
+>
+> double empty line
+>
+>
+>> +&spi1 {
+>> +	status = "okay";
+>> +
+>> +	flash: norflash@0 {
+>
+> norflash: flash@0 maybe?
+>
+> You reference the phandle and at the position it gets referenced
+> the specific name might be more helpful.
+>
+>
+>> +		compatible = "jedec,spi-nor";
+>> +		reg = <0>;
+>> +		spi-max-frequency = <50000000>;
+>> +	};
+>> +};
+>
+>
+>
+>> +&pinctrl {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&puma_pin_hog>;
+>> +
+>> +	hog {
+>> +			puma_pin_hog: puma_pin_hog {
+>
+> puma_pin_hog: puma-pin-hog
+>
+> Same for more defined pinctrl nodes below that.
+>
+>
+> Heiko
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>
+
+
 -- 
-1.8.3.1
+Best Regards
+Shawn Lin
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
