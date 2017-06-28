@@ -1,7 +1,7 @@
 From: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
-Subject: [PATCH v2 01/10] Documentation: Add device tree binding for Goldfish RTC driver
-Date: Wed, 28 Jun 2017 17:46:54 +0200
-Message-ID: <1498664922-28493-2-git-send-email-aleksandar.markovic@rt-rk.com>
+Subject: [PATCH v2 03/10] Documentation: Add device tree binding for Goldfish PIC driver
+Date: Wed, 28 Jun 2017 17:46:56 +0200
+Message-ID: <1498664922-28493-4-git-send-email-aleksandar.markovic@rt-rk.com>
 References: <1498664922-28493-1-git-send-email-aleksandar.markovic@rt-rk.com>
 Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1498664922-28493-1-git-send-email-aleksandar.markovic@rt-rk.com>
@@ -15,61 +15,62 @@ List-owner: <mailto:ralf@linux-mips.org>
 List-post: <mailto:linux-mips@linux-mips.org>
 List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: linux-mips@linux-mips.org
-Cc: Aleksandar Markovic <aleksandar.markovic@imgtec.com>, Miodrag Dinic <miodrag.dinic@imgtec.com>, Goran Ferenc <goran.ferenc@imgtec.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@imgtec.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hogan <james.hogan@imgtec.com>, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Petar Jovanovic <petar.jovanovic@imgtec.com>, Raghu Gandham <raghu.gandham@imgtec.com>, Rob
+Cc: Aleksandar Markovic <aleksandar.markovic@imgtec.com>, Miodrag Dinic <miodrag.dinic@imgtec.com>, Goran Ferenc <goran.ferenc@imgtec.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@imgtec.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hogan <james.hogan@imgtec.com>, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Petar Jovanovic <petar.jovanovic@imgtec.com>, Raghu Gandham <raghu.gandham@imgtec.com>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutron>
 List-Id: devicetree@vger.kernel.org
 
 From: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
 
-Add documentation for DT binding of Goldfish RTC driver. The compatible
-string used by OS for binding the driver is "google,goldfish-rtc".
+Add documentation for DT binding of Goldfish PIC driver. The compatible
+string used by OS for binding the driver is "google,goldfish-pic".
 
 Signed-off-by: Miodrag Dinic <miodrag.dinic@imgtec.com>
 Signed-off-by: Goran Ferenc <goran.ferenc@imgtec.com>
 Signed-off-by: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
 ---
- .../devicetree/bindings/rtc/google,goldfish-rtc.txt     | 17 +++++++++++++++++
- MAINTAINERS                                             |  5 +++++
- 2 files changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+ .../interrupt-controller/google,goldfish-pic.txt       | 18 ++++++++++++++++++
+ MAINTAINERS                                            |  5 +++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
 
-diff --git a/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
 new file mode 100644
-index 0000000..634312d
+index 0000000..f198762
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
-@@ -0,0 +1,17 @@
-+Android Goldfish RTC
++++ b/Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
+@@ -0,0 +1,18 @@
++Android Goldfish PIC
 +
-+Android Goldfish RTC device used by Android emulator.
++Android Goldfish programmable interrupt device used by Android
++emulator.
 +
 +Required properties:
 +
-+- compatible : should contain "google,goldfish-rtc"
++- compatible : should contain "google,goldfish-pic"
 +- reg        : <registers mapping>
 +- interrupts : <interrupt mapping>
 +
 +Example:
 +
-+	goldfish_timer@9020000 {
-+		compatible = "google,goldfish-rtc";
-+		reg = <0x9020000 0x1000>;
-+		interrupts = <0x3>;
-+	};
++        goldfish_pic@9020000 {
++                compatible = "google,goldfish-pic";
++                reg = <0x9020000 0x1000>;
++                interrupts = <0x3>;
++        };
 diff --git a/MAINTAINERS b/MAINTAINERS
-index 09b5ab6..519cdef 100644
+index 26a1267..85da9f0 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
 @@ -841,6 +841,11 @@ S:	Supported
  F:	drivers/android/
  F:	drivers/staging/android/
  
-+ANDROID GOLDFISH RTC DRIVER
++ANDROID GOLDFISH PIC DRIVER
 +M:	Miodrag Dinic <miodrag.dinic@imgtec.com>
 +S:	Supported
-+F:	Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
++F:	Documentation/devicetree/bindings/interrupt-controller/google,goldfish-pic.txt
 +
- ANDROID ION DRIVER
- M:	Laura Abbott <labbott@redhat.com>
- M:	Sumit Semwal <sumit.semwal@linaro.org>
+ ANDROID GOLDFISH RTC DRIVER
+ M:	Miodrag Dinic <miodrag.dinic@imgtec.com>
+ S:	Supported
 -- 
 2.7.4
