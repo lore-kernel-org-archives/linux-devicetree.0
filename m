@@ -1,59 +1,75 @@
-From: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: amlogic: add unstable statement
-Date: Wed, 28 Jun 2017 17:39:34 +0200
-Message-ID: <1498664374.2337.7.camel@baylibre.com>
-References: <20170628145343.25443-1-khilman@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170628145343.25443-1-khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-amlogic-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Aleksandar Markovic <aleksandar.markovic@rt-rk.com>
+Subject: [PATCH v2 01/10] Documentation: Add device tree binding for Goldfish RTC driver
+Date: Wed, 28 Jun 2017 17:46:54 +0200
+Message-ID: <1498664922-28493-2-git-send-email-aleksandar.markovic@rt-rk.com>
+References: <1498664922-28493-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1498664922-28493-1-git-send-email-aleksandar.markovic@rt-rk.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-mips@linux-mips.org
+Cc: Aleksandar Markovic <aleksandar.markovic@imgtec.com>, Miodrag Dinic <miodrag.dinic@imgtec.com>, Goran Ferenc <goran.ferenc@imgtec.com>, Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Douglas Leung <douglas.leung@imgtec.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Hogan <james.hogan@imgtec.com>, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Paul Burton <paul.burton@imgtec.com>, Petar Jovanovic <petar.jovanovic@imgtec.com>, Raghu Gandham <raghu.gandham@imgtec.com>, Rob
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-06-28 at 07:53 -0700, Kevin Hilman wrote:
-> Due to the lack of documentation on this SoC family, discovery of new
-> features, and correcting of previous misunderstandings is expected, so
-> it's unrealistic to expect any form of stable bindings for this SoC
-> family.  Make that clear inthe binding documentation.
-> 
+From: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
 
-Acked-by: Jerome Brunet <jbrunet-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Add documentation for DT binding of Goldfish RTC driver. The compatible
+string used by OS for binding the driver is "google,goldfish-rtc".
 
-> Signed-off-by: Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt
-> b/Documentation/devicetree/bindings/arm/amlogic.txt
-> index bfd5b558477d..9be902b4656d 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.txt
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-> @@ -1,6 +1,18 @@
->  Amlogic MesonX device tree bindings
->  -------------------------------------------
->  
-> +Work in progress statement:
-> +
-> +Device tree files and bindings applying to Amlogic SoCs and boards are
-> +considered "unstable". Any Amlogic device tree binding may change at
-> +any time. Be sure to use a device tree binary and a kernel image
-> +generated from the same source tree.
-> +
-> +Please refer to Documentation/devicetree/bindings/ABI.txt for a definition of
-> a
-> +stable binding/ABI.
-> +
-> +---------------------------------------------------------------
-> +
->  Boards with the Amlogic Meson6 SoC shall have the following properties:
->    Required root node property:
->      compatible: "amlogic,meson6"
+Signed-off-by: Miodrag Dinic <miodrag.dinic@imgtec.com>
+Signed-off-by: Goran Ferenc <goran.ferenc@imgtec.com>
+Signed-off-by: Aleksandar Markovic <aleksandar.markovic@imgtec.com>
+---
+ .../devicetree/bindings/rtc/google,goldfish-rtc.txt     | 17 +++++++++++++++++
+ MAINTAINERS                                             |  5 +++++
+ 2 files changed, 22 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+new file mode 100644
+index 0000000..634312d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
+@@ -0,0 +1,17 @@
++Android Goldfish RTC
++
++Android Goldfish RTC device used by Android emulator.
++
++Required properties:
++
++- compatible : should contain "google,goldfish-rtc"
++- reg        : <registers mapping>
++- interrupts : <interrupt mapping>
++
++Example:
++
++	goldfish_timer@9020000 {
++		compatible = "google,goldfish-rtc";
++		reg = <0x9020000 0x1000>;
++		interrupts = <0x3>;
++	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 09b5ab6..519cdef 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -841,6 +841,11 @@ S:	Supported
+ F:	drivers/android/
+ F:	drivers/staging/android/
+ 
++ANDROID GOLDFISH RTC DRIVER
++M:	Miodrag Dinic <miodrag.dinic@imgtec.com>
++S:	Supported
++F:	Documentation/devicetree/bindings/rtc/google,goldfish-rtc.txt
++
+ ANDROID ION DRIVER
+ M:	Laura Abbott <labbott@redhat.com>
+ M:	Sumit Semwal <sumit.semwal@linaro.org>
+-- 
+2.7.4
