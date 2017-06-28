@@ -1,47 +1,150 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] drivers/watchdog: ASPEED reference dev tree
- properties for config
-Date: Wed, 28 Jun 2017 10:52:16 -0700
-Message-ID: <20170628175216.GA13730@roeck-us.net>
-References: <20170627211734.60477-1-cbostic@linux.vnet.ibm.com>
- <20170627211734.60477-3-cbostic@linux.vnet.ibm.com>
- <606a2e11-2d43-5204-0bb6-9c4415ee03df@roeck-us.net>
- <de0dc054-0813-fab1-d7ac-2f1d7ba61fd8@linux.vnet.ibm.com>
- <20170628145452.GA30968@roeck-us.net>
- <38e57720-9728-9377-2a16-adc8ce430ca0@linux.vnet.ibm.com>
- <20170628150846.GE30968@roeck-us.net>
- <b6c53add-c165-3678-dfed-cb6f1798accc@linux.vnet.ibm.com>
- <20170628160649.GB8915@roeck-us.net>
- <a3f76a4e-6c44-9844-9840-f6b5b05255ed@linux.vnet.ibm.com>
+Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
+Date: Wed, 28 Jun 2017 10:55:37 -0700
+Message-ID: <20170628175537.GB13730@roeck-us.net>
+References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
+ <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
+ <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
+ <97eb089f-e0e2-1146-6e17-8f9f790433d8@topic.nl>
+ <20170628150130.GC30968@roeck-us.net>
+ <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch>
+ <20170628160048.GA8915@roeck-us.net>
+ <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch>
+ <abe96add-88fc-af6c-a5ed-330c7ae422b9@topic.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <a3f76a4e-6c44-9844-9840-f6b5b05255ed-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <abe96add-88fc-af6c-a5ed-330c7ae422b9-Oq418RWZeHk@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
+Cc: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, jdelvare-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 28, 2017 at 11:09:15AM -0500, Christopher Bostic wrote:
+On Wed, Jun 28, 2017 at 07:33:33PM +0200, Mike Looijmans wrote:
+> ﻿On 28-06-17 19:02, Tom Levens wrote:
+> >
+> >On Wed, 28 Jun 2017, Guenter Roeck wrote:
+> >
+> >>On Wed, Jun 28, 2017 at 05:29:38PM +0200, Tom Levens wrote:
+> >>>
+> >>[ ... ]
+> >>
+> >>>>
+> >>>>>Whatever happened to this patch though? It didn't make it to mainline,
+> >>>>>otherwise I'd have found it sooner...
+> >>>>>
+> >>>>I'll have to look it up, but I guess I didn't get an updated version.
+> >>>
+> >>>As far as I remember I had a working V3 of this patch, but it is
+> >>>entirely
+> >>>possible that it was never submitted as I have been busy with other
+> >>>projects
+> >>>recently. I'll dig it out and check that it is complete.
+> >>>
+> >>FWIW, I don't see it at
+> >>https://patchwork.kernel.org/project/linux-hwmon/list/?submitter=171225&state=*
+> >>
+> >>
+> >>Maybe you were waiting for a reply from Rob. Either case, it might make
+> >>sense to only provide valid modes, ie to abstract the mode bits from the
+> >>hardware, such as
+> >>
+> >>0 - internal temp only
+> >>1 - Tr1
+> >>2 - V1
+> >>3 - V1-V2
+> >>4 - Tr2
+> >>5 - V3
+> >>6 - V3-V4
+> >>7 to 14 - per bit 0..2
+> >>
+> >>Guenter
+> >>
+> >
+> >You are right, there was still an open question about how best to handle
+> >the mode selection in DT.
+> >
+> >In the latest version of my patch I have it implemented as an array for
+> >setting the two values, for example:
+> >
+> >     lltc,meas-mode = <7 3>;
+> >
+> >This sets bits [2..0] = 7 and [4..3] = 3. Of course these could be split
+> >into two DT properties, but I was unsure what to name them as both fields
+> >are called "mode" in the datasheet and "mode-43"/"mode-20" (or similar) is
+> >ugly.
+> >
+> >With regards to your proposal, it is not clear to me whether the modes
+> >which have the same result are exactly equivalent. Does disabling a
+> >measurement with the mode[4..3] bits really leaves the part in a safe
+> >state for all possible HW connections? With this doubt in my head, I would
+> >prefer to keep the option available to the user to select any specific
+> >mode. But I am open to suggestions.
 > 
-> >>
-> >>Why would there even be a need configure for no system reset?  The external
-> >>mode 'wdt ext: External signal enable after timeout' can be sent off chip
-> >>even if system reset is disabled.  The watchdog is doing something in this
-> >>case and would require wdt instantiation.
-> >>
-> >Wouldn't that be "aspeed,external-signal" ?
-> Yes that optional parameter would need to be specified in that situation, as
-> well as 'aspeed,no-system-reset'.
+> Well, the input restrictions always apply, so disabling V3 measurement
+> doesn't imply that you can apply 20V to that input safely now.
+> 
+> I'd suggest to set unused input to plain voltage measurement. That is
+> "passive" and safe for external components.
+> 
+> So I'd suggest just setting the mode as per device datasheet, I can see no
+> real advantage in abstracting it away and forcing users to read yet another
+> document to get it right, e.g.:
+> 
+> lltc,mode = <6>;
+> 
+> As for the input disabling, since I doubt anyone would use it (why purchase
+> a 4-channel device and use only 2), just add two booleans, e.g.
+> "disable-inputs-34" and "disable-inputs-12" which set the command bits
+> appropriately, and change the mode such that the disabled inputs are voltage
+> readout only.
+> 
+> A case could even be made for changing mode at runtime. This allows using it
+> to measure both current and voltage on two inputs, by reading V1, and V3,
+> and then switch mode to obtain (accurate) V1-V2 and V4-V3.
+> 
+The hwmon subsystem doesn't really currently support that, and you'll likely
+confuse userspace as well.
+
+> That might be a viable way to handle not setting the mode at all. If the
+> mode can be selected via sysfs, the driver can keep the device in a "safe"
+> mode until the mode has been selected.
 > 
 
-Ok, makes sense (after looking into the datasheet). The missing detail
-is that there is a separate configuration bit for "Reset system after
-timeout", which is set in addition to reset_{sys,soc,arm}.
+You'll have to present me with a really good use case for me to agree with that
+approach.
 
-Thanks,
 Guenter
+
+> 
+> >Mike, if you would like to test it, the latest version of my code is here:
+> >
+> >https://github.com/levens/ltc2990/blob/dev/drivers/hwmon/ltc2990.c
+> 
+> Sure, I even have a board with 2 of these devices now :)
+> 
+> -- 
+> Mike Looijmans
+> 
+> 
+> Kind regards,
+> 
+> Mike Looijmans
+> System Expert
+> 
+> TOPIC Products
+> Materiaalweg 4, NL-5681 RJ Best
+> Postbus 440, NL-5680 AK Best
+> Telefoon: +31 (0) 499 33 69 79
+> E-mail: mike.looijmans-yhtFebqMsb9it5bFGTN0CAC/G2K4zDHf@public.gmane.org
+> Website: www.topicproducts.com
+> 
+> Please consider the environment before printing this e-mail
+> 
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
