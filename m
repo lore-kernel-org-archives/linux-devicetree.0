@@ -1,65 +1,74 @@
-From: Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: document /sys/firmware/fdt
-Date: Wed, 28 Jun 2017 22:49:18 +0100
-Message-ID: <CACxGe6tKZRoZQEbVNJqrSqC2VtPsNJfCyHeY0KSgJbe7eQqmYg@mail.gmail.com>
-References: <1497414007-8380-1-git-send-email-frowand.list@gmail.com>
- <20170622152124.hc7pgqlirr6h7t7k@rob-hp-laptop> <20170622152329.ear3hkossznzk3o5@rob-hp-laptop>
- <595423C7.7040400@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Subject: [PATCH v2] of: document /sys/firmware/fdt
+Date: Wed, 28 Jun 2017 14:53:57 -0700
+Message-ID: <1498686837-5378-1-git-send-email-frowand.list@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <595423C7.7040400-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-I'm slowly getting back into things and plan to actively participate.
-Please use my ARM address:
+From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
 
-grant.likely-5wv7dgnIgG8@public.gmane.org
+Add ABI documentation for /sys/firmware/fdt
 
-g.
+Change obsolete contact for /sys/firmware/devicetree/* to mail list
 
-On Wed, Jun 28, 2017 at 10:46 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 06/22/17 08:23, Rob Herring wrote:
->> Meant to add Grant.
->>
->> On Thu, Jun 22, 2017 at 10:21:24AM -0500, Rob Herring wrote:
->>> On Tue, Jun 13, 2017 at 09:20:07PM -0700, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->>>> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>>>
->>>> Add ABI documentation for /sys/firmware/fdt
->>>>
->>>> Update contact for /sys/firmware/devicetree/* to include mail list
->>>>
->>>> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->>>> ---
->>>>  Documentation/ABI/testing/sysfs-firmware-ofw | 27 ++++++++++++++++++++++++++-
->>>>  1 file changed, 26 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation/ABI/testing/sysfs-firmware-ofw
->>>> index f562b188e71d..8e700db6c295 100644
->>>> --- a/Documentation/ABI/testing/sysfs-firmware-ofw
->>>> +++ b/Documentation/ABI/testing/sysfs-firmware-ofw
->>>> @@ -1,6 +1,6 @@
->>>>  What:              /sys/firmware/devicetree/*
->>>>  Date:              November 2013
->>>> -Contact:   Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>> +Contact:   Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>>
->>> Grant's email is not valid either. I would just drop it unless he wants
->>> his secretlab.ca email.
->>>
->>> Rob
->>
->
-> No response from Grant, so I'll drop his email and add the mail list.
->
-> Also, for the newly added section I'll change the contact from being both
-> me and the mail list to just be the mail list.
->
-> -Frank
+Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+---
+
+changes from v1:
+  - Remove obsolete email address as contact for /sys/firmware/devicetree/*
+  - For newly documented /sys/firmware/fdt do not include any individual
+    email for Contact (only provide email list)
+
+ Documentation/ABI/testing/sysfs-firmware-ofw | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation/ABI/testing/sysfs-firmware-ofw
+index f562b188e71d..30a6b3621828 100644
+--- a/Documentation/ABI/testing/sysfs-firmware-ofw
++++ b/Documentation/ABI/testing/sysfs-firmware-ofw
+@@ -1,6 +1,6 @@
+ What:		/sys/firmware/devicetree/*
+ Date:		November 2013
+-Contact:	Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
++Contact:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ Description:
+ 		When using OpenFirmware or a Flattened Device Tree to enumerate
+ 		hardware, the device tree structure will be exposed in this
+@@ -26,3 +26,28 @@ Description:
+ 		name plus address). Properties are represented as files
+ 		in the directory. The contents of each file is the exact
+ 		binary data from the device tree.
++
++What:		/sys/firmware/fdt
++Date:		February 2015
++KernelVersion:	3.19
++Contact:	devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
++Description:
++		Exports the FDT blob that was passed to the kernel by
++		the bootloader. This allows userland applications such
++		as kexec to access the raw binary. This blob is also
++		useful when debugging since it contains any changes
++		made to the blob by the bootloader.
++
++		The fact that this node does not reside under
++		/sys/firmware/device-tree is deliberate: FDT is also used
++		on arm64 UEFI/ACPI systems to communicate just the UEFI
++		and ACPI entry points, but the FDT is never unflattened
++		and used to configure the system.
++
++		A CRC32 checksum is calculated over the entire FDT
++		blob, and verified at late_initcall time. The sysfs
++		entry is instantiated only if the checksum is valid,
++		i.e., if the FDT blob has not been modified in the mean
++		time. Otherwise, a warning is printed.
++Users:		kexec, debugging
++
+-- 
+Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
