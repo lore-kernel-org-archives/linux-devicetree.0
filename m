@@ -1,151 +1,94 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Wed, 28 Jun 2017 10:55:37 -0700
-Message-ID: <20170628175537.GB13730@roeck-us.net>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <97eb089f-e0e2-1146-6e17-8f9f790433d8@topic.nl>
- <20170628150130.GC30968@roeck-us.net>
- <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch>
- <20170628160048.GA8915@roeck-us.net>
- <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch>
- <abe96add-88fc-af6c-a5ed-330c7ae422b9@topic.nl>
+From: Priit Laes <plaes@plaes.org>
+Subject: Re: [PATCH v4 1/6] clk: sunxi-ng: div: Add support for fixed
+ post-divider
+Date: Wed, 28 Jun 2017 17:59:49 +0000
+Message-ID: <20170628175949.GA3706@plaes.org>
+References: <cover.24b2b13ec5a68552e186ba1637f1328363c3886e.1498422562.git-series.plaes@plaes.org>
+ <bc043a64775ec8c9cfcfe6d638e348d38e34eba3.1498422562.git-series.plaes@plaes.org>
+ <20170627094607.2hkgzkycclboemvu@flea.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <abe96add-88fc-af6c-a5ed-330c7ae422b9-Oq418RWZeHk@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>
-Cc: Tom Levens <tom.levens-vJEk5272eHo@public.gmane.org>, jdelvare-IBi9RG/b67k@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-hwmon-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170627094607.2hkgzkycclboemvu@flea.lan>
+Sender: linux-clk-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jonathan Liu <net147@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 28, 2017 at 07:33:33PM +0200, Mike Looijmans wrote:
-> ﻿On 28-06-17 19:02, Tom Levens wrote:
-> >
-> >On Wed, 28 Jun 2017, Guenter Roeck wrote:
-> >
-> >>On Wed, Jun 28, 2017 at 05:29:38PM +0200, Tom Levens wrote:
-> >>>
-> >>[ ... ]
-> >>
-> >>>>
-> >>>>>Whatever happened to this patch though? It didn't make it to mainline,
-> >>>>>otherwise I'd have found it sooner...
-> >>>>>
-> >>>>I'll have to look it up, but I guess I didn't get an updated version.
-> >>>
-> >>>As far as I remember I had a working V3 of this patch, but it is
-> >>>entirely
-> >>>possible that it was never submitted as I have been busy with other
-> >>>projects
-> >>>recently. I'll dig it out and check that it is complete.
-> >>>
-> >>FWIW, I don't see it at
-> >>https://patchwork.kernel.org/project/linux-hwmon/list/?submitter=171225&state=*
-> >>
-> >>
-> >>Maybe you were waiting for a reply from Rob. Either case, it might make
-> >>sense to only provide valid modes, ie to abstract the mode bits from the
-> >>hardware, such as
-> >>
-> >>0 - internal temp only
-> >>1 - Tr1
-> >>2 - V1
-> >>3 - V1-V2
-> >>4 - Tr2
-> >>5 - V3
-> >>6 - V3-V4
-> >>7 to 14 - per bit 0..2
-> >>
-> >>Guenter
-> >>
-> >
-> >You are right, there was still an open question about how best to handle
-> >the mode selection in DT.
-> >
-> >In the latest version of my patch I have it implemented as an array for
-> >setting the two values, for example:
-> >
-> >     lltc,meas-mode = <7 3>;
-> >
-> >This sets bits [2..0] = 7 and [4..3] = 3. Of course these could be split
-> >into two DT properties, but I was unsure what to name them as both fields
-> >are called "mode" in the datasheet and "mode-43"/"mode-20" (or similar) is
-> >ugly.
-> >
-> >With regards to your proposal, it is not clear to me whether the modes
-> >which have the same result are exactly equivalent. Does disabling a
-> >measurement with the mode[4..3] bits really leaves the part in a safe
-> >state for all possible HW connections? With this doubt in my head, I would
-> >prefer to keep the option available to the user to select any specific
-> >mode. But I am open to suggestions.
+On Tue, Jun 27, 2017 at 11:46:07AM +0200, Maxime Ripard wrote:
+> Hi!
 > 
-> Well, the input restrictions always apply, so disabling V3 measurement
-> doesn't imply that you can apply 20V to that input safely now.
+> On Sun, Jun 25, 2017 at 11:45:42PM +0300, Priit Laes wrote:
+> > SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
+> > 6 is fixed post-divider.
+> > 
+> > Signed-off-by: Priit Laes <plaes@plaes.org>
+> > ---
+> >  drivers/clk/sunxi-ng/ccu_div.c | 12 ++++++++++--
+> >  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
+> >  2 files changed, 12 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
+> > index c0e5c10..de30e15 100644
+> > --- a/drivers/clk/sunxi-ng/ccu_div.c
+> > +++ b/drivers/clk/sunxi-ng/ccu_div.c
+> > @@ -62,8 +62,13 @@ static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
+> >  	parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
+> >  						  parent_rate);
+> >  
+> > -	return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
+> > -				   cd->div.flags);
+> > +	val = divider_recalc_rate(hw, parent_rate, val, cd->div.table,
+> > +				  cd->div.flags);
+> > +
+> > +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> > +		val /= cd->fixed_post_div;
+> > +
+> > +	return val;
+> >  }
+> >  
+> >  static int ccu_div_determine_rate(struct clk_hw *hw,
+> > @@ -89,6 +94,9 @@ static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
+> >  	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
+> >  			      cd->div.flags);
+> >  
+> > +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> > +		val *= cd->fixed_post_div;
+> > +
+> >  	spin_lock_irqsave(cd->common.lock, flags);
+> >  
+> >  	reg = readl(cd->common.base + cd->common.reg);
 > 
-> I'd suggest to set unused input to plain voltage measurement. That is
-> "passive" and safe for external components.
-> 
-> So I'd suggest just setting the mode as per device datasheet, I can see no
-> real advantage in abstracting it away and forcing users to read yet another
-> document to get it right, e.g.:
-> 
-> lltc,mode = <6>;
-> 
-> As for the input disabling, since I doubt anyone would use it (why purchase
-> a 4-channel device and use only 2), just add two booleans, e.g.
-> "disable-inputs-34" and "disable-inputs-12" which set the command bits
-> appropriately, and change the mode such that the disabled inputs are voltage
-> readout only.
-> 
-> A case could even be made for changing mode at runtime. This allows using it
-> to measure both current and voltage on two inputs, by reading V1, and V3,
-> and then switch mode to obtain (accurate) V1-V2 and V4-V3.
-> 
-The hwmon subsystem doesn't really currently support that, and you'll likely
-confuse userspace as well.
+> You also need to adjust the round rate call back to take into account
+> the post divider before calling divider_round_rate_parent, and after
+> since that function can modify the parent_rate.
 
-> That might be a viable way to handle not setting the mode at all. If the
-> mode can be selected via sysfs, the driver can keep the device in a "safe"
-> mode until the mode has been selected.
+Is there a way to trigger this function? I don't see it getting called.
+
+> > diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
+> > index 08d0744..f3a5028 100644
+> > --- a/drivers/clk/sunxi-ng/ccu_div.h
+> > +++ b/drivers/clk/sunxi-ng/ccu_div.h
+> > @@ -86,9 +86,10 @@ struct ccu_div_internal {
+> >  struct ccu_div {
+> >  	u32			enable;
+> >  
+> > -	struct ccu_div_internal		div;
+> > +	struct ccu_div_internal	div;
 > 
+> Spurious change?
 
-You'll have to present me with a really good use case for me to agree with that
-approach.
-
-Guenter
+Nope, it was not indented the same way as other variables.
+Should I send it as separate patch?
 
 > 
-> >Mike, if you would like to test it, the latest version of my code is here:
-> >
-> >https://github.com/levens/ltc2990/blob/dev/drivers/hwmon/ltc2990.c
-> 
-> Sure, I even have a board with 2 of these devices now :)
+> Thanks!
+> Maxime
 > 
 > -- 
-> Mike Looijmans
-> 
-> 
-> Kind regards,
-> 
-> Mike Looijmans
-> System Expert
-> 
-> TOPIC Products
-> Materiaalweg 4, NL-5681 RJ Best
-> Postbus 440, NL-5680 AK Best
-> Telefoon: +31 (0) 499 33 69 79
-> E-mail: mike.looijmans-yhtFebqMsb9it5bFGTN0CAC/G2K4zDHf@public.gmane.org
-> Website: www.topicproducts.com
-> 
-> Please consider the environment before printing this e-mail
-> 
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Maxime Ripard, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+
+
