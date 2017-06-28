@@ -1,433 +1,107 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv2 3/3] hwmon: da9052: add support for TSI channel
-Date: Wed, 28 Jun 2017 04:39:44 -0700
-Message-ID: <0ce61b7c-81e8-c0e0-75af-de183e89faf9@roeck-us.net>
-References: <20170627143859.21312-1-sebastian.reichel@collabora.co.uk>
- <20170627143859.21312-4-sebastian.reichel@collabora.co.uk>
+From: Hugues FRUCHET <hugues.fruchet@st.com>
+Subject: Re: [PATCH v1 1/6] DT bindings: add bindings for ov965x camera module
+Date: Wed, 28 Jun 2017 12:28:31 +0000
+Message-ID: <2d916065-fd81-6f52-5d32-a46331e0c5ed@st.com>
+References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
+ <1498143942-12682-2-git-send-email-hugues.fruchet@st.com>
+ <D5629236-95D8-45B6-9719-E8B9796FEC90@goldelico.com>
+ <64e3005d-31df-71f2-762b-2c1b1152fc2d@st.com>
+ <5cd25a47-f3be-8c40-3940-29f26a245076@kernel.org>
+ <39501C78-7B81-4803-94C1-25DFA06EA526@goldelico.com>
+ <e2a9df8b-00f8-ae36-f4f3-63dcc98dea50@kernel.org>
+ <CGME20170628091334epcas5p2071ae52aa3f9312b1099e37ffac20eb1@epcas5p2.samsung.com>
+ <6F68CD33-70E6-47C1-9E89-5E2AA776879F@goldelico.com>
+ <5bcc7ec0-4ae5-3703-3cee-ed644eef710a@samsung.com>
+ <9D51AC4C-6CB7-46A5-B363-2AD6DA6C497F@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170627143859.21312-4-sebastian.reichel@collabora.co.uk>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <9D51AC4C-6CB7-46A5-B363-2AD6DA6C497F@goldelico.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-ID: <29AEB76E89C20F42BE1AF53C84C02888@st.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Hans Verkuil <hverkuil@xs4all.nl>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, Yannick FERTRE <yannick.fertre@st.com>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2017 07:38 AM, Sebastian Reichel wrote:
-> TSI channel has a 4 channel mux connected to it and is normally
-> used for touchscreen support. The hardware may alternatively
-> use it as general purpose adc.
-> 
-> Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.co.uk>
-> ---
->   .../devicetree/bindings/mfd/da9052-i2c.txt         |   8 +
->   drivers/hwmon/da9052-hwmon.c                       | 252 ++++++++++++++++++++-
->   drivers/input/touchscreen/da9052_tsi.c             |   5 +
->   include/linux/mfd/da9052/da9052.h                  |   6 +
->   4 files changed, 267 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> index 9554292dc6cb..a4fcf6ee4d7b 100644
-> --- a/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> +++ b/Documentation/devicetree/bindings/mfd/da9052-i2c.txt
-> @@ -4,6 +4,14 @@ Required properties:
->   - compatible : Should be "dlg,da9052", "dlg,da9053-aa",
->   			 "dlg,da9053-ab", or "dlg,da9053-bb"
->   
-> +Optional properties:
-> +- diag,tsi-as-adc : Boolean, if set the X+, X-, Y+, Y- touchscreen
-> +                    input lines are used as general purpose analogue
-> +					input.
-> +- tsiref-supply: Phandle to the regulator, which provides the reference
-> +                 voltage for the TSIREF pin. Must be provided when the
-> +			     touchscreen pins are used for ADC purposes.
-> +
-
-The subject line does not include a notion that devicetree properties are added,
-meaning DT maintainers probably won;t have a look. It is better to split
-the DT changes into a separate patch to make sure they get the necessary attention.
-
->   Sub-nodes:
->   - regulators : Contain the regulator nodes. The DA9052/53 regulators are
->     bound using their names as listed below:
-> diff --git a/drivers/hwmon/da9052-hwmon.c b/drivers/hwmon/da9052-hwmon.c
-> index 708c91ac601f..85bfff9cf43b 100644
-> --- a/drivers/hwmon/da9052-hwmon.c
-> +++ b/drivers/hwmon/da9052-hwmon.c
-> @@ -20,13 +20,19 @@
->   #include <linux/module.h>
->   #include <linux/slab.h>
->   #include <linux/platform_device.h>
-> +#include <linux/property.h>
->   
->   #include <linux/mfd/da9052/da9052.h>
->   #include <linux/mfd/da9052/reg.h>
-> +#include <linux/regulator/consumer.h>
->   
->   struct da9052_hwmon {
-> -	struct da9052	*da9052;
-> -	struct mutex	hwmon_lock;
-> +	struct da9052		*da9052;
-> +	struct mutex		hwmon_lock;
-> +	bool			tsi_as_adc;
-> +	int			tsiref_mv;
-> +	struct regulator	*tsiref;
-> +	struct completion	tsidone;
->   };
->   
->   static const char * const input_names[] = {
-> @@ -37,6 +43,10 @@ static const char * const input_names[] = {
->   	[DA9052_ADC_IN4]	=	"ADC IN4",
->   	[DA9052_ADC_IN5]	=	"ADC IN5",
->   	[DA9052_ADC_IN6]	=	"ADC IN6",
-> +	[DA9052_ADC_TSI_XP]	=	"ADC TS X+",
-> +	[DA9052_ADC_TSI_YP]	=	"ADC TS Y+",
-> +	[DA9052_ADC_TSI_XN]	=	"ADC TS X-",
-> +	[DA9052_ADC_TSI_YN]	=	"ADC TS Y-",
->   	[DA9052_ADC_TJUNC]	=	"BATTERY JUNCTION TEMP",
->   	[DA9052_ADC_VBBAT]	=	"BACK-UP BATTERY VOLTAGE",
->   };
-> @@ -59,6 +69,11 @@ static inline int vbbat_reg_to_mv(int value)
->   	return DIV_ROUND_CLOSEST(value * 5000, 1023);
->   }
->   
-> +static inline int input_tsireg_to_mv(struct da9052_hwmon *hwmon, int value)
-> +{
-> +	return DIV_ROUND_CLOSEST(value * hwmon->tsiref_mv, 1023);
-> +}
-> +
->   static inline int da9052_enable_vddout_channel(struct da9052 *da9052)
->   {
->   	return da9052_reg_update(da9052, DA9052_ADC_CONT_REG,
-> @@ -154,6 +169,101 @@ static ssize_t da9052_read_misc_channel(struct device *dev,
->   	return sprintf(buf, "%d\n", input_reg_to_mv(ret));
->   }
->   
-> +static int da9052_request_tsi_read(struct da9052_hwmon *hwmon, int channel)
-> +{
-> +	u8 val = BIT(6); /* TSI_MAN */
-> +
-> +	switch (channel) {
-> +	case DA9052_ADC_TSI_XP:
-> +		val |= (0 << 4); /* TSI_MUX */
-> +		break;
-> +	case DA9052_ADC_TSI_YP:
-> +		val |= (1 << 4); /* TSI_MUX */
-> +		break;
-> +	case DA9052_ADC_TSI_XN:
-> +		val |= (2 << 4); /* TSI_MUX */
-> +		break;
-> +	case DA9052_ADC_TSI_YN:
-> +		val |= (3 << 4); /* TSI_MUX */
-> +		break;
-> +	}
-> +
-> +	return da9052_reg_write(hwmon->da9052, DA9052_TSI_CONT_B_REG, val);
-> +}
-> +
-> +static int da9052_get_tsi_result(struct da9052_hwmon *hwmon, int channel)
-> +{
-> +	int msb, lsb;
-> +
-> +	switch (channel) {
-> +	case DA9052_ADC_TSI_XP:
-> +	case DA9052_ADC_TSI_XN:
-> +		msb = da9052_reg_read(hwmon->da9052, DA9052_TSI_X_MSB_REG);
-> +		if (msb < 0)
-> +			return msb;
-> +
-> +		lsb = da9052_reg_read(hwmon->da9052, DA9052_TSI_LSB_REG);
-> +		if (lsb < 0)
-> +			return lsb;
-> +
-> +		break;
-> +	case DA9052_ADC_TSI_YP:
-> +	case DA9052_ADC_TSI_YN:
-> +		msb = da9052_reg_read(hwmon->da9052, DA9052_TSI_Y_MSB_REG);
-> +		if (msb < 0)
-> +			return msb;
-> +
-> +		lsb = da9052_reg_read(hwmon->da9052, DA9052_TSI_LSB_REG);
-> +		if (lsb < 0)
-> +			return lsb;
-> +		lsb >>= 2;
-> +
-> +		break;
-> +	default:
-> +		return -ENXIO;
-> +	}
-> +
-> +	return (msb << 2) | (lsb & 0x3);
-> +}
-> +
-> +
-> +static ssize_t __da9052_read_tsi(struct device *dev, int channel)
-> +{
-> +	struct da9052_hwmon *hwmon = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	reinit_completion(&hwmon->tsidone);
-> +
-> +	ret = da9052_request_tsi_read(hwmon, channel);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Wait for an conversion done interrupt */
-> +	if (!wait_for_completion_timeout(&hwmon->tsidone,
-> +					 msecs_to_jiffies(500)))
-> +		return -ETIMEDOUT;
-> +
-> +	return da9052_get_tsi_result(hwmon, channel);
-> +}
-> +
-> +static ssize_t da9052_read_tsi(struct device *dev,
-> +			       struct device_attribute *devattr,
-> +			       char *buf)
-> +{
-> +	struct da9052_hwmon *hwmon = dev_get_drvdata(dev);
-> +	int channel = to_sensor_dev_attr(devattr)->index;
-> +	int ret;
-> +
-> +	mutex_lock(&hwmon->hwmon_lock);
-> +	ret = __da9052_read_tsi(dev, channel);
-> +	mutex_unlock(&hwmon->hwmon_lock);
-> +
-> +	if (ret < 0)
-> +		return ret;
-> +	else
-> +		return sprintf(buf, "%d\n", input_tsireg_to_mv(hwmon, ret));
-> +}
-> +
->   static ssize_t da9052_read_tjunc(struct device *dev,
->   				 struct device_attribute *devattr, char *buf)
->   {
-> @@ -196,6 +306,27 @@ static ssize_t show_label(struct device *dev,
->   		       input_names[to_sensor_dev_attr(devattr)->index]);
->   }
->   
-> +static umode_t da9052_channel_is_visible(struct kobject *kobj,
-> +					 struct attribute *a, int index)
-> +{
-> +	struct device *dev = container_of(kobj, struct device, kobj);
-> +	struct da9052_hwmon *hwmon = dev_get_drvdata(dev);
-> +
-> +	switch (index) {
-> +	case DA9052_ADC_TSI_XP:
-> +	case DA9052_ADC_TSI_YP:
-> +	case DA9052_ADC_TSI_XN:
-> +	case DA9052_ADC_TSI_YN:
-> +		if (!hwmon->tsi_as_adc)
-> +			return 0;
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return a->mode;
-> +}
-> +
->   static SENSOR_DEVICE_ATTR(in0_input, 0444, da9052_read_vddout, NULL,
->   			  DA9052_ADC_VDDOUT);
->   static SENSOR_DEVICE_ATTR(in0_label, 0444, show_label, NULL,
-> @@ -221,6 +352,23 @@ static SENSOR_DEVICE_ATTR(in9_input, 0444, da9052_read_vbbat, NULL,
->   static SENSOR_DEVICE_ATTR(in9_label, 0444, show_label, NULL,
->   			  DA9052_ADC_VBBAT);
->   
-> +static SENSOR_DEVICE_ATTR(in70_input, 0444, da9052_read_tsi, NULL,
-> +			  DA9052_ADC_TSI_XP);
-> +static SENSOR_DEVICE_ATTR(in70_label, 0444, show_label, NULL,
-> +			  DA9052_ADC_TSI_XP);
-> +static SENSOR_DEVICE_ATTR(in71_input, 0444, da9052_read_tsi, NULL,
-> +			  DA9052_ADC_TSI_XN);
-> +static SENSOR_DEVICE_ATTR(in71_label, 0444, show_label, NULL,
-> +			  DA9052_ADC_TSI_XN);
-> +static SENSOR_DEVICE_ATTR(in72_input, 0444, da9052_read_tsi, NULL,
-> +			  DA9052_ADC_TSI_YP);
-> +static SENSOR_DEVICE_ATTR(in72_label, 0444, show_label, NULL,
-> +			  DA9052_ADC_TSI_YP);
-> +static SENSOR_DEVICE_ATTR(in73_input, 0444, da9052_read_tsi, NULL,
-> +			  DA9052_ADC_TSI_YN);
-> +static SENSOR_DEVICE_ATTR(in73_label, 0444, show_label, NULL,
-> +			  DA9052_ADC_TSI_YN);
-> +
->   static SENSOR_DEVICE_ATTR(curr1_input, 0444, da9052_read_ich, NULL,
->   			  DA9052_ADC_ICH);
->   static SENSOR_DEVICE_ATTR(curr1_label, 0444, show_label, NULL,
-> @@ -246,6 +394,14 @@ static struct attribute *da9052_attrs[] = {
->   	&sensor_dev_attr_in5_label.dev_attr.attr,
->   	&sensor_dev_attr_in6_input.dev_attr.attr,
->   	&sensor_dev_attr_in6_label.dev_attr.attr,
-> +	&sensor_dev_attr_in70_input.dev_attr.attr,
-> +	&sensor_dev_attr_in70_label.dev_attr.attr,
-> +	&sensor_dev_attr_in71_input.dev_attr.attr,
-> +	&sensor_dev_attr_in71_label.dev_attr.attr,
-> +	&sensor_dev_attr_in72_input.dev_attr.attr,
-> +	&sensor_dev_attr_in72_label.dev_attr.attr,
-> +	&sensor_dev_attr_in73_input.dev_attr.attr,
-> +	&sensor_dev_attr_in73_label.dev_attr.attr,
->   	&sensor_dev_attr_in9_input.dev_attr.attr,
->   	&sensor_dev_attr_in9_label.dev_attr.attr,
->   	&sensor_dev_attr_curr1_input.dev_attr.attr,
-> @@ -257,29 +413,117 @@ static struct attribute *da9052_attrs[] = {
->   	NULL
->   };
->   
-> -ATTRIBUTE_GROUPS(da9052);
-> +static const struct attribute_group da9052_group = {
-> +	.attrs = da9052_attrs,
-> +	.is_visible = da9052_channel_is_visible,
-> +};
-> +__ATTRIBUTE_GROUPS(da9052);
-> +
-> +static irqreturn_t da9052_tsi_datardy_irq(int irq, void *data)
-> +{
-> +	struct da9052_hwmon *hwmon = data;
-> +
-> +	complete(&hwmon->tsidone);
-> +	return IRQ_HANDLED;
-> +}
->   
->   static int da9052_hwmon_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
->   	struct da9052_hwmon *hwmon;
->   	struct device *hwmon_dev;
-> +	int err;
->   
->   	hwmon = devm_kzalloc(dev, sizeof(struct da9052_hwmon), GFP_KERNEL);
->   	if (!hwmon)
->   		return -ENOMEM;
->   
-> +	platform_set_drvdata(pdev, hwmon);
-> +
->   	mutex_init(&hwmon->hwmon_lock);
->   	hwmon->da9052 = dev_get_drvdata(pdev->dev.parent);
->   
-> +	init_completion(&hwmon->tsidone);
-> +
-> +	hwmon->tsi_as_adc =
-> +		device_property_read_bool(pdev->dev.parent, "diag,tsi-as-adc");
-> +
-> +	if (hwmon->tsi_as_adc) {
-> +		hwmon->tsiref = devm_regulator_get(pdev->dev.parent, "tsiref");
-> +		if (IS_ERR(hwmon->tsiref)) {
-> +			err = PTR_ERR(hwmon->tsiref);
-> +			dev_err(&pdev->dev, "failed to get tsiref: %d", err);
-> +			return err;
-> +		}
-> +
-> +		err = regulator_enable(hwmon->tsiref);
-> +		if (err)
-> +			return err;
-> +
-> +		hwmon->tsiref_mv = regulator_get_voltage(hwmon->tsiref);
-> +		if (hwmon->tsiref_mv < 0) {
-> +			err = hwmon->tsiref_mv;
-> +			goto exit_regulator;
-> +		}
-> +
-> +		/* convert from microvolt (DT) to millivolt (hwmon) */
-> +		hwmon->tsiref_mv /= 1000;
-> +
-> +		/* TSIREF limits from datasheet */
-> +		if (hwmon->tsiref_mv < 1800 || hwmon->tsiref_mv > 2600) {
-> +			dev_err(hwmon->da9052->dev, "invalid TSIREF voltage: %d",
-> +				hwmon->tsiref_mv);
-> +			err = -ENXIO;
-> +			goto exit_regulator;
-> +		}
-> +
-> +		/* disable touchscreen features */
-> +		da9052_reg_write(hwmon->da9052, DA9052_TSI_CONT_A_REG, 0x00);
-> +
-> +		err = da9052_request_irq(hwmon->da9052, DA9052_IRQ_TSIREADY,
-> +					 "tsiready-irq", da9052_tsi_datardy_irq,
-> +					 hwmon);
-> +		if (err) {
-> +			dev_err(&pdev->dev, "Failed to register TSIRDY IRQ: %d",
-> +				err);
-> +			goto exit_regulator;
-> +		}
-> +	}
-> +
->   	hwmon_dev = devm_hwmon_device_register_with_groups(dev, "da9052",
->   							   hwmon,
->   							   da9052_groups);
-> -	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +	err = PTR_ERR_OR_ZERO(hwmon_dev);
-> +	if (err)
-> +		goto exit_irq;
-> +
-> +	return 0;
-> +
-> +exit_irq:
-> +	if (hwmon->tsi_as_adc)
-> +		da9052_free_irq(hwmon->da9052, DA9052_IRQ_TSIREADY, hwmon);
-> +exit_regulator:
-> +	if (hwmon->tsiref)
-> +		regulator_disable(hwmon->tsiref);
-> +
-> +	return err;
-> +}
-> +
-> +static int da9052_hwmon_remove(struct platform_device *pdev)
-> +{
-> +	struct da9052_hwmon *hwmon = platform_get_drvdata(pdev);
-> +
-> +	if (hwmon->tsi_as_adc) {
-> +		da9052_free_irq(hwmon->da9052, DA9052_IRQ_TSIREADY, hwmon);
-> +		regulator_disable(hwmon->tsiref);
-> +	}
-> +
-> +	return 0;
->   }
->   
->   static struct platform_driver da9052_hwmon_driver = {
->   	.probe = da9052_hwmon_probe,
-> +	.remove = da9052_hwmon_remove,
->   	.driver = {
->   		.name = "da9052-hwmon",
->   	},
-> diff --git a/drivers/input/touchscreen/da9052_tsi.c b/drivers/input/touchscreen/da9052_tsi.c
-> index 5a013bb7bcad..f0cb239546a9 100644
-> --- a/drivers/input/touchscreen/da9052_tsi.c
-> +++ b/drivers/input/touchscreen/da9052_tsi.c
-> @@ -16,6 +16,7 @@
->   #include <linux/delay.h>
->   #include <linux/platform_device.h>
->   #include <linux/interrupt.h>
-> +#include <linux/property.h>
->   
->   #include <linux/mfd/da9052/reg.h>
->   #include <linux/mfd/da9052/da9052.h>
-> @@ -238,6 +239,10 @@ static int da9052_ts_probe(struct platform_device *pdev)
->   	if (!da9052)
->   		return -EINVAL;
->   
-> +	/* check if pins are used as general purpose ADC input */
-> +	if (device_property_read_bool(pdev->dev.parent, "diag,tsi-as-adc"))
-> +		return -ENODEV;
-> +
->   	tsi = kzalloc(sizeof(struct da9052_tsi), GFP_KERNEL);
->   	input_dev = input_allocate_device();
->   	if (!tsi || !input_dev) {
-> diff --git a/include/linux/mfd/da9052/da9052.h b/include/linux/mfd/da9052/da9052.h
-> index ce9230af09c2..ae5b663836d0 100644
-> --- a/include/linux/mfd/da9052/da9052.h
-> +++ b/include/linux/mfd/da9052/da9052.h
-> @@ -45,6 +45,12 @@
->   #define DA9052_ADC_TJUNC	8
->   #define DA9052_ADC_VBBAT	9
->   
-> +/* TSI channel has its own 4 channel mux */
-> +#define DA9052_ADC_TSI_XP	70
-> +#define DA9052_ADC_TSI_XN	71
-> +#define DA9052_ADC_TSI_YP	72
-> +#define DA9052_ADC_TSI_YN	73
-> +
->   #define DA9052_IRQ_DCIN	0
->   #define DA9052_IRQ_VBUS	1
->   #define DA9052_IRQ_DCINREM	2
-> 
+DQoNCk9uIDA2LzI4LzIwMTcgMDE6MjQgUE0sIEguIE5pa29sYXVzIFNjaGFsbGVyIHdyb3RlOg0K
+PiANCj4+IEFtIDI4LjA2LjIwMTcgdW0gMTI6NTAgc2NocmllYiBTeWx3ZXN0ZXIgTmF3cm9ja2kg
+PHMubmF3cm9ja2lAc2Ftc3VuZy5jb20+Og0KPj4NCj4+IE9uIDA2LzI4LzIwMTcgMTE6MTIgQU0s
+IEguIE5pa29sYXVzIFNjaGFsbGVyIHdyb3RlOg0KPj4+PiBBbSAyOC4wNi4yMDE3IHVtIDAwOjU3
+IHNjaHJpZWIgU3lsd2VzdGVyIE5hd3JvY2tpIDxzbmF3cm9ja2lAa2VybmVsLm9yZz46DQo+Pj4+
+IE9uIDA2LzI3LzIwMTcgMDc6NDggQU0sIEguIE5pa29sYXVzIFNjaGFsbGVyIHdyb3RlOg0KPj4+
+Pj4+IEFtIDI2LjA2LjIwMTcgdW0gMjI6MDQgc2NocmllYiBTeWx3ZXN0ZXIgTmF3cm9ja2kgPHNu
+YXdyb2NraUBrZXJuZWwub3JnPjoNCj4+Pj4+PiBPbiAwNi8yNi8yMDE3IDEyOjM1IFBNLCBIdWd1
+ZXMgRlJVQ0hFVCB3cm90ZToNCj4+Pj4+Pj4+IFdoYXQgSSBhbSBtaXNzaW5nIHRvIHN1cHBvcnQg
+dGhlIEdUQTA0IGNhbWVyYSBpcyB0aGUgY29udHJvbCBvZiB0aGUgb3B0aW9uYWwgInZhbmEtc3Vw
+cGx5Ii4NCj4+Pj4+Pj4+IFNvIHRoZSBkcml2ZXIgZG9lcyBub3QgcG93ZXIgdXAgdGhlIGNhbWVy
+YSBtb2R1bGUgd2hlbiBuZWVkZWQgYW5kIHRoZXJlZm9yZSBwcm9iaW5nIGZhaWxzLg0KPj4+Pj4+
+Pj4NCj4+Pj4+Pj4+ICAgICAtIHZhbmEtc3VwcGx5OiBhIHJlZ3VsYXRvciB0byBwb3dlciB1cCB0
+aGUgY2FtZXJhIG1vZHVsZS4NCj4+Pj4+Pj4+DQo+Pj4+Pj4+PiBEcml2ZXIgY29kZSBpcyBub3Qg
+Y29tcGxleCB0byBhZGQ6DQo+Pj4+Pj4NCj4+Pj4+Pj4gWWVzLCBJIHNhdyBpdCBpbiB5b3VyIGNv
+ZGUsIGJ1dCBhcyBJIGRvbid0IGhhdmUgYW55IHByb2dyYW1tYWJsZSBwb3dlcg0KPj4+Pj4+PiBz
+dXBwbHkgb24gbXkgc2V0dXAsIEkgaGF2ZSBub3QgcHVzaGVkIHRoaXMgY29tbWl0Lg0KPj4+Pj4+
+DQo+Pj4+Pj4gU2luY2UgeW91IGFyZSBhYm91dCB0byBhZGQgdm9sdGFnZSBzdXBwbGllcyB0byB0
+aGUgRFQgYmluZGluZyBJJ2Qgc3VnZ2VzdA0KPj4+Pj4+IHRvIGluY2x1ZGUgYWxsIHRocmVlIHZv
+bHRhZ2Ugc3VwcGxpZXMgb2YgdGhlIHNlbnNvciBjaGlwLiBMb29raW5nIGF0IHRoZSBPVjk2NTAN
+Cj4+Pj4+PiBhbmQgdGhlIE9WOTY1NSBkYXRhc2hlZXQgdGhlcmUgYXJlIGZvbGxvd2luZyBuYW1l
+cyB1c2VkIGZvciB0aGUgdm9sdGFnZSBzdXBwbHkNCj4+Pj4+PiBwaW5zOg0KPj4+Pj4+DQo+Pj4+
+Pj4gQVZERCAtIEFuYWxvZyBwb3dlciBzdXBwbHksDQo+Pj4+Pj4gRFZERCAtIFBvd2VyIHN1cHBs
+eSBmb3IgZGlnaXRhbCBjb3JlIGxvZ2ljLA0KPj4+Pj4+IERPVkREIC0gRGlnaXRhbCBwb3dlciBz
+dXBwbHkgZm9yIEkvTy4NCj4+Pj4+DQo+Pj4+PiBUaGUgbGF0dGVyIHR3byBhcmUgdXN1YWxseSBu
+b3QgaW5kZXBlbmRlbnRseSBzd2l0Y2hhYmxlIGZyb20gdGhlIFNvQyBwb3dlcg0KPj4+Pj4gdGhl
+IG1vZHVsZSBpcyBjb25uZWN0ZWQgdG8uDQo+Pj4+Pg0KPj4+Pj4gQW5kIHNvbWV0aW1lcyBEVkRE
+IGFuZCBET1ZERCBhcmUgY29ubmVjdGVkIHRvZ2V0aGVyLg0KPj4+Pj4NCj4+Pj4+IFNvIHRoZSBk
+cml2ZXIgY2FuJ3QgbWFrZSBtdWNoIHVzZSBvZiBrbm93aW5nIG9yIHJlcXVlc3RpbmcgdGhlbSBi
+ZWNhdXNlIHRoZQ0KPj4+Pj4gMS44ViBzdXBwbHkgaXMgYWx3YXlzIGFjdGl2ZSwgZXZlbiBkdXJp
+bmcgc3VzcGVuZC4NCj4+Pj4+DQo+Pj4+Pj4NCj4+Pj4+PiBJIGRvdWJ0IHRoZSBzZW5zb3IgY2Fu
+IHdvcmsgd2l0aG91dCBhbnkgb2YgdGhlc2Ugdm9sdGFnZSBzdXBwbGllcywgdGh1cw0KPj4+Pj4+
+IHJlZ3VsYXRvcl9nZXRfb3B0aW9uYWwoKSBzaG91bGQgbm90IGJlIHVzZWQuIEkgd291bGQganVz
+dCB1c2UgdGhlIHJlZ3VsYXRvcg0KPj4+Pj4+IGJ1bGsgQVBJIHRvIGhhbmRsZSBhbGwgdGhyZWUg
+cG93ZXIgc3VwcGxpZXMuDQo+Pj4+Pg0KPj4+Pj4gVGhlIGRpZ2l0YWwgcGFydCB3b3JrcyB3aXRo
+IEFWREQgdHVybmVkIG9mZi4gU28gdGhlIExETyBzdXBwbHlpbmcgQVZERCBzaG91bGQNCj4+Pj4+
+IGJlIHN3aXRjaGFibGUgdG8gc2F2ZSBwb3dlciAoJnZhdXgzIG9uIHRoZSBHVEEwNCBkZXZpY2Up
+Lj4NCj4+Pj4+IEJ1dCBub3QgYWxsIGRlc2lnbnMgY2FuIHN3aXRjaCBpdCBvZmYuIEhlbmNlIHRo
+ZSBpZGVhIHRvIGRlZmluZSBpdCBhcyBhbg0KPj4+Pj4gL29wdGlvbmFsLyByZWd1bGF0b3IuIElm
+IGl0IGlzIG5vdCBkZWZpbmVkIGJ5IERULCB0aGUgZHJpdmVyIHNpbXBseSBhc3N1bWVzDQo+Pj4+
+PiBpdCBpcyBhbHdheXMgcG93ZXJlZCBvbi4NCj4+Pj4NCj4+Pj4gSSBkaWRuJ3Qgc2F5IHdlIGNh
+bid0IGRlZmluZSByZWd1bGF0b3Igc3VwcGx5IHByb3BlcnRpZXMgYXMgb3B0aW9uYWwgaW4gdGhl
+IERUDQo+Pj4+IGJpbmRpbmcuICBJZiB3ZSBkZWZpbmUgdGhlbSBhcyBzdWNoIGFuZCBhbnkgb2Yg
+dGhlc2UgKi1zdXBwbHkgcHJvcGVydGllcyBpcw0KPj4+PiBtaXNzaW5nIGluIERUIHdpdGggcmVn
+dWxhdG9yX2dldCgpIHRoZSByZWd1bGF0b3IgY29yZSB3aWxsIHVzZSBkdW1teSByZWd1bGF0b3IN
+Cj4+Pj4gZm9yIHRoYXQgcGFydGljdWxhciB2b2x0YWdlIHN1cHBseS4gIFdoaWxlIHdpdGggcmVn
+dWxhdG9yX2dldF9vcHRpb25hbCgpDQo+Pj4+IC1FTk9ERVYgaXMgcmV0dXJuZWQgd2hlbiB0aGUg
+cmVndWxhdG9yIGNhbm5vdCBiZSBmb3VuZC4NCj4+Pg0KPj4+IEFoLCBvay4gSSBzZWUuDQo+Pj4N
+Cj4+PiBJIGhhZCB0aG91Z2h0IHRoYXQgaXQgaXMgdGhlIHJpZ2h0IHRoaW5nIHRvIGRvIGxpa2Ug
+ZGV2bV9ncGlvZF9nZXRfb3B0aW9uYWwoKS4NCj4+Pg0KPj4+IFRoYXQgb25lIGl0IGlzIGRlc2Ny
+aWJlZCBhczoNCj4+Pg0KPj4+ICIqIFRoaXMgaXMgZXF1aXZhbGVudCB0byBncGlvZF9nZXQoKSwg
+ZXhjZXB0IHRoYXQgd2hlbiBubyBHUElPIHdhcyBhc3NpZ25lZCB0bw0KPj4+ICAgKiB0aGUgcmVx
+dWVzdGVkIGZ1bmN0aW9uIGl0IHdpbGwgcmV0dXJuIE5VTEwuIFRoaXMgaXMgY29udmVuaWVudCBm
+b3IgZHJpdmVycw0KPj4+ICAgKiB0aGF0IG5lZWQgdG8gaGFuZGxlIG9wdGlvbmFsIEdQSU9zLiIN
+Cj4+Pg0KPj4+IFNlZW1zIHRvIGJlIGluY29uc2lzdGVudCBkZWZpbml0aW9uIG9mIHdoYXQgIm9w
+dGlvbmFsIiBtZWFucy4NCj4+DQo+PiBJbmRlZWQsIHRoaXMgY29tbWl0IGV4cGxhaW5zIGl0IGZ1
+cnRoZXI6DQo+Pg0KPj4gY29tbWl0IGRlMWRkOWZkMjE1Njg3NGI0NTgwMzI5OWIzYjI3ZTY1ZDVk
+ZWZkZDkNCj4+IHJlZ3VsYXRvcjogY29yZTogUHJvdmlkZSBoaW50cyB0byB0aGUgY29yZSBhYm91
+dCBvcHRpb25hbCBzdXBwbGllcw0KPj4NCj4+PiBTbyB3ZSBpbmRlZWQgc2hvdWxkIHVzZSBkZXZt
+X3JlZ3VsYXRvcl9nZXQoKSBpbiB0aGlzIGNhc2UuIFRoYW5rcyBmb3IgPiBwb2ludGluZyBvdXQh
+DQo+Pg0KPj4+Pj4gU28gaW4gc3VtbWFyeSB3ZSBvbmx5IG5lZWQgQVZERCBzd2l0Y2hlZCBmb3Ig
+dGhlIEdUQTA0IC0gYnV0IGl0IGRvZXMgbm90DQo+Pj4+PiBtYXR0ZXIgaWYgdGhlIG90aGVycyBh
+cmUgb3B0aW9uYWwgcHJvcGVydGllcy4gV2Ugd291bGQgbm90IHVzZSB0aGVtLg0KPj4+Pj4NCj4+
+Pj4+IEl0IGRvZXMgbWF0dGVyIGlmIHRoZXkgYXJlIG1hbmRhdG9yeSBiZWNhdXNlIGl0IGFkZHMg
+RFQgY29tcGxleGl0eSAoc2l6ZQ0KPj4+Pj4gYW5kIHByb2Nlc3NpbmcpIHdpdGhvdXQgYWRkZWQg
+ZnVuY3Rpb24uDQo+Pj4+DQo+Pj4+IFdlIHNob3VsZCBub3QgYmUgZGVmaW5pbmcgRFQgYmluZGlu
+ZyBvbmx5IHdpdGggc2VsZWN0ZWQgdXNlIGNhc2VzL2JvYXJkDQo+Pj4+IGRlc2lnbnMgaW4gbWlu
+ZC4gIElNTyBhbGwgdGhyZWUgdm9sdGFnZSBzdXBwbGllcyBzaG91bGQgYmUgbGlzdGVkIGluIHRo
+ZQ0KPj4+PiBiaW5kaW5nLCBwcmVzdW1hYmx5IGFsbCBjYW4gYmUgbWFkZSBvcHRpb25hbCwgd2l0
+aCBhbiBhc3N1bXB0aW9uIHRoYXQgd2hlbg0KPj4+PiB0aGUgcHJvcGVydHkgaXMgbWlzc2luZyBz
+ZWxlY3RlZCBwaW4gaXMgaG9va2VkIHVwIHRvIGEgZml4ZWQgcmVndWxhdG9yLg0KPj4+DQo+Pj4g
+T2ssIHRoZW4gaXQgc2hvdWxkIGp1c3QgYmUgZGVmaW5lZCBpbiB0aGUgYmluZGluZ3MgYnV0IG5v
+dCB1c2VkIGJ5DQo+Pj4gdGhlIGRyaXZlcj8NCj4+DQo+PiBZZXMsIEkgdGhpbmsgc28uIFNvIHdl
+IGhhdmUgYSBwb3NzaWJseSBjb21wbGV0ZSBiaW5kaW5nIHJpZ2h0IGZyb20gdGhlDQo+PiBiZWdp
+bm5pbmcuIEkgc29tZW9uZSBuZWVkcyBoYW5kbGluZyBvdGhlciBzdXBwbGllcyB0aGFuIEFWREQg
+dGhleSBjb3VsZA0KPj4gdXBkYXRlIHRoZSBkcml2ZXIgaW4gZnV0dXJlLg0KPiANCj4gRmluZSEg
+SSBoYXZlIHNlbnQgc29tZSBwYXRjaGVzIHRvIEh1Z2h1ZXMgc28gdGhhdCBoZSBjYW4gaW50ZWdy
+YXRlIGl0IGluDQo+IGhpcyBuZXh0IHZlcnNpb24gb2YgdGhlIHBhdGNoIHNlcmllcy4NCj4gDQo+
+IEJSIGFuZCB0aGFua3MsDQo+IE5pa29sYXVzDQo+IA0KDQpPSyBnb3QgaXQsIEknbGwgcHVzaCBp
+biB2Mi4=
