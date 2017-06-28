@@ -1,76 +1,118 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/4] misc: sram: Allow ARM64 to select SRAM_EXEC
-Date: Wed, 28 Jun 2017 15:57:08 +0100
-Message-ID: <20170628145707.GB8252@leverpostej>
-References: <20170626223248.14199-1-f.fainelli@gmail.com>
- <20170626223248.14199-3-f.fainelli@gmail.com>
- <20170627173859.GA5189@leverpostej>
- <171ae8ff-2af2-65e3-9796-308b21976876@gmail.com>
+From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drivers/watchdog: ASPEED reference dev tree
+ properties for config
+Date: Wed, 28 Jun 2017 09:59:22 -0500
+Message-ID: <38e57720-9728-9377-2a16-adc8ce430ca0@linux.vnet.ibm.com>
+References: <20170627211734.60477-1-cbostic@linux.vnet.ibm.com>
+ <20170627211734.60477-3-cbostic@linux.vnet.ibm.com>
+ <606a2e11-2d43-5204-0bb6-9c4415ee03df@roeck-us.net>
+ <de0dc054-0813-fab1-d7ac-2f1d7ba61fd8@linux.vnet.ibm.com>
+ <20170628145452.GA30968@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <171ae8ff-2af2-65e3-9796-308b21976876-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <20170628145452.GA30968-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Markus Mayer <mmayer-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Eric Anholt <eric-WhKQ6XTQaPysTnJN9+BGXg@public.gmane.org>, Justin Chen <justinpopo6-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Berger <opendmb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:BROADCOM BCM47XX MIPS ARCHITECTURE" <linux-mips@lin>
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 11:21:17AM -0700, Florian Fainelli wrote:
-> On 06/27/2017 10:38 AM, Mark Rutland wrote:
-> > On Mon, Jun 26, 2017 at 03:32:42PM -0700, Florian Fainelli wrote:
-> >> Now that ARM64 also has a fncpy() implementation, allow selection
-> >> SRAM_EXEC for ARM64 as well.
-> >>
-> >> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> > 
-> > Sorr,y but I must NAK this patch.
-> > 
-> > As mentioned on prior threads regarding fncpy, I do not think it makes
-> > sense to enable this for arm64. The only use-cases that have been
-> > described so far for this are power-management stuff that should live in
-> > PSCI or other secure FW, and have no place in the kernel on arm64
-> 
-> This is a valid reason, but this is only one use case presented, the
-> only thing is that we need to make sure, as patch reviewers and you guys
-> as architecture maintainers, that this is not used as a means to bypass
-> PSCI for suspend/resume operation, which I now agree with.
-> 
-> Still, the general use case remains: you have a piece of addressable
-> memory which can be used to allocate space from and relocate code to be
-> it for security, performance, predictability, isolation, or anything,
-> and that should be possible given standard kernel facilities offered by
-> the SRAM driver.
 
-While I agree that these are *theoretically* possible use cases, they
-aren't *real* cases today. 
 
-If someone comes by with code that needs this (which doesn't fall into
-one of those NAK'd cases above), then I'm happy for this to be enabled
-for that feature.
-
-Until such time, I see no reason to enable this. Given it comes with
-strong the potential for abuse, I'd rather it remained disabled.
-
-> > > There are no other users of this functionality, and until there are, I
-> > see no reason to enable this, and risk a proliferation of unnecessary
-> > platform-specific code.
-> > 
-> > It should be possible to #ifdef-ise the relevant callers of this such
-> > that they can be built on arm64 without using fncpy or sram_exec
-> > functionality. AFAICT, there are no users on arm64 introduced by this
-> > series.
-> 
-> I sent this patch accidentally as part of this patch series anyway, so
-> if you want to keep the discussion alive, reply here:
-> 
-> https://patchwork.kernel.org/patch/9793745/
-
-That appears to be v2 of the series, and there's a v3 afterwards, so
-I've replied on v3.
+On 6/28/17 9:54 AM, Guenter Roeck wrote:
+> On Wed, Jun 28, 2017 at 09:29:50AM -0500, Christopher Bostic wrote:
+>>
+>> On 6/28/17 6:31 AM, Guenter Roeck wrote:
+>>> On 06/27/2017 02:17 PM, Christopher Bostic wrote:
+>>>> Reference the system device tree when configuring the watchdog
+>>>> engines.  Set external signal mode on timeout if specified.
+>>>> Set system reset on timeout if specified.
+>>>>
+>>>> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+>>>> ---
+>>>> v2 - Change of_get_property() to of_property_read_bool()
+>>>>     - Remove redundant check for NULL struct device_node pointer
+>>>>     - Optional property names now start with prefix 'aspeed,'
+>>>> ---
+>>>>   drivers/watchdog/aspeed_wdt.c | 13 +++++++++++--
+>>>>   1 file changed, 11 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/watchdog/aspeed_wdt.c
+>>>> b/drivers/watchdog/aspeed_wdt.c
+>>>> index 1c65258..71ce5f5 100644
+>>>> --- a/drivers/watchdog/aspeed_wdt.c
+>>>> +++ b/drivers/watchdog/aspeed_wdt.c
+>>>> @@ -140,6 +140,7 @@ static int aspeed_wdt_probe(struct platform_device
+>>>> *pdev)
+>>>>   {
+>>>>       struct aspeed_wdt *wdt;
+>>>>       struct resource *res;
+>>>> +    struct device_node *np;
+>>>>       int ret;
+>>>>         wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
+>>>> @@ -170,8 +171,16 @@ static int aspeed_wdt_probe(struct platform_device
+>>>> *pdev)
+>>>>        * the SOC and not the full chip
+>>>>        */
+>>>>       wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
+>>>> -        WDT_CTRL_1MHZ_CLK |
+>>>> -        WDT_CTRL_RESET_SYSTEM;
+>>>> +        WDT_CTRL_1MHZ_CLK;
+>>>> +
+>>>> +    np = pdev->dev.of_node;
+>>>> +    if (of_property_read_bool(np, "aspeed,sys-reset"))
+>>>> +        wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
+>>>> +
+>>> For backward compatibility, this should default to WDT_CTRL_RESET_SYSTEM
+>>> if no optional property is provided.
+>>>
+>> I had the logic inverted for this property in a previous patch.  The
+>> property was 'no-system-reset' so that when not present the default was to
+>> set WDT_CTRL_RESET_SYSTEM.   As it is in this patch, the only way to
+>> indicate that no system reset is to be done is to not specify the property.
+>> No system reset is desired under circumstances when another wdt engine is to
+>> be responsible for this.   Given the issue with backward compatibility
+>> that's not a solution.  Given this, would creating a property
+>> 'no-system-reset' be acceptable?
+>>
+> Sorry, I fail to see the problem. There are half a dozen properties. What is the
+> problem with having a default if no property is specified ? Your default is "do
+> nothing", which does not really make any sense to me. If the user wants the
+> watchdog to do nothing, the simple means to accomplish that would be to not
+> instantiate it.
+>
+> Sure, that means specifying "system-reset" is redundant, but I don't see a
+> problem with that either. But I do see a problem with loading a watchdog driver
+> that doesn't do anything.
+>
+> If there is really some use case where it makes sense to load a watchdog driver
+> and have it do nothing, please explain and provide a respective devicetree
+> property. "aspeed,do-nothing" (or whatever similar) doesn't sound good, but
+> at least makes it obvious that the driver isn't doing anything besides
+> creating a false sense of "the system is watchdog protected".
+If system-reset is not wanted there are other properties that might 
+still be needed, for example
+ARM reset only.   We'd still want to instantiate it.
 
 Thanks,
-Mark.
+Chris
+>
+> Thanks,
+> Guenter
+>
+>
+>> Thanks,
+>> Chris
+>>
+>>>> +    if (of_property_read_bool(np, "aspeed,external-signal"))
+>>>> +        wdt->ctrl |= WDT_CTRL_WDT_EXT;
+>>>> +
+>>>> +    writel(wdt->ctrl, wdt->base + WDT_CTRL);
+>>>>         if (readl(wdt->base + WDT_CTRL) & WDT_CTRL_ENABLE)  {
+>>>>           aspeed_wdt_start(&wdt->wdd);
+>>>>
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
