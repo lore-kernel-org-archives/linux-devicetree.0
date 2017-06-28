@@ -1,235 +1,147 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/9] Documentation: add DT binding for ARM System Control
- and Management Interface(SCMI) protocol
-Date: Wed, 28 Jun 2017 18:04:24 -0500
-Message-ID: <20170628230423.qbxyycqcrgqxyxjh@rob-hp-laptop>
-References: <1498492513-29771-1-git-send-email-sudeep.holla@arm.com>
- <1498492513-29771-3-git-send-email-sudeep.holla@arm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Bindings for Altera Quadspi Controller
+ Version 2
+Date: Wed, 28 Jun 2017 18:09:28 -0500
+Message-ID: <20170628230928.k3hafpxhqrr26val@rob-hp-laptop>
+References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
+ <1498493619-4633-2-git-send-email-matthew.gerlach@linux.intel.com>
+ <0bfc282d-2aec-8f36-1528-312f7ded8d9c@gmail.com>
+ <alpine.DEB.2.20.1706270722440.8058@mgerlach-VirtualBox>
+ <0ca53c35-732c-a122-8191-6d102e824d52@gmail.com>
+ <alpine.DEB.2.20.1706270833100.8058@mgerlach-VirtualBox>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1498492513-29771-3-git-send-email-sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Cc: ALKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, DTML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Roy Franz <roy.franz-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Harb Abdulhamid <harba-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Alexey Klimov <alexey.klimov-5wv7dgnIgG8@public.gmane.org>, Matt Sealey <neko-HhXTZounMxbZATc7fWT8Dg@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.20.1706270833100.8058@mgerlach-VirtualBox>
+Sender: linux-kernel-owner@vger.kernel.org
+To: matthew.gerlach@linux.intel.com
+Cc: Marek Vasut <marek.vasut@gmail.com>, vndao@altera.com, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, mark.rutland@arm.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, davem@davemloft.net, mchehab@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 04:55:06PM +0100, Sudeep Holla wrote:
-> This patch adds devicetree binding for System Control and Management
-> Interface (SCMI) Message Protocol used between the Application Cores(AP)
-> and the System Control Processor(SCP). The MHU peripheral provides a
-> mechanism for inter-processor communication between SCP's M3 processor
-> and AP.
-
-"dt-bindings: arm: ..." for the subject.
-
+On Tue, Jun 27, 2017 at 08:57:14AM -0700, matthew.gerlach@linux.intel.com wrote:
 > 
-> SCP offers control and management of the core/cluster power states,
-> various power domain DVFS including the core/cluster, certain system
-> clocks configuration, thermal sensors and many others.
 > 
-> SCMI protocol is developed as better replacement to the existing SCPI
-> which is not flexible and easily extensible.
+> On Tue, 27 Jun 2017, Marek Vasut wrote:
 > 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/arm,scmi.txt | 175 +++++++++++++++++++++
->  1 file changed, 175 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > On 06/27/2017 04:32 PM, matthew.gerlach@linux.intel.com wrote:
+> > > 
+> > > 
+> > > On Tue, 27 Jun 2017, Marek Vasut wrote:
+> > > 
+> > > Hi Marek,
+> > > 
+> > > Thanks for the feedback.  See my comments below.
+> > > 
+> > > Matthew Gerlach
+> > > 
+> > > > On 06/26/2017 06:13 PM, matthew.gerlach@linux.intel.com wrote:
+> > > > > From: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > > > > 
+> > > > > Device Tree bindings for Version 2 of the Altera Quadspi Controller
+> > > > > that can be optionally paired with a windowed bridge.
+> > > > > 
+> > > > > Signed-off-by: Matthew Gerlach <matthew.gerlach@linux.intel.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/mtd/altera-quadspi-v2.txt  | 37
+> > > > > ++++++++++++++++++++++
+> > > > >  1 file changed, 37 insertions(+)
+> > > > >  create mode 100644
+> > > > > Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+> > > > > 
+> > > > > diff --git
+> > > > > a/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+> > > > > b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+> > > > > new file mode 100644
+> > > > > index 0000000..8ba63d7
+> > > > > --- /dev/null
+> > > > > +++ b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+> > > > > @@ -0,0 +1,37 @@
+> > > > > +* Altera Quad SPI Controller Version 2
+> > > > > +
+> > > > > +Required properties:
+> > > > > +- compatible : Should be "altr,quadspi-v2".
+> > > > > +- reg : Contains at least two entries, and possibly three entries,
+> > > > > each of
+> > > > > +    which is a tuple consisting of a physical address and length.
+> > > > > +- reg-names : Should contain the names "avl_csr" and "avl_mem"
+> > > > > corresponding
+> > > > > +          to the control and status registers and qspi memory,
+> > > > > respectively.
+> > > > > +
+> > > > > +
+> > > > > +The Altera Quad SPI Controller Version 2 can be paired with a
+> > > > > windowed bridge
+> > > > > +in order to reduce the footprint of the memory interface.  When a
+> > > > > windowed
+> > > > > +bridge is used, reads and writes of data must be 32 bits wide.
+> > > > > +
+> > > > > +Optional properties:
+> > > > > +- reg-names : Should contain the name "avl_window", if the windowed
+> > > > > bridge
+> > > > > +          is used.  This name corresponds to the register space that
+> > > > > +          controls the window.
+> > > > > +- window-size : The size of the window which must be an even power
+> > > > > of 2.
+> > > > > +- read-bit-reverse : A boolean indicating the data read from the
+> > > > > flash should
+> > > > > +             be bit reversed on a byte by byte basis before being
+> > > > > +             delivered to the MTD layer.
+> > > > > +- write-bit-reverse : A boolean indicating the data written to the
+> > > > > flash should
+> > > > > +              be bit reversed on a byte by byte basis.
+> > > > 
+> > > > Is there ever a usecase where you need to set just one of these props ?
+> > > > Also, they're altera specific, so altr, prefix should be added.
+> > > 
+> > > In general, I think if bit reversal is required, it would be required in
+> > > both directions.  However, anything is possible when using FPGAs.  So
+> > > I thought separate booleans would be future proofing the bindings.
+> > 
+> > Maybe we should drop this whole thing and add it when this is actually
+> > required.
+> > 
+> > Are there any users of this in the wild currently ?
+> > 
+> > What is the purpose of doing this per-byte bit reverse instead of
+> > storing th bits in the original order ?
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> new file mode 100644
-> index 000000000000..d4565e78a8d7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> @@ -0,0 +1,175 @@
-> +System Control and Management Interface (SCMI) Message Protocol
-> +----------------------------------------------------------
-> +
-> +The SCMI is intended to allow agents such as OSPM to manage various functions
-> +that are provided by the hardware platform it is running on, including power
-> +and performance functions.
-> +
-> +This binding is intended to define the interface the firmware implementing
-> +the SCMI as described in ARM document number ARM DUI 0922B ("ARM System Control
-> +and Management Interface Platform Design Document")[0] provide for OSPM in
-> +the device tree.
-> +
-> +Required properties:
-> +
-> +- compatible : shall be "arm,scmi"
-> +- method : The method of calling the SCMI firmware. Only permitted value
-> +	   currently is:
-> +	   "mailbox-doorbell" : When mailbox doorbell is used as a mechanism
-> +				to alert the presence of a messages and/or
-> +				notification
-
-Isn't this implied by mboxes property?
-
-> +- mboxes: List of phandle and mailbox channel specifiers. It should contain
-> +	  exactly one or two mailboxes, one for transmitting messages("tx")
-> +	  and another optional for receiving the notifications("rx") if
-> +	  supported.
-> +- mbox-names: shall be "tx" or "rx"
-> +- shmem : List of phandle pointing to the shared memory(SHM) area as per
-> +	  generic mailbox client binding.
-> +
-> +See Documentation/devicetree/bindings/mailbox/mailbox.txt for more details
-> +about the generic mailbox controller and client driver bindings.
-> +
-> +Each protocol supported shall have a sub-node with corresponding compatible
-> +as described in the following sections. If the platform supports dedicated
-> +communication channel for a particular protocol, the 3 properties namely:
-> +mboxes, mbox-names and shmem shall be present in the sub-node corresponding
-> +to that protocol.
-> +
-> +Clock/Performance bindings for the clocks/OPPs based on SCMI Message Protocol
-> +------------------------------------------------------------
-> +
-> +This binding uses the common clock binding[1].
-> +
-> +Required properties:
-> +- #clock-cells : Should be 1. Contains the Clock ID value used by SCMI commands.
-> +
-> +Power domain bindings for the power domains based on SCMI Message Protocol
-> +------------------------------------------------------------
-> +
-> +This binding uses the generic power domain binding[4].
-> +
-> +PM domain providers
-> +===================
-> +
-> +Required properties:
-> + - #power-domain-cells : Should be 1. Contains the device or the power
-> +			 domain ID value used by SCMI commands.
-> +
-> +PM domain consumers
-> +===================
-> +
-> +Required properties:
-> + - power-domains : A phandle and PM domain specifier as defined by bindings of
-> +                   the power controller specified by phandle.
-> +
-> +Sensor bindings for the sensors based on SCMI Message Protocol
-> +--------------------------------------------------------------
-> +SCMI provides an API to access the various sensors on the SoC.
-> +
-> +Required properties:
-> +- #thermal-sensor-cells: should be set to 1. This property follows the
-> +			 thermal device tree bindings[2].
-> +
-> +			 Valid cell values are raw identifiers (Sensor ID)
-> +			 as used by the firmware. Refer to  platform details
-> +			 for your implementation for the IDs to use.
-> +
-> +SRAM and Shared Memory for SCMI
-> +-------------------------------
-> +
-> +A small area of SRAM is reserved for SCMI communication between application
-> +processors and SCP.
-> +
-> +The properties should follow the generic mmio-sram description found in [3]
-> +
-> +Each sub-node represents the reserved area for SCMI.
-> +
-> +Required sub-node properties:
-> +- reg : The base offset and size of the reserved area with the SRAM
-> +- compatible : should be "arm,scp-shmem" for Non-secure SRAM based
-> +	       shared memory
-
-This compatible doesn't match the example.
-
-> +
-> +[0] http://infocenter.arm.com/help/topic/com.arm.doc.den0056a/index.html
-> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +[2] Documentation/devicetree/bindings/thermal/thermal.txt
-> +[3] Documentation/devicetree/bindings/sram/sram.txt
-> +[4] Documentation/devicetree/bindings/power/power_domain.txt
-> +
-> +Example:
-> +
-> +sram: sram@50000000 {
-> +	compatible = "arm,juno-sram-ns", "mmio-sram";
-> +	reg = <0x0 0x50000000 0x0 0x10000>;
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <1>;
-> +	ranges = <0 0x0 0x50000000 0x10000>;
-> +
-> +	cpu_scp_lpri: scp-shmem@0 {
-> +		compatible = "arm,juno-scp-shmem";
-> +		reg = <0x0 0x200>;
-> +	};
-> +
-> +	cpu_scp_hpri: scp-shmem@200 {
-> +		compatible = "arm,juno-scp-shmem";
-> +		reg = <0x200 0x200>;
-> +	};
-> +};
-> +
-> +mailbox: mailbox0@40000000 {
-> +	....
-> +	#mbox-cells = <1>;
-> +};
-> +
-> +scmi_protocol: scmi@2e000000 {
-> +	compatible = "arm,scmi";
-> +	method = "mailbox-doorbell";
-> +	mboxes = <&mailbox 0 &mailbox 1>;
-> +	shmem = <&cpu_scp_lpri &cpu_scp_hpri>;
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	scmi_devpd: protocol@11 {
-> +		reg = <0x11>;
-> +		#power-domain-cells = <1>;
-> +	};
-> +
-> +	scmi_dvfs: protocol@13 {
-> +		reg = <0x13>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	scmi_clk: protocol@14 {
-> +		reg = <0x14>;
-> +		#clock-cells = <1>;
-> +	};
-> +
-> +	scmi_sensors0: protocol@15 {
-> +		reg = <0x15>;
-> +		#thermal-sensor-cells = <1>;
-> +	};
-> +};
-> +
-> +cpu@0 {
-> +	...
-> +	reg = <0 0>;
-> +	clocks = <&scmi_dvfs 0>;
-> +};
-> +
-> +hdlcd@7ff60000 {
-> +	...
-> +	reg = <0 0x7ff60000 0 0x1000>;
-> +	clocks = <&scmi_clk 4>;
-> +	power-domains = <&scmi_devpd 1>;
-> +};
-> +
-> +thermal-zones {
-> +	soc_thermal {
-> +		polling-delay-passive = <100>;
-> +		polling-delay = <1000>;
-> +
-> +				/* sensor         ID */
-> +		thermal-sensors = <&scmi_sensors0 3>;
-> +		...
-> +	};
-> +};
-> -- 
-> 2.7.4
+> Hi Marek,
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Yes, there is hardware that has been in the wild for years that needs this
+> bit reversal.  The specific use case is when a flash chip is connected to
+> a FPGA, and the contents of the flash is used to configure the FPGA on power
+> up.  In this use case, there is no processor involved with configuring the
+> FPGA.  I am most familiar with this feature/bug with Altera FPGAs, but I
+> believe this issue exists with other programmable devices.
+> 
+> > 
+> > > Thinking about this binding more, I wonder if the binding name(s)
+> > > should be (read|write)-bit8-reverse to indicate reversings the bits
+> > > in a byte as opposed to reversing the bits in a 32 bit word?
+> > > 
+> > > I don't think bit reversal is specific to Altera/Intel components. I see
+> > > a nand driver performing bit reversal, and I think I've recently seen
+> > > other FPGA based drivers requiring bit reversal.
+> > 
+> > $ git grep bit.reverse Documentation/devicetree/ | wc -l
+> > 0
+> > 
+> > So we don't have such a generic binding . It's up to Rob (I guess) to
+> > decide whether this is SoC specific and should've altr, prefix or not.
+> > IMO it is.
+> 
+> I agree there is no generic binding at this time, and I look forward
+> to any input from Rob and anyone else on this issue.  I think it is worth
+> pointing out that this really isn't an issue of an SoC, but rather it is an
+> issue of how data in the flash chip is accessed.  I think what makes this issue
+> "weird" is that we have different hardware accessing the data in the flash
+> with a different perspective.  The FPGA looks at the data from one
+> perspective on power up, and a processor trying to update the flash has a
+> different perspective.
+
+Given the comment that it is reversing bits in each byte, that seems 
+fairly Altera specific. I'd be more in favor of a generic property if it 
+was flipping all the bits in a word (for any size word).
+
+Rob
