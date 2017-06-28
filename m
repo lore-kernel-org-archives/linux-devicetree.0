@@ -1,94 +1,35 @@
-From: Priit Laes <plaes@plaes.org>
-Subject: Re: [PATCH v4 1/6] clk: sunxi-ng: div: Add support for fixed
- post-divider
-Date: Wed, 28 Jun 2017 17:59:49 +0000
-Message-ID: <20170628175949.GA3706@plaes.org>
-References: <cover.24b2b13ec5a68552e186ba1637f1328363c3886e.1498422562.git-series.plaes@plaes.org>
- <bc043a64775ec8c9cfcfe6d638e348d38e34eba3.1498422562.git-series.plaes@plaes.org>
- <20170627094607.2hkgzkycclboemvu@flea.lan>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 9/9] of: document rs485 bindings for Atmel USART,
+ Freescale UARTs and OMAP UART
+Date: Wed, 28 Jun 2017 13:04:00 -0500
+Message-ID: <20170628180400.h7yxrprhr44wncgs@rob-hp-laptop>
+References: <20170626090803.10981-1-u.kleine-koenig@pengutronix.de>
+ <20170626090803.10981-10-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20170627094607.2hkgzkycclboemvu@flea.lan>
-Sender: linux-clk-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@armlinux.org.uk>, Philipp Zabel <p.zabel@pengutronix.de>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com, Jonathan Liu <net147@gmail.com>
+In-Reply-To: <20170626090803.10981-10-u.kleine-koenig@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: kernel@pengutronix.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 11:46:07AM +0200, Maxime Ripard wrote:
-> Hi!
-> 
-> On Sun, Jun 25, 2017 at 11:45:42PM +0300, Priit Laes wrote:
-> > SATA clock on sun4i/sun7i is of type (parent) / M / 6 where
-> > 6 is fixed post-divider.
-> > 
-> > Signed-off-by: Priit Laes <plaes@plaes.org>
-> > ---
-> >  drivers/clk/sunxi-ng/ccu_div.c | 12 ++++++++++--
-> >  drivers/clk/sunxi-ng/ccu_div.h |  3 ++-
-> >  2 files changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/clk/sunxi-ng/ccu_div.c b/drivers/clk/sunxi-ng/ccu_div.c
-> > index c0e5c10..de30e15 100644
-> > --- a/drivers/clk/sunxi-ng/ccu_div.c
-> > +++ b/drivers/clk/sunxi-ng/ccu_div.c
-> > @@ -62,8 +62,13 @@ static unsigned long ccu_div_recalc_rate(struct clk_hw *hw,
-> >  	parent_rate = ccu_mux_helper_apply_prediv(&cd->common, &cd->mux, -1,
-> >  						  parent_rate);
-> >  
-> > -	return divider_recalc_rate(hw, parent_rate, val, cd->div.table,
-> > -				   cd->div.flags);
-> > +	val = divider_recalc_rate(hw, parent_rate, val, cd->div.table,
-> > +				  cd->div.flags);
-> > +
-> > +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> > +		val /= cd->fixed_post_div;
-> > +
-> > +	return val;
-> >  }
-> >  
-> >  static int ccu_div_determine_rate(struct clk_hw *hw,
-> > @@ -89,6 +94,9 @@ static int ccu_div_set_rate(struct clk_hw *hw, unsigned long rate,
-> >  	val = divider_get_val(rate, parent_rate, cd->div.table, cd->div.width,
-> >  			      cd->div.flags);
-> >  
-> > +	if (cd->common.features & CCU_FEATURE_FIXED_POSTDIV)
-> > +		val *= cd->fixed_post_div;
-> > +
-> >  	spin_lock_irqsave(cd->common.lock, flags);
-> >  
-> >  	reg = readl(cd->common.base + cd->common.reg);
-> 
-> You also need to adjust the round rate call back to take into account
-> the post divider before calling divider_round_rate_parent, and after
-> since that function can modify the parent_rate.
+On Mon, Jun 26, 2017 at 11:08:03AM +0200, Uwe Kleine-K=F6nig wrote:
+> The drivers support the rs485 binding described in rs485.txt, this commit
+> just makes that explicit.
 
-Is there a way to trigger this function? I don't see it getting called.
+"dt-bindings: serial: ..." for the subject if you respin the series. =
 
-> > diff --git a/drivers/clk/sunxi-ng/ccu_div.h b/drivers/clk/sunxi-ng/ccu_div.h
-> > index 08d0744..f3a5028 100644
-> > --- a/drivers/clk/sunxi-ng/ccu_div.h
-> > +++ b/drivers/clk/sunxi-ng/ccu_div.h
-> > @@ -86,9 +86,10 @@ struct ccu_div_internal {
-> >  struct ccu_div {
-> >  	u32			enable;
-> >  
-> > -	struct ccu_div_internal		div;
-> > +	struct ccu_div_internal	div;
-> 
-> Spurious change?
+Otherwise,
 
-Nope, it was not indented the same way as other variables.
-Should I send it as separate patch?
-
-> 
-> Thanks!
-> Maxime
-> 
-> -- 
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-
-
+Acked-by: Rob Herring <robh@kernel.org>
