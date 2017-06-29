@@ -1,202 +1,172 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] mmc: dw_mmc-rockchip: parse
- rockchip,desired-num-phases from DT
-Date: Thu, 29 Jun 2017 19:57:40 +0900
-Message-ID: <203776cb-c6d4-4de5-1005-668984778f4a@samsung.com>
-References: <1494916134-68043-1-git-send-email-shawn.lin@rock-chips.com>
-        <CGME20170516063039epcas1p49836d3f2fb67c402d6ffd30f7eebef96@epcas1p4.samsung.com>
-        <1494916134-68043-2-git-send-email-shawn.lin@rock-chips.com>
-        <87542133-3d88-ea4f-03b7-884274964e48@samsung.com>
-        <35413895-08d3-c916-e5ec-d5c087260391@rock-chips.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: Clocks used by another OS/CPU (was: Re: [RFC PATCH] clk: renesas:
+ cpg-mssr: Add interface for critical core clocks)
+Date: Thu, 29 Jun 2017 13:18:05 +0200
+Message-ID: <CAMuHMdVD3i0YhGCf-HSS+y+4SHvXi9sW3V4-ScQX=7R+DX=kEQ@mail.gmail.com>
+References: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
+ <b2328038-64ac-f7e0-d8a9-434f2f0b0300@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <35413895-08d3-c916-e5ec-d5c087260391-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <b2328038-64ac-f7e0-d8a9-434f2f0b0300@de.bosch.com>
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Dirk Behme <dirk.behme@de.bosch.com>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@baylibre.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2017 10:38 AM, Shawn Lin wrote:
-> Hi Jaehoon,
+Hi Dirk,
 
-Applied to my dwmmc repository. Thanks!
-
-Best Regards,
-Jaehoon Chung
-
-> 
-> On 2017/5/18 10:20, Jaehoon Chung wrote:
->> Hi Shawn,
+On Thu, Jun 29, 2017 at 12:28 PM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+> On 29.06.2017 11:27, Geert Uytterhoeven wrote:
+>> CC clock, ARM, DT, PM people
 >>
->> On 05/16/2017 03:28 PM, Shawn Lin wrote:
->>> Currently we unconditionally do tuning for each degree, which
->>> costs 900ms for each boot and resume.
+>> TL;DR: Clocks may be in use by another CPU not running Linux, while Linux
+>> disables them as being unused.
+>>
+>> On Mon, Jun 26, 2017 at 1:30 PM, Dirk Behme <dirk.behme@de.bosch.com>
+>> wrote:
+>>> With commit 72f5df2c2bbb6 ("clk: renesas: cpg-mssr: Migrate to
+>>> CLK_IS_CRITICAL") we are able to handle critical module clocks.
+>>> Introduce the same logic for critical core clocks.
 >>>
->>> May someone argue that this is a question of accuracy VS time. But I
->>> would say it's a trick of how we need to do decision for our boards.
->>> If we don't care the time we spend at all, we could definitely do tuning
->>> for each degree. But when we need to improve the user experience, for
->>> instance, speed up resuming from S3, we should also have the right to
->>> do that. This patch add parsing "rockchip,desired-num-phases", for folks
->>> to specify the number of doing tuning. If not specified, 360 will be used
->>> as before.
->>>
->>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
->>
->> Will pick this patch with [PATCH 1/2] after getting acked tags from DT guys.
->>
-> 
-> patch 1 was acked by Rob, so I assume these two are material for 4.13?
-> 
->> Best Regards,
->> Jaehoon Chung
->>
->>>
+>>> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
 >>> ---
+>>> Commit
 >>>
->>> Changes in v2:
->>> - rename property to rockchip,desired-num-phases
+>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/clk/renesas?id=72f5df2c2bbb66d4a555cb51eb9f412abf1af77f
 >>>
->>>   drivers/mmc/host/dw_mmc-rockchip.c | 48 ++++++++++++++++++++++++--------------
->>>   1 file changed, 30 insertions(+), 18 deletions(-)
+>>> is quite nice to avoid *module* clocks being disabled. Unfortunately,
+>>> there are *core* clocks, too. E.g. using an other OS on the Cortex R7
+>>> core of the r8a7795, the 'canfd' is a quite popular core clock which
+>>> shouldn't be disabled by Linux.
 >>>
->>> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
->>> index 372fb6e..a3f1c2b 100644
->>> --- a/drivers/mmc/host/dw_mmc-rockchip.c
->>> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
->>> @@ -25,6 +25,7 @@ struct dw_mci_rockchip_priv_data {
->>>       struct clk        *drv_clk;
->>>       struct clk        *sample_clk;
->>>       int            default_sample_phase;
->>> +    int            num_phases;
->>>   };
->>>     static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->>> @@ -133,8 +134,8 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
->>>       }
->>>   }
->>>   -#define NUM_PHASES            360
->>> -#define TUNING_ITERATION_TO_PHASE(i)    (DIV_ROUND_UP((i) * 360, NUM_PHASES))
->>> +#define TUNING_ITERATION_TO_PHASE(i, num_phases) \
->>> +        (DIV_ROUND_UP((i) * 360, num_phases))
->>>     static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
->>>   {
->>> @@ -159,13 +160,15 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
->>>           return -EIO;
->>>       }
->>>   -    ranges = kmalloc_array(NUM_PHASES / 2 + 1, sizeof(*ranges), GFP_KERNEL);
->>> +    ranges = kmalloc_array(priv->num_phases / 2 + 1,
->>> +                   sizeof(*ranges), GFP_KERNEL);
->>>       if (!ranges)
->>>           return -ENOMEM;
->>>         /* Try each phase and extract good ranges */
->>> -    for (i = 0; i < NUM_PHASES; ) {
->>> -        clk_set_phase(priv->sample_clk, TUNING_ITERATION_TO_PHASE(i));
->>> +    for (i = 0; i < priv->num_phases; ) {
->>> +        clk_set_phase(priv->sample_clk,
->>> +                  TUNING_ITERATION_TO_PHASE(i, priv->num_phases));
->>>             v = !mmc_send_tuning(mmc, opcode, NULL);
->>>   @@ -179,7 +182,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
->>>           if (v) {
->>>               ranges[range_count-1].end = i;
->>>               i++;
->>> -        } else if (i == NUM_PHASES - 1) {
->>> +        } else if (i == priv->num_phases - 1) {
->>>               /* No extra skipping rules if we're at the end */
->>>               i++;
->>>           } else {
->>> @@ -188,11 +191,11 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
->>>                * one since testing bad phases is slow.  Skip
->>>                * 20 degrees.
->>>                */
->>> -            i += DIV_ROUND_UP(20 * NUM_PHASES, 360);
->>> +            i += DIV_ROUND_UP(20 * priv->num_phases, 360);
->>>                 /* Always test the last one */
->>> -            if (i >= NUM_PHASES)
->>> -                i = NUM_PHASES - 1;
->>> +            if (i >= priv->num_phases)
->>> +                i = priv->num_phases - 1;
->>>           }
->>>             prev_v = v;
->>> @@ -210,7 +213,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
->>>           range_count--;
->>>       }
->>>   -    if (ranges[0].start == 0 && ranges[0].end == NUM_PHASES - 1) {
->>> +    if (ranges[0].start == 0 && ranges[0].end == priv->num_phases - 1) {
->>>           clk_set_phase(priv->sample_clk, priv->default_sample_phase);
->>>           dev_info(host->dev, "All phases work, using default phase %d.",
->>>                priv->default_sample_phase);
->>> @@ -222,7 +225,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
->>>           int len = (ranges[i].end - ranges[i].start + 1);
->>>             if (len < 0)
->>> -            len += NUM_PHASES;
->>> +            len += priv->num_phases;
->>>             if (longest_range_len < len) {
->>>               longest_range_len = len;
->>> @@ -230,25 +233,30 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
->>>           }
->>>             dev_dbg(host->dev, "Good phase range %d-%d (%d len)\n",
->>> -            TUNING_ITERATION_TO_PHASE(ranges[i].start),
->>> -            TUNING_ITERATION_TO_PHASE(ranges[i].end),
->>> +            TUNING_ITERATION_TO_PHASE(ranges[i].start,
->>> +                          priv->num_phases),
->>> +            TUNING_ITERATION_TO_PHASE(ranges[i].end,
->>> +                          priv->num_phases),
->>>               len
->>>           );
->>>       }
->>>         dev_dbg(host->dev, "Best phase range %d-%d (%d len)\n",
->>> -        TUNING_ITERATION_TO_PHASE(ranges[longest_range].start),
->>> -        TUNING_ITERATION_TO_PHASE(ranges[longest_range].end),
->>> +        TUNING_ITERATION_TO_PHASE(ranges[longest_range].start,
->>> +                      priv->num_phases),
->>> +        TUNING_ITERATION_TO_PHASE(ranges[longest_range].end,
->>> +                      priv->num_phases),
->>>           longest_range_len
->>>       );
->>>         middle_phase = ranges[longest_range].start + longest_range_len / 2;
->>> -    middle_phase %= NUM_PHASES;
->>> +    middle_phase %= priv->num_phases;
->>>       dev_info(host->dev, "Successfully tuned phase to %d\n",
->>> -         TUNING_ITERATION_TO_PHASE(middle_phase));
->>> +         TUNING_ITERATION_TO_PHASE(middle_phase, priv->num_phases));
->>>         clk_set_phase(priv->sample_clk,
->>> -              TUNING_ITERATION_TO_PHASE(middle_phase));
->>> +              TUNING_ITERATION_TO_PHASE(middle_phase,
->>> +                        priv->num_phases));
->>>     free:
->>>       kfree(ranges);
->>> @@ -264,6 +272,10 @@ static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
->>>       if (!priv)
->>>           return -ENOMEM;
->>>   +    if (of_property_read_u32(np, "rockchip,desired-num-phases",
->>> +                    &priv->num_phases))
->>> +        priv->num_phases = 360;
->>> +
->>>       if (of_property_read_u32(np, "rockchip,default-sample-phase",
->>>                       &priv->default_sample_phase))
->>>           priv->default_sample_phase = 0;
+>>> Therefore, this patch is a proposal to use the same 'mark clocks as
+>>> critical' logic implemented for the module clocks for the core
+>>> clocks, too.
 >>>
+>>> Opinions?
 >>
+>> On r8a7795, there are several Cortex A cores running Linux, and a Cortex
+>> R7
+>> core which may run another OS.
+>> This is an interesting issue, and relevant to other SoCs, too.
 >>
->> _______________________________________________
->> Linux-rockchip mailing list
->> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>> In this particular case, the "canfd" clock is a core clock used as an
+>> auxiliary clock for the CAN0, CAN1, and CANFD interfaces.  This can lead
+>> to three scenarios:
+>>    1. Linux controls all CAN interfaces
+>>       => no issue,
+>>    2. The OS on the RT CPU controls all CAN interfaces
+>>       => issue, Linux disables the clock
+>>    3. Mix of 1 and 2
+>>       => More issues.
+>> Of course this is not limited to clocks, but also to e.g. PM domains.
 >>
+>> How can this be handled?
+>> I believe just marking the "canfd" clock critical is not the right
+>> solution,
+>> as about any clock could be used by the RT CPU.
 >>
+>> Still, Linux needs to be made aware that devices (clocks and PM domains)
+>> are
+>> controlled by another CPU/OS.
 >>
-> 
-> -- 
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
-> 
+>> Should this be described in DT? It feels like software policy to me.
+>>
+>> Note that we (mainline) currently don't describe the Cortex R7 core in DT.
+>> Dirk: do you describe it?
+>
+> No, we don't describe anything R7 related in DT, too.
+>
+>> Summary:
+>>    1. Core/module clocks are described in the clock driver (not in DT),
+>>    2. Unused clocks are disabled by CCF,
+>>    3. Clocks may be in use by the Real-Time CPU core, running another OS,
+>>    4. How to communicate to Linux which clocks are under control of the RT
+>> CPU?
+>
+>> Thanks for your comments!
+>
+> While I appreciated that the overall issue is discussed, I'm not sure if
+> there is anything really special we don't support generally, yet.
+>
+> We have an infrastructure to mark clocks enabled anywhere else to be not
+> disabled by Linux kernel (CLK_IS_CRITICAL). From my point of view, for this
+> infrastructure, it doesn't matter, where this 'anywhere else' is. To take
+> some concrete Renesas RCar3 examples, from my point of view it doesn't
+> matter if its a GIC-400 clock enabled in the boot loader (U-Boot) or a CAN
+> clock enabled by the R7. In both cases marking them as critical on Linux
+> side does the trick.
+
+Yes, it does the trick. But is it the proper solution?
+
+> The issue I just want to address (discuss) with this RFC patch is that for
+> Renesas RCar3 we have CLK_IS_CRITICAL support for module clocks, but not for
+> core clocks. From my point of view, this is a completely Renesas
+> implementation specific discussion.
+
+Correct. How the Renesas CPG/MSSR driver decides which clocks are marked
+critical is a Renesas-specific implementation issue.
+And indeed, currently the driver only handles critical module clocks
+(more specifically, the GIC module clock, due to the lack of runtime PM
+support in the GIC driver).
+It does not handle critical core clocks, as so far no use case required
+such support.
+
+> So I would rephrase the initial sentence above
+>
+> "Clocks may be in use by another CPU not running Linux, while Linux disables
+> them as being unused."
+>
+> to anything like
+>
+> "Clocks may be enabled (used) by others (U-Boot/CPUs/Hypervisors), while
+> Linux disables them as being unused"
+
+If a clock is used by Linux, Linux must make sure it is enabled when
+needed.
+If a clock is needed to run Linux, without driver support, Linux must still
+make sure it is enabled. This is were critical clocks enter the game.
+The above includes CPU clocks.
+
+If a clock is used by U-Boot, U-Boot must make sure it is enabled when
+needed.  Once U-Boot has transferred control to Linux, this no longer
+matters.
+
+if a clock is used by a HV, the HV must make sure it is enabled when
+needed. I believe this is handled in secure mode? R-Car Gen3 SoCs already
+have several module clocks that cannot be disabled (i.e. MSTPSRx != OR of
+all yMSTPCRx).
+
+If a clock is used by the RT CPU, the RT CPU must make sure it is enabled
+when needed.
+There are several options to do that:
+  - Secure mode,
+  - Communicating the clock requirements to Linux, either statically or
+    dynamically,
+  - DT? (but this is software policy?)
+  - ???
+
+> And I think this is completely addressed by CLK_IS_CRITICAL, as far as I can
+> see :)
+
+While this is a solution that works (for your use case), IMHO it's not the
+right thing to do.
+However, if we decide to go this route, which other clocks should be marked
+critical? Almost (all?) peripherals can be used by the RT CPU. Hence all
+clocks should be enabled and marked critical, unconditionally?
+
+So I still think we need a more general solution.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
