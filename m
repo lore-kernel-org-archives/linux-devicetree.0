@@ -1,93 +1,117 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 1/6] staging: iio: tsl2x7x: add of_match table for device tree
- support
-Date: Thu, 29 Jun 2017 13:03:47 -0400
-Message-ID: <20170629170352.11264-2-masneyb@onstation.org>
-References: <20170629170352.11264-1-masneyb@onstation.org>
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH 3/5] dt-bindings: arm: Document Socionext MB86S71 and
+ Fujitsu F-Cue
+Date: Fri, 30 Jun 2017 02:18:31 +0900
+Message-ID: <CAK7LNASYvdWq5rV6q5Xf4Zqjso3H+XQY9Z6byJgcgfN7wT6fog@mail.gmail.com>
+References: <20170625170020.11791-1-afaerber@suse.de> <20170625170020.11791-4-afaerber@suse.de>
+ <20170628164605.2gnvrv4g7jluzyrm@rob-hp-laptop> <CAK7LNATqjOMUajUCYVq=L6wWVTUEc1M7Po+KQ3M3Z=A7+FHX5w@mail.gmail.com>
+ <51221840-b08e-45f1-5601-937fb15f3947@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20170629170352.11264-1-masneyb@onstation.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: jic23@kernel.org, linux-iio@vger.kernel.org
-Cc: devel@driverdev.osuosl.org, Mark Rutland <mark.rutland@arm.com>, lars@metafoo.de, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Jon.Brenner@ams.com, pmeerw@pmeerw.net, knaack.h@gmx.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51221840-b08e-45f1-5601-937fb15f3947-l3A5Bk7waGM@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Satoru OKAMOTO <okamoto.satoru-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for the tsl2x7x IIO driver with no custom
-properties.
+Hi Andreas,
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/trivial-devices.txt | 10 ++++++++++
- drivers/staging/iio/light/tsl2x7x.c                   | 16 ++++++++++++++++
- 2 files changed, 26 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/trivial-devices.txt b/Documentation/devicetree/bindings/trivial-devices.txt
-index 35f406d..0e6e953 100644
---- a/Documentation/devicetree/bindings/trivial-devices.txt
-+++ b/Documentation/devicetree/bindings/trivial-devices.txt
-@@ -21,6 +21,16 @@ adi,adt7490		+/-1C TDM Extended Temp Range I.C
- adi,adxl345		Three-Axis Digital Accelerometer
- adi,adxl346		Three-Axis Digital Accelerometer (backward-compatibility value "adi,adxl345" must be listed too)
- ams,iaq-core		AMS iAQ-Core VOC Sensor
-+amstaos,tsl2571		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2671		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2671		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2771		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2771		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2572		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2672		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2672		AMS/TAOS ALS and proximity sensor
-+amstaos,tsl2772		AMS/TAOS ALS and proximity sensor
-+amstaos,tmd2772		AMS/TAOS ALS and proximity sensor
- at,24c08		i2c serial eeprom  (24cxx)
- atmel,at97sc3204t	i2c trusted platform module (TPM)
- capella,cm32181		CM32181: Ambient Light Sensor
-diff --git a/drivers/staging/iio/light/tsl2x7x.c b/drivers/staging/iio/light/tsl2x7x.c
-index 1467199..3f4f1f3 100644
---- a/drivers/staging/iio/light/tsl2x7x.c
-+++ b/drivers/staging/iio/light/tsl2x7x.c
-@@ -2026,6 +2026,21 @@ static struct i2c_device_id tsl2x7x_idtable[] = {
- 
- MODULE_DEVICE_TABLE(i2c, tsl2x7x_idtable);
- 
-+static const struct of_device_id tsl2x7x_of_match[] = {
-+        { .compatible = "amstaos,tsl2571" },
-+        { .compatible = "amstaos,tsl2671" },
-+        { .compatible = "amstaos,tmd2671" },
-+        { .compatible = "amstaos,tsl2771" },
-+        { .compatible = "amstaos,tmd2771" },
-+        { .compatible = "amstaos,tsl2572" },
-+        { .compatible = "amstaos,tsl2672" },
-+        { .compatible = "amstaos,tmd2672" },
-+        { .compatible = "amstaos,tsl2772" },
-+        { .compatible = "amstaos,tmd2772" },
-+        {}
-+};
-+MODULE_DEVICE_TABLE(of, tsl2x7x_of_match);
-+
- static const struct dev_pm_ops tsl2x7x_pm_ops = {
- 	.suspend = tsl2x7x_suspend,
- 	.resume  = tsl2x7x_resume,
-@@ -2035,6 +2050,7 @@ static const struct dev_pm_ops tsl2x7x_pm_ops = {
- static struct i2c_driver tsl2x7x_driver = {
- 	.driver = {
- 		.name = "tsl2x7x",
-+		.of_match_table = tsl2x7x_of_match,
- 		.pm = &tsl2x7x_pm_ops,
- 	},
- 	.id_table = tsl2x7x_idtable,
--- 
-2.9.4
+2017-06-29 21:53 GMT+09:00 Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>:
+> Hi Masahiro-san,
+>
+> Am 29.06.2017 um 14:18 schrieb Masahiro Yamada:
+>> 2017-06-29 1:46 GMT+09:00 Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>:
+>>> On Sun, Jun 25, 2017 at 07:00:18PM +0200, Andreas F=C3=A4rber wrote:
+>>>> For consistency with existing SoC bindings, use "fujitsu,mb86s71" but
+>>>> socionext.txt.
+>>>>
+>>>> Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/arm/socionext.txt | 17 ++++++++++++=
++++++
+>>>>  1 file changed, 17 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/arm/socionext.tx=
+t
+>>>
+>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> --
+>>
+>> I do not mind this, but
+>> please note there are multiple product lines in Socionext
+>> because Socionext merged LSI divisions from Panasonic and Fujitsu.
+>>
+>> I maintain documents for Socionext UniPhier SoC family
+>> (which inherits SoC architecture of Panasonic)
+>> in Documentation/devicetree/bindings/arm/uniphier/.
+>
+> Actually you seemed to be lacking bindings beyond the cache controller
+> for Uniphier:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/=
+Documentation/devicetree/bindings/arm/uniphier
+>
+> The SoC compatible, e.g. "socionext,uniphier-ld11", needs to be defined
+> somewhere too, as done here. A git-grep for that particular compatible
+> only finds derived clk and reset bindings.
+
+I can care to send a patch later, but it is off-topic here.
+
+
+> Using socionext.txt allows you to add those bindings to a shared file;
+> if you prefer to host them separately below uniphier/ or as uniphier.txt
+
+I was thinking of this way.
+
+For example, TI has omap/, keystone/, davinci.txt, etc.
+in this directory level.
+
+
+> do you have a better name suggestion for this one? I was trying to keep
+> our options open to later add SC2A11 in socionext.txt, and I also saw
+> some mb8ac300 or so (MB86S7x predecessor?) in downstream sources, so I
+> don't know a good common name for the non-Panasonic parts. And if we
+> take fujitsu.txt for MB86S7x to match the vendor prefix then we will
+> need a separate file for the new SC2A11 IIUC.
+
+I have no idea.
+Actually, I am not familiar with those SoCs.
+
+I am not sure if there exists a common name for those Fujitsu-derived SoCs.
+I think a SoC family name will be helpful to avoid proliferating
+arch/arm/mach-{mb86s7x,mb8ac300, ...}.
+
+I see some Socionext guys CC'ed in this mail,
+somebody might have information about this.
+
+As I said before, I do not mind adding socionext.txt
+and it seems reasonable enough
+if there is no common name for those SoCs.
+
+
+
+> Also if you can tell us where the cut between Fujitsu and Socionext
+> should be done, we can certainly adapt. NXP is still adding all their
+> new SoCs in fsl.txt, it seems.
+> (A similar naming issue exists for my not-yet-submitted FM4 patches,
+> where it changed owners from Fujitsu to Spansion and then to Cypress.)
+>
+
+Right, vendor names are not future-proof in some cases.
+
+We use "uniphier" because it is convenient to
+make a group of SoCs with similar architecture,
+and it will work even if UniPhier product lines are sold again in the
+future.  :-)
+
+
+
+--=20
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
