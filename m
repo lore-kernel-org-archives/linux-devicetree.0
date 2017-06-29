@@ -1,36 +1,73 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] pinctrl: Add USB support for Aspeed SoCs
-Date: Thu, 29 Jun 2017 14:53:41 +0200
-Message-ID: <CACRpkdZpJuaedE=04we_bcLB7qzOdvJAz4QmTfnuZA=5PrMf0g@mail.gmail.com>
-References: <20170627021214.23323-1-andrew@aj.id.au>
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Subject: Re: Clocks used by another OS/CPU
+Date: Thu, 29 Jun 2017 14:55:14 +0200
+Message-ID: <d1ee0f5b-d9ef-96c0-b698-a4a1cef58428@de.bosch.com>
+References: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
+ <CAMuHMdWRadUCZUycUW3dKJhS__aRRVbV1tXo0umUQ7KHOYQMoQ@mail.gmail.com>
+ <50911172-8fa1-8341-0ed0-d40f00d9392c@de.bosch.com>
+ <CAMuHMdXedexq_jGq+y3Hbmph1_1N_LjT7dhYJ=rC0Q2oK_Xjug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170627021214.23323-1-andrew-zrmu5oMJ5Fs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>
-Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Joel Stanley <joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Ryan Chen <ryan_chen-SAlXDmAnmOAqDJ6do+/SaQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-renesas-soc-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXedexq_jGq+y3Hbmph1_1N_LjT7dhYJ=rC0Q2oK_Xjug@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-renesas-soc-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@baylibre.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 4:12 AM, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org> wrote:
+On 29.06.2017 14:45, Geert Uytterhoeven wrote:
+> Hi Dirk,
+> 
+> On Thu, Jun 29, 2017 at 2:07 PM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+>> On 29.06.2017 13:56, Geert Uytterhoeven wrote:
+>>> On Thu, Jun 29, 2017 at 11:27 AM, Geert Uytterhoeven
+>>> <geert@linux-m68k.org> wrote:
+>>>> CC clock, ARM, DT, PM people
+>>>>
+>>>> TL;DR: Clocks may be in use by another CPU not running Linux, while Linux
+>>>> disables them as being unused.
+>>>
+>>>> Of course this is not limited to clocks, but also to e.g. PM domains.
+>>>
+>>> BTW, how do you prevent Linux from powering down the CR7 PM domain,
+>>> which contains the Cortex R7?
+>>
+>> The idea is
+>>
+>> --- a/drivers/soc/renesas/r8a7795-sysc.c
+>> +++ b/drivers/soc/renesas/r8a7795-sysc.c
+>> @@ -38,7 +38,8 @@ static const struct rcar_sysc_area r8a7795_areas[]
+>> __initconst = {
+>>          { "ca53-cpu3",  0x200, 3, R8A7795_PD_CA53_CPU3, R8A7795_PD_CA53_SCU,
+>>            PD_CPU_NOCR },
+>>          { "a3vp",       0x340, 0, R8A7795_PD_A3VP,      R8A7795_PD_ALWAYS_ON
+>> },
+>> -       { "cr7",        0x240, 0, R8A7795_PD_CR7,       R8A7795_PD_ALWAYS_ON
+>> },
+>> +       { "cr7",        0x240, 0, R8A7795_PD_CR7,
+>> R8A7795_PD_ALWAYS_ON,
+>> +         PD_CPU_NOCR },
+>>          { "a3vc",       0x380, 0, R8A7795_PD_A3VC,      R8A7795_PD_ALWAYS_ON
+>> },
+>>          { "a2vc0",      0x3c0, 0, R8A7795_PD_A2VC0,     R8A7795_PD_A3VC },
+>>          { "a2vc1",      0x3c0, 1, R8A7795_PD_A2VC1,     R8A7795_PD_A3VC },
+>>
+>>
+>> Not finally tested, though.
+> 
+> Pretending the CR7 PM Domain can only be controlled through WFI/APMU only should
+> work.
+> But IMHO it is a hack, just like your solution for the CANFD clock.
 
-> With recent interest in the USB virtual hub in the Aspeed SoCs[1] it is a good
-> time to add pinmux support for the USB ports and controllers. The earlier
-> series of pinmux patches for the Aspeed SoCs focussed on supporting pins which
-> were capable of GPIO. This is not the case for the USB pins, hence they have
-> been unsupported until now.
->
-> Rob: I know you've mentioned previously you desired complete bindings to be
-> provided up front, so apologies for continuing to add functionality. This looks
-> to be the last of it.
 
-Waiting for DT review and addressing of Beji's comment for these.
+Well, it seems to be the best solution recent mainline gives us and 
+seems to work ;)
 
-Please resend after the merge window.
+And for me it looks at least better than the other solution I've seen so 
+far: Remove the 'cr7', 'canfd' etc lines completely from the kernel.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+
+Dirk
