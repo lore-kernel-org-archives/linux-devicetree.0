@@ -1,191 +1,200 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 01/14] qcom: mtd: nand: Add driver data for QPIC DMA
-Date: Thu, 29 Jun 2017 11:46:23 +0200
-Message-ID: <d5f24c71-f674-9519-7d48-3fe768d8f2c4@gmail.com>
-References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-2-git-send-email-absahu@codeaurora.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCH v2 2/2] mmc: dw_mmc-rockchip: parse
+ rockchip,desired-num-phases from DT
+Date: Thu, 29 Jun 2017 18:47:29 +0900
+Message-ID: <d7698d78-1a39-2b9f-3013-26c7b55ae5dc@samsung.com>
+References: <1494916134-68043-1-git-send-email-shawn.lin@rock-chips.com>
+        <CGME20170516063039epcas1p49836d3f2fb67c402d6ffd30f7eebef96@epcas1p4.samsung.com>
+        <1494916134-68043-2-git-send-email-shawn.lin@rock-chips.com>
+        <87542133-3d88-ea4f-03b7-884274964e48@samsung.com>
+        <35413895-08d3-c916-e5ec-d5c087260391@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="gbk"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1498720566-20782-2-git-send-email-absahu@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Abhishek Sahu <absahu@codeaurora.org>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <35413895-08d3-c916-e5ec-d5c087260391@rock-chips.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Lin <shawn.lin@rock-chips.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: devicetree@vger.kernel.org, Ziyuan Xu <xzy.xu@rock-chips.com>, linux-mmc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2017 09:15 AM, Abhishek Sahu wrote:
-> The current driver only support EBI2 NAND which uses ADM DMA. The
-> latest QCOM controller supports QPIC NAND which uses BAM DMA. NAND
-> registers and programming sequence are same for EBI2 and QPIC
-> NAND so the same driver can support QPIC NAND also by adding the
-> BAM DMA support. This patch adds the QPIC NAND support in current
-> NAND driver with compatible string "qcom,qpic-nandc-v1.4.0" and
-> maps it with different configuration parameter in driver data.
+Hi Shawn,
+
+On 06/29/2017 10:38 AM, Shawn Lin wrote:
+> Hi Jaehoon,
 > 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-
-Split this into DT bindings patch and code patch ...
-
-> ---
->  .../devicetree/bindings/mtd/qcom_nandc.txt         | 41 +++++++++++++++++++++-
->  drivers/mtd/nand/qcom_nandc.c                      | 37 ++++++++++++++++---
->  2 files changed, 73 insertions(+), 5 deletions(-)
+> On 2017/5/18 10:20, Jaehoon Chung wrote:
+>> Hi Shawn,
+>>
+>> On 05/16/2017 03:28 PM, Shawn Lin wrote:
+>>> Currently we unconditionally do tuning for each degree, which
+>>> costs 900ms for each boot and resume.
+>>>
+>>> May someone argue that this is a question of accuracy VS time. But I
+>>> would say it's a trick of how we need to do decision for our boards.
+>>> If we don't care the time we spend at all, we could definitely do tuning
+>>> for each degree. But when we need to improve the user experience, for
+>>> instance, speed up resuming from S3, we should also have the right to
+>>> do that. This patch add parsing "rockchip,desired-num-phases", for folks
+>>> to specify the number of doing tuning. If not specified, 360 will be used
+>>> as before.
+>>>
+>>> Signed-off-by: Shawn Lin <shawn.lin@rock-chips.com>
+>>
+>> Will pick this patch with [PATCH 1/2] after getting acked tags from DT guys.
+>>
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> index 70dd511..5d0f7ae 100644
-> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
-> @@ -1,7 +1,9 @@
->  * Qualcomm NAND controller
->  
->  Required properties:
-> -- compatible:		should be "qcom,ipq806x-nand"
-> +- compatible:		must be one of the following:
-> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
-> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA like IPQ4019.
->  - reg:			MMIO address range
->  - clocks:		must contain core clock and always on clock
->  - clock-names:		must contain "core" for the core clock and "aon" for the
-> @@ -84,3 +86,40 @@ nand@1ac00000 {
->  		};
->  	};
->  };
-> +
-> +nand@79b0000 {
-> +	compatible = "qcom,qpic-nandc-v1.4.0";
-> +	reg = <0x79b0000 0x1000>;
-> +
-> +	clocks = <&gcc GCC_QPIC_CLK>,
-> +		<&gcc GCC_QPIC_AHB_CLK>;
-> +	clock-names = "core", "aon";
-> +
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	nandcs@0 {
-> +		compatible = "qcom,nandcs";
-> +		reg = <0>;
-> +
-> +		nand-ecc-strength = <4>;
-> +		nand-ecc-step-size = <512>;
-> +		nand-bus-width = <8>;
-> +
-> +		partitions {
-> +			compatible = "fixed-partitions";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +
-> +			partition@0 {
-> +				label = "boot-nand";
-> +				reg = <0 0x58a0000>;
-> +			};
-> +
-> +			partition@58a0000 {
-> +				label = "fs-nand";
-> +				reg = <0x58a0000 0x4000000>;
-> +			};
-> +		};
-> +	};
-> +};
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index 57d483a..f55f728 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright (c) 2016, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
->   *
->   * This software is licensed under the terms of the GNU General Public
->   * License version 2, as published by the Free Software Foundation, and
-> @@ -234,6 +234,8 @@ struct nandc_regs {
->   * @cmd1/vld:			some fixed controller register values
->   * @ecc_modes:			supported ECC modes by the current controller,
->   *				initialized via DT match data
-> + * @dma_bam_enabled:		flag to tell whether nand controller is using
-> + *				bam dma
->   */
->  struct qcom_nand_controller {
->  	struct nand_hw_control controller;
-> @@ -253,6 +255,7 @@ struct qcom_nand_controller {
->  	struct list_head desc_list;
->  
->  	u8		*data_buffer;
-> +	bool		dma_bam_enabled;
->  	int		buf_size;
->  	int		buf_count;
->  	int		buf_start;
-> @@ -316,6 +319,17 @@ struct qcom_nand_host {
->  	u32 clrreadstatus;
->  };
->  
-> +/*
-> + * This data type corresponds to the nand driver data which will be used at
-> + * driver probe time
-> + * @ecc_modes - ecc mode for nand
-> + * @dma_bam_enabled - whether this driver is using bam
-> + */
-> +struct qcom_nand_driver_data {
-> +	u32 ecc_modes;
-> +	bool dma_bam_enabled;
-> +};
-> +
->  static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
->  {
->  	return container_of(chip, struct qcom_nand_host, chip);
-> @@ -2073,6 +2087,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
->  	struct device_node *dn = dev->of_node, *child;
->  	struct resource *res;
->  	int ret;
-> +	const struct qcom_nand_driver_data *driver_data;
->  
->  	nandc = devm_kzalloc(&pdev->dev, sizeof(*nandc), GFP_KERNEL);
->  	if (!nandc)
-> @@ -2087,7 +2102,10 @@ static int qcom_nandc_probe(struct platform_device *pdev)
->  		return -ENODEV;
->  	}
->  
-> -	nandc->ecc_modes = (unsigned long)dev_data;
-> +	driver_data = (const struct qcom_nand_driver_data *)dev_data;
-> +
-> +	nandc->ecc_modes = driver_data->ecc_modes;
-> +	nandc->dma_bam_enabled = driver_data->dma_bam_enabled;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	nandc->base = devm_ioremap_resource(dev, res);
-> @@ -2179,15 +2197,26 @@ static int qcom_nandc_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> -#define EBI2_NANDC_ECC_MODES	(ECC_RS_4BIT | ECC_BCH_8BIT)
->  
-> +static const struct qcom_nand_driver_data ebi2_nandc_data = {
-> +	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
-> +	.dma_bam_enabled = false,
-> +};
-> +
-> +static const struct qcom_nand_driver_data qpic_nandc_v1_4_0_data = {
-> +	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
-> +	.dma_bam_enabled = true,
-> +};
->  /*
->   * data will hold a struct pointer containing more differences once we support
->   * more controller variants
->   */
->  static const struct of_device_id qcom_nandc_of_match[] = {
->  	{	.compatible = "qcom,ipq806x-nand",
-> -		.data = (void *)EBI2_NANDC_ECC_MODES,
-> +		.data = (void *)&ebi2_nandc_data,
-> +	},
-> +	{	.compatible = "qcom,qpic-nandc-v1.4.0",
-> +		.data = (void *)&qpic_nandc_v1_4_0_data,
->  	},
->  	{}
->  };
+> patch 1 was acked by Rob, so I assume these two are material for 4.13?
+
+Sorry for late..Will pick and PR..Thanks!
+
+Best Regards,
+Jaehoon Chung
+
+> 
+>> Best Regards,
+>> Jaehoon Chung
+>>
+>>>
+>>> ---
+>>>
+>>> Changes in v2:
+>>> - rename property to rockchip,desired-num-phases
+>>>
+>>>   drivers/mmc/host/dw_mmc-rockchip.c | 48 ++++++++++++++++++++++++--------------
+>>>   1 file changed, 30 insertions(+), 18 deletions(-)
+>>>
+>>> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+>>> index 372fb6e..a3f1c2b 100644
+>>> --- a/drivers/mmc/host/dw_mmc-rockchip.c
+>>> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+>>> @@ -25,6 +25,7 @@ struct dw_mci_rockchip_priv_data {
+>>>       struct clk        *drv_clk;
+>>>       struct clk        *sample_clk;
+>>>       int            default_sample_phase;
+>>> +    int            num_phases;
+>>>   };
+>>>     static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>>> @@ -133,8 +134,8 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>>>       }
+>>>   }
+>>>   -#define NUM_PHASES            360
+>>> -#define TUNING_ITERATION_TO_PHASE(i)    (DIV_ROUND_UP((i) * 360, NUM_PHASES))
+>>> +#define TUNING_ITERATION_TO_PHASE(i, num_phases) \
+>>> +        (DIV_ROUND_UP((i) * 360, num_phases))
+>>>     static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>>   {
+>>> @@ -159,13 +160,15 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>>           return -EIO;
+>>>       }
+>>>   -    ranges = kmalloc_array(NUM_PHASES / 2 + 1, sizeof(*ranges), GFP_KERNEL);
+>>> +    ranges = kmalloc_array(priv->num_phases / 2 + 1,
+>>> +                   sizeof(*ranges), GFP_KERNEL);
+>>>       if (!ranges)
+>>>           return -ENOMEM;
+>>>         /* Try each phase and extract good ranges */
+>>> -    for (i = 0; i < NUM_PHASES; ) {
+>>> -        clk_set_phase(priv->sample_clk, TUNING_ITERATION_TO_PHASE(i));
+>>> +    for (i = 0; i < priv->num_phases; ) {
+>>> +        clk_set_phase(priv->sample_clk,
+>>> +                  TUNING_ITERATION_TO_PHASE(i, priv->num_phases));
+>>>             v = !mmc_send_tuning(mmc, opcode, NULL);
+>>>   @@ -179,7 +182,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>>           if (v) {
+>>>               ranges[range_count-1].end = i;
+>>>               i++;
+>>> -        } else if (i == NUM_PHASES - 1) {
+>>> +        } else if (i == priv->num_phases - 1) {
+>>>               /* No extra skipping rules if we're at the end */
+>>>               i++;
+>>>           } else {
+>>> @@ -188,11 +191,11 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>>                * one since testing bad phases is slow.  Skip
+>>>                * 20 degrees.
+>>>                */
+>>> -            i += DIV_ROUND_UP(20 * NUM_PHASES, 360);
+>>> +            i += DIV_ROUND_UP(20 * priv->num_phases, 360);
+>>>                 /* Always test the last one */
+>>> -            if (i >= NUM_PHASES)
+>>> -                i = NUM_PHASES - 1;
+>>> +            if (i >= priv->num_phases)
+>>> +                i = priv->num_phases - 1;
+>>>           }
+>>>             prev_v = v;
+>>> @@ -210,7 +213,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>>           range_count--;
+>>>       }
+>>>   -    if (ranges[0].start == 0 && ranges[0].end == NUM_PHASES - 1) {
+>>> +    if (ranges[0].start == 0 && ranges[0].end == priv->num_phases - 1) {
+>>>           clk_set_phase(priv->sample_clk, priv->default_sample_phase);
+>>>           dev_info(host->dev, "All phases work, using default phase %d.",
+>>>                priv->default_sample_phase);
+>>> @@ -222,7 +225,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>>           int len = (ranges[i].end - ranges[i].start + 1);
+>>>             if (len < 0)
+>>> -            len += NUM_PHASES;
+>>> +            len += priv->num_phases;
+>>>             if (longest_range_len < len) {
+>>>               longest_range_len = len;
+>>> @@ -230,25 +233,30 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>>           }
+>>>             dev_dbg(host->dev, "Good phase range %d-%d (%d len)\n",
+>>> -            TUNING_ITERATION_TO_PHASE(ranges[i].start),
+>>> -            TUNING_ITERATION_TO_PHASE(ranges[i].end),
+>>> +            TUNING_ITERATION_TO_PHASE(ranges[i].start,
+>>> +                          priv->num_phases),
+>>> +            TUNING_ITERATION_TO_PHASE(ranges[i].end,
+>>> +                          priv->num_phases),
+>>>               len
+>>>           );
+>>>       }
+>>>         dev_dbg(host->dev, "Best phase range %d-%d (%d len)\n",
+>>> -        TUNING_ITERATION_TO_PHASE(ranges[longest_range].start),
+>>> -        TUNING_ITERATION_TO_PHASE(ranges[longest_range].end),
+>>> +        TUNING_ITERATION_TO_PHASE(ranges[longest_range].start,
+>>> +                      priv->num_phases),
+>>> +        TUNING_ITERATION_TO_PHASE(ranges[longest_range].end,
+>>> +                      priv->num_phases),
+>>>           longest_range_len
+>>>       );
+>>>         middle_phase = ranges[longest_range].start + longest_range_len / 2;
+>>> -    middle_phase %= NUM_PHASES;
+>>> +    middle_phase %= priv->num_phases;
+>>>       dev_info(host->dev, "Successfully tuned phase to %d\n",
+>>> -         TUNING_ITERATION_TO_PHASE(middle_phase));
+>>> +         TUNING_ITERATION_TO_PHASE(middle_phase, priv->num_phases));
+>>>         clk_set_phase(priv->sample_clk,
+>>> -              TUNING_ITERATION_TO_PHASE(middle_phase));
+>>> +              TUNING_ITERATION_TO_PHASE(middle_phase,
+>>> +                        priv->num_phases));
+>>>     free:
+>>>       kfree(ranges);
+>>> @@ -264,6 +272,10 @@ static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
+>>>       if (!priv)
+>>>           return -ENOMEM;
+>>>   +    if (of_property_read_u32(np, "rockchip,desired-num-phases",
+>>> +                    &priv->num_phases))
+>>> +        priv->num_phases = 360;
+>>> +
+>>>       if (of_property_read_u32(np, "rockchip,default-sample-phase",
+>>>                       &priv->default_sample_phase))
+>>>           priv->default_sample_phase = 0;
+>>>
+>>
+>>
+>> _______________________________________________
+>> Linux-rockchip mailing list
+>> Linux-rockchip@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+>>
+>>
+>>
+> 
+> -- 
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> 
 > 
 
-
--- 
-Best regards,
-Marek Vasut
