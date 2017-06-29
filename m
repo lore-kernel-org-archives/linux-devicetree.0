@@ -1,74 +1,67 @@
-From: Franklin S Cooper Jr <fcooper@ti.com>
-Subject: Re: CAN-FD Transceiver Limitations
-Date: Thu, 29 Jun 2017 11:36:59 -0500
-Message-ID: <c0d3d772-6939-d22c-b954-3ba6486a9ede@ti.com>
-References: <de1f6343-4b28-4a5f-c6df-4e54c09fcce2@ti.com>
- <20170629142142.GF9244@lunn.ch> <5d4f2bcf-bd0f-4fa1-5d5a-d7b4a83cbc5e@ti.com>
- <20170629154139.GC13221@lunn.ch>
+From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 3/3 v6] ARC: hsdk: initial port for HSDK board
+Date: Thu, 29 Jun 2017 16:39:45 +0000
+Message-ID: <1498754384.2378.10.camel@synopsys.com>
+References: <20170626151118.19507-1-Eugeniy.Paltsev@synopsys.com>
+         <20170626151118.19507-4-Eugeniy.Paltsev@synopsys.com>
+         <CAL_JsqJBPL+AuYNP=JgXWOGNFxdenKY4Rt3_f6tG6MYDLncRNg@mail.gmail.com>
+         <1498494334.28955.58.camel@synopsys.com>
+         <20170628225005.5ume54d67vtvp5fi@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20170629154139.GC13221@lunn.ch>
-Sender: netdev-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170628225005.5ume54d67vtvp5fi@rob-hp-laptop>
+Content-Language: en-US
+Content-ID: <510F4FDEE91E5247BB1E8C004AD14A4A-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+device tree mailing list
-
-Hi Andrew
-On 06/29/2017 10:41 AM, Andrew Lunn wrote:
->> Transceivers for CAN are not apart of any model. Traditional CAN didn't
->> have a problem because all transceivers from my understanding supported
->> the maximum speed of 1 Mbps defined by the spec. However, with the
->> introduction of CAN Flexible Datarate mode it seems that for
->> transceivers that supported CAN-FD the maximum supported speeds vary.
-> 
-> So transceivers are dumb devices, nothing to configure, so no need to
-> have a driver for them.
-> 
->> Now that I think of it
->> you also can't determine if the transceiver supports CAN-FD in the first
->> place. IP that supports CAN-FD is backwards compatible with standard
->> CAN. Therefore, its feasible that you may even use a transceiver that
->> doesn't support CAN-FD. So I would think something like the below would
->> be needed.
->>
->> mcan@0 {
->> 	...
->> 	fixed-transceiver {
->> 	      max-canfd-speed = <2000>
->> 	};
->> 	...
->> };
-> 
-> Are there likely to be other transceiver properties? Adding a subnode
-> may not make sense if this is going to be the only property.
-> 
-> Also, 2KHz is not very fast :-)
-> 
-> Taking a quick look in Documentation/devicetree/bindings/net/can, it
-> seems a bit of a wild west. No standardization, no central binding
-> which CAN drivers are expected to support, etc. This sounds like a
-> generic problem, not an mcan problem. So document this property
-> centrally, implement the parsing of it centrally, etc, to encourage
-> other CAN drivers to use it, rather than re-invent the wheel.
-
-As of now its the only property that I think is needed. In general from
-past experience and threads it seems that people are fairly adamant
-about having DT mimic hardware as closely as possible. So since from a
-hardware perspective the transceiver is an external device that is
-connected to the CAN IP it would make sense for a subnode to be used to
-model it. But either way works for me. If the device tree folks do not
-care for subnode to be created then I can just add a property.
-
-Also I agree that attempting to make this optional property/subnode
-generic to all of CAN would be preferable. Another not sure if its
-feasible yet without standardization being first forced across all CAN
-drivers.
-
-
-> 
-> 	   Andrew
-> 
+T24gV2VkLCAyMDE3LTA2LTI4IGF0IDE3OjUwIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+PiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjY2xv
+Y2stY2VsbHMgPSA8MD47DQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gPiA+ICvCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xvY2stZnJlcXVlbmN5
+ID0gPDEwMDAwMDAwMDA+Ow0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+fTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29y
+ZV9pbnRjOiBhcmNocy1pbnRjQGNwdSB7DQo+ID4gPiANCj4gPiA+IGNwdSBpcyBub3QgYSB2YWxp
+ZCB1bml0LWFkZHJlc3MuIEhvdyBhcmUgdGhlc2UgaW50ZXJydXB0DQo+ID4gPiBjb250cm9sbGVy
+cyBhZGRyZXNzZWQ/DQo+ID4gDQo+ID4gV2UgaGF2ZSBwZXItY29yZSBJTlRDIHNvIGVhY2ggY29y
+ZSBjb21tdW5pY2F0ZXMgdG8gaXRzIG93biBJTlRDIGFuZA0KPiA+IHRoZXJlJ3Mgbm8gd2F5DQo+
+ID4gZm9yIGFueSBjb3JlIHRvIHRhbGsgd2l0aCBJTlRDIG9mIGFub3RoZXIgY29yZS4NCj4gPiAN
+Cj4gPiBCdXQgdGhlbiB3ZSBoYXZlIHRoZSBuZXh0IGxldmVsIElOVEMgd2hpY2ggaXMgSURVIChJ
+bnRlcnJ1cHQNCj4gPiBEaXN0cmlidXRpb24gVW5pdCkNCj4gPiB3aGljaCBkaXNwYXRjaGVzICJj
+b21tb24iIElSUXMgdG8gZGlmZmVyZW50IHVwc3RyZWFtIHBlci1jb3JlIElOVEMsDQo+ID4gc2Vl
+IGJlbG93IGl0cyBub2RlLsKgDQo+IA0KPiBPa2F5LCBJJ2QganVzdCBkbyAiY3B1LWludGVycnVw
+dC1jb250cm9sbGVyIiBmb3IgdGhlIG5vZGUgbmFtZSB0aGVuLsKgDQo+IFRoZXJlIGRvZXNuJ3Qg
+c2VlbSB0byBiZSBhbiBlYXN5IHdheSB0byB1c2UganVzdCAiaW50ZXJydXB0LQ0KPiBjb250cm9s
+bGVyIsKgDQo+IHNpbmNlIHlvdSBoYXZlIDIgbm9kZXMgYXQgdGhlIHNhbWUgbGV2ZWwgYW5kIG5v
+IHVuaXQtYWRkcmVzcyAoaS5lLiBhwqANCj4gcmVnIHByb3BlcnR5KS4NCj4gDQoNClRvIGJlIG1v
+cmUgY2xhcmlmeSwgd2hhdCBpcyBiZXR0ZXIgd2F5IGRvIGRlc2NyaWJlIHN1Y2ggaGFyZHdhcmUg
+aW4NCmRldmljZSB0cmVlPw0KDQotLS0tLS0tLS0tLS0twqDCoMKgwqAtLS0tLS0tLS0tLS0twqDC
+oA0KfCBjcHUgY29yZSAwfMKgwqDCoMKgfCBjcHUgY29yZSAxfMKgwqANCi0tLS0tLS0tLS0tLS3C
+oMKgwqDCoC0tLS0tLS0tLS0tLS3CoMKgDQp8IGludGVycnVwdCB8wqDCoMKgwqB8IGludGVycnVw
+dCB8wqDCoA0KfCBjb250cm9sbGVyfMKgwqDCoMKgfCBjb250cm9sbGVyfMKgwqANCnzCoMKgwqDC
+oMKgMMKgwqDCoMKgwqB8wqDCoMKgwqB8wqDCoMKgwqDCoDHCoMKgwqDCoMKgfMKgwqANCi0tLS0t
+LS0tLS0tLS3CoMKgwqDCoC0tLS0tLS0tLS0tLS3CoMKgDQrCoMKgwqDCoMKgwqBewqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBeDQrCoMKgwqDCoMKgwqB8wqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqB8DQrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC0tLS0tLS0tLS0tDQrC
+oMKgwqDCoMKgwqB8wqDCoMKgwqDCoMKgfA0KLS0tLS0tLS0tLS0tLS0tLQ0KfMKgwqDCoGludGVy
+cnVwdMKgwqB8DQp8IGRpc3RyaWJ1dGlvbiB8DQp8wqDCoMKgwqDCoHVuaXTCoMKgwqDCoMKgfA0K
+LS0tLS0tLS0tLS0tLS0tLQ0KwqDCoMKgwqDCoMKgXg0KwqDCoMKgwqDCoMKgfA0KwqDCoMKgwqDC
+oMKgfDwtLW90aGVyIGRldmljZXMgaW50ZXJydXB0IGxpbmVzDQoNCldlIGNhbid0IGp1c3QgY3Jl
+YXRlIGEgbm9kZSBmb3IgZWFjaCBjb3JlIGludGVycnVwdCBjb250cm9sbGVyIGJlY2F1c2UNCndl
+IHdvdWxkbid0IGFibGUgdG8gc3BlY2lmeSB3aGljaCBvbmUgaXMgcGFyZW50IGZvciBpbnRlcnJ1
+cHQNCmRpc3RyaWJ1dGlvbiB1bml0Og0KDQotLS0tLS0tLS0tLS0+Pj4tLS0tLS0tLS0tLS0tDQpj
+cHVzIHsNCsKgwqDCoMKgY3B1QDAgeyBpbnRjQDAgfTsNCsKgwqDCoMKgY3B1QDEgeyBpbnRjQDEg
+fTsNCn07DQoNCmludGVycnVwdC1kaXN0cmlidXRpb24tdW5pdCB7DQrCoMKgwqDCoGludGVycnVw
+dC1wYXJlbnQgPSA/Pz8/DQp9Ow0KLS0tLS0tLS0tLS0tPj4+LS0tLS0tLS0tLS0tLQ0KDQpTaG91
+bGQgd2Ugc2ltcGx5IGNyZWF0ZSBvbmUgY29yZSBpbnRlcnJ1cHQgY29udHJvbGxlciBub2RlIGZv
+ciBhbGwgY3B1cw0KKGluc3RlYWQgb2Ygb25lIHBlciBlYWNoIGNwdSBjb3JlKSwgb3Igd2hlcmUg
+aXMgYSBiZXR0ZXIgb3B0aW9uPw0KDQotLSANCsKgRXVnZW5peSBQYWx0c2V2
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
