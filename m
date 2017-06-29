@@ -1,200 +1,125 @@
-From: Vivek Unune <npcomplete13-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
-Date: Thu, 29 Jun 2017 17:04:43 -0400
-Message-ID: <CAChtp77nD-dUCytja6PM3fAqXLCVshHqN-hV6pp6ues0PQcaOA@mail.gmail.com>
-References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
- <20170315185214.GF21021@lunn.ch> <CAChtp75xk3LN1-DPVvaHT5qEvrdoFFvXEk-daVCcJ=4rYu_vmw@mail.gmail.com>
- <7f5ddeba-6f79-9de5-2c67-a77e6bec0ef9@broadcom.com> <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
- <2e4ed52f-4134-9b6a-18c9-7c1f28cd7038@broadcom.com> <CAChtp76sbKjxq03ipSDJN69XeJRU-0aRTeJ75+gCXZfo4D5r0A@mail.gmail.com>
- <03ba6198-a2cc-da9f-7d7d-f626d53d5717@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 3/3] dts: RISC-V PLIC documentation
+Date: Thu, 29 Jun 2017 16:14:42 -0500
+Message-ID: <20170629211442.76w5qfglhpfgdmdg@rob-hp-laptop>
+References: <20170627052124.426-1-palmer@dabbelt.com>
+ <20170627052124.426-4-palmer@dabbelt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <03ba6198-a2cc-da9f-7d7d-f626d53d5717-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170627052124.426-4-palmer@dabbelt.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, jic23@kernel.org, treding@nvidia.com, maxime.ripard@free-electrons.com, marek.vasut@gmail.com, ccc94453@vip.cybercity.dk, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Florian,
+On Mon, Jun 26, 2017 at 10:21:24PM -0700, Palmer Dabbelt wrote:
+> This patch adds documentation for the platform-level interrupt
+> controller (PLIC) found in all RISC-V systems.  This interrupt
+> controller routes interrupts from all the devices in the system to each
+> hart-local interrupt controller.
+> 
+> Note: the DTS bindings for the PLIC aren't set in stone yet, as we might
+> want to change how we're specifying holes in the hart list.
+> 
+> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
+> ---
+>  .../bindings/interrupt-controller/riscv,plic0.txt  | 63 ++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> new file mode 100644
+> index 000000000000..b51a948d9acc
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,plic0.txt
+> @@ -0,0 +1,63 @@
+> +RISC-V Platform-Level Interrupt Controller (PLIC)
+> +-------------------------------------------------
+> +
+> +The RISC-V supervisor ISA specification allows for the presence of a
+> +platform-level interrupt contrellor (PLIC).   The PLIC connects all external
+> +interrupts in the system to all hart contexts in the system, via the external
+> +interrupt source in each hart's hart-local interrupt controller (HLIC).  A hart
+> +context is a priviledge mode in a hardware execution thread.  For example, in
+> +an 4 core system with 2-way SMT, you have 8 harts and probably at least two
+> +priviledge modes per hart; machine mode and supervisor mode.
+> +
+> +Each interrupt can be enabled on per-context basis. Any context can claim
+> +a pending enabled interrupt and then release it once it has been handled.
+> +
+> +Each interrupt has a configurable priority. Higher priority interrupts are
+> +serviced firs. Each context can specify a priority threshold. Interrupts
 
->> I have managed to use DSA driver and was able detect both internal and
->> external switches. However, I only get packets flowing only through the
->> internal switch. I have used the ip & bridge commands to setup the vlan
->> 101 & 102 for lan and wan respectively.
->>
->> VLAN101 = lan1 lan2 lan3 lan4 lan5 lan6 lan7 lan8 eth0.101
->
-> That looks reasonable although keep in mind that the IMP/CPU interfaces
-> of the switch are configured with VLAN tags (see commit [1]), so you may
-> need to make sure that port 0 of the internal switch is not accidentally
-> configured back to untagged since that would cause problem when
-> terminating the VLAN tag on the SW side.
->
-> So here are a few things that you want to check:
->
-> - read the MIB counters from the "extswitch" interface and see if
-> packets flow through in both directions with no errors
+s/firs/first/
 
-lan4 is on internal switch, lan1 on external. I cannot ping router from lan1
+> +with priority below this threshold will not cause the PLIC to raise its
+> +interrupt line leading to the context.
+> +
+> +While the PLIC supports both edge-triggered and level-triggered interrupts,
+> +interrupt handlers are oblivious to this distinction and therefor it is not
+> +specific in the PLIC device-tree binding.
 
-Inter-    |   Receive                |  Transmit
- face     |bytes    packets errs drop|bytes    packets errs drop
-br-lan:      168590    1726    0    0   190542     753    0    0
-extswitch:        0       0    0    0   101012    1221    0    0
-  lan1:           0       0    0    0     5382     111    0    0
-  lan4:           0       0    0    0  1306680   13909    0    0
-  eth0:     3276924    5539    0    0  1106135    5084    0    0
-eth0.101:    169338    1732    0    0   190256     750    0    0
-eth0.102:   2959522    3274    0    0   587248    1094    0    0
-    lo:       39390     502    0    0    39390     502    0    0
-br-wan:     2956822    3254    0    0   587248    1094    0    0
+s/specific/specified/
 
->
-> - check the "extswitch" VLAN configuration on both the internal switch
-> side (port 0) and on the external switch side ("cpu", port 8, not visible)
+Quite a few typos in your series. Please spell check your stuff so I 
+don't have to.
 
-#bridge vlan show
-port    vlan ids
-extswitch       None
-extswitch
-lan7     101 PVID Egress Untagged
-lan7     101 PVID Egress Untagged
-lan4     101 PVID Egress Untagged
-lan4     101 PVID Egress Untagged
-lan8     101 PVID Egress Untagged
-lan8     101 PVID Egress Untagged
-wan      102 PVID Egress Untagged
-wan      102 PVID Egress Untagged
-lan1     101 PVID Egress Untagged
-lan1     101 PVID Egress Untagged
-lan5     101 PVID Egress Untagged
-lan5     101 PVID Egress Untagged
-lan2     101 PVID Egress Untagged
-lan2     101 PVID Egress Untagged
-lan6     101 PVID Egress Untagged
-lan6     101 PVID Egress Untagged
-lan3     101 PVID Egress Untagged
-lan3     101 PVID Egress Untagged
-br-lan  None
-eth0.101         101 PVID Egress Untagged
-eth0.101
-br-wan  None
-eth0.102         102 PVID Egress Untagged
-eth0.102
+> +
+> +FIXME: I'm going to see if it's viable to change this.
+> +On RISC-V systems there is no physical hart ID availiable to programs running
+> +in supervisor mode, only a logical hart ID that is set by the bootloader.  As
+> +such, hart contexts are expected to be mostly contiguous.
 
->
-> - see if you can get traffic end-to-end from eth0 all the way through
-> one of the external switch port. If that's the case, that means that the
-> configuration of internal switch port 0, internal switch CPU port, and
-> external switch external port is working and operational
->
-> [1]:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e47112d9d6009bf6b7438cedc0270316d6b0370d
->
->> VLAN102 = wan eth0.102
->>
->> Reading configs from the factory firmware, I'm sure that sw0port0 and> sw1port8 are connected. Excerpt from the same:
->>
->> port_numbers=0 2 4 2 1 3 1 3
->> port_switch_id=1 1 1 0 1 1 0 0
->> port_names=port0 port1 port2 port3 port4 port5 port6 port7
->
-> Is 0 the identifier for the external or internal switch? If 0 is
-> internal switch identifier and 1 is the external switch identifier, your
-> mapping looks correct to me with one exception below:
+How does this affect the binding? Or if this changes, how will it change 
+the binding?
 
-0 is internal here.
+> +
+> +Required properties:
+> +- compatible : "riscv,plic0"
+> +- #address-cells : should be <0>
+> +- #interrupt-cells : should be <1>
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +- reg : Should contain 1 register range (address and length)
+> +- riscv,ndev : Specifies the maximum number of devices this PLIC is capable of
+> +  recieving interrupts from.  While this may usually be the same as the number
+> +  of devices the PLIC is actually connected to, there may be fewer devices
+> +  actually connected.  Software can be largely oblivious of this, as devices
+> +  that are not connected will never fire an interrupt.
 
->
->> cpu_port_number=5 7 8
->> cpu_port_switch_id=0 0 0
->> hidden_port_numbers=0 8
->> hidden_port_switch_id=0 1
->>
->> Below is my updated device tree.
->>
->> Thanks,
->>
->> Vivek
->>
->> &srab {
->>     compatible = "brcm,bcm53012-srab", "brcm,bcm5301x-srab";
->>     status = "okay";
->>     dsa,member = <0 0>;
->>
->>     ports {
->>         #address-cells = <1>;
->>         #size-cells = <0>;
->>
->>         port@1 {
->>             reg = <1>;
->>             label = "lan7";
->>         };
->>
->>         port@2 {
->>             reg = <2>;
->>             label = "lan4";
->>         };
->>
->>         port@3 {
->>             reg = <3>;
->>             label = "lan8";
->>         };
->>
->>         port@4 {
->>             reg = <4>;
->>             label = "wan";
->>         };
->>
->>         port@5 {
->>             reg = <5>;
->>             ethernet = <&gmac0>;
->>             label = "cpu";
->>
->>             fixed-link {
->>
->>                 speed = <1000>;
->>                 full-duplex;
->>             };
->>         };
->
-> I think this is meant to be port 8 here based on the hidden_port_number
-> value. This actually matters for VLAN configuration because B53 is not
-> (unfortunately, to be fixed) consistently using dst->cpu_port (whatever
-> is configured in Device Tree) vs. dev->cpu_port (hardcoded to 8 for this
-> class of switch).
+We generally don't have this sort of property for irqchips because of 
+the reason in the last sentence. So drop this.
 
-When I connect to port 8 I receive no packets on internal switch.
+> +- interrupts-extended : Specifies which contexts are connected to the PLIC,
+> +  with "-1" specifying that a context is not present.
+> +
+> +Example:
+> +
+> +	plic: interrupt-controller@c000000 {
+> +		#address-cells = <0>;
+> +		#interrupt-cells = <1>;
+> +		compatible = "riscv,plic0";
+> +		interrupt-controller;
+> +		interrupts-extended = <
+> +			&cpu0-intc 11
+> +			&cpu1-intc 11 &cpu1-intc 9
+> +			&cpu2-intc 11 &cpu2-intc 9
+> +			&cpu3-intc 11 &cpu3-intc 9
+> +			&cpu4-intc 11 &cpu4-intc 9>;
+> +		reg = <0xc000000 0x4000000>;
+> +		riscv,ndev = <10>;
+> +	};
+> +
+> +While the RISC-V ISA doesn't specify a memory layout for the PLIC, the
+> +"riscv,plic0" device is a concrete implementation of the PLIC that contains a
+> +specific memory layout.  More details about the memory layout of the
+> +"riscv,plic0" device can be found as a comment in the device driver.
 
->
-> PS: on that front, we will have to rework that when we bring multiple
-> CPU port support in DSA/B53/bcm_sf2 and so for now what we could do is
-> just check that the configured CPU port in Device Tree is a valid CPU
-> port for that switch (typically 5, 7 or 8), and if not, just issue a
-> warning.
->
->>
->>         sw0port0: port@0 {
->>             reg = <0>;
->>             label = "extswitch";
->>
->>             fixed-link {
->>                 speed = <1000>;
->>                 full-duplex;
->>             };
->
-> There might be some additional configuration needed here for this port,
-> because by default, the port will most likely try to use its built-in
-> PHY and maybe that's what they did, they wired the built-in PHY directly
-> to the IMP port of the external switch.
+Move this above required properties. Is there not a reference manual or 
+something that's not kernel dependent? Bindings need to stand on their 
+own without the kernel. 
 
-Do you know what that configuration might be?
+Is "0" the best you can come up with for the specific implementation?
 
-Thanks,
-
-Vivek
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
