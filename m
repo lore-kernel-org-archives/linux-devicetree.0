@@ -1,72 +1,79 @@
-From: Marek Vasut <marek.vasut@gmail.com>
-Subject: Re: [PATCH 7/8] clk: vc5: Add bindings for IDT VersaClock 5P49V6901
-Date: Thu, 29 Jun 2017 17:49:21 +0200
-Message-ID: <1a65c823-d39f-1824-886d-d32fddcee4f0@gmail.com>
-References: <20170629101851.23972-1-marek.vasut@gmail.com>
- <20170629101851.23972-7-marek.vasut@gmail.com>
- <CAMuHMdXaEDtKwZYDaZ0qUvUk_0WuZwf6ky+nfeahQuU7q4qiyQ@mail.gmail.com>
+From: David Lechner <david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] drivers: misc: eeprom: at24: support reading mac
+ eeprom from different addresses
+Date: Thu, 29 Jun 2017 10:32:12 -0500
+Message-ID: <b67a323b-5562-1259-08f1-fa7ee3509e8b@lechnology.com>
+References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
+ <1498736351-9021-3-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXaEDtKwZYDaZ0qUvUk_0WuZwf6ky+nfeahQuU7q4qiyQ@mail.gmail.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-clk <linux-clk@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Alexey Firago <alexey_firago@mentor.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498736351-9021-3-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2017 01:38 PM, Geert Uytterhoeven wrote:
-> Hi Marek,
+On 06/29/2017 06:39 AM, Claudiu Beznea wrote:
+> Add support for reading from different offsets of EEPROM.
+> The offset is initialized via device tree. If nothing is
+> given as input the old value, 0x90, is used. In this way
+> the driver could be used as generic driver for different
+> vendor memories by only changing the reading offset via
+> device tree.
 > 
-> On Thu, Jun 29, 2017 at 12:18 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
->> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->>
->> IDT VersaClock 6 5P49V6901 has 4 clock outputs, 4 fractional dividers.
->> Input clock source can be taken from either external crystal or from
->> external reference clock.
->>
->> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
->> Cc: Alexey Firago <alexey_firago@mentor.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: Stephen Boyd <sboyd@codeaurora.org>
->> Cc: Michael Turquette <mturquette@baylibre.com>
->> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Cc: linux-renesas-soc@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> ---
->>  .../devicetree/bindings/clock/idt,versaclock5.txt         | 15 ++++++++++++---
->>  1 file changed, 12 insertions(+), 3 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
->> index 53d7e50ed875..a3d4260039a8 100644
->> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
->> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> ---
+>   drivers/misc/eeprom/at24.c         | 5 ++++-
+>   include/linux/platform_data/at24.h | 1 +
+>   2 files changed, 5 insertions(+), 1 deletion(-)
 > 
-> Probably you want to sprinkle the first few lines of the document with
-> a few "VersaClock 6" references?
+> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
+> index 764ff5df..53c5fb8 100644
+> --- a/drivers/misc/eeprom/at24.c
+> +++ b/drivers/misc/eeprom/at24.c
+> @@ -365,7 +365,7 @@ static ssize_t at24_eeprom_read_mac(struct at24_data *at24, char *buf,
+>   	memset(msg, 0, sizeof(msg));
+>   	msg[0].addr = client->addr;
+>   	msg[0].buf = addrbuf;
+> -	addrbuf[0] = 0x90 + offset;
+> +	addrbuf[0] = at24->chip.offset + offset;
+>   	msg[0].len = 1;
+>   	msg[1].addr = client->addr;
+>   	msg[1].flags = I2C_M_RD;
+> @@ -581,6 +581,9 @@ static void at24_get_pdata(struct device *dev, struct at24_platform_data *chip)
+>   		 */
+>   		chip->page_size = 1;
+>   	}
+> +	err = device_property_read_u8(dev, "start-offset", &chip->offset);
 
-Something like this?
+Why use u8 here? I have an at24 EEPROM that uses 16-bit addressing where 
+the MAC address is stored at 0x3F06. Seems like it would be better to 
+just use u32, then you don't have to mess with /bits/ in the device tree 
+binding.
 
---- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-+++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-@@ -1,7 +1,7 @@
--Binding for IDT VersaClock5 programmable i2c clock generator.
-+Binding for IDT VersaClock 5,6 programmable i2c clock generators.
-
--The IDT VersaClock5 are programmable i2c clock generators providing
--from 3 to 12 output clocks.
-+The IDT VersaClock 5 and VersaClock 6 are programmable i2c clock
-+generators providing from 3 to 12 output clocks.
-
- ==I2C device node==
-
->> @@ -7,18 +7,20 @@ from 3 to 12 output clocks.
+> +	if (err)
+> +		chip->offset = 0x90;
+>   }
+>   
+>   static int at24_probe(struct i2c_client *client, const struct i2c_device_id *id)
+> diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
+> index 271a4e2..d55c454 100644
+> --- a/include/linux/platform_data/at24.h
+> +++ b/include/linux/platform_data/at24.h
+> @@ -50,6 +50,7 @@ struct at24_platform_data {
+>   #define AT24_FLAG_TAKE8ADDR	BIT(4)	/* take always 8 addresses (24c00) */
+>   #define AT24_FLAG_SERIAL	BIT(3)	/* factory-programmed serial number */
+>   #define AT24_FLAG_MAC		BIT(2)	/* factory-programmed mac address */
+> +	u8		offset;
+>   
+>   	void		(*setup)(struct nvmem_device *nvmem, void *context);
+>   	void		*context;
 > 
-> The rest looks OK to me, so
-> Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks
-
--- 
-Best regards,
-Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
