@@ -1,48 +1,67 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 9/9] of: document rs485 bindings for Atmel USART,
- Freescale UARTs and OMAP UART
-Date: Thu, 29 Jun 2017 20:53:34 +0200
-Message-ID: <20170629185334.7pjlsnpggfvx4clo@pengutronix.de>
-References: <20170626090803.10981-1-u.kleine-koenig@pengutronix.de>
- <20170626090803.10981-10-u.kleine-koenig@pengutronix.de>
- <20170628180400.h7yxrprhr44wncgs@rob-hp-laptop>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH 1/6] net: stmmac: support future possible
+ different internal phy mode
+Date: Thu, 29 Jun 2017 16:05:13 -0400 (EDT)
+Message-ID: <20170629.160513.1064622973584891732.davem@davemloft.net>
+References: <20170627092806.28181-1-clabbe.montjoie@gmail.com>
+	<20170629.122349.2265868886957558079.davem@davemloft.net>
+	<20170629170238.GA2606@Red>
+Reply-To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170628180400.h7yxrprhr44wncgs@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCFPF2XH6UDBB7F22XFAKGQEDAONZPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170629170238.GA2606@Red>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 28, 2017 at 01:04:00PM -0500, Rob Herring wrote:
-> On Mon, Jun 26, 2017 at 11:08:03AM +0200, Uwe Kleine-König wrote:
-> > The drivers support the rs485 binding described in rs485.txt, this commit
-> > just makes that explicit.
-> 
-> "dt-bindings: serial: ..." for the subject if you respin the series. 
+From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Thu, 29 Jun 2017 19:02:38 +0200
 
-Done, I shortend the first line a bit, it now looks as follows:
+> On Thu, Jun 29, 2017 at 12:23:49PM -0400, David Miller wrote:
+>> From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> Date: Tue, 27 Jun 2017 11:28:01 +0200
+>> =
 
-	dt-bindings: serial: document rs485 bindings for various devices
+>> > The current way to find if the phy is internal is to compare DT ph=
+y-mode
+>> > and emac_variant/internal_phy.
+>> > But it will negate a possible future SoC where an external PHY use=
+ the
+>> > same phy mode than the internal one.
+>> > =
 
-	Atmel USART, Freescale UARTs and OMAP UART all support the rs485 binding 
-	described in rs485.txt, this commit just makes that explicit.
+>> > By using phy-mode =3D "internal" we permit to have an external PHY=
+ with
+>> > the same mode than the internal one.
+>> > =
 
-	Acked-by: Nicolas Ferre <nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-	Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-	Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> > Reported-by: Andr=E9 Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> > Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> =
 
-Best regards
-Uwe
+>> Series applied.
+>> =
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> Please provide a proper "[PATCH 0/n] " header posting next time.
+> =
+
+> Sorry could you wait for applying, there are a parallel thread (http:=
+//www.spinics.net/lists/devicetree/msg183520.html) and it seems finaly =
+that internal could not be the good way to do it.
+> =
+
+> Regards
+> Sorry again, I should have sent a comment for waiting.
+
+Please send me a revert patch, when I say I've applied it I already pus=
+hed
+it out to my GIT tree.
