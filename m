@@ -1,201 +1,145 @@
-From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v5 07/16] Documentation: DT: MIPS: lantiq: Add docs for
- the RCU bindings
-Date: Thu, 29 Jun 2017 22:27:19 +0200
-Message-ID: <1171930b-769b-f0ea-778e-ddcd11b20775@hauke-m.de>
-References: <20170620223743.13735-1-hauke@hauke-m.de>
- <20170620223743.13735-8-hauke@hauke-m.de>
- <20170623221224.fhfc6ezydd3uglfr@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] dts: RISC-V local interrupt controller docs
+Date: Thu, 29 Jun 2017 15:30:28 -0500
+Message-ID: <20170629203028.qv6r4kj6fyu3hxfz@rob-hp-laptop>
+References: <20170627052124.426-1-palmer@dabbelt.com>
+ <20170627052124.426-3-palmer@dabbelt.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170623221224.fhfc6ezydd3uglfr@rob-hp-laptop>
+Content-Disposition: inline
+In-Reply-To: <20170627052124.426-3-palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/2017 12:12 AM, Rob Herring wrote:
-> On Wed, Jun 21, 2017 at 12:37:34AM +0200, Hauke Mehrtens wrote:
->> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
->>
->> This adds the initial documentation for the RCU module (a MFD device
->> which provides USB PHYs, reset controllers and more).
->>
->> The RCU register range is used for multiple purposes. Mostly one device
->> uses one or multiple register exclusively, but for some registers some
->> bits are for one driver and some other bits are for a different driver.
->> With this patch all accesses to the RCU registers will go through
->> syscon.
->>
->> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
->> ---
->>  .../devicetree/bindings/mips/lantiq/rcu.txt        | 95 ++++++++++++++++++++++
->>  1 file changed, 95 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
->> new file mode 100644
->> index 000000000000..9c875f4f3c90
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
->> @@ -0,0 +1,95 @@
->> +Lantiq XWAY SoC RCU binding
->> +===========================
->> +
->> +This binding describes the RCU (reset controller unit) multifunction device,
->> +where each sub-device has it's own set of registers.
->> +
->> +The RCU register range is used for multiple purposes. Mostly one device
->> +uses one or multiple register exclusively, but for some registers some
->> +bits are for one driver and some other bits are for a different driver.
->> +With this patch all accesses to the RCU registers will go through
->> +syscon.
->> +
->> +
->> +-------------------------------------------------------------------------------
->> +Required properties:
->> +- compatible	: The first and second values must be:
->> +		  "lantiq,xrx200-rcu", "simple-mfd", "syscon"
->> +- reg		: The address and length of the system control registers
->> +
->> +
->> +-------------------------------------------------------------------------------
->> +Example of the RCU bindings on a xRX200 SoC:
->> +	rcu0: rcu@203000 {
->> +		compatible = "lantiq,xrx200-rcu", "simple-mfd", "syscon";
->> +		reg = <0x203000 0x100>;
->> +		ranges = <0x0 0x203000 0x100>;
->> +		big-endian;
->> +
->> +		gphy0: gphy@0 {
-> 
-> unit address should match reg, so "phy@20"
+On Mon, Jun 26, 2017 at 10:21:23PM -0700, Palmer Dabbelt wrote:
+> This patch adds documentation on the RISC-V local interrupt controller,
+> which is a per-hart interrupt controller that manages all interrupts
+> entering a RISC-V hart.  This interrupt controller is present on all
+> RISC-V systems.
 
-done
-
->> +			compatible = "lantiq,xrx200a2x-gphy";
->> +			reg = <0x20 0x4>;
->> +
->> +			resets = <&reset0 31 30>, <&reset1 7 7>;
->> +			reset-names = "gphy", "gphy2";
->> +			lantiq,gphy-mode = <GPHY_MODE_GE>;
->> +		};
->> +
->> +		gphy1: gphy@1 {
-> 
-> phy@68
-
-done
-
->> +			compatible = "lantiq,xrx200a2x-gphy";
->> +			reg = <0x68 0x4>;
->> +
->> +			resets = <&reset0 29 28>, <&reset1 6 6>;
->> +			reset-names = "gphy", "gphy2";
->> +			lantiq,gphy-mode = <GPHY_MODE_GE>;
->> +		};
->> +
->> +		reset0: reset-controller@0 {
-> 
-> ...@10
-
-done
-
-
->> +			compatible = "lantiq,xrx200-reset";
->> +
->> +			offset-set = <0x10>;
->> +			offset-status = <0x14>;
-> 
-> reg = <0x10 8>;
-
-done
-
->> +			#reset-cells = <2>;
->> +		};
->> +
->> +		reset1: reset-controller@1 {
->> +			compatible = "lantiq,xrx200-reset";
->> +
->> +			offset-set = <0x48>;
->> +			offset-status = <0x24>;
-> 
-> reg = <0x48 4>, <0x24 4>;
-
-done
-
->> +			#reset-cells = <2>;
->> +		};
->> +
->> +		usb_phy0: usb2-phy@0 {
->> +			compatible = "lantiq,xrx200-usb2-phy";
->> +			status = "disabled";
->> +
->> +			regmap = <&rcu0>;
-> 
-> This should be dropped.
-
-I will get this from the parent device now.
-
->> +			offset-phy = <0x18>;
->> +			offset-ana = <0x38>;
-> 
-> Use reg.
-
-There is also one bit used to reset the DSL digital frontend at offset
-0x38. This has nothing to do with USB.
-
->> +			resets = <&reset1 4 4>, <&reset0 4 4>;
->> +			reset-names = "phy", "ctrl";
->> +			#phy-cells = <0>;
->> +		};
->> +
->> +		usb_phy1: usb2-phy@1 {
->> +			compatible = "lantiq,xrx200-usb2-phy";
->> +			status = "disabled";
->> +
->> +			regmap = <&rcu0>;
-> 
-> Drop.
-
-done
-
->> +			offset-phy = <0x34>;
->> +			offset-ana = <0x3C>;
-> 
-> Use reg.
-
-There is also a bits to configure something with the DSL dying gasp at
-offset 0x34. This has nothing to do with USB.
+"dt-bindings: interrupt-controller: ..." for the subject. Similar for 
+the other patches.
 
 > 
->> +			resets = <&reset1 5 4>, <&reset0 4 4>;
->> +			reset-names = "phy", "ctrl";
->> +			#phy-cells = <0>;
->> +		};
->> +
->> +		reboot {
->> +			compatible = "syscon-reboot";
->> +
->> +			regmap = <&rcu0>;
+> Signed-off-by: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../interrupt-controller/riscv,cpu-intc.txt        | 70 ++++++++++++++++++++++
+>  1 file changed, 70 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
 > 
-> Drop.
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> new file mode 100644
+> index 000000000000..f4906f49a1b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/riscv,cpu-intc.txt
+> @@ -0,0 +1,70 @@
+> +RISC-V Hart-Level Interrupt Controller (HLIC)
+> +---------------------------------------------
+> +
+> +RISC-V cores include Control Status Registers (CSRs) which are local to each
+> +hart and can be read or written by software. Some of these CSRs are used to
 
-The syscon-reboot driver uses this code to get the regmap:
-ctx->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
-This driver was not added by me.
+What's a hart? Please define.
 
->> +			offset = <0x10>;
->> +			mask = <0x40000000>;
->> +		};
->> +	};
->> +
->> -- 
->> 2.11.0
->>
+> +control local interrupts connected to the core.  Every interrupt is ultimately
+> +routed through a hart's HLIC before it interrupts that hart.
+> +
+> +The RISC-V supervisor ISA manual specifices three interrupt sources that are
+> +attached to every HLIC: software interrupts, the timer interrupt, and external
+> +interrupts.  Software interrupts are used to send IPIs between cores.  The
+> +timer interrupt comes from an architectually mandated real-time timer that is
+> +controller via SBI calls and CSR reads.  External interrupts connect all other
+> +device interrupts to the HLIC, which are routed via the platforw-level
 
+s/platforw/platform/
+
+> +interrupt contrellor (PLIC).
+
+another typo
+
+> +
+> +All RISC-V systems that conform to the supervisor ISA specification are
+> +required to have a HLIC with these three interrupt sources present.
+> +
+> +Required properties:
+> +- compatible : "riscv,cpu-intc"
+
+Only one version? 
+
+> +- #interrupt-cells : should be <1>
+> +- interrupt-controller : Identifies the node as an interrupt controller
+> +
+> +Furthermore, this interrupt-controller MUST be embedded inside the cpu
+> +definition of the hart whose CSRs control these local interrupts.
+> +
+> +An example of a device tree entry for a standard RISC-V hart is as follows:
+> +
+> +	cpu1: cpu@1 {
+> +		clock-frequency = <1600000000>;
+> +		compatible = "riscv";
+
+This is not really specific enough. You need cpu node documentation 
+for this as well.
+
+> +		d-cache-block-size = <64>;
+> +		d-cache-sets = <64>;
+> +		d-cache-size = <16384>;
+> +		d-tlb-sets = <1>;
+> +		d-tlb-size = <32>;
+> +		device_type = "cpu";
+> +		i-cache-block-size = <64>;
+> +		i-cache-sets = <64>;
+> +		i-cache-size = <16384>;
+> +		i-tlb-sets = <1>;
+> +		i-tlb-size = <32>;
+> +		mmu-type = "riscv,sv39";
+
+This and ...
+
+> +		next-level-cache = <&L2>;
+> +		reg = <1>;
+> +		riscv,isa = "rv64imac";
+
+... this should be implied by specific compatible strings.
+
+> +		status = "okay";
+> +		tlb-split;
+> +		cpu1-intc: interrupt-controller {
+> +			#interrupt-cells = <1>;
+> +			compatible = "riscv,cpu-intc";
+> +			interrupt-controller;
+> +		};
+> +	};
+> +
+> +The sections specifically relevant to the HLIC are
+> +
+> +	cpu1: cpu@1 {
+
+Just remove the above and add this which is enough for the example:
+
+		compatible = "riscv";
+		...
+
+> +		cpu1-intc: interrupt-controller {
+> +			#interrupt-cells = <1>;
+> +			compatible = "riscv,cpu-intc";
+> +			interrupt-controller;
+> +		};
+> +	};
+> +
+> +As the HLIC is essentially a static interrupt controller, this device tree
+> +entry essentially just indicates the presence of a HLIC.  All HLIC interrupts
+
+Won't it also show the connections to the timer, PLIC, etc.?
+
+> +are level-triggered, so there is no need to specify this as part of the device
+> +tree.
+> -- 
+> 2.13.0
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
