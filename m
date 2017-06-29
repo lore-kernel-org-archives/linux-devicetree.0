@@ -1,112 +1,36 @@
-From: Hugues FRUCHET <hugues.fruchet-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH v1 4/6] [media] ov9650: use write_array() for resolution
- sequences
-Date: Thu, 29 Jun 2017 13:59:31 +0000
-Message-ID: <9ac5d920-b29e-afe3-4413-3e147870a103@st.com>
-References: <1498143942-12682-1-git-send-email-hugues.fruchet@st.com>
- <1498143942-12682-5-git-send-email-hugues.fruchet@st.com>
- <20170626163330.GR12407@valkosipuli.retiisi.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170626163330.GR12407-S+BSfZ9RZZmRSg0ZkenSGLdO1Tsj/99ntUK59QYPAWc@public.gmane.org>
-Content-Language: en-US
-Content-ID: <DD30F200E8D9FA4E84C4D1BB5C564B68-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "H. Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Coquelin <mcoquelin.stm32-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre TORGUE <alexandre.torgue-qxv4g6HH51o@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Hans Verkuil <hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Gaignard <benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yannick FERTRE <yannick.fertre-qxv4g6HH51o@public.gmane.org>
+From: Sricharan R <sricharan@codeaurora.org>
+Subject: [PATCH 0/3] Add remoteproc driver for Hexagon Q6 - WCSS integrated core
+Date: Thu, 29 Jun 2017 19:47:38 +0530
+Message-ID: <1498745861-20531-1-git-send-email-sricharan@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA2LzI2LzIwMTcgMDY6MzMgUE0sIFNha2FyaSBBaWx1cyB3cm90ZToNCj4gSGkgSHVn
-dWVzLA0KPiANCj4gT24gVGh1LCBKdW4gMjIsIDIwMTcgYXQgMDU6MDU6NDBQTSArMDIwMCwgSHVn
-dWVzIEZydWNoZXQgd3JvdGU6DQo+PiBBbGlnbiByZXNvbHV0aW9uIHNlcXVlbmNlcyBvbiBpbml0
-aWFsaXphdGlvbiBzZXF1ZW5jZSB1c2luZw0KPj4gaTJjX3J2IHN0cnVjdHVyZSBOVUxMIHRlcm1p
-bmF0ZWQgLlRoaXMgYWRkIGZsZXhpYmlsaXR5DQo+PiBvbiByZXNvbHV0aW9uIHNlcXVlbmNlIHNp
-emUuDQo+PiBEb2N1bWVudCByZXNvbHV0aW9uIHJlbGF0ZWQgcmVnaXN0ZXJzIGJ5IHVzaW5nIGNv
-cnJlc3BvbmRpbmcNCj4+IGRlZmluZSBpbnN0ZWFkIG9mIGhleGEgYWRkcmVzcy92YWx1ZS4NCj4+
-DQo+PiBTaWduZWQtb2ZmLWJ5OiBIdWd1ZXMgRnJ1Y2hldCA8aHVndWVzLmZydWNoZXRAc3QuY29t
-Pg0KPj4gLS0tDQo+PiAgIGRyaXZlcnMvbWVkaWEvaTJjL292OTY1MC5jIHwgOTggKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLQ0KPj4gICAxIGZpbGUgY2hhbmdl
-ZCwgNjQgaW5zZXJ0aW9ucygrKSwgMzQgZGVsZXRpb25zKC0pDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbWVkaWEvaTJjL292OTY1MC5jIGIvZHJpdmVycy9tZWRpYS9pMmMvb3Y5NjUwLmMN
-Cj4+IGluZGV4IDQzMTFkYTYuLjhiMjgzYzkgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL21lZGlh
-L2kyYy9vdjk2NTAuYw0KPj4gKysrIGIvZHJpdmVycy9tZWRpYS9pMmMvb3Y5NjUwLmMNCj4+IEBA
-IC0yMjcsMTEgKzIyNywxNiBAQCBzdHJ1Y3Qgb3Y5NjV4X2N0cmxzIHsNCj4+ICAgCXU4IHVwZGF0
-ZTsNCj4+ICAgfTsNCj4+ICAgDQo+PiArc3RydWN0IGkyY19ydiB7DQo+PiArCXU4IGFkZHI7DQo+
-PiArCXU4IHZhbHVlOw0KPj4gK307DQo+PiArDQo+PiAgIHN0cnVjdCBvdjk2NXhfZnJhbWVzaXpl
-IHsNCj4+ICAgCXUxNiB3aWR0aDsNCj4+ICAgCXUxNiBoZWlnaHQ7DQo+PiAgIAl1MTYgbWF4X2V4
-cF9saW5lczsNCj4+IC0JY29uc3QgdTggKnJlZ3M7DQo+PiArCWNvbnN0IHN0cnVjdCBpMmNfcnYg
-KnJlZ3M7DQo+PiAgIH07DQo+PiAgIA0KPj4gICBzdHJ1Y3Qgb3Y5NjV4X2ludGVydmFsIHsNCj4+
-IEBAIC0yODAsOSArMjg1LDExIEBAIHN0cnVjdCBvdjk2NXggew0KPj4gICAJdTggYXBwbHlfZnJh
-bWVfZm10Ow0KPj4gICB9Ow0KPj4gICANCj4+IC1zdHJ1Y3QgaTJjX3J2IHsNCj4+IC0JdTggYWRk
-cjsNCj4+IC0JdTggdmFsdWU7DQo+PiArc3RydWN0IG92OTY1eF9waXhmbXQgew0KPj4gKwl1MzIg
-Y29kZTsNCj4+ICsJdTMyIGNvbG9yc3BhY2U7DQo+PiArCS8qIFJFR19UU0xCIHZhbHVlLCBvbmx5
-IGJpdHMgWzM6Ml0gbWF5IGJlIHNldC4gKi8NCj4+ICsJdTggdHNsYl9yZWc7DQo+PiAgIH07DQo+
-PiAgIA0KPj4gICBzdGF0aWMgY29uc3Qgc3RydWN0IGkyY19ydiBvdjk2NXhfaW5pdF9yZWdzW10g
-PSB7DQo+PiBAQCAtMzQyLDMwICszNDksNTkgQEAgc3RydWN0IGkyY19ydiB7DQo+PiAgIAl7IFJF
-R19OVUxMLCAwIH0NCj4+ICAgfTsNCj4+ICAgDQo+PiAtI2RlZmluZSBOVU1fRk1UX1JFR1MgMTQN
-Cj4+IC0vKg0KPj4gLSAqIENPTTcsICBDT00zLCAgQ09NNCwgSFNUQVJULCBIU1RPUCwgSFJFRiwg
-VlNUQVJULCBWU1RPUCwgVlJFRiwNCj4+IC0gKiBFWEhDSCwgRVhIQ0wsIEFEQywgIE9DT00sICAg
-T0ZPTg0KPj4gLSAqLw0KPj4gLXN0YXRpYyBjb25zdCB1OCBmcmFtZV9zaXplX3JlZ19hZGRyW05V
-TV9GTVRfUkVHU10gPSB7DQo+PiAtCTB4MTIsIDB4MGMsIDB4MGQsIDB4MTcsIDB4MTgsIDB4MzIs
-IDB4MTksIDB4MWEsIDB4MDMsDQo+PiAtCTB4MmEsIDB4MmIsIDB4MzcsIDB4MzgsIDB4MzksDQo+
-PiAtfTsNCj4+IC0NCj4+IC1zdGF0aWMgY29uc3QgdTggb3Y5NjV4X3N4Z2FfcmVnc1tOVU1fRk1U
-X1JFR1NdID0gew0KPj4gLQkweDAwLCAweDAwLCAweDAwLCAweDFlLCAweGJlLCAweGJmLCAweDAx
-LCAweDgxLCAweDEyLA0KPj4gLQkweDEwLCAweDM0LCAweDgxLCAweDkzLCAweDUxLA0KPj4gK3N0
-YXRpYyBjb25zdCBzdHJ1Y3QgaTJjX3J2IG92OTY1eF9zeGdhX3JlZ3NbXSA9IHsNCj4+ICsJeyBS
-RUdfQ09NNywgMHgwMCB9LA0KPj4gKwl7IFJFR19DT00zLCAweDAwIH0sDQo+PiArCXsgUkVHX0NP
-TTQsIDB4MDAgfSwNCj4+ICsJeyBSRUdfSFNUQVJULCAweDFlIH0sDQo+PiArCXsgUkVHX0hTVE9Q
-LCAweGJlIH0sDQo+PiArCXsgMHgzMiwgMHhiZiB9LA0KPj4gKwl7IFJFR19WU1RBUlQsIDB4MDEg
-fSwNCj4+ICsJeyBSRUdfVlNUT1AsIDB4ODEgfSwNCj4+ICsJeyBSRUdfVlJFRiwgMHgxMiB9LA0K
-Pj4gKwl7IFJFR19FWEhDSCwgMHgxMCB9LA0KPj4gKwl7IFJFR19FWEhDTCwgMHgzNCB9LA0KPj4g
-Kwl7IFJFR19BREMsIDB4ODEgfSwNCj4+ICsJeyBSRUdfQUNPTSwgMHg5MyB9LA0KPj4gKwl7IFJF
-R19PRk9OLCAweDUxIH0sDQo+PiArCXsgUkVHX05VTEwsIDAgfSwNCj4+ICAgfTsNCj4+ICAgDQo+
-PiAtc3RhdGljIGNvbnN0IHU4IG92OTY1eF92Z2FfcmVnc1tOVU1fRk1UX1JFR1NdID0gew0KPj4g
-LQkweDQwLCAweDA0LCAweDgwLCAweDI2LCAweGM2LCAweGVkLCAweDAxLCAweDNkLCAweDAwLA0K
-Pj4gLQkweDEwLCAweDQwLCAweDkxLCAweDEyLCAweDQzLA0KPj4gK3N0YXRpYyBjb25zdCBzdHJ1
-Y3QgaTJjX3J2IG92OTY1eF92Z2FfcmVnc1tdID0gew0KPj4gKwl7IFJFR19DT003LCAweDQwIH0s
-DQo+PiArCXsgUkVHX0NPTTMsIDB4MDQgfSwNCj4+ICsJeyBSRUdfQ09NNCwgMHg4MCB9LA0KPj4g
-Kwl7IFJFR19IU1RBUlQsIDB4MjYgfSwNCj4+ICsJeyBSRUdfSFNUT1AsIDB4YzYgfSwNCj4+ICsJ
-eyAweDMyLCAweGVkIH0sDQo+PiArCXsgUkVHX1ZTVEFSVCwgMHgwMSB9LA0KPj4gKwl7IFJFR19W
-U1RPUCwgMHgzZCB9LA0KPj4gKwl7IFJFR19WUkVGLCAweDAwIH0sDQo+PiArCXsgUkVHX0VYSENI
-LCAweDEwIH0sDQo+PiArCXsgUkVHX0VYSENMLCAweDQwIH0sDQo+PiArCXsgUkVHX0FEQywgMHg5
-MSB9LA0KPj4gKwl7IFJFR19BQ09NLCAweDEyIH0sDQo+PiArCXsgUkVHX09GT04sIDB4NDMgfSwN
-Cj4+ICsJeyBSRUdfTlVMTCwgMCB9LA0KPj4gICB9Ow0KPj4gICANCj4+ICAgLyogRGV0ZXJtaW5l
-ZCBlbXBpcmljYWxseS4gKi8NCj4+IC1zdGF0aWMgY29uc3QgdTggb3Y5NjV4X3F2Z2FfcmVnc1tO
-VU1fRk1UX1JFR1NdID0gew0KPj4gLQkweDEwLCAweDA0LCAweDgwLCAweDI1LCAweGM1LCAweGJm
-LCAweDAwLCAweDgwLCAweDEyLA0KPj4gLQkweDEwLCAweDQwLCAweDkxLCAweDEyLCAweDQzLA0K
-Pj4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaTJjX3J2IG92OTY1eF9xdmdhX3JlZ3NbXSA9IHsNCj4+
-ICsJeyBSRUdfQ09NNywgMHgxMCB9LA0KPj4gKwl7IFJFR19DT00zLCAweDA0IH0sDQo+PiArCXsg
-UkVHX0NPTTQsIDB4ODAgfSwNCj4+ICsJeyBSRUdfSFNUQVJULCAweDI1IH0sDQo+PiArCXsgUkVH
-X0hTVE9QLCAweGM1IH0sDQo+PiArCXsgMHgzMiwgMHhiZiB9LA0KPj4gKwl7IFJFR19WU1RBUlQs
-IDB4MDAgfSwNCj4+ICsJeyBSRUdfVlNUT1AsIDB4ODAgfSwNCj4+ICsJeyBSRUdfVlJFRiwgMHgx
-MiB9LA0KPj4gKwl7IFJFR19FWEhDSCwgMHgxMCB9LA0KPj4gKwl7IFJFR19FWEhDTCwgMHg0MCB9
-LA0KPj4gKwl7IFJFR19BREMsIDB4OTEgfSwNCj4+ICsJeyBSRUdfQUNPTSwgMHgxMiB9LA0KPj4g
-Kwl7IFJFR19PRk9OLCAweDQzIH0sDQo+PiArCXsgUkVHX05VTEwsIDAgfSwNCj4+ICAgfTsNCj4+
-ICAgDQo+PiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb3Y5NjV4X2ZyYW1lc2l6ZSBvdjk2NXhfZnJh
-bWVzaXplc1tdID0gew0KPj4gQEAgLTM4NywxMyArNDIzLDYgQEAgc3RydWN0IGkyY19ydiB7DQo+
-PiAgIAl9LA0KPj4gICB9Ow0KPj4gICANCj4+IC1zdHJ1Y3Qgb3Y5NjV4X3BpeGZtdCB7DQo+PiAt
-CXUzMiBjb2RlOw0KPj4gLQl1MzIgY29sb3JzcGFjZTsNCj4+IC0JLyogUkVHX1RTTEIgdmFsdWUs
-IG9ubHkgYml0cyBbMzoyXSBtYXkgYmUgc2V0LiAqLw0KPj4gLQl1OCB0c2xiX3JlZzsNCj4+IC19
-Ow0KPiANCj4gQW55IHBhcnRpY3VsYXIgcmVhc29uIGZvciBtb3Zpbmcgc3RydWN0IG92OTY1eF9w
-aXhmbXQgZGVmaW5pdGlvbj8NCg0KTm90IGluIHRoZSByaWdodCBwYXRjaCwgbXVzdCBiZSBpbiA1
-LzYgW21lZGlhXSBvdjk2NTA6IGFkZCBtdWx0aXBsZSANCnZhcmlhbnQgc3VwcG9ydCwgSSdsbCBm
-aXggaW4gdjIuDQoNCj4gDQo+PiAtDQo+PiAgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb3Y5NjV4X3Bp
-eGZtdCBvdjk2NXhfZm9ybWF0c1tdID0gew0KPj4gICAJeyBNRURJQV9CVVNfRk1UX1lVWVY4XzJY
-OCwgVjRMMl9DT0xPUlNQQUNFX0pQRUcsIDB4MDB9LA0KPj4gICAJeyBNRURJQV9CVVNfRk1UX1lW
-WVU4XzJYOCwgVjRMMl9DT0xPUlNQQUNFX0pQRUcsIDB4MDR9LA0KPj4gQEAgLTEyNjgsMTEgKzEy
-OTcsMTIgQEAgc3RhdGljIGludCBvdjk2NXhfc2V0X2ZtdChzdHJ1Y3QgdjRsMl9zdWJkZXYgKnNk
-LCBzdHJ1Y3QgdjRsMl9zdWJkZXZfcGFkX2NvbmZpZw0KPj4gICANCj4+ICAgc3RhdGljIGludCBv
-djk2NXhfc2V0X2ZyYW1lX3NpemUoc3RydWN0IG92OTY1eCAqb3Y5NjV4KQ0KPj4gICB7DQo+PiAt
-CWludCBpLCByZXQgPSAwOw0KPj4gKwlpbnQgcmV0ID0gMDsNCj4+ICsNCj4+ICsJdjRsMl9kYmco
-MSwgZGVidWcsIG92OTY1eC0+Y2xpZW50LCAiJXNcbiIsIF9fZnVuY19fKTsNCj4+ICAgDQo+PiAt
-CWZvciAoaSA9IDA7IHJldCA9PSAwICYmIGkgPCBOVU1fRk1UX1JFR1M7IGkrKykNCj4+IC0JCXJl
-dCA9IG92OTY1eF93cml0ZShvdjk2NXgtPmNsaWVudCwgZnJhbWVfc2l6ZV9yZWdfYWRkcltpXSwN
-Cj4+IC0JCQkJICAgb3Y5NjV4LT5mcmFtZV9zaXplLT5yZWdzW2ldKTsNCj4+ICsJcmV0ID0gb3Y5
-NjV4X3dyaXRlX2FycmF5KG92OTY1eC0+Y2xpZW50LA0KPj4gKwkJCQkgb3Y5NjV4LT5mcmFtZV9z
-aXplLT5yZWdzKTsNCj4+ICAgCXJldHVybiByZXQ7DQo+PiAgIH0NCj4+ICAgDQo+IA==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+IPQ8074 has an integrated Hexagon dsp core Q6v5 and a wireless lan
+(Lithium) IP. This series adds the remoteproc driver to reset, load
+and boot Q6 firmware. The first patch is to make the mdt_loader authenticate
+the firmware only if required, so that the code can be reused for
+self-authenticating firmware like the Q6v5 core in IPQ8074.
+
+Sricharan R (3):
+  drivers: remoteproc: Make mdt_loader firmware authentication optional
+  drivers: remoteproc: Add Hexagon Q6 - WCSS integrated core driver
+  dt-binding: remoteproc: Add the bindings required for Hexagon - WCSS
+    core
+
+ .../bindings/remoteproc/qcom,q6v5-wcss.txt         | 139 ++++
+ drivers/remoteproc/Kconfig                         |  13 +
+ drivers/remoteproc/Makefile                        |   1 +
+ drivers/remoteproc/q6v5-wcss.c                     | 784 +++++++++++++++++++++
+ drivers/remoteproc/qcom_adsp_pil.c                 |   3 +-
+ drivers/remoteproc/qcom_wcnss.c                    |   3 +-
+ drivers/soc/qcom/mdt_loader.c                      |  24 +-
+ include/linux/soc/qcom/mdt_loader.h                |   2 +-
+ 8 files changed, 956 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/qcom,q6v5-wcss.txt
+ create mode 100644 drivers/remoteproc/q6v5-wcss.c
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
