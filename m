@@ -1,63 +1,44 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 2/6] clk: at91: add audio pll clock driver
-Date: Fri, 30 Jun 2017 00:11:18 +0200
-Message-ID: <20170629221118.fwnwe7k7ykx2acr3@piout.net>
-References: <20170623090059.8371-1-quentin.schulz@free-electrons.com>
- <20170623090059.8371-3-quentin.schulz@free-electrons.com>
- <20170629214758.7a55wtssikekjjh4@rob-hp-laptop>
+From: Kurt Van Dijck <dev.kurt@vandijck-laurijssen.be>
+Subject: Re: CAN-FD Transceiver Limitations
+Date: Fri, 30 Jun 2017 00:36:32 +0200
+Message-ID: <20170629223551.GA6568@airbook.vandijck-laurijssen.be>
+References: <de1f6343-4b28-4a5f-c6df-4e54c09fcce2@ti.com>
+ <20170629142142.GF9244@lunn.ch>
+ <5d4f2bcf-bd0f-4fa1-5d5a-d7b4a83cbc5e@ti.com>
+ <20170629154139.GC13221@lunn.ch>
+ <c0d3d772-6939-d22c-b954-3ba6486a9ede@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-can-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170629214758.7a55wtssikekjjh4@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Quentin Schulz <quentin.schulz@free-electrons.com>, mturquette@baylibre.com, sboyd@codeaurora.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, linux@armlinux.org.uk, boris.brezillon@free-electrons.com, lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, tiwai@suse.com, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org, thomas.petazzoni@free-electrons.com
+In-Reply-To: <c0d3d772-6939-d22c-b954-3ba6486a9ede@ti.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Franklin S Cooper Jr <fcooper@ti.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, linux-can@vger.kernel.org, netdev@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> >>
+> >> mcan@0 {
+> >> 	...
+> >> 	fixed-transceiver {
+> >> 	      max-canfd-speed = <2000>
+> >> 	};
+> >> 	...
+> >> };
 
-On 29/06/2017 at 16:47:58 -0500, Rob Herring wrote:
-> On Fri, Jun 23, 2017 at 11:00:55AM +0200, Quentin Schulz wrote:
-> > From: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > 
-> > This new clock driver set allows to have a fractional divided clock that
-> > would generate a precise clock particularly suitable for audio
-> > applications.
-> > 
-> > The main audio pll clock has two children clocks: one that is connected
-> > to the PMC, the other that can directly drive a pad. As these two routes
-> > have different enable bits and different dividers and divider formula,
-> > they are handled by two different drivers. Each of them could modify the
-> > rate of the main audio pll parent.
-> > The main audio pll clock can output 620MHz to 700MHz.
-> > 
-> > Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > Signed-off-by: Quentin Schulz <quentin.schulz@free-electrons.com>
-> > ---
-> >  .../devicetree/bindings/clock/at91-clock.txt       |  10 +
-> 
-> It would be nice to see at91 to transition away from a node per clock to 
-> just clock controller nodes. In any case:
-> 
+Since when would a transceiver support different speeds for CAN & CANFD?
+No transceivers were available, but they are now.
+I see no datalink problem applying 2MBit for regular CAN with apropriate
+physical layer, and CAN does not predefine the physical layer
+(advise != define).
 
-Yes, that is exactly our plan.
+IMHO,
+	fixed-transceiver {
+		max-arbitration-speed = <2000000>
+		max-data-speed = <4000000>
+	};
+is way better to describe the hardware.
+Regular CAN chips would not consider max-data-speed...
 
-> Acked-by: Rob Herring <robh@kernel.org>
-> 
-> >  arch/arm/mach-at91/Kconfig                         |   4 +
-> >  drivers/clk/at91/Makefile                          |   2 +
-> >  drivers/clk/at91/clk-audio-pll-pad.c               | 204 ++++++++++++++++++
-> >  drivers/clk/at91/clk-audio-pll-pmc.c               | 175 +++++++++++++++
-> >  drivers/clk/at91/clk-audio-pll.c                   | 237 +++++++++++++++++++++
-> >  include/linux/clk/at91_pmc.h                       |  25 +++
-> >  sound/soc/atmel/atmel-classd.c                     |  20 +-
-> >  8 files changed, 658 insertions(+), 19 deletions(-)
-> >  create mode 100644 drivers/clk/at91/clk-audio-pll-pad.c
-> >  create mode 100644 drivers/clk/at91/clk-audio-pll-pmc.c
-> >  create mode 100644 drivers/clk/at91/clk-audio-pll.c
-
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Kind regards,
+Kurt
