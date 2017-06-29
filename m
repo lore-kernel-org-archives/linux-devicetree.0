@@ -1,16 +1,16 @@
-From: Michael Ellerman <patch-notifications-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Subject: Re: [RESEND, v5, 12/16] powerpc/5200: Add generic compatible string for I2C EEPROM
-Date: Thu, 29 Jun 2017 22:21:11 +1000 (AEST)
-Message-ID: <3wyzKN0hY6z9s7v@ozlabs.org>
-References: <20170615185418.13980-13-javier@dowhile0.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170615185418.13980-13-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+Subject: Re: [RESEND, v5, 16/16] powerpc/44x: Add generic compatible string for I2C EEPROM
+Date: Thu, 29 Jun 2017 22:21:16 +1000 (AEST)
+Message-ID: <3wyzKS5H8Rz9s3T@ozlabs.org>
+References: <20170615185418.13980-17-javier@dowhile0.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20170615185418.13980-17-javier@dowhile0.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Javier Martinez Canillas <javier@dowhile0.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2017-06-15 at 18:54:14 UTC, Javier Martinez Canillas wrote:
+On Thu, 2017-06-15 at 18:54:18 UTC, Javier Martinez Canillas wrote:
 > The at24 driver allows to register I2C EEPROM chips using different vendor
 > and devices, but the I2C subsystem does not take the vendor into account
 > when matching using the I2C table since it only has device entries.
@@ -22,14 +22,10 @@ On Thu, 2017-06-15 at 18:54:14 UTC, Javier Martinez Canillas wrote:
 > So add this generic fallback to the device node compatible string to make
 > the device to match the driver using the OF device ID table.
 > 
-> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Javier Martinez Canillas <javier@dowhile0.org>
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/fd393188064e3d01a91a21160751f6
+https://git.kernel.org/powerpc/c/adeb8667eaf5f00b5a7f0cede680cd
 
 cheers
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
