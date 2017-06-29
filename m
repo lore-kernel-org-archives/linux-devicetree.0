@@ -1,101 +1,31 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Wed, 28 Jun 2017 20:33:37 -0700
-Message-ID: <b51fedbb-837f-49ea-d050-4c3be82724c5@roeck-us.net>
-References: <20170629002811.87199-1-cbostic@linux.vnet.ibm.com>
- <20170629002811.87199-2-cbostic@linux.vnet.ibm.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v6 1/6] pinctrl: qcom: Add ipq8074 pinctrl driver
+Date: Wed, 28 Jun 2017 21:30:20 -0700
+Message-ID: <20170629043020.GS18666@tuxbook>
+References: <1497001319-30353-1-git-send-email-varada@codeaurora.org>
+ <1497001319-30353-2-git-send-email-varada@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170629002811.87199-2-cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Content-Language: en-US
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1497001319-30353-2-git-send-email-varada@codeaurora.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Varadarajan Narayanan <varada@codeaurora.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@codeaurora.org, linus.walleij@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, catalin.marinas@arm.com, will.deacon@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, absahu@codeaurora.org, sjaganat@codeaurora.org, sricharan@codeaurora.org, Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/28/2017 05:28 PM, Christopher Bostic wrote:
-> Describe device tree optional properties:
+On Fri 09 Jun 02:41 PDT 2017, Varadarajan Narayanan wrote:
+
+> Add initial pinctrl driver to support pin configuration with
+> pinctrl framework for ipq8074.
 > 
->    * aspeed,arm-reet - ARM CPU reset on signal
->    * aspeed,no-soc-reset - SOC reset on signal
->    * aspeed,no-sys-reset - System reset on signal
->    * aspeed,interrupt - Interrupt CPU on signal
->    * aspeed,external-signal - Generate external signal (WDT1 and WDT2 only)
->    * aspeed,alt-boot - Boot from alternate block on signal
-> 
-> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> ---
-> v3 - Invert soc and sys reset to 'no' to preserve backwards
->       compatibility.  SOC and SYS reset will be set by default
->       without any optional parameters set
-> v2 - Add 'aspeed,' prefix to all optional properties
->     - Add arm-reset, soc-reset, interrupt, alt-boot properties
-> ---
->   .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 24 ++++++++++++++++++++++
->   1 file changed, 24 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> index c5e74d7..6f18005 100644
-> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> @@ -8,9 +8,33 @@ Required properties:
->    - reg: physical base address of the controller and length of memory mapped
->      region
->   
-> +Optional properties:
-> +   Signal behavior - Whenever a timeout occurs the watchdog can be programmed
-> +   to generate/not generate 6 types of signals:
-> +
-> + - aspeed,arm-reset:	If property is present then reset ARM CPU only.
-> +			If not specified no ARM CPU reset is done.
-> +
-> + - aspeed,no-soc-reset: If property is present then do not reset SOC.
-> +			If not specified then SOC reset is done.
-> +
-> + - aspeed,no-sys-reset: If property is present then do not reset system.
-> +			Typcally used in tandem with 'aspeed-external-signal'
+> Acked-by: Rob Herring <robh@kernel.org> (bindings)
+> Signed-off-by: Manoharan Vijaya Raghavan <mraghava@codeaurora.org>
+> Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
 
-Is this correct ? As I understand the datasheet, it could also used in tandem with
-aspeed,interrupt.
+Sorry for the delay, I think this looks good.
 
-> +			If not specified then system reset is done.
-> +
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-I'll leave it up to Rob to decide, but for my part I don't understand no-soc-reset.
-I would instead use four properties.
-
-	aspeed,arm-reset
-	aspeed,soc-reset
-	aspeed,sys-reset (which is the default)
-	aspeed,no-reset
-
-There should also be a note explaining that the above are mutually exclusive.
-
-> + - aspeed,interrupt:	If property is present then interrupt CPU.
-> +			If not specified then don't interrupt CPU.
-> +
-> + - aspeed,external-signal: If property is present then signal is sent to
-> +			external reset counter (only WDT1 and WDT2). If not
-> +			specified no external signal is sent.
-
-For consistency, either add an empty line here or remove the empty lines above
-
-> + - aspeed,alt-boot:    If property is present then boot from alternate block.
-> +
->   Example:
->   
->   	wdt1: watchdog@1e785000 {
->   		compatible = "aspeed,ast2400-wdt";
->   		reg = <0x1e785000 0x1c>;
-> +		aspeed,no-sys-reset;
-> +		aspeed,external-signal;
->   	};
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Bjorn
