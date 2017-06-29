@@ -1,82 +1,43 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: document /sys/firmware/fdt
-Date: Thu, 29 Jun 2017 14:28:41 +0100
-Message-ID: <CACxGe6t=xfgWUmFUS=_hpmH_VRRURE4TzTLOx7Yi=BsoKeSBUg@mail.gmail.com>
-References: <1497414007-8380-1-git-send-email-frowand.list@gmail.com>
+From: Ludovic Desroches <ludovic.desroches@microchip.com>
+Subject: Re: [RFC PATCH 2/3] drivers: misc: eeprom: at24: support reading mac
+ eeprom from different addresses
+Date: Thu, 29 Jun 2017 15:30:29 +0200
+Message-ID: <20170629133029.fq6jjivu5cx22j6q@rfolt0960.corp.atmel.com>
+References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
+ <1498736351-9021-3-git-send-email-claudiu.beznea@microchip.com>
+ <CAHp75Vf_SL3ReKLK0=8v3bDwHs5qwi2qc9p=XzJK9BXzOsLKLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1497414007-8380-1-git-send-email-frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-i2c-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAHp75Vf_SL3ReKLK0=8v3bDwHs5qwi2qc9p=XzJK9BXzOsLKLA@mail.gmail.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Claudiu Beznea <claudiu.beznea@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 14, 2017 at 5:20 AM,  <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
-> Add ABI documentation for /sys/firmware/fdt
->
-> Update contact for /sys/firmware/devicetree/* to include mail list
->
-> Signed-off-by: Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
+On Thu, Jun 29, 2017 at 02:56:03PM +0300, Andy Shevchenko wrote:
+> On Thu, Jun 29, 2017 at 2:39 PM, Claudiu Beznea
+> <claudiu.beznea@microchip.com> wrote:
+> > Add support for reading from different offsets of EEPROM.
+> > The offset is initialized via device tree. If nothing is
+> > given as input the old value, 0x90, is used. In this way
+> > the driver could be used as generic driver for different
+> > vendor memories by only changing the reading offset via
+> > device tree.
+> 
+> > +       err = device_property_read_u8(dev, "start-offset", &chip->offset);
+> 
+> This property has to be documented.
+> 
+> Moreover, the name looks too broad (I checked current use of
+> "*-offset" type of properties and they either vendor specific, or data
+> type specific.
+> 
+> Taking above into consideration mac-offset sounds better to me.
 
-Acked-by: Grant Likely <grant.likely-5wv7dgnIgG8@public.gmane.org>
+I agree, it sounds better to me too.
 
-(Apologies for acking from a different address. My ARM email isn't yet
-set up to play nice on mailing lists.)
+Regards
 
-g.
-
-> ---
->  Documentation/ABI/testing/sysfs-firmware-ofw | 27 ++++++++++++++++++++++++++-
->  1 file changed, 26 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/ABI/testing/sysfs-firmware-ofw b/Documentation/ABI/testing/sysfs-firmware-ofw
-> index f562b188e71d..8e700db6c295 100644
-> --- a/Documentation/ABI/testing/sysfs-firmware-ofw
-> +++ b/Documentation/ABI/testing/sysfs-firmware-ofw
-> @@ -1,6 +1,6 @@
->  What:          /sys/firmware/devicetree/*
->  Date:          November 2013
-> -Contact:       Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> +Contact:       Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->  Description:
->                 When using OpenFirmware or a Flattened Device Tree to enumerate
->                 hardware, the device tree structure will be exposed in this
-> @@ -26,3 +26,28 @@ Description:
->                 name plus address). Properties are represented as files
->                 in the directory. The contents of each file is the exact
->                 binary data from the device tree.
-> +
-> +What:          /sys/firmware/fdt
-> +Date:          February 2015
-> +KernelVersion: 3.19
-> +Contact:       Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> +Description:
-> +               Exports the FDT blob that was passed to the kernel by
-> +               the bootloader. This allows userland applications such
-> +               as kexec to access the raw binary. This blob is also
-> +               useful when debugging since it contains any changes
-> +               made to the blob by the bootloader.
-> +
-> +               The fact that this node does not reside under
-> +               /sys/firmware/device-tree is deliberate: FDT is also used
-> +               on arm64 UEFI/ACPI systems to communicate just the UEFI
-> +               and ACPI entry points, but the FDT is never unflattened
-> +               and used to configure the system.
-> +
-> +               A CRC32 checksum is calculated over the entire FDT
-> +               blob, and verified at late_initcall time. The sysfs
-> +               entry is instantiated only if the checksum is valid,
-> +               i.e., if the FDT blob has not been modified in the mean
-> +               time. Otherwise, a warning is printed.
-> +Users:         kexec, debugging
-> +
-> --
-> Frank Rowand <frank.rowand-7U/KSKJipcs@public.gmane.org>
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ludovic
