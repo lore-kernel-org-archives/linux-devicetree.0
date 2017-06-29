@@ -1,42 +1,202 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] ARM: aspeed: g5: Add USB functions to pinctrl
- bindings
-Date: Thu, 29 Jun 2017 15:13:24 -0500
-Message-ID: <20170629201324.c4t7bcrhsdoftkd3@rob-hp-laptop>
-References: <20170627021214.23323-1-andrew@aj.id.au>
- <20170627021214.23323-3-andrew@aj.id.au>
+From: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v5 07/16] Documentation: DT: MIPS: lantiq: Add docs for
+ the RCU bindings
+Date: Thu, 29 Jun 2017 22:27:19 +0200
+Message-ID: <1171930b-769b-f0ea-778e-ddcd11b20775@hauke-m.de>
+References: <20170620223743.13735-1-hauke@hauke-m.de>
+ <20170620223743.13735-8-hauke@hauke-m.de>
+ <20170623221224.fhfc6ezydd3uglfr@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170627021214.23323-3-andrew@aj.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, joel@jms.id.au, benh@kernel.crashing.org, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170623221224.fhfc6ezydd3uglfr@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org, john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 11:42:12AM +0930, Andrew Jeffery wrote:
-> The Aspeed AST2500 SoC contains a number of USB controllers:
+On 06/24/2017 12:12 AM, Rob Herring wrote:
+> On Wed, Jun 21, 2017 at 12:37:34AM +0200, Hauke Mehrtens wrote:
+>> From: Martin Blumenstingl <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+>>
+>> This adds the initial documentation for the RCU module (a MFD device
+>> which provides USB PHYs, reset controllers and more).
+>>
+>> The RCU register range is used for multiple purposes. Mostly one device
+>> uses one or multiple register exclusively, but for some registers some
+>> bits are for one driver and some other bits are for a different driver.
+>> With this patch all accesses to the RCU registers will go through
+>> syscon.
+>>
+>> Signed-off-by: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
+>> ---
+>>  .../devicetree/bindings/mips/lantiq/rcu.txt        | 95 ++++++++++++++++++++++
+>>  1 file changed, 95 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mips/lantiq/rcu.txt b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+>> new file mode 100644
+>> index 000000000000..9c875f4f3c90
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mips/lantiq/rcu.txt
+>> @@ -0,0 +1,95 @@
+>> +Lantiq XWAY SoC RCU binding
+>> +===========================
+>> +
+>> +This binding describes the RCU (reset controller unit) multifunction device,
+>> +where each sub-device has it's own set of registers.
+>> +
+>> +The RCU register range is used for multiple purposes. Mostly one device
+>> +uses one or multiple register exclusively, but for some registers some
+>> +bits are for one driver and some other bits are for a different driver.
+>> +With this patch all accesses to the RCU registers will go through
+>> +syscon.
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Required properties:
+>> +- compatible	: The first and second values must be:
+>> +		  "lantiq,xrx200-rcu", "simple-mfd", "syscon"
+>> +- reg		: The address and length of the system control registers
+>> +
+>> +
+>> +-------------------------------------------------------------------------------
+>> +Example of the RCU bindings on a xRX200 SoC:
+>> +	rcu0: rcu@203000 {
+>> +		compatible = "lantiq,xrx200-rcu", "simple-mfd", "syscon";
+>> +		reg = <0x203000 0x100>;
+>> +		ranges = <0x0 0x203000 0x100>;
+>> +		big-endian;
+>> +
+>> +		gphy0: gphy@0 {
 > 
-> * USB 1.1 Host Controller
-> * USB 2.0 Host Controller (x2)
-> * Combined USB 2.0 Virtual Hub and USB 1.1 HID Controller
-> 
-> The controllers are exposed via two USB ports with functionality muxed
-> as required. The following table illustrates the relationships between
-> the ports and the controllers via the mux function names:
-> 
-> Port  | USB Version  | USB Mode     | Mux Function
-> ------|--------------|--------------|-------------
-> A     | 2.0          | Virtual Hub  | USB2AD
-> A     | 2.0          | Host         | USB2AH
-> B     | 1.1          | HID          | USB11BHID
-> B     | 2.0          | Device       | USB2BD
-> B     | 2.0          | Host         | USB2BH
-> 
-> Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> ---
->  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> unit address should match reg, so "phy@20"
 
-Acked-by: Rob Herring <robh@kernel.org>
+done
+
+>> +			compatible = "lantiq,xrx200a2x-gphy";
+>> +			reg = <0x20 0x4>;
+>> +
+>> +			resets = <&reset0 31 30>, <&reset1 7 7>;
+>> +			reset-names = "gphy", "gphy2";
+>> +			lantiq,gphy-mode = <GPHY_MODE_GE>;
+>> +		};
+>> +
+>> +		gphy1: gphy@1 {
+> 
+> phy@68
+
+done
+
+>> +			compatible = "lantiq,xrx200a2x-gphy";
+>> +			reg = <0x68 0x4>;
+>> +
+>> +			resets = <&reset0 29 28>, <&reset1 6 6>;
+>> +			reset-names = "gphy", "gphy2";
+>> +			lantiq,gphy-mode = <GPHY_MODE_GE>;
+>> +		};
+>> +
+>> +		reset0: reset-controller@0 {
+> 
+> ...@10
+
+done
+
+
+>> +			compatible = "lantiq,xrx200-reset";
+>> +
+>> +			offset-set = <0x10>;
+>> +			offset-status = <0x14>;
+> 
+> reg = <0x10 8>;
+
+done
+
+>> +			#reset-cells = <2>;
+>> +		};
+>> +
+>> +		reset1: reset-controller@1 {
+>> +			compatible = "lantiq,xrx200-reset";
+>> +
+>> +			offset-set = <0x48>;
+>> +			offset-status = <0x24>;
+> 
+> reg = <0x48 4>, <0x24 4>;
+
+done
+
+>> +			#reset-cells = <2>;
+>> +		};
+>> +
+>> +		usb_phy0: usb2-phy@0 {
+>> +			compatible = "lantiq,xrx200-usb2-phy";
+>> +			status = "disabled";
+>> +
+>> +			regmap = <&rcu0>;
+> 
+> This should be dropped.
+
+I will get this from the parent device now.
+
+>> +			offset-phy = <0x18>;
+>> +			offset-ana = <0x38>;
+> 
+> Use reg.
+
+There is also one bit used to reset the DSL digital frontend at offset
+0x38. This has nothing to do with USB.
+
+>> +			resets = <&reset1 4 4>, <&reset0 4 4>;
+>> +			reset-names = "phy", "ctrl";
+>> +			#phy-cells = <0>;
+>> +		};
+>> +
+>> +		usb_phy1: usb2-phy@1 {
+>> +			compatible = "lantiq,xrx200-usb2-phy";
+>> +			status = "disabled";
+>> +
+>> +			regmap = <&rcu0>;
+> 
+> Drop.
+
+done
+
+>> +			offset-phy = <0x34>;
+>> +			offset-ana = <0x3C>;
+> 
+> Use reg.
+
+There is also a bits to configure something with the DSL dying gasp at
+offset 0x34. This has nothing to do with USB.
+
+> 
+>> +			resets = <&reset1 5 4>, <&reset0 4 4>;
+>> +			reset-names = "phy", "ctrl";
+>> +			#phy-cells = <0>;
+>> +		};
+>> +
+>> +		reboot {
+>> +			compatible = "syscon-reboot";
+>> +
+>> +			regmap = <&rcu0>;
+> 
+> Drop.
+
+The syscon-reboot driver uses this code to get the regmap:
+ctx->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
+This driver was not added by me.
+
+>> +			offset = <0x10>;
+>> +			mask = <0x40000000>;
+>> +		};
+>> +	};
+>> +
+>> -- 
+>> 2.11.0
+>>
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
