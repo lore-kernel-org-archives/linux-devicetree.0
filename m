@@ -1,67 +1,60 @@
-From: Eugeniy Paltsev <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 3/3 v6] ARC: hsdk: initial port for HSDK board
-Date: Thu, 29 Jun 2017 16:39:45 +0000
-Message-ID: <1498754384.2378.10.camel@synopsys.com>
-References: <20170626151118.19507-1-Eugeniy.Paltsev@synopsys.com>
-         <20170626151118.19507-4-Eugeniy.Paltsev@synopsys.com>
-         <CAL_JsqJBPL+AuYNP=JgXWOGNFxdenKY4Rt3_f6tG6MYDLncRNg@mail.gmail.com>
-         <1498494334.28955.58.camel@synopsys.com>
-         <20170628225005.5ume54d67vtvp5fi@rob-hp-laptop>
+From: icenowy-h8G6r0blFSE@public.gmane.org
+Subject: Re: Re: [PATCH 1/6] net: stmmac: support future
+ possible different internal phy mode
+Date: Fri, 30 Jun 2017 00:46:30 +0800
+Message-ID: <9f1992d1cab37e5f309c6260985ce32a@aosc.io>
+References: <20170627092806.28181-1-clabbe.montjoie@gmail.com>
+ <20170629.122349.2265868886957558079.davem@davemloft.net>
+Reply-To: icenowy-h8G6r0blFSE@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170628225005.5ume54d67vtvp5fi@rob-hp-laptop>
-Content-Language: en-US
-Content-ID: <510F4FDEE91E5247BB1E8C004AD14A4A-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Eugeniy.Paltsev-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-snps-arc-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDS6XAN6ZADRB2652TFAKGQE264TGXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20170629.122349.2265868886957558079.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, alexandre.torgue-qxv4g6HH51o@public.gmane.org, andre.przywara-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE3LTA2LTI4IGF0IDE3OjUwIC0wNTAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-PiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAjY2xv
-Y2stY2VsbHMgPSA8MD47DQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJmaXhlZC1jbG9jayI7DQo+ID4gPiA+ICvCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY2xvY2stZnJlcXVlbmN5
-ID0gPDEwMDAwMDAwMDA+Ow0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-fTsNCj4gPiA+ID4gKw0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgY29y
-ZV9pbnRjOiBhcmNocy1pbnRjQGNwdSB7DQo+ID4gPiANCj4gPiA+IGNwdSBpcyBub3QgYSB2YWxp
-ZCB1bml0LWFkZHJlc3MuIEhvdyBhcmUgdGhlc2UgaW50ZXJydXB0DQo+ID4gPiBjb250cm9sbGVy
-cyBhZGRyZXNzZWQ/DQo+ID4gDQo+ID4gV2UgaGF2ZSBwZXItY29yZSBJTlRDIHNvIGVhY2ggY29y
-ZSBjb21tdW5pY2F0ZXMgdG8gaXRzIG93biBJTlRDIGFuZA0KPiA+IHRoZXJlJ3Mgbm8gd2F5DQo+
-ID4gZm9yIGFueSBjb3JlIHRvIHRhbGsgd2l0aCBJTlRDIG9mIGFub3RoZXIgY29yZS4NCj4gPiAN
-Cj4gPiBCdXQgdGhlbiB3ZSBoYXZlIHRoZSBuZXh0IGxldmVsIElOVEMgd2hpY2ggaXMgSURVIChJ
-bnRlcnJ1cHQNCj4gPiBEaXN0cmlidXRpb24gVW5pdCkNCj4gPiB3aGljaCBkaXNwYXRjaGVzICJj
-b21tb24iIElSUXMgdG8gZGlmZmVyZW50IHVwc3RyZWFtIHBlci1jb3JlIElOVEMsDQo+ID4gc2Vl
-IGJlbG93IGl0cyBub2RlLsKgDQo+IA0KPiBPa2F5LCBJJ2QganVzdCBkbyAiY3B1LWludGVycnVw
-dC1jb250cm9sbGVyIiBmb3IgdGhlIG5vZGUgbmFtZSB0aGVuLsKgDQo+IFRoZXJlIGRvZXNuJ3Qg
-c2VlbSB0byBiZSBhbiBlYXN5IHdheSB0byB1c2UganVzdCAiaW50ZXJydXB0LQ0KPiBjb250cm9s
-bGVyIsKgDQo+IHNpbmNlIHlvdSBoYXZlIDIgbm9kZXMgYXQgdGhlIHNhbWUgbGV2ZWwgYW5kIG5v
-IHVuaXQtYWRkcmVzcyAoaS5lLiBhwqANCj4gcmVnIHByb3BlcnR5KS4NCj4gDQoNClRvIGJlIG1v
-cmUgY2xhcmlmeSwgd2hhdCBpcyBiZXR0ZXIgd2F5IGRvIGRlc2NyaWJlIHN1Y2ggaGFyZHdhcmUg
-aW4NCmRldmljZSB0cmVlPw0KDQotLS0tLS0tLS0tLS0twqDCoMKgwqAtLS0tLS0tLS0tLS0twqDC
-oA0KfCBjcHUgY29yZSAwfMKgwqDCoMKgfCBjcHUgY29yZSAxfMKgwqANCi0tLS0tLS0tLS0tLS3C
-oMKgwqDCoC0tLS0tLS0tLS0tLS3CoMKgDQp8IGludGVycnVwdCB8wqDCoMKgwqB8IGludGVycnVw
-dCB8wqDCoA0KfCBjb250cm9sbGVyfMKgwqDCoMKgfCBjb250cm9sbGVyfMKgwqANCnzCoMKgwqDC
-oMKgMMKgwqDCoMKgwqB8wqDCoMKgwqB8wqDCoMKgwqDCoDHCoMKgwqDCoMKgfMKgwqANCi0tLS0t
-LS0tLS0tLS3CoMKgwqDCoC0tLS0tLS0tLS0tLS3CoMKgDQrCoMKgwqDCoMKgwqBewqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqBeDQrCoMKgwqDCoMKgwqB8wqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqB8DQrCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC0tLS0tLS0tLS0tDQrC
-oMKgwqDCoMKgwqB8wqDCoMKgwqDCoMKgfA0KLS0tLS0tLS0tLS0tLS0tLQ0KfMKgwqDCoGludGVy
-cnVwdMKgwqB8DQp8IGRpc3RyaWJ1dGlvbiB8DQp8wqDCoMKgwqDCoHVuaXTCoMKgwqDCoMKgfA0K
-LS0tLS0tLS0tLS0tLS0tLQ0KwqDCoMKgwqDCoMKgXg0KwqDCoMKgwqDCoMKgfA0KwqDCoMKgwqDC
-oMKgfDwtLW90aGVyIGRldmljZXMgaW50ZXJydXB0IGxpbmVzDQoNCldlIGNhbid0IGp1c3QgY3Jl
-YXRlIGEgbm9kZSBmb3IgZWFjaCBjb3JlIGludGVycnVwdCBjb250cm9sbGVyIGJlY2F1c2UNCndl
-IHdvdWxkbid0IGFibGUgdG8gc3BlY2lmeSB3aGljaCBvbmUgaXMgcGFyZW50IGZvciBpbnRlcnJ1
-cHQNCmRpc3RyaWJ1dGlvbiB1bml0Og0KDQotLS0tLS0tLS0tLS0+Pj4tLS0tLS0tLS0tLS0tDQpj
-cHVzIHsNCsKgwqDCoMKgY3B1QDAgeyBpbnRjQDAgfTsNCsKgwqDCoMKgY3B1QDEgeyBpbnRjQDEg
-fTsNCn07DQoNCmludGVycnVwdC1kaXN0cmlidXRpb24tdW5pdCB7DQrCoMKgwqDCoGludGVycnVw
-dC1wYXJlbnQgPSA/Pz8/DQp9Ow0KLS0tLS0tLS0tLS0tPj4+LS0tLS0tLS0tLS0tLQ0KDQpTaG91
-bGQgd2Ugc2ltcGx5IGNyZWF0ZSBvbmUgY29yZSBpbnRlcnJ1cHQgY29udHJvbGxlciBub2RlIGZv
-ciBhbGwgY3B1cw0KKGluc3RlYWQgb2Ygb25lIHBlciBlYWNoIGNwdSBjb3JlKSwgb3Igd2hlcmUg
-aXMgYSBiZXR0ZXIgb3B0aW9uPw0KDQotLSANCsKgRXVnZW5peSBQYWx0c2V2
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+=E5=9C=A8 2017-06-30 00:23=EF=BC=8CDavid Miller =E5=86=99=E9=81=93=EF=BC=9A
+> From: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Date: Tue, 27 Jun 2017 11:28:01 +0200
+>=20
+>> The current way to find if the phy is internal is to compare DT=20
+>> phy-mode
+>> and emac_variant/internal_phy.
+>> But it will negate a possible future SoC where an external PHY use the
+>> same phy mode than the internal one.
+>>=20
+>> By using phy-mode =3D "internal" we permit to have an external PHY with
+>> the same mode than the internal one.
+>>=20
+>> Reported-by: Andr=C3=A9 Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+>> Signed-off-by: Corentin Labbe <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>=20
+> Series applied.
+
+I think there's still some problems around for this patchset...
+The definition of "internal" is internal *proprietary* PHY, but the
+internal PHY of Allwinner SoCs seem to be MII...
+
+See [1].
+
+[1]=20
+http://lists.infradead.org/pipermail/linux-arm-kernel/2017-June/516159.html
+
+>=20
+> Please provide a proper "[PATCH 0/n] " header posting next time.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
