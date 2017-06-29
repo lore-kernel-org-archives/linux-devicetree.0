@@ -1,33 +1,199 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/3] dts: RISC-V vendor prefix
-Date: Thu, 29 Jun 2017 15:35:15 -0500
-Message-ID: <20170629203515.furw573zz2uu76pa@rob-hp-laptop>
-References: <20170627052124.426-1-palmer@dabbelt.com>
- <20170627052124.426-2-palmer@dabbelt.com>
+From: Vivek Unune <npcomplete13-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: BCM5301X: Add support for Linksys EA9500
+Date: Thu, 29 Jun 2017 17:04:43 -0400
+Message-ID: <CAChtp77nD-dUCytja6PM3fAqXLCVshHqN-hV6pp6ues0PQcaOA@mail.gmail.com>
+References: <1489590033-4946-1-git-send-email-npcomplete13@gmail.com>
+ <20170315185214.GF21021@lunn.ch> <CAChtp75xk3LN1-DPVvaHT5qEvrdoFFvXEk-daVCcJ=4rYu_vmw@mail.gmail.com>
+ <7f5ddeba-6f79-9de5-2c67-a77e6bec0ef9@broadcom.com> <CAChtp75mzHkSg4rVh602vaMotqs6NtaPOD4383Gef8tVPO37FQ@mail.gmail.com>
+ <2e4ed52f-4134-9b6a-18c9-7c1f28cd7038@broadcom.com> <CAChtp76sbKjxq03ipSDJN69XeJRU-0aRTeJ75+gCXZfo4D5r0A@mail.gmail.com>
+ <03ba6198-a2cc-da9f-7d7d-f626d53d5717@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20170627052124.426-2-palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <03ba6198-a2cc-da9f-7d7d-f626d53d5717-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org, zajec5-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 10:21:22PM -0700, Palmer Dabbelt wrote:
-> RISC-V systems use device tree to specify the memory layout of the
-> system.  This patch reserves the "riscv" vendor prefix, which will be
-> used for devices that are specified by the various RISC-V ISA
-> specifications.
-> 
-> Signed-off-by: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+Florian,
 
-Applied with subject fixup.
+>> I have managed to use DSA driver and was able detect both internal and
+>> external switches. However, I only get packets flowing only through the
+>> internal switch. I have used the ip & bridge commands to setup the vlan
+>> 101 & 102 for lan and wan respectively.
+>>
+>> VLAN101 = lan1 lan2 lan3 lan4 lan5 lan6 lan7 lan8 eth0.101
+>
+> That looks reasonable although keep in mind that the IMP/CPU interfaces
+> of the switch are configured with VLAN tags (see commit [1]), so you may
+> need to make sure that port 0 of the internal switch is not accidentally
+> configured back to untagged since that would cause problem when
+> terminating the VLAN tag on the SW side.
+>
+> So here are a few things that you want to check:
+>
+> - read the MIB counters from the "extswitch" interface and see if
+> packets flow through in both directions with no errors
 
-Rob
+lan4 is on internal switch, lan1 on external. I cannot ping router from lan1
+
+Inter-    |   Receive                |  Transmit
+ face     |bytes    packets errs drop|bytes    packets errs drop
+br-lan:      168590    1726    0    0   190542     753    0    0
+extswitch:        0       0    0    0   101012    1221    0    0
+  lan1:           0       0    0    0     5382     111    0    0
+  lan4:           0       0    0    0  1306680   13909    0    0
+  eth0:     3276924    5539    0    0  1106135    5084    0    0
+eth0.101:    169338    1732    0    0   190256     750    0    0
+eth0.102:   2959522    3274    0    0   587248    1094    0    0
+    lo:       39390     502    0    0    39390     502    0    0
+br-wan:     2956822    3254    0    0   587248    1094    0    0
+
+>
+> - check the "extswitch" VLAN configuration on both the internal switch
+> side (port 0) and on the external switch side ("cpu", port 8, not visible)
+
+#bridge vlan show
+port    vlan ids
+extswitch       None
+extswitch
+lan7     101 PVID Egress Untagged
+lan7     101 PVID Egress Untagged
+lan4     101 PVID Egress Untagged
+lan4     101 PVID Egress Untagged
+lan8     101 PVID Egress Untagged
+lan8     101 PVID Egress Untagged
+wan      102 PVID Egress Untagged
+wan      102 PVID Egress Untagged
+lan1     101 PVID Egress Untagged
+lan1     101 PVID Egress Untagged
+lan5     101 PVID Egress Untagged
+lan5     101 PVID Egress Untagged
+lan2     101 PVID Egress Untagged
+lan2     101 PVID Egress Untagged
+lan6     101 PVID Egress Untagged
+lan6     101 PVID Egress Untagged
+lan3     101 PVID Egress Untagged
+lan3     101 PVID Egress Untagged
+br-lan  None
+eth0.101         101 PVID Egress Untagged
+eth0.101
+br-wan  None
+eth0.102         102 PVID Egress Untagged
+eth0.102
+
+>
+> - see if you can get traffic end-to-end from eth0 all the way through
+> one of the external switch port. If that's the case, that means that the
+> configuration of internal switch port 0, internal switch CPU port, and
+> external switch external port is working and operational
+>
+> [1]:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=e47112d9d6009bf6b7438cedc0270316d6b0370d
+>
+>> VLAN102 = wan eth0.102
+>>
+>> Reading configs from the factory firmware, I'm sure that sw0port0 and> sw1port8 are connected. Excerpt from the same:
+>>
+>> port_numbers=0 2 4 2 1 3 1 3
+>> port_switch_id=1 1 1 0 1 1 0 0
+>> port_names=port0 port1 port2 port3 port4 port5 port6 port7
+>
+> Is 0 the identifier for the external or internal switch? If 0 is
+> internal switch identifier and 1 is the external switch identifier, your
+> mapping looks correct to me with one exception below:
+
+0 is internal here.
+
+>
+>> cpu_port_number=5 7 8
+>> cpu_port_switch_id=0 0 0
+>> hidden_port_numbers=0 8
+>> hidden_port_switch_id=0 1
+>>
+>> Below is my updated device tree.
+>>
+>> Thanks,
+>>
+>> Vivek
+>>
+>> &srab {
+>>     compatible = "brcm,bcm53012-srab", "brcm,bcm5301x-srab";
+>>     status = "okay";
+>>     dsa,member = <0 0>;
+>>
+>>     ports {
+>>         #address-cells = <1>;
+>>         #size-cells = <0>;
+>>
+>>         port@1 {
+>>             reg = <1>;
+>>             label = "lan7";
+>>         };
+>>
+>>         port@2 {
+>>             reg = <2>;
+>>             label = "lan4";
+>>         };
+>>
+>>         port@3 {
+>>             reg = <3>;
+>>             label = "lan8";
+>>         };
+>>
+>>         port@4 {
+>>             reg = <4>;
+>>             label = "wan";
+>>         };
+>>
+>>         port@5 {
+>>             reg = <5>;
+>>             ethernet = <&gmac0>;
+>>             label = "cpu";
+>>
+>>             fixed-link {
+>>
+>>                 speed = <1000>;
+>>                 full-duplex;
+>>             };
+>>         };
+>
+> I think this is meant to be port 8 here based on the hidden_port_number
+> value. This actually matters for VLAN configuration because B53 is not
+> (unfortunately, to be fixed) consistently using dst->cpu_port (whatever
+> is configured in Device Tree) vs. dev->cpu_port (hardcoded to 8 for this
+> class of switch).
+
+When I connect to port 8 I receive no packets on internal switch.
+
+>
+> PS: on that front, we will have to rework that when we bring multiple
+> CPU port support in DSA/B53/bcm_sf2 and so for now what we could do is
+> just check that the configured CPU port in Device Tree is a valid CPU
+> port for that switch (typically 5, 7 or 8), and if not, just issue a
+> warning.
+>
+>>
+>>         sw0port0: port@0 {
+>>             reg = <0>;
+>>             label = "extswitch";
+>>
+>>             fixed-link {
+>>                 speed = <1000>;
+>>                 full-duplex;
+>>             };
+>
+> There might be some additional configuration needed here for this port,
+> because by default, the port will most likely try to use its built-in
+> PHY and maybe that's what they did, they wired the built-in PHY directly
+> to the IMP port of the external switch.
+
+Do you know what that configuration might be?
+
+Thanks,
+
+Vivek
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
