@@ -1,35 +1,42 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: CAN-FD Transceiver Limitations
-Date: Thu, 29 Jun 2017 19:19:00 +0200
-Message-ID: <20170629171900.GA17008@lunn.ch>
-References: <de1f6343-4b28-4a5f-c6df-4e54c09fcce2@ti.com>
- <20170629142142.GF9244@lunn.ch>
- <5d4f2bcf-bd0f-4fa1-5d5a-d7b4a83cbc5e@ti.com>
- <20170629154139.GC13221@lunn.ch>
- <c0d3d772-6939-d22c-b954-3ba6486a9ede@ti.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v2 3/5] i2c: i2c-stm32f7: add driver
+Date: Thu, 29 Jun 2017 20:00:55 +0200
+Message-ID: <20170629180055.ga6jgonch6dhowyi@pengutronix.de>
+References: <1497958890-5530-1-git-send-email-pierre-yves.mordret@st.com>
+ <1497958890-5530-4-git-send-email-pierre-yves.mordret@st.com>
+ <20170627205135.greh3baskzi4zetk@pengutronix.de>
+ <21ca1ecb-39ac-5d43-71a2-d566974ab577@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-i2c-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <c0d3d772-6939-d22c-b954-3ba6486a9ede@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Franklin S Cooper Jr <fcooper@ti.com>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, devicetree@vger.kernel.org
+In-Reply-To: <21ca1ecb-39ac-5d43-71a2-d566974ab577@st.com>
+Sender: linux-i2c-owner@vger.kernel.org
+To: Pierre Yves MORDRET <pierre-yves.mordret@st.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Russell King <linux@armlinux.org.uk>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> Also I agree that attempting to make this optional property/subnode
-> generic to all of CAN would be preferable. Another not sure if its
-> feasible yet without standardization being first forced across all CAN
-> drivers.
+Hello,
 
-It should be. All you need to do is add an
-of_get_can_maxspeed(struct device_node *np)
-for drivers to call.
+On Thu, Jun 29, 2017 at 02:40:44PM +0000, Pierre Yves MORDRET wrote:
+> >> +	/* Arbitration loss */
+> >> +	if (status & STM32F7_I2C_ISR_ARLO) {
+> >> +		dev_err(dev, "<%s>: Arbitration loss\n", __func__);
+> > 
+> > Drop this. Arbitration loss is not an error and it shouldn't pollute the
+> > kernel log.
+> > 
+> 
+> I would like to keep it as indication though.
+> Agree with dev_warn ?
 
-If it finds the property, return its value, otherwise return the
-standardised 1Mbps.
+No, dev_debug is ok.
 
-And you probably want to do the verify in can_changelink(), by adding
-the max speed into the can_priv structure somewhere.
+Best regards
+Uwe
 
-    Andrew
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
