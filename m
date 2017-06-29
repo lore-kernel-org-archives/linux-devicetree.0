@@ -1,134 +1,54 @@
-From: Todor Tomov <todor.tomov@linaro.org>
-Subject: Re: [PATCH v2 01/19] doc: DT: camss: Binding document for Qualcomm
- Camera subsystem driver
-Date: Thu, 29 Jun 2017 15:11:21 +0300
-Message-ID: <3b349fe9-c11c-199f-50c7-1ddf09494c53@linaro.org>
-References: <1497883719-12410-1-git-send-email-todor.tomov@linaro.org>
- <1497883719-12410-2-git-send-email-todor.tomov@linaro.org>
- <20170623204153.jpjecbzgnaptypbu@rob-hp-laptop>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: sama5d27_som1_ek: Add sama5d27 SoM1 EK
+ support
+Date: Thu, 29 Jun 2017 14:16:55 +0200
+Message-ID: <20170629121655.37pq7cnabvv4wh7z@piout.net>
+References: <1498736674-9233-1-git-send-email-claudiu.beznea@microchip.com>
+ <1498736674-9233-6-git-send-email-claudiu.beznea@microchip.com>
+ <20170629115931.yki2xbehyicbtx3w@tarshish>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20170623204153.jpjecbzgnaptypbu@rob-hp-laptop>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: mchehab@kernel.org, hans.verkuil@cisco.com, javier@osg.samsung.com, s.nawrocki@samsung.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170629115931.yki2xbehyicbtx3w@tarshish>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Cc: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sza-4N5lU0Zj96A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cristian.birsan-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you for review, Rob.
-
-On 06/23/2017 11:41 PM, Rob Herring wrote:
-> On Mon, Jun 19, 2017 at 05:48:21PM +0300, Todor Tomov wrote:
->> Add DT binding document for Qualcomm Camera subsystem driver.
+On 29/06/2017 at 14:59:31 +0300, Baruch Siach wrote:
+> Hi Claudiu,
 > 
-> "dt-bindings: media: ..." for the subject please.
-
-I'll change it in the next version.
-
+> On Thu, Jun 29, 2017 at 02:44:34PM +0300, Claudiu Beznea wrote:
+> > Add specifig DTS files and bindings for sama5d27 SoM1 EK board.
 > 
->>
->> CC: Rob Herring <robh+dt@kernel.org>
->> CC: devicetree@vger.kernel.org
->> Signed-off-by: Todor Tomov <todor.tomov@linaro.org>
->> ---
->>  .../devicetree/bindings/media/qcom,camss.txt       | 196 +++++++++++++++++++++
->>  1 file changed, 196 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/qcom,camss.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/qcom,camss.txt b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> new file mode 100644
->> index 0000000..5213b03
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/qcom,camss.txt
->> @@ -0,0 +1,196 @@
->> +Qualcomm Camera Subsystem
->> +
->> +* Properties
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain:
->> +		- "qcom,msm8916-camss"
+> Is there any publicly available information on this SoM?
 > 
-> Okay if it is one node, but I'd like to see some agreement from other QC 
-> folks that 1 node is appropriate.
-
-Ok.
-
+> One more comment below.
 > 
->> +- reg:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: Register ranges as listed in the reg-names property.
->> +- reg-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "csiphy0"
->> +		- "csiphy0_clk_mux"
->> +		- "csiphy1"
->> +		- "csiphy1_clk_mux"
->> +		- "csid0"
->> +		- "csid1"
->> +		- "ispif"
->> +		- "csi_clk_mux"
->> +		- "vfe0"
->> +- interrupts:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: Interrupts as listed in the interrupt-names property.
->> +- interrupt-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "csiphy0"
->> +		- "csiphy1"
->> +		- "csid0"
->> +		- "csid1"
->> +		- "ispif"
->> +		- "vfe0"
->> +- power-domains:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A phandle and power domain specifier pairs to the
->> +		    power domain which is responsible for collapsing
->> +		    and restoring power to the peripheral.
->> +- clocks:
->> +	Usage: required
->> +	Value type: <prop-encoded-array>
->> +	Definition: A list of phandle and clock specifier pairs as listed
->> +		    in clock-names property.
->> +- clock-names:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: Should contain the following entries:
->> +		- "camss_top_ahb_clk"
->> +		- "ispif_ahb_clk"
->> +		- "csiphy0_timer_clk"
->> +		- "csiphy1_timer_clk"
->> +		- "csi0_ahb_clk"
->> +		- "csi0_clk"
->> +		- "csi0_phy_clk"
->> +		- "csi0_pix_clk"
->> +		- "csi0_rdi_clk"
->> +		- "csi1_ahb_clk"
->> +		- "csi1_clk"
->> +		- "csi1_phy_clk"
->> +		- "csi1_pix_clk"
->> +		- "csi1_rdi_clk"
->> +		- "camss_ahb_clk"
->> +		- "camss_vfe_vfe_clk"
->> +		- "camss_csi_vfe_clk"
->> +		- "iface_clk"
->> +		- "bus_clk"
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> > Signed-off-by: Cristian Birsan <cristian.birsan-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> > ---
 > 
-> "_clk" is redundant.
+> [snip]
+> 
+> > +	memory {
+> > +		reg = <0x20000000 0x20000>;
+> 
+> Are you sure this SoM has 132KB RAM?
+> 
+> Since you seem to rely on the bootloader to fill in the right size value, you 
+> can just drop this node and rely on sama5d2.dtsi that provides a stub node.
+> 
 
-Yes, it will be better without it.
+Yeah, that is what I would do too.
+
 
 -- 
-Best regards,
-Todor Tomov
+Alexandre Belloni, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
