@@ -1,141 +1,130 @@
-From: Tom Levens <tom.levens@cern.ch>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 29 Jun 2017 13:46:09 +0200
-Message-ID: <alpine.LRH.2.20.1706291343280.20615@lxplus092.cern.ch>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch> <1479384616-12479-3-git-send-email-tom.levens@cern.ch> <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net> <97eb089f-e0e2-1146-6e17-8f9f790433d8@topic.nl> <20170628150130.GC30968@roeck-us.net>
- <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch> <20170628160048.GA8915@roeck-us.net> <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch> <9a6ba152-3d17-3f9c-782c-1f10aa74691b@topic.nl>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [linux-sunxi] [PATCH v4 5/6] ARM: sun7i: Convert to CCU
+Date: Thu, 29 Jun 2017 13:49:05 +0200
+Message-ID: <20170629114905.hr6icycjcn2fekfd@flea>
+References: <cover.24b2b13ec5a68552e186ba1637f1328363c3886e.1498422562.git-series.plaes@plaes.org>
+ <ac9cc7f0a67d3e9e5edd0d5eb21cc60820c2b457.1498422562.git-series.plaes@plaes.org>
+ <a08cbe0d-dad4-7d0c-9845-452e0d6e3f03@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"; format=flowed
-Return-path: <linux-hwmon-owner@vger.kernel.org>
-In-Reply-To: <9a6ba152-3d17-3f9c-782c-1f10aa74691b@topic.nl>
-Sender: linux-hwmon-owner@vger.kernel.org
-To: Mike Looijmans <mike.looijmans@topic.nl>
-Cc: Tom Levens <tom.levens@cern.ch>, Guenter Roeck <linux@roeck-us.net>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ggpms2er24kjfgoa"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <a08cbe0d-dad4-7d0c-9845-452e0d6e3f03-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jonathan Liu <net147-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--ggpms2er24kjfgoa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 29 Jun 2017, Mike Looijmans wrote:
+On Thu, Jun 29, 2017 at 11:57:05AM +0100, Andre Przywara wrote:
+> Hi,
+>=20
+> On 25/06/17 21:45, Priit Laes wrote:
+> > Convert sun7i-a20.dtsi to new CCU driver.
+>=20
+> I know that some people hat^Wget annoyed by me asking this, but anyway:
+>=20
+> Why do we actually need this?
+>=20
+> This ultimately makes the DT incompatible with older kernels (as
+> actually shipped by distros today).
+>
+> So if we for instance use UEFI boot or otherwise just use "one golden
+> DT" to drive all kernels (like using the DT from U-Boot), we now don't
+> have one good DT that fits all.
 
-> On 28-06-17 19:02, Tom Levens wrote:
->>
->>  On Wed, 28 Jun 2017, Guenter Roeck wrote:
->> 
->> >  On Wed, Jun 28, 2017 at 05:29:38PM +0200, Tom Levens wrote:
->> > > 
->> >  [ ... ]
->> > 
->> > > > 
->> > > > >  Whatever happened to this patch though? It didn't make it to 
->> > > > >  mainline,
->> > > > >  otherwise I'd have found it sooner...
->> > > > > 
->> > > >  I'll have to look it up, but I guess I didn't get an updated 
->> > > >  version.
->> > > 
->> > >  As far as I remember I had a working V3 of this patch, but it is 
->> > >  entirely
->> > >  possible that it was never submitted as I have been busy with other 
->> > >  projects
->> > >  recently. I'll dig it out and check that it is complete.
->> > > 
->> >  FWIW, I don't see it at
->> >  https://patchwork.kernel.org/project/linux-hwmon/list/?submitter=171225&state=*
->> > 
->> >  Maybe you were waiting for a reply from Rob. Either case, it might make
->> >  sense to only provide valid modes, ie to abstract the mode bits from the
->> >  hardware, such as
->> > 
->> >  0 - internal temp only
->> >  1 - Tr1
->> >  2 - V1
->> >  3 - V1-V2
->> >  4 - Tr2
->> >  5 - V3
->> >  6 - V3-V4
->> >  7 to 14 - per bit 0..2
->> > 
->> >  Guenter
->> >
->>
->>  You are right, there was still an open question about how best to handle
->>  the mode selection in DT.
->>
->>  In the latest version of my patch I have it implemented as an array for
->>  setting the two values, for example:
->>
->>       lltc,meas-mode = <7 3>;
->>
->>  This sets bits [2..0] = 7 and [4..3] = 3. Of course these could be split
->>  into two DT properties, but I was unsure what to name them as both fields
->>  are called "mode" in the datasheet and "mode-43"/"mode-20" (or similar) is
->>  ugly.
->>
->>  With regards to your proposal, it is not clear to me whether the modes
->>  which have the same result are exactly equivalent. Does disabling a
->>  measurement with the mode[4..3] bits really leaves the part in a safe
->>  state for all possible HW connections? With this doubt in my head, I would
->>  prefer to keep the option available to the user to select any specific
->>  mode. But I am open to suggestions.
->>
->>  Mike, if you would like to test it, the latest version of my code is here:
->>
->>  https://github.com/levens/ltc2990/blob/dev/drivers/hwmon/ltc2990.c
->> 
->
-> I pulled your patches, added two lines to the devicetree and it works fine, 
-> I'm seeing plausible results:
-> root@topic-miami:/sys/class/hwmon# grep . */*
-> hwmon0/name:battery-gauge
-> hwmon0/temp1_input:291700
-> hwmon1/in0_input:3258
-> hwmon1/in1_input:1824
-> hwmon1/in2_input:1916
-> hwmon1/in3_input:1512
-> hwmon1/in4_input:2066
-> hwmon1/name:ltc2990
-> hwmon1/temp1_input:28062
-> hwmon1/uevent:OF_NAME=ltc2990
-> hwmon1/uevent:OF_FULLNAME=/gpios-i2c@50/ltc2990@4c
-> hwmon1/uevent:OF_COMPATIBLE_0=lltc,ltc2990
-> hwmon1/uevent:OF_COMPATIBLE_N=1
-> hwmon2/curr1_input:1825
-> hwmon2/curr2_input:349
-> hwmon2/in0_input:3244
-> hwmon2/name:ltc2990
-> hwmon2/temp1_input:31500
-> hwmon2/uevent:OF_NAME=ltc2990
-> hwmon2/uevent:OF_FULLNAME=/gpios-i2c@52/ltc2990@4C
-> hwmon2/uevent:OF_COMPATIBLE_0=ltc2990
-> hwmon2/uevent:OF_COMPATIBLE_N=1
->
->
-> As you can see, two ltc2990 on two busses, one measuring current and one 
-> measuring 4 independent voltages.
->
-> I also like your implementation of the mode setting better, it's much simpler 
-> than mine. And you've solved a bug in the temperature reading as well.
+What is broken exactly?
 
-Excellent, I am glad it also works for you! In this case, I would propose 
-that I submit the V3 of the patch for further discussion.
+> This is really a showstopper for boards which ship a DT in firmware
+> (in SPI flash, for instance, or on some eMMC).
+>
+> So:
+> - Do we actually need to change the .dtsi? The old .dtsi should still wor=
+k.
 
-Thanks,
+It does.
 
->
-> Kind regards,
->
-> Mike Looijmans
-> System Expert
->
-> TOPIC Products
-> Materiaalweg 4, NL-5681 RJ Best
-> Postbus 440, NL-5680 AK Best
-> Telefoon: +31 (0) 499 33 69 79
-> E-mail: mike.looijmans@topicproducts.com
-> Website: www.topicproducts.com
->
-> Please consider the environment before printing this e-mail
->
->
->
->
+> - Is there anything that the new and fancy clocks gives us over the
+> existing clocks? If yes, that should be a  stated in the commit message
+> or cover letter.
+
+Yes, support for all the clocks used in the SoC, and not a single
+fraction of them (which will reduce the number of additions of new
+bindings and drivers, which will in turn make the DT have less
+changes, which will make it far more easier for distros and / or
+firmwares to ship an immutable DT).
+
+> - Why do we change the clocks for those older SoCs in the first place?
+> Can't we just keep on using what worked for years?
+
+Please tell me where the displays clocks, CSI or HDMI clocks are in
+the old code.
+
+> I think we really can't remove the old code anyway.
+
+We don't.
+
+> The new clock driver moves information from the DT into the kernel. That
+> means it is no longer available for a DT consumer and the SoC details
+> (which clocks is located where, for instance), have to be replicated to
+> other DT users (U-Boot, *BSD, you-name-it). We already came across this
+> issue when looking at converting U-Boot over to use DT clocks.
+> Also it ultimately requires kernel changes for each new SoC, even if it
+> only differs in some detail which could be perfectly modelled in DT
+> (think of H3 vs. H5).
+
+Doing otherwise would also assume that you have a perfect
+understanding of all the clocks interactions, relationship and
+computations from day one, which is something the old code proved that
+it was unreasonable.
+
+The new binding also makes it easier to add SCPI that you're
+interested in iirc, where you basically just have to change the CCU
+compatible, and be done with it as long as you use the same IDs.
+
+It also lowers the barrier of entry for people that would want to
+write new drivers, since the first thing you'd need to do otherwise
+would be to create a clock driver for that, which is yet another thing
+to learn.
+
+The reduced duplication is also neat and reduces the number of similar
+bugs in each and every clock, even though it's not related to clocks.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--ggpms2er24kjfgoa
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIcBAEBAgAGBQJZVOkxAAoJEBx+YmzsjxAgG3gP/ii4+t+51WQCK/0FLH3Sk5I8
+GHgei9WjlPcKYG2XLx7sHwlCe9zXQsaySnKbgnmjDu+OYhqEYxsyYLygjVBt5/Ji
++aM8OPT+LiNndib1ZvTa0ogF1gpJxd0oUA/s/lHQPaKsS3UjTnnf6lt1O1nKeFU/
+O9ykl/OF8Sq2sUSmONwh1K/YHZZAASBbKlZKrjR/AbDNhVZmeUubwYoKg/6v8usM
+sTZJgxLbg0iViTxbLK5tn7R4/uGEOl/X3ttQtTKJVBu5uuSfRuWSvGr9jtzRh5j9
+BZoe8C0d6HSWwkHaDHInGW6Wphw61hy4tC3ZircFWo7F+SUVEK1EM6dHVEbsK9nP
+17Kf1ejMbJLR02FeZW2Vy28AmtEj5UHMVLi8shfNFGJwnV7073Kydq+HTBgmC1X9
+Dzx1lEcVb3EiZ8v0Mp5ER7Y7QWUmRu1AAuGyUwL3kQvKvMFgiS3JsvsFOsYuvZwr
+TkCKCM6ySYix0dp2W3CVU6sz7WOUfBHEZgNDKs7iLJJ2vGtjp0Bw3gm+OMz+vx26
+5YrOn9t76iLyBVfKZ/NgbqIsREsN8egpqtAgg14YKWJFDCtS7T/E0VTE8zRDKxSl
+Ry26pv1onaBRJb17lSCPdZobY91UtcZnEzFwT/fZQL9j2FcuMaKRTkSzwT4P1Jak
+hqaEZu4wbnrdgJFSJWsm
+=yqPY
+-----END PGP SIGNATURE-----
+
+--ggpms2er24kjfgoa--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
