@@ -1,72 +1,35 @@
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC
- support for A83T
-Date: Thu, 29 Jun 2017 20:19:14 +0800
-Message-ID: <CAAST=9zv8nqbR42kS99F5S6Nk6brZXE8ruOEapSf7sEjKBrD-A@mail.gmail.com>
-References: <20170624024515.4669-1-techping.chan@gmail.com>
- <20170624024515.4669-3-techping.chan@gmail.com> <20170626171524.cqfyasetpsfr6xfg@flea.lan>
- <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA@mail.gmail.com>
- <24845446a80e3542d90a1111a6141415@aosc.io> <20170627173631.2rjdzgwdwnksqjzm@flea>
- <CAAST=9yWEO7qdZvZJPDKhYnqSwT_fJLcyN_f3eGrLQ15EMvSzQ@mail.gmail.com> <20170629075324.oflzdye3pi5ijzcr@flea>
-Reply-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCJ6PAPY4MPBBQ7A2PFAKGQE7LJMSYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170629075324.oflzdye3pi5ijzcr@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: icenowy-h8G6r0blFSE@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Michael Ellerman <patch-notifications-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Subject: Re: [RESEND, v5, 12/16] powerpc/5200: Add generic compatible string for I2C EEPROM
+Date: Thu, 29 Jun 2017 22:21:11 +1000 (AEST)
+Message-ID: <3wyzKN0hY6z9s7v@ozlabs.org>
+References: <20170615185418.13980-13-javier@dowhile0.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170615185418.13980-13-javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2017-06-29 15:53 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> On Thu, Jun 29, 2017 at 12:45:51PM +0800, Ziping Chen wrote:
->> 2017-06-28 1:36 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
->> > Hi,
->> >
->> > On Tue, Jun 27, 2017 at 11:29:10PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->> >> Maxime, here's another problem: if we have already a GP LRADC driver,
->> >> how can we tell the kernel to use it as IIO ADC rather than keys?
->> >
->> > The GPADC IIO driver is not for the LRADC driver, but the GPADC /
->> > temperature sensor.
->> >
->> > We used to have an LRADC IIO driver in the CHIP BSP written by Alex
->> > (in CC):
->> > https://github.com/NextThingCo/CHIP-linux/commit/8675b761c54be73dc7cc0113209f02e10cc63a27
->> >
->> > But he never mainlined it.
->> >
->> >> Should we introduce a new property for this once ready?
->> >
->> > We need to keep the current binding. We can just check for the
->> > presence or not of child nodes to see if it has some keys, and we'd
->> > need an IIO-to-input driver that is yet to be written.
->> >
->>
->> Yes, then we need an iio-to-input driver...
->> So...whether the driver(a83t lradc keys) can be applied now,
->> or we should wait for the iio-to-input driver.
->
-> This is a long term discussion, it shouldn't hold the patches you
-> sent.
+On Thu, 2017-06-15 at 18:54:14 UTC, Javier Martinez Canillas wrote:
+> The at24 driver allows to register I2C EEPROM chips using different vendor
+> and devices, but the I2C subsystem does not take the vendor into account
+> when matching using the I2C table since it only has device entries.
+> 
+> But when matching using an OF table, both the vendor and device has to be
+> taken into account so the driver defines only a set of compatible strings
+> using the "atmel" vendor as a generic fallback for compatible I2C devices.
+> 
+> So add this generic fallback to the device node compatible string to make
+> the device to match the driver using the OF device ID table.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
 
-OK, I get it.
+Applied to powerpc next, thanks.
 
-And I will think about how to implement the iio-to-input driver.
+https://git.kernel.org/powerpc/c/fd393188064e3d01a91a21160751f6
 
-Thanks,
-Ziping
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+cheers
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
