@@ -1,195 +1,202 @@
-From: Abhishek Sahu <absahu@codeaurora.org>
-Subject: [PATCH 08/14] qcom: mtd: nand: Add support for additional CSRs
-Date: Thu, 29 Jun 2017 12:46:00 +0530
-Message-ID: <1498720566-20782-9-git-send-email-absahu@codeaurora.org>
+From: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH 06/14] qcom: mtd: nand: add bam dma descriptor handling
+Date: Thu, 29 Jun 2017 12:45:58 +0530
+Message-ID: <1498720566-20782-7-git-send-email-absahu@codeaurora.org>
 References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, marek.vasut@gmail.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org, Abhishek Sahu <absahu@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498720566-20782-1-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
+Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-1. NAND_READ_LOCATION: provides the offset in page for
-   reading in BAM DMA mode
+1. prepare_bam_async_desc is the function which will call
+   all the DMA API’s. It will fetch the outstanding scatter gather
+   list for passed channel and will do the DMA descriptor formation.
+   The DMA flag is dependent upon the type of channel.
 
-2. NAND_ERASED_CW_DETECT_CFG: contains the status for erased
-   code words
+2. For ADM DMA, the descriptor is being formed for every DMA
+   request so its sgl count will be always 1 while in BAM DMA, the
+   clubbing of descriptor is being done to increase throughput.
 
-3. NAND_BUFFER_STATUS: contains the status for ECC
+3. ADM uses only one channel while in BAM, data descriptors
+   will be submitted to tx channel (for write) or rx channel
+   (for read) and all the registers read/write descriptors in
+   command channel.
 
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- drivers/mtd/nand/qcom_nandc.c | 67 ++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 66 insertions(+), 1 deletion(-)
+ drivers/mtd/nand/qcom_nandc.c | 119 ++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 114 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-index 65c9059..8e7dc9e 100644
+index f8d0bde..7042a65 100644
 --- a/drivers/mtd/nand/qcom_nandc.c
 +++ b/drivers/mtd/nand/qcom_nandc.c
-@@ -54,6 +54,8 @@
- #define	NAND_VERSION			0xf08
- #define	NAND_READ_LOCATION_0		0xf20
- #define	NAND_READ_LOCATION_1		0xf24
-+#define	NAND_READ_LOCATION_2		0xf28
-+#define	NAND_READ_LOCATION_3		0xf2c
+@@ -206,14 +206,22 @@ struct bam_transaction {
+  * This data type corresponds to the nand dma descriptor
+  * @list - list for desc_info
+  * @dir - DMA transfer direction
+- * @sgl - sgl which will be used for single sgl dma descriptor
++ * @sgl - sgl which will be used for single sgl dma descriptor. Only used by ADM
++ * @bam_sgl - sgl which will be used for dma descriptor. Only used by BAM
++ * @sgl_cnt - number of SGL in bam_sgl. Only used by BAM
+  * @dma_desc - low level dma engine descriptor
+  */
+ struct desc_info {
+ 	struct list_head node;
  
- /* dummy register offsets, used by write_reg_dma */
- #define	NAND_DEV_CMD1_RESTORE		0xdead
-@@ -132,6 +134,11 @@
- #define	ERASED_PAGE			(PAGE_ALL_ERASED | PAGE_ERASED)
- #define	ERASED_CW			(CODEWORD_ALL_ERASED | CODEWORD_ERASED)
- 
-+/* NAND_READ_LOCATION_n bits */
-+#define READ_LOCATION_OFFSET		0
-+#define READ_LOCATION_SIZE		16
-+#define READ_LOCATION_LAST		31
-+
- /* Version Mask */
- #define	NAND_VERSION_MAJOR_MASK		0xf0000000
- #define	NAND_VERSION_MAJOR_SHIFT	28
-@@ -177,6 +184,11 @@
- #define NAND_BAM_NWD			(0x0002)
- /* Finish writing in the current sgl and start writing in another sgl */
- #define NAND_BAM_NEXT_SGL		(0x0004)
-+/*
-+ * Erased codeword status is being used two times in single transfer so this
-+ * flag will determine the current value of erased codeword status register
-+ */
-+#define NAND_ERASED_CW_SET		(0x0008)
- 
- #define QPIC_PER_CW_MAX_CMD_ELEMENTS	(32)
- #define QPIC_PER_CW_MAX_CMD_SGL		(32)
-@@ -258,6 +270,13 @@ struct nandc_regs {
- 	__le32 orig_vld;
- 
- 	__le32 ecc_buf_cfg;
-+	__le32 read_location0;
-+	__le32 read_location1;
-+	__le32 read_location2;
-+	__le32 read_location3;
-+
-+	__le32 erased_cw_detect_cfg_clr;
-+	__le32 erased_cw_detect_cfg_set;
+ 	enum dma_data_direction dir;
+-	struct scatterlist sgl;
++	union {
++			struct scatterlist sgl;
++			struct {
++				struct scatterlist *bam_sgl;
++				int sgl_cnt;
++			};
++	};
+ 	struct dma_async_tx_descriptor *dma_desc;
  };
  
- /*
-@@ -504,6 +523,16 @@ static __le32 *offset_to_nandc_reg(struct nandc_regs *regs, int offset)
- 		return &regs->orig_vld;
- 	case NAND_EBI2_ECC_BUF_CFG:
- 		return &regs->ecc_buf_cfg;
-+	case NAND_BUFFER_STATUS:
-+		return &regs->clrreadstatus;
-+	case NAND_READ_LOCATION_0:
-+		return &regs->read_location0;
-+	case NAND_READ_LOCATION_1:
-+		return &regs->read_location1;
-+	case NAND_READ_LOCATION_2:
-+		return &regs->read_location2;
-+	case NAND_READ_LOCATION_3:
-+		return &regs->read_location3;
- 	default:
- 		return NULL;
- 	}
-@@ -545,7 +574,7 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read)
- {
- 	struct nand_chip *chip = &host->chip;
- 	struct qcom_nand_controller *nandc = get_qcom_nand_controller(chip);
--	u32 cmd, cfg0, cfg1, ecc_bch_cfg;
-+	u32 cmd, cfg0, cfg1, ecc_bch_cfg, read_location0;
- 
- 	if (read) {
- 		if (host->use_ecc)
-@@ -562,12 +591,20 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read)
- 
- 		cfg1 = host->cfg1;
- 		ecc_bch_cfg = host->ecc_bch_cfg;
-+		if (read)
-+			read_location0 = (0 << READ_LOCATION_OFFSET) |
-+				(host->cw_data << READ_LOCATION_SIZE) |
-+				(1 << READ_LOCATION_LAST);
- 	} else {
- 		cfg0 = (host->cfg0_raw & ~(7U << CW_PER_PAGE)) |
- 				(num_cw - 1) << CW_PER_PAGE;
- 
- 		cfg1 = host->cfg1_raw;
- 		ecc_bch_cfg = 1 << ECC_CFG_ECC_DISABLE;
-+		if (read)
-+			read_location0 = (0 << READ_LOCATION_OFFSET) |
-+				(host->cw_size << READ_LOCATION_SIZE) |
-+				(1 << READ_LOCATION_LAST);
- 	}
- 
- 	nandc_set_reg(nandc, NAND_FLASH_CMD, cmd);
-@@ -578,6 +615,9 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read)
- 	nandc_set_reg(nandc, NAND_FLASH_STATUS, host->clrflashstatus);
- 	nandc_set_reg(nandc, NAND_READ_STATUS, host->clrreadstatus);
+@@ -564,6 +572,68 @@ static void update_rw_regs(struct qcom_nand_host *host, int num_cw, bool read)
  	nandc_set_reg(nandc, NAND_EXEC_CMD, 1);
-+
-+	if (read)
-+		nandc_set_reg(nandc, NAND_READ_LOCATION_0, read_location0);
  }
  
- /*
-@@ -756,6 +796,13 @@ static int write_reg_dma(struct qcom_nand_controller *nandc, int first,
- 	if (first == NAND_FLASH_CMD)
- 		flow_control = true;
- 
-+	if (first == NAND_ERASED_CW_DETECT_CFG) {
-+		if (flags & NAND_ERASED_CW_SET)
-+			vaddr = &regs->erased_cw_detect_cfg_set;
-+		else
-+			vaddr = &regs->erased_cw_detect_cfg_clr;
++/*
++ * Maps the scatter gather list for DMA transfer and forms the DMA descriptor
++ * for BAM. This descriptor will be added in the NAND DMA descriptor queue
++ * which will be submitted to DMA engine.
++ */
++static int prepare_bam_async_desc(struct qcom_nand_controller *nandc,
++				  struct dma_chan *chan,
++				  unsigned long flags)
++{
++	struct desc_info *desc;
++	struct scatterlist *sgl;
++	unsigned int sgl_cnt;
++	struct bam_transaction *bam_txn = nandc->bam_txn;
++	enum dma_transfer_direction dir_eng;
++	struct dma_async_tx_descriptor *dma_desc;
++
++	desc = kzalloc(sizeof(*desc), GFP_KERNEL);
++	if (!desc)
++		return -ENOMEM;
++
++	if (chan == nandc->cmd_chan) {
++		sgl = &bam_txn->cmd_sgl[bam_txn->cmd_sgl_start];
++		sgl_cnt = bam_txn->cmd_sgl_pos - bam_txn->cmd_sgl_start;
++		bam_txn->cmd_sgl_start = bam_txn->cmd_sgl_pos;
++		dir_eng = DMA_MEM_TO_DEV;
++		desc->dir = DMA_TO_DEVICE;
++	} else if (chan == nandc->tx_chan) {
++		sgl = &bam_txn->data_sg[bam_txn->tx_sgl_start];
++		sgl_cnt = bam_txn->tx_sgl_pos - bam_txn->tx_sgl_start;
++		bam_txn->tx_sgl_start = bam_txn->tx_sgl_pos;
++		dir_eng = DMA_MEM_TO_DEV;
++		desc->dir = DMA_TO_DEVICE;
++	} else {
++		sgl = &bam_txn->data_sg[bam_txn->rx_sgl_start];
++		sgl_cnt = bam_txn->rx_sgl_pos - bam_txn->rx_sgl_start;
++		bam_txn->rx_sgl_start = bam_txn->rx_sgl_pos;
++		desc->dir = DMA_FROM_DEVICE;
++		dir_eng = DMA_DEV_TO_MEM;
 +	}
 +
- 	if (first == NAND_EXEC_CMD)
- 		flags |= NAND_BAM_NWD;
- 
-@@ -808,6 +855,12 @@ static void config_cw_read(struct qcom_nand_controller *nandc)
- 	write_reg_dma(nandc, NAND_DEV0_CFG0, 3, 0);
- 	write_reg_dma(nandc, NAND_EBI2_ECC_BUF_CFG, 1, 0);
- 
-+	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1, 0);
-+	write_reg_dma(nandc, NAND_ERASED_CW_DETECT_CFG, 1, NAND_ERASED_CW_SET);
-+	if (nandc->dma_bam_enabled)
-+		write_reg_dma(nandc, NAND_READ_LOCATION_0, 1,
-+			      NAND_BAM_NEXT_SGL);
++	sg_mark_end(sgl + sgl_cnt - 1);
++	dma_map_sg(nandc->dev, sgl, sgl_cnt, desc->dir);
 +
- 	write_reg_dma(nandc, NAND_EXEC_CMD, 1,
- 		      NAND_BAM_NWD | NAND_BAM_NEXT_SGL);
++	desc->sgl_cnt = sgl_cnt;
++	desc->bam_sgl = sgl;
++
++	dma_desc = dmaengine_prep_slave_sg(chan, sgl, sgl_cnt, dir_eng,
++					   flags);
++
++	if (!dma_desc) {
++		dev_err(nandc->dev, "failure in prep desc\n");
++		kfree(desc);
++		return -EINVAL;
++	}
++
++	desc->dma_desc = dma_desc;
++
++	list_add_tail(&desc->node, &nandc->desc_list);
++
++	return 0;
++}
++
+ static int prep_dma_desc(struct qcom_nand_controller *nandc, bool read,
+ 			 int reg_off, const void *vaddr, int size,
+ 			 bool flow_control)
+@@ -891,12 +961,44 @@ static int submit_descs(struct qcom_nand_controller *nandc)
+ {
+ 	struct desc_info *desc;
+ 	dma_cookie_t cookie = 0;
++	struct bam_transaction *bam_txn = nandc->bam_txn;
++	int r;
++
++	if (nandc->dma_bam_enabled) {
++		if (bam_txn->rx_sgl_pos - bam_txn->rx_sgl_start) {
++			r = prepare_bam_async_desc(nandc, nandc->rx_chan, 0);
++			if (r)
++				return r;
++		}
++
++		if (bam_txn->tx_sgl_pos - bam_txn->tx_sgl_start) {
++			r = prepare_bam_async_desc(nandc, nandc->tx_chan,
++						   DMA_PREP_INTERRUPT);
++			if (r)
++				return r;
++		}
++
++		if (bam_txn->cmd_sgl_pos - bam_txn->cmd_sgl_start) {
++			r = prepare_bam_async_desc(nandc, nandc->cmd_chan,
++						   DMA_PREP_CMD);
++			if (r)
++				return r;
++		}
++	}
  
-@@ -882,6 +935,10 @@ static int nandc_param(struct qcom_nand_host *host)
+ 	list_for_each_entry(desc, &nandc->desc_list, node)
+ 		cookie = dmaengine_submit(desc->dma_desc);
  
- 	nandc_set_reg(nandc, NAND_DEV_CMD1_RESTORE, nandc->cmd1);
- 	nandc_set_reg(nandc, NAND_DEV_CMD_VLD_RESTORE, nandc->vld);
-+	nandc_set_reg(nandc, NAND_READ_LOCATION_0,
-+		      (0 << READ_LOCATION_OFFSET) |
-+		      (512 << READ_LOCATION_SIZE) |
-+		      (1 << READ_LOCATION_LAST));
+-	if (dma_sync_wait(nandc->chan, cookie) != DMA_COMPLETE)
+-		return -ETIMEDOUT;
++	if (nandc->dma_bam_enabled) {
++		dma_async_issue_pending(nandc->tx_chan);
++		dma_async_issue_pending(nandc->rx_chan);
++
++		if (dma_sync_wait(nandc->cmd_chan, cookie) != DMA_COMPLETE)
++			return -ETIMEDOUT;
++	} else {
++		if (dma_sync_wait(nandc->chan, cookie) != DMA_COMPLETE)
++			return -ETIMEDOUT;
++	}
  
- 	write_reg_dma(nandc, NAND_DEV_CMD_VLD, 1, 0);
- 	write_reg_dma(nandc, NAND_DEV_CMD1, 1, NAND_BAM_NEXT_SGL);
-@@ -1413,6 +1470,10 @@ static int copy_last_cw(struct qcom_nand_host *host, int page)
+ 	return 0;
+ }
+@@ -907,7 +1009,14 @@ static void free_descs(struct qcom_nand_controller *nandc)
  
- 	set_address(host, host->cw_size * (ecc->steps - 1), page);
- 	update_rw_regs(host, 1, true);
-+	nandc_set_reg(nandc, NAND_READ_LOCATION_0,
-+		      (0 << READ_LOCATION_OFFSET) |
-+		      (size << READ_LOCATION_SIZE) |
-+		      (1 << READ_LOCATION_LAST));
- 
- 	config_cw_read(nandc);
- 
-@@ -2147,6 +2208,10 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
- 
- 	host->clrflashstatus = FS_READY_BSY_N;
- 	host->clrreadstatus = 0xc0;
-+	nandc->regs->erased_cw_detect_cfg_clr =
-+		cpu_to_le32(CLR_ERASED_PAGE_DET);
-+	nandc->regs->erased_cw_detect_cfg_set =
-+		cpu_to_le32(SET_ERASED_PAGE_DET);
- 
- 	dev_dbg(nandc->dev,
- 		"cfg0 %x cfg1 %x ecc_buf_cfg %x ecc_bch cfg %x cw_size %d cw_data %d strength %d parity_bytes %d steps %d\n",
+ 	list_for_each_entry_safe(desc, n, &nandc->desc_list, node) {
+ 		list_del(&desc->node);
+-		dma_unmap_sg(nandc->dev, &desc->sgl, 1, desc->dir);
++
++		if (nandc->dma_bam_enabled)
++			dma_unmap_sg(nandc->dev, desc->bam_sgl,
++				     desc->sgl_cnt, desc->dir);
++		else
++			dma_unmap_sg(nandc->dev, &desc->sgl, 1,
++				     desc->dir);
++
+ 		kfree(desc);
+ 	}
+ }
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
