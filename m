@@ -1,58 +1,51 @@
 From: Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: [PATCH 1/3] dt-bindings: i2c: eeprom: document all at24 bindings
-Date: Thu, 29 Jun 2017 14:39:09 +0300
-Message-ID: <1498736351-9021-2-git-send-email-claudiu.beznea@microchip.com>
-References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
+Subject: [PATCH 0/5] Add SoM1 support
+Date: Thu, 29 Jun 2017 14:44:29 +0300
+Message-ID: <1498736674-9233-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, nsekhar@ti.com, david@lechnology.com, wsa@the-dreams.de
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, nicolas.ferre@microchip.com, Claudiu Beznea <claudiu.beznea@microchip.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cristian.birsan@microchip.com, Claudiu Beznea <claudiu.beznea@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Document all at24 memories specific bindings.
+Hi all,
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- Documentation/devicetree/bindings/eeprom/eeprom.txt | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+This series adds support for sama5d2 SoM1 devices.
 
-diff --git a/Documentation/devicetree/bindings/eeprom/eeprom.txt b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-index 5696eb5..a50dc01 100644
---- a/Documentation/devicetree/bindings/eeprom/eeprom.txt
-+++ b/Documentation/devicetree/bindings/eeprom/eeprom.txt
-@@ -4,9 +4,11 @@ Required properties:
- 
-   - compatible : should be "<manufacturer>,<type>", like these:
- 
--	"atmel,24c00", "atmel,24c01", "atmel,24c02", "atmel,24c04",
--	"atmel,24c08", "atmel,24c16", "atmel,24c32", "atmel,24c64",
--	"atmel,24c128", "atmel,24c256", "atmel,24c512", "atmel,24c1024"
-+	"atmel,24c00", "atmel,24c01", "atmel,24cs01", "atmel,24c02", "atmel,24cs02",
-+	"atmel,24mac402", "atmel,24mac602", "atmel,spd", "atmel,24c04",
-+	"atmel,24cs04", "atmel,24c08", "atmel,24cs08", "atmel,24c16", "atmel,24cs16",
-+	"atmel,24c32", "atmel,24cs32", "atmel,24c64", "atmel,24cs64", "atmel,24c128",
-+	"atmel,24c256", "atmel,24c512", "atmel,24c1024"
- 
- 	"catalyst,24c32"
- 
-@@ -16,10 +18,11 @@ Required properties:
- 
- 	"renesas,r1ex24002"
- 
--	 If there is no specific driver for <manufacturer>, a generic
--	 driver based on <type> is selected. Possible types are:
--	 "24c00", "24c01", "24c02", "24c04", "24c08", "24c16", "24c32", "24c64",
--	 "24c128", "24c256", "24c512", "24c1024", "spd"
-+	If there is no specific driver for <manufacturer>, a generic
-+	driver based on <type> is selected. Possible types are:
-+	"24c00", "24c01", "24cs01", "24c02", "24cs02", "24mac402", "24mac602", "spd",
-+	"24c04", "24cs04", "24c08", "24cs08", "24c16", "24cs16", "24c32", "24cs32",
-+	"24c64", "24cs64", "24c128", "24c256", "24c512", "24c1024"
- 
-   - reg : the I2C address of the EEPROM
- 
+The at91-sama5d27_som1.dtsi add specific bindings for SoM1 board.
+The at91-sama5d27_som1_ek.dts add specific bindings for SoM1 EK board.
+
+The sama5d27_som1_ek uses a EEPROM binding, "start-offset", which is
+introduced in patch series: "[RFC PATCH 0/3] Add at24 functionality to
+read form different EEPROM offsets".
+
+Thank you,
+Claudiu
+
+Claudiu Beznea (2):
+  ARM: dts: at91: at91-sama5d27_som1: add sama5d27 SoM1 support
+  ARM: dts: sama5d27_som1_ek: Add sama5d27 SoM1 EK support
+
+Cristian Birsan (1):
+  drivers: soc: atmel: Add basic support for new sama5d2 SiPs
+
+Cyrille Pitchen (1):
+  ARM: dts: at91: sama5d2: add QSPI nodes
+
+Songjun Wu (1):
+  ARM: dts: at91: sama5d2: add isc node
+
+ arch/arm/boot/dts/Makefile                  |   1 +
+ arch/arm/boot/dts/at91-sama5d27_som1.dtsi   | 178 +++++++++
+ arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 551 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/sama5d2.dtsi              |  38 ++
+ drivers/soc/atmel/soc.c                     |   8 +
+ drivers/soc/atmel/soc.h                     |   4 +
+ 6 files changed, 780 insertions(+)
+ create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+ create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+
 -- 
 2.7.4
