@@ -1,41 +1,41 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCHv3 4/4] hwmon: da9052: add support for TSI channel
-Date: Thu, 29 Jun 2017 15:44:57 -0700
-Message-ID: <20170629224457.GA4360@roeck-us.net>
-References: <20170629124346.22325-1-sebastian.reichel@collabora.co.uk>
- <20170629124346.22325-5-sebastian.reichel@collabora.co.uk>
- <20170629184521.GA38388@dtor-ws>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 06/10] Documentation: Add device tree binding for
+ Goldfish FB driver
+Date: Thu, 29 Jun 2017 18:12:40 -0500
+Message-ID: <CAL_Jsq+m-g__T34W2-7ddAF9ehH1woT3WfuxuDnHQMfzrg86Hg@mail.gmail.com>
+References: <1498664922-28493-1-git-send-email-aleksandar.markovic@rt-rk.com> <1498664922-28493-7-git-send-email-aleksandar.markovic@rt-rk.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170629184521.GA38388@dtor-ws>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Sebastian Reichel <sebastian.reichel@collabora.co.uk>, Sebastian Reichel <sre@kernel.org>, Support Opensource <support.opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jean Delvare <jdelvare@suse.com>, devicetree@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498664922-28493-7-git-send-email-aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aleksandar Markovic <aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org>
+Cc: Linux-MIPS <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Aleksandar Markovic <aleksandar.markovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Miodrag Dinic <miodrag.dinic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Goran Ferenc <goran.ferenc-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Douglas Leung <douglas.leung-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Paul Burton <paul.burton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Petar Jovanovic <petar.jovanovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Raghu Gandham <raghu.gandham-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 11:45:21AM -0700, Dmitry Torokhov wrote:
-> Hi Sebastian,
-> 
-> On Thu, Jun 29, 2017 at 02:43:46PM +0200, Sebastian Reichel wrote:
-> > @@ -238,6 +239,14 @@ static int da9052_ts_probe(struct platform_device *pdev)
-> >  	if (!da9052)
-> >  		return -EINVAL;
-> >  
-> > +	/*
-> > +	 * Check if touchscreen pins are used are analogue input instead
-> > +	 * of having a touchscreen connected to them. The analogue input
-> > +	 * functionality will be provided by hwmon driver (if enabled).
-> > +	 */
-> > +	if (device_property_read_bool(pdev->dev.parent, "dlg,tsi-as-adc"))
-> > +		return -ENODEV;
-> > +
-> 
-> I believe this is not the right way of doing this. da9052-core should
-> simply forgo creating da9052-tsi platform device when this property is
-> present.
-> 
-Agreed.
+On Wed, Jun 28, 2017 at 10:46 AM, Aleksandar Markovic
+<aleksandar.markovic-FblTVreYubkAvxtiuMwx3w@public.gmane.org> wrote:
+> From: Aleksandar Markovic <aleksandar.markovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+>
+> Add documentation for DT binding of Goldfish FB driver. The compatible
+> string used by OS for binding the driver is "google,goldfish-fb".
+>
+> Signed-off-by: Miodrag Dinic <miodrag.dinic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Goran Ferenc <goran.ferenc-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Aleksandar Markovic <aleksandar.markovic-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/goldfish/google,goldfish-fb.txt           | 18 ++++++++++++++++++
 
-Guenter
+bindings/display/
+
+I don't know that this should even go upstream. There's no upstream
+qemu support for goldfish-fb. Maybe this is a minor driver change, but
+FB drivers are being replaced with DRM drivers. And the time for AOSP
+supporting framebuffer drivers is limited I think with HWC2 and
+explicit fence support in DRM.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
