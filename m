@@ -1,147 +1,160 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] drm: rcar-du: Add a VSP channel index to the vsps DT property
-Date: Thu, 29 Jun 2017 12:42:52 +0300
-Message-ID: <3275037.xsJ5PofXMk@avalon>
-References: <20170626162930.30240-1-laurent.pinchart+renesas@ideasonboard.com> <20170626162930.30240-2-laurent.pinchart+renesas@ideasonboard.com> <20170628231807.lzq3nepac3zsx74b@rob-hp-laptop>
+From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Bindings for Altera Quadspi Controller
+ Version 2
+Date: Thu, 29 Jun 2017 11:43:55 +0200
+Message-ID: <5bd89165-3e42-9db4-321d-5f3df35922ce@gmail.com>
+References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
+ <1498493619-4633-2-git-send-email-matthew.gerlach@linux.intel.com>
+ <0bfc282d-2aec-8f36-1528-312f7ded8d9c@gmail.com>
+ <alpine.DEB.2.20.1706270722440.8058@mgerlach-VirtualBox>
+ <0ca53c35-732c-a122-8191-6d102e824d52@gmail.com>
+ <alpine.DEB.2.20.1706270833100.8058@mgerlach-VirtualBox>
+ <20170628230928.k3hafpxhqrr26val@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170628231807.lzq3nepac3zsx74b@rob-hp-laptop>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170628230928.k3hafpxhqrr26val@rob-hp-laptop>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Wednesday 28 Jun 2017 18:18:07 Rob Herring wrote:
-> On Mon, Jun 26, 2017 at 07:29:29PM +0300, Laurent Pinchart wrote:
-> > On some R-Car SoCs a single VSP can serve multiple DU channels through
-> > multiple LIF instances in the VSP. The current DT bindings don't support
-> > specifying that kind of SoC integration scheme. Extend them with a VSP
-> > channel index.
+On 06/29/2017 01:09 AM, Rob Herring wrote:
+> On Tue, Jun 27, 2017 at 08:57:14AM -0700, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>
+>>
+>> On Tue, 27 Jun 2017, Marek Vasut wrote:
+>>
+>>> On 06/27/2017 04:32 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>>>
+>>>>
+>>>> On Tue, 27 Jun 2017, Marek Vasut wrote:
+>>>>
+>>>> Hi Marek,
+>>>>
+>>>> Thanks for the feedback.  See my comments below.
+>>>>
+>>>> Matthew Gerlach
+>>>>
+>>>>> On 06/26/2017 06:13 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
+>>>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>>>>
+>>>>>> Device Tree bindings for Version 2 of the Altera Quadspi Controller
+>>>>>> that can be optionally paired with a windowed bridge.
+>>>>>>
+>>>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>>>>>> ---
+>>>>>>  .../devicetree/bindings/mtd/altera-quadspi-v2.txt  | 37
+>>>>>> ++++++++++++++++++++++
+>>>>>>  1 file changed, 37 insertions(+)
+>>>>>>  create mode 100644
+>>>>>> Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>>
+>>>>>> diff --git
+>>>>>> a/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>> b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..8ba63d7
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
+>>>>>> @@ -0,0 +1,37 @@
+>>>>>> +* Altera Quad SPI Controller Version 2
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible : Should be "altr,quadspi-v2".
+>>>>>> +- reg : Contains at least two entries, and possibly three entries,
+>>>>>> each of
+>>>>>> +    which is a tuple consisting of a physical address and length.
+>>>>>> +- reg-names : Should contain the names "avl_csr" and "avl_mem"
+>>>>>> corresponding
+>>>>>> +          to the control and status registers and qspi memory,
+>>>>>> respectively.
+>>>>>> +
+>>>>>> +
+>>>>>> +The Altera Quad SPI Controller Version 2 can be paired with a
+>>>>>> windowed bridge
+>>>>>> +in order to reduce the footprint of the memory interface.  When a
+>>>>>> windowed
+>>>>>> +bridge is used, reads and writes of data must be 32 bits wide.
+>>>>>> +
+>>>>>> +Optional properties:
+>>>>>> +- reg-names : Should contain the name "avl_window", if the windowed
+>>>>>> bridge
+>>>>>> +          is used.  This name corresponds to the register space that
+>>>>>> +          controls the window.
+>>>>>> +- window-size : The size of the window which must be an even power
+>>>>>> of 2.
+>>>>>> +- read-bit-reverse : A boolean indicating the data read from the
+>>>>>> flash should
+>>>>>> +             be bit reversed on a byte by byte basis before being
+>>>>>> +             delivered to the MTD layer.
+>>>>>> +- write-bit-reverse : A boolean indicating the data written to the
+>>>>>> flash should
+>>>>>> +              be bit reversed on a byte by byte basis.
+>>>>>
+>>>>> Is there ever a usecase where you need to set just one of these props ?
+>>>>> Also, they're altera specific, so altr, prefix should be added.
+>>>>
+>>>> In general, I think if bit reversal is required, it would be required in
+>>>> both directions.  However, anything is possible when using FPGAs.  So
+>>>> I thought separate booleans would be future proofing the bindings.
+>>>
+>>> Maybe we should drop this whole thing and add it when this is actually
+>>> required.
+>>>
+>>> Are there any users of this in the wild currently ?
+>>>
+>>> What is the purpose of doing this per-byte bit reverse instead of
+>>> storing th bits in the original order ?
+>>
+>> Hi Marek,
+>>
+>> Yes, there is hardware that has been in the wild for years that needs this
+>> bit reversal.  The specific use case is when a flash chip is connected to
+>> a FPGA, and the contents of the flash is used to configure the FPGA on power
+>> up.  In this use case, there is no processor involved with configuring the
+>> FPGA.  I am most familiar with this feature/bug with Altera FPGAs, but I
+>> believe this issue exists with other programmable devices.
+>>
+>>>
+>>>> Thinking about this binding more, I wonder if the binding name(s)
+>>>> should be (read|write)-bit8-reverse to indicate reversings the bits
+>>>> in a byte as opposed to reversing the bits in a 32 bit word?
+>>>>
+>>>> I don't think bit reversal is specific to Altera/Intel components. I see
+>>>> a nand driver performing bit reversal, and I think I've recently seen
+>>>> other FPGA based drivers requiring bit reversal.
+>>>
+>>> $ git grep bit.reverse Documentation/devicetree/ | wc -l
+>>> 0
+>>>
+>>> So we don't have such a generic binding . It's up to Rob (I guess) to
+>>> decide whether this is SoC specific and should've altr, prefix or not.
+>>> IMO it is.
+>>
+>> I agree there is no generic binding at this time, and I look forward
+>> to any input from Rob and anyone else on this issue.  I think it is worth
+>> pointing out that this really isn't an issue of an SoC, but rather it is an
+>> issue of how data in the flash chip is accessed.  I think what makes this issue
+>> "weird" is that we have different hardware accessing the data in the flash
+>> with a different perspective.  The FPGA looks at the data from one
+>> perspective on power up, and a processor trying to update the flash has a
+>> different perspective.
 > 
-> "dt-bindings: display: ..." for the subject.
+> Given the comment that it is reversing bits in each byte, that seems 
+> fairly Altera specific. I'd be more in favor of a generic property if it 
+> was flipping all the bits in a word (for any size word).
 
-Sorry, I'll fix that.
-
-> > Backward compatibility can be ensured in drivers by checking the length
-> > of the vsps property and setting the channel to 0 when the property
-> > doesn't contain channel indices.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > ---
-> > 
-> >  .../devicetree/bindings/display/renesas,du.txt     | 51 +++++++++-------
-> >  1 file changed, 30 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > b/Documentation/devicetree/bindings/display/renesas,du.txt index
-> > c6cb96a4fa93..89bbc7950654 100644
-> > --- a/Documentation/devicetree/bindings/display/renesas,du.txt
-> > +++ b/Documentation/devicetree/bindings/display/renesas,du.txt
-> > 
-> > @@ -36,8 +36,10 @@ Required Properties:
-> >        When supplied they must be named "dclkin.x" with "x" being the
-> >        input
-> >        clock numerical index.
-> > 
-> > -  - vsps: A list of phandles to the VSP nodes that handle the memory
-> > -    interfaces for the DU channels.
-> > +  - vsps: A list of phandle and channel index tuples to the VSPs that
-> > handle
-> > +    the memory interfaces for the DU channels. The phandle identifies the
-> > VSP
-> > +    instance that serves the DU channel, and the channel index identifies
-> > the
-> > +    LIF instances in that VSP.
-> > 
-> >  Required nodes:
-> > @@ -59,24 +61,24 @@ corresponding to each DU output.
-> > 
-> >   R8A7796 (M3-W)	DPAD		HDMI		LVDS		-
-> > 
-> > -Example: R8A7790 (R-Car H2) DU
-> > +Example: R8A7795 (R-Car H3) ES2.0 DU
-> > 
-> > -	du: du@feb00000 {
-> > -		compatible = "renesas,du-r8a7790";
-> > -		reg = <0 0xfeb00000 0 0x70000>,
-> > -		      <0 0xfeb90000 0 0x1c>,
-> > -		      <0 0xfeb94000 0 0x1c>;
-> > -		reg-names = "du", "lvds.0", "lvds.1";
-> > -		interrupt-parent = <&gic>;
-> > -		interrupts = <0 256 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 268 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 269 IRQ_TYPE_LEVEL_HIGH>;
-> > -		clocks = <&mstp7_clks R8A7790_CLK_DU0>,
-> > -		         <&mstp7_clks R8A7790_CLK_DU1>,
-> > -		         <&mstp7_clks R8A7790_CLK_DU2>,
-> > -		         <&mstp7_clks R8A7790_CLK_LVDS0>,
-> > -		         <&mstp7_clks R8A7790_CLK_LVDS1>;
-> > -		clock-names = "du.0", "du.1", "du.2", "lvds.0", "lvds.1";
-> > +	du: display@feb00000 {
-> > +		compatible = "renesas,du-r8a7795";
-> > +		reg = <0 0xfeb00000 0 0x80000>,
-> > +		      <0 0xfeb90000 0 0x14>;
-> > +		reg-names = "du", "lvds.0";
-> > +		interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 269 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <GIC_SPI 270 IRQ_TYPE_LEVEL_HIGH>;
-> > +		clocks = <&cpg CPG_MOD 724>,
-> > +			 <&cpg CPG_MOD 723>,
-> > +			 <&cpg CPG_MOD 722>,
-> > +			 <&cpg CPG_MOD 721>,
-> > +			 <&cpg CPG_MOD 727>;
-> > +		clock-names = "du.0", "du.1", "du.2", "du.3", "lvds.0";
-> > +		vsps = <&vspd0 0 &vspd1 0 &vspd2 0 &vspd0 1>;
-> > 
-> >  		ports {
-> >  			#address-cells = <1>;
-> > @@ -89,12 +91,19 @@ Example: R8A7790 (R-Car H2) DU
-> >  			};
-> >  			port@1 {
-> >  				reg = <1>;
-> > -				du_out_lvds0: endpoint {
-> > +				du_out_hdmi0: endpoint {
-> > +					remote-endpoint = <&dw_hdmi0_in>;
-> >  				};
-> >  			};
-> >  			port@2 {
-> >  				reg = <2>;
-> > -				du_out_lvds1: endpoint {
-> > +				du_out_hdmi1: endpoint {
-> > +					remote-endpoint = <&dw_hdmi1_in>;
-> > +				};
-> > +			};
-> > +			port@3 {
-> 
-> Shouldn't a new port be documented somewhere?
-
-I've replaced the R8A7790-based example with one based on the R8A7795, as it 
-gives a better idea of how to use the vsps property. Port 3 is already defined 
-for the R8A7795 earlier in this file.
-
-                Port 0          Port1           Port2           Port3
------------------------------------------------------------------------------
- ...
- R8A7790 (H2)   DPAD            LVDS 0          LVDS 1          -
- ...
- R8A7795 (H3)   DPAD            HDMI 0          HDMI 1          LVDS
-
-> > +				reg = <3>;
-> > +				du_out_lvds0: endpoint {
-> > 
-> >  				};
-> >  			
-> >  			};
-> >  		
-> >  		};
+Actually, I'd prefer to fix up the FPGA bitstream in software and then
+write the fixed up bitstream into the flash. That way there's no need
+for any such DT property and other FPGA vendors (ie. xilinx) do it that
+way already.
 
 -- 
-Regards,
-
-Laurent Pinchart
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
