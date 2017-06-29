@@ -1,39 +1,42 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] pinctrl: generic: Add output-enable property
-Date: Thu, 29 Jun 2017 14:33:17 +0200
-Message-ID: <CACRpkdYViCZG0PmboxVq7S9ggFOrsTuvk6ZjdzoBgS9aio0ygg@mail.gmail.com>
-References: <1498125658-14554-1-git-send-email-jacopo+renesas@jmondi.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 1/1] dt-bindings: pinctrl: extend the pinmux property
+ to support integers array
+Date: Thu, 29 Jun 2017 14:35:49 +0200
+Message-ID: <CACRpkdZ=tgnOZJWOCHOPvS+V7q2LcfyRjOjb2XEHAprAfQAWfA@mail.gmail.com>
+References: <1498046395-30001-2-git-send-email-aisheng.dong@nxp.com> <1498142940-7982-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498125658-14554-1-git-send-email-jacopo+renesas@jmondi.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacopo Mondi <jacopo+renesas@jmondi.org>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, Dong Aisheng <dongas86@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <Chris.Brandt@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498142940-7982-1-git-send-email-aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
+Cc: "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>, Bai Ping <ping.bai-3arQi8VN3Tc@public.gmane.org>, Andy Duan <fugang.duan-3arQi8VN3Tc@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 22, 2017 at 12:00 PM, Jacopo Mondi
-<jacopo+renesas@jmondi.org> wrote:
+On Thu, Jun 22, 2017 at 4:49 PM, Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org> wrote:
 
-> Add output-enable generic pin configuration property.
-> This properties allows enabling/disabling pin's output capabilities
-> without actually driving any value on the line.
+> Some platforms may need more than one integer to represent a complete
+> pinmux binding, so let's extend the pinmux property to allow to accept
+> integer array instead of only a single integer.
+>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Dong Aisheng <aisheng.dong-3arQi8VN3Tc@public.gmane.org>
 >
 > ---
-> v1->v2:
->  - Expand the property description as suggested by Laurent. I ended up
->    mentioning the in-famous output buffer :)
+> ChangeLog:
+> v4->v5:
+>  * doc improvement
 
-I have applied the patch adding a few elaborations in the binding that
-the situation where you may use this is typically when enabling/disabling
-input or output buffers irrespective of the mode of the line as a whole.
-
-We might need even more documentation because this is really
-confusing.
-
-But for now it lets drivers work, which is nice.
-
-Rough consensus and running code should be our guide.
+Patch applied with Rob's ACK.
 
 Yours,
 Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
