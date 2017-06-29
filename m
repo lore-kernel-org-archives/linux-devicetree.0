@@ -1,39 +1,37 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v2] pinctrl: generic: Add output-enable property
-Date: Thu, 29 Jun 2017 17:26:33 +0300
-Message-ID: <CAHp75VdAM2EWXtZfaBZ4U2eXL0oj82ipWQZier18jX93xhdUYQ@mail.gmail.com>
-References: <1498125658-14554-1-git-send-email-jacopo+renesas@jmondi.org> <CACRpkdYViCZG0PmboxVq7S9ggFOrsTuvk6ZjdzoBgS9aio0ygg@mail.gmail.com>
+From: David Laight <David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org>
+Subject: RE: [PATCH 4/8] usb: bdc: Small code cleanup
+Date: Thu, 29 Jun 2017 14:28:23 +0000
+Message-ID: <063D6719AE5E284EB5DD2968C1650D6DD002DC6D@AcuExch.aculab.com>
+References: <1498587806-24781-1-git-send-email-alcooperx@gmail.com>
+ <1498587806-24781-5-git-send-email-alcooperx@gmail.com>
+ <063D6719AE5E284EB5DD2968C1650D6DD002C93C@AcuExch.aculab.com>
+ <CAGh=XABghZ73=TNToMvpQWXP26dS1W8iujj1uQtOB8ewf+Mpew@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYViCZG0PmboxVq7S9ggFOrsTuvk6ZjdzoBgS9aio0ygg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jacopo Mondi <jacopo+renesas@jmondi.org>, Dong Aisheng <dongas86@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Brandt <Chris.Brandt@renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGh=XABghZ73=TNToMvpQWXP26dS1W8iujj1uQtOB8ewf+Mpew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Al Cooper' <al.cooper-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Al Cooper <alcooperx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Felipe Balbi <balbi-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, yuan linyu <Linyu.Yuan-cfy2TCaE7SHLM0G2K2Xlo2/U75nxZMCp@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "open list:USB SUBSYSTEM" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 3:33 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Jun 22, 2017 at 12:00 PM, Jacopo Mondi
-> <jacopo+renesas@jmondi.org> wrote:
->
->> Add output-enable generic pin configuration property.
->> This properties allows enabling/disabling pin's output capabilities
->> without actually driving any value on the line.
-
-> I have applied the patch adding a few elaborations in the binding that
-> the situation where you may use this is typically when enabling/disabling
-> input or output buffers irrespective of the mode of the line as a whole.
->
-> We might need even more documentation because this is really
-> confusing.
->
-> But for now it lets drivers work, which is nice.
->
-> Rough consensus and running code should be our guide.
-
-At least this looks much better than odd bi-directional thingy.
-Thanks!
-
--- 
-With Best Regards,
-Andy Shevchenko
+RnJvbTogQWwgQ29vcGVyDQo+IFNlbnQ6IDI4IEp1bmUgMjAxNyAxNTo1Ng0KPiBPbiBXZWQsIEp1
+biAyOCwgMjAxNyBhdCA0OjQ3IEFNLCBEYXZpZCBMYWlnaHQgPERhdmlkLkxhaWdodEBhY3VsYWIu
+Y29tPiB3cm90ZToNCj4gPj4NCj4gPj4gICAgICAgdGVtcCA9IGJkY19yZWFkbChiZGMtPnJlZ3Ms
+IEJEQ19CRENTQyk7DQo+ID4+ICAgICAgIGlmICgodGVtcCAmIEJEQ19QNjQpICYmDQo+ID4+ICAg
+ICAgICAgICAgICAgICAgICAgICAhZG1hX3NldF9tYXNrX2FuZF9jb2hlcmVudChkZXYsIERNQV9C
+SVRfTUFTSyg2NCkpKSB7DQo+ID4+IC0gICAgICAgICAgICAgZGV2X2RiZyhiZGMtPmRldiwgIlVz
+aW5nIDY0LWJpdCBhZGRyZXNzXG4iKTsNCj4gPj4gKyAgICAgICAgICAgICBkZXZfZGJnKGRldiwg
+IlVzaW5nIDY0LWJpdCBhZGRyZXNzXG4iKTsNCj4gPj4gICAgICAgfSBlbHNlIHsNCj4gPj4gLSAg
+ICAgICAgICAgICByZXQgPSBkbWFfc2V0X21hc2tfYW5kX2NvaGVyZW50KCZwZGV2LT5kZXYsIERN
+QV9CSVRfTUFTSygzMikpOw0KPiA+PiArICAgICAgICAgICAgIHJldCA9IGRtYV9zZXRfbWFza19h
+bmRfY29oZXJlbnQoZGV2LCBETUFfQklUX01BU0soMzIpKTsNCj4gPg0KPiA+IFRoYXQganVzdCB3
+cm9uZy4uLg0KPiA+IE9yIHdhcyB3cm9uZyBiZWZvcmUuDQo+IA0KPiBXaHkgaXMgdGhpcyB3cm9u
+Zz8NCg0KSXQgaXNuJ3Qgb2J2aW91cyB0aGF0ICZwZGV2LT5kZXYgaXMgYmRjLT5kZXYgYW5kIGhl
+bmNlIGRldi4NCg0KCURhdmlkDQoNCg==
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
