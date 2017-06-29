@@ -1,180 +1,166 @@
-From: matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Subject: Re: [PATCH 1/3] ARM: dts: Bindings for Altera Quadspi Controller
- Version 2
-Date: Thu, 29 Jun 2017 08:03:46 -0700 (PDT)
-Message-ID: <alpine.DEB.2.20.1706290748230.4589@mgerlach-VirtualBox>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com> <1498493619-4633-2-git-send-email-matthew.gerlach@linux.intel.com> <0bfc282d-2aec-8f36-1528-312f7ded8d9c@gmail.com> <alpine.DEB.2.20.1706270722440.8058@mgerlach-VirtualBox>
- <0ca53c35-732c-a122-8191-6d102e824d52@gmail.com> <alpine.DEB.2.20.1706270833100.8058@mgerlach-VirtualBox> <20170628230928.k3hafpxhqrr26val@rob-hp-laptop> <5bd89165-3e42-9db4-321d-5f3df35922ce@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] drivers/watchdog: Add optional ASPEED device tree
+ properties
+Date: Thu, 29 Jun 2017 08:04:17 -0700
+Message-ID: <20170629150417.GA10226@roeck-us.net>
+References: <20170629002811.87199-1-cbostic@linux.vnet.ibm.com>
+ <20170629002811.87199-2-cbostic@linux.vnet.ibm.com>
+ <b51fedbb-837f-49ea-d050-4c3be82724c5@roeck-us.net>
+ <21f28ed9-b73a-5c21-5557-bec1fef0d874@linux.vnet.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5bd89165-3e42-9db4-321d-5f3df35922ce-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <21f28ed9-b73a-5c21-5557-bec1fef0d874-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jun 29, 2017 at 08:39:59AM -0500, Christopher Bostic wrote:
+> 
+> 
+> On 6/28/17 10:33 PM, Guenter Roeck wrote:
+> >On 06/28/2017 05:28 PM, Christopher Bostic wrote:
+> >>Describe device tree optional properties:
+> >>
+> >>   * aspeed,arm-reet - ARM CPU reset on signal
+> >>   * aspeed,no-soc-reset - SOC reset on signal
+> >>   * aspeed,no-sys-reset - System reset on signal
+> >>   * aspeed,interrupt - Interrupt CPU on signal
+> >>   * aspeed,external-signal - Generate external signal (WDT1 and WDT2
+> >>only)
+> >>   * aspeed,alt-boot - Boot from alternate block on signal
+> >>
+> >>Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+> >>---
+> >>v3 - Invert soc and sys reset to 'no' to preserve backwards
+> >>      compatibility.  SOC and SYS reset will be set by default
+> >>      without any optional parameters set
+> >>v2 - Add 'aspeed,' prefix to all optional properties
+> >>    - Add arm-reset, soc-reset, interrupt, alt-boot properties
+> >>---
+> >>  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 24
+> >>++++++++++++++++++++++
+> >>  1 file changed, 24 insertions(+)
+> >>
+> >>diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> >>b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> >>index c5e74d7..6f18005 100644
+> >>--- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> >>+++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
+> >>@@ -8,9 +8,33 @@ Required properties:
+> >>   - reg: physical base address of the controller and length of memory
+> >>mapped
+> >>     region
+> >>  +Optional properties:
+> >>+   Signal behavior - Whenever a timeout occurs the watchdog can be
+> >>programmed
+> >>+   to generate/not generate 6 types of signals:
+> >>+
+> >>+ - aspeed,arm-reset:    If property is present then reset ARM CPU only.
+> >>+            If not specified no ARM CPU reset is done.
+> >>+
+> >>+ - aspeed,no-soc-reset: If property is present then do not reset SOC.
+> >>+            If not specified then SOC reset is done.
+> >>+
+> >>+ - aspeed,no-sys-reset: If property is present then do not reset
+> >>system.
+> >>+            Typcally used in tandem with 'aspeed-external-signal'
+> >
+> >Is this correct ? As I understand the datasheet, it could also used in
+> >tandem with
+> >aspeed,interrupt.
+> True, that should be documented.  Will add that.
+> >
+> >>+            If not specified then system reset is done.
+> >>+
+> >
+> >I'll leave it up to Rob to decide, but for my part I don't understand
+> >no-soc-reset.
+> As the aspeed watchdog driver exists prior to this change an SOC reset is
+> done by
+> default.   In order to preserve backwards compatibility a missing optional
+> property
+> should result in default behavior.  I however need to be able to specify
+> that SOC
+> reset be disabled in some way.  This goes back to our discussion about why
+> we'd
+> ever want to disable SYSTEM reset in the first place.  Same reasoning
+> applies for
+> SOC reset.
+> 
+> >I would instead use four properties.
+> >
+> >    aspeed,arm-reset
+> >    aspeed,soc-reset
+> Per my response above I think it should remain as aspeed,no-soc-reset due to
+> backwards compatibility requirements.
 
+The same can be accomplished with "aspeed,no-reset", which would avoid the, in
+my opinion, awkward "no-{sys,soc}-reset" poperties.
 
-On Thu, 29 Jun 2017, Marek Vasut wrote:
+> >    aspeed,sys-reset (which is the default)
+> Again as per our discussion yesterday I need some way to specify how system
+> reset is to  be done.  For backwards compatibility, a lack of parameter here
+> would
+> result in a system reset being configured.  Only way to indicate to the
+> driver
+> that no system reset is to be done is to indicate 'no' system reset in the
+> optional
+> parameter.
 
-> On 06/29/2017 01:09 AM, Rob Herring wrote:
->> On Tue, Jun 27, 2017 at 08:57:14AM -0700, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>
->>>
->>> On Tue, 27 Jun 2017, Marek Vasut wrote:
->>>
->>>> On 06/27/2017 04:32 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>>>
->>>>>
->>>>> On Tue, 27 Jun 2017, Marek Vasut wrote:
->>>>>
->>>>> Hi Marek,
->>>>>
->>>>> Thanks for the feedback.  See my comments below.
->>>>>
->>>>> Matthew Gerlach
->>>>>
->>>>>> On 06/26/2017 06:13 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>>>>>
->>>>>>> Device Tree bindings for Version 2 of the Altera Quadspi Controller
->>>>>>> that can be optionally paired with a windowed bridge.
->>>>>>>
->>>>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>>>>> ---
->>>>>>>  .../devicetree/bindings/mtd/altera-quadspi-v2.txt  | 37
->>>>>>> ++++++++++++++++++++++
->>>>>>>  1 file changed, 37 insertions(+)
->>>>>>>  create mode 100644
->>>>>>> Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>>>
->>>>>>> diff --git
->>>>>>> a/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>>> b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>>> new file mode 100644
->>>>>>> index 0000000..8ba63d7
->>>>>>> --- /dev/null
->>>>>>> +++ b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>>> @@ -0,0 +1,37 @@
->>>>>>> +* Altera Quad SPI Controller Version 2
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +- compatible : Should be "altr,quadspi-v2".
->>>>>>> +- reg : Contains at least two entries, and possibly three entries,
->>>>>>> each of
->>>>>>> +    which is a tuple consisting of a physical address and length.
->>>>>>> +- reg-names : Should contain the names "avl_csr" and "avl_mem"
->>>>>>> corresponding
->>>>>>> +          to the control and status registers and qspi memory,
->>>>>>> respectively.
->>>>>>> +
->>>>>>> +
->>>>>>> +The Altera Quad SPI Controller Version 2 can be paired with a
->>>>>>> windowed bridge
->>>>>>> +in order to reduce the footprint of the memory interface.  When a
->>>>>>> windowed
->>>>>>> +bridge is used, reads and writes of data must be 32 bits wide.
->>>>>>> +
->>>>>>> +Optional properties:
->>>>>>> +- reg-names : Should contain the name "avl_window", if the windowed
->>>>>>> bridge
->>>>>>> +          is used.  This name corresponds to the register space that
->>>>>>> +          controls the window.
->>>>>>> +- window-size : The size of the window which must be an even power
->>>>>>> of 2.
->>>>>>> +- read-bit-reverse : A boolean indicating the data read from the
->>>>>>> flash should
->>>>>>> +             be bit reversed on a byte by byte basis before being
->>>>>>> +             delivered to the MTD layer.
->>>>>>> +- write-bit-reverse : A boolean indicating the data written to the
->>>>>>> flash should
->>>>>>> +              be bit reversed on a byte by byte basis.
->>>>>>
->>>>>> Is there ever a usecase where you need to set just one of these props ?
->>>>>> Also, they're altera specific, so altr, prefix should be added.
->>>>>
->>>>> In general, I think if bit reversal is required, it would be required in
->>>>> both directions.  However, anything is possible when using FPGAs.  So
->>>>> I thought separate booleans would be future proofing the bindings.
->>>>
->>>> Maybe we should drop this whole thing and add it when this is actually
->>>> required.
->>>>
->>>> Are there any users of this in the wild currently ?
->>>>
->>>> What is the purpose of doing this per-byte bit reverse instead of
->>>> storing th bits in the original order ?
->>>
->>> Hi Marek,
->>>
->>> Yes, there is hardware that has been in the wild for years that needs this
->>> bit reversal.  The specific use case is when a flash chip is connected to
->>> a FPGA, and the contents of the flash is used to configure the FPGA on power
->>> up.  In this use case, there is no processor involved with configuring the
->>> FPGA.  I am most familiar with this feature/bug with Altera FPGAs, but I
->>> believe this issue exists with other programmable devices.
->>>
->>>>
->>>>> Thinking about this binding more, I wonder if the binding name(s)
->>>>> should be (read|write)-bit8-reverse to indicate reversings the bits
->>>>> in a byte as opposed to reversing the bits in a 32 bit word?
->>>>>
->>>>> I don't think bit reversal is specific to Altera/Intel components. I see
->>>>> a nand driver performing bit reversal, and I think I've recently seen
->>>>> other FPGA based drivers requiring bit reversal.
->>>>
->>>> $ git grep bit.reverse Documentation/devicetree/ | wc -l
->>>> 0
->>>>
->>>> So we don't have such a generic binding . It's up to Rob (I guess) to
->>>> decide whether this is SoC specific and should've altr, prefix or not.
->>>> IMO it is.
->>>
->>> I agree there is no generic binding at this time, and I look forward
->>> to any input from Rob and anyone else on this issue.  I think it is worth
->>> pointing out that this really isn't an issue of an SoC, but rather it is an
->>> issue of how data in the flash chip is accessed.  I think what makes this issue
->>> "weird" is that we have different hardware accessing the data in the flash
->>> with a different perspective.  The FPGA looks at the data from one
->>> perspective on power up, and a processor trying to update the flash has a
->>> different perspective.
->>
->> Given the comment that it is reversing bits in each byte, that seems
->> fairly Altera specific. I'd be more in favor of a generic property if it
->> was flipping all the bits in a word (for any size word).
->
-> Actually, I'd prefer to fix up the FPGA bitstream in software and then
-> write the fixed up bitstream into the flash. That way there's no need
-> for any such DT property and other FPGA vendors (ie. xilinx) do it that
-> way already.
->
-> -- 
-> Best regards,
-> Marek Vasut
->
+Or "aspeed,no-reset".
 
-While I totally understand Marek's point of view regarding bit flipping,
-I think it is instructive to explore the other point of view.  For me the 
-issue of flipping the bits in user space versus kernel space came down to 
-laziness, which along with impatience and hubris are considered by some to 
-be good traits for a software engineer.  I looked around for an existing user 
-space to perform the function, but I did not find an existing tool, but I 
-suppose I could look more closely at Xilinx's tools.  I do not want to 
-create my own tool, and then it was pointed out to me that the necessary 
-bit flipping functions already exist in the kernel.
+> >    aspeed,no-reset
+> This parameter seems ambiguous as we could be doing a 'no system reset'
+> or a 'no SOC reset' in theory.
 
-Even if we decided that performing the bit flipping in the kernel makes 
-sense, my original binding proposal is clearly inadequate.  As Rob pointed 
-such a binding should be more generic to support flipping the bits in any word 
-size (i.e. 8, 16, 32, 64 ...).  Additionally, Marek has pointed out that a 
-portion of the flash could requiring flipping, and another portion of the 
-same flash would not require flipping.  Therefore, a bit flipping binding 
-is not a property of the flash controller, but rather it is a property of 
-a particular flash partition.
+{arm,soc,sys}-reset are mutually exclusive per datasheet, and there is a
+separate configuration bit which enables the reset in the first place.
+I don't see how that is ambiguous.
 
-Matthew Gerlach
+Anyway, I don't think we are making any progress here. Let's wait for
+guidance from Rob.
+
+Guenter
+
+> >
+> >There should also be a note explaining that the above are mutually
+> >exclusive.
+> >
+> OK, will add that.
+> 
+> >>+ - aspeed,interrupt:    If property is present then interrupt CPU.
+> >>+            If not specified then don't interrupt CPU.
+> >>+
+> >>+ - aspeed,external-signal: If property is present then signal is sent
+> >>to
+> >>+            external reset counter (only WDT1 and WDT2). If not
+> >>+            specified no external signal is sent.
+> >
+> >For consistency, either add an empty line here or remove the empty lines
+> >above
+> 
+> Will fix.
+> 
+> Thanks,
+> Chris
+> >
+> >>+ - aspeed,alt-boot:    If property is present then boot from alternate
+> >>block.
+> >>+
+> >>  Example:
+> >>        wdt1: watchdog@1e785000 {
+> >>          compatible = "aspeed,ast2400-wdt";
+> >>          reg = <0x1e785000 0x1c>;
+> >>+        aspeed,no-sys-reset;
+> >>+        aspeed,external-signal;
+> >>      };
+> >>
+> >
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
