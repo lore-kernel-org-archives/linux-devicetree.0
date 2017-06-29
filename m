@@ -1,37 +1,43 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [RFC PATCH 2/3] drivers: misc: eeprom: at24: support reading mac
- eeprom from different addresses
-Date: Thu, 29 Jun 2017 14:56:03 +0300
-Message-ID: <CAHp75Vf_SL3ReKLK0=8v3bDwHs5qwi2qc9p=XzJK9BXzOsLKLA@mail.gmail.com>
-References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com> <1498736351-9021-3-git-send-email-claudiu.beznea@microchip.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: Clocks used by another OS/CPU (was: Re: [RFC PATCH] clk: renesas:
+ cpg-mssr: Add interface for critical core clocks)
+Date: Thu, 29 Jun 2017 13:56:18 +0200
+Message-ID: <CAMuHMdWRadUCZUycUW3dKJhS__aRRVbV1tXo0umUQ7KHOYQMoQ@mail.gmail.com>
+References: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-In-Reply-To: <1498736351-9021-3-git-send-email-claudiu.beznea@microchip.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-clk <linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux PM list <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 2:39 PM, Claudiu Beznea
-<claudiu.beznea@microchip.com> wrote:
-> Add support for reading from different offsets of EEPROM.
-> The offset is initialized via device tree. If nothing is
-> given as input the old value, 0x90, is used. In this way
-> the driver could be used as generic driver for different
-> vendor memories by only changing the reading offset via
-> device tree.
+Hi Dirk,
 
-> +       err = device_property_read_u8(dev, "start-offset", &chip->offset);
+On Thu, Jun 29, 2017 at 11:27 AM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> CC clock, ARM, DT, PM people
+>
+> TL;DR: Clocks may be in use by another CPU not running Linux, while Linux
+> disables them as being unused.
 
-This property has to be documented.
+> Of course this is not limited to clocks, but also to e.g. PM domains.
 
-Moreover, the name looks too broad (I checked current use of
-"*-offset" type of properties and they either vendor specific, or data
-type specific.
+BTW, how do you prevent Linux from powering down the CR7 PM domain,
+which contains the Cortex R7?
 
-Taking above into consideration mac-offset sounds better to me.
+Gr{oetje,eeting}s,
 
--- 
-With Best Regards,
-Andy Shevchenko
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
