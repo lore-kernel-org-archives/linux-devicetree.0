@@ -1,148 +1,34 @@
-From: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Thu, 29 Jun 2017 08:39:59 -0500
-Message-ID: <21f28ed9-b73a-5c21-5557-bec1fef0d874@linux.vnet.ibm.com>
-References: <20170629002811.87199-1-cbostic@linux.vnet.ibm.com>
- <20170629002811.87199-2-cbostic@linux.vnet.ibm.com>
- <b51fedbb-837f-49ea-d050-4c3be82724c5@roeck-us.net>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: Re: [RESEND PATCH v4] clk: stm32h7: Add stm32h743 clock driver
+Date: Thu, 29 Jun 2017 13:41:04 +0000
+Message-ID: <7c0c3861-cf61-a9e2-cd5d-2ae30b8f32fa@st.com>
+References: <1496818794-14771-1-git-send-email-gabriel.fernandez@st.com>
+ <20170621220703.GI4493@codeaurora.org>
+ <110cf67f-e1d6-1f99-953c-6b9639bb4910@st.com>
+ <20170628155956.GA5316@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b51fedbb-837f-49ea-d050-4c3be82724c5-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170628155956.GA5316@codeaurora.org>
+Content-Language: en-US
+Content-ID: <076530B8F941BE43902C65DE1FC187E0@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 6/28/17 10:33 PM, Guenter Roeck wrote:
-> On 06/28/2017 05:28 PM, Christopher Bostic wrote:
->> Describe device tree optional properties:
->>
->>    * aspeed,arm-reet - ARM CPU reset on signal
->>    * aspeed,no-soc-reset - SOC reset on signal
->>    * aspeed,no-sys-reset - System reset on signal
->>    * aspeed,interrupt - Interrupt CPU on signal
->>    * aspeed,external-signal - Generate external signal (WDT1 and WDT2 
->> only)
->>    * aspeed,alt-boot - Boot from alternate block on signal
->>
->> Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
->> ---
->> v3 - Invert soc and sys reset to 'no' to preserve backwards
->>       compatibility.  SOC and SYS reset will be set by default
->>       without any optional parameters set
->> v2 - Add 'aspeed,' prefix to all optional properties
->>     - Add arm-reset, soc-reset, interrupt, alt-boot properties
->> ---
->>   .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 24 
->> ++++++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>
->> diff --git 
->> a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt 
->> b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->> index c5e74d7..6f18005 100644
->> --- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->> +++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
->> @@ -8,9 +8,33 @@ Required properties:
->>    - reg: physical base address of the controller and length of 
->> memory mapped
->>      region
->>   +Optional properties:
->> +   Signal behavior - Whenever a timeout occurs the watchdog can be 
->> programmed
->> +   to generate/not generate 6 types of signals:
->> +
->> + - aspeed,arm-reset:    If property is present then reset ARM CPU only.
->> +            If not specified no ARM CPU reset is done.
->> +
->> + - aspeed,no-soc-reset: If property is present then do not reset SOC.
->> +            If not specified then SOC reset is done.
->> +
->> + - aspeed,no-sys-reset: If property is present then do not reset 
->> system.
->> +            Typcally used in tandem with 'aspeed-external-signal'
->
-> Is this correct ? As I understand the datasheet, it could also used in 
-> tandem with
-> aspeed,interrupt.
-True, that should be documented.  Will add that.
->
->> +            If not specified then system reset is done.
->> +
->
-> I'll leave it up to Rob to decide, but for my part I don't understand 
-> no-soc-reset.
-As the aspeed watchdog driver exists prior to this change an SOC reset 
-is done by
-default.   In order to preserve backwards compatibility a missing 
-optional property
-should result in default behavior.  I however need to be able to specify 
-that SOC
-reset be disabled in some way.  This goes back to our discussion about 
-why we'd
-ever want to disable SYSTEM reset in the first place.  Same reasoning 
-applies for
-SOC reset.
-
-> I would instead use four properties.
->
->     aspeed,arm-reset
->     aspeed,soc-reset
-Per my response above I think it should remain as aspeed,no-soc-reset due to
-backwards compatibility requirements.
->     aspeed,sys-reset (which is the default)
-Again as per our discussion yesterday I need some way to specify how system
-reset is to  be done.  For backwards compatibility, a lack of parameter 
-here would
-result in a system reset being configured.  Only way to indicate to the 
-driver
-that no system reset is to be done is to indicate 'no' system reset in 
-the optional
-parameter.
->     aspeed,no-reset
-This parameter seems ambiguous as we could be doing a 'no system reset'
-or a 'no SOC reset' in theory.
->
-> There should also be a note explaining that the above are mutually 
-> exclusive.
->
-OK, will add that.
-
->> + - aspeed,interrupt:    If property is present then interrupt CPU.
->> +            If not specified then don't interrupt CPU.
->> +
->> + - aspeed,external-signal: If property is present then signal is 
->> sent to
->> +            external reset counter (only WDT1 and WDT2). If not
->> +            specified no external signal is sent.
->
-> For consistency, either add an empty line here or remove the empty 
-> lines above
-
-Will fix.
-
-Thanks,
-Chris
->
->> + - aspeed,alt-boot:    If property is present then boot from 
->> alternate block.
->> +
->>   Example:
->>         wdt1: watchdog@1e785000 {
->>           compatible = "aspeed,ast2400-wdt";
->>           reg = <0x1e785000 0x1c>;
->> +        aspeed,no-sys-reset;
->> +        aspeed,external-signal;
->>       };
->>
->
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCk9uIDA2LzI4LzIwMTcgMDU6NTkgUE0sIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gT24gMDYv
+MjcsIEdhYnJpZWwgRkVSTkFOREVaIHdyb3RlOg0KPj4NCj4+IE9uIDA2LzIyLzIwMTcgMTI6MDcg
+QU0sIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4+PiByZWFkbF9wb2xsX3RpbWVvdXQ/DQo+Pj4NCj4+
+IGlmIGkgdXNlIHJlYWRsX3BvbGxfdGltZW91dCAod2ljaCB1c2UgJ2t0aW1lX2dldCgpJykgaXQg
+Y2FuIGJlDQo+PiBvcGVyYXRpb25hbCBvbmx5IGFmdGVyIHRoZSBzZWxlY3Rpb24gb2YgY2xvY2tz
+b3VyY2UgPyAoZGV2aWNlX2luaXRjYWxsKS4NCj4+IEFuZCB0aGVuIGlmIGEgZHJpdmVyIHR1cm4g
+b24gYSBjbG9jayBiZWZvcmUsIGl0IGNvdWxkIGJsb2NrZWQgdGhlIGxpbnV4DQo+PiBjb25zb2xl
+ID8NCj4+DQo+IE9rLiBJIHdvbmRlciBpZiB3ZSBjb3VsZCBhZGQgc29tZSBzb3J0IG9mIHN0YXJ0
+aW5nIGNoZWNrIHRvDQo+IHJlYWRsX3BvbGxfdGltZW91dCgpIHRoYXQgdGVzdHMgc3lzdGVtX3N0
+YXRlIGZvciBib290aW5nIHZzLg0KPiBzY2hlZHVsaW5nPyBUaGF0IHNob3VsZCBiZSBzdWZmaWNp
+ZW50IHRvIGhhbmRsZSB0aGlzIGNhc2U/DQo+DQpPb3BzIGkgdGhpbmsgaSB1bmRlcnN0b29kIG15
+IHByb2JsZW0uLi4NCmkgdXNlZCByZWFkbF9wb2xsX3RpbWVvdXQgaW4gYXRvbWljIGNvbnRleHQu
+DQpJIGhhdmUgdG8gbW92ZSBteSBjb2RlIGluIHRoZSAucHJlcGFyZSBvcHMuDQoNCklmIHlvdSBh
+cmUgb2sgd2l0aCB0aGF0IGkgd2lsbCBzZW5kIGEgdjUNCg0KVGhhbmtzDQoNCkdhYnJpZWwNCg0K
