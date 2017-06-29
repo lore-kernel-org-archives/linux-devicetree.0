@@ -1,61 +1,54 @@
-From: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC
- support for A83T
-Date: Thu, 29 Jun 2017 12:45:51 +0800
-Message-ID: <CAAST=9yWEO7qdZvZJPDKhYnqSwT_fJLcyN_f3eGrLQ15EMvSzQ@mail.gmail.com>
-References: <20170624024515.4669-1-techping.chan@gmail.com>
- <20170624024515.4669-3-techping.chan@gmail.com> <20170626171524.cqfyasetpsfr6xfg@flea.lan>
- <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA@mail.gmail.com>
- <24845446a80e3542d90a1111a6141415@aosc.io> <20170627173631.2rjdzgwdwnksqjzm@flea>
-Reply-To: techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Rafal Ozieblo <rafalo@cadence.com>
+Subject: [PATCH v4 0/4] PTP support for macb driver
+Date: Thu, 29 Jun 2017 07:08:46 +0100
+Message-ID: <1498716526-1372-1-git-send-email-rafalo@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCJ6PAPY4MPBBAEM2LFAKGQE54S2VTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170627173631.2rjdzgwdwnksqjzm@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: icenowy-h8G6r0blFSE@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>, nicolas.ferre@atmel.com, Richard Cochran <richardcochran@gmail.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, harini.katakam@xilinx.com, andrei.pistirica@microchip.com
+Cc: Rafal Ozieblo <rafalo@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-2017-06-28 1:36 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> Hi,
->
-> On Tue, Jun 27, 2017 at 11:29:10PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
->> Maxime, here's another problem: if we have already a GP LRADC driver,
->> how can we tell the kernel to use it as IIO ADC rather than keys?
->
-> The GPADC IIO driver is not for the LRADC driver, but the GPADC /
-> temperature sensor.
->
-> We used to have an LRADC IIO driver in the CHIP BSP written by Alex
-> (in CC):
-> https://github.com/NextThingCo/CHIP-linux/commit/8675b761c54be73dc7cc0113209f02e10cc63a27
->
-> But he never mainlined it.
->
->> Should we introduce a new property for this once ready?
->
-> We need to keep the current binding. We can just check for the
-> presence or not of child nodes to see if it has some keys, and we'd
-> need an IIO-to-input driver that is yet to be written.
->
+This patch series adds support for PTP synchronization protocol
+in Cadence GEM driver based on PHC.
 
-Yes, then we need an iio-to-input driver...
-So...whether the driver(a83t lradc keys) can be applied now,
-or we should wait for the iio-to-input driver.
+v2 changes:
+* removed alarm's support
+* removed external time stamp support
+* removed PTP event interrupt handling
+* removed ptp_hw_support flag
+* removed all extra sanity checks
+* removed unnecessary #ifdef
+* fixed coding style and alligment issues
+* renamed macb.c to macb_main.c
 
-Thanks
-Ziping
+v3 changes:
+* added checking NULL ptr from ptp_clock_register()
+* fixed error codes return
+* locals list in "upside down Christmas tree" style
+* fixed some other issues from review
 
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+v4 changes:
+* respin to the newest next-next (28 Jun 2017)
+ 
+Rafal Ozieblo (4):
+  net: macb: Add support for PTP timestamps in DMA descriptors
+  net: macb: Add tsu_clk to device tree
+  net: macb: macb.c changed to macb_main.c
+  net: macb: Add hardware PTP support
+
+ Documentation/devicetree/bindings/net/macb.txt |    1 +
+ drivers/net/ethernet/cadence/Kconfig           |   10 +-
+ drivers/net/ethernet/cadence/Makefile          |    5 +
+ drivers/net/ethernet/cadence/macb.c            | 3529 -----------------------
+ drivers/net/ethernet/cadence/macb.h            |  158 +-
+ drivers/net/ethernet/cadence/macb_main.c       | 3666 ++++++++++++++++++++++++
+ drivers/net/ethernet/cadence/macb_ptp.c        |  518 ++++
+ 7 files changed, 4350 insertions(+), 3537 deletions(-)
+ delete mode 100644 drivers/net/ethernet/cadence/macb.c
+ create mode 100644 drivers/net/ethernet/cadence/macb_main.c
+ create mode 100755 drivers/net/ethernet/cadence/macb_ptp.c
+
+-- 
+2.4.5
