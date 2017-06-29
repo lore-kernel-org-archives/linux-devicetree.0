@@ -1,93 +1,99 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [linux-sunxi] Re: [PATCH v3 2/3] dt-bindings: input: Add R_LRADC
- support for A83T
-Date: Thu, 29 Jun 2017 09:53:24 +0200
-Message-ID: <20170629075324.oflzdye3pi5ijzcr@flea>
-References: <20170624024515.4669-1-techping.chan@gmail.com>
- <20170624024515.4669-3-techping.chan@gmail.com>
- <20170626171524.cqfyasetpsfr6xfg@flea.lan>
- <CAAST=9x+fS41tznuJ9hQ-cQxecKN751=61YkhEt31DvpeqeEcA@mail.gmail.com>
- <24845446a80e3542d90a1111a6141415@aosc.io>
- <20170627173631.2rjdzgwdwnksqjzm@flea>
- <CAAST=9yWEO7qdZvZJPDKhYnqSwT_fJLcyN_f3eGrLQ15EMvSzQ@mail.gmail.com>
+From: =?UTF-8?q?Gordan=20Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] 1/2] input: keyboard: Add devicetree support for lm8333
+Date: Thu, 29 Jun 2017 10:18:54 +0200
+Message-ID: <20170629081855.16034-3-gordan.markus@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="ixmydedsq64hippy"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAST=9yWEO7qdZvZJPDKhYnqSwT_fJLcyN_f3eGrLQ15EMvSzQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ziping Chen <techping.chan-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: icenowy-h8G6r0blFSE@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Gordan=20Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds LM8333 devicetree parsing for the keypad part. Optional
+properties to specify the keypad driver active time and debounce time.
 
---ixmydedsq64hippy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/input/keyboard/lm8333.c | 54 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
 
-On Thu, Jun 29, 2017 at 12:45:51PM +0800, Ziping Chen wrote:
-> 2017-06-28 1:36 GMT+08:00 Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
->:
-> > Hi,
-> >
-> > On Tue, Jun 27, 2017 at 11:29:10PM +0800, icenowy-h8G6r0blFSE@public.gmane.org wrote:
-> >> Maxime, here's another problem: if we have already a GP LRADC driver,
-> >> how can we tell the kernel to use it as IIO ADC rather than keys?
-> >
-> > The GPADC IIO driver is not for the LRADC driver, but the GPADC /
-> > temperature sensor.
-> >
-> > We used to have an LRADC IIO driver in the CHIP BSP written by Alex
-> > (in CC):
-> > https://github.com/NextThingCo/CHIP-linux/commit/8675b761c54be73dc7cc01=
-13209f02e10cc63a27
-> >
-> > But he never mainlined it.
-> >
-> >> Should we introduce a new property for this once ready?
-> >
-> > We need to keep the current binding. We can just check for the
-> > presence or not of child nodes to see if it has some keys, and we'd
-> > need an IIO-to-input driver that is yet to be written.
-> >
->=20
-> Yes, then we need an iio-to-input driver...
-> So...whether the driver(a83t lradc keys) can be applied now,
-> or we should wait for the iio-to-input driver.
+diff --git a/drivers/input/keyboard/lm8333.c b/drivers/input/keyboard/lm8333.c
+index c717e8f..f1508c5 100644
+--- a/drivers/input/keyboard/lm8333.c
++++ b/drivers/input/keyboard/lm8333.c
+@@ -128,6 +128,51 @@ static irqreturn_t lm8333_irq_thread(int irq, void *data)
+ 	return IRQ_HANDLED;
+ }
+ 
++static struct lm8333_platform_data *lm8333_parse_dt(struct i2c_client *client)
++{
++	struct device_node *np = client->dev.of_node;
++	struct lm8333_platform_data *pdata;
++	struct matrix_keymap_data *matrix_data;
++	u32 *keymap;
++	u32 prop;
++	int len;
++
++	pdata = devm_kzalloc(&client->dev, sizeof(pdata),
++				GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	if (!of_property_read_u32(np, "ti,active-time-ms", &prop))
++		pdata->active_time = prop;
++
++	if (!of_property_read_u32(np, "debounce-delay-ms", &prop))
++		pdata->debounce_time = prop;
++	else
++		pdata->debounce_time = 10;
++
++	if (!of_get_property(np, "linux,keymap", &prop))
++		len = prop / sizeof(u32);
++	else {
++		dev_err(&client->dev, "no keymap data defined\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	keymap = devm_kzalloc(&client->dev, sizeof(len) * len, GFP_KERNEL);
++	matrix_data = devm_kzalloc(&client->dev, sizeof(matrix_data),
++					GFP_KERNEL);
++	if (!matrix_data || !keymap)
++		return ERR_PTR(-ENOMEM);
++
++	if (!of_property_read_u32_array(np, "linux,keymap", keymap, len)) {
++		matrix_data->keymap_size = len;
++		matrix_data->keymap = keymap;
++
++		pdata->matrix_data = matrix_data;
++	}
++
++	return pdata;
++}
++
+ static int lm8333_probe(struct i2c_client *client,
+ 				  const struct i2c_device_id *id)
+ {
+@@ -137,6 +182,15 @@ static int lm8333_probe(struct i2c_client *client,
+ 	struct input_dev *input;
+ 	int err, active_time;
+ 
++	if (!pdata && client->dev.of_node) {
++		pdata = lm8333_parse_dt(client);
++		if (IS_ERR(pdata)) {
++			dev_err(&client->dev,
++				"could not parse configuration\n");
++			return IS_ERR(pdata);
++		}
++	}
++
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
+-- 
+2.9.3
 
-This is a long term discussion, it shouldn't hold the patches you
-sent.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---ixmydedsq64hippy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIcBAEBAgAGBQJZVLH0AAoJEBx+YmzsjxAgApQP/3W49rPKJoSkajZ0upgtorZF
-P2/x0MeyY5hvcJGrU8EPntmdCE6RwiwxHpd7TTs7HaA88W7vREAlGGleH7A+t66f
-TTRJkzHvhbll3QsiTjiaeRFANDg753ZRVXOBCwWHmAW8uqxMNUPpj7ZFz9rncnuN
-XfFjZyJRWEyQz6iYd5cYRzfI/IBnoM8Umh4YQjSabjKXhwdzaqU775LfXMQ46Bno
-E1ILGAju4dPa33GZe20B7XCcv9yv/gBhNe8L3KAUGcnRncIxYesX64JzspKJSzgM
-tV6tq5hRIoQxLhEcRt4/od3yLsAhLYquvfPq9TGKdtcEDVgsIveKQeTev3AmBGCf
-pXyTetGpO3JUXH5/nqheUz/JkjVFfqeQnHbHnYYRe7Z603Vf2Bd4EETtQQHo6OFm
-CK8KsKKLuWQC27DjBl53GxS+RLBr1gKTyltFI5XuYvpn/Ev6lt2xKvFDFEgcy2Di
-KQ7bnfTF0wkH8zACDyGDElfmE7JVE0AozcZ4bb4RpVB0Gndi+qruNhJiDv7j+c89
-eCzRgr+vSvMG+ndEySG439tawsP8hQHhVXcosBbbJmwX65FHSXfI6g+q1v7jOZhS
-sWL7PNTqsHSa2qEV4vHuDP6Pu423oO1c8n441JOW9uQSpx7VEAz6HLCzaINiDW4Y
-Ga3QG3OPSvwe5OGG4f2/
-=f57M
------END PGP SIGNATURE-----
-
---ixmydedsq64hippy--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
