@@ -1,34 +1,41 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/6] dt-bindings: arm: Document RDA8810PL and Orange Pi
- 2G-IoT
-Date: Thu, 29 Jun 2017 15:09:55 -0500
-Message-ID: <20170629200955.wzl6jg4ffuiwamie@rob-hp-laptop>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/6] dt-bindings: serial: Document RDA Micro UART
+Date: Thu, 29 Jun 2017 15:10:51 -0500
+Message-ID: <20170629201051.cfr37kh2gozompqo@rob-hp-laptop>
 References: <20170627005520.23731-1-afaerber@suse.de>
- <20170627005520.23731-3-afaerber@suse.de>
+ <20170627005520.23731-5-afaerber@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20170627005520.23731-3-afaerber-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, service-KgY735zpLH1Wk0Htik3J/w@public.gmane.org, zhao_steven-Y9sIeH5OGRo@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20170627005520.23731-5-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, service@rdamicro.com, zhao_steven@263.net, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 27, 2017 at 02:55:16AM +0200, Andreas Färber wrote:
-> Add bindings for RDA Micro RDA8810PL SoC and Orange Pi 2G-IoT board.
+On Tue, Jun 27, 2017 at 02:55:18AM +0200, Andreas Färber wrote:
+> Add an initial binding for the RDA8810PL UART.
 > 
-> Cc: service-KgY735zpLH1Wk0Htik3J/w@public.gmane.org
-> Cc: zhao_steven-Y9sIeH5OGRo@public.gmane.org
-> Signed-off-by: Andreas Färber <afaerber-l3A5Bk7waGM@public.gmane.org>
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
 > ---
->  Documentation/devicetree/bindings/arm/rda.txt | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/rda.txt
+>  Documentation/devicetree/bindings/serial/rda-uart.txt | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/serial/rda-uart.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/rda-uart.txt b/Documentation/devicetree/bindings/serial/rda-uart.txt
+> new file mode 100644
+> index 000000000000..6840a8aee035
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/rda-uart.txt
+> @@ -0,0 +1,13 @@
+> +RDA Micro UART
+> +
+> +Required properties:
+> +- compatible :  "rda,8810pl-uart" for RDA8810PL
+> +- reg        :  Offset and length of the register set for the device.
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+No clocks or interrupts?
+
+Rob
