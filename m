@@ -1,131 +1,49 @@
-From: Mike Looijmans <mike.looijmans@topic.nl>
-Subject: Re: [PATCH v2 3/3] hwmon: ltc2990: support all measurement modes
-Date: Thu, 29 Jun 2017 09:45:32 +0200
-Message-ID: <9a6ba152-3d17-3f9c-782c-1f10aa74691b@topic.nl>
-References: <1479384616-12479-1-git-send-email-tom.levens@cern.ch>
- <1479384616-12479-3-git-send-email-tom.levens@cern.ch>
- <410de6c9-a13e-51f7-4d66-6f4e2537c574@roeck-us.net>
- <97eb089f-e0e2-1146-6e17-8f9f790433d8@topic.nl>
- <20170628150130.GC30968@roeck-us.net>
- <alpine.LRH.2.20.1706281723170.31209@lxplus022.cern.ch>
- <20170628160048.GA8915@roeck-us.net>
- <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch>
+From: Richard Fitzgerald <rf@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 01/17] mfd: madera: Add register
+ definitions for Cirrus Logic Madera codecs
+Date: Thu, 29 Jun 2017 10:11:34 +0100
+Message-ID: <1498727494.4826.84.camel@rf-debian.wolfsonmicro.main>
+References: <1496415790-19164-1-git-send-email-rf@opensource.wolfsonmicro.com>
+ <1496415790-19164-2-git-send-email-rf@opensource.wolfsonmicro.com>
+ <20170605100707.zqyfyzhlhrpswa2u@dell>
+ <1498466018.4826.81.camel@rf-debian.wolfsonmicro.main>
+ <20170628192640.lboeddcabjcrvmtw@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.LRH.2.20.1706281819540.21032@lxplus028.cern.ch>
-Content-Language: nl
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tom Levens <tom.levens@cern.ch>, Guenter Roeck <linux@roeck-us.net>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20170628192640.lboeddcabjcrvmtw@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: gnurou@gmail.com, alsa-devel@alsa-project.org, jason@lakedaemon.net, devicetree@vger.kernel.org, linus.walleij@linaro.org, patches@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, robh+dt@kernel.org, tglx@linutronix.de, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-﻿On 28-06-17 19:02, Tom Levens wrote:
+On Wed, 2017-06-28 at 20:26 +0100, Mark Brown wrote:
+> On Mon, Jun 26, 2017 at 09:33:38AM +0100, Richard Fitzgerald wrote:
+> > On Mon, 2017-06-05 at 11:07 +0100, Lee Jones wrote:
 > 
-> On Wed, 28 Jun 2017, Guenter Roeck wrote:
+> > > For my own reference:
+> > >   Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 > 
->> On Wed, Jun 28, 2017 at 05:29:38PM +0200, Tom Levens wrote:
->>>
->> [ ... ]
->>
->>>>
->>>>> Whatever happened to this patch though? It didn't make it to mainline,
->>>>> otherwise I'd have found it sooner...
->>>>>
->>>> I'll have to look it up, but I guess I didn't get an updated version.
->>>
->>> As far as I remember I had a working V3 of this patch, but it is entirely
->>> possible that it was never submitted as I have been busy with other projects
->>> recently. I'll dig it out and check that it is complete.
->>>
->> FWIW, I don't see it at
->> https://patchwork.kernel.org/project/linux-hwmon/list/?submitter=171225&state=*
->>
->> Maybe you were waiting for a reply from Rob. Either case, it might make
->> sense to only provide valid modes, ie to abstract the mode bits from the
->> hardware, such as
->>
->> 0 - internal temp only
->> 1 - Tr1
->> 2 - V1
->> 3 - V1-V2
->> 4 - Tr2
->> 5 - V3
->> 6 - V3-V4
->> 7 to 14 - per bit 0..2
->>
->> Guenter
->>
+> > Can I suggest that you take this patch into the mfd tree? Other
+> > subsystem maintainers will have to base on that but it avoids me keeping
+> > emailing out nearly 9000 lines of register definitions each time I do an
+> > update to the other patches in the chain.
 > 
-> You are right, there was still an open question about how best to handle the 
-> mode selection in DT.
-> 
-> In the latest version of my patch I have it implemented as an array for 
-> setting the two values, for example:
-> 
->      lltc,meas-mode = <7 3>;
-> 
-> This sets bits [2..0] = 7 and [4..3] = 3. Of course these could be split into 
-> two DT properties, but I was unsure what to name them as both fields are 
-> called "mode" in the datasheet and "mode-43"/"mode-20" (or similar) is ugly.
-> 
-> With regards to your proposal, it is not clear to me whether the modes which 
-> have the same result are exactly equivalent. Does disabling a measurement with 
-> the mode[4..3] bits really leaves the part in a safe state for all possible HW 
-> connections? With this doubt in my head, I would prefer to keep the option 
-> available to the user to select any specific mode. But I am open to suggestions.
-> 
-> Mike, if you would like to test it, the latest version of my code is here:
-> 
-> https://github.com/levens/ltc2990/blob/dev/drivers/hwmon/ltc2990.c
-> 
+> Yes, please!  It also helps other maintainers see that the early bits of
+> the series we depend on are making progress.
 
-I pulled your patches, added two lines to the devicetree and it works fine, 
-I'm seeing plausible results:
-root@topic-miami:/sys/class/hwmon# grep . */*
-hwmon0/name:battery-gauge
-hwmon0/temp1_input:291700
-hwmon1/in0_input:3258
-hwmon1/in1_input:1824
-hwmon1/in2_input:1916
-hwmon1/in3_input:1512
-hwmon1/in4_input:2066
-hwmon1/name:ltc2990
-hwmon1/temp1_input:28062
-hwmon1/uevent:OF_NAME=ltc2990
-hwmon1/uevent:OF_FULLNAME=/gpios-i2c@50/ltc2990@4c
-hwmon1/uevent:OF_COMPATIBLE_0=lltc,ltc2990
-hwmon1/uevent:OF_COMPATIBLE_N=1
-hwmon2/curr1_input:1825
-hwmon2/curr2_input:349
-hwmon2/in0_input:3244
-hwmon2/name:ltc2990
-hwmon2/temp1_input:31500
-hwmon2/uevent:OF_NAME=ltc2990
-hwmon2/uevent:OF_FULLNAME=/gpios-i2c@52/ltc2990@4C
-hwmon2/uevent:OF_COMPATIBLE_0=ltc2990
-hwmon2/uevent:OF_COMPATIBLE_N=1
+I guess taking all the MFD code when Lee is happy with it would also be
+acceptable? There's several multi-thousand-line files in there too.
 
-
-As you can see, two ltc2990 on two busses, one measuring current and one 
-measuring 4 independent voltages.
-
-I also like your implementation of the mode setting better, it's much simpler 
-than mine. And you've solved a bug in the temperature reading as well.
-
-
-
-Kind regards,
-
-Mike Looijmans
-System Expert
-
-TOPIC Products
-Materiaalweg 4, NL-5681 RJ Best
-Postbus 440, NL-5680 AK Best
-Telefoon: +31 (0) 499 33 69 79
-E-mail: mike.looijmans@topicproducts.com
-Website: www.topicproducts.com
-
-Please consider the environment before printing this e-mail
+There are build dependencies between the subsystems but I don't know how
+the maintainers prefer to deal with that - keep the patches as a set or
+cross-merge branches.
