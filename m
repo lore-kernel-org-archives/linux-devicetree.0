@@ -1,99 +1,32 @@
-From: =?UTF-8?q?Gordan=20Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 1/2] input: keyboard: Add devicetree support for lm8333
-Date: Thu, 29 Jun 2017 14:22:19 +0200
-Message-ID: <20170629122220.12425-3-gordan.markus@gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] gpio: rcar: Add R8A7743 (RZ/G1M) support
+Date: Thu, 29 Jun 2017 14:23:38 +0200
+Message-ID: <CACRpkdaHb8GnwTc0D0B9TtYC=LUa0ZdDK90xKwydg=s4z-VxMQ@mail.gmail.com>
+References: <1497619944-61410-1-git-send-email-biju.das@bp.renesas.com> <1498055229-42052-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498055229-42052-1-git-send-email-biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Gordan=20Marku=C5=A1?= <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux-Renesas <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds LM8333 devicetree parsing for the keypad part. Optional
-properties to specify the keypad driver active time and debounce time.
+On Wed, Jun 21, 2017 at 4:27 PM, Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org> wrote:
 
-Signed-off-by: Gordan Markuš <gordan.markus-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/input/keyboard/lm8333.c | 54 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
+> Renesas RZ/G1M (R8A7743) SoC GPIO blocks are identical to the R-Car Gen2
+> family. Add support for its GPIO controllers.
+>
+> Signed-off-by: Biju Das <biju.das-kTT6dE0pTRh9uiUsa/gSgQ@public.gmane.org>
+> Reviewed-by: Chris Paterson <chris.paterson2-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+> v1->v2
+> * Modified the text "RZ-G1M" to "RZ/G1M"
 
-diff --git a/drivers/input/keyboard/lm8333.c b/drivers/input/keyboard/lm8333.c
-index c717e8f..f1508c5 100644
---- a/drivers/input/keyboard/lm8333.c
-+++ b/drivers/input/keyboard/lm8333.c
-@@ -128,6 +128,51 @@ static irqreturn_t lm8333_irq_thread(int irq, void *data)
- 	return IRQ_HANDLED;
- }
- 
-+static struct lm8333_platform_data *lm8333_parse_dt(struct i2c_client *client)
-+{
-+	struct device_node *np = client->dev.of_node;
-+	struct lm8333_platform_data *pdata;
-+	struct matrix_keymap_data *matrix_data;
-+	u32 *keymap;
-+	u32 prop;
-+	int len;
-+
-+	pdata = devm_kzalloc(&client->dev, sizeof(pdata),
-+				GFP_KERNEL);
-+	if (!pdata)
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (!of_property_read_u32(np, "ti,active-time-ms", &prop))
-+		pdata->active_time = prop;
-+
-+	if (!of_property_read_u32(np, "debounce-delay-ms", &prop))
-+		pdata->debounce_time = prop;
-+	else
-+		pdata->debounce_time = 10;
-+
-+	if (!of_get_property(np, "linux,keymap", &prop))
-+		len = prop / sizeof(u32);
-+	else {
-+		dev_err(&client->dev, "no keymap data defined\n");
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	keymap = devm_kzalloc(&client->dev, sizeof(len) * len, GFP_KERNEL);
-+	matrix_data = devm_kzalloc(&client->dev, sizeof(matrix_data),
-+					GFP_KERNEL);
-+	if (!matrix_data || !keymap)
-+		return ERR_PTR(-ENOMEM);
-+
-+	if (!of_property_read_u32_array(np, "linux,keymap", keymap, len)) {
-+		matrix_data->keymap_size = len;
-+		matrix_data->keymap = keymap;
-+
-+		pdata->matrix_data = matrix_data;
-+	}
-+
-+	return pdata;
-+}
-+
- static int lm8333_probe(struct i2c_client *client,
- 				  const struct i2c_device_id *id)
- {
-@@ -137,6 +182,15 @@ static int lm8333_probe(struct i2c_client *client,
- 	struct input_dev *input;
- 	int err, active_time;
- 
-+	if (!pdata && client->dev.of_node) {
-+		pdata = lm8333_parse_dt(client);
-+		if (IS_ERR(pdata)) {
-+			dev_err(&client->dev,
-+				"could not parse configuration\n");
-+			return IS_ERR(pdata);
-+		}
-+	}
-+
- 	if (!pdata)
- 		return -EINVAL;
- 
--- 
-2.9.3
+Patch applied with the ACKs.
 
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
