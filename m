@@ -1,160 +1,191 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: Bindings for Altera Quadspi Controller
- Version 2
-Date: Thu, 29 Jun 2017 11:43:55 +0200
-Message-ID: <5bd89165-3e42-9db4-321d-5f3df35922ce@gmail.com>
-References: <1498493619-4633-1-git-send-email-matthew.gerlach@linux.intel.com>
- <1498493619-4633-2-git-send-email-matthew.gerlach@linux.intel.com>
- <0bfc282d-2aec-8f36-1528-312f7ded8d9c@gmail.com>
- <alpine.DEB.2.20.1706270722440.8058@mgerlach-VirtualBox>
- <0ca53c35-732c-a122-8191-6d102e824d52@gmail.com>
- <alpine.DEB.2.20.1706270833100.8058@mgerlach-VirtualBox>
- <20170628230928.k3hafpxhqrr26val@rob-hp-laptop>
+From: Marek Vasut <marek.vasut@gmail.com>
+Subject: Re: [PATCH 01/14] qcom: mtd: nand: Add driver data for QPIC DMA
+Date: Thu, 29 Jun 2017 11:46:23 +0200
+Message-ID: <d5f24c71-f674-9519-7d48-3fe768d8f2c4@gmail.com>
+References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
+ <1498720566-20782-2-git-send-email-absahu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170628230928.k3hafpxhqrr26val@rob-hp-laptop>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: vndao-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1498720566-20782-2-git-send-email-absahu@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Abhishek Sahu <absahu@codeaurora.org>, dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@free-electrons.com, richard@nod.at, cyrille.pitchen@wedev4u.fr, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, architt@codeaurora.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2017 01:09 AM, Rob Herring wrote:
-> On Tue, Jun 27, 2017 at 08:57:14AM -0700, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>
->>
->> On Tue, 27 Jun 2017, Marek Vasut wrote:
->>
->>> On 06/27/2017 04:32 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>>
->>>>
->>>> On Tue, 27 Jun 2017, Marek Vasut wrote:
->>>>
->>>> Hi Marek,
->>>>
->>>> Thanks for the feedback.  See my comments below.
->>>>
->>>> Matthew Gerlach
->>>>
->>>>> On 06/26/2017 06:13 PM, matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org wrote:
->>>>>> From: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>>>>
->>>>>> Device Tree bindings for Version 2 of the Altera Quadspi Controller
->>>>>> that can be optionally paired with a windowed bridge.
->>>>>>
->>>>>> Signed-off-by: Matthew Gerlach <matthew.gerlach-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>>>>> ---
->>>>>>  .../devicetree/bindings/mtd/altera-quadspi-v2.txt  | 37
->>>>>> ++++++++++++++++++++++
->>>>>>  1 file changed, 37 insertions(+)
->>>>>>  create mode 100644
->>>>>> Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>>
->>>>>> diff --git
->>>>>> a/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>> b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..8ba63d7
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/mtd/altera-quadspi-v2.txt
->>>>>> @@ -0,0 +1,37 @@
->>>>>> +* Altera Quad SPI Controller Version 2
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible : Should be "altr,quadspi-v2".
->>>>>> +- reg : Contains at least two entries, and possibly three entries,
->>>>>> each of
->>>>>> +    which is a tuple consisting of a physical address and length.
->>>>>> +- reg-names : Should contain the names "avl_csr" and "avl_mem"
->>>>>> corresponding
->>>>>> +          to the control and status registers and qspi memory,
->>>>>> respectively.
->>>>>> +
->>>>>> +
->>>>>> +The Altera Quad SPI Controller Version 2 can be paired with a
->>>>>> windowed bridge
->>>>>> +in order to reduce the footprint of the memory interface.  When a
->>>>>> windowed
->>>>>> +bridge is used, reads and writes of data must be 32 bits wide.
->>>>>> +
->>>>>> +Optional properties:
->>>>>> +- reg-names : Should contain the name "avl_window", if the windowed
->>>>>> bridge
->>>>>> +          is used.  This name corresponds to the register space that
->>>>>> +          controls the window.
->>>>>> +- window-size : The size of the window which must be an even power
->>>>>> of 2.
->>>>>> +- read-bit-reverse : A boolean indicating the data read from the
->>>>>> flash should
->>>>>> +             be bit reversed on a byte by byte basis before being
->>>>>> +             delivered to the MTD layer.
->>>>>> +- write-bit-reverse : A boolean indicating the data written to the
->>>>>> flash should
->>>>>> +              be bit reversed on a byte by byte basis.
->>>>>
->>>>> Is there ever a usecase where you need to set just one of these props ?
->>>>> Also, they're altera specific, so altr, prefix should be added.
->>>>
->>>> In general, I think if bit reversal is required, it would be required in
->>>> both directions.  However, anything is possible when using FPGAs.  So
->>>> I thought separate booleans would be future proofing the bindings.
->>>
->>> Maybe we should drop this whole thing and add it when this is actually
->>> required.
->>>
->>> Are there any users of this in the wild currently ?
->>>
->>> What is the purpose of doing this per-byte bit reverse instead of
->>> storing th bits in the original order ?
->>
->> Hi Marek,
->>
->> Yes, there is hardware that has been in the wild for years that needs this
->> bit reversal.  The specific use case is when a flash chip is connected to
->> a FPGA, and the contents of the flash is used to configure the FPGA on power
->> up.  In this use case, there is no processor involved with configuring the
->> FPGA.  I am most familiar with this feature/bug with Altera FPGAs, but I
->> believe this issue exists with other programmable devices.
->>
->>>
->>>> Thinking about this binding more, I wonder if the binding name(s)
->>>> should be (read|write)-bit8-reverse to indicate reversings the bits
->>>> in a byte as opposed to reversing the bits in a 32 bit word?
->>>>
->>>> I don't think bit reversal is specific to Altera/Intel components. I see
->>>> a nand driver performing bit reversal, and I think I've recently seen
->>>> other FPGA based drivers requiring bit reversal.
->>>
->>> $ git grep bit.reverse Documentation/devicetree/ | wc -l
->>> 0
->>>
->>> So we don't have such a generic binding . It's up to Rob (I guess) to
->>> decide whether this is SoC specific and should've altr, prefix or not.
->>> IMO it is.
->>
->> I agree there is no generic binding at this time, and I look forward
->> to any input from Rob and anyone else on this issue.  I think it is worth
->> pointing out that this really isn't an issue of an SoC, but rather it is an
->> issue of how data in the flash chip is accessed.  I think what makes this issue
->> "weird" is that we have different hardware accessing the data in the flash
->> with a different perspective.  The FPGA looks at the data from one
->> perspective on power up, and a processor trying to update the flash has a
->> different perspective.
+On 06/29/2017 09:15 AM, Abhishek Sahu wrote:
+> The current driver only support EBI2 NAND which uses ADM DMA. The
+> latest QCOM controller supports QPIC NAND which uses BAM DMA. NAND
+> registers and programming sequence are same for EBI2 and QPIC
+> NAND so the same driver can support QPIC NAND also by adding the
+> BAM DMA support. This patch adds the QPIC NAND support in current
+> NAND driver with compatible string "qcom,qpic-nandc-v1.4.0" and
+> maps it with different configuration parameter in driver data.
 > 
-> Given the comment that it is reversing bits in each byte, that seems 
-> fairly Altera specific. I'd be more in favor of a generic property if it 
-> was flipping all the bits in a word (for any size word).
+> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
 
-Actually, I'd prefer to fix up the FPGA bitstream in software and then
-write the fixed up bitstream into the flash. That way there's no need
-for any such DT property and other FPGA vendors (ie. xilinx) do it that
-way already.
+Split this into DT bindings patch and code patch ...
+
+> ---
+>  .../devicetree/bindings/mtd/qcom_nandc.txt         | 41 +++++++++++++++++++++-
+>  drivers/mtd/nand/qcom_nandc.c                      | 37 ++++++++++++++++---
+>  2 files changed, 73 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> index 70dd511..5d0f7ae 100644
+> --- a/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> +++ b/Documentation/devicetree/bindings/mtd/qcom_nandc.txt
+> @@ -1,7 +1,9 @@
+>  * Qualcomm NAND controller
+>  
+>  Required properties:
+> -- compatible:		should be "qcom,ipq806x-nand"
+> +- compatible:		must be one of the following:
+> +	* "qcom,ebi2-nandc" - EBI2 NAND which uses ADM DMA like IPQ8064.
+> +	* "qcom,qpic-nandc-v1.4.0" - QPIC NAND v1.4.0 which uses BAM DMA like IPQ4019.
+>  - reg:			MMIO address range
+>  - clocks:		must contain core clock and always on clock
+>  - clock-names:		must contain "core" for the core clock and "aon" for the
+> @@ -84,3 +86,40 @@ nand@1ac00000 {
+>  		};
+>  	};
+>  };
+> +
+> +nand@79b0000 {
+> +	compatible = "qcom,qpic-nandc-v1.4.0";
+> +	reg = <0x79b0000 0x1000>;
+> +
+> +	clocks = <&gcc GCC_QPIC_CLK>,
+> +		<&gcc GCC_QPIC_AHB_CLK>;
+> +	clock-names = "core", "aon";
+> +
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	nandcs@0 {
+> +		compatible = "qcom,nandcs";
+> +		reg = <0>;
+> +
+> +		nand-ecc-strength = <4>;
+> +		nand-ecc-step-size = <512>;
+> +		nand-bus-width = <8>;
+> +
+> +		partitions {
+> +			compatible = "fixed-partitions";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +
+> +			partition@0 {
+> +				label = "boot-nand";
+> +				reg = <0 0x58a0000>;
+> +			};
+> +
+> +			partition@58a0000 {
+> +				label = "fs-nand";
+> +				reg = <0x58a0000 0x4000000>;
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
+> index 57d483a..f55f728 100644
+> --- a/drivers/mtd/nand/qcom_nandc.c
+> +++ b/drivers/mtd/nand/qcom_nandc.c
+> @@ -1,5 +1,5 @@
+>  /*
+> - * Copyright (c) 2016, The Linux Foundation. All rights reserved.
+> + * Copyright (c) 2016-2017, The Linux Foundation. All rights reserved.
+>   *
+>   * This software is licensed under the terms of the GNU General Public
+>   * License version 2, as published by the Free Software Foundation, and
+> @@ -234,6 +234,8 @@ struct nandc_regs {
+>   * @cmd1/vld:			some fixed controller register values
+>   * @ecc_modes:			supported ECC modes by the current controller,
+>   *				initialized via DT match data
+> + * @dma_bam_enabled:		flag to tell whether nand controller is using
+> + *				bam dma
+>   */
+>  struct qcom_nand_controller {
+>  	struct nand_hw_control controller;
+> @@ -253,6 +255,7 @@ struct qcom_nand_controller {
+>  	struct list_head desc_list;
+>  
+>  	u8		*data_buffer;
+> +	bool		dma_bam_enabled;
+>  	int		buf_size;
+>  	int		buf_count;
+>  	int		buf_start;
+> @@ -316,6 +319,17 @@ struct qcom_nand_host {
+>  	u32 clrreadstatus;
+>  };
+>  
+> +/*
+> + * This data type corresponds to the nand driver data which will be used at
+> + * driver probe time
+> + * @ecc_modes - ecc mode for nand
+> + * @dma_bam_enabled - whether this driver is using bam
+> + */
+> +struct qcom_nand_driver_data {
+> +	u32 ecc_modes;
+> +	bool dma_bam_enabled;
+> +};
+> +
+>  static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
+>  {
+>  	return container_of(chip, struct qcom_nand_host, chip);
+> @@ -2073,6 +2087,7 @@ static int qcom_nandc_probe(struct platform_device *pdev)
+>  	struct device_node *dn = dev->of_node, *child;
+>  	struct resource *res;
+>  	int ret;
+> +	const struct qcom_nand_driver_data *driver_data;
+>  
+>  	nandc = devm_kzalloc(&pdev->dev, sizeof(*nandc), GFP_KERNEL);
+>  	if (!nandc)
+> @@ -2087,7 +2102,10 @@ static int qcom_nandc_probe(struct platform_device *pdev)
+>  		return -ENODEV;
+>  	}
+>  
+> -	nandc->ecc_modes = (unsigned long)dev_data;
+> +	driver_data = (const struct qcom_nand_driver_data *)dev_data;
+> +
+> +	nandc->ecc_modes = driver_data->ecc_modes;
+> +	nandc->dma_bam_enabled = driver_data->dma_bam_enabled;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	nandc->base = devm_ioremap_resource(dev, res);
+> @@ -2179,15 +2197,26 @@ static int qcom_nandc_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> -#define EBI2_NANDC_ECC_MODES	(ECC_RS_4BIT | ECC_BCH_8BIT)
+>  
+> +static const struct qcom_nand_driver_data ebi2_nandc_data = {
+> +	.ecc_modes = (ECC_RS_4BIT | ECC_BCH_8BIT),
+> +	.dma_bam_enabled = false,
+> +};
+> +
+> +static const struct qcom_nand_driver_data qpic_nandc_v1_4_0_data = {
+> +	.ecc_modes = (ECC_BCH_4BIT | ECC_BCH_8BIT),
+> +	.dma_bam_enabled = true,
+> +};
+>  /*
+>   * data will hold a struct pointer containing more differences once we support
+>   * more controller variants
+>   */
+>  static const struct of_device_id qcom_nandc_of_match[] = {
+>  	{	.compatible = "qcom,ipq806x-nand",
+> -		.data = (void *)EBI2_NANDC_ECC_MODES,
+> +		.data = (void *)&ebi2_nandc_data,
+> +	},
+> +	{	.compatible = "qcom,qpic-nandc-v1.4.0",
+> +		.data = (void *)&qpic_nandc_v1_4_0_data,
+>  	},
+>  	{}
+>  };
+> 
+
 
 -- 
 Best regards,
 Marek Vasut
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
