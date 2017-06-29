@@ -1,56 +1,97 @@
-From: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] PCI: mediatek: Add Mediatek PCIe host controller
- support
-Date: Thu, 29 Jun 2017 10:00:23 +0800
-Message-ID: <1498701623.32475.9.camel@mtkswgap22>
-References: <1495338145-9384-1-git-send-email-ryder.lee@mediatek.com>
-         <1495338145-9384-2-git-send-email-ryder.lee@mediatek.com>
-         <20170628195325.GR17844@bhelgaas-glaptop.roam.corp.google.com>
+From: Wang Yafei <wangyafei@goodix.com>
+Subject: [PATCH v5 1/2] dt-bindings: input: Add Device tree bindings for
+ Goodix GTx5 series touchscreen controller
+Date: Thu, 29 Jun 2017 10:13:27 +0800
+Message-ID: <20170629021327.GA16992@andrew-dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170628195325.GR17844-1RhO1Y9PlrlHTL0Zs8A6p5iNqAH0jzoTYJqu5kTmcBRl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <helgaas-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Red Hung <red.hung-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-input-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org, andrew@goodix.com, mouse@goodix.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2017-06-28 at 14:53 -0500, Bjorn Helgaas wrote:
-> On Sun, May 21, 2017 at 11:42:24AM +0800, Ryder Lee wrote:
-> > Add support for the Mediatek PCIe Gen2 controller which can
-> > be found on MT7623 series SoCs.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> > ---
-> >  drivers/pci/host/Kconfig         |  11 +
-> >  drivers/pci/host/Makefile        |   1 +
-> >  drivers/pci/host/pcie-mediatek.c | 553 +++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 565 insertions(+)
-> >  create mode 100644 drivers/pci/host/pcie-mediatek.c
-> >...
-> 
-> > +static int mtk_pcie_register_host(struct pci_host_bridge *host)
-> > +{
-> > +	struct mtk_pcie *pcie = pci_host_bridge_priv(host);
-> > +	struct pci_bus *child;
-> > +	int err;
-> > +
-> > +	pci_add_flags(PCI_REASSIGN_ALL_RSRC | PCI_REASSIGN_ALL_BUS);
-> 
-> Do you really need the PCI_REASSIGN_ALL_RSRC and PCI_REASSIGN_ALL_BUS
-> flags?  I'd like to get rid of them because we should automatically
-> assign resources if the firmware hasn't done it.
-> 
-> Bjorn
+Signed-off-by: Wang Yafei <wangyafei@goodix.com>
+---
+since v1:
+ - Change device properties name
+ - Modified irq property format
+ - Modified linux,keycode format
+ - Modified panel configuration property name
+ - Remove time-delay properties
+---
+ .../bindings/input/touchscreen/goodix-gtx5.txt     | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
 
-You're right! These flags are not needed and should be removed.
-Thanks for catching that.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+new file mode 100644
+index 0000000..9bb82c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
+@@ -0,0 +1,61 @@
++Device tree bindings for Goodix GTx5 series touchscreen controller
++
++Required properties:
++
++- compatible		: Should be "goodix,gt7589"
++				 or "goodix,gt8589"
++			         or "goodix,gt9589"
++- reg			: I2C address of the chip. Should be 0x5d or 0x14
++- interrupt-parent	: Interrupt controller to which the chip is connected
++- interrupts		: Interrupt to which the chip is connected
++- touchscreen-size-x	: horizontal resolution of touchscreen(in pixels)
++- touchscreen-size-y	: vertical resolution of touchscreen(in pixels)
++- touchscreen-max-id	: panel supported max touch number.
++- touchscreen-max-w	: panel max width value.
++
++Optional properties:
++- reset-gpios		  : reset gpio.
++- touchscreen-swapped-x-y : swap  x/y axis coordinates.
++- linux,keycodes	  : Specifies an array of numeric keycode values to
++			    be used for reporting button presses. The array can
++			    contain up to 8 entries.
++- goodix,normal-cfg-X	  : touch device normal config data, this config data is
++		            touchpanel manufacturer related. normal-cfg-X, X
++			    represent for a panel manufacturer, X is less than 10.
++- vtouch-supply		  : power supply for the touch device.
++
++Example:
++i2c@00000000 {
++	/* ... */
++
++	gt8589@14 {
++		compatible = "goodix,gt8589";
++		reg = <0x14>;
++		interrupt-parent = <&msm_gpio>;
++		interrupts = <13 IRQ_TYPE_EDGE_FALLING>;
++		vtouch-supply = <&pm8916_l15>;
++		reset-gpios = <&msm_gpio 12 0x0>;
++		touchscreen-max-id = <10>;
++		touchscreen-size-x = <400>;
++		touchscreen-size-y = <400>;
++		touchscreen-max-w = <400>;
++		linux,keycodes = <KEY_HOMEPAGE>, <KEY_MENU>, <KEY_BACK>;
++		goodix,normal-cfg-0 = [
++			02 00 00 09 09 01 07 02 00 00 00 00 01 00 3C 00 07 07
++			00 00 00 00 00 00 40 01 40 01 C8 00 96 00 F4 01 F4 01
++			F4 01 20 01 11 0A 0A 03 14 14 14 14 0A 0C 01 01 11 11
++			11 00 14 14 14 14 14 14 14 14 14 00 00 0F 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
++			00 00 00 00 00 00 00 00 00 00 11 09 10 00 31 32 33 34
++			00 00 00 00 00 00 00 00 00 00 00 00 00 01 00 CA 64 00
++			00 00 00 00 00 00 09 00 13 00 00 00 00 00 00 00 00 00
++			50 B0 19 00 19 00 05 00 00 00 00 0A 05 00 00 00 00 00
++			01 00 FF 00 0B 06 0D 02 FF 04 05 03 07 01 08 0A 0E 11
++			0F 10 09 13 0C 16 17 14 18 12 19 15 1D 1E 1C 1F 1B 20
++			1A 2A 29 28 25 2B 27 21 FF 24 22 2C 26 23 FF 00 00 00
++			00 00 00 00 00 00 00 00 00 00 00 00 80 80 80 80 80 80
++			80 80 80 80 80 80 80 80 80 80 9F 22 01 AE];
++		};
++	};
++}
++
+-- 
+2.7.4
 
-Ryder
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
