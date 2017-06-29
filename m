@@ -1,74 +1,40 @@
-From: Christopher Bostic <cbostic@linux.vnet.ibm.com>
-Subject: [PATCH v3 2/2] drivers/watchdog: ASPEED reference dev tree properties for config
-Date: Wed, 28 Jun 2017 19:28:11 -0500
-Message-ID: <20170629002811.87199-3-cbostic@linux.vnet.ibm.com>
-References: <20170629002811.87199-1-cbostic@linux.vnet.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170629002811.87199-1-cbostic@linux.vnet.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: wim@iguana.be, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Christopher Bostic <cbostic@linux.vnet.ibm.com>, linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/3] dt-bindings: PCI: rockchip: Add vpcie12v-supply for Rockchip PCIe controller
+Date: Thu, 29 Jun 2017 09:21:28 +0800
+Message-ID: <1498699288-63944-1-git-send-email-shawn.lin@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Reference the system device tree when configuring the watchdog
-engines. If optional property 'aspeed,no-sys-reset' is specified
-then override the default config and do not set sys reset mode.
-If optional property 'aspeed,no-soc-reset' is specified then
-override the default and do not set soc reset mode.
+PCIe connector provide a optional 12V power supply for high
+power downstream components, so we add this as a optional
+one if we need to control it.
 
-Signed-off-by: Christopher Bostic <cbostic@linux.vnet.ibm.com>
+Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 ---
-v3 - Invert the logic for system reset dev tree property to
-     preserve backwards compatibility. If not specified the
-     default is to configure for system reset
-   - Add check for 'aspeed,no-soc-reset' property and only if
-     not present is SOC reset to be configured.  This preserves
-     backwards compatibility.
-v2 - Change of_get_property() to of_property_read_bool()
-   - Remove redundant check for NULL struct device_node pointer
-   - Optional property names now start with prefix 'aspeed,'
----
- drivers/watchdog/aspeed_wdt.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/watchdog/aspeed_wdt.c b/drivers/watchdog/aspeed_wdt.c
-index 1c65258..ace74f8 100644
---- a/drivers/watchdog/aspeed_wdt.c
-+++ b/drivers/watchdog/aspeed_wdt.c
-@@ -140,6 +140,7 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- {
- 	struct aspeed_wdt *wdt;
- 	struct resource *res;
-+	struct device_node *np;
- 	int ret;
- 
- 	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-@@ -166,12 +167,21 @@ static int aspeed_wdt_probe(struct platform_device *pdev)
- 
- 	/*
- 	 * Control reset on a per-device basis to ensure the
--	 * host is not affected by a BMC reboot, so only reset
--	 * the SOC and not the full chip
-+	 * host is not affected by a BMC reboot
- 	 */
--	wdt->ctrl = WDT_CTRL_RESET_MODE_SOC |
--		WDT_CTRL_1MHZ_CLK |
--		WDT_CTRL_RESET_SYSTEM;
-+	wdt->ctrl = WDT_CTRL_1MHZ_CLK;
-+
-+	np = pdev->dev.of_node;
-+	if (!(of_property_read_bool(np, "aspeed,no-soc-reset")))
-+		wdt->ctrl |= WDT_CTRL_RESET_MODE_SOC;
-+
-+	if (!(of_property_read_bool(np, "aspeed,no-sys-reset")))
-+		wdt->ctrl |= WDT_CTRL_RESET_SYSTEM;
-+
-+	if (of_property_read_bool(np, "aspeed,external-signal"))
-+		wdt->ctrl |= WDT_CTRL_WDT_EXT;
-+
-+	writel(wdt->ctrl, wdt->base + WDT_CTRL);
- 
- 	if (readl(wdt->base + WDT_CTRL) & WDT_CTRL_ENABLE)  {
- 		aspeed_wdt_start(&wdt->wdd);
+ Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+index 1453a73..9b88959 100644
+--- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
+@@ -47,6 +47,7 @@ Optional Property:
+ 	using 24MHz OSC for RC's PHY.
+ - ep-gpios: contain the entry for pre-reset gpio
+ - num-lanes: number of lanes to use
++- vpcie12v-supply: The phandle to the 12v regulator to use for PCIe.
+ - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
+ - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
+ - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
 -- 
-1.8.2.2
+1.9.1
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
