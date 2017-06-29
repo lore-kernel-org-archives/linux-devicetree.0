@@ -1,38 +1,202 @@
 From: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: [PATCH 1/3] dt-bindings: PCI: rockchip: Add vpcie12v-supply for Rockchip PCIe controller
-Date: Thu, 29 Jun 2017 09:21:28 +0800
-Message-ID: <1498699288-63944-1-git-send-email-shawn.lin@rock-chips.com>
+Subject: Re: [PATCH v2 2/2] mmc: dw_mmc-rockchip: parse
+ rockchip,desired-num-phases from DT
+Date: Thu, 29 Jun 2017 09:38:42 +0800
+Message-ID: <35413895-08d3-c916-e5ec-d5c087260391@rock-chips.com>
+References: <1494916134-68043-1-git-send-email-shawn.lin@rock-chips.com>
+ <CGME20170516063039epcas1p49836d3f2fb67c402d6ffd30f7eebef96@epcas1p4.samsung.com>
+ <1494916134-68043-2-git-send-email-shawn.lin@rock-chips.com>
+ <87542133-3d88-ea4f-03b7-884274964e48@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=gbk; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87542133-3d88-ea4f-03b7-884274964e48-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ziyuan Xu <xzy.xu-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PCIe connector provide a optional 12V power supply for high
-power downstream components, so we add this as a optional
-one if we need to control it.
+Hi Jaehoon,
 
-Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
----
+On 2017/5/18 10:20, Jaehoon Chung wrote:
+> Hi Shawn,
+> 
+> On 05/16/2017 03:28 PM, Shawn Lin wrote:
+>> Currently we unconditionally do tuning for each degree, which
+>> costs 900ms for each boot and resume.
+>>
+>> May someone argue that this is a question of accuracy VS time. But I
+>> would say it's a trick of how we need to do decision for our boards.
+>> If we don't care the time we spend at all, we could definitely do tuning
+>> for each degree. But when we need to improve the user experience, for
+>> instance, speed up resuming from S3, we should also have the right to
+>> do that. This patch add parsing "rockchip,desired-num-phases", for folks
+>> to specify the number of doing tuning. If not specified, 360 will be used
+>> as before.
+>>
+>> Signed-off-by: Shawn Lin <shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+> 
+> Will pick this patch with [PATCH 1/2] after getting acked tags from DT guys.
+> 
 
- Documentation/devicetree/bindings/pci/rockchip-pcie.txt | 1 +
- 1 file changed, 1 insertion(+)
+patch 1 was acked by Rob, so I assume these two are material for 4.13?
 
-diff --git a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-index 1453a73..9b88959 100644
---- a/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-+++ b/Documentation/devicetree/bindings/pci/rockchip-pcie.txt
-@@ -47,6 +47,7 @@ Optional Property:
- 	using 24MHz OSC for RC's PHY.
- - ep-gpios: contain the entry for pre-reset gpio
- - num-lanes: number of lanes to use
-+- vpcie12v-supply: The phandle to the 12v regulator to use for PCIe.
- - vpcie3v3-supply: The phandle to the 3.3v regulator to use for PCIe.
- - vpcie1v8-supply: The phandle to the 1.8v regulator to use for PCIe.
- - vpcie0v9-supply: The phandle to the 0.9v regulator to use for PCIe.
--- 
-1.9.1
-
+> Best Regards,
+> Jaehoon Chung
+> 
+>>
+>> ---
+>>
+>> Changes in v2:
+>> - rename property to rockchip,desired-num-phases
+>>
+>>   drivers/mmc/host/dw_mmc-rockchip.c | 48 ++++++++++++++++++++++++--------------
+>>   1 file changed, 30 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/drivers/mmc/host/dw_mmc-rockchip.c b/drivers/mmc/host/dw_mmc-rockchip.c
+>> index 372fb6e..a3f1c2b 100644
+>> --- a/drivers/mmc/host/dw_mmc-rockchip.c
+>> +++ b/drivers/mmc/host/dw_mmc-rockchip.c
+>> @@ -25,6 +25,7 @@ struct dw_mci_rockchip_priv_data {
+>>   	struct clk		*drv_clk;
+>>   	struct clk		*sample_clk;
+>>   	int			default_sample_phase;
+>> +	int			num_phases;
+>>   };
+>>   
+>>   static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>> @@ -133,8 +134,8 @@ static void dw_mci_rk3288_set_ios(struct dw_mci *host, struct mmc_ios *ios)
+>>   	}
+>>   }
+>>   
+>> -#define NUM_PHASES			360
+>> -#define TUNING_ITERATION_TO_PHASE(i)	(DIV_ROUND_UP((i) * 360, NUM_PHASES))
+>> +#define TUNING_ITERATION_TO_PHASE(i, num_phases) \
+>> +		(DIV_ROUND_UP((i) * 360, num_phases))
+>>   
+>>   static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>   {
+>> @@ -159,13 +160,15 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>   		return -EIO;
+>>   	}
+>>   
+>> -	ranges = kmalloc_array(NUM_PHASES / 2 + 1, sizeof(*ranges), GFP_KERNEL);
+>> +	ranges = kmalloc_array(priv->num_phases / 2 + 1,
+>> +			       sizeof(*ranges), GFP_KERNEL);
+>>   	if (!ranges)
+>>   		return -ENOMEM;
+>>   
+>>   	/* Try each phase and extract good ranges */
+>> -	for (i = 0; i < NUM_PHASES; ) {
+>> -		clk_set_phase(priv->sample_clk, TUNING_ITERATION_TO_PHASE(i));
+>> +	for (i = 0; i < priv->num_phases; ) {
+>> +		clk_set_phase(priv->sample_clk,
+>> +			      TUNING_ITERATION_TO_PHASE(i, priv->num_phases));
+>>   
+>>   		v = !mmc_send_tuning(mmc, opcode, NULL);
+>>   
+>> @@ -179,7 +182,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>   		if (v) {
+>>   			ranges[range_count-1].end = i;
+>>   			i++;
+>> -		} else if (i == NUM_PHASES - 1) {
+>> +		} else if (i == priv->num_phases - 1) {
+>>   			/* No extra skipping rules if we're at the end */
+>>   			i++;
+>>   		} else {
+>> @@ -188,11 +191,11 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>   			 * one since testing bad phases is slow.  Skip
+>>   			 * 20 degrees.
+>>   			 */
+>> -			i += DIV_ROUND_UP(20 * NUM_PHASES, 360);
+>> +			i += DIV_ROUND_UP(20 * priv->num_phases, 360);
+>>   
+>>   			/* Always test the last one */
+>> -			if (i >= NUM_PHASES)
+>> -				i = NUM_PHASES - 1;
+>> +			if (i >= priv->num_phases)
+>> +				i = priv->num_phases - 1;
+>>   		}
+>>   
+>>   		prev_v = v;
+>> @@ -210,7 +213,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>   		range_count--;
+>>   	}
+>>   
+>> -	if (ranges[0].start == 0 && ranges[0].end == NUM_PHASES - 1) {
+>> +	if (ranges[0].start == 0 && ranges[0].end == priv->num_phases - 1) {
+>>   		clk_set_phase(priv->sample_clk, priv->default_sample_phase);
+>>   		dev_info(host->dev, "All phases work, using default phase %d.",
+>>   			 priv->default_sample_phase);
+>> @@ -222,7 +225,7 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>   		int len = (ranges[i].end - ranges[i].start + 1);
+>>   
+>>   		if (len < 0)
+>> -			len += NUM_PHASES;
+>> +			len += priv->num_phases;
+>>   
+>>   		if (longest_range_len < len) {
+>>   			longest_range_len = len;
+>> @@ -230,25 +233,30 @@ static int dw_mci_rk3288_execute_tuning(struct dw_mci_slot *slot, u32 opcode)
+>>   		}
+>>   
+>>   		dev_dbg(host->dev, "Good phase range %d-%d (%d len)\n",
+>> -			TUNING_ITERATION_TO_PHASE(ranges[i].start),
+>> -			TUNING_ITERATION_TO_PHASE(ranges[i].end),
+>> +			TUNING_ITERATION_TO_PHASE(ranges[i].start,
+>> +						  priv->num_phases),
+>> +			TUNING_ITERATION_TO_PHASE(ranges[i].end,
+>> +						  priv->num_phases),
+>>   			len
+>>   		);
+>>   	}
+>>   
+>>   	dev_dbg(host->dev, "Best phase range %d-%d (%d len)\n",
+>> -		TUNING_ITERATION_TO_PHASE(ranges[longest_range].start),
+>> -		TUNING_ITERATION_TO_PHASE(ranges[longest_range].end),
+>> +		TUNING_ITERATION_TO_PHASE(ranges[longest_range].start,
+>> +					  priv->num_phases),
+>> +		TUNING_ITERATION_TO_PHASE(ranges[longest_range].end,
+>> +					  priv->num_phases),
+>>   		longest_range_len
+>>   	);
+>>   
+>>   	middle_phase = ranges[longest_range].start + longest_range_len / 2;
+>> -	middle_phase %= NUM_PHASES;
+>> +	middle_phase %= priv->num_phases;
+>>   	dev_info(host->dev, "Successfully tuned phase to %d\n",
+>> -		 TUNING_ITERATION_TO_PHASE(middle_phase));
+>> +		 TUNING_ITERATION_TO_PHASE(middle_phase, priv->num_phases));
+>>   
+>>   	clk_set_phase(priv->sample_clk,
+>> -		      TUNING_ITERATION_TO_PHASE(middle_phase));
+>> +		      TUNING_ITERATION_TO_PHASE(middle_phase,
+>> +						priv->num_phases));
+>>   
+>>   free:
+>>   	kfree(ranges);
+>> @@ -264,6 +272,10 @@ static int dw_mci_rk3288_parse_dt(struct dw_mci *host)
+>>   	if (!priv)
+>>   		return -ENOMEM;
+>>   
+>> +	if (of_property_read_u32(np, "rockchip,desired-num-phases",
+>> +					&priv->num_phases))
+>> +		priv->num_phases = 360;
+>> +
+>>   	if (of_property_read_u32(np, "rockchip,default-sample-phase",
+>>   					&priv->default_sample_phase))
+>>   		priv->default_sample_phase = 0;
+>>
+> 
+> 
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
+> 
+> 
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
