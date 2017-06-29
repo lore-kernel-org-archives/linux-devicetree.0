@@ -1,166 +1,632 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] drivers/watchdog: Add optional ASPEED device tree
- properties
-Date: Thu, 29 Jun 2017 08:04:17 -0700
-Message-ID: <20170629150417.GA10226@roeck-us.net>
-References: <20170629002811.87199-1-cbostic@linux.vnet.ibm.com>
- <20170629002811.87199-2-cbostic@linux.vnet.ibm.com>
- <b51fedbb-837f-49ea-d050-4c3be82724c5@roeck-us.net>
- <21f28ed9-b73a-5c21-5557-bec1fef0d874@linux.vnet.ibm.com>
+From: Ludovic Desroches <ludovic.desroches-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: Re: [PATCH 5/5] ARM: dts: sama5d27_som1_ek: Add sama5d27 SoM1 EK
+ support
+Date: Thu, 29 Jun 2017 17:04:08 +0200
+Message-ID: <20170629150408.rcmwy74ozy4mtglo@rfolt0960.corp.atmel.com>
+References: <1498736674-9233-1-git-send-email-claudiu.beznea@microchip.com>
+ <1498736674-9233-6-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <21f28ed9-b73a-5c21-5557-bec1fef0d874-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Sender: linux-watchdog-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, joel-U3u1mxZcP9KHXe+LvDLADg@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1498736674-9233-6-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, sza-4N5lU0Zj96A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cristian.birsan-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 08:39:59AM -0500, Christopher Bostic wrote:
+On Thu, Jun 29, 2017 at 02:44:34PM +0300, Claudiu Beznea wrote:
+> Add specifig DTS files and bindings for sama5d27 SoM1 EK board.
+> 
+> Signed-off-by: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> Signed-off-by: Cristian Birsan <cristian.birsan-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile                  |   1 +
+>  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 551 ++++++++++++++++++++++++++++
+>  2 files changed, 552 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 9449493..3396f73 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -46,6 +46,7 @@ dtb-$(CONFIG_SOC_AT91SAM9) += \
+>  	at91sam9x35ek.dtb
+>  dtb-$(CONFIG_SOC_SAM_V7) += \
+>  	at91-kizbox2.dtb \
+> +	at91-sama5d27_som1_ek.dtb \
+>  	at91-sama5d2_xplained.dtb \
+>  	at91-sama5d3_xplained.dtb \
+>  	at91-tse850-3.dtb \
+> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+> new file mode 100644
+> index 0000000..a87125e
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
+> @@ -0,0 +1,551 @@
+> +/*
+> + * at91-sama5d27_som1_ek.dts - Device Tree file for SAMA5D27-SOM1-EK board
+> + *
+> + *  Copyright (c) 2017, Microchip Technology Inc.
+> + *                2016 Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> + *                2017 Cristian Birsan <cristian.birsan-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> + *                2017 Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+> + *
+> + * This file is dual-licensed: you can use it either under the terms
+> + * of the GPL or the X11 license, at your option. Note that this dual
+> + * licensing only applies to this file, and not this project as a
+> + * whole.
+> + *
+> + *  a) This file is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This file is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + * Or, alternatively,
+> + *
+> + *  b) Permission is hereby granted, free of charge, to any person
+> + *     obtaining a copy of this software and associated documentation
+> + *     files (the "Software"), to deal in the Software without
+> + *     restriction, including without limitation the rights to use,
+> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+> + *     sell copies of the Software, and to permit persons to whom the
+> + *     Software is furnished to do so, subject to the following
+> + *     conditions:
+> + *
+> + *     The above copyright notice and this permission notice shall be
+> + *     included in all copies or substantial portions of the Software.
+> + *
+> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+> + *     OTHER DEALINGS IN THE SOFTWARE.
+> + */
+> +/dts-v1/;
+> +#include "at91-sama5d27_som1.dtsi"
+> +#include <dt-bindings/mfd/atmel-flexcom.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +
+> +/ {
+> +	model = "Atmel SAMA5D27 SOM1 EK";
+> +	compatible = "atmel,sama5d27-som1-ek", "atmel,sama5d27-som1", "atmel,sama5d27", "atmel,sama5d2", "atmel,sama5";
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	memory {
+> +		reg = <0x20000000 0x20000>;
+> +	};
+> +
+> +	ahb {
+> +		usb0: gadget@00300000 {
+> +			atmel,vbus-gpio = <&pioA 116 GPIO_ACTIVE_HIGH>;
+
+Even if it is not done in other dts file (I plan to send patches to fix
+it), prefer macros to avoid errors: PIN_PD20.
+
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_usba_vbus>;
+> +			status = "okay";
+> +		};
+> +
+> +		usb1: ohci@00400000 {
+> +			num-ports = <3>;
+> +			atmel,vbus-gpio = <&pioA 10 GPIO_ACTIVE_HIGH>;
+
+Ditto
+
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_usb_default>;
+> +			status = "okay";
+> +		};
+> +
+> +		usb2: ehci@00500000 {
+> +			status = "okay";
+> +		};
+> +
+> +		sdmmc0: sdio-host@a0000000 {
+> +			bus-width = <8>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_sdmmc0_default>;
+> +			status = "okay";
+> +		};
+> +
+> +		sdmmc1: sdio-host@b0000000 {
+> +			bus-width = <4>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&pinctrl_sdmmc1_default>;
+> +			status = "okay";
+> +		};
+> +
+> +		apb {
+> +			isc: isc@f0008000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_isc_base &pinctrl_isc_data_8bit &pinctrl_isc_data_9_10 &pinctrl_isc_data_11_12>;
+> +				status = "okay";
+> +			};
+> +
+> +			spi0: spi@f8000000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_spi0_default>;
+> +				status = "okay";
+> +			};
+> +
+> +			macb0: ethernet@f8008000 {
+> +				status = "okay";
+> +			};
+> +
+> +			uart1: serial@f8020000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_uart1_default>;
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +				status = "okay";
+> +			};
+> +
+> +			uart2: serial@f8024000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_mikrobus2_uart>;
+> +				atmel,use-dma-rx;
+> +				atmel-use-dma-tx;
+> +				status = "okay";
+> +			};
+> +
+> +			pwm0: pwm@f802c000 {
+> +				status = "okay";
+> +			};
+> +
+> +			flx1: flexcom@f8038000 {
+> +				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_TWI>;
+> +				status = "disabled";
+> +
+> +				i2c2: i2c@600 {
+> +					compatible = "atmel,sama5d2-i2c";
+> +					reg = <0x600 0x200>;
+> +					interrupts = <20 IRQ_TYPE_LEVEL_HIGH 7>;
+> +					dmas = <0>, <0>;
+> +					dma-names = "tx", "rx";
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					clocks = <&flx1_clk>;
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&pinctrl_mikrobus_i2c>;
+> +					atmel,fifo-size = <16>;
+> +					status = "disabled";
+> +				};
+> +			};
+> +
+> +			shdwc@f8048010 {
+> +				atmel,shdwc-debouncer = <976>;
+> +				atmel,wakeup-rtc-timer;
+> +
+> +				input@0 {
+> +					reg = <0>;
+> +					atmel,wakeup-type = "low";
+> +				};
+> +			};
+> +
+> +			watchdog@f8048040 {
+> +				status = "okay";
+> +			};
+> +
+> +			can0: can@f8054000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_can0_default>;
+> +			};
+> +
+> +			uart3: serial@fc008000 {
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_uart3_default>;
+> +				status = "disabled";
+> +			};
+> +
+> +			uart4: serial@fc00c000 {
+> +				atmel,use-dma-rx;
+> +				atmel,use-dma-tx;
+> +				pinctrl-name = "default";
+> +				pinctrl-0 = <&pinctrl_mikrobus1_uart>;
+> +				status = "okay";
+> +			};
+> +
+> +			flx3: flexcom@fc014000 {
+> +				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_SPI>;
+> +				status = "disabled";
+> +
+> +				uart7: serial@200 {
+> +					compatible = "atmel,at91sam9260-usart";
+> +					reg = <0x200 0x200>;
+> +					interrupts = <22 IRQ_TYPE_LEVEL_HIGH 7>;
+> +					clocks = <&flx3_clk>;
+> +					clock-names = "usart";
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&pinctrl_flx3_default>;
+> +					atmel,fifo-size = <32>;
+> +					status = "disabled";
+> +				};
+> +
+> +				spi2: spi@400 {
+> +					compatible = "atmel,at91rm9200-spi";
+> +					reg = <0x400 0x200>;
+> +					interrupts = <22 IRQ_TYPE_LEVEL_HIGH 7>;
+> +					clocks = <&flx3_clk>;
+> +					clock-names = "spi_clk";
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&pinctrl_flx3_default>;
+> +					atmel,fifo-size = <16>;
+> +					status = "disabled";
+> +				};
+> +			};
+> +
+> +			flx4: flexcom@fc018000 {
+> +				atmel,flexcom-mode = <ATMEL_FLEXCOM_MODE_SPI>;
+> +				status = "okay";
+> +
+> +				uart6: serial@200 {
+> +					compatible = "atmel,at91sam9260-usart";
+> +					reg = <0x200 0x200>;
+> +					interrupts = <23 IRQ_TYPE_LEVEL_HIGH 7>;
+> +					clocks = <&flx4_clk>;
+> +					clock-names = "usart";
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&pinctrl_flx4_default>;
+> +					atmel,fifo-size = <32>;
+> +					status = "disabled";
+> +				};
+> +
+> +				spi3: spi@400 {
+> +					compatible = "atmel,at91rm9200-spi";
+> +					reg = <0x400 0x200>;
+> +					interrupts = <23 IRQ_TYPE_LEVEL_HIGH 7>;
+> +					clocks = <&flx4_clk>;
+> +					clock-names = "spi_clk";
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&pinctrl_mikrobus_spi &pinctrl_mikrobus1_spi_cs &pinctrl_mikrobus2_spi_cs>;
+> +					atmel,fifo-size = <16>;
+> +					status = "okay";
+> +				};
+> +
+> +				i2c3: i2c@600 {
+> +					compatible = "atmel,sama5d2-i2c";
+> +					reg = <0x600 0x200>;
+> +					interrupts = <23 IRQ_TYPE_LEVEL_HIGH 7>;
+> +					dmas = <0>, <0>;
+> +					dma-names = "tx", "rx";
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					clocks = <&flx4_clk>;
+> +					pinctrl-names = "default";
+> +					pinctrl-0 = <&pinctrl_flx4_default>;
+> +					atmel,fifo-size = <16>;
+> +					status = "disabled";
+> +				};
+> +			};
+> +
+> +			i2c1: i2c@fc028000 {
+> +				dmas = <0>, <0>;
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_i2c1_default>;
+> +				status = "okay";
+> +			};
+> +
+> +			pinctrl@fc038000 {
+> +
+> +				pinctrl_can0_default: can0_default {
+> +					pinmux = <PIN_PC10__CANTX0>,
+> +						 <PIN_PC11__CANRX0>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_can1_default: can1_default {
+> +					pinmux = <PIN_PC26__CANTX1>,
+> +						 <PIN_PC27__CANRX1>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_flx3_default: flx3_default {
+> +					pinmux = <PIN_PC20__FLEXCOM3_IO0>,
+> +						 <PIN_PC19__FLEXCOM3_IO1>,
+> +						 <PIN_PC18__FLEXCOM3_IO2>,
+> +						 <PIN_PC21__FLEXCOM3_IO3>,
+> +						 <PIN_PC22__FLEXCOM3_IO4>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_i2c1_default: i2c1_default {
+> +					pinmux = <PIN_PD4__TWD1>,
+> +						 <PIN_PD5__TWCK1>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_isc_base: isc_base {
+> +					pinmux = <PIN_PC21__ISC_PCK>,
+> +						 <PIN_PC22__ISC_VSYNC>,
+> +						 <PIN_PC23__ISC_HSYNC>,
+> +						 <PIN_PC24__ISC_MCK>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_isc_data_8bit: isc_data_8bit {
+> +					pinmux = <PIN_PC20__ISC_D11>,
+> +						 <PIN_PC19__ISC_D10>,
+> +						 <PIN_PC18__ISC_D9>,
+> +						 <PIN_PC17__ISC_D8>,
+> +						 <PIN_PC16__ISC_D7>,
+> +						 <PIN_PC15__ISC_D6>,
+> +						 <PIN_PC14__ISC_D5>,
+> +						 <PIN_PC13__ISC_D4>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_isc_data_9_10: isc_data_9_10 {
+> +					pinmux = <PIN_PC12__ISC_D3>,
+> +						 <PIN_PC11__ISC_D2>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_isc_data_11_12: isc_data_11_12 {
+> +					pinmux = <PIN_PC10__ISC_D1>,
+> +						 <PIN_PC9__ISC_D0>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_key_gpio_default: key_gpio_default {
+> +					pinmux = <PIN_PA29__GPIO>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				pinctrl_led_gpio_default: led_gpio_default {
+> +					pinmux = <PIN_PA27__GPIO>,
+> +						 <PIN_PB1__GPIO>,
+> +						 <PIN_PA31__GPIO>;
+> +					bias-pull-up;
+> +				};
+> +
+> +				pinctrl_sdmmc0_default: sdmmc0_default {
+> +					cmd_data {
+> +						pinmux = <PIN_PA1__SDMMC0_CMD>,
+> +							 <PIN_PA2__SDMMC0_DAT0>,
+> +							 <PIN_PA3__SDMMC0_DAT1>,
+> +							 <PIN_PA4__SDMMC0_DAT2>,
+> +							 <PIN_PA5__SDMMC0_DAT3>,
+> +							 <PIN_PA6__SDMMC0_DAT4>,
+> +							 <PIN_PA7__SDMMC0_DAT5>,
+> +							 <PIN_PA8__SDMMC0_DAT6>,
+> +							 <PIN_PA9__SDMMC0_DAT7>;
+> +						bias-pull-up;
+> +					};
+> +
+> +					ck_cd_vddsel {
+> +						pinmux = <PIN_PA0__SDMMC0_CK>,
+> +							 <PIN_PA11__SDMMC0_VDDSEL>,
+> +							 <PIN_PA13__SDMMC0_CD>;
+> +						bias-disable;
+> +					};
+> +				};
+> +
+> +				pinctrl_sdmmc1_default: sdmmc1_default {
+> +					cmd_data {
+> +						pinmux = <PIN_PA28__SDMMC1_CMD>,
+> +							 <PIN_PA18__SDMMC1_DAT0>,
+> +							 <PIN_PA19__SDMMC1_DAT1>,
+> +							 <PIN_PA20__SDMMC1_DAT2>,
+> +							 <PIN_PA21__SDMMC1_DAT3>;
+> +						bias-pull-up;
+> +					};
+> +
+> +					conf-ck_cd {
+> +						pinmux = <PIN_PA22__SDMMC1_CK>,
+> +							 <PIN_PA30__SDMMC1_CD>;
+> +						bias-disable;
+> +					};
+> +				};
+> +
+> +				pinctrl_sensor_power: sensor_power {
+> +					pinmux = <PIN_PB12__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_sensor_reset: sensor_reset {
+> +					pinmux = <PIN_PB11__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_spi0_default: spi0_default {
+> +					pinmux = <PIN_PA14__SPI0_SPCK>,
+> +						 <PIN_PA15__SPI0_MOSI>,
+> +						 <PIN_PA16__SPI0_MISO>,
+> +						 <PIN_PA17__SPI0_NPCS0>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_uart1_default: uart1_default {
+> +					pinmux = <PIN_PD2__URXD1>,
+> +						 <PIN_PD3__UTXD1>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_uart3_default: uart3_default {
+> +					pinmux = <PIN_PC12__URXD3>,
+> +						 <PIN_PC13__UTXD3>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_usb_default: usb_default {
+> +					pinmux = <PIN_PA10__GPIO>,
+> +						 <PIN_PD19__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_usba_vbus: usba_vbus {
+> +					pinmux = <PIN_PD20__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus1_an: mikrobus1_an {
+> +					pinmux = <PIN_PD25__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus2_an: mikrobus2_an {
+> +					pinmux = <PIN_PD26__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus1_rst: mikrobus1_rst {
+> +					pinmux = <PIN_PB2__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus2_rst: mikrobus2_rst {
+> +					pinmux = <PIN_PA26__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus1_spi_cs: mikrobus1_spi_cs {
+> +					pinmux = <PIN_PD0__FLEXCOM4_IO4>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus2_spi_cs: mikrobus2_spi_cs {
+> +					pinmux = <PIN_PC31__FLEXCOM4_IO3>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus_spi: mikrobus_spi {
+> +					pinmux = <PIN_PC28__FLEXCOM4_IO0>,
+> +						 <PIN_PC29__FLEXCOM4_IO1>,
+> +						 <PIN_PC30__FLEXCOM4_IO2>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus1_pwm: mikrobus1_pwm {
+> +					pinmux = <PIN_PB1__PWML1>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus2_pwm: mikrobus2_pwm {
+> +					pinmux = <PIN_PA31__PWML0>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus1_int: mikrobus1_int {
+> +					pinmux = <PIN_PB0__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus2_int: mikrobus2_int {
+> +					pinmux = <PIN_PA25__GPIO>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus1_uart: mikrobus1_uart {
+> +					pinmux = <PIN_PB3__URXD4>,
+> +						 <PIN_PB4__UTXD4>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus2_uart: mikrobus2_uart {
+> +					pinmux = <PIN_PD23__URXD2>,
+> +						 <PIN_PD24__UTXD2>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_mikrobus_i2c: mikrobus1_i2c {
+> +					pinmux = <PIN_PA24__FLEXCOM1_IO0>,
+> +						 <PIN_PA23__FLEXCOM1_IO1>;
+> +					bias-disable;
+> +				};
+> +
+> +				pinctrl_flx4_default: flx4_uart_default {
+> +					pinmux = <PIN_PC28__FLEXCOM4_IO0>,
+> +						 <PIN_PC29__FLEXCOM4_IO1>,
+> +						 <PIN_PC30__FLEXCOM4_IO2>,
+> +						 <PIN_PC31__FLEXCOM4_IO3>,
+> +						 <PIN_PD0__FLEXCOM4_IO4>;
+> +					bias-disable;
+> +				};
+> +			};
+> +
+> +			can1: can@fc050000 {
+> +				pinctrl-names = "default";
+> +				pinctrl-0 = <&pinctrl_can1_default>;
+> +				status = "okay";
+> +			};
+> +		};
+> +	};
+> +
+> +	gpio_keys {
+> +		compatible = "gpio-keys";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_key_gpio_default>;
+> +
+> +		bp1 {
+> +			label = "USER";
+> +			gpios = <&pioA 29 GPIO_ACTIVE_LOW>;
+
+Ditto
+
+> +			linux,code = <0x104>;
+> +		};
+> +	};
+> +
+> +	leds {
+> +		compatible = "gpio-leds";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_led_gpio_default>;
+> +		status = "okay";
+> +
+> +		red {
+> +			label = "red";
+> +			gpios = <&pioA 27 GPIO_ACTIVE_LOW>;
+
+Ditto
+
+> +		};
+> +
+> +		green {
+> +			label = "green";
+> +			gpios = <&pioA 33 GPIO_ACTIVE_LOW>;
+
+Ditto
+
+> +		};
+> +
+> +		blue {
+> +			label = "blue";
+> +			gpios = <&pioA 31 GPIO_ACTIVE_LOW>;
+
+Ditto
+
+Regards
+
+Ludovic
+
+> +			linux,default-trigger = "heartbeat";
+> +		};
+> +	};
+> +};
+> -- 
+> 2.7.4
 > 
 > 
-> On 6/28/17 10:33 PM, Guenter Roeck wrote:
-> >On 06/28/2017 05:28 PM, Christopher Bostic wrote:
-> >>Describe device tree optional properties:
-> >>
-> >>   * aspeed,arm-reet - ARM CPU reset on signal
-> >>   * aspeed,no-soc-reset - SOC reset on signal
-> >>   * aspeed,no-sys-reset - System reset on signal
-> >>   * aspeed,interrupt - Interrupt CPU on signal
-> >>   * aspeed,external-signal - Generate external signal (WDT1 and WDT2
-> >>only)
-> >>   * aspeed,alt-boot - Boot from alternate block on signal
-> >>
-> >>Signed-off-by: Christopher Bostic <cbostic-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-> >>---
-> >>v3 - Invert soc and sys reset to 'no' to preserve backwards
-> >>      compatibility.  SOC and SYS reset will be set by default
-> >>      without any optional parameters set
-> >>v2 - Add 'aspeed,' prefix to all optional properties
-> >>    - Add arm-reset, soc-reset, interrupt, alt-boot properties
-> >>---
-> >>  .../devicetree/bindings/watchdog/aspeed-wdt.txt    | 24
-> >>++++++++++++++++++++++
-> >>  1 file changed, 24 insertions(+)
-> >>
-> >>diff --git a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>index c5e74d7..6f18005 100644
-> >>--- a/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>+++ b/Documentation/devicetree/bindings/watchdog/aspeed-wdt.txt
-> >>@@ -8,9 +8,33 @@ Required properties:
-> >>   - reg: physical base address of the controller and length of memory
-> >>mapped
-> >>     region
-> >>  +Optional properties:
-> >>+   Signal behavior - Whenever a timeout occurs the watchdog can be
-> >>programmed
-> >>+   to generate/not generate 6 types of signals:
-> >>+
-> >>+ - aspeed,arm-reset:    If property is present then reset ARM CPU only.
-> >>+            If not specified no ARM CPU reset is done.
-> >>+
-> >>+ - aspeed,no-soc-reset: If property is present then do not reset SOC.
-> >>+            If not specified then SOC reset is done.
-> >>+
-> >>+ - aspeed,no-sys-reset: If property is present then do not reset
-> >>system.
-> >>+            Typcally used in tandem with 'aspeed-external-signal'
-> >
-> >Is this correct ? As I understand the datasheet, it could also used in
-> >tandem with
-> >aspeed,interrupt.
-> True, that should be documented.  Will add that.
-> >
-> >>+            If not specified then system reset is done.
-> >>+
-> >
-> >I'll leave it up to Rob to decide, but for my part I don't understand
-> >no-soc-reset.
-> As the aspeed watchdog driver exists prior to this change an SOC reset is
-> done by
-> default.   In order to preserve backwards compatibility a missing optional
-> property
-> should result in default behavior.  I however need to be able to specify
-> that SOC
-> reset be disabled in some way.  This goes back to our discussion about why
-> we'd
-> ever want to disable SYSTEM reset in the first place.  Same reasoning
-> applies for
-> SOC reset.
-> 
-> >I would instead use four properties.
-> >
-> >    aspeed,arm-reset
-> >    aspeed,soc-reset
-> Per my response above I think it should remain as aspeed,no-soc-reset due to
-> backwards compatibility requirements.
-
-The same can be accomplished with "aspeed,no-reset", which would avoid the, in
-my opinion, awkward "no-{sys,soc}-reset" poperties.
-
-> >    aspeed,sys-reset (which is the default)
-> Again as per our discussion yesterday I need some way to specify how system
-> reset is to  be done.  For backwards compatibility, a lack of parameter here
-> would
-> result in a system reset being configured.  Only way to indicate to the
-> driver
-> that no system reset is to be done is to indicate 'no' system reset in the
-> optional
-> parameter.
-
-Or "aspeed,no-reset".
-
-> >    aspeed,no-reset
-> This parameter seems ambiguous as we could be doing a 'no system reset'
-> or a 'no SOC reset' in theory.
-
-{arm,soc,sys}-reset are mutually exclusive per datasheet, and there is a
-separate configuration bit which enables the reset in the first place.
-I don't see how that is ambiguous.
-
-Anyway, I don't think we are making any progress here. Let's wait for
-guidance from Rob.
-
-Guenter
-
-> >
-> >There should also be a note explaining that the above are mutually
-> >exclusive.
-> >
-> OK, will add that.
-> 
-> >>+ - aspeed,interrupt:    If property is present then interrupt CPU.
-> >>+            If not specified then don't interrupt CPU.
-> >>+
-> >>+ - aspeed,external-signal: If property is present then signal is sent
-> >>to
-> >>+            external reset counter (only WDT1 and WDT2). If not
-> >>+            specified no external signal is sent.
-> >
-> >For consistency, either add an empty line here or remove the empty lines
-> >above
-> 
-> Will fix.
-> 
-> Thanks,
-> Chris
-> >
-> >>+ - aspeed,alt-boot:    If property is present then boot from alternate
-> >>block.
-> >>+
-> >>  Example:
-> >>        wdt1: watchdog@1e785000 {
-> >>          compatible = "aspeed,ast2400-wdt";
-> >>          reg = <0x1e785000 0x1c>;
-> >>+        aspeed,no-sys-reset;
-> >>+        aspeed,external-signal;
-> >>      };
-> >>
-> >
-> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 --
-To unsubscribe from this list: send the line "unsubscribe linux-watchdog" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
