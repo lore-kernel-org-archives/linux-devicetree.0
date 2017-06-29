@@ -1,49 +1,34 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] ARM: aspeed: g5: Add USB functions to pinctrl
- bindings
-Date: Thu, 29 Jun 2017 15:32:22 -0500
-Message-ID: <20170629203222.xwxzlawckxlpw6u5@rob-hp-laptop>
-References: <20170627021214.23323-1-andrew@aj.id.au>
- <20170627021214.23323-3-andrew@aj.id.au>
- <20170629201324.c4t7bcrhsdoftkd3@rob-hp-laptop>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] dts: RISC-V vendor prefix
+Date: Thu, 29 Jun 2017 15:35:15 -0500
+Message-ID: <20170629203515.furw573zz2uu76pa@rob-hp-laptop>
+References: <20170627052124.426-1-palmer@dabbelt.com>
+ <20170627052124.426-2-palmer@dabbelt.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20170629201324.c4t7bcrhsdoftkd3@rob-hp-laptop>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Andrew Jeffery <andrew@aj.id.au>
-Cc: linus.walleij@linaro.org, mark.rutland@arm.com, joel@jms.id.au, benh@kernel.crashing.org, ryan_chen@aspeedtech.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-aspeed@lists.ozlabs.org
+In-Reply-To: <20170627052124.426-2-palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, ccc94453-1EA3ORoCGBhoJ7GROcy7lA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 03:13:24PM -0500, Rob Herring wrote:
-> On Tue, Jun 27, 2017 at 11:42:12AM +0930, Andrew Jeffery wrote:
-> > The Aspeed AST2500 SoC contains a number of USB controllers:
-> > 
-> > * USB 1.1 Host Controller
-> > * USB 2.0 Host Controller (x2)
-> > * Combined USB 2.0 Virtual Hub and USB 1.1 HID Controller
-> > 
-> > The controllers are exposed via two USB ports with functionality muxed
-> > as required. The following table illustrates the relationships between
-> > the ports and the controllers via the mux function names:
-> > 
-> > Port  | USB Version  | USB Mode     | Mux Function
-> > ------|--------------|--------------|-------------
-> > A     | 2.0          | Virtual Hub  | USB2AD
-> > A     | 2.0          | Host         | USB2AH
-> > B     | 1.1          | HID          | USB11BHID
-> > B     | 2.0          | Device       | USB2BD
-> > B     | 2.0          | Host         | USB2BH
-> > 
-> > Signed-off-by: Andrew Jeffery <andrew@aj.id.au>
-> > ---
-> >  Documentation/devicetree/bindings/pinctrl/pinctrl-aspeed.txt | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+On Mon, Jun 26, 2017 at 10:21:22PM -0700, Palmer Dabbelt wrote:
+> RISC-V systems use device tree to specify the memory layout of the
+> system.  This patch reserves the "riscv" vendor prefix, which will be
+> used for devices that are specified by the various RISC-V ISA
+> specifications.
 > 
-> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Palmer Dabbelt <palmer-96lFi9zoCfxBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Also, when you resend, use "dt-bindings: pinctrl: ..." for the subjects 
-of binding patches in this series.
+Applied with subject fixup.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
