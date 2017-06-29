@@ -1,58 +1,44 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 7/8] clk: vc5: Add bindings for IDT VersaClock 5P49V6901
-Date: Thu, 29 Jun 2017 13:38:56 +0200
-Message-ID: <CAMuHMdXaEDtKwZYDaZ0qUvUk_0WuZwf6ky+nfeahQuU7q4qiyQ@mail.gmail.com>
-References: <20170629101851.23972-1-marek.vasut@gmail.com> <20170629101851.23972-7-marek.vasut@gmail.com>
+From: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Subject: [RFC PATCH 0/3] Add at24 functionality to read form different EEPROM offsets
+Date: Thu, 29 Jun 2017 14:39:08 +0300
+Message-ID: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <20170629101851.23972-7-marek.vasut@gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>
-Cc: linux-clk <linux-clk@vger.kernel.org>, Marek Vasut <marek.vasut+renesas@gmail.com>, Alexey Firago <alexey_firago@mentor.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Michael Turquette <mturquette@baylibre.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org, Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
+Hi all,
 
-On Thu, Jun 29, 2017 at 12:18 PM, Marek Vasut <marek.vasut@gmail.com> wrote:
-> From: Marek Vasut <marek.vasut+renesas@gmail.com>
->
-> IDT VersaClock 6 5P49V6901 has 4 clock outputs, 4 fractional dividers.
-> Input clock source can be taken from either external crystal or from
-> external reference clock.
->
-> Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-> Cc: Alexey Firago <alexey_firago@mentor.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Stephen Boyd <sboyd@codeaurora.org>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: linux-renesas-soc@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../devicetree/bindings/clock/idt,versaclock5.txt         | 15 ++++++++++++---
->  1 file changed, 12 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> index 53d7e50ed875..a3d4260039a8 100644
-> --- a/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
-> +++ b/Documentation/devicetree/bindings/clock/idt,versaclock5.txt
+Please give feedback on the following approach to extends at24 EEPROM
+driver to support reading MAC from different addresses in EEPROM (patch
+2 and 3 from this series). This will allow the at24 driver to be used
+as a generic driver by different hardwares.
 
-Probably you want to sprinkle the first few lines of the document with
-a few "VersaClock 6" references?
+This series also contains a patch (patch 1 from this series) which document
+all at24 EEPROM memories and it was pushed with this series because patch
+3 from the series is based on it.
 
-> @@ -7,18 +7,20 @@ from 3 to 12 output clocks.
+Thank you,
+Claudiu Beznea
 
-The rest looks OK to me, so
-Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Claudiu Beznea (3):
+  dt-bindings: i2c: eeprom: document all at24 bindings
+  drivers: misc: eeprom: at24: support reading mac eeprom from
+    different addresses
+  dt-bindings: i2c: eeprom: document "start-offset" binding
 
-Gr{oetje,eeting}s,
+ Documentation/devicetree/bindings/eeprom/eeprom.txt | 20 +++++++++++++-------
+ drivers/misc/eeprom/at24.c                          |  5 ++++-
+ include/linux/platform_data/at24.h                  |  1 +
+ 3 files changed, 18 insertions(+), 8 deletions(-)
 
-                        Geert
+-- 
+2.7.4
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
