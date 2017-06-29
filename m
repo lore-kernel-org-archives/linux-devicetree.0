@@ -1,43 +1,41 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [RFC PATCH 2/3] drivers: misc: eeprom: at24: support reading mac
- eeprom from different addresses
-Date: Thu, 29 Jun 2017 15:30:29 +0200
-Message-ID: <20170629133029.fq6jjivu5cx22j6q@rfolt0960.corp.atmel.com>
-References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
- <1498736351-9021-3-git-send-email-claudiu.beznea@microchip.com>
- <CAHp75Vf_SL3ReKLK0=8v3bDwHs5qwi2qc9p=XzJK9BXzOsLKLA@mail.gmail.com>
+From: Brandon Streiff <brandon.streiff@ni.com>
+Subject: [PATCH] clk: si5351: expand compatible strings in documentation
+Date: Thu, 29 Jun 2017 08:31:45 -0500
+Message-ID: <1498743105-29078-1-git-send-email-brandon.streiff@ni.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-i2c-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAHp75Vf_SL3ReKLK0=8v3bDwHs5qwi2qc9p=XzJK9BXzOsLKLA@mail.gmail.com>
-Sender: linux-i2c-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Claudiu Beznea <claudiu.beznea@microchip.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sekhar Nori <nsekhar@ti.com>, David Lechner <david@lechnology.com>, Wolfram Sang <wsa@the-dreams.de>, devicetree <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-i2c <linux-i2c@vger.kernel.org>, Nicolas Ferre <nicolas.ferre@microchip.com>
+Content-Type: text/plain
+Return-path: <linux-clk-owner@vger.kernel.org>
+Sender: linux-clk-owner@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@codeaurora.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Brandon Streiff <brandon.streiff@ni.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 02:56:03PM +0300, Andy Shevchenko wrote:
-> On Thu, Jun 29, 2017 at 2:39 PM, Claudiu Beznea
-> <claudiu.beznea@microchip.com> wrote:
-> > Add support for reading from different offsets of EEPROM.
-> > The offset is initialized via device tree. If nothing is
-> > given as input the old value, 0x90, is used. In this way
-> > the driver could be used as generic driver for different
-> > vendor memories by only changing the reading offset via
-> > device tree.
-> 
-> > +       err = device_property_read_u8(dev, "start-offset", &chip->offset);
-> 
-> This property has to be documented.
-> 
-> Moreover, the name looks too broad (I checked current use of
-> "*-offset" type of properties and they either vendor specific, or data
-> type specific.
-> 
-> Taking above into consideration mac-offset sounds better to me.
+checkpatch.pl doesn't know how to expand "silabs,si5351{a,a-msop,b,c}"
+and so generates warnings about si5351-compatible devices appearing to
+be un-documented. Resolve this by documenting the compatible options
+supported by the clk-si5351 driver individually.
 
-I agree, it sounds better to me too.
+Signed-off-by: Brandon Streiff <brandon.streiff@ni.com>
+---
+ Documentation/devicetree/bindings/clock/silabs,si5351.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-Regards
+diff --git a/Documentation/devicetree/bindings/clock/silabs,si5351.txt b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
+index 28b2830..a6c4ef3 100644
+--- a/Documentation/devicetree/bindings/clock/silabs,si5351.txt
++++ b/Documentation/devicetree/bindings/clock/silabs,si5351.txt
+@@ -12,7 +12,11 @@ generators can be found in [1].
+ ==I2C device node==
+ 
+ Required properties:
+-- compatible: shall be one of "silabs,si5351{a,a-msop,b,c}".
++- compatible: shall be one of the following:
++	"silabs,si5351a" - Si5351a, QFN20 package
++	"silabs,si5351a-msop" - Si5351a, MSOP10 package
++	"silabs,si5351b" - Si5351b, QFN20 package
++	"silabs,si5351c" - Si5351c, QFN20 package
+ - reg: i2c device address, shall be 0x60 or 0x61.
+ - #clock-cells: from common clock binding; shall be set to 1.
+ - clocks: from common clock binding; list of parent clock
+-- 
+2.1.4
 
-Ludovic
