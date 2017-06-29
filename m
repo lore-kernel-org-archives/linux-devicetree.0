@@ -1,232 +1,435 @@
-From: Marek Vasut <marek.vasut-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 05/14] qcom: mtd: nand: allocate bam transaction
-Date: Thu, 29 Jun 2017 11:50:53 +0200
-Message-ID: <659d69fd-ae7c-b566-ccab-aca2a3efe178@gmail.com>
-References: <1498720566-20782-1-git-send-email-absahu@codeaurora.org>
- <1498720566-20782-6-git-send-email-absahu@codeaurora.org>
+From: Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH 2/2] v4l: fwnode: Support generic parsing of graph
+ endpoints in V4L2
+Date: Thu, 29 Jun 2017 12:57:55 +0300
+Message-ID: <20170629095754.uw5v4zbpfwlq7dg4@valkosipuli.retiisi.org.uk>
+References: <1498721410-28199-1-git-send-email-sakari.ailus@linux.intel.com>
+ <1498721410-28199-3-git-send-email-sakari.ailus@linux.intel.com>
+ <20170629090203.GO30481@bigcity.dyn.berto.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498720566-20782-6-git-send-email-absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20170629090203.GO30481-ofJ5d6taAgIKcZgyrm77+z0dHWC0CY5B@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, richard-/L3Ra7n9ekc@public.gmane.org, cyrille.pitchen-yU5RGvR974pGWvitb5QawA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org
-Cc: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sricharan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+To: Niklas =?iso-8859-1?Q?S=F6derlund?= <niklas.soderlund-1zkq55x86MTxsAP9Fp7wbw@public.gmane.org>
+Cc: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/29/2017 09:15 AM, Abhishek Sahu wrote:
-> The BAM transaction is the core data structure which will be used
-> for all the data transfers in QPIC NAND. Since the base layer is
-> serializing all the NAND requests so allocating BAM transaction
-> before every transfer will be overhead. The memory for it be
-> allocated during probe time and before every transfer, it will be
-> cleared. The BAM transaction contains the array of command
-> elements, command and data scatter gather list and indexes. For
-> every transfer, all the resource will be taken from bam
-> transaction.
+On Thu, Jun 29, 2017 at 11:02:03AM +0200, Niklas Söderlund wrote:
+> Hi Sakari,
 > 
-> Signed-off-by: Abhishek Sahu <absahu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  drivers/mtd/nand/qcom_nandc.c | 116 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 116 insertions(+)
+> Thanks for your patch.
 > 
-> diff --git a/drivers/mtd/nand/qcom_nandc.c b/drivers/mtd/nand/qcom_nandc.c
-> index eb0ec19..f8d0bde 100644
-> --- a/drivers/mtd/nand/qcom_nandc.c
-> +++ b/drivers/mtd/nand/qcom_nandc.c
-> @@ -22,6 +22,7 @@
->  #include <linux/of.h>
->  #include <linux/of_device.h>
->  #include <linux/delay.h>
-> +#include <linux/dma/qcom_bam_dma.h>
->  
->  /* NANDc reg offsets */
->  #define	NAND_FLASH_CMD			0x00
-> @@ -169,6 +170,45 @@
->  #define	ECC_BCH_4BIT	BIT(2)
->  #define	ECC_BCH_8BIT	BIT(3)
->  
-> +#define QPIC_PER_CW_MAX_CMD_ELEMENTS	(32)
-> +#define QPIC_PER_CW_MAX_CMD_SGL		(32)
-> +#define QPIC_PER_CW_MAX_DATA_SGL	(8)
-> +
-> +/*
-> + * This data type corresponds to the BAM transaction which will be used for all
-> + * NAND transfers.
-> + * @bam_ce - the array of bam command elements
-> + * @cmd_sgl - sgl for nand bam command pipe
-> + * @data_sgl - sgl for nand bam consumer/producer pipe
-> + * @bam_ce_pos - the index in bam_ce which is available for next sgl request
-> + * @bam_ce_start - the index in bam_ce which marks the start position ce
-> + *		   for current sgl. It will be used for size calculation
-> + *		   for current sgl
-> + * @cmd_sgl_pos - current index in command sgl.
-> + * @tx_sgl_pos - current index in data sgl for tx.
-> + * @rx_sgl_pos - current index in data sgl for rx.
-> + */
-> +struct bam_transaction {
-> +	struct bam_cmd_element *bam_ce;
-> +	struct scatterlist *cmd_sgl;
-> +	struct scatterlist *data_sg;
-> +	u32 bam_ce_pos;
-> +	u32 bam_ce_start;
-> +	u32 cmd_sgl_pos;
-> +	u32 cmd_sgl_start;
-> +	u32 tx_sgl_pos;
-> +	u32 tx_sgl_start;
-> +	u32 rx_sgl_pos;
-> +	u32 rx_sgl_start;
-> +};
-> +
-> +/*
-> + * This data type corresponds to the nand dma descriptor
-> + * @list - list for desc_info
-> + * @dir - DMA transfer direction
-> + * @sgl - sgl which will be used for single sgl dma descriptor
-> + * @dma_desc - low level dma engine descriptor
-> + */
->  struct desc_info {
->  	struct list_head node;
->  
-> @@ -217,6 +257,7 @@ struct nandc_regs {
->   * @aon_clk:			another controller clock
->   *
->   * @chan:			dma channel
-> + * @bam_txn:			contains the bam transaction buffer
->   * @cmd_crci:			ADM DMA CRCI for command flow control
->   * @data_crci:			ADM DMA CRCI for data flow control
->   * @desc_list:			DMA descriptor list (list of desc_infos)
-> @@ -237,6 +278,8 @@ struct nandc_regs {
->   *				initialized via DT match data
->   * @dma_bam_enabled:		flag to tell whether nand controller is using
->   *				bam dma
-> + * @max_cwperpage:		maximum qpic codeword required. calcualted
-> + *				from all nand device pagesize
->   */
->  struct qcom_nand_controller {
->  	struct nand_hw_control controller;
-> @@ -264,12 +307,14 @@ struct qcom_nand_controller {
->  	};
->  
->  	struct list_head desc_list;
-> +	struct bam_transaction *bam_txn;
->  
->  	u8		*data_buffer;
->  	bool		dma_bam_enabled;
->  	int		buf_size;
->  	int		buf_count;
->  	int		buf_start;
-> +	unsigned int	max_cwperpage;
->  
->  	__le32 *reg_read_buf;
->  	dma_addr_t reg_read_buf_phys;
-> @@ -342,6 +387,51 @@ struct qcom_nand_driver_data {
->  	bool dma_bam_enabled;
->  };
->  
-> +/* Frees the BAM transaction memory */
-> +static void free_bam_transaction(struct qcom_nand_controller *nandc)
-> +{
-> +	struct bam_transaction *bam_txn = nandc->bam_txn;
-> +
-> +	devm_kfree(nandc->dev, bam_txn->bam_ce);
-> +	devm_kfree(nandc->dev, bam_txn->cmd_sgl);
-> +	devm_kfree(nandc->dev, bam_txn->data_sg);
-> +	devm_kfree(nandc->dev, bam_txn);
-> +}
-> +
-> +/* Allocates and Initializes the BAM transaction */
-> +static struct bam_transaction *
-> +alloc_bam_transaction(struct qcom_nand_controller *nandc, unsigned int num_cw)
-> +{
-> +	struct bam_transaction *bam_txn;
-> +
-> +	bam_txn = devm_kzalloc(nandc->dev, sizeof(*bam_txn), GFP_KERNEL);
-
-Can you make these four allocations into a single allocation ?
-
-> +	if (!bam_txn)
-> +		return NULL;
-> +
-> +	bam_txn->bam_ce =
-> +		devm_kzalloc(nandc->dev, sizeof(*bam_txn->bam_ce) *
-> +			     num_cw * QPIC_PER_CW_MAX_CMD_ELEMENTS, GFP_KERNEL);
-> +	if (!bam_txn->bam_ce)
-> +		return NULL;
-> +
-> +	bam_txn->cmd_sgl =
-> +		devm_kzalloc(nandc->dev, sizeof(*bam_txn->cmd_sgl) * num_cw *
-> +			     QPIC_PER_CW_MAX_CMD_SGL, GFP_KERNEL);
-> +	if (!bam_txn->cmd_sgl)
-> +		return NULL;
-> +
-> +	bam_txn->data_sg =
-> +		devm_kzalloc(nandc->dev, sizeof(*bam_txn->data_sg) *
-> +			     num_cw * QPIC_PER_CW_MAX_DATA_SGL, GFP_KERNEL);
-> +	if (!bam_txn->data_sg)
-> +		return NULL;
-> +
-> +	nandc->max_cwperpage = num_cw;
-> +
-> +	return bam_txn;
-> +}
-> +
->  static inline struct qcom_nand_host *to_qcom_nand_host(struct nand_chip *chip)
->  {
->  	return container_of(chip, struct qcom_nand_host, chip);
-> @@ -1868,6 +1958,8 @@ static int qcom_nand_host_setup(struct qcom_nand_host *host)
->  	mtd_set_ooblayout(mtd, &qcom_nand_ooblayout_ops);
->  
->  	cwperpage = mtd->writesize / ecc->size;
-> +	nandc->max_cwperpage = max_t(unsigned int, nandc->max_cwperpage,
-> +					cwperpage);
->  
->  	/*
->  	 * DATA_UD_BYTES varies based on whether the read/write command protects
-> @@ -2010,6 +2102,19 @@ static int qcom_nandc_alloc(struct qcom_nand_controller *nandc)
->  			dev_err(nandc->dev, "failed to request cmd channel\n");
->  			return -ENODEV;
->  		}
-> +
-> +		/*
-> +		 * Initially allocate BAM transaction to read ONFI param page.
-> +		 * After detecting all the devices, this BAM transaction will
-> +		 * be freed and the next BAM tranasction will be allocated with
-> +		 * maximum codeword size
-> +		 */
-> +		nandc->bam_txn = alloc_bam_transaction(nandc, 1);
-> +		if (!nandc->bam_txn) {
-> +			dev_err(nandc->dev,
-> +				"failed to allocate bam transaction\n");
-> +			return -ENOMEM;
-> +		}
->  	}
->  
->  	INIT_LIST_HEAD(&nandc->desc_list);
-> @@ -2153,6 +2258,17 @@ static int qcom_probe_nand_devices(struct qcom_nand_controller *nandc)
->  	if (list_empty(&nandc->host_list))
->  		return -ENODEV;
->  
-> +	if (nandc->dma_bam_enabled) {
-> +		free_bam_transaction(nandc);
-> +		nandc->bam_txn = alloc_bam_transaction(nandc,
-> +						       nandc->max_cwperpage);
-> +		if (!nandc->bam_txn) {
-> +			dev_err(nandc->dev,
-> +				"failed to allocate bam transaction\n");
-> +			return -ENOMEM;
-> +		}
-> +	}
-> +
->  	list_for_each_entry_safe(host, tmp, &nandc->host_list, node) {
->  		ret = qcom_nand_mtd_register(nandc, host, child);
->  		if (ret) {
+> On 2017-06-29 10:30:10 +0300, Sakari Ailus wrote:
+> > The current practice is that drivers iterate over their endpoints and
+> > parse each endpoint separately. This is very similar in a number of
+> > drivers, implement a generic function for the job. Driver specific matters
+> > can be taken into account in the driver specific callback.
+> > 
+> > Convert the omap3isp as an example.
+> > 
+> > Signed-off-by: Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> > ---
+> >  drivers/media/platform/omap3isp/isp.c | 91 ++++++++++-----------------------
+> >  drivers/media/platform/omap3isp/isp.h |  3 --
+> >  drivers/media/v4l2-core/v4l2-fwnode.c | 94 +++++++++++++++++++++++++++++++++++
+> >  include/media/v4l2-async.h            |  4 +-
+> >  include/media/v4l2-fwnode.h           |  9 ++++
+> >  5 files changed, 132 insertions(+), 69 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/omap3isp/isp.c b/drivers/media/platform/omap3isp/isp.c
+> > index 9df64c1..9ccf883 100644
+> > --- a/drivers/media/platform/omap3isp/isp.c
+> > +++ b/drivers/media/platform/omap3isp/isp.c
+> > @@ -2008,43 +2008,42 @@ enum isp_of_phy {
+> >  	ISP_OF_PHY_CSIPHY2,
+> >  };
+> >  
+> > -static int isp_fwnode_parse(struct device *dev, struct fwnode_handle *fwnode,
+> > -			    struct isp_async_subdev *isd)
+> > +static int isp_fwnode_parse(struct device *dev,
+> > +			    struct v4l2_fwnode_endpoint *vep,
+> > +			    struct v4l2_async_subdev *asd)
+> >  {
+> > +	struct isp_async_subdev *isd =
+> > +		container_of(asd, struct isp_async_subdev, asd);
+> >  	struct isp_bus_cfg *buscfg = &isd->bus;
+> > -	struct v4l2_fwnode_endpoint vep;
+> >  	unsigned int i;
+> > -	int ret;
+> > -
+> > -	ret = v4l2_fwnode_endpoint_parse(fwnode, &vep);
+> > -	if (ret)
+> > -		return ret;
+> >  
+> >  	dev_dbg(dev, "parsing endpoint %s, interface %u\n",
+> > -		to_of_node(fwnode)->full_name, vep.base.port);
+> > +		to_of_node(vep->base.local_fwnode)->full_name, vep->base.port);
+> >  
+> > -	switch (vep.base.port) {
+> > +	switch (vep->base.port) {
+> >  	case ISP_OF_PHY_PARALLEL:
+> >  		buscfg->interface = ISP_INTERFACE_PARALLEL;
+> >  		buscfg->bus.parallel.data_lane_shift =
+> > -			vep.bus.parallel.data_shift;
+> > +			vep->bus.parallel.data_shift;
+> >  		buscfg->bus.parallel.clk_pol =
+> > -			!!(vep.bus.parallel.flags
+> > +			!!(vep->bus.parallel.flags
+> >  			   & V4L2_MBUS_PCLK_SAMPLE_FALLING);
+> >  		buscfg->bus.parallel.hs_pol =
+> > -			!!(vep.bus.parallel.flags & V4L2_MBUS_VSYNC_ACTIVE_LOW);
+> > +			!!(vep->bus.parallel.flags &
+> > +			   V4L2_MBUS_VSYNC_ACTIVE_LOW);
+> >  		buscfg->bus.parallel.vs_pol =
+> > -			!!(vep.bus.parallel.flags & V4L2_MBUS_HSYNC_ACTIVE_LOW);
+> > +			!!(vep->bus.parallel.flags &
+> > +			   V4L2_MBUS_HSYNC_ACTIVE_LOW);
+> >  		buscfg->bus.parallel.fld_pol =
+> > -			!!(vep.bus.parallel.flags & V4L2_MBUS_FIELD_EVEN_LOW);
+> > +			!!(vep->bus.parallel.flags & V4L2_MBUS_FIELD_EVEN_LOW);
+> >  		buscfg->bus.parallel.data_pol =
+> > -			!!(vep.bus.parallel.flags & V4L2_MBUS_DATA_ACTIVE_LOW);
+> > +			!!(vep->bus.parallel.flags & V4L2_MBUS_DATA_ACTIVE_LOW);
+> >  		break;
+> >  
+> >  	case ISP_OF_PHY_CSIPHY1:
+> >  	case ISP_OF_PHY_CSIPHY2:
+> >  		/* FIXME: always assume CSI-2 for now. */
+> > -		switch (vep.base.port) {
+> > +		switch (vep->base.port) {
+> >  		case ISP_OF_PHY_CSIPHY1:
+> >  			buscfg->interface = ISP_INTERFACE_CSI2C_PHY1;
+> >  			break;
+> > @@ -2052,18 +2051,19 @@ static int isp_fwnode_parse(struct device *dev, struct fwnode_handle *fwnode,
+> >  			buscfg->interface = ISP_INTERFACE_CSI2A_PHY2;
+> >  			break;
+> >  		}
+> > -		buscfg->bus.csi2.lanecfg.clk.pos = vep.bus.mipi_csi2.clock_lane;
+> > +		buscfg->bus.csi2.lanecfg.clk.pos =
+> > +			vep->bus.mipi_csi2.clock_lane;
+> >  		buscfg->bus.csi2.lanecfg.clk.pol =
+> > -			vep.bus.mipi_csi2.lane_polarities[0];
+> > +			vep->bus.mipi_csi2.lane_polarities[0];
+> >  		dev_dbg(dev, "clock lane polarity %u, pos %u\n",
+> >  			buscfg->bus.csi2.lanecfg.clk.pol,
+> >  			buscfg->bus.csi2.lanecfg.clk.pos);
+> >  
+> >  		for (i = 0; i < ISP_CSIPHY2_NUM_DATA_LANES; i++) {
+> >  			buscfg->bus.csi2.lanecfg.data[i].pos =
+> > -				vep.bus.mipi_csi2.data_lanes[i];
+> > +				vep->bus.mipi_csi2.data_lanes[i];
+> >  			buscfg->bus.csi2.lanecfg.data[i].pol =
+> > -				vep.bus.mipi_csi2.lane_polarities[i + 1];
+> > +				vep->bus.mipi_csi2.lane_polarities[i + 1];
+> >  			dev_dbg(dev, "data lane %u polarity %u, pos %u\n", i,
+> >  				buscfg->bus.csi2.lanecfg.data[i].pol,
+> >  				buscfg->bus.csi2.lanecfg.data[i].pos);
+> > @@ -2079,55 +2079,14 @@ static int isp_fwnode_parse(struct device *dev, struct fwnode_handle *fwnode,
+> >  
+> >  	default:
+> >  		dev_warn(dev, "%s: invalid interface %u\n",
+> > -			 to_of_node(fwnode)->full_name, vep.base.port);
+> > +			 to_of_node(vep->base.local_fwnode)->full_name,
+> > +			 vep->base.port);
+> >  		break;
+> >  	}
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > -static int isp_fwnodes_parse(struct device *dev,
+> > -			     struct v4l2_async_notifier *notifier)
+> > -{
+> > -	struct fwnode_handle *fwnode = NULL;
+> > -
+> > -	notifier->subdevs = devm_kcalloc(
+> > -		dev, ISP_MAX_SUBDEVS, sizeof(*notifier->subdevs), GFP_KERNEL);
+> > -	if (!notifier->subdevs)
+> > -		return -ENOMEM;
+> > -
+> > -	while (notifier->num_subdevs < ISP_MAX_SUBDEVS &&
+> > -	       (fwnode = fwnode_graph_get_next_endpoint(
+> > -			of_fwnode_handle(dev->of_node), fwnode))) {
+> > -		struct isp_async_subdev *isd;
+> > -
+> > -		isd = devm_kzalloc(dev, sizeof(*isd), GFP_KERNEL);
+> > -		if (!isd)
+> > -			goto error;
+> > -
+> > -		notifier->subdevs[notifier->num_subdevs] = &isd->asd;
+> > -
+> > -		if (isp_fwnode_parse(dev, fwnode, isd))
+> > -			goto error;
+> > -
+> > -		isd->asd.match.fwnode.fwnode =
+> > -			fwnode_graph_get_remote_port_parent(fwnode);
+> > -		if (!isd->asd.match.fwnode.fwnode) {
+> > -			dev_warn(dev, "bad remote port parent\n");
+> > -			goto error;
+> > -		}
+> > -
+> > -		isd->asd.match_type = V4L2_ASYNC_MATCH_FWNODE;
+> > -		notifier->num_subdevs++;
+> > -	}
+> > -
+> > -	return notifier->num_subdevs;
+> > -
+> > -error:
+> > -	fwnode_handle_put(fwnode);
+> > -	return -EINVAL;
+> > -}
+> > -
+> >  static int isp_subdev_notifier_bound(struct v4l2_async_notifier *async,
+> >  				     struct v4l2_subdev *subdev,
+> >  				     struct v4l2_async_subdev *asd)
+> > @@ -2210,7 +2169,9 @@ static int isp_probe(struct platform_device *pdev)
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	ret = isp_fwnodes_parse(&pdev->dev, &isp->notifier);
+> > +	ret = v4l2_fwnode_endpoints_parse(
+> > +		&pdev->dev, &isp->notifier, sizeof(struct isp_async_subdev),
+> > +		isp_fwnode_parse);
+> >  	if (ret < 0)
+> >  		return ret;
+> >  
+> > diff --git a/drivers/media/platform/omap3isp/isp.h b/drivers/media/platform/omap3isp/isp.h
+> > index 2f2ae60..a852c11 100644
+> > --- a/drivers/media/platform/omap3isp/isp.h
+> > +++ b/drivers/media/platform/omap3isp/isp.h
+> > @@ -220,9 +220,6 @@ struct isp_device {
+> >  
+> >  	unsigned int sbl_resources;
+> >  	unsigned int subclk_resources;
+> > -
+> > -#define ISP_MAX_SUBDEVS		8
+> > -	struct v4l2_subdev *subdevs[ISP_MAX_SUBDEVS];
+> >  };
+> >  
+> >  struct isp_async_subdev {
+> > diff --git a/drivers/media/v4l2-core/v4l2-fwnode.c b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > index 0ec6c14..b35d525 100644
+> > --- a/drivers/media/v4l2-core/v4l2-fwnode.c
+> > +++ b/drivers/media/v4l2-core/v4l2-fwnode.c
+> > @@ -26,6 +26,7 @@
+> >  #include <linux/string.h>
+> >  #include <linux/types.h>
+> >  
+> > +#include <media/v4l2-async.h>
+> >  #include <media/v4l2-fwnode.h>
+> >  
+> >  static int v4l2_fwnode_endpoint_parse_csi_bus(struct fwnode_handle *fwnode,
+> > @@ -339,6 +340,99 @@ void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link)
+> >  }
+> >  EXPORT_SYMBOL_GPL(v4l2_fwnode_put_link);
+> >  
+> > +static int notifier_realloc(struct device *dev,
+> > +			    struct v4l2_async_notifier *notifier,
+> > +			    unsigned int max_subdevs)
+> > +{
+> > +	struct v4l2_async_subdev **subdevs;
+> > +	unsigned int i;
+> > +
+> > +	if (max_subdevs <= notifier->max_subdevs)
+> > +		return 0;
+> > +
+> > +	subdevs = devm_kcalloc(
+> > +		dev, max_subdevs, sizeof(*notifier->subdevs), GFP_KERNEL);
+> > +	if (!subdevs)
+> > +		return -ENOMEM;
+> > +
+> > +	if (notifier->subdevs) {
+> > +		for (i = 0; i < notifier->num_subdevs; i++)
+> > +			subdevs[i] = notifier->subdevs[i];
+> > +
+> > +		devm_kfree(dev, notifier->subdevs);
+> > +	}
+> > +
+> > +	notifier->subdevs = subdevs;
+> > +	notifier->max_subdevs = max_subdevs;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +int v4l2_fwnode_endpoints_parse(
+> > +	struct device *dev, struct v4l2_async_notifier *notifier,
+> > +	size_t asd_struct_size,
+> > +	int (*parse_single)(struct device *dev,
+> > +			    struct v4l2_fwnode_endpoint *vep,
+> > +			    struct v4l2_async_subdev *asd))
+> > +{
+> > +	struct fwnode_handle *fwnode = NULL;
+> > +	unsigned int max_subdevs = notifier->max_subdevs;
+> > +	int ret;
+> > +
+> > +	if (asd_struct_size < sizeof(struct v4l2_async_subdev))
+> > +		return -EINVAL;
+> > +
+> > +	while ((fwnode = fwnode_graph_get_next_endpoint(dev_fwnode(dev),
+> > +							fwnode)))
+> > +		max_subdevs++;
+> > +
+> > +	ret = notifier_realloc(dev, notifier, max_subdevs);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	for (fwnode = NULL; (fwnode = fwnode_graph_get_next_endpoint(
+> > +				     dev_fwnode(dev), fwnode)) &&
+> > +		     !WARN_ON(notifier->num_subdevs >= notifier->max_subdevs);
+> > +		) {
+> > +		struct v4l2_fwnode_endpoint *vep;
+> > +		struct v4l2_async_subdev *asd;
+> > +
+> > +		asd = devm_kzalloc(dev, asd_struct_size, GFP_KERNEL);
+> > +		if (!asd) {
+> > +			ret = -ENOMEM;
+> > +			goto error;
+> > +		}
+> > +
+> > +		notifier->subdevs[notifier->num_subdevs] = asd;
+> > +
+> > +		/* Ignore endpoints the parsing of which failed. */
+> > +		vep = v4l2_fwnode_endpoint_alloc_parse(fwnode);
+> > +		if (IS_ERR(vep))
+> > +			continue;
+> > +
+> > +		ret = parse_single(dev, vep, asd);
+> > +		v4l2_fwnode_endpoint_free(vep);
+> > +		if (ret)
+> > +			goto error;
 > 
+> First off I think this is a good step in the right direction to create 
+> core functions for this task.
+> 
+> However while reading this I got to think about a use-case I have with 
+> the Renesas R-Car VIN and CSI-2 drivers where I would not be able to use 
+> this helper. I have previously posted a patch-set to introduce 
+> incremental async, see [1]. If that gets picked-up not only the video 
+> device driver can have use of this helper but subdevices drivers.  As 
+> the subdevice driver would also need to pars its DT node to search for 
+> subdevices to add to it's own subnotifier. In this case this helper wont 
+> suffice, I think.
+> 
+> Since the subdevice DT node will contain endpoints pointing to both the 
+> subdevice which the incremental async notifier would like to find and 
+> endpoints pointing back to the root video device node it self.
+> 
+> In my use-case for Renesas R-Car Gen3 VIN and CSI-2 DT (not yet accepted 
+> upstream) I have solved this by having the CSI-2 DT node having two port 
+> nodes, port0 and port1. In port0 endpoints describing the 'upstream' 
+> video source from the CSI-2 point of view are defined (these should be 
+> added to the subnotifier). In port1 endpoints describing connections 
+> back to the VIN video devices are described. Currently the CSI-2 driver 
+> simply only looks for endpoints in the port0 node to add to its 
+> subnotifier, and I don't think this would be possible with this helper?
 
+What we could also do is to add a variant of this that parses the endpoints
+by the port / endpoint IDs. Then you don't need to have a cumbersome way to
+skip parsing of some ports --- you would have allocated the memory and
+parsed the port for nothing by the time you call the callback anyway.
+
+That would seem to be a better approach in general. I remember Rob was
+pushing this for DRM as it greatly simplified driver code there. But then
+the DT bindings have to be written accordingly: in current bindings the
+endpoint IDs are mostly undefined.
+
+We may still need to take extra measures to support cases where there are
+multiple links between two sub-devices.
+
+What do you think?
+
+Cc Rob + devicetree list as well.
+
+> 
+> Perhaps this patch can be modified so that en error code from the 
+> callback parse_single() could be taken in to account when making the 
+> decision if the parsed endpoint should be added to the notifiers list of 
+> subdevices?
+> 
+> > +
+> > +		asd->match.fwnode.fwnode =
+> > +			fwnode_graph_get_remote_port_parent(fwnode);
+> > +		if (!asd->match.fwnode.fwnode) {
+> > +			dev_warn(dev, "bad remote port parent\n");
+> > +			ret = -EINVAL;
+> > +			goto error;
+> > +		}
+> > +
+> > +		asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+> > +		notifier->num_subdevs++;
+> > +	}
+> > +
+> > +error:
+> > +	fwnode_handle_put(fwnode);
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(v4l2_fwnode_endpoints_parse);
+> > +
+> >  MODULE_LICENSE("GPL");
+> >  MODULE_AUTHOR("Sakari Ailus <sakari.ailus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>");
+> >  MODULE_AUTHOR("Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> > diff --git a/include/media/v4l2-async.h b/include/media/v4l2-async.h
+> > index c69d8c8..067f368 100644
+> > --- a/include/media/v4l2-async.h
+> > +++ b/include/media/v4l2-async.h
+> > @@ -78,7 +78,8 @@ struct v4l2_async_subdev {
+> >  /**
+> >   * struct v4l2_async_notifier - v4l2_device notifier data
+> >   *
+> > - * @num_subdevs: number of subdevices
+> > + * @num_subdevs: number of subdevices used in subdevs array
+> > + * @max_subdevs: number of subdevices allocated in subdevs array
+> >   * @subdevs:	array of pointers to subdevice descriptors
+> >   * @v4l2_dev:	pointer to struct v4l2_device
+> >   * @waiting:	list of struct v4l2_async_subdev, waiting for their drivers
+> > @@ -90,6 +91,7 @@ struct v4l2_async_subdev {
+> >   */
+> >  struct v4l2_async_notifier {
+> >  	unsigned int num_subdevs;
+> > +	unsigned int max_subdevs;
+> >  	struct v4l2_async_subdev **subdevs;
+> >  	struct v4l2_device *v4l2_dev;
+> >  	struct list_head waiting;
+> > diff --git a/include/media/v4l2-fwnode.h b/include/media/v4l2-fwnode.h
+> > index ecc1233..ff489f7 100644
+> > --- a/include/media/v4l2-fwnode.h
+> > +++ b/include/media/v4l2-fwnode.h
+> > @@ -25,6 +25,8 @@
+> >  #include <media/v4l2-mediabus.h>
+> >  
+> >  struct fwnode_handle;
+> > +struct v4l2_async_notifier;
+> > +struct v4l2_async_subdev;
+> >  
+> >  /**
+> >   * struct v4l2_fwnode_bus_mipi_csi2 - MIPI CSI-2 bus data structure
+> > @@ -101,4 +103,11 @@ int v4l2_fwnode_parse_link(struct fwnode_handle *fwnode,
+> >  			   struct v4l2_fwnode_link *link);
+> >  void v4l2_fwnode_put_link(struct v4l2_fwnode_link *link);
+> >  
+> > +int v4l2_fwnode_endpoints_parse(
+> > +	struct device *dev, struct v4l2_async_notifier *notifier,
+> > +	size_t asd_struct_size,
+> > +	int (*parse_single)(struct device *dev,
+> > +			    struct v4l2_fwnode_endpoint *vep,
+> > +			    struct v4l2_async_subdev *asd));
+> > +
+> >  #endif /* _V4L2_FWNODE_H */
+> > -- 
+> > 2.1.4
+> > 
+> > 
+> 
+> -- 
+> Regards,
+> Niklas Söderlund
 
 -- 
-Best regards,
-Marek Vasut
+Sakari Ailus
+e-mail: sakari.ailus-X3B1VOXEql0@public.gmane.org	XMPP: sailus-PCDdDYkjdNMDXYZnReoRVg@public.gmane.org
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
