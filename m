@@ -1,95 +1,47 @@
-From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Subject: arm64: dts: rockchip: add SdioAudio pd control for rk3399
-Date: Fri, 30 Jun 2017 14:01:53 +0800
-Message-ID: <1498802513-535-1-git-send-email-wxt@rock-chips.com>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH v1 1/4] dt-bindings: media: mtk-cir: Add support for MT7622 SoC
+Date: Fri, 30 Jun 2017 14:03:04 +0800
+Message-ID: <a778a3a33a273f00d3ff071d62fe672a207d949c.1498794408.git.sean.wang@mediatek.com>
+References: <cover.1498794408.git.sean.wang@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1498794408.git.sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+To: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SdioAudio power domain includes the i2s/spdif/spi5/sdio.
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-So this patch adds the pd control for rk3399 i2s/spdif/spi5/sdio, in order
-to save more power consumption.
+Document the devicetree bindings for CIR on MediaTek MT7622
+SoC.
 
-Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 ---
+ Documentation/devicetree/bindings/media/mtk-cir.txt | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-Changes note:
-- As the Jeffy fixes the spi'cs issue recently as follows:
-aa09938 spi: rockchip: Disable Runtime PM when chip select is asserted
-c863795 spi: rockchip: Set GPIO_SS flag to enable Slave Select with GPIO CS
-c351587 spi: rockchip: fix error handling when probe
-- Posted this CL to support the SdioAudio power domain as commnets on
-  https://chromium-review.googlesource.com/#/c/378562/
-
- arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-index 33e17d7..a1dd0da 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-@@ -289,6 +289,7 @@
- 		fifo-depth = <0x100>;
- 		resets = <&cru SRST_SDIO0>;
- 		reset-names = "reset";
-+		power-domains = <&power RK3399_PD_SDIOAUDIO>;
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/media/mtk-cir.txt b/Documentation/devicetree/bindings/media/mtk-cir.txt
+index 2be2005..5e18087 100644
+--- a/Documentation/devicetree/bindings/media/mtk-cir.txt
++++ b/Documentation/devicetree/bindings/media/mtk-cir.txt
+@@ -2,10 +2,14 @@ Device-Tree bindings for Mediatek consumer IR controller
+ found in Mediatek SoC family
  
-@@ -678,6 +679,7 @@
- 		pinctrl-0 = <&spi5_clk &spi5_tx &spi5_rx &spi5_cs0>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		power-domains = <&power RK3399_PD_SDIOAUDIO>;
- 		status = "disabled";
- 	};
- 
-@@ -952,6 +954,11 @@
- 					 <&cru SCLK_SDMMC>;
- 				pm_qos = <&qos_sd>;
- 			};
-+			pd_sdioaudio@RK3399_PD_SDIOAUDIO {
-+				reg = <RK3399_PD_SDIOAUDIO>;
-+				clocks = <&cru HCLK_SDIO>;
-+				pm_qos = <&qos_sdioaudio>;
-+			};
- 			pd_vio@RK3399_PD_VIO {
- 				reg = <RK3399_PD_VIO>;
- 				#address-cells = <1>;
-@@ -1372,6 +1379,7 @@
- 		clocks = <&cru SCLK_SPDIF_8CH>, <&cru HCLK_SPDIF>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&spdif_bus>;
-+		power-domains = <&power RK3399_PD_SDIOAUDIO>;
- 		status = "disabled";
- 	};
- 
-@@ -1386,6 +1394,7 @@
- 		clocks = <&cru SCLK_I2S0_8CH>, <&cru HCLK_I2S0_8CH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2s0_8ch_bus>;
-+		power-domains = <&power RK3399_PD_SDIOAUDIO>;
- 		status = "disabled";
- 	};
- 
-@@ -1399,6 +1408,7 @@
- 		clocks = <&cru SCLK_I2S1_8CH>, <&cru HCLK_I2S1_8CH>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2s1_2ch_bus>;
-+		power-domains = <&power RK3399_PD_SDIOAUDIO>;
- 		status = "disabled";
- 	};
- 
-@@ -1410,6 +1420,7 @@
- 		dma-names = "tx", "rx";
- 		clock-names = "i2s_clk", "i2s_hclk";
- 		clocks = <&cru SCLK_I2S2_8CH>, <&cru HCLK_I2S2_8CH>;
-+		power-domains = <&power RK3399_PD_SDIOAUDIO>;
- 		status = "disabled";
- 	};
+ Required properties:
+-- compatible	    : "mediatek,mt7623-cir"
++- compatible	    : Should be
++			"mediatek,mt7623-cir": for MT7623 SoC
++			"mediatek,mt7622-cir": for MT7622 SoC
+ - clocks	    : list of clock specifiers, corresponding to
+ 		      entries in clock-names property;
+-- clock-names	    : should contain "clk" entries;
++- clock-names	    : should contain
++			- "clk" entries: for MT7623 SoC
++			- "clk", "bus" entries: for MT7622 SoC
+ - interrupts	    : should contain IR IRQ number;
+ - reg		    : should contain IO map address for IR.
  
 -- 
 2.7.4
