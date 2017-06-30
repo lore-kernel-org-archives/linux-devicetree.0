@@ -1,53 +1,62 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 4/6] dt-bindings: serial: Document RDA Micro UART
-Date: Fri, 30 Jun 2017 13:12:33 +0200
-Message-ID: <e8b8eb0c-0362-0cfb-4d18-3e1ab2b77412@suse.de>
-References: <20170627005520.23731-1-afaerber@suse.de>
- <20170627005520.23731-5-afaerber@suse.de>
- <20170629201051.cfr37kh2gozompqo@rob-hp-laptop>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 9/9] spi: spidev: add Aardvark to device tree
+ compatibility list
+Date: Fri, 30 Jun 2017 12:51:50 +0100
+Message-ID: <20170630115150.zea5iaoih4alqibm@sirena.org.uk>
+References: <1498578321-13980-1-git-send-email-amelie.delaunay@st.com>
+ <1498578321-13980-10-git-send-email-amelie.delaunay@st.com>
+ <20170628185445.fsnqs2tlqqeqzl57@sirena.org.uk>
+ <67764839-889b-e398-16eb-de583d82cbf3@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20170629201051.cfr37kh2gozompqo@rob-hp-laptop>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, service@rdamicro.com, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, zhao_steven@263.net
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="gml6e5yjm24yaoyf"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <67764839-889b-e398-16eb-de583d82cbf3@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amelie DELAUNAY <amelie.delaunay@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gMjkuMDYuMjAxNyB1bSAyMjoxMCBzY2hyaWViIFJvYiBIZXJyaW5nOgo+IE9uIFR1ZSwgSnVu
-IDI3LCAyMDE3IGF0IDAyOjU1OjE4QU0gKzAyMDAsIEFuZHJlYXMgRsOkcmJlciB3cm90ZToKPj4g
-QWRkIGFuIGluaXRpYWwgYmluZGluZyBmb3IgdGhlIFJEQTg4MTBQTCBVQVJULgo+Pgo+PiBTaWdu
-ZWQtb2ZmLWJ5OiBBbmRyZWFzIEbDpHJiZXIgPGFmYWVyYmVyQHN1c2UuZGU+Cj4+IC0tLQo+PiAg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NlcmlhbC9yZGEtdWFydC50eHQgfCAx
-MyArKysrKysrKysrKysrCj4+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQo+PiAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zZXJp
-YWwvcmRhLXVhcnQudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3Mvc2VyaWFsL3JkYS11YXJ0LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9zZXJpYWwvcmRhLXVhcnQudHh0Cj4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4+
-IGluZGV4IDAwMDAwMDAwMDAwMC4uNjg0MGE4YWVlMDM1Cj4+IC0tLSAvZGV2L251bGwKPj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NlcmlhbC9yZGEtdWFydC50eHQK
-Pj4gQEAgLTAsMCArMSwxMyBAQAo+PiArUkRBIE1pY3JvIFVBUlQKPj4gKwo+PiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZSA6ICAicmRhLDg4MTBwbC11YXJ0IiBmb3IgUkRB
-ODgxMFBMCj4+ICstIHJlZyAgICAgICAgOiAgT2Zmc2V0IGFuZCBsZW5ndGggb2YgdGhlIHJlZ2lz
-dGVyIHNldCBmb3IgdGhlIGRldmljZS4KPiAKPiBObyBjbG9ja3Mgb3IgaW50ZXJydXB0cz8KCk5v
-dCB5ZXQuIEkndmUgb25seSBwaWVjZWQgdG9nZXRoZXIgYW4gZWFybHljb24gZHJpdmVyIHNvIGZh
-ciwgbm8gZnVsbApzZXJpYWwgZHJpdmVyLiBUaGUgLmR0c2kgZG9lc24ndCBldmVuIGhhdmUgYW4g
-aW50ZXJydXB0LWNvbnRyb2xsZXIgbm9kZQp5ZXQgLSB3YXNuJ3QgY2xlYXIgdG8gbWUgd2hldGhl
-ciB0aGlzIFNvQyBldmVuIGhhcyBhIEdJQyBhbmQsIGlmIHNvLAp3aGVyZSwgZnJvbSB0aGUgZG93
-bnN0cmVhbSBwcmUtRFQgY29kZS4KClJlZ2FyZHMsCkFuZHJlYXMKCi0tIApTVVNFIExpbnV4IEdt
-YkgsIE1heGZlbGRzdHIuIDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQpHRjogRmVsaXggSW1l
-bmTDtnJmZmVyLCBKYW5lIFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uCkhSQiAyMTI4NCAoQUcgTsO8
-cm5iZXJnKQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-bGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGlu
-dXgtYXJtLWtlcm5lbAo=
+
+--gml6e5yjm24yaoyf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jun 29, 2017 at 02:58:43PM +0200, Amelie DELAUNAY wrote:
+> On 06/28/2017 08:54 PM, Mark Brown wrote:
+
+> > What does this device actually do and why is spidev a sensible fit for
+> > it?
+
+> This device is actually a debugging tool [1] which can work on SPI bus (and
+> also I2C). Connected via USB on a PC, it can either acts as an SPI master or
+> SPI slave and it can transmit/receive serial data using SPI protocol.
+> Polarity, Phase, Bit Order, Frequency can be configured. So this tool is
+> really useful during SPI driver development to troubleshoot. And that's why
+> spidev driver totally fit for it when used as an SPI slave, for the reason
+> described in spidev Documentation: "Developing simple protocols used to talk
+> to" Aardvark "acting as SPI slaves, which you may need to change quite
+> often".
+
+This doesn't seem like something that should be in DT, it's a tool used
+to implement or emulate other things and is no more specific than spidev
+itself is.  Whatever it is implementing or emulating should be in DT
+instead.
+
+--gml6e5yjm24yaoyf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllWO1UACgkQJNaLcl1U
+h9Cllgf+OaogYnbSbFheFfqBhJaEq3eVS1BF9ZDiWZ0O4BZyOlFlkM952YNySEls
+8Ow1vj8AXmFeLhDrPLr5U9Uxj6o9AynyqUForPTZoJxAaRXWNOROMBT08/HUOgyp
+zgTSNtbmkJvz9/5Qlr7xTiKhX1y5tKpgA18CcuCrePnb8i0Z/MyeIX7FhFlpQ9zb
+f6lCHpa+t0BbkXv2nI+YexBFVQVvYOCM7BqV4HxTgfrvijIQNN+vjNkqBwhj1UdH
+zqx6Vl1H2mbESfhV+QE6qYnrlx+eyOg3+lgU2GJM/Y/wL7ETeqFaffaUUi+QaDST
+R4bSmVBa2ZhVpTnXBXhEKHvD0UK1Cw==
+=gnT1
+-----END PGP SIGNATURE-----
+
+--gml6e5yjm24yaoyf--
