@@ -1,70 +1,99 @@
-From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
-Subject: Re: [PATCH] powerpc: dts: use #include "..." to include local DT
-Date: Fri, 30 Jun 2017 14:18:38 +0900
-Message-ID: <CAK7LNASvupxqXnwm3hyEq7iGpHyActRbYjZ3v9xyd4qpxdVmLA@mail.gmail.com>
-References: <1495602744-18874-1-git-send-email-yamada.masahiro@socionext.com>
- <CAK7LNARnkHTyAMXjPZnOxOkP_b8vc6qvYOv-wf_Fn0eaPSdpeA@mail.gmail.com>
- <87r2yogpc6.fsf@concordia.ellerman.id.au> <CAK7LNAS0tkpCuCjjCe=P_Qc2Q12B-+7YgAipko5n+AoeASpQnQ@mail.gmail.com>
- <87y3sv2hky.fsf@concordia.ellerman.id.au> <CAK7LNAQ2Ek3VEou_adaH3g8efSnJ7JgvHynzqR9Br4M+q8Mccw@mail.gmail.com>
- <87bmphu0vq.fsf@concordia.ellerman.id.au> <CAK7LNAQBbZ7WcXN=3rxi0AQGJC8W_WKtGtmapEziLUre075J=g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: arm64: dts: rockchip: add SdioAudio pd control for rk3399
+Date: Fri, 30 Jun 2017 14:01:53 +0800
+Message-ID: <1498802513-535-1-git-send-email-wxt@rock-chips.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAK7LNAQBbZ7WcXN=3rxi0AQGJC8W_WKtGtmapEziLUre075J=g@mail.gmail.com>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Michael,
+The SdioAudio power domain includes the i2s/spdif/spi5/sdio.
 
-Ping.  Please apply this patch.
+So this patch adds the pd control for rk3399 i2s/spdif/spi5/sdio, in order
+to save more power consumption.
 
-I need this to clean up Makefiles in the next development cycle.
+Signed-off-by: Caesar Wang <wxt-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
 
+Changes note:
+- As the Jeffy fixes the spi'cs issue recently as follows:
+aa09938 spi: rockchip: Disable Runtime PM when chip select is asserted
+c863795 spi: rockchip: Set GPIO_SS flag to enable Slave Select with GPIO CS
+c351587 spi: rockchip: fix error handling when probe
+- Posted this CL to support the SdioAudio power domain as commnets on
+  https://chromium-review.googlesource.com/#/c/378562/
 
+ arch/arm64/boot/dts/rockchip/rk3399.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-2017-06-21 18:52 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
-> 2017-06-21 18:48 GMT+09:00 Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>:
->> Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> writes:
->>> 2017-06-14 15:45 GMT+09:00 Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>:
->>>>
->>>> Acked-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
->>>
->>> I have not seen it in linux-next yet.
->>>
->>> Who will pick it up?
->>
->> In the original patch you said:
->>
->>   Fix them to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
->>   dtc_cpp_flags.
->>
->> So I assumed there was a series somewhere that did that and included
->> this patch.
->>
->> But if there isn't then I can just merge it.
->>
->
-> Yes, please apply.
->
->
-> At first, I sent a series including ARM, PowerPC, Makefile changes,
-> but I decided to split per-subsystem after all.
->
-> Sorry for confusion.
->
->
->
-> --
-> Best Regards
-> Masahiro Yamada
-
-
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+index 33e17d7..a1dd0da 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
+@@ -289,6 +289,7 @@
+ 		fifo-depth = <0x100>;
+ 		resets = <&cru SRST_SDIO0>;
+ 		reset-names = "reset";
++		power-domains = <&power RK3399_PD_SDIOAUDIO>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -678,6 +679,7 @@
+ 		pinctrl-0 = <&spi5_clk &spi5_tx &spi5_rx &spi5_cs0>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		power-domains = <&power RK3399_PD_SDIOAUDIO>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -952,6 +954,11 @@
+ 					 <&cru SCLK_SDMMC>;
+ 				pm_qos = <&qos_sd>;
+ 			};
++			pd_sdioaudio@RK3399_PD_SDIOAUDIO {
++				reg = <RK3399_PD_SDIOAUDIO>;
++				clocks = <&cru HCLK_SDIO>;
++				pm_qos = <&qos_sdioaudio>;
++			};
+ 			pd_vio@RK3399_PD_VIO {
+ 				reg = <RK3399_PD_VIO>;
+ 				#address-cells = <1>;
+@@ -1372,6 +1379,7 @@
+ 		clocks = <&cru SCLK_SPDIF_8CH>, <&cru HCLK_SPDIF>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&spdif_bus>;
++		power-domains = <&power RK3399_PD_SDIOAUDIO>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -1386,6 +1394,7 @@
+ 		clocks = <&cru SCLK_I2S0_8CH>, <&cru HCLK_I2S0_8CH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s0_8ch_bus>;
++		power-domains = <&power RK3399_PD_SDIOAUDIO>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -1399,6 +1408,7 @@
+ 		clocks = <&cru SCLK_I2S1_8CH>, <&cru HCLK_I2S1_8CH>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2s1_2ch_bus>;
++		power-domains = <&power RK3399_PD_SDIOAUDIO>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -1410,6 +1420,7 @@
+ 		dma-names = "tx", "rx";
+ 		clock-names = "i2s_clk", "i2s_hclk";
+ 		clocks = <&cru SCLK_I2S2_8CH>, <&cru HCLK_I2S2_8CH>;
++		power-domains = <&power RK3399_PD_SDIOAUDIO>;
+ 		status = "disabled";
+ 	};
+ 
 -- 
-Best Regards
-Masahiro Yamada
+2.7.4
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
