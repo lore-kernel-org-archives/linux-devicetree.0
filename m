@@ -1,65 +1,62 @@
-From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 10/16] reset: Add a reset controller driver for the
- Lantiq XWAY based SoCs
-Date: Fri, 30 Jun 2017 15:22:56 +0300
-Message-ID: <CAHp75Ve+oO7Zzk4jN3BOVCWWsEVki0yNQfpkfuw4Q5K85CMQHg@mail.gmail.com>
-References: <20170629213951.31176-1-hauke@hauke-m.de> <20170629213951.31176-11-hauke@hauke-m.de>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/8] mailbox: arm/arm64: introduce smc
+ triggered mailbox
+Date: Fri, 30 Jun 2017 14:25:29 +0200
+Message-ID: <20170630122529.upjigip4hztrq67h@flea>
+References: <20170630095608.24943-1-andre.przywara@arm.com>
+Reply-To: maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170629213951.31176-11-hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, Linux MIPS Mailing List <linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "martin.blumenstingl" <martin.blumenstingl-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>, john <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>, linux-spi <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "hauke.mehrtens" <hauke.mehrtens-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l7shr4ksnggdol4b"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBREG3HFAKGQE3WZHTNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20170630095608.24943-1-andre.przywara-5wv7dgnIgG8@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
+Cc: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 30, 2017 at 12:39 AM, Hauke Mehrtens <hauke-5/S+JYg5SzeELgA04lAiVw@public.gmane.org> wrote:
 
-> +static int lantiq_rcu_reset_update(struct reset_controller_dev *rcdev,
-> +                                  unsigned long id, bool assert)
-> +{
-> +       struct lantiq_rcu_reset_priv *priv = to_lantiq_rcu_reset_priv(rcdev);
-> +       unsigned int set = id & 0x1f;
+--l7shr4ksnggdol4b
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
+Hi,
 
-> +       int ret;
-> +       u32 val;
-> +
-> +       if (assert)
-> +               val = BIT(set);
-> +       else
-> +               val = 0;
+On Fri, Jun 30, 2017 at 10:56:00AM +0100, Andre Przywara wrote:
+> The remaining patches demonstrate usage of this feature to drive SCPI services
+> implemented as part of the ARM Trusted Firmware implementation used for
+> AArch64 based Allwinner SoCs, the Allwinner A64 in this example.
+> It allows to provide DVFS services, sensors support, device power domains
+> and potentially other services like clocks or regulators.
+> This allows to abstract those features in firmware, without the need to
+> implement explicit Linux support for each variant of some SoC design.
+> Those DT changes are not necessarily meant to be merged at this point.
+> I started implementing the firmware side of those services and put a WIP
+> branch on my ATF Github repo [1]. With this branch and these patches here
+> you get DVFS and temperature sensor support for the A64, just with this
+> driver and the generic SCPI support.
 
-I would put this as
+I would go even further, and say that these changes should be done by
+the bootloader itself once it installed the proper monitor.
 
-u32 val = assert ? BIT(set) : 0;
-int ret;
+These patches represent not a state of the hardware itself, but the
+state the bootloader let the hardware in, and that state will change
+from one bootloader to the other, and one version to the other
+(obviously). This is already what we do for the other things the
+bootloader initializes (like simplefb, or PSCI). It just feels natural
+to do the same thing here.
 
-...but it's up to you.
-
-The rest looks fine.
-
-> +
-> +       ret = regmap_update_bits(priv->regmap, priv->reset_offset, BIT(set),
-> +                                val);
-> +       if (ret) {
-> +               dev_err(priv->dev, "Failed to set reset bit %u\n", set);
-> +               return ret;
-> +       }
-> +
-> +
-> +       ret = lantiq_rcu_reset_status_timeout(rcdev, id, assert);
-> +       if (ret)
-> +               dev_err(priv->dev, "Failed to %s bit %u\n",
-> +                       assert ? "assert" : "deassert", set);
-> +
-> +       return ret;
-> +}
+Maxime
 
 -- 
-With Best Regards,
-Andy Shevchenko
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime Ripard, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+--l7shr4ksnggdol4b--
