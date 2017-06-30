@@ -1,130 +1,71 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH RFC 2/2] dt-bindings: add binding
- documentation for Allwinner CSI
-Date: Fri, 30 Jun 2017 11:41:50 +0800
-Message-ID: <CAGb2v66+xHR7xfBX_mPigZE_nvcRQfnpr4QAcKYEUhSGN7h61w@mail.gmail.com>
-References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
- <1498561654-14658-3-git-send-email-yong.deng@magewell.com> <20170629211957.uz7jijkuoxr2vohc@rob-hp-laptop>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>
+Subject: Re: [PATCH] powerpc: dts: use #include "..." to include local DT
+Date: Fri, 30 Jun 2017 14:18:38 +0900
+Message-ID: <CAK7LNASvupxqXnwm3hyEq7iGpHyActRbYjZ3v9xyd4qpxdVmLA@mail.gmail.com>
+References: <1495602744-18874-1-git-send-email-yamada.masahiro@socionext.com>
+ <CAK7LNARnkHTyAMXjPZnOxOkP_b8vc6qvYOv-wf_Fn0eaPSdpeA@mail.gmail.com>
+ <87r2yogpc6.fsf@concordia.ellerman.id.au> <CAK7LNAS0tkpCuCjjCe=P_Qc2Q12B-+7YgAipko5n+AoeASpQnQ@mail.gmail.com>
+ <87y3sv2hky.fsf@concordia.ellerman.id.au> <CAK7LNAQ2Ek3VEou_adaH3g8efSnJ7JgvHynzqR9Br4M+q8Mccw@mail.gmail.com>
+ <87bmphu0vq.fsf@concordia.ellerman.id.au> <CAK7LNAQBbZ7WcXN=3rxi0AQGJC8W_WKtGtmapEziLUre075J=g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBF4R27FAKGQE7MC2KCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20170629211957.uz7jijkuoxr2vohc@rob-hp-laptop>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bparrot-l0cyMroinI0@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAK7LNAQBbZ7WcXN=3rxi0AQGJC8W_WKtGtmapEziLUre075J=g@mail.gmail.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 30, 2017 at 5:19 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, Jun 27, 2017 at 07:07:34PM +0800, Yong Deng wrote:
->> Add binding documentation for Allwinner CSI.
->
-> For the subject:
->
-> dt-bindings: media: Add Allwinner Camera Sensor Interface (CSI)
->
-> "binding documentation" is redundant.
->
+Hi Michael,
+
+Ping.  Please apply this patch.
+
+I need this to clean up Makefiles in the next development cycle.
+
+
+
+2017-06-21 18:52 GMT+09:00 Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org>:
+> 2017-06-21 18:48 GMT+09:00 Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>:
+>> Masahiro Yamada <yamada.masahiro-uWyLwvC0a2jby3iVrkZq2A@public.gmane.org> writes:
+>>> 2017-06-14 15:45 GMT+09:00 Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>:
+>>>>
+>>>> Acked-by: Michael Ellerman <mpe-Gsx/Oe8HsFggBc27wqDAHg@public.gmane.org>
+>>>
+>>> I have not seen it in linux-next yet.
+>>>
+>>> Who will pick it up?
 >>
->> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
->> ---
->>  .../devicetree/bindings/media/sunxi-csi.txt        | 51 ++++++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-csi.txt
+>> In the original patch you said:
 >>
->> diff --git a/Documentation/devicetree/bindings/media/sunxi-csi.txt b/Documentation/devicetree/bindings/media/sunxi-csi.txt
->> new file mode 100644
->> index 0000000..770be0e
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/sunxi-csi.txt
->> @@ -0,0 +1,51 @@
->> +Allwinner V3s Camera Sensor Interface
->> +------------------------------
->> +
->> +Required properties:
->> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
->> +  - reg: base address and size of the memory-mapped region.
->> +  - interrupts: interrupt associated to this IP
->> +  - clocks: phandles to the clocks feeding the CSI
->> +    * ahb: the CSI interface clock
->> +    * mod: the CSI module clock
->> +    * ram: the CSI DRAM clock
->> +  - clock-names: the clock names mentioned above
->> +  - resets: phandles to the reset line driving the CSI
->> +
->> +- ports: A ports node with endpoint definitions as defined in
->> +  Documentation/devicetree/bindings/media/video-interfaces.txt. The
->> +  first port should be the input endpoints, the second one the outputs
->
-> Is there more than one endpoint for each port? If so, need to define
-> that numbering too.
-
-It is possible to have multiple camera sensors connected to the same
-bus. Think front and back cameras on a cell phone or tablet.
-
-I don't think any kind of numbering makes much sense though. The
-system is free to use just one sensor at a time, or use many with
-some time multiplexing scheme. What might matter to the end user
-is where the camera is placed. But using the position or orientation
-as a numbering scheme might not work well either. Someone may end
-up using two sensors with the same orientation for stereoscopic
-vision.
-
->
->> +
->> +Example:
->> +
->> +     csi1: csi@01cb4000 {
->> +             compatible = "allwinner,sun8i-v3s-csi";
->> +             reg = <0x01cb4000 0x1000>;
-
-Yong, the address range size is 0x4000, including the CCI (I2C)
-controller at offset 0x3000. You should also consider this in
-the device tree binding, and the driver.
-
-ChenYu
-
->> +             interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
->> +             clocks = <&ccu CLK_BUS_CSI>,
->> +                      <&ccu CLK_CSI1_SCLK>,
->> +                      <&ccu CLK_DRAM_CSI>;
->> +             clock-names = "ahb", "mod", "ram";
->> +             resets = <&ccu RST_BUS_CSI>;
->> +
->> +             port {
->> +                     #address-cells = <1>;
->> +                     #size-cells = <0>;
->> +
->> +                     /* Parallel bus endpoint */
->> +                     csi1_0: endpoint@0 {
->> +                             reg = <0>;
->
-> Don't need this and everything associated with it for a single endpoint.
->
->> +                             remote = <&adv7611_1>;
->> +                             bus-width = <16>;
->> +                             data-shift = <0>;
->> +
->> +                             /* If hsync-active/vsync-active are missing,
->> +                                embedded BT.656 sync is used */
->> +                             hsync-active = <0>; /* Active low */
->> +                             vsync-active = <0>; /* Active low */
->> +                             data-active = <1>;  /* Active high */
->> +                             pclk-sample = <1>;  /* Rising */
->> +                     };
->> +             };
->> +     };
->> +
->> --
->> 1.8.3.1
+>>   Fix them to remove -I$(srctree)/arch/$(SRCARCH)/boot/dts path from
+>>   dtc_cpp_flags.
 >>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> So I assumed there was a series somewhere that did that and included
+>> this patch.
+>>
+>> But if there isn't then I can just merge it.
+>>
+>
+> Yes, please apply.
+>
+>
+> At first, I sent a series including ARM, PowerPC, Makefile changes,
+> but I decided to split per-subsystem after all.
+>
+> Sorry for confusion.
+>
+>
+>
+> --
+> Best Regards
+> Masahiro Yamada
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
