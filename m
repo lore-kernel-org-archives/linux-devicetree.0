@@ -1,184 +1,243 @@
-From: Yong <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH RFC 2/2] dt-bindings: add binding documentation for
- Allwinner CSI
-Date: Fri, 30 Jun 2017 15:55:58 +0800
-Message-ID: <20170630155558.929bcdc7805a88bb2c467436@magewell.com>
-References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
-        <1498561654-14658-3-git-send-email-yong.deng@magewell.com>
-        <20170629211957.uz7jijkuoxr2vohc@rob-hp-laptop>
-        <CAGb2v66+xHR7xfBX_mPigZE_nvcRQfnpr4QAcKYEUhSGN7h61w@mail.gmail.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: Re: Clocks used by another OS/CPU (was: Re: [RFC PATCH] clk:
+ renesas: cpg-mssr: Add interface for critical core clocks)
+Date: Fri, 30 Jun 2017 11:02:00 +0300
+Message-ID: <20170630080200.GU14819@tbergstrom-lnx.Nvidia.com>
+References: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v66+xHR7xfBX_mPigZE_nvcRQfnpr4QAcKYEUhSGN7h61w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org, peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, hugues.fruchet-qxv4g6HH51o@public.gmane.org, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bparrot-l0cyMroinI0@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, jean-christophe.trotin-qxv4g6HH51o@public.gmane.org, benjamin.gaignard-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tiffany.lin-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, kamil-MZ2JYD8fkKLYtjvyW6yDsg@public.gmane.org, kieran+renesas-7hKh/agyDeatmTQ+vhA3Yw@public.gmane.org, andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Dirk Behme <dirk.behme@de.bosch.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@baylibre.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Jun 2017 11:41:50 +0800
-Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-
-> On Fri, Jun 30, 2017 at 5:19 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> > On Tue, Jun 27, 2017 at 07:07:34PM +0800, Yong Deng wrote:
-> >> Add binding documentation for Allwinner CSI.
-> >
-> > For the subject:
-> >
-> > dt-bindings: media: Add Allwinner Camera Sensor Interface (CSI)
-> >
-> > "binding documentation" is redundant.
-
-OK.
-
-> >
-> >>
-> >> Signed-off-by: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/media/sunxi-csi.txt        | 51 ++++++++++++++++++++++
-> >>  1 file changed, 51 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-csi.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/sunxi-csi.txt b/Documentation/devicetree/bindings/media/sunxi-csi.txt
-> >> new file mode 100644
-> >> index 0000000..770be0e
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/sunxi-csi.txt
-> >> @@ -0,0 +1,51 @@
-> >> +Allwinner V3s Camera Sensor Interface
-> >> +------------------------------
-> >> +
-> >> +Required properties:
-> >> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
-> >> +  - reg: base address and size of the memory-mapped region.
-> >> +  - interrupts: interrupt associated to this IP
-> >> +  - clocks: phandles to the clocks feeding the CSI
-> >> +    * ahb: the CSI interface clock
-> >> +    * mod: the CSI module clock
-> >> +    * ram: the CSI DRAM clock
-> >> +  - clock-names: the clock names mentioned above
-> >> +  - resets: phandles to the reset line driving the CSI
-> >> +
-> >> +- ports: A ports node with endpoint definitions as defined in
-> >> +  Documentation/devicetree/bindings/media/video-interfaces.txt. The
-> >> +  first port should be the input endpoints, the second one the outputs
-> >
-> > Is there more than one endpoint for each port? If so, need to define
-> > that numbering too.
-
-I made a mistake here.
-"The first port should be the input endpoints, the second one the outputs"
-is wrong and redundant.
-
+On Thu, Jun 29, 2017 at 11:27:28AM +0200, Geert Uytterhoeven wrote:
+> Hi Dirk,
 > 
-> It is possible to have multiple camera sensors connected to the same
-> bus. Think front and back cameras on a cell phone or tablet.
+> CC clock, ARM, DT, PM people
 > 
-> I don't think any kind of numbering makes much sense though. The
-> system is free to use just one sensor at a time, or use many with
-> some time multiplexing scheme. What might matter to the end user
-> is where the camera is placed. But using the position or orientation
-> as a numbering scheme might not work well either. Someone may end
-> up using two sensors with the same orientation for stereoscopic
-> vision.
-
-It is! But multiple sensors can't be working on the same bus 
-simultaneously. So, the driver should have capability to switch
-input device. But my driver does not support switching between 
-multiple camera sensors for now! The driver only pickup the first
-valid one. Maybe it's a feature to implement in the future.
-
-Maybe like this:
-- port: A port node with endpoint definitions as defined in
-  Documentation/devicetree/bindings/media/video-interfaces.txt.
-  A CSI have only one port. But you can define multiple endpoint
-  under the port. The driver will pick up the first valid one.
-
+> TL;DR: Clocks may be in use by another CPU not running Linux, while Linux
+> disables them as being unused.
 > 
+
+There is that but also Linux should not be allowed to change the rate and
+parent. Otherwise your R7 sw will likely fail as well. I think it makes sense
+to have some DT property which informs linux which clocks it should not touch.
+At least assuming clock control isn't moved to a separate coprocessor. In that
+case any policy can ofcourse be implemented in the coprocessor.
+
+Peter.
+
+
+> On Mon, Jun 26, 2017 at 1:30 PM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
+> > With commit 72f5df2c2bbb6 ("clk: renesas: cpg-mssr: Migrate to
+> > CLK_IS_CRITICAL") we are able to handle critical module clocks.
+> > Introduce the same logic for critical core clocks.
 > >
-> >> +
-> >> +Example:
-> >> +
-> >> +     csi1: csi@01cb4000 {
-> >> +             compatible = "allwinner,sun8i-v3s-csi";
-> >> +             reg = <0x01cb4000 0x1000>;
-> 
-> Yong, the address range size is 0x4000, including the CCI (I2C)
-> controller at offset 0x3000. You should also consider this in
-> the device tree binding, and the driver.
-> 
-> ChenYu
-
-For V3s, the reg range <0x01cb0000 0x4000> of CSI0 have 4 module:
-  * <0x01cb0000 0x1000>	-- CSI0
-  * <0x01cb1000 0x1000>	-- MIPI-CSI
-  * <0x01cb2000 0x1000>	-- MIPI-DPHY
-  * <0x01cb3000 0x1000>	-- CCI
-the reg range <0x01cb4000 0x4000> of CSI1 have 1 module:
-  * <0x01cb4000 0x1000>	-- CSI1
-
-And, I think the CCI, MIPI-CSI, MIPI-DPHY should have their own
-device tree binding and driver.
-
-> 
-> >> +             interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-> >> +             clocks = <&ccu CLK_BUS_CSI>,
-> >> +                      <&ccu CLK_CSI1_SCLK>,
-> >> +                      <&ccu CLK_DRAM_CSI>;
-> >> +             clock-names = "ahb", "mod", "ram";
-> >> +             resets = <&ccu RST_BUS_CSI>;
-> >> +
-> >> +             port {
-> >> +                     #address-cells = <1>;
-> >> +                     #size-cells = <0>;
-> >> +
-> >> +                     /* Parallel bus endpoint */
-> >> +                     csi1_0: endpoint@0 {
-> >> +                             reg = <0>;
+> > Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+> > ---
+> > Commit
 > >
-> > Don't need this and everything associated with it for a single endpoint.
-
-Like this?
-            csi1_ep: endpoint {
-                remote-endpoint = <&adv7611_ep>;
-                bus-width = <16>;
-                data-shift = <0>;
-    
-                /* If hsync-active/vsync-active are missing,
-                   embedded BT.656 sync is used */
-                hsync-active = <0>; /* Active low */
-                vsync-active = <0>; /* Active low */
-                data-active = <1>;  /* Active high */
-                pclk-sample = <1>;  /* Rising */
-            };
-
-The property "remote" should be "remote-endpoint".
-Is there a mistake in video-interfaces.txt's example?
-
+> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/clk/renesas?id=72f5df2c2bbb66d4a555cb51eb9f412abf1af77f
 > >
-> >> +                             remote = <&adv7611_1>;
-> >> +                             bus-width = <16>;
-> >> +                             data-shift = <0>;
-> >> +
-> >> +                             /* If hsync-active/vsync-active are missing,
-> >> +                                embedded BT.656 sync is used */
-> >> +                             hsync-active = <0>; /* Active low */
-> >> +                             vsync-active = <0>; /* Active low */
-> >> +                             data-active = <1>;  /* Active high */
-> >> +                             pclk-sample = <1>;  /* Rising */
-> >> +                     };
-> >> +             };
-> >> +     };
-> >> +
-> >> --
-> >> 1.8.3.1
-> >>
-> >> --
-> >> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> >> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> >> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > is quite nice to avoid *module* clocks being disabled. Unfortunately,
+> > there are *core* clocks, too. E.g. using an other OS on the Cortex R7
+> > core of the r8a7795, the 'canfd' is a quite popular core clock which
+> > shouldn't be disabled by Linux.
+> >
+> > Therefore, this patch is a proposal to use the same 'mark clocks as
+> > critical' logic implemented for the module clocks for the core
+> > clocks, too.
+> >
+> > Opinions?
+> 
+> On r8a7795, there are several Cortex A cores running Linux, and a Cortex R7
+> core which may run another OS.
+> This is an interesting issue, and relevant to other SoCs, too.
+> 
+> In this particular case, the "canfd" clock is a core clock used as an
+> auxiliary clock for the CAN0, CAN1, and CANFD interfaces.  This can lead
+> to three scenarios:
+>   1. Linux controls all CAN interfaces
+>      => no issue,
+>   2. The OS on the RT CPU controls all CAN interfaces
+>      => issue, Linux disables the clock
+>   3. Mix of 1 and 2
+>      => More issues.
+> Of course this is not limited to clocks, but also to e.g. PM domains.
+> 
+> How can this be handled?
+> I believe just marking the "canfd" clock critical is not the right solution,
+> as about any clock could be used by the RT CPU.
+> 
+> Still, Linux needs to be made aware that devices (clocks and PM domains) are
+> controlled by another CPU/OS.
+> 
+> Should this be described in DT? It feels like software policy to me.
+> 
+> Note that we (mainline) currently don't describe the Cortex R7 core in DT.
+> Dirk: do you describe it?
+> 
+> Summary:
+>   1. Core/module clocks are described in the clock driver (not in DT),
+>   2. Unused clocks are disabled by CCF,
+>   3. Clocks may be in use by the Real-Time CPU core, running another OS,
+>   4. How to communicate to Linux which clocks are under control of the RT CPU?
+> 
+> Thanks for your comments!
+> 
+> >  drivers/clk/renesas/clk-div6.c         | 17 +++++++++++++++--
+> >  drivers/clk/renesas/clk-div6.h         |  4 +++-
+> >  drivers/clk/renesas/r8a7795-cpg-mssr.c |  7 +++++++
+> >  drivers/clk/renesas/renesas-cpg-mssr.c |  3 ++-
+> >  drivers/clk/renesas/renesas-cpg-mssr.h |  8 ++++++++
+> >  5 files changed, 35 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/clk/renesas/clk-div6.c b/drivers/clk/renesas/clk-div6.c
+> > index 0627860..5917e05 100644
+> > --- a/drivers/clk/renesas/clk-div6.c
+> > +++ b/drivers/clk/renesas/clk-div6.c
+> > @@ -18,6 +18,7 @@
+> >  #include <linux/of_address.h>
+> >  #include <linux/slab.h>
+> >
+> > +#include "renesas-cpg-mssr.h"
+> >  #include "clk-div6.h"
+> >
+> >  #define CPG_DIV6_CKSTP         BIT(8)
+> > @@ -184,7 +185,9 @@ static const struct clk_ops cpg_div6_clock_ops = {
+> >  struct clk * __init cpg_div6_register(const char *name,
+> >                                       unsigned int num_parents,
+> >                                       const char **parent_names,
+> > -                                     void __iomem *reg)
+> > +                                     void __iomem *reg,
+> > +                                     const struct cpg_mssr_info *info,
+> > +                                     unsigned int id)
+> >  {
+> >         unsigned int valid_parents;
+> >         struct clk_init_data init;
+> > @@ -246,6 +249,15 @@ struct clk * __init cpg_div6_register(const char *name,
+> >         init.name = name;
+> >         init.ops = &cpg_div6_clock_ops;
+> >         init.flags = CLK_IS_BASIC;
+> > +       if (info) {
+> > +               for (i = 0; i < info->num_crit_core_clks; i++)
+> > +                       if (id == info->crit_core_clks[i]) {
+> > +                               pr_devel("DIV6 %s setting CLK_IS_CRITICAL\n",
+> > +                                        name);
+> > +                               init.flags |= CLK_IS_CRITICAL;
+> > +                               break;
+> > +                       }
+> > +       }
+> >         init.parent_names = parent_names;
+> >         init.num_parents = valid_parents;
+> >
+> > @@ -298,7 +310,8 @@ static void __init cpg_div6_clock_init(struct device_node *np)
+> >         for (i = 0; i < num_parents; i++)
+> >                 parent_names[i] = of_clk_get_parent_name(np, i);
+> >
+> > -       clk = cpg_div6_register(clk_name, num_parents, parent_names, reg);
+> > +       clk = cpg_div6_register(clk_name, num_parents, parent_names, reg,
+> > +                               NULL, 0);
+> >         if (IS_ERR(clk)) {
+> >                 pr_err("%s: failed to register %s DIV6 clock (%ld)\n",
+> >                        __func__, np->name, PTR_ERR(clk));
+> > diff --git a/drivers/clk/renesas/clk-div6.h b/drivers/clk/renesas/clk-div6.h
+> > index 567b31d..b619d6b4 100644
+> > --- a/drivers/clk/renesas/clk-div6.h
+> > +++ b/drivers/clk/renesas/clk-div6.h
+> > @@ -2,6 +2,8 @@
+> >  #define __RENESAS_CLK_DIV6_H__
+> >
+> >  struct clk *cpg_div6_register(const char *name, unsigned int num_parents,
+> > -                             const char **parent_names, void __iomem *reg);
+> > +                             const char **parent_names, void __iomem *reg,
+> > +                             const struct cpg_mssr_info *info,
+> > +                             unsigned int id);
+> >
+> >  #endif
+> > diff --git a/drivers/clk/renesas/r8a7795-cpg-mssr.c b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+> > index eaa98b4..a54fed6 100644
+> > --- a/drivers/clk/renesas/r8a7795-cpg-mssr.c
+> > +++ b/drivers/clk/renesas/r8a7795-cpg-mssr.c
+> > @@ -114,6 +114,9 @@ static struct cpg_core_clk r8a7795_core_clks[] __initdata = {
+> >         DEF_BASE("r",           R8A7795_CLK_R,     CLK_TYPE_GEN3_R, CLK_RINT),
+> >  };
+> >
+> > +static const unsigned int r8a7795_crit_core_clks[] __initconst = {
+> > +};
+> > +
+> >  static struct mssr_mod_clk r8a7795_mod_clks[] __initdata = {
+> >         DEF_MOD("fdp1-2",                117,   R8A7795_CLK_S2D1), /* ES1.x */
+> >         DEF_MOD("fdp1-1",                118,   R8A7795_CLK_S0D1),
+> > @@ -441,6 +444,10 @@ const struct cpg_mssr_info r8a7795_cpg_mssr_info __initconst = {
+> >         .last_dt_core_clk = LAST_DT_CORE_CLK,
+> >         .num_total_core_clks = MOD_CLK_BASE,
+> >
+> > +       /* Critical Core Clocks */
+> > +       .crit_core_clks = r8a7795_crit_core_clks,
+> > +       .num_crit_core_clks = ARRAY_SIZE(r8a7795_crit_core_clks),
+> > +
+> >         /* Module Clocks */
+> >         .mod_clks = r8a7795_mod_clks,
+> >         .num_mod_clks = ARRAY_SIZE(r8a7795_mod_clks),
+> > diff --git a/drivers/clk/renesas/renesas-cpg-mssr.c b/drivers/clk/renesas/renesas-cpg-mssr.c
+> > index 99eeec6..80be019 100644
+> > --- a/drivers/clk/renesas/renesas-cpg-mssr.c
+> > +++ b/drivers/clk/renesas/renesas-cpg-mssr.c
+> > @@ -293,7 +293,8 @@ static void __init cpg_mssr_register_core_clk(const struct cpg_core_clk *core,
+> >
+> >                 if (core->type == CLK_TYPE_DIV6P1) {
+> >                         clk = cpg_div6_register(core->name, 1, &parent_name,
+> > -                                               priv->base + core->offset);
+> > +                                               priv->base + core->offset, info,
+> > +                                               core->id);
+> >                 } else {
+> >                         clk = clk_register_fixed_factor(NULL, core->name,
+> >                                                         parent_name, 0,
+> > diff --git a/drivers/clk/renesas/renesas-cpg-mssr.h b/drivers/clk/renesas/renesas-cpg-mssr.h
+> > index 148f4f0a..a723fdd 100644
+> > --- a/drivers/clk/renesas/renesas-cpg-mssr.h
+> > +++ b/drivers/clk/renesas/renesas-cpg-mssr.h
+> > @@ -86,6 +86,10 @@ struct device_node;
+> >       * @last_dt_core_clk: ID of the last Core Clock exported to DT
+> >       * @num_total_core_clks: Total number of Core Clocks (exported + internal)
+> >       *
+> > +     * @crit_core_clks: Array with Core Clock IDs of critical clocks that
+> > +     *                  should not be disabled without a knowledgeable driver
+> > +     * @num_core_mod_clks: Number of entries in crit_core_clks[]
+> > +     *
+> >       * @mod_clks: Array of Module Clock definitions
+> >       * @num_mod_clks: Number of entries in mod_clks[]
+> >       * @num_hw_mod_clks: Number of Module Clocks supported by the hardware
+> > @@ -109,6 +113,10 @@ struct cpg_mssr_info {
+> >         unsigned int last_dt_core_clk;
+> >         unsigned int num_total_core_clks;
+> >
+> > +       /* Critical Core Clocks that should not be disabled */
+> > +       const unsigned int *crit_core_clks;
+> > +       unsigned int num_crit_core_clks;
+> > +
+> >         /* Module Clocks */
+> >         const struct mssr_mod_clk *mod_clks;
+> >         unsigned int num_mod_clks;
+> > --
+> > 2.8.0
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-clk" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
