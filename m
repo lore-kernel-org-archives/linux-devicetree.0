@@ -1,54 +1,39 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3] media: platform: rcar_imr: add IMR-LSX3 support
-Date: Fri, 30 Jun 2017 16:15:21 +0300
-Message-ID: <ea3cceb5-5fa4-a3d8-01c8-8a768553869a@cogentembedded.com>
-References: <20170628195719.333514117@cogentembedded.com>
- <20170629214212.6r4e5xqmuul7g4o2@rob-hp-laptop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6q-bx50v3: disable SD card
+Date: Fri, 30 Jun 2017 15:35:57 +0200
+Message-ID: <20170630133557.17129-1-romain.perier@collabora.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170629214212.6r4e5xqmuul7g4o2@rob-hp-laptop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>, Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/30/2017 12:42 AM, Rob Herring wrote:
+From: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
 
->> Add support for the image renderer light SRAM extended 3 (IMR-LSX3) found
->> only in the R-Car V2H (R8A7792) SoC.  It differs  from IMR-LX4 in that it
->> supports only planar video formats but can use the video capture data for
->> the textures.
->>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
->>
->> ---
->> This patch  is against the 'media_tree.git' repo's 'master' branch plus the
->> latest version of the Renesas IMR driver...
->>
->> Changes in version 3:
->> - fixed compilation errors, resolved rejects, refreshed the patch atop of the
->>   IMR driver patch (version 6).
->>
->> Changes in version 2:
->> - renamed *enum* 'imr_gen' to 'imr_type' and the *struct* field of this type
->>   from 'gen' to 'type';
->> - rename *struct* 'imr_type' to 'imr_info' and the fields/variables of this type
->>   from 'type' to 'info';
->> - added comments to IMR-LX4 only CMRCR2 bits;
->> - added IMR type check to the WTS instruction writing to CMRCCR2.
->>
->>  Documentation/devicetree/bindings/media/rcar_imr.txt |   11 +-
->
-> You missed my ack on v2.
+Default boot medium must be internal eMMC, we don't want the SDIO to be
+used for these devices. This commit disables the SD card interface
+for GE Healthcare Bx50v3 devices.
 
-    Sorry again, realized that just after posting v3.
+Signed-off-by: Ian Ray <ian.ray-JJi787mZWgc@public.gmane.org>
+Signed-off-by: Romain Perier <romain.perier-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-bx50v3.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
->>  drivers/media/platform/rcar_imr.c                    |  101 +++++++++++++++----
->>  2 files changed, 92 insertions(+), 20 deletions(-)
-
-MBR, Sergei
+diff --git a/arch/arm/boot/dts/imx6q-bx50v3.dtsi b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+index 75201ca..25466372 100644
+--- a/arch/arm/boot/dts/imx6q-bx50v3.dtsi
++++ b/arch/arm/boot/dts/imx6q-bx50v3.dtsi
+@@ -326,3 +326,7 @@
+ 		tcxo-clock-frequency = <26000000>;
+ 	};
+ };
++
++&usdhc2 {
++	status = "disabled";
++};
+-- 
+1.8.3.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
