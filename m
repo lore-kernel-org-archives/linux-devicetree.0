@@ -1,45 +1,87 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] drivers: misc: eeprom: at24: support reading mac
- eeprom from different addresses
-Date: Fri, 30 Jun 2017 09:20:32 +0200
-Message-ID: <20170630072032.tbnatpnh3rej4lmf@pengutronix.de>
-References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
- <1498736351-9021-3-git-send-email-claudiu.beznea@microchip.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH V1 9/9] arm64: dts: add ccu for SC9860
+Date: Fri, 30 Jun 2017 15:37:29 +0800
+Message-ID: <CAAfSe-vsj8SsdB+kVOyNLALM8SkS5KJKbeDN6CHHWL4SjdrbdQ@mail.gmail.com>
+References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
+ <20170618015855.27738-10-chunyan.zhang@spreadtrum.com> <20170620012411.GF4493@codeaurora.org>
+ <CAAfSe-tBtcsyocumaDAyUP674ey1z+xmfAOR7cqnakM_+MOtfQ@mail.gmail.com> <20170630005708.GI22780@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498736351-9021-3-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170630005708.GI22780@codeaurora.org>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-Hallo,
+Hi Stephen,
 
-On Thu, Jun 29, 2017 at 02:39:10PM +0300, Claudiu Beznea wrote:
-> diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
-> index 271a4e2..d55c454 100644
-> --- a/include/linux/platform_data/at24.h
-> +++ b/include/linux/platform_data/at24.h
-> @@ -50,6 +50,7 @@ struct at24_platform_data {
->  #define AT24_FLAG_TAKE8ADDR	BIT(4)	/* take always 8 addresses (24c00) */
->  #define AT24_FLAG_SERIAL	BIT(3)	/* factory-programmed serial number */
->  #define AT24_FLAG_MAC		BIT(2)	/* factory-programmed mac address */
-> +	u8		offset;
+Thanks for your every so clear and detailed answer, thank you.
 
-Assuming you rename the property, please adapt the member name here
-accordingly.
+On 30 June 2017 at 08:57, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 06/22, Chunyan Zhang wrote:
+>> Hi Stephen,
+>>
+>> On 20 June 2017 at 09:24, Stephen Boyd <sboyd@codeaurora.org> wrote:
+>> > On 06/18, Chunyan Zhang wrote:
+>>
+>> >
+>> >> +             compatible = "sprd,sc9860-ccu";
+>> >> +             #clock-cells = <1>;
+>> >> +             reg = <0 0x20000000 0 0x400>,
+>> >> +                   <0 0x20210000 0 0x3000>,
+>> >> +                   <0 0x402b0000 0 0x4000>,
+>> >> +                   <0 0x402d0000 0 0x400>,
+>> >> +                   <0 0x402e0000 0 0x4000>,
+>> >> +                   <0 0x40400000 0 0x400>,
+>> >> +                   <0 0x40880000 0 0x400>,
+>> >> +                   <0 0x415e0000 0 0x400>,
+>> >> +                   <0 0x60200000 0 0x400>,
+>> >> +                   <0 0x61000000 0 0x400>,
+>> >> +                   <0 0x61100000 0 0x3000>,
+>> >> +                   <0 0x62000000 0 0x4000>,
+>> >> +                   <0 0x62100000 0 0x4000>,
+>> >> +                   <0 0x63000000 0 0x400>,
+>> >> +                   <0 0x63100000 0 0x3000>,
+>> >> +                   <0 0x70b00000 0 0x3000>;
+>> >
+>> > There are a lot of reg properties here. Perhaps there needs to be
+>> > different nodes for the different clock controllers in this SoC?
+>> >
+>>
+>> On Spreadtrum's platform, clocks are basically located in a few
+>> address areas due to some hardware design issue, that says there're
+>> more than one kinds of clocks in one address range, and one kind of
+>> clocks have more than one physical address bases, except ccu_pll and
+>> ccu_div in this patchset.
+>>
+>> We're planning to map the whole device area at one time before
+>> initializing each of them, once that has been done and upstreamed, I
+>> will remove these lists of addressed.
+>
+> Ok. Does this mean we need to wait for those patches to be sent
 
-Best regards
-Uwe
+I don't think that would come out for review in the near future, so I
+have to keep these ranges of the address listed here for the time
+being.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> out for review? Is it more like certain clks are embedded inside
+> other devices like display controllers, i2c controllers, etc? Is
+
+>From what I understand, that's just something like you said.
+
+> there any more information I can get on this SoC?
+
+I think you may get more information from our dts files [1], if you
+would like to :)
+
+
+Thanks again,
+Chunyan
+
+[1] https://github.com/sprdlinux/kernel/blob/sp9860g-1h10/arch/arm64/boot/dts/sprd/whale.dtsi
+
+>
+> --
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
