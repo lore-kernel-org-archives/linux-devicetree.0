@@ -1,18 +1,19 @@
-From: Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: Re: [PATCH 4/5] ARM: dts: at91: at91-sama5d27_som1: add sama5d27
- SoM1 support
-Date: Fri, 30 Jun 2017 14:57:53 +0200
-Message-ID: <20170630125753.hx6nv46gjjgww3dy@rfolt0960.corp.atmel.com>
+From: m18063 <Claudiu.Beznea@microchip.com>
+Subject: Re: [PATCH 4/5] ARM: dts: at91: at91-sama5d27_som1: add sama5d27 SoM1
+ support
+Date: Fri, 30 Jun 2017 16:01:26 +0300
+Message-ID: <8ff31cb6-b551-4e05-d9aa-aef11c7675d0@microchip.com>
 References: <1498736674-9233-1-git-send-email-claudiu.beznea@microchip.com>
  <1498736674-9233-5-git-send-email-claudiu.beznea@microchip.com>
  <20170629145841.srpjgcdw7jo2f6as@rfolt0960.corp.atmel.com>
  <4452aad8-1bb4-f937-02b8-e5960f2aadc2@microchip.com>
+ <20170630125753.hx6nv46gjjgww3dy@rfolt0960.corp.atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <4452aad8-1bb4-f937-02b8-e5960f2aadc2@microchip.com>
+In-Reply-To: <20170630125753.hx6nv46gjjgww3dy@rfolt0960.corp.atmel.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,244 +23,247 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: m18063 <Claudiu.Beznea@microchip.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, sza@esh.hu, linux-kernel@vger.kernel.org, linux@armlinux.org.uk, robh+dt@kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org, cristian.birsan@microchip.com
+To: nicolas.ferre@microchip.com, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, sza@esh.hu, devicetree@vger.kernel.org, cristian.birsan@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 30, 2017 at 03:38:22PM +0300, m18063 wrote:
-> Hi Ludovic,
+
+
+On 30.06.2017 15:57, Ludovic Desroches wrote:
+> On Fri, Jun 30, 2017 at 03:38:22PM +0300, m18063 wrote:
+>> Hi Ludovic,
+>>
+>> On 29.06.2017 17:58, Ludovic Desroches wrote:
+>>> On Thu, Jun 29, 2017 at 02:44:33PM +0300, Claudiu Beznea wrote:
+>>>> Add specific DTS file and bindings for sama5d27 SoM1 board.
+>>>>
+>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+>>>> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 178 ++++++++++++++++++++++++++++++
+>>>>  1 file changed, 178 insertions(+)
+>>>>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+>>>> new file mode 100644
+>>>> index 0000000..b3af4d4
+>>>> --- /dev/null
+>>>> +++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
+>>>> @@ -0,0 +1,178 @@
+>>>> +/*
+>>>> + * at91-sama5d27_som1.dtsi - Device Tree file for SAMA5D27 SoM1 board
+>>>> + *
+>>>> + *  Copyright (c) 2017, Microchip Technology Inc.
+>>>> + *                2017 Cristian Birsan <cristian.birsan@microchip.com>
+>>>> + *                2017 Claudiu Beznea <claudiu.beznea@microchip.com>
+>>>> + *
+>>>> + * This file is dual-licensed: you can use it either under the terms
+>>>> + * of the GPL or the X11 license, at your option. Note that this dual
+>>>> + * licensing only applies to this file, and not this project as a
+>>>> + * whole.
+>>>> + *
+>>>> + *  a) This file is free software; you can redistribute it and/or
+>>>> + *     modify it under the terms of the GNU General Public License as
+>>>> + *     published by the Free Software Foundation; either version 2 of the
+>>>> + *     License, or (at your option) any later version.
+>>>> + *
+>>>> + *     This file is distributed in the hope that it will be useful,
+>>>> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>>> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>>> + *     GNU General Public License for more details.
+>>>> + *
+>>>> + * Or, alternatively,
+>>>> + *
+>>>> + *  b) Permission is hereby granted, free of charge, to any person
+>>>> + *     obtaining a copy of this software and associated documentation
+>>>> + *     files (the "Software"), to deal in the Software without
+>>>> + *     restriction, including without limitation the rights to use,
+>>>> + *     copy, modify, merge, publish, distribute, sublicense, and/or
+>>>> + *     sell copies of the Software, and to permit persons to whom the
+>>>> + *     Software is furnished to do so, subject to the following
+>>>> + *     conditions:
+>>>> + *
+>>>> + *     The above copyright notice and this permission notice shall be
+>>>> + *     included in all copies or substantial portions of the Software.
+>>>> + *
+>>>> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+>>>> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+>>>> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+>>>> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+>>>> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+>>>> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+>>>> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+>>>> + *     OTHER DEALINGS IN THE SOFTWARE.
+>>>> + */
+>>>> +#include "sama5d2.dtsi"
+>>>> +#include "sama5d2-pinfunc.h"
+>>>> +
+>>>> +/ {
+>>>> +	model = "Atmel SAMA5D27 SoM1";
+>>>> +	compatible = "atmel,sama5d27-som1", "atmel,sama5d27", "atmel,sama5d2", "atmel,sama5";
+>>>> +
+>>>> +	clocks {
+>>>> +		slow_xtal {
+>>>> +			clock-frequency = <32768>;
+>>>> +		};
+>>>> +
+>>>> +		main_xtal {
+>>>> +			clock-frequency = <24000000>;
+>>>> +		};
+>>>> +	};
+>>>> +
+>>>> +	ahb {
+>>>> +		apb {
+>>>> +			qspi1: spi@f0024000 {
+>>>> +				pinctrl-names = "default";
+>>>> +				pinctrl-0 = <&pinctrl_qspi1_default>;
+>>>> +				flash@0 {
+>>>> +					#address-cells = <1>;
+>>>> +					#size-cells = <1>;
+>>>> +					compatible = "jedec,spi-nor";
+>>>> +					reg = <0>;
+>>>> +					spi-max-frequency = <83000000>;
+>>>> +					m25p,fast-read;
+>>>> +
+>>>> +					at91bootstrap@00000000 {
+>>>> +						label = "at91bootstrap";
+>>>> +						reg = <0x00000000 0x00010000>;
+>>>> +					};
+>>>> +
+>>>> +					bootloaderenv@00010000 {
+>>>> +						label = "bootloader env";
+>>>> +						reg = <0x00010000 0x00010000>;
+>>>> +					};
+>>>> +
+>>>> +					bootloader@00020000 {
+>>>> +						label = "bootloader";
+>>>> +						reg = <0x00020000 0x00050000>;
+>>>> +					};
+>>>> +
+>>>> +					dtb@00070000 {
+>>>> +						label = "device tree";
+>>>> +						reg = <0x00070000 0x00010000>;
+>>>> +					};
+>>>> +
+>>>> +					kernel@00080000 {
+>>>> +						label = "kernel";
+>>>> +						reg = <0x00080000 0x00380000>;
+>>>> +					};
+>>>
+>>> I am wondering if it's a good idea to give the flash map here. If we
+>>> take a kernel generated by a sama5_defconfig, it is about 3.8 MB.
+>> The flash size here is 8MB. With kernel image of 3.8M, bootloader of 18KB,
+>> u-boot of 2.2MB, dtb of 31K it will still fit.
 > 
-> On 29.06.2017 17:58, Ludovic Desroches wrote:
-> > On Thu, Jun 29, 2017 at 02:44:33PM +0300, Claudiu Beznea wrote:
-> >> Add specific DTS file and bindings for sama5d27 SoM1 board.
-> >>
-> >> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-> >> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
-> >> ---
-> >>  arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 178 ++++++++++++++++++++++++++++++
-> >>  1 file changed, 178 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-> >>
-> >> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1.dtsi b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-> >> new file mode 100644
-> >> index 0000000..b3af4d4
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/at91-sama5d27_som1.dtsi
-> >> @@ -0,0 +1,178 @@
-> >> +/*
-> >> + * at91-sama5d27_som1.dtsi - Device Tree file for SAMA5D27 SoM1 board
-> >> + *
-> >> + *  Copyright (c) 2017, Microchip Technology Inc.
-> >> + *                2017 Cristian Birsan <cristian.birsan@microchip.com>
-> >> + *                2017 Claudiu Beznea <claudiu.beznea@microchip.com>
-> >> + *
-> >> + * This file is dual-licensed: you can use it either under the terms
-> >> + * of the GPL or the X11 license, at your option. Note that this dual
-> >> + * licensing only applies to this file, and not this project as a
-> >> + * whole.
-> >> + *
-> >> + *  a) This file is free software; you can redistribute it and/or
-> >> + *     modify it under the terms of the GNU General Public License as
-> >> + *     published by the Free Software Foundation; either version 2 of the
-> >> + *     License, or (at your option) any later version.
-> >> + *
-> >> + *     This file is distributed in the hope that it will be useful,
-> >> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> >> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> >> + *     GNU General Public License for more details.
-> >> + *
-> >> + * Or, alternatively,
-> >> + *
-> >> + *  b) Permission is hereby granted, free of charge, to any person
-> >> + *     obtaining a copy of this software and associated documentation
-> >> + *     files (the "Software"), to deal in the Software without
-> >> + *     restriction, including without limitation the rights to use,
-> >> + *     copy, modify, merge, publish, distribute, sublicense, and/or
-> >> + *     sell copies of the Software, and to permit persons to whom the
-> >> + *     Software is furnished to do so, subject to the following
-> >> + *     conditions:
-> >> + *
-> >> + *     The above copyright notice and this permission notice shall be
-> >> + *     included in all copies or substantial portions of the Software.
-> >> + *
-> >> + *     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-> >> + *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-> >> + *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-> >> + *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-> >> + *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-> >> + *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-> >> + *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-> >> + *     OTHER DEALINGS IN THE SOFTWARE.
-> >> + */
-> >> +#include "sama5d2.dtsi"
-> >> +#include "sama5d2-pinfunc.h"
-> >> +
-> >> +/ {
-> >> +	model = "Atmel SAMA5D27 SoM1";
-> >> +	compatible = "atmel,sama5d27-som1", "atmel,sama5d27", "atmel,sama5d2", "atmel,sama5";
-> >> +
-> >> +	clocks {
-> >> +		slow_xtal {
-> >> +			clock-frequency = <32768>;
-> >> +		};
-> >> +
-> >> +		main_xtal {
-> >> +			clock-frequency = <24000000>;
-> >> +		};
-> >> +	};
-> >> +
-> >> +	ahb {
-> >> +		apb {
-> >> +			qspi1: spi@f0024000 {
-> >> +				pinctrl-names = "default";
-> >> +				pinctrl-0 = <&pinctrl_qspi1_default>;
-> >> +				flash@0 {
-> >> +					#address-cells = <1>;
-> >> +					#size-cells = <1>;
-> >> +					compatible = "jedec,spi-nor";
-> >> +					reg = <0>;
-> >> +					spi-max-frequency = <83000000>;
-> >> +					m25p,fast-read;
-> >> +
-> >> +					at91bootstrap@00000000 {
-> >> +						label = "at91bootstrap";
-> >> +						reg = <0x00000000 0x00010000>;
-> >> +					};
-> >> +
-> >> +					bootloaderenv@00010000 {
-> >> +						label = "bootloader env";
-> >> +						reg = <0x00010000 0x00010000>;
-> >> +					};
-> >> +
-> >> +					bootloader@00020000 {
-> >> +						label = "bootloader";
-> >> +						reg = <0x00020000 0x00050000>;
-> >> +					};
-> >> +
-> >> +					dtb@00070000 {
-> >> +						label = "device tree";
-> >> +						reg = <0x00070000 0x00010000>;
-> >> +					};
-> >> +
-> >> +					kernel@00080000 {
-> >> +						label = "kernel";
-> >> +						reg = <0x00080000 0x00380000>;
-> >> +					};
-> > 
-> > I am wondering if it's a good idea to give the flash map here. If we
-> > take a kernel generated by a sama5_defconfig, it is about 3.8 MB.
-> The flash size here is 8MB. With kernel image of 3.8M, bootloader of 18KB,
-> u-boot of 2.2MB, dtb of 31K it will still fit.
-
-Right it can fit, I mean the description gives about 3.5 MB for the kernel so
-you can extend it.
-
-Regards
-
-Ludovic
-
-> > 
-> >> +				};
-> >> +			};
-> >> +
-> >> +			macb0: ethernet@f8008000 {
-> >> +				pinctrl-names = "default";
-> >> +				pinctrl-0 = <&pinctrl_macb0_default>;
-> >> +				phy-mode = "rmii";
-> >> +
-> >> +				ethernet-phy@1 {
-> >> +					reg = <0x1>;
-> >> +					interrupt-parent = <&pioA>;
-> >> +					interrupts = <73 IRQ_TYPE_LEVEL_LOW>;
-> > 
-> > Are you sure about this value? pinctrl tells PD31 so 127. By the way, it
-> > is better to use macros: PIN_PD31.
-> Yes, here is a mistake. It has to be PIN_PD31. I will fix it in v2.
+> Right it can fit, I mean the description gives about 3.5 MB for the kernel so
+> you can extend it.
+You're right. It should be changed. I will do it in v2.
 > 
-> Thank you,
-> Claudiu
-> > 
-> > Regards
-> > 
-> > Ludovic
-> > 
-> >> +					pinctrl-names = "default";
-> >> +					pinctrl-0 = <&pinctrl_macb0_phy_irq>;
-> >> +				};
-> >> +			};
-> >> +
-> >> +			i2c0: i2c@f8028000 {
-> >> +				dmas = <0>, <0>;
-> >> +				pinctrl-names = "default";
-> >> +				pinctrl-0 = <&pinctrl_i2c0_default>;
-> >> +				i2c-sda-hold-time-ns = <350>;
-> >> +				status = "disabled";
-> >> +
-> >> +				24aa@50 {
-> >> +					compatible = "24mac602";
-> >> +					reg = <0x50>;
-> >> +					pagesize = <8>;
-> >> +					start-offset = /bits/ 8 <0xf8>;
-> >> +					read-only;
-> >> +				};
-> >> +			};
-> >> +
-> >> +			pinctrl@fc038000 {
-> >> +
-> >> +				pinctrl_i2c0_default: i2c0_default {
-> >> +					pinmux = <PIN_PD21__TWD0>,
-> >> +						 <PIN_PD22__TWCK0>;
-> >> +					bias-disable;
-> >> +				};
-> >> +
-> >> +				pinctrl_macb0_default: macb0_default {
-> >> +					pinmux = <PIN_PD9__GTXCK>,
-> >> +						 <PIN_PD10__GTXEN>,
-> >> +						 <PIN_PD11__GRXDV>,
-> >> +						 <PIN_PD12__GRXER>,
-> >> +						 <PIN_PD13__GRX0>,
-> >> +						 <PIN_PD14__GRX1>,
-> >> +						 <PIN_PD15__GTX0>,
-> >> +						 <PIN_PD16__GTX1>,
-> >> +						 <PIN_PD17__GMDC>,
-> >> +						 <PIN_PD18__GMDIO>;
-> >> +					bias-disable;
-> >> +				};
-> >> +
-> >> +				pinctrl_macb0_phy_irq: macb0_phy_irq {
-> >> +					pinmux = <PIN_PD31__GPIO>;
-> >> +					bias-disable;
-> >> +				};
-> >> +
-> >> +				pinctrl_qspi1_default: qspi1_default {
-> >> +					sck_cs {
-> >> +						pinmux = <PIN_PB5__QSPI1_SCK>,
-> >> +							 <PIN_PB6__QSPI1_CS>;
-> >> +						bias-disable;
-> >> +					};
-> >> +
-> >> +					data {
-> >> +						pinmux = <PIN_PB7__QSPI1_IO0>,
-> >> +							 <PIN_PB8__QSPI1_IO1>,
-> >> +							 <PIN_PB9__QSPI1_IO2>,
-> >> +							 <PIN_PB10__QSPI1_IO3>;
-> >> +						bias-pull-up;
-> >> +					};
-> >> +				};
-> >> +			};
-> >> +		};
-> >> +	};
-> >> +};
-> >> -- 
-> >> 2.7.4
-> >>
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Regards
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Ludovic
+> 
+>>>
+>>>> +				};
+>>>> +			};
+>>>> +
+>>>> +			macb0: ethernet@f8008000 {
+>>>> +				pinctrl-names = "default";
+>>>> +				pinctrl-0 = <&pinctrl_macb0_default>;
+>>>> +				phy-mode = "rmii";
+>>>> +
+>>>> +				ethernet-phy@1 {
+>>>> +					reg = <0x1>;
+>>>> +					interrupt-parent = <&pioA>;
+>>>> +					interrupts = <73 IRQ_TYPE_LEVEL_LOW>;
+>>>
+>>> Are you sure about this value? pinctrl tells PD31 so 127. By the way, it
+>>> is better to use macros: PIN_PD31.
+>> Yes, here is a mistake. It has to be PIN_PD31. I will fix it in v2.
+>>
+>> Thank you,
+>> Claudiu
+>>>
+>>> Regards
+>>>
+>>> Ludovic
+>>>
+>>>> +					pinctrl-names = "default";
+>>>> +					pinctrl-0 = <&pinctrl_macb0_phy_irq>;
+>>>> +				};
+>>>> +			};
+>>>> +
+>>>> +			i2c0: i2c@f8028000 {
+>>>> +				dmas = <0>, <0>;
+>>>> +				pinctrl-names = "default";
+>>>> +				pinctrl-0 = <&pinctrl_i2c0_default>;
+>>>> +				i2c-sda-hold-time-ns = <350>;
+>>>> +				status = "disabled";
+>>>> +
+>>>> +				24aa@50 {
+>>>> +					compatible = "24mac602";
+>>>> +					reg = <0x50>;
+>>>> +					pagesize = <8>;
+>>>> +					start-offset = /bits/ 8 <0xf8>;
+>>>> +					read-only;
+>>>> +				};
+>>>> +			};
+>>>> +
+>>>> +			pinctrl@fc038000 {
+>>>> +
+>>>> +				pinctrl_i2c0_default: i2c0_default {
+>>>> +					pinmux = <PIN_PD21__TWD0>,
+>>>> +						 <PIN_PD22__TWCK0>;
+>>>> +					bias-disable;
+>>>> +				};
+>>>> +
+>>>> +				pinctrl_macb0_default: macb0_default {
+>>>> +					pinmux = <PIN_PD9__GTXCK>,
+>>>> +						 <PIN_PD10__GTXEN>,
+>>>> +						 <PIN_PD11__GRXDV>,
+>>>> +						 <PIN_PD12__GRXER>,
+>>>> +						 <PIN_PD13__GRX0>,
+>>>> +						 <PIN_PD14__GRX1>,
+>>>> +						 <PIN_PD15__GTX0>,
+>>>> +						 <PIN_PD16__GTX1>,
+>>>> +						 <PIN_PD17__GMDC>,
+>>>> +						 <PIN_PD18__GMDIO>;
+>>>> +					bias-disable;
+>>>> +				};
+>>>> +
+>>>> +				pinctrl_macb0_phy_irq: macb0_phy_irq {
+>>>> +					pinmux = <PIN_PD31__GPIO>;
+>>>> +					bias-disable;
+>>>> +				};
+>>>> +
+>>>> +				pinctrl_qspi1_default: qspi1_default {
+>>>> +					sck_cs {
+>>>> +						pinmux = <PIN_PB5__QSPI1_SCK>,
+>>>> +							 <PIN_PB6__QSPI1_CS>;
+>>>> +						bias-disable;
+>>>> +					};
+>>>> +
+>>>> +					data {
+>>>> +						pinmux = <PIN_PB7__QSPI1_IO0>,
+>>>> +							 <PIN_PB8__QSPI1_IO1>,
+>>>> +							 <PIN_PB9__QSPI1_IO2>,
+>>>> +							 <PIN_PB10__QSPI1_IO3>;
+>>>> +						bias-pull-up;
+>>>> +					};
+>>>> +				};
+>>>> +			};
+>>>> +		};
+>>>> +	};
+>>>> +};
+>>>> -- 
+>>>> 2.7.4
+>>>>
+>>>>
+>>>> _______________________________________________
+>>>> linux-arm-kernel mailing list
+>>>> linux-arm-kernel@lists.infradead.org
+>>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
