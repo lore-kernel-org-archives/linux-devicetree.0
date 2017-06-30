@@ -1,28 +1,49 @@
-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject: Re: [PATCH 1/3] dts: RISC-V vendor prefix
-Date: Thu, 29 Jun 2017 16:45:29 -0700 (PDT)
-Message-ID: <mhng-2736aef3-140f-497b-9870-29fbdadfdb88@palmer-si-x1c4>
-References: <20170629203515.furw573zz2uu76pa@rob-hp-laptop>
-Mime-Version: 1.0 (MHng)
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20170629203515.furw573zz2uu76pa@rob-hp-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, mark.rutland@arm.com, jic23@kernel.org, treding@nvidia.com, maxime.ripard@free-electrons.com, marek.vasut@gmail.com, ccc94453@vip.cybercity.dk, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [RESEND PATCH v4] clk: stm32h7: Add stm32h743 clock driver
+Date: Thu, 29 Jun 2017 17:20:08 -0700
+Message-ID: <20170630002008.GD22780@codeaurora.org>
+References: <1496818794-14771-1-git-send-email-gabriel.fernandez@st.com>
+ <20170621220703.GI4493@codeaurora.org>
+ <110cf67f-e1d6-1f99-953c-6b9639bb4910@st.com>
+ <20170628155956.GA5316@codeaurora.org>
+ <7c0c3861-cf61-a9e2-cd5d-2ae30b8f32fa@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-clk-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7c0c3861-cf61-a9e2-cd5d-2ae30b8f32fa@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Jun 2017 13:35:15 PDT (-0700), robh@kernel.org wrote:
-> On Mon, Jun 26, 2017 at 10:21:22PM -0700, Palmer Dabbelt wrote:
->> RISC-V systems use device tree to specify the memory layout of the
->> system.  This patch reserves the "riscv" vendor prefix, which will be
->> used for devices that are specified by the various RISC-V ISA
->> specifications.
->>
->> Signed-off-by: Palmer Dabbelt <palmer@dabbelt.com>
->> ---
->>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->>  1 file changed, 1 insertion(+)
->
-> Applied with subject fixup.
+On 06/29, Gabriel FERNANDEZ wrote:
+> 
+> 
+> On 06/28/2017 05:59 PM, Stephen Boyd wrote:
+> > On 06/27, Gabriel FERNANDEZ wrote:
+> >>
+> >> On 06/22/2017 12:07 AM, Stephen Boyd wrote:
+> >>> readl_poll_timeout?
+> >>>
+> >> if i use readl_poll_timeout (wich use 'ktime_get()') it can be
+> >> operational only after the selection of clocksource ? (device_initcall).
+> >> And then if a driver turn on a clock before, it could blocked the linux
+> >> console ?
+> >>
+> > Ok. I wonder if we could add some sort of starting check to
+> > readl_poll_timeout() that tests system_state for booting vs.
+> > scheduling? That should be sufficient to handle this case?
+> >
+> Oops i think i understood my problem...
+> i used readl_poll_timeout in atomic context.
+> I have to move my code in the .prepare ops.
+> 
+> If you are ok with that i will send a v5
+> 
 
-Thanks!
+There's readl_poll_timeout_atomic() for those modes.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
