@@ -1,59 +1,100 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] arm64: dts: add RK3399-Q7 (Puma) SoM
-Date: Sat, 01 Jul 2017 00:13:25 +0200
-Message-ID: <1912092.hfJnF4sPpq@phil>
-References: <20170626191854.58253-1-klaus.goger@theobroma-systems.com> <20170626191854.58253-5-klaus.goger@theobroma-systems.com>
+From: Eduardo Valentin <edubezval@gmail.com>
+Subject: Re: [PATCH 1/4] arm64: tegra: Add BPMP thermal sensor to Tegra186
+Date: Fri, 30 Jun 2017 16:56:05 -0700
+Message-ID: <20170630235603.GA2943@localhost.localdomain>
+References: <20170616112825.31025-1-mperttunen@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170626191854.58253-5-klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-Cc: Philipp Tomsich <philipp.tomsich-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20170616112825.31025-1-mperttunen@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, rui.zhang@intel.com, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Klaus,
-
-Am Montag, 26. Juni 2017, 21:18:54 CEST schrieb Klaus Goger:
-> The RK3399-Q7 SoM is a Qseven-compatible (70mm x 70mm, MXM-230
-> connector) system-on-module from Theobroma Systems, featuring the
-> Rockchip RK3399.
-> 
-> It provides the following feature set:
->  * up to 4GB DDR3
->  * on-module SPI-NOR flash
->  * on-module eMMC (with 8-bit 1.8V interface)
->  * SD card (on a baseboad) via edge connector
->  * Gigabit Ethernet with on-module Micrel KSZ9031 GbE PHY
->  * HDMI/eDP/2x MIPI-DSI
->  * 2x MIPI-CSI
->  * USB
->    - 1x USB 3.0 dual-role (direct connection)
->    - 2x USB 3.0 host + 1x USB 2.0 (on-module USB 3.0 hub)
->  * on-module STM32 Cortex-M0 companion controller, implementing:
->    - low-power RTC functionality (ISL1208 emulation)
->    - fan controller (AMC6821 emulation)
->    - USB<->CAN bridge controller
-> 
-> Signed-off-by: Klaus Goger <klaus.goger-SN7IsUiht6C/RdPyistoZJqQE7yCjDx5@public.gmane.org>
-> 
+On Fri, Jun 16, 2017 at 02:28:22PM +0300, Mikko Perttunen wrote:
+> This adds the thermal sensor device provided by the BPMP, and the
+> relevant thermal sensors to the Tegra186 device tree.
+>=20
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 > ---
-> 
->  arch/arm64/boot/dts/rockchip/Makefile        |   1 +
->  arch/arm64/boot/dts/rockchip/rk3399-puma.dts | 650 +++++++++++++++++++++++++++
+>  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 48 ++++++++++++++++++++++++++=
+++++++
+>  1 file changed, 48 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/d=
+ts/nvidia/tegra186.dtsi
+> index 5e62e68ac053..5c19ea74da24 100644
+> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+> @@ -4,6 +4,7 @@
+>  #include <dt-bindings/mailbox/tegra186-hsp.h>
+>  #include <dt-bindings/power/tegra186-powergate.h>
+>  #include <dt-bindings/reset/tegra186-reset.h>
+> +#include <dt-bindings/thermal/tegra186-bpmp-thermal.h>
+> =20
+>  / {
+>  	compatible =3D "nvidia,tegra186";
+> @@ -444,6 +445,53 @@
+>  			#size-cells =3D <0>;
+>  			status =3D "disabled";
+>  		};
+> +
+> +		bpmp_thermal: thermal {
+> +			compatible =3D "nvidia,tegra186-bpmp-thermal";
+> +			#thermal-sensor-cells =3D <1>;
+> +		};
+> +	};
+> +
+> +	thermal-zones {
+> +		a57 {
+> +			polling-delay =3D <0>;
+> +			polling-delay-passive =3D <1000>;
+> +
+> +			thermal-sensors =3D
+> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_CPU>;
+> +		};
+> +
+> +		denver {
+> +			polling-delay =3D <0>;
+> +			polling-delay-passive =3D <1000>;
+> +
+> +			thermal-sensors =3D
+> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_AUX>;
+> +		};
+> +
+> +		gpu {
+> +			polling-delay =3D <0>;
+> +			polling-delay-passive =3D <1000>;
+> +
+> +			thermal-sensors =3D
+> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_GPU>;
+> +		};
+> +
+> +		pll {
+> +			polling-delay =3D <0>;
+> +			polling-delay-passive =3D <1000>;
+> +
+> +			thermal-sensors =3D
+> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_PLLX>;
+> +		};
+> +
+> +		always_on {
+> +			polling-delay =3D <0>;
+> +			polling-delay-passive =3D <1000>;
+> +
+> +			thermal-sensors =3D
+> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_AO>;
+> +		};
 
-One thing I forgot to address was the SOM'nes of the puma board. People
-might want to use that with different base-boards so you might want to
-split this up into a rk3399-puma-som.dtsi and for example rk3399-puma-haikou.dts
-for the Puma + Haikou Q7 combination.
+All the above zones are lacking mandatory fields. Please refer to the
+thermal binding documentation.=20
 
-Examples for such a split may be the rk3288-phycore, rk3288-rock2 and
-rk3288-firefly-reload.
-
-
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  	};
+> =20
+>  	timer {
+> --=20
+> 2.13.1
+>=20
