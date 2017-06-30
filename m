@@ -1,87 +1,47 @@
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: Re: [PATCH V1 9/9] arm64: dts: add ccu for SC9860
-Date: Fri, 30 Jun 2017 15:37:29 +0800
-Message-ID: <CAAfSe-vsj8SsdB+kVOyNLALM8SkS5KJKbeDN6CHHWL4SjdrbdQ@mail.gmail.com>
-References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
- <20170618015855.27738-10-chunyan.zhang@spreadtrum.com> <20170620012411.GF4493@codeaurora.org>
- <CAAfSe-tBtcsyocumaDAyUP674ey1z+xmfAOR7cqnakM_+MOtfQ@mail.gmail.com> <20170630005708.GI22780@codeaurora.org>
+From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] dt-bindings: nvmem: mediatek: add support for MediaTek MT7623 and MT7622 SoC
+Date: Fri, 30 Jun 2017 15:49:00 +0800
+Message-ID: <fc06fbe496ac237b961b73d51bb823e4ac2f8578.1498808678.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170630005708.GI22780@codeaurora.org>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
 
-Thanks for your every so clear and detailed answer, thank you.
+This updates dt-binding documentation for MediaTek MT7622 and
+MT7623 SoC. For the both SoCs supported all rely on the fallback
+binding of the generic case with "mediatek,efuse".
 
-On 30 June 2017 at 08:57, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> On 06/22, Chunyan Zhang wrote:
->> Hi Stephen,
->>
->> On 20 June 2017 at 09:24, Stephen Boyd <sboyd@codeaurora.org> wrote:
->> > On 06/18, Chunyan Zhang wrote:
->>
->> >
->> >> +             compatible = "sprd,sc9860-ccu";
->> >> +             #clock-cells = <1>;
->> >> +             reg = <0 0x20000000 0 0x400>,
->> >> +                   <0 0x20210000 0 0x3000>,
->> >> +                   <0 0x402b0000 0 0x4000>,
->> >> +                   <0 0x402d0000 0 0x400>,
->> >> +                   <0 0x402e0000 0 0x4000>,
->> >> +                   <0 0x40400000 0 0x400>,
->> >> +                   <0 0x40880000 0 0x400>,
->> >> +                   <0 0x415e0000 0 0x400>,
->> >> +                   <0 0x60200000 0 0x400>,
->> >> +                   <0 0x61000000 0 0x400>,
->> >> +                   <0 0x61100000 0 0x3000>,
->> >> +                   <0 0x62000000 0 0x4000>,
->> >> +                   <0 0x62100000 0 0x4000>,
->> >> +                   <0 0x63000000 0 0x400>,
->> >> +                   <0 0x63100000 0 0x3000>,
->> >> +                   <0 0x70b00000 0 0x3000>;
->> >
->> > There are a lot of reg properties here. Perhaps there needs to be
->> > different nodes for the different clock controllers in this SoC?
->> >
->>
->> On Spreadtrum's platform, clocks are basically located in a few
->> address areas due to some hardware design issue, that says there're
->> more than one kinds of clocks in one address range, and one kind of
->> clocks have more than one physical address bases, except ccu_pll and
->> ccu_div in this patchset.
->>
->> We're planning to map the whole device area at one time before
->> initializing each of them, once that has been done and upstreamed, I
->> will remove these lists of addressed.
->
-> Ok. Does this mean we need to wait for those patches to be sent
+Signed-off-by: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Signed-off-by: Andrew-CT Chen <andrew-ct.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+---
+ Documentation/devicetree/bindings/nvmem/mtk-efuse.txt | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I don't think that would come out for review in the near future, so I
-have to keep these ranges of the address listed here for the time
-being.
+diff --git a/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+index 74cf529..0668c45 100644
+--- a/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
++++ b/Documentation/devicetree/bindings/nvmem/mtk-efuse.txt
+@@ -3,7 +3,10 @@
+ This binding is intended to represent MTK-EFUSE which is found in most Mediatek SOCs.
+ 
+ Required properties:
+-- compatible: should be "mediatek,mt8173-efuse" or "mediatek,efuse"
++- compatible: should be
++	      "mediatek,mt7622-efuse", "mediatek,efuse": for MT7622
++	      "mediatek,mt7623-efuse", "mediatek,efuse": for MT7623
++	      "mediatek,mt8173-efuse" or "mediatek,efuse": for MT8173
+ - reg: Should contain registers location and length
+ 
+ = Data cells =
+-- 
+2.7.4
 
-> out for review? Is it more like certain clks are embedded inside
-> other devices like display controllers, i2c controllers, etc? Is
-
->From what I understand, that's just something like you said.
-
-> there any more information I can get on this SoC?
-
-I think you may get more information from our dts files [1], if you
-would like to :)
-
-
-Thanks again,
-Chunyan
-
-[1] https://github.com/sprdlinux/kernel/blob/sp9860g-1h10/arch/arm64/boot/dts/sprd/whale.dtsi
-
->
-> --
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
