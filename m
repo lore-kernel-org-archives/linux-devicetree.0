@@ -1,71 +1,69 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] dt-bindings: input: Add the Goodix GTx5 series
- Touchscreen devicetree bindings
-Date: Fri, 30 Jun 2017 09:46:35 -0500
-Message-ID: <CAL_JsqJXjKTUaOp-DS07Jw-iGrBB3euoE94LFBAhh0TOP8Tmxg@mail.gmail.com>
-References: <22592d94-f482-3e4f-3860-1dce83472d4f@goodix.com>
- <20170623203706.upfzigj6ghdbqx2q@rob-hp-laptop> <20170626132253.GA24061@andrew-dell>
- <CAL_JsqJ6w7oEjm=i_KX8Y_axbRSdX4Q+14NQ8XaHnDevGQrS_w@mail.gmail.com> <20170627032705.GA16627@andrew-dell>
+From: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: "Generic" MMIO ADC
+Date: Fri, 30 Jun 2017 10:33:05 -0500
+Message-ID: <CAL_JsqJ4gD=sSW40qE_gbKDBG_NA6eng_sr26b-4AV5D0uXjkA@mail.gmail.com>
+References: <b60def9a-45dc-bf97-e059-abbe105648b2@topic.nl> <20170630145319.20ec3696@jic23.retrosnub.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20170627032705.GA16627@andrew-dell>
+In-Reply-To: <20170630145319.20ec3696-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrew-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org, mouse-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org
+To: Jonathan Cameron <jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org>
+Cc: Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 10:27 PM, Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org> wrote:
-> On Mon, Jun 26, 2017 at 09:16:40AM -0500, Rob Herring wrote:
->> On Mon, Jun 26, 2017 at 8:22 AM, Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org> wrote:
->> > Hi Rob,
->> >
->> > Thank you for the review.
->> >
->> > On Fri, Jun 23, 2017 at 03:37:06PM -0500, Rob Herring wrote:
->> >> On Mon, Jun 19, 2017 at 06:40:32PM +0800, Wang Yafei wrote:
->> >> > Signed-off-by: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
->> >> > ---
->> >> >  .../bindings/input/touchscreen/goodix-gtx5.txt     | 75 ++++++++++++++++++++++
->> >> >  1 file changed, 75 insertions(+)
->> >> >  create mode 100755 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
->>
->> [...]
-
->> >> > +           compatible = "goodix,gtx5";
->> >> > +           reg = <0x14>;
->> >> > +           interrupt-parent = <&msm_gpio>;
->> >> > +           interrupts = <13 0x2800>;
->> >> > +           vtouch-supply = <&pm8916_l15>;
->> >> > +           reset-gpios = <&msm_gpio 12 0x0>;
->> >> > +           irq-gpios = <&msm_gpio 13 0x2800>;
->> >> > +           irq-flags = <1>; /* 1:trigger rising, 2:trigger falling;*/
->> >> > +           touchscreen-max-id = <10>;
->> >> > +           touchscreen-size-x = <400>;
->> >> > +           touchscreen-size-y = <400>;
->> >> > +           touchscreen-max-w = <400>;
->> >> > +           touchscreen-max-pressure = <255>;
->> >> > +           touchscreen-swapped-x-y;
->> >> > +           touchscreen-key-map = <172 158>; /*KEY_HOMEPAGE, KEY_BACK*/
->> >> > +           sensor0 {
->> >>
->> >> How many sensors can there be? That needs to be documented.
->> >>
->> >> Why do you need a sub-node?
->> >
->> > sensor is an internal call, we use senesorX to represent the touchpanel
->> > is produced by which factory. A panel factory will have it corresponding
->> > config data to get the best touch results. It will delete the sub-node
->> > and change to the following format:
->> >         panel0,normal-cfg = [...]  /* panelX,cfg : X is no more than 10*/
->>
->> panel0 is not a vendor and normal doesn't tell us anything. How about
->> just "goodix,panel-cfg-X"?
+On Fri, Jun 30, 2017 at 8:53 AM, Jonathan Cameron
+<jic23-tko9wxEg+fIOOJlXag/Snyp2UmYkHbXO@public.gmane.org> wrote:
+> On Fri, 30 Jun 2017 10:44:42 +0200
+> Mike Looijmans <mike.looijmans-Oq418RWZeHk@public.gmane.org> wrote:
 >
-> Can I use "goodix,normal-cfg-X" rather than "goodix,panel-cfg-X"? The
-> string "normal-cfg" is meaningful to driver.
+>> ﻿I'm writing an IIO driver for a custom IP, which is pretty simple:
+>>
+>> - Map the registers to memory and register IRQ routine
+>> - To start acquisition, write a value to the config register
+>> - On interrupt, read data register, push it into queue
+>> - To stop, write another value to config.
+>>
+>> Would it be useful to provide this as a generic driver in Linux, so that you
+>> can provide the config register and data register offsets and values in the
+>> devicetree? That would make it work on a lot of similar project without
+>> everyone coding the same thing.
+>
+> Hi Mike,
+>
+> I've brought in the devicetree bindings maintainers and list as well on this
+> discussion because in many ways it's more about the strategy on bindings
+> than the actual driver...  Also Linus Walleij for any experience handing
+> the gpio-mmio driver which strikes me as fairly similar in aim.
+>
+> To the driver question, yes absolutely this would be a good thing to have.
+> The majority of ADCs out there are irritatingly more complex than what
+> you have.  Everyone seems to feel obliged to put in their own 'special
+> sauce'.
+>
+> As for bindings, there are two options, either we
+>
+> 1) As you suggest push all differences between different parts into the
+> bindings.  Note we'll still need a compatible list in the driver.
+> So this is something like gpio-mmio.c
+>
+> 2) Do something similar to the irq generic_chip (CONFIG_GENERIC_IRQ)
+> infrastructure and actually have very slim wrapper drivers around a
+> library.   That allows those elements that are constrained by the
+> hardware to not need specifying in device tree bindings.
+>
+>>
+>> And a related question: Is there a driver that's close to this?
+> I can't immediately think of one, but it's possible that one
+> of the SoC ADC drivers is simple enough to describe this way.
+>
+> So Mark / Rob.  You guys have experience with how the bindings
+> worked out for each approach.  Which do you prefer?
+> Either approach is fine with me.
 
-Okay.
+The latter case. Specific bindings can map to a generic driver or
+evolve to a specific driver if the generic one becomes inadequate.
 
 Rob
 --
