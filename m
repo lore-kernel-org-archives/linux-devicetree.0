@@ -1,99 +1,65 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH V1 0/9] add clock driver for Spreadtrum platforms
-Date: Thu, 29 Jun 2017 17:45:53 -0700
-Message-ID: <20170630004553.GH22780@codeaurora.org>
+Subject: Re: [PATCH V1 9/9] arm64: dts: add ccu for SC9860
+Date: Thu, 29 Jun 2017 17:57:08 -0700
+Message-ID: <20170630005708.GI22780@codeaurora.org>
 References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
- <20170620012530.GG4493@codeaurora.org>
- <CAAfSe-uTzgz0kyhQQzqpYKnYxDLv+3gG_9MfdrBTY-AUC549Gg@mail.gmail.com>
+ <20170618015855.27738-10-chunyan.zhang@spreadtrum.com>
+ <20170620012411.GF4493@codeaurora.org>
+ <CAAfSe-tBtcsyocumaDAyUP674ey1z+xmfAOR7cqnakM_+MOtfQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAAfSe-uTzgz0kyhQQzqpYKnYxDLv+3gG_9MfdrBTY-AUC549Gg@mail.gmail.com>
+In-Reply-To: <CAAfSe-tBtcsyocumaDAyUP674ey1z+xmfAOR7cqnakM_+MOtfQ@mail.gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
 To: Chunyan Zhang <zhang.lyra@gmail.com>
-Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
 On 06/22, Chunyan Zhang wrote:
 > Hi Stephen,
 > 
-> On 20 June 2017 at 09:25, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> On 20 June 2017 at 09:24, Stephen Boyd <sboyd@codeaurora.org> wrote:
 > > On 06/18, Chunyan Zhang wrote:
-> >> In the last cycle, the patches support Whale2 sc9860 mobile chip have been
-> >> merged. This patchset adds clock driver which is used on almost all
-> >> Spreadtrum SoCs.
-> >>
-> >> This is a rewrite of Spreadtrum's original clock driver[1] according to the
-> >> comments[2] from Stephen Boyd.
-> >>
-> >> This series also adds Spreadtrum clock binding documentation and devicetree
-> >> data.
-> >>
-> >> Any comments would be greatly appreciated.
+> 
 > >
-> > Overall it seems to copy quite a bit of code from sunxi-ng, which
-> > is OK, but if that's just copy/paste + replace some names then
-> > perhaps we should consolidate the two implementations into one
-> > that both SoCs can use.
+> >> +             compatible = "sprd,sc9860-ccu";
+> >> +             #clock-cells = <1>;
+> >> +             reg = <0 0x20000000 0 0x400>,
+> >> +                   <0 0x20210000 0 0x3000>,
+> >> +                   <0 0x402b0000 0 0x4000>,
+> >> +                   <0 0x402d0000 0 0x400>,
+> >> +                   <0 0x402e0000 0 0x4000>,
+> >> +                   <0 0x40400000 0 0x400>,
+> >> +                   <0 0x40880000 0 0x400>,
+> >> +                   <0 0x415e0000 0 0x400>,
+> >> +                   <0 0x60200000 0 0x400>,
+> >> +                   <0 0x61000000 0 0x400>,
+> >> +                   <0 0x61100000 0 0x3000>,
+> >> +                   <0 0x62000000 0 0x4000>,
+> >> +                   <0 0x62100000 0 0x4000>,
+> >> +                   <0 0x63000000 0 0x400>,
+> >> +                   <0 0x63100000 0 0x3000>,
+> >> +                   <0 0x70b00000 0 0x3000>;
+> >
+> > There are a lot of reg properties here. Perhaps there needs to be
+> > different nodes for the different clock controllers in this SoC?
 > >
 > 
-> OK, will try.
-
-Ok. Please don't spend too much time on it though. 
-
+> On Spreadtrum's platform, clocks are basically located in a few
+> address areas due to some hardware design issue, that says there're
+> more than one kinds of clocks in one address range, and one kind of
+> clocks have more than one physical address bases, except ccu_pll and
+> ccu_div in this patchset.
 > 
-> > Also, is there any reason why we can't use a platform device
-> > driver for this instead of the DT probing mechanism? That is more
-> > preferred method of probing clk controllers.
-> 
-> From what I have known on ARM platforms, device drivers cannot
-> recognize out which SoC the driver is running on, assume that the
-> device on different SoC has some differences.  To make one only kernel
-> Image can be used on all SoCs of Spreadtrum, we selected the way of
-> loading different dtb for each SoC.
+> We're planning to map the whole device area at one time before
+> initializing each of them, once that has been done and upstreamed, I
+> will remove these lists of addressed.
 
-Device drivers can figure out what device the driver is bound to
-based on the compatible string of the node. Typically, the clk
-driver binds to a device node with a compatible indicating the
-clock controller it is, like spd,soc-name-clk-controller-name.
-Then that can be used to determine what sort of associated data
-there is.
-
-> 
-> Actually, I haven't understood the merits of moving more clk things to
-> driver from DT, could you please introduce more about that?
-> 
-> 
-
-Some mailing list digging may be helpful, but I admit I need to
-have some sort of canned response here that I can just repeat
-each time this comes up. Here it goes.
-
-We really only need CLK_OF_DECLARE() if a clk needs to be
-available for timers or interrupt controllers. Otherwise, its
-possible to put the rest of the clk tree registration in the
-normal device driver path.
-
-Reasons (in no particular order):
-
-  1. We get a dev pointer to use with clk_hw_register()
-
-  2. We can handle probe defer if some resource is not available
-
-  3. Using device model gets us a hook into power management frameworks
-     like runtime PM and system PM for things like suspend and hibernate
-
-  4. It encourages a single DT node clk controller style binding
-     instead of a single node per clk style binding
-
-  5. We can use non-DT specific functions like devm_ioremap_resource() to map
-     registers and acquire other resources, leading to more portable and
-     generic code
-
-  6. We may be able to make the device driver a module, which will
-     make distros happy if we don't have to compile in all
-     these clk drivers to the resulting vmlinux
+Ok. Does this mean we need to wait for those patches to be sent
+out for review? Is it more like certain clks are embedded inside
+other devices like display controllers, i2c controllers, etc? Is
+there any more information I can get on this SoC?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
