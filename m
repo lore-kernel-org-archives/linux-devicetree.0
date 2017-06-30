@@ -1,43 +1,45 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: Re: [RESEND PATCH v4] clk: stm32h7: Add stm32h743 clock driver
-Date: Fri, 30 Jun 2017 07:14:23 +0000
-Message-ID: <d325071a-5da5-4ff1-89b9-fc1bbe10e223@st.com>
-References: <1496818794-14771-1-git-send-email-gabriel.fernandez@st.com>
- <20170621220703.GI4493@codeaurora.org>
- <110cf67f-e1d6-1f99-953c-6b9639bb4910@st.com>
- <20170628155956.GA5316@codeaurora.org>
- <7c0c3861-cf61-a9e2-cd5d-2ae30b8f32fa@st.com>
- <20170630002008.GD22780@codeaurora.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] drivers: misc: eeprom: at24: support reading mac
+ eeprom from different addresses
+Date: Fri, 30 Jun 2017 09:20:32 +0200
+Message-ID: <20170630072032.tbnatpnh3rej4lmf@pengutronix.de>
+References: <1498736351-9021-1-git-send-email-claudiu.beznea@microchip.com>
+ <1498736351-9021-3-git-send-email-claudiu.beznea@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-clk-owner@vger.kernel.org>
-In-Reply-To: <20170630002008.GD22780@codeaurora.org>
-Content-Language: en-US
-Content-ID: <C11821B759F09B4281A7F0F7934FE3B1@st.com>
-Sender: linux-clk-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1498736351-9021-3-git-send-email-claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Claudiu Beznea <claudiu.beznea-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, david-nq/r/kbU++upp/zk7JDF2g@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-UWL1GkI3JZL3oGB3hsPCZA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDA2LzMwLzIwMTcgMDI6MjAgQU0sIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gT24gMDYv
-MjksIEdhYnJpZWwgRkVSTkFOREVaIHdyb3RlOg0KPj4NCj4+IE9uIDA2LzI4LzIwMTcgMDU6NTkg
-UE0sIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4+PiBPbiAwNi8yNywgR2FicmllbCBGRVJOQU5ERVog
-d3JvdGU6DQo+Pj4+IE9uIDA2LzIyLzIwMTcgMTI6MDcgQU0sIFN0ZXBoZW4gQm95ZCB3cm90ZToN
-Cj4+Pj4+IHJlYWRsX3BvbGxfdGltZW91dD8NCj4+Pj4+DQo+Pj4+IGlmIGkgdXNlIHJlYWRsX3Bv
-bGxfdGltZW91dCAod2ljaCB1c2UgJ2t0aW1lX2dldCgpJykgaXQgY2FuIGJlDQo+Pj4+IG9wZXJh
-dGlvbmFsIG9ubHkgYWZ0ZXIgdGhlIHNlbGVjdGlvbiBvZiBjbG9ja3NvdXJjZSA/IChkZXZpY2Vf
-aW5pdGNhbGwpLg0KPj4+PiBBbmQgdGhlbiBpZiBhIGRyaXZlciB0dXJuIG9uIGEgY2xvY2sgYmVm
-b3JlLCBpdCBjb3VsZCBibG9ja2VkIHRoZSBsaW51eA0KPj4+PiBjb25zb2xlID8NCj4+Pj4NCj4+
-PiBPay4gSSB3b25kZXIgaWYgd2UgY291bGQgYWRkIHNvbWUgc29ydCBvZiBzdGFydGluZyBjaGVj
-ayB0bw0KPj4+IHJlYWRsX3BvbGxfdGltZW91dCgpIHRoYXQgdGVzdHMgc3lzdGVtX3N0YXRlIGZv
-ciBib290aW5nIHZzLg0KPj4+IHNjaGVkdWxpbmc/IFRoYXQgc2hvdWxkIGJlIHN1ZmZpY2llbnQg
-dG8gaGFuZGxlIHRoaXMgY2FzZT8NCj4+Pg0KPj4gT29wcyBpIHRoaW5rIGkgdW5kZXJzdG9vZCBt
-eSBwcm9ibGVtLi4uDQo+PiBpIHVzZWQgcmVhZGxfcG9sbF90aW1lb3V0IGluIGF0b21pYyBjb250
-ZXh0Lg0KPj4gSSBoYXZlIHRvIG1vdmUgbXkgY29kZSBpbiB0aGUgLnByZXBhcmUgb3BzLg0KPj4N
-Cj4+IElmIHlvdSBhcmUgb2sgd2l0aCB0aGF0IGkgd2lsbCBzZW5kIGEgdjUNCj4+DQo+IFRoZXJl
-J3MgcmVhZGxfcG9sbF90aW1lb3V0X2F0b21pYygpIGZvciB0aG9zZSBtb2Rlcy4NCj4NCnllcyBp
-dCdzIGV4YWN0bHkgdGhlIHRlc3QgaSBtYWRlICh1c2UgJ3JlYWRsX3BvbGxfdGltZW91dCgpX2F0
-b21pYycgaW4gDQouZW5hYmxlIG9wcykgYnV0IGknbSBibG9ja2VkLg0KDQppZiBpIGRvIHRoZSBz
-YW1lIGluIC5wcmVwYXJlIG9wcyB3aXRoICdyZWFkbF9wb2xsX3RpbWVvdXQoKScgaXQncyBvay4N
-Cg==
+Hallo,
+
+On Thu, Jun 29, 2017 at 02:39:10PM +0300, Claudiu Beznea wrote:
+> diff --git a/include/linux/platform_data/at24.h b/include/linux/platform_data/at24.h
+> index 271a4e2..d55c454 100644
+> --- a/include/linux/platform_data/at24.h
+> +++ b/include/linux/platform_data/at24.h
+> @@ -50,6 +50,7 @@ struct at24_platform_data {
+>  #define AT24_FLAG_TAKE8ADDR	BIT(4)	/* take always 8 addresses (24c00) */
+>  #define AT24_FLAG_SERIAL	BIT(3)	/* factory-programmed serial number */
+>  #define AT24_FLAG_MAC		BIT(2)	/* factory-programmed mac address */
+> +	u8		offset;
+
+Assuming you rename the property, please adapt the member name here
+accordingly.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
