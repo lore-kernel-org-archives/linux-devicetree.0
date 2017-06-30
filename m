@@ -1,62 +1,105 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv2 9/9] spi: spidev: add Aardvark to device tree
- compatibility list
-Date: Fri, 30 Jun 2017 12:51:50 +0100
-Message-ID: <20170630115150.zea5iaoih4alqibm@sirena.org.uk>
-References: <1498578321-13980-1-git-send-email-amelie.delaunay@st.com>
- <1498578321-13980-10-git-send-email-amelie.delaunay@st.com>
- <20170628185445.fsnqs2tlqqeqzl57@sirena.org.uk>
- <67764839-889b-e398-16eb-de583d82cbf3@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: r8a7796: Add DRIF support
+Date: Fri, 30 Jun 2017 13:53:45 +0200
+Message-ID: <20170630115345.GK26710@verge.net.au>
+References: <20170627125438.44491-1-ramesh.shanmugasundaram@bp.renesas.com>
+ <20170630101720.GH26710@verge.net.au>
+ <KL1PR0601MB2038A605A7A2825225EB49DBC3D30@KL1PR0601MB2038.apcprd06.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gml6e5yjm24yaoyf"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <67764839-889b-e398-16eb-de583d82cbf3@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Amelie DELAUNAY <amelie.delaunay@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <KL1PR0601MB2038A605A7A2825225EB49DBC3D30@KL1PR0601MB2038.apcprd06.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 30, 2017 at 10:28:09AM +0000, Ramesh Shanmugasundaram wrote:
+> Hi Simon,
+> 
+> > Subject: Re: [PATCH] arm64: dts: r8a7796: Add DRIF support
+> > 
+> > On Tue, Jun 27, 2017 at 01:54:38PM +0100, Ramesh Shanmugasundaram wrote:
+> > > Adds the DRIF controller nodes for r8a7796.
+> > >
+> > > Signed-off-by: Ramesh Shanmugasundaram
+> > > <ramesh.shanmugasundaram@bp.renesas.com>
+> > > ---
+> > > Hi Simon,
+> > >
+> > >    This patch is based on renesas-devel-20170626-v4.12-rc7 tag.
+> > >    It is verified on M3 ES1.0. I also verified there are no regression
+> > issues
+> > >    with this addition.
+> > >
+> > >    The driver[1] is pushed into the media_tree. The bindings[2] are
+> > ACK'ed
+> > >    by Geert & Rob and in the media_tree queue.
+> > >
+> > >    [1]
+> > https://git.linuxtv.org/media_tree.git/commit/?id=7625ee981af166ddb569e2e6
+> > c0006e2af471326f
+> > >    [2]
+> > > https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg1560
+> > > 2.html
+> > >
+> > > Thanks,
+> > > Ramesh.
+> > >
+> > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 120
+> > > +++++++++++++++++++++++++++++++
+> > >  1 file changed, 120 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > > b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > > index 1f6710912045..df04d132a127 100644
+> > > --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > > +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> > > @@ -639,6 +639,126 @@
+> > >  			};
+> > >  		};
+> > >
+> > > +		drif00: rif@e6f40000 {
+> > > +			compatible = "renesas,r8a7796-drif",
+> > > +				     "renesas,rcar-gen3-drif";
+> > > +			reg = <0 0xe6f40000 0 0x64>;
+> > > +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> > > +			clocks = <&cpg CPG_MOD 515>;
+> > > +			clock-names = "fck";
+> > > +			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
+> > 
+> > The dmas property seems a little strange. I would have expected to allow
+> > ether dmac1 or dmac2 to be used for both tx and rx:
+> > 
+> > 			dmas = <&dmac1 0x20>, <&dmac1 0x20>,
+> > 			       <&dmac2 0x20>, <&dmac2 0x20>;
+> > 
+> 
+> It is an rx-only interface that can use either dmac1 or 2.
 
---gml6e5yjm24yaoyf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks, I see that clearly now.
+I have applied this for v4.14.
 
-On Thu, Jun 29, 2017 at 02:58:43PM +0200, Amelie DELAUNAY wrote:
-> On 06/28/2017 08:54 PM, Mark Brown wrote:
-
-> > What does this device actually do and why is spidev a sensible fit for
-> > it?
-
-> This device is actually a debugging tool [1] which can work on SPI bus (and
-> also I2C). Connected via USB on a PC, it can either acts as an SPI master or
-> SPI slave and it can transmit/receive serial data using SPI protocol.
-> Polarity, Phase, Bit Order, Frequency can be configured. So this tool is
-> really useful during SPI driver development to troubleshoot. And that's why
-> spidev driver totally fit for it when used as an SPI slave, for the reason
-> described in spidev Documentation: "Developing simple protocols used to talk
-> to" Aardvark "acting as SPI slaves, which you may need to change quite
-> often".
-
-This doesn't seem like something that should be in DT, it's a tool used
-to implement or emulate other things and is no more specific than spidev
-itself is.  Whatever it is implementing or emulating should be in DT
-instead.
-
---gml6e5yjm24yaoyf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAllWO1UACgkQJNaLcl1U
-h9Cllgf+OaogYnbSbFheFfqBhJaEq3eVS1BF9ZDiWZ0O4BZyOlFlkM952YNySEls
-8Ow1vj8AXmFeLhDrPLr5U9Uxj6o9AynyqUForPTZoJxAaRXWNOROMBT08/HUOgyp
-zgTSNtbmkJvz9/5Qlr7xTiKhX1y5tKpgA18CcuCrePnb8i0Z/MyeIX7FhFlpQ9zb
-f6lCHpa+t0BbkXv2nI+YexBFVQVvYOCM7BqV4HxTgfrvijIQNN+vjNkqBwhj1UdH
-zqx6Vl1H2mbESfhV+QE6qYnrlx+eyOg3+lgU2GJM/Y/wL7ETeqFaffaUUi+QaDST
-R4bSmVBa2ZhVpTnXBXhEKHvD0UK1Cw==
-=gnT1
------END PGP SIGNATURE-----
-
---gml6e5yjm24yaoyf--
+> 
+> > 
+> > > +			dma-names = "rx", "rx";
+> > > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> > > +			resets = <&cpg 515>;
+> > > +			renesas,bonding = <&drif01>;
+> > > +			status = "disabled";
+> > > +		};
+> > 
+> 
+> Thanks,
+> Ramesh
+> 
