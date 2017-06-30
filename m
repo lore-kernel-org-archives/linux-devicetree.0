@@ -1,42 +1,43 @@
-From: <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH v1 0/4] media: rc: add support for IR receiver on MT7622 SoC
-Date: Fri, 30 Jun 2017 14:03:03 +0800
-Message-ID: <cover.1498794408.git.sean.wang@mediatek.com>
+From: <sean.wang@mediatek.com>
+Subject: [PATCH v1 4/4] MAINTAINERS: add entry for MediaTek CIR driver
+Date: Fri, 30 Jun 2017 14:03:07 +0800
+Message-ID: <66add79b9e331edfbf3a797cb3fcbcf3fd119eb2.1498794408.git.sean.wang@mediatek.com>
+References: <cover.1498794408.git.sean.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: mchehab-JPH+aEBZ4P+UEJcrhfAQsw@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, hkallweit1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, andi.shyti-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hverkuil-qWit8jRvyhVmR6Xm/wNWPw@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1498794408.git.sean.wang@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mchehab@osg.samsung.com, sean@mess.org, hdegoede@redhat.com, hkallweit1@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, matthias.bgg@gmail.com
+Cc: andi.shyti@samsung.com, hverkuil@xs4all.nl, ivo.g.dimitrov.75@gmail.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sean Wang <sean.wang-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+From: Sean Wang <sean.wang@mediatek.com>
 
-This patchset introduces Consumer IR (CIR) support for MT7622 SoC
-implements raw mode for more compatibility with different protocols
-as previously SoC did. Before adding support to MT7622 SoC, extra
-code refactor is done since there're major differences in register and
-field definition from the previous SoC.
+I work for MediaTek on maintaining the MediaTek CIR driver
+for the existing SoCs and adding support for the following
+SoCs.
 
-Sean Wang (4):
-  dt-bindings: media: mtk-cir: Add support for MT7622 SoC
-  media: rc: mtk-cir: add platform data to adapt into various hardware
-  media: rc: mtk-cir: add support for MediaTek MT7622 SoC
-  MAINTAINERS: add entry for MediaTek CIR driver
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
- .../devicetree/bindings/media/mtk-cir.txt          |   8 +-
- MAINTAINERS                                        |   5 +
- drivers/media/rc/mtk-cir.c                         | 242 ++++++++++++++++-----
- 3 files changed, 197 insertions(+), 58 deletions(-)
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 2a1290a..1bc1fb1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8261,6 +8261,11 @@ L:	linux-wireless@vger.kernel.org
+ S:	Maintained
+ F:	drivers/net/wireless/mediatek/mt7601u/
+ 
++MEDIATEK CIR DRIVER
++M:      Sean Wang <sean.wang@mediatek.com>
++S:      Maintained
++F:      drivers/media/rc/mtk-cir.c
++
+ MEDIATEK RANDOM NUMBER GENERATOR SUPPORT
+ M:      Sean Wang <sean.wang@mediatek.com>
+ S:      Maintained
 -- 
 2.7.4
