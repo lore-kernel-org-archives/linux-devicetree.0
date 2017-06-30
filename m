@@ -1,84 +1,79 @@
-From: Varadarajan Narayanan <varada@codeaurora.org>
-Subject: [PATCH] dts: ipq4019: Move xo and timer nodes to SoC dtsi
-Date: Fri, 30 Jun 2017 15:38:01 +0530
-Message-ID: <1498817281-30608-1-git-send-email-varada@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Varadarajan Narayanan <varada@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] arm64: dts: r8a7796: Add DRIF support
+Date: Fri, 30 Jun 2017 12:17:20 +0200
+Message-ID: <20170630101720.GH26710@verge.net.au>
+References: <20170627125438.44491-1-ramesh.shanmugasundaram@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20170627125438.44491-1-ramesh.shanmugasundaram@bp.renesas.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, chris.paterson2@renesas.com, geert+renesas@glider.be, catalin.marinas@arm.com, magnus.damm@gmail.com, will.deacon@arm.com, linux-renesas-soc@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The node for xo and timer belong to the SoC DTS file.
-Else, new board DT files may not inherit these nodes.
+On Tue, Jun 27, 2017 at 01:54:38PM +0100, Ramesh Shanmugasundaram wrote:
+> Adds the DRIF controller nodes for r8a7796.
+> 
+> Signed-off-by: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
+> ---
+> Hi Simon,
+> 
+>    This patch is based on renesas-devel-20170626-v4.12-rc7 tag.
+>    It is verified on M3 ES1.0. I also verified there are no regression issues
+>    with this addition.
+> 
+>    The driver[1] is pushed into the media_tree. The bindings[2] are ACK'ed
+>    by Geert & Rob and in the media_tree queue.
+> 
+>    [1] https://git.linuxtv.org/media_tree.git/commit/?id=7625ee981af166ddb569e2e6c0006e2af471326f
+>    [2] https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg15602.html
+> 
+> Thanks,
+> Ramesh.
+> 
+>  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 120 +++++++++++++++++++++++++++++++
+>  1 file changed, 120 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> index 1f6710912045..df04d132a127 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
+> @@ -639,6 +639,126 @@
+>  			};
+>  		};
+>  
+> +		drif00: rif@e6f40000 {
+> +			compatible = "renesas,r8a7796-drif",
+> +				     "renesas,rcar-gen3-drif";
+> +			reg = <0 0xe6f40000 0 0x64>;
+> +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&cpg CPG_MOD 515>;
+> +			clock-names = "fck";
+> +			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
 
-Signed-off-by: Varadarajan Narayanan <varada@codeaurora.org>
----
- arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi | 19 -------------------
- arch/arm/boot/dts/qcom-ipq4019.dtsi           | 14 ++++++++++++++
- 2 files changed, 14 insertions(+), 19 deletions(-)
+The dmas property seems a little strange. I would have expected to allow
+ether dmac1 or dmac2 to be used for both tx and rx:
 
-diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-index b9457dd..b74c113 100644
---- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-@@ -20,26 +20,7 @@
- 	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK01.1";
- 	compatible = "qcom,ipq4019";
- 
--	clocks {
--                xo: xo {
--                        compatible = "fixed-clock";
--                        clock-frequency = <48000000>;
--                        #clock-cells = <0>;
--                };
--	};
--
- 	soc {
--
--
--		timer {
--			compatible = "arm,armv7-timer";
--			interrupts = <1 2 0xf08>,
--				     <1 3 0xf08>,
--				     <1 4 0xf08>,
--				     <1 1 0xf08>;
--			clock-frequency = <48000000>;
--		};
--
- 		pinctrl@0x01000000 {
- 			serial_pins: serial_pinmux {
- 				mux {
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index b7a24af..e8ab1e1 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -96,6 +96,11 @@
- 			clock-frequency = <32768>;
- 			#clock-cells = <0>;
- 		};
-+		xo: xo {
-+			compatible = "fixed-clock";
-+			clock-frequency = <48000000>;
-+			#clock-cells = <0>;
-+		};
- 	};
- 
- 	soc {
-@@ -104,6 +109,15 @@
- 		ranges;
- 		compatible = "simple-bus";
- 
-+		timer {
-+			compatible = "arm,armv7-timer";
-+			interrupts = <1 2 0xf08>,
-+				     <1 3 0xf08>,
-+				     <1 4 0xf08>,
-+				     <1 1 0xf08>;
-+			clock-frequency = <48000000>;
-+		};
-+
- 		intc: interrupt-controller@b000000 {
- 			compatible = "qcom,msm-qgic2";
- 			interrupt-controller;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+			dmas = <&dmac1 0x20>, <&dmac1 0x20>,
+			       <&dmac2 0x20>, <&dmac2 0x20>;
+
+
+> +			dma-names = "rx", "rx";
+> +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
+> +			resets = <&cpg 515>;
+> +			renesas,bonding = <&drif01>;
+> +			status = "disabled";
+> +		};
+
+...
