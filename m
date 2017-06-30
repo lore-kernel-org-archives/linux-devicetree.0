@@ -1,96 +1,99 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH] dts: ipq4019: Move xo and timer nodes to SoC dtsi
-Date: Fri, 30 Jun 2017 10:17:50 -0700
-Message-ID: <20170630171750.GM22780@codeaurora.org>
-References: <1498817281-30608-1-git-send-email-varada@codeaurora.org>
+From: Franklin S Cooper Jr <fcooper-l0cyMroinI0@public.gmane.org>
+Subject: Re: CAN-FD Transceiver Limitations
+Date: Fri, 30 Jun 2017 12:51:31 -0500
+Message-ID: <7883a83f-6af7-3ac8-a5ab-449ca1ab889a@ti.com>
+References: <de1f6343-4b28-4a5f-c6df-4e54c09fcce2@ti.com>
+ <20170629142142.GF9244@lunn.ch> <5d4f2bcf-bd0f-4fa1-5d5a-d7b4a83cbc5e@ti.com>
+ <20170629154139.GC13221@lunn.ch>
+ <c0d3d772-6939-d22c-b954-3ba6486a9ede@ti.com>
+ <20170629223551.GA6568@airbook.vandijck-laurijssen.be>
+ <d5c2e2f2-8b74-58e1-0cc8-727ba39bd14c@ti.com>
+ <20170630080906.GA26712@airbook.vandijck-laurijssen.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1498817281-30608-1-git-send-email-varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+In-Reply-To: <20170630080906.GA26712-W3bwb+3xS1LIj2mJfgo99rBP9FGTfoIhIWnq8iejnXE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Varadarajan Narayanan <varada-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wg-5Yr1BZd7O62+XT7JhA+gdA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/30, Varadarajan Narayanan wrote:
-> diff --git a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-> index b9457dd..b74c113 100644
-> --- a/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-> +++ b/arch/arm/boot/dts/qcom-ipq4019-ap.dk01.1.dtsi
-> @@ -20,26 +20,7 @@
->  	model = "Qualcomm Technologies, Inc. IPQ4019/AP-DK01.1";
->  	compatible = "qcom,ipq4019";
->  
-> -	clocks {
-> -                xo: xo {
-> -                        compatible = "fixed-clock";
-> -                        clock-frequency = <48000000>;
-> -                        #clock-cells = <0>;
-> -                };
-> -	};
-> -
->  	soc {
-> -
-> -
-> -		timer {
-> -			compatible = "arm,armv7-timer";
-> -			interrupts = <1 2 0xf08>,
-> -				     <1 3 0xf08>,
-> -				     <1 4 0xf08>,
-> -				     <1 1 0xf08>;
-> -			clock-frequency = <48000000>;
-> -		};
-> -
->  		pinctrl@0x01000000 {
+Hi Kurt,
 
-This should be pinctrl@1000000 { and fixed in another patch.
+On 06/30/2017 03:09 AM, Kurt Van Dijck wrote:
+>> On 06/29/2017 05:36 PM, Kurt Van Dijck wrote:
+>>>>>>
+>>>>>> mcan@0 {
+>>>>>> 	...
+>>>>>> 	fixed-transceiver {
+>>>>>> 	      max-canfd-speed = <2000>
+>>>>>> 	};
+>>>>>> 	...
+>>>>>> };
+>>>
+>>> Since when would a transceiver support different speeds for CAN & CANFD?
+>>
+>> When I say CAN I'm referring to CAN 2.0 specification which mentioned
+>> speeds upto 1 Mbit/s. While CAN FD supports higher bitrates.
+> 
+> linux-can is not necessarily restricted to CAN 2.0B?
+> 
+>>
+>>> No transceivers were available, but they are now.
+>>> I see no datalink problem applying 2MBit for regular CAN with apropriate
+>>> physical layer, and CAN does not predefine the physical layer
+>>> (advise != define).
+>>>
+>>> IMHO,
+>>> 	fixed-transceiver {
+>>> 		max-arbitration-speed = <2000000>
+>>> 		max-data-speed = <4000000>
+>>> 	};
+>>> is way better to describe the hardware.
+>>> Regular CAN chips would not consider max-data-speed...
+>>
+>> What is arbitration speed?
+> 
+> CANFD remains similar during the arbitration phase (when the CAN id is
+> sent on the wire), and after that allows to switch to a higher 'data'
+> speed because the round-trip wire restrictions during arbitration
+> don't apply anymore.
+> 
+>>
+>> Also if I understand you correctly then I agree drivers for traditional
+>> CAN wouldn't care about this subnode. Although it may be helpful for
+>> max-data-speed to become max-canfd-speed or something along those lines.
+>> Just so the property's purpose is clear.
+> 
+> Transceivers exist that don't support 1MB either.
+> naming the speeds max-arbitration-speed and max-data-speed makes this
+> OF nodes usable for that kind of CAN 2.0 restrtications too.
+> 
+> Of course, CAN 2.0 chips only consider max-arbitration-speed as that
+> applies to the whole wire bitstream, where as CANFD considers both.
+> 
+> What I understand of your proposal is that max-arbitration-speed is
+> 'fixed to 1MB anyway', and that assumption has been proven not
+> universally applicable with CAN2.0 transceivers already.
+> 
+> I found the name 'max-canfd-speed' a bit dubious as CANFD relies on
+> 'flexible datarate'. transceivers may not necessarily support the same
+> speed for both arbitration and data.
+> So I propose to replace it with 'max-data-speed'
 
-
->  			serial_pins: serial_pinmux {
->  				mux {
-> diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-> index b7a24af..e8ab1e1 100644
-> --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-> +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-> @@ -96,6 +96,11 @@
->  			clock-frequency = <32768>;
->  			#clock-cells = <0>;
->  		};
-> +		xo: xo {
-
-Please add a newline so it isn't right next to the previous node.
-
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <48000000>;
-> +			#clock-cells = <0>;
-> +		};
->  	};
->  
->  	soc {
-> @@ -104,6 +109,15 @@
->  		ranges;
->  		compatible = "simple-bus";
->  
-> +		timer {
-> +			compatible = "arm,armv7-timer";
-> +			interrupts = <1 2 0xf08>,
-> +				     <1 3 0xf08>,
-> +				     <1 4 0xf08>,
-> +				     <1 1 0xf08>;
-> +			clock-frequency = <48000000>;
-> +		};
-
-This should be outside of the soc node.
-
-> +
->  		intc: interrupt-controller@b000000 {
->  			compatible = "qcom,msm-qgic2";
->  			interrupt-controller;
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Thanks for the explanation. Makes sense.
+> 
+> Kind regards,
+> Kurt
+> 
+>>>
+>>> Kind regards,
+>>> Kurt
+>>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-can" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
