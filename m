@@ -1,58 +1,43 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [GIT PULL] Update binding documentation for CP110 and AP806
-Date: Fri, 30 Jun 2017 08:57:10 +0200
-Message-ID: <87h8yyvu7t.fsf@free-electrons.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: Re: [RESEND PATCH v4] clk: stm32h7: Add stm32h743 clock driver
+Date: Fri, 30 Jun 2017 07:14:23 +0000
+Message-ID: <d325071a-5da5-4ff1-89b9-fc1bbe10e223@st.com>
+References: <1496818794-14771-1-git-send-email-gabriel.fernandez@st.com>
+ <20170621220703.GI4493@codeaurora.org>
+ <110cf67f-e1d6-1f99-953c-6b9639bb4910@st.com>
+ <20170628155956.GA5316@codeaurora.org>
+ <7c0c3861-cf61-a9e2-cd5d-2ae30b8f32fa@st.com>
+ <20170630002008.GD22780@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-clk-owner@vger.kernel.org>
+In-Reply-To: <20170630002008.GD22780@codeaurora.org>
+Content-Language: en-US
+Content-ID: <C11821B759F09B4281A7F0F7934FE3B1@st.com>
+Sender: linux-clk-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi Stephen,
-
-As seen on Tuesday this is the pull request for the remaining binding
-documentation which depends on the documentation already applied in your
-tree.
-
-Thanks for taking care of it,
-
-Gregory
-
-The following changes since commit 7e5b11afecc0f558c5a6723970770f92f2529d4e:
-
-  dt-bindings: ap806: introduce a new binding (2017-06-01 12:02:01 +0900)
-
-are available in the git repository at:
-
-  git://git.infradead.org/linux-mvebu.git binding-doc-cp110-ap806
-
-for you to fetch changes up to 1fa67c675f6477ceb670f087a6f6739f7b3cb099:
-
-  gpio: dt-bindings: Add documentation for gpio controllers on Armada 7K/8K (2017-06-27 09:07:17 +0200)
-
-----------------------------------------------------------------
-Gregory CLEMENT (6):
-      dt-bindings: cp110: do not depend anymore of the *-clock-output-names
-      dt-bindings: cp110: introduce a new binding
-      dt-bindings: cp110: add sdio clock to cp-110 system controller
-      pinctrl: dt-bindings: add documentation for AP806 pin controllers
-      pinctrl: dt-bindings: add documentation for CP110 pin controllers
-      gpio: dt-bindings: Add documentation for gpio controllers on Armada 7K/8K
-
- Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt  |  73 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
- Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 144 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------
- Documentation/devicetree/bindings/gpio/gpio-mvebu.txt                      |  24 +++++++++++++++++-------
- 3 files changed, 208 insertions(+), 33 deletions(-)
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQoNCk9uIDA2LzMwLzIwMTcgMDI6MjAgQU0sIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4gT24gMDYv
+MjksIEdhYnJpZWwgRkVSTkFOREVaIHdyb3RlOg0KPj4NCj4+IE9uIDA2LzI4LzIwMTcgMDU6NTkg
+UE0sIFN0ZXBoZW4gQm95ZCB3cm90ZToNCj4+PiBPbiAwNi8yNywgR2FicmllbCBGRVJOQU5ERVog
+d3JvdGU6DQo+Pj4+IE9uIDA2LzIyLzIwMTcgMTI6MDcgQU0sIFN0ZXBoZW4gQm95ZCB3cm90ZToN
+Cj4+Pj4+IHJlYWRsX3BvbGxfdGltZW91dD8NCj4+Pj4+DQo+Pj4+IGlmIGkgdXNlIHJlYWRsX3Bv
+bGxfdGltZW91dCAod2ljaCB1c2UgJ2t0aW1lX2dldCgpJykgaXQgY2FuIGJlDQo+Pj4+IG9wZXJh
+dGlvbmFsIG9ubHkgYWZ0ZXIgdGhlIHNlbGVjdGlvbiBvZiBjbG9ja3NvdXJjZSA/IChkZXZpY2Vf
+aW5pdGNhbGwpLg0KPj4+PiBBbmQgdGhlbiBpZiBhIGRyaXZlciB0dXJuIG9uIGEgY2xvY2sgYmVm
+b3JlLCBpdCBjb3VsZCBibG9ja2VkIHRoZSBsaW51eA0KPj4+PiBjb25zb2xlID8NCj4+Pj4NCj4+
+PiBPay4gSSB3b25kZXIgaWYgd2UgY291bGQgYWRkIHNvbWUgc29ydCBvZiBzdGFydGluZyBjaGVj
+ayB0bw0KPj4+IHJlYWRsX3BvbGxfdGltZW91dCgpIHRoYXQgdGVzdHMgc3lzdGVtX3N0YXRlIGZv
+ciBib290aW5nIHZzLg0KPj4+IHNjaGVkdWxpbmc/IFRoYXQgc2hvdWxkIGJlIHN1ZmZpY2llbnQg
+dG8gaGFuZGxlIHRoaXMgY2FzZT8NCj4+Pg0KPj4gT29wcyBpIHRoaW5rIGkgdW5kZXJzdG9vZCBt
+eSBwcm9ibGVtLi4uDQo+PiBpIHVzZWQgcmVhZGxfcG9sbF90aW1lb3V0IGluIGF0b21pYyBjb250
+ZXh0Lg0KPj4gSSBoYXZlIHRvIG1vdmUgbXkgY29kZSBpbiB0aGUgLnByZXBhcmUgb3BzLg0KPj4N
+Cj4+IElmIHlvdSBhcmUgb2sgd2l0aCB0aGF0IGkgd2lsbCBzZW5kIGEgdjUNCj4+DQo+IFRoZXJl
+J3MgcmVhZGxfcG9sbF90aW1lb3V0X2F0b21pYygpIGZvciB0aG9zZSBtb2Rlcy4NCj4NCnllcyBp
+dCdzIGV4YWN0bHkgdGhlIHRlc3QgaSBtYWRlICh1c2UgJ3JlYWRsX3BvbGxfdGltZW91dCgpX2F0
+b21pYycgaW4gDQouZW5hYmxlIG9wcykgYnV0IGknbSBibG9ja2VkLg0KDQppZiBpIGRvIHRoZSBz
+YW1lIGluIC5wcmVwYXJlIG9wcyB3aXRoICdyZWFkbF9wb2xsX3RpbWVvdXQoKScgaXQncyBvay4N
+Cg==
