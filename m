@@ -1,74 +1,83 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: Clocks used by another OS/CPU (was: Re: [RFC PATCH] clk: renesas:
- cpg-mssr: Add interface for critical core clocks)
-Date: Fri, 30 Jun 2017 10:58:26 -0500
-Message-ID: <CAL_JsqKGrZeR7z80beY_XEjqd5fEQQwPxusJ1FADoALgNE3fEg@mail.gmail.com>
-References: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH RFC 2/2] dt-bindings: add binding documentation for
+ Allwinner CSI
+Date: Fri, 30 Jun 2017 11:05:55 -0500
+Message-ID: <CAL_JsqK5n966u9dfBiAxphURghetxu5Cfkj03oNafAFT4NO10A@mail.gmail.com>
+References: <1498561654-14658-1-git-send-email-yong.deng@magewell.com>
+ <1498561654-14658-3-git-send-email-yong.deng@magewell.com>
+ <20170629211957.uz7jijkuoxr2vohc@rob-hp-laptop> <CAGb2v66+xHR7xfBX_mPigZE_nvcRQfnpr4QAcKYEUhSGN7h61w@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-renesas-soc-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdW9+CNTTOVO4SRRUxuz3ajLbY2j1uG8b_RpHX52NPwXrQ@mail.gmail.com>
-Sender: linux-renesas-soc-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Dirk Behme <dirk.behme@de.bosch.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Kevin Hilman <khilman@baylibre.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v66+xHR7xfBX_mPigZE_nvcRQfnpr4QAcKYEUhSGN7h61w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Hans Verkuil <hans.verkuil@cisco.com>, Peter Griffin <peter.griffin@linaro.org>, Hugues Fruchet <hugues.fruchet@st.com>, Krzysztof Kozlowski <krzk@kernel.org>, Benoit Parrot <bparrot@ti.com>, Arnd Bergmann <arnd@arndb.de>, Jean-Christophe Trotin <jean-christophe.trotin@st.com>, Benjamin Gaignard <benjamin.gaignard@linaro.org>, tiffany lin <tiffany.lin@mediatek.com>, kamil@wypas.org, kieran+renesas@ksquared.org.uk, =?UTF-8?B?QW5kcmV3LUNUIENoZW4gKOmZs+aZuui/qik=?= <andrew-ct.chen@mediatek.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 29, 2017 at 4:27 AM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> Hi Dirk,
->
-> CC clock, ARM, DT, PM people
->
-> TL;DR: Clocks may be in use by another CPU not running Linux, while Linux
-> disables them as being unused.
->
-> On Mon, Jun 26, 2017 at 1:30 PM, Dirk Behme <dirk.behme@de.bosch.com> wrote:
->> With commit 72f5df2c2bbb6 ("clk: renesas: cpg-mssr: Migrate to
->> CLK_IS_CRITICAL") we are able to handle critical module clocks.
->> Introduce the same logic for critical core clocks.
+On Thu, Jun 29, 2017 at 10:41 PM, Chen-Yu Tsai <wens@csie.org> wrote:
+> On Fri, Jun 30, 2017 at 5:19 AM, Rob Herring <robh@kernel.org> wrote:
+>> On Tue, Jun 27, 2017 at 07:07:34PM +0800, Yong Deng wrote:
+>>> Add binding documentation for Allwinner CSI.
 >>
->> Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
->> ---
->> Commit
+>> For the subject:
 >>
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/drivers/clk/renesas?id=72f5df2c2bbb66d4a555cb51eb9f412abf1af77f
+>> dt-bindings: media: Add Allwinner Camera Sensor Interface (CSI)
 >>
->> is quite nice to avoid *module* clocks being disabled. Unfortunately,
->> there are *core* clocks, too. E.g. using an other OS on the Cortex R7
->> core of the r8a7795, the 'canfd' is a quite popular core clock which
->> shouldn't be disabled by Linux.
+>> "binding documentation" is redundant.
 >>
->> Therefore, this patch is a proposal to use the same 'mark clocks as
->> critical' logic implemented for the module clocks for the core
->> clocks, too.
+>>>
+>>> Signed-off-by: Yong Deng <yong.deng@magewell.com>
+>>> ---
+>>>  .../devicetree/bindings/media/sunxi-csi.txt        | 51 ++++++++++++++++++++++
+>>>  1 file changed, 51 insertions(+)
+>>>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-csi.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/media/sunxi-csi.txt b/Documentation/devicetree/bindings/media/sunxi-csi.txt
+>>> new file mode 100644
+>>> index 0000000..770be0e
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/sunxi-csi.txt
+>>> @@ -0,0 +1,51 @@
+>>> +Allwinner V3s Camera Sensor Interface
+>>> +------------------------------
+>>> +
+>>> +Required properties:
+>>> +  - compatible: value must be "allwinner,sun8i-v3s-csi"
+>>> +  - reg: base address and size of the memory-mapped region.
+>>> +  - interrupts: interrupt associated to this IP
+>>> +  - clocks: phandles to the clocks feeding the CSI
+>>> +    * ahb: the CSI interface clock
+>>> +    * mod: the CSI module clock
+>>> +    * ram: the CSI DRAM clock
+>>> +  - clock-names: the clock names mentioned above
+>>> +  - resets: phandles to the reset line driving the CSI
+>>> +
+>>> +- ports: A ports node with endpoint definitions as defined in
+>>> +  Documentation/devicetree/bindings/media/video-interfaces.txt. The
+>>> +  first port should be the input endpoints, the second one the outputs
 >>
->> Opinions?
+>> Is there more than one endpoint for each port? If so, need to define
+>> that numbering too.
 >
-> On r8a7795, there are several Cortex A cores running Linux, and a Cortex R7
-> core which may run another OS.
-> This is an interesting issue, and relevant to other SoCs, too.
+> It is possible to have multiple camera sensors connected to the same
+> bus. Think front and back cameras on a cell phone or tablet.
 >
-> In this particular case, the "canfd" clock is a core clock used as an
-> auxiliary clock for the CAN0, CAN1, and CANFD interfaces.  This can lead
-> to three scenarios:
->   1. Linux controls all CAN interfaces
->      => no issue,
->   2. The OS on the RT CPU controls all CAN interfaces
->      => issue, Linux disables the clock
->   3. Mix of 1 and 2
->      => More issues.
-> Of course this is not limited to clocks, but also to e.g. PM domains.
->
-> How can this be handled?
-> I believe just marking the "canfd" clock critical is not the right solution,
-> as about any clock could be used by the RT CPU.
->
-> Still, Linux needs to be made aware that devices (clocks and PM domains) are
-> controlled by another CPU/OS.
->
-> Should this be described in DT? It feels like software policy to me.
+> I don't think any kind of numbering makes much sense though. The
+> system is free to use just one sensor at a time, or use many with
+> some time multiplexing scheme. What might matter to the end user
+> is where the camera is placed. But using the position or orientation
+> as a numbering scheme might not work well either. Someone may end
+> up using two sensors with the same orientation for stereoscopic
+> vision.
 
-No, it shouldn't. It is Linux policy to disable all unused clocks, so
-Linux gets to deal with the consequences.
+Well, for muxing, you need to no which endpoint is which mux input,
+but if the muxing is at the board level, then that's really outside
+this binding. For stereoscopic, don't you need both sensors to work at
+the same time (i.e. not muxed). That would be multiple ports.
+
+When would you have 2 output endpoints though? That could be to
+different processing blocks, but those connections are internal,
+fixed, and known. So you should document the numbering in that case.
 
 Rob
