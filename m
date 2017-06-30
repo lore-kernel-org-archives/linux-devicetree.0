@@ -1,88 +1,74 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH v3 2/6] dt-bindings: spi/core: add wakeup-source
- optional property
-Date: Fri, 30 Jun 2017 09:44:27 -0500
-Message-ID: <CAL_JsqJCvtCx-s3usVaPvz0bH8EZOGyykG2CTG6_mmNR7cHp_w@mail.gmail.com>
-References: <1498039313-24220-1-git-send-email-jeffy.chen@rock-chips.com>
- <1498039313-24220-3-git-send-email-jeffy.chen@rock-chips.com>
- <20170626160011.qi3bliz5jt6d5wgb@rob-hp-laptop> <20170626164016.GA4965@dtor-ws>
- <5951BD17.305@rock-chips.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] dt-bindings: input: Add the Goodix GTx5 series
+ Touchscreen devicetree bindings
+Date: Fri, 30 Jun 2017 09:46:35 -0500
+Message-ID: <CAL_JsqJXjKTUaOp-DS07Jw-iGrBB3euoE94LFBAhh0TOP8Tmxg@mail.gmail.com>
+References: <22592d94-f482-3e4f-3860-1dce83472d4f@goodix.com>
+ <20170623203706.upfzigj6ghdbqx2q@rob-hp-laptop> <20170626132253.GA24061@andrew-dell>
+ <CAL_JsqJ6w7oEjm=i_KX8Y_axbRSdX4Q+14NQ8XaHnDevGQrS_w@mail.gmail.com> <20170627032705.GA16627@andrew-dell>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5951BD17.305@rock-chips.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jeffy <jeffy.chen@rock-chips.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Brian Norris <briannorris@chromium.org>, Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20170627032705.GA16627@andrew-dell>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, andrew-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org, mouse-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 26, 2017 at 9:04 PM, jeffy <jeffy.chen@rock-chips.com> wrote:
-> Hi Rob,
->
-> On 06/27/2017 12:40 AM, Dmitry Torokhov wrote:
+On Mon, Jun 26, 2017 at 10:27 PM, Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org> wrote:
+> On Mon, Jun 26, 2017 at 09:16:40AM -0500, Rob Herring wrote:
+>> On Mon, Jun 26, 2017 at 8:22 AM, Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org> wrote:
+>> > Hi Rob,
+>> >
+>> > Thank you for the review.
+>> >
+>> > On Fri, Jun 23, 2017 at 03:37:06PM -0500, Rob Herring wrote:
+>> >> On Mon, Jun 19, 2017 at 06:40:32PM +0800, Wang Yafei wrote:
+>> >> > Signed-off-by: Wang Yafei <wangyafei-PiwChjOeyQzQT0dZR+AlfA@public.gmane.org>
+>> >> > ---
+>> >> >  .../bindings/input/touchscreen/goodix-gtx5.txt     | 75 ++++++++++++++++++++++
+>> >> >  1 file changed, 75 insertions(+)
+>> >> >  create mode 100755 Documentation/devicetree/bindings/input/touchscreen/goodix-gtx5.txt
 >>
->> On Mon, Jun 26, 2017 at 11:00:11AM -0500, Rob Herring wrote:
->>>
->>> On Wed, Jun 21, 2017 at 06:01:49PM +0800, Jeffy Chen wrote:
->>>>
->>>> Update document devicetree bindings to support "wakeup-source" property.
->>>>
->>>> Signed-off-by: Jeffy Chen <jeffy.chen@rock-chips.com>
->>>> ---
->>>>
->>>> Changes in v3: None
->>>>
->>>>   Documentation/devicetree/bindings/spi/spi-bus.txt | 1 +
->>>>   1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt
->>>> b/Documentation/devicetree/bindings/spi/spi-bus.txt
->>>> index 1f6e86f..0fa1ccf 100644
->>>> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
->>>> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
->>>> @@ -77,6 +77,7 @@ All slave nodes can contain the following optional
->>>> properties:
->>>>                     Defaults to 1 if not present.
->>>>   - spi-rx-delay-us - Microsecond delay after a read transfer.
->>>>   - spi-tx-delay-us - Microsecond delay after a write transfer.
->>>> +- wakeup-source   - Device can be used as a wakeup source.
->>>
->>>
->>> wakeup-source is valid for any device with an interrupts property
->>> already, so I don't think this is necessary.
->
-> i saw http://lkml.iu.edu/hypermail/linux/kernel/1510.2/04553.html add a
-> Documentation/devicetree/bindings/power/wakeup-source.txt for this, but that
-> serial didn't remove all wakeup-source property from other bindings, but
-> standardize them, for example:
-> 71a0151 Documentation: devicetree: fix reference to legacy wakeup properties
->
-> +++ b/Documentation/devicetree/bindings/input/gpio-keys.txt
-> @@ -24,6 +24,7 @@ Optional subnode-properties:
->         - debounce-interval: Debouncing interval time in milliseconds.
->           If not specified defaults to 5.
->         - wakeup-source: Boolean, button can wake-up the system.
-> +                        (Legacy property supported: "gpio-key,wakeup")
->
->>
->> Do you mean it is not necessary on SPI level or not necessary at all? Or
->> you disagree with wording? Because we do need a way to say that on given
->> platform the device is supposed to be configured as a wakeup source.
->>
->> Thanks.
->>
->
-> Hi guys,
->
-> Mark Brown suggested to put wakeup-source support in some common place
-> instead of sub drivers, should we do that?
+>> [...]
 
-As you point out, it is already documented in a common place. In SPI
-makes no sense. Are you going to document in I2C, simple-bus, USB,
-etc. as well?
+>> >> > +           compatible = "goodix,gtx5";
+>> >> > +           reg = <0x14>;
+>> >> > +           interrupt-parent = <&msm_gpio>;
+>> >> > +           interrupts = <13 0x2800>;
+>> >> > +           vtouch-supply = <&pm8916_l15>;
+>> >> > +           reset-gpios = <&msm_gpio 12 0x0>;
+>> >> > +           irq-gpios = <&msm_gpio 13 0x2800>;
+>> >> > +           irq-flags = <1>; /* 1:trigger rising, 2:trigger falling;*/
+>> >> > +           touchscreen-max-id = <10>;
+>> >> > +           touchscreen-size-x = <400>;
+>> >> > +           touchscreen-size-y = <400>;
+>> >> > +           touchscreen-max-w = <400>;
+>> >> > +           touchscreen-max-pressure = <255>;
+>> >> > +           touchscreen-swapped-x-y;
+>> >> > +           touchscreen-key-map = <172 158>; /*KEY_HOMEPAGE, KEY_BACK*/
+>> >> > +           sensor0 {
+>> >>
+>> >> How many sensors can there be? That needs to be documented.
+>> >>
+>> >> Why do you need a sub-node?
+>> >
+>> > sensor is an internal call, we use senesorX to represent the touchpanel
+>> > is produced by which factory. A panel factory will have it corresponding
+>> > config data to get the best touch results. It will delete the sub-node
+>> > and change to the following format:
+>> >         panel0,normal-cfg = [...]  /* panelX,cfg : X is no more than 10*/
+>>
+>> panel0 is not a vendor and normal doesn't tell us anything. How about
+>> just "goodix,panel-cfg-X"?
+>
+> Can I use "goodix,normal-cfg-X" rather than "goodix,panel-cfg-X"? The
+> string "normal-cfg" is meaningful to driver.
 
-wakeup-source is really a property of the system (the upstream
-interrupt controller in particular), so it doesn't really need to be
-documented per device.
+Okay.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
