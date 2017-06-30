@@ -1,12 +1,13 @@
 From: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 1/8] mailbox: introduce ARM SMC based mailbox
-Date: Fri, 30 Jun 2017 10:56:01 +0100
-Message-ID: <20170630095608.24943-2-andre.przywara@arm.com>
+Subject: [PATCH 8/8] arm64: dts: allwinner: a64: add (unused)
+ MMC clock node
+Date: Fri, 30 Jun 2017 10:56:08 +0100
+Message-ID: <20170630095608.24943-9-andre.przywara@arm.com>
 References: <20170630095608.24943-1-andre.przywara@arm.com>
 Reply-To: andre.przywara-5wv7dgnIgG8@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDNZNK75ZIKRBG6C3DFAKGQETY6J2SI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDNZNK75ZIKRBKOC3DFAKGQEHAPSTQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20170630095608.24943-1-andre.przywara-5wv7dgnIgG8@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,228 +20,39 @@ To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sudeep 
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Icenowy Zheng <icenowy-ymACFijhrKM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This mailbox driver implements a mailbox which signals transmitted data
-via an ARM smc (secure monitor call) instruction. The mailbox receiver
-is implemented in firmware and can synchronously return data when it
-returns execution to the non-secure world again.
-An asynchronous receive path is not implemented.
-This allows the usage of a mailbox to trigger firmware actions on SoCs
-which either don't have a separate management processor or on which such
-a core is not available. A user of this mailbox could be the SCP
-interface.
+More of a demo than to be really useful as it this adds a clock producer
+node for the MMC clock.
+This can be used instead of the existing clock driver for driving a clock.
+Use cases include providing clock control by hypervisors or driving new
+SoCs which don't have an appropriate clock driver in the kernel.
+The number here is made explicitly compatible with the in-kernel CCF
+numbering, so any consumer can be switched over by just exchaning the
+phandle.
 
 Signed-off-by: Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>
 ---
- drivers/mailbox/Kconfig           |   8 ++
- drivers/mailbox/Makefile          |   2 +
- drivers/mailbox/arm-smc-mailbox.c | 172 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 182 insertions(+)
- create mode 100644 drivers/mailbox/arm-smc-mailbox.c
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-index c5731e5..5664b7f 100644
---- a/drivers/mailbox/Kconfig
-+++ b/drivers/mailbox/Kconfig
-@@ -170,4 +170,12 @@ config BCM_FLEXRM_MBOX
- 	  Mailbox implementation of the Broadcom FlexRM ring manager,
- 	  which provides access to various offload engines on Broadcom
- 	  SoCs. Say Y here if you want to use the Broadcom FlexRM.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 30cad44..6949a70 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -162,6 +162,15 @@
+ 				clock-indices = <0>;
+ 				clock-output-names = "cpu_clk";
+ 			};
 +
-+config ARM_SMC_MBOX
-+	tristate "Generic ARM smc mailbox"
-+	depends on OF && HAVE_ARM_SMCCC
-+	help
-+	  Generic mailbox driver which uses ARM smc calls to call into
-+	  firmware for triggering mailboxes.
-+
- endif
-diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-index d54e412..8ec6869 100644
---- a/drivers/mailbox/Makefile
-+++ b/drivers/mailbox/Makefile
-@@ -35,3 +35,5 @@ obj-$(CONFIG_BCM_FLEXRM_MBOX)	+= bcm-flexrm-mailbox.o
- obj-$(CONFIG_QCOM_APCS_IPC)	+= qcom-apcs-ipc-mailbox.o
++			scpi_clk: scpi_clocks {
++				compatible = "arm,scpi-variable-clocks";
++				#clock-cells = <1>;
++				clock-indices = <75>, <76>,
++						<77>;
++				clock-output-names = "mmc0_clk", "mmc1_clk",
++						     "mmc2_clk";
++			};
+ 		};
  
- obj-$(CONFIG_TEGRA_HSP_MBOX)	+= tegra-hsp.o
-+
-+obj-$(CONFIG_ARM_SMC_MBOX)	+= arm-smc-mailbox.o
-diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-mailbox.c
-new file mode 100644
-index 0000000..578aed2
---- /dev/null
-+++ b/drivers/mailbox/arm-smc-mailbox.c
-@@ -0,0 +1,172 @@
-+/*
-+ *  Copyright (C) 2016,2017 ARM Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This device provides a mechanism for emulating a mailbox by using
-+ * smc calls, allowing a "mailbox" consumer to sit in firmware running
-+ * on the same core.
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/err.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/mailbox_controller.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/arm-smccc.h>
-+
-+#define ARM_SMC_MBOX_SMC		(0 << 0)
-+#define ARM_SMC_MBOX_HVC		(1 << 0)
-+#define ARM_SMC_MBOX_METHOD_MASK	(1 << 0)
-+
-+struct arm_smc_chan_data {
-+	u32 function_id;
-+	u32 flags;
-+};
-+
-+static int arm_smc_send_data(struct mbox_chan *link, void *data)
-+{
-+	struct arm_smc_chan_data *chan_data = link->con_priv;
-+	u32 function_id = chan_data->function_id;
-+	struct arm_smccc_res res;
-+	u32 msg = *(u32 *)data;
-+
-+	if ((chan_data->flags & ARM_SMC_MBOX_METHOD_MASK) == ARM_SMC_MBOX_SMC)
-+		arm_smccc_smc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-+	else
-+		arm_smccc_hvc(function_id, msg, 0, 0, 0, 0, 0, 0, &res);
-+
-+	mbox_chan_received_data(link, (void *)res.a0);
-+
-+	return 0;
-+}
-+
-+static int arm_smc_startup(struct mbox_chan *link)
-+{
-+	return 0;
-+}
-+
-+static void arm_smc_shutdown(struct mbox_chan *link)
-+{
-+}
-+
-+/* This mailbox is synchronous, so we are always done. */
-+static bool arm_smc_last_tx_done(struct mbox_chan *link)
-+{
-+	return true;
-+}
-+
-+static const struct mbox_chan_ops arm_smc_mbox_chan_ops = {
-+	.send_data	= arm_smc_send_data,
-+	.startup	= arm_smc_startup,
-+	.shutdown	= arm_smc_shutdown,
-+	.last_tx_done	= arm_smc_last_tx_done
-+};
-+
-+static int arm_smc_mbox_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct mbox_controller *mbox;
-+	struct arm_smc_chan_data *chan_data;
-+	const char *method;
-+	bool use_hvc = false;
-+	int ret = 0, i;
-+
-+	ret = of_property_count_elems_of_size(dev->of_node, "arm,smc-func-ids",
-+					      sizeof(u32));
-+	if (ret < 0)
-+		return ret;
-+
-+	if (!of_property_read_string(dev->of_node, "method", &method)) {
-+		if (!strcmp("hvc", method)) {
-+			use_hvc = true;
-+		} else if (!strcmp("smc", method)) {
-+			use_hvc = false;
-+		} else {
-+			dev_warn(dev, "invalid \"method\" property: %s\n",
-+				 method);
-+
-+			return -EINVAL;
-+		}
-+	}
-+
-+	mbox = devm_kzalloc(dev, sizeof(*mbox), GFP_KERNEL);
-+	if (!mbox)
-+		return -ENOMEM;
-+
-+	mbox->num_chans = ret;
-+	mbox->chans = devm_kcalloc(dev, mbox->num_chans, sizeof(*mbox->chans),
-+				   GFP_KERNEL);
-+	if (!mbox->chans)
-+		return -ENOMEM;
-+
-+	chan_data = devm_kcalloc(dev, mbox->num_chans, sizeof(*chan_data),
-+				 GFP_KERNEL);
-+	if (!chan_data)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < mbox->num_chans; i++) {
-+		u32 function_id;
-+
-+		ret = of_property_read_u32_index(dev->of_node,
-+						 "arm,smc-func-ids", i,
-+						 &function_id);
-+		if (ret)
-+			return ret;
-+
-+		chan_data[i].function_id = function_id;
-+		if (use_hvc)
-+			chan_data[i].flags |= ARM_SMC_MBOX_HVC;
-+		mbox->chans[i].con_priv = &chan_data[i];
-+	}
-+
-+	mbox->txdone_poll = true;
-+	mbox->txdone_irq = false;
-+	mbox->txpoll_period = 1;
-+	mbox->ops = &arm_smc_mbox_chan_ops;
-+	mbox->dev = dev;
-+
-+	ret = mbox_controller_register(mbox);
-+	if (ret)
-+		return ret;
-+
-+	platform_set_drvdata(pdev, mbox);
-+	dev_info(dev, "ARM SMC mailbox enabled with %d chan%s.\n",
-+		 mbox->num_chans, mbox->num_chans == 1 ? "" : "s");
-+
-+	return ret;
-+}
-+
-+static int arm_smc_mbox_remove(struct platform_device *pdev)
-+{
-+	struct mbox_controller *mbox = platform_get_drvdata(pdev);
-+
-+	mbox_controller_unregister(mbox);
-+	return 0;
-+}
-+
-+static const struct of_device_id arm_smc_mbox_of_match[] = {
-+	{ .compatible = "arm,smc-mbox", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, arm_smc_mbox_of_match);
-+
-+static struct platform_driver arm_smc_mbox_driver = {
-+	.driver = {
-+		.name = "arm-smc-mbox",
-+		.of_match_table = arm_smc_mbox_of_match,
-+	},
-+	.probe		= arm_smc_mbox_probe,
-+	.remove		= arm_smc_mbox_remove,
-+};
-+module_platform_driver(arm_smc_mbox_driver);
-+
-+MODULE_AUTHOR("Andre Przywara <andre.przywara-5wv7dgnIgG8@public.gmane.org>");
-+MODULE_DESCRIPTION("Generic ARM smc mailbox driver");
-+MODULE_LICENSE("GPL v2");
+ 		scpi_sensors0: sensors {
 -- 
 2.9.0
