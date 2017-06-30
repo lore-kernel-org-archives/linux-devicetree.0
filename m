@@ -1,105 +1,159 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64: dts: r8a7796: Add DRIF support
-Date: Fri, 30 Jun 2017 13:53:45 +0200
-Message-ID: <20170630115345.GK26710@verge.net.au>
-References: <20170627125438.44491-1-ramesh.shanmugasundaram@bp.renesas.com>
- <20170630101720.GH26710@verge.net.au>
- <KL1PR0601MB2038A605A7A2825225EB49DBC3D30@KL1PR0601MB2038.apcprd06.prod.outlook.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: audio-graph-card: add widgets and
+	routing for external amplifier support" to the asoc tree
+Date: Fri, 30 Jun 2017 12:58:52 +0100
+Message-ID: <E1dQuZY-0007xM-6Q@finisterre>
+References: <1498742798-3128-3-git-send-email-shawnguo@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <KL1PR0601MB2038A605A7A2825225EB49DBC3D30@KL1PR0601MB2038.apcprd06.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ramesh Shanmugasundaram <ramesh.shanmugasundaram@bp.renesas.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, "geert+renesas@glider.be" <geert+renesas@glider.be>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1498742798-3128-3-git-send-email-shawnguo@kernel.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Mark Brown <broonie@kernel.org>, Baoyou Xie <xie.baoyou@sanechips.com.cn>, Rob Herring <robh+dt@kernel.org>, Xin Zhou <zhou.xin8@sanechips.com.cn>, Jun Nie <jun.nie@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 30, 2017 at 10:28:09AM +0000, Ramesh Shanmugasundaram wrote:
-> Hi Simon,
-> 
-> > Subject: Re: [PATCH] arm64: dts: r8a7796: Add DRIF support
-> > 
-> > On Tue, Jun 27, 2017 at 01:54:38PM +0100, Ramesh Shanmugasundaram wrote:
-> > > Adds the DRIF controller nodes for r8a7796.
-> > >
-> > > Signed-off-by: Ramesh Shanmugasundaram
-> > > <ramesh.shanmugasundaram@bp.renesas.com>
-> > > ---
-> > > Hi Simon,
-> > >
-> > >    This patch is based on renesas-devel-20170626-v4.12-rc7 tag.
-> > >    It is verified on M3 ES1.0. I also verified there are no regression
-> > issues
-> > >    with this addition.
-> > >
-> > >    The driver[1] is pushed into the media_tree. The bindings[2] are
-> > ACK'ed
-> > >    by Geert & Rob and in the media_tree queue.
-> > >
-> > >    [1]
-> > https://git.linuxtv.org/media_tree.git/commit/?id=7625ee981af166ddb569e2e6
-> > c0006e2af471326f
-> > >    [2]
-> > > https://www.mail-archive.com/linux-renesas-soc@vger.kernel.org/msg1560
-> > > 2.html
-> > >
-> > > Thanks,
-> > > Ramesh.
-> > >
-> > >  arch/arm64/boot/dts/renesas/r8a7796.dtsi | 120
-> > > +++++++++++++++++++++++++++++++
-> > >  1 file changed, 120 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> > > b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> > > index 1f6710912045..df04d132a127 100644
-> > > --- a/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/r8a7796.dtsi
-> > > @@ -639,6 +639,126 @@
-> > >  			};
-> > >  		};
-> > >
-> > > +		drif00: rif@e6f40000 {
-> > > +			compatible = "renesas,r8a7796-drif",
-> > > +				     "renesas,rcar-gen3-drif";
-> > > +			reg = <0 0xe6f40000 0 0x64>;
-> > > +			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-> > > +			clocks = <&cpg CPG_MOD 515>;
-> > > +			clock-names = "fck";
-> > > +			dmas = <&dmac1 0x20>, <&dmac2 0x20>;
-> > 
-> > The dmas property seems a little strange. I would have expected to allow
-> > ether dmac1 or dmac2 to be used for both tx and rx:
-> > 
-> > 			dmas = <&dmac1 0x20>, <&dmac1 0x20>,
-> > 			       <&dmac2 0x20>, <&dmac2 0x20>;
-> > 
-> 
-> It is an rx-only interface that can use either dmac1 or 2.
+The patch
 
-Thanks, I see that clearly now.
-I have applied this for v4.14.
+   ASoC: audio-graph-card: add widgets and routing for external amplifier support
 
-> 
-> > 
-> > > +			dma-names = "rx", "rx";
-> > > +			power-domains = <&sysc R8A7796_PD_ALWAYS_ON>;
-> > > +			resets = <&cpg 515>;
-> > > +			renesas,bonding = <&drif01>;
-> > > +			status = "disabled";
-> > > +		};
-> > 
-> 
-> Thanks,
-> Ramesh
-> 
+has been applied to the asoc tree at
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From f986907c9225cf48e9a55233b086039152bb5b99 Mon Sep 17 00:00:00 2001
+From: Shawn Guo <shawn.guo@linaro.org>
+Date: Thu, 29 Jun 2017 21:26:38 +0800
+Subject: [PATCH] ASoC: audio-graph-card: add widgets and routing for external
+ amplifier support
+
+It's very common that audio card has a machine level amplifier which is
+controlled by GPIO.  The patch adds DAPM widgets and routing support
+into audio-graph-card driver, and creates an output driver widget with
+event to control the amplifier via GPIO.
+
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/generic/audio-graph-card.c | 48 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 47 insertions(+), 1 deletion(-)
+
+diff --git a/sound/soc/generic/audio-graph-card.c b/sound/soc/generic/audio-graph-card.c
+index ee752f62d89d..105ec3a6e30d 100644
+--- a/sound/soc/generic/audio-graph-card.c
++++ b/sound/soc/generic/audio-graph-card.c
+@@ -13,6 +13,7 @@
+ #include <linux/clk.h>
+ #include <linux/device.h>
+ #include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -30,6 +31,34 @@ struct graph_card_data {
+ 		struct asoc_simple_dai codec_dai;
+ 	} *dai_props;
+ 	struct snd_soc_dai_link *dai_link;
++	struct gpio_desc *pa_gpio;
++};
++
++static int asoc_graph_card_outdrv_event(struct snd_soc_dapm_widget *w,
++					struct snd_kcontrol *kcontrol,
++					int event)
++{
++	struct snd_soc_dapm_context *dapm = w->dapm;
++	struct graph_card_data *priv = snd_soc_card_get_drvdata(dapm->card);
++
++	switch (event) {
++	case SND_SOC_DAPM_POST_PMU:
++		gpiod_set_value_cansleep(priv->pa_gpio, 1);
++		break;
++	case SND_SOC_DAPM_PRE_PMD:
++		gpiod_set_value_cansleep(priv->pa_gpio, 0);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static const struct snd_soc_dapm_widget asoc_graph_card_dapm_widgets[] = {
++	SND_SOC_DAPM_OUT_DRV_E("Amplifier", SND_SOC_NOPM,
++			       0, 0, NULL, 0, asoc_graph_card_outdrv_event,
++			       SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PMD),
+ };
+ 
+ #define graph_priv_to_card(priv) (&(priv)->snd_card)
+@@ -180,8 +209,16 @@ static int asoc_graph_card_parse_of(struct graph_card_data *priv)
+ 	int rc, idx = 0;
+ 	int ret;
+ 
++	ret = asoc_simple_card_of_parse_widgets(card, NULL);
++	if (ret < 0)
++		return ret;
++
++	ret = asoc_simple_card_of_parse_routing(card, NULL, 1);
++	if (ret < 0)
++		return ret;
++
+ 	/*
+-	 * we need to consider "widgets", "routing", "mclk-fs" around here
++	 * we need to consider "mclk-fs" around here
+ 	 * see simple-card
+ 	 */
+ 
+@@ -233,6 +270,13 @@ static int asoc_graph_card_probe(struct platform_device *pdev)
+ 	if (!dai_props || !dai_link)
+ 		return -ENOMEM;
+ 
++	priv->pa_gpio = devm_gpiod_get_optional(dev, "pa", GPIOD_OUT_LOW);
++	if (IS_ERR(priv->pa_gpio)) {
++		ret = PTR_ERR(priv->pa_gpio);
++		dev_err(dev, "failed to get amplifier gpio: %d\n", ret);
++		return ret;
++	}
++
+ 	priv->dai_props			= dai_props;
+ 	priv->dai_link			= dai_link;
+ 
+@@ -242,6 +286,8 @@ static int asoc_graph_card_probe(struct platform_device *pdev)
+ 	card->dev	= dev;
+ 	card->dai_link	= dai_link;
+ 	card->num_links	= num;
++	card->dapm_widgets = asoc_graph_card_dapm_widgets;
++	card->num_dapm_widgets = ARRAY_SIZE(asoc_graph_card_dapm_widgets);
+ 
+ 	ret = asoc_graph_card_parse_of(priv);
+ 	if (ret < 0) {
+-- 
+2.13.2
