@@ -1,166 +1,58 @@
-From: Zhi Mao <zhi.mao@mediatek.com>
-Subject: [PATCH v3 3/6] pwm: mediatek: fix clock control issue
-Date: Fri, 30 Jun 2017 14:05:18 +0800
-Message-ID: <1498802721-32455-4-git-send-email-zhi.mao@mediatek.com>
-References: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [GIT PULL] Update binding documentation for CP110 and AP806
+Date: Fri, 30 Jun 2017 08:57:10 +0200
+Message-ID: <87h8yyvu7t.fsf@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1498802721-32455-1-git-send-email-zhi.mao@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: john@phrozen.org, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-pwm@vger.kernel.org
-Cc: srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, zhi.mao@mediatek.com, yingjoe.chen@mediatek.com, yt.shen@mediatek.com, sean.wang@mediatek.com, zhenbao.liu@mediatek.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Kostya Porotchkin <kostap-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Neta Zur Hershkovits <neta-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Marcin Wojtas <mw-nYOzD4b6Jr9Wk0Htik3J/w@public.gmane.org>, Omri Itach <omrii-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-1. prepare top/main clk in mtk_pwm_probe() function,
-   it will increase power consumption
-   and in original code these clocks is only prepeare but never enabled.
-2. pwm clock should be enabled before setting pwm registers
-   in function: mtk_pwm_config().
-3. delete "pwm_disable" in function:mtk_pwm_remove(),
-   as framework should disable all the pwms, before remove them.
 
-Signed-off-by: Zhi Mao <zhi.mao@mediatek.com>
----
- drivers/pwm/pwm-mediatek.c |   69 ++++++++++++++++++++++++++++++--------------
- 1 file changed, 47 insertions(+), 22 deletions(-)
+Hi Stephen,
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index d08b5b3..554a042 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -2,6 +2,7 @@
-  * Mediatek Pulse Width Modulator driver
-  *
-  * Copyright (C) 2015 John Crispin <blogic@openwrt.org>
-+ * Copyright (C) 2017 Zhi Mao <zhi.mao@mediatek.com>
-  *
-  * This file is licensed under the terms of the GNU General Public
-  * License version 2. This program is licensed "as is" without any
-@@ -61,6 +62,42 @@ static inline struct mtk_pwm_chip *to_mtk_pwm_chip(struct pwm_chip *chip)
- 	return container_of(chip, struct mtk_pwm_chip, chip);
- }
- 
-+static int mtk_pwm_clk_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+	int ret = 0;
-+
-+	ret = clk_prepare_enable(pc->clks[MTK_CLK_TOP]);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = clk_prepare_enable(pc->clks[MTK_CLK_MAIN]);
-+	if (ret < 0)
-+		goto disable_clk_top;
-+
-+	ret = clk_prepare_enable(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	if (ret < 0)
-+		goto disable_clk_main;
-+
-+	return 0;
-+
-+disable_clk_main:
-+	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
-+disable_clk_top:
-+	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-+
-+	return ret;
-+}
-+
-+static void mtk_pwm_clk_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
-+
-+	clk_disable_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	clk_disable_unprepare(pc->clks[MTK_CLK_MAIN]);
-+	clk_disable_unprepare(pc->clks[MTK_CLK_TOP]);
-+}
-+
- static inline u32 mtk_pwm_readl(struct mtk_pwm_chip *chip, unsigned int num,
- 				unsigned int offset)
- {
-@@ -80,6 +117,11 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	struct mtk_pwm_chip *pc = to_mtk_pwm_chip(chip);
- 	struct clk *clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm];
- 	u32 resolution, clkdiv = 0;
-+	int ret;
-+
-+	ret = mtk_pwm_clk_enable(chip, pwm);
-+	if (ret < 0)
-+		return ret;
- 
- 	resolution = NSEC_PER_SEC / clk_get_rate(clk);
- 
-@@ -95,6 +137,8 @@ static int mtk_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	mtk_pwm_writel(pc, pwm->hwpwm, PWMDWIDTH, period_ns / resolution);
- 	mtk_pwm_writel(pc, pwm->hwpwm, PWMTHRES, duty_ns / resolution);
- 
-+	mtk_pwm_clk_disable(chip, pwm);
-+
- 	return 0;
- }
- 
-@@ -104,7 +148,7 @@ static int mtk_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	u32 value;
- 	int ret;
- 
--	ret = clk_prepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	ret = mtk_pwm_clk_enable(chip, pwm);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -124,7 +168,7 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	value &= ~BIT(pwm->hwpwm);
- 	writel(value, pc->regs);
- 
--	clk_unprepare(pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]);
-+	mtk_pwm_clk_disable(chip, pwm);
- }
- 
- static const struct pwm_ops mtk_pwm_ops = {
-@@ -156,14 +200,6 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 			return PTR_ERR(pc->clks[i]);
- 	}
- 
--	ret = clk_prepare(pc->clks[MTK_CLK_TOP]);
--	if (ret < 0)
--		return ret;
--
--	ret = clk_prepare(pc->clks[MTK_CLK_MAIN]);
--	if (ret < 0)
--		goto disable_clk_top;
--
- 	platform_set_drvdata(pdev, pc);
- 
- 	pc->chip.dev = &pdev->dev;
-@@ -174,26 +210,15 @@ static int mtk_pwm_probe(struct platform_device *pdev)
- 	ret = pwmchip_add(&pc->chip);
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
--		goto disable_clk_main;
-+		return ret;
- 	}
- 
- 	return 0;
--
--disable_clk_main:
--	clk_unprepare(pc->clks[MTK_CLK_MAIN]);
--disable_clk_top:
--	clk_unprepare(pc->clks[MTK_CLK_TOP]);
--
--	return ret;
- }
- 
- static int mtk_pwm_remove(struct platform_device *pdev)
- {
- 	struct mtk_pwm_chip *pc = platform_get_drvdata(pdev);
--	unsigned int i;
--
--	for (i = 0; i < pc->chip.npwm; i++)
--		pwm_disable(&pc->chip.pwms[i]);
- 
- 	return pwmchip_remove(&pc->chip);
- }
+As seen on Tuesday this is the pull request for the remaining binding
+documentation which depends on the documentation already applied in your
+tree.
+
+Thanks for taking care of it,
+
+Gregory
+
+The following changes since commit 7e5b11afecc0f558c5a6723970770f92f2529d4e:
+
+  dt-bindings: ap806: introduce a new binding (2017-06-01 12:02:01 +0900)
+
+are available in the git repository at:
+
+  git://git.infradead.org/linux-mvebu.git binding-doc-cp110-ap806
+
+for you to fetch changes up to 1fa67c675f6477ceb670f087a6f6739f7b3cb099:
+
+  gpio: dt-bindings: Add documentation for gpio controllers on Armada 7K/8K (2017-06-27 09:07:17 +0200)
+
+----------------------------------------------------------------
+Gregory CLEMENT (6):
+      dt-bindings: cp110: do not depend anymore of the *-clock-output-names
+      dt-bindings: cp110: introduce a new binding
+      dt-bindings: cp110: add sdio clock to cp-110 system controller
+      pinctrl: dt-bindings: add documentation for AP806 pin controllers
+      pinctrl: dt-bindings: add documentation for CP110 pin controllers
+      gpio: dt-bindings: Add documentation for gpio controllers on Armada 7K/8K
+
+ Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt  |  73 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0.txt | 144 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------------------
+ Documentation/devicetree/bindings/gpio/gpio-mvebu.txt                      |  24 +++++++++++++++++-------
+ 3 files changed, 208 insertions(+), 33 deletions(-)
+
 -- 
-1.7.9.5
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
