@@ -1,60 +1,151 @@
 From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [RESEND PATCH v4] clk: stm32h7: Add stm32h743 clock driver
-Date: Fri, 30 Jun 2017 11:54:03 -0700
-Message-ID: <20170630185403.GN22780@codeaurora.org>
-References: <1496818794-14771-1-git-send-email-gabriel.fernandez@st.com>
- <20170621220703.GI4493@codeaurora.org>
- <110cf67f-e1d6-1f99-953c-6b9639bb4910@st.com>
- <20170628155956.GA5316@codeaurora.org>
- <7c0c3861-cf61-a9e2-cd5d-2ae30b8f32fa@st.com>
- <20170630002008.GD22780@codeaurora.org>
- <d325071a-5da5-4ff1-89b9-fc1bbe10e223@st.com>
+Subject: Re: [PATCH V1 7/9] clk: sprd: add adjustable pll support
+Date: Fri, 30 Jun 2017 12:22:28 -0700
+Message-ID: <20170630192228.GO22780@codeaurora.org>
+References: <20170618015855.27738-1-chunyan.zhang@spreadtrum.com>
+ <20170618015855.27738-8-chunyan.zhang@spreadtrum.com>
+ <20170620013710.GJ4493@codeaurora.org>
+ <CAAfSe-sMy3aM9=LwpVivvHKy4hVw3GEd3U-hZe17pXM5fJRxPg@mail.gmail.com>
+ <20170630014452.GL22780@codeaurora.org>
+ <CAAfSe-smKqgd42jDAGDA=NtYvRZExNanU7fHrRkT4W-WH-2=ug@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-clk-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d325071a-5da5-4ff1-89b9-fc1bbe10e223@st.com>
+In-Reply-To: <CAAfSe-smKqgd42jDAGDA=NtYvRZExNanU7fHrRkT4W-WH-2=ug@mail.gmail.com>
 Sender: linux-clk-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre TORGUE <alexandre.torgue@st.com>, Michael Turquette <mturquette@baylibre.com>, Nicolas Pitre <nico@linaro.org>, Arnd Bergmann <arnd@arndb.de>, "daniel.thompson@linaro.org" <daniel.thompson@linaro.org>, "andrea.merello@gmail.com" <andrea.merello@gmail.com>, "radoslaw.pietrzyk@gmail.com" <radoslaw.pietrzyk@gmail.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+To: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Chunyan Zhang <chunyan.zhang@spreadtrum.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Mark Brown <broonie@kernel.org>, Xiaolong Zhang <xiaolong.zhang@spreadtrum.com>, Orson Zhai <orson.zhai@spreadtrum.com>, Geng Ren <geng.ren@spreadtrum.com>, Ben Li <ben.li@spreadtrum.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/30, Gabriel FERNANDEZ wrote:
+On 06/30, Chunyan Zhang wrote:
+> Hi Stephen,
 > 
-> 
-> On 06/30/2017 02:20 AM, Stephen Boyd wrote:
-> > On 06/29, Gabriel FERNANDEZ wrote:
+> On 30 June 2017 at 09:44, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > On 06/22, Chunyan Zhang wrote:
+> >> On 20 June 2017 at 09:37, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> >> > On 06/18, Chunyan Zhang wrote:
+> >> >> +     pll->factors[member].width
+> >> >> +
+> >> >> +#define pmask(pll, member)                                   \
+> >> >> +     ((pwidth(pll, member)) ?                                \
+> >> >> +     GENMASK(pwidth(pll, member) + pshift(pll, member) - 1,  \
+> >> >> +     pshift(pll, member)) : 0)
+> >> >> +
+> >> >> +#define pinternal(pll, cfg, member)  \
+> >> >> +     (cfg[pindex(pll, member)] & pmask(pll, member))
+> >> >> +
+> >> >> +#define pinternal_val(pll, cfg, member)      \
+> >> >> +     (pinternal(pll, cfg, member) >> pshift(pll, member))
+> >> >> +
+> >> >> +static unsigned long pll_get_refin_rate(struct ccu_pll *pll)
+> >> >
+> >> > pll could be const?
 > >>
-> >> On 06/28/2017 05:59 PM, Stephen Boyd wrote:
-> >>> On 06/27, Gabriel FERNANDEZ wrote:
-> >>>> On 06/22/2017 12:07 AM, Stephen Boyd wrote:
-> >>>>> readl_poll_timeout?
-> >>>>>
-> >>>> if i use readl_poll_timeout (wich use 'ktime_get()') it can be
-> >>>> operational only after the selection of clocksource ? (device_initcall).
-> >>>> And then if a driver turn on a clock before, it could blocked the linux
-> >>>> console ?
-> >>>>
-> >>> Ok. I wonder if we could add some sort of starting check to
-> >>> readl_poll_timeout() that tests system_state for booting vs.
-> >>> scheduling? That should be sufficient to handle this case?
-> >>>
-> >> Oops i think i understood my problem...
-> >> i used readl_poll_timeout in atomic context.
-> >> I have to move my code in the .prepare ops.
+> >> What this function returns is a factor used to calculate the pll rate
+> >> later, I will rename this function in the next iterator.
 > >>
-> >> If you are ok with that i will send a v5
-> >>
-> > There's readl_poll_timeout_atomic() for those modes.
 > >
-> yes it's exactly the test i made (use 'readl_poll_timeout()_atomic' in 
-> .enable ops) but i'm blocked.
+> > Rename is fine, but pll can still be marked const?
 > 
-> if i do the same in .prepare ops with 'readl_poll_timeout()' it's ok.
+> Oh, sorry I misunderstood :)
+> You mean mark the input parameter "pll" const, right?
 
-I'm still confused. readl_poll_timeout_atomic() uses ktime_get(),
-and so does readl_poll_timeout(), so how does moving to the
-prepare op fix the problem? What's the actual problem?
+Yes.
+
+> >> >> +
+> >> >> +static int ccu_pll_helper_set_rate(struct ccu_pll *pll,
+> >> >> +                                unsigned long rate,
+> >> >> +                                unsigned long parent_rate)
+> >> >> +{
+> >> >> +     u32 mask, shift, width, ibias_val, index, kint, nint;
+> >> >> +     u32 reg_num = pll->regs[0], i = 0;
+> >> >> +     unsigned long refin, fvco = rate;
+> >> >> +     struct reg_cfg *cfg;
+> >> >> +
+> >> >> +     cfg = kcalloc(reg_num, sizeof(*cfg), GFP_KERNEL);
+> >> >> +     if (!cfg)
+> >> >> +             return -ENOMEM;
+> >> >> +
+> >> >> +     refin = pll_get_refin_rate(pll);
+> >> >> +
+> >> >> +     mask = pmask(pll, PLL_PREDIV);
+> >> >> +     index = pindex(pll, PLL_PREDIV);
+> >> >> +     width = pwidth(pll, PLL_PREDIV);
+> >> >> +     if (width && (ccu_pll_readl(pll, index) & mask))
+> >> >> +             refin = refin * 2;
+> >> >> +
+> >> >> +     mask = pmask(pll, PLL_POSTDIV);
+> >> >> +     index = pindex(pll, PLL_POSTDIV);
+> >> >> +     width = pwidth(pll, PLL_POSTDIV);
+> >> >> +     cfg[index].msk = mask;
+> >> >> +     if (width && ((pll->fflag == 1 && fvco <= pll->fvco) ||
+> >> >> +                   (pll->fflag == 0 && fvco > pll->fvco)))
+> >> >> +             cfg[index].val |= mask;
+> >> >> +
+> >> >> +     if (width && fvco <= pll->fvco)
+> >> >> +             fvco = fvco * 2;
+> >> >> +
+> >> >> +     mask = pmask(pll, PLL_DIV_S);
+> >> >> +     index = pindex(pll, PLL_DIV_S);
+> >> >> +     cfg[index].val |= mask;
+> >> >> +     cfg[index].msk |= mask;
+> >> >> +
+> >> >> +     mask = pmask(pll, PLL_SDM_EN);
+> >> >> +     index = pindex(pll, PLL_SDM_EN);
+> >> >> +     cfg[index].val |= mask;
+> >> >> +     cfg[index].msk |= mask;
+> >> >> +
+> >> >> +     nint  = fvco/(refin * CCU_PLL_1M);
+> >> >> +
+> >> >> +     mask = pmask(pll, PLL_NINT);
+> >> >> +     index = pindex(pll, PLL_NINT);
+> >> >> +     shift = pshift(pll, PLL_NINT);
+> >> >> +     cfg[index].val |= (nint << shift) & mask;
+> >> >> +     cfg[index].msk |= mask;
+> >> >> +
+> >> >> +     mask = pmask(pll, PLL_KINT);
+> >> >> +     index = pindex(pll, PLL_KINT);
+> >> >> +     width = pwidth(pll, PLL_KINT);
+> >> >> +     shift = pshift(pll, PLL_KINT);
+> >> >> +#ifndef CONFIG_64BIT
+> >> >> +     i = width < 21 ? 0 : i - 21;
+> >> >> +#endif
+> >> >
+> >> > What's this? Why do we depend on CONFIG_64BIT?
+> >>
+> >> On 32-bit SoCs, the largest width we can support is limited due to the
+> >> limitation of calculation precision.
+> >
+> > Does the hardware width change? Still not clear to me what's
+> > going on here.
+> 
+> I heard from my colleague, that because the calculation precision on
+> Spreadtrum's 32-bit SoCs is different from on 64-bit SoCs,  when the
+> width of the value of PLL_KINT is larger than 21, the value is too
+> large to be multiplied on 32-bit Spreadtrum's SoCs.
+
+It sounds like you're saying that the clk hardware is not
+changing, but the sizeof(long) is different on 64-bit and 32-bit
+CPUs so you've added this ifndef here for that.
+
+> 
+> i = width < 21 ? 0 : i - 21;
+> 
+> Here ' i ' is used to adjust 'shift' rather than 'width'  like below (
+> wrote the code back for convenience of understanding)
+> 
+> +       kint = DIV_ROUND_CLOSEST(((fvco - refin * nint * CCU_PLL_1M)/10000) *
+> +       ((mask >> (shift + i)) + 1), refin * 100) << i;
+> 
+
+Having the types for all these variables would also be helpful.
+
+  u32 mask, shift, width, kint, nint;
+  unsigned long refin, fvco;
+
+Why don't we do 64-bit math here instead of 32-bit math? And use
+DIV_ROUND_CLOSEST_ULL?
 
 -- 
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
