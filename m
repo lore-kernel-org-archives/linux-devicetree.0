@@ -1,122 +1,34 @@
-From: Christian Lamparter <chunkeey@googlemail.com>
-Subject: [PATCH v2 3/3] pinctrl: qcom: add support to configure ipq40xx GPIO_PULL bits
-Date: Sat,  1 Jul 2017 18:25:07 +0200
-Message-ID: <e8b73406f36f47a408196f4bf8f6126ecc9e68aa.1498925339.git.chunkeey@googlemail.com>
-References: <73f822f3f969fa2c9ed25097ab8c70826b265491.1498925339.git.chunkeey@googlemail.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <73f822f3f969fa2c9ed25097ab8c70826b265491.1498925339.git.chunkeey@googlemail.com>
-In-Reply-To: <a30335a8948ddcb0bc2d3db5bb13d9599af86cca.1498925339.git.chunkeey@googlemail.com>
-References: <73f822f3f969fa2c9ed25097ab8c70826b265491.1498925339.git.chunkeey@googlemail.com> <a30335a8948ddcb0bc2d3db5bb13d9599af86cca.1498925339.git.chunkeey@googlemail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Ram Chandra Jangir <rjangir@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm64: dts: rockchip: add gpu opp table for rk3399
+Date: Sat, 01 Jul 2017 18:26:49 +0200
+Message-ID: <1592990.2RINQAheo5@phil>
+References: <1498913770-16519-1-git-send-email-jacob-chen@iotwrt.com> <1498913770-16519-2-git-send-email-jacob-chen@iotwrt.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498913770-16519-2-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ram Chandra Jangir <rjangir@codeaurora.org>
+Hi Jacob,
 
-GPIO_PULL bits configurations in TLMM_GPIO_CFG register
-differs for IPQ40xx from rest of the other qcom SoC's.
-This change add support to configure the msm_gpio_pull
-bits for ipq40xx, It is required to fix the proper
-configurations of gpio-pull bits for nand pins mux.
+Am Samstag, 1. Juli 2017, 20:56:09 CEST schrieb Jacob Chen:
+> midgard-t860 gpu in rk3399 support run in 800MHz.
+> 
+> Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-opp.dtsi | 33 ++++++++++++++++++++++++++++
 
-IPQ40xx SoC:
-2'b10: Internal pull up enable.
-2'b11: Unsupport
+Could you also provide the opp table for op1-variants please?
 
-For other SoC's:
-2'b10: Keeper
-2'b11: Pull-Up
 
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Ram Chandra Jangir <rjangir@codeaurora.org>
-Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
----
- drivers/pinctrl/qcom/pinctrl-ipq4019.c |  1 +
- drivers/pinctrl/qcom/pinctrl-msm.c     | 25 +++++++++++++++++++------
- drivers/pinctrl/qcom/pinctrl-msm.h     |  1 +
- 3 files changed, 21 insertions(+), 6 deletions(-)
+Thanks
+Heiko
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-ipq4019.c b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-index ce60df5b05fb..eb01c1309d3a 100644
---- a/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-+++ b/drivers/pinctrl/qcom/pinctrl-ipq4019.c
-@@ -738,6 +738,7 @@ static const struct msm_pinctrl_soc_data ipq4019_pinctrl = {
- 	.groups = ipq4019_groups,
- 	.ngroups = ARRAY_SIZE(ipq4019_groups),
- 	.ngpios = 100,
-+	.pull_no_keeper = true,
- };
- 
- static int ipq4019_pinctrl_probe(struct platform_device *pdev)
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index 273badd92561..e5e27d79f5ef 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -202,10 +202,11 @@ static int msm_config_reg(struct msm_pinctrl *pctrl,
- 	return 0;
- }
- 
--#define MSM_NO_PULL	0
--#define MSM_PULL_DOWN	1
--#define MSM_KEEPER	2
--#define MSM_PULL_UP	3
-+#define MSM_NO_PULL		0
-+#define MSM_PULL_DOWN		1
-+#define MSM_KEEPER		2
-+#define MSM_PULL_UP_NO_KEEPER	2
-+#define MSM_PULL_UP		3
- 
- static unsigned msm_regval_to_drive(u32 val)
- {
-@@ -243,10 +244,16 @@ static int msm_config_group_get(struct pinctrl_dev *pctldev,
- 		arg = arg == MSM_PULL_DOWN;
- 		break;
- 	case PIN_CONFIG_BIAS_BUS_HOLD:
-+		if (pctrl->soc->pull_no_keeper)
-+			return -ENOTSUPP;
-+
- 		arg = arg == MSM_KEEPER;
- 		break;
- 	case PIN_CONFIG_BIAS_PULL_UP:
--		arg = arg == MSM_PULL_UP;
-+		if (pctrl->soc->pull_no_keeper)
-+			arg = arg == MSM_PULL_UP_NO_KEEPER;
-+		else
-+			arg = arg == MSM_PULL_UP;
- 		break;
- 	case PIN_CONFIG_DRIVE_STRENGTH:
- 		arg = msm_regval_to_drive(arg);
-@@ -309,10 +316,16 @@ static int msm_config_group_set(struct pinctrl_dev *pctldev,
- 			arg = MSM_PULL_DOWN;
- 			break;
- 		case PIN_CONFIG_BIAS_BUS_HOLD:
-+			if (pctrl->soc->pull_no_keeper)
-+				return -ENOTSUPP;
-+
- 			arg = MSM_KEEPER;
- 			break;
- 		case PIN_CONFIG_BIAS_PULL_UP:
--			arg = MSM_PULL_UP;
-+			if (pctrl->soc->pull_no_keeper)
-+				arg = MSM_PULL_UP_NO_KEEPER;
-+			else
-+				arg = MSM_PULL_UP;
- 			break;
- 		case PIN_CONFIG_DRIVE_STRENGTH:
- 			/* Check for invalid values */
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.h b/drivers/pinctrl/qcom/pinctrl-msm.h
-index 54fdd04ce9d5..71e97db5ba18 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.h
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.h
-@@ -115,6 +115,7 @@ struct msm_pinctrl_soc_data {
- 	const struct msm_pingroup *groups;
- 	unsigned ngroups;
- 	unsigned ngpios;
-+	bool pull_no_keeper;
- };
- 
- int msm_pinctrl_probe(struct platform_device *pdev,
--- 
-2.13.2
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
