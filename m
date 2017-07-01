@@ -1,31 +1,27 @@
 From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 0/5] some devicetree changes for rk3288 boards
-Date: Sat, 01 Jul 2017 21:26:18 +0200
-Message-ID: <10271838.b6AgH4ZSYx@phil>
-References: <1498874567-11219-1-git-send-email-jacob-chen@iotwrt.com>
+Subject: Re: [RESEND PATCH v2 2/7] ARM: dts: rockchip: add basic dtsi file for RK3229 SoC
+Date: Sat, 01 Jul 2017 21:31:14 +0200
+Message-ID: <11624815.k5Pp5InCUx@phil>
+References: <1498127402-6705-1-git-send-email-frank.wang@rock-chips.com> <1498127402-6705-3-git-send-email-frank.wang@rock-chips.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1498874567-11219-1-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1498127402-6705-3-git-send-email-frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, charles.chen-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kevan.lan-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, finley.xiao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, david.wu-TNX95d0MmH7DzftRWevZcw@public.gmane.org, shawn.lin-TNX95d0MmH7DzftRWevZcw@public.gmane.org, wmc-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 1. Juli 2017, 10:02:42 CEST schrieb Jacob Chen:
-> Since Guillaume have send patches for mali gpu node, let's enable it in more boards.
+Am Donnerstag, 22. Juni 2017, 18:29:57 CEST schrieb Frank Wang:
+> Due to some tiny differences between RK3228 and RK3229, this patch adds
+> a basic dtsi file which first includes a new CPU opp table for RK3229.
 > 
-> Jacob Chen (5):
->   ARM: dts: rockchip: enable ARM Mali GPU on rk3288-tinker
->   ARM: dts: rockchip: enable ARM Mali GPU on rk3288-evb
->   ARM: dts: rockchip: enable ARM Mali GPU on rk3288-fennec
->   ARM: dts: rockchip: enable saradc for rk3288-evb
->   ARM: dts: rockchip: enable adc key for rk3288-evb
+> Signed-off-by: Frank Wang <frank.wang-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-applied for 4.14, with the saradc patch replaced with your v2
+applied for 4.14
 
-
+Thanks
 Heiko
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
