@@ -1,100 +1,43 @@
-From: Eduardo Valentin <edubezval@gmail.com>
-Subject: Re: [PATCH 1/4] arm64: tegra: Add BPMP thermal sensor to Tegra186
-Date: Fri, 30 Jun 2017 16:56:05 -0700
-Message-ID: <20170630235603.GA2943@localhost.localdomain>
-References: <20170616112825.31025-1-mperttunen@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20170616112825.31025-1-mperttunen@nvidia.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, rui.zhang@intel.com, thierry.reding@gmail.com, jonathanh@nvidia.com, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/5] ARM: dts: rockchip: enable ARM Mali GPU on rk3288-tinker
+Date: Sat,  1 Jul 2017 10:02:43 +0800
+Message-ID: <1498874567-11219-2-git-send-email-jacob-chen@iotwrt.com>
+References: <1498874567-11219-1-git-send-email-jacob-chen@iotwrt.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1498874567-11219-1-git-send-email-jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 16, 2017 at 02:28:22PM +0300, Mikko Perttunen wrote:
-> This adds the thermal sensor device provided by the BPMP, and the
-> relevant thermal sensors to the Tegra186 device tree.
->=20
-> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-> ---
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 48 ++++++++++++++++++++++++++=
-++++++
->  1 file changed, 48 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/d=
-ts/nvidia/tegra186.dtsi
-> index 5e62e68ac053..5c19ea74da24 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> @@ -4,6 +4,7 @@
->  #include <dt-bindings/mailbox/tegra186-hsp.h>
->  #include <dt-bindings/power/tegra186-powergate.h>
->  #include <dt-bindings/reset/tegra186-reset.h>
-> +#include <dt-bindings/thermal/tegra186-bpmp-thermal.h>
-> =20
->  / {
->  	compatible =3D "nvidia,tegra186";
-> @@ -444,6 +445,53 @@
->  			#size-cells =3D <0>;
->  			status =3D "disabled";
->  		};
-> +
-> +		bpmp_thermal: thermal {
-> +			compatible =3D "nvidia,tegra186-bpmp-thermal";
-> +			#thermal-sensor-cells =3D <1>;
-> +		};
-> +	};
-> +
-> +	thermal-zones {
-> +		a57 {
-> +			polling-delay =3D <0>;
-> +			polling-delay-passive =3D <1000>;
-> +
-> +			thermal-sensors =3D
-> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_CPU>;
-> +		};
-> +
-> +		denver {
-> +			polling-delay =3D <0>;
-> +			polling-delay-passive =3D <1000>;
-> +
-> +			thermal-sensors =3D
-> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_AUX>;
-> +		};
-> +
-> +		gpu {
-> +			polling-delay =3D <0>;
-> +			polling-delay-passive =3D <1000>;
-> +
-> +			thermal-sensors =3D
-> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_GPU>;
-> +		};
-> +
-> +		pll {
-> +			polling-delay =3D <0>;
-> +			polling-delay-passive =3D <1000>;
-> +
-> +			thermal-sensors =3D
-> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_PLLX>;
-> +		};
-> +
-> +		always_on {
-> +			polling-delay =3D <0>;
-> +			polling-delay-passive =3D <1000>;
-> +
-> +			thermal-sensors =3D
-> +				<&bpmp_thermal TEGRA186_BPMP_THERMAL_ZONE_AO>;
-> +		};
+Add reference to the Mali GPU device tree node on rk3288-tinker.
+Tested on Tinker board.
 
-All the above zones are lacking mandatory fields. Please refer to the
-thermal binding documentation.=20
+Signed-off-by: Jacob Chen <jacob-chen-fyOeoxGR3m/QT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/rk3288-tinker.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
->  	};
-> =20
->  	timer {
-> --=20
-> 2.13.1
->=20
+diff --git a/arch/arm/boot/dts/rk3288-tinker.dts b/arch/arm/boot/dts/rk3288-tinker.dts
+index f601c78..ba0d0bf 100644
+--- a/arch/arm/boot/dts/rk3288-tinker.dts
++++ b/arch/arm/boot/dts/rk3288-tinker.dts
+@@ -156,6 +156,11 @@
+ 	status = "ok";
+ };
+ 
++&gpu {
++	mali-supply = <&vdd_gpu>;
++	status = "okay";
++};
++
+ &hdmi {
+ 	ddc-i2c-bus = <&i2c5>;
+ 	status = "okay";
+-- 
+2.7.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
