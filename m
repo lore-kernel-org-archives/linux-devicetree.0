@@ -1,51 +1,80 @@
-From: mindentropy <mindentropy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] ARM: dts: imx7d-sdb: Set VLDO4 outpt to 2.8V for MIPI CSI/DSI
-Date: Sat,  1 Jul 2017 13:09:11 +0530
-Message-ID: <20170701073911.7338-1-mindentropy@gmail.com>
-References: <CAOMZO5A41QFoJsC2ST1kvpCOs3-unzHDrqXshHa=2ShWWCOyZg@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5A41QFoJsC2ST1kvpCOs3-unzHDrqXshHa=2ShWWCOyZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Gautam Bhat <mindentropy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawnguo-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-3arQi8VN3Tc@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-I+IVW8TIWO2tmTQ+vhA3Yw@public.gmane.org>, "moderated list:ARM/FREESCALE IMX
-        / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 0/3] Overlay syntax sugar using <&label>
+Date: Sat, 1 Jul 2017 18:01:44 +1000
+Message-ID: <20170701080144.GM13989@umbus.fritz.box>
+References: <1497451986-15515-1-git-send-email-pantelis.antoniou@konsulko.com>
+ <594C3748.1030409@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cGfB/trNgB3WtPHu"
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <594C3748.1030409-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Tom Rini <trini-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Devicetree Compiler <devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Gautam Bhat <mindentropy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
- * According to mx7sabresd schematics the MIPI CSI/DSI voltage rails
-   should be 2.8V but the voltage provided is a maximum of 3.3V and
-   minimum of 1.8V. Providing such a higher voltage might damage the
-   peripherals and violates the schematic settings.
+--cGfB/trNgB3WtPHu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Gautam Bhat <mindentropy-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-Changes in v2:
- - Added subject line according to convention
+On Thu, Jun 22, 2017 at 02:31:52PM -0700, Frank Rowand wrote:
+> On 06/14/17 07:53, Pantelis Antoniou wrote:
+> > This patchset makes overlays simpler to write by utilizing
+> > the standard &label { }; syntax instead of the manual
+> > method which is more error prone.
+> >=20
+> > Pantelis Antoniou (3):
+> >   overlay: Documentation for the overlay sugar syntax
+> >   overlay: Add syntactic sugar version of overlays
+> >   tests: Add a test for overlays syntactic sugar
+> >=20
+> >  Documentation/dt-object-internal.txt | 17 +++++++++++++++++
+> >  dtc-parser.y                         | 20 +++++++++++++++++---
+> >  dtc.h                                |  1 +
+> >  livetree.c                           | 22 ++++++++++++++++++++++
+> >  tests/run_tests.sh                   |  6 ++++++
+> >  5 files changed, 63 insertions(+), 3 deletions(-)
+> >=20
+>=20
+> Hi David,
+>=20
+> Any thoughts on this series?
+>=20
+> I have been hoping this new syntax would be accepted.
 
- arch/arm/boot/dts/imx7d-sdb.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Sorry, I've been travelling and then sick, so I haven't had a chance
+to look at this.
 
-diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
-index 5be01a1bf840..1da1f97ec342 100644
---- a/arch/arm/boot/dts/imx7d-sdb.dts
-+++ b/arch/arm/boot/dts/imx7d-sdb.dts
-@@ -262,8 +262,8 @@
- 			};
- 
- 			vgen6_reg: vldo4 {
--				regulator-min-microvolt = <1800000>;
--				regulator-max-microvolt = <3300000>;
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
- 				regulator-always-on;
- 			};
- 		};
--- 
-2.11.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--cGfB/trNgB3WtPHu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBCAAGBQJZV1boAAoJEGw4ysog2bOSIDsP/igzvRzasV99cUhbJ41ZmyLr
+/8RBSak1p6440b8h6Vd4786EeH/MO1N1IWl4lcOPDW9WnZ7IXTl39kt12DYVnCaG
+/GaQ3zCPu29UxVrCiFl8G5Ahtrruh+Aom1sYCFq7DYhfP5qzYUaqEz+TX64OVA48
+TVKEr2BnwajIiaeXKjFBuY40cQkl1FCp00Y11lzP6DdFpG1B2WMga/xbjnCAMUw3
+uOL/tFSR+IlYWv7CTxgJlpqTejzUYkZ4Hs3ok3wzk16zlhc3FBfHAWdWX/wpM/JT
+kNHIPsYgKtHXxl70tTfe0dVklKtpy6QQLw3y1baLmABtfdK9Gj2lo/HogjljlQpj
+WLTShgwc5BJJKEmaBrf3aYhE5nOHbQ5U5E8ySFwrZbV7xGr0GWIo1RX1FJPgHgTV
+7DfcPTFV5Ekmb/jxX4unBW58ixF3hpAM2E1NuRN8bejJLHndM9uxOXx+UkDQcTR+
+PbcLaY/OUlZeYNNinvtRZ7ONXj/CkDsoq3B/Msyow7YB+NcQiHkNR+0be2N/JfJU
+Ln5dSdayjdFC3yQGfCS4IZgY3Tz1FO9+Zi9Tlg1JQf0sWtJEVQ7QlPW5570vUAwv
+2e9lgQlZI+V2sSep14IZcgBFD9EKSttksPVZjzeRSCgAde0GzmryznbivXeD5q+v
+4jLbVzfqR5gYCKXRih1a
+=DZMh
+-----END PGP SIGNATURE-----
+
+--cGfB/trNgB3WtPHu--
