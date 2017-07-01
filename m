@@ -1,32 +1,45 @@
-From: "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: Re: [PATCH v7 0/2] More fixes for twl4030 charger
-Date: Sat, 1 Jul 2017 13:49:16 +0200
-Message-ID: <B93260EC-F61D-4B51-9B2C-707917CEBC53@goldelico.com>
-References: <cover.1497861705.git.hns@goldelico.com>
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1497861705.git.hns@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux PM mailing list <linux-pm@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>, Grazvydas Ignotas <notasas@gmail.com>, linux-omap <linux-omap@vger.kernel.org>, Nikolaus Schaller <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, NeilBrown <neil@brown.name>, Grygorii Strashko <grygorii.strashko@ti.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] iio: accel: st_accel_spi: add OF capability to
+ st_accel_spi
+Date: Sat, 1 Jul 2017 13:13:34 +0100
+Message-ID: <20170701131334.7dc77c12@kernel.org>
+References: <20170626225346.12019-1-lorenzo.bianconi@st.com>
+        <20170626225346.12019-2-lorenzo.bianconi@st.com>
+        <CACRpkdbF3iVLSr3kBNGmoZjoPX=1KOO74OS3wmTSxFrzqwak3A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbF3iVLSr3kBNGmoZjoPX=1KOO74OS3wmTSxFrzqwak3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lorenzo Bianconi <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+On Thu, 29 Jun 2017 14:48:31 +0200
+Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-> Am 19.06.2017 um 10:41 schrieb H. Nikolaus Schaller =
-<hns@goldelico.com>:
->=20
-> Changes V7:
-> * removed already merged patches from patch set
-> * further fix for potentially wrong irq and notifier initialization =
-sequence (suggested by Sebastian Reichel)
-> * NULLify transceiver pointer in case of errors (suggested by =
-Sebastian Reichel)
+> On Tue, Jun 27, 2017 at 12:53 AM, Lorenzo Bianconi
+> <lorenzo.bianconi83-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> 
+> > Add device tree support for LIS3DH, LSM330D, LSM330DL, LSM330DLC,
+> > LIS331DLH, LSM330, LSM303AGR, LIS2DH12, LIS3L02DQ, LNG2DM accel sensors.
+> > Fix LIS302DL support defining of_device_id data field in st_accel_of_match
+> > table
+> >
+> > Fixes: 762227721fe6 (iio: accel: st_accel: handle deprecated bindings)
+> > Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi-qxv4g6HH51o@public.gmane.org>  
+> 
+> Looks right.
+> 
+> Reviewed-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+> Yours,
+> Linus Walleij
 
-Did you find time to review the updated v7 patches?
-I have not seen them arrive in linux-next.
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-BR and thanks,
-Nikolaus
+Thanks,
+
+Jonathan
